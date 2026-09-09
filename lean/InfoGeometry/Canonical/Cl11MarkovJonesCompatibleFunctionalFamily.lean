@@ -23,28 +23,29 @@ open InfoGeometry.Clifford.Cl11MarkovJonesEngine
 
 def cl11CompatibleFunctionalFamily :
     CompatibleFunctionalFamily
-      (A := MatStage) cl11InductiveAlgebraNet :=
-  fun n => normalizedTraceLinear n
+      (A := MatStage) cl11InductiveAlgebraNet.embed where
+  omega := normalizedTraceLinear
+  compatible := by
+    intro n A
+    exact cl11_normalizedTrace_one_step n A
 
 theorem cl11CompatibleFunctionalFamily_compatible
     (n : ℕ) (A : MatStage n) :
-    cl11CompatibleFunctionalFamily (n + 1)
+    cl11CompatibleFunctionalFamily.omega (n + 1)
         (cl11InductiveAlgebraNet.embed n A) =
-      cl11CompatibleFunctionalFamily n A := by
+      cl11CompatibleFunctionalFamily.omega n A := by
   exact cl11_normalizedTrace_one_step n A
 
 @[simp] theorem cl11CompatibleFunctionalFamily_apply
     (n : ℕ) (A : MatStage n) :
-    cl11CompatibleFunctionalFamily n A = normalizedTrace n A :=
+    cl11CompatibleFunctionalFamily.omega n A = normalizedTrace n A :=
   rfl
 
 theorem cl11TopCatReadout_matches_functionalFamily
     (n : ℕ) (A : MatStage n) :
     normalizedTraceTopCatHom (n + 1)
         (stageEmbedTopCatHom n A) =
-      cl11CompatibleFunctionalFamily n A := by
+      cl11CompatibleFunctionalFamily.omega n A := by
   exact cl11_normalizedTrace_one_step n A
 
 end InfoGeometry.Canonical.Cl11MarkovJonesCompatibleFunctionalFamily
-
-end

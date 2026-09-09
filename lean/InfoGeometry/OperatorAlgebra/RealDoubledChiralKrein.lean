@@ -88,20 +88,58 @@ def etaChiral : EndH₂ (E := E) :=
 def etaSplit : EndH₂ (E := E) :=
   spectral_epsilon (E := E)
 
-/-- Hilbertized form obtained from the chiral Krein form and its fundamental
-symmetry. -/
-def chiralHilbertForm
-    (u v : H₂ (E := E)) : ℝ :=
-  chiralKreinForm u ((etaChiral (E := E)) v)
+/-! Canonical names for the doubled real phase axis and its associated
+Hilbertized form.  These are aliases of the already-owned `DoubledSpace`
+operators, not a second operator construction. -/
 
-/-- The complex-structure-shaped product `γ₅ ∘ η_chiral` on the real carrier. -/
-def chiralComplexStructure : EndH₂ (E := E) :=
-  (gamma5 (E := E)).comp (etaChiral (E := E))
+abbrev chiralComplexStructure : EndH₂ (E := E) := complex_i (E := E)
 
-/-- The actual antisymmetric form associated with the cross-sheet Krein form. -/
-def chiralSymplecticForm
-    (u v : H₂ (E := E)) : ℝ :=
-  chiralKreinForm ((gamma5 (E := E)) u) v
+theorem chiralComplexStructure_sq :
+    (chiralComplexStructure (E := E)).comp chiralComplexStructure =
+      -(ContinuousLinearMap.id ℝ (H₂ (E := E))) := by
+  exact complex_i_sq E
+
+def chiralHilbertForm (u v : H₂ (E := E)) : ℝ :=
+  chiralKreinForm u (etaChiral v)
+
+def chiralSymplecticForm (u v : H₂ (E := E)) : ℝ :=
+  inner ℝ (WithLp.fst u) (WithLp.snd v) -
+    inner ℝ (WithLp.snd u) (WithLp.fst v)
+
+theorem chiralSymplecticForm_swap (u v : H₂ (E := E)) :
+    chiralSymplecticForm u v = -chiralSymplecticForm v u := by
+  simp [chiralSymplecticForm, real_inner_comm, sub_eq_add_neg, add_comm,
+    add_left_comm, add_assoc]
+
+theorem chiralHilbertForm_eq_inner (u v : H₂ (E := E)) :
+    chiralHilbertForm u v = inner ℝ u v := by
+  simp [chiralHilbertForm, chiralKreinForm, etaChiral, modular_j,
+    WithLp.prod_inner_apply, real_inner_comm, add_comm]
+
+theorem chiralHilbertForm_self_nonneg (u : H₂ (E := E)) :
+    0 ≤ chiralHilbertForm u u := by
+  rw [chiralHilbertForm_eq_inner]
+  exact real_inner_self_nonneg
+
+theorem chiralKreinForm_swap (u v : H₂ (E := E)) :
+    chiralKreinForm u v = chiralKreinForm v u := by
+  simp [chiralKreinForm, WithLp.prod_inner_apply, real_inner_comm, add_comm]
+
+theorem chiralHilbertForm_self_pos {u : H₂ (E := E)} (hu : u ≠ 0) :
+    0 < chiralHilbertForm u u := by
+  simp [chiralHilbertForm, chiralKreinForm, etaChiral, modular_j,
+    WithLp.prod_inner_apply]
+  by_cases h₁ : WithLp.fst u = 0
+  · have h₂ : WithLp.snd u ≠ 0 := by
+      intro h₂
+      apply hu
+      exact DoubledSpace.ext h₁ h₂
+    have hp : 0 < ‖WithLp.snd u‖ ^ 2 := by
+      exact sq_pos_of_pos (norm_pos_iff.mpr h₂)
+    nlinarith [sq_nonneg ‖WithLp.fst u‖]
+  · have hp : 0 < ‖WithLp.fst u‖ ^ 2 := by
+      exact sq_pos_of_pos (norm_pos_iff.mpr h₁)
+    nlinarith [sq_nonneg ‖WithLp.snd u‖]
 
 /-- Operators preserving the chiral decomposition commute with `γ₅`. -/
 def IsBlockDiagonal
@@ -160,165 +198,6 @@ theorem etaChiral_gamma5_anticommute :
     (etaChiral (E := E)).comp (gamma5 (E := E)) =
       -((gamma5 (E := E)).comp (etaChiral (E := E))) := by
   simpa [etaChiral, gamma5] using modular_j_spectral_epsilon_anticommute E
-
-/-- Conjugating the chiral grading by the doubled real chiral metric flips its sign. -/
-theorem etaChiral_conj_gamma5 :
-    (etaChiral (E := E)).comp
-        ((gamma5 (E := E)).comp (etaChiral (E := E))) =
-      -(gamma5 (E := E)) := by
-  calc
-    (etaChiral (E := E)).comp
-          ((gamma5 (E := E)).comp (etaChiral (E := E))) =
-        ((etaChiral (E := E)).comp (gamma5 (E := E))).comp
-          (etaChiral (E := E)) := by
-            rw [ContinuousLinearMap.comp_assoc]
-    _ = (-((gamma5 (E := E)).comp (etaChiral (E := E)))).comp
-          (etaChiral (E := E)) := by
-            rw [etaChiral_gamma5_anticommute]
-    _ = -((gamma5 (E := E)).comp
-          ((etaChiral (E := E)).comp (etaChiral (E := E)))) := by
-            simp [ContinuousLinearMap.comp_assoc]
-    _ = -(gamma5 (E := E)) := by
-            rw [etaChiral_involution]
-            simp
-
-omit [CompleteSpace E] in
-@[simp]
-theorem gamma5_to_doubled (x ξ : E) :
-    gamma5 (E := E) (to_doubled x ξ : H₂ (E := E)) =
-      to_doubled x (-ξ) := by
-  simp [gamma5, spectral_epsilon]
-
-omit [CompleteSpace E] in
-@[simp]
-theorem etaChiral_to_doubled (x ξ : E) :
-    etaChiral (E := E) (to_doubled x ξ : H₂ (E := E)) =
-      to_doubled ξ x := by
-  simp [etaChiral, modular_j]
-
-omit [CompleteSpace E] in
-@[simp]
-theorem chiralComplexStructure_to_doubled (x ξ : E) :
-    chiralComplexStructure (E := E) (to_doubled x ξ : H₂ (E := E)) =
-      to_doubled ξ (-x) := by
-  simp [chiralComplexStructure, gamma5, etaChiral, spectral_epsilon, modular_j]
-
-omit [CompleteSpace E] in
-theorem chiralComplexStructure_sq :
-    (chiralComplexStructure (E := E)).comp
-        (chiralComplexStructure (E := E)) =
-      -(ContinuousLinearMap.id ℝ (H₂ (E := E))) := by
-  apply ContinuousLinearMap.ext
-  intro u
-  apply DoubledSpace.ext <;>
-    simp [chiralComplexStructure, gamma5, etaChiral, spectral_epsilon, modular_j]
-
-omit [CompleteSpace E] in
-theorem chiralHilbertForm_eq_inner (u v : H₂ (E := E)) :
-    chiralHilbertForm (E := E) u v = inner ℝ u v := by
-  simp [chiralHilbertForm, chiralKreinForm, etaChiral, modular_j,
-    WithLp.prod_inner_apply]
-
-omit [CompleteSpace E] in
-theorem chiralHilbertForm_self_nonneg (u : H₂ (E := E)) :
-    0 ≤ chiralHilbertForm (E := E) u u := by
-  rw [chiralHilbertForm_eq_inner]
-  exact real_inner_self_nonneg
-
-omit [CompleteSpace E] in
-theorem chiralHilbertForm_self_pos {u : H₂ (E := E)} (hu : u ≠ 0) :
-    0 < chiralHilbertForm (E := E) u u := by
-  rw [chiralHilbertForm_eq_inner]
-  exact real_inner_self_pos.mpr hu
-
-omit [CompleteSpace E] in
-theorem chiralSymplecticForm_to_doubled (x ξ y η : E) :
-    chiralSymplecticForm (E := E)
-        (to_doubled x ξ : H₂ (E := E))
-        (to_doubled y η : H₂ (E := E)) =
-      inner ℝ x η - inner ℝ ξ y := by
-  simp [chiralSymplecticForm, chiralKreinForm, gamma5, spectral_epsilon,
-    WithLp.prod_inner_apply, sub_eq_add_neg, add_comm]
-
-omit [CompleteSpace E] in
-theorem chiralSymplecticForm_swap (u v : H₂ (E := E)) :
-    chiralSymplecticForm (E := E) u v =
-      -chiralSymplecticForm (E := E) v u := by
-  have hu : to_doubled (WithLp.fst u) (WithLp.snd u) = u := by
-    exact DoubledSpace.ext rfl rfl
-  have hv : to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
-    exact DoubledSpace.ext rfl rfl
-  rw [← hu, ← hv]
-  rw [chiralSymplecticForm_to_doubled]
-  rw [chiralSymplecticForm_to_doubled]
-  rw [real_inner_comm (WithLp.fst v) (WithLp.snd u)]
-  rw [real_inner_comm (WithLp.snd v) (WithLp.fst u)]
-  simp [sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
-
-omit [CompleteSpace E] in
-theorem chiralKreinForm_swap (u v : H₂ (E := E)) :
-    chiralKreinForm (E := E) u v =
-      chiralKreinForm (E := E) v u := by
-  have hu : to_doubled (WithLp.fst u) (WithLp.snd u) = u := by
-    exact DoubledSpace.ext rfl rfl
-  have hv : to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
-    exact DoubledSpace.ext rfl rfl
-  rw [← hu, ← hv]
-  rw [chiralKreinForm_to_doubled]
-  rw [chiralKreinForm_to_doubled]
-  rw [real_inner_comm (WithLp.fst u) (WithLp.snd v)]
-  rw [real_inner_comm (WithLp.snd u) (WithLp.fst v)]
-  exact add_comm _ _
-
-omit [CompleteSpace E] in
-theorem chiralComplexStructure_form_is_symmetric (u v : H₂ (E := E)) :
-    chiralKreinForm (E := E)
-        ((chiralComplexStructure (E := E)) u) v =
-      chiralKreinForm (E := E)
-        ((chiralComplexStructure (E := E)) v) u := by
-    simp [chiralComplexStructure, chiralKreinForm, gamma5, etaChiral,
-    spectral_epsilon, modular_j, WithLp.prod_inner_apply, real_inner_comm,
-    add_comm]
-
-omit [CompleteSpace E] in
-/-- The positive chiral sheet is isotropic for the cross-sheet form. -/
-theorem chiralKreinForm_left_isotropic (x y : E) :
-    chiralKreinForm (E := E)
-        (to_doubled x 0 : H₂ (E := E))
-        (to_doubled y 0 : H₂ (E := E)) = 0 := by
-  simp [chiralKreinForm]
-
-omit [CompleteSpace E] in
-/-- The negative chiral sheet is isotropic for the cross-sheet form. -/
-theorem chiralKreinForm_right_isotropic (ξ η : E) :
-    chiralKreinForm (E := E)
-        (to_doubled 0 ξ : H₂ (E := E))
-        (to_doubled 0 η : H₂ (E := E)) = 0 := by
-  simp [chiralKreinForm]
-
-omit [CompleteSpace E] in
-/-- Cross-sheet pairing from the positive sheet into the negative sheet. -/
-theorem chiralKreinForm_left_right (x η : E) :
-    chiralKreinForm (E := E)
-        (to_doubled x 0 : H₂ (E := E))
-        (to_doubled 0 η : H₂ (E := E)) = inner ℝ x η := by
-  simp [chiralKreinForm]
-
-omit [CompleteSpace E] in
-/-- Cross-sheet pairing from the negative sheet into the positive sheet. -/
-theorem chiralKreinForm_right_left (ξ y : E) :
-    chiralKreinForm (E := E)
-        (to_doubled 0 ξ : H₂ (E := E))
-        (to_doubled y 0 : H₂ (E := E)) = inner ℝ ξ y := by
-  simp [chiralKreinForm]
-
-theorem etaChiral_is_fundamental_symmetry :
-    ∀ u v,
-      chiralKreinForm (E := E) ((etaChiral (E := E)) u) v =
-        chiralKreinForm (E := E) u ((etaChiral (E := E)) v) := by
-  intro u v
-  simp [chiralKreinForm, etaChiral, modular_j,
-    WithLp.prod_inner_apply, real_inner_comm, add_comm]
 
 /-! ## 3. Algebraic closure laws for block/off-block operators -/
 
@@ -650,10 +529,10 @@ theorem etaChiral_comp_right_projector :
     simp [etaChiral, leftChiralProjector, rightChiralProjector, gamma5,
       modular_j, spectral_epsilon, one_div, sub_eq_add_neg]
 
-/-! ## 6. Hyperbolic-flow interface -/
+/-! ## 6. Hyperbolic-flow socket -/
 
 /--
-Deferred interface for a real hyperbolic primon flow.
+Witness socket for a real hyperbolic primon flow.
 
 The exponential `exp(t L)` is not constructed here.  A concrete owner module may
 supply such a flow together with preservation of the chosen Krein form and any
@@ -688,7 +567,7 @@ end HyperbolicPrimonFlow
 Regularized comparison between a chiral Liouvillean readout and a Möbius heat
 supertrace.
 
-This is deliberately a property gate.  The expression
+This is deliberately a witness gate.  The expression
 `Tr(J_chiral exp(-β L_chiral / 2))` is not automatically the positive-decay
 Möbius heat trace `Tr(Γ exp(-β H))`: the raw hyperbolic calculation contains
 growing `sinh(βH/2)` terms and requires a concrete regulator/projection before
@@ -733,7 +612,7 @@ theorem liouvillean_isOffBlock
 end ChiralMobiusSupertraceCalibration
 
 /--
-Analytic inverse-zeta property for the positive-decay Möbius heat trace.
+Analytic inverse-zeta witness for the positive-decay Möbius heat trace.
 
 This is separate from the chiral Liouvillean calibration.  The theorem
 `Σ μ(n)n^{-s} = 1 / ζ(s)` belongs to an analytic Dirichlet-series/Euler-product

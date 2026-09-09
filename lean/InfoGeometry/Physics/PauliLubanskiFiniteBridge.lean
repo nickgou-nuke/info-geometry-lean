@@ -20,8 +20,8 @@ abbrev SpatialVector := Fin 3 → ℝ
 def spatialMomentum (P : FourVector) : SpatialVector :=
   ![P.x, P.y, P.z]
 
-def spatialTriple (v : SpatialVector) : ℝ × (ℝ × ℝ) :=
-  (v 0, (v 1, v 2))
+def spatialTriple (w : ℝ) (v : SpatialVector) : FourVector :=
+  ⟨w, v 0, v 1, v 2⟩
 
 structure LorentzBivectorDatum where
   momentum : FourVector
@@ -31,9 +31,9 @@ structure LorentzBivectorDatum where
 /-! In the mostly-minus convention this is the standard finite split of
 `W^μ = (p · J, E J + p × K)`, with the sign convention fixed by this owner. -/
 def pauliLubanski (D : LorentzBivectorDatum) : FourVector :=
-  (ZornMatrixSU3.dotProduct (spatialMomentum D.momentum) D.rotation,
-    spatialTriple (D.momentum.t • D.rotation +
-      ZornMatrixSU3.crossProduct (spatialMomentum D.momentum) D.boost))
+  spatialTriple (ZornMatrixSU3.dotProduct (spatialMomentum D.momentum) D.rotation)
+    (D.momentum.t • D.rotation +
+      ZornMatrixSU3.crossProduct (spatialMomentum D.momentum) D.boost)
 
 theorem pauliLubanski_orthogonal (D : LorentzBivectorDatum) :
     minkowskiPair D.momentum (pauliLubanski D) = 0 := by

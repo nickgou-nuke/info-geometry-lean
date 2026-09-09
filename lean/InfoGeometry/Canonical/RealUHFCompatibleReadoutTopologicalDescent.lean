@@ -73,5 +73,4 @@ theorem normalizedTraceReadoutAtTime_eq_postcomposition
   rfl
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutTopologicalDescent
-
 end

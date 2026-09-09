@@ -79,11 +79,11 @@ theorem twoSidedSpan_eq_top_iff_one_mem (e : A) :
     have hx' := left_mul_mem_twoSidedSpan e x 1 h
     simpa using hx'
 
-noncomputable def corner_endomorphism_equiv
+def corner_endomorphism_equiv
     (e : A) (he : e * e = e) :
-    InfoGeometry.Algebra.IdempotentCornerCommutant.corner e he ≃
-      Module.End A
-        (InfoGeometry.Algebra.IdempotentCornerCommutant.principalLeftIdeal e he) :=
-  InfoGeometry.Algebra.IdempotentCornerCommutant.cornerEndEquiv e he
+    InfoGeometry.Algebra.IdempotentCornerCommutant.Corner e ≃
+      {T : Module.End ℤ (InfoGeometry.Algebra.IdempotentCornerCommutant.PrincipalLeftIdeal (R := ℤ) e) //
+        T ∈ InfoGeometry.Algebra.IdempotentCornerCommutant.leftIdealCommutant (R := ℤ) e} :=
+  InfoGeometry.Algebra.IdempotentCornerCommutant.cornerEquivLeftIdealCommutant (R := ℤ) e he
 
 end InfoGeometry.Algebra.IdempotentTwoSidedSpan

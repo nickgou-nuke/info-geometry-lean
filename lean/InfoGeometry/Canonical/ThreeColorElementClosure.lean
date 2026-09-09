@@ -87,29 +87,29 @@ theorem chiralBasisSpan_eq_top :
   have hpp : peirceComponent zornPlus zornPlus Z ∈
       chiralBasisSpan (R := R) := by
     rw [peirce_plus_plus_apply]
-    convert (chiralBasisSpan (R := R)).smul_mem Z.a hPlus using 1
-    · apply ZornMatrix.ext
-      · simp [zornPlus]
-      · simp [zornPlus]
+    have h : ({ a := Z.a, b := 0, x := 0, y := 0 } : ZornMatrix R) = Z.a • zornPlus := by
+      apply ZornMatrix.ext
+      · simp [zornPlus, smul_a]
+      · simp [zornPlus, smul_b]
       · funext i
-        change 0 = Z.a • (0 : R)
-        simp
+        simp [zornPlus, smul_x]
       · funext i
-        change 0 = Z.a • (0 : R)
-        simp
+        simp [zornPlus, smul_y]
+    rw [h]
+    exact (chiralBasisSpan (R := R)).smul_mem Z.a hPlus
   have hmm : peirceComponent zornMinus zornMinus Z ∈
       chiralBasisSpan (R := R) := by
     rw [peirce_minus_minus_apply]
-    convert (chiralBasisSpan (R := R)).smul_mem Z.b hMinus using 1
-    · apply ZornMatrix.ext
-      · simp [zornMinus]
-      · simp [zornMinus]
+    have h : ({ a := 0, b := Z.b, x := 0, y := 0 } : ZornMatrix R) = Z.b • zornMinus := by
+      apply ZornMatrix.ext
+      · simp [zornMinus, smul_a]
+      · simp [zornMinus, smul_b]
       · funext i
-        change 0 = Z.b • (0 : R)
-        simp
+        simp [zornMinus, smul_x]
       · funext i
-        change 0 = Z.b • (0 : R)
-        simp
+        simp [zornMinus, smul_y]
+    rw [h]
+    exact (chiralBasisSpan (R := R)).smul_mem Z.b hMinus
   have hcolor : colorProject Z ∈ chiralBasisSpan (R := R) := by
     rw [colorProject_eq_chiralUpper_sum]
     exact hUpperSum

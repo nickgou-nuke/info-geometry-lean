@@ -53,19 +53,19 @@ theorem diracGammaLinear_chiral_decomposition (Z : ZornMatrix R) :
         cases Z with
         | mk a b x y =>
             apply ZornMatrix.ext
-            · simp [zornPlus, ZornMatrix.smul_a]
-            · simp [zornPlus, ZornMatrix.smul_b]
-            · funext i; simp [zornPlus, ZornMatrix.smul_x]
-            · funext i; simp [zornPlus, ZornMatrix.smul_y]
+            · simp [zornPlus, ZornClifford.smul_a]
+            · simp [zornPlus, ZornClifford.smul_b]
+            · funext i; simp [zornPlus, ZornClifford.smul_x]
+            · funext i; simp [zornPlus, ZornClifford.smul_y]
       have hmm : peirceComponent zornMinus zornMinus Z = Z.b • zornMinus := by
         rw [peirce_minus_minus_apply]
         cases Z with
         | mk a b x y =>
             apply ZornMatrix.ext
-            · simp [zornMinus, ZornMatrix.smul_a]
-            · simp [zornMinus, ZornMatrix.smul_b]
-            · funext i; simp [zornMinus, ZornMatrix.smul_x]
-            · funext i; simp [zornMinus, ZornMatrix.smul_y]
+            · simp [zornMinus, ZornClifford.smul_a]
+            · simp [zornMinus, ZornClifford.smul_b]
+            · funext i; simp [zornMinus, ZornClifford.smul_x]
+            · funext i; simp [zornMinus, ZornClifford.smul_y]
       rw [hpp, colorProject_eq_chiralUpper_sum,
         anticolorProject_eq_chiralLower_sum, hmm] at hZ
       simpa [add_assoc, add_left_comm, add_comm] using hZ

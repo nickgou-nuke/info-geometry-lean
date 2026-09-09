@@ -27,19 +27,19 @@ open InfoGeometry.Canonical.CantorThermodynamics
 open InfoGeometry.Canonical.CuntzCantorBoundaryShift
 
 /-- Pointwise state evaluation at the left boundary pole `wL`. -/
-def evalL (T : (Module.End ℂ ((ℕ → Bool) → ℂ))) : ℂ :=
+def evalL (T : CantorOp) : ℂ :=
   T vacuumState wL
 
 /-- Pointwise state evaluation at the right boundary pole `wR`. -/
-def evalR (T : (Module.End ℂ ((ℕ → Bool) → ℂ))) : ℂ :=
+def evalR (T : CantorOp) : ℂ :=
   T vacuumState wR
 
 /-- Commutator of an operator with the boundary Dirac operator `[D, A]`. -/
-def DiracComm (A : (Module.End ℂ ((ℕ → Bool) → ℂ))) : (Module.End ℂ ((ℕ → Bool) → ℂ)) :=
+def DiracComm (A : CantorOp) : CantorOp :=
   DiracOp * A - A * DiracOp
 
 /-- The canonical metric test operator: the right branch projector `S_R S_R*`. -/
-def metricTestOp : (Module.End ℂ ((ℕ → Bool) → ℂ)) :=
+def metricTestOp : CantorOp :=
   S_R_linear * star_S_R_linear
 
 /-- The commutator `[D, S_R S_R*]` squares to `-1`. This algebraic identity
@@ -55,65 +55,6 @@ theorem metricTestOp_commutator_sq :
       · contradiction
       · rfl
     simp [h_true, tail_prependBit, prependBit_tail_of_head]
-
-theorem metricTestOp_commutator_ne_zero :
-    DiracComm metricTestOp ≠ 0 := by
-  intro hzero
-  have hsq := metricTestOp_commutator_sq
-  rw [hzero] at hsq
-  simpa using hsq
-
-theorem metricTestOp_commutator_mul_neg_eq_one :
-    DiracComm metricTestOp * (-DiracComm metricTestOp) = 1 := by
-  ext f x
-  have h := congrArg
-    (fun T : Module.End ℂ ((ℕ → Bool) → ℂ) => T f x)
-    metricTestOp_commutator_sq
-  simp only [Module.End.mul_apply, LinearMap.neg_apply, Module.End.one_apply] at h ⊢
-  simp only [map_neg]
-  change -(DiracComm metricTestOp (DiracComm metricTestOp f) x) = f x
-  rw [h]
-  simp
-
-theorem neg_metricTestOp_commutator_mul_eq_one :
-    (-DiracComm metricTestOp) * DiracComm metricTestOp = 1 := by
-  ext f x
-  have h := congrArg
-    (fun T : Module.End ℂ ((ℕ → Bool) → ℂ) => T f x)
-    metricTestOp_commutator_sq
-  simp only [Module.End.mul_apply, LinearMap.neg_apply, Module.End.one_apply] at h ⊢
-  change -(DiracComm metricTestOp (DiracComm metricTestOp f) x) = f x
-  rw [h]
-  simp
-
-theorem metricTestOp_commutator_injective :
-    Function.Injective (DiracComm metricTestOp) := by
-  intro f g h
-  calc
-    f = (1 : Module.End ℂ ((ℕ → Bool) → ℂ)) f := by rfl
-    _ = ((-DiracComm metricTestOp) * DiracComm metricTestOp) f := by
-      rw [neg_metricTestOp_commutator_mul_eq_one]
-    _ = (-DiracComm metricTestOp) (DiracComm metricTestOp f) := by rfl
-    _ = (-DiracComm metricTestOp) (DiracComm metricTestOp g) := by rw [h]
-    _ = ((-DiracComm metricTestOp) * DiracComm metricTestOp) g := by rfl
-    _ = (1 : Module.End ℂ ((ℕ → Bool) → ℂ)) g := by
-      rw [neg_metricTestOp_commutator_mul_eq_one]
-    _ = g := by rfl
-
-theorem metricTestOp_commutator_surjective :
-    Function.Surjective (DiracComm metricTestOp) := by
-  intro f
-  refine ⟨(-DiracComm metricTestOp) f, ?_⟩
-  calc
-    DiracComm metricTestOp ((-DiracComm metricTestOp) f) =
-        (DiracComm metricTestOp * (-DiracComm metricTestOp)) f := by rfl
-    _ = (1 : Module.End ℂ ((ℕ → Bool) → ℂ)) f := by
-      rw [metricTestOp_commutator_mul_neg_eq_one]
-    _ = f := by rfl
-
-theorem metricTestOp_commutator_bijective :
-    Function.Bijective (DiracComm metricTestOp) :=
-  ⟨metricTestOp_commutator_injective, metricTestOp_commutator_surjective⟩
 
 /-- The metric test operator realizes an evaluation difference of exactly 1,
     establishing that the emergent Connes distance between the boundary poles is at least 1. -/

@@ -6,29 +6,27 @@ import InfoGeometry.Physics.IsospinMirrorDynamics
 namespace InfoGeometry.Physics
 
 /-- The A=73 mirror pair (Sr-73 and Br-73). -/
-def Sr73 : Nucleus := (38, 35)
-def Br73 : Nucleus := (35, 38)
+def Sr73 : Nucleus := { Z := 38, N := 35 }
+def Br73 : Nucleus := { Z := 35, N := 38 }
 
 /-- The A=73 MirrorPair instance for Sr-73 and Br-73. -/
-def A73Pair : MirrorPair :=
-  ⟨(Sr73, Br73), by constructor <;> rfl⟩
+def A73Pair : MirrorPair where
+  nuc1 := Sr73
+  nuc2 := Br73
+  mirror_cond_Z := by rfl
+  mirror_cond_N := by rfl
 
 /-- Nuclear state properties including spin. -/
-abbrev A73State := ℝ × (ℚ × ℤ)
-
-namespace A73State
-
-abbrev energy (s : A73State) : ℝ := s.1
-
-abbrev spin (s : A73State) : ℚ := s.2.1
-
-abbrev parity (s : A73State) : ℤ := s.2.2
-
-end A73State
+structure A73State where
+  energy : ℝ
+  spin : ℚ
+  parity : ℤ
 
 /-- The ground state of a given nucleus. -/
 noncomputable def ground_state (nuc : Nucleus) : A73State :=
-  (0.0, (if nuc.Z = 38 then 5 / 2 else 1 / 2, 1))
+  { energy := 0.0,
+    spin := if nuc.Z = 38 then 5 / 2 else 1 / 2,
+    parity := 1 }
 
 /-- Structure representing the A=73 Mirror Symmetry Violation.
     The ground state spin of Sr-73 is 5/2 while the ground state spin of Br-73 is 1/2. -/

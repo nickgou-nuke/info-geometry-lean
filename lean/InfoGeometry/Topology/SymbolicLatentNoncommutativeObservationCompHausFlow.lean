@@ -72,5 +72,3 @@ theorem operatorCommutingLocusCompHausFlowHom_add
   rw [add_comm s t, Φ.act_add]
 
 end InfoGeometry.Topology
-
-end

@@ -17,7 +17,7 @@ graph-Hodge carrier from `GraphHodge.lean` into a single coherence layer:
 * `ChiralGrading` and `extendedChiralGrading` provide the grading data;
 * `chiralAnticommutes` is the bounded chiral compatibility check;
 * `HodgeSummary` is the readout/export packet.
-* `RealDoubledKreinGraphHodgeData` adds the actual Hestenes--Krein substrate:
+* `RealDoubledKreinGraphHodgePacket` adds the actual Hestenes--Krein substrate:
   `DoubledSpace E` with `modular_j`, `spectral_epsilon`, and `clockAxis`.
 
 The bridge is intentionally a packaging surface, not a new theorem owner.
@@ -37,7 +37,7 @@ Canonical finite graph-Hodge operator packet.
 This bundles the finite declaration two-complex together with the induced
 Dirac, Laplacian, chiral, and summary readouts.
 -/
-structure FiniteGraphHodgeData (α) [BEq α] [Hashable α] where
+structure FiniteGraphHodgePacket (α) [BEq α] [Hashable α] where
   tc : TwoComplex α
   gradingSize : Nat
   gradingMatrix : Array (Array Rat)
@@ -48,7 +48,7 @@ structure FiniteGraphHodgeData (α) [BEq α] [Hashable α] where
   chiralCompatible : Bool
   summary : HodgeSummary
 
-namespace FiniteGraphHodgeData
+namespace FiniteGraphHodgePacket
 
 /--
 Canonical constructor for the finite graph-Hodge packet.
@@ -59,7 +59,7 @@ def canonical
     {α} [BEq α] [Hashable α]
     (tc : TwoComplex α)
     (grading : ChiralGrading (tc.base.toGraph.nodes.size)) :
-    FiniteGraphHodgeData α :=
+    FiniteGraphHodgePacket α :=
   let n := tc.base.toGraph.nodes.size
   { tc := tc
     gradingSize := n
@@ -71,7 +71,7 @@ def canonical
     chiralCompatible := chiralAnticommutes tc grading
     summary := hodgeSummary tc }
 
-end FiniteGraphHodgeData
+end FiniteGraphHodgePacket
 
 /-! ## Real doubled Hestenes--Krein carrier for the graph-Hodge packet -/
 
@@ -92,10 +92,10 @@ The finite `TwoComplex`/matrix data remain in `finite`; the carrier fields
 record the real doubled modular swap, fundamental symmetry, and clock axis
 used by the Hestenes--Krein layer.
 -/
-structure RealDoubledKreinGraphHodgeData
+structure RealDoubledKreinGraphHodgePacket
     (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (α) [BEq α] [Hashable α] where
-  finite : FiniteGraphHodgeData α
+  finite : FiniteGraphHodgePacket α
   J : RealDoubledKreinDAGCarrier E →L[ℝ] RealDoubledKreinDAGCarrier E
   ε : RealDoubledKreinDAGCarrier E →L[ℝ] RealDoubledKreinDAGCarrier E
   K : RealDoubledKreinDAGCarrier E →L[ℝ] RealDoubledKreinDAGCarrier E
@@ -103,14 +103,14 @@ structure RealDoubledKreinGraphHodgeData
   epsilon_eq : ε = spectral_epsilon (E := E)
   K_eq : K = clockAxis (E := E)
 
-namespace RealDoubledKreinGraphHodgeData
+namespace RealDoubledKreinGraphHodgePacket
 
 /-- Canonical real doubled Hestenes--Krein lift of a finite graph-Hodge packet. -/
 noncomputable def canonical
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {α} [BEq α] [Hashable α]
-    (finite : FiniteGraphHodgeData α) :
-    RealDoubledKreinGraphHodgeData E α :=
+    (finite : FiniteGraphHodgePacket α) :
+    RealDoubledKreinGraphHodgePacket E α :=
   { finite := finite
     J := modular_j (E := E)
     ε := spectral_epsilon (E := E)
@@ -123,7 +123,7 @@ noncomputable def canonical
 theorem canonical_J
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {α} [BEq α] [Hashable α]
-    (finite : FiniteGraphHodgeData α) :
+    (finite : FiniteGraphHodgePacket α) :
     (canonical (E := E) finite).J = modular_j (E := E) :=
   rfl
 
@@ -131,7 +131,7 @@ theorem canonical_J
 theorem canonical_epsilon
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {α} [BEq α] [Hashable α]
-    (finite : FiniteGraphHodgeData α) :
+    (finite : FiniteGraphHodgePacket α) :
     (canonical (E := E) finite).ε = spectral_epsilon (E := E) :=
   rfl
 
@@ -139,11 +139,11 @@ theorem canonical_epsilon
 theorem canonical_clockAxis
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {α} [BEq α] [Hashable α]
-    (finite : FiniteGraphHodgeData α) :
+    (finite : FiniteGraphHodgePacket α) :
     (canonical (E := E) finite).K = clockAxis (E := E) :=
   rfl
 
-end RealDoubledKreinGraphHodgeData
+end RealDoubledKreinGraphHodgePacket
 
 /-! ## Cuntz transfer on the real doubled Hestenes--Krein DAG carrier -/
 
@@ -154,19 +154,19 @@ The Cuntz data live in the endomorphism ring of `DoubledSpace E`.  The state
 laws are explicit: this packet proves fixed-point behavior only for states
 whose left and right branch readouts each contribute one half.
 -/
-structure RealDoubledKreinCuntzTransferData
+structure RealDoubledKreinCuntzTransferPacket
     (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (α) [BEq α] [Hashable α] where
-  graph : RealDoubledKreinGraphHodgeData E α
-  cuntz : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) (RealDoubledKreinDAGEnd E)
+  graph : RealDoubledKreinGraphHodgePacket E α
+  cuntz : CuntzO2Carrier (RealDoubledKreinDAGEnd E)
   state : RealDoubledKreinDAGEnd E → ℝ
   state_add : ∀ A B, state (A + B) = state A + state B
   state_left_half :
-    ∀ A, state (InfoGeometry.Topology.CuntzO2Carrier.S_left cuntz * A * star InfoGeometry.Topology.CuntzO2Carrier.S_left cuntz) = (1 / 2 : ℝ) * state A
+    ∀ A, state (cuntz.S_left * A * star cuntz.S_left) = (1 / 2 : ℝ) * state A
   state_right_half :
-    ∀ A, state (InfoGeometry.Topology.CuntzO2Carrier.S_right cuntz * A * star InfoGeometry.Topology.CuntzO2Carrier.S_right cuntz) = (1 / 2 : ℝ) * state A
+    ∀ A, state (cuntz.S_right * A * star cuntz.S_right) = (1 / 2 : ℝ) * state A
 
-namespace RealDoubledKreinCuntzTransferData
+namespace RealDoubledKreinCuntzTransferPacket
 
 variable
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -174,12 +174,10 @@ variable
 
 /-- The Cuntz canonical endomorphism on the real doubled Krein operator ring. -/
 noncomputable def canonicalEndomorphism
-    (P : RealDoubledKreinCuntzTransferData E α)
+    (P : RealDoubledKreinCuntzTransferPacket E α)
     (A : RealDoubledKreinDAGEnd E) : RealDoubledKreinDAGEnd E :=
-  InfoGeometry.Topology.CuntzO2Carrier.S_left P.cuntz * A *
-      star (InfoGeometry.Topology.CuntzO2Carrier.S_left P.cuntz) +
-    InfoGeometry.Topology.CuntzO2Carrier.S_right P.cuntz * A *
-      star (InfoGeometry.Topology.CuntzO2Carrier.S_right P.cuntz)
+  P.cuntz.S_left * A * star P.cuntz.S_left +
+    P.cuntz.S_right * A * star P.cuntz.S_right
 
 /--
 The discrete modular step used by this packet.
@@ -188,55 +186,28 @@ This is deliberately an alias for the Cuntz canonical endomorphism, not a
 claim that every continuous modular flow has already been identified with it.
 -/
 noncomputable def discreteModularStep
-    (P : RealDoubledKreinCuntzTransferData E α)
+    (P : RealDoubledKreinCuntzTransferPacket E α)
     (A : RealDoubledKreinDAGEnd E) : RealDoubledKreinDAGEnd E :=
   canonicalEndomorphism P A
 
 @[simp]
 theorem discreteModularStep_eq_canonicalEndomorphism
-    (P : RealDoubledKreinCuntzTransferData E α)
+    (P : RealDoubledKreinCuntzTransferPacket E α)
     (A : RealDoubledKreinDAGEnd E) :
     discreteModularStep P A = canonicalEndomorphism P A :=
   rfl
 
 /-- The Cuntz transfer is unital by the `O₂` range-sum relation. -/
 theorem canonicalEndomorphism_one
-    (P : RealDoubledKreinCuntzTransferData E α) :
+    (P : RealDoubledKreinCuntzTransferPacket E α) :
     canonicalEndomorphism P 1 = 1 := by
-  simpa [canonicalEndomorphism] using
-    InfoGeometry.Topology.CuntzO2Carrier.range_sum P.cuntz
-
-theorem canonicalEndomorphism_zero
-    (P : RealDoubledKreinCuntzTransferData E α) :
-    canonicalEndomorphism P 0 = 0 := by
-  unfold canonicalEndomorphism
-  rw [mul_zero, mul_zero, zero_mul, zero_mul, add_zero]
-
-theorem canonicalEndomorphism_add
-    (P : RealDoubledKreinCuntzTransferData E α)
-    (A B : RealDoubledKreinDAGEnd E) :
-    canonicalEndomorphism P (A + B) =
-      canonicalEndomorphism P A + canonicalEndomorphism P B := by
-  unfold canonicalEndomorphism
-  noncomm_ring
+  simpa [canonicalEndomorphism] using P.cuntz.range_sum
 
 /-- The packet's discrete modular step is unital. -/
 theorem discreteModularStep_one
-    (P : RealDoubledKreinCuntzTransferData E α) :
+    (P : RealDoubledKreinCuntzTransferPacket E α) :
     discreteModularStep P 1 = 1 := by
   simpa [discreteModularStep] using canonicalEndomorphism_one P
-
-theorem discreteModularStep_zero
-    (P : RealDoubledKreinCuntzTransferData E α) :
-    discreteModularStep P 0 = 0 := by
-  simpa [discreteModularStep] using canonicalEndomorphism_zero P
-
-theorem discreteModularStep_add
-    (P : RealDoubledKreinCuntzTransferData E α)
-    (A B : RealDoubledKreinDAGEnd E) :
-    discreteModularStep P (A + B) =
-      discreteModularStep P A + discreteModularStep P B := by
-  simpa [discreteModularStep] using canonicalEndomorphism_add P A B
 
 /--
 KMS fixed-point law for the Cuntz transfer.
@@ -245,36 +216,28 @@ If each branch readout contributes exactly one half, the state is fixed by the
 Cuntz canonical endomorphism.
 -/
 theorem state_fixed_by_canonicalEndomorphism
-    (P : RealDoubledKreinCuntzTransferData E α)
+    (P : RealDoubledKreinCuntzTransferPacket E α)
     (A : RealDoubledKreinDAGEnd E) :
     P.state (canonicalEndomorphism P A) = P.state A := by
-  rw [canonicalEndomorphism, P.state_add]
-  calc
-    P.state (InfoGeometry.Topology.CuntzO2Carrier.S_left P.cuntz * A *
-        star (InfoGeometry.Topology.CuntzO2Carrier.S_left P.cuntz)) +
-        P.state (InfoGeometry.Topology.CuntzO2Carrier.S_right P.cuntz * A *
-          star (InfoGeometry.Topology.CuntzO2Carrier.S_right P.cuntz)) =
-        (1 / 2 : ℝ) * P.state A + (1 / 2 : ℝ) * P.state A := by
-          exact congrArg₂ (fun x y : ℝ => x + y)
-            (P.state_left_half A) (P.state_right_half A)
-    _ = P.state A := by ring
+  rw [canonicalEndomorphism, P.state_add, P.state_left_half, P.state_right_half]
+  ring
 
 /-- Fixed-point law for the packet's discrete modular step. -/
 theorem state_fixed_by_discreteModularStep
-    (P : RealDoubledKreinCuntzTransferData E α)
+    (P : RealDoubledKreinCuntzTransferPacket E α)
     (A : RealDoubledKreinDAGEnd E) :
     P.state (discreteModularStep P A) = P.state A := by
   simpa [discreteModularStep] using state_fixed_by_canonicalEndomorphism P A
 
 /-- The Cuntz transfer packet is anchored on the real doubled Krein graph carrier. -/
 theorem graph_carrier_is_real_doubled
-    (P : RealDoubledKreinCuntzTransferData E α) :
+    (P : RealDoubledKreinCuntzTransferPacket E α) :
     P.graph.J = modular_j (E := E) ∧
       P.graph.ε = spectral_epsilon (E := E) ∧
       P.graph.K = clockAxis (E := E) := by
   exact ⟨P.graph.J_eq, P.graph.epsilon_eq, P.graph.K_eq⟩
 
-end RealDoubledKreinCuntzTransferData
+end RealDoubledKreinCuntzTransferPacket
 
 /--
 Finite graph Hodge bridge target.
@@ -285,7 +248,7 @@ bundle in the DAG layer.
 def GraphHodgeBridgeTarget (α) [BEq α] [Hashable α] : Prop :=
   ∀ (tc : TwoComplex α)
     (grading : ChiralGrading (tc.base.toGraph.nodes.size)),
-    ∃ B : FiniteGraphHodgeData α,
+    ∃ B : FiniteGraphHodgePacket α,
       B.tc = tc ∧
       B.gradingSize = tc.base.toGraph.nodes.size ∧
       B.gradingMatrix = chiralDiagMatrix grading ∧
@@ -300,8 +263,8 @@ def GraphHodgeBridgeTarget (α) [BEq α] [Hashable α] : Prop :=
 theorem graphHodgeBridgeTarget (α) [BEq α] [Hashable α] :
     GraphHodgeBridgeTarget α := by
   intro tc grading
-  refine ⟨FiniteGraphHodgeData.canonical tc grading, ?_⟩
-  simp [FiniteGraphHodgeData.canonical]
+  refine ⟨FiniteGraphHodgePacket.canonical tc grading, ?_⟩
+  simp [FiniteGraphHodgePacket.canonical]
 
 /--
 The graph-Hodge bridge lifts canonically to the real doubled
@@ -312,15 +275,15 @@ theorem realDoubledKreinGraphHodgeBridgeTarget
     (α) [BEq α] [Hashable α] :
     ∀ (tc : TwoComplex α)
       (grading : ChiralGrading (tc.base.toGraph.nodes.size)),
-      ∃ B : RealDoubledKreinGraphHodgeData E α,
+      ∃ B : RealDoubledKreinGraphHodgePacket E α,
         B.finite.tc = tc ∧
         B.finite.dirac = graphDirac tc ∧
         B.J = modular_j (E := E) ∧
         B.ε = spectral_epsilon (E := E) ∧
         B.K = clockAxis (E := E) := by
   intro tc grading
-  let finite := FiniteGraphHodgeData.canonical tc grading
-  refine ⟨RealDoubledKreinGraphHodgeData.canonical (E := E) finite, ?_⟩
+  let finite := FiniteGraphHodgePacket.canonical tc grading
+  refine ⟨RealDoubledKreinGraphHodgePacket.canonical (E := E) finite, ?_⟩
   constructor
   · rfl
   constructor

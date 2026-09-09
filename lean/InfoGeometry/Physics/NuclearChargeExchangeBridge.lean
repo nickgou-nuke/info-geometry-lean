@@ -16,17 +16,19 @@ open InfoGeometry.Physics
 noncomputable section
 
 /-- Exchange proton and neutron numbers in a nucleus. -/
-def chargeExchange (nuc : Nucleus) : Nucleus := (nuc.N, nuc.Z)
+def chargeExchange (nuc : Nucleus) : Nucleus :=
+  ⟨nuc.N, nuc.Z⟩
 
 @[simp]
 theorem chargeExchange_involutive (nuc : Nucleus) :
     chargeExchange (chargeExchange nuc) = nuc := by
+  cases nuc
   rfl
 
 @[simp]
 theorem chargeExchange_preserves_mass (nuc : Nucleus) :
     (chargeExchange nuc).A = nuc.A := by
-  simp [chargeExchange, Nucleus.A, add_comm]
+  simp [chargeExchange, Nucleus.A, Nat.add_comm]
 
 @[simp]
 theorem chargeExchange_negates_twoTz (nuc : Nucleus) :

@@ -9,7 +9,7 @@ import InfoGeometry.Canonical.PrimeHurwitzCliffordCascadeLimit
 /-!
 # InfoGeometry.Canonical.PrimeLaplaceMellinHurwitzWaveletLimit
 
-Prime-specific Laplace--Mellin / Hurwitz--Clifford wavelet limit interface.
+Prime-specific Laplace--Mellin / Hurwitz--Clifford wavelet limit socket.
 
 This file does not prove RH.
 
@@ -100,7 +100,7 @@ structure PrimeHurwitzWaveletXiRealization
 
 /--
 Bridge from the Laplace--Mellin realization to the discrete Hurwitz--Clifford
-cascade interface.
+cascade socket.
 -/
 @[rep_depth operator]
 def toPrimeHurwitzCliffordCascadeRealization

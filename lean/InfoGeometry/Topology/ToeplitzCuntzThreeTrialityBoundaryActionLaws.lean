@@ -35,6 +35,5 @@ theorem boundaryPermutationHomeomorph_mul
   ext x n
   rfl
 
-end InfoGeometry.Topology.ToeplitzCuntzThreeTriality
 
-end
+end InfoGeometry.Topology.ToeplitzCuntzThreeTriality

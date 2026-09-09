@@ -111,7 +111,10 @@ theorem cl11TraceColimitMap_unique
         (FilteredColimit.Native.moduleCocone
           cl11DirectSystem cl11TraceCocone).ι.app n) :
     g = cl11TraceColimitMap := by
-  exact FilteredColimit.Native.descendModuleCocone_unique
-    cl11DirectSystem cl11TraceCocone g hg
+  apply colimit.hom_ext
+  intro n
+  rw [hg n]
+  exact (FilteredColimit.Native.moduleColimit_desc_stage
+    cl11DirectSystem cl11TraceCocone n).symm
 
 end InfoGeometry.Canonical.Cl11FilteredDirectInverseColimit

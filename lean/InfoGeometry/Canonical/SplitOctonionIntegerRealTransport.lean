@@ -58,14 +58,14 @@ theorem cast_injective : Function.Injective cast := by
   · exact_mod_cast hy2
 
 theorem cast_zero : cast (0 : SplitOct) = (0 : PaperZorn) := by
-  ext <;> simp [cast, InfoGeometry.Algebra.ZornMatrix.zero]
+  change cast zeroZ = InfoGeometry.Algebra.ZornMatrix.zero
+  ext <;> simp [cast, zeroZ, InfoGeometry.Algebra.ZornMatrix.zero]
 
 theorem cast_add (X Y : SplitOct) : cast (X + Y) = cast X + cast Y := by
   cases X
   cases Y
   ext <;>
-    simp [cast, InfoGeometry.Algebra.ZornMatrix.add,
-      InfoGeometry.Algebra.Vec3.add]
+    simp [cast, InfoGeometry.Algebra.Vec3.add]
 
 theorem cast_mul (X Y : SplitOct) :
     cast (mulZ X Y) = cast X * cast Y := by
@@ -79,7 +79,6 @@ theorem cast_mul (X Y : SplitOct) :
       simp [cast, mulZ, InfoGeometry.Algebra.ZornMatrix.mul,
         InfoGeometry.Algebra.Vec3.add, InfoGeometry.Algebra.Vec3.sub,
         InfoGeometry.Algebra.Vec3.smul, InfoGeometry.Algebra.Vec3.cross]
-    all_goals ring
   · funext i
     fin_cases i <;>
       simp [cast, mulZ, InfoGeometry.Algebra.ZornMatrix.mul,

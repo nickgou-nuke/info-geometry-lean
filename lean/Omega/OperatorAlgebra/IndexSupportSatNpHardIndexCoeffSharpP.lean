@@ -11,7 +11,7 @@ variable {Formula Assignment : Type*} [Fintype Formula] [DecidableEq Formula]
 theorem index_support_sat_np_hard_index_coeff_sharpp_characterization
     (satEval : Formula → Assignment → Bool) :
     (∀ φ, verifierProjectorInSupport satEval φ ↔ ∃ a, satEval φ a = true) ∧
-      (∀ φ, foldWatataniIndexElement (verifierFold satEval) φ = verifierCandidateCount satEval φ) := by
+      (∀ φ, foldWatataniIndexElement (verifierFold satEval) φ = verifierWitnessCount satEval φ) := by
   simpa [and_comm] using paper_np_watatani_index_support_characterization satEval
 
 end

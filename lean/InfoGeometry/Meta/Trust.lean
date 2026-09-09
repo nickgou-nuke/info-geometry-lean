@@ -23,7 +23,7 @@ def constantKindLabel : ConstantInfo → String
   | .thmInfo _ => "theorem"
   | .defnInfo _ => "def"
   | .opaqueInfo _ => "opaque"
-  | .axiomInfo _ => "ax!om"
+  | .axiomInfo _ => "axiom"
   | .inductInfo _ => "inductive"
   | .ctorInfo _ => "constructor"
   | .recInfo _ => "recursor"
@@ -80,7 +80,7 @@ private def hasRepDepthViolation (env : Environment) (declName : Name) : Bool :=
 private def forbiddenRegionKind
     (region : AdmissionRegion)
     (info : ConstantInfo) : Bool :=
-  region == .protectedRegion && constantKindLabel info = "ax!om"
+  region == .protectedRegion && constantKindLabel info = "axiom"
 
 /-- Collect hard-trust evidence for a declaration under the current policy. -/
 def collectHardEvidence (policy : PolicySnapshot) (declName : Name) : CoreM HardEvidence := do

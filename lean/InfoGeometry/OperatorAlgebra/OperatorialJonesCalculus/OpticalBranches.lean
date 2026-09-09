@@ -5,7 +5,7 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus
 
-/-! ## 3. Optical branch definitions -/
+/-! ## 3. Optical branch sockets -/
 
 /--
 Brewster rank-collapse branch.

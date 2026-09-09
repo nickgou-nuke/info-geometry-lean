@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/FiveGradedInformationLedger.lean
 
-Projected information accounting identity and five-grade memory ledger interfaces.
+Projected information accounting identity and five-grade memory ledger sockets.
 -/
 
 import Mathlib
@@ -16,7 +16,6 @@ variable
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Obs] [Module ℝ Obs]
 
-omit [LieAlgebra ℝ L] in
 /--
 Projected information accounting identity.
 
@@ -47,7 +46,7 @@ theorem observedDefect_eq_obs_hidden_of_cross_identity
   rw [hassoc, map_add]
   abel
 
-/-- Five-graded Lie-algebra carrier used by horizon/ledger interfaces. -/
+/-- Five-graded Lie-algebra carrier used by horizon/ledger sockets. -/
 structure FiveGrading
     (L : Type*) [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] where
   gNegTwo : Submodule ℝ L
@@ -83,7 +82,7 @@ theorem bracket_graded_holds :
   ⟨@G.negOne_posOne_mem_zero, G.bracket_negTwo_posTwo,
     @G.posOne_posOne_mem_posTwo, @G.negOne_negOne_mem_negTwo⟩
 
-/-- Backward-compatible mixed-grade bracket property name. -/
+/-- Backward-compatible mixed-grade bracket witness name. -/
 theorem bracket_negOne_posOne_mem_zero
     {X Y : L}
     (hX : X ∈ G.gNegOne)
@@ -178,7 +177,7 @@ theorem true_bracket_mem_zero
 end FiveGradeProjectedAccounting
 
 /--
-Five-grade black-hole information ledger interface.
+Five-grade black-hole information ledger socket.
 -/
 structure BlackHoleInformationLedger
     (J L Obs Memory : Type*)
@@ -217,7 +216,7 @@ def visibleHiddenProjection
     (x y : J) : Obs :=
   A.obs (B.hiddenGradeTwoSum x y)
 
-/-- Re-export of ledger nontrivial-memory implies nontrivial-hidden property. -/
+/-- Re-export of ledger nontrivial-memory implies nontrivial-hidden witness. -/
 theorem hiddenGradeTwoSum_ne_zero_of_memoryReadout_ne_zero
     (x y : J)
     (hmem : B.memoryReadout (B.hiddenGradeTwoSum x y) ≠ 0) :

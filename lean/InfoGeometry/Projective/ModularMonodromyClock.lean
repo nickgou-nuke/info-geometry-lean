@@ -11,7 +11,7 @@ A small, fully checkable bridge between:
 2. a square-zero generator matrix whose modular flow is parabolic/unipotent.
 
 This file avoids placeholders. Any statement about a nilpotent generator is made
-with an explicit algebraic property.
+with an explicit algebraic hypothesis.
 -/
 
 noncomputable section

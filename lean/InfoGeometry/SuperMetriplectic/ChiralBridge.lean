@@ -8,8 +8,8 @@ open scoped InnerProductSpace
 /-!
 # SuperMetriplectic Chiral Bridge
 
-Small theorem-backed bridge from the conservative carrier-level chiral closure
-packet into the already owned Drazin/chiral supercharge lane.
+Small theorem-backed bridge from the conservative scalar chiral closure packet
+into the already owned Drazin/chiral supercharge lane.
 
 This file does not derive new chiral or Drazin facts. It only re-expresses the
 existing owner packet from `UnifiedSuperchargeAlgebra` in the axiomatic

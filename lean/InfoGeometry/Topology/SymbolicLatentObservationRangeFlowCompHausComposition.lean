@@ -34,5 +34,3 @@ theorem SymbolicLatentObservableModularFlow.observationQuotientRangeFlowCompHaus
   exact Φ.observationQuotientRangeFlowHomeomorph_comp_apply S h_cont s t q
 
 end InfoGeometry.Topology
-
-end

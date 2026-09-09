@@ -56,10 +56,14 @@ theorem poleScale_inv (p z : ℂ) {lam : ℝ} (hlam : lam ≠ 0) :
 def poleScalePoint (C D : ℂ) (lam : ℝ) (v : ℂ) : ℂ :=
   -(C / D) + (lam : ℂ) * v
 
-theorem poleScalePoint_eq_scale_direction (C D : ℂ) (lam : ℝ) (v : ℂ) :
-    poleScalePoint C D lam v =
-      poleScale (-(C / D)) lam (-(C / D) + v) := by
-  simp [poleScalePoint, poleScale]
+/-- The exact pole-coordinate identity for a fractional-linear map. -/
+theorem mobius_pole_identity
+    (A B C D ε : ℂ) (hD : D ≠ 0) (hε : ε ≠ 0) :
+    -(A + B * (-C / D + ε)) /
+        (C + D * (-C / D + ε)) =
+      -(A * D - B * C) / (D ^ 2 * ε) - B / D := by
+  field_simp [hD, hε]
+  ring
 
 theorem poleScalePoint_mul_direction
     (C D : ℂ) (lam mu : ℝ) (v : ℂ) :
@@ -70,11 +74,12 @@ theorem poleScalePoint_mul_direction
 
 theorem poleScalePoint_one (C D v : ℂ) :
     poleScalePoint C D 1 v = -(C / D) + v := by
-  simp [poleScalePoint]
+  norm_num [poleScalePoint]
 
 theorem poleScalePoint_sub_pole (C D : ℂ) (lam : ℝ) (v : ℂ) :
     poleScalePoint C D lam v - (-(C / D)) = (lam : ℂ) * v := by
-  simp [poleScalePoint]
+  simp only [poleScalePoint, neg_div]
+  abel
 
 theorem norm_poleScalePoint_sub_pole
     (C D : ℂ) {lam : ℝ} (hlam : 0 ≤ lam) (v : ℂ) :
@@ -119,15 +124,6 @@ theorem poleBlowupCoefficient_ne_zero
 def mobiusPolePath (A B C D ε : ℂ) : ℂ :=
   -(A + B * (-C / D + ε)) / (C + D * (-C / D + ε))
 
-/-! ## Compatibility with the original punctured pole path -/
-
-theorem mobiusPolePath_eq_asanoRootMap_poleScale
-    (A B C D : ℂ) (lam : ℝ) (v : ℂ) :
-    mobiusPolePath A B C D ((lam : ℂ) * v) =
-      asanoRootMap A B C D (poleScalePoint C D lam v) := by
-  simp only [mobiusPolePath, asanoRootMap, poleScalePoint]
-  ring
-
 theorem mobiusPolePath_scale_transport
     (A B C D : ℂ) (lam : ℝ) (v : ℂ)
     (hD : D ≠ 0)
@@ -136,11 +132,10 @@ theorem mobiusPolePath_scale_transport
     mobiusPolePath A B C D ((lam : ℂ) * v) =
       (lam : ℂ)⁻¹ *
           (-(A * D - B * C) / (D ^ 2 * v)) - B / D := by
-  rw [mobiusPolePath_eq_asanoRootMap_poleScale]
-  change -((A + B * poleScalePoint C D lam v) /
-      (C + D * poleScalePoint C D lam v)) = _
-  convert mobiusRoot_at_poleScale_inverse_scale A B C D lam v hD hlam hv using 1 <;>
-    ring
+  unfold mobiusPolePath
+  rw [mobius_pole_identity A B C D ((lam : ℂ) * v) hD
+    (mul_ne_zero hlam hv)]
+  field_simp [hlam, hD, hv]
 
 /-- Nonzero determinant forces the Möbius root to escape every bounded set at
 the denominator pole. -/

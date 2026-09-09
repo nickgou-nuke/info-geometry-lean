@@ -114,5 +114,3 @@ theorem boundaryAtlasSugawaraPacket_currentSugawara_lgen_apply
   simpa [boundaryAtlasSugawaraPacket] using
     (InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas_currentSugawara_lgen_apply
       (𝕜 := 𝕜) α n)
-
-end

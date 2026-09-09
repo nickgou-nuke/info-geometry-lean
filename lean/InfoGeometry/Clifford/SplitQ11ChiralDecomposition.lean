@@ -13,8 +13,8 @@ This module does not add any new analytic content. It packages the existing
 decomposition and proves the exact left/right splitting laws for an arbitrary
 split `Cl(1,1)` element.
 
-No interface.
-No property.
+No socket.
+No certificate.
 No CFT claim.
 -/
 

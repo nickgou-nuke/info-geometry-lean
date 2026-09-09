@@ -24,22 +24,25 @@ The adjunction is: `refine a ≤ b ↔ a ≤ coarse b`.
 namespace InfoGeometry.Canonical.RefinementGaloisConnection
 
 open CantorCylinderLattice
+
+abbrev BinaryWord (n : ℕ) := CantorCylinderLattice.BinaryWord n
 abbrev KreinSector := KreinProjectorLattice.KreinSector
-abbrev Sector (n : ℕ) := Set ((Fin n → Bool)) × KreinSector
+abbrev Sector (n : ℕ) := Set (BinaryWord n) × KreinSector
+abbrev ProjectionAssignment (n : ℕ) := BinaryWord n → KreinSector
 
 /-! ## 1. Spatial Refinement and Coarse-Graining -/
 
 /-- Refines a level `n` spatial set to a level `n+1` spatial set.
 
 This is the preimage of `truncateWord`. -/
-def refineSpatial {n : ℕ} (S : Set ((Fin n → Bool))) : Set ((Fin (n + 1) → Bool)) :=
+def refineSpatial {n : ℕ} (S : Set (BinaryWord n)) : Set (BinaryWord (n + 1)) :=
   truncateWord ⁻¹' S
 
 /-- Coarse-grains a level `n+1` spatial set to a level `n` spatial set.
 
 This is the right adjoint to `refineSpatial`. A word `w` is in the coarse-grained
 set if both its children `w0` and `w1` are in `T`. -/
-def coarseSpatial {n : ℕ} (T : Set ((Fin (n + 1) → Bool))) : Set ((Fin n → Bool)) :=
+def coarseSpatial {n : ℕ} (T : Set (BinaryWord (n + 1))) : Set (BinaryWord n) :=
   {w | ∀ v, truncateWord v = w → v ∈ T}
 
 /-- The fundamental spatial Galois connection: `refineSpatial ⊣ coarseSpatial`. -/
@@ -70,6 +73,21 @@ def coarseSector {n : ℕ} (s : Sector (n + 1)) :
     Sector n :=
   (coarseSpatial s.1, s.2)
 
+/-- Coarse-graining is a left inverse to refinement on sectors. -/
+@[simp] theorem coarseSector_refineSector {n : ℕ} (s : Sector n) :
+    coarseSector (refineSector s) = s := by
+  rcases s with ⟨S, κ⟩
+  apply Prod.ext
+  · ext w
+    constructor
+    · intro hw
+      have hm := hw (leftChild w) (truncateWord_leftChild w)
+      change leftChild w ∈ refineSpatial S at hm
+      simpa [refineSpatial] using hm
+    · intro hw v hv
+      exact Set.mem_preimage.mpr (hv ▸ hw)
+  · rfl
+
 /-- The full sector Galois connection: `refineSector ⊣ coarseSector`. -/
 theorem sector_galois_connection (n : ℕ) :
     GaloisConnection (@refineSector n) (@coarseSector n) := by
@@ -78,52 +96,10 @@ theorem sector_galois_connection (n : ℕ) :
   have h := spatial_galois_connection n a.1 b.1
   tauto
 
-theorem refineSpatial_monotone {n : ℕ} :
-    Monotone (@refineSpatial n) := by
-  exact (spatial_galois_connection n).monotone_l
-
-theorem coarseSpatial_monotone {n : ℕ} :
-    Monotone (@coarseSpatial n) := by
-  exact (spatial_galois_connection n).monotone_u
-
-theorem refineSector_monotone {n : ℕ} :
-    Monotone (@refineSector n) := by
-  exact (sector_galois_connection n).monotone_l
-
-theorem coarseSector_monotone {n : ℕ} :
-    Monotone (@coarseSector n) := by
-  exact (sector_galois_connection n).monotone_u
-
-theorem refineSpatial_coarseSpatial_le {n : ℕ}
-    (T : Set ((Fin (n + 1) → Bool))) :
-    refineSpatial (coarseSpatial T) ⊆ T := by
-  intro v hv
-  exact hv v rfl
-
-theorem refineSector_coarseSector_le {n : ℕ}
-    (s : Sector (n + 1)) :
-    refineSector (coarseSector s) ≤ s := by
-  exact (sector_galois_connection n).l_u_le s
-
-theorem coarseSpatial_refineSpatial {n : ℕ}
-    (S : Set ((Fin n → Bool))) :
-    coarseSpatial (refineSpatial S) = S := by
-  ext w
-  constructor
-  · intro hw
-    simpa [refineSpatial] using
-      hw (leftChild w) (truncateWord_leftChild w)
-  · intro hw v hv
-    change truncateWord v ∈ S
-    rw [hv]
-    exact hw
-
-theorem coarseSector_refineSector {n : ℕ} (s : Sector n) :
-    coarseSector (refineSector s) = s := by
-  cases s with
-  | mk spatial krein =>
-      simp only [coarseSector, refineSector]
-      rw [coarseSpatial_refineSpatial]
+/-- The unit inequality of the refinement/coarse-graining adjunction. -/
+theorem refineSector_le_coarseSector_refineSector {n : ℕ} (s : Sector n) :
+    s ≤ coarseSector (refineSector s) := by
+  exact (sector_galois_connection n).le_u_l s
 
 /-! ## 3. Order Properties -/
 

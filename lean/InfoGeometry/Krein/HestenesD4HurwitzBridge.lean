@@ -18,12 +18,12 @@ Hestenes--Krein / Connes--Wilson / Möbius pipeline.  It also does not construct
 the D4 root lattice, Hurwitz units, triality, self-duality, or affine
 Kac--Moody representation theory from scratch.
 
-Instead it exposes a theorem-safe arithmetic datum:
+Instead it exposes a theorem-safe arithmetic socket:
 
 * the 24 candidate Hurwitz/D4 roots are identified with the finite
   Wigner--Jones atom layer already carried by `StandardFormOmegaVolumeBridge`;
 * triality is an explicit permutation relation;
-* the affine null-root data are calibrated to the existing Drazin
+* the affine null-root sockets are calibrated to the existing Drazin
   `ProjectorSplit.uPlus/uMinus` arrows;
 * same-arrow null-root nilpotence is inherited from `ProjectorSplit`;
 * Virasoro centrality is read from the existing `VirasoroAlgebra.cgen_bracket`.
@@ -63,7 +63,7 @@ local instance d4HurwitzIsScalarTower : IsScalarTower ℝ EndH EndH := inferInst
 Finite root-family, triality, and central-charge calibration carrier.
 
 It records 24 candidate roots and discrete symmetry actions on their indices.
-The name reflects the intended future realization, but this finite datum does
+The name reflects the intended future realization, but this finite socket does
 not assert the absent D4 lattice, Hurwitz order, or affine current algebra.
 
 No construction of the Hurwitz maximal order, D4 self-duality, or affine
@@ -369,7 +369,7 @@ theorem affineNullRootMinus_eq_uMinus (A : EndH) :
     B.affineNullRootMinus A = B.drazinSplit.uMinus A :=
   rfl
 
-/-- The supplied triality property is available. -/
+/-- The supplied triality certificate is available. -/
 @[rep_depth projective]
 theorem triality_readback :
     ∀ g : MoebiusParameter, B.trialityAction g ^ 3 = 1 :=
@@ -409,19 +409,19 @@ theorem hurwitzRoot_expectation_moebius_invariant
       B.moebius.wilson.volume.atomExpectation i :=
   B.moebius.atomExpectation_wordAction_invariant g i
 
-/-- Positive affine null-root readback to `uPlus`. -/
+/-- Positive affine null-root socket readback to `uPlus`. -/
 @[rep_depth operator]
 theorem affineNullRootPlus_eq_uPlus_readback (A : EndH) :
     B.affineNullRootPlus A = B.drazinSplit.uPlus A :=
   B.affineNullRootPlus_eq_uPlus A
 
-/-- Negative affine null-root readback to `uMinus`. -/
+/-- Negative affine null-root socket readback to `uMinus`. -/
 @[rep_depth operator]
 theorem affineNullRootMinus_eq_uMinus_readback (A : EndH) :
     B.affineNullRootMinus A = B.drazinSplit.uMinus A :=
   B.affineNullRootMinus_eq_uMinus A
 
-/-- Same-arrow nilpotence for the positive affine null root. -/
+/-- Same-arrow nilpotence for the positive affine null-root socket. -/
 @[rep_depth operator]
 theorem affineNullRootPlus_mul_affineNullRootPlus_eq_zero (A C : EndH) :
     B.affineNullRootPlus A * B.affineNullRootPlus C = 0 := by
@@ -429,7 +429,7 @@ theorem affineNullRootPlus_mul_affineNullRootPlus_eq_zero (A C : EndH) :
     B.affineNullRootPlus_eq_uPlus_readback C]
   exact B.drazinSplit.uPlus_mul_uPlus_eq_zero A C
 
-/-- Same-arrow nilpotence for the negative affine null root. -/
+/-- Same-arrow nilpotence for the negative affine null-root socket. -/
 @[rep_depth operator]
 theorem affineNullRootMinus_mul_affineNullRootMinus_eq_zero (A C : EndH) :
     B.affineNullRootMinus A * B.affineNullRootMinus C = 0 := by

@@ -25,14 +25,8 @@ universe u
 A linear functional (state candidate) on the `n`-th stage of the CPT Clifford tower.
 The stage is an algebra of finite operators built from 2x2 CPT symmetry atoms.
 -/
-abbrev FiniteStageFunctional (n : ℕ) := Stage n →+ ℝ
-
-namespace FiniteStageFunctional
-
-/-- Compatibility accessor for the native additive functional carrier. -/
-abbrev func (ω : FiniteStageFunctional n) : Stage n →+ ℝ := ω
-
-end FiniteStageFunctional
+structure FiniteStageFunctional (n : ℕ) where
+  func : Stage n →+ ℝ
 
 /-- 
 A compatible sequence of finite linear functionals. 
@@ -46,14 +40,8 @@ def IsCompatibleFunctionalFamily (omega : ∀ n, FiniteStageFunctional n) : Prop
 The global state on the infinite inductive colimit CAR C*-algebra. 
 This represents the macroscopic field theory vacuum.
 -/
-abbrev GlobalLimitFunctional := Limit →+ ℝ
-
-namespace GlobalLimitFunctional
-
-/-- Compatibility accessor for the native colimit functional carrier. -/
-abbrev func (ω : GlobalLimitFunctional) : Limit →+ ℝ := ω
-
-end GlobalLimitFunctional
+structure GlobalLimitFunctional where
+  func : Limit →+ ℝ
 
 /-- 
 The limit functional restricted to a finite stage `n` matches the finite stage functional.

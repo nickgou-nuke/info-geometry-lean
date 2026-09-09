@@ -1,6 +1,6 @@
 import proofs.QCDScaleExtraction
 import proofs.FierzIdentities
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 
 /-!
 # GNS Modular Observables — expectation values, J involution, Fierz soldering

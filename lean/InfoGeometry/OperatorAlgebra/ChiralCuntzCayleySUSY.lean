@@ -44,7 +44,8 @@ theorem cayley_plus_spin_transfer :
   exact chiralSigmaPlus_zero_mul_one
 
 theorem cayley_minus_spin_transfer :
-    chiralSigmaMinus 0 * chiralSigmaMinus 1 = -(chiralSigmaPlus 2) := by
+    chiralSigmaMinus 0 * chiralSigmaMinus 1 =
+      ZornMatrix.sub (0 : SplitZornC) (chiralSigmaPlus 2) := by
   exact chiralSigmaMinus_zero_mul_one
 
 theorem cayley_mixed_scalar_channel (i j : Fin 3) :

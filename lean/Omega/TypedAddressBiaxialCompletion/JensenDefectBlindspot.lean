@@ -16,34 +16,17 @@ recovery path, and any fixed-chart blindspot instance either enters that recover
 null witness while still forcing an address-collision budget witness.
     prop:typed-address-biaxial-completion-jensen-defect-blindspot -/
 theorem paper_typed_address_biaxial_completion_jensen_defect_blindspot
-    {radiusBlindspotNecessary addressLedgerNecessary : Prop}
-    (hRadiusBlindspot : radiusBlindspotNecessary)
-    (hAddressLedger : addressLedgerNecessary)
+    (B : Omega.CircleDimension.RadiusBlindspotJointBudgetData)
     (J : JensenDefectFiniteizationData) {rho : ℝ} (hrho : 0 < rho) (hrho_lt : rho < 1)
-    {explicitFourierDecomposition depthGroupedSpectrum smallestDepthExponentialFactored
-      nextDepthGapTailBound leadingAsymptoticSeparation leadingLayerRecovered : Prop}
-    (hExplicitFourierDecomposition : explicitFourierDecomposition)
-    (hDepthGroupedSpectrum : depthGroupedSpectrum)
-    (hSmallestDepthExponentialFactored : smallestDepthExponentialFactored)
-    (hNextDepthGapTailBound : nextDepthGapTailBound)
-    {lorentzProfileModel explicitFourierFormulaInput positiveFrequencyRestriction
-      intervalUniquenessPrinciple fourierClosedForm finiteExponentialSpectrum openIntervalInjective : Prop}
-    (hLorentzProfileModel : lorentzProfileModel)
-    (hExplicitFourierFormulaInput : explicitFourierFormulaInput)
-    (hPositiveFrequencyRestriction : positiveFrequencyRestriction)
-    (hIntervalUniquenessPrinciple : intervalUniquenessPrinciple)
-    (deriveFourierClosedForm :
-      lorentzProfileModel → explicitFourierFormulaInput → fourierClosedForm)
-    (deriveFiniteExponentialSpectrum :
-      fourierClosedForm → positiveFrequencyRestriction → finiteExponentialSpectrum)
-    (deriveOpenIntervalInjective :
-      finiteExponentialSpectrum → intervalUniquenessPrinciple → openIntervalInjective)
-    (deriveLeadingAsymptoticSeparation :
-      fourierClosedForm → explicitFourierDecomposition → depthGroupedSpectrum →
-        smallestDepthExponentialFactored → nextDepthGapTailBound → leadingAsymptoticSeparation)
-    (recoverLeadingLayer :
-      leadingAsymptoticSeparation → finiteExponentialSpectrum → openIntervalInjective →
-        leadingLayerRecovered)
+    (D : Omega.CircleDimension.ComovingHorizonScanFirstLayerExtractionData)
+    (hExplicitFourierDecomposition : D.explicitFourierDecomposition)
+    (hDepthGroupedSpectrum : D.depthGroupedSpectrum)
+    (hSmallestDepthExponentialFactored : D.smallestDepthExponentialFactored)
+    (hNextDepthGapTailBound : D.nextDepthGapTailBound)
+    (hLorentzProfileModel : D.fourierClosedData.lorentzProfileModel)
+    (hExplicitFourierFormulaInput : D.fourierClosedData.explicitFourierFormulaInput)
+    (hPositiveFrequencyRestriction : D.fourierClosedData.positiveFrequencyRestriction)
+    (hIntervalUniquenessPrinciple : D.fourierClosedData.intervalUniquenessPrinciple)
     (offsliceAssertion prefixRecoveryRoute nullBlindspotWitness noThirdPath : Prop)
     (hSplit : offsliceAssertion → prefixRecoveryRoute ∨ nullBlindspotWitness)
     (hNoThird : offsliceAssertion → noThirdPath)
@@ -54,8 +37,8 @@ theorem paper_typed_address_biaxial_completion_jensen_defect_blindspot
       (prefixRecoveryRoute ∨ nullBlindspotWitness) ∧
       noThirdPath ∧
       (0 ≤ J.defect rho ∧ (J.defect rho = 0 ↔ J.zeroFree rho)) ∧
-      (radiusBlindspotNecessary ∧ addressLedgerNecessary) ∧
-      (leadingAsymptoticSeparation ∧ leadingLayerRecovered) ∧
+      (B.radiusBlindspotNecessary ∧ B.addressLedgerNecessary) ∧
+      (D.leadingAsymptoticSeparation ∧ D.leadingLayerRecovered) ∧
       ∃ a : Fin (2 ^ b), c * T^2 * Real.log T / (2 : ℝ) ^ b ≤ addressOccupancy a := by
   intro hOffslice
   have hOffsliceSplit :
@@ -66,18 +49,15 @@ theorem paper_typed_address_biaxial_completion_jensen_defect_blindspot
       0 ≤ J.defect rho ∧ (J.defect rho = 0 ↔ J.zeroFree rho) :=
     paper_typed_address_biaxial_completion_jensen_defect_finiteization J hrho hrho_lt
   have hBlindspot :
-      radiusBlindspotNecessary ∧ addressLedgerNecessary :=
-    Omega.CircleDimension.paper_cdim_radius_blindspot_and_joint_discrete_budget_orthogonal
-      hRadiusBlindspot hAddressLedger
+      B.radiusBlindspotNecessary ∧ B.addressLedgerNecessary :=
+    Omega.CircleDimension.paper_cdim_radius_blindspot_and_joint_discrete_budget_orthogonal B
   have hRecovery :
-      leadingAsymptoticSeparation ∧ leadingLayerRecovered :=
-    Omega.CircleDimension.paper_cdim_comoving_horizon_scan_first_layer_extraction
+      D.leadingAsymptoticSeparation ∧ D.leadingLayerRecovered :=
+    Omega.CircleDimension.paper_cdim_comoving_horizon_scan_first_layer_extraction D
       hExplicitFourierDecomposition hDepthGroupedSpectrum
       hSmallestDepthExponentialFactored hNextDepthGapTailBound
       hLorentzProfileModel hExplicitFourierFormulaInput
       hPositiveFrequencyRestriction hIntervalUniquenessPrinciple
-      deriveFourierClosedForm deriveFiniteExponentialSpectrum deriveOpenIntervalInjective
-      deriveLeadingAsymptoticSeparation recoverLeadingLayer
   rcases
       BoundaryAddressCollision.paper_typed_address_biaxial_completion_boundary_address_collision
         c T b addressOccupancy hNonneg hTotal with

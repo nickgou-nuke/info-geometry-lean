@@ -103,5 +103,3 @@ theorem projectionRankSystem_completion_real_readout_eq_bounded
   simpa [dyadicToRealInterval] using h
 
 end InfoGeometry.Canonical.DyadicDirectLimitCompletionTopologicalBridge
-
-end

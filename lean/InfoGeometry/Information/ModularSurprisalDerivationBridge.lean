@@ -112,6 +112,7 @@ theorem adK_algebra_one (K : A) : adK_algebra (R := R) K 1 = 0 := by
 
 end AlgebraModularDerivation
 
+
 /-!
 =============================================================================
 PART 3: Logarithmic Radon–Nikodym Derivative and Cocycle Additivity
@@ -206,8 +207,10 @@ structure TrifoldSurprisal (A : Type*) [AddCommGroup A] [Module R A] where
   unit_I : A
   chiral_Gamma : A
   -- Volume / shape invariants
-  tr_K0_zero : True
-  str_K0_zero : True
+  trace : A → R
+  supertrace : A → R
+  tr_K0_zero : trace K0 = 0
+  str_K0_zero : supertrace K0 = 0
 
 /-- Reconstructed modular Hamiltonian operator element. -/
 def TrifoldSurprisal.reconstruct {A : Type*} [AddCommGroup A] [Module R A]

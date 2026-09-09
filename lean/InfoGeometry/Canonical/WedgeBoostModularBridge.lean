@@ -101,7 +101,7 @@ theorem modularTimeOfWedgeBoost_agrees_with_standardForm (τ : ℝ) :
   rfl
 
 /--
-Compatibility property: modular transport flow is identified with Unruh flow
+Compatibility witness: modular transport flow is identified with Unruh flow
 under wedge-normalized time.
 -/
 @[rep_depth transport]
@@ -112,7 +112,7 @@ def FlowEqUnruh (modularSeed : EndH) : Prop :=
 
 /--
 Direct wedge bridge from the single flow-equivalence theorem, without packaging
-it into a compatibility property structure.
+it into a compatibility witness structure.
 -/
 @[rep_depth transport]
 theorem flow_at_wedgeParameter_of_flowEqUnruh
@@ -137,7 +137,7 @@ theorem flow_at_wedgeParameter_of_flowEqUnruh
           rw [wedgeBoost_roundtrip τwedge]
 
 /--
-Compatibility property: modular transport flow is identified with Unruh flow
+Compatibility witness: modular transport flow is identified with Unruh flow
 under wedge-normalized time.
 -/
 @[rep_depth transport]

@@ -50,7 +50,7 @@ theorem cl11_limit_functional_recovers_trace
       cl11CompatibleFunctionalFamily Ω)
     (n : ℕ) (A : Stage n) :
     Ω (cl11TensorInductiveLimit.inj n A) =
-      cl11CompatibleFunctionalFamily n A := by
+      cl11CompatibleFunctionalFamily.omega n A := by
   exact TensorInductiveLimit.limit_functional_recovers_stage
     cl11TensorInductiveLimit cl11CompatibleFunctionalFamily Ω hΩ n A
 
@@ -64,5 +64,3 @@ theorem cl11_limit_functional_recovers_normalized_trace
   rfl
 
 end InfoGeometry.Canonical.Cl11TensorInductiveLimit
-
-end

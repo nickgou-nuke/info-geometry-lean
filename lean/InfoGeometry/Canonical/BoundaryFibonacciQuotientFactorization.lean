@@ -129,5 +129,3 @@ theorem boundaryFibonacci_quotient_factor_intertwines
       hS1 hΦ h1⟩
 
 end InfoGeometry.Canonical.BoundaryFibonacciQuotientFactorization
-
-end

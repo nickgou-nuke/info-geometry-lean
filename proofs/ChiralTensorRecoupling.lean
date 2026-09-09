@@ -1,5 +1,5 @@
 import Mathlib
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 import Mathlib.LinearAlgebra.TensorProduct.Basic
 import Mathlib.RingTheory.TensorProduct.Basic
 

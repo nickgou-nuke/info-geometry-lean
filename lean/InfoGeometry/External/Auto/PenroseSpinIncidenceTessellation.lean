@@ -52,6 +52,23 @@ theorem incidence_alpha_cycle_relation :
       (NonIsoConf3QuadricD4Model.reduceAlphaProduct AlphaProduct.a23a13) = 0 :=
   NonIsoConf3QuadricD4Model.alpha_arnold_relation
 
+/-- Consolidated finite incidence and arithmetic statement. -/
+theorem penrose_spin_incidence_tessellation_synthesis :
+    Fintype.card SpinTileGenerator = 6 ∧
+    (∀ e : Edge3, genDegree (edgeToAlpha e) = 1) ∧
+    (∀ e : Edge3, genDegree (edgeToBeta e) = 3) ∧
+    NonIsoConf3QuadricD4Model.vadd
+      (NonIsoConf3QuadricD4Model.vsub
+        (NonIsoConf3QuadricD4Model.reduceAlphaProduct AlphaProduct.a12a23)
+        (NonIsoConf3QuadricD4Model.reduceAlphaProduct AlphaProduct.a12a13))
+      (NonIsoConf3QuadricD4Model.reduceAlphaProduct AlphaProduct.a23a13) = 0 ∧
+    countPolynomial 3 = 1296 :=
+  ⟨incidence_edge_generator_card,
+    edgeToAlpha_degree,
+    edgeToBeta_degree,
+    incidence_alpha_cycle_relation,
+    countPolynomial_at_three⟩
+
 end PenroseSpinIncidenceTessellation
 
 end noncomputable section

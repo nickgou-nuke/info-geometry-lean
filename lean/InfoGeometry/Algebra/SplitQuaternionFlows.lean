@@ -83,4 +83,16 @@ theorem norm_parabolic_flow (T : ℝ) :
   unfold splitNorm parabolicFlow
   ring
 
+/-- Compatibility alias for the user's snake-case notation. -/
+noncomputable abbrev elliptic_flow := ellipticFlow
+
+/-- Compatibility alias for the user's snake-case notation. -/
+noncomputable abbrev hyperbolic_flow := hyperbolicFlow
+
+/-- Compatibility alias for the user's snake-case notation. -/
+abbrev parabolic_flow := parabolicFlow
+
+/-- Compatibility alias for the split norm. -/
+abbrev norm := splitNorm
+
 end InfoGeometry.Algebra.SplitQuaternionFlows

@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Canonical.BinaryCrystalWeylBlochBridge
@@ -28,7 +29,7 @@ open TypeIIIModularCantorSystem
 
 /-- Binary-lattice carrier used by the symbolic crystal. -/
 @[rep_depth operator]
-abbrev BinaryLattice := List Bool
+abbrev BinaryLattice := TypeIIIModularCantorSystem.BinaryWord
 
 /-- Observable algebra on the binary lattice. -/
 @[rep_depth operator]
@@ -37,22 +38,22 @@ abbrev BinaryCrystalObservable := BinaryLattice → ℂ
 /-- A crystal cell is the Cantor cylinder at a binary address. -/
 @[rep_depth operator]
 def binaryUnitCell (w : BinaryLattice) : Set BinaryLattice :=
-  TypeIIIModularCantorSystem.closedCylinder w
+  BinaryWord.closedCylinder w
 
 /-- Every word belongs to its own crystal cell. -/
 @[rep_depth operator]
 theorem binaryUnitCell_self_mem (w : BinaryLattice) :
     w ∈ binaryUnitCell w := by
-  simpa [binaryUnitCell] using (TypeIIIModularCantorSystem.mem_closedCylinder_self w)
+  simpa [binaryUnitCell] using (BinaryWord.mem_closedCylinder_self w)
 
 /-- The crystal cell splits into the root cell and the two binary children. -/
 @[rep_depth operator]
 theorem binaryUnitCell_split (w : BinaryLattice) :
     binaryUnitCell w =
       ({w} : Set BinaryLattice)
-        ∪ binaryUnitCell (TypeIIIModularCantorSystem.child w false)
-        ∪ binaryUnitCell (TypeIIIModularCantorSystem.child w true) := by
-  simpa [binaryUnitCell] using (TypeIIIModularCantorSystem.closedCylinder_split w)
+        ∪ binaryUnitCell (BinaryWord.child w false)
+        ∪ binaryUnitCell (BinaryWord.child w true) := by
+  simpa [binaryUnitCell] using (BinaryWord.closedCylinder_split w)
 
 /-- Depth of a binary address. -/
 @[rep_depth operator]
@@ -67,38 +68,14 @@ def wordParity (w : BinaryLattice) : Bool :=
 /-- A single binary refinement step increases the depth by one. -/
 @[rep_depth operator]
 theorem binaryWord_child_depth (w : BinaryLattice) (b : Bool) :
-    wordDepth (TypeIIIModularCantorSystem.child w b) = wordDepth w + 1 := by
-  simp [wordDepth, TypeIIIModularCantorSystem.child]
+    wordDepth (BinaryWord.child w b) = wordDepth w + 1 := by
+  simp [wordDepth, BinaryWord.child]
 
 /-- A binary refinement step toggles the depth parity. -/
 @[rep_depth operator]
 theorem binaryWord_child_parity (w : BinaryLattice) (b : Bool) :
-    wordParity (TypeIIIModularCantorSystem.child w b) = not (wordParity w) := by
-  simp [wordParity, wordDepth, TypeIIIModularCantorSystem.child, Nat.bodd_succ]
-
-@[rep_depth operator]
-theorem binaryWord_grandchild_depth (w : BinaryLattice) (b₁ b₂ : Bool) :
-    wordDepth
-        (TypeIIIModularCantorSystem.child
-          (TypeIIIModularCantorSystem.child w b₁) b₂) =
-      wordDepth w + 2 := by
-  calc
-    wordDepth
-        (TypeIIIModularCantorSystem.child
-          (TypeIIIModularCantorSystem.child w b₁) b₂) =
-        wordDepth (TypeIIIModularCantorSystem.child w b₁) + 1 :=
-      binaryWord_child_depth (TypeIIIModularCantorSystem.child w b₁) b₂
-    _ = (wordDepth w + 1) + 1 := by
-      rw [binaryWord_child_depth]
-    _ = wordDepth w + 2 := by omega
-
-@[rep_depth operator]
-theorem binaryWord_grandchild_parity (w : BinaryLattice) (b₁ b₂ : Bool) :
-    wordParity
-        (TypeIIIModularCantorSystem.child
-          (TypeIIIModularCantorSystem.child w b₁) b₂) =
-      wordParity w := by
-  rw [binaryWord_child_parity, binaryWord_child_parity, Bool.not_not]
+    wordParity (BinaryWord.child w b) = not (wordParity w) := by
+  simp [wordParity, wordDepth, BinaryWord.child, Nat.bodd_succ]
 
 /--
 Contragredient action on binary-lattice observables.
@@ -117,15 +94,6 @@ theorem adjointAction_apply {G : Type*} [Group G] [MulAction G BinaryLattice]
     adjointAction (G := G) g f (g • w) = f w := by
   simp [adjointAction]
 
-@[rep_depth operator]
-theorem adjointAction_mul {G : Type*} [Group G] [MulAction G BinaryLattice]
-    (g h : G) (f : BinaryCrystalObservable) :
-    adjointAction (G := G) (g * h) f =
-      adjointAction g (adjointAction h f) := by
-  funext w
-  change f ((g * h)⁻¹ • w) = f (h⁻¹ • (g⁻¹ • w))
-  rw [mul_inv_rev, mul_smul]
-
 /-- A Bloch-wave readout on the binary crystal. -/
 @[rep_depth operator]
 structure BinaryBlochWave where
@@ -133,7 +101,7 @@ structure BinaryBlochWave where
   quasiMomentum : Bool → ℂ
   shiftCovariance :
     ∀ (w : BinaryLattice) (b : Bool),
-      mode (TypeIIIModularCantorSystem.child w b) = quasiMomentum b * mode w
+      mode (BinaryWord.child w b) = quasiMomentum b * mode w
 
 /--
 Binary crystal packet with Weyl-like discrete symmetry and Bloch readout.
@@ -142,9 +110,43 @@ The group action is supplied externally by the caller; this bridge only
 packages the symbolic crystal/lattice/spectral interface.
 -/
 @[rep_depth operator]
-structure BinaryCrystalWeylBlochData (G : Type*)
+structure BinaryCrystalWeylBlochPacket (G : Type*)
     [Group G] [MulAction G BinaryLattice] where
   root : BinaryLattice
   bloch : BinaryBlochWave
+
+/--
+Combined theorem-safe owner target for the binary crystal regime.
+
+This records the three repo-owned laws:
+
+* cylinder splitting;
+* depth-parity toggle;
+* contragredient observable transport along the symmetry action.
+-/
+@[owner_target_tag]
+def BinaryCrystalWeylBlochOwnerTarget : Prop :=
+  (∀ w : BinaryLattice,
+      binaryUnitCell w =
+        ({w} : Set BinaryLattice)
+          ∪ binaryUnitCell (BinaryWord.child w false)
+          ∪ binaryUnitCell (BinaryWord.child w true))
+    ∧ (∀ w : BinaryLattice, ∀ b : Bool,
+        wordParity (BinaryWord.child w b) = not (wordParity w))
+    ∧ (∀ {G : Type*} [Group G] [MulAction G BinaryLattice]
+        (g : G) (f : BinaryCrystalObservable) (w : BinaryLattice),
+        adjointAction (G := G) g f (g • w) = f w)
+
+/-- The binary crystal owner target is available from the repo-owned laws. -/
+@[rep_depth operator]
+theorem binaryCrystalWeylBlochOwnerTarget :
+    BinaryCrystalWeylBlochOwnerTarget := by
+  refine ⟨?_, ?_, ?_⟩
+  · intro w
+    exact binaryUnitCell_split w
+  · intro w b
+    exact binaryWord_child_parity w b
+  · intro G instG instA g f w
+    simpa using (adjointAction_apply (G := G) (g := g) (f := f) (w := w))
 
 end InfoGeometry.Canonical.BinaryCrystalWeylBlochBridge

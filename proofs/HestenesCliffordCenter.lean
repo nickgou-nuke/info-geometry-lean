@@ -1,4 +1,4 @@
-import proofs.HestenesClPlus14
+import InfoGeometry.Canonical.HestenesClPlus14
 
 /-!
 # Spacetime pseudoscalar owner for real Cl⁺(1,3)

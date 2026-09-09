@@ -209,11 +209,7 @@ theorem nilpotent_lightcone_incidence :
       ∧ (concreteCARAnnihilation (E := E)).comp (concreteCARCreation (E := E))
         = spectralMinusProj (E := E) := by
   have h := tomitaKrein_nilpotent_idempotent_atom (E := E)
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact h.1
-  · exact h.2.1
-  · exact h.2.2.1
-  · exact h.2.2.2.1
+  exact ⟨h.1, h.2.1, h.2.2.1, h.2.2.2.1⟩
 
 /-- Tomita/PHS conjugation swaps the two concrete split-null light-cone maps. -/
 theorem tomita_mirror_swaps_concrete_lightcone :
@@ -221,9 +217,8 @@ theorem tomita_mirror_swaps_concrete_lightcone :
       = concreteCARAnnihilation (E := E)
     ∧ tomitaConjOp (E := E) (concreteCARAnnihilation (E := E))
       = concreteCARCreation (E := E) := by
-  refine ⟨?_, ?_⟩
-  · exact tomitaConj_creation_eq_annihilation (E := E)
-  · exact tomitaConj_annihilation_eq_creation (E := E)
+  exact ⟨tomitaConj_creation_eq_annihilation (E := E),
+    tomitaConj_annihilation_eq_creation (E := E)⟩
 
 end ConcreteAtom
 

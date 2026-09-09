@@ -6,7 +6,7 @@ import Mathlib.Data.Real.Sqrt
 # The Leech lattice numerator construction
 
 This file restores the genuine Golay congruence construction that was hidden
-behind the former numerical `LeechLatticeNormData` property.
+behind the former numerical `LeechLatticeNormData` witness.
 
 We first construct the integral numerator set.  Its conventional real
 realization is obtained by multiplying every coordinate by `1 / sqrt 8`.

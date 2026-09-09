@@ -57,5 +57,3 @@ omit [TopologicalSpace R] in
     (T : R) (_hT : T * T * T = T) :
     peirceProjectorGrothendieckReadout T = classOf (1 : R) := by
   exact peirceProjectorGrothendieckReadout_eq (R := R) T
-
-end

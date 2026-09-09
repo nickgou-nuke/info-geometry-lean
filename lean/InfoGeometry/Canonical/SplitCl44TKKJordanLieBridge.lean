@@ -107,6 +107,71 @@ theorem splitTriality_phaseAxis_anticommutes
 /-! ## Operatorial TKK/KKT/Jordan-Lie packet -/
 
 /--
+Proof-carrying packet connecting the recursive split `Cl(4,4)` stage to the
+operatorial Weyl/TKK/KKT/Jordan-Lie closure surface.
+-/
+@[rep_depth transport]
+structure SplitCl44TKKJordanLiePacket where
+  closure : ConformalWeylTKKKKTJordanLieContext (α := α) (H := H)
+  triality : SplitTrialityKernel
+
+namespace SplitCl44TKKJordanLiePacket
+
+variable (P : SplitCl44TKKJordanLiePacket (α := α) (H := H))
+
+/-- The packet carries the explicit operatorial TKK master relation. -/
+@[rep_depth transport]
+theorem tkkMasterRelation :
+    P.closure.gibbs.SatisfiesOperatorTKKMasterRelation P.closure.tkkParameter :=
+  P.closure.tkkMasterRelation
+
+/-- The packet carries the explicit operatorial admissibility/KKT gate. -/
+@[rep_depth transport]
+theorem operatorAdmissible :
+    P.closure.gibbs.IsOperatorAdmissible :=
+  P.closure.operatorAdmissible
+
+/-- The conformal dilation lies in the KKT grade-zero lane. -/
+@[rep_depth transport]
+theorem dilation_isGZero :
+    IsGZero cl11 P.closure.gibbs.DGenerator :=
+  P.closure.dilation_isGZero
+
+/-- Circular polarization closes in grade zero: `[u₊ X, u₋ Y] ∈ 𝔤₀`. -/
+@[rep_depth transport]
+theorem circularPolarizedCommutator_isGZero :
+    IsGZero cl11 P.closure.circularPolarizedCommutator :=
+  P.closure.circularPolarizedCommutator_isGZero
+
+/-- The full operatorial KKT/TKK/Weyl/Jordan-Lie closure proposition. -/
+@[rep_depth transport]
+theorem satisfiesKKT_TKK_Weyl_JordanLieClosure :
+    P.closure.SatisfiesKKT_TKK_Weyl_JordanLieClosure :=
+  P.closure.satisfiesKKT_TKK_Weyl_JordanLieClosure
+
+/-- The commutator channel is exactly twice the antisymmetric Lie product. -/
+@[rep_depth transport]
+theorem fockCommutator_temperature_weyl_eq_two_smul_lieProduct :
+    InfoGeometry.Canonical.BogoliubovFockSuper.fockCommutator (E := H)
+      P.closure.gibbs.conformalGeometricTemperature P.closure.weylTemperature =
+        (2 : ℝ) • P.closure.lieProductTemperatureWeyl :=
+  P.closure.fockCommutator_temperature_weyl_eq_two_smul_lieProduct
+
+/-- The anticommutator channel is exactly twice the symmetric Jordan product. -/
+@[rep_depth transport]
+theorem fockAnticommutator_temperature_weyl_eq_two_smul_jordanProduct :
+    InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator (E := H)
+      P.closure.gibbs.conformalGeometricTemperature P.closure.weylTemperature =
+        (2 : ℝ) • P.closure.jordanProductTemperatureWeyl :=
+  P.closure.fockAnticommutator_temperature_weyl_eq_two_smul_jordanProduct
+
+/-- The packet's triality proxy carries an involutive Dirac-square seed. -/
+@[rep_depth krein]
+theorem triality_informationalDiracSquare_eq_id :
+    P.triality.informationalDiracSquare = LinearMap.id :=
+  P.triality.informationalDiracSquare_eq_id
+
+/--
 Consolidated constructive packet for the repo-owned `Cl(4,4)` / TKK /
 Jordan-Lie corridor.
 
@@ -122,14 +187,7 @@ It does not assert the unavailable global `Cl(4,4) ≃ M₁₆(ℝ)`, full
 -/
 @[rep_depth transport]
 theorem splitCl44_TKK_JordanLie_constructive_packet
-    (x : ℝ × ℝ) (xs : SplitClNNCarrier 3)
-    (T : SplitTrialityKernel)
-    (C : ConformalGibbsSouriauOperatorContext (α := α) (H := H))
-    (tkkParameter : ℝ)
-    (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hOperatorAdmissible : C.IsOperatorAdmissible)
-    (X Y : EndH₂)
-    (weylGauge : WeylGaugeField EndH₂ EndH₂) :
+    (x : ℝ × ℝ) (xs : SplitClNNCarrier 3) :
     splitCl44_headFactorEquiv
         (CliffordAlgebra.ι SplitCl44Quad
           (InfoGeometry.Clifford.ClNN.headPair 3 x))
@@ -139,36 +197,41 @@ theorem splitCl44_TKK_JordanLie_constructive_packet
         (CliffordAlgebra.ι SplitCl44Quad (InfoGeometry.Clifford.ClNN.tailLift 3 xs))
       = (1 : CliffordAlgebra InfoGeometry.CliffordTower.Q11)
           ᵍ⊗ₜ (CliffordAlgebra.ι (InfoGeometry.CliffordTower.Qsplit 3) xs)
-      ∧ T.informationalDiracSquare = LinearMap.id
-      ∧ T.trialitySupercharge.comp T.trialitySupercharge =
+      ∧ P.triality.informationalDiracSquare = LinearMap.id
+      ∧ P.triality.trialitySupercharge.comp P.triality.trialitySupercharge =
         LinearMap.id
-      ∧ T.trialitySupercharge.comp
-          (T.polarization.Pplus - T.polarization.Pminus)
+      ∧ P.triality.trialitySupercharge.comp
+          (P.triality.polarization.Pplus - P.triality.polarization.Pminus)
         =
-        -((T.polarization.Pplus - T.polarization.Pminus).comp
-          T.trialitySupercharge)
-      ∧ C.SatisfiesOperatorTKKMasterRelation tkkParameter
-      ∧ C.IsOperatorAdmissible
-      ∧ IsGZero (doubledSpaceCl11Action (E := H)) C.DGenerator
-      ∧ IsGZero (doubledSpaceCl11Action (E := H)) (InfoGeometry.Canonical.SouriauConformalKKT.circularPolarizedCommutator X Y)
+        -((P.triality.polarization.Pplus - P.triality.polarization.Pminus).comp
+          P.triality.trialitySupercharge)
+      ∧ P.closure.gibbs.SatisfiesOperatorTKKMasterRelation P.closure.tkkParameter
+      ∧ P.closure.gibbs.IsOperatorAdmissible
+      ∧ IsGZero cl11 P.closure.gibbs.DGenerator
+      ∧ IsGZero cl11 P.closure.circularPolarizedCommutator
+      ∧ P.closure.SatisfiesKKT_TKK_Weyl_JordanLieClosure
       ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockCommutator (E := H)
-          C.conformalGeometricTemperature (InfoGeometry.Canonical.SouriauConformalKKT.weylTemperature C weylGauge) =
-        (2 : ℝ) • InfoGeometry.Canonical.SouriauConformalKKT.lieProductTemperatureWeyl C weylGauge
+          P.closure.gibbs.conformalGeometricTemperature P.closure.weylTemperature =
+        (2 : ℝ) • P.closure.lieProductTemperatureWeyl
       ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator (E := H)
-          C.conformalGeometricTemperature (InfoGeometry.Canonical.SouriauConformalKKT.weylTemperature C weylGauge) =
-        (2 : ℝ) • InfoGeometry.Canonical.SouriauConformalKKT.jordanProductTemperatureWeyl C weylGauge := by
+          P.closure.gibbs.conformalGeometricTemperature P.closure.weylTemperature =
+        (2 : ℝ) • P.closure.jordanProductTemperatureWeyl := by
   exact
     ⟨splitCl44_recursive_head_factor (x := x),
       splitCl44_recursive_tail_factor (xs := xs),
-      splitTriality_informationalDiracSquare_eq_id T,
-      splitTriality_supercharge_sq_eq_id T,
-      splitTriality_phaseAxis_anticommutes T,
-      hTKK,
-      hOperatorAdmissible,
-      InfoGeometry.Canonical.SouriauConformalKKT.dilation_isGZero C,
-      InfoGeometry.Canonical.SouriauConformalKKT.circularPolarizedCommutator_isGZero X Y,
-      InfoGeometry.Canonical.SouriauConformalKKT.fockCommutator_temperature_weyl_eq_two_smul_lieProduct C weylGauge,
-      InfoGeometry.Canonical.SouriauConformalKKT.fockAnticommutator_temperature_weyl_eq_two_smul_jordanProduct C weylGauge⟩
+      P.triality_informationalDiracSquare_eq_id,
+      P.triality.trialitySupercharge_sq_eq_id,
+      P.triality.k_acts_as_imaginary,
+      P.tkkMasterRelation,
+      P.operatorAdmissible,
+      P.dilation_isGZero,
+      P.circularPolarizedCommutator_isGZero,
+      P.satisfiesKKT_TKK_Weyl_JordanLieClosure,
+      P.fockCommutator_temperature_weyl_eq_two_smul_lieProduct,
+      P.fockAnticommutator_temperature_weyl_eq_two_smul_jordanProduct⟩
+
+end SplitCl44TKKJordanLiePacket
+
 /-! ## Fisher/Killing bridge with explicit base relation -/
 
 section FisherKilling
@@ -183,7 +246,7 @@ along any Hessian-preserving orbit equivalence.
 
 This is the legitimate theorem presently owned by the repo: proportionality is
 not inferred from `Cl(4,4)` or triality; it is transported after being supplied
-as a base property.
+as a base hypothesis.
 -/
 @[rep_depth transport]
 theorem fisherKilling_baseRelation_transports

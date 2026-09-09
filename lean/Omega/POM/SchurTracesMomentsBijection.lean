@@ -6,10 +6,9 @@ namespace Omega.POM
 package.
     cor:pom-schur-traces-moments-bijection -/
 theorem paper_pom_schur_traces_moments_bijection
-    {forwardSchurTomography partitionMonomialRecovered : Prop}
-    (hForwardSchurTomography : forwardSchurTomography)
-    (hPartitionMonomialRecovered : partitionMonomialRecovered) :
-    forwardSchurTomography ∧ partitionMonomialRecovered := by
-  exact ⟨hForwardSchurTomography, hPartitionMonomialRecovered⟩
+    (D : SchurTomographyInversePartitionMonomialsData) :
+    D.forwardSchurTomography ∧ D.partitionMonomialRecovered := by
+  have h := paper_pom_schur_tomography_inverse_partition_monomials D
+  exact ⟨h.1, h.2.2⟩
 
 end Omega.POM

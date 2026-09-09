@@ -251,14 +251,8 @@ noncomputable def splitSuperBracket (a b : CliffordLabel) (u v : ℝ × ℝ) : �
   ring
 
 /-- Minimal split `Cl(n,n)`-style graded mode data over permutation modes. -/
-abbrev SplitCliffordSuperData (n : Nat) := PermMode n → CliffordLabel
-
-namespace SplitCliffordSuperData
-
-abbrev label {n : Nat} (S : SplitCliffordSuperData n) :
-    PermMode n → CliffordLabel := S
-
-end SplitCliffordSuperData
+structure SplitCliffordSuperData (n : Nat) where
+  label : PermMode n → CliffordLabel
 
 /-- Mode-level super sign induced by the graded label map. -/
 def modeSuperSign {n : Nat} (S : SplitCliffordSuperData n) (σ τ : PermMode n) : ℝ :=

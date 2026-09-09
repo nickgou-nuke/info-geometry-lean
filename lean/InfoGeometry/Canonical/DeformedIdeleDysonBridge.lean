@@ -55,7 +55,7 @@ namespace BranchDefectToDysonNodes
 
 variable (B : BranchDefectToDysonNodes (A := A) (N := N))
 
-/-- Operator-side noncommutativity readout from the explicit range-defect property. -/
+/-- Operator-side noncommutativity readout from the explicit range-defect hypothesis. -/
 @[rep_depth thermo]
 theorem branch_commutator_ne_zero
     (hRange : InfoGeometry.Algebra.NonCommutativity.rangeProjection B.branch ≠ (1 : A)) :
@@ -63,7 +63,7 @@ theorem branch_commutator_ne_zero
   exact InfoGeometry.Algebra.NonCommutativity.isometry_branch_commutator_ne_zero
     B.branch B.branch_isometry hRange
 
-/-- Scalar node injectivity extracted from the bridge property. -/
+/-- Scalar node injectivity extracted from the bridge hypothesis. -/
 @[rep_depth thermo]
 theorem nodes_injective_of_range_defect
     (hRange : InfoGeometry.Algebra.NonCommutativity.rangeProjection B.branch ≠ (1 : A)) :

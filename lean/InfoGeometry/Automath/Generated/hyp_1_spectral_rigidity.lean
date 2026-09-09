@@ -11,6 +11,6 @@ The characteristic polynomial x^2-x-1 forces the spectrum to be the golden ratio
 Source: InfoGeometry.Algebra.CuntzFibonacciBraidInclusion.matrixToCuntz
 Objects: spectrum, C*-algebra, golden-ratio, minimal-polynomial, spectral-rigidity -/
 theorem hyp_1_spectral_rigidity : X * X - X - 1 = 0 :=
-  property1_minimal_polynomial
+  hypothesis1_minimal_polynomial
 
 end Automath.Generated

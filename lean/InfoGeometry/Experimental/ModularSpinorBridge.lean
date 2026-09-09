@@ -4,10 +4,9 @@ import InfoGeometry.Krein.DoubledSpaceMatrix
 import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Quantum.Fock
 import InfoGeometry.Canonical.KaehlerGeometry
-import InfoGeometry.Canonical.BerryConnection
 import InfoGeometry.Krein.HilbertBridge
 import InfoGeometry.Canonical.YangMillsContinuum
-import InfoGeometry.Canonical.RelativeModularPotential
+import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import Mathlib.InformationTheory.KullbackLeibler.Basic
 
 /-!
@@ -25,6 +24,7 @@ open InfoGeometry.Canonical.RicciMongeAmpere
 open InfoGeometry.Quantum
 open InfoGeometry.Canonical.KaehlerGeometry
 open InfoGeometry.Canonical.YangMillsContinuum
+open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
@@ -80,30 +80,22 @@ theorem spinorBilinear_eq_berryPhase
 
 /--
 **Spinor Innovation Bridge**:
-Links the microscopic spinor bilinear to the operatorial relative modular
-potential on the doubled carrier.
+Links the microscopic spinor bilinear to the macroscopic KL divergence.
 -/
 structure SpinorInnovationBridge (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   ψ : Krein.DoubledSpace E
-  potential :
-    InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)
+  D : LogRadonNikodymData (Krein.DoubledSpace E)
   O_innov : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E
-  h_bilinear :
-    spinorBilinear (E := E) ψ O_innov =
-      InfoGeometry.Canonical.RelativeModularPotential.value
-        (E := E) potential ψ
+  h_bilinear : spinorBilinear (E := E) ψ O_innov = D.KL
 
 /--
-**Relative modular potential bridge**:
-The spinor bilinear is identified with the operatorial relative modular
-potential on the same doubled carrier.  No scalar Radon--Nikodym tuple or
-commutative KL surrogate is introduced here.
+**Bayesian KL Bridge**:
+The spinor bilinear for the innovation operator recovers the Kullback-Leibler
+divergence.
 -/
-theorem spinorBilinear_eq_relativeModularPotential
+theorem spinorBilinear_eq_klDivergence
     (B : SpinorInnovationBridge E) :
-    spinorBilinear (E := E) B.ψ B.O_innov =
-      InfoGeometry.Canonical.RelativeModularPotential.value
-        (E := E) B.potential B.ψ := by
+    spinorBilinear (E := E) B.ψ B.O_innov = B.D.KL := by
   exact B.h_bilinear
 
 end InfoGeometry.Experimental.ModularSpinorBridge

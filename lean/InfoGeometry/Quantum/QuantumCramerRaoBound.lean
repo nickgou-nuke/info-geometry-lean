@@ -239,4 +239,37 @@ theorem quantum_cramer_rao_bound
   rw [h_inner, h_normX, h_normY, mul_comm] at h_cs
   exact h_cs
 
+/-! =========================================================================
+    5. Lower-bound form of the QCRB
+    ========================================================================= -/
+
+/--
+The product form of the QCRB yields the usual variance lower bound whenever
+the SLD Fisher information is strictly positive.  The sensitivity is kept
+explicit: no unit-sensitivity normalization is implicit in this statement.
+-/
+theorem quantum_cramer_rao_variance_lower_bound
+    (R drho L O : Matrix n n ℝ)
+    (hL : Lᵀ = L)
+    (hO : Oᵀ = O)
+    (h_tr_drho : Matrix.trace drho = 0)
+    (h_sld : isSLD (Rᵀ * R) drho L)
+    (h_symm : Matrix.trace ((Rᵀ * R) * (L * centeredObservable (Rᵀ * R) O)) =
+              Matrix.trace ((Rᵀ * R) * (centeredObservable (Rᵀ * R) O * L)))
+    (h_fisher_pos : 0 < sldFisherInfo (Rᵀ * R) L) :
+    (paramDeriv drho O) ^ 2 / sldFisherInfo (Rᵀ * R) L ≤
+      quantumVariance (Rᵀ * R) O := by
+  have h_product := quantum_cramer_rao_bound R drho L O hL hO h_tr_drho h_sld h_symm
+  have h_inv_pos : 0 < (sldFisherInfo (Rᵀ * R) L)⁻¹ :=
+    inv_pos.mpr h_fisher_pos
+  calc
+    (paramDeriv drho O) ^ 2 / sldFisherInfo (Rᵀ * R) L =
+        (paramDeriv drho O) ^ 2 * (sldFisherInfo (Rᵀ * R) L)⁻¹ := by
+          rw [div_eq_mul_inv]
+    _ ≤ (quantumVariance (Rᵀ * R) O * sldFisherInfo (Rᵀ * R) L) *
+          (sldFisherInfo (Rᵀ * R) L)⁻¹ := by
+          exact mul_le_mul_of_nonneg_right h_product (le_of_lt h_inv_pos)
+    _ = quantumVariance (Rᵀ * R) O := by
+          rw [mul_assoc, mul_inv_cancel₀ (ne_of_gt h_fisher_pos), mul_one]
+
 end InfoGeometry.Quantum.QuantumCramerRaoBound

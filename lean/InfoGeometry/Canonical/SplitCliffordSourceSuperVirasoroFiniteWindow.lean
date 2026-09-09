@@ -210,7 +210,7 @@ theorem eventually_zero_of_stabilizesFrom
     _ = 0 := h0
 
 /--
-Sufficient property package for mixed-bracket closure:
+Sufficient hypothesis package for mixed-bracket closure:
 if the mixed boundary defect stabilizes and its stabilized value is `0`,
 then mixed finite-window closure holds eventually.
 -/
@@ -230,7 +230,7 @@ theorem eventually_superBracket_LG_closure_of_stabilization
       N0 hstab h0)
 
 /--
-Sufficient property package for `G-G` closure:
+Sufficient hypothesis package for `G-G` closure:
 if the `G-G` boundary defect stabilizes and its stabilized value is `0`,
 then anticommutator finite-window closure holds eventually.
 -/
@@ -332,13 +332,13 @@ theorem eventually_superBracket_LG_closure_of_psi_zero
     (stabilizes_boundaryDefect_LG_of_psi_zero (𝕜 := 𝕜) m r J 0)
     (by simp [boundaryDefect_LG_eq_zero_of_psi_zero])
 
-/-! ### Concrete nontrivial property family: `J ≠ 0`, `ψ ≠ 0` but index-mismatched -/
+/-! ### Concrete nontrivial witness family: `J ≠ 0`, `ψ ≠ 0` but index-mismatched -/
 
-/-- Single-mode property for currents, supported at index `0`. -/
+/-- Single-mode witness for currents, supported at index `0`. -/
 def J_mode0 (A : EndV) : ℤ → EndV :=
   fun n => if n = 0 then A else 0
 
-/-- Single-mode property for fermions, supported at index `1`. -/
+/-- Single-mode witness for fermions, supported at index `1`. -/
 def psi_mode1 (B : EndV) : ℤ → EndV :=
   fun n => if n = 1 then B else 0
 
@@ -361,7 +361,7 @@ theorem psi_mode1_nontrivial (B : EndV) (hB : B ≠ 0) :
   simpa [psi_mode1] using hB
 
 /--
-For the explicit property family with `J` at mode `0` and `ψ` at mode `1`,
+For the explicit witness family with `J` at mode `0` and `ψ` at mode `1`,
 the truncated supercurrent at `r = 0` vanishes for every cutoff.
 -/
 theorem G_trunc_r0_mode01_eq_zero
@@ -378,7 +378,7 @@ theorem G_trunc_r0_mode01_eq_zero
     simp [hJ]
 
 /--
-Concrete real lemma (nontrivial property family):
+Concrete real lemma (nontrivial witness family):
 for `J = J_mode0 A`, `ψ = psi_mode1 B`, and `r = 0`,
 the mixed finite-window defect is identically zero for all `N,m`.
 -/
@@ -389,7 +389,7 @@ theorem boundaryDefect_LG_mode01_r0_eq_zero
   simp [boundaryDefect_LG, G_trunc_r0_mode01_eq_zero]
 
 /--
-Stabilization for the same nontrivial property family at `r = 0`.
+Stabilization for the same nontrivial witness family at `r = 0`.
 -/
 theorem stabilizes_boundaryDefect_LG_mode01_r0
     (A B : EndV) (N0 : ℤ) :
@@ -402,7 +402,7 @@ theorem stabilizes_boundaryDefect_LG_mode01_r0
   simp [boundaryDefect_LG_mode01_r0_eq_zero]
 
 /--
-Concrete eventual closure in the explicit nontrivial property lane
+Concrete eventual closure in the explicit nontrivial witness lane
 for `(m,r) = (0,0)`.
 -/
 theorem eventually_superBracket_LG_closure_mode01_r0
@@ -421,7 +421,7 @@ theorem eventually_superBracket_LG_closure_mode01_r0
     (boundaryDefect_LG_mode01_r0_eq_zero (𝕜 := 𝕜) 0 A B)
 
 /--
-Nontrivial explicit property lane (both families nonzero somewhere) with
+Nontrivial explicit witness lane (both families nonzero somewhere) with
 proved eventual closure at `(m,r) = (0,0)`.
 -/
 theorem nontrivial_mode01_family_with_eventual_closure
@@ -438,9 +438,9 @@ theorem nontrivial_mode01_family_with_eventual_closure
   refine ⟨J_mode0_nontrivial (𝕜 := 𝕜) A hA, psi_mode1_nontrivial (𝕜 := 𝕜) B hB, ?_⟩
   exact eventually_superBracket_LG_closure_mode01_r0 (𝕜 := 𝕜) A B
 
-/-! ### Concrete `{G,G}` property lane with explicit central stabilization -/
+/-! ### Concrete `{G,G}` witness lane with explicit central stabilization -/
 
-/-- Explicit central profile used in the concrete property lane. -/
+/-- Explicit central profile used in the concrete witness lane. -/
 def centralZero : ℤ → ℤ → 𝕜 := fun _ _ => 0
 
 theorem G_trunc_r1_mode01_eq

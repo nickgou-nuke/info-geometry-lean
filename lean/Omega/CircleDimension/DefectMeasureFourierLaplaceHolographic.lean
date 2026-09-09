@@ -53,17 +53,30 @@ injectivity of the Fourier-Laplace transform on this finite-measure class.
     prop:cdim-defect-measure-fourier-laplace-holographic -/
 theorem paper_cdim_defect_measure_fourier_laplace_holographic
     (D : DefectMeasureFourierLaplaceData) : D.tensorizedFingerprint ∧ D.fingerprintInjective := by
+  let fourierData : Omega.TypedAddressBiaxialCompletion.ComovingFourierClosedData := {
+    lorentzProfileModel := D.lorentzProfileModel
+    explicitFourierFormulaInput := D.explicitFourierFormulaInput
+    positiveFrequencyRestriction := D.positiveFrequencyRestriction
+    intervalUniquenessPrinciple := ComovingOpenIntervalInjective D.κ D.interval
+    fourierClosedForm := ComovingFingerprintIntegralRepresentation D.κ
+    finiteExponentialSpectrum := ComovingFiniteExponentialSpectrum D.κ
+    openIntervalInjective := ComovingOpenIntervalInjective D.κ D.interval
+    deriveFourierClosedForm := fun _ _ => comovingFingerprint_integral_representation D.κ
+    deriveFiniteExponentialSpectrum := fun _ _ => comovingFingerprint_finite_exponential_spectrum D.κ
+    deriveOpenIntervalInjective := fun _ hI => hI }
+  let scanData : ComovingHorizonScanFourierInversionData := {
+    fourierClosedData := fourierData
+    integrableAnalyticProfile := D.integrableAnalyticProfile
+    explicitFourierSpectrumFormula := ComovingFiniteExponentialSpectrum D.κ
+    finiteMultisetInjectivity := ComovingOpenIntervalInjective D.κ D.interval
+    deriveExplicitFourierSpectrumFormula := fun _ => comovingFingerprint_finite_exponential_spectrum D.κ
+    deriveFiniteMultisetInjectivity := fun _ hI => hI }
   have hScan :
-      D.integrableAnalyticProfile ∧ ComovingFiniteExponentialSpectrum D.κ ∧
-        ComovingOpenIntervalInjective D.κ D.interval :=
+      scanData.integrableAnalyticProfile ∧ scanData.explicitFourierSpectrumFormula ∧
+        scanData.finiteMultisetInjectivity :=
     paper_cdim_comoving_horizon_scan_fourier_inversion
-      D.integrableAnalyticProfile_h D.lorentzProfileModel_h
-      D.explicitFourierFormulaInput_h D.positiveFrequencyRestriction_h D.hInterval
-      (fun _ _ => comovingFingerprint_integral_representation D.κ)
-      (fun _ _ => comovingFingerprint_finite_exponential_spectrum D.κ)
-      (fun _ hI => hI)
-      (fun _ => comovingFingerprint_finite_exponential_spectrum D.κ)
-      (fun _ hI => hI)
+      scanData D.integrableAnalyticProfile_h D.lorentzProfileModel_h
+        D.explicitFourierFormulaInput_h D.positiveFrequencyRestriction_h D.hInterval
   have hSpectrum : ComovingFiniteExponentialSpectrum D.κ := hScan.2.1
   refine ⟨?_, ?_⟩
   · intro ν s

@@ -20,29 +20,25 @@ noncomputable def innerDerivation : VZ →ₗ[ℝ] VZ →ₗ[ℝ] VDer :=
       intro z
       change stanDerMap (R := ℝ) (x₁ + x₂) y z =
         stanDerMap (R := ℝ) x₁ y z + stanDerMap (R := ℝ) x₂ y z
-      rw [stanDerMap_add_left]
-      simp only [LinearMap.add_apply])
+      rw [stanDerMap_add_left])
     (fun r x y => by
       apply ZornVectorMatrix.Derivation.ext
       intro z
       change stanDerMap (R := ℝ) (r • x) y z =
         r • stanDerMap (R := ℝ) x y z
-      rw [stanDerMap_smul_left]
-      simp only [LinearMap.smul_apply])
+      rw [stanDerMap_smul_left])
     (fun x y₁ y₂ => by
       apply ZornVectorMatrix.Derivation.ext
       intro z
       change stanDerMap (R := ℝ) x (y₁ + y₂) z =
         stanDerMap (R := ℝ) x y₁ z + stanDerMap (R := ℝ) x y₂ z
-      rw [stanDerMap_add_right]
-      simp only [LinearMap.add_apply])
+      rw [stanDerMap_add_right])
     (fun r x y => by
       apply ZornVectorMatrix.Derivation.ext
       intro z
       change stanDerMap (R := ℝ) x (r • y) z =
         r • stanDerMap (R := ℝ) x y z
-      rw [stanDerMap_smul_right]
-      simp only [LinearMap.smul_apply])
+      rw [stanDerMap_smul_right])
 
 @[simp] theorem innerDerivation_apply (x y : VZ) :
     innerDerivation x y = fromNonAssocDerivation (zornStanDerivation x y) := rfl

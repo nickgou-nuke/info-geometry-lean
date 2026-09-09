@@ -5,7 +5,7 @@ import Mathlib.Tactic.Linarith
 # Native noncommutative spectral-triple algebra
 
 The commutator seminorm is derived from an actual Dirac element in a normed
-noncommutative algebra.  No independently supplied norm field or property
+noncommutative algebra.  No independently supplied norm field or certificate
 is accepted as a substitute for the commutator.
 -/
 
@@ -15,14 +15,12 @@ namespace ConnesSpectral
 
 variable {A : Type*} [NormedRing A]
 
-abbrev SpectralTriple (A : Type*) [NormedRing A] := A
+structure SpectralTriple (A : Type*) [NormedRing A] where
+  dirac : A
 
 namespace SpectralTriple
 
 variable (ST : SpectralTriple A)
-
-/-- Compatibility accessor for the native Dirac-element carrier. -/
-abbrev dirac : A := ST
 
 def commutator (f : A) : A := ST.dirac * f - f * ST.dirac
 

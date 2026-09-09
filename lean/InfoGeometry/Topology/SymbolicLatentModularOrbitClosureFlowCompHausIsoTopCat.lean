@@ -22,5 +22,3 @@ theorem SymbolicLatentModularFlow.orbitClosureFlowCompHausIso_hom_forget
   rfl
 
 end InfoGeometry.Topology
-
-end

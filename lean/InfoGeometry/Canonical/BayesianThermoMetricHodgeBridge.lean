@@ -45,7 +45,7 @@ section ScalarCurrentCalibration
 
 variable {Θ V State Op Alg X : Type*}
 variable [AddCommGroup V] [AddGroup Op] [Ring Alg]
-variable (P : InfinitesimalDictionaryModel Θ V State Op Alg X)
+variable (P : InfinitesimalDictionaryPacket Θ V State Op Alg X)
 
 /--
 If the antisymmetric divergence is calibrated to the packet's scalar current
@@ -85,9 +85,9 @@ theorem posterior_harmonic_protected
 
 /-- A protected harmonic `K₃` packet has zero carrier when both closed and coclosed. -/
 theorem K3_harmonic_packet_zero
-    {ω : Fin 3 → ℝ} (h : K3HarmonicMode ω) :
-    ω = 0 :=
-  K3HarmonicMode.eq_zero h
+    (P : K3HodgeModePacket) :
+    P.ω = 0 :=
+  P.harmonic_eq_zero
 
 end HodgeProtection
 

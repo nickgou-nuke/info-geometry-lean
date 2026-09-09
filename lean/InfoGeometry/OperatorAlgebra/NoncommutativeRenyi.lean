@@ -29,7 +29,7 @@ The Petz Rényi operator kernel
 `ρ ^ α * σ ^ (1 - α)`.
 
 The order of multiplication is part of the definition and is not erased by a
-commutativity or diagonalizability property.
+commutativity or diagonalizability assumption.
 -/
 noncomputable def petzKernel (α : ℝ) (ρ σ : A) : A :=
   ρ ^ α * σ ^ (1 - α)
@@ -39,7 +39,7 @@ The exponent used to conjugate `ρ` in the sandwiched Rényi kernel.
 
 The order `α = 0` is excluded by the mathematical application, but the
 operator expression is kept total at the definition level.  The appropriate
-nonzero/order property belongs on the theorem that consumes it.
+nonzero/order hypothesis belongs on the theorem that consumes it.
 -/
 noncomputable def sandwichExponent (α : ℝ) : ℝ :=
   (1 - α) / (2 * α)
@@ -169,7 +169,7 @@ theorem sandwichedMoment_apply
 The sandwiched core is positive whenever the state operator `ρ` is positive.
 
 This is the native star-ordered-ring conjugation theorem; no commutation or
-diagonalization property is used.
+diagonalization hypothesis is used.
 -/
 theorem sandwichedCore_nonneg
     (α : ℝ) {ρ σ : A} (hρ : 0 ≤ ρ) :

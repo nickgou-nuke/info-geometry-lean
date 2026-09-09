@@ -42,7 +42,7 @@ open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
 /-! ## 1. Finite exterior prime algebra -/
 
-/-- A finite prime cutoff is a property finite register of primes. -/
+/-- A finite prime cutoff is a certified finite register of primes. -/
 abbrev PrimeCutoff :=
   PrimeRegister
 
@@ -206,21 +206,6 @@ theorem finiteFullSUSYProduct_eq_one
     finiteFullSUSYProduct P β = 1 := by
   unfold finiteFullSUSYProduct finiteBosonicPrimePartition
   exact inv_mul_cancel₀ hdenom
-
-/--
-The finite signed supertrace cancels the finite bosonic reciprocal partition.
-
-This is the real finite readout form of the boson/signed-supertrace
-cancellation.  It is distinct from the unsigned square-free partition, whose
-local factors are `1 + primeWeight β p` rather than `1 - primeWeight β p`.
--/
-theorem finitePrimeSupertrace_mul_finiteBosonicPrimePartition_eq_one
-    (P : PrimeCutoff) (β : ℝ)
-    (hdenom : finitePrimeDenominator P β ≠ 0) :
-    finitePrimeSupertrace P β * finiteBosonicPrimePartition P β = 1 := by
-  rw [finitePrimeSupertrace_eq_denominator]
-  unfold finiteBosonicPrimePartition
-  exact mul_inv_cancel₀ hdenom
 
 /-! ## 3. Möbius interpretation and differential guardrails -/
 

@@ -18,7 +18,7 @@ structure BernsteinSato (Q : ℝ → ℝ) where
 
 def m2_b_function_roots : List ℚ := [-1]
 
-/-- The exact one-root Bernstein--Sato polynomial used by the finite M2 property. -/
+/-- The exact one-root Bernstein--Sato polynomial used by the finite M2 witness. -/
 noncomputable def m2_b_function_poly : Polynomial ℝ :=
   Polynomial.X + 1
 

@@ -30,14 +30,31 @@ noncomputable def leftRightActionDifference
     leftRightActionDifference n a b x = a * x - x * b := by
   rfl
 
+/-- The GNS sesquilinear form on `CuntzAlg n` associated to a functional `φ`. -/
+noncomputable def gnsInner
+    (φ : CuntzAlg n →ₗ[ℂ] ℂ) (u v : CuntzAlg n) : ℂ :=
+  φ (star u * v)
+
+@[simp] theorem gnsInner_apply
+    (φ : CuntzAlg n →ₗ[ℂ] ℂ) (u v : CuntzAlg n) :
+    gnsInner φ u v = φ (star u * v) :=
+  rfl
+
+theorem gnsInner_hermitian
+    (φ : CuntzAlg n →ₗ[ℂ] ℂ)
+    (hφ : ∀ u v : CuntzAlg n, star (φ (star u * v)) = φ (star v * u))
+    (u v : CuntzAlg n) :
+    star (gnsInner φ v u) = gnsInner φ u v :=
+  hφ v u
+
 /-- The GNS pairing of two left/right action defects.
 
 The name records distinguishability, while the type remains the native
-sesquilinear form `kmsInner`; no positivity is built in here. -/
+sesquilinear form `gnsInner`; no positivity is built in here. -/
 noncomputable def modularDistinguishabilityPairing
     (φ : CuntzAlg n →ₗ[ℂ] ℂ)
     (a b : CuntzAlg n) (x y : CuntzAlg n) : ℂ :=
-  kmsInner φ
+  gnsInner φ
     (leftRightActionDifference n a b x)
     (leftRightActionDifference n a b y)
 
@@ -45,7 +62,7 @@ noncomputable def modularDistinguishabilityPairing
     (φ : CuntzAlg n →ₗ[ℂ] ℂ)
     (a b x y : CuntzAlg n) :
     modularDistinguishabilityPairing φ a b x y =
-      kmsInner φ (a * x - x * b) (a * y - y * b) := by
+      gnsInner φ (a * x - x * b) (a * y - y * b) := by
   rfl
 
 theorem modularDistinguishabilityPairing_hermitian
@@ -55,7 +72,7 @@ theorem modularDistinguishabilityPairing_hermitian
     (a b x y : CuntzAlg n) :
     star (modularDistinguishabilityPairing φ a b y x) =
       modularDistinguishabilityPairing φ a b x y := by
-  exact kmsInner_hermitian φ hφ
+  exact gnsInner_hermitian φ hφ
     (leftRightActionDifference n a b x)
     (leftRightActionDifference n a b y)
 
@@ -65,8 +82,9 @@ theorem modularDistinguishabilityPairing_zero_of_action_agreement
     (h : ∀ x : CuntzAlg n, a * x = x * b)
     (x y : CuntzAlg n) :
     modularDistinguishabilityPairing φ a b x y = 0 := by
-  simp [modularDistinguishabilityPairing, leftRightActionDifference_apply,
-    h x, h y, kmsInner]
+  dsimp [modularDistinguishabilityPairing, leftRightActionDifference, gnsInner]
+  have hx : a * x - x * b = 0 := by rw [h x, sub_self]
+  simp [hx]
 
 theorem leftRightActionDifference_commutant_shadow
     (a b x : CuntzAlg n) :

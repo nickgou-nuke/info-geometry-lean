@@ -21,6 +21,10 @@ open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 open InfoGeometry.Lie.SplitOctonionImaginaryAction
 open ProjectiveAffineConformalClosure55
 
+abbrev canonicalDet (X : CanonicalZorn) : ℝ :=
+  InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+    InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X
+
 /-! ## The real carrier equivalence -/
 
 def canonicalToCore (X : CanonicalZorn) : ZornCore.Zorn :=
@@ -60,9 +64,10 @@ theorem canonicalToCore_mul (X Y : CanonicalZorn) :
 
 theorem canonicalToCore_det (X : CanonicalZorn) :
     ZornCore.det (canonicalToCore X) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X := by
+    canonicalDet X := by
   simp [canonicalToCore, ZornCore.det,
     InfoGeometry.Canonical.ZornMatrix.dot,
+    canonicalDet, InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3,
     InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, ZornCore.dot,
     Fin.sum_univ_three]
 
@@ -77,7 +82,7 @@ theorem canonicalToCore_zero : canonicalToCore (0 : CanonicalZorn) = 0 := by
 
 theorem canonicalToCore_null_iff (X : CanonicalZorn) :
     ZornCore.det (canonicalToCore X) = 0 ↔
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X = 0 := by
+      canonicalDet X = 0 := by
   rw [canonicalToCore_det]
 
 theorem canonicalToCore_annihilator_iff (X Y : CanonicalZorn) :
@@ -90,22 +95,21 @@ theorem canonicalToCore_annihilator_iff (X Y : CanonicalZorn) :
     rw [canonicalToCore_mul, h, canonicalToCore_zero]
 
 theorem canonical_det_mul (X Y : CanonicalZorn) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (zMul X Y) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X *
-        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Y := by
-  simpa [zMul, InfoGeometry.Algebra.Zorn.ZornMatrix.mulZ] using
-    (InfoGeometry.Algebra.Zorn.ZornMatrix.detZ_mul X Y)
+    canonicalDet (zMul X Y) = canonicalDet X * canonicalDet Y := by
+  exact InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionDatum.detZ_mul X Y
 
 theorem canonical_annihilator_mem_null {X : Imaginary}
     (hX0 : X ≠ 0) (hXnull : X ∈ NormLevel 0)
     {Y : CanonicalZorn}
     (hY : Y ∈ LinearMap.ker (fullRightMulLinear X.1)) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Y = 0 := by
+    canonicalDet Y = 0 := by
   rw [← fullRightMul_range_eq_ker hX0 hXnull] at hY
   obtain ⟨Z, rfl⟩ := hY
-  change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (zMul Z X.1) = 0
+  change canonicalDet (zMul Z X.1) = 0
   rw [canonical_det_mul]
-  rw [(mem_normLevel_iff 0 X).mp hXnull]
+  have hdet : canonicalDet X.1 = 0 :=
+    (mem_normLevel_iff 0 X).mp hXnull
+  rw [hdet]
   simp
 
 /-! ## Canonical real Zorn coordinates in the affine `(4,4)` chart -/
@@ -122,8 +126,10 @@ def canonicalToPAC44 (X : CanonicalZorn) : PACSplit44 where
 
 theorem canonicalToPAC44_Q44 (X : CanonicalZorn) :
     Q44 (canonicalToPAC44 X) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X := by
+      canonicalDet X := by
   simp [canonicalToPAC44, Q44,
+    canonicalDet,
+    InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3,
     InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
     InfoGeometry.Canonical.ZornMatrix.dot, Fin.sum_univ_three]
   ring
@@ -138,10 +144,10 @@ def canonicalAffineNullChart (x y : Fin 3 → ℝ) : CanonicalZorn :=
     y := y }
 
 theorem canonicalAffineNullChart_det (x y : Fin 3 → ℝ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
-        (canonicalAffineNullChart x y) = 0 := by
-  simp [canonicalAffineNullChart,
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ]
+    canonicalDet (canonicalAffineNullChart x y) = 0 := by
+  simp [canonicalDet, canonicalAffineNullChart,
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
+    InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3]
 
 theorem canonicalAffineNullChart_injective : Function.Injective
     (fun p : (Fin 3 → ℝ) × (Fin 3 → ℝ) =>
@@ -157,12 +163,14 @@ theorem canonicalAffineNullChart_injective : Function.Injective
 chart coordinates `(x,y)`. -/
 theorem canonicalAffineNullChart_eq_of_a_one
     (X : CanonicalZorn) (ha : X.a = 1)
-    (hnull : InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X = 0) :
+    (hnull : canonicalDet X = 0) :
     canonicalAffineNullChart X.x X.y = X := by
   apply InfoGeometry.Canonical.ZornMatrix.ext
   · exact ha.symm
   · have hdot : X.b = InfoGeometry.Canonical.ZornMatrix.dot X.x X.y := by
-      rw [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ] at hnull
+      rw [canonicalDet,
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3,
+        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ] at hnull
       rw [ha] at hnull
       linarith
     exact hdot.symm
@@ -208,7 +216,7 @@ theorem canonicalConformalLift_null_of_normLevel
 theorem imaginary_annihilator_mem_null {X : Imaginary}
     (hX0 : X ≠ 0) (hXnull : X ∈ NormLevel 0)
     (Y : Annihilator X) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Y.1.1 = 0 := by
+    canonicalDet Y.1.1 = 0 := by
   apply canonical_annihilator_mem_null hX0 hXnull
   exact (mem_annihilator_iff X Y.1).mp Y.2
 

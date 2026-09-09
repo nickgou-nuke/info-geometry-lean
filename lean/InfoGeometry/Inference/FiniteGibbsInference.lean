@@ -25,13 +25,8 @@ namespace InfoGeometry.Inference.FiniteGibbs
 variable {Data Theta : Type*} [Fintype Data] [Nonempty Data]
 
 /-- A finite parameterized energy model. -/
-abbrev Model := Data → Theta → ℝ
-
-namespace Model
-
-abbrev energy (M : Model (Data := Data) (Theta := Theta)) : Data → Theta → ℝ := M
-
-end Model
+structure Model where
+  energy : Data → Theta → ℝ
 
 /-- The finite partition function at parameter `θ` and temperature `ε`. -/
 noncomputable def partitionFunction

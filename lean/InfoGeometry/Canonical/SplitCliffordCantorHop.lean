@@ -59,13 +59,17 @@ theorem bitCharge_hopBit (b : Bool) :
     bitCharge (hopBit b) = bitCharge b + 1 := by
   cases b <;> rfl
 
+/-- Finite binary word carrier. -/
+def BinaryWord : Type :=
+  List Bool
+
 /-- Finite `ZMod 2` charge of a binary word. -/
-def wordCharge : List Bool → ZMod 2
+def wordCharge : BinaryWord → ZMod 2
   | [] => 0
   | b :: bs => bitCharge b + wordCharge bs
 
 /-- Hop the first site of a finite binary word. -/
-def hopHead : List Bool → List Bool
+def hopHead : BinaryWord → BinaryWord
   | [] => []
   | b :: bs => hopBit b :: bs
 
@@ -81,7 +85,7 @@ theorem hopHead_cons (b : Bool) (bs : List Bool) :
 
 /-- The head-hop is involutive. -/
 @[simp]
-theorem hopHead_involutive (w : List Bool) :
+theorem hopHead_involutive (w : BinaryWord) :
     hopHead (hopHead w) = w := by
   cases w with
   | nil => rfl
@@ -98,7 +102,7 @@ theorem wordCharge_hopHead_cons
 
 /-- Two head-hops return the charge to its original value. -/
 theorem wordCharge_hopHead_twice
-    (w : List Bool) :
+    (w : BinaryWord) :
     wordCharge (hopHead (hopHead w)) = wordCharge w := by
   rw [hopHead_involutive]
 
@@ -145,8 +149,8 @@ theorem nilpotent_packet :
 theorem cantor_hop_packet :
     (∀ b : Bool, hopBit (hopBit b) = b) ∧
     (∀ b : Bool, bitCharge (hopBit b) = bitCharge b + 1) ∧
-    (∀ w : List Bool, hopHead (hopHead w) = w) ∧
-    (∀ w : List Bool, wordCharge (hopHead (hopHead w)) = wordCharge w) :=
+    (∀ w : BinaryWord, hopHead (hopHead w) = w) ∧
+    (∀ w : BinaryWord, wordCharge (hopHead (hopHead w)) = wordCharge w) :=
   ⟨hopBit_involutive,
     bitCharge_hopBit,
     hopHead_involutive,

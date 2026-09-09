@@ -13,10 +13,60 @@ theorem.
 
 namespace InfoGeometry.Arithmetic.IndexTheorem
 
-open scoped BigOperators
 open InfoGeometry.Arithmetic.BostConnesSystem
 open InfoGeometry.Geometry.BilingualAnalyticity
 open InfoGeometry.Geometry.SpectralDivisors
+
+/-! ## Finite two-term complexes and their kernel index -/
+
+/-- A finite two-term complex, with its two differentials and square-zero laws. -/
+structure FiniteTwoTermComplex
+    (K Vp Vm : Type*)
+    [DivisionRing K] [AddCommGroup Vp] [AddCommGroup Vm]
+    [Module K Vp] [Module K Vm] where
+  qPlus : Vp →ₗ[K] Vm
+  qMinus : Vm →ₗ[K] Vp
+  qMinus_qPlus : qMinus.comp qPlus = 0
+  qPlus_qMinus : qPlus.comp qMinus = 0
+
+/-- Euler characteristic of the two-term complex, computed from kernels. -/
+noncomputable def finiteKernelIndex
+    {K Vp Vm : Type*}
+    [DivisionRing K] [AddCommGroup Vp] [AddCommGroup Vm]
+    [Module K Vp] [Module K Vm]
+    [FiniteDimensional K Vp] [FiniteDimensional K Vm]
+    (C : FiniteTwoTermComplex K Vp Vm) : ℤ :=
+  (Module.finrank K (LinearMap.ker C.qPlus) : ℤ) -
+    (Module.finrank K (LinearMap.ker C.qMinus) : ℤ)
+
+/-- The zero-differential two-term complex on two finite-dimensional modules. -/
+def zeroFiniteTwoTermComplex
+    {K Vp Vm : Type*}
+    [DivisionRing K] [AddCommGroup Vp] [AddCommGroup Vm]
+    [Module K Vp] [Module K Vm] :
+    FiniteTwoTermComplex K Vp Vm where
+  qPlus := 0
+  qMinus := 0
+  qMinus_qPlus := by simp
+  qPlus_qMinus := by simp
+
+theorem finiteKernelIndex_zero
+    {K Vp Vm : Type*}
+    [DivisionRing K] [AddCommGroup Vp] [AddCommGroup Vm]
+    [Module K Vp] [Module K Vm]
+    [FiniteDimensional K Vp] [FiniteDimensional K Vm] :
+    finiteKernelIndex (zeroFiniteTwoTermComplex (K := K) (Vp := Vp) (Vm := Vm)) =
+      (Module.finrank K Vp : ℤ) - (Module.finrank K Vm : ℤ) := by
+  unfold finiteKernelIndex
+  rw [show (zeroFiniteTwoTermComplex (K := K) (Vp := Vp) (Vm := Vm)).qPlus = 0 by rfl,
+    show (zeroFiniteTwoTermComplex (K := K) (Vp := Vp) (Vm := Vm)).qMinus = 0 by rfl]
+  have hp : LinearMap.ker (0 : Vp →ₗ[K] Vm) = ⊤ := by
+    ext x
+    simp
+  have hm : LinearMap.ker (0 : Vm →ₗ[K] Vp) = ⊤ := by
+    ext x
+    simp
+  rw [hp, hm, finrank_top, finrank_top]
 
 /-- The total prime-factor count of `1` is zero. -/
 @[simp] theorem totalPrimeFactors_one :
@@ -54,14 +104,11 @@ theorem liouville_prime_mul (p n : ℕ+) (hp : Nat.Prime p.val) :
   InfoGeometry.Arithmetic.BostConnesSystem.liouville_prime_mul p n hp n.pos
 
 /--
-Compatibility readout for this lane.
+Open theorem debt for this lane.
 
 The current repository proves the finite arithmetic grading identities above.
-The following theorem only reads back equality supplied by the explicit
-`TopologicalIndexDatum`; it is not a Witten-index, Euler-characteristic, or
-anomaly-cancellation theorem.  A genuine identification with those objects
-requires the finite graded complex and kernel correspondence provided by the
-separate finite index owners.
+Any Witten-index, Euler-characteristic, or anomaly-cancellation statement must
+be added later as a theorem with explicit operator/cohomological hypotheses.
 -/
 theorem topological_index_eq_spectral_flow
     {Region Point Tangent Value Cycle : Type*}
@@ -74,57 +121,5 @@ theorem topological_index_eq_spectral_flow
     (c : Cycle) :
     T.index c = T.spectralFlow c := by
   exact T.index_eq_spectralFlow c
-
-/-! ## Finite graded index owner
-
-The following is the genuine finite algebraic carrier for a two-term graded
-complex.  It is intentionally independent of divisor data: a divisor-to-index
-theorem requires an additional kernel/cokernel correspondence. -/
-
-section FiniteGradedIndex
-
-variable {K Vp Vm : Type*}
-  [DivisionRing K]
-  [AddCommGroup Vp] [Module K Vp]
-  [AddCommGroup Vm] [Module K Vm]
-  [FiniteDimensional K Vp] [FiniteDimensional K Vm]
-
-/-- A finite two-term graded complex with odd maps in both directions. -/
-structure FiniteTwoTermComplex where
-  qPlus : Vp →ₗ[K] Vm
-  qMinus : Vm →ₗ[K] Vp
-  qMinus_qPlus : qMinus.comp qPlus = 0
-  qPlus_qMinus : qPlus.comp qMinus = 0
-
-/-- The finite Euler/Witten kernel index of a two-term complex. -/
-noncomputable def finiteKernelIndex
-    (C : FiniteTwoTermComplex (K := K) (Vp := Vp) (Vm := Vm)) : ℤ :=
-  (Module.finrank K C.qPlus.ker : ℤ) - Module.finrank K C.qMinus.ker
-
-/-! ## Finite signed divisor readout -/
-
-/-- The signed integer charge of a finite marked divisor. -/
-def finiteDivisorIndex {ι : Type*} (marks : Finset ι) (order : ι → ℤ) : ℤ :=
-  ∑ a ∈ marks, order a
-
-/-- The zero-differential two-term complex. -/
-def zeroFiniteTwoTermComplex :
-    FiniteTwoTermComplex (K := K) (Vp := Vp) (Vm := Vm) where
-  qPlus := 0
-  qMinus := 0
-  qMinus_qPlus := by simp
-  qPlus_qMinus := by simp
-
-/-- For the zero complex, the kernel index is the graded dimension difference. -/
-theorem finiteKernelIndex_zero :
-    finiteKernelIndex
-        (zeroFiniteTwoTermComplex (K := K) (Vp := Vp) (Vm := Vm)) =
-      (Module.finrank K Vp : ℤ) - Module.finrank K Vm := by
-  change (Module.finrank K (LinearMap.ker (0 : Vp →ₗ[K] Vm)) : ℤ) -
-      Module.finrank K (LinearMap.ker (0 : Vm →ₗ[K] Vp)) =
-      (Module.finrank K Vp : ℤ) - Module.finrank K Vm
-  rw [LinearMap.ker_zero, LinearMap.ker_zero, finrank_top, finrank_top]
-
-end FiniteGradedIndex
 
 end InfoGeometry.Arithmetic.IndexTheorem

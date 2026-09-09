@@ -147,7 +147,8 @@ theorem klein_logarithmic_deck_increment (z : ℂ) (n : ℤ) :
 theorem klein_logarithmic_sheet_shift (z : ℂ) (n k : ℤ) :
     uLog (z, n + k) - uLog (z, n) =
       (2 * Real.pi * Complex.I : ℂ) * (k : ℂ) := by
-  rw [uLog_sheet_add]
+  unfold uLog
+  push_cast
   ring
 
 /-! ## The period pairing already owned by the punctured-plane model -/

@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/TKKConformalClosure.lean
 
-TKK conformal closure and Ricci-flux data.
+TKK conformal closure and Ricci-flux sockets.
 
 This file records the Lie-algebraic Tits-Kantor-Koecher closure layer:
 
@@ -11,7 +11,7 @@ where the plus/minus-one pieces encode Jordan translation/special-conformal dire
 and g_0 encodes the derivation/structure algebra.
 
 The conformal group-level interpretation, such as SO(5,5), Pin(5,5), or
-projective null-cone Mobius geometry, is kept as an explicit property layer.
+projective null-cone Mobius geometry, is kept as an explicit witness layer.
 
 Ricci flux is defined as a covariant readout of the variation of curvature /
 closure defect along TKK generators. It is not a bare Ricci tensor until a
@@ -26,7 +26,7 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.TKKConformalClosure
 
-/-! ## 1. Abstract conformal compactification datum -/
+/-! ## 1. Abstract conformal compactification socket -/
 
 /--
 A conformal compactification datum.
@@ -50,7 +50,7 @@ structure ConformalCompactificationDatum
   /-- Null cone in the ambient conformal carrier. -/
   nullCone : Set W
 
-  /-- Projective conformal boundary / representative datum for compactification. -/
+  /-- Projective conformal boundary / representative socket for compactification. -/
   projectiveNullBoundary : Set W
 
   /-- The null cone is represented by `ambientQ = 0`. -/
@@ -61,7 +61,7 @@ structure ConformalCompactificationDatum
   The projective boundary lies on the null cone.
 
   This keeps the “boundary is the projectivized null cone” interpretation
-  explicit while still storing a representative datum rather than a quotient.
+  explicit while still storing a representative socket rather than a quotient.
   -/
   boundary_subset_nullCone :
     projectiveNullBoundary ⊆ nullCone
@@ -92,7 +92,7 @@ theorem affineEmbed_injective_prop :
 
 end ConformalCompactificationDatum
 
-/-! ## 2. TKK 3-grading datum -/
+/-! ## 2. TKK 3-grading socket -/
 
 /--
 A TKK 3-grading on a Lie algebra.
@@ -264,13 +264,13 @@ theorem toPlus_mem_grade
 
 end TKKClosureDatum
 
-/-! ## 3. Conformal action datum -/
+/-! ## 3. Conformal action socket -/
 
 /--
 A Lie-algebraic conformal action of the TKK algebra on a state space.
 
 This is the infinitesimal version. Group-level `SO(5,5)`/`Pin(5,5)` integration
-is a separate property.
+is a separate witness.
 -/
 structure TKKInfinitesimalAction
     (L State : Type*) [AddCommGroup L] [Module ℝ L]
@@ -312,10 +312,52 @@ theorem act_lie
 
 end TKKInfinitesimalAction
 
-/-! ## 3A. Pin group lift property -/
+/--
+A group-level conformal/Mobius lift witness.
+
+This is where `SO(5,5)`, `Pin(5,5)`, projective null-cone action, and discrete
+CPT/V4 components should be recorded.
+-/
+structure ConformalGroupLiftWitness
+    (L W : Type*) [AddCommGroup L] [Module ℝ L]
+    [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup W] [Module ℝ W] where
+  /-- Infinitesimal action on the ambient conformal carrier, linear in generators. -/
+  infinitesimalAction : L →ₗ[ℝ] W →ₗ[ℝ] W
+
+  /-- Predicate for admissible conformal motions. -/
+  IsConformalMotion : (W →ₗ[ℝ] W) → Prop
+
+  /-- The infinitesimal action is a Lie homomorphism. -/
+  infinitesimalAction_lie :
+    ∀ X Y : L,
+      infinitesimalAction ⁅X, Y⁆ =
+        (infinitesimalAction X).comp (infinitesimalAction Y) -
+        (infinitesimalAction Y).comp (infinitesimalAction X)
+
+namespace ConformalGroupLiftWitness
+
+variable
+    {L W : Type*} [AddCommGroup L] [Module ℝ L]
+    [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup W] [Module ℝ W]
+
+variable (G : ConformalGroupLiftWitness L W)
+
+/-- The infinitesimal action respects the Lie bracket. -/
+theorem infinitesimalAction_lie_eq
+    (X Y : L) :
+    G.infinitesimalAction ⁅X, Y⁆ =
+      (G.infinitesimalAction X).comp (G.infinitesimalAction Y) -
+      (G.infinitesimalAction Y).comp (G.infinitesimalAction X) :=
+  G.infinitesimalAction_lie X Y
+
+end ConformalGroupLiftWitness
+
+/-! ## 3A. Pin group lift witness -/
 
 /--
-Pin group lift property for the TKK conformal double cover.
+Pin group lift witness for the TKK conformal double cover.
 
 Certifies that the `so(5,5)` infinitesimal action on the ambient conformal
 module `W` lifts to a group-level `Pin(p,q)` action through the Clifford
@@ -333,7 +375,7 @@ The Lie-algebra level action is inherited from `ConformalGroupLiftWitness`.
 See: Lawson–Michelsohn, *Spin Geometry*, Ch. I;
 Meinrenken, *Clifford Algebras and Lie Theory*.
 -/
-structure PinLiftData
+structure PinLiftWitness
     (L W : Type*)
     [AddCommGroup L] [Module ℝ L]
     [LieRing L] [LieAlgebra ℝ L]
@@ -342,18 +384,8 @@ structure PinLiftData
   /-- Quadratic form on `W`, intended signature `(5,5)`. -/
   quadraticForm : QuadraticForm ℝ W
 
-  /-- Infinitesimal conformal action at the Lie algebra level. -/
-  infinitesimalAction : L →ₗ[ℝ] W →ₗ[ℝ] W
-
-  /-- Predicate for admissible conformal motions. -/
-  IsConformalMotion : (W →ₗ[ℝ] W) → Prop
-
-  /-- The infinitesimal action is a Lie homomorphism. -/
-  infinitesimalAction_lie :
-    ∀ X Y : L,
-      infinitesimalAction ⁅X, Y⁆ =
-        (infinitesimalAction X).comp (infinitesimalAction Y) -
-        (infinitesimalAction Y).comp (infinitesimalAction X)
+  /-- Underlying infinitesimal conformal action at the Lie algebra level. -/
+  infinitesimalAction : ConformalGroupLiftWitness L W
 
   /-- Abstract Pin group carrier (double cover of `O(quadraticForm)`). -/
   PinGroupCarrier : Type*
@@ -389,7 +421,7 @@ structure PinLiftData
     ∀ (g : PinGroupCarrier) (w : W),
       quadraticForm (pinAction g w) = quadraticForm w
 
-namespace PinLiftData
+namespace PinLiftWitness
 
 variable
     {L W : Type*}
@@ -397,7 +429,7 @@ variable
     [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup W] [Module ℝ W]
 
-variable (P : PinLiftData L W)
+variable (P : PinLiftWitness L W)
 
 /-- The Clifford squaring relation at a given vector `w`. -/
 theorem clifford_sq_eq (w : W) :
@@ -411,15 +443,15 @@ theorem pinAction_preserves_form (g : P.PinGroupCarrier) (w : W) :
   P.pinAction_preserves_Q g w
 
 /-- The infinitesimal action is a Lie homomorphism. -/
-theorem infinitesimalAction_lie_eq (X Y : L) :
-    P.infinitesimalAction ⁅X, Y⁆ =
-      (P.infinitesimalAction X).comp
-          (P.infinitesimalAction Y) -
-      (P.infinitesimalAction Y).comp
-          (P.infinitesimalAction X) :=
-  P.infinitesimalAction_lie X Y
+theorem infinitesimalAction_lie (X Y : L) :
+    P.infinitesimalAction.infinitesimalAction ⁅X, Y⁆ =
+      (P.infinitesimalAction.infinitesimalAction X).comp
+          (P.infinitesimalAction.infinitesimalAction Y) -
+      (P.infinitesimalAction.infinitesimalAction Y).comp
+          (P.infinitesimalAction.infinitesimalAction X) :=
+  P.infinitesimalAction.infinitesimalAction_lie X Y
 
-end PinLiftData
+end PinLiftWitness
 
 /-! ## 4. Closure defect and Ricci flux -/
 
@@ -500,7 +532,7 @@ def mk
     CurvatureReadout State Geometry :=
   curvature_linear
 
-/-- The curvature readout agrees with its linear property. -/
+/-- The curvature readout agrees with its linear witness. -/
 theorem curvature_eq
     (s : State) :
     C.curvature s = C.curvature_linear s :=
@@ -755,13 +787,8 @@ structure Closure
   infinitesimalAction :
     TKKInfinitesimalAction L State
 
-  groupLift : L →ₗ[ℝ] W →ₗ[ℝ] W
-  groupLiftIsConformalMotion : (W →ₗ[ℝ] W) → Prop
-  groupLift_lie :
-    ∀ X Y : L,
-      groupLift ⁅X, Y⁆ =
-        (groupLift X).comp (groupLift Y) -
-        (groupLift Y).comp (groupLift X)
+  groupLift :
+    ConformalGroupLiftWitness L W
 
   ricciFlux :
     TKKRicciFluxDatum L State Geometry

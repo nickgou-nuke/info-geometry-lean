@@ -2,7 +2,6 @@ import InfoGeometry.Singular.CartanWiring
 import InfoGeometry.Singular.DrazinAdjoint
 import InfoGeometry.Singular.DrazinGreen
 import InfoGeometry.Singular.MoorePenroseAdjoint
-import InfoGeometry.Singular.MetricAlgebraicProjectionDefect
 import InfoGeometry.Singular.NaturalGradient
 import InfoGeometry.Singular.NormalAnomaly
 import InfoGeometry.Singular.SchurDrazinMoorePenrose

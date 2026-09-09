@@ -93,7 +93,7 @@ theorem modularHamiltonian_eq_neg_log_rn :
 /--
 Bridge hook into the real Tomita `δ = log Δ` package.
 
-`hExp` is the explicit property that the chosen generator exponentiates to `Δ`.
+`hExp` is the explicit witness that the chosen generator exponentiates to `Δ`.
 -/
 @[rep_depth transport]
 noncomputable def toRealModularLogData
@@ -165,6 +165,23 @@ noncomputable def boltzmannEntropyPotentialHom
       (InfoGeometry.Volume.ConnesCocycle.cocycleLogPotential_zero
         (H := E) R.additiveFlow u hCocycle B)
   map_add' := R.boltzmannEntropyPotential_add u hCocycle B
+
+@[simp] theorem boltzmannEntropyPotentialHom_apply
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd E)
+    (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle R.additiveFlow u)
+    (B : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := E) R.additiveFlow)
+    (t : ℝ) :
+    R.boltzmannEntropyPotentialHom u hCocycle B t = R.boltzmannEntropyPotential u B t :=
+  rfl
+
+@[rep_depth thermo, capstone]
+theorem exists_boltzmannEntropyPotential_of_cocycle
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd E)
+    (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle R.additiveFlow u)
+    (B : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := E) R.additiveFlow) :
+    ∃ Φ : ℝ → ℝ, ∀ s t, Φ (s + t) = Φ s + Φ t := by
+  refine ⟨R.boltzmannEntropyPotential u B, ?_⟩
+  exact R.boltzmannEntropyPotential_add u hCocycle B
 
 end RealTypeIIIModularData
 
@@ -379,7 +396,7 @@ theorem coreTrace_dualAction_eq_singularPolar_split_of_wedgeCalibrated
 /--
 Wedge-calibrated CP-003 capstone package on the Type-III core lane:
 bundles the base core-trace split equality, its dual-action transport form, and
-the mixed active/apex block-vanishing property.
+the mixed active/apex block-vanishing witness.
 -/
 @[rep_depth transport, capstone]
 theorem coreTrace_wedgeCalibrated_activeApex_stability_package

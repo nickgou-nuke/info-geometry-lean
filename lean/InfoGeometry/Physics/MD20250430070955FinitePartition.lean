@@ -10,7 +10,7 @@ Source: `github-nick:nickgou-nuke/MD`, file
 The source is a broad report on partition functions as a bridge between
 information geometry, quantum-state geometry, and spacetime geometry.  Most of
 its continuum, QFT, GR, Kähler-Fisher, and emergence claims are stated as
-background, analogy, conjecture, property, or open research program.  This
+background, analogy, conjecture, hypothesis, or open research program.  This
 file extracts the finite theorem-safe core:
 
 * a finite partition function is just a finite sum of nonzero-normalized
@@ -105,6 +105,30 @@ theorem finiteCovariance_zero_right_of_constant {ι : Type} [Fintype ι]
     finiteCovariance w O (fun _ => c) = 0 := by
   rw [finiteCovariance_symmetric]
   exact finiteCovariance_zero_left_of_constant w hZ c O
+
+/--
+Repaired finite packet for the MD partition-function manuscript.
+
+The last conjunct explicitly carries the previous MD matrix-statistics local
+configuration surface forward: Pauli recomposition remains the finite local
+matrix-statistic readback used by the pre-geometric ensemble narrative.
+-/
+theorem repaired_MD20250430070955_finite_partition_packet
+    {ι κ : Type} [Fintype ι] [Fintype κ]
+    (w : ι → ℂ) (v : κ → ℂ) (hZ : finitePartition w ≠ 0)
+    (O P : ι → ℂ) (c : ℂ)
+    (q : ι → MD20250430071017MatrixStatistics.LocalMatrixConfig) :
+    (∑ i, normalizedWeight w i = 1) ∧
+    (finitePartition (fun p : ι × κ => w p.1 * v p.2) =
+      finitePartition w * finitePartition v) ∧
+    (finiteCovariance w O P = finiteCovariance w P O) ∧
+    (finiteCovariance w (fun _ => c) P = 0) ∧
+    (∀ i, Section33PauliBiquaternionCompletion.pauliRecompose (q i) = q i) := by
+  exact ⟨normalizedWeight_sum_one w hZ,
+    finitePartition_product w v,
+    finiteCovariance_symmetric w O P,
+    finiteCovariance_zero_left_of_constant w hZ c P,
+    fun i => MD20250430071017MatrixStatistics.localMatrix_recompose (q i)⟩
 
 end InfoGeometry.Physics.MD20250430070955FinitePartition
 

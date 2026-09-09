@@ -9,22 +9,22 @@ noncomputable section
 # InfoGeometry.Canonical.BoundedModularKMSBridge
 
 Adapter from the bounded modular-flow calibration layer to the existing
-operator-algebraic KMS interface.
+operator-algebraic KMS socket.
 
 This file consumes:
 
 * `BoundedModularFlowCalibration`, which calibrates an external flow against
   the bounded surrogate action;
 * `OperatorThermodynamics.KMSState`, which carries the analytic KMS boundary
-  condition as explicit property data.
+  condition as explicit witness data.
 
 No analytic strip theorem is proved here. The KMS boundary condition remains a
-property supplied by the model.
+certificate supplied by the model.
 
 The purpose is to read back:
 
 * invariance of the KMS state under the bounded calibrated flow;
-* availability of the KMS analytic boundary property;
+* availability of the KMS analytic boundary certificate;
 * compatibility of the bounded flow with `KsurAction`.
 -/
 
@@ -37,7 +37,6 @@ section Core
 
 variable {E LieAlgebra : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable [AddMonoid LieAlgebra]
 
 local notation "EndH" => E →L[ℝ] E
 

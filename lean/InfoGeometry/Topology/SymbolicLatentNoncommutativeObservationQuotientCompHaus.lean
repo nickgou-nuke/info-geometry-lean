@@ -169,5 +169,3 @@ noncomputable def operatorObservationQuotientCompHausIso
   rfl
 
 end InfoGeometry.Topology
-
-end

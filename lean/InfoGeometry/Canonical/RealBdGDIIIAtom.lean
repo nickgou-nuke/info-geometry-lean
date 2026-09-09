@@ -799,11 +799,11 @@ theorem canonicalDIIIProxy_transport_root_parity_vorticity_kkt_headSuperBracket_
     hNullPlusSq, hCAR, hJK⟩
 
 /--
-Root-name parity/vortex-property/KKT/head-superbracket closure on a transport
+Root-name parity/vortex-witness/KKT/head-superbracket closure on a transport
 slice.
 
 This strengthens the vorticity-facing closure by exporting a localized boundary
-vortex property directly:
+vortex witness directly:
 `∃ v, IsDanglingZeroMode S v ∧ coriolisVorticity S v ≠ 0`.
 -/
 @[rep_depth transport]

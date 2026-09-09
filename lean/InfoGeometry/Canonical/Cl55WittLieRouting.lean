@@ -1,4 +1,6 @@
 import InfoGeometry.Canonical.Cl55WittCAR
+import InfoGeometry.OperatorAlgebra.ChiralRetainedWordFiveGradeClosure
+import InfoGeometry.OperatorAlgebra.GradeActionInterface
 
 noncomputable section
 set_option autoImplicit false
@@ -9,6 +11,8 @@ open scoped Matrix Kronecker
 open Matrix
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Canonical.Cl55WittCAR
+open InfoGeometry.OperatorAlgebra
+open InfoGeometry.OperatorAlgebra.RetainedChiralOperators
 
 def bracket (X Y : MatStage 5) : MatStage 5 := X * Y - Y * X
 
@@ -317,39 +321,43 @@ theorem numberAdjoint_mul (X Y : MatStage 5) :
   noncomm_ring
 
 def gradeSubmodule (k : ℤ) : Submodule ℝ (MatStage 5) :=
-  LinearMap.ker (numberAdjoint - (k : ℝ) • LinearMap.id)
+  InfoGeometry.OperatorAlgebra.gradeSubmodule numberOperator k
 
 theorem numberOperator_mem_grade_zero :
     numberOperator ∈ gradeSubmodule 0 := by
-  apply LinearMap.mem_ker.mpr
-  simp [numberAdjoint, bracket]
+  change HasOperatorGrade numberOperator numberOperator 0
+  unfold HasOperatorGrade
+  simpa [bracket]
 
 theorem creation_mem_gradeSubmodule (i : Fin 5) :
     creation i ∈ gradeSubmodule 1 := by
-  apply LinearMap.mem_ker.mpr
-  simp [numberAdjoint, numberOperator_creation]
+  change HasOperatorGrade numberOperator (creation i) 1
+  unfold HasOperatorGrade
+  simpa [bracket] using numberOperator_creation i
 
 theorem annihilation_mem_gradeSubmodule (i : Fin 5) :
     annihilation i ∈ gradeSubmodule (-1) := by
-  apply LinearMap.mem_ker.mpr
-  simp [numberAdjoint, numberOperator_annihilation]
+  change HasOperatorGrade numberOperator (annihilation i) (-1)
+  unfold HasOperatorGrade
+  simpa [bracket] using numberOperator_annihilation i
 
 theorem E_mem_gradeSubmodule (i j : Fin 5) :
     E i j ∈ gradeSubmodule 0 := by
-  apply LinearMap.mem_ker.mpr
-  simp [numberAdjoint, numberOperator_E]
+  change HasOperatorGrade numberOperator (E i j) 0
+  unfold HasOperatorGrade
+  simpa [bracket] using numberOperator_E i j
 
 theorem creation_quadratic_mem_gradeSubmodule (i j : Fin 5) :
     creation i * creation j ∈ gradeSubmodule 2 := by
-  apply LinearMap.mem_ker.mpr
-  simp [numberAdjoint,
-    numberOperator_creation_quadratic]
+  change HasOperatorGrade numberOperator (creation i * creation j) 2
+  unfold HasOperatorGrade
+  simpa [bracket] using numberOperator_creation_quadratic i j
 
 theorem annihilation_quadratic_mem_gradeSubmodule (i j : Fin 5) :
     annihilation i * annihilation j ∈ gradeSubmodule (-2) := by
-  apply LinearMap.mem_ker.mpr
-  simp [numberAdjoint,
-    numberOperator_annihilation_quadratic]
+  change HasOperatorGrade numberOperator (annihilation i * annihilation j) (-2)
+  unfold HasOperatorGrade
+  simpa [bracket] using numberOperator_annihilation_quadratic i j
 
 theorem creation_E (i j k : Fin 5) :
     bracket (creation k) (E i j) =
@@ -747,12 +755,14 @@ theorem grade_mem_eq_zero_of_distinct
     (hxk : x ∈ gradeSubmodule k)
     (hxl : x ∈ gradeSubmodule l) :
     x = 0 := by
-  have hk : numberAdjoint x = (k : ℝ) • x := by
-    have h := LinearMap.mem_ker.mp hxk
-    exact sub_eq_zero.mp (by simpa [gradeSubmodule] using h)
-  have hl : numberAdjoint x = (l : ℝ) • x := by
-    have h := LinearMap.mem_ker.mp hxl
-    exact sub_eq_zero.mp (by simpa [gradeSubmodule] using h)
+  have hk : bracket numberOperator x = (k : ℝ) • x := by
+    change HasOperatorGrade numberOperator x k at hxk
+    change bracket numberOperator x = (k : ℝ) • x at hxk
+    exact hxk
+  have hl : bracket numberOperator x = (l : ℝ) • x := by
+    change HasOperatorGrade numberOperator x l at hxl
+    change bracket numberOperator x = (l : ℝ) • x at hxl
+    exact hxl
   have hsub : ((k : ℝ) - (l : ℝ)) • x = 0 := by
     rw [sub_smul]
     exact sub_eq_zero.mpr (hk.symm.trans hl)
@@ -763,32 +773,45 @@ theorem gradeSubmodule_bracket_mem
     (hX : X ∈ gradeSubmodule k) (hY : Y ∈ gradeSubmodule l) :
     bracket X Y ∈ gradeSubmodule (k + l) := by
   have hk : numberAdjoint X = (k : ℝ) • X := by
-    have h := LinearMap.mem_ker.mp hX
-    exact sub_eq_zero.mp (by simpa [gradeSubmodule] using h)
+    change HasOperatorGrade numberOperator X k at hX
+    change numberAdjoint X = (k : ℝ) • X at hX
+    exact hX
   have hl : numberAdjoint Y = (l : ℝ) • Y := by
-    have h := LinearMap.mem_ker.mp hY
-    exact sub_eq_zero.mp (by simpa [gradeSubmodule] using h)
-  apply LinearMap.mem_ker.mpr
-  simp only [LinearMap.sub_apply, LinearMap.smul_apply, LinearMap.id_apply]
+    change HasOperatorGrade numberOperator Y l at hY
+    change numberAdjoint Y = (l : ℝ) • Y at hY
+    exact hY
+  change HasOperatorGrade numberOperator (bracket X Y) (k + l)
+  change numberAdjoint (bracket X Y) = ((k + l : ℤ) : ℝ) • bracket X Y
   rw [numberAdjoint_bracket, hk, hl,
     bracket_smul_left, bracket_smul_right, Int.cast_add,
-    ← add_smul, sub_self]
+    ← add_smul]
+
+theorem bracket_left_mapsToGradeBetween
+    {k : ℤ} {X : MatStage 5} (hX : X ∈ gradeSubmodule k) :
+    InfoGeometry.OperatorAlgebra.MapsToGradeBetween
+      (fun l : ℤ => (gradeSubmodule l : Set (MatStage 5)))
+      (fun l : ℤ => (gradeSubmodule l : Set (MatStage 5)))
+      (fun _ : Unit => bracket X)
+      (fun _ l => k + l) := by
+  intro _ l Y hY
+  exact gradeSubmodule_bracket_mem hX hY
 
 theorem gradeSubmodule_mul_mem
     {k l : ℤ} {X Y : MatStage 5}
     (hX : X ∈ gradeSubmodule k) (hY : Y ∈ gradeSubmodule l) :
     X * Y ∈ gradeSubmodule (k + l) := by
-  have hk : numberAdjoint X = (k : ℝ) • X := by
-    have h := LinearMap.mem_ker.mp hX
-    exact sub_eq_zero.mp (by simpa [gradeSubmodule] using h)
-  have hl : numberAdjoint Y = (l : ℝ) • Y := by
-    have h := LinearMap.mem_ker.mp hY
-    exact sub_eq_zero.mp (by simpa [gradeSubmodule] using h)
-  apply LinearMap.mem_ker.mpr
-  simp only [LinearMap.sub_apply, LinearMap.smul_apply, LinearMap.id_apply]
-  rw [numberAdjoint_mul, hk, hl, Matrix.smul_mul, Matrix.mul_smul,
+  have hk : bracket numberOperator X = (k : ℝ) • X := by
+    change HasOperatorGrade numberOperator X k at hX
+    change bracket numberOperator X = (k : ℝ) • X at hX
+    exact hX
+  have hl : bracket numberOperator Y = (l : ℝ) • Y := by
+    change HasOperatorGrade numberOperator Y l at hY
+    change bracket numberOperator Y = (l : ℝ) • Y at hY
+    exact hY
+  change HasOperatorGrade numberOperator (X * Y) (k + l)
+  change bracket numberOperator (X * Y) = ((k + l : ℤ) : ℝ) • (X * Y)
+  rw [bracket_mul_right, hk, hl, Matrix.smul_mul, Matrix.mul_smul,
     Int.cast_add, ← add_smul]
-  module
 
 theorem gradeSubmodule_anticommutator_mem
     {k l : ℤ} {X Y : MatStage 5}

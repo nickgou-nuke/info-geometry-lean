@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.TomitaTakesaki
 /-!
 # InfoGeometry.Canonical.YangMillsFiniteQFT
 
-Finite constructive QFT property layer for the canonical Yang-Mills scaffold.
+Finite constructive QFT witness layer for the canonical Yang-Mills scaffold.
 -/
 
 namespace InfoGeometry.Canonical.YangMillsFinite
@@ -66,7 +66,7 @@ omit [CompleteSpace E] in
       finiteOsterwalderSchraderLayer (E := E) Ω := by
   simp [finiteOsterwalderSchraderLayerRoot, finiteOsterwalderSchraderLayer]
 
-/-- Constructive finite OS-like property from positive-time geometry. -/
+/-- Constructive finite OS-like witness from positive-time geometry. -/
 theorem finiteOsterwalderSchraderLayer_of_positiveTimeVector
     (Ω : InfoGeometry.Krein.DoubledSpace E)
     (hΩ : PositiveTimeVector Ω) :
@@ -75,7 +75,7 @@ theorem finiteOsterwalderSchraderLayer_of_positiveTimeVector
   · simpa using reflectionQuadratic_nonneg_of_positiveTimeVector (E := E) Ω hΩ
   · exact modularConjugationJ_fixed_of_positiveTimeVector (E := E) Ω hΩ
 
-/-- Root-name property from positive-time geometry. -/
+/-- Root-name witness from positive-time geometry. -/
 theorem finiteOsterwalderSchraderLayerRoot_of_positiveTimeVector
     (Ω : InfoGeometry.Krein.DoubledSpace E)
     (hΩ : PositiveTimeVector Ω) :
@@ -92,7 +92,7 @@ def finiteWightmanReconstructionLayer
       SatisfiesKMSLike (E := E) K ω β ∧
       ω ≠ 0
 
-/-- Constructive finite Wightman-like property from expectation-seed data. -/
+/-- Constructive finite Wightman-like witness from expectation-seed data. -/
 theorem finiteWightmanReconstructionLayer_of_expectationSeed
     (K : AlgebraEnd E)
     (β : ℝ)

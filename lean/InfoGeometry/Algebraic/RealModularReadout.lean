@@ -5,7 +5,7 @@ Arithmetic-to-real readout for the modular boundary cusp interface.
 
 This file stays on the real side of the quarantine:
 - it provides the `SL(2, ℤ) → SL(2, ℝ)` lift as a monoid hom;
-- it packages the `T`-identity property at the readout level;
+- it packages the `T`-identity hypothesis at the readout level;
 - it also exposes a generic automorphy-factor pullback API;
 - it turns the denominator cocycle into a rotor cocycle through the
   real chiral phase readout;
@@ -329,7 +329,7 @@ def RealBerryRotorCocycle
 A modular readout with a distinguished `T` element.
 
 The only closed theorem we need for the boundary cusp lane is the
-`T`-identity property.
+`T`-identity hypothesis.
 -/
 def RealModularReadoutData (R : Type*) [Monoid R] :=
   {readout : SL2Z → RealUpperHalfPlane → R //
@@ -350,7 +350,7 @@ theorem T_identity (D : RealModularReadoutData R) :
     ∀ τ : RealUpperHalfPlane, D.readout D.T τ = 1 :=
   Classical.choose_spec D.2
 
-/-- The `T`-identity property in theorem form. -/
+/-- The `T`-identity hypothesis in theorem form. -/
 theorem t_identity (D : RealModularReadoutData R) :
     ∀ τ : RealUpperHalfPlane, D.readout D.T τ = 1 :=
   D.T_identity

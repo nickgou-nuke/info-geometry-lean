@@ -64,7 +64,7 @@ every downstream proof.
 
 ### Stage 5 — Kernel check + tracking
 ```bash
-manage_task list          # no concurrent builds
+# Inspect running compiler processes first; never overlap verification commands.
 lake env lean OwnerFile.lean   # targeted check only
 git add -A                # immediately protect the work
 ```

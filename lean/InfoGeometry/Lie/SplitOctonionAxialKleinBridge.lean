@@ -22,6 +22,7 @@ namespace InfoGeometry.Lie.SplitOctonionAxialKleinBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.ZornMatrix
+open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 open InfoGeometry.Canonical.FierzKleinFoundation
 open InfoGeometry.Lie.SplitOctonionAxialSupportGrading
 open InfoGeometry.Lie.SplitOctonionAxialWittReduction
@@ -116,12 +117,12 @@ theorem kleinForm_wittKleinEquiv (xy : WittCoordinates) :
 native Zorn determinant. -/
 theorem kleinForm_activeKleinEquiv (X : ActiveSector) :
     kleinForm (activeKleinEquiv X) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X.1 := by
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X.1 := by
   rw [activeKleinEquiv, Equiv.trans_apply, LinearEquiv.coe_toEquiv,
     kleinForm_wittKleinEquiv]
   rcases X with ⟨X, Y, hY⟩
   change -ZornMatrix.dot X.x X.y =
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X
   rw [← hY, detZ_axialActiveSupport]
   simp [axialActiveSupport_apply]
 
@@ -130,7 +131,7 @@ is the native six-dimensional split-form isometry statement; the preceding
 theorem is its underlying set-equivalence readout. -/
 theorem kleinForm_activeKleinLinearEquiv (X : ActiveSector) :
     kleinForm (activeKleinLinearEquiv X) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X.1 := by
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X.1 := by
   have hX : activeKleinLinearEquiv X = activeKleinEquiv X := by
     change activeKleinLinearEquiv.toEquiv X = activeKleinEquiv X
     rw [activeKleinLinearEquiv_toEquiv]
@@ -139,9 +140,9 @@ theorem kleinForm_activeKleinLinearEquiv (X : ActiveSector) :
 
 /-- The native cross-term polarization of the active Zorn determinant. -/
 def activeDetPolar (X Y : ActiveSector) : ℝ :=
-  InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (X.1 + Y.1) -
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X.1 -
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Y.1
+  InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (X.1 + Y.1) -
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X.1 -
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 Y.1
 
 /-- The corresponding cross-term polarization of the Klein form. -/
 def activeKleinPolar (X Y : ActiveSector) : ℝ :=
@@ -169,7 +170,7 @@ def activeExteriorLinearEquiv :
 theorem exteriorKleinForm_activeExterior (X : ActiveSector) :
     InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorKleinForm
         (activeExteriorLinearEquiv X) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X.1 := by
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X.1 := by
   rw [InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorKleinForm,
     activeExteriorLinearEquiv, LinearEquiv.trans_apply,
     LinearEquiv.apply_symm_apply]
@@ -202,7 +203,7 @@ theorem activeExteriorLinearEquiv_preserves_polar (X Y : ActiveSector) :
 /-- The active Zorn null cone is exactly the decomposable locus after the
     literal exterior-power transport. -/
 theorem detZ_eq_zero_iff_activeExterior_decomposable (X : ActiveSector) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X.1 = 0 ↔
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X.1 = 0 ↔
       ∃ u v : InfoGeometry.Canonical.FierzKleinFoundation.Vec4,
         activeExteriorLinearEquiv X =
           exteriorPower.ιMulti ℝ 2 ![u, v] := by
@@ -225,13 +226,13 @@ theorem detZ_eq_zero_iff_activeExterior_decomposable (X : ActiveSector) :
 coordinate lies on the Klein quadric. -/
 theorem active_on_klein_iff_detZ_eq_zero (X : ActiveSector) :
     IsOnKleinQuadric (activeKleinEquiv X) ↔
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X.1 = 0 := by
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X.1 = 0 := by
   unfold IsOnKleinQuadric
   rw [kleinForm_activeKleinEquiv]
 
 /-- The affine null cone in the active Zorn support. -/
 abbrev ActiveNullCone :=
-  {X : ActiveSector // InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X.1 = 0}
+  {X : ActiveSector // InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X.1 = 0}
 
 /-- The affine Klein null cone in the repo's canonical six Pluecker
 coordinates. -/
@@ -258,7 +259,7 @@ def activeNullKleinEquiv : ActiveNullCone ≃ KleinNullCone where
 the coordinate polynomial explicit rather than hiding it behind the Klein
 predicate. -/
 theorem detZ_eq_zero_iff_plucker_relation (X : ActiveSector) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X.1 = 0 ↔
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X.1 = 0 ↔
       let P := activeKleinEquiv X
       P.p01 * P.p23 - P.p02 * P.p13 + P.p03 * P.p12 = 0 := by
   rw [← active_on_klein_iff_detZ_eq_zero]

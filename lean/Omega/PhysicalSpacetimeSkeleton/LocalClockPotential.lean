@@ -13,14 +13,14 @@ structure TransportFlatExactPatch (OneCochain : Type u) (ZeroCochain : Type v)
   restrict : OneCochain → OneCochain
   dOne : OneCochain → OneCochain
   dZero : ZeroCochain → OneCochain
+  restrict_dOne : ∀ θ, dOne (restrict θ) = restrict (dOne θ)
+  exact_of_closed : ∀ θ, dOne θ = 0 → ∃ φ : ZeroCochain, θ = dZero φ
 
 /-- Local-patch version of the local clock-potential existence statement. -/
 theorem local_clock_potential_of_transport_flat_exact_patch
     {OneCochain : Type u} {ZeroCochain : Type v} [AddGroup OneCochain]
     (U : TransportFlatExactPatch OneCochain ZeroCochain)
     (Theta dDeltaTau dA Omega : OneCochain)
-    (restrict_dOne : ∀ θ, U.dOne (U.restrict θ) = U.restrict (U.dOne θ))
-    (exact_of_closed : ∀ θ, U.dOne θ = 0 → ∃ φ : ZeroCochain, θ = U.dZero φ)
     (hTheta : U.dOne Theta = dDeltaTau - dA) (hDeltaTau : dDeltaTau = 0) (hOmega : Omega = -dA)
     (hFlat : U.restrict Omega = 0) :
     ∃ φ : ZeroCochain, U.restrict Theta = U.dZero φ := by
@@ -29,8 +29,8 @@ theorem local_clock_potential_of_transport_flat_exact_patch
       (delta := U.dOne) (Theta := Theta) (dDeltaTau := dDeltaTau) (dA := dA) (Omega := Omega)
       hTheta hDeltaTau hOmega
   have hClosed : U.dOne (U.restrict Theta) = 0 := by
-    rw [restrict_dOne, hTransport, hFlat]
-  exact exact_of_closed (U.restrict Theta) hClosed
+    rw [U.restrict_dOne, hTransport, hFlat]
+  exact U.exact_of_closed (U.restrict Theta) hClosed
 
 /-- Paper-facing wrapper for the existence of a local clock potential on a transport-flat exact
     patch: the transport equation makes `Θ|_U` closed when `Ω|_U = 0`, and exactness upgrades

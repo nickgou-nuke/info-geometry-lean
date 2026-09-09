@@ -344,7 +344,7 @@ def run_socratic_dialogue(
     context = (
         f"THEOREM TARGET:\n{theorem_text}\n\n"
         f"Theorem fully qualified name: {theorem_target}\n"
-        f"Project: info-geometry-lean (Lean 4.28.0, mathlib4)\n"
+        f"Project: info-geometry-lean (Lean 4.28.1, mathlib4)\n"
     )
 
     # Dialogue history
@@ -592,7 +592,7 @@ _MUTATIONS = [
     # Add constraints
     lambda p: "Be ruthlessly concise. " + p,
     lambda p: "Think in kernel-checkable terms. " + p,
-    lambda p: "Assume the codebase uses Lean 4.28.0 with mathlib4. " + p,
+    lambda p: "Assume the codebase uses Lean 4.28.1 with mathlib4. " + p,
     # Role specificity
     lambda p: p.replace("explorer", "structural invariant detector"),
     lambda p: p.replace("adjudicator", "kernel-level obstruction finder"),

@@ -58,6 +58,15 @@ theorem theta_theta
     Θ.theta (Θ.theta x) = x :=
   Θ.theta_sq x
 
+/--
+If an element is fixed, applying the closure map does nothing.
+-/
+theorem theta_eq_self_of_fixed
+    {x : X}
+    (h : Θ.IsFixed x) :
+    Θ.theta x = x :=
+  h
+
 end ClosureInvolution
 
 /-! ## 2. Linear closure involution and e₋/e₊ pairs -/
@@ -65,7 +74,7 @@ end ClosureInvolution
 /--
 A real-linear closure involution.
 
-This is the correct interface for grade-swapping statements such as `e₋ ↔ e₊`.
+This is the correct socket for grade-swapping statements such as `e₋ ↔ e₊`.
 -/
 structure LinearClosureInvolution
     (V : Type*) [AddCommGroup V] [Module ℝ V] where

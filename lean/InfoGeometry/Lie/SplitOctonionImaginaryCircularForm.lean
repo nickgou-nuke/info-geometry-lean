@@ -25,6 +25,18 @@ open InfoGeometry.Lie.SplitOctonionCircularMultiplicationTable
 
 abbrev Imaginary := SplitOctonionImaginaryAction.Imaginary
 
+@[simp] theorem realCrossProduct3_dot_eq (v w : Fin 3 → ℝ) :
+    realCrossProduct3.dot v w = dot v w := rfl
+
+@[simp] theorem realCrossProduct3_cross_eq (v w : Fin 3 → ℝ) :
+    realCrossProduct3.cross v w = cross v w := rfl
+
+@[simp] theorem dot_zero_left (v : Fin 3 → ℝ) : dot 0 v = 0 := by
+  simp [dot]
+
+@[simp] theorem dot_zero_right (v : Fin 3 → ℝ) : dot v 0 = 0 := by
+  simp [dot]
+
 def diagonalAxis : Imaginary :=
   ⟨diagEll, by
     simp [mem_imaginary_iff, diagEll, zornPlus, zornMinus, realZornTrace]⟩
@@ -69,10 +81,8 @@ theorem imaginaryThreeForm_diagonal_upper_lower (i j : Fin 3) :
   unfold imaginaryPolar
   fin_cases i <;> fin_cases j <;>
   simp [upperAxis, lowerAxis, rootPlus, rootMinus, quaternionAxis,
-    ellAxis, axis, cartesianZorn_rootPlus,
-    cartesianZorn_rootMinus, chiralUpperBasis, chiralLowerBasis,
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, dot, Fin.sum_univ_three,
-    Pi.single_apply, Equiv.smul_def, coordEquiv] <;> norm_num
+    ellAxis, axis,
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, dot] <;> norm_num
 
 theorem imaginaryThreeForm_diagonal_lower_upper (i j : Fin 3) :
     imaginaryThreeForm diagonalAxis (lowerAxis i) (upperAxis j) =
@@ -82,10 +92,8 @@ theorem imaginaryThreeForm_diagonal_lower_upper (i j : Fin 3) :
   unfold imaginaryPolar
   fin_cases i <;> fin_cases j <;>
   simp [upperAxis, lowerAxis, rootPlus, rootMinus, quaternionAxis,
-    ellAxis, axis, cartesianZorn_rootPlus,
-    cartesianZorn_rootMinus, chiralUpperBasis, chiralLowerBasis,
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, dot, Fin.sum_univ_three,
-    Pi.single_apply, Equiv.smul_def, coordEquiv] <;> norm_num
+    ellAxis, axis,
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, dot] <;> norm_num
 
 theorem imaginaryThreeForm_upper_upper_upper (i j k : Fin 3) :
     imaginaryThreeForm (upperAxis i) (upperAxis j) (upperAxis k) =
@@ -94,13 +102,10 @@ theorem imaginaryThreeForm_upper_upper_upper (i j k : Fin 3) :
   rw [imaginaryPolarBilin_apply]
   unfold imaginaryPolar
   fin_cases i <;> fin_cases j <;> fin_cases k <;>
-    simp [imaginaryCross,
-      upperAxis, rootPlus, quaternionAxis, ellAxis, axis,
-      chiralUpperBasis, chiralLowerBasis,
-      realZornTrace, mul_def, mul, dot, cross,
+    simp [imaginaryCross, upperAxis, rootPlus, quaternionAxis, ellAxis, axis,
+      mul_def, mul, dot, cross,
       InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
-      leviCivita3, Fin.sum_univ_three, Pi.single_apply,
-      Equiv.smul_def, coordEquiv] <;> norm_num
+      leviCivita3, Equiv.smul_def, coordEquiv] <;> norm_num
 
 theorem imaginaryThreeForm_lower_lower_lower (i j k : Fin 3) :
     imaginaryThreeForm (lowerAxis i) (lowerAxis j) (lowerAxis k) =
@@ -109,13 +114,10 @@ theorem imaginaryThreeForm_lower_lower_lower (i j k : Fin 3) :
   rw [imaginaryPolarBilin_apply]
   unfold imaginaryPolar
   fin_cases i <;> fin_cases j <;> fin_cases k <;>
-    simp [imaginaryCross,
-      lowerAxis, rootMinus, quaternionAxis, ellAxis, axis,
-      chiralUpperBasis, chiralLowerBasis,
-      realZornTrace, mul_def, mul, dot, cross,
+    simp [imaginaryCross, lowerAxis, rootMinus, quaternionAxis, ellAxis, axis,
+      mul_def, mul, dot, cross,
       InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
-      leviCivita3, Fin.sum_univ_three, Pi.single_apply,
-      Equiv.smul_def, coordEquiv] <;> norm_num
+      leviCivita3, Equiv.smul_def, coordEquiv] <;> norm_num
 
 theorem imaginaryThreeForm_diagonal_upper_upper (i j : Fin 3) :
     imaginaryThreeForm diagonalAxis (upperAxis i) (upperAxis j) = 0 := by
@@ -124,10 +126,7 @@ theorem imaginaryThreeForm_diagonal_upper_upper (i j : Fin 3) :
   unfold imaginaryPolar
   fin_cases i <;> fin_cases j <;>
     simp [upperAxis, rootPlus, quaternionAxis, ellAxis, axis,
-      chiralUpperBasis, realZornTrace, mul_def, mul, dot,
-      cross, InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
-      Fin.sum_univ_three, Pi.single_apply, Equiv.smul_def,
-      coordEquiv] <;> norm_num
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ]
 
 theorem imaginaryThreeForm_diagonal_lower_lower (i j : Fin 3) :
     imaginaryThreeForm diagonalAxis (lowerAxis i) (lowerAxis j) = 0 := by
@@ -136,10 +135,7 @@ theorem imaginaryThreeForm_diagonal_lower_lower (i j : Fin 3) :
   unfold imaginaryPolar
   fin_cases i <;> fin_cases j <;>
     simp [lowerAxis, rootMinus, quaternionAxis, ellAxis, axis,
-      chiralLowerBasis, realZornTrace, mul_def, mul, dot,
-      cross, InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
-      Fin.sum_univ_three, Pi.single_apply, Equiv.smul_def,
-      coordEquiv] <;> norm_num
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ]
 
 theorem imaginaryThreeForm_upper_upper_lower (i j k : Fin 3) :
     imaginaryThreeForm (upperAxis i) (upperAxis j) (lowerAxis k) = 0 := by
@@ -147,13 +143,9 @@ theorem imaginaryThreeForm_upper_upper_lower (i j k : Fin 3) :
   rw [imaginaryPolarBilin_apply]
   unfold imaginaryPolar
   fin_cases i <;> fin_cases j <;> fin_cases k <;>
-    simp [imaginaryCross,
-      upperAxis, lowerAxis, rootPlus, rootMinus, quaternionAxis, ellAxis,
-      axis, chiralUpperBasis, chiralLowerBasis,
-      realZornTrace, mul_def, mul, dot, cross, leviCivita3,
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
-      Fin.sum_univ_three, Pi.single_apply, Equiv.smul_def, coordEquiv] <;>
-    norm_num
+    simp [imaginaryCross, upperAxis, lowerAxis, rootPlus, rootMinus, quaternionAxis, ellAxis,
+      axis, mul_def, mul, dot, cross,
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, Equiv.smul_def, coordEquiv]
 
 theorem imaginaryThreeForm_lower_lower_upper (i j k : Fin 3) :
     imaginaryThreeForm (lowerAxis i) (lowerAxis j) (upperAxis k) = 0 := by
@@ -161,12 +153,10 @@ theorem imaginaryThreeForm_lower_lower_upper (i j k : Fin 3) :
   rw [imaginaryPolarBilin_apply]
   unfold imaginaryPolar
   fin_cases i <;> fin_cases j <;> fin_cases k <;>
-    simp [imaginaryCross,
-      upperAxis, lowerAxis, rootPlus, rootMinus, quaternionAxis, ellAxis,
-      axis, chiralUpperBasis, chiralLowerBasis,
-      realZornTrace, mul_def, mul, dot, cross, leviCivita3,
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
-      Fin.sum_univ_three, Pi.single_apply, Equiv.smul_def, coordEquiv] <;>
-    norm_num
+    simp [imaginaryCross, upperAxis, lowerAxis, rootPlus, rootMinus, quaternionAxis, ellAxis,
+      axis, mul_def, mul, dot, cross,
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, Equiv.smul_def, coordEquiv]
 
 end InfoGeometry.Lie.SplitOctonionImaginaryCircularForm
+
+

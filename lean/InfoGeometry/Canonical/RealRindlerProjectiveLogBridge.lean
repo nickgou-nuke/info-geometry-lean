@@ -49,7 +49,7 @@ theorem projectiveNullRatio_rindler_boost
       Real.exp (2 * lam) * rindlerProjectiveNullRatio c := by
   rw [rindler_flow_is_time_translation]
   change rindlerProjectiveNullRatio
-      ⟨(c.radius, c.time + lam), c.radius_pos⟩ = _
+      ⟨c.radius, c.time + lam, c.radius_pos⟩ = _
   rw [rindlerProjectiveNullRatio_eq_exp, rindlerProjectiveNullRatio_eq_exp]
   rw [← Real.exp_add]
   congr 1

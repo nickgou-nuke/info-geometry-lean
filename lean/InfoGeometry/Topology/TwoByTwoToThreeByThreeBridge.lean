@@ -5,7 +5,7 @@ import InfoGeometry.Topology.AharonovBohmVortices
 /-!
 # Finite `2 × 2` to `3 × 3` block bridge
 
-This module reconciles the finite `2 × 2` exceptional-point Jordan property with
+This module reconciles the finite `2 × 2` exceptional-point Jordan witness with
 the finite `3 × 3` projective/vortex carrier.
 
 There are two maps, kept deliberately separate:
@@ -74,7 +74,7 @@ theorem projectiveEmbed_jordanBlock_deviation (lam : ℂ) :
     simp [projectiveEmbed2to3, jordanBlock, scalarExtendedBlock,
       embeddedJordanNilpotent, linearEmbed2to3, jordanNilpotent]
 
-/-- The embedded exceptional-point deviation is a finite `3 × 3` square-zero property. -/
+/-- The embedded exceptional-point deviation is a finite `3 × 3` square-zero witness. -/
 theorem projectiveEmbed_jordanBlock_deviation_square_zero (lam : ℂ) :
     (projectiveEmbed2to3 (jordanBlock lam) - scalarExtendedBlock lam) *
       (projectiveEmbed2to3 (jordanBlock lam) - scalarExtendedBlock lam) = 0 := by

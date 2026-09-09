@@ -157,7 +157,7 @@ theorem mul_is_physical_of_balanced
   rw [hMul x y]
   exact hBal
 
-/-! ## 3. Bracket and mode balance -/
+/-! ## 3. Bracket and mode balance sockets -/
 
 /--
 External predicate: a bracket-like operation adds integer Weyl weights.

@@ -386,4 +386,44 @@ theorem cantorDirac_is_selfAdjoint
   rw [StarModule.star_smul]
   simpa [h_self p hp]
 
+/--
+Predicate form of finite self-adjointness for the implemented Cantor Dirac
+operator.
+-/
+@[rep_depth thermo]
+theorem cantorDirac_isSelfAdjoint
+    {Op : Type*} [Ring Op] [Algebra ℝ Op] [StarRing Op] [StarModule ℝ Op]
+    (P : PrimeRegister)
+    (γ : ℕ → Op)
+    (h_self : ∀ p ∈ P.primes, star (γ p) = γ p) :
+    IsSelfAdjoint (cantorDiracOperator P γ) := by
+  exact cantorDirac_is_selfAdjoint P γ h_self
+
+/--
+Alias with explicit hypothesis naming:
+self-adjoint Majorana generators imply self-adjoint finite Cantor Dirac.
+-/
+@[rep_depth thermo]
+theorem cantorDirac_selfAdjoint_of_generator_selfAdjoint
+    {Op : Type*} [Ring Op] [Algebra ℝ Op] [StarRing Op] [StarModule ℝ Op]
+    (P : PrimeRegister)
+    (γ : ℕ → Op)
+    (h_self : ∀ p ∈ P.primes, star (γ p) = γ p) :
+    IsSelfAdjoint (cantorDiracOperator P γ) :=
+  cantorDirac_isSelfAdjoint P γ h_self
+
+/--
+Equation-form alias:
+`star D = D` for the finite Cantor Dirac operator under generator
+self-adjointness.
+-/
+@[rep_depth thermo]
+theorem star_cantorDirac_eq_cantorDirac_of_generator_selfAdjoint
+    {Op : Type*} [Ring Op] [Algebra ℝ Op] [StarRing Op] [StarModule ℝ Op]
+    (P : PrimeRegister)
+    (γ : ℕ → Op)
+    (h_self : ∀ p ∈ P.primes, star (γ p) = γ p) :
+    star (cantorDiracOperator P γ) = cantorDiracOperator P γ :=
+  cantorDirac_is_selfAdjoint P γ h_self
+
 end InfoGeometry.Arithmetic.CantorDiracOperator

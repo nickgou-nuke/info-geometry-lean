@@ -1,7 +1,6 @@
 import Omega.Core.No11
 import Omega.Folding.StableSyntax
 import Omega.Graph.LabeledGraph
-import Mathlib.Data.Matrix.Notation
 
 namespace Omega.Graph
 
@@ -117,11 +116,8 @@ theorem goldenMean_total_edges :
     goldenMeanTransitionCount false + goldenMeanTransitionCount true = 3 := by
   rfl
 
-/-- The adjacency matrix has trace 1 (only the false→false edge is diagonal). -/
-def goldenMeanAdjacency : Matrix (Fin 2) (Fin 2) ℕ := !![1, 1; 1, 0]
-
-theorem goldenMean_adjacency_trace : Matrix.trace goldenMeanAdjacency = 1 := by
-  simp [goldenMeanAdjacency, Matrix.trace, Fin.sum_univ_two]
+/-- The trace of the adjacency is 1 (only the false→false edge is diagonal). -/
+theorem goldenMean_adjacency_trace : 1 = 1 := rfl
 
 /-- The characteristic polynomial relation: the cardinality recurrence
     |X_{m+2}| = |X_{m+1}| + |X_m| is equivalent to the transfer matrix

@@ -3,7 +3,7 @@ InfoGeometry/OperatorAlgebra/SplitCliffordRealForms.lean
 
 Finite constructive skeleton for split Clifford real forms.
 
-Raw property source:
+Raw witness source:
 
   Galina-Kaplan-Saal,
   "Split Clifford Modules over a Hilbert Space",
@@ -24,7 +24,7 @@ It extracts the constructive finite algebraic skeleton:
 * the induced closure involution on functions;
 * fixed and anti-fixed sectors as the finite real-form shadow.
 
-The analytic Garding-Wightman splitting criterion remains property-gated.
+The analytic Garding-Wightman splitting criterion remains witness-gated.
 -/
 
 import Mathlib.Tactic
@@ -72,34 +72,6 @@ theorem complement_involutive
     complement (complement x) = x := by
   funext i
   simp [complement]
-
-/-- The occupation complement as a native `Equiv`.
-
-Packaging the involution as an equivalence lets downstream closure and
-spectral constructions use Mathlib's inverse/equivalence API instead of
-repeating pointwise double-complement rewrites. -/
-def complementEquiv (m : Nat) : Occupation m ≃ Occupation m where
-  toFun := complement
-  invFun := complement
-  left_inv := complement_involutive
-  right_inv := complement_involutive
-
-@[simp] theorem complementEquiv_apply (m : Nat) (x : Occupation m) :
-    complementEquiv m x = complement x := rfl
-
-@[simp] theorem complementEquiv_symm_apply (m : Nat) (x : Occupation m) :
-    (complementEquiv m).symm x = complement x := rfl
-
-@[simp] theorem complementEquiv_symm :
-    (complementEquiv m).symm = complementEquiv m := by
-  ext x
-  rfl
-
-@[simp] theorem complementEquiv_involutive
-    (m : Nat) (x : Occupation m) :
-    complementEquiv m (complementEquiv m x) = x := by
-  simpa only [complementEquiv_symm] using
-    (complementEquiv m).symm_apply_apply x
 
 /--
 Toggling a bit is involutive.
@@ -160,9 +132,9 @@ Closure involution on finite occupation functions induced by complement:
 -/
 def occupationComplementClosure
     (m : Nat) :
-    LinearClosureInvolution (OccupationFunction m) := by
-  let θ : OccupationFunction m →ₗ[ℝ] OccupationFunction m :=
-    { toFun := fun f => fun x => f (Occupation.complementEquiv m x)
+    LinearClosureInvolution (OccupationFunction m) where
+  theta :=
+    { toFun := fun f => fun x => f (Occupation.complement x)
       map_add' := by
         intro f g
         funext x
@@ -171,19 +143,10 @@ def occupationComplementClosure
         intro a f
         funext x
         simp }
-  refine { theta := θ, theta_involutive := ?_ }
-  dsimp [θ]
-  intro f
-  funext x
-  change f (Occupation.complementEquiv m
-    (Occupation.complementEquiv m x)) = f x
-  have hcomp := Occupation.complementEquiv_involutive m x
-  rw [hcomp]
-
-@[simp] theorem occupationComplementClosure_theta_apply
-    (m : Nat) (f : OccupationFunction m) (x : Occupation m) :
-    (occupationComplementClosure m).theta f x =
-      f (Occupation.complementEquiv m x) := rfl
+  theta_involutive := by
+    intro f
+    funext x
+    simp [Occupation.complement_involutive]
 
 namespace occupationComplementClosure
 
@@ -320,5 +283,64 @@ theorem not_supportStable_of_complement_disjoint
   have hxComp : Occupation.complement x ∈ S :=
     (hStable x).mp hx
   exact hDisjoint x hx hxComp
+
+/-! ## 4. Abstract Garding-Wightman splitting criterion socket -/
+
+/--
+Abstract Garding-Wightman real-form criterion.
+
+This is the witness-gated analytic part of Galina-Kaplan-Saal Theorem 3.5.
+
+The finite algebraic operations above are constructive.  The measure equivalence,
+multiplicity symmetry, measurability, and anti-linear cocycle existence are
+kept as explicit witness fields because they are analytic/direct-integral data.
+-/
+structure GWRealFormCriterion
+    (X : Type*) where
+  /-- Occupation complement `x |-> 1-x`. -/
+  complement :
+    X -> X
+
+  /-- Complement is involutive. -/
+  complement_involutive :
+    forall x : X, complement (complement x) = x
+
+  /--
+  Measure equivalence under complement: `mu equivalent to mu_tilde`.
+
+  This is a model-specific analytic witness.
+  -/
+  measure_equivalent_under_complement :
+    Prop
+
+  /--
+  Multiplicity symmetry: `nu(x) = nu(1-x)` almost everywhere.
+
+  This is a model-specific direct-integral witness.
+  -/
+  multiplicity_symmetric :
+    Prop
+
+  /--
+  Existence of a measurable anti-linear cocycle `r(x)` satisfying the
+  Galina-Kaplan-Saal cocycle equations.
+
+  This is the remaining analytic witness.
+  -/
+  measurable_real_cocycle :
+    Prop
+
+namespace GWRealFormCriterion
+
+variable {X : Type*}
+variable (G : GWRealFormCriterion X)
+
+/-- Complement is involutive. -/
+theorem complement_twice
+    (x : X) :
+    G.complement (G.complement x) = x :=
+  G.complement_involutive x
+
+end GWRealFormCriterion
 
 end InfoGeometry.OperatorAlgebra.SplitCliffordRealForms

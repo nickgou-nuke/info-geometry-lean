@@ -94,5 +94,3 @@ theorem zorn_null_clifford_representation_apply_sq
   simpa [Module.End.mul_apply] using h
 
 end CanonicalZornNullCliffordClosure
-
-end

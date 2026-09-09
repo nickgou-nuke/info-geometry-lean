@@ -86,5 +86,3 @@ theorem SymbolicLatentInvolution.fixedPointInclusionCompHausHom_invariant
   exact x.2
 
 end InfoGeometry.Topology
-
-end

@@ -33,6 +33,10 @@ def value : D4Sign → ℝ
   | .plus => 1
   | .minus => -1
 
+@[simp] theorem value_plus : value .plus = (1 : ℝ) := rfl
+
+@[simp] theorem value_minus : value .minus = (-1 : ℝ) := rfl
+
 end D4Sign
 
 /-- Number of negative signs in a `D₄` sign vector. -/
@@ -83,12 +87,10 @@ end D4RootLabel
 /--
 Chiral spinor weight label for `D₄`: `1/2 (±e₁ ± e₂ ± e₃ ± e₄)`.
 -/
-abbrev D4SpinorWeight := Fin 4 → D4Sign
+structure D4SpinorWeight where
+  signs : Fin 4 → D4Sign
 
 namespace D4SpinorWeight
-
-abbrev signs (W : D4SpinorWeight) : Fin 4 → D4Sign :=
-  W
 
 /-- Chirality is derived from the parity of the sign label. -/
 def positiveChirality (W : D4SpinorWeight) : Prop :=
@@ -106,27 +108,109 @@ theorem positiveChirality_iff
 
 end D4SpinorWeight
 
+/-- Distribution of degeneracies for Weyl Character. -/
+structure Cl44WeylCharacterDistribution where
+  stressTensorDegeneracy : ℝ
+  centralChargeDegeneracy : ℝ
+  residualDegeneracy : ℝ
+  totalDegeneracy : ℝ
+  total_eq : totalDegeneracy = stressTensorDegeneracy + centralChargeDegeneracy + residualDegeneracy
+
+/--
+Cartan skeleton for the split `Cl(4,4)`/`Spin(4,4)` character lane.
+
+`cartanTemperature` is the rank-four Cartan thermodynamic vector.  The stress
+and central-charge projections are supplied scalar readouts of how a spinor
+weight contributes to the two macroscopic lanes.
+-/
+structure Cl44D4CartanCharacterSkeleton where
+  cartanTemperature : Fin 4 → ℝ
+  stressProjection : D4SpinorWeight → ℝ
+  centralChargeProjection : D4SpinorWeight → ℝ
+  stressCentralDistribution : Cl44WeylCharacterDistribution
+  totalProjection : D4SpinorWeight → ℝ
+  totalProjection_eq :
+    ∀ w, totalProjection w = stressProjection w + centralChargeProjection w
+
+namespace Cl44D4CartanCharacterSkeleton
+
 /-- The Cartan subalgebra is represented by four scalar thermodynamic axes. -/
-theorem cartan_rank_four :
+theorem cartan_rank_four
+    (_C : Cl44D4CartanCharacterSkeleton) :
     Fintype.card (Fin 4) = 4 := by
   simp
 
-/-! The following readouts are consequences of the finite sign-label model,
-not supplied BPS or thermodynamic hypotheses. -/
+/-- Weight projection splits into stress-tensor and central-charge lanes. -/
+theorem totalProjection_eq_stress_add_central
+    (C : Cl44D4CartanCharacterSkeleton)
+    (w : D4SpinorWeight) :
+    C.totalProjection w = C.stressProjection w + C.centralChargeProjection w :=
+  C.totalProjection_eq w
 
-theorem d4_sign_label_has_a_chirality (W : D4SpinorWeight) :
-    W.positiveChirality ∨ d4NegativeChirality W.signs := by
-  exact Nat.even_or_odd (d4NegativeCount W.signs)
+/-- The global degeneracy distribution is stress plus central plus residual. -/
+theorem degeneracyDistribution_eq
+    (C : Cl44D4CartanCharacterSkeleton) :
+    C.stressCentralDistribution.totalDegeneracy =
+      C.stressCentralDistribution.stressTensorDegeneracy
+        + C.stressCentralDistribution.centralChargeDegeneracy
+        + C.stressCentralDistribution.residualDegeneracy :=
+  C.stressCentralDistribution.total_eq
 
-theorem d4_spinor_weight_coordinate_sq (W : D4SpinorWeight) (k : Fin 4) :
-    (W.coordinate k) ^ 2 = (1 / 4 : ℝ) := by
-  dsimp [D4SpinorWeight.coordinate, D4SpinorWeight.signs, D4Sign.value]
-  cases W k <;> norm_num
+end Cl44D4CartanCharacterSkeleton
 
-theorem d4_root_coordinate_zero_of_neither
-    (R : D4RootLabel) (k : Fin 4)
-    (hki : k ≠ R.i) (hkj : k ≠ R.j) :
-    R.coordinate k = 0 := by
-  simp [D4RootLabel.coordinate, hki, hkj]
+/--
+BPS-dominant character packet.
+
+The dominant weights for the protected sector are exactly those whose central
+charge projection saturates the selected BPS readout and whose stress
+projection is compatible with the horizon/stress lane.  Dominance itself is
+kept as a supplied predicate, because this file does not own the analytic
+asymptotics of character coefficients.
+-/
+structure Cl44BPSDominantCharacterPacket where
+  skeleton : Cl44D4CartanCharacterSkeleton
+  dominantWeight : D4SpinorWeight
+  bpsCentralReadout : ℝ
+  stressReadout : ℝ
+  isDominantBPSWeight : D4SpinorWeight → Prop
+  dominantWeight_isBPS :
+    isDominantBPSWeight dominantWeight
+  centralProjection_saturates :
+    skeleton.centralChargeProjection dominantWeight = bpsCentralReadout
+  stressProjection_matches :
+    skeleton.stressProjection dominantWeight = stressReadout
+
+namespace Cl44BPSDominantCharacterPacket
+
+/-- The selected dominant weight lies in the protected BPS predicate. -/
+theorem dominant_isBPS
+    (P : Cl44BPSDominantCharacterPacket) :
+    P.isDominantBPSWeight P.dominantWeight :=
+  P.dominantWeight_isBPS
+
+/-- Its central-charge projection saturates the chosen BPS readout. -/
+theorem central_saturates
+    (P : Cl44BPSDominantCharacterPacket) :
+    P.skeleton.centralChargeProjection P.dominantWeight = P.bpsCentralReadout :=
+  P.centralProjection_saturates
+
+/-- Its stress projection matches the chosen stress/horizon lane. -/
+theorem stress_matches
+    (P : Cl44BPSDominantCharacterPacket) :
+    P.skeleton.stressProjection P.dominantWeight = P.stressReadout :=
+  P.stressProjection_matches
+
+/--
+The dominant BPS weight simultaneously identifies the protected central-charge
+lane and the stress-tensor lane.
+-/
+theorem bps_dominant_weight_capstone
+    (P : Cl44BPSDominantCharacterPacket) :
+    P.isDominantBPSWeight P.dominantWeight
+      ∧ P.skeleton.centralChargeProjection P.dominantWeight = P.bpsCentralReadout
+      ∧ P.skeleton.stressProjection P.dominantWeight = P.stressReadout :=
+  ⟨P.dominant_isBPS, P.central_saturates, P.stress_matches⟩
+
+end Cl44BPSDominantCharacterPacket
 
 end InfoGeometry.SuperMetriplectic

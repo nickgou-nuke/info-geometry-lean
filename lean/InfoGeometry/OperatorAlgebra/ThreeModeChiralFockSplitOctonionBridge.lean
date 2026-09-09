@@ -135,11 +135,11 @@ def hodgeOneToTwo :
   left_inv w := by
     apply Subtype.ext
     simpa [reflected] using
-      InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complementEquiv_involutive 3 w
+      InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complement_involutive w.1
   right_inv w := by
     apply Subtype.ext
     simpa [reflected] using
-      InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complementEquiv_involutive 3 w
+      InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complement_involutive w.1
 
 theorem hodgeOneToTwo_card :
     Fintype.card {w : Occupation3 // degree w = 1} =

@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Algebra.OSp12
 
 /-!
 # `Cl(5,5)`, split anomaly cancellation, Bott stability, and `osp(1|2)` atoms
@@ -53,29 +52,49 @@ def anomalyIndex (p q : ℤ) : ℤ := p - q
 theorem anomalyIndex_55_zero : anomalyIndex 5 5 = 0 := by
   norm_num [anomalyIndex]
 
-/-! ## Native noncommutative operator facts -/
+/-! ## `osp(1|2)` atom and tripotency -/
 
-section NativeOSp
+abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M6C := Matrix (Fin 6) (Fin 6) ℂ
 
-variable {V : Type*} [AddCommGroup V] [Module ℝ V]
+/-- A concrete odd generator. -/
+def Gatom : M2C := !![0, 1; 1, 0]
 
-abbrev OSpSurface := InfoGeometry.Algebra.OSp12.OperatorSurface (V := V)
+/-- The even Hamiltonian/translation atom. -/
+def Tatom : M2C := 1
 
-theorem osp_G1_square
-    (S : InfoGeometry.Algebra.OSp12.OperatorSurface (V := V))
-    (hS : InfoGeometry.Algebra.OSp12.OperatorSurfaceLaws S) :
-    S.G1 * S.G1 = S.Ep :=
-  InfoGeometry.Algebra.OSp12.OperatorSurface.G1_sq S
-    (InfoGeometry.Algebra.OSp12.OperatorSurfaceLaws.G1_G1 hS)
+/-- `G²=T`. -/
+theorem Gatom_sq : Gatom * Gatom = Tatom := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [Gatom, Tatom, Matrix.mul_apply, Fin.sum_univ_two]
 
-theorem osp_G1_anticommutator
-    (S : InfoGeometry.Algebra.OSp12.OperatorSurface (V := V))
-    (hS : InfoGeometry.Algebra.OSp12.OperatorSurfaceLaws S) :
-    S.G1 * S.G1 + S.G1 * S.G1 = (2 : ℝ) • S.Ep := by
-  rw [osp_G1_square S hS]
-  module
+/-- The super-anticommutator `{G,G}=2T`. -/
+theorem osp_atom_anticommutator : Gatom * Gatom + Gatom * Gatom = (2 : ℂ) • Tatom := by
+  rw [Gatom_sq]
+  ext i j <;> fin_cases i <;> fin_cases j <;> simp [Tatom] <;> norm_num
 
-end NativeOSp
+/-- Tripotent scale operator. -/
+def Trip : M3C := !![1, 0, 0; 0, -1, 0; 0, 0, 0]
+
+/-- Tripotency `T³=T`. -/
+theorem Trip_tripotent : Trip * Trip * Trip = Trip := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [Trip, Matrix.mul_apply, Fin.sum_univ_three]
+
+/-- One doubled/tensored copy of the tripotent sector. -/
+def TripLift : M6C :=
+  !![1, 0, 0, 0, 0, 0;
+     0, 1, 0, 0, 0, 0;
+     0, 0, -1, 0, 0, 0;
+     0, 0, 0, -1, 0, 0;
+     0, 0, 0, 0, 0, 0;
+     0, 0, 0, 0, 0, 0]
+
+/-- Tensoring/doubling by an identity block preserves tripotency. -/
+theorem TripLift_tripotent : TripLift * TripLift * TripLift = TripLift := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [TripLift, Matrix.mul_apply, Fin.sum_univ_six]
 
 
 end InfoGeometry.Clifford.Clifford55AnomalyOSP

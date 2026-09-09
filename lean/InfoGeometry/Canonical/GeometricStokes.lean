@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.GeometricMonodromy
 /-!
 # Geometric Stokes boundary readout, theorem-safe layer
 
-This file records the kernel-checked algebraic consequence of a property
+This file records the kernel-checked algebraic consequence of a certified
 boundary-angle readout.  External scripts may certify that a concrete planar
 current has total boundary angle `2π`; this Lean file does **not** prove a full
 analytic Stokes theorem, a distributional de Rham theorem, a GNS construction,
@@ -15,7 +15,7 @@ reads it as the negative of the unit expectation.
 
 `boundaryAngleDefect_half`, `defect_spinor_transport_eq_neg_one`,
 `defect_bivectorExp_half_eq_neg_one`, and the state-level readouts are closed
-algebra/trigonometry consequences of the property angle `2π`.
+algebra/trigonometry consequences of the certified angle `2π`.
 
 The interpretation of `boundaryAngleDefect` as the boundary integral of the
 planar current is supplied by external scripts:
@@ -36,7 +36,7 @@ variable {AInf : Type*} [Ring AInf] [Algebra ℝ AInf]
 def boundaryAngleDefect : ℝ :=
   2 * Real.pi
 
-/-- Compatibility name for the property defect angle. -/
+/-- Compatibility name for the certified defect angle. -/
 def defectBoundaryAngle : ℝ :=
   boundaryAngleDefect
 
@@ -48,7 +48,7 @@ def boundaryIntegralDefect (J : AInf) : AInf :=
 def stokesBivectorResidue (J : AInf) : AInf :=
   defectBoundaryAngle • J
 
-/-- The spinorial half-angle associated to the property defect angle is `π`. -/
+/-- The spinorial half-angle associated to the certified defect angle is `π`. -/
 theorem boundaryAngleDefect_half :
     boundaryAngleDefect / 2 = Real.pi := by
   unfold boundaryAngleDefect
@@ -74,13 +74,13 @@ theorem defect_spinor_transport_eq_neg_one (J : AInf) :
   unfold boundaryAngleDefect
   exact spinorial_monodromy_around_pole J
 
-/-- Feeding the property Stokes boundary angle into spinorial transport gives `-1`. -/
+/-- Feeding the certified Stokes boundary angle into spinorial transport gives `-1`. -/
 theorem stokes_spinorial_parity_flip (J : AInf) :
     spinorTransport J defectBoundaryAngle = -(1 : AInf) := by
   unfold defectBoundaryAngle
   exact defect_spinor_transport_eq_neg_one J
 
-/-- Two property Stokes loops give the identity spinorial transport. -/
+/-- Two certified Stokes loops give the identity spinorial transport. -/
 theorem stokes_spinorial_double_loop_identity (J : AInf) :
     spinorTransport J (2 * defectBoundaryAngle) = (1 : AInf) := by
   unfold defectBoundaryAngle boundaryAngleDefect
@@ -115,7 +115,7 @@ theorem state_defect_bivectorExp_half
   rw [defect_bivectorExp_half_eq_neg_one]
   exact map_neg ω 1
 
-/-- Combining the property angle with the generic monodromy boundary current:
+/-- Combining the certified angle with the generic monodromy boundary current:
 its state readout cancels by linearity. -/
 theorem state_defect_monodromyBoundaryCurrent_zero
     (ω : AInf →ₗ[ℝ] ℝ) (J X : AInf) :
@@ -126,7 +126,7 @@ theorem state_defect_monodromyBoundaryCurrent_zero
 def stokesVacuumBoundaryPair (J : AInf) : AInf :=
   spinorTransport J defectBoundaryAngle + (1 : AInf)
 
-/-- The Stokes boundary pair is algebraically zero after one property loop. -/
+/-- The Stokes boundary pair is algebraically zero after one certified loop. -/
 theorem stokesVacuumBoundaryPair_eq_zero (J : AInf) :
     stokesVacuumBoundaryPair J = 0 := by
   unfold stokesVacuumBoundaryPair

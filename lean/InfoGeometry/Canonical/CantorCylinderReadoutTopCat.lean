@@ -24,7 +24,7 @@ open InfoGeometry.Canonical.CantorBoundaryReadoutRefinement
 open InfoGeometry.Canonical.CantorBoundaryReadoutTopCat
 
 def prefixCylinderTopCatIso (n : ℕ) (w : BitWord n) :
-    TopCat.of (ℕ → Bool) ≅ TopCat.of (prefixCylinder n w) where
+    TopCat.of CantorBoundary ≅ TopCat.of (prefixCylinder n w) where
   hom := TopCat.ofHom
     { toFun := prefixCylinderHomeomorph n w
       continuous_toFun := (prefixCylinderHomeomorph n w).continuous }
@@ -38,12 +38,9 @@ def prefixCylinderTopCatIso (n : ℕ) (w : BitWord n) :
     simp [TopCat.ofHom]
   inv_hom_id := by
     apply TopCat.hom_ext
-    apply ContinuousMap.ext
-    intro x
+    ext x
     rw [TopCat.comp_app, TopCat.id_app]
-    change prefixCylinderHomeomorph n w
-        ((prefixCylinderHomeomorph n w).symm x) = x
-    exact (prefixCylinderHomeomorph n w).apply_symm_apply x
+    simp [TopCat.ofHom]
 
 def prefixCylinderReadoutTopCatHom (n : ℕ) (w : BitWord n) :
     TopCat.of (prefixCylinder n w) ⟶ TopCat.of ℝ :=
@@ -86,7 +83,7 @@ theorem prefixCylinder_readout_square (n : ℕ) (w : BitWord n) :
   rw [prefixCylinderHomeomorph_apply]
   exact realBinaryReadout_prefixExtend n w x
 
-theorem prefixCylinder_readout_interval (n : ℕ) (w : BitWord n) (x : (ℕ → Bool)) :
+theorem prefixCylinder_readout_interval (n : ℕ) (w : BitWord n) (x : CantorBoundary) :
     realBinaryReadout (prefixExtend w x) ∈
       Set.Icc (finitePrefixReadout (List.ofFn w))
         (finitePrefixReadout (List.ofFn w) + (1 / 2 : ℝ) ^ n) :=

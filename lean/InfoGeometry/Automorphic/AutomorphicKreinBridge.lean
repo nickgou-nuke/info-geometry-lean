@@ -32,7 +32,7 @@ Identifies the abstract Siegel Boundary with the real doubled carrier H₂.
 structure AutomorphicKreinBridge
     (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (Bulk : Type*) [AddCommGroup Bulk] [Module ℝ Bulk] where
-  /-- The automorphic surgery property. -/
+  /-- The automorphic surgery witness. -/
   surgery : SiegelEisensteinWitness Bulk (DoubledSpace E)
 
 namespace AutomorphicKreinBridge
@@ -41,7 +41,7 @@ variable {Bulk : Type*} [AddCommGroup Bulk] [Module ℝ Bulk]
 variable (W : AutomorphicKreinBridge E Bulk)
 
 /-- The genuine operator-valued geometric boundary readout owned by the
-automorphic surgery property. -/
+automorphic surgery witness. -/
 def geometricReadout : Bulk →ₗ[ℝ] DoubledSpace E :=
   W.surgery.siegel
 

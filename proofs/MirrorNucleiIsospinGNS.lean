@@ -1,7 +1,7 @@
 import Mathlib
 import proofs.Q8NuclearChirality
 import proofs.HillWheelerProjection
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 
 noncomputable section
 

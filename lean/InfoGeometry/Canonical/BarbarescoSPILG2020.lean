@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 
 /-!
-# Barbaresco SPIGL 2020: finite Souriau--Casimir property layer
+# Barbaresco SPIGL 2020: finite Souriau--Casimir certificate layer
 
 This file extracts theorem-safe algebraic content from
 `Barbaresco-SPILG2020.pdf`:
@@ -13,7 +13,7 @@ This file extracts theorem-safe algebraic content from
 
 It intentionally does **not** claim the analytic/global statements of the
 slides: no global coadjoint-orbit theorem, no measure-theoretic Gibbs state,
-and no differentiable Lie-group construction.  Those remain interfaces for owner
+and no differentiable Lie-group construction.  Those remain sockets for owner
 files with the needed hypotheses.
 -/
 
@@ -88,13 +88,13 @@ theorem legendreReadout_eq_zero_on_dual_line (c Q : ℚ) :
     legendreReadout c c Q = 0 := by
   simp [legendreReadout, affineEntropy]
 
-/-- Exact finite-difference Hessian property for Souriau/Fisher capacity. -/
+/-- Exact finite-difference Hessian certificate for Souriau/Fisher capacity. -/
 theorem massieu_centered_second_difference (β : ℚ) :
     massieu (β + 1) - 2 * massieu β + massieu (β - 1) = 1 := by
   simp [massieu]
   ring
 
-theorem property (F X Y Z : M2Q) :
+theorem certificate (F X Y Z : M2Q) :
     commutator X Y = - commutator Y X ∧
       (commutator X (commutator Y Z) +
         commutator Y (commutator Z X) +

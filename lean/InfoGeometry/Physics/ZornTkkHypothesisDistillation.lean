@@ -14,8 +14,8 @@ The concrete owner-supported content is:
 * selected cleared Jordan-triple readbacks close on named concrete sectors;
 * the concrete `e⁺/e⁻` commutator packet remains exactly zero.
 
-The abstract TKK route is recorded only as an explicit property packet over a
-Jordan triple system and its Lie closure boundary.
+The abstract TKK route is recorded only as an explicit hypothesis packet over a
+Jordan triple system and its Lie closure socket.
 -/
 
 noncomputable section
@@ -39,10 +39,9 @@ theorem concrete_doubleJordan_packet :
     doubleJordanTriple up0 down0 up0 = ⟨0, 0, 2, 0, 0, 0, 0, 0⟩ ∧
       doubleJordanTriple up0 down0 up1 = ⟨0, 0, 0, 1, 0, 0, 0, 0⟩ ∧
       doubleJordanTriple up1 down1 up2 = ⟨0, 0, 0, 0, 1, 0, 0, 0⟩ := by
-  refine ⟨?_, ?_, ?_⟩
-  · exact doubleJordan_up0_down0_up0_eq
-  · exact doubleJordan_up0_down0_up1_eq
-  · exact doubleJordan_up1_down1_up2_eq
+  exact ⟨doubleJordan_up0_down0_up0_eq,
+    doubleJordan_up0_down0_up1_eq,
+    doubleJordan_up1_down1_up2_eq⟩
 
 /-- Honest concrete `e⁺/e⁻` packet: exact cancellation, pure-bosonic readback,
 and vanishing trace/determinant. -/
@@ -51,11 +50,10 @@ theorem concrete_ePlus_eMinus_packet :
       IsPureBosonic (lieBracket ePlus eMinus) ∧
       trZ (lieBracket ePlus eMinus) = 0 ∧
       detZ (lieBracket ePlus eMinus) = 0 := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact lieBracket_ePlus_eMinus
-  · exact tkk_e_plus_minus_anomaly_cancellation
-  · exact tkk_commutator_trace_evaluation
-  · exact tkk_commutator_det_evaluation
+  exact ⟨lieBracket_ePlus_eMinus,
+    tkk_e_plus_minus_anomaly_cancellation,
+    tkk_commutator_trace_evaluation,
+    tkk_commutator_det_evaluation⟩
 
 /-- Finite concrete boundary packet: the raw full commutator is not Lie, while
 the surviving theorem-honest Zorn data are the named doubled-Jordan readbacks
@@ -69,13 +67,11 @@ theorem concrete_boundary_packet :
         IsPureBosonic (lieBracket ePlus eMinus) ∧
         trZ (lieBracket ePlus eMinus) = 0 ∧
         detZ (lieBracket ePlus eMinus) = 0) := by
-  refine ⟨?_, ?_, ?_⟩
-  · exact raw_commutator_not_lie
-  · exact concrete_doubleJordan_packet
-  · exact concrete_ePlus_eMinus_packet
+  exact ⟨raw_commutator_not_lie, concrete_doubleJordan_packet,
+    concrete_ePlus_eMinus_packet⟩
 
 /-- The abstract TKK route is legitimate only after supplying a concrete
-`TKKLieClosure` property, which already packages the Jordan triple data together
+`TKKLieClosure` witness, which already packages the Jordan triple data together
 with its 3-graded Lie closure. -/
 structure JordanTripleTKKClosureHypotheses
     (J : Type*) [AddCommGroup J] [Module ℝ J] where
@@ -149,7 +145,7 @@ theorem pos_zero_triple_action (x y z : J) :
   H.closure.bracket_pos_zero x y z
 
 /-- Small theorem-safe packet collecting the basic bracket identities carried by
-the supplied `TKKLieClosure` property. -/
+the supplied `TKKLieClosure` witness. -/
 theorem basic_closure_consequences (x y z : J) :
     H.closure.lie.bracket (H.closure.neg x) (H.closure.neg y) = 0 ∧
       H.closure.lie.bracket (H.closure.pos x) (H.closure.pos y) = 0 ∧
@@ -163,15 +159,14 @@ theorem basic_closure_consequences (x y z : J) :
         -H.closure.pos (H.closure.jordan.triple y x z) ∧
       H.closure.lie.bracket (H.closure.pos z) (H.closure.zero x y) =
         H.closure.pos (H.closure.jordan.triple y x z) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact H.neg_grade_abelian x y
-  · exact H.pos_grade_abelian x y
-  · exact H.cross_bracket_closure x y
-  · exact H.opposite_cross_bracket_closure x y
-  · exact H.zero_neg_triple_action x y z
-  · exact H.neg_zero_triple_action x y z
-  · exact H.zero_pos_triple_action x y z
-  · exact H.pos_zero_triple_action x y z
+  exact ⟨H.neg_grade_abelian x y,
+    H.pos_grade_abelian x y,
+    H.cross_bracket_closure x y,
+    H.opposite_cross_bracket_closure x y,
+    H.zero_neg_triple_action x y z,
+    H.neg_zero_triple_action x y z,
+    H.zero_pos_triple_action x y z,
+    H.pos_zero_triple_action x y z⟩
 
 end JordanTripleTKKClosureHypotheses
 

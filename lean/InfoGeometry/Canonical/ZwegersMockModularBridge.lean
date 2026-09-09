@@ -19,8 +19,7 @@ def kreinNormSq16_16 (v : Vector32) : ℝ :=
   kreinInner16_16 v v
 
 theorem kreinInner16_16_eq_B_krein (x y : Vector32) :
-    kreinInner16_16 x y = B_krein_signature x y := by
-  simpa [kreinInner16_16, B_krein_signature]
+    kreinInner16_16 x y = B_krein_signature x y := rfl
 
 /-- Three-valued sign of a real number, used in the Zwegers kernel. -/
 def zwegersRealSign (r : ℝ) : ℝ :=

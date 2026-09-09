@@ -19,7 +19,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   [CompleteSpace E] [FiniteDimensional ℝ E]
 
 /--
-Entropy-sourced Monge-Ampere property:
+Entropy-sourced Monge-Ampere hypothesis:
 the Monge-Ampere density is the RN-induced relative-volume factor
 `exp(-K_RN)` associated to a Sinkhorn matrix state.
 -/
@@ -48,7 +48,7 @@ omit [FiniteDimensional ℝ E] in
 Proof-carrying unit relative-volume closure extracted from RN-sourced
 Monge-Ampere density.
 
-This narrows the public property surface from the bare equality
+This narrows the public hypothesis surface from the bare equality
 `relativeVolumeChangeRN n M = 1` to the constructive
 `UnitRelativeVolumeBit n M` packet while reusing the existing owner route.
 -/
@@ -81,7 +81,7 @@ omit [FiniteDimensional ℝ E] in
 /--
 Proof-carrying incompressible Monge-Ampere closure from the RN entropy source.
 
-This narrows the public property surface from the bare equality
+This narrows the public hypothesis surface from the bare equality
 `relativeVolumeChangeRN n M = 1` to the constructive
 `UnitRelativeVolumeBit n M` packet while reusing the existing owner route.
 -/
@@ -98,7 +98,7 @@ theorem incompressibleMongeAmpere_of_rnEntropySource_of_unitRelativeVolumeBit
 omit [FiniteDimensional ℝ E] in
 /--
 Direct Cramer-Rao determinant closure from the RN entropy source and unit
-relative-volume property.
+relative-volume hypothesis.
 -/
 theorem absDet_cramerRaoMetric_eq_one_of_rnEntropySource_of_unitRelativeVolume
     (n : Nat)
@@ -120,7 +120,7 @@ theorem absDet_cramerRaoMetric_eq_one_of_rnEntropySource_of_unitRelativeVolume
 omit [FiniteDimensional ℝ E] in
 /--
 Potential-form Cramer-Rao closure from the RN entropy source and unit
-relative-volume property.
+relative-volume hypothesis.
 -/
 theorem cramerRaoMetricVolumePotential_eq_zero_of_rnEntropySource_of_unitRelativeVolume
     (n : Nat)
@@ -140,7 +140,7 @@ theorem cramerRaoMetricVolumePotential_eq_zero_of_rnEntropySource_of_unitRelativ
 omit [FiniteDimensional ℝ E] in
 /--
 Direct logarithmic Cramer-Rao closure from the RN entropy source and unit
-relative-volume property.
+relative-volume hypothesis.
 -/
 theorem logAbsDet_cramerRaoMetric_eq_zero_of_rnEntropySource_of_unitRelativeVolume
     (n : Nat)
@@ -211,7 +211,7 @@ Proof-carrying entropy-sourced gravity closure through the constructive
 `UnitRelativeVolumeBit n M` packet.
 
 This narrows the public capstone surface from the bare equality
-`relativeVolumeChangeRN n M = 1` to the existing constructive property while
+`relativeVolumeChangeRN n M = 1` to the existing constructive witness while
 reusing the owner theorem above unchanged.
 -/
 theorem isRicciFlat_and_vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolumeBit
@@ -231,7 +231,7 @@ theorem isRicciFlat_and_vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativ
 
 omit [FiniteDimensional ℝ E] in
 /--
-Constant-density property extracted from RN-entropy Monge-Ampere sourcing.
+Constant-density witness extracted from RN-entropy Monge-Ampere sourcing.
 -/
 private theorem hasConstantMongeAmpereDensity_of_rnEntropySource
     (n : Nat)
@@ -292,7 +292,7 @@ omit [FiniteDimensional ℝ E] in
 /--
 If the Kähler logarithmic potential `logF` matches the negative RN/Kähler
 potential, then RN entropy sourcing upgrades directly to a `logF`-driven
-Monge-Ampere potential property.
+Monge-Ampere potential witness.
 -/
 theorem rnEntropySourcesMongeAmperePotential_of_logF_eq_neg_kahlerPotentialRN
     (n : Nat)

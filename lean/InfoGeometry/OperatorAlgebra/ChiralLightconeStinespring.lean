@@ -6,7 +6,7 @@ Chiral lightcone stage for the Stinespring-Tomita clinch.
 This module formalizes the statement:
 
   observed absorption/loss is a deficit in the visible chiral lightcone branch;
-  with a Stinespring-Tomita dilation property, that deficit is accounted for by
+  with a Stinespring-Tomita dilation witness, that deficit is accounted for by
   a mirrored hidden/environment/commutant component.
 
 The module does not claim that every absorbing process is automatically a
@@ -82,7 +82,7 @@ def IsChiralLightlike
 /--
 A coupling is off-diagonal if it has no same-sector block.
 
-This is the algebraic interface for mass/chiral mixing.
+This is the algebraic socket for mass/chiral mixing.
 -/
 def IsOffDiagonalCoupling
     (m : Op) : Prop :=
@@ -488,7 +488,7 @@ structure ChiralLightconeStinespringClinch
 
   /-
   A Tomita/CPT identification of the environment with a commutant mirror is
-  not a theorem of this abstract Stinespring interface.  Downstream modules must
+  not a theorem of this abstract Stinespring socket.  Downstream modules must
   use a concrete commutant/Tomita owner rather than a bare calibration `Prop`.
   -/
 
@@ -633,5 +633,19 @@ end BregmanCalibration
 
 end ChiralLightconeStinespringClinch
 
+/-! ## 7. Owner target -/
+
+/--
+Owner target for installing a chiral-lightcone Stinespring-Tomita clinch.
+-/
+def ChiralLightconeStinespringOwnerTarget
+    (System Dilated Env Carrier : Type*)
+    [NormedAddCommGroup System] [NormedSpace ℝ System]
+    [NormedAddCommGroup Dilated] [NormedSpace ℝ Dilated]
+    [NormedAddCommGroup Env] [NormedSpace ℝ Env]
+    [AddCommGroup Carrier] [Module ℝ Carrier] : Prop :=
+  Nonempty
+    (ChiralLightconeStinespringClinch
+      System Dilated Env Carrier)
 
 end InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring

@@ -336,8 +336,31 @@ theorem inverseLimitStarBoundaryOp_sq (g : InverseLimitFunction) :
     inverseLimitStarBoundaryOp (inverseLimitStarBoundaryOp g) = 0 := by
   simp only [inverseLimitStarBoundaryOp]
   rw [inverseLimitPushforward_pullback]
-  rw [InfoGeometry.Canonical.UHFBoundaryExactSequence.star_UHF_boundary_op_sq_zero]
+  rw [InfoGeometry.Canonical.UHFColimitRepresentationBridge.star_UHF_boundary_op_sq_zero]
   rfl
+
+/-- The two transported differentials satisfy the source anticommutator identity. -/
+theorem inverseLimitBoundaryOp_star_add_star_boundary (g : InverseLimitFunction) :
+    inverseLimitBoundaryOp (inverseLimitStarBoundaryOp g) +
+      inverseLimitStarBoundaryOp (inverseLimitBoundaryOp g) = g := by
+  simp only [inverseLimitBoundaryOp, inverseLimitStarBoundaryOp,
+    inverseLimitPushforward_pullback]
+  have h := congrArg inverseLimitPullback
+    (UHF_Laplacian_op_eq_id (inverseLimitPushforward g))
+  rw [inverseLimitPullback_pushforward] at h
+  exact h
+
+/-- A closed inverse-limit function has the explicitly given primitive `d* g`. -/
+theorem inverseLimitBoundaryOp_exact_of_closed (g : InverseLimitFunction)
+    (hg : inverseLimitBoundaryOp g = 0) :
+    inverseLimitBoundaryOp (inverseLimitStarBoundaryOp g) = g := by
+  have h := inverseLimitBoundaryOp_star_add_star_boundary g
+  rw [hg] at h
+  have hzero : inverseLimitStarBoundaryOp 0 = 0 := by
+    funext z
+    simp [inverseLimitStarBoundaryOp, inverseLimitPushforward,
+      inverseLimitPullback, star_UHF_boundary_op, S_R_op, star_S_L_op]
+  simpa only [hzero, add_zero] using h
 
 theorem inverseLimitPullback_intertwines_boundary_op
     (f : BoundaryFunction) :

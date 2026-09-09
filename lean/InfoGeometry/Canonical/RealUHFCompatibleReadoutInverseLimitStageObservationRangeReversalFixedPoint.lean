@@ -64,6 +64,5 @@ noncomputable def fixedPointRangeMirrorHomeomorph
     (fixedPointRangeMirrorHomeomorph R ρ hρ hreadout n X z).1 = z.1 := by
   rfl
 
-end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeReversalFixedPoint
 
-end
+end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeReversalFixedPoint

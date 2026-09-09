@@ -4,7 +4,7 @@ InfoGeometry/OperatorAlgebra/TomitaCartanDynamics.lean
 Cartan dynamics into Tomita-center collapse and Krein isotropic defects.
 
 This module connects the kinematic mechanism isolated in
-`TomitaCartanSplit.lean` to a dynamical Cartan-flow interface:
+`TomitaCartanSplit.lean` to a dynamical Cartan-flow socket:
 
 * noncompact Cartan directions are the antisymmetric Tomita branch;
 * a model may supply a flow saying that such directions hit the
@@ -14,7 +14,7 @@ This module connects the kinematic mechanism isolated in
   doubled Krein carrier.
 
 The file deliberately keeps the analytic convergence/limit statement as a
-property field.  The algebraic theorem proved here is the composition of those
+witness field.  The algebraic theorem proved here is the composition of those
 witnesses.
 -/
 
@@ -89,13 +89,13 @@ theorem noncompact_globalGenerator_eq_zero_of_tomita_fixed
 
 end CartanTomitaGenerator
 
-/-! ## 2. Cartan flow hitting the algebra/commutant overlap -/
+/-! ## 2. Cartan flow socket hitting the algebra/commutant overlap -/
 
 /--
-A Cartan dynamics property saying that noncompact directions reach the
+A Cartan dynamics witness saying that noncompact directions reach the
 algebra/commutant overlap at a supplied hitting time.
 
-This is intentionally a property interface.  Analytic statements such as convergence
+This is intentionally a witness socket.  Analytic statements such as convergence
 of a noncompact one-parameter group to a projective boundary should be proved in
 concrete models and then supplied through `noncompact_hits_overlap`.
 -/
@@ -176,10 +176,10 @@ theorem noncompact_hit_isotropic
 
 end CartanDynamicsToOverlap
 
-/-! ## 3. Cartan flow hitting a Tomita/Drazin defect locus -/
+/-! ## 3. Cartan flow socket hitting a Tomita/Drazin defect locus -/
 
 /--
-A Cartan dynamics property saying that noncompact directions hit an already
+A Cartan dynamics witness saying that noncompact directions hit an already
 specified Tomita defect locus in a split source.
 
 This is the defect-locus version of `CartanDynamicsToOverlap`.
@@ -267,7 +267,7 @@ end CartanDynamicsToDefect
 /--
 Bundled datum connecting Cartan dynamics to the doubled Krein null mechanism.
 
-This is the canonical property package:
+This is the canonical witness package:
 
 `noncompact Cartan flow → overlap → scalar collapse → isotropic carrier`.
 -/
@@ -302,8 +302,8 @@ def hit
 Main theorem: noncompact Cartan dynamics generates an isotropic doubled-Krein
 carrier readout.
 
-All analytic/geometric content is in the supplied hypotheses.  The theorem here
-is the formal composition of those hypotheses.
+All analytic/geometric content is in the supplied witnesses.  The theorem here
+is the formal composition of those witnesses.
 -/
 theorem noncompact_generates_isotropic
     {X : Gen} {x : Op}

@@ -127,25 +127,6 @@ theorem diracGamma_sq (V : Vector8) :
   intro Ψ
   exact diracGamma_sq_apply V Ψ
 
-/-- A vector on the quadratic null cone acts nilpotently in the Dirac
-representation.  This is the native Clifford consequence of the null
-condition; it does not identify this eight-dimensional cone with a Klein
-quadric of decomposable bivectors. -/
-def IsVectorNull (V : Vector8) : Prop :=
-  vectorQuadratic V = 0
-
-theorem diracGamma_sq_zero_of_isVectorNull
-    (V : Vector8) (hV : IsVectorNull V) :
-    diracGamma V * diracGamma V = 0 := by
-  rw [diracGamma_sq, hV]
-  simp
-
-theorem diracGamma_nilpotent_apply_of_isVectorNull
-    (V : Vector8) (hV : IsVectorNull V) (Ψ : DiracSpinor16) :
-    diracGamma V (diracGamma V Ψ) = 0 := by
-  rw [diracGamma_sq_apply, hV]
-  simp
-
 /-- Gamma depends linearly on its vector argument. -/
 def diracGammaLinear : Vector8 →ₗ[ℂ] Module.End ℂ DiracSpinor16 where
   toFun := diracGamma
@@ -167,18 +148,6 @@ def diracGammaLinear : Vector8 →ₗ[ℂ] Module.End ℂ DiracSpinor16 where
         smul_zornMul]
     · apply ZornCopy.ext
       simp [diracGamma, cliffordPlus, copy_smul_val, smul_zornMul]
-
-@[simp] theorem diracGamma_zero :
-    diracGamma (0 : Vector8) = 0 := by
-  exact diracGammaLinear.map_zero
-
-theorem diracGamma_add (V W : Vector8) :
-    diracGamma (V + W) = diracGamma V + diracGamma W := by
-  exact diracGammaLinear.map_add V W
-
-theorem diracGamma_smul (c : ℂ) (V : Vector8) :
-    diracGamma (c • V) = c • diracGamma V := by
-  exact diracGammaLinear.map_smul c V
 
 /-- The universal Clifford-algebra representation on the Zorn Dirac carrier. -/
 def zornCliffordRepresentation :

@@ -116,5 +116,3 @@ theorem sheetDiagonal_conjugates_cMinus (a b : ℂ) (ha : a ≠ 0) (hb : b ≠ 0
     field_simp [ha, hb] <;> ring
 
 end InfoGeometry.Canonical.HestenesOmegaHyperbolic
-
-end

@@ -56,6 +56,19 @@ theorem susyHamiltonian_eq_one
     _ = c * cdag + cdag * c := by rw [mul_one]
     _ = 1 := fermion_anticomm
 
+/-- Synthesis theorem for the Cuntz/glide SUSY construction. -/
+theorem paperwall_susy_synthesis
+    (c_sq : c * c = 0)
+    (c_comm_G : c * G = G * c)
+    (fermion_anticomm : c * cdag + cdag * c = 1)
+    (G_right_inv : G * Ginv = 1)
+    (even_covariant : Ginv * (cdag * c) * G = cdag * c) :
+    supercharge c G * supercharge c G = 0 ∧ susyHamiltonian c cdag G Ginv = 1 := by
+  constructor
+  · exact supercharge_sq_zero c G c_sq c_comm_G
+  · exact susyHamiltonian_eq_one c cdag G Ginv
+      fermion_anticomm G_right_inv even_covariant
+
 /-! ## 2. Non-symmorphic glide -/
 
 variable {Γ : Type*} [Group Γ]
@@ -66,5 +79,10 @@ theorem glide_fourth_translation_sq (glide_sq : glide ^ 2 = tx) :
     glide ^ 4 = tx ^ 2 := by
   rw [show (4 : ℕ) = 2 + 2 by norm_num, pow_add, glide_sq]
   simp [pow_two]
+
+/-- Package the genuinely proven paperwall/Klein-bottle facts used by the holographic construction. -/
+theorem klein_glide_synthesis (glide_sq : glide ^ 2 = tx) :
+    glide ^ 4 = tx ^ 2 := by
+  exact glide_fourth_translation_sq tx glide glide_sq
 
 end PaperwallHolographicSUSY

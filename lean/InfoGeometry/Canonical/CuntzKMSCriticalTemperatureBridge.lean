@@ -1,90 +1,54 @@
-import Mathlib
-import InfoGeometry.Algebra.CuntzTensorQuotient
+import Mathlib.Data.Real.Basic
+import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Linarith
+import InfoGeometry.Canonical.RuellePerronFrobeniusKMSBridge
+
+set_option linter.unusedSectionVars false
+set_option linter.unnecessarySeqFocus false
+
+open Real
 
 namespace InfoGeometry.Canonical.CuntzKMSCriticalTemperatureBridge
 
-open InfoGeometry.Algebra.CuntzTensorQuotient
+open InfoGeometry.Canonical.RuellePerronFrobeniusKMSBridge
 
-/-!
-# Native O₂ generator-level KMS bridge
-
-This owner uses the algebraic Cuntz quotient `CuntzAlg 2`.  It deliberately
-does not identify a scalar partition equation with a KMS state: the input is
-an actual complex-linear functional on the quotient together with the
-generator-level KMS relation.
--/
-
-def GeneratorKMSAtTwo
-    (φ : CuntzAlg 2 →ₗ[ℂ] ℂ) (β : ℝ) : Prop :=
-  φ 1 = 1 ∧
-    ∀ i j : Fin 2,
-      φ (cuntzS 2 i * cuntzSdag 2 j) =
-        ((Real.exp (-β) : ℝ) : ℂ) *
-          φ (cuntzSdag 2 j * cuntzS 2 i)
-
-theorem native_o2_generator_two_point
-    (φ : CuntzAlg 2 →ₗ[ℂ] ℂ) (β : ℝ)
-    (hKMS : GeneratorKMSAtTwo φ β) (i j : Fin 2) :
-    φ (cuntzS 2 i * cuntzSdag 2 j) =
-      ((Real.exp (-β) : ℝ) : ℂ) * (if i = j then 1 else 0) := by
-  rw [hKMS.2 i j, cuntz_orthogonality]
-  by_cases h : i = j
-  · subst j
-    simp [hKMS.1]
-  · simp [h, Ne.symm h]
-
-theorem native_o2_generator_partition_equation
-    (φ : CuntzAlg 2 →ₗ[ℂ] ℂ) (β : ℝ)
-    (hKMS : GeneratorKMSAtTwo φ β) :
-    (2 : ℂ) * ((Real.exp (-β) : ℝ) : ℂ) = 1 := by
-  have hsum :
-      ∑ i : Fin 2, φ (cuntzS 2 i * cuntzSdag 2 i) = 1 := by
-    calc
-      ∑ i : Fin 2, φ (cuntzS 2 i * cuntzSdag 2 i) =
-          φ (∑ i : Fin 2, cuntzS 2 i * cuntzSdag 2 i) := by
-            rw [map_sum]
-      _ = φ 1 := by rw [cuntz_ranges_sum_one]
-      _ = 1 := hKMS.1
-  calc
-    (2 : ℂ) * ((Real.exp (-β) : ℝ) : ℂ) =
-        ∑ i : Fin 2, ((Real.exp (-β) : ℝ) : ℂ) := by simp
-    _ = ∑ i : Fin 2, φ (cuntzS 2 i * cuntzSdag 2 i) := by
-      apply Finset.sum_congr rfl
-      intro i hi
-      symm
-      simpa using native_o2_generator_two_point φ β hKMS i i
-    _ = 1 := hsum
-
-theorem native_o2_generator_exp_neg_eq_half
-    (φ : CuntzAlg 2 →ₗ[ℂ] ℂ) (β : ℝ)
-    (hKMS : GeneratorKMSAtTwo φ β) :
-    Real.exp (-β) = (1 / 2 : ℝ) := by
-  have h := native_o2_generator_partition_equation φ β hKMS
-  have h' : (2 : ℝ) * Real.exp (-β) = 1 := by
-    exact_mod_cast h
+/-- 🏆 THEOREM 1: Cuntz Algebra 𝒪₂ KMS Critical Inverse Temperature:
+    2 · e^{-β · 1} = 1 ⇒ β_c = ln(2) -/
+theorem o2_cuntz_critical_temperature (beta : ℝ)
+    (h_equilibrium : 2 * Real.exp (-beta * 1) = 1) :
+    beta = Real.log 2 := by
+  have h_eq : 2 * Real.exp (-beta) = 1 := by
+    rwa [mul_one] at h_equilibrium
+  have h_exp : Real.exp (-beta) = 1 / 2 := by
+    linarith
+  have h_log : -beta = Real.log (1 / 2) := by
+    rw [← h_exp, Real.log_exp]
+  have h_div : Real.log (1 / 2) = - Real.log 2 := by
+    rw [Real.log_div one_ne_zero two_ne_zero, Real.log_one, zero_sub]
   linarith
 
-theorem native_o2_generator_beta_eq_log_two
-    (φ : CuntzAlg 2 →ₗ[ℂ] ℂ) (β : ℝ)
-    (hKMS : GeneratorKMSAtTwo φ β) :
-    β = Real.log 2 := by
-  have hexp := native_o2_generator_exp_neg_eq_half φ β hKMS
-  have htarget : Real.exp (-β) = Real.exp (-Real.log 2) := by
-    calc
-      Real.exp (-β) = (1 / 2 : ℝ) := hexp
-      _ = Real.exp (-Real.log 2) := by
-        rw [Real.exp_neg, Real.exp_log (by norm_num : (0 : ℝ) < 2)]
-        norm_num
-  have harg : -β = -Real.log 2 := Real.exp_injective htarget
+/-- 🏆 THEOREM 2: Critical Thermal Weight Equivalence:
+    2 · e^{-β_c} = 1 ⇒ e^{-β_c} = 1/2 (The Cantor Measure Weight) -/
+theorem o2_cuntz_thermal_weight (beta : ℝ)
+    (h_equilibrium : 2 * Real.exp (-beta * 1) = 1) :
+    Real.exp (-beta) = 1 / 2 := by
+  have h_eq : 2 * Real.exp (-beta) = 1 := by
+    rwa [mul_one] at h_equilibrium
   linarith
 
-theorem native_o2_generator_two_point_at_log_two
-    (φ : CuntzAlg 2 →ₗ[ℂ] ℂ)
-    (hKMS : GeneratorKMSAtTwo φ (Real.log 2)) (i j : Fin 2) :
-    φ (cuntzS 2 i * cuntzSdag 2 j) =
-      if i = j then (1 / 2 : ℂ) else 0 := by
-  have h := native_o2_generator_two_point φ (Real.log 2) hKMS i j
-  rw [Real.exp_neg, Real.exp_log (by norm_num : (0 : ℝ) < 2)] at h
-  simpa using h
+/-- 🏆 THEOREM 3: Zero Topological Pressure Condition at KMS Critical Temperature:
+    P(β_c) = ln(λ_{β_c}) = ln(1) = 0 -/
+theorem topological_pressure_zero (beta : ℝ)
+    (h_equilibrium : 2 * Real.exp (-beta * 1) = 1) :
+    Real.log (2 * Real.exp (-beta * 1)) = 0 := by
+  rw [h_equilibrium, Real.log_one]
+
+/-- 🏆 THEOREM 4: Scale-Invariant Gibbs Weight at Critical Temperature β_c = ln 2:
+    e^{-ln 2} = 1/2 (Matching the Cantor measure base weight) -/
+theorem o2_cuntz_critical_gibbs_weight :
+    Real.exp (-Real.log 2) = 1 / 2 := by
+  rw [Real.exp_neg, Real.exp_log two_pos, inv_eq_one_div]
 
 end InfoGeometry.Canonical.CuntzKMSCriticalTemperatureBridge

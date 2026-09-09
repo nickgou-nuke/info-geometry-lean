@@ -7,7 +7,7 @@ open scoped InnerProductSpace
 /-!
 # InfoGeometry.Canonical.RealIncidenceHomologyBridge
 
-Real homology/cohomology transport layer for incidence and wire complexes.
+Theorem-safe real homology/cohomology socket for incidence and wire complexes.
 
 This file records the real Hestenes--Krein translation:
 
@@ -20,7 +20,7 @@ This file records the real Hestenes--Krein translation:
 
 It does not construct quotient spaces, prove a full Hodge theorem, or assert
 that a Dirac lane is automatically a nilpotent chain differential. Those remain
-explicit property/calibration layers.
+explicit witness/calibration layers.
 -/
 
 namespace InfoGeometry.Canonical.RealIncidenceHomologyBridge
@@ -30,7 +30,7 @@ open InfoGeometry.Canonical.ChiralHodgeDecomposition
 open InfoGeometry.Canonical.HestenesPhaseSemilinear
 
 /--
-A real chain-complex structure.
+A real chain-complex socket.
 
 `C n` is the degree-`n` chain carrier, `boundary n : C (n+1) -> C n` is the
 real boundary map, and `boundary_boundary_zero` is the supplied chain-complex
@@ -68,7 +68,7 @@ theorem boundary_is_cycle
 end RealChainComplex
 
 /--
-A real cochain-complex datum.
+A real cochain-complex socket.
 
 This is the dual readout lane. `coboundary n` sends degree-`n` cochains to
 degree-`n+1` cochains, and `coboundary_coboundary_zero` supplies `d d = 0`.
@@ -210,14 +210,14 @@ theorem rootDirac_sq_eq_hodge_loop_sum :
   rootDiracOddLane_sq_eq_chiralLaplacian_sum (E := E)
 
 /-!
-A nilpotent chiral complex property.
+A nilpotent chiral complex witness.
 
-Only with this property should quotient-style chiral homology
+Only with this witness should quotient-style chiral homology
 `ker D± / im D∓` be interpreted as an actual chain-complex homology lane.
 -/
 namespace ChiralNilpotentComplexWitness
 
-/-- With a nilpotent-complex property, plus boundaries are plus cycles. -/
+/-- With a nilpotent-complex witness, plus boundaries are plus cycles. -/
 @[rep_depth krein]
 theorem plus_boundary_is_cycle
     (W : (rootDiracPlus (E := E)).comp (rootDiracMinus (E := E)) = 0 ∧
@@ -229,7 +229,7 @@ theorem plus_boundary_is_cycle
   simpa [ContinuousLinearMap.comp_apply] using
     congrArg (fun F : EndH => F v) W.1
 
-/-- With a nilpotent-complex property, minus boundaries are minus cycles. -/
+/-- With a nilpotent-complex witness, minus boundaries are minus cycles. -/
 @[rep_depth krein]
 theorem minus_boundary_is_cycle
     (W : (rootDiracPlus (E := E)).comp (rootDiracMinus (E := E)) = 0 ∧

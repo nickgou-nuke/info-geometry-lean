@@ -92,5 +92,4 @@ theorem fixedPointOrbitClosureHom_forget
   exact (reversalData (involution M) hM).orbitClosureFixedPointCompHausHom_forget ρ hρ
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutFamilyMirrorCompHaus
-
 end

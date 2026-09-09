@@ -369,13 +369,11 @@ theorem inverse_unit_packet (q : SplitBiquaternion) (hq : norm q ≠ 0) :
     inverseCandidate q * q = 1 ∧
     q * inverseCandidate q = 1 ∧
     ∀ u : NormOneSplitBiquaternion, (u⁻¹ * u).val = 1 := by
-  refine ⟨?_, ?_, ?_⟩
-  · exact inverseCandidate_mul q hq
-  · exact mul_inverseCandidate q hq
-  · intro u
-    change splitConj u.val * u.val = (1 : SplitBiquaternion)
-    rw [splitConj_mul, u.property]
-    rfl
+  exact ⟨inverseCandidate_mul q hq, mul_inverseCandidate q hq,
+    fun u => by
+      change splitConj u.val * u.val = (1 : SplitBiquaternion)
+      rw [splitConj_mul, u.property]
+      rfl⟩
 
 end SplitBiquaternion
 end InfoGeometry.Clifford

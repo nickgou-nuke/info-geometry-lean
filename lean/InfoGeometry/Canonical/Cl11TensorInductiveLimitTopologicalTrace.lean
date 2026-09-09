@@ -80,6 +80,3 @@ theorem normalizedTraceTopologicalColimitMap_unique
   change f (topologicalInjection n A) = normalizedTrace n A
   exact hf n A
 
-end InfoGeometry.Canonical.Cl11TensorInductiveLimitTopologicalTrace
-
-end

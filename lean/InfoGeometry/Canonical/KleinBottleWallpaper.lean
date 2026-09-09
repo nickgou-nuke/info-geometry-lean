@@ -43,28 +43,8 @@ conjugating `G` by `S` yields `G` or `G⁻¹` up to integer translations.
 For exactness in this continuous setup, we define strict commutation 
 with the glide-reflection vector field (or anti-commutation via G_inv).
 -/
-theorem G_inv_left (p : ℝ × ℝ) :
-    G_inv (G p) = p := by
-  dsimp [G_inv, G, glide_reflection]
-  ext <;> ring
-
-theorem G_inv_right (p : ℝ × ℝ) :
-    G (G_inv p) = p := by
-  dsimp [G_inv, G, glide_reflection]
-  ext <;> ring
-
-theorem G_square (p : ℝ × ℝ) :
-    G (G p) = (p.1, p.2 + 1) := by
-  dsimp [G, glide_reflection]
-  ext <;> ring
-
 def IsCompatibleSymmetry (S : ℝ × ℝ → ℝ × ℝ) : Prop :=
   (∀ p, S (G p) = G (S p)) ∨ (∀ p, S (G p) = G_inv (S p))
-
-theorem G_compatible : IsCompatibleSymmetry G := by
-  left
-  intro p
-  rfl
 
 /-!
 ### 1. Pure Translations
@@ -76,16 +56,6 @@ commute with the square, preserving the Klein bottle covering.
 /-- Translation along the glide axis. -/
 def trans_y (b : ℝ) (p : ℝ × ℝ) : ℝ × ℝ :=
   (p.1, p.2 + b)
-
-theorem trans_y_add (a b : ℝ) (p : ℝ × ℝ) :
-    trans_y a (trans_y b p) = trans_y (a + b) p := by
-  dsimp [trans_y]
-  ext <;> ring
-
-theorem trans_y_zero (p : ℝ × ℝ) :
-    trans_y 0 p = p := by
-  dsimp [trans_y]
-  ext <;> ring
 
 theorem trans_y_compatible (b : ℝ) : IsCompatibleSymmetry (trans_y b) := by
   left
@@ -103,11 +73,6 @@ Any parallel glide reflection forms a `pg` or `pgg` structure and is compatible.
 /-- Parallel glide reflection with shift `d`. -/
 def parallel_glide (d : ℝ) (p : ℝ × ℝ) : ℝ × ℝ :=
   (-p.1, p.2 + d)
-
-theorem parallel_glide_square (d : ℝ) (p : ℝ × ℝ) :
-    parallel_glide d (parallel_glide d p) = trans_y (2 * d) p := by
-  dsimp [parallel_glide, trans_y]
-  ext <;> ring
 
 theorem parallel_glide_compatible (d : ℝ) : IsCompatibleSymmetry (parallel_glide d) := by
   left
@@ -127,11 +92,6 @@ A 180-degree rotation `(x, y) ↦ (-x, -y)` is characteristic of the `pgg`
 def rot_180 (p : ℝ × ℝ) : ℝ × ℝ :=
   (-p.1, -p.2)
 
-theorem rot_180_square (p : ℝ × ℝ) :
-    rot_180 (rot_180 p) = p := by
-  dsimp [rot_180]
-  ext <;> ring
-
 theorem rot_180_compatible : IsCompatibleSymmetry rot_180 := by
   right
   intro p
@@ -149,11 +109,6 @@ the `pmg` wallpaper group. It inverts the glide translation.
 /-- Mirror reflection perpendicular to the glide axis. -/
 def mirror_perp (p : ℝ × ℝ) : ℝ × ℝ :=
   (p.1, -p.2)
-
-theorem mirror_perp_square (p : ℝ × ℝ) :
-    mirror_perp (mirror_perp p) = p := by
-  dsimp [mirror_perp]
-  ext <;> ring
 
 theorem mirror_perp_compatible : IsCompatibleSymmetry mirror_perp := by
   right
@@ -173,44 +128,10 @@ the `cm` wallpaper group (as well as `pm`). It strictly commutes with the glide.
 def mirror_parallel (p : ℝ × ℝ) : ℝ × ℝ :=
   (-p.1, p.2)
 
-theorem mirror_parallel_square (p : ℝ × ℝ) :
-    mirror_parallel (mirror_parallel p) = p := by
-  dsimp [mirror_parallel]
-  ext <;> ring
-
 theorem mirror_parallel_compatible : IsCompatibleSymmetry mirror_parallel := by
   left
   intro p
   simpa [mirror_parallel, G, G_inv, glide_reflection]
-
-theorem mirror_perp_trans_y (b : ℝ) (p : ℝ × ℝ) :
-    mirror_perp (trans_y b p) = trans_y (-b) (mirror_perp p) := by
-  dsimp [mirror_perp, trans_y]
-  ext <;> ring
-
-theorem mirror_parallel_trans_y (b : ℝ) (p : ℝ × ℝ) :
-    mirror_parallel (trans_y b p) = trans_y b (mirror_parallel p) := by
-  dsimp [mirror_parallel, trans_y]
-
-theorem rot_180_trans_y (b : ℝ) (p : ℝ × ℝ) :
-    rot_180 (trans_y b p) = trans_y (-b) (rot_180 p) := by
-  dsimp [rot_180, trans_y]
-  ext <;> ring
-
-theorem G_trans_y (b : ℝ) (p : ℝ × ℝ) :
-    G (trans_y b p) = trans_y b (G p) := by
-  dsimp [G, glide_reflection, trans_y]
-  ext <;> ring
-
-theorem G_inv_trans_y (b : ℝ) (p : ℝ × ℝ) :
-    G_inv (trans_y b p) = trans_y b (G_inv p) := by
-  dsimp [G_inv, trans_y]
-  ext <;> ring
-
-theorem parallel_glide_add (d e : ℝ) (p : ℝ × ℝ) :
-    parallel_glide d (parallel_glide e p) = trans_y (d + e) p := by
-  dsimp [parallel_glide, trans_y]
-  ext <;> ring
 
 /-!
 ### 6. Incompatible Symmetries

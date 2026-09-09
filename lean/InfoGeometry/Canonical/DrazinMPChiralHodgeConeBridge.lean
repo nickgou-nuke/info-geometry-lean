@@ -81,7 +81,7 @@ theorem hodgeChiralityStar_sq_one
       noncomm_ring [hP, hQ, hPQ, hQP]
     _ = (1 : EndH) := hAdd
 
-/-- The bridge chirality agrees with the property spectral grading. -/
+/-- The bridge chirality agrees with the certified spectral grading. -/
 @[rep_depth krein]
 theorem hodgeChiralityStar_eq_GammaS
     (CIK : CertifiedInverseKernel E) :
@@ -155,7 +155,7 @@ theorem hodgeASD_mul_hodgeChiralityStar
   change Q * (P - Q) = -Q
   noncomm_ring [hQ, hQP]
 
-/-- The property left anomaly is genuinely odd for the bridge chirality. -/
+/-- The certified left anomaly is genuinely odd for the bridge chirality. -/
 @[rep_depth krein]
 theorem chiralAnomaly_anticommutes_hodgeChiralityStar
     (CIK : CertifiedInverseKernel E) :
@@ -164,7 +164,7 @@ theorem chiralAnomaly_anticommutes_hodgeChiralityStar
   rw [hodgeChiralityStar_eq_GammaS]
   exact CIK.chiralAnomaly_anticommutes_GammaS
 
-/-- The property right anomaly is genuinely odd for the bridge chirality. -/
+/-- The certified right anomaly is genuinely odd for the bridge chirality. -/
 @[rep_depth krein]
 theorem rightChiralAnomaly_anticommutes_hodgeChiralityStar
     (CIK : CertifiedInverseKernel E) :
@@ -193,7 +193,7 @@ theorem canonicalDirac_anticommutes_hodgeChiralityStar
           noncomm_ring
 
 /--
-Bridge between property Drazin/MP projectors, the lightcone projector algebra,
+Bridge between certified Drazin/MP projectors, the lightcone projector algebra,
 chiral Hodge star/chirality, and a supplied odd Dirac/supercharge candidate.
 
 The oddness field is a calibration, not a theorem of arbitrary `Dirac`.
@@ -359,7 +359,7 @@ theorem netMPChiralCharge_eq_lightcone_mismatch :
     B.chiralAnomaly_eq_mpMetric_uPlus_sub_uMinus]
 
 /--
-The property anomaly is already off-diagonal for the Drazin chiral cone. This
+The certified anomaly is already off-diagonal for the Drazin chiral cone. This
 is the existing owner theorem re-exported through the bridge.
 -/
 @[rep_depth krein]

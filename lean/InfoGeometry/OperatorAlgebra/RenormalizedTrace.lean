@@ -25,7 +25,7 @@ namespace InfoGeometry.OperatorAlgebra
 /--
 A singular trace backend on an ambient operator algebra or ideal.
 
-This is the abstract interface for Dixmier/Macaev/weak-L¹ traces. The analytic
+This is the abstract socket for Dixmier/Macaev/weak-L¹ traces. The analytic
 ideal, measurability, and vanishing-on-trace-class properties are carried as
 certificates because they depend on the concrete operator model.
 -/
@@ -153,7 +153,7 @@ theorem continuation_agrees {T : A} {s : ℂ} (hs : ζ.regularAt T s) :
 end ZetaRegularizationDatum
 
 /--
-Compatibility alias for older spectral-triple interfaces that used the
+Compatibility alias for older spectral-triple sockets that used the
 `ZetaRegularizedTraceDatum` name.
 -/
 abbrev ZetaRegularizedTraceDatum
@@ -206,7 +206,7 @@ structure ResidueTraceBridge
   constant : ℂ
   /-- Chosen complex readout of the extended nonnegative singular trace. -/
   singularTraceComplex : ℝ≥0∞ → ℂ
-  /-- Bridge formula property. -/
+  /-- Bridge formula certificate. -/
   residue_trace_formula :
     ∀ T : A,
       T ∈ singular.ideal →
@@ -238,7 +238,7 @@ def baseSingularTrace
 end CoreSingularTraceDatum
 
 /--
-A type III renormalized integration interface:
+A type III renormalized integration socket:
 
 base integration uses a modular weight; singular/logarithmic readouts are
 computed on the crossed-product core.
@@ -250,7 +250,7 @@ structure TypeIIIRenormalizedTraceDatum
   typeIIIIntegration : TypeIIIIntegrationDatum M Core
   coreSingular : CoreSingularTraceDatum M Core
 
-/-! ## 5. Cyclic cocycle backend -/
+/-! ## 5. Cyclic cocycle backend socket -/
 
 /-- Rotate the first entry of a Hochschild chain to the final position. -/
 def cyclicRotate {A : Type*} : List A → List A
@@ -332,7 +332,7 @@ end RenormalizedCyclicCocycleDatum
 /--
 Separated renormalized integration backends.
 
-This compatibility interface keeps existing spectral-triple layers explicit about
+This compatibility socket keeps existing spectral-triple layers explicit about
 whether a readout is singular, zeta-regularized, or cocycle-based.
 -/
 inductive RenormalizedTraceBackend
@@ -342,5 +342,31 @@ inductive RenormalizedTraceBackend
   | singularTrace (τ : SingularTraceDatum A)
   | renormalizedCyclicCocycle (φ : RenormalizedCyclicCocycleDatum A)
 
+/-! ## 6. Owner targets -/
+
+/-- Owner target for choosing a singular/Dixmier trace backend. -/
+def SingularTraceOwnerTarget
+    (A : Type*) [AddCommMonoid A] [Mul A] : Prop :=
+  ∃ τ : SingularTraceDatum A,
+    ∀ a b : A,
+      a ∈ τ.ideal → b ∈ τ.ideal →
+        τ.singularTrace (a * b) = τ.singularTrace (b * a)
+
+/-- Owner target for choosing a zeta-regularization backend. -/
+def ZetaRegularizationOwnerTarget
+    (A : Type*) : Prop :=
+  ∃ ζ : ZetaRegularizationDatum A,
+    ∀ T : A, MeromorphicOn (ζ.continuedZeta T) Set.univ
+
+/-- Owner target for a type III-safe renormalized trace backend. -/
+def TypeIIIRenormalizedTraceOwnerTarget
+    (M Core : Type*)
+    [AddCommMonoid M]
+    [AddCommMonoid Core] [Mul Core] : Prop :=
+  ∃ T : TypeIIIRenormalizedTraceDatum M Core,
+    ∀ x : M,
+      T.coreSingular.baseSingularTrace x =
+        T.coreSingular.singularCoreTrace.singularTrace
+          (T.coreSingular.coreTrace.embed x)
 
 end InfoGeometry.OperatorAlgebra

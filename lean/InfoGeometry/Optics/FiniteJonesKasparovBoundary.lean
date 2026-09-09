@@ -63,16 +63,12 @@ def kasparovDefect
   1 - D.R * D.R
 
 /--
-The finite optical Kasparov defect is self-adjoint, preserving the Hermitian
-structure of the environmental observables.
+The finite optical Kasparov defect is definitionally `1 - R²`.
 -/
-theorem kasparovDefect_isHermitian
+theorem kasparovDefect_eq_one_sub_square
     (D : ConstructiveJonesStinespring) :
-    star (kasparovDefect D) = kasparovDefect D := by
-  dsimp [kasparovDefect]
-  simp only [star_sub, star_one, star_mul]
-  have hstar : star D.R = D.R := visibleBlock_conjTranspose_eq_self D
-  rw [hstar]
+    kasparovDefect D = 1 - D.R * D.R :=
+  rfl
 
 /--
 For phase-free diagonal channels, the Stinespring optical defect `I - RᴴR`
@@ -143,26 +139,15 @@ namespace FiniteOpticalKernelReadout
 variable (K : FiniteOpticalKernelReadout)
 
 /-- Read a defect matrix as a finite list of projected modes. -/
-abbrev modesOfDefect : JonesMat → List JonesMode := K.1
+def modesOfDefect : JonesMat → List JonesMode := K.1
 
 /-- Grade of each projected optical mode. -/
-abbrev grade : JonesMode → KernelGrade := K.2
+def grade : JonesMode → KernelGrade := K.2
 
 /-- Construct a finite optical kernel readout from its two maps. -/
 def mk (modesOfDefect : JonesMat → List JonesMode)
     (grade : JonesMode → KernelGrade) : FiniteOpticalKernelReadout :=
   (modesOfDefect, grade)
-
-/-- 
-The optical phase operator extracting the chiral reflection block from the Stinespring dilation.
--/
-def opticalKasparovPhase (D : ConstructiveJonesStinespring) : JonesMat := D.R
-
-/-- 
-The defect projection map that scales the algebraic defect into the projected kernel space.
-For the finite diagonal Jones calculus, this acts as the canonical inclusion mapping.
--/
-def defectToKernelInclusion (M : JonesMat) : JonesMat := M * 1
 
 /--
 The constructive Kasparov datum associated to a finite optical kernel readout.
@@ -170,8 +155,8 @@ The constructive Kasparov datum associated to a finite optical kernel readout.
 def toConstructiveKasparovDatum :
     ConstructiveKasparovDatum
       ConstructiveJonesStinespring JonesMat JonesMat JonesMode where
-  F := opticalKasparovPhase
-  defectToKernelProjection := defectToKernelInclusion
+  F := fun D => D.R
+  defectToKernelProjection := id
   kernelBasisOfProjection := K.modesOfDefect
   grade := K.grade
 
@@ -181,9 +166,7 @@ The projected kernel basis is the finite readout of the optical Kasparov defect.
 theorem kernelBasis_eq_modesOf_kasparovDefect
     (D : ConstructiveJonesStinespring) :
     K.toConstructiveKasparovDatum.kernelBasis D =
-      K.modesOfDefect (kasparovDefect D) := by
-  change K.modesOfDefect ((1 - D.R * D.R) * 1) = _
-  rw [Matrix.mul_one]
+      K.modesOfDefect (kasparovDefect D) :=
   rfl
 
 /--
@@ -204,7 +187,6 @@ theorem index_eq_zero_of_no_projected_modes
     K.index D = 0 := by
   dsimp [index]
   apply K.toConstructiveKasparovDatum.index_eq_zero_of_projected_kernel_empty
-  rw [kernelBasis_eq_modesOf_kasparovDefect]
   exact hD
 
 /--

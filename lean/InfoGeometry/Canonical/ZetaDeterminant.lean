@@ -82,7 +82,7 @@ noncomputable def operatorZetaRegularizedLogDet
 /--
 Right-composition additivity for the operatorial zeta log-determinant.
 
-No commutativity property is imposed on `L` and `K`; composition is the
+No commutativity assumption is imposed on `L` and `K`; composition is the
 ambient (potentially noncommutative) operator product.  The logarithmic split
 requires explicit nondegeneracy of the scaled and right factors.
 -/
@@ -167,20 +167,12 @@ Regularized operator/spectral zeta package.
 `regularizedOp` is the regularized operator input (e.g. Drazin inverse or a
 shifted variant), and `cutoff` is the spectral scale.
 -/
-def SpectralZetaLogDetData :=
-  {x : (E →L[ℝ] E) × ℝ // x.2 ≠ 0}
+structure SpectralZetaLogDetData where
+  regularizedOp : E →L[ℝ] E
+  cutoff : ℝ
+  cutoff_ne_zero : cutoff ≠ 0
 
 namespace SpectralZetaLogDetData
-
-def regularizedOp (pkg : SpectralZetaLogDetData (E := E)) : E →L[ℝ] E :=
-  pkg.1.1
-
-def cutoff (pkg : SpectralZetaLogDetData (E := E)) : ℝ :=
-  pkg.1.2
-
-def cutoff_ne_zero (pkg : SpectralZetaLogDetData (E := E)) :
-    cutoff pkg ≠ 0 := pkg.2
-
 
 /-- Extract the regularized zeta log-determinant represented by the package. -/
 noncomputable def logDet (pkg : SpectralZetaLogDetData (E := E)) : ℝ :=
@@ -202,8 +194,10 @@ end SpectralZetaLogDetData
 /-- Canonical zeta package extracted from a regularized spectral triple. -/
 noncomputable def spectralZetaLogDetDataOfRegularizedTriple
     (RST : RegularizedSpectralTriple E)
-    (Λ : ℝ) (hΛ : Λ ≠ 0) : SpectralZetaLogDetData (E := E) :=
-  ⟨(RST.DD, Λ), hΛ⟩
+    (Λ : ℝ) (hΛ : Λ ≠ 0) : SpectralZetaLogDetData (E := E) where
+  regularizedOp := RST.DD
+  cutoff := Λ
+  cutoff_ne_zero := hΛ
 
 omit [FiniteDimensional ℝ E] in
 @[simp] theorem spectralZetaLogDetDataOfRegularizedTriple_logDet
@@ -216,8 +210,11 @@ omit [FiniteDimensional ℝ E] in
 /-- Canonical zeta package extracted from a chiral regularized spectral triple. -/
 noncomputable def spectralZetaLogDetDataOfChiralTriple
     (CST : ChiralSpectralTriple E)
-    (Λ : ℝ) (hΛ : Λ ≠ 0) : SpectralZetaLogDetData (E := E) :=
-  ⟨(CST.DD + ChiralSpectralTriple.epsilon CST • 1, Λ), hΛ⟩
+    (Λ : ℝ) (hΛ : Λ ≠ 0) : SpectralZetaLogDetData (E := E) where
+  regularizedOp :=
+    CST.DD + ChiralSpectralTriple.epsilon CST • 1
+  cutoff := Λ
+  cutoff_ne_zero := hΛ
 
 omit [FiniteDimensional ℝ E] in
 @[simp] theorem spectralZetaLogDetDataOfChiralTriple_logDet

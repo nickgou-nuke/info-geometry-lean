@@ -13,7 +13,8 @@ def pom_fiber_fixed_symmetric_layer_unbounded_scheduling_visible_algebra_dim (r 
 
 /-- The chapter-level bulk scheduling entropy package specialized to the fixed symmetric layer. -/
 def pom_fiber_fixed_symmetric_layer_unbounded_scheduling_bulk_entropy : Prop :=
-  bulk_hypothesis → entropy_asymptotic
+  let D : PomFiberBulkSchedulingEntropyUniversalData := {}
+  D.bulk_hypothesis → D.entropy_asymptotic
 
 /-- Natural scheduling complexity attached to the explicit family. -/
 def pom_fiber_fixed_symmetric_layer_unbounded_scheduling_complexity (r N : ℕ) : ℕ :=
@@ -37,7 +38,8 @@ theorem paper_pom_fiber_fixed_symmetric_layer_unbounded_scheduling (r N : ℕ) (
   · dsimp [pom_fiber_fixed_symmetric_layer_unbounded_scheduling_family_size]
     omega
   · simpa [pom_fiber_fixed_symmetric_layer_unbounded_scheduling_bulk_entropy] using
-      paper_pom_fiber_bulk_scheduling_entropy_universal
+      (paper_pom_fiber_bulk_scheduling_entropy_universal
+        ({ } : PomFiberBulkSchedulingEntropyUniversalData))
   · dsimp [pom_fiber_fixed_symmetric_layer_unbounded_scheduling_complexity]
     omega
 

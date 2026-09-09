@@ -95,5 +95,3 @@ theorem SymbolicLatentObservableModularFlow.observationQuotientFlowCompHausHom_c
   simpa using Φ.observationQuotientFlowCompHausHom_zero h_flow
 
 end InfoGeometry.Topology
-
-end

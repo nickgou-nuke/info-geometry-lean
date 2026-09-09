@@ -36,20 +36,10 @@ structure TopologicalMajoranaShadow
     (X : RealMajoranaCore)
     [NormedAddCommGroup X] [NormedSpace ℝ X] where
   sigma : ℝ → X ≃L[ℝ] X
+  sigma_zero : sigma 0 = ContinuousLinearEquiv.refl ℝ X
   sigma_add : ∀ t s, sigma (t + s) = (sigma t).trans (sigma s)
   J_conj_sigma :
     ∀ t x, X.J ((sigma t) x) = (sigma (-t)) (X.J x)
-
-theorem TopologicalMajoranaShadow.sigma_zero
-    {X : RealMajoranaCore}
-    [NormedAddCommGroup X] [NormedSpace ℝ X]
-    (M : TopologicalMajoranaShadow X) :
-    M.sigma 0 = ContinuousLinearEquiv.refl ℝ X := by
-  ext x
-  have h := congrArg (fun e : X ≃L[ℝ] X => e x) (M.sigma_add 0 1)
-  have h' : M.sigma 1 (M.sigma 0 x) = M.sigma 1 x := by
-    simpa using h.symm
-  exact (M.sigma 1).injective h'
 
 namespace TopologicalMajoranaShadow
 
@@ -298,6 +288,7 @@ noncomputable def topologicalShadowOfExp
           (expFlow σGen (-t)) ((cl11DoubledCore E).J x)) :
     TopologicalMajoranaShadow Xc where
   sigma := expFlow σGen
+  sigma_zero := expFlow_zero σGen
   sigma_add := expFlow_add σGen
   J_conj_sigma := hJConj
 
@@ -421,6 +412,7 @@ modular sign involution `ε`.
 noncomputable def canonicalCl11TopologicalShadow :
     TopologicalMajoranaShadow Xc :=
   { sigma := expFlow (canonicalCl11Generator (E := E))
+    sigma_zero := expFlow_zero (canonicalCl11Generator (E := E))
     sigma_add := expFlow_add (canonicalCl11Generator (E := E))
     J_conj_sigma := canonicalCl11Generator_J_conj_expFlow (E := E) }
 
@@ -967,41 +959,6 @@ noncomputable def berezinian
   Matrix.det (blockA U - blockB U * ⅟(blockD U) * blockC U) /
     Matrix.det (blockD U)
 
-/-- With vanishing off-diagonal blocks, the block Berezinian reduces to the
-ordinary ratio of the two diagonal determinants. -/
-theorem berezinian_eq_diagonal_ratio_of_offdiag_zero
-    (U : Matrix (Fin N ⊕ Fin N) (Fin N ⊕ Fin N) ℝ)
-    [Invertible (blockD U)]
-    (hB : blockB U = 0) (hC : blockC U = 0) :
-    berezinian (N := N) U =
-      Matrix.det (blockA U) / Matrix.det (blockD U) := by
-  unfold berezinian
-  rw [hB, hC]
-  simp
-
-/-- An anomaly-free lattice transformation has the diagonal Berezinian ratio. -/
-theorem berezinian_eq_diagonal_ratio_of_anomaly_free
-    (U : Matrix (Fin N ⊕ Fin N) (Fin N ⊕ Fin N) ℝ)
-    [Invertible (blockD U)]
-    (hAnomaly : latticeAnomalyCommutator U = 0) :
-    berezinian (N := N) U =
-      Matrix.det (blockA U) / Matrix.det (blockD U) := by
-  apply berezinian_eq_diagonal_ratio_of_offdiag_zero U
-  · exact (latticeAnomalyCommutator_eq_zero_iff_blocks_zero U).mp hAnomaly |>.1
-  · exact (latticeAnomalyCommutator_eq_zero_iff_blocks_zero U).mp hAnomaly |>.2
-
-/-- Positivity of an anomaly-free block Berezinian from positive diagonal
-determinant readouts. -/
-theorem berezinian_pos_of_offdiag_zero_of_det_pos
-    (U : Matrix (Fin N ⊕ Fin N) (Fin N ⊕ Fin N) ℝ)
-    [Invertible (blockD U)]
-    (hB : blockB U = 0) (hC : blockC U = 0)
-    (hA : 0 < Matrix.det (blockA U))
-    (hD : 0 < Matrix.det (blockD U)) :
-    0 < berezinian (N := N) U := by
-  rw [berezinian_eq_diagonal_ratio_of_offdiag_zero U hB hC]
-  exact div_pos hA hD
-
 /-- Topological parity index of the lattice modular flow. -/
 theorem invariant_parity_index (t : ℝ) :
     Matrix.det (sigmaMatrix (N := N) t) = 1 :=
@@ -1036,96 +993,6 @@ theorem thermal_berezinian_index (t : ℝ) :
   rw [← Real.rpow_add hpos (-(N : ℝ)) (-(N : ℝ))]
   congr 1
   ring
-
-theorem berezinian_sigmaMatrix_eq_thermalBerezinianEval (t : ℝ) :
-    berezinian (N := N) (sigmaMatrix (N := N) t) =
-      thermalBerezinianEval (N := N) t := by
-  let c : ℝ := Real.cosh t
-  let s : ℝ := Real.sinh t
-  have hcp : 0 < c := by
-    dsimp [c]
-    positivity
-  have hcz : c ≠ 0 := ne_of_gt hcp
-  letI : Invertible c := invertibleOfNonzero hcz
-  letI : Invertible (scalarBlock (N := N) c) := scalarBlockInvertible (N := N) c
-  have hSchur :
-      scalarBlock (N := N) c
-        - scalarBlock (N := N) s * ⅟(scalarBlock (N := N) c) * scalarBlock (N := N) s
-        = scalarBlock (N := N) (c - s ^ 2 / c) := by
-    have hInv : ⅟(scalarBlock (N := N) c) = Matrix.diagonal (fun _ : Fin N => ⅟c) := by
-      letI := constInvertible (N := N) c
-      letI : Invertible (Matrix.diagonal fun _ : Fin N => c) := by
-        simpa [scalarBlock] using
-          (show Invertible (scalarBlock (N := N) c) from inferInstance)
-      simpa [scalarBlock] using (Matrix.invOf_diagonal_eq (v := fun _ : Fin N => c))
-    rw [hInv]
-    ext i j
-    by_cases hij : i = j
-    · subst hij
-      have hScalar : c - s * c⁻¹ * s = c - s ^ 2 / c := by
-        ring
-      simp [scalarBlock, hScalar]
-    · simp [scalarBlock, hij]
-  unfold berezinian thermalBerezinianEval
-  change Matrix.det (scalarBlock (N := N) c - scalarBlock (N := N) s * ⅟(scalarBlock (N := N) c) * scalarBlock (N := N) s) / Matrix.det (scalarBlock (N := N) c) =
-    (c - s ^ 2 / c) ^ N / c ^ N
-  rw [hSchur]
-  simp [scalarBlock, Matrix.det_diagonal, c, s]
-
-/-- The explicit hyperbolic shadow has a strictly positive Berezinian. -/
-theorem berezinian_sigmaMatrix_pos (t : ℝ) :
-    0 < berezinian (N := N) (sigmaMatrix (N := N) t) := by
-  rw [berezinian_sigmaMatrix_eq_thermalBerezinianEval]
-  unfold thermalBerezinianEval
-  have hpos : 0 < Real.cosh t := Real.cosh_pos t
-  have hschur :
-      0 < Real.cosh t - (Real.sinh t) ^ 2 / Real.cosh t := by
-    rw [show Real.cosh t - (Real.sinh t) ^ 2 / Real.cosh t =
-        1 / Real.cosh t by
-      field_simp [ne_of_gt hpos]
-      nlinarith [Real.cosh_sq_sub_sinh_sq t]]
-    positivity
-  positivity
-
-theorem berezinian_sigmaMatrix_ne_zero (t : ℝ) :
-    berezinian (N := N) (sigmaMatrix (N := N) t) ≠ 0 :=
-  (berezinian_sigmaMatrix_pos (N := N) t).ne'
-
-/-- Logarithmic Berezinian readout of the explicit hyperbolic shadow. -/
-theorem log_berezinian_sigmaMatrix (t : ℝ) :
-    Real.log (berezinian (N := N) (sigmaMatrix (N := N) t)) =
-      -2 * (N : ℝ) * Real.log (Real.cosh t) := by
-  rw [berezinian_sigmaMatrix_eq_thermalBerezinianEval,
-    thermal_berezinian_index]
-  rw [Real.log_rpow (Real.cosh_pos t)]
-
-/-- The logarithmic Berezinian is minus twice the logarithmic finite Witten
-index of the same hyperbolic shadow. -/
-theorem log_berezinian_sigmaMatrix_eq_neg_two_log_wittenIndex (t : ℝ) :
-    Real.log (berezinian (N := N) (sigmaMatrix (N := N) t)) =
-      -2 * Real.log (wittenIndex (N := N) (sigmaMatrix (N := N) t)) := by
-  rw [log_berezinian_sigmaMatrix, wittenIndex_sigmaMatrix,
-    Real.log_pow]
-  ring
-
-/-- Infinitesimal logarithmic Berezinian rate of the hyperbolic shadow. -/
-theorem hasDerivAt_log_berezinian_sigmaMatrix (t : ℝ) :
-    HasDerivAt
-      (fun u => Real.log (berezinian (N := N) (sigmaMatrix (N := N) u)))
-      (-2 * (N : ℝ) * Real.tanh t) t := by
-  have hlog := Real.hasDerivAt_log (ne_of_gt (Real.cosh_pos t))
-  have hcosh := Real.hasDerivAt_cosh t
-  have hcomp := hlog.comp t hcosh
-  rw [show (fun u : ℝ =>
-      Real.log (berezinian (N := N) (sigmaMatrix (N := N) u)) ) =
-      (fun u => -2 * (N : ℝ) * Real.log (Real.cosh u)) by
-        funext u
-        rw [log_berezinian_sigmaMatrix]]
-  have h_tanh : (Real.cosh t)⁻¹ * Real.sinh t = Real.tanh t := by
-    rw [Real.tanh_eq_sinh_div_cosh, div_eq_inv_mul, mul_comm]
-  have h_deriv := hcomp.const_mul (-2 * (N : ℝ))
-  rw [h_tanh] at h_deriv
-  exact h_deriv
 
 end Lattice
 

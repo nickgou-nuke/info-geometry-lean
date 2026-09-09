@@ -92,7 +92,7 @@ theorem antipode_two_turns_iff_radius_three_times {R r : ℝ} (hr : r ≠ 0) :
 
 /-! ## Abstract null-subalgebra incidence geometry -/
 
-variable {A : Type*} [AddCommGroup A] [Module ℝ A] [Mul A]
+variable {A : Type*} [AddCommGroup A] [Module ℝ A] [Mul A] [Zero A]
 
 /-- A submodule on which multiplication is identically zero. -/
 def ProductZeroOn (U : Submodule ℝ A) : Prop :=
@@ -101,21 +101,14 @@ def ProductZeroOn (U : Submodule ℝ A) : Prop :=
 /-- A null subalgebra for a quadratic readout `Q`: every element is `Q`-null and
 all products inside the submodule vanish.  Dimension is tracked through separate
 rank hypotheses, and one- and two-dimensional versions can add them later. -/
-abbrev NullSubalgebra (Q : A → ℝ) :=
-  {U : Submodule ℝ A //
-    (∀ ⦃x : A⦄, x ∈ U → Q x = 0) ∧ ProductZeroOn U}
+structure NullSubalgebra (Q : A → ℝ) where
+  carrier : Submodule ℝ A
+  null' : ∀ ⦃x : A⦄, x ∈ carrier → Q x = 0
+  product_zero' : ProductZeroOn carrier
 
 namespace NullSubalgebra
 
 variable {Q : A → ℝ}
-
-abbrev carrier (U : NullSubalgebra (A := A) Q) : Submodule ℝ A := U.1
-
-abbrev null' (U : NullSubalgebra (A := A) Q) :
-    ∀ ⦃x : A⦄, x ∈ U.carrier → Q x = 0 := U.2.1
-
-abbrev product_zero' (U : NullSubalgebra (A := A) Q) :
-    ProductZeroOn U.carrier := U.2.2
 
 /-- The quadratic null condition attached to a null subalgebra. -/
 theorem null (U : NullSubalgebra (A := A) Q) {x : A} (hx : x ∈ U.carrier) :
@@ -141,23 +134,15 @@ def NullIncident {Q : A → ℝ} (P L : NullSubalgebra (A := A) Q) : Prop :=
 
 /-- A linear automorphism preserving multiplication and a quadratic readout.
 This is the theorem-safe abstraction of the `Aut(𝕆')` action used in the blog. -/
-abbrev QuadraticMulAut (Q : A → ℝ) :=
-  {e : A ≃ₗ[ℝ] A //
-    (∀ x y : A, e (x * y) = e x * e y) ∧
-      ∀ x : A, Q (e x) = Q x}
+structure QuadraticMulAut (Q : A → ℝ) where
+  toLinearEquiv : A ≃ₗ[ℝ] A
+  map_mul' : ∀ x y : A, toLinearEquiv (x * y) = toLinearEquiv x * toLinearEquiv y
+  map_zero_mul' : toLinearEquiv (0 : A) = 0
+  preserve_Q' : ∀ x : A, Q (toLinearEquiv x) = Q x
 
 namespace QuadraticMulAut
 
 variable {Q : A → ℝ}
-
-abbrev toLinearEquiv (g : QuadraticMulAut (A := A) Q) : A ≃ₗ[ℝ] A := g.1
-
-abbrev map_mul' (g : QuadraticMulAut (A := A) Q) :
-    ∀ x y : A, g.toLinearEquiv (x * y) = g.toLinearEquiv x * g.toLinearEquiv y :=
-  g.2.1
-
-abbrev preserve_Q' (g : QuadraticMulAut (A := A) Q) :
-    ∀ x : A, Q (g.toLinearEquiv x) = Q x := g.2.2
 
 instance : CoeFun (QuadraticMulAut (A := A) Q) (fun _ => A → A) where
   coe g := g.toLinearEquiv
@@ -167,7 +152,7 @@ instance : CoeFun (QuadraticMulAut (A := A) Q) (fun _ => A → A) where
   g.map_mul' x y
 
 @[simp] theorem map_zero (g : QuadraticMulAut (A := A) Q) : g (0 : A) = 0 :=
-  g.toLinearEquiv.map_zero
+  g.map_zero_mul'
 
 @[simp] theorem preserve_Q (g : QuadraticMulAut (A := A) Q) (x : A) :
     Q (g x) = Q x :=
@@ -176,17 +161,18 @@ instance : CoeFun (QuadraticMulAut (A := A) Q) (fun _ => A → A) where
 /-- Image of a null subalgebra under a multiplication- and quadratic-form-
 preserving linear automorphism. -/
 def mapNullSubalgebra (g : QuadraticMulAut (A := A) Q)
-    (U : NullSubalgebra (A := A) Q) : NullSubalgebra (A := A) Q :=
-  ⟨U.carrier.map g.toLinearEquiv.toLinearMap, by
-    constructor
-    · rintro _ ⟨x, hx, rfl⟩
-      simpa using (g.preserve_Q x).trans (U.null hx)
-    · rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
-      calc
-        g.toLinearEquiv x * g.toLinearEquiv y = g.toLinearEquiv (x * y) := by
-          exact (g.map_mul x y).symm
-        _ = g.toLinearEquiv 0 := by rw [U.product_zero hx hy]
-        _ = 0 := g.map_zero⟩
+    (U : NullSubalgebra (A := A) Q) : NullSubalgebra (A := A) Q where
+  carrier := U.carrier.map g.toLinearEquiv.toLinearMap
+  null' := by
+    rintro _ ⟨x, hx, rfl⟩
+    simpa using (g.preserve_Q x).trans (U.null hx)
+  product_zero' := by
+    rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
+    calc
+      g.toLinearEquiv x * g.toLinearEquiv y = g.toLinearEquiv (x * y) := by
+        exact (g.map_mul x y).symm
+      _ = g.toLinearEquiv 0 := by rw [U.product_zero hx hy]
+      _ = 0 := g.map_zero
 
 @[simp] theorem mem_mapNullSubalgebra_iff (g : QuadraticMulAut (A := A) Q)
     (U : NullSubalgebra (A := A) Q) (z : A) :

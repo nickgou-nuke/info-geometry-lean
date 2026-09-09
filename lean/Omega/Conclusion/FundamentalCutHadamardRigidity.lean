@@ -51,13 +51,9 @@ flow-lattice/tree-weight covolume identity to obtain both inequalities, and iden
 case with pairwise orthogonality of the weighted cut vectors.
     thm:conclusion-fundamental-cut-hadamard-rigidity -/
 theorem paper_conclusion_fundamental_cut_hadamard_rigidity {treeRank : Nat}
-    {reducedLaplacian_eq_cutGram cutGramDiagonal_eq_capacity : Prop}
-    (hReducedLaplacian_eq_cutGram : reducedLaplacian_eq_cutGram)
-    (hCutGramDiagonal_eq_capacity : cutGramDiagonal_eq_capacity)
     (D : Omega.Conclusion.FundamentalCutHadamardData treeRank) :
     D.treeWeightLeCutProduct ∧ D.flowLatticeCovolLeCutProduct ∧ D.equalityCriterion := by
-  rcases Omega.SPG.paper_spg_kirchhoff_fundamental_cut_capacity_hadamard
-      hReducedLaplacian_eq_cutGram hCutGramDiagonal_eq_capacity D.capacityData with
+  rcases Omega.SPG.paper_spg_kirchhoff_fundamental_cut_capacity_hadamard D.capacityData with
     ⟨_, _, hHadamard, _, _⟩
   have hGraph :
       Omega.Graph.flowLatticeGramDet D.graph =

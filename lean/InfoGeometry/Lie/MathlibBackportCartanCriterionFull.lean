@@ -281,6 +281,17 @@ public instance InfoGeometry.Lie.MathlibBackport.hasTrivialRadical_isKilling
     [HasTrivialRadical R L] : IsKilling R L where
   killingCompl_top_eq_bot := by simpa using killingCompl_top_le_radical R L
 
+/-- In the trivial-solvable-radical case, the Killing radical agrees with the
+solvable radical.  This is the reusable equality form of the preceding
+Cartan-criterion inclusion. -/
+public lemma killingCompl_top_eq_radical_of_hasTrivialRadical
+    [HasTrivialRadical R L] :
+    LieIdeal.killingCompl R L ⊤ = radical R L := by
+  apply le_antisymm
+  · simpa only [HasTrivialRadical.radical_eq_bot] using
+      (killingCompl_top_le_radical R L)
+  · simp
+
 lemma hasTrivialRadical_iff_isKilling [IsPrincipalIdealRing R] :
     HasTrivialRadical R L ↔ IsKilling R L :=
   ⟨fun _ ↦ inferInstance, fun _ ↦ inferInstance⟩

@@ -45,6 +45,7 @@ theorem circularPeirceQuadratic_formula (x : Fin 8 → ℝ) :
   rw [circularPeirceQuadratic_apply_coord]
   rw [circularPeirceBasis.equivFun_symm_apply]
   change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+    InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
     (∑ i : Fin 8, x i • circularPeirceBasis i) = _
   rw [show (∑ i : Fin 8, x i • circularPeirceBasis i) =
       ∑ i : Fin 8, x i • frame i by
@@ -61,6 +62,7 @@ theorem circularPeirceQuadratic_formula (x : Fin 8 → ℝ) :
     lUnit, InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
     hsmul]
   simp [InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
+    InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3,
     InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross]
   ring
@@ -73,7 +75,8 @@ theorem circularPeirceQuadratic_zero_iff (x : Fin 8 → ℝ) :
 
 @[simp] theorem circularPeirceQuadratic_apply (X : CanonicalZorn) :
     circularPeirceQuadratic (coordinateEquiv X) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X := by
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X := by
   change canonicalDetQuadratic
       (circularPeirceBasis.equivFun.symm (coordinateEquiv X)) = _
   change canonicalDetQuadratic
@@ -84,16 +87,19 @@ theorem circularPeirceQuadratic_zero_iff (x : Fin 8 → ℝ) :
 
 theorem circularPeirceQuadratic_null_iff (X : CanonicalZorn) :
     circularPeirceQuadratic (coordinateEquiv X) = 0 ↔
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X = 0 := by
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X = 0 := by
   rw [circularPeirceQuadratic_apply]
 
 theorem detZ_null_iff_circularPeirceQuadratic_null (X : CanonicalZorn) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X = 0 ↔
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X = 0 ↔
       circularPeirceQuadratic (coordinateEquiv X) = 0 := by
   rw [circularPeirceQuadratic_apply]
 
 theorem detZ_coordinate_zero_iff (X : CanonicalZorn) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X = 0 ↔
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X = 0 ↔
       coordinateEquiv X 0 * coordinateEquiv X 4 =
         coordinateEquiv X 1 * coordinateEquiv X 5 +
           coordinateEquiv X 2 * coordinateEquiv X 6 +
@@ -133,7 +139,8 @@ noncomputable def circularPeirceQuadraticIsometry :
   QuadraticMap.IsometryEquiv.mk circularPeirceBasis.equivFun (by
     intro X
     change circularPeirceQuadratic (coordinateEquiv X) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X
     exact circularPeirceQuadratic_apply X)
 
 @[simp] theorem circularPeirceQuadraticIsometry_map_app (X : CanonicalZorn) :

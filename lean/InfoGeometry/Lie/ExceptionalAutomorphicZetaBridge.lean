@@ -80,8 +80,7 @@ structure AutomorphicZetaRHEquivalenceBridge where
   automorphic_zeta : EpsteinAutomorphicZeta
   fredholm_determinant : ℂ → ℂ
   fredholm_nonzero :
-    InfoGeometry.Arithmetic.RiemannHypothesis.FredholmHalfPlaneProperty
-      fredholm_determinant
+    ∀ s : ℂ, (1 / 2 : ℝ) < s.re → fredholm_determinant s ≠ 0
   /--
   OPEN HYPOTHESIS: The zeros of the automorphic zeta function coincide with the
   zeros of the Riemann zeta function (or its associated Fredholm determinant) on

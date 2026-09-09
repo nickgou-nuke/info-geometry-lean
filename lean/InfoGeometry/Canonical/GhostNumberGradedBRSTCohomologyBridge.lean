@@ -51,9 +51,9 @@ theorem master_ghost_number_graded_brst_synthesis
     (h_comm : g_op.comp q - q.comp g_op = q)
     (g_num : R) :
     (ghostEigenspace g_op g_num = LinearMap.ker (g_op - g_num • LinearMap.id)) ∧
-    (Submodule.map q (ghostEigenspace g_op g_num) ≤ ghostEigenspace g_op (g_num + 1)) := by
-  constructor
-  · rfl
-  · exact q_maps_ghostEigenspace_succ q g_op h_comm g_num
+    (Submodule.map q (ghostEigenspace g_op g_num) ≤ ghostEigenspace g_op (g_num + 1)) := ⟨
+  rfl,
+  q_maps_ghostEigenspace_succ q g_op h_comm g_num
+⟩
 
 end InfoGeometry.Canonical.GhostNumberGradedBRSTCohomologyBridge

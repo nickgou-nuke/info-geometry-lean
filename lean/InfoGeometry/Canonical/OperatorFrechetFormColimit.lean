@@ -33,7 +33,7 @@ variable [∀ n, CStarAlgebra (Stage n)]
 variable [∀ n, PartialOrder (Stage n)]
 variable [∀ n, StarOrderedRing (Stage n)]
 variable (T : CuntzStarTower Stage)
-variable (Φ : CuntzStageModularFlowData Stage)
+variable (Φ : CuntzStageModularFlowData Stage T)
 
 /-- The actual TopCat diagram carried by the supplied Cuntz tower. -/
 abbrev cuntzStageDiagram : ℕ ⥤ TopCat :=
@@ -63,13 +63,13 @@ variable (E : CuntzStageExchangeData Stage T Φ)
 /-- The stagewise exchange as a genuine natural transformation in `TopCat`. -/
 def naturalTransformation :
     cuntzStageDiagram Stage T ⟶ cuntzStageDiagram Stage T :=
-  modularFlowTopCatNatTrans Stage T Φ E.hmap_naturality E.time
+  modularFlowTopCatNatTrans Stage T Φ E.time
 
 /-- The exchange descended through the native categorical colimit. -/
 noncomputable def colimitMap :
     cuntzStageTopologicalColimit Stage T ⟶
       cuntzStageTopologicalColimit Stage T :=
-  modularFlowTopologicalColimitMap Stage T Φ E.hmap_naturality E.time
+  modularFlowTopologicalColimitMap Stage T Φ E.time
 
 @[simp]
 theorem colimitMap_stage (n : ℕ) (a : Stage n) :
@@ -79,25 +79,25 @@ theorem colimitMap_stage (n : ℕ) (a : Stage n) :
       topologicalInjection Stage (system Stage T) n
         (Φ.flow n E.time a) := by
   exact modularFlowTopologicalColimitMap_inclusion
-    Stage T Φ E.hmap_naturality E.time n a
+    Stage T Φ E.time n a
 
 theorem colimitMap_comp_neg :
     CuntzStageExchangeData.colimitMap
           (Stage := Stage) (T := T) (Φ := Φ) E ≫
         modularFlowTopologicalColimitMap Stage T Φ
-          E.hmap_naturality (-E.time) =
+          (-E.time) =
       𝟙 (cuntzStageTopologicalColimit Stage T) := by
   exact modularFlowTopologicalColimitMap_right_inverse
-    Stage T Φ E.hflow_add E.hmap_naturality E.time
+    Stage T Φ E.time
 
 theorem neg_colimitMap_comp :
     modularFlowTopologicalColimitMap Stage T Φ
-          E.hmap_naturality (-E.time) ≫
+          (-E.time) ≫
         CuntzStageExchangeData.colimitMap
           (Stage := Stage) (T := T) (Φ := Φ) E =
       𝟙 (cuntzStageTopologicalColimit Stage T) := by
   exact modularFlowTopologicalColimitMap_left_inverse
-    Stage T Φ E.hflow_add E.hmap_naturality E.time
+    Stage T Φ E.time
 
 theorem colimitMap_zero
     (hzero : E.time = 0) :
@@ -105,11 +105,11 @@ theorem colimitMap_zero
         (Stage := Stage) (T := T) (Φ := Φ) E =
       𝟙 (cuntzStageTopologicalColimit Stage T) := by
   change modularFlowTopologicalColimitMap Stage T Φ
-      E.hmap_naturality E.time =
+      E.time =
     𝟙 (cuntzStageTopologicalColimit Stage T)
   rw [hzero]
   exact modularFlowTopologicalColimitMap_zero
-    Stage T Φ E.hflow_add E.hmap_naturality
+    Stage T Φ
 
 end CuntzStageExchangeData
 

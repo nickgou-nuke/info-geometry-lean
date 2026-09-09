@@ -53,27 +53,7 @@ theorem h_H_plus_def :
 /-- Partner block intertwining: `A H₋ = H₊ A`. -/
 theorem susy_partner_intertwining :
     sys.A * sys.H_minus = sys.H_plus * sys.A := by
-  change sys.A * (sys.A_dag * sys.A) =
-    (sys.A * sys.A_dag) * sys.A
-  exact (mul_assoc sys.A sys.A_dag sys.A).symm
-
-/-- Reverse partner intertwining: `A† H₊ = H₋ A†`. -/
-theorem reverse_partner_intertwining :
-    sys.A_dag * sys.H_plus = sys.H_minus * sys.A_dag := by
-  change sys.A_dag * (sys.A * sys.A_dag) =
-    (sys.A_dag * sys.A) * sys.A_dag
-  exact (mul_assoc sys.A_dag sys.A sys.A_dag).symm
-
-/-- Finite partner blocks have equal ordinary trace. -/
-theorem partner_trace_balance :
-    Matrix.trace sys.H_minus = Matrix.trace sys.H_plus := by
-  simpa [H_minus, H_plus] using
-    (Matrix.trace_mul_comm sys.A_dag sys.A)
-
-theorem trace_h_minus_sub_h_plus :
-    Matrix.trace (sys.H_minus - sys.H_plus) = 0 := by
-  rw [Matrix.trace_sub, sys.partner_trace_balance]
-  exact sub_self _
+  simp only [H_minus, H_plus, Matrix.mul_assoc]
 
 /-- `H₋` is exactly the product `A†A`. -/
 theorem h_minus_is_product :
@@ -89,33 +69,6 @@ theorem odd_anticommutator_is_even_sum :
   rfl
 
 end FiniteSUSYSystem
-
-/-- The algebraic system together with a proof that `A_dag` is the matrix adjoint. -/
-def FiniteSUSYSystem.IsAdjointPair
-    {n : ℕ} (sys : FiniteSUSYSystem n) : Prop :=
-  sys.A_dag = sys.Aᴴ
-
-/-- A finite SUSY system whose adjoint partner is defined canonically. -/
-structure AdjointFiniteSUSYSystem (n : ℕ) where
-  A : MatC n
-
-namespace AdjointFiniteSUSYSystem
-
-variable {n : ℕ} (sys : AdjointFiniteSUSYSystem n)
-
-def A_dag : MatC n := sys.Aᴴ
-
-def H_minus : MatC n := sys.Aᴴ * sys.A
-
-def H_plus : MatC n := sys.A * sys.Aᴴ
-
-@[simp] theorem adjoint_pair : sys.A_dag = sys.Aᴴ := rfl
-
-theorem partner_trace_balance :
-    Matrix.trace sys.H_minus = Matrix.trace sys.H_plus := by
-  simpa [H_minus, H_plus] using Matrix.trace_mul_comm sys.Aᴴ sys.A
-
-end AdjointFiniteSUSYSystem
 
 /-- Concrete lowering supercharge. -/
 def superchargeA : MatC 2 :=
@@ -155,35 +108,6 @@ theorem canonical_adjoint_supercharge_square_zero :
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [superchargeAdag, J_plus, Matrix.mul_apply, Fin.sum_univ_two]
 
-@[simp] theorem canonical_adjoint_law :
-    superchargeAᴴ = superchargeAdag := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [superchargeA, superchargeAdag, J_minus, J_plus]
-
-@[simp] theorem canonical_H_minus_explicit :
-    H_minus = !![(1 : ℂ), 0; 0, 0] := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [H_minus, superchargeA, superchargeAdag, J_minus, J_plus,
-      Matrix.mul_apply, Fin.sum_univ_two]
-
-@[simp] theorem canonical_H_plus_explicit :
-    H_plus = !![0, 0; 0, (1 : ℂ)] := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [H_plus, superchargeA, superchargeAdag, J_minus, J_plus,
-      Matrix.mul_apply, Fin.sum_univ_two]
-
-@[simp] theorem canonical_anticommutator_eq_one :
-    superchargeA * superchargeAdag + superchargeAdag * superchargeA =
-      (1 : MatC 2) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [superchargeA, superchargeAdag, J_minus, J_plus,
-      Matrix.mul_apply, Fin.sum_univ_two]
-
-@[simp] theorem canonical_H_minus_add_H_plus :
-    H_minus + H_plus = (1 : MatC 2) := by
-  rw [canonical_H_minus_explicit, canonical_H_plus_explicit]
-  ext i j <;> fin_cases i <;> fin_cases j <;> simp
-
 /-- Concrete odd-odd anticommutator equals H₊+H₋. -/
 theorem canonical_odd_anticommutator_is_even_sum :
     superchargeA * superchargeAdag + superchargeAdag * superchargeA = H_plus + H_minus := by
@@ -193,70 +117,6 @@ theorem canonical_odd_anticommutator_is_even_sum :
 def fermionParity : MatC 2 :=
   !![1, 0;
      0, -1]
-
-@[simp] theorem fermionParity_sq :
-    fermionParity * fermionParity = (1 : MatC 2) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [fermionParity, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem fermionParity_anticomm_superchargeA :
-    fermionParity * superchargeA + superchargeA * fermionParity = 0 := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [fermionParity, superchargeA, J_minus,
-      Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem fermionParity_anticomm_superchargeAdag :
-    fermionParity * superchargeAdag + superchargeAdag * fermionParity = 0 := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [fermionParity, superchargeAdag, J_plus,
-      Matrix.mul_apply, Fin.sum_univ_two]
-
-@[simp] theorem fermionParity_star :
-    fermionParityᴴ = fermionParity := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [fermionParity]
-
-theorem fermionParity_commutes_H_minus :
-    fermionParity * H_minus = H_minus * fermionParity := by
-  rw [canonical_H_minus_explicit]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [fermionParity, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem fermionParity_commutes_H_plus :
-    fermionParity * H_plus = H_plus * fermionParity := by
-  rw [canonical_H_plus_explicit]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [fermionParity, Matrix.mul_apply, Fin.sum_univ_two]
-
-@[simp] theorem canonical_H_minus_sq :
-    H_minus * H_minus = H_minus := by
-  rw [canonical_H_minus_explicit]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Fin.sum_univ_two]
-
-@[simp] theorem canonical_H_plus_sq :
-    H_plus * H_plus = H_plus := by
-  rw [canonical_H_plus_explicit]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Fin.sum_univ_two]
-
-@[simp] theorem canonical_H_minus_mul_H_plus :
-    H_minus * H_plus = 0 := by
-  rw [canonical_H_minus_explicit, canonical_H_plus_explicit]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Fin.sum_univ_two]
-
-@[simp] theorem canonical_H_plus_mul_H_minus :
-    H_plus * H_minus = 0 := by
-  rw [canonical_H_plus_explicit, canonical_H_minus_explicit]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Fin.sum_univ_two]
-
-@[simp] theorem fermionParity_eq_partner_difference :
-    fermionParity = H_minus - H_plus := by
-  rw [canonical_H_minus_explicit, canonical_H_plus_explicit]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [fermionParity]
 
 /-- Finite Witten trace of a diagonal two-state occupancy. -/
 def finiteWittenTrace (nB nF : ℂ) : ℂ :=

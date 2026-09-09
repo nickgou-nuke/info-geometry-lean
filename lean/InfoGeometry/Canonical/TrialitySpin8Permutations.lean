@@ -2,7 +2,7 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.Cl55V4SpinorFragmentation
 
 -- File: TrialitySpin8Permutations.lean
--- Conservative boundary-level property of a 3-cycle permutation on sector labels.
+-- Conservative boundary-level witness of a 3-cycle permutation on sector labels.
 -- It formalizes the cycle 0 → 1 → 2 → 0 and transport of concrete Cl(5,5) seeds.
 
 namespace InfoGeometry.Canonical.TrialitySpin8Permutations

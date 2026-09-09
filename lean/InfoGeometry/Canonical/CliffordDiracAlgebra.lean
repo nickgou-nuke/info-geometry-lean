@@ -111,9 +111,9 @@ open HodgeHelmholtzKreinDecomposition
 
 variable {R : Type*} [Ring R] {W : Type*} [AddCommGroup W] [Module R W]
 
-def Dirac (H : HodgeLaplacianData (R := R) (V := W)) : Module.End R W := H.d + H.δ
+def Dirac (H : HodgePacket (R := R) (V := W)) : Module.End R W := H.d + H.δ
 
-theorem dirac_sq_eq_delta (H : HodgeLaplacianData (R := R) (V := W)) :
+theorem dirac_sq_eq_delta (H : HodgePacket (R := R) (V := W)) :
     Dirac H * Dirac H = H.Δ := by
   simp [Dirac, H.Δ_def]
   ext x
@@ -175,7 +175,7 @@ theorem hestenesJ_isInvolution [HestenesKreinSpace V] :
   simpa [Module.End.mul_eq_comp] using (HestenesKreinSpace.J_involution (V := V))
 
 -- `ε` in an involutive self-dual carrier is a Cartan involution.
--- (using only its defining involutivity ax!om).
+-- (using only its defining involutivity axiom).
 theorem involutiveSelfDualCarrier_ε_isInvolution (X : InvolutiveSelfDualCarrier) :
     IsInvolution (X.ε.toLinearMap) := by
   dsimp [IsInvolution, InfoGeometry.Cartan.IsCartanInvolution]

@@ -141,7 +141,7 @@ theorem toVec44_conj (Z : SplitO) :
 
 theorem conj44Vec_preserves_q44 (v : Fin 8 → ℚ) :
     SplitO.q44 (conj44Vec v) = SplitO.q44 v := by
-  simp [SplitO.q44, conj44Vec]
+  simp [conj44Vec, SplitO.q44]
 
 def conjugateTransverse (X : Herm2x2OsQ) : Herm2x2OsQ :=
   { xp := X.xp
@@ -168,9 +168,7 @@ theorem conjugateTransverse55Vec_preserves_q55 (v : Fin 10 → ℚ) :
 
 theorem conjugateTransverse_preserves_det (X : Herm2x2OsQ) :
     (conjugateTransverse X).det = X.det := by
-  have hnorm : SplitO.norm (SplitO.conj X.z) = SplitO.norm X.z := by
-    simpa using SplitO.norm_conj X.z
-  simp [conjugateTransverse, Herm2x2OsQ.det, hnorm]
+  simp [conjugateTransverse, Herm2x2OsQ.det, SplitO.norm_conj]
 theorem toVec55Q_eq_light_add_transverse (X : Herm2x2OsQ) :
     toVec55Q X =
       lightEmbed55 X.xp X.xm +
@@ -220,8 +218,7 @@ theorem nullSwap55Vec_preserves_q55 (v : Fin 10 → ℚ) :
 
 theorem nullSwap_preserves_det (X : Herm2x2OsQ) :
     (nullSwap X).det = X.det := by
-  have hmul : X.xm * X.xp = X.xp * X.xm := mul_comm _ _
-  simp [nullSwap, Herm2x2OsQ.det, hmul]
+  simp [nullSwap, Herm2x2OsQ.det, mul_comm]
 
 /-! ### Generic rational `O(5,5)` action readback -/
 

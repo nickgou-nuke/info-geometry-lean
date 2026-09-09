@@ -88,7 +88,7 @@ noncomputable def pinBoundaryHom (g : Pin55) :
 
 theorem pinBoundaryHom_map_null (g : Pin55) (v : V55) (hv : Q55 v = 0) :
     Q55 ((pinBoundaryHom g).toFun v) = 0 := by
-  exact (pinBoundaryHom g).map_null v hv
+  exact (pinBoundaryHom g).map_null hv
 
 noncomputable def pinBoundaryAction (g : Pin55) : Boundary → Boundary :=
   BoundaryHom.mapBoundary (pinBoundaryHom g)
@@ -110,24 +110,25 @@ theorem pinBoundaryAction_one (Z : NullRep) :
     pinBoundaryAction (1 : Pin55) (mk Z) = mk Z := by
   rw [pinBoundaryAction_mk]
   apply congrArg (ProjectiveNullBoundaryDatum.nullMk datum)
-  apply ProjectiveNullBoundaryDatum.NullRep.ext_Z
-  change pinConjActionEquiv (1 : Pin55) Z.Z = Z.Z
-  change pinConjAction (1 : Pin55) Z.Z = Z.Z
-  rw [pinConjAction_one]
-  rfl
+  cases Z with
+  | mk z hz hn =>
+    simp [BoundaryHom.mapNullRep, pinBoundaryHom]
 
 theorem pinBoundaryAction_mul (g h : Pin55) (Z : NullRep) :
     pinBoundaryAction (g * h) (mk Z) =
       pinBoundaryAction g (pinBoundaryAction h (mk Z)) := by
   rw [pinBoundaryAction_mk, pinBoundaryAction_mk]
   apply congrArg (ProjectiveNullBoundaryDatum.nullMk datum)
-  apply ProjectiveNullBoundaryDatum.NullRep.ext_Z
-  change pinConjActionEquiv (g * h) Z.Z =
-    pinConjActionEquiv g (pinConjActionEquiv h Z.Z)
-  change pinConjAction (g * h) Z.Z =
-    pinConjAction g (pinConjAction h Z.Z)
-  rw [pinConjAction_mul]
-  rfl
+  cases Z with
+  | mk z hz hn =>
+    simp only [BoundaryHom.mapNullRep, pinBoundaryHom]
+    congr 1
+    change pinConjActionEquiv (g * h) z =
+      pinConjActionEquiv g (pinConjActionEquiv h z)
+    change pinConjAction (g * h) z =
+      pinConjAction g (pinConjAction h z)
+    simpa [LinearMap.comp_apply] using
+      congrArg (fun T : V55 →ₗ[ℝ] V55 => T z) (pinConjAction_mul g h)
 
 /-- The native Pin action on the projective `Q55` null boundary. -/
 noncomputable def pinBoundaryRepresentation :

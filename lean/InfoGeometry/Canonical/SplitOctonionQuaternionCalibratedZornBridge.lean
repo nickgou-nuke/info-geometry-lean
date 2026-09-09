@@ -8,6 +8,7 @@ namespace InfoGeometry.Canonical.SplitOctonionQuaternionCalibratedZornBridge
 open SplitOctonion
 open InfoGeometry.Canonical.SplitOctonionQuaternionZornPolarBridge
 open InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
+open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 abbrev H := Quaternion ℝ
 abbrev Vec3 := Fin 3 → ℝ
@@ -73,12 +74,13 @@ noncomputable def splitOctonionCalibratedCanonicalZornEquiv :
         (splitOctonionCartesianEquiv X) := rfl
 
 theorem splitOctonionCalibratedCanonicalZornEquiv_norm (X : SplitOctonion) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
         (splitOctonionCalibratedCanonicalZornEquiv X) = normSQ X := by
-  change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+  change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
       (calibratedCartesianZornLinearEquiv
         (splitOctonionCartesianEquiv X)) = normSQ X
   simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
+    realCrossProduct3,
     calibratedCartesianZornLinearEquiv,
     splitOctonionCartesianEquiv,
     splitOctonionPairEquiv,

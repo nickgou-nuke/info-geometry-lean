@@ -1,6 +1,7 @@
 import InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative
 import InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 import InfoGeometry.Algebra.Zorn.G2TwoPCNormalForm
+import InfoGeometry.Algebra.Zorn.G2PCWordSubgroupEquiv
 
 namespace InfoGeometry.Algebra.Zorn.G2QuotientEnumInjectivityProbe
 
@@ -18,27 +19,31 @@ than attempting a global table enumeration. -/
 theorem quotient_equality_has_pc_factor
     (i j : Fin 189)
     (hquot : quotientRepresentative i = quotientRepresentative j) :
-    ∃ e : PCWordExp,
+    ∃ e : G2TwoSylowSubgroup.PCWordExp,
       autMatrix ((flagRepresentative i)⁻¹ * flagRepresentative j) =
-        autMatrix (pcWord e) := by
+        autMatrix (G2TwoSylowSubgroup.pcWord e) := by
   have hmem :
       (flagRepresentative i)⁻¹ * flagRepresentative j ∈
         G2TwoPCSubgroupClosure.unipotentSubgroup :=
     (quotientRepresentative_eq_iff i j).1 hquot
   let z : G2TwoPCSubgroupClosure.unipotentSubgroup :=
     ⟨(flagRepresentative i)⁻¹ * flagRepresentative j, hmem⟩
-  obtain ⟨e, he⟩ := (G2TwoPCSubgroupClosure.pcWordMulEquiv).surjective z
+  let e :=
+    InfoGeometry.Algebra.Zorn.G2PCWordSubgroupEquiv.pcWordEquivUnipotent.symm z
+  have he : InfoGeometry.Algebra.Zorn.G2PCWordSubgroupEquiv.pcWordSubtype e = z := by
+    exact InfoGeometry.Algebra.Zorn.G2PCWordSubgroupEquiv.pcWordEquivUnipotent.apply_symm_apply z
   refine ⟨e, ?_⟩
-  have he' : pcWord e = (flagRepresentative i)⁻¹ * flagRepresentative j := by
+  have he' : G2TwoSylowSubgroup.pcWord e =
+      (flagRepresentative i)⁻¹ * flagRepresentative j := by
     exact congrArg Subtype.val he
   exact congrArg autMatrix he'.symm
 
 theorem quotient_equality_iff_pc_matrix_factor
     (i j : Fin 189) :
     quotientRepresentative i = quotientRepresentative j ↔
-      ∃ e : PCWordExp,
+    ∃ e : G2TwoSylowSubgroup.PCWordExp,
         autMatrix ((flagRepresentative i)⁻¹ * flagRepresentative j) =
-          autMatrix (pcWord e) := by
+          autMatrix (G2TwoSylowSubgroup.pcWord e) := by
   constructor
   · exact quotient_equality_has_pc_factor i j
   · rintro ⟨e, he⟩

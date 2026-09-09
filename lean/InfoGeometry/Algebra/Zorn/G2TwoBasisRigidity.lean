@@ -363,10 +363,9 @@ theorem admissibleBasis7Action_apply
         down0, down1, down2]
   simp only [admissibleBasis7Action, basisRestriction7]
   have hcomp :
-      (admissibleBasis7_to_aut v hv * f).1 (basis7 i) =
+    (admissibleBasis7_to_aut v hv * f).1 (basis7 i) =
         f.1 ((admissibleBasis7_to_aut v hv).1 (basis7 i)) := by
-    change ((admissibleBasis7_to_aut v hv).1.trans f.1) (basis7 i) = _
-    simp [Equiv.trans_apply]
+    exact SplitOctF2Aut.mul_apply _ _ _
   rw [hcomp, hbasis]
 
 theorem admissibleBasis7Action_comp
@@ -381,8 +380,7 @@ theorem admissibleBasis7Action_comp
   rw [admissibleBasis7Action_apply,
     admissibleBasis7Action_apply,
     admissibleBasis7Action_apply]
-  change f.1 (g.1 (v i)) = (g.1.trans f.1) (v i)
-  rfl
+  exact SplitOctF2Aut.mul_apply _ _ _
 
 theorem admissibleBasis7Action_one
     (v : Fin 7 → SplitOctF2)
@@ -489,7 +487,7 @@ theorem admissibleBasis7_smul_eq_iff (g h : SplitOctF2Aut)
 
 /-- The standard admissible 7-basis obtained by restricting the identity
 automorphism. -/
-def standardAdmissibleBasis7 : {v : Fin 7 → SplitOctF2 // admissibleBasis7 v} :=
+noncomputable def standardAdmissibleBasis7 : {v : Fin 7 → SplitOctF2 // admissibleBasis7 v} :=
   ⟨basisRestriction7 1, basisRestriction7_admissible 1⟩
 
 /-- The stabilizer of the standard admissible basis is the trivial subgroup. -/

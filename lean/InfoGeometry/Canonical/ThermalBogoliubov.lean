@@ -103,24 +103,10 @@ statistical-mechanical and geometric descriptions of the thermal state.
 structure ThermalPolarization where
   q : ℝ
   hq_bounds : -1 < q ∧ q < 1
-
-namespace ThermalPolarization
-
-noncomputable abbrev beta (T : ThermalPolarization) : ℝ :=
-  -Real.log (|T.q|)
-
-@[simp] theorem beta_eq (T : ThermalPolarization) :
-    T.beta = -Real.log (|T.q|) :=
-  rfl
-
-noncomputable abbrev theta (T : ThermalPolarization) : ℝ :=
-  Real.artanh T.q
-
-@[simp] theorem theta_eq (T : ThermalPolarization) :
-    T.theta = Real.artanh T.q :=
-  rfl
-
-end ThermalPolarization
+  beta : ℝ
+  beta_eq : beta = -Real.log (|q|)
+  theta : ℝ
+  theta_eq : theta = Real.artanh q
 
 /-! ## 2. The bridge structure -/
 

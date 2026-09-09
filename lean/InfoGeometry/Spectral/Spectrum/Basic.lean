@@ -60,15 +60,6 @@ def SplitCliffordPrespectrum : Prespectrum :=
     (fun n => SplitClNNAlg n)
     (fun n x => splitCliffordStep n x)
 
-/-- Explicit name for the finite split-Clifford prespectrum boundary.
-
-This is only the finite stage-and-step carrier above; it does not assert a
-spectrification, a stable homotopy spectrum, or Bott periodicity as an
-equivalence theorem.
--/
-abbrev FiniteSplitCliffordPrespectrum : Prespectrum :=
-  SplitCliffordPrespectrum
-
 @[simp]
 theorem SplitCliffordPrespectrum_space (n : ℕ) :
     SplitCliffordPrespectrum.space n = SplitClNNAlg n :=
@@ -92,6 +83,7 @@ theorem bottClockStage_sub_self (n : ℕ) :
 theorem bottClockStage_pos (n : ℕ) :
     n < bottClockStage n := by
   simp [bottClockStage]
+  <;> omega
 
 /-- A two-eigenvalue finite Dirac readout. -/
 def diracOperator (m : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
@@ -131,6 +123,8 @@ theorem diracSpectrum_card (m : ℝ) :
       have : m = 0 := by linarith
       exact hm this
     simp [diracSpectrum, hm, Finset.card_insert_of_notMem, Finset.mem_singleton, hne]
+    <;> norm_num
+    <;> aesop
 
 /-! ## Stable split-Clifford direct-limit readouts -/
 

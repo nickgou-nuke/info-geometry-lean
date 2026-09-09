@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.BostConnesSystem
-import InfoGeometry.Arithmetic.UnifiedCapstone
+import InfoGeometry.Arithmetic.PrimeSuperalgebra
 import InfoGeometry.Canonical.BostConnesGalois
 import InfoGeometry.Canonical.BostConnesSymmetryBreaking
 import InfoGeometry.Canonical.SouriauDiracHodgeCoupling
@@ -19,7 +19,7 @@ language.
 The file proves only the displayed owner-backed finite statements: preservation
 of the declared Hestenes null-cone predicate and a delegated `2 × 2` anomaly /
 Dikin readout.  It does not prove the Langlands correspondence, a zeta
-functional equation, an automorphic trace formula, or any Riemann-property
+functional equation, an automorphic trace formula, or any Riemann-hypothesis
 consequence.
 
 Zero axioms. Zero sorries. All mathematical content is delegated to owner files.
@@ -62,7 +62,7 @@ theorem langlands_lfunction_euler_product_eq_riemannZeta
     {β : ℂ} (hRe : 1 < β.re) :
     InfoGeometry.Arithmetic.PrimeSuperalgebra.infiniteComplexBosonicEulerProduct β =
       riemannZeta β :=
-  InfoGeometry.Arithmetic.UnifiedCapstone.master_euler_product_eq_riemannZeta hRe
+  InfoGeometry.Arithmetic.PrimeSuperalgebra.infiniteComplexBosonicEulerProduct_eq_riemannZeta hRe
 
 
 /--

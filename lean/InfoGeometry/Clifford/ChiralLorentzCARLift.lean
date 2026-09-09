@@ -83,6 +83,9 @@ def unitConjugationAction : ChiralInvolutionAction Opˣ Op where
   act := unitConjugation
   map_one := unitConjugation_one
   map_add := unitConjugation_add
+  map_sub := by
+    intro u x y
+    simp [sub_eq_add_neg, unitConjugation, mul_add, add_mul, mul_neg]
   map_mul := unitConjugation_mul
   map_smul := unitConjugation_smul
 

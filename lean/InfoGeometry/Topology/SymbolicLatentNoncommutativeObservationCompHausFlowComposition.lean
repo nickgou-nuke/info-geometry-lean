@@ -50,5 +50,3 @@ theorem operatorCommutingLocusCompHausFlowIso_inv_eq_neg_hom
   rfl
 
 end InfoGeometry.Topology
-
-end

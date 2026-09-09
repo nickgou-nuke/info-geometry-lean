@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.CuntzMatrixAlgebraicStarColimit
 import InfoGeometry.Canonical.CuntzMatrixTraceRealGNSBridge
+import InfoGeometry.Canonical.CuntzMatrixFiniteTraceFaithfulness
 
 /-!
 # Normalized trace on the noncommutative matrix direct limit
@@ -60,7 +61,7 @@ theorem traceFunctional_positive (x : Carrier) :
       rw [star_mk]
       rw [DirectLimit.mul_def]
       change 0 ≤ (matrixTraceState n (star A * A)).re
-      exact matrixTraceState_realPart_star_mul_self_nonneg n A
+      exact InfoGeometry.Canonical.CuntzMatrixFiniteTraceFaithfulness.matrixTraceState_star_mul_self_re_nonneg n A
 
 theorem traceFunctional_cyclic (x y : Carrier) :
     traceFunctional (x * y) = traceFunctional (y * x) := by

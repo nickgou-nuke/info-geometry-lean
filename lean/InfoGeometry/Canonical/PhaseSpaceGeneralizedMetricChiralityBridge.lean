@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.PhaseSpaceGeneralizedMetric
+import Mathlib.LinearAlgebra.BilinearForm.Hom
 import InfoGeometry.Krein.Prelude
 import InfoGeometry.Meta.Architecture
 
@@ -284,6 +285,98 @@ chirality `-1` projector. -/
   rw [hpol]
   rfl
 
+/-! The intertwining equations upgrade to operator equalities because the
+    soldering map is an equivalence. -/
+
+@[rep_depth krein] theorem realized_ofMetric_polarization_eq_modular_j
+    (metric : MetricDatum E) :
+    realizedPolarization (G := GeneralizedMetricDatum.ofMetric metric) metric.gFlat
+      = (modular_j (E := E)).toLinearMap := by
+  apply LinearMap.ext
+  intro Y
+  let X : PhaseSpaceCarrier E :=
+    fromDoubledCopyRho (E := E) metric.gFlat Y
+  have hXY : toDoubledCopyRho (E := E) metric.gFlat X = Y := by
+    simpa [X] using
+      (toDoubledCopyRho_fromDoubledCopyRho (E := E) metric.gFlat Y)
+  have hrealized := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+      (toDoubledCopyRho_comp_polarization_eq_realized
+        (G := GeneralizedMetricDatum.ofMetric metric) metric.gFlat)
+  have hmetric := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+      (toDoubledCopyRho_comp_ofMetricPolarization metric)
+  calc
+    realizedPolarization (G := GeneralizedMetricDatum.ofMetric metric) metric.gFlat Y
+        = realizedPolarization (G := GeneralizedMetricDatum.ofMetric metric) metric.gFlat
+            (toDoubledCopyRho (E := E) metric.gFlat X) := by rw [hXY]
+    _ = toDoubledCopyRho (E := E) metric.gFlat
+          ((GeneralizedMetricDatum.ofMetric metric).polarization X) := by
+          simpa [LinearMap.comp_apply] using hrealized.symm
+    _ = modular_j (E := E) (toDoubledCopyRho (E := E) metric.gFlat X) := by
+          simpa [LinearMap.comp_apply] using hmetric
+    _ = modular_j (E := E) Y := by rw [hXY]
+
+@[rep_depth krein] theorem realized_ofMetric_plusProjector_eq_gradePlusProj
+    (metric : MetricDatum E) :
+    realizedPlusProjector (G := GeneralizedMetricDatum.ofMetric metric) metric.gFlat
+      = (gradePlusProj (E := E)).toLinearMap := by
+  apply LinearMap.ext
+  intro Y
+  let X : PhaseSpaceCarrier E :=
+    fromDoubledCopyRho (E := E) metric.gFlat Y
+  have hXY : toDoubledCopyRho (E := E) metric.gFlat X = Y := by
+    simpa [X] using
+      (toDoubledCopyRho_fromDoubledCopyRho (E := E) metric.gFlat Y)
+  have hrealized := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+      (toDoubledCopyRho_comp_plusProjector_eq_realized
+        (G := GeneralizedMetricDatum.ofMetric metric) metric.gFlat)
+  have hmetric := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+      (toDoubledCopyRho_comp_ofMetric_plusProjector metric)
+  calc
+    realizedPlusProjector (G := GeneralizedMetricDatum.ofMetric metric) metric.gFlat Y
+        = realizedPlusProjector (G := GeneralizedMetricDatum.ofMetric metric) metric.gFlat
+            (toDoubledCopyRho (E := E) metric.gFlat X) := by rw [hXY]
+    _ = toDoubledCopyRho (E := E) metric.gFlat
+          ((GeneralizedMetricDatum.ofMetric metric).plusProjector X) := by
+          simpa [LinearMap.comp_apply] using hrealized.symm
+    _ = gradePlusProj (E := E)
+          (toDoubledCopyRho (E := E) metric.gFlat X) := by
+          simpa [LinearMap.comp_apply] using hmetric
+    _ = gradePlusProj (E := E) Y := by rw [hXY]
+
+@[rep_depth krein] theorem realized_ofMetric_minusProjector_eq_gradeMinusProj
+    (metric : MetricDatum E) :
+    realizedMinusProjector (G := GeneralizedMetricDatum.ofMetric metric) metric.gFlat
+      = (gradeMinusProj (E := E)).toLinearMap := by
+  apply LinearMap.ext
+  intro Y
+  let X : PhaseSpaceCarrier E :=
+    fromDoubledCopyRho (E := E) metric.gFlat Y
+  have hXY : toDoubledCopyRho (E := E) metric.gFlat X = Y := by
+    simpa [X] using
+      (toDoubledCopyRho_fromDoubledCopyRho (E := E) metric.gFlat Y)
+  have hrealized := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+      (toDoubledCopyRho_comp_minusProjector_eq_realized
+        (G := GeneralizedMetricDatum.ofMetric metric) metric.gFlat)
+  have hmetric := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+      (toDoubledCopyRho_comp_ofMetric_minusProjector metric)
+  calc
+    realizedMinusProjector (G := GeneralizedMetricDatum.ofMetric metric) metric.gFlat Y
+        = realizedMinusProjector (G := GeneralizedMetricDatum.ofMetric metric) metric.gFlat
+            (toDoubledCopyRho (E := E) metric.gFlat X) := by rw [hXY]
+    _ = toDoubledCopyRho (E := E) metric.gFlat
+          ((GeneralizedMetricDatum.ofMetric metric).minusProjector X) := by
+          simpa [LinearMap.comp_apply] using hrealized.symm
+    _ = gradeMinusProj (E := E)
+          (toDoubledCopyRho (E := E) metric.gFlat X) := by
+          simpa [LinearMap.comp_apply] using hmetric
+    _ = gradeMinusProj (E := E) Y := by rw [hXY]
+
 /-- Under a Riesz compatibility law for the metric datum, the untwisted owner
 generalized metric realizes as the ambient Hilbert inner product on the doubled
 carrier. -/
@@ -386,6 +479,458 @@ the doubled chirality `-1` projector. -/
           rw [hmap']
 
 end RealizedFixpoints
+
+section SolderingFixedPoints
+
+/-- Equality of endomorphisms can be checked after transport through the native
+    phase-space soldering equivalence.  This is the reusable operator form of
+    soldering: it transports relations, not only individual vectors. -/
+@[rep_depth krein] theorem soldering_operator_eq_iff
+    (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E)
+    (A B : Module.End ℝ (PhaseSpaceCarrier E))
+    (C D : Module.End ℝ (DoubledSpace E))
+    (hA : (toDoubledCopyRho (E := E) ρ).comp A = C.comp
+      (toDoubledCopyRho (E := E) ρ))
+    (hB : (toDoubledCopyRho (E := E) ρ).comp B = D.comp
+      (toDoubledCopyRho (E := E) ρ)) :
+    A = B ↔ C = D := by
+  constructor
+  · intro h
+    apply LinearMap.ext
+    intro Y
+    let X : PhaseSpaceCarrier E := fromDoubledCopyRho (E := E) ρ Y
+    have hA' := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X) hA
+    have hB' := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X) hB
+    calc
+      C Y = C (toDoubledCopyRho (E := E) ρ X) := by
+        rw [toDoubledCopyRho_fromDoubledCopyRho]
+      _ = toDoubledCopyRho (E := E) ρ (A X) := by
+        simpa [LinearMap.comp_apply] using hA'.symm
+      _ = toDoubledCopyRho (E := E) ρ (B X) := by rw [h]
+      _ = D (toDoubledCopyRho (E := E) ρ X) := by
+        simpa [LinearMap.comp_apply] using hB'
+      _ = D Y := by
+        rw [toDoubledCopyRho_fromDoubledCopyRho]
+  · intro h
+    apply LinearMap.ext
+    intro X
+    have hA' := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X) hA
+    have hB' := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X) hB
+    have hCD := congrArg
+      (fun F : Module.End ℝ (DoubledSpace E) => F
+        (toDoubledCopyRho (E := E) ρ X)) h
+    have hCD' : C (toDoubledCopyRho (E := E) ρ X) =
+        D (toDoubledCopyRho (E := E) ρ X) := by
+      simpa [Module.End.mul_apply] using hCD
+    have hA'' : toDoubledCopyRho (E := E) ρ (A X) =
+        C (toDoubledCopyRho (E := E) ρ X) := by
+      simpa [LinearMap.comp_apply] using hA'
+    have hB'' : toDoubledCopyRho (E := E) ρ (B X) =
+        D (toDoubledCopyRho (E := E) ρ X) := by
+      simpa [LinearMap.comp_apply] using hB'
+    have htransport : toDoubledCopyRho (E := E) ρ (A X) =
+        toDoubledCopyRho (E := E) ρ (B X) := hA''.trans (hCD'.trans hB''.symm)
+    exact (doubledCopyRhoEquiv (E := E) ρ).injective htransport
+
+/--
+The generalized-metric `+1` projector has exactly the same fixed points after
+transport through the native phase-space soldering map.  This is the converse
+direction to the projector intertwining equation: no fixed-point information
+is lost because `toDoubledCopyRho` is a linear equivalence.
+-/
+@[rep_depth krein] theorem plusProjector_fixed_iff_soldered
+    (G : GeneralizedMetricDatum E) (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E)
+    (X : PhaseSpaceCarrier E) :
+    G.plusProjector X = X ↔
+      realizedPlusProjector (G := G) ρ
+        (toDoubledCopyRho (E := E) ρ X) =
+        toDoubledCopyRho (E := E) ρ X := by
+  constructor
+  · intro hX
+    have htransport := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+      (toDoubledCopyRho_comp_plusProjector_eq_realized (G := G) ρ)
+    have htransport' :
+        toDoubledCopyRho (E := E) ρ (G.plusProjector X) =
+          realizedPlusProjector (G := G) ρ
+            (toDoubledCopyRho (E := E) ρ X) := by
+      simpa [LinearMap.comp_apply] using htransport
+    rw [hX] at htransport'
+    exact htransport'.symm
+  · intro hX
+    have htransport := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+      (toDoubledCopyRho_comp_plusProjector_eq_realized (G := G) ρ)
+    have htransport' :
+        toDoubledCopyRho (E := E) ρ (G.plusProjector X) =
+          realizedPlusProjector (G := G) ρ
+            (toDoubledCopyRho (E := E) ρ X) := by
+      simpa [LinearMap.comp_apply] using htransport
+    have hsame :
+        toDoubledCopyRho (E := E) ρ (G.plusProjector X) =
+          toDoubledCopyRho (E := E) ρ X := htransport'.trans hX
+    have hback := congrArg
+      (fun Y : DoubledSpace E => fromDoubledCopyRho (E := E) ρ Y) hsame
+    simpa using hback
+
+/- The `-1` projector obeys the same lossless soldering transport. -/
+@[rep_depth krein] theorem minusProjector_fixed_iff_soldered
+    (G : GeneralizedMetricDatum E) (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E)
+    (X : PhaseSpaceCarrier E) :
+    G.minusProjector X = X ↔
+      realizedMinusProjector (G := G) ρ
+        (toDoubledCopyRho (E := E) ρ X) =
+        toDoubledCopyRho (E := E) ρ X := by
+  constructor
+  · intro hX
+    have htransport := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+      (toDoubledCopyRho_comp_minusProjector_eq_realized (G := G) ρ)
+    have htransport' :
+        toDoubledCopyRho (E := E) ρ (G.minusProjector X) =
+          realizedMinusProjector (G := G) ρ
+            (toDoubledCopyRho (E := E) ρ X) := by
+      simpa [LinearMap.comp_apply] using htransport
+    rw [hX] at htransport'
+    exact htransport'.symm
+  · intro hX
+    have htransport := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+      (toDoubledCopyRho_comp_minusProjector_eq_realized (G := G) ρ)
+    have htransport' :
+        toDoubledCopyRho (E := E) ρ (G.minusProjector X) =
+          realizedMinusProjector (G := G) ρ
+            (toDoubledCopyRho (E := E) ρ X) := by
+      simpa [LinearMap.comp_apply] using htransport
+    have hsame :
+        toDoubledCopyRho (E := E) ρ (G.minusProjector X) =
+          toDoubledCopyRho (E := E) ρ X := htransport'.trans hX
+    have hback := congrArg
+      (fun Y : DoubledSpace E => fromDoubledCopyRho (E := E) ρ Y) hsame
+    simpa using hback
+
+end SolderingFixedPoints
+
+section SolderedProjectorAlgebra
+
+/-! The native soldering equivalence transports the complete projector algebra.
+    These are operator equalities on the doubled carrier, not merely pointwise
+    fixed-point readouts. -/
+
+@[rep_depth krein] theorem realizedPlusProjector_idempotent
+    (G : GeneralizedMetricDatum E) (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E) :
+    realizedPlusProjector (G := G) ρ * realizedPlusProjector (G := G) ρ =
+      realizedPlusProjector (G := G) ρ := by
+  apply LinearMap.ext
+  intro Y
+  let X : PhaseSpaceCarrier E := fromDoubledCopyRho (E := E) ρ Y
+  have h₁ := congrArg
+    (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+    (toDoubledCopyRho_comp_plusProjector_eq_realized (G := G) ρ)
+  have h₂ := congrArg
+    (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F (G.plusProjector X))
+    (toDoubledCopyRho_comp_plusProjector_eq_realized (G := G) ρ)
+  have h₁' : toDoubledCopyRho (E := E) ρ (G.plusProjector X) =
+      realizedPlusProjector (G := G) ρ Y := by
+    simpa [X, LinearMap.comp_apply] using h₁
+  have h₂' : toDoubledCopyRho (E := E) ρ (G.plusProjector (G.plusProjector X)) =
+      realizedPlusProjector (G := G) ρ
+        (toDoubledCopyRho (E := E) ρ (G.plusProjector X)) := by
+    simpa [LinearMap.comp_apply] using h₂
+  have hId : G.plusProjector (G.plusProjector X) = G.plusProjector X := by
+    have h := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] PhaseSpaceCarrier E => F X)
+      (GeneralizedMetricDatum.plusProjector_idempotent G)
+    simpa [Module.End.mul_apply] using h
+  calc
+    (realizedPlusProjector (G := G) ρ * realizedPlusProjector (G := G) ρ) Y =
+        realizedPlusProjector (G := G) ρ
+          (realizedPlusProjector (G := G) ρ Y) := rfl
+    _ = realizedPlusProjector (G := G) ρ
+          (toDoubledCopyRho (E := E) ρ (G.plusProjector X)) := by rw [h₁']
+    _ = toDoubledCopyRho (E := E) ρ
+          (G.plusProjector (G.plusProjector X)) := by rw [h₂']
+    _ = toDoubledCopyRho (E := E) ρ (G.plusProjector X) := by
+      rw [hId]
+    _ = realizedPlusProjector (G := G) ρ Y := h₁'
+
+@[rep_depth krein] theorem realizedMinusProjector_idempotent
+    (G : GeneralizedMetricDatum E) (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E) :
+    realizedMinusProjector (G := G) ρ * realizedMinusProjector (G := G) ρ =
+      realizedMinusProjector (G := G) ρ := by
+  apply LinearMap.ext
+  intro Y
+  let X : PhaseSpaceCarrier E := fromDoubledCopyRho (E := E) ρ Y
+  have h₁ := congrArg
+    (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+    (toDoubledCopyRho_comp_minusProjector_eq_realized (G := G) ρ)
+  have h₂ := congrArg
+    (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F (G.minusProjector X))
+    (toDoubledCopyRho_comp_minusProjector_eq_realized (G := G) ρ)
+  have h₁' : toDoubledCopyRho (E := E) ρ (G.minusProjector X) =
+      realizedMinusProjector (G := G) ρ Y := by
+    simpa [X, LinearMap.comp_apply] using h₁
+  have h₂' : toDoubledCopyRho (E := E) ρ (G.minusProjector (G.minusProjector X)) =
+      realizedMinusProjector (G := G) ρ
+        (toDoubledCopyRho (E := E) ρ (G.minusProjector X)) := by
+    simpa [LinearMap.comp_apply] using h₂
+  have hId : G.minusProjector (G.minusProjector X) = G.minusProjector X := by
+    have h := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] PhaseSpaceCarrier E => F X)
+      (GeneralizedMetricDatum.minusProjector_idempotent G)
+    simpa [Module.End.mul_apply] using h
+  calc
+    (realizedMinusProjector (G := G) ρ * realizedMinusProjector (G := G) ρ) Y =
+        realizedMinusProjector (G := G) ρ
+          (realizedMinusProjector (G := G) ρ Y) := rfl
+    _ = realizedMinusProjector (G := G) ρ
+          (toDoubledCopyRho (E := E) ρ (G.minusProjector X)) := by rw [h₁']
+    _ = toDoubledCopyRho (E := E) ρ
+          (G.minusProjector (G.minusProjector X)) := by rw [h₂']
+    _ = toDoubledCopyRho (E := E) ρ (G.minusProjector X) := by
+      rw [hId]
+    _ = realizedMinusProjector (G := G) ρ Y := h₁'
+
+end SolderedProjectorAlgebra
+
+section SolderedProjectorRelations
+
+@[rep_depth krein] theorem realizedPlusProjector_add_realizedMinusProjector
+    (G : GeneralizedMetricDatum E) (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E) :
+    realizedPlusProjector (G := G) ρ + realizedMinusProjector (G := G) ρ =
+      (1 : Module.End ℝ (DoubledSpace E)) := by
+  refine (soldering_operator_eq_iff (ρ := ρ)
+    (A := G.plusProjector + G.minusProjector)
+    (B := (1 : Module.End ℝ (PhaseSpaceCarrier E)))
+    (C := realizedPlusProjector (G := G) ρ + realizedMinusProjector (G := G) ρ)
+    (D := (1 : Module.End ℝ (DoubledSpace E))) ?_ ?_).mp ?_
+  · apply LinearMap.ext
+    intro X
+    have hp := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+      (toDoubledCopyRho_comp_plusProjector_eq_realized (G := G) ρ)
+    have hm := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+      (toDoubledCopyRho_comp_minusProjector_eq_realized (G := G) ρ)
+    have hp' : toDoubledCopyRho (E := E) ρ (G.plusProjector X) =
+        realizedPlusProjector (G := G) ρ (toDoubledCopyRho (E := E) ρ X) := by
+      simpa [LinearMap.comp_apply] using hp
+    have hm' : toDoubledCopyRho (E := E) ρ (G.minusProjector X) =
+        realizedMinusProjector (G := G) ρ (toDoubledCopyRho (E := E) ρ X) := by
+      simpa [LinearMap.comp_apply] using hm
+    change toDoubledCopyRho (E := E) ρ
+        (G.plusProjector X + G.minusProjector X) =
+      realizedPlusProjector (G := G) ρ (toDoubledCopyRho (E := E) ρ X) +
+        realizedMinusProjector (G := G) ρ (toDoubledCopyRho (E := E) ρ X)
+    rw [map_add, hp', hm']
+  · apply LinearMap.ext
+    intro X
+    simp [LinearMap.comp_apply]
+  exact GeneralizedMetricDatum.plusProjector_add_minusProjector G
+
+@[rep_depth krein] theorem realizedPlusProjector_mul_realizedMinusProjector
+    (G : GeneralizedMetricDatum E) (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E) :
+    realizedPlusProjector (G := G) ρ * realizedMinusProjector (G := G) ρ =
+      (0 : Module.End ℝ (DoubledSpace E)) := by
+  refine (soldering_operator_eq_iff (ρ := ρ)
+    (A := G.plusProjector * G.minusProjector)
+    (B := (0 : Module.End ℝ (PhaseSpaceCarrier E)))
+    (C := realizedPlusProjector (G := G) ρ * realizedMinusProjector (G := G) ρ)
+    (D := (0 : Module.End ℝ (DoubledSpace E))) ?_ ?_).mp ?_
+  · apply LinearMap.ext
+    intro X
+    have hm := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+      (toDoubledCopyRho_comp_minusProjector_eq_realized (G := G) ρ)
+    have hp := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F (G.minusProjector X))
+      (toDoubledCopyRho_comp_plusProjector_eq_realized (G := G) ρ)
+    have hprod := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+      (toDoubledCopyRho_comp_plusProjector_eq_realized (G := G) ρ)
+    change toDoubledCopyRho (E := E) ρ
+        (G.plusProjector (G.minusProjector X)) =
+      realizedPlusProjector (G := G) ρ
+        (realizedMinusProjector (G := G) ρ
+          (toDoubledCopyRho (E := E) ρ X))
+    have hm' : toDoubledCopyRho (E := E) ρ (G.minusProjector X) =
+        realizedMinusProjector (G := G) ρ (toDoubledCopyRho (E := E) ρ X) := by
+      simpa [LinearMap.comp_apply] using hm
+    have hp' : toDoubledCopyRho (E := E) ρ
+        (G.plusProjector (G.minusProjector X)) =
+        realizedPlusProjector (G := G) ρ
+          (toDoubledCopyRho (E := E) ρ (G.minusProjector X)) := by
+      simpa [LinearMap.comp_apply] using hp
+    calc
+      toDoubledCopyRho (E := E) ρ
+          (G.plusProjector (G.minusProjector X)) =
+          realizedPlusProjector (G := G) ρ
+            (toDoubledCopyRho (E := E) ρ (G.minusProjector X)) := hp'
+      _ = realizedPlusProjector (G := G) ρ
+          (realizedMinusProjector (G := G) ρ (toDoubledCopyRho (E := E) ρ X)) := by
+            rw [hm']
+  · apply LinearMap.ext
+    intro X
+    simp
+  exact InfoGeometry.Cartan.Pplus_comp_Pminus G.polarization
+    G.polarization_is_cartan
+
+@[rep_depth krein] theorem realizedMinusProjector_mul_realizedPlusProjector
+    (G : GeneralizedMetricDatum E) (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E) :
+    realizedMinusProjector (G := G) ρ * realizedPlusProjector (G := G) ρ =
+      (0 : Module.End ℝ (DoubledSpace E)) := by
+  refine (soldering_operator_eq_iff (ρ := ρ)
+    (A := G.minusProjector * G.plusProjector)
+    (B := (0 : Module.End ℝ (PhaseSpaceCarrier E)))
+    (C := realizedMinusProjector (G := G) ρ * realizedPlusProjector (G := G) ρ)
+    (D := (0 : Module.End ℝ (DoubledSpace E))) ?_ ?_).mp ?_
+  · apply LinearMap.ext
+    intro X
+    have hp := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+      (toDoubledCopyRho_comp_plusProjector_eq_realized (G := G) ρ)
+    have hm := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F (G.plusProjector X))
+      (toDoubledCopyRho_comp_minusProjector_eq_realized (G := G) ρ)
+    have hp' : toDoubledCopyRho (E := E) ρ (G.plusProjector X) =
+        realizedPlusProjector (G := G) ρ (toDoubledCopyRho (E := E) ρ X) := by
+      simpa [LinearMap.comp_apply] using hp
+    have hm' : toDoubledCopyRho (E := E) ρ
+        (G.minusProjector (G.plusProjector X)) =
+        realizedMinusProjector (G := G) ρ
+          (toDoubledCopyRho (E := E) ρ (G.plusProjector X)) := by
+      simpa [LinearMap.comp_apply] using hm
+    change toDoubledCopyRho (E := E) ρ
+        (G.minusProjector (G.plusProjector X)) =
+      realizedMinusProjector (G := G) ρ
+        (realizedPlusProjector (G := G) ρ
+          (toDoubledCopyRho (E := E) ρ X))
+    calc
+      toDoubledCopyRho (E := E) ρ
+          (G.minusProjector (G.plusProjector X)) =
+          realizedMinusProjector (G := G) ρ
+            (toDoubledCopyRho (E := E) ρ (G.plusProjector X)) := hm'
+      _ = realizedMinusProjector (G := G) ρ
+          (realizedPlusProjector (G := G) ρ (toDoubledCopyRho (E := E) ρ X)) := by
+            rw [hp']
+  · apply LinearMap.ext
+    intro X
+    simp
+  exact InfoGeometry.Cartan.Pminus_comp_Pplus G.polarization
+    G.polarization_is_cartan
+
+end SolderedProjectorRelations
+
+section SolderedPolarization
+
+/-! The same soldering map transports the generalized metric readout, not only
+the polarization operator.  The form is defined by pullback along the native
+linear equivalence; its evaluation theorem is the reusable soldering law. -/
+
+@[rep_depth krein]
+noncomputable def realizedGeneralizedMetricForm
+    (G : GeneralizedMetricDatum E) (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E) :
+    LinearMap.BilinForm ℝ (DoubledSpace E) :=
+  LinearMap.BilinForm.comp G.generalizedMetricForm
+    (fromDoubledCopyRho (E := E) ρ)
+    (fromDoubledCopyRho (E := E) ρ)
+
+@[rep_depth krein, simp] theorem realizedGeneralizedMetricForm_apply
+    (G : GeneralizedMetricDatum E) (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E)
+    (X Y : PhaseSpaceCarrier E) :
+    realizedGeneralizedMetricForm (G := G) ρ
+        (toDoubledCopyRho (E := E) ρ X)
+        (toDoubledCopyRho (E := E) ρ Y) =
+      G.generalizedMetricForm X Y := by
+  simp [realizedGeneralizedMetricForm, LinearMap.BilinForm.comp_apply]
+
+@[rep_depth krein] theorem realizedGeneralizedMetricForm_symm
+    (G : GeneralizedMetricDatum E) (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E)
+    (X Y : DoubledSpace E) :
+    realizedGeneralizedMetricForm (G := G) ρ X Y =
+      realizedGeneralizedMetricForm (G := G) ρ Y X := by
+  rw [realizedGeneralizedMetricForm, LinearMap.BilinForm.comp_apply,
+    LinearMap.BilinForm.comp_apply, G.generalizedMetricForm_symm]
+
+@[rep_depth krein]
+noncomputable def realizedGeneralizedMetricQuadraticForm
+    (G : GeneralizedMetricDatum E) (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E) :
+    QuadraticForm ℝ (DoubledSpace E) :=
+  G.generalizedMetricQuadraticForm.comp
+    (fromDoubledCopyRho (E := E) ρ)
+
+@[rep_depth krein, simp] theorem realizedGeneralizedMetricQuadraticForm_apply
+    (G : GeneralizedMetricDatum E) (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E)
+    (X : PhaseSpaceCarrier E) :
+    realizedGeneralizedMetricQuadraticForm (G := G) ρ
+        (toDoubledCopyRho (E := E) ρ X) =
+      G.generalizedMetricQuadraticForm X := by
+  simp [realizedGeneralizedMetricQuadraticForm]
+
+@[rep_depth krein] theorem realizedGeneralizedMetricQuadraticForm_eq_diagonal
+    (G : GeneralizedMetricDatum E) (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E) :
+    realizedGeneralizedMetricQuadraticForm (G := G) ρ =
+      (realizedGeneralizedMetricForm (G := G) ρ).toQuadraticMap := by
+  ext X
+  change G.generalizedMetricQuadraticForm
+      (fromDoubledCopyRho (E := E) ρ X) =
+    G.generalizedMetricForm
+      (fromDoubledCopyRho (E := E) ρ X)
+      (fromDoubledCopyRho (E := E) ρ X)
+  exact G.generalizedMetricQuadraticForm_apply _
+
+/-- The native soldering equivalence preserves the generalized-metric
+    polarization involution. -/
+@[rep_depth krein] theorem realizedPolarization_sq
+    (G : GeneralizedMetricDatum E) (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E) :
+    realizedPolarization (G := G) ρ * realizedPolarization (G := G) ρ =
+      (1 : Module.End ℝ (DoubledSpace E)) := by
+  refine (soldering_operator_eq_iff (ρ := ρ)
+    (A := G.polarization * G.polarization)
+    (B := (1 : Module.End ℝ (PhaseSpaceCarrier E)))
+    (C := realizedPolarization (G := G) ρ * realizedPolarization (G := G) ρ)
+    (D := (1 : Module.End ℝ (DoubledSpace E))) ?_ ?_).mp ?_
+  · apply LinearMap.ext
+    intro X
+    have h₁ := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E =>
+        F (G.polarization X))
+      (toDoubledCopyRho_comp_polarization_eq_realized (G := G) ρ)
+    have h₂ := congrArg
+      (fun F : PhaseSpaceCarrier E →ₗ[ℝ] DoubledSpace E => F X)
+      (toDoubledCopyRho_comp_polarization_eq_realized (G := G) ρ)
+    have h₁' : toDoubledCopyRho (E := E) ρ
+        (G.polarization (G.polarization X)) =
+        realizedPolarization (G := G) ρ
+          (toDoubledCopyRho (E := E) ρ (G.polarization X)) := by
+      simpa [LinearMap.comp_apply] using h₁
+    have h₂' : toDoubledCopyRho (E := E) ρ (G.polarization X) =
+        realizedPolarization (G := G) ρ
+          (toDoubledCopyRho (E := E) ρ X) := by
+      simpa [LinearMap.comp_apply] using h₂
+    change toDoubledCopyRho (E := E) ρ
+        (G.polarization (G.polarization X)) =
+      realizedPolarization (G := G) ρ
+        (realizedPolarization (G := G) ρ
+          (toDoubledCopyRho (E := E) ρ X))
+    calc
+      toDoubledCopyRho (E := E) ρ
+          (G.polarization (G.polarization X)) =
+          realizedPolarization (G := G) ρ
+            (toDoubledCopyRho (E := E) ρ (G.polarization X)) := h₁'
+      _ = realizedPolarization (G := G) ρ
+          (realizedPolarization (G := G) ρ
+            (toDoubledCopyRho (E := E) ρ X)) := by rw [h₂']
+  · apply LinearMap.ext
+    intro X
+    simp [LinearMap.comp_apply]
+  exact GeneralizedMetricDatum.polarization_sq G
+
+end SolderedPolarization
 
 end Core
 

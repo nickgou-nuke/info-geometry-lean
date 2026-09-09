@@ -1,30 +1,21 @@
 import InfoGeometry.Canonical.OperatorialHessianBridge
 import InfoGeometry.Canonical.OnsagerReciprocity
-import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
-
-set_option linter.unusedSectionVars false
 
 /-!
 # InfoGeometry.Canonical.Operators
 
-Operator-facing thermodynamic aliases for the existing Fisher/Onsager trunk.
+Thin naming/export surface for the operatorial thermodynamic lane.
 
-This module is intentionally thin. It does not introduce a parallel Onsager
-machinery. Instead, it exposes a compact operatorial surface over the already
-owned layers in:
+Boundary:
 
-- `OperatorialHessianBridge`
-- `RelationalInformationDynamics`
-- `OnsagerReciprocity`
-
-The exported objects are:
-
-- scalar operatorial Massieu/free-energy readout,
-- operatorial Fisher readout and its probed scalar form,
-- Onsager response coefficient on the operator lane,
-- diagonal entropy-production readout and its reciprocity/nonnegativity facts.
+* owner/operatorial content lives in `CertifiedModularReduction`,
+  `OperatorialHessianBridge`, and `OnsagerReciprocity`;
+* this file only packages the already-owned scalar and probe-read projections
+  under operator-thermodynamic names;
+* the diagonal/scalar readouts here are shadows of the richer mixed
+  noncommutative second-variation packet, not new primitive owner definitions.
 -/
 
 namespace InfoGeometry.Canonical.Operators
@@ -33,7 +24,6 @@ open InfoGeometry.Canonical
 open InfoGeometry.Canonical.RelationalInformationDynamics
 open InfoGeometry.Canonical.OperatorialHessianBridge
 open InfoGeometry.Canonical.OnsagerReciprocity
-open InfoGeometry.Canonical.RelativeModularPotential
 open InfoGeometry.Krein
 
 section Bridge
@@ -43,7 +33,6 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
-local notation "PotDatum" => @PotentialDatum E _ _ _
 
 noncomputable local instance : NormedRing EndH := inferInstance
 noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
@@ -51,106 +40,83 @@ noncomputable local instance : NormedSpace ℝ EndH := inferInstance
 local instance : IsTopologicalRing EndH := inferInstance
 local instance : CompleteSpace EndH := inferInstance
 
-/-- Operatorial scalar free-energy/Massieu readout along transport. -/
+/-- Scalar free-energy/log-readout shadow of the operatorial transport lane. -/
 @[rep_depth transport]
-noncomputable abbrev operatorFreeEnergyReadout
+noncomputable def operatorFreeEnergyReadout
     (ω : EndH →L[ℝ] ℝ) (X A : EndH) (t : ℝ) : ℝ :=
-  scalarLogReadout ω X A t
+  scalarLogReadout (E := E) ω X A t
 
-/-- Symmetric operatorial Fisher sector, as an operator-valued Hessian readout. -/
+/-- Symmetric operatorial Fisher/Onsager mixed readout before diagonal collapse. -/
 @[rep_depth transport]
-noncomputable abbrev operatorFisherReadout
+noncomputable def operatorFisherReadout
     (X Y A : EndH) : EndH :=
-  operatorInformationMetricPart X Y A
+  operatorInformationMetricPart (E := E) X Y A
 
-/-- Diagonal operatorial Fisher sector. -/
+/-- Diagonal probe target: a shadow of the mixed operatorial second variation. -/
 @[rep_depth transport]
-noncomputable abbrev operatorFisherDiagonal
+noncomputable def operatorFisherDiagonal
     (X A : EndH) : EndH :=
-  RelationalInformationDynamics.operatorInformationHessian X A
+  InfoGeometry.Canonical.OperatorialHessianBridge.operatorInformationHessian (E := E) X A
 
-/-- The probed Fisher readout on the operator lane. -/
+/-- Scalar probe of the symmetric operatorial Hessian form. -/
 @[rep_depth transport]
-noncomputable abbrev probedFisherReadout
-    (P : PotDatum) (X Y A : EndH) : ℝ :=
-  operatorMetricHessianForm P A X Y
+noncomputable def probedFisherReadout
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)) (X Y A : EndH) : ℝ :=
+  operatorMetricHessianForm (E := E) P A X Y
 
-/-- Onsager response coefficient, exposed on the compact operator surface. -/
+/-- Onsager coefficient exported from the symmetric operatorial response lane. -/
 @[rep_depth transport]
-noncomputable abbrev onsagerCoefficient
-    (P : PotDatum) (X Y A : EndH) : ℝ :=
-  responseCoefficient P X Y A
+noncomputable def onsagerCoefficient
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)) (X Y A : EndH) : ℝ :=
+  responseCoefficient (E := E) P X Y A
 
-/-- Diagonal Onsager entropy production readout. -/
+/--
+Entropy-production shadow exported as the probe of the operatorial Fisher
+Diagonal. This is intentionally a shadow/export theorem surface, not the owner
+positivity producer.
+-/
 @[rep_depth transport]
-noncomputable abbrev entropyProduction
-    (P : PotDatum) (X A : EndH) : ℝ :=
-  onsagerCoefficient P X X A
+noncomputable def entropyProduction
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)) (X A : EndH) : ℝ :=
+  P.probe (operatorFisherDiagonal (E := E) X A)
 
-/-- The operatorial Fisher sector is symmetric in its two channels. -/
+omit [CompleteSpace E] in
 @[rep_depth transport]
 theorem operatorFisherReadout_swap
     (X Y A : EndH) :
-    operatorFisherReadout X Y A
-      =
-    operatorFisherReadout Y X A := by
-  exact operatorInformationMetricPart_swap X Y A
+    operatorFisherReadout (E := E) X Y A = operatorFisherReadout (E := E) Y X A := by
+  exact operatorInformationMetricPart_swap (E := E) X Y A
 
-/-- On the diagonal, the Fisher readout agrees with the Hessian channel. -/
 @[rep_depth transport]
-theorem operatorFisherReadout_diag
-    (X A : EndH) :
-    operatorFisherReadout X X A
-      =
-    operatorFisherDiagonal X A := by
-  have h := operatorInformationMetricPartMap_diag A X
-  rw [operatorInformationMetricPartMap_apply] at h
-  exact h
-
-/-- The compact probed Fisher readout is exactly the owned metric Hessian form. -/
-@[rep_depth transport, simp]
-theorem probedFisherReadout_def
-    (P : PotDatum) (X Y A : EndH) :
-    probedFisherReadout P X Y A
-      =
-    P.probe (operatorFisherReadout X Y A) := by
-  simp [probedFisherReadout, operatorFisherReadout, operatorMetricHessianForm_apply]
-
-/-- Compact Onsager coefficient is just the trunk response coefficient. -/
-@[rep_depth transport, simp]
-theorem onsagerCoefficient_def
-    (P : PotDatum) (X Y A : EndH) :
-    onsagerCoefficient P X Y A
-      =
-    probedFisherReadout P X Y A := by
+theorem probedFisherReadout_eq_metricHessianForm
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)) (X Y A : EndH) :
+    probedFisherReadout P X Y A = operatorMetricHessianForm (E := E) P A X Y := by
   rfl
 
-/-- Onsager reciprocity on the compact operator surface. -/
+@[rep_depth transport]
+theorem onsagerCoefficient_eq_probedFisherReadout
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)) (X Y A : EndH) :
+    onsagerCoefficient P X Y A = probedFisherReadout P X Y A := by
+  simp [onsagerCoefficient, probedFisherReadout, responseCoefficient]
+
 @[rep_depth transport]
 theorem onsagerCoefficient_swap
-    (P : PotDatum) (X Y A : EndH) :
-    onsagerCoefficient P X Y A
-      =
-    onsagerCoefficient P Y X A := by
-  exact responseCoefficient_swap P X Y A
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)) (X Y A : EndH) :
+    onsagerCoefficient P X Y A = onsagerCoefficient P Y X A := by
+  exact responseCoefficient_swap (E := E) P X Y A
 
-/-- Diagonal entropy production is the probe of the diagonal Fisher/Hessian sector. -/
-@[rep_depth transport, simp]
+@[rep_depth transport]
 theorem entropyProduction_eq_probe_hessian
-    (P : PotDatum) (X A : EndH) :
-    entropyProduction P X A
-      =
-    P.probe (operatorFisherDiagonal X A) := by
-  rw [entropyProduction, onsagerCoefficient_def, probedFisherReadout_def, operatorFisherReadout_diag]
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)) (X A : EndH) :
+    entropyProduction P X A = P.probe (operatorFisherDiagonal (E := E) X A) := by
+  rfl
 
-/-- If the probe reads the diagonal Fisher sector as nonnegative, entropy production is nonnegative. -/
 @[rep_depth transport]
 theorem entropyProduction_nonneg_of_probe_hessian_nonneg
-    (P : PotDatum)
-    (hP : ∀ X A : EndH, 0 ≤ P.probe (operatorFisherDiagonal X A))
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
+    (hP : ∀ X A : EndH, 0 ≤ P.probe (operatorFisherDiagonal (E := E) X A))
     (X A : EndH) :
     0 ≤ entropyProduction P X A := by
-  rw [entropyProduction_eq_probe_hessian P X A]
   exact hP X A
 
 end Bridge

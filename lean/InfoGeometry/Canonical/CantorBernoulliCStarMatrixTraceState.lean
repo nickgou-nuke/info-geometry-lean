@@ -217,7 +217,7 @@ theorem cstarMatrixTraceState_transition (n : ℕ) (A : CStarMatrixStage n) :
   change matrixTraceState (n + 1)
       (concreteStep n ((matrixEquiv n).symm A)) =
     matrixTraceState n ((matrixEquiv n).symm A)
-  exact concrete_trace_compatible n ((matrixEquiv n).symm A)
+  exact concreteData.trace_compatible n ((matrixEquiv n).symm A)
 
 theorem cstarMatrixTraceState_restrict (n : ℕ) :
     (cstarMatrixTraceState (n + 1)).restrict (cstarConcreteStep n) =

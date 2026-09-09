@@ -57,7 +57,7 @@ theorem sectionSix_n5_b3_outer_block (q3 : ℂ) (B : BBlockEntries) :
       pi5_b3 q3 B 2 2 = BBlockEntries.B11 B :=
   pi5_b3_outer_block q3 B
 
-/-
+/-- An assumed `n = 5` middle Artin matrix identity is re-expressed unchanged. -/
 theorem sectionSix_n5_middle_artin_from_identity
     (q3 : ℂ) (B : BBlockEntries)
     (h : pi5_b2 q3 B * pi5_b3 q3 B * pi5_b2 q3 B =
@@ -65,7 +65,6 @@ theorem sectionSix_n5_middle_artin_from_identity
     pi5_b2 q3 B * pi5_b3 q3 B * pi5_b2 q3 B =
       pi5_b3 q3 B * pi5_b2 q3 B * pi5_b3 q3 B :=
   pi5_middle_artin_from_identity q3 B h
--/
 
 /-- The repo-owned `n = 6` endpoint braid templates are the next finite owner surface exposed here. -/
 theorem sectionSix_n6_endpoint_templates (qNeg4 q3 : ℂ) :
@@ -94,7 +93,7 @@ theorem sectionSix_n6_b5_diagonal_entries (qNeg4 q3 : ℂ) :
       pi6_b5 qNeg4 q3 4 4 = q3 :=
   pi6_b5_diagonal_entries qNeg4 q3
 
-/-
+/-- Assumed `n = 6` adjacent Artin matrix identities are re-expressed unchanged. -/
 theorem sectionSix_n6_adjacent_artin_from_identities
     (qNeg4 q3 : ℂ) (B : BBlockEntries)
     (h12 : pi6_b1 qNeg4 q3 * pi6_b2 q3 B * pi6_b1 qNeg4 q3 =
@@ -114,6 +113,5 @@ theorem sectionSix_n6_adjacent_artin_from_identities
       (pi6_b4 q3 B * pi6_b5 qNeg4 q3 * pi6_b4 q3 B =
         pi6_b5 qNeg4 q3 * pi6_b4 q3 B * pi6_b5 qNeg4 q3) :=
   pi6_adjacent_artin_from_identities qNeg4 q3 B h12 h23 h34 h45
--/
 
 end InfoGeometry.Canonical.FiniteFibonacciLowAnyonPaperBridge

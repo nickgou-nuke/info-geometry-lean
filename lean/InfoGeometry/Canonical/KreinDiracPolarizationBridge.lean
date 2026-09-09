@@ -50,13 +50,13 @@ noncomputable def transportDirac
     S →L[ℝ] S :=
   transportEnd T IST.D
 
-/-- Metric property transported on the same real doubled/Krein carrier. -/
+/-- Metric witness transported on the same real doubled/Krein carrier. -/
 noncomputable def transportMetricOp
     (IST : InfoSpectralTriple S) (T : RealBogoliubovTransform (S := S) M) :
     S →L[ℝ] S :=
   transportEnd T (IST.H.metricOp IST.x₀)
 
-/-- Bogoliubov conjugation preserves the Dirac-square property on the same carrier. -/
+/-- Bogoliubov conjugation preserves the Dirac-square witness on the same carrier. -/
 @[rep_depth transport]
 theorem transportDirac_sq_eq_transportMetricOp
     (IST : InfoSpectralTriple S) (T : RealBogoliubovTransform (S := S) M) :
@@ -78,7 +78,7 @@ theorem transportDirac_sq_eq_transportMetricOp
           rw [hsq]
     _ = transportMetricOp IST T := rfl
 
-/-- Strict symmetry morphisms transport the Dirac-square property on the same carrier. -/
+/-- Strict symmetry morphisms transport the Dirac-square witness on the same carrier. -/
 theorem transportDirac_sq_eq_transportMetricOp_of_strictSymmetry
     (IST : InfoSpectralTriple S)
     {X Y : PolarizedMajorana (S := S) M} (h : X ⟶ Y) :
@@ -88,9 +88,9 @@ theorem transportDirac_sq_eq_transportMetricOp_of_strictSymmetry
   exact transportDirac_sq_eq_transportMetricOp (IST := IST) (T := h.toBogoliubovTransform)
 
 /--
-Downstream property burn-down check: the transport bridge can consume the
+Downstream witness burn-down check: the transport bridge can consume the
 canonical spectral constructor without seeing a hand-supplied square or metric-order
-property.
+witness.
 -/
 private theorem transportDirac_sq_eq_transportMetricOp_of_metric
     [FiniteDimensional ℝ S]
@@ -116,7 +116,7 @@ theorem kreinDiracPolarizationBridge_of_strictSymmetry
     (transportDirac IST h.toBogoliubovTransform).comp
       (transportDirac IST h.toBogoliubovTransform)
       = transportMetricOp IST h.toBogoliubovTransform := by
-  exact ⟨h.toBogoliubovTransform.transportK_sq,
+  exact ⟨transportK_sq_of_strictSymmetryBogoliubov h,
     transportP_eq_targetPolarization_of_strictSymmetry h,
     transportDirac_sq_eq_transportMetricOp_of_strictSymmetry (IST := IST) h⟩
 

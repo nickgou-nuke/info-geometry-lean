@@ -191,7 +191,7 @@ logarithms.
 
 This is the direct proof needed for prime log-volume:
 `log (∏ p, v p) = ∑ p, log (v p)`.
-No property field, no wrapper structure.
+No certificate field, no wrapper structure.
 -/
 theorem log_prod_of_pos
     {ι : Type*}

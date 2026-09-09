@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.External.Auto.tomita_kms_v4
 import InfoGeometry.External.Auto.CramerRaoFisher
 
@@ -100,13 +100,21 @@ theorem bures_information_geodesic_flow_synthesis
     (∀ dx dy dz,
       buresMetric 0 0 0 dx dy dz (by norm_num) =
         dx ^ 2 + dy ^ 2 + dz ^ 2) := by
-  dsimp
-  exact ⟨cramerRao_from_information_product hI hprod,
-    fun θ E => fisher_legendre_geodesic_cost I θ E hI,
-    fun θ E => fisher_curvature_inverse I θ E (ne_of_gt hI),
-    fun K A => modularFlow_zero_time K A,
-    bures_center_distance_zero,
-    fun dx dy dz => bures_metric_at_origin dx dy dz⟩
+  constructor
+  · exact cramerRao_from_information_product hI hprod
+  constructor
+  · intro θ E
+    exact fisher_legendre_geodesic_cost I θ E hI
+  constructor
+  · intro θ E
+    exact fisher_curvature_inverse I θ E (ne_of_gt hI)
+  constructor
+  · intro K A
+    exact modularFlow_zero_time K A
+  constructor
+  · exact bures_center_distance_zero
+  · intro dx dy dz
+    exact bures_metric_at_origin dx dy dz
 
 end BuresInformationGeodesicFlow
 

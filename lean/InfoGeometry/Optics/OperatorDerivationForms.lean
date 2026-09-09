@@ -12,6 +12,8 @@ import InfoGeometry.Geometry.BilingualAnalyticity
 import InfoGeometry.Thermo.SusceptibilityOnsagerStress
 import InfoGeometry.OperatorAlgebra.NoncommutativePowerDerivative
 import InfoGeometry.Optics.OperatorValuedConnection
+import InfoGeometry.NCG.DerivationDifferential
+import InfoGeometry.OperatorAlgebra.NoncommutativeMaurerCartanAdjointBridge
 
 noncomputable section
 
@@ -146,12 +148,201 @@ theorem map_curvature
   rw [D.toContinuousLinearMap.map_add, D.toContinuousLinearMap.map_sub,
     D.leibniz, D.leibniz]
 
+/-- The commutator of two continuous operator derivations is again a
+continuous operator derivation.  This is the Lie-algebra operation needed
+for derivation-based (Chevalley--Eilenberg) forms. -/
+noncomputable def commutator
+    (D E : FrechetOperatorDerivation 𝕜 A) :
+    FrechetOperatorDerivation 𝕜 A where
+  toContinuousLinearMap :=
+    D.toContinuousLinearMap.comp E.toContinuousLinearMap -
+      E.toContinuousLinearMap.comp D.toContinuousLinearMap
+  leibniz := by
+    intro a b
+    change D (E (a * b)) - E (D (a * b)) = _
+    simp only [D.leibniz, E.leibniz,
+      D.toContinuousLinearMap.map_add, E.toContinuousLinearMap.map_add,
+      ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply]
+    noncomm_ring
+
+@[simp] theorem commutator_apply
+    (D E : FrechetOperatorDerivation 𝕜 A) (a : A) :
+    commutator D E a = D (E a) - E (D a) :=
+  rfl
+
+theorem commutator_leibniz
+    (D E : FrechetOperatorDerivation 𝕜 A) (a b : A) :
+    commutator D E (a * b) =
+      commutator D E a * b + a * commutator D E b :=
+  (commutator D E).leibniz a b
+
+end FrechetOperatorDerivation
+
+namespace FrechetOperatorDerivation
+
+open InfoGeometry.NCG.Calculus
+open InfoGeometry.OperatorAlgebra.NoncommutativeMaurerCartanAdjointBridge
+
+variable {A : Type*} [NormedRing A] [NormedAlgebra ℝ A]
+
+/-- The canonical associative inner derivation is a continuous operator
+derivation, using the existing left/right multiplier construction. -/
+def ofInner (a : A) [CompleteSpace A] :
+    FrechetOperatorDerivation ℝ A where
+  toContinuousLinearMap := adCLM a
+  leibniz := adCLM_leibniz a
+
+@[simp] theorem ofInner_apply (a x : A) [CompleteSpace A] :
+    ofInner a x = a * x - x * a :=
+  rfl
+
+/-- Forget the real scalar continuity structure and retain the underlying
+integer-linear Leibniz derivation used by the canonical CE calculus. -/
+noncomputable def toNCDerivation
+    {A : Type*} [NormedRing A] [NormedAlgebra ℝ A]
+    (D : FrechetOperatorDerivation ℝ A) : NCDerivation A where
+  toLinearMap := D.toContinuousLinearMap.toLinearMap.restrictScalars ℤ
+  leibniz' := by
+    intro a b
+    exact D.leibniz a b
+
+@[simp] theorem toNCDerivation_apply
+    {A : Type*} [NormedRing A] [NormedAlgebra ℝ A]
+    (D : FrechetOperatorDerivation ℝ A) (a : A) :
+    toNCDerivation D a = D a :=
+  rfl
+
+theorem toNCDerivation_ofInner_apply (a x : A) [CompleteSpace A] :
+    toNCDerivation (ofInner a) x =
+      InfoGeometry.NCG.DerivationDifferential.innerDerivation a x :=
+  rfl
+
+theorem toNCDerivation_ofInner (a : A) [CompleteSpace A] :
+    toNCDerivation (ofInner a) =
+      InfoGeometry.NCG.DerivationDifferential.innerDerivation a := by
+  apply InfoGeometry.NCG.Calculus.NCDerivation.ext
+  intro x
+  exact toNCDerivation_ofInner_apply a x
+
+theorem toNCDerivation_ofInner_commutator
+    (a b : A) [CompleteSpace A] :
+    toNCDerivation (commutator (ofInner a) (ofInner b)) =
+      toNCDerivation (ofInner (a * b - b * a)) := by
+  apply InfoGeometry.NCG.Calculus.NCDerivation.ext
+  intro x
+  simp only [toNCDerivation_apply, commutator_apply, ofInner_apply]
+  noncomm_ring
+
+theorem toNCDerivation_leibniz
+    {A : Type*} [NormedRing A] [NormedAlgebra ℝ A]
+    (D : FrechetOperatorDerivation ℝ A) (a b : A) :
+    toNCDerivation D (a * b) =
+      toNCDerivation D a * b + a * toNCDerivation D b :=
+  (toNCDerivation D).leibniz a b
+
+/-- The adapter preserves the Lie action pointwise.  This is the
+commutator compatibility needed when a continuous derivation family is fed
+to the canonical derivation-form calculus. -/
+@[simp] theorem toNCDerivation_commutator_apply
+    {A : Type*} [NormedRing A] [NormedAlgebra ℝ A]
+    (D E : FrechetOperatorDerivation ℝ A) (a : A) :
+    toNCDerivation (commutator D E) a =
+      toNCDerivation D (toNCDerivation E a) -
+        toNCDerivation E (toNCDerivation D a) := by
+  simp [commutator_apply, toNCDerivation_apply]
+
+end FrechetOperatorDerivation
+
+namespace FrechetOperatorDerivation
+
+open InfoGeometry.NCG.Calculus
+
+noncomputable def toDerivationDifferentialSystem
+    {A 𝔤 : Type*} [NormedRing A] [NormedAlgebra ℝ A] [AddGroup 𝔤]
+    (derivation : 𝔤 → FrechetOperatorDerivation ℝ A)
+    (bracket : 𝔤 → 𝔤 → 𝔤)
+    (hbracket : ∀ D E a,
+      derivation D (derivation E a) - derivation E (derivation D a) =
+        derivation (bracket D E) a) :
+    InfoGeometry.NCG.DerivationDifferential.System A 𝔤 where
+  derivation := fun D => toNCDerivation (derivation D)
+  bracket := bracket
+  bracket_action := by
+    intro D E a
+    simpa only [toNCDerivation_apply] using hbracket D E a
+
+@[simp] theorem toDerivationDifferentialSystem_derivation_apply
+    {A 𝔤 : Type*} [NormedRing A] [NormedAlgebra ℝ A] [AddGroup 𝔤]
+    (derivation : 𝔤 → FrechetOperatorDerivation ℝ A)
+    (bracket : 𝔤 → 𝔤 → 𝔤)
+    (hbracket : ∀ D E a,
+      derivation D (derivation E a) - derivation E (derivation D a) =
+        derivation (bracket D E) a)
+    (D : 𝔤) (a : A) :
+    (toDerivationDifferentialSystem derivation bracket hbracket).derivation D a =
+      derivation D a := rfl
+
+noncomputable def innerFrechetSystem
+    (A : Type*) [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A] :
+    InfoGeometry.NCG.DerivationDifferential.System A A :=
+  toDerivationDifferentialSystem
+    (fun a : A => ofInner a)
+    (fun a b : A => a * b - b * a)
+    (by
+      intro a b x
+      simp only [ofInner_apply]
+      noncomm_ring)
+
+theorem innerFrechetSystem_covariant_curvature
+    (A : Type*) [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
+    (Γ : A → A) (a D E : A) :
+    InfoGeometry.NCG.DerivationDifferential.covariant
+        (innerFrechetSystem A) Γ D
+        (InfoGeometry.NCG.DerivationDifferential.covariant
+          (innerFrechetSystem A) Γ E a) -
+      InfoGeometry.NCG.DerivationDifferential.covariant
+        (innerFrechetSystem A) Γ E
+        (InfoGeometry.NCG.DerivationDifferential.covariant
+          (innerFrechetSystem A) Γ D a) -
+      InfoGeometry.NCG.DerivationDifferential.covariant
+        (innerFrechetSystem A) Γ (D * E - E * D) a =
+      InfoGeometry.NCG.DerivationDifferential.curvature
+        (innerFrechetSystem A) Γ D E * a -
+        a * InfoGeometry.NCG.DerivationDifferential.curvature
+          (innerFrechetSystem A) Γ D E := by
+  exact InfoGeometry.NCG.DerivationDifferential.covariant_commutator_sub_bracket
+    (innerFrechetSystem A) Γ a D E
+
 end FrechetOperatorDerivation
 
 section FiniteDimensional
 
 variable {A : Type*} [NormedRing A] [NormedAlgebra ℝ A]
 variable [FiniteDimensional ℝ A]
+
+/-- Continuous realization of a finite-dimensional real-linear Leibniz map.
+This is the canonical constructor for transporting algebraic derivations into
+the operator/Frechet layer. -/
+noncomputable def frechetOperatorDerivationOfLinear
+    (D : A →ₗ[ℝ] A)
+    (hD : ∀ a b, D (a * b) = D a * b + a * D b) :
+    FrechetOperatorDerivation ℝ A where
+  toContinuousLinearMap := D.toContinuousLinearMap
+  leibniz := hD
+
+@[simp] theorem frechetOperatorDerivationOfLinear_apply
+    (D : A →ₗ[ℝ] A)
+    (hD : ∀ a b, D (a * b) = D a * b + a * D b) (a : A) :
+    frechetOperatorDerivationOfLinear D hD a = D a :=
+  rfl
+
+theorem frechetOperatorDerivationOfLinear_hasFDerivAt
+    (D : A →ₗ[ℝ] A)
+    (hD : ∀ a b, D (a * b) = D a * b + a * D b) (a : A) :
+    HasFDerivAt D
+      (frechetOperatorDerivationOfLinear D hD).toContinuousLinearMap a := by
+  simpa only [frechetOperatorDerivationOfLinear_apply] using
+    (frechetOperatorDerivationOfLinear D hD).hasFDerivAt a
 
 /-- On a finite-dimensional operator algebra, every thermodynamic linear
 Leibniz derivation has a canonical continuous Fréchet realization. -/

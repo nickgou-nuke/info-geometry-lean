@@ -29,7 +29,6 @@ section Core
 variable {E : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable {LieAlgebra : Type*}
-variable [AddMonoid LieAlgebra]
 
 local notation "H₂" => InfoGeometry.Krein.DoubledSpace E
 local notation "EndH₂" => H₂ →L[ℝ] H₂
@@ -45,7 +44,7 @@ local instance : IsScalarTower ℝ EndH₂ EndH₂ := inferInstance
 Calibration packet identifying the bounded Souriau/Drazin surrogate with a
 Type-III modular generator.
 
-The exponential property is explicit because `TypeIIIContinuousCoreReal` only
+The exponential witness is explicit because `TypeIIIContinuousCoreReal` only
 offers the Tomita `δ = log Δ` bridge after a supplied proof that
 `exp(generator) = Δ`.
 -/
@@ -65,7 +64,7 @@ structure Calibration where
     souriau.superBridge.Ksur = typeIII.modularGenerator
 
   /--
-  Explicit Tomita exponential property for the Type-III modular generator.
+  Explicit Tomita exponential witness for the Type-III modular generator.
   This is not derived here.
   -/
   exp_typeIII_modularGenerator_eq_modularOperator :
@@ -102,7 +101,7 @@ theorem modularHamiltonian_eq_typeIII_modularGenerator_add_partitionPotential_on
   rw [C.souriau.modularHamiltonian_eq_Ksur_add_partitionPotential_one,
     C.Ksur_eq_typeIII_modularGenerator]
 
-/-- The bounded surrogate exponentiates to the Type-III modular operator by explicit property. -/
+/-- The bounded surrogate exponentiates to the Type-III modular operator by explicit witness. -/
 @[rep_depth transport]
 theorem exp_Ksur_eq_modularOperator :
     NormedSpace.exp C.souriau.superBridge.Ksur = C.typeIII.rn.modularOperator := by
@@ -141,7 +140,7 @@ theorem modularGenerator_eq_neg_log_rn :
     C.typeIII.modularGenerator =
       (-Real.log C.typeIII.rn.rnDerivative) •
         InfoGeometry.Canonical.YangMillsContinuum.idEndH E :=
-  C.typeIII.hTypeIII.2.1
+  C.typeIII.modularHamiltonian_eq_neg_log_rn
 
 end Calibration
 

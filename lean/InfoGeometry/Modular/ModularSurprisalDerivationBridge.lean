@@ -7,6 +7,8 @@ set_option linter.unusedVariables false
 
 noncomputable section
 
+open scoped BigOperators
+
 namespace InfoGeometry.Modular.ModularSurprisalDerivationBridge
 
 variable {A : Type*} [Ring A]
@@ -31,6 +33,205 @@ def adK (K : A) : A →ₗ[ℤ] A where
     rw [hL, hR, smul_sub]
 
 @[simp] theorem adK_apply (K : A) (X : A) : adK K X = K * X - X * K := rfl
+
+/-! The inner derivation is natural for algebra homomorphisms.  This is the
+finite-stage bonding-map identity used when the surprisal generator is
+transported from one algebraic stage to the next. -/
+
+theorem map_adK {B : Type*} [Ring B] (f : A →+* B) (K X : A) :
+    f (adK K X) = adK (f K) (f X) := by
+  simp only [adK_apply, map_sub, map_mul]
+
+/-! Transport of an inner derivation when the generator is identified with
+    the next-stage generator.  This is the exact pointwise bonding law. -/
+theorem map_adK_of_generator {B : Type*} [Ring B] (f : A →+* B)
+    (K : A) (K' : B) (X : A) (hK : f K = K') :
+    f (adK K X) = adK K' (f X) := by
+  rw [map_adK, hK]
+
+/-! Finite powers are transported by the same bonding map.  This is the
+    induction-level statement needed before any exponential readout: it uses
+    only multiplicativity of the ring homomorphism, so it remains valid in
+    genuinely noncommutative carriers. -/
+
+theorem map_pow {B : Type*} [Ring B] (f : A →+* B) (X : A) :
+    ∀ n : ℕ, f (X ^ n) = (f X) ^ n := by
+  intro n
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [pow_succ, map_mul, pow_succ, ih]
+
+/-! Finite iterates of the inner derivation also transport.  These are the
+    finite coefficients that precede any analytic/exponential completion. -/
+
+def adKIterate (K : A) : ℕ → A → A
+  | 0, X => X
+  | n + 1, X => adK K (adKIterate K n X)
+
+theorem adKIterate_add (K X Y : A) :
+    ∀ n : ℕ, adKIterate K n (X + Y) =
+      adKIterate K n X + adKIterate K n Y := by
+  intro n
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      rw [adKIterate, ih]
+      exact (adK K).map_add _ _
+
+theorem adKIterate_zsmul (K : A) (r : ℤ) (X : A) :
+    ∀ n : ℕ, adKIterate K n (r • X) = r • adKIterate K n X := by
+  intro n
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      rw [adKIterate, ih]
+      exact (adK K).map_smul r _
+
+theorem map_adKIterate_of_generator {B : Type*} [Ring B]
+    (f : A →+* B) (K : A) (K' : B) (X : A) (hK : f K = K') :
+    ∀ n : ℕ, f (adKIterate K n X) = adKIterate K' n (f X) := by
+  intro n
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      change f (adK K (adKIterate K n X)) =
+        adK K' (adKIterate K' n (f X))
+      rw [map_adK_of_generator f K K' (adKIterate K n X) hK, ih]
+
+theorem adKIterate_of_comm (K X : A) (hcomm : K * X = X * K) :
+    ∀ n : ℕ, 0 < n → adKIterate K n X = 0 := by
+  intro n
+  induction n with
+  | zero => intro hn; cases hn
+  | succ n ih =>
+      intro _
+      cases n with
+      | zero =>
+          simp [adKIterate, adK_apply, hcomm]
+      | succ n =>
+          rw [adKIterate]
+          rw [ih (Nat.succ_pos n)]
+          exact (adK K).map_zero
+
+/-! The finite iterate stencil is the algebraic partial sum underlying an
+    exponential of the derivation.  Coefficients can be supplied later by a
+    chosen scalar calculus; this carrier itself needs no analytic structure. -/
+
+def adKTruncation (K X : A) (n : ℕ) : A :=
+  Finset.sum (Finset.range (n + 1)) (fun k => adKIterate K k X)
+
+@[simp] theorem adKTruncation_zero (K X : A) :
+    adKTruncation K X 0 = X := by
+  simp [adKTruncation, adKIterate]
+
+theorem adKTruncation_succ (K X : A) (n : ℕ) :
+    adKTruncation K X (n + 1) =
+      adKTruncation K X n + adKIterate K (n + 1) X := by
+  unfold adKTruncation
+  rw [show n + 1 + 1 = (n + 1) + 1 by omega, Finset.sum_range_succ]
+
+theorem map_adKTruncation_of_generator {B : Type*} [Ring B]
+    (f : A →+* B) (K : A) (K' : B) (X : A) (hK : f K = K') (n : ℕ) :
+    f (adKTruncation K X n) = adKTruncation K' (f X) n := by
+  unfold adKTruncation
+  rw [map_sum]
+  apply Finset.sum_congr rfl
+  intro k hk
+  exact map_adKIterate_of_generator f K K' X hK k
+
+theorem adKTruncation_of_comm (K X : A) (hcomm : K * X = X * K) (n : ℕ) :
+    adKTruncation K X n = X := by
+  unfold adKTruncation
+  rw [Finset.sum_eq_single 0]
+  · simp [adKIterate]
+  · intro b hb hne
+    exact adKIterate_of_comm K X hcomm b (Nat.pos_of_ne_zero (by simpa using hne))
+  · intro hzero
+    simp at hzero
+
+theorem adKTruncation_add (K X Y : A) (n : ℕ) :
+    adKTruncation K (X + Y) n =
+      adKTruncation K X n + adKTruncation K Y n := by
+  unfold adKTruncation
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro k hk
+  exact adKIterate_add K X Y k
+
+theorem adKTruncation_zsmul (K X : A) (r : ℤ) (n : ℕ) :
+    adKTruncation K (r • X) n = r • adKTruncation K X n := by
+  unfold adKTruncation
+  calc
+    Finset.sum (Finset.range (n + 1)) (fun k => adKIterate K k (r • X)) =
+        Finset.sum (Finset.range (n + 1))
+          (fun k => r • adKIterate K k X) := by
+      apply Finset.sum_congr rfl
+      intro k hk
+      exact adKIterate_zsmul K r X k
+    _ = r • Finset.sum (Finset.range (n + 1)) (fun k => adKIterate K k X) := by
+      rw [Finset.smul_sum]
+
+/-! A factorial-weighted finite exponential is defined only after choosing a
+    scalar algebra.  This keeps the noncommutative carrier honest while making
+    the usual exponential coefficients available at finite order. -/
+
+def adKExpTruncation {C : Type*} [Ring C] [Algebra ℚ C]
+    (K X : C) (t : ℚ) (n : ℕ) : C :=
+  Finset.sum (Finset.range (n + 1)) (fun k =>
+    (t ^ k / (Nat.factorial k : ℚ)) • adKIterate K k X)
+
+theorem adK_smul_rat {C : Type*} [Ring C] [Algebra ℚ C]
+    (K X : C) (q : ℚ) :
+    adK K (q • X) = q • adK K X := by
+  simp only [adK_apply, Algebra.mul_smul_comm, Algebra.smul_mul_assoc,
+    smul_sub]
+
+theorem adKIterate_smul_rat {C : Type*} [Ring C] [Algebra ℚ C]
+    (K X : C) (q : ℚ) :
+    ∀ n : ℕ, adKIterate K n (q • X) = q • adKIterate K n X := by
+  intro n
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      rw [adKIterate, ih, adK_smul_rat, adKIterate]
+
+theorem adKExpTruncation_zero {C : Type*} [Ring C] [Algebra ℚ C]
+    (K X : C) (t : ℚ) :
+    adKExpTruncation K X t 0 = X := by
+  simp [adKExpTruncation, adKIterate]
+
+theorem adKExpTruncation_succ {C : Type*} [Ring C] [Algebra ℚ C]
+    (K X : C) (t : ℚ) (n : ℕ) :
+    adKExpTruncation K X t (n + 1) =
+      adKExpTruncation K X t n +
+        (t ^ (n + 1) / (Nat.factorial (n + 1) : ℚ)) •
+          adKIterate K (n + 1) X := by
+  unfold adKExpTruncation
+  rw [show n + 1 + 1 = (n + 1) + 1 by omega, Finset.sum_range_succ]
+
+theorem adKExpTruncation_add {C : Type*} [Ring C] [Algebra ℚ C]
+    (K X Y : C) (t : ℚ) (n : ℕ) :
+    adKExpTruncation K (X + Y) t n =
+      adKExpTruncation K X t n + adKExpTruncation K Y t n := by
+  unfold adKExpTruncation
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro k hk
+  rw [adKIterate_add, smul_add]
+
+theorem adKExpTruncation_of_comm {C : Type*} [Ring C] [Algebra ℚ C]
+    (K X : C) (hcomm : K * X = X * K) (t : ℚ) (n : ℕ) :
+    adKExpTruncation K X t n = X := by
+  unfold adKExpTruncation
+  rw [Finset.sum_eq_single 0]
+  · simp [adKIterate]
+  · intro b hb hne
+    rw [adKIterate_of_comm K X hcomm b
+      (Nat.pos_of_ne_zero (by simpa using hne))]
+    exact smul_zero _
+  · intro hzero
+    simp at hzero
 
 /-- 
   THEOREM 1: The Modular Commutator is a Genuine Derivation.

@@ -85,41 +85,37 @@ theorem twoSidedSpan_fMinus_eq_top :
 scalar-line readout at the two finite sheets. -/
 
 theorem fPlus_generic_corner_eq_scalar_line
-    (c : InfoGeometry.Algebra.IdempotentCornerCommutant.corner
-      fPlus fPlus_idempotent) :
+    (c : InfoGeometry.Algebra.IdempotentCornerCommutant.Corner fPlus) :
     ∃ z : ℂ, c.1 = z • fPlus := by
   apply fPlus_corner_eq_scalar_line
   change fPlus * c.1 * fPlus = c.1
   calc
-    fPlus * c.1 * fPlus = (fPlus * c.1) * fPlus := by rfl
-    _ = c.1 * fPlus := by rw [c.2.2]
-    _ = c.1 := c.2.1
+    fPlus * c.1 * fPlus = (fPlus * c.1) * fPlus := by rw [mul_assoc]
+    _ = c.1 * fPlus := by rw [c.property.left]
+    _ = c.1 := c.property.right
 
 theorem fMinus_generic_corner_eq_scalar_line
-    (c : InfoGeometry.Algebra.IdempotentCornerCommutant.corner
-      fMinus fMinus_idempotent) :
+    (c : InfoGeometry.Algebra.IdempotentCornerCommutant.Corner fMinus) :
     ∃ z : ℂ, c.1 = z • fMinus := by
   apply fMinus_corner_eq_scalar_line
   change fMinus * c.1 * fMinus = c.1
   calc
-    fMinus * c.1 * fMinus = (fMinus * c.1) * fMinus := by rfl
-    _ = c.1 * fMinus := by rw [c.2.2]
-    _ = c.1 := c.2.1
+    fMinus * c.1 * fMinus = (fMinus * c.1) * fMinus := by rw [mul_assoc]
+    _ = c.1 * fMinus := by rw [c.property.left]
+    _ = c.1 := c.property.right
 
-theorem fPlus_endomorphism_eq_scalar_rightCornerMap
-    (T : Module.End InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix
-      (InfoGeometry.Algebra.IdempotentCornerCommutant.principalLeftIdeal
-        fPlus fPlus_idempotent)) :
+theorem fPlus_endomorphism_eq_scalar_rightCornerAction
+    (T : Module.End ℂ (InfoGeometry.Algebra.IdempotentCornerCommutant.PrincipalLeftIdeal (R := ℂ) fPlus))
+    (hT : T ∈ InfoGeometry.Algebra.IdempotentCornerCommutant.leftIdealCommutant (R := ℂ) fPlus) :
     ∃ z : ℂ,
-      T = InfoGeometry.Algebra.IdempotentCornerCommutant.rightCornerMap
-        fPlus fPlus_idempotent
+      T = InfoGeometry.Algebra.IdempotentCornerCommutant.rightCornerAction (R := ℂ) fPlus
         ⟨z • fPlus, by
           constructor
           · simp [fPlus_idempotent]
           · simp [fPlus_idempotent]⟩ := by
   let c :=
-    InfoGeometry.Algebra.IdempotentCornerCommutant.corner_of_idempotent_endomorphism
-      fPlus fPlus_idempotent T
+    InfoGeometry.Algebra.IdempotentCornerCommutant.cornerOfCommutant (R := ℂ)
+      fPlus fPlus_idempotent T hT
   obtain ⟨z, hz⟩ := fPlus_generic_corner_eq_scalar_line c
   have hc : c =
       ⟨z • fPlus, by
@@ -130,23 +126,21 @@ theorem fPlus_endomorphism_eq_scalar_rightCornerMap
     exact hz
   refine ⟨z, ?_⟩
   rw [← hc]
-  exact InfoGeometry.Algebra.IdempotentCornerCommutant.corner_endomorphism_eq_rightCornerMap
-    fPlus fPlus_idempotent T
+  exact InfoGeometry.Algebra.IdempotentCornerCommutant.eq_rightCornerAction_of_mem_leftIdealCommutant (R := ℂ)
+    fPlus fPlus_idempotent T hT
 
-theorem fMinus_endomorphism_eq_scalar_rightCornerMap
-    (T : Module.End InfoGeometry.Canonical.ChiralStokesPauliBasis.SheetMatrix
-      (InfoGeometry.Algebra.IdempotentCornerCommutant.principalLeftIdeal
-        fMinus fMinus_idempotent)) :
+theorem fMinus_endomorphism_eq_scalar_rightCornerAction
+    (T : Module.End ℂ (InfoGeometry.Algebra.IdempotentCornerCommutant.PrincipalLeftIdeal (R := ℂ) fMinus))
+    (hT : T ∈ InfoGeometry.Algebra.IdempotentCornerCommutant.leftIdealCommutant (R := ℂ) fMinus) :
     ∃ z : ℂ,
-      T = InfoGeometry.Algebra.IdempotentCornerCommutant.rightCornerMap
-        fMinus fMinus_idempotent
+      T = InfoGeometry.Algebra.IdempotentCornerCommutant.rightCornerAction (R := ℂ) fMinus
         ⟨z • fMinus, by
           constructor
           · simp [fMinus_idempotent]
           · simp [fMinus_idempotent]⟩ := by
   let c :=
-    InfoGeometry.Algebra.IdempotentCornerCommutant.corner_of_idempotent_endomorphism
-      fMinus fMinus_idempotent T
+    InfoGeometry.Algebra.IdempotentCornerCommutant.cornerOfCommutant (R := ℂ)
+      fMinus fMinus_idempotent T hT
   obtain ⟨z, hz⟩ := fMinus_generic_corner_eq_scalar_line c
   have hc : c =
       ⟨z • fMinus, by
@@ -157,8 +151,8 @@ theorem fMinus_endomorphism_eq_scalar_rightCornerMap
     exact hz
   refine ⟨z, ?_⟩
   rw [← hc]
-  exact InfoGeometry.Algebra.IdempotentCornerCommutant.corner_endomorphism_eq_rightCornerMap
-    fMinus fMinus_idempotent T
+  exact InfoGeometry.Algebra.IdempotentCornerCommutant.eq_rightCornerAction_of_mem_leftIdealCommutant (R := ℂ)
+    fMinus fMinus_idempotent T hT
 
 end
 

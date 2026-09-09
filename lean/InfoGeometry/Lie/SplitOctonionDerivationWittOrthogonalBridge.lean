@@ -86,7 +86,7 @@ theorem derivation_native_polar_skew_of_imaginary_trace
     (htrace : ∀ Z : InfoGeometry.Canonical.SplitOctonionGogberashviliCanonicalBridge.CanonicalZorn,
       realZornTrace (D.1 Z) = 0)
     (hconj : ∀ Z : InfoGeometry.Canonical.SplitOctonionGogberashviliCanonicalBridge.CanonicalZorn,
-      InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalConj (D.1 Z) = -D.1 Z)
+      InfoGeometry.Lie.SplitOctonionImaginaryAction.canonicalConj (D.1 Z) = -D.1 Z)
     (X Y : InfoGeometry.Canonical.SplitOctonionGogberashviliCanonicalBridge.CanonicalZorn) :
     canonicalPolar (D.1 X) Y + canonicalPolar X (D.1 Y) = 0 := by
   rw [canonicalPolar_eq_trace_conj_mul, canonicalPolar_eq_trace_conj_mul]
@@ -105,9 +105,14 @@ theorem derivation_native_polar_skew_of_imaginary_trace
   rw [htrace
     (InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalConj Y * X)] at ht
   rw [hmap] at ht
+  have hconj_eq (Z : InfoGeometry.Canonical.SplitOctonionGogberashviliCanonicalBridge.CanonicalZorn) :
+      InfoGeometry.Lie.SplitOctonionImaginaryAction.canonicalConj Z =
+        InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalConj Z := by
+    apply InfoGeometry.Canonical.ZornMatrix.ext <;> rfl
+  rw [hconj_eq Y]
   simp [realZornTrace, InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornTrace] at ht ⊢
   ring_nf at ht ⊢
-  linarith
+  nlinarith
 
 /-! The canonical Zorn polar form is written through the native vector-matrix
 equivalence.  This keeps the derivation theorem on the actual carrier; the
@@ -146,7 +151,8 @@ theorem derivation_native_witt_skew
     (canonicalVectorEquiv X) (canonicalVectorEquiv Y)
   rw [hp] at h
   simpa [nativeCanonicalWittPairing, vectorNativeWittPairing, Dv, p,
-    canonicalVectorEquiv_mul, canonicalVectorEquiv_canonicalConj,
+    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalVectorEquiv_mul,
+    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalVectorEquiv_canonicalConj,
     canonicalToVectorDerivation_apply] using h
 
 /-! The native conjugation and trace identities let us expose the canonical

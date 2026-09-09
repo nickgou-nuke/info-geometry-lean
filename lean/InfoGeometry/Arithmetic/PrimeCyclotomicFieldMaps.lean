@@ -22,7 +22,8 @@ private theorem primitiveRoot_power_divisor
       (Nat.ne_of_gt hk) (dvd_mul_left k N)
   have h₁ : N * k / N = k := by
     simpa [Nat.mul_comm] using Nat.mul_div_left k hN
-  have h₂ : N * k / k = N := Nat.mul_div_right N hk
+  have h₂ : N * k / k = N := by
+    simpa [Nat.mul_comm] using Nat.mul_div_right N hk
   simpa [h₁, h₂] using hpow
 
 /-- The canonical cyclotomic embedding induced by `N ∣ M` and
@@ -51,6 +52,27 @@ def cyclotomicFieldEmbedding
     (⟨_, (mem_primitiveRoots hN).2 (primitiveRoot_power_divisor hN hM hNM)⟩ :
       primitiveRoots N (CyclotomicField M ℚ))
   exact congrArg Subtype.val h
+
+theorem cyclotomicFieldEmbedding_self
+    {N : ℕ} [NeZero N] (hN : 0 < N) :
+    cyclotomicFieldEmbedding hN hN (dvd_refl N) = AlgHom.id ℚ _ := by
+  apply (IsCyclotomicExtension.zeta_spec N ℚ (CyclotomicField N ℚ)).powerBasis ℚ |>.algHom_ext
+  simp [cyclotomicFieldEmbedding_zeta, Nat.div_self hN]
+
+theorem cyclotomicFieldEmbedding_comp
+    {N M L : ℕ} [NeZero N] [NeZero M] [NeZero L]
+    (hN : 0 < N) (hM : 0 < M) (hL : 0 < L)
+    (hNM : N ∣ M) (hML : M ∣ L) (hNL : N ∣ L)
+    (hq : L / N = (L / M) * (M / N)) :
+    (cyclotomicFieldEmbedding hM hL hML).comp
+        (cyclotomicFieldEmbedding hN hM hNM) =
+      cyclotomicFieldEmbedding hN hL hNL := by
+  apply (IsCyclotomicExtension.zeta_spec N ℚ (CyclotomicField N ℚ)).powerBasis ℚ |>.algHom_ext
+  rw [IsPrimitiveRoot.powerBasis_gen]
+  rw [AlgHom.comp_apply, cyclotomicFieldEmbedding_zeta hN hM hNM,
+    map_pow, cyclotomicFieldEmbedding_zeta hM hL hML,
+    cyclotomicFieldEmbedding_zeta hN hL hNL]
+  rw [← pow_mul, hq]
 
 end
 end InfoGeometry.Arithmetic

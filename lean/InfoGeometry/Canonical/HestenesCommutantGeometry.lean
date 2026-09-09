@@ -21,7 +21,7 @@ therefore represented by operator expressions of the form
 * left convention:  `A + I B`.
 
 Theorems in this file are plain noncommutative endomorphism-algebra laws.
-No property packets, trace assumptions, diagonal models, or scalar-complex owner
+No witness packets, trace assumptions, diagonal models, or scalar-complex owner
 language are introduced.
 -/
 

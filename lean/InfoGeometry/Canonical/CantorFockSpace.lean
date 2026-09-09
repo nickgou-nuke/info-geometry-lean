@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.SplitCliffordSourceWickBase
 import InfoGeometry.Canonical.SplitCliffordJordanWigner
 import InfoGeometry.Canonical.ModularNilpotentAutomorphism
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
-import InfoGeometry.Topology.FractalCantorFock
+import InfoGeometry.Topology.FractalCantorFockWitness
 
 noncomputable section
 
@@ -13,7 +13,7 @@ open Matrix
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
 open InfoGeometry.Canonical.ModularNilpotentAutomorphism
 open InfoGeometry.Canonical.FractalCantorCliffordFockBridge
-open InfoGeometry.Topology.FractalCantorFock
+open InfoGeometry.Topology.FractalCantorFockWitness
 
 set_option linter.unusedSectionVars false
 
@@ -56,57 +56,6 @@ theorem localVacuum_annihilation :
 def localParity : M2R :=
   SplitCliffordJordanWigner.P
 
-@[simp] theorem localParity_sq :
-    localParity * localParity = (1 : M2R) := by
-  simpa [localParity] using SplitCliffordJordanWigner.parity_sq_eq_one
-
-@[simp] theorem localParity_conj_annihilation :
-    localParity * localAnnihilation * localParity = -localAnnihilation := by
-  simpa [localParity, localAnnihilation] using
-    SplitCliffordJordanWigner.parity_conj_annihilate
-
-@[simp] theorem localParity_conj_creation :
-    localParity * localCreation * localParity = -localCreation := by
-  simpa [localParity, localCreation] using
-    SplitCliffordJordanWigner.parity_conj_create
-
-theorem localParity_mul_annihilation :
-    localParity * localAnnihilation =
-      -(localAnnihilation * localParity) := by
-  calc
-    localParity * localAnnihilation =
-        localParity * localAnnihilation *
-          (localParity * localParity) := by
-            rw [localParity_sq]
-            simp
-    _ = (localParity * localAnnihilation * localParity) * localParity := by
-          noncomm_ring
-    _ = (-localAnnihilation) * localParity := by
-          rw [localParity_conj_annihilation]
-    _ = -(localAnnihilation * localParity) := by
-          simp
-
-theorem localParity_mul_creation :
-    localParity * localCreation =
-      -(localCreation * localParity) := by
-  calc
-    localParity * localCreation =
-        localParity * localCreation *
-          (localParity * localParity) := by
-            rw [localParity_sq]
-            simp
-    _ = (localParity * localCreation * localParity) * localParity := by
-          noncomm_ring
-    _ = (-localCreation) * localParity := by
-          rw [localParity_conj_creation]
-    _ = -(localCreation * localParity) := by
-          simp
-
-theorem localParity_vacuum :
-    localParity * localVacuumVector = localVacuumVector := by
-  simpa [localParity, localVacuumVector] using
-    SplitCliffordJordanWigner.parity_vacuum
-
 /-- Finite CAR pair extracted from the local nilpotent seed. -/
 def localCARPair : RealCARPair M2R where
   annihilation := localAnnihilation
@@ -125,44 +74,33 @@ theorem local_informationFreeEnergy_eq_zero :
     informationFreeEnergy = (0 : M2R) := by
   simpa [informationFreeEnergy] using informationFreeEnergy_eq_zero
 
+/-- Infinite binary Cantor boundary (symbolic `\{0,1\}^\u2115`). -/
+abbrev InfiniteBoundary := InfiniteBinaryWordSpace
+
 /-- Canonical vacuum boundary word `0000...`. -/
-abbrev vacuumBoundary : (ℕ → Bool) :=
+abbrev vacuumBoundary : InfiniteBoundary :=
   fun _ : ℕ => false
 
 /-- Finite-cylinder Fock-state readout: a finite prefix is sent to a Hilbert basis vector. -/
 def cantorPrefixState
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    (W : CelikKocakInfiniteHilbertCarrier E) (ξ : (ℕ → Bool)) (n : ℕ) : E :=
-  W.orbitBasis (FractalCantorCliffordFockBridge.boundaryPrefix n ξ)
+    (W : CelikKocakInfiniteFockCarrierData E) (ξ : InfiniteBoundary) (n : ℕ) : E :=
+  W.hilbertCarrier.orbitBasis (FractalCantorCliffordFockBridge.boundaryPrefix n ξ)
 
 /-- Empty-prefix readout is the Hilbert vacuum basis vector (the empty cylinder). -/
 theorem cantorPrefixState_empty
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    (W : CelikKocakInfiniteHilbertCarrier E)
-    (ξ : (ℕ → Bool)) :
-    cantorPrefixState (W := W) ξ 0 = W.orbitBasis [] := by
+    (W : CelikKocakInfiniteFockCarrierData E)
+    (ξ : InfiniteBoundary) :
+    cantorPrefixState (W := W) ξ 0 = W.hilbertCarrier.orbitBasis [] := by
   simp [cantorPrefixState]
-
-theorem cantorPrefixState_norm
-    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    (W : CelikKocakInfiniteHilbertCarrier E) (ξ : (ℕ → Bool)) (n : ℕ) :
-    ‖cantorPrefixState (W := W) ξ n‖ = 1 := by
-  exact W.orbit_orthonormal.norm_eq_one _
-
-theorem cantorPrefixState_eq_of_prefix_eq
-    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    (W : CelikKocakInfiniteHilbertCarrier E) (ξ η : (ℕ → Bool)) (n : ℕ)
-    (h : FractalCantorCliffordFockBridge.boundaryPrefix n ξ =
-      FractalCantorCliffordFockBridge.boundaryPrefix n η) :
-    cantorPrefixState (W := W) ξ n = cantorPrefixState (W := W) η n := by
-  simp [cantorPrefixState, h]
 
 /-- Prefix recursion at one step. -/
 theorem cantorPrefixState_succ
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    (W : CelikKocakInfiniteHilbertCarrier E) (ξ : (ℕ → Bool)) (n : ℕ) :
+    (W : CelikKocakInfiniteFockCarrierData E) (ξ : InfiniteBoundary) (n : ℕ) :
     cantorPrefixState (W := W) ξ (n + 1)
-      = W.orbitBasis
+      = W.hilbertCarrier.orbitBasis
           (FractalCantorCliffordFockBridge.boundaryHead ξ ::
             FractalCantorCliffordFockBridge.boundaryPrefix n (FractalCantorCliffordFockBridge.boundaryTail ξ)) := by
   simp [cantorPrefixState, FractalCantorCliffordFockBridge.boundaryPrefix_succ]
@@ -170,7 +108,7 @@ theorem cantorPrefixState_succ
 /-- Distinct finite prefixes are orthogonal in the Cantor/Fock basis. -/
 theorem cantorPrefixState_orthogonal_of_distinct_prefix
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    (W : CelikKocakInfiniteHilbertCarrier E) (ξ η : (ℕ → Bool))
+    (W : CelikKocakInfiniteFockCarrierData E) (ξ η : InfiniteBoundary)
     (n : ℕ) (h : FractalCantorCliffordFockBridge.boundaryPrefix n ξ ≠
       FractalCantorCliffordFockBridge.boundaryPrefix n η) :
     inner ℂ (cantorPrefixState (W := W) ξ n) (cantorPrefixState (W := W) η n) = 0 := by
@@ -181,14 +119,14 @@ theorem cantorPrefixState_orthogonal_of_distinct_prefix
 /-- Vacuum boundary map along the finite-prefix reconstruction. -/
 def cantorVacuumPrefixState
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    (W : CelikKocakInfiniteHilbertCarrier E) (n : ℕ) : E :=
+    (W : CelikKocakInfiniteFockCarrierData E) (n : ℕ) : E :=
   cantorPrefixState (W := W) vacuumBoundary n
 
 /-- The vacuum prefix starts at the empty cylinder. -/
 theorem cantorVacuumPrefixState_zero
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    (W : CelikKocakInfiniteHilbertCarrier E) :
-    cantorVacuumPrefixState (W := W) 0 = W.orbitBasis [] := by
+    (W : CelikKocakInfiniteFockCarrierData E) :
+    cantorVacuumPrefixState (W := W) 0 = W.hilbertCarrier.orbitBasis [] := by
   simp [cantorVacuumPrefixState, cantorPrefixState]
 
 end InfoGeometry.Canonical.CantorFockSpace

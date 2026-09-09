@@ -153,7 +153,7 @@ theorem cellToPaper_J (i : Fin 3) :
       InfoGeometry.Algebra.ZornMatrix.add, InfoGeometry.Algebra.ZornMatrix.U,
       InfoGeometry.Algebra.ZornMatrix.V,
       InfoGeometry.Algebra.ZornMatrix.Vec3.basis]
-  all_goals
+  all_goals try
     funext k
     fin_cases k <;>
       simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.J,
@@ -166,25 +166,16 @@ theorem cellToPaper_j (i : Fin 3) :
     cellToPaper (InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.j i) =
       -paperj i := by
   fin_cases i <;>
-    apply InfoGeometry.Algebra.ZornMatrix.ext
-  all_goals
-    simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.j,
-      paperj,
-      InfoGeometry.Algebra.Vec3.sub,
-      InfoGeometry.Algebra.ZornMatrix.sub,
-      InfoGeometry.Algebra.ZornMatrix.U,
-      InfoGeometry.Algebra.ZornMatrix.V,
-      InfoGeometry.Algebra.ZornMatrix.Vec3.basis]
-  all_goals
-    funext k
-    fin_cases k <;>
+    change _ = InfoGeometry.Algebra.ZornMatrixRealModule.neg _ <;>
+    ext <;>
       simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.j,
-        paperj,
-        InfoGeometry.Algebra.Vec3.sub,
+        paperj, InfoGeometry.Algebra.Vec3.sub,
         InfoGeometry.Algebra.ZornMatrix.sub,
         InfoGeometry.Algebra.ZornMatrix.U,
         InfoGeometry.Algebra.ZornMatrix.V,
-        InfoGeometry.Algebra.ZornMatrix.Vec3.basis]
+        InfoGeometry.Algebra.ZornMatrix.Vec3.basis,
+        InfoGeometry.Algebra.ZornMatrixRealModule.neg,
+        InfoGeometry.Algebra.Vec3.smul]
 
 @[simp] theorem cellToPaper_symm_paperJ (i : Fin 3) :
     cellToPaper.symm (paperJ i) =
@@ -213,7 +204,9 @@ def cellToCanonical : Cell ≃ₗ[ℝ] Canonical :=
   rw [cellToPaper_mul, paperCanonicalLinearEquiv_mul]
 
 theorem cellToCanonical_norm (X : Cell) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (cellToCanonical X) =
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+      (cellToCanonical X) =
       ZornCell.detZ X := by
   rw [cellToCanonical, LinearEquiv.trans_apply]
   rw [← paperCanonicalLinearEquiv_norm]

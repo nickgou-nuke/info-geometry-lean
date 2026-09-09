@@ -168,6 +168,32 @@ theorem paravector_null_iff (t x y z : ℝ) :
   simp [pauliDetSector, hq]
 
 
+/-- Consolidated dictionary theorem for this layer. -/
+theorem trifactor_geometry_synthesis :
+    (∀ OP : ℝ, OP ^ 3 = OP → OP = -1 ∨ OP = 0 ∨ OP = 1) ∧
+    (∀ OP : ℝ, OP ^ 3 = OP → OP ^ 2 = 0 ∨ OP ^ 2 = 1) ∧
+    (∀ q : ℝ, q ^ 3 = q →
+      (trifactorProjectorPlus q) ^ 2 = trifactorProjectorPlus q ∧
+      (trifactorProjectorMinus q) ^ 2 = trifactorProjectorMinus q ∧
+      (trifactorProjectorNull q) ^ 2 = trifactorProjectorNull q ∧
+      trifactorProjectorPlus q + trifactorProjectorMinus q + trifactorProjectorNull q = 1) ∧
+    (∀ t x y z : ℝ, (ParavectorMatrix t x y z).det = (pauliQuadratic t x y z : ℂ)) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · intro OP hOP
+    exact cubic_real_roots hOP
+  · intro OP hOP
+    exact cubic_real_sq_values hOP
+  · intro q hq
+    constructor
+    · exact trifactor_projector_idempotent_plus hq
+    constructor
+    · exact trifactor_projector_idempotent_minus hq
+    constructor
+    · exact trifactor_projector_idempotent_null hq
+    · exact trifactor_projector_partition_of_cubic hq
+  · intro t x y z
+    exact det_paravector t x y z
+
 end TrifactorGeometry
 
 end noncomputable section

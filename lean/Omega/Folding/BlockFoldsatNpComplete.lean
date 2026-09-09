@@ -49,7 +49,7 @@ def blockEncodedAssignment (D : BlockFoldsatNpCompleteData) (φ : D.SatInstance)
 def satLanguage (D : BlockFoldsatNpCompleteData) : Set D.SatInstance :=
   {φ | ∃ a : D.SatAssignment φ, D.satEval φ a = true}
 
-/-- The Block--FoldSAT verifier establishes membership in NP with a polynomial-time bound. -/
+/-- The Block--FoldSAT verifier witnesses membership in NP with a polynomial-time bound. -/
 def inNP (D : BlockFoldsatNpCompleteData) : Prop :=
   ∃ k, ∀ x, x ∈ D.language ↔ ∃ cert : D.Certificate,
     D.verifier x cert = true ∧
@@ -64,7 +64,7 @@ def satKarpReduction (D : BlockFoldsatNpCompleteData) : Prop :=
 def npComplete (D : BlockFoldsatNpCompleteData) : Prop :=
   D.inNP ∧ D.satKarpReduction
 
-lemma tail_decode_assignment (D : BlockFoldsatNpCompleteData) (φ : D.SatInstance)
+lemma witnessTail_decodes (D : BlockFoldsatNpCompleteData) (φ : D.SatInstance)
     (a : D.SatAssignment φ) :
     blockReservoirDecode (D.witnessTail φ a) = D.assignmentBits φ a := by
   rw [D.witnessTail_eq]

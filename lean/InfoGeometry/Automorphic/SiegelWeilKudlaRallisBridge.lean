@@ -46,16 +46,16 @@ theorem IsRationalComplex.of_eq
 /-! ## 2. Rankin-Selberg / theta doubling identity -/
 
 /--
-Rankin-Selberg theta integral representation property.
+Rankin-Selberg theta integral representation witness.
 
-This is the algebraic interface for the paper's Theorem 1:
+This is the algebraic socket for the paper's Theorem 1:
 
 `⟨θ f₁ · E_s, θ f₂⟩_G =
   ⟨f₁, f₂⟩_H · L^S(s + 1/2, π ⊗ χ) · L_bad(s)`.
 
 The concrete analytic content - theta lifts, measures, convergence,
 bad-prime factors, and representation-theoretic hypotheses - is supplied by
-the property fields.
+the witness fields.
 -/
 structure RankinSelbergThetaIntegralWitness
     (Cusp : Type*) where
@@ -78,7 +78,7 @@ structure RankinSelbergThetaIntegralWitness
   /--
   Integral representation law.
 
-  This is the paper-level theorem supplied as property data.
+  This is the paper-level theorem supplied as witness data.
   -/
   rankinSelberg_identity :
     ∀ f₁ f₂ : Cusp, ∀ s : ℂ,
@@ -135,7 +135,7 @@ end RankinSelbergThetaIntegralWitness
 /-! ## 3. Siegel-Weil-Kudla-Rallis critical equality -/
 
 /--
-Siegel-Weil-Kudla-Rallis formula property.
+Siegel-Weil-Kudla-Rallis formula witness.
 
 This packages the paper's critical equality
 
@@ -179,9 +179,9 @@ end SiegelWeilKudlaRallisFormulaWitness
 /-! ## 4. Pullback/decomposition formula -/
 
 /--
-Finite pullback/decomposition formula property.
+Finite pullback/decomposition formula witness.
 
-This is the algebraic interface for the paper's decomposition formula:
+This is the algebraic socket for the paper's decomposition formula:
 
 `E_s(ι(g₁,g₂)) = Σ_f f(g₁) f̄(g₂) · λ(f) / ⟨f,f⟩`.
 
@@ -238,10 +238,10 @@ theorem pullbackEisenstein_eq_sum
 
 end PullbackDecompositionFormulaWitness
 
-/-! ## 5. Rational Fourier and special-value property -/
+/-! ## 5. Rational Fourier and special-value witness -/
 
 /--
-Rational finite-prime Fourier coefficient property.
+Rational finite-prime Fourier coefficient witness.
 
 This packages the paper's rationality result for finite parts of Fourier
 coefficients without asserting a concrete Fourier expansion here.
@@ -272,7 +272,7 @@ theorem finiteFourierPart_is_rational
 end RationalFiniteFourierWitness
 
 /--
-Special-value rationality property.
+Special-value rationality witness.
 
 This packages the paper's statement that the normalized coefficient
 `λ(f) / ⟨f,f⟩` is rational.
@@ -326,13 +326,13 @@ theorem lambda_div_inner_is_rational
 
 end NormalizedSpecialValueRationalityWitness
 
-/-! ## 6. Bridge to existing projected L-function data -/
+/-! ## 6. Bridge to existing projected L-function socket -/
 
 /--
 Projected L-function data supplied by a Rankin-Selberg/theta integral model.
 
 This connects the SWKR/doubling-method lane to the existing
-`ProjectedAutomorphicLFunctionData` API by a supplied equality between the
+`ProjectedAutomorphicLFunctionWitness` API by a supplied equality between the
 projected L-function and the standard L-function readout.
 -/
 structure RankinSelbergProjectedLBridge
@@ -340,9 +340,9 @@ structure RankinSelbergProjectedLBridge
     [AddCommGroup Bulk] [Module ℝ Bulk]
     [AddCommGroup Boundary] [Module ℝ Boundary]
     {W : SiegelEisensteinWitness Bulk Boundary}
-    (P : ProjectedAutomorphicLFunctionData W)
+    (P : ProjectedAutomorphicLFunctionWitness W)
     (Cusp : Type*) where
-  /-- Rankin-Selberg theta integral property. -/
+  /-- Rankin-Selberg theta integral witness. -/
   rankinSelberg :
     RankinSelbergThetaIntegralWitness Cusp
 
@@ -360,7 +360,7 @@ variable
     [AddCommGroup Bulk] [Module ℝ Bulk]
     [AddCommGroup Boundary] [Module ℝ Boundary]
     {W : SiegelEisensteinWitness Bulk Boundary}
-    {P : ProjectedAutomorphicLFunctionData W}
+    {P : ProjectedAutomorphicLFunctionWitness W}
     {Cusp : Type*}
 
 variable (B : RankinSelbergProjectedLBridge P Cusp)

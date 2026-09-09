@@ -21,7 +21,7 @@ Existing mathlib/literature context:
   tensor-level PSD predicate.
 
 QMS purification move:
-- Replace the impossible tensor-PSD deferred interface by the native dissipativity theorem
+- Replace the impossible tensor-PSD socket by the native dissipativity theorem
   that is actually carried by the structure: along each density `ρ`, the scalar
   free-energy derivative is nonpositive.
 -/
@@ -40,7 +40,7 @@ structure SouriauMetriplecticOnsager (State Observable : Type*) where
   hamiltonianPartPreservesFreeEnergy : ∀ ρ, relativeFreeEnergy (reversibleFlow ρ) = relativeFreeEnergy ρ
   dissipativePartDissipatesFreeEnergy : ∀ ρ, freeEnergyDerivative ρ ≤ 0
 
-/-- The Onsager deferred interface reduces to the supplied scalar free-energy dissipativity law. -/
+/-- The Onsager socket reduces to the supplied scalar free-energy dissipativity law. -/
 theorem onsagerPositiveSemidefinite_as_freeEnergyDerivative_nonpos
     {State Observable : Type*}
     (O : SouriauMetriplecticOnsager State Observable) (ρ : Density State) :

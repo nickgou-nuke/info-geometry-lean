@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 import InfoGeometry.Canonical.ZetaStandardRealizations
+import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 import InfoGeometry.Meta.Architecture
 
@@ -20,7 +21,7 @@ Scope discipline:
   currently compiles.
 - It does NOT prove analytic continuation, Euler products, Ramanujan's full
   odd-zeta transform, or an operator-level theorem `exp (-s H) = exp (-H/2) exp (-u H) exp (-iv H)`.
-- The Ramanujan/Lambert lane is kept property-gated on purpose.
+- The Ramanujan/Lambert lane is kept witness-gated on purpose.
 -/
 
 noncomputable section
@@ -32,6 +33,7 @@ open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart.ZetaCenteredChart
 open InfoGeometry.Canonical.ZetaStandardRealizations
+open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 open InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 
 abbrev CenteredChart :=
@@ -48,18 +50,6 @@ def centeredParameter (x : CenteredChart) : ℂ :=
 @[simp] theorem centeredParameter_im (x : CenteredChart) :
     (centeredParameter x).im = x.v := by
   simp [centeredParameter]
-
-theorem centeredParameter_functionalDual (x : CenteredChart) :
-    centeredParameter (ZetaCenteredChart.functionalDual x) =
-      1 - centeredParameter x := by
-  apply Complex.ext <;> simp [centeredParameter, ZetaCenteredChart.functionalDual]
-  · ring
-
-theorem centeredParameter_criticalMirror (x : CenteredChart) :
-    centeredParameter (ZetaCenteredChart.criticalMirror x) =
-      1 - star (centeredParameter x) := by
-  apply Complex.ext <;> simp [centeredParameter, ZetaCenteredChart.criticalMirror]
-  · ring
 
 /-- Critical-line predicate in centered coordinates. -/
 def centeredCriticalLine (x : CenteredChart) : Prop :=
@@ -147,6 +137,35 @@ theorem centeredXi_JEvenProjection_eq_self
     JEvenProjection X.centeredXi z = X.centeredXi z := by
   exact JEvenProjection_eq_of_even X.centeredXi (fun w => X.centeredXi_even w) z
 
+section SouriauReadback
+
+variable {State LieAlgebra LieDual : Type*}
+
+/-- The Souriau modular potential reads back as the moment pairing plus Massieu shift. -/
+@[rep_depth thermo]
+theorem modularPotential_eq_pairing_add_partitionPotential
+    (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) (x : State) :
+    D.modularPotential x =
+      D.souriau.pairing (D.souriau.momentMap x) D.souriau.beta +
+        D.souriau.partitionPotential := by
+  rw [D.modularPotential_eq_K_beta_add_Phi, D.souriau.K_beta_eq_pairing x]
+
+/-- Entropy is the expectation of the pairing-plus-shift modular potential. -/
+@[rep_depth thermo]
+theorem entropy_eq_expectation_pairing_add_partitionPotential
+    (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) :
+    D.entropy =
+      D.expectationBeta
+        (fun x =>
+          D.souriau.pairing (D.souriau.momentMap x) D.souriau.beta +
+            D.souriau.partitionPotential) := by
+  rw [D.entropy_eq_expectation_modularPotential]
+  congr 1
+  funext x
+  exact modularPotential_eq_pairing_add_partitionPotential D x
+
+end SouriauReadback
+
 section TomitaReadback
 
 universe u v
@@ -158,13 +177,37 @@ variable {Symmetry : Type v}
 @[rep_depth operator]
 theorem tomita_deltaLog_eq_souriau_moment_geometricTemperature
     (C : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry)) :
-    C.modularHamiltonian =
+    C.toRealModularLogData =
       C.souriauMoment.momentOperator C.souriauMoment.geometricTemperature := by
-  calc
-    C.modularHamiltonian = C.souriauMoment.thermalGenerator := rfl
-    _ = C.souriauMoment.momentOperator C.souriauMoment.geometricTemperature :=
-      C.souriauModularGenerator_eq_moment_geometricTemperature
+  rw [C.tomita_deltaLog_eq_thermalGenerator,
+    C.souriauModularGenerator_eq_moment_geometricTemperature]
 
 end TomitaReadback
+
+/--
+Witness-gated Ramanujan/Lambert socket.
+
+This is intentionally a socket, not an analytic theorem: the tracked repo already
+uses the same discipline for Ramanujan's odd-zeta transform.
+-/
+def RamanujanLambertTransform
+    (oddZetaReadout lambertSeriesSide bernoulliCorrectionSide : ℕ → ℂ) : Prop :=
+  ∀ m, oddZetaReadout m = lambertSeriesSide m + bernoulliCorrectionSide m
+
+structure RamanujanLambertSocket where
+  oddZetaReadout : ℕ → ℂ
+  lambertSeriesSide : ℕ → ℂ
+  bernoulliCorrectionSide : ℕ → ℂ
+  transform :
+    RamanujanLambertTransform oddZetaReadout lambertSeriesSide bernoulliCorrectionSide
+
+namespace RamanujanLambertSocket
+
+theorem oddZeta_eq_lambert_plus_bernoulli
+    (R : RamanujanLambertSocket) (m : ℕ) :
+    R.oddZetaReadout m = R.lambertSeriesSide m + R.bernoulliCorrectionSide m :=
+  R.transform m
+
+end RamanujanLambertSocket
 
 end InfoGeometry.Canonical.SouriauTomitaZetaCenteredBridge

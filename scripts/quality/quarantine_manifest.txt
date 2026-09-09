@@ -34,3 +34,5 @@ InfoGeometry.Canonical.StandardSplitQuaternionCalibrationBridge | imports the qu
 InfoGeometry.Quantum.DoubleCopyBridge | imports the quarantined ChiralAction owner and remains a dependent quarantine surface
 InfoGeometry.Canonical.CheegerMullerAnalyticTorsionBridge | imports the quarantined SouriauBerryPhaseMonodromyBridge owner and remains a dependent quarantine surface
 InfoGeometry.Canonical.ExpectationBilinearCommutantCorrespondence | imports the quarantined OperatorObservationPrequantumBridge owner and remains a dependent quarantine surface
+InfoGeometry.Canonical.DeepHorizon | facade over quarantined holographic emergence and Tomita-Takesaki atom
+InfoGeometry.Canonical.ChiralTorsionBridge | umbrella over quarantined chiral torsion bridge modules

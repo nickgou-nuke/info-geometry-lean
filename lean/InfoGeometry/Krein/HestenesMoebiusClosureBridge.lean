@@ -8,7 +8,7 @@ noncomputable section
 /-!
 # InfoGeometry.Krein.HestenesMoebiusClosureBridge
 
-Möbius closure data for the Hestenes--Krein / Connes--Wilson lane.
+Möbius closure socket for the Hestenes--Krein / Connes--Wilson lane.
 
 This file deliberately does **not** construct a global conformal field theory,
 a representation theorem for `SL(2,ℝ)`, or a compactification theorem for a
@@ -20,7 +20,7 @@ Cantor boundary.  Instead it provides a theorem-safe calibration interface:
 * a supplied Krein-isometric vector action fixing the vacuum `Ω`;
 * invariance readbacks for Ω-expectations and Connes--Wilson holonomies.
 
-The mathematical doctrine is property-gated: a concrete CFT/Jones/Cantor backend
+The mathematical doctrine is witness-gated: a concrete CFT/Jones/Cantor backend
 supplies the Möbius representation laws, while this bridge records the exact
 consequences needed by the real Hestenes--Krein volume pipeline.
 -/
@@ -55,7 +55,7 @@ local instance moebiusClosureIsScalarTower : IsScalarTower ℝ EndH EndH := infe
 
 /--
 A determinant-one real Möbius parameter, read as an `SL(2,ℝ)` matrix
-`[[a,b],[c,d]]` at this data level.
+`[[a,b],[c,d]]` at this socket level.
 -/
 @[rep_depth projective]
 structure MoebiusParameter where
@@ -64,239 +64,6 @@ structure MoebiusParameter where
   c : ℝ
   d : ℝ
   det_one : a * d - b * c = 1
-
-def MoebiusParameter.toMatrix (g : MoebiusParameter) :
-    Matrix (Fin 2) (Fin 2) ℝ :=
-  !![g.a, g.b; g.c, g.d]
-
-@[ext]
-theorem MoebiusParameter.ext {g h : MoebiusParameter}
-    (ha : g.a = h.a) (hb : g.b = h.b) (hc : g.c = h.c) (hd : g.d = h.d) :
-    g = h := by
-  cases g
-  cases h
-  simp_all
-
-@[simp]
-theorem MoebiusParameter.toMatrix_det (g : MoebiusParameter) :
-    g.toMatrix.det = 1 := by
-  dsimp [MoebiusParameter.toMatrix]
-  rw [Matrix.det_fin_two]
-  exact g.det_one
-
-def MoebiusParameter.mul (g h : MoebiusParameter) : MoebiusParameter where
-  a := g.a * h.a + g.b * h.c
-  b := g.a * h.b + g.b * h.d
-  c := g.c * h.a + g.d * h.c
-  d := g.c * h.b + g.d * h.d
-  det_one := by
-    calc
-      (g.a * h.a + g.b * h.c) * (g.c * h.b + g.d * h.d) -
-          (g.a * h.b + g.b * h.d) * (g.c * h.a + g.d * h.c) =
-        (g.a * g.d - g.b * g.c) * (h.a * h.d - h.b * h.c) := by ring
-      _ = 1 := by rw [g.det_one, h.det_one]; norm_num
-
-theorem MoebiusParameter.toMatrix_mul (g h : MoebiusParameter) :
-    (g.mul h).toMatrix = g.toMatrix * h.toMatrix := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [MoebiusParameter.mul, MoebiusParameter.toMatrix,
-      Matrix.mul_apply, Fin.sum_univ_two]
-  <;> ring
-
-theorem MoebiusParameter.toMatrix_injective :
-    Function.Injective MoebiusParameter.toMatrix := by
-  intro g h hgh
-  cases g with
-  | mk ga gb gc gd hg =>
-      cases h with
-      | mk ha hb hc hd hh =>
-          have haa := congrArg
-            (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) hgh
-          have hab := congrArg
-            (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 1) hgh
-          have hac := congrArg
-            (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 1 0) hgh
-          have had := congrArg
-            (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 1 1) hgh
-          simp [MoebiusParameter.toMatrix] at haa hab hac had
-          subst ha
-          subst hb
-          subst hc
-          subst hd
-          rfl
-
-def MoebiusParameter.one : MoebiusParameter where
-  a := 1
-  b := 0
-  c := 0
-  d := 1
-  det_one := by norm_num
-
-def MoebiusParameter.inv (g : MoebiusParameter) : MoebiusParameter where
-  a := g.d
-  b := -g.b
-  c := -g.c
-  d := g.a
-  det_one := by
-    rw [← g.det_one]
-    ring
-
-theorem MoebiusParameter.one_mul (g : MoebiusParameter) :
-    MoebiusParameter.one.mul g = g := by
-  cases g
-  ext <;> simp [MoebiusParameter.one, MoebiusParameter.mul]
-
-theorem MoebiusParameter.mul_one (g : MoebiusParameter) :
-    g.mul MoebiusParameter.one = g := by
-  cases g
-  ext <;> simp [MoebiusParameter.one, MoebiusParameter.mul]
-
-theorem MoebiusParameter.mul_inv (g : MoebiusParameter) :
-    g.mul g.inv = MoebiusParameter.one := by
-  apply MoebiusParameter.ext <;> simp [MoebiusParameter.one, MoebiusParameter.inv,
-    MoebiusParameter.mul]
-  · rw [← g.det_one]
-    ring
-  · ring
-  · ring
-  · rw [← g.det_one]
-    ring
-
-theorem MoebiusParameter.inv_mul (g : MoebiusParameter) :
-    g.inv.mul g = MoebiusParameter.one := by
-  apply MoebiusParameter.ext <;> simp [MoebiusParameter.one, MoebiusParameter.inv,
-    MoebiusParameter.mul]
-  · rw [← g.det_one]
-    ring
-  · ring
-  · ring
-  · rw [← g.det_one]
-    ring
-
-theorem MoebiusParameter.mul_assoc
-    (g h k : MoebiusParameter) :
-    (g.mul h).mul k = g.mul (h.mul k) := by
-  cases g
-  cases h
-  cases k
-  apply MoebiusParameter.ext <;> simp [MoebiusParameter.mul] <;> ring
-
-theorem MoebiusParameter.toMatrix_isUnit (g : MoebiusParameter) :
-    IsUnit g.toMatrix := by
-  apply (Matrix.isUnit_iff_isUnit_det (A := g.toMatrix)).mpr
-  rw [g.toMatrix_det]
-  exact isUnit_one
-
-theorem MoebiusParameter.toMatrix_ne_zero (g : MoebiusParameter) :
-    g.toMatrix ≠ 0 := by
-  intro hzero
-  have ha : g.a = 0 := by
-    simpa [MoebiusParameter.toMatrix] using congrFun (congrFun hzero 0) 0
-  have hb : g.b = 0 := by
-    simpa [MoebiusParameter.toMatrix] using congrFun (congrFun hzero 0) 1
-  have hc : g.c = 0 := by
-    simpa [MoebiusParameter.toMatrix] using congrFun (congrFun hzero 1) 0
-  have hd : g.d = 0 := by
-    simpa [MoebiusParameter.toMatrix] using congrFun (congrFun hzero 1) 1
-  have hdet := g.det_one
-  rw [ha, hb, hc, hd] at hdet
-  norm_num at hdet
-
-def MoebiusParameter.inverseMatrix (g : MoebiusParameter) :
-    Matrix (Fin 2) (Fin 2) ℝ :=
-  !![g.d, -g.b; -g.c, g.a]
-
-@[simp]
-theorem MoebiusParameter.inv_toMatrix (g : MoebiusParameter) :
-    g.inv.toMatrix = g.inverseMatrix :=
-  rfl
-
-@[simp]
-theorem MoebiusParameter.one_toMatrix :
-    MoebiusParameter.one.toMatrix = 1 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [MoebiusParameter.one, MoebiusParameter.toMatrix,
-      Matrix.one_apply]
-
-@[simp]
-theorem MoebiusParameter.inverseMatrix_det (g : MoebiusParameter) :
-    g.inverseMatrix.det = 1 := by
-  dsimp [MoebiusParameter.inverseMatrix]
-  rw [Matrix.det_fin_two]
-  change (g.d * g.a - (-g.b) * (-g.c) : ℝ) = 1
-  rw [← g.det_one]
-  ring
-
-theorem MoebiusParameter.toMatrix_mul_inverseMatrix (g : MoebiusParameter) :
-    g.toMatrix * g.inverseMatrix = 1 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [MoebiusParameter.toMatrix, MoebiusParameter.inverseMatrix,
-      Matrix.mul_apply, Fin.sum_univ_two]
-  · rw [← g.det_one]
-    ring
-  · ring
-  · ring
-  · rw [← g.det_one]
-    ring
-
-theorem MoebiusParameter.inverseMatrix_mul_toMatrix (g : MoebiusParameter) :
-    g.inverseMatrix * g.toMatrix = 1 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [MoebiusParameter.toMatrix, MoebiusParameter.inverseMatrix,
-      Matrix.mul_apply, Fin.sum_univ_two]
-  · rw [← g.det_one]
-    ring
-  · ring
-  · ring
-  · rw [← g.det_one]
-    ring
-
-def MoebiusParameter.toUnit (g : MoebiusParameter) :
-    (Matrix (Fin 2) (Fin 2) ℝ)ˣ :=
-  { val := g.toMatrix
-    inv := g.inverseMatrix
-    val_inv := g.toMatrix_mul_inverseMatrix
-    inv_val := g.inverseMatrix_mul_toMatrix }
-
-@[simp]
-theorem MoebiusParameter.toUnit_val (g : MoebiusParameter) :
-    (g.toUnit : Matrix (Fin 2) (Fin 2) ℝ) = g.toMatrix :=
-  rfl
-
-@[simp]
-theorem MoebiusParameter.toUnit_inv_val (g : MoebiusParameter) :
-    (↑(g.toUnit⁻¹) : Matrix (Fin 2) (Fin 2) ℝ) = g.inverseMatrix :=
-  rfl
-
-theorem MoebiusParameter.toUnit_mul
-    (g h : MoebiusParameter) :
-    (g.mul h).toUnit = g.toUnit * h.toUnit := by
-  apply Units.ext
-  exact MoebiusParameter.toMatrix_mul g h
-
-theorem MoebiusParameter.toUnit_one :
-    MoebiusParameter.one.toUnit = 1 := by
-  apply Units.ext
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [MoebiusParameter.toUnit, MoebiusParameter.one,
-      MoebiusParameter.toMatrix, Matrix.one_apply]
-
-theorem MoebiusParameter.toUnit_inv (g : MoebiusParameter) :
-    g.inv.toUnit = g.toUnit⁻¹ := by
-  apply Units.ext
-  rfl
-
-theorem MoebiusParameter.toUnit_injective :
-    Function.Injective MoebiusParameter.toUnit := by
-  intro g h heq
-  apply MoebiusParameter.toMatrix_injective
-  exact congrArg (fun u : (Matrix (Fin 2) (Fin 2) ℝ)ˣ =>
-    (u : Matrix (Fin 2) (Fin 2) ℝ)) heq
 
 
 /-- Hestenes--Krein null cone associated to the Wilson/KMS carrier. -/
@@ -516,7 +283,7 @@ theorem modularVolumeIncrement_moebius_invariant
 /--
 Alias for the final finite-level projective closure readback.
 
-This is the theorem-safe "closure of the universe" statement at this data level:
+This is the theorem-safe "closure of the universe" statement at this socket:
 Möbius reindexing of the finite atom layer preserves the normalized total
 Ω-volume.  No compactification theorem or global CFT representation theorem is
 claimed here.
@@ -544,29 +311,6 @@ theorem connes_weyl_scale_moebius_closed
 end Bridge
 
 end Core
-
-instance : Mul MoebiusParameter := ⟨MoebiusParameter.mul⟩
-
-instance : One MoebiusParameter := ⟨MoebiusParameter.one⟩
-
-instance : Inv MoebiusParameter := ⟨MoebiusParameter.inv⟩
-
-instance : Group MoebiusParameter :=
-  Group.ofLeftAxioms
-    MoebiusParameter.mul_assoc
-    MoebiusParameter.one_mul
-    MoebiusParameter.inv_mul
-
-def MoebiusParameter.toUnitHom :
-    MoebiusParameter →* (Matrix (Fin 2) (Fin 2) ℝ)ˣ where
-  toFun := MoebiusParameter.toUnit
-  map_one' := MoebiusParameter.toUnit_one
-  map_mul' g h := MoebiusParameter.toUnit_mul g h
-
-theorem MoebiusParameter.toUnitHom_injective :
-    Function.Injective MoebiusParameter.toUnitHom := by
-  intro g h heq
-  exact MoebiusParameter.toUnit_injective heq
 
 end InfoGeometry.Krein.HestenesMoebiusClosureBridge
 

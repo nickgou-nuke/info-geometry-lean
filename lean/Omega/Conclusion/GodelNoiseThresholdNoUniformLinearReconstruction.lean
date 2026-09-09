@@ -21,28 +21,17 @@ structure conclusion_godel_noise_threshold_no_uniform_linear_reconstruction_data
 /-- The algorithmic sufficiency package survives, but the linear noise budget fails once the
 noise exceeds the sharp `2^{-m/2}` threshold. -/
 def conclusion_godel_noise_threshold_no_uniform_linear_reconstruction_data.obstruction
-    (D : conclusion_godel_noise_threshold_no_uniform_linear_reconstruction_data)
-    (complexityPreserved volumeComputableFromCode : Prop) : Prop :=
-  (complexityPreserved ∧
-      (∀ u, D.algData.decode
-        ⟨(D.algData.toCode ∘ D.algData.toBoundary) u, ⟨u, rfl⟩⟩ = u) ∧
-      volumeComputableFromCode) ∧
+    (D : conclusion_godel_noise_threshold_no_uniform_linear_reconstruction_data) : Prop :=
+  (D.algData.complexityPreserved ∧ D.algData.bulkRecoverableFromCode ∧
+      D.algData.volumeComputableFromCode) ∧
     ¬ (((1 / Real.sqrt (2 * D.n : ℝ)) * (2 : ℝ) ^ (D.m / 2 : ℝ)) * D.ε ≤ D.δ)
 
 /-- Paper label: `cor:conclusion-godel-noise-threshold-no-uniform-linear-reconstruction`. -/
 theorem paper_conclusion_godel_noise_threshold_no_uniform_linear_reconstruction
-    (D : conclusion_godel_noise_threshold_no_uniform_linear_reconstruction_data)
-    (complexityPreserved volumeComputableFromCode : Prop)
-    (complexity_of_injective_dictionary :
-      Function.Injective (D.algData.toCode ∘ D.algData.toBoundary) → complexityPreserved)
-    (volume_of_decoder :
-      (Set.range (D.algData.toCode ∘ D.algData.toBoundary) → D.algData.Bulk) →
-        volumeComputableFromCode) :
-    D.obstruction complexityPreserved volumeComputableFromCode := by
+    (D : conclusion_godel_noise_threshold_no_uniform_linear_reconstruction_data) :
+    D.obstruction := by
   have hsep :=
     paper_conclusion_godel_algorithmic_sufficiency_metric_instability_separation D.algData
-      complexityPreserved volumeComputableFromCode complexity_of_injective_dictionary
-      volume_of_decoder
   refine ⟨hsep.1, ?_⟩
   intro hlinear
   have hbudget :=

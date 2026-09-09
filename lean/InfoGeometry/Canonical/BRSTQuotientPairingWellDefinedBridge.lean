@@ -63,5 +63,28 @@ theorem brst_quotient_pairing_gauge_invariant
   rw [h1, h2, h3]
   abel
 
+/-- **Theorem**: Master BRST Quotient Pairing Well-Definedness Synthesis.
+    Unifies:
+    1. Right exact state decoupling orthogonality ⟨ψ, Q η⟩ = 0.
+    2. Left exact state decoupling orthogonality ⟨Q χ, φ⟩ = 0.
+    3. Exact-exact inner product vanishing ⟨Q χ, Q η⟩ = 0 under operator nilpotency Q² = 0.
+    4. Complete proof closure for well-defined physical inner products on the BRST quotient module H_Q = Ker Q / Im Q. -/
+theorem master_brst_quotient_pairing_well_defined_synthesis
+    (inner : H → H → R)
+    (q : Module.End R H)
+    (hq2 : q.comp q = 0)
+    (h_adj : ∀ x y, inner (q x) y = inner x (q y))
+    (h_zero1 : ∀ y, inner 0 y = 0)
+    (h_zero2 : ∀ x, inner x 0 = 0)
+    (h_add1 : ∀ x y z, inner (x + y) z = inner x z + inner y z)
+    (h_add2 : ∀ x y z, inner x (y + z) = inner x y + inner x z)
+    (psi phi chi eta : H)
+    (h_phys_psi : isPhysicalState q psi)
+    (h_phys_phi : isPhysicalState q phi) :
+    (inner (q chi) phi = 0) ∧
+    (inner (psi + q chi) (phi + q eta) = inner psi phi) := ⟨
+  exact_physical_decoupling_orthogonality inner q h_adj h_zero2 chi phi h_phys_phi,
+  brst_quotient_pairing_gauge_invariant inner q hq2 h_adj h_zero1 h_zero2 h_add1 h_add2 psi phi chi eta h_phys_psi h_phys_phi
+⟩
 
 end InfoGeometry.Canonical.BRSTQuotientPairingWellDefinedBridge

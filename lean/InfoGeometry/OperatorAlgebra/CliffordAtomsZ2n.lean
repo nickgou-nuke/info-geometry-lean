@@ -99,18 +99,32 @@ structure SplitCliffordAtomSystem
   /-- Negative-square split generator. -/
   f : ι → Op
 
-def SplitCliffordAtomSystem.H
-    {ι Op : Type*} [Fintype ι] [Ring Op]
-    (A : SplitCliffordAtomSystem ι Op) (i : ι) : Op :=
-  A.e i * A.f i
+  /-- `e_i^2 = +1`. -/
+  e_sq :
+    ∀ i : ι, e i * e i = 1
 
-def SplitCliffordAtomSystemLaws
-    {ι Op : Type*} [Fintype ι] [Ring Op]
-    (A : SplitCliffordAtomSystem ι Op) : Prop :=
-  (∀ i : ι, A.e i * A.e i = 1) ∧
-  (∀ i : ι, A.f i * A.f i = -1) ∧
-  (∀ i : ι, A.e i * A.f i = -(A.f i * A.e i)) ∧
-  (∀ i j : ι, A.H i * A.H j = A.H j * A.H i)
+  /-- `f_i^2 = -1`. -/
+  f_sq :
+    ∀ i : ι, f i * f i = -1
+
+  /-- Same-atom anticommutation. -/
+  same_anticomm :
+    ∀ i : ι, e i * f i = -(f i * e i)
+
+  /-- Local Cartan/chiral involution. -/
+  H : ι → Op
+
+  /-- `H_i = e_i f_i`. -/
+  H_def :
+    ∀ i : ι, H i = e i * f i
+
+  /-- `H_i^2 = 1`. -/
+  H_sq :
+    ∀ i : ι, H i * H i = 1
+
+  /-- The Cartan involutions commute. -/
+  H_comm :
+    ∀ i j : ι, H i * H j = H j * H i
 
 namespace SplitCliffordAtomSystem
 
@@ -119,30 +133,15 @@ variable (A : SplitCliffordAtomSystem ι Op)
 
 /-- Re-export the local Cartan square law. -/
 theorem H_square
-    (hA : SplitCliffordAtomSystemLaws A)
     (i : ι) :
     A.H i * A.H i = 1 :=
-  by
-    dsimp [SplitCliffordAtomSystem.H]
-    calc
-      (A.e i * A.f i) * (A.e i * A.f i) =
-          A.e i * (A.f i * A.e i) * A.f i := by noncomm_ring
-      _ = A.e i * (-(A.e i * A.f i)) * A.f i := by
-        have hfe : A.f i * A.e i = -(A.e i * A.f i) := by
-          calc
-            A.f i * A.e i = -(-(A.f i * A.e i)) := by simp
-            _ = -(A.e i * A.f i) := by rw [hA.2.2.1 i]
-        rw [hfe]
-      _ = -(A.e i * A.e i) * (A.f i * A.f i) := by noncomm_ring
-      _ = -(1 : Op) * (-1 : Op) := by rw [hA.1 i, hA.2.1 i]
-      _ = 1 := by simp
+  A.H_sq i
 
 /-- Re-export commutativity of the local Cartan involutions. -/
 theorem H_mul_comm
-    (hA : SplitCliffordAtomSystemLaws A)
     (i j : ι) :
     A.H i * A.H j = A.H j * A.H i :=
-  hA.2.2.2 i j
+  A.H_comm i j
 
 /-- The local Cartan involution attached to an atom. -/
 def cartan
@@ -419,6 +418,20 @@ abbrev Z16Charge : Type :=
   ZMod 16
 
 /--
+System relating local Clifford signs to a global anomaly or stacking
+index.
+
+The fields are proof-carrying on purpose: `Z2^4` gives four independent local
+binary addresses, while `Z16` is a cyclic global stacking law.
+-/
+structure LocalToGlobalAnomalySystem where
+  /-- Local admissible four-bit sectors. -/
+  localCharge : Z2FourCharge → Prop
+
+  /-- Global integer index or winding predicate. -/
+  globalIndex : ℤ → Prop
+
+/--
 A global anomaly/topological class sitting above local Clifford signs.
 
 This is the formal boundary between the `Z2^4` Cartan ledger and a genuine
@@ -440,6 +453,17 @@ structure GlobalAnomalyClass where
     cyclicIndex = (integerLift : ZMod 16)
 
 
+namespace GlobalAnomalyClass
+
+variable (G : GlobalAnomalyClass)
+
+/-- Forget a global anomaly class to the local-to-global compatibility system. -/
+def toLocalToGlobalAnomalySystem : LocalToGlobalAnomalySystem where
+  localCharge := G.localSector
+  globalIndex := fun n => (n : ZMod 16) = G.cyclicIndex
+
+end GlobalAnomalyClass
+
 /--
 A DIII index calibration turns a local charge address type into a cyclic
 `ZMod 16` stacking index.
@@ -456,14 +480,13 @@ structure DIIIIndexCalibration
 /--
 A DIII interaction calibration for the four-bit `Cl(1,1)^⊗4` address space.
 -/
-abbrev DIIIInteractionCalibration := Charge4 → ZMod 16
+structure DIIIInteractionCalibration where
+  /-- Encoding of local four-bit sectors into a cyclic DIII stacking class. -/
+  encode : Charge4 → ZMod 16
 
 namespace DIIIInteractionCalibration
 
 variable (C : DIIIInteractionCalibration)
-
-/-- Compatibility accessor for the native cyclic encoder. -/
-abbrev encode : Charge4 → ZMod 16 := C
 
 /-- Repackage the four-bit interaction calibration as the generic index calibration. -/
 def toDIIIIndexCalibration : DIIIIndexCalibration Charge4 where

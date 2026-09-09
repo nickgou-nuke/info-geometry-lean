@@ -6,6 +6,8 @@ noncomputable section
 /-!
 # InfoGeometry.Canonical.MoebiusClosure
 
+Theorem-safe Möbius closure socket.
+
 This file does not construct a conformal net, cyclic cohomology, Wilson-loop
 path integral, or global conformal compactification theorem.  It records that a
 supplied real `SL(2,R)` projective action preserves the supplied vacuum readout
@@ -22,25 +24,12 @@ namespace InfoGeometry.Canonical.MoebiusClosure
 
 /-- A real `SL(2,R)` matrix, carried as explicit data. -/
 @[rep_depth projective]
-def SL2RCoordinates := ℝ × (ℝ × (ℝ × ℝ))
-
-def SL2RDatum : Type :=
-  {x : SL2RCoordinates // x.1 * x.2.2.2 - x.2.1 * x.2.2.1 = 1}
-
-namespace SL2RDatum
-
-abbrev a (g : SL2RDatum) : ℝ := g.1.1
-
-abbrev b (g : SL2RDatum) : ℝ := g.1.2.1
-
-abbrev c (g : SL2RDatum) : ℝ := g.1.2.2.1
-
-abbrev d (g : SL2RDatum) : ℝ := g.1.2.2.2
-
-def det_eq_one (g : SL2RDatum) : a g * d g - b g * c g = 1 := by
-  exact g.2
-
-end SL2RDatum
+structure SL2RDatum where
+  a : ℝ
+  b : ℝ
+  c : ℝ
+  d : ℝ
+  det_eq_one : a * d - b * c = 1
 
 /--
 Theorem-safe Möbius closure bridge.
@@ -53,7 +42,7 @@ assert that they are group actions, algebra automorphisms, or conformal-net
 implementations.
 -/
 @[rep_depth projective]
-structure MoebiusClosureBridgeData (Op Hilb : Type*) where
+structure MoebiusClosureBridge (Op Hilb : Type*) where
   /-- Supplied projective action on observable/operator-like objects. -/
   opAction : SL2RDatum → Op → Op
 
@@ -69,14 +58,17 @@ structure MoebiusClosureBridgeData (Op Hilb : Type*) where
   /-- Wilson/Connes holonomy readout. -/
   wilsonHolonomy : Op → ℝ
 
-def MoebiusClosureBridgeLaws {Op Hilb : Type*}
-    (M : MoebiusClosureBridgeData Op Hilb) : Prop :=
-  (∀ g, M.vectorAction g M.Omega = M.Omega) ∧
-  (∀ g A, M.vacuumReadout (M.opAction g A) = M.vacuumReadout A) ∧
-  (∀ g A, M.wilsonHolonomy (M.opAction g A) = M.wilsonHolonomy A)
+  /-- The supplied vector action fixes the distinguished vacuum. -/
+  Omega_invariant :
+    ∀ g, vectorAction g Omega = Omega
 
-def MoebiusClosureBridge (Op Hilb : Type*) :=
-  {M : MoebiusClosureBridgeData Op Hilb // MoebiusClosureBridgeLaws M}
+  /-- The supplied operator action preserves the vacuum readout. -/
+  vacuumReadout_invariant :
+    ∀ g A, vacuumReadout (opAction g A) = vacuumReadout A
+
+  /-- The supplied operator action preserves the Wilson/Connes holonomy readout. -/
+  wilsonHolonomy_invariant :
+    ∀ g A, wilsonHolonomy (opAction g A) = wilsonHolonomy A
 
 namespace MoebiusClosureBridge
 
@@ -87,22 +79,22 @@ variable (M : MoebiusClosureBridge Op Hilb)
 @[rep_depth projective]
 theorem Omega_fixed
     (g : SL2RDatum) :
-    M.1.vectorAction g M.1.Omega = M.1.Omega :=
-  M.2.1 g
+    M.vectorAction g M.Omega = M.Omega :=
+  M.Omega_invariant g
 
 /-- Readback: the vacuum readout is invariant under the supplied Möbius action. -/
 @[rep_depth projective]
 theorem vacuumReadout_moebius_invariant
     (g : SL2RDatum) (A : Op) :
-    M.1.vacuumReadout (M.1.opAction g A) = M.1.vacuumReadout A :=
-  M.2.2.1 g A
+    M.vacuumReadout (M.opAction g A) = M.vacuumReadout A :=
+  M.vacuumReadout_invariant g A
 
 /-- Readback: the Wilson/Connes holonomy readout is Möbius invariant. -/
 @[rep_depth projective]
 theorem wilsonHolonomy_moebius_invariant
     (g : SL2RDatum) (A : Op) :
-    M.1.wilsonHolonomy (M.1.opAction g A) = M.1.wilsonHolonomy A :=
-  M.2.2.2 g A
+    M.wilsonHolonomy (M.opAction g A) = M.wilsonHolonomy A :=
+  M.wilsonHolonomy_invariant g A
 
 end MoebiusClosureBridge
 

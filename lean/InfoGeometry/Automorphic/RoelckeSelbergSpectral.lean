@@ -218,13 +218,19 @@ variable {HeckeIndex : Type uHecke}
 variable (R : RoelckeSelbergSpectralDatum W HeckeIndex)
 
 /-- Historical statement name, now derived from the explicit span equality. -/
-theorem roelckeSelberg_complete :
-    Submodule.span ℝ
-        (simultaneousCuspidalEigenvectors W R.laplacian R.hecke) =
-      W.pCuspidalSubspace :=
+def roelckeSelbergStatement : Prop :=
+  Submodule.span ℝ
+      (simultaneousCuspidalEigenvectors W R.laplacian R.hecke) =
+    W.pCuspidalSubspace
+
+/-- The explicit Roelcke-Selberg completeness law carried by the datum. -/
+theorem roelckeSelberg_holds :
+    R.roelckeSelbergStatement :=
   R.roelckeSelberg
 
-/-- The Laplacian preserves the cuspidal subspace. -/
+/--
+The Laplacian preserves the cuspidal subspace.
+-/
 theorem laplacian_mem_pCuspidal
     {F : Bulk}
     (hF : F ∈ W.pCuspidalSubspace) :
@@ -387,16 +393,22 @@ variable {HeckeIndex : Type uHecke}
 variable (L : AutomorphicLFunctionDatum HeckeIndex)
 
 /-- Historical statement name, now the explicit local-factor law. -/
-theorem eulerProduct_finite_local_factor :
-    ∀ chi s, s ∈ L.convergenceRegion chi →
-      ∃ finitePlaces : Finset HeckeIndex,
-        L.value chi s =
-          ∏ i ∈ finitePlaces, L.localFactor i chi s :=
+def eulerProductStatement : Prop :=
+  ∀ chi s, s ∈ L.convergenceRegion chi →
+    ∃ finitePlaces : Finset HeckeIndex,
+      L.value chi s =
+        ∏ i ∈ finitePlaces, L.localFactor i chi s
+
+/-- Readback of the concrete Euler-product realization. -/
+theorem eulerProduct_holds :
+    L.eulerProductStatement :=
   L.eulerProduct
 
-/-- Prime-surprisal / L-potential attached to a joint eigenvalue:
+/--
+Prime-surprisal / L-potential attached to a joint eigenvalue:
 
-`Φ_L(χ,s) = -log |L(χ,s)|`. -/
+`Φ_L(χ,s) = -log |L(χ,s)|`.
+-/
 def potential
     (chi : JointEigenvalue HeckeIndex)
     (s : ℂ) : ℝ :=
@@ -437,5 +449,22 @@ def potentialOnPacket
 
 end AutomorphicLFunctionDatum
 
+/-! ## 6. Owner targets -/
+
+/--
+Owner target for a Roelcke-Selberg spectral datum over a given
+Siegel-Eisenstein split.
+-/
+def RoelckeSelbergSpectralOwnerTarget
+    (W : SiegelEisensteinWitness Bulk Boundary)
+    (HeckeIndex : Type uHecke) : Type _ :=
+  RoelckeSelbergSpectralDatum W HeckeIndex
+
+/--
+Owner target for an automorphic L-function datum on the Hecke spectrum.
+-/
+def AutomorphicLFunctionOwnerTarget
+    (HeckeIndex : Type uHecke) : Type _ :=
+  AutomorphicLFunctionDatum HeckeIndex
 
 end InfoGeometry.Automorphic.RoelckeSelbergSpectral

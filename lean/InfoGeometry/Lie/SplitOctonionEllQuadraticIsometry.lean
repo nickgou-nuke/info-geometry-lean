@@ -42,8 +42,10 @@ def ellFlowPhiQuadraticIsometry (t : ℝ) :
 theorem ellFlowPhiQuadraticIsometry_preserves_det
     (t : ℝ) (X : CZ) :
     InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
         (ellFlowPhiQuadraticIsometry t X) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X := by
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X := by
   simpa [ellFlowPhiQuadraticIsometry_apply] using
     (ellFlowPhi_preserves_det t X)
 

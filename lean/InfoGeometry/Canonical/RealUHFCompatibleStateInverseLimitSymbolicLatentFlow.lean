@@ -47,5 +47,3 @@ theorem scalarDilationCompatibleReadoutFamilyFlow_orbit_mem
   scalarDilationCompatibleReadoutFamilyFlow.orbit_mem ρ
 
 end InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitSymbolicLatentFlow
-
-end

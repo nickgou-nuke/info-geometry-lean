@@ -211,7 +211,8 @@ cyclic group ℤ/5ℤ.
 The grading map sends
   `0↦gNegTwo,  1↦gNegOne,  2↦gZero,  3↦gPosOne,  4↦gPosTwo`.
 -/
-structure CyclicFiveGrading (L : Type*) [LieRing L] [LieAlgebra ℝ L] where
+structure CyclicFiveGrading (L : Type*) [AddCommGroup L] [Module ℝ L]
+    [LieRing L] [LieAlgebra ℝ L] where
   fiveGrading : FiveGrading L
   /-- A `ZMod 5`-indexed family of grade subspaces. -/
   cyclicGradeMap : ZMod 5 → Submodule ℝ L
@@ -327,8 +328,8 @@ def fiveGradingToCyclic (FG : FiveGrading L) : CyclicFiveGrading L where
 into the concrete named subspaces of `FiveGrading`.
 
 Since `CG.fiveGrading` already carries a valid `FiveGrading` whose subspaces
-match the `CG.cyclicGradeMap` entries by the matching ax!om, we just return
-`CG.fiveGrading`.  The `cyclicGradeMap_matches_fiveGrading` ax!om of `CG`
+match the `CG.cyclicGradeMap` entries by the matching axiom, we just return
+`CG.fiveGrading`.  The `cyclicGradeMap_matches_fiveGrading` axiom of `CG`
 provides the explicit equalities that identify the two representations. -/
 def cyclicFiveGradingToFive (CG : CyclicFiveGrading L) : FiveGrading L :=
   CG.fiveGrading

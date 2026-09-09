@@ -41,11 +41,11 @@ abbrev annihilateBase : Mat2R :=
   InfoGeometry.Clifford.JordanWignerBridge.a_base
 
 abbrev ckGamma0 : Mat2R :=
-  InfoGeometry.Canonical.CelikKocakCl11ConcretePacket.canonicalPauliGamma
+  InfoGeometry.Canonical.CelikKocakCl11ConcretePacket.canonical.pauliBridge.psiGamma
     ⟨0, by decide⟩
 
 abbrev ckGamma1 : Mat2R :=
-  InfoGeometry.Canonical.CelikKocakCl11ConcretePacket.canonicalPauliGamma
+  InfoGeometry.Canonical.CelikKocakCl11ConcretePacket.canonical.pauliBridge.psiGamma
     ⟨1, by decide⟩
 
 /-- The Jordan-Wigner upper nilpotent is the repo-owned Wick annihilation atom. -/
@@ -241,7 +241,7 @@ end OneSlotTiltSwitch
 namespace CelikDepthOne
 
 abbrev F1 :=
-  (((Fin 1) → Bool) → ℂ)
+  InfoGeometry.Canonical.CelikKocakCantorOperators.FunctionSpace 1
 
 abbrev Op1 :=
   F1 →ₗ[ℂ] F1
@@ -250,10 +250,10 @@ abbrev slot0 : Fin 1 :=
   ⟨0, by decide⟩
 
 abbrev T0 : Op1 :=
-  InfoGeometry.Canonical.CelikKocakCl11ConcretePacket.canonicalTiltSwitch.T slot0
+  InfoGeometry.Canonical.CelikKocakCl11ConcretePacket.canonical.tiltSwitch.T slot0
 
 abbrev S0 : Op1 :=
-  InfoGeometry.Canonical.CelikKocakCl11ConcretePacket.canonicalTiltSwitch.S slot0
+  InfoGeometry.Canonical.CelikKocakCl11ConcretePacket.canonical.tiltSwitch.S slot0
 
 def majoranaC : Op1 :=
   S0
@@ -315,7 +315,7 @@ theorem annihilation_creation_anticomm_raw :
     (OneSlotTiltSwitch.raw_anticomm (T := T0) (S := S0) S0_sq majoranaD_sq)
 
 /-- The depth-one raw Cantor/Jordan-Wigner pair satisfies the CAR axioms. -/
-theorem depthOneCAR_propertys :
+theorem depthOneCAR_axioms :
     annihilationRaw * annihilationRaw = (0 : Op1) ∧
     creationRaw * creationRaw = (0 : Op1) ∧
     annihilationRaw * creationRaw + creationRaw * annihilationRaw = (4 : Op1) := by

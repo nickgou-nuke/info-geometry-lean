@@ -170,10 +170,25 @@ abbrev modularHamiltonian : H →L[ℝ] H :=
 def stateSurprisalOperator : H →L[ℝ] H :=
   C.negativeLogModularOperator
 
+/-!
+Historical compatibility names.  They denote the supplied
+state-surprisal/modular-log operator, not the macrostate multiplicity
+operator owned by `FiniteBoltzmannMacroentropy`.
+-/
+@[deprecated stateSurprisalOperator (since := "2026-07-27")]
+abbrev boltzmannEntropyOperator : H →L[ℝ] H :=
+  C.stateSurprisalOperator
+
 @[simp]
 theorem stateSurprisalOperator_eq_negativeLogModularOperator :
     C.stateSurprisalOperator = C.negativeLogModularOperator :=
   rfl
+
+@[deprecated stateSurprisalOperator_eq_negativeLogModularOperator
+    (since := "2026-07-27")]
+theorem boltzmannEntropyOperator_eq_negativeLogModularOperator :
+    C.boltzmannEntropyOperator = C.negativeLogModularOperator :=
+  C.stateSurprisalOperator_eq_negativeLogModularOperator
 
 /-- The historical modular-Hamiltonian alias is definitionally the negative log. -/
 @[simp, rep_depth operator]
@@ -193,6 +208,12 @@ theorem modularHamiltonian_eq_stateSurprisalOperator :
     C.modularHamiltonian = C.stateSurprisalOperator := by
   rw [stateSurprisalOperator_eq_negativeLogModularOperator,
     modularHamiltonian_eq_supplied_negativeLog]
+
+@[deprecated modularHamiltonian_eq_stateSurprisalOperator
+    (since := "2026-07-27")]
+theorem modularHamiltonian_eq_boltzmannEntropyOperator :
+    C.modularHamiltonian = C.boltzmannEntropyOperator :=
+  C.modularHamiltonian_eq_stateSurprisalOperator
 
 end ModularHamiltonianSurprisalContext
 

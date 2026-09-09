@@ -66,7 +66,7 @@ theorem braidWordAction_append {State : Type*} (ρ : HalfMonodromy State)
   | nil => rfl
   | cons i u ih => simp [ih]
 
-/-- Invariance under a separated Artin commutation rewrite, from a pointwise property. -/
+/-- Invariance under a separated Artin commutation rewrite, from a pointwise hypothesis. -/
 theorem braidWordAction_commute_rewrite {State : Type*} (ρ : HalfMonodromy State)
     {i j : ℕ} (left right : BraidWord)
     (hcomm : ∀ x : State, ρ i (ρ j x) = ρ j (ρ i x))
@@ -76,7 +76,7 @@ theorem braidWordAction_commute_rewrite {State : Type*} (ρ : HalfMonodromy Stat
   repeat rw [braidWordAction_append]
   simp [hcomm]
 
-/-- Invariance under the adjacent Artin/Yang--Baxter rewrite, from a pointwise property. -/
+/-- Invariance under the adjacent Artin/Yang--Baxter rewrite, from a pointwise hypothesis. -/
 theorem braidWordAction_braid_rewrite {State : Type*} (ρ : HalfMonodromy State)
     (i : ℕ) (left right : BraidWord)
     (hbraid : ∀ x : State,

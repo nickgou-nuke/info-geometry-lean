@@ -81,37 +81,13 @@ Looks for patterns like:
 - `∀ X, η X : F X → G X`
 - `∀ X, ∃ η_X, ...`
 
+Note: Full extraction requires metaprogramming beyond this stub.
 -/
-private partial def firstConstant? : Expr → Option Name
-  | .const name _ => some name
-  | .app fn arg =>
-      match firstConstant? fn with
-      | some name => some name
-      | none => firstConstant? arg
-  | .lam _ domain body _
-  | .forallE _ domain body _ =>
-      match firstConstant? domain with
-      | some name => some name
-      | none => firstConstant? body
-  | .letE _ value type body _ =>
-      match firstConstant? value with
-      | some name => some name
-      | none =>
-        match firstConstant? type with
-        | some name => some name
-        | none => firstConstant? body
-  | .mdata _ body => firstConstant? body
-  | .proj _ _ body => firstConstant? body
-  | .sort _ | .bvar _ | .fvar _ | .lit _ | .mvar _ => none
-
-def extractComponentFromType? (thmType : Expr) :
+def extractComponentFromType? (_thmType : Expr) :
     MetaM (Option Name) := do
-  let type ← whnf thmType
-  match type with
-  | .forallE _ _ body _ =>
-      return firstConstant? body
-  | _ =>
-      return none
+  -- Stub: return none for now
+  -- A full implementation would traverse the type AST looking for component patterns
+  return none
 
 /-!
 ## Verification utilities

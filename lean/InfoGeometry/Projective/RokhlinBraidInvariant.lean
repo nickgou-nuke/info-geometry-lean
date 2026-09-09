@@ -38,17 +38,9 @@ $K_3$ configuration space of the horizon boundary.
 Since it acts unitarily on the associative boundary, it resolves to a
 phase evaluation. Here we model the signature of this evaluation.
 -/
-abbrev BraidHolonomy :=
-  {evaluation : ZornMatrix R V //
-    mul B evaluation (star evaluation) = diag 1 1}
-
-namespace BraidHolonomy
-
-abbrev evaluation (h : BraidHolonomy B) : ZornMatrix R V := h.1
-abbrev is_unitary (h : BraidHolonomy B) :
-    mul B h.evaluation (star h.evaluation) = diag 1 1 := h.2
-
-end BraidHolonomy
+structure BraidHolonomy where
+  evaluation : ZornMatrix R V
+  is_unitary : mul B evaluation (star evaluation) = diag 1 1
 
 
 

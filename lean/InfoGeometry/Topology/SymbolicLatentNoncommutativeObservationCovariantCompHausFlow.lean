@@ -95,5 +95,3 @@ theorem operatorCommutingLocusCompHausCovariantFlowHom_isIso
       _ = x.1 := by rw [add_neg_cancel, Φ.act_zero]
 
 end InfoGeometry.Topology
-
-end

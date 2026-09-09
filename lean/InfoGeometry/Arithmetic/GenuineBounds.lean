@@ -173,38 +173,18 @@ theorem prime_fluctuation_bound (A : Finset ℕ) (hA : A.Nonempty) :
 
 /-! ## 5. Genuine Finite Fluctuation Certificate -/
 
-/-- Raw coordinates for a finite fluctuation property. -/
-abbrev GenuineFiniteFluctuationCoordinates := ℝ × (ℝ × ℝ)
+/-- Genuine finite fluctuation certificate with explicit PNT-based bounds. -/
+structure GenuineFiniteFluctuationCertificate where
+  actual : ℝ
+  expected : ℝ
+  bound : ℝ
+  certificate : |actual - expected| ≤ bound
+  bound_proof : ∃ (x : ℝ), x ≥ 55 ∧ bound = x / (8 * Real.pi * Real.sqrt x * Real.log x)
 
-/-- The property and explicit bound property carried by the finite readout. -/
-def GenuineFiniteFluctuationPredicate
-    (p : GenuineFiniteFluctuationCoordinates) : Prop :=
-  |p.1 - p.2.1| ≤ p.2.2 ∧
-    ∃ x : ℝ, x ≥ 55 ∧ p.2.2 = x / (8 * Real.pi * Real.sqrt x * Real.log x)
-
-/-- Genuine finite fluctuation evidence as a native subtype. -/
-abbrev GenuineFiniteFluctuationCertificate :=
-  {p : GenuineFiniteFluctuationCoordinates // GenuineFiniteFluctuationPredicate p}
-
-namespace GenuineFiniteFluctuationCertificate
-
-abbrev actual (C : GenuineFiniteFluctuationCertificate) : ℝ := C.1.1
-abbrev expected (C : GenuineFiniteFluctuationCertificate) : ℝ := C.1.2.1
-abbrev bound (C : GenuineFiniteFluctuationCertificate) : ℝ := C.1.2.2
-
-lemma property (C : GenuineFiniteFluctuationCertificate) :
-    |C.actual - C.expected| ≤ C.bound := C.2.1
-
-lemma bound_proof (C : GenuineFiniteFluctuationCertificate) :
-    ∃ x : ℝ, x ≥ 55 ∧ C.bound = x / (8 * Real.pi * Real.sqrt x * Real.log x) := C.2.2
-
-end GenuineFiniteFluctuationCertificate
-
-/-- Construct a genuine property from prime counting data. -/
+/-- Construct a genuine certificate from prime counting data. -/
 noncomputable def mkGenuineCertificate (x : ℝ) (hx : x ≥ 55) (actual expected : ℝ) (h : |actual - expected| ≤ x / (8 * Real.pi * Real.sqrt x * Real.log x)) :
     GenuineFiniteFluctuationCertificate :=
-  ⟨(actual, expected, x / (8 * Real.pi * Real.sqrt x * Real.log x)),
-    ⟨h, ⟨x, by linarith, by ring⟩⟩⟩
+  ⟨actual, expected, x / (8 * Real.pi * Real.sqrt x * Real.log x), h, ⟨x, by linarith, by ring⟩⟩
 
 /-! ## 6. Genuine Quantum Counting Accuracy -/
 

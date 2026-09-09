@@ -101,12 +101,12 @@ def graphTopologicalDiagram : I ⥤ TopCat where
         p.1.2
 
 abbrev graphTopologicalColimit : TopCat :=
-  colimit (graphTopologicalDiagram Stage sys ω)
+  topologicalDirectColimit (graphTopologicalDiagram Stage sys ω)
 
 def graphTopologicalInjection (i : I) :
     (graphTopologicalDiagram Stage sys ω).obj i ⟶
       graphTopologicalColimit Stage sys ω :=
-  colimit.ι (graphTopologicalDiagram Stage sys ω) i
+  topologicalDirectInjection (graphTopologicalDiagram Stage sys ω) i
 
 omit [Nonempty I] [IsDirectedOrder I] [DecidableEq I] in
 theorem graphTopologicalInjection_transition
@@ -175,7 +175,7 @@ noncomputable def graphToDomainTopologicalColimitMap :
     graphTopologicalColimit Stage sys ω ⟶
       TopCat.of (CStarStateColimit.Native.FilteredGNSTomitaDomainTopologicalColimit.topologicalColimit
         Stage sys ω) :=
-  colimit.desc (graphTopologicalDiagram Stage sys ω)
+  topologicalDirectDescend (graphTopologicalDiagram Stage sys ω)
     (graphToDomainCocone Stage sys ω)
 
 omit [Nonempty I] [IsDirectedOrder I] [DecidableEq I] in
@@ -247,7 +247,7 @@ noncomputable def domainTopologicalColimitToGlobalHilbert :
     CStarStateColimit.Native.FilteredGNSTomitaDomainTopologicalColimit.topologicalColimit
         Stage sys ω ⟶
       TopCat.of (GNSHilbertColimit Stage sys ω) :=
-  colimit.desc
+  topologicalDirectDescend
     (CStarStateColimit.Native.FilteredGNSTomitaDomainTopologicalColimit.topologicalDiagram
       Stage sys ω)
     (domainToGlobalHilbertCocone Stage sys ω)
@@ -334,7 +334,7 @@ def graphSecondToGlobalHilbertCocone :
 noncomputable def graphTopologicalColimitToGlobalHilbertSecond :
     graphTopologicalColimit Stage sys ω ⟶
       TopCat.of (GNSHilbertColimit Stage sys ω) :=
-  colimit.desc (graphTopologicalDiagram Stage sys ω)
+  topologicalDirectDescend (graphTopologicalDiagram Stage sys ω)
     (graphSecondToGlobalHilbertCocone Stage sys ω)
 
 @[simp] theorem graphTopologicalColimitToGlobalHilbertSecond_stage
@@ -395,7 +395,7 @@ def graphFirstToGlobalHilbertCocone :
 noncomputable def graphTopologicalColimitToGlobalHilbertFirst :
     graphTopologicalColimit Stage sys ω ⟶
       TopCat.of (GNSHilbertColimit Stage sys ω) :=
-  colimit.desc (graphTopologicalDiagram Stage sys ω)
+  topologicalDirectDescend (graphTopologicalDiagram Stage sys ω)
     (graphFirstToGlobalHilbertCocone Stage sys ω)
 
 @[simp] theorem graphTopologicalColimitToGlobalHilbertFirst_stage
@@ -429,7 +429,7 @@ theorem graphTopologicalColimitToGlobalHilbertFirst_unique
 noncomputable def graphTopologicalColimitToGlobalPair :
     graphTopologicalColimit Stage sys ω ⟶
       TopCat.of (globalGraphPair Stage sys ω) :=
-  colimit.desc (graphTopologicalDiagram Stage sys ω)
+  topologicalDirectDescend (graphTopologicalDiagram Stage sys ω)
     (graphToGlobalPairCocone Stage sys ω)
 
 @[simp] theorem graphTopologicalColimitToGlobalPair_stage

@@ -138,7 +138,7 @@ theorem propagatedDensity_trace (D₀ : MatrixStage 0) (z : ℂ)
   | 0 => h₀
   | n + 1 => by
       rw [propagatedDensity]
-      have htrace := concrete_trace_compatible n
+      have htrace := concreteData.trace_compatible n
         (propagatedDensity D₀ n)
       simpa [matrixTraceState, matrixTraceFunctional] using
         htrace.trans (propagatedDensity_trace D₀ z h₀ n)
@@ -157,9 +157,9 @@ theorem weightedStageFunctional_compatible_of_density_compatible
           simpa [rawMap, CuntzMatrixTraceTower.concreteMap,
             CuntzMatrixTraceTower.map_succ] using
             congrArg (fun f => f x)
-              (CuntzMatrixTraceTower.map_succ concreteStep hij)]
+              (CuntzMatrixTraceTower.map_succ concreteData hij)]
       rw [hD j, ← map_mul]
-      have htrace := concrete_trace_compatible j (rawMap hij x * D j)
+      have htrace := concreteData.trace_compatible j (rawMap hij x * D j)
       change matrixTraceFunctional (j + 1)
           (concreteStep j (rawMap hij x * D j)) =
         matrixTraceFunctional i (x * D i)
@@ -387,8 +387,8 @@ theorem gibbsStageFunctional_compatible
       rfl
   | @step j hij ih =>
       change gibbsFunctional (H (j + 1)) (hH (j + 1)) β
-          ((map concreteStep (Nat.le.step hij)) x) = _
-      rw [map_succ concreteStep hij]
+          ((map concreteData (Nat.le.step hij)) x) = _
+      rw [map_succ concreteData hij]
       change gibbsFunctional (H (j + 1)) (hH (j + 1)) β
           (concreteStep j (rawMap hij x)) = _
       exact gibbsFunctional_concreteStep j (H j) (H (j + 1))

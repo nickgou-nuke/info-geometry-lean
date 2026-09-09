@@ -27,40 +27,33 @@ noncomputable section
 namespace InfoGeometry.Prequantum.FiniteSymmetryAtoms
 
 /-- Real coordinate proxy for a unit complex number. -/
-abbrev HestenesComplex := ℝ × ℝ
-
-namespace HestenesComplex
-
-abbrev re (z : HestenesComplex) : ℝ := z.1
-abbrev im (z : HestenesComplex) : ℝ := z.2
-
-end HestenesComplex
+@[ext]
+structure HestenesComplex where
+  /-- Real coordinate. -/
+  re : ℝ
+  /-- Imaginary coordinate. -/
+  im : ℝ
 
 instance : One HestenesComplex where
-  one := (1, 0)
+  one := ⟨1, 0⟩
 
 /-- Coordinate circle flow `θ ↦ (cos θ, sin θ)`. -/
 def ellipticFlow (θ : ℝ) : HestenesComplex :=
-  (Real.cos θ, Real.sin θ)
+  ⟨Real.cos θ, Real.sin θ⟩
 
 /-- A full `2π` turn returns the coordinate circle flow to `(1,0)`. -/
 theorem master_loop_holonomy :
     ellipticFlow (2 * Real.pi) = 1 := by
-  change (Real.cos (2 * Real.pi), Real.sin (2 * Real.pi)) =
-    ((1, 0) : HestenesComplex)
+  change ⟨Real.cos (2 * Real.pi), Real.sin (2 * Real.pi)⟩ =
+    (⟨1, 0⟩ : HestenesComplex)
   ext <;> simp [Real.cos_two_pi, Real.sin_two_pi]
 
 /-- Four-coordinate real spacetime slice with `(+---)` interval. -/
-abbrev RealSpacetime4 := ℝ × ℝ × ℝ × ℝ
-
-namespace RealSpacetime4
-
-abbrev t (X : RealSpacetime4) : ℝ := X.1
-abbrev x (X : RealSpacetime4) : ℝ := X.2.1
-abbrev y (X : RealSpacetime4) : ℝ := X.2.2.1
-abbrev z (X : RealSpacetime4) : ℝ := X.2.2.2
-
-end RealSpacetime4
+structure RealSpacetime4 where
+  t : ℝ
+  x : ℝ
+  y : ℝ
+  z : ℝ
 
 /-- The concrete `(+---)` interval readout. -/
 def interval (X : RealSpacetime4) : ℝ :=
@@ -68,7 +61,7 @@ def interval (X : RealSpacetime4) : ℝ :=
 
 /-- Total sign inversion on the finite spacetime slice. -/
 def spaceTimeInversion (X : RealSpacetime4) : RealSpacetime4 :=
-  (-X.t, -X.x, -X.y, -X.z)
+  ⟨-X.t, -X.x, -X.y, -X.z⟩
 
 /-- Total sign inversion preserves the concrete `(+---)` interval. -/
 theorem inversion_preserves_interval (X : RealSpacetime4) :

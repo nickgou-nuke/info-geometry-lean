@@ -22,9 +22,9 @@ This module formalizes:
    The scalar potential $\Phi_{x₀}(x)_i = -\ln x_i + \ln x_{0,i}$ is a smooth ($C^\infty$) 0-form.
 3. **Exact 1-Form Score / Maurer-Cartan Velocity**:
    The velocity along smooth curves $\frac{d}{dt}\Phi(\gamma(t)) = -\frac{\dot{\gamma}(t)}{\gamma(t)}$.
-4. **Fundamental Theorem of Calculus (Stokes' Theorem) on Manifolds**:
+4. **Fundamental Theorem of Calculus along coordinate paths**:
    $\int_a^b \omega = \Phi(\gamma(b)) - \Phi(\gamma(a))$.
-5. **Closed Loop Reversibility (First Law of Thermodynamics)**:
+5. **Exact-form closed-path cancellation**:
    $\oint_\gamma \omega = 0$.
 
 All proofs are complete in native Mathlib 4 with zero `sorry`s.
@@ -120,10 +120,8 @@ theorem smoothZeroForm_base_independent (x₀ x₀' x₁ x₂ : PositiveOrthant 
 def scoreVelocity (γ : ℝ → PositiveOrthant α) (i : α) (t : ℝ) : ℝ :=
   - (deriv (fun s => coord i (γ s)) t) / coord i (γ t)
 
-/-- 
-  Continuous Stokes Theorem / Fundamental Theorem of Calculus along Trajectories:
-  The integral of the score 1-form along any smooth curve equals the potential difference.
--/
+/-- Fundamental Theorem of Calculus for the coordinate score along a path
+    satisfying the displayed derivative and integrability hypotheses. -/
 theorem smooth_stokes_theorem
     (x₀ : PositiveOrthant α) (i : α)
     (γ : ℝ → PositiveOrthant α) (a b : ℝ)
@@ -154,7 +152,7 @@ theorem smooth_stokes_theorem
     exact h_add
   exact intervalIntegral.integral_eq_sub_of_hasDerivAt h_deriv hint
 
-/-- Closed loop vanishing (Conservation of Energy): ∮ ω = 0. -/
+/-- The exact coordinate score has zero integral on a closed path. -/
 theorem smooth_closed_loop_vanishing
     (x₀ : PositiveOrthant α) (i : α)
     (γ : ℝ → PositiveOrthant α) (a b : ℝ)

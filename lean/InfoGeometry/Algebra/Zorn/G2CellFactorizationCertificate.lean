@@ -59,4 +59,34 @@ theorem representative_mem_concreteBruhatCell
     (left_factor_mem C k i) (right_factor_mem C k i)
     (factorization_of_mem C k i hi)
 
+/--
+Construct a `CellFactorizationCertificate` from normalized left/right word maps and a soundness witness.
+-/
+def ofWords
+    (left : NormalizedFactorWord)
+    (right : NormalizedFactorWord)
+    (hsound : ∀ (k : Fin 12) (i : Fin 189), i ∈ orbitCells k →
+      flagRepresentative i =
+        collect (left k i) *
+          weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
+            collect (right k i)) :
+    CellFactorizationCertificate where
+  normalizedLeftFactorWord := left
+  normalizedRightFactorWord := right
+  sound := hsound
+
+/--
+Standard forward-order constructor using the canonical left/right factor words.
+-/
+def ofForwardWords
+    (hsound : ∀ (k : Fin 12) (i : Fin 189), i ∈ orbitCells k →
+      flagRepresentative i =
+        collect (leftFactorWord k i) *
+          weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
+            collect (rightFactorWord k i)) :
+    CellFactorizationCertificate where
+  normalizedLeftFactorWord := leftFactorWord
+  normalizedRightFactorWord := rightFactorWord
+  sound := hsound
+
 end InfoGeometry.Algebra.Zorn.G2CellFactorizationCertificate

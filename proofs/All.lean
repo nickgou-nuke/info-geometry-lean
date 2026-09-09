@@ -69,9 +69,9 @@ import proofs.CheckPUnitAdd
 import proofs.ChemicalPotentialDeRhamG0Bridge
 import proofs.ChiralAffineBogoliubovWeld
 import proofs.ChiralB3PresentedBridge
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 import proofs.ChiralConeAlgebraFinality
-import proofs.ChiralCausalConeTKKBridge
+import InfoGeometry.Canonical.ChiralCausalConeTKKBridge
 import proofs.ChiralCuntzInductive
 import proofs.ChiralIsospinEOMSU2
 import proofs.ChiralPoincareSouriauBridge

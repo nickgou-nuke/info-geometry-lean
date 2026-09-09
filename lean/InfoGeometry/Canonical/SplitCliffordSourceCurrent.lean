@@ -21,12 +21,13 @@ Current modes attached to a split source carrier.
 
 `modeAction l v` is the `l`-th current mode applied to source vector `v`.
 -/
-abbrev SplitSourceCurrent
+structure SplitSourceCurrent
     (𝕜 V Carrier : Type*) [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     [AddCommGroup Carrier] [Module 𝕜 Carrier]
-    (S : SplitSourceCarrier 𝕜 V Carrier) : Type _ :=
-  Int → V →ₗ[𝕜] Carrier
+    (S : SplitSourceCarrier 𝕜 V Carrier) where
+  /-- Source current mode family. -/
+  modeAction : Int → V →ₗ[𝕜] Carrier
 
 /--
 Truncation obligation surface for a split source current.
@@ -40,7 +41,7 @@ def SplitCurrentTruncation
     [AddCommGroup Carrier] [Module 𝕜 Carrier]
     {S : SplitSourceCarrier 𝕜 V Carrier}
     (J : SplitSourceCurrent 𝕜 V Carrier S) : Prop :=
-  ∀ v : V, ∀ᶠ l : Int in atTop, J l v = 0
+  ∀ v : V, ∀ᶠ l : Int in atTop, J.modeAction l v = 0
 
 /--
 A real truncation lemma.
@@ -60,7 +61,7 @@ theorem splitCurrentTruncation_of_stableCutoff_zero
         S.stableCutoff v N → N ≤ M → S.stableCutoff v M)
     (hzero :
       ∀ (v : V) (l : Int),
-        S.stableCutoff v l → J l v = 0) :
+        S.stableCutoff v l → J.modeAction l v = 0) :
     SplitCurrentTruncation J := by
   intro v
   rcases S.exists_stableCutoff v with ⟨N, hN⟩
@@ -76,7 +77,7 @@ theorem splitCurrentTruncation_of_stableCutoff
     [AddCommGroup Carrier] [Module 𝕜 Carrier]
     {S : SplitSourceCarrier 𝕜 V Carrier}
     (J : SplitSourceCurrent 𝕜 V Carrier S)
-    (hzero : ∀ {v : V} {l : Int}, S.stableCutoff v l → J l v = 0) :
+    (hzero : ∀ {v : V} {l : Int}, S.stableCutoff v l → J.modeAction l v = 0) :
     SplitCurrentTruncation J :=
   splitCurrentTruncation_of_stableCutoff_zero J S.stableCutoff_mono
     (fun v l hv => hzero hv)

@@ -56,5 +56,3 @@ theorem scalarRescaling_compatible_apply
       (scalarRescaling c).map_compatibility ρ) n X
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutScalarMorphism
-
-end

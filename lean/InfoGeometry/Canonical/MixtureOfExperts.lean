@@ -26,23 +26,12 @@ variable [NormedAddCommGroup V] [NormedSpace ℝ V]
 abbrev ExpertIdx (n : Nat) := Fin n
 
 /-- An expert is a transformation on the semantic space V. -/
-abbrev Expert (V : Type*) := V → V
-
-namespace Expert
-
-/-- Compatibility accessor for the native expert transformation. -/
-abbrev apply (expert : Expert V) : V → V := expert
-
-end Expert
+structure Expert (V : Type*) where
+  apply : V → V
 
 /-- The MoE layer contains `n` experts. -/
-abbrev MoELayer (n : Nat) (V : Type*) := ExpertIdx n → Expert V
-
-namespace MoELayer
-
-abbrev experts (layer : MoELayer n V) : ExpertIdx n → Expert V := layer
-
-end MoELayer
+structure MoELayer (n : Nat) (V : Type*) where
+  experts : ExpertIdx n → Expert V
 
 section Router
 

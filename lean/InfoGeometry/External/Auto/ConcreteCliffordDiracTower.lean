@@ -78,6 +78,16 @@ theorem bond_isometry (n : ℕ) (f g : StageSpace n) :
     _ = ∑ i ∈ Finset.range (2 ^ n), star (f i) * g i := by
           exact sum_range_if_lt_eq_sum_range hpow (fun i => star (f i) * g i)
 
+/--
+Concrete finite-stage synthesis:
+finite Dirac operators are self-adjoint and the bonding maps preserve the
+finite cutoff inner product.
+-/
+theorem concrete_clifford_tower_synthesis :
+    (∀ n f g, stageInner n f (Dfinite n g) = stageInner n (Dfinite n f) g) ∧
+    (∀ n f g, stageInner (n + 1) (bond n f) (bond n g) = stageInner n f g) := by
+  exact ⟨Dfinite_self_adjoint, bond_isometry⟩
+
 /-!
 ## Operator-valued Clifford/Cuntz finite sums
 
@@ -149,5 +159,14 @@ theorem cuntzDiracFinite_self_adjoint
     inner ℂ x (cuntzDiracFinite G E y) =
       inner ℂ (cuntzDiracFinite G E x) y := by
   simpa [eq_comm] using (cuntzDiracFinite_isSymmetric (G := G) (E := E)) x y
+
+/-- Synthesis package for the operator-valued finite Clifford/Cuntz Dirac model. -/
+theorem concrete_cuntz_dirac_synthesis
+    [Fintype ι]
+    (G : CliffordCuntzGenerators H ι) (E : ι → ℝ) :
+    ∀ x y : H,
+      inner ℂ x (cuntzDiracFinite G E y) =
+        inner ℂ (cuntzDiracFinite G E x) y :=
+  cuntzDiracFinite_self_adjoint G E
 
 end InfoGeometry.Quantum.ConcreteCliffordDiracTower

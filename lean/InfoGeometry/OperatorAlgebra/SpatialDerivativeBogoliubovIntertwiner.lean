@@ -10,11 +10,11 @@ Typed bridge from the noncommutative Connes spatial-derivative owner to the
 real doubled Tomita/Bogoliubov transport lane.
 
 The analytic input is explicit: a realization of the spatial-derivative
-carrier as bounded doubled operators, together with the property
+carrier as bounded doubled operators, together with the certificate
 
 `exp (-K φ ψ) = realize (dφ/dψ)`.
 
-Everything else in this file is derived from that property and the existing
+Everything else in this file is derived from that certificate and the existing
 operator-valued Tomita transport laws.  No diagonalization, determinant, or
 scalar entropy readout is used.
 -/
@@ -66,7 +66,7 @@ structure Intertwiner
   -/
   realizeSpatialDerivative : Deriv →* EndH
 
-  /-- Exact negative-log orientation property. -/
+  /-- Exact negative-log orientation certificate. -/
   exp_neg_relativeHamiltonian :
     ∀ φ ψ : Weight,
       NormedSpace.exp (-modularCore.relativeHamiltonian φ ψ) =
@@ -179,7 +179,7 @@ theorem toRealModularLogData_deltaLog
   rfl
 
 /--
-The Tomita logarithm property retains the intended orientation on the
+The Tomita logarithm certificate retains the intended orientation on the
 realized spatial derivative.
 -/
 theorem exp_toRealModularLogData_deltaLog

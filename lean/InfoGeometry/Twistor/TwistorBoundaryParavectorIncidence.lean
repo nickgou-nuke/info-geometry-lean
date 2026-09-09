@@ -19,24 +19,23 @@ open InfoGeometry.Twistor.Cl55MinkowskiCelestialSlice
 open InfoGeometry.Twistor.PenroseIncidence
 
 def minkowski13ToMinkowski4 : Minkowski13 →ₗ[ℝ] Minkowski4 where
-  toFun p := ![p.1, p.2 0, p.2 1, p.2 2]
+  toFun p := ⟨p.1, p.2 0, p.2 1, p.2 2⟩
   map_add' p q := by
-    funext i
-    fin_cases i <;> rfl
+    apply Minkowski4.ext <;> rfl
   map_smul' a p := by
-    funext i
-    fin_cases i <;> rfl
+    apply Minkowski4.ext <;> rfl
 
-@[simp] theorem minkowski13ToMinkowski4_apply (p : Minkowski13) :
-    minkowski13ToMinkowski4 p = ![p.1, p.2 0, p.2 1, p.2 2] := rfl
+theorem minkowski13ToMinkowski4_apply (p : Minkowski13) :
+    minkowski13ToMinkowski4 p = ⟨p.1, p.2 0, p.2 1, p.2 2⟩ := rfl
 
 def paravectorQuadratic (p : Minkowski13) : ℝ :=
   p.1 ^ 2 - ∑ i : Fin 3, p.2 i ^ 2
 
 @[simp] theorem paravectorQuadratic_eq_minkowski4_q (p : Minkowski13) :
     paravectorQuadratic p = Minkowski4.q (minkowski13ToMinkowski4 p) := by
+  rw [minkowski13ToMinkowski4_apply]
   simp [paravectorQuadratic, Minkowski4.q, Fin.sum_univ_succ]
-  ring
+  ring_nf
 
 def paravectorToSolderingMatrix (p : Minkowski13) : PauliMat :=
   pauliMatrix (minkowski13ToMinkowski4 p)
@@ -58,7 +57,7 @@ theorem null_paravector_iff_nontrivial_kernel (p : Minkowski13) :
       ∃ ψ : Spinor2, ψ ≠ 0 ∧
         Matrix.mulVec (paravectorToSolderingMatrix p) ψ = 0 := by
   rw [null_paravector_iff_det_zero, paravectorToSolderingMatrix]
-  exact pauliMatrix_det_zero_iff_exists_nonzero_kernel _
+  exact Matrix.exists_mulVec_eq_zero_iff.symm
 
 def boundaryIncidenceLinearMap (p : Minkowski13) :
     Spinor2 →ₗ[ℂ] Twistor4 :=

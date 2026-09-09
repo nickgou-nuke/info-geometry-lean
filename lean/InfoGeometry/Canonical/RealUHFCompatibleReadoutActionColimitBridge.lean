@@ -67,5 +67,3 @@ theorem normalizedTrace_action_coordinate_stageFlow
       normalizedTrace_scalarValueMap_matches_stageFlow t n X
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutActionColimitBridge
-
-end

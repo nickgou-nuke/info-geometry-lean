@@ -1,5 +1,5 @@
 import Mathlib
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 
 /-!
 # Temperley–Lieb Chain — indexed 3-site TL relations

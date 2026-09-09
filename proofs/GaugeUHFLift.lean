@@ -1,6 +1,6 @@
 import Mathlib
 import proofs.UHFInductiveColimit
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 
 /-!
 # Gauge → UHF Boundary — stage-n lift

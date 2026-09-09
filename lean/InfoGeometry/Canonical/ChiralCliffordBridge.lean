@@ -34,14 +34,6 @@ noncomputable def generalizedChiralPlus (CI : ConformalInference E) : E →L[ℝ
 noncomputable def generalizedChiralMinus (CI : ConformalInference E) : E →L[ℝ] E :=
   ((2 : ℝ)⁻¹) • (CI.spectralChiralProjector - chiralGrading CI)
 
-/-- Canonical naming alias for the positive chiral projector. -/
-noncomputable abbrev chiralProjectorPlus (CI : ConformalInference E) : E →L[ℝ] E :=
-  generalizedChiralPlus CI
-
-/-- Canonical naming alias for the negative chiral projector. -/
-noncomputable abbrev chiralProjectorMinus (CI : ConformalInference E) : E →L[ℝ] E :=
-  generalizedChiralMinus CI
-
 /-! ### Cartan Decomposition of the Information Algebra -/
 
 /--
@@ -112,7 +104,7 @@ omit [FiniteDimensional ℝ E] in
 Proof-carrying unit-relative-volume route for Cartan anomaly collapse.
 
 This is the constructive companion to `cartan_collapse_of_unitRelativeVolume`:
-callers supply the `UnitRelativeVolumeBit` property packet rather than a bare
+callers supply the `UnitRelativeVolumeBit` witness packet rather than a bare
 `relativeVolumeChangeRN n M = 1` equality.
 -/
 theorem cartan_collapse_of_unitRelativeVolumeBit

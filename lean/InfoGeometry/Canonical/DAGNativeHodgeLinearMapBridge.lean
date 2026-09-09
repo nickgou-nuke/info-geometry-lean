@@ -254,6 +254,14 @@ theorem dagChiralProjectors_sum (tc : DAG.TwoComplex α) :
   simp [dagChiralProjectorPlus, dagChiralProjectorMinus]
   module
 
+theorem dagChiralProjectors_sub (tc : DAG.TwoComplex α) :
+    dagChiralProjectorPlus tc - dagChiralProjectorMinus tc =
+      dagChirality tc := by
+  apply LinearMap.ext
+  intro x
+  simp [dagChiralProjectorPlus, dagChiralProjectorMinus]
+  module
+
 theorem dagDirac_anticommutes_chirality
     (tc : DAG.TwoComplex α) :
     dagChirality tc * dagDirac tc =

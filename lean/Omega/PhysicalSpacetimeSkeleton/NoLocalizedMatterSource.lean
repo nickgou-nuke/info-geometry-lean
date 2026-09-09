@@ -9,31 +9,21 @@ namespace Omega.PhysicalSpacetimeSkeleton
 quadratic-harmonic normal form into the statement that no independent localized matter source
 survives inside the admissible closure. -/
 theorem paper_physical_spacetime_no_localized_matter_source_package
-    (metric residualLagrangian stressEnergy tracelessPart : ℝ)
-    (stressEnergy_eq : stressEnergy = residualLagrangian * metric)
-    (tracelessPart_eq : tracelessPart = stressEnergy - residualLagrangian * metric)
-    (E : AdmissibleEinsteinClosure) (admissible : Prop) (hAdm : admissible)
-    (eulerLagrange_identity :
-      admissible →
-        E.einsteinTensor + E.cosmologicalConstant * E.metric =
-          E.couplingConstant * E.stressEnergy)
-    (hMetric : E.metric = metric) (hResidual : E.residualLagrangian = residualLagrangian)
-    (hStress : E.stressEnergy = stressEnergy)
+    (D : ResourceStressEnergyPureTraceData) (E : AdmissibleEinsteinClosure) (hAdm : E.admissible)
+    (hMetric : E.metric = D.metric) (hResidual : E.residualLagrangian = D.residualLagrangian)
+    (hStress : E.stressEnergy = D.stressEnergy)
     (Delta : (Fin 3 → Real) →ₗ[Real] Real) (phi q : Fin 3 → Real) (sigma L : Real)
     (hq : Delta q = sigma * L) (hphi : Delta phi = sigma * L) :
-    tracelessPart = 0 ∧
+    D.tracelessPart = 0 ∧
       E.einsteinTensor +
           (E.cosmologicalConstant - E.couplingConstant * E.residualLagrangian) * E.metric =
         0 ∧
       ∃ h : Fin 3 → Real, phi = q + h ∧ Delta h = 0 := by
-  have hPureD := paper_physical_spacetime_resource_stress_energy_pure_trace
-    metric residualLagrangian stressEnergy tracelessPart stressEnergy_eq tracelessPart_eq
+  have hPureD := paper_physical_spacetime_resource_stress_energy_pure_trace D
   rcases hPureD with ⟨hPureStress, hTraceZero⟩
   have hPureE : E.stressEnergy = E.residualLagrangian * E.metric := by
     rw [hStress, hPureStress, hResidual, hMetric]
-  refine ⟨hTraceZero,
-    paper_physical_spacetime_effective_cosmological_closure E admissible hAdm
-      eulerLagrange_identity hPureE, ?_⟩
+  refine ⟨hTraceZero, paper_physical_spacetime_effective_cosmological_closure E hAdm hPureE, ?_⟩
   exact paper_physical_spacetime_weak_field_quadratic_harmonic_normal_form Delta phi q sigma L hq
     hphi
 
@@ -41,19 +31,13 @@ theorem paper_physical_spacetime_no_localized_matter_source_package
     cor:physical-spacetime-no-localized-matter-source -/
 def paper_physical_spacetime_no_localized_matter_source : Prop := by
   exact
-    ∀ (metric residualLagrangian stressEnergy tracelessPart : Real)
-      (_stressEnergy_eq : stressEnergy = residualLagrangian * metric)
-      (_tracelessPart_eq : tracelessPart = stressEnergy - residualLagrangian * metric)
-      (E : AdmissibleEinsteinClosure) (_admissible : Prop) (_hAdm : _admissible)
-      (_eulerLagrange_identity :
-        _admissible →
-          E.einsteinTensor + E.cosmologicalConstant * E.metric =
-            E.couplingConstant * E.stressEnergy)
-      (_hMetric : E.metric = metric) (_hResidual : E.residualLagrangian = residualLagrangian)
-      (_hStress : E.stressEnergy = stressEnergy) (Delta : (Fin 3 → Real) →ₗ[Real] Real)
+    ∀ (D : ResourceStressEnergyPureTraceData) (E : AdmissibleEinsteinClosure)
+      (_hAdm : E.admissible) (_hMetric : E.metric = D.metric)
+      (_hResidual : E.residualLagrangian = D.residualLagrangian)
+      (_hStress : E.stressEnergy = D.stressEnergy) (Delta : (Fin 3 → Real) →ₗ[Real] Real)
       (phi q : Fin 3 → Real) (sigma L : Real), Delta q = sigma * L →
         Delta phi = sigma * L →
-        tracelessPart = 0 ∧
+        D.tracelessPart = 0 ∧
           E.einsteinTensor +
               (E.cosmologicalConstant - E.couplingConstant * E.residualLagrangian) * E.metric =
             0 ∧
@@ -61,10 +45,9 @@ def paper_physical_spacetime_no_localized_matter_source : Prop := by
 
 theorem paper_physical_spacetime_no_localized_matter_source_verified :
     paper_physical_spacetime_no_localized_matter_source := by
-  intro metric residualLagrangian stressEnergy tracelessPart stressEnergy_eq tracelessPart_eq
-    E admissible hAdm hEuler hMetric hResidual hStress Delta phi q sigma L hq hphi
-  exact paper_physical_spacetime_no_localized_matter_source_package
-    metric residualLagrangian stressEnergy tracelessPart stressEnergy_eq tracelessPart_eq
-    E admissible hAdm hEuler hMetric hResidual hStress Delta phi q sigma L hq hphi
+  intro D E hAdm hMetric hResidual hStress Delta phi q sigma L hq hphi
+  exact
+    paper_physical_spacetime_no_localized_matter_source_package D E hAdm hMetric hResidual
+      hStress Delta phi q sigma L hq hphi
 
 end Omega.PhysicalSpacetimeSkeleton

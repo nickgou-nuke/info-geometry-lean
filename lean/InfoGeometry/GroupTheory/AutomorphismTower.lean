@@ -19,14 +19,14 @@ lanes, not assumed here.
 namespace InfoGeometry.GroupTheory.AutomorphismTower
 
 /-! The complete-group datum is the explicit multiplicative equivalence itself;
-the former property added no field or proposition beyond `conjEquiv`. -/
+the former certificate added no field or proposition beyond `conjEquiv`. -/
 abbrev CompleteGroupCertificate (G : Type*) [Group G] := G ≃* MulAut G
 
 namespace CompleteGroupCertificate
 
 variable {G : Type*} [Group G]
 
-/-- A complete-group property transports a finite structure to the
+/-- A complete-group certificate transports a finite structure to the
 automorphism group. -/
 noncomputable def autFintype [Fintype G]
     (C : CompleteGroupCertificate G) : Fintype (MulAut G) :=
@@ -40,11 +40,19 @@ theorem card_aut_eq_group [Fintype G] (C : CompleteGroupCertificate G) :
   letI : Fintype (MulAut G) := CompleteGroupCertificate.autFintype C
   exact Fintype.card_congr (C.symm : MulAut G ≃* G).toEquiv
 
-/- The bounded finite-stage cardinal ledger used by the executable multi-engine
-sandbox once a complete-group property is available. -/
- /- Once the complete-group property is supplied, the bounded ledger is stable
+/-- The bounded finite-stage cardinal ledger used by the executable multi-engine
+sandbox once a complete-group certificate is available. -/
+def towerCard [Fintype G] (_C : CompleteGroupCertificate G) (_n : ℕ) : ℕ :=
+  Fintype.card G
+
+/-- Once the complete-group certificate is supplied, the bounded ledger is stable
 from one stage to the next.  This is not the transfinite automorphism-tower
 theorem; it is the exact local fixed-point readback. -/
+theorem towerCard_stable [Fintype G] (C : CompleteGroupCertificate G) (n : ℕ) :
+    CompleteGroupCertificate.towerCard C (n + 1) =
+      CompleteGroupCertificate.towerCard C n := by
+  rfl
+
 /-- Concrete low-cardinality sanity check used by the external lanes: the
 permutation group on three letters has six elements.  The statement is about the
 standard permutation group only; it does not assert completeness of `S₃`. -/

@@ -73,35 +73,6 @@ def hermitianPromotion (X : JordanCayleyInversionOs.Herm2x2Os) :
     JordanCayleyInversionOsQ.Herm2x2OsQ :=
   { xp := X.xp, xm := X.xm, z := splitOctToSplitO X.z }
 
-/-- The componentwise integer-to-rational promotion on split octonions is injective. -/
-theorem splitOctToSplitO_injective : Function.Injective splitOctToSplitO := by
-  intro x y h
-  cases x with
-  | mk a b x0 x1 x2 y0 y1 y2 =>
-      cases y with
-      | mk a' b' x0' x1' x2' y0' y1' y2' =>
-          have ha : a = a' := Int.cast_injective (congrArg (fun w : SplitO => w.a) h)
-          have hb : b = b' := Int.cast_injective (congrArg (fun w : SplitO => w.b) h)
-          have hx0 : x0 = x0' := Int.cast_injective (congrArg (fun w : SplitO => w.x0) h)
-          have hx1 : x1 = x1' := Int.cast_injective (congrArg (fun w : SplitO => w.x1) h)
-          have hx2 : x2 = x2' := Int.cast_injective (congrArg (fun w : SplitO => w.x2) h)
-          have hy0 : y0 = y0' := Int.cast_injective (congrArg (fun w : SplitO => w.y0) h)
-          have hy1 : y1 = y1' := Int.cast_injective (congrArg (fun w : SplitO => w.y1) h)
-          have hy2 : y2 = y2' := Int.cast_injective (congrArg (fun w : SplitO => w.y2) h)
-          rw [ha, hb, hx0, hx1, hx2, hy0, hy1, hy2]
-
-/-- The integral Zorn carrier embeds faithfully into its rational promotion. -/
-theorem hermitianPromotion_injective : Function.Injective hermitianPromotion := by
-  intro X Y h
-  cases X with
-  | mk xp xm z =>
-      cases Y with
-      | mk xp' xm' z' =>
-          have hxp : xp = xp' := congrArg (fun w : JordanCayleyInversionOsQ.Herm2x2OsQ => w.xp) h
-          have hxm : xm = xm' := congrArg (fun w : JordanCayleyInversionOsQ.Herm2x2OsQ => w.xm) h
-          have hz : z = z' := splitOctToSplitO_injective (congrArg (fun w : JordanCayleyInversionOsQ.Herm2x2OsQ => w.z) h)
-          rw [hxp, hxm, hz]
-
 /-- The determinant is preserved under promotion. -/
 theorem det_preserved (X : JordanCayleyInversionOs.Herm2x2Os) :
     (hermitianPromotion X).det = X.det := by

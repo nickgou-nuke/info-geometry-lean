@@ -60,11 +60,11 @@ def entropyProduction
   InfoGeometry.Canonical.RegularSupportSecondLaw.entropyProduction
     F.compressedState F.dissipator x
 
-/-- Convert a graph frame into the canonical Second Law property. -/
+/-- Convert a graph frame into the canonical Second Law certificate. -/
 @[rep_depth krein]
 def toSecondLawCertificate
     (F : DrazinThermoFrame Op) :
-    RegularSupportSecondLawData Op where
+    RegularSupportSecondLawCertificate Op where
   state := F.compressedState
   flow := F.flow
   support := F.support
@@ -79,7 +79,7 @@ theorem second_law
     (hx : InRegularCorner F.support x) :
     0 ≤ F.entropyProduction x := by
   simpa [DrazinThermoFrame.entropyProduction] using
-    property_second F.toSecondLawCertificate x hx
+    certificate_second F.toSecondLawCertificate x hx
 
 /-- Modular fixedness gives two-sided no leakage. -/
 @[rep_depth krein]
@@ -88,21 +88,21 @@ theorem no_leakage
     (∀ t : ℝ, leakageOperator F.flow F.support t = 0)
       ∧
     (∀ t : ℝ, rightLeakageOperator F.flow F.support t = 0) :=
-  property_no_leakage F.toSecondLawCertificate
+  certificate_no_leakage F.toSecondLawCertificate
 
 /-- The defect complement is modularly fixed. -/
 @[rep_depth krein]
 theorem defect_modular_fixed
     (F : DrazinThermoFrame Op) :
     ∀ t : ℝ, F.flow.sigma t F.support.q = F.support.q :=
-  property_defect_modular_fixed F.toSecondLawCertificate
+  certificate_defect_modular_fixed F.toSecondLawCertificate
 
 /-- Left leakage energy vanishes. -/
 @[rep_depth krein]
 theorem leakage_energy_zero
     (F : DrazinThermoFrame Op) :
     ∀ t : ℝ, leakageEnergy F.compressedState F.flow F.support t = 0 :=
-  property_leakage_energy_zero F.toSecondLawCertificate
+  certificate_leakage_energy_zero F.toSecondLawCertificate
 
 end DrazinThermoFrame
 
@@ -283,7 +283,7 @@ end DrazinEntropyArrow
 /--
 Stronger irreversible transition packet.
 
-This extends the base arrow with the actual entropy-order property
+This extends the base arrow with the actual entropy-order witness
 `EP_source x ≤ EP_target (map x)`.
 -/
 @[rep_depth krein]
@@ -333,7 +333,7 @@ def compMonotoneArrow
       β.entropy_nondecreasing (α.base.map x) hαx
     exact le_trans hα hβ
 
-/-- Readback of the supplied entropy monotonicity property. -/
+/-- Readback of the supplied entropy monotonicity witness. -/
 @[rep_depth krein]
 theorem arrow_entropy_nondecreasing
     {F G : DrazinThermoFrame Op}

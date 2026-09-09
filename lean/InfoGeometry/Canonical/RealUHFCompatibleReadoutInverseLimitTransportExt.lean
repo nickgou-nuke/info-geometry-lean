@@ -25,5 +25,4 @@ theorem inverseLimit_hom_ext_of_compatible_transport
   exact (cancel_epi compatibleReadoutInverseLimitIso.hom).1 H
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitTransportExt
-
 end

@@ -43,13 +43,25 @@ The scalar model can be viewed as a "shadow" or expectation-value readout of
 the deeper noncommutative structure.
 -/
 
+/-- Scalar partition function. -/
+def spinorialPartitionFunction (Q : ℝ → ℝ) : ℝ → ℝ := Q
+
 /-- Boltzmann potential `S_B(β) = log(Q(β))`. -/
 def boltzmannEntropy (Q : ℝ → ℝ) (β : ℝ) : ℝ :=
-  Real.log (Q β)
+  Real.log (spinorialPartitionFunction Q β)
+
+/-- Abstract modular-energy expectation readout. -/
+def modularEnergyExpectation (Kexp : ℝ → ℝ) : ℝ → ℝ := Kexp
 
 /-- Legendre-style packet for the von Neumann entropy readout. -/
 def vonNeumannEntropy (Q Kexp : ℝ → ℝ) (β : ℝ) : ℝ :=
-  boltzmannEntropy Q β + β * Kexp β
+  boltzmannEntropy Q β + β * modularEnergyExpectation Kexp β
+
+@[simp] theorem spinorialPartitionFunction_apply (Q : ℝ → ℝ) (β : ℝ) :
+    spinorialPartitionFunction Q β = Q β := rfl
+
+@[simp] theorem modularEnergyExpectation_apply (Kexp : ℝ → ℝ) (β : ℝ) :
+    modularEnergyExpectation Kexp β = Kexp β := rfl
 
 @[simp] theorem boltzmannEntropy_eq_log (Q : ℝ → ℝ) (β : ℝ) :
     boltzmannEntropy Q β = Real.log (Q β) := rfl
@@ -89,29 +101,35 @@ theorem first_law_modular_thermodynamics
   simpa using hSum.deriv
 
 /--
+A concrete two-level partition function from the verified scalar packet.
+-/
+abbrev twoLevelPartition (r : ℝ) : ℝ → ℝ :=
+  spinorialPartitionFunction (partitionQ r)
+
+/--
 The corresponding concrete Boltzmann potential from
 `InfoGeometry.Canonical.DeRhamBoltzmannModular`.
 -/
 @[simp] theorem twoLevel_boltzmannEntropy_eq
     (r β : ℝ) :
-    boltzmannEntropy (partitionQ r) β = entropyPotential r β := by
+    boltzmannEntropy (twoLevelPartition r) β = entropyPotential r β := by
   rfl
 
 /--
 The concrete two-level partition function is positive, so the logarithm is
 well-defined pointwise.
 -/
-theorem twoLevelPartition_pos (r β : ℝ) : 0 < partitionQ r β :=
+theorem twoLevelPartition_pos (r β : ℝ) : 0 < twoLevelPartition r β :=
   partitionQ_pos r β
 
 /--
-The scalar two-level packet gives a concrete property that the capstone surface is
+The scalar two-level packet gives a concrete witness that the capstone surface is
 nonempty: there exists a partition function with positive values and a well-defined
 Boltzmann potential.
 -/
 theorem exists_twoLevel_capstone_packet :
     ∃ Q : ℝ → ℝ, (∀ β : ℝ, 0 < Q β) := by
-  refine ⟨partitionQ 1, ?_⟩
+  refine ⟨twoLevelPartition 1, ?_⟩
   intro β
   exact twoLevelPartition_pos 1 β
 

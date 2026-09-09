@@ -3,7 +3,7 @@ import Mathlib.Tactic
 /-!
 # Proof layer for the zeta-barrier discussion
 
-No deferred interfaces. No certificates. No axioms. No `sorry`.
+No sockets. No certificates. No axioms. No `sorry`.
 
 This file proves three finite algebraic facts:
 

@@ -33,7 +33,7 @@ def anticommutator (X Y : EndH) : EndH := X * Y + Y * X
 
 /--
 Canonical KKT-style algebra slice already latent in the repo:
-a property inverse kernel together with its spectral/geometric gradings,
+a certified inverse kernel together with its spectral/geometric gradings,
 dilation gap, mismatch, and left/right anomaly operators.
 -/
 structure DPDKKT (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
@@ -133,7 +133,7 @@ theorem commutator_P_D_GammaG_eq_rightSupercharge_sub_leftSupercharge :
 /--
 Equivalent commutator law written through the dilation gap:
 `[P_D, G] = (1/2) (χ_R - χ_L)`.
-This is already proved in the property inverse-kernel owner.
+This is already proved in the certified inverse-kernel owner.
 -/
 theorem commutator_P_D_G_eq_half_sub_supercharges :
     commutator K.P_D K.G =

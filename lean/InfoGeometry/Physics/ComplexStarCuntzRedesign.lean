@@ -94,10 +94,16 @@ def idComplexStarAlgHom {ι : Type*} [Fintype ι] [DecidableEq ι] :
 
 /-! ## Real Cuntz families inside complex C*-algebras -/
 
+/-- A C*-Cuntz family whose generators satisfy the Cuntz relations.  This is the
+same relation package as `CStarCuntzFamily`, but exposed here to build the real
+star representation first and then complexify it. -/
+abbrev RealCuntzLiftTarget (A ι : Type*) [Fintype ι] [DecidableEq ι] [CStarAlgebra A] :=
+  CuntzAlg ℝ ι →ₐ[ℝ] A
+
 /-- The real algebraic Cuntz quotient maps into any complex C*-Cuntz family by
 forgetting scalars from `ℂ` to `ℝ`. -/
 def realLift {ι A : Type*} [Fintype ι] [DecidableEq ι] [CStarAlgebra A]
-    (F : CStarCuntzTensorQuotient.CStarCuntzFamily A ι) : CuntzAlg ℝ ι →ₐ[ℝ] A :=
+    (F : CStarCuntzTensorQuotient.CStarCuntzFamily A ι) : RealCuntzLiftTarget A ι :=
   lift (R := ℝ) (A := A) F.S (fun i => star (F.S i))
     F.ortho
     F.partition
@@ -134,20 +140,6 @@ structure GenuineComplexCuntzStarRepresentation
   map : ComplexStarCuntzAlg ι →⋆ₐ[ℂ] A
   map_S : ∀ i, map (Sℂ i) = F.S i
   map_T : ∀ i, map (Tℂ i) = star (F.S i)
-
-theorem GenuineComplexCuntzStarRepresentation.map_star_S
-    {ι A : Type*} [Fintype ι] [DecidableEq ι] [CStarAlgebra A]
-    {F : CStarCuntzTensorQuotient.CStarCuntzFamily A ι}
-    (R : GenuineComplexCuntzStarRepresentation F) (i : ι) :
-    star (R.map (Sℂ i)) = R.map (Tℂ i) := by
-  simp [R.map_S, R.map_T]
-
-theorem GenuineComplexCuntzStarRepresentation.map_star_T
-    {ι A : Type*} [Fintype ι] [DecidableEq ι] [CStarAlgebra A]
-    {F : CStarCuntzTensorQuotient.CStarCuntzFamily A ι}
-    (R : GenuineComplexCuntzStarRepresentation F) (i : ι) :
-    star (R.map (Tℂ i)) = R.map (Sℂ i) := by
-  simp [R.map_S, R.map_T]
 
 #check ComplexStarCuntzAlg
 #check Sℂ

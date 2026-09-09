@@ -22,7 +22,7 @@ corridor.  The Drazin residue is carried separately by the concrete
 square-zero residue `(0, 2) : ℤ × ZMod 4`.
 
 This file does not construct a concrete BdG/Kitaev Hamiltonian.  The DIII
-`topologicalIndexZ2 = 1` datum is recorded as a property packet, so the actual
+`topologicalIndexZ2 = 1` datum is recorded as a witness packet, so the actual
 chain/bulk-boundary proof remains separate from the count/probability/Drazin
 corridor.
 -/
@@ -48,6 +48,16 @@ inductive Sector where
   | boundary
   | residue
 deriving DecidableEq, Repr
+
+/--
+Witness that a concrete Kitaev chain is in the nontrivial DIII/`ZMod 2` sector.
+
+This is intentionally separated from the count example: the present file fixes
+the arithmetic/operator target surface, while a model-specific BdG file supplies
+the actual chain witness.
+-/
+def DIIIZ2SectorWitness (chain : List KitaevCell) : Prop :=
+  topologicalIndexZ2 chain = 1
 
 /-- Positive three-sector count representative for the DIII count target. -/
 def counts : RelativeCounts 3 :=

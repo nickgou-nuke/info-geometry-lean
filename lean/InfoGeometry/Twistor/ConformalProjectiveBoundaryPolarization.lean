@@ -34,7 +34,9 @@ open InfoGeometry.Canonical.ZornVectorMatrixExplicit
 
 /-- The scalar defect measuring departure from the split-octonion null cone. -/
 def twistorBoundaryDefect (Z : Twistor4) : ℝ :=
-  InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (twistorRealEquivZorn Z)
+  InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+    InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+    (twistorRealEquivZorn Z)
 
 /-- The affine null-boundary condition before projectivization. -/
 def IsTwistorBoundaryNull (Z : Twistor4) : Prop :=
@@ -53,6 +55,7 @@ factorization of the twistor-to-Zorn map. -/
 theorem twistorBoundaryDefect_sheet_factorization (Z : Twistor4) :
     twistorBoundaryDefect Z =
       InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
         (plusZornMap Z.1 + minusZornMap Z.2) := by
   rw [twistorBoundaryDefect, twistor_zorn_sheet_decomposition]
 
@@ -78,7 +81,9 @@ theorem twistorBoundaryNull_iff_peirce_sheet_balance (Z : Twistor4) :
               (cartesianZornLinearEquiv.symm (twistorRealEquivZorn Z)) 3 *
               circularCoordinate
                 (cartesianZornLinearEquiv.symm (twistorRealEquivZorn Z)) 7 := by
-  change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (twistorRealEquivZorn Z) = 0 ↔ _
+  change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+      (twistorRealEquivZorn Z) = 0 ↔ _
   exact circularPeirceBasis_null_iff (twistorRealEquivZorn Z)
 
 /-- The finite paravector boundary map has exactly the same null equation in

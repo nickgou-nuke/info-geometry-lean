@@ -271,6 +271,5 @@ theorem StarInductiveCocone.restrictedState_naturalTransformation_eq
   intro a
   rfl
 
-end CStarStateColimit.Native.ContinuousStarInductiveSystem
 
-end
+end CStarStateColimit.Native.ContinuousStarInductiveSystem

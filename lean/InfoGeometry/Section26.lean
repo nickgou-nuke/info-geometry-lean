@@ -78,10 +78,30 @@ theorem electromagneticFieldShadow_diagonal_zero
     electromagneticFieldShadow D mu mu = 0 := by
   simp [electromagneticFieldShadow]
 
-/-- Section 25's scalar reality result remains the finite real-valued bilinear shadow. -/
-theorem physical_scalarRealityReadout_im_zero
-    (A B : ℂ) (hB : B = starRingEnd ℂ A) :
-    (Section25.scalarRealityReadout A B).im = 0 :=
-  Section25.scalarRealityReadout_im_zero A B hB
+theorem section26_capstone :
+    (∀ mu2 lambda s : ℝ, lambda ≠ 0 →
+      quarticPotential mu2 lambda s =
+        lambda * (s - mu2 / (2 * lambda)) ^ 2 - mu2 ^ 2 / (4 * lambda)) ∧
+    (∀ mu2 lambda : ℝ, lambda ≠ 0 →
+      quarticPotential mu2 lambda (mu2 / (2 * lambda)) =
+        -mu2 ^ 2 / (4 * lambda)) ∧
+    (∀ D : Fin 4 → Fin 4 → ℂ, ∀ mu nu : Fin 4,
+      electromagneticFieldShadow D nu mu =
+        -electromagneticFieldShadow D mu nu) ∧
+    (∀ D : Fin 4 → Fin 4 → ℂ, ∀ mu : Fin 4,
+      electromagneticFieldShadow D mu mu = 0) ∧
+    (∀ A B : ℂ, B = starRingEnd ℂ A →
+      (Section25.scalarRealityReadout A B).im = 0) ∧
+    (Section8.Quat.qi * Section8.Quat.qi = -(1 : Quat)
+      ∧ Section8.Quat.qj * Section8.Quat.qj = -(1 : Quat)
+      ∧ Section8.Quat.qk * Section8.Quat.qk = -(1 : Quat)
+      ∧ Section8.Quat.qi * Section8.Quat.qj = Section8.Quat.qk
+      ∧ Section8.Quat.qj * Section8.Quat.qk = Section8.Quat.qi
+      ∧ Section8.Quat.qk * Section8.Quat.qi = Section8.Quat.qj
+      ∧ (Section8.Quat.qi * Section8.Quat.qj) * Section8.Quat.qk =
+        -(1 : Quat)) := by
+  exact ⟨quarticPotential_complete_square, quarticPotential_critical_value,
+    electromagneticFieldShadow_antisymmetric, electromagneticFieldShadow_diagonal_zero,
+    Section25.scalarRealityReadout_im_zero, Section24.hamilton_basis_with_triple⟩
 
 end Section26

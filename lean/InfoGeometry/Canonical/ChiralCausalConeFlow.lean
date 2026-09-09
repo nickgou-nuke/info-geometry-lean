@@ -118,7 +118,7 @@ def outerAutomorphismEquivalenceOf
     OuterAutomorphismEquivalence A Embedding Δ :=
   ⟨h⟩
 
-/-- Conditional interval preservation under the explicit outer-automorphism property. -/
+/-- Conditional interval preservation under the explicit outer-automorphism witness. -/
 theorem automorphism_preserves_interval
     {R : Type*} [CommRing R] [ModularTimeFlow R]
     {A : Type*} [Ring A]

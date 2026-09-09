@@ -63,7 +63,7 @@ variable {Space GaugeGroup : Type}
 variable [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
 variable [Group GaugeGroup]
 
-/-- The momentum-value carrier is the dual module, not an untyped placeholder. -/
+/-- The momentum-value carrier is the dual module, not an untyped socket. -/
 abbrev momentumValue (Q : SymplecticQuotientData Space GaugeGroup) :=
   Module.Dual ℝ Space
 
@@ -137,29 +137,13 @@ theorem SymplecticQuotientData.mem_zeroLocus_iff
     a ∈ Q.zeroLocus ↔ Q.momentumMap a = 0 := by
   rfl
 
-/-- Weyl reduction data is a native product of the root owner and torus map.
-
-No additional compatibility law is carried here; those laws belong to the
-underlying `WeylData` owner or to downstream integration theorems.
--/
-abbrev WeylIntegrationData (GaugeGroup Torus : Type)
-    [Group GaugeGroup] [Group Torus] :=
-  WeylIntegration.WeylData GaugeGroup Torus × (GaugeGroup → Torus)
-
-abbrev WeylIntegrationData.rootData
-    {GaugeGroup Torus : Type} [Group GaugeGroup] [Group Torus]
-    (W : WeylIntegrationData GaugeGroup Torus) :
-    WeylIntegration.WeylData GaugeGroup Torus := W.1
-
-abbrev WeylIntegrationData.torusMap
-    {GaugeGroup Torus : Type} [Group GaugeGroup] [Group Torus]
-    (W : WeylIntegrationData GaugeGroup Torus) : GaugeGroup → Torus := W.2
-
-def WeylIntegrationData.mk
-    {GaugeGroup Torus : Type} [Group GaugeGroup] [Group Torus]
-    (rootData : WeylIntegration.WeylData GaugeGroup Torus)
-    (torusMap : GaugeGroup → Torus) :
-    WeylIntegrationData GaugeGroup Torus := (rootData, torusMap)
+/-- The Weyl carrier is the existing finite-root owner, not a pair of type sockets. -/
+structure WeylIntegrationData (GaugeGroup Torus : Type)
+    [Group GaugeGroup] [Group Torus] where
+  /-- Root-system and Weyl-action data from the existing Weyl owner. -/
+  rootData : WeylIntegration.WeylData GaugeGroup Torus
+  /-- Explicit reduction map from the original group to the torus. -/
+  torusMap : GaugeGroup → Torus
 
 /--
 Pullback along the torus map.
@@ -181,25 +165,19 @@ theorem WeylIntegrationData.pullback_apply
     W.pullback f g = f (W.torusMap g) := by
   rfl
 
-/-! Combined carrier data has no additional law beyond its two components. -/
-abbrev SymplecticWeylVolumeData (Space GaugeGroup Torus : Type)
-    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
-    [instGroup : Group GaugeGroup] [Group Torus] :=
-  SymplecticQuotientData Space GaugeGroup × WeylIntegrationData GaugeGroup Torus
+/--
+Combined carrier data for Atiyah--Bott/Abelian-reduction style localization.
 
-abbrev SymplecticWeylVolumeData.quotient
-    {Space GaugeGroup Torus : Type}
+The combined carrier is an owner-level shape: the moduli object is presented with
+its momentum constraint and a Weyl-type torus reduction shadow.
+-/
+structure SymplecticWeylVolumeData (Space GaugeGroup Torus : Type)
     [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
-    [Group GaugeGroup] [Group Torus]
-    (D : SymplecticWeylVolumeData Space GaugeGroup Torus) :
-    SymplecticQuotientData Space GaugeGroup := D.1
-
-abbrev SymplecticWeylVolumeData.weyl
-    {Space GaugeGroup Torus : Type}
-    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
-    [Group GaugeGroup] [Group Torus]
-    (D : SymplecticWeylVolumeData Space GaugeGroup Torus) :
-    WeylIntegrationData GaugeGroup Torus := D.2
+    [instGroup : Group GaugeGroup] [Group Torus] where
+  /-- Symplectic quotient layer. -/
+  quotient : SymplecticQuotientData Space GaugeGroup
+  /-- Weyl torus-reduction layer. -/
+  weyl : WeylIntegrationData GaugeGroup Torus
 
 /--
 Canonical assembly from separate symplectic-quotient and Weyl-reduction data.
@@ -237,52 +215,30 @@ theorem constructSymplecticWeylVolumeData_weyl
     (constructSymplecticWeylVolumeData Q W).weyl = W := by
   rfl
 
-/-! The pillar is a product of existing owner carriers, with no extra law. -/
-abbrev WeylIntegrationPillarData
+/--
+Connector data for the theorem-safe Weyl-integration scaffold.
+
+This does not prove the Weyl integration formula.  It records the existing
+owner surfaces that such a formula must pass through: torus pullback, coadjoint
+orbit, finite Mellin scaling, finite spectral Taylor/Mellin readout, and the
+scale/shape channel split.
+-/
+structure WeylIntegrationPillarData
     (Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type)
     [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
-    [Group GaugeGroup] [Group Torus] [AddCommMonoid Func] [CommSemiring R] [Fintype ι] :=
-  SymplecticQuotientData Space GaugeGroup ×
-    (WeylIntegrationData GaugeGroup Torus ×
-      (InfiniteCoadjointOrbitMetriplecticContext Orbit LieAlg LieCoalg ×
-        (FiniteMellinScalingDatum Func R ×
-          (SpectralTaylorMellinData ι × LaplaceMellinScaleShapePacket))))
-
-abbrev WeylIntegrationPillarData.quotient
-    {Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type}
-    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
-    [Group GaugeGroup] [Group Torus] [AddCommMonoid Func] [CommSemiring R] [Fintype ι]
-    (P : WeylIntegrationPillarData Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι) := P.1
-
-abbrev WeylIntegrationPillarData.weyl
-    {Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type}
-    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
-    [Group GaugeGroup] [Group Torus] [AddCommMonoid Func] [CommSemiring R] [Fintype ι]
-    (P : WeylIntegrationPillarData Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι) := P.2.1
-
-abbrev WeylIntegrationPillarData.orbit
-    {Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type}
-    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
-    [Group GaugeGroup] [Group Torus] [AddCommMonoid Func] [CommSemiring R] [Fintype ι]
-    (P : WeylIntegrationPillarData Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι) := P.2.2.1
-
-abbrev WeylIntegrationPillarData.mellin
-    {Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type}
-    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
-    [Group GaugeGroup] [Group Torus] [AddCommMonoid Func] [CommSemiring R] [Fintype ι]
-    (P : WeylIntegrationPillarData Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι) := P.2.2.2.1
-
-abbrev WeylIntegrationPillarData.spectral
-    {Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type}
-    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space] [Group GaugeGroup] [Group Torus]
-    [AddCommMonoid Func] [CommSemiring R] [Fintype ι]
-    (P : WeylIntegrationPillarData Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι) := P.2.2.2.2.1
-
-abbrev WeylIntegrationPillarData.scaleShape
-    {Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type}
-    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space] [Group GaugeGroup] [Group Torus]
-    [AddCommMonoid Func] [CommSemiring R] [Fintype ι]
-    (P : WeylIntegrationPillarData Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι) := P.2.2.2.2.2
+    [Group GaugeGroup] [Group Torus] [AddCommMonoid Func] [CommSemiring R] [Fintype ι] where
+  /-- Gauge-theoretic symplectic quotient carrier. -/
+  quotient : SymplecticQuotientData Space GaugeGroup
+  /-- Weyl torus-reduction carrier. -/
+  weyl : WeylIntegrationData GaugeGroup Torus
+  /-- Coadjoint orbit/metriplectic carrier from the Souriau owner. -/
+  orbit : InfiniteCoadjointOrbitMetriplecticContext Orbit LieAlg LieCoalg
+  /-- Finite Mellin orbit-scaling datum. -/
+  mellin : FiniteMellinScalingDatum Func R
+  /-- Finite spectral Taylor/Mellin packet. -/
+  spectral : SpectralTaylorMellinPacket ι
+  /-- Analytic scale/shape channel split. -/
+  scaleShape : LaplaceMellinScaleShapePacket
 
 namespace WeylIntegrationPillarData
 
@@ -305,6 +261,12 @@ theorem torus_pullback_apply (f : Torus → ℝ) (g : GaugeGroup) :
 theorem moment_mem_coadjoint_orbit (x : Orbit) :
     P.orbit.isOnCoadjointOrbit (P.orbit.moment x) :=
   InfiniteCoadjointOrbitMetriplecticContext.moment_lands_on_coadjoint_orbit P.orbit x
+
+/-- Metriplectic nonnegativity is delegated to the coadjoint-orbit owner. -/
+theorem totalEntropyRate_nonnegative (x : Orbit) :
+    0 ≤ P.orbit.totalEntropyRate x :=
+  InfiniteCoadjointOrbitMetriplecticContext.coadjoint_orbit_metriplectic_second_law
+    P.orbit x
 
 /-- Finite root/orbit Mellin character factorization is delegated to the Mellin owner. -/
 theorem finite_mellin_orbit_factor (A : Finset ℕ) (f : Func) :
@@ -337,7 +299,7 @@ theorem spectral_heat_readout_eq_prefix (t : ℂ) (N : ℕ) :
       InfoGeometry.Analysis.FiniteSpectralMellinTaylor.FiniteSpectralData.taylorMomentPrefix
         P.spectral.data
         (InfoGeometry.Analysis.FiniteSpectralHeatMellin.heatTaylorCoeff t) N :=
-  SpectralTaylorMellinData.heat_readout_eq_prefix P.spectral t N
+  SpectralTaylorMellinPacket.heat_readout_eq_prefix P.spectral t N
 
 /-- Finite spectral scalar readout uses the Taylor/Mellin owner. -/
 theorem spectral_scalar_readout_eq :
@@ -345,7 +307,7 @@ theorem spectral_scalar_readout_eq :
         P.spectral.data P.spectral.heatMellinScalar =
       InfoGeometry.Analysis.FiniteSpectralHeatMellin.spectralScalingReadout
         P.spectral.data P.spectral.scaleScalar :=
-  SpectralTaylorMellinData.scalar_readout_eq P.spectral
+  SpectralTaylorMellinPacket.scalar_readout_eq P.spectral
 
 end WeylIntegrationPillarData
 
@@ -359,20 +321,54 @@ theorem weylKernel_laplaceTransform_eq_fourierChar
   InfoGeometry.Analysis.LaplaceFourierComparison.laplaceTransform_eq_fourierChar
     (f := f) (w := w)
 
+/--
+Algebraic two-channel shadow of a split boundary metric bracket.
+
+The factors `gPlus` and `gMinus` are the dual metric coefficients after
+restriction to the boundary; `left` and `right` are the already-evaluated
+chiral operator/readout products.
+-/
+def splitBoundaryMetricBracket {R : Type*} [Semiring R]
+    (gPlus gMinus left right : R) : R :=
+  gPlus * left + gMinus * right
+
+/--
+If both boundary dual metric coefficients vanish, the split metric bracket
+vanishes.  This is the kernel-checkable algebraic part of the proposed
+metriplectic boundary barrier.
+-/
+theorem splitBoundaryMetricBracket_eq_zero_of_boundary_dual_zero
+    {R : Type*} [Semiring R]
+    {gPlus gMinus left right : R}
+    (hgPlus : gPlus = 0) (hgMinus : gMinus = 0) :
+    splitBoundaryMetricBracket gPlus gMinus left right = 0 := by
+  simp [splitBoundaryMetricBracket, hgPlus, hgMinus]
+
+/-- Coordinate-free algebraic Connes/Radon--Nikodym boundary velocity shadow. -/
+def connesBoundaryCocycleDerivative
+    {E : Type*} [AddCommGroup E] [Module ℂ E]
+    (H₁ H₂ : E) : E :=
+  Complex.I • (H₂ - H₁)
+
+/-- Equal Hamiltonian readouts give zero boundary cocycle derivative. -/
+theorem connesBoundaryCocycleDerivative_eq_zero_of_eq
+    {E : Type*} [AddCommGroup E] [Module ℂ E]
+    {H₁ H₂ : E}
+    (hH : H₁ = H₂) :
+    connesBoundaryCocycleDerivative H₁ H₂ = 0 := by
+  subst H₂
+  simp [connesBoundaryCocycleDerivative]
+
 /-- Minimal carrier for the Klein-bottle sheet flip used by non-orientable boundary maps. -/
-abbrev KleinBottleSheet (Carrier : Type*) := Carrier × Chirality
-
-namespace KleinBottleSheet
-
-abbrev carrier {Carrier : Type*} (A : KleinBottleSheet Carrier) : Carrier := A.1
-
-abbrev chirality {Carrier : Type*} (A : KleinBottleSheet Carrier) : Chirality := A.2
-
-end KleinBottleSheet
+structure KleinBottleSheet (Carrier : Type*) where
+  carrier : Carrier
+  chirality : Chirality
 
 /-- Orientation-reversing sheet transition: it preserves the carrier and flips chirality. -/
 def kleinSheetFlip {Carrier : Type*} (A : KleinBottleSheet Carrier) :
-    KleinBottleSheet Carrier := (A.carrier, A.chirality.flip)
+    KleinBottleSheet Carrier where
+  carrier := A.carrier
+  chirality := A.chirality.flip
 
 @[simp] theorem kleinSheetFlip_carrier {Carrier : Type*} (A : KleinBottleSheet Carrier) :
     (kleinSheetFlip A).carrier = A.carrier :=
@@ -385,9 +381,8 @@ def kleinSheetFlip {Carrier : Type*} (A : KleinBottleSheet Carrier) :
 /-- The Klein sheet transition is a genuine `Z₂` involution. -/
 @[simp] theorem kleinSheetFlip_involutive {Carrier : Type*} (A : KleinBottleSheet Carrier) :
     kleinSheetFlip (kleinSheetFlip A) = A := by
-  rcases A with ⟨carrier, chirality⟩
-  change (carrier, chirality.flip.flip) = (carrier, chirality)
-  simp
+  cases A
+  simp [kleinSheetFlip]
 
 /-- Inner derivation/commutator with the convention `δ_H(X) = XH - HX`. -/
 def boundaryInnerDerivation {A : Type*} [NonUnitalNonAssocRing A] (H X : A) : A :=

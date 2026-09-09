@@ -6,7 +6,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.CayleyMobiusPowerLaws
 
 /--
-An explicit involutive-power lemma with no property fields:
+An explicit involutive-power lemma with no witness/socket fields:
 an involutive map `f` is periodic of period `2` pointwise.
 -/
 theorem iterate_two_of_involution
@@ -92,9 +92,10 @@ theorem cayley_partition_invariant_under_reflection
     (Z : ℂ → ℂ)
     (hZ : ∀ z : ℂ, Z (z⁻¹) = Z z)
     (s : ℂ)
-    (hs0 : s ≠ 0) :
+    (hs0 : s ≠ 0)
+    (hs1 : s ≠ 1) :
     Z (PrimeHurwitzLimit.cayley (1 - s)) = Z (PrimeHurwitzLimit.cayley s) := by
-  rw [PrimeHurwitzLimit.CayleyCriticalWitness.cayley_reflection_to_inversion s hs0]
+  rw [PrimeHurwitzLimit.CayleyCriticalWitness.cayley_reflection_to_inversion s hs0 hs1]
   exact hZ (PrimeHurwitzLimit.cayley s)
 
 end InfoGeometry.Canonical.CayleyMobiusPowerLaws

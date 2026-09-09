@@ -121,4 +121,17 @@ theorem det_nilpotentBoundary (x : ℝ) : (nilpotentBoundary x).det = 0 := by
   rw [Matrix.det_fin_two]
   simp
 
+/-- Bundled synthesis: phase, scale, and boundary are one real KAN matrix language. -/
+theorem iwasawa_kan_unification_synthesis (c : KANComponents) :
+    (generatorH c).trace = 0 ∧
+      (kPart c.theta).det = 1 ∧
+      (aPart c.r).det = 1 ∧
+      (nPart c.x).det = 1 ∧
+      (kPart c.theta * aPart c.r * nPart c.x).det = 1 ∧
+      nilpotentBoundary c.x * nilpotentBoundary c.x = 0 ∧
+      (nilpotentBoundary c.x).det = 0 := by
+  exact ⟨iwasawa_trace_annihilation c, det_kPart c.theta, det_aPart c.r,
+    det_nPart c.x, det_kanProduct c, nilpotentBoundary_sq c.x,
+    det_nilpotentBoundary c.x⟩
+
 end InfoGeometry.Quantum.IwasawaKUnification

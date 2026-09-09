@@ -25,7 +25,7 @@ noncomputable def real_kms_shift [CompleteSpace E] (beta : ℝ) : EndH :=
 set_option linter.unusedVariables false
 
 /-- The Kubo-Martin-Schwinger (KMS) boundary condition in the finite doubled-real
-interface.
+socket.
 
 `ω` is the chosen finite readout/state.  The right hand side inserts the real
 KMS shift, so this is a genuine equality of scalar correlation readouts rather

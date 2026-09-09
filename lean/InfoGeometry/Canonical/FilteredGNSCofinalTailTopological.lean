@@ -69,19 +69,19 @@ def upperGnsTopologicalCocone (i₀ : I) :
     (gnsTopologicalCocone Stage sys ω)
 
 abbrev upperGnsTopologicalColimit (i₀ : I) : TopCat.{u} :=
-  colimit (upperGnsTopologicalDiagram Stage sys ω i₀)
+  topologicalDirectColimit (upperGnsTopologicalDiagram Stage sys ω i₀)
 
 noncomputable def upperGnsTopologicalColimitToHilbert (i₀ : I) :
     upperGnsTopologicalColimit Stage sys ω i₀ ⟶
       (upperGnsTopologicalCocone Stage sys ω i₀).pt :=
-  colimit.desc
+  topologicalDirectDescend
     (upperGnsTopologicalDiagram Stage sys ω i₀)
     (upperGnsTopologicalCocone Stage sys ω i₀)
 
 @[reassoc]
 theorem upperGnsTopologicalColimitToHilbert_stage
     (i₀ : I) (j : UpperIndex i₀) :
-    colimit.ι
+    topologicalDirectInjection
         (upperGnsTopologicalDiagram Stage sys ω i₀) j ≫
       upperGnsTopologicalColimitToHilbert Stage sys ω i₀ =
       (upperGnsTopologicalCocone Stage sys ω i₀).ι.app j := by
@@ -98,7 +98,7 @@ theorem denseRange_upperGnsTopologicalColimitToHilbert (i₀ : I) :
   rintro x hx
   simp only [Set.mem_iUnion] at hx
   obtain ⟨j, ⟨y, rfl⟩⟩ := hx
-  refine ⟨colimit.ι
+  refine ⟨topologicalDirectInjection
       (upperGnsTopologicalDiagram Stage sys ω i₀) j y, ?_⟩
   have h := congrArg (fun f => f y)
     (upperGnsTopologicalColimitToHilbert_stage Stage sys ω i₀ j)
@@ -135,7 +135,7 @@ def upperGnsToTailHilbertCocone (i₀ : I) :
 noncomputable def upperGnsToTailHilbertColimitMap (i₀ : I) :
     upperGnsTopologicalColimit Stage sys ω i₀ ⟶
       (upperGnsToTailHilbertCocone Stage sys ω i₀).pt :=
-  colimit.desc
+  topologicalDirectDescend
     (upperGnsTopologicalDiagram Stage sys ω i₀)
     (upperGnsToTailHilbertCocone Stage sys ω i₀)
 
@@ -143,7 +143,7 @@ omit [Nonempty I] in
 @[reassoc]
 theorem upperGnsToTailHilbertColimitMap_stage
     (i₀ : I) (j : UpperIndex i₀) :
-    colimit.ι
+    topologicalDirectInjection
         (upperGnsTopologicalDiagram Stage sys ω i₀) j ≫
       upperGnsToTailHilbertColimitMap Stage sys ω i₀ =
       (upperGnsToTailHilbertCocone Stage sys ω i₀).ι.app j := by
@@ -233,11 +233,11 @@ theorem tailGNSOperator_star
 
 theorem upperTailRepresentationColimitMap_stage
     {i₀ : I} (a : Stage i₀) (j : UpperIndex i₀) :
-    colimit.ι
+    topologicalDirectInjection
         (upperGnsTopologicalDiagram Stage sys ω i₀) j ≫
       upperTailRepresentationColimitMap Stage sys ω a =
       (upperTailRepresentationNatTrans Stage sys ω a).app j ≫
-        colimit.ι
+        topologicalDirectInjection
           (upperGnsTopologicalDiagram Stage sys ω i₀) j := by
   exact colimit.ι_map (upperTailRepresentationNatTrans Stage sys ω a) j
 
@@ -245,18 +245,18 @@ theorem upperTailRepresentationColimitMap_stage
     {i₀ : I} (a : Stage i₀) (j : UpperIndex i₀)
     (x : TailGNSStage Stage sys ω i₀ j) :
     upperTailRepresentationColimitMap Stage sys ω (star a)
-        (colimit.ι
+        (topologicalDirectInjection
           (upperGnsTopologicalDiagram Stage sys ω i₀) j x) =
-      colimit.ι
+      topologicalDirectInjection
         (upperGnsTopologicalDiagram Stage sys ω i₀) j
         (star (tailGNSOperator Stage sys ω a j) x) := by
   have h := congrArg (fun f => f x)
     (upperTailRepresentationColimitMap_stage Stage sys ω (star a) j)
   have h' :
       upperTailRepresentationColimitMap Stage sys ω (star a)
-          (colimit.ι
+          (topologicalDirectInjection
             (upperGnsTopologicalDiagram Stage sys ω i₀) j x) =
-        colimit.ι
+        topologicalDirectInjection
           (upperGnsTopologicalDiagram Stage sys ω i₀) j
           (tailGNSOperator Stage sys ω (star a) j x) := by
     simpa only [TopCat.comp_app, tailGNSOperatorTopCatHom_apply,
@@ -285,17 +285,17 @@ theorem upperTailRepresentationColimitMap_intertwines_global
   apply colimit.hom_ext
   intro j
   calc
-    colimit.ι
+    topologicalDirectInjection
           (upperGnsTopologicalDiagram Stage sys ω i₀) j ≫
         (upperTailRepresentationColimitMap Stage sys ω a ≫
           upperGnsTopologicalColimitToHilbert Stage sys ω i₀) =
-        (colimit.ι
+        (topologicalDirectInjection
           (upperGnsTopologicalDiagram Stage sys ω i₀) j ≫
           upperTailRepresentationColimitMap Stage sys ω a) ≫
           upperGnsTopologicalColimitToHilbert Stage sys ω i₀ :=
       (Category.assoc _ _ _).symm
     _ = ((upperTailRepresentationNatTrans Stage sys ω a).app j ≫
-          colimit.ι
+          topologicalDirectInjection
             (upperGnsTopologicalDiagram Stage sys ω i₀) j) ≫
           upperGnsTopologicalColimitToHilbert Stage sys ω i₀ := by
       rw [upperTailRepresentationColimitMap_stage]
@@ -306,7 +306,7 @@ theorem upperTailRepresentationColimitMap_intertwines_global
     _ = (upperGnsTopologicalCocone Stage sys ω i₀).ι.app j ≫
           globalStageRepresentationTopCatHom Stage sys ω a :=
       upperTailRepresentation_stage_global_intertwines Stage sys ω a j
-    _ = colimit.ι
+    _ = topologicalDirectInjection
           (upperGnsTopologicalDiagram Stage sys ω i₀) j ≫
           (upperGnsTopologicalColimitToHilbert Stage sys ω i₀ ≫
             globalStageRepresentationTopCatHom Stage sys ω a) := by
@@ -369,8 +369,9 @@ The operator carrier has its normed topology, but this file does not assume a
 therefore supplied explicitly, exactly as for a general topological
 realization of a star-inductive system. -/
 
-def GlobalStageRepresentationTopologicalData : Prop :=
-  ∀ i : I, Continuous (globalStageRepresentationStarAlgHom Stage sys ω i)
+structure GlobalStageRepresentationTopologicalData where
+  continuous_stage : ∀ i : I,
+    Continuous (globalStageRepresentationStarAlgHom Stage sys ω i)
 
 abbrev globalStageRepresentationOperatorSpace :=
   GNSHilbertColimit Stage sys ω →L[ℂ] GNSHilbertColimit Stage sys ω
@@ -383,7 +384,7 @@ def globalStageRepresentationTopCatCocone
     app := fun i =>
       TopCat.ofHom {
         toFun := globalStageRepresentationStarAlgHom Stage sys ω i
-        continuous_toFun := R i }
+        continuous_toFun := R.continuous_stage i }
     naturality := by
       intro i j f
       apply TopCat.hom_ext
@@ -399,7 +400,7 @@ noncomputable def globalStageRepresentationTopologicalColimitMap
     (R : GlobalStageRepresentationTopologicalData Stage sys ω) :
     topologicalColimit Stage sys ⟶
       TopCat.of (globalStageRepresentationOperatorSpace Stage sys ω) :=
-  colimit.desc (topologicalDiagram Stage sys)
+  topologicalDirectDescend (topologicalDiagram Stage sys)
     (globalStageRepresentationTopCatCocone Stage sys ω R)
 
 @[simp] theorem globalStageRepresentationTopologicalColimitMap_stage

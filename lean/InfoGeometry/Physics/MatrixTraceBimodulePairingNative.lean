@@ -2,7 +2,7 @@ import Mathlib
 
 namespace InfoGeometry.Physics
 
-variable {n : Type*} [Fintype n] [DecidableEq n]
+variable {n : Type*} [Fintype n]
 
 abbrev TraceOperatorSpace (n : Type*) := Matrix n n ℝ
 

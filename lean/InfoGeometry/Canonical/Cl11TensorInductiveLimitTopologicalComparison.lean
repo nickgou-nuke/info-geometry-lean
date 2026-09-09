@@ -47,5 +47,3 @@ theorem algebraicToTopological_unique
       rw [hf n A, algebraicToTopological_ofStage]
 
 end InfoGeometry.Canonical.Cl11TensorInductiveLimitTopologicalComparison
-
-end

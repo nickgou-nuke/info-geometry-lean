@@ -6,10 +6,10 @@ import Mathlib.Tactic
 Finite theorem-honest anchors reconciling the chain:
 
 * Dirac adjoint as a Krein/fundamental-symmetry adjoint;
-* Tomita-style modular conjugation;
-* Souriau temperature as Lie-algebra/vector parameter;
+* Tomita-style modular conjugation socket;
+* Souriau temperature as Lie-algebra/vector parameter socket;
 * Bogoliubov hyperbolic sheet-mixing preserving the Krein metric;
-* determinant/log-barrier and Itakura--Saito extensions.
+* determinant/log-barrier and Itakura--Saito extensions as sockets.
 
 The proved core uses a `2×2` real model with Krein metric `diag(1,-1)`, the
 finite shadow of the doubled `16₊⊕16₋` spinor picture.

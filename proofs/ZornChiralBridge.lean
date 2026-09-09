@@ -1,6 +1,6 @@
 import Mathlib
 import proofs.ZornParavectorNullspace
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 
 /-!
 # Zorn → Chiral CAR Bridge

@@ -18,6 +18,7 @@ This is a bridge datum, not a global theorem about every modular conjugation.
 
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -49,7 +50,7 @@ def rightChiralProjector
 /-! ## 2. Modular mirror sign datum -/
 
 /--
-A low-level modular mirror sign property for fixed operators `J` and `chi`.
+A low-level modular mirror sign witness for fixed operators `J` and `chi`.
 
 This is the pure sign relation.  It does not require scalar structure or
 projectors; those enter in `ModularChiralMirrorDatum`.
@@ -122,7 +123,7 @@ def P_left : Op :=
 def P_right : Op :=
   rightChiralProjector Op M.chi
 
-/-- The underlying low-level sign property. -/
+/-- The underlying low-level sign witness. -/
 def sign : ModularChiralMirrorSign Op M.J M.chi where
   J_square := M.J_square
   chi_square := M.chi_square
@@ -809,7 +810,7 @@ theorem chiralCharge_J
 
 end ModularChiralChargeDatum
 
-/-! ### Algebra/commutant chiral mirroring -/
+/-! ### Algebra/commutant chiral mirroring socket -/
 
 /--
 A proof-carrying statement that the modular mirror routes the algebra side to
@@ -843,7 +844,7 @@ structure AlgebraCommutantChiralMirror
 
   /--
   Exact algebra/commutant routing law.  This is the predicate-level form of
-  `J M J = M'`, rather than a bare property that such a law exists.
+  `J M J = M'`, rather than a bare certificate that such a law exists.
   -/
   algebra_mirrors_to_commutant :
     ∀ x : Op, InCommutant (mirrorOp x) ↔ InAlgebra x
@@ -887,7 +888,7 @@ Real-linear modular mirroring of chiral projectors.
 Once the sign datum `Jχ = -χJ` and the involution laws are supplied, Lean proves
 that the modular mirror exchanges the left and right chiral projectors.
 -/
-theorem modularChiralMirror_projectors :
+theorem modularChiralMirrorOwnerTarget :
   ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
   ∀ M : ModularChiralMirrorDatum H,
     M.J.comp M.Pleft = M.Pright.comp M.J ∧
@@ -901,6 +902,16 @@ theorem modularChiralMirror_projectors :
     M.J_conj_Pleft,
     M.J_conj_Pright
   ⟩
+
+/-- Disambiguated theorem surface for the real-linear modular chiral mirror. -/
+theorem realLinearModularChiralMirrorOwnerTarget :
+  ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
+  ∀ M : ModularChiralMirrorDatum H,
+    M.J.comp M.Pleft = M.Pright.comp M.J ∧
+    M.J.comp M.Pright = M.Pleft.comp M.J ∧
+    (M.J.comp M.Pleft).comp M.J = M.Pright ∧
+    (M.J.comp M.Pright).comp M.J = M.Pleft :=
+  modularChiralMirrorOwnerTarget
 
 end RealLinear
 
@@ -963,7 +974,7 @@ structure SignedModularChiralMirrorDatum
 /--
 A sign datum recording whether a modular mirror preserves or flips chirality.
 
-This parameterized datum exposes both branches as implication fields, which is handy
+This looser socket exposes both branches as implication fields, which is handy
 when a concrete model carries the sign as ordinary data rather than by matching
 on `ChiralMirrorRelation`.
 -/
@@ -988,5 +999,25 @@ structure ModularChiralSignDatum
     sign = ChiralMirrorSign.flips →
       J * chi = -(chi * J)
 
+/-! ## 5. Owner targets -/
+
+/--
+Owner target for supplying a modular chiral mirror in a concrete algebraic
+model.
+-/
+def ModularChiralMirrorOwnerTarget
+    (Op : Type*) [Ring Op] [Algebra ℝ Op] : Prop :=
+  ∀ M : ModularChiralMirrorDatum Op,
+    M.J * M.J = 1 ∧
+      M.chi * M.chi = 1 ∧
+      M.J * M.chi = -(M.chi * M.J) ∧
+      M.J * ((1 : Op) + M.chi) = ((1 : Op) - M.chi) * M.J
+
+/--
+Disambiguated name for the algebraic modular chiral mirror owner target.
+-/
+def AlgebraicModularChiralMirrorOwnerTarget
+    (Op : Type*) [Ring Op] [Algebra ℝ Op] : Prop :=
+  ModularChiralMirrorOwnerTarget Op
 
 end InfoGeometry.OperatorAlgebra.ModularChiralMirror

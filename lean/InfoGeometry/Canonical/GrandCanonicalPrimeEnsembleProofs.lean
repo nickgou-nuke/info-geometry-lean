@@ -11,7 +11,7 @@ import InfoGeometry.Canonical.Arithmetic.ZetaEulerProductBridge
 Proof-only layer for the finite prime grand-canonical lane.
 
 This file carries formulas as functions and proves the finite identities
-directly.  It does not introduce certificates, interfaces, axioms, or property
+directly.  It does not introduce certificates, sockets, axioms, or witness
 packets.
 
 The layer closes the finite pieces used by the prime/zeta thermodynamic lane:
@@ -37,14 +37,8 @@ open InfoGeometry.Arithmetic.PrimeSurprisalNormalization
 /-! ## 1. Log-volume normalization -/
 
 /-- A profile carrying raw multiplicative volume data. -/
-abbrev VolumeProfile (α : Type*) := α → ℝ
-
-namespace VolumeProfile
-
-/-- Compatibility accessor for the native volume profile function. -/
-abbrev volume (P : VolumeProfile α) : α → ℝ := P
-
-end VolumeProfile
+structure VolumeProfile (α : Type*) where
+  volume : α → ℝ
 
 /-- Energy is the logarithm of the volume. -/
 def energy {α : Type*} (P : VolumeProfile α) (x : α) : ℝ :=
@@ -131,37 +125,51 @@ theorem finite_log_volume_product
 
 /-! ## 3. Two-Majorana cancellation -/
 
+/--
+Minimal two-mode Majorana pair.
+
+This records the algebraic inputs needed for the finite Dirac-square
+cancellation.
+-/
+structure TwoMajoranaPair (Op : Type*) [Ring Op] where
+  gamma₁ : Op
+  gamma₂ : Op
+  gamma₁_sq : gamma₁ * gamma₁ = 1
+  gamma₂_sq : gamma₂ * gamma₂ = 1
+  anticomm : gamma₁ * gamma₂ + gamma₂ * gamma₁ = 0
+
+namespace TwoMajoranaPair
+
 variable {Op : Type*} [Ring Op]
+variable (M : TwoMajoranaPair Op)
 
 /-- The finite two-mode Dirac operator. -/
-def dirac (gamma₁ gamma₂ : Op) : Op :=
-  gamma₁ + gamma₂
+def dirac : Op :=
+  M.gamma₁ + M.gamma₂
 
 /-- The Dirac square cancels the cross term and returns `2`. -/
 -- theorem-class: derived
-theorem finite_majorana_dirac_square
-    (gamma₁ gamma₂ : Op)
-    (gamma₁_sq : gamma₁ * gamma₁ = 1)
-    (gamma₂_sq : gamma₂ * gamma₂ = 1)
-    (anticomm : gamma₁ * gamma₂ + gamma₂ * gamma₁ = 0) :
-    dirac gamma₁ gamma₂ * dirac gamma₁ gamma₂ = (2 : Op) := by
+theorem finite_majorana_dirac_square :
+    M.dirac * M.dirac = (2 : Op) := by
   unfold dirac
   calc
-    (gamma₁ + gamma₂) * (gamma₁ + gamma₂)
-        = gamma₁ * gamma₁
-          + gamma₁ * gamma₂
-          + gamma₂ * gamma₁
-          + gamma₂ * gamma₂ := by
+    (M.gamma₁ + M.gamma₂) * (M.gamma₁ + M.gamma₂)
+        = M.gamma₁ * M.gamma₁
+          + M.gamma₁ * M.gamma₂
+          + M.gamma₂ * M.gamma₁
+          + M.gamma₂ * M.gamma₂ := by
             noncomm_ring
     _ = (2 : Op) := by
-          rw [gamma₁_sq, gamma₂_sq]
-          have hcross : gamma₁ * gamma₂ + gamma₂ * gamma₁ = 0 := anticomm
+          rw [M.gamma₁_sq, M.gamma₂_sq]
+          have hcross : M.gamma₁ * M.gamma₂ + M.gamma₂ * M.gamma₁ = 0 := M.anticomm
           have hsum :
-              1 + gamma₁ * gamma₂ + gamma₂ * gamma₁ + 1 =
-                1 + (gamma₁ * gamma₂ + gamma₂ * gamma₁) + 1 := by
+              1 + M.gamma₁ * M.gamma₂ + M.gamma₂ * M.gamma₁ + 1 =
+                1 + (M.gamma₁ * M.gamma₂ + M.gamma₂ * M.gamma₁) + 1 := by
             abel
           rw [hsum, hcross]
           norm_num
+
+end TwoMajoranaPair
 
 /-! ## 4. Prime square-free product and zeta bridge -/
 

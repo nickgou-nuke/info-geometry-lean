@@ -34,7 +34,7 @@ variable (F : TwistedBerryCurvature gbz)
     ω (gbz.glide k) = - ω k :=
   hω k
 
-/-- The structure-field property promotes to the explicit oddness predicate. -/
+/-- The structure-field witness promotes to the explicit oddness predicate. -/
 theorem twistedBerryCurvature_isGlideOdd : IsGlideOddCurvature gbz F.curvature := by
   exact F.h_twisted
 
@@ -51,7 +51,7 @@ This forces the Nielsen-Ninomiya total chirality to be measured
 in twisted (co)homology (modulo 2) rather than Z.
 
 Mathlib root:
-* `glide_odd_curvature_strictly_odd` is the explicit oddness property readout;
+* `glide_odd_curvature_strictly_odd` is the explicit oddness hypothesis readout;
 * `Mathlib.Data.Real.Basic` supplies `add_neg_cancel`, closing the cancellation.
 -/
 theorem glide_odd_curvature_cancellation
@@ -96,7 +96,7 @@ def swap : ChiralSheet → ChiralSheet
 end ChiralSheet
 
 /-- A finite two-sheet Berry connection represented by a real potential on each sheet. -/
-abbrev BerryConnection (_gbz : GlideBrillouinZone BZ) := ChiralSheet → BZ → ℝ
+abbrev BerryConnection (gbz : GlideBrillouinZone BZ) := ChiralSheet → BZ → ℝ
 
 namespace BerryConnection
 
@@ -106,7 +106,7 @@ abbrev potential {gbz : GlideBrillouinZone BZ}
 end BerryConnection
 
 /-- A finite two-sheet Berry curvature represented by a real curvature on each sheet. -/
-abbrev SheetBerryCurvature (_gbz : GlideBrillouinZone BZ) := ChiralSheet → BZ → ℝ
+abbrev SheetBerryCurvature (gbz : GlideBrillouinZone BZ) := ChiralSheet → BZ → ℝ
 
 namespace SheetBerryCurvature
 

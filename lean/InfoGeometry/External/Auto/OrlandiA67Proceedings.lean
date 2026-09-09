@@ -4,6 +4,16 @@ noncomputable section
 
 namespace OrlandiA67Proceedings
 
+structure MirrorPair where
+  A : ℕ
+  protonRich : String
+  neutronRich : String
+
+def As67Se67 : MirrorPair where
+  A := 67
+  protonRich := "67As"
+  neutronRich := "67Se"
+
 def channelCalibration_ns_per_channel : ℚ := 56 / 100
 
 def centroidShiftTime (cForward cReverse : ℚ) : ℚ :=
@@ -70,6 +80,18 @@ def noLongLifetimeObserved (tauMeasured tauClaimed : ℚ) : Prop :=
 theorem As67_not_12ns_centroid_scale :
     noLongLifetimeObserved tau_As67_9half_prelim_ns 12 := by
   norm_num [noLongLifetimeObserved, tau_As67_9half_prelim_ns]
+
+def formalSummary : Prop :=
+  tau_As67_9half_prelim_ns < tau_Se67_9half_prelim_ns ∧
+    branching_Se67_304 + branching_Se67_717 + branching_Se67_1365 = 1 ∧
+    mirrorRatio BE1u_As67_725 BE1u_Se67_717 = 13 / 10 ∧
+    mirrorRatio BE1u_As67_319 BE1u_Se67_304 = 81 / 17 ∧
+    noLongLifetimeObserved tau_As67_9half_prelim_ns 12
+
+theorem formalSummary_proved : formalSummary := by
+  exact ⟨Se67_lifetime_longer_prelim, branching_Se67_sum,
+    BE1_first_ratio_prelim, BE1_second_ratio_prelim,
+    As67_not_12ns_centroid_scale⟩
 
 end OrlandiA67Proceedings
 

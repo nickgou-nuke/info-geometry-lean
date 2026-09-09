@@ -8,7 +8,7 @@ surface.
 
 This file does not reprove the full theorem stack. It packages the mathlib
 Jordan-Chevalley decomposition in the native `Module.End` language and exposes
-the commuting readout coming from the singleton `adjoin` property. A local
+the commuting readout coming from the singleton `adjoin` witness. A local
 matrix-facing endomorphism readout is included for the standard complex
 coordinate carrier.
 -/

@@ -8,7 +8,7 @@ import InfoGeometry.Meta.Architecture
 
 Operator-valued modular Hamiltonian / beta-temperature duality.
 
-This file formulates the theorem-safe operator Fenchel/Frobenius interface:
+This file formulates the theorem-safe operator Fenchel/Frobenius socket:
 
 * `K` is a modular Hamiltonian/operator generator;
 * `Β` is an operator-valued inverse-temperature/geometric-temperature coordinate;

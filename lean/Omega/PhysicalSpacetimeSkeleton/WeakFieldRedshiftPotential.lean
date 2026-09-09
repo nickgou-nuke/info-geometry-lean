@@ -27,26 +27,17 @@ theorem weakFieldMetric00_of_linear_lapse (φ : ℝ) (hLin : weakFieldLapse φ =
 /-- The admissible Einstein equation rewritten as a Poisson-source identity for the linearized
 `00`-component. -/
 theorem einsteinTensor_eq_weakFieldPoissonSource
-    (D : AdmissibleEinsteinClosure) (admissible : Prop) (hAdm : admissible)
-    (eulerLagrange_identity :
-      admissible →
-        D.einsteinTensor + D.cosmologicalConstant * D.metric =
-          D.couplingConstant * D.stressEnergy) :
+    (D : AdmissibleEinsteinClosure) (hAdm : D.admissible) :
     D.einsteinTensor = weakFieldPoissonSource D := by
   dsimp [weakFieldPoissonSource]
-  linarith [paper_physical_spacetime_admissible_global_einstein_equation D admissible hAdm
-    eulerLagrange_identity]
+  linarith [paper_physical_spacetime_admissible_global_einstein_equation D hAdm]
 
 /-- Paper-facing weak-field wrapper: the redshift ratio is controlled by the lapse, the lapse
 linearizes to the Newtonian potential, and the admissible Einstein equation supplies the source
 term.
     cor:physical-spacetime-weak-field-redshift-potential -/
 theorem paper_physical_spacetime_weak_field_redshift_potential
-    (D : AdmissibleEinsteinClosure) (admissible : Prop) (hAdm : admissible)
-    (eulerLagrange_identity :
-      admissible →
-        D.einsteinTensor + D.cosmologicalConstant * D.metric =
-          D.couplingConstant * D.stressEnergy)
+    (D : AdmissibleEinsteinClosure) (hAdm : D.admissible)
     {U : Type} (N : U → Real) (A B : U) (deltaT nuA nuB φ : Real)
     (hNA : N A != 0) (hNB : N B != 0) (hT : deltaT != 0)
     (hA : nuA = 1 / (N A * deltaT)) (hB : nuB = 1 / (N B * deltaT))
@@ -56,6 +47,6 @@ theorem paper_physical_spacetime_weak_field_redshift_potential
       D.einsteinTensor = weakFieldPoissonSource D := by
   refine ⟨paper_physical_spacetime_local_redshift N A B deltaT nuA nuB hNA hNB hT hA hB, ?_, ?_⟩
   · exact weakFieldMetric00_of_linear_lapse φ hLin
-  · exact einsteinTensor_eq_weakFieldPoissonSource D admissible hAdm eulerLagrange_identity
+  · exact einsteinTensor_eq_weakFieldPoissonSource D hAdm
 
 end Omega.PhysicalSpacetimeSkeleton

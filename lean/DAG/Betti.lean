@@ -2,7 +2,6 @@ import Lean
 import DAG.Basic
 import DAG.Disassembler
 import DAG.TwoComplex
-import DAG.Hydrate
 
 open Lean
 
@@ -31,9 +30,17 @@ def computeExprHomology (e : Expr) : MetaM Unit := do
     forward := forward
   }
 
-  -- 3. Use the canonical hydration owner for SCCs, predecessors,
-  --    topological order, and dominators.
-  let h : HydratedGraph Nat := hydrate g
+  -- 3. "Hydrate" the graph (compute SCCs, topo sort etc needed for TwoComplex)
+  -- Note: Since Expr is a DAG, SCCs will be trivial, but we need the structure.
+  let h : HydratedGraph Nat := {
+    toGraph := g,
+    sccs := g.nodes.map (fun i => #[i]),
+    sccOf := g.nodes.map (fun i => i),
+    dag := g.forward.map (fun arr => arr.map (·.1)),
+    preds := Array.replicate n #[], -- simplified
+    topo := Array.range n, -- simplified
+    doms := #[] -- not needed for Betti
+  }
 
   -- 4. Build the 2-Complex
   let tc := buildTwoComplex h

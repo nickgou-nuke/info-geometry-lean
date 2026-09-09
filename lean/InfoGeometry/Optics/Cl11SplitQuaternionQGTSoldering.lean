@@ -81,7 +81,7 @@ theorem cl11SplitQuaternionMatrix_cliffordConjugate (q : Cl11) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [cl11SplitQuaternionMatrix, splitQuaternionMatrixConjugate,
-      splitQ_eq_matrix, cliffordConjugate_apply] <;> ring
+      splitQ_eq_matrix, cliffordConjugate] <;> ring
 
 /-- The causal quadratic form is the `Cl(1,1)` split norm. -/
 @[simp] theorem q22_cl11PauliVector (q : Cl11) :

@@ -55,33 +55,28 @@ def cross3 (u v : Vec3) : Vec3
   | 1 => u 2 * v 0 - u 0 * v 2
   | 2 => u 0 * v 1 - u 1 * v 0
 
-abbrev Zorn := ℂ × ℂ × Vec3 × Vec3
-
-namespace Zorn
-
-def a (X : Zorn) : ℂ := X.1
-def b (X : Zorn) : ℂ := X.2.1
-def u (X : Zorn) : Vec3 := X.2.2.1
-def v (X : Zorn) : Vec3 := X.2.2.2
-
-end Zorn
+structure Zorn where
+  a : ℂ
+  b : ℂ
+  u : Vec3
+  v : Vec3
 
 theorem zorn_ext {X Y : Zorn}
     (ha : X.a = Y.a) (hb : X.b = Y.b) (hu : X.u = Y.u) (hv : X.v = Y.v) : X = Y := by
-  rcases X with ⟨aX, bX, uX, vX⟩
-  rcases Y with ⟨aY, bY, uY, vY⟩
-  simp only [Zorn.a, Zorn.b, Zorn.u, Zorn.v] at ha hb hu hv
+  cases X
+  cases Y
   simp_all
 
-def zornMul (X Y : Zorn) : Zorn :=
-  (X.a * Y.a + dot3 X.u Y.v,
-    X.b * Y.b + dot3 X.v Y.u,
-    fun i => X.a * Y.u i + Y.b * X.u i - cross3 X.v Y.v i,
-    fun i => Y.a * X.v i + X.b * Y.v i + cross3 X.u Y.u i)
+def zornMul (X Y : Zorn) : Zorn where
+  a := X.a * Y.a + dot3 X.u Y.v
+  b := X.b * Y.b + dot3 X.v Y.u
+  u := fun i => X.a * Y.u i + Y.b * X.u i - cross3 X.v Y.v i
+  v := fun i => Y.a * X.v i + X.b * Y.v i + cross3 X.u Y.u i
 
 def zornNorm (X : Zorn) : ℂ := X.a * X.b - dot3 X.u X.v
 
-def zero : Zorn := (0, 0, fun _ => 0, fun _ => 0)
+def zero : Zorn where
+  a := 0; b := 0; u := fun _ => 0; v := fun _ => 0
 
 /-- Fixed-line momentum vector `(px,0,0)`. -/
 def fixedLineMomentum (px : ℂ) : Vec3
@@ -90,32 +85,40 @@ def fixedLineMomentum (px : ℂ) : Vec3
   | 2 => 0
 
 /-- Fixed-line paravector `[[E,px],[px,E]]`. -/
-def fixedParavector (E px : ℂ) : Zorn := (E, E, fixedLineMomentum px, fixedLineMomentum px)
+def fixedParavector (E px : ℂ) : Zorn where
+  a := E
+  b := E
+  u := fixedLineMomentum px
+  v := fixedLineMomentum px
 
 /-- Collapsed lower nilpotent defect `[[0,0],[px,0]]`. -/
-def collapsedFixedLower (px : ℂ) : Zorn := (0, 0, fun _ => 0, fixedLineMomentum px)
+def collapsedFixedLower (px : ℂ) : Zorn where
+  a := 0
+  b := 0
+  u := fun _ => 0
+  v := fixedLineMomentum px
 
 /-- Fixed-line mass shell. -/
 theorem fixed_paravector_mass_shell (E px : ℂ) :
     zornNorm (fixedParavector E px) = E^2 - px^2 := by
-  simp [Zorn.a, Zorn.b, Zorn.u, Zorn.v, zornNorm, fixedParavector, fixedLineMomentum, dot3, Fin.sum_univ_three]
+  simp [zornNorm, fixedParavector, fixedLineMomentum, dot3, Fin.sum_univ_three]
   ring
 
 /-- Collapsed fixed-line defect has zero norm. -/
 theorem collapsed_fixed_norm_zero (px : ℂ) :
     zornNorm (collapsedFixedLower px) = 0 := by
-  simp [Zorn.a, Zorn.b, Zorn.u, Zorn.v, zornNorm, collapsedFixedLower, fixedLineMomentum, dot3]
+  simp [zornNorm, collapsedFixedLower, fixedLineMomentum, dot3]
 
 /-- Collapsed fixed-line defect is nilpotent. -/
 theorem collapsed_fixed_nilpotent (px : ℂ) :
     zornMul (collapsedFixedLower px) (collapsedFixedLower px) = zero := by
   apply zorn_ext
-  · simp [Zorn.a, Zorn.b, Zorn.u, Zorn.v, zornMul, collapsedFixedLower, zero, dot3]
-  · simp [Zorn.a, Zorn.b, Zorn.u, Zorn.v, zornMul, collapsedFixedLower, zero, dot3]
+  · simp [zornMul, collapsedFixedLower, zero, dot3]
+  · simp [zornMul, collapsedFixedLower, zero, dot3]
   · funext i
-    fin_cases i <;> simp [Zorn.a, Zorn.b, Zorn.u, Zorn.v, zornMul, collapsedFixedLower, zero, fixedLineMomentum, cross3]
+    fin_cases i <;> simp [zornMul, collapsedFixedLower, zero, fixedLineMomentum, cross3]
   · funext i
-    fin_cases i <;> simp [Zorn.a, Zorn.b, Zorn.u, Zorn.v, zornMul, collapsedFixedLower, zero, fixedLineMomentum, cross3]
+    fin_cases i <;> simp [zornMul, collapsedFixedLower, zero, fixedLineMomentum, cross3]
 
 /-! ## Nilpotent Itakura--Saito collapse -/
 
@@ -126,5 +129,40 @@ def nilItakuraSaito (K : M2C) : M2C := nilExp K - 1 - K
 theorem nilItakuraSaito_zero (K : M2C) : nilItakuraSaito K = 0 := by
   ext i j
   simp [nilItakuraSaito, nilExp, Matrix.sub_apply]
+
+/-! ## Synthesis -/
+
+/-- Main synthesis theorem. -/
+theorem brillouin_klein_nilpotent_attractor_synthesis :
+    (∀ {k : ℕ} {c : ℂ}, Odd k → c = pgPhase k * c → c = 0) ∧
+    (∀ {k : ℕ} {c : ℂ}, c = pgPhase k * c → c ≠ 0 → ¬ Odd k) ∧
+    (∀ E px : ℂ, zornNorm (fixedParavector E px) = E^2 - px^2) ∧
+    (∀ px : ℂ, zornNorm (collapsedFixedLower px) = 0) ∧
+    (∀ px : ℂ, zornMul (collapsedFixedLower px) (collapsedFixedLower px) = zero) ∧
+    (∀ K : M2C, nilItakuraSaito K = 0) := by
+  constructor
+  · intro k c hodd hrel
+    exact pg_fixed_line_extinction hodd hrel
+  constructor
+  · intro k c hrel hnz
+    exact nonzero_fixed_line_mode_not_odd hrel hnz
+  constructor
+  · intro E px
+    exact fixed_paravector_mass_shell E px
+  constructor
+  · intro px
+    exact collapsed_fixed_norm_zero px
+  constructor
+  · intro px
+    exact collapsed_fixed_nilpotent px
+  · intro K
+    exact nilItakuraSaito_zero K
+
+#check pg_fixed_line_extinction
+#check fixed_paravector_mass_shell
+#check collapsed_fixed_norm_zero
+#check collapsed_fixed_nilpotent
+#check nilItakuraSaito_zero
+#check brillouin_klein_nilpotent_attractor_synthesis
 
 end BrillouinKleinNilpotentAttractor

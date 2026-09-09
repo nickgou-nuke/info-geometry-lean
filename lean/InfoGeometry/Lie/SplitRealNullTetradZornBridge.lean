@@ -1,5 +1,6 @@
 import InfoGeometry.Clifford.SplitRealNullTetrad
 import InfoGeometry.Lie.SplitOctonionEllKleinFlow
+import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 /-!
 # A split-real null tetrad inside the active Zorn/Klein carrier
@@ -104,7 +105,7 @@ theorem doubleWittBoost_quad_eq_zero_iff (t : ℝ) (X : Carrier) :
 /-- The native Zorn determinant restricts to the split `(2,2)` tetrad
 quadratic form. -/
 theorem detZ_toActive (X : Carrier) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (toActive X).1 = quad X := by
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 (toActive X).1 = quad X := by
   have hdet := kleinForm_activeKleinLinearEquiv (toActive X)
   rw [activeKleinLinearEquiv, LinearEquiv.trans_apply,
     activeSectorEquiv_toActive] at hdet
@@ -148,13 +149,13 @@ theorem doubleWittBoost_toActive_kleinPolar (t : ℝ) (X Y : Carrier) :
   rw [doubleWittBoost_pairing]
 
 theorem doubleWittBoost_toActive_null_iff (t : ℝ) (X : Carrier) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
         (toActive (doubleWittBoost t X)).1 = 0 ↔
       quad X = 0 := by
   rw [detZ_toActive, doubleWittBoost_quad]
 
 theorem toActive_null_iff (X : Carrier) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (toActive X).1 = 0 ↔
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 (toActive X).1 = 0 ↔
       quad X = 0 := by
   rw [detZ_toActive]
 
@@ -255,7 +256,7 @@ theorem toActive_intertwines_ellFlow (t : ℝ) (X : Carrier) :
 /-- Consequently the concrete tetrad embedding transports the invariant
 quadratic flow without changing its native `(2,2)` form. -/
 theorem detZ_ellFlow_toActive (t : ℝ) (X : Carrier) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
         (ellFlowActive t (toActive X)).1 = quad X := by
   rw [← toActive_intertwines_ellFlow, detZ_toActive, doubleWittBoost_quad]
 

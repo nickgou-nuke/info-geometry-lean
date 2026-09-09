@@ -40,6 +40,30 @@ def pureStateHorizontal
     (ψ : UnitPureState E) (dψ : E) : E :=
   dψ - ⟪(ψ : E), dψ⟫_ℂ • (ψ : E)
 
+theorem pureStateHorizontal_orthogonal
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    (ψ : UnitPureState E) (dψ : E) :
+    ⟪(ψ : E), pureStateHorizontal ψ dψ⟫_ℂ = 0 := by
+  unfold pureStateHorizontal
+  rw [inner_sub_right, inner_smul_right]
+  have hnorm : ⟪(ψ : E), (ψ : E)⟫_ℂ = 1 := by
+    apply Complex.ext
+    · simpa [real_inner_self_eq_norm_sq] using congrArg (fun x : ℝ => (x : ℂ))
+        (show ‖(ψ : E)‖ ^ 2 = (1 : ℝ) by simp [ψ.norm_eq_one])
+    · simp
+  rw [hnorm, mul_one, sub_self]
+
+theorem pureStateHorizontal_idempotent
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    (ψ : UnitPureState E) (dψ : E) :
+    pureStateHorizontal ψ (pureStateHorizontal ψ dψ) =
+      pureStateHorizontal ψ dψ := by
+  change pureStateHorizontal ψ dψ -
+      ⟪(ψ : E), pureStateHorizontal ψ dψ⟫_ℂ • (ψ : E) =
+    pureStateHorizontal ψ dψ
+  rw [pureStateHorizontal_orthogonal]
+  simp
+
 /-- The complex QGT, with the state-direction removed projectively. -/
 def complexPureQGT
     {E U : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]

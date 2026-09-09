@@ -3,7 +3,6 @@ import InfoGeometry.Canonical.TimeAsWindingMonodromy3D
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
 import InfoGeometry.Krein.DoubledSpace
-import InfoGeometry.Topology.ThermodynamicSL2MobiusFlow
 
 set_option linter.unusedSectionVars false
 
@@ -29,7 +28,6 @@ open Complex
 open InfoGeometry.Canonical.TimeAsWindingMonodromy3D
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 open InfoGeometry.Projective.KleinQuadric.DeRhamMonodromy
-open InfoGeometry.Topology.ThermodynamicSL2MobiusFlow
 
 /-- The "Red Line" Ω-Generating Potential $\Phi_{\text{RedLine}}(\phi) = -\ln \det J(\phi)$. -/
 noncomputable def redLineOmegaPotential (detJ : ℝ → ℝ) (x : ℝ) : ℝ :=
@@ -46,50 +44,12 @@ theorem redLineOmegaPotential_derivAt (detJ : ℝ → ℝ) (x : ℝ)
   simpa [redLineOmegaPotential, Function.comp, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc]
     using hcomp
 
-/-! The abstract determinant readout above has a concrete Lie-flow
-specialization.  The Jacobian datum is the norm of the actual finite Möbius
-orbit Jacobian; no surrogate partition or witness is introduced. -/
-
-theorem redLineOmegaPotential_eq_neg_logJacobianNorm
-    (v : ThermodynamicSL2Variation) (t : ℝ) (z : ℂ) :
-    redLineOmegaPotential
-        (fun r : ℝ => ‖v.finiteOrbitJacobian (r : ℂ) z‖) t =
-      -v.logJacobianNorm (t : ℂ) z := by
-  rfl
-
-theorem hasDerivAt_redLineOmegaPotential_finiteOrbitJacobian
-    (v : ThermodynamicSL2Variation) (t : ℝ) (z : ℂ)
-    (hden : v.matrixFlow (t : ℂ) 1 0 * z + v.matrixFlow (t : ℂ) 1 1 ≠ 0) :
-    HasDerivAt
-      (fun r : ℝ => redLineOmegaPotential
-        (fun u : ℝ => ‖v.finiteOrbitJacobian (u : ℂ) z‖) r)
-      (-((2 * (v.dilation.force : ℂ) -
-        2 * (v.specialConformal.force : ℂ) *
-          v.finiteOrbit (t : ℂ) z).re)) t := by
-  simpa [redLineOmegaPotential, ThermodynamicSL2Variation.logJacobianNorm]
-    using (v.hasDerivAt_logJacobianNorm_real t z hden).neg
-
 /-- Unnormalized spinorial flow Jacobian data. -/
 structure SpinorialFlowJacobianData (Map : Type*) where
   jacobianDet : Map → ℝ
   pos_det : ∀ φ, 0 < jacobianDet φ
-
-namespace SpinorialFlowJacobianData
-
-/-- The Red Line potential determined by the positive Jacobian determinant. -/
-noncomputable abbrev redLinePotential
-    {Map : Type*}
-    (data : SpinorialFlowJacobianData Map) : Map → ℝ :=
-  fun φ => - Real.log (data.jacobianDet φ)
-
-/-- The Red Line potential is its defining negative logarithm. -/
-theorem redLinePotential_eq
-    {Map : Type*}
-    (data : SpinorialFlowJacobianData Map) (φ : Map) :
-    data.redLinePotential φ = - Real.log (data.jacobianDet φ) := by
-  rfl
-
-end SpinorialFlowJacobianData
+  redLinePotential : Map → ℝ
+  redLinePotential_eq : ∀ φ, redLinePotential φ = - Real.log (jacobianDet φ)
 
 /--
 **Main Theorem 1: Red Line Potential Exponentiation**

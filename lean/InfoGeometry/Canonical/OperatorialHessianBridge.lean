@@ -249,8 +249,8 @@ theorem deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stat
 /--
 Support-restricted modular form of the scalar log-Hessian theorem.
 
-For the property modular generator `Kambient`, the normalized stationary scalar
-second derivative of the log-readout is the probe of the property modular Lie
+For the certified modular generator `Kambient`, the normalized stationary scalar
+second derivative of the log-readout is the probe of the certified modular Lie
 Hessian. This is the owner bridge from scalar second variation to the
 operatorial modular Hessian; no finite response matrix is used.
 -/

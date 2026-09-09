@@ -365,13 +365,13 @@ theorem master_spin8_triality_chiral_parity
     (PPlus g + PMinus g = 1) ∧
     (PPlus g * PPlus g = PPlus g) ∧
     (PPlus g * PMinus g = 0) ∧
-    (PPlus g * g.g1 = g.g1 * PMinus g) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact gamma_sq_eq_one g
-  · exact gamma_anticomm_g1 g
-  · exact chiral_projectors_completeness g
-  · exact pplus_idempotent g
-  · exact chiral_projectors_orthogonal g
-  · exact pplus_gamma1_flip g
+    (PPlus g * g.g1 = g.g1 * PMinus g) := ⟨
+  gamma_sq_eq_one g,
+  gamma_anticomm_g1 g,
+  chiral_projectors_completeness g,
+  pplus_idempotent g,
+  chiral_projectors_orthogonal g,
+  pplus_gamma1_flip g
+⟩
 
 end InfoGeometry.Algebra.CliffordCl8SpinorTriality

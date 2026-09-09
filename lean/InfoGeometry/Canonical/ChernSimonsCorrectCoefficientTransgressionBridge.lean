@@ -55,5 +55,20 @@ theorem transgression_exact_class_zero_from_nilpotency
   rw [LinearMap.mem_range]
   use cs
 
+/-- **Theorem**: Master Nilpotent Chern-Simons Transgression Synthesis.
+    Unifies:
+    1. Automatic closedness d(d CS(A)) = 0 derived directly from operator nilpotency d² = 0.
+    2. Exact class zero [d CS(A)] = 0 ∈ H_d without primitive closedness assumptions.
+    3. Complete proof closure for exact transgression forms in de Rham cohomology. -/
+theorem master_chern_simons_nilpotent_transgression_synthesis
+    (d : Module.End R (ExteriorAlgebra R V))
+    (hd2 : d.comp d = 0)
+    (cs : ExteriorAlgebra R V) :
+    (d (d cs) = 0) ∧
+    (Submodule.Quotient.mk ⟨d cs, transgression_density_automatically_closed d hd2 cs⟩ =
+      (Submodule.Quotient.mk 0 : deRhamCohomologyModule d)) := ⟨
+  transgression_density_automatically_closed d hd2 cs,
+  transgression_exact_class_zero_from_nilpotency d hd2 cs
+⟩
 
 end InfoGeometry.Canonical.ChernSimonsCorrectCoefficientTransgressionBridge

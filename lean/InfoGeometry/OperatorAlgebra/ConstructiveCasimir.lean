@@ -17,7 +17,7 @@ and replaces it with a constructive algebraic path:
   5. show centrality implies invariance under unit conjugation.
 
 The cancellation identity is the remaining model-specific law.  It is no
-longer hidden inside a bare `is_central` property.
+longer hidden inside a bare `is_central` hypothesis.
 -/
 
 import Mathlib.Tactic
@@ -166,7 +166,7 @@ The only remaining model-specific input is the explicit cancellation identity:
 
 `sum_i ([A,X_i]Y_i + X_i[A,Y_i]) = 0`.
 
-This replaces a bare centrality property.
+This replaces a bare centrality assumption.
 -/
 structure VerifiedQuadraticCasimir
     (A ι : Type*) [Ring A] [Fintype ι] where
@@ -203,7 +203,7 @@ def element : A :=
 The verified quadratic Casimir is central.
 
 This is the first coagulation theorem: centrality is no longer a primitive
-property.
+hypothesis.
 -/
 theorem isCentral :
     IsCentral C.element := by
@@ -280,27 +280,25 @@ downstream modules usually need:
 -/
 abbrev IndividuatedCasimir
     (A : Type*) [Ring A] :=
-  A
+  InfoGeometry.OperatorAlgebra.IndividuatedCasimir.VerifiedCasimir A
 
 namespace IndividuatedCasimir
 
 variable {A : Type*} [Ring A]
 
 /-- Historical centrality readout, derived from the canonical commutation law. -/
-theorem isCentral (C : IndividuatedCasimir A)
-    (hC : ∀ X : A, C * X = X * C) :
-    IsCentral C := by
+theorem isCentral (C : IndividuatedCasimir A) :
+    IsCentral C.element := by
   intro X
-  exact sub_eq_zero.mpr (hC X).symm
+  simp [assocCommutator, C.central X]
 
 /--
 Historical invariance readout.  Unit-conjugation invariance is derived from
 centrality rather than stored as a second evidence field.
 -/
-theorem isInvariant (C : IndividuatedCasimir A)
-    (hC : ∀ X : A, C * X = X * C) :
-    IsUnitConjugationInvariant C :=
-  unitConjugationInvariant_of_central (isCentral C hC)
+theorem isInvariant (C : IndividuatedCasimir A) :
+    IsUnitConjugationInvariant C.element :=
+  unitConjugationInvariant_of_central C.isCentral
 
 end IndividuatedCasimir
 
@@ -310,15 +308,29 @@ Build an individuated Casimir from a verified quadratic Casimir datum.
 def VerifiedQuadraticCasimir.toIndividuatedCasimir
     {A ι : Type*} [Ring A] [Fintype ι]
     (C : VerifiedQuadraticCasimir A ι) :
-    IndividuatedCasimir A :=
-  C.element
+    IndividuatedCasimir A where
+  element := C.element
+  central := fun X => (C.commutes_with X).symm
 
-/-! ## 7. Native quadratic Casimir theorem -/
+/-! ## 7. Owner target -/
 
-theorem constructiveCasimir
+/--
+Owner target for a constructive quadratic Casimir.
+
+This target is intentionally non-vacuous: it requires an actual verified
+quadratic Casimir datum, not a bare centrality postulate.
+-/
+def ConstructiveCasimirOwnerTarget
+    (A ι : Type*) [Ring A] [Fintype ι] : Prop :=
+  ∀ C : VerifiedQuadraticCasimir A ι,
+    IsCentral C.element ∧ IsUnitConjugationInvariant C.element
+
+/--
+The owner target is constructively discharged.
+-/
+theorem constructiveCasimirOwnerTarget
     (A ι : Type*) [Ring A] [Fintype ι] :
-    ∀ C : VerifiedQuadraticCasimir A ι,
-      IsCentral C.element ∧ IsUnitConjugationInvariant C.element := by
+    ConstructiveCasimirOwnerTarget A ι := by
   intro C
   exact ⟨C.isCentral, C.unitConjugationInvariant⟩
 

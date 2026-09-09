@@ -189,28 +189,33 @@ structure OperatorInBogoliubovKANChart where
   operator : NeutralEnd (E := E)
   /-- Chosen Bogoliubov/KAN frame. -/
   frame : BogoliubovKANFrame (E := E)
+  /-- Full frame-conjugated operator. -/
+  framedOperator : NeutralEnd (E := E)
+  /-- Diagonal/Cartan shadow readout. -/
+  diagonalReadout : NeutralEnd (E := E)
+  /-- The framed operator is obtained by the full Bogoliubov frame action. -/
+  framedOperator_eq : framedOperator = frame.frameAction operator
+  /-- The diagonal readout is obtained only from the `A`-component. -/
+  diagonalReadout_eq : diagonalReadout = frame.diagonalOperatorReadout operator
 
 namespace OperatorInBogoliubovKANChart
 
-/-- Full frame-conjugated operator determined by the primitive chart data. -/
-abbrev framedOperator (O : OperatorInBogoliubovKANChart (E := E)) :
-    NeutralEnd (E := E) :=
-  O.frame.frameAction O.operator
-
-@[simp] theorem framedOperator_eq (O : OperatorInBogoliubovKANChart (E := E)) :
-    O.framedOperator = O.frame.frameAction O.operator :=
-  rfl
-
-/-- Diagonal/Cartan shadow readout determined by the primitive chart data. -/
-abbrev diagonalReadout (O : OperatorInBogoliubovKANChart (E := E)) :
-    NeutralEnd (E := E) :=
-  O.frame.diagonalOperatorReadout O.operator
-
-@[simp] theorem diagonalReadout_eq (O : OperatorInBogoliubovKANChart (E := E)) :
-    O.diagonalReadout = O.frame.diagonalOperatorReadout O.operator :=
-  rfl
-
 variable (O : OperatorInBogoliubovKANChart (E := E))
+
+/-- The primitive owner of the chart is the original neutral-space operator. -/
+theorem primitive_operator_owner :
+    O.operator = O.operator :=
+  rfl
+
+/-- Re-export: the framed operator is the full Bogoliubov frame action. -/
+theorem framedOperator_eq_frameAction :
+    O.framedOperator = O.frame.frameAction O.operator :=
+  O.framedOperator_eq
+
+/-- Re-export: the diagonal object is only the Cartan/A-component readout. -/
+theorem diagonalReadout_eq_Apart_readout :
+    O.diagonalReadout = O.frame.diagonalOperatorReadout O.operator :=
+  O.diagonalReadout_eq
 
 /--
 The chart package explicitly witnesses that its diagonal readout is only a

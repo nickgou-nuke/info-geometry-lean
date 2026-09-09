@@ -74,7 +74,7 @@ private theorem W_constant_of_spinorialClosureState
 
 omit [FiniteDimensional ℝ E] in
 /--
-Constructive `W`-constancy closure from an explicit zero-spinorial property
+Constructive `W`-constancy closure from an explicit zero-spinorial witness
 (non-bridge form).
 -/
 private theorem W_constant_of_spinorialState

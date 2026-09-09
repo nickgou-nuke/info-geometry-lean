@@ -16,7 +16,7 @@ This file is a narrow composition layer over existing owner surfaces:
 * Witten parity/supertrace cancellation: `BostConnesSuperalgebraConstructive`.
 
 It does not define a new graph model and does not assert analytic KMS, C*-completion,
-zeta, or Riemann-property consequences.
+zeta, or Riemann-hypothesis consequences.
 -/
 
 noncomputable section
@@ -78,8 +78,8 @@ theorem graphEnergy_nonneg (ψ : P.graph.State) :
 /-- The supplied Laplacian is Hodge-even when `Δ = Q²` and `{Q,*}=0`. -/
 @[rep_depth operator]
 theorem laplacian_commutes_hodge :
-    laplacian P.hodge * hodgeStar P.hodge =
-      hodgeStar P.hodge * laplacian P.hodge :=
+    P.hodge.laplacian * P.hodge.hodgeStar =
+      P.hodge.hodgeStar * P.hodge.laplacian :=
   laplacian_commutes_hodge_of_dirac_closure
     P.hodge P.hodgeChiral P.laplacianFromDirac
 

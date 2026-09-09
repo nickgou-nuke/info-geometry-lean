@@ -51,7 +51,7 @@ theorem artin_braid_relation_topological :
     congrArg (fun z : JonesCarrier => z * x) artin_braid_relation
 
 /-- The topological braid relation is the image of the finite algebraic one,
-not an independent postulat3. -/
+not an independent postulate. -/
 theorem artin_braid_relation_topological_factorization :
     s0LeftTopCatHom ≫ s1LeftTopCatHom ≫ s0LeftTopCatHom =
       leftMulTopCatHom (s0 * s1 * s0) ∧

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 open Matrix Complex
 
@@ -66,7 +66,7 @@ theorem logBranchShift_add (m n : ℤ) :
   norm_num
   ring
 
-/-- Scalar and traceless square roots of the negative identity coexist in `M₂(ℂ)`. -/
+/-- Synthesis: scalar and traceless roots of `-I` coexist in `M₂(ℂ)`. -/
 theorem negative_identity_root_synthesis :
     ((I • (1 : Matrix (Fin 2) (Fin 2) ℂ)) * (I • (1 : Matrix (Fin 2) (Fin 2) ℂ)) =
       -(1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧

@@ -44,12 +44,6 @@ def KleinBottleRel (a b : ℝ × ℝ) : Prop :=
     b.1 = (-1 : ℝ) ^ (n : ℤ) * a.1 + (m : ℝ) ∧
     b.2 = a.2 + (n : ℝ)
 
-/-- The quotient relation is reflexive via the zero lattice shift. -/
-theorem klein_bottle_rel_refl (a : ℝ × ℝ) : KleinBottleRel a a := by
-  refine ⟨0, 0, ?_, ?_⟩
-  · norm_num
-  · norm_num
-
 /-- The non-orientable fundamental twist is in the Klein quotient relation. -/
 theorem klein_twist_relation (x y : ℝ) :
     KleinBottleRel (x, y) (-x, y + 1) := by
@@ -71,25 +65,6 @@ def fiveCycle : Equiv.Perm (Fin 5) :=
 /-- The 5-cycle has order dividing five. -/
 theorem fiveCycle_pow_five : fiveCycle ^ 5 = 1 := by
   native_decide
-
-/-- The finite shift is nontrivial, so its order is not a proper divisor of five. -/
-theorem fiveCycle_ne_one : fiveCycle ≠ 1 := by
-  native_decide
-
-/-- The finite shift has exact order five. -/
-theorem fiveCycle_order : orderOf fiveCycle = 5 := by
-  apply orderOf_eq_of_pow_and_pow_div_prime (n := 5)
-  · norm_num
-  · exact fiveCycle_pow_five
-  · intro p hp hdiv
-    have hp_le : p ≤ 5 := Nat.le_of_dvd (by norm_num) hdiv
-    interval_cases p
-    · norm_num at hp
-    · norm_num at hp
-    · norm_num at hdiv
-    · norm_num at hdiv
-    · norm_num at hdiv
-    · simpa using fiveCycle_ne_one
 
 /-! ## `B₃ -> S₃` Artin quotient shadow -/
 

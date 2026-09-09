@@ -37,11 +37,11 @@ structure ArakiConnesHaagerupTriad
   standard :
     NaturalConeStandardFormInterface Alg Hilb NormalPositive
 
-  /-- Connes cocycle / projective Weyl transport channel. -/
+  /-- Connes cocycle / projective Weyl transport socket. -/
   connesCocycle :
     ℝ → Alg
 
-  /-- Araki relative entropy readout. -/
+  /-- Araki relative entropy readout socket. -/
   arakiRelativeEntropy :
     NormalPositive → NormalPositive → ℝ
 
@@ -79,7 +79,7 @@ theorem eval_eq_vector_readout_of_normal
 
 end ArakiConnesHaagerupTriad
 
-/-! ## Cantor extension -/
+/-! ## Cantor extension socket -/
 
 /--
 Standard-form Cantor cone system with explicit dyadic weights.
@@ -96,19 +96,19 @@ structure StandardFormCantorConeSystem
 
   /-- Dyadic cylinder projection carrier. -/
   cylinderProjection :
-    List Bool → Alg
+    BinaryWord → Alg
 
   /-- Reflected/right cylinder carrier. -/
   reflectedCylinder :
-    List Bool → Alg
+    BinaryWord → Alg
 
   /-- Positive reference cylinder weight. -/
   referenceWeight :
-    List Bool → ℝ
+    BinaryWord → ℝ
 
   /-- Positivity of cylinder weights. -/
   referenceWeight_pos :
-    ∀ w : List Bool, 0 < referenceWeight w
+    ∀ w : BinaryWord, 0 < referenceWeight w
 
 namespace StandardFormCantorConeSystem
 
@@ -117,20 +117,20 @@ variable (C : StandardFormCantorConeSystem Alg Hilb NormalPositive)
 
 /-- Cylinder logarithmic potential `-log μ(w)`. -/
 @[rep_depth thermo]
-def cylinderPotential (w : List Bool) : ℝ :=
+def cylinderPotential (w : BinaryWord) : ℝ :=
   TypeIIIModularCantorSystem.cylinderPotential C.referenceWeight w
 
 /-- Branch logarithmic increment `-log(μ(wb)/μ(w))`. -/
 @[rep_depth thermo]
-def branchIncrement (w : List Bool) (b : Bool) : ℝ :=
+def branchIncrement (w : BinaryWord) (b : Bool) : ℝ :=
   TypeIIIModularCantorSystem.branchIncrement C.referenceWeight w b
 
 /-- One-step logarithmic chain rule along the dyadic tree. -/
 @[rep_depth thermo]
 theorem cylinderPotential_child
-    (w : List Bool)
+    (w : BinaryWord)
     (b : Bool) :
-    C.cylinderPotential (TypeIIIModularCantorSystem.child w b) =
+    C.cylinderPotential (BinaryWord.child w b) =
       C.cylinderPotential w + C.branchIncrement w b :=
   TypeIIIModularCantorSystem.cylinderPotential_child C.referenceWeight C.referenceWeight_pos w b
 

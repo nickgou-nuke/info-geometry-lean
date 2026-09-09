@@ -35,6 +35,12 @@ def muPaper : ℕ → ℤ
   | 12 => 0
   | _ => 0
 
+/-- The first square-obstruction anomaly: `4` has a repeated prime factor, so `μ(4)=0`. -/
+theorem muPaper_four_square_obstruction : muPaper 4 = 0 := rfl
+
+/-- The `12 = 2^2 * 3` square-obstruction example also has Mobius value zero. -/
+theorem muPaper_twelve_square_obstruction : muPaper 12 = 0 := rfl
+
 /-- Divisor-sum cancellation for `n = 6`: `μ(1)+μ(2)+μ(3)+μ(6)=0`. -/
 theorem muPaper_divisor_sum_six :
     muPaper 1 + muPaper 2 + muPaper 3 + muPaper 6 = 0 := by
@@ -44,6 +50,9 @@ theorem muPaper_divisor_sum_six :
 theorem muPaper_divisor_sum_twelve :
     muPaper 1 + muPaper 2 + muPaper 3 + muPaper 4 + muPaper 6 + muPaper 12 = 0 := by
   decide
+
+/-- The divisor sum at `1` is the identity term, not a cancellation. -/
+theorem muPaper_divisor_sum_one : muPaper 1 = 1 := rfl
 
 /-- Concrete nonzero Euler factor for the first prime at exponent `k = 2`. -/
 theorem euler_factor_two_k2_nonzero : (1 - (1 : ℚ) / 2 ^ 2) ≠ 0 := by

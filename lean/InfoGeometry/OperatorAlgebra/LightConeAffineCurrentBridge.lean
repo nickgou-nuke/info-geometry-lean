@@ -8,7 +8,7 @@ set_option linter.dupNamespace false
 namespace InfoGeometry.OperatorAlgebra.LightConeAffineCurrentBridge
 
 /--
-Affine-current bridge for lightcone-arrow modes.
+Affine-current socket for lightcone-arrow modes.
 
 This bridge does not identify the nilpotent lightcone arrows with Virasoro
 generators.  It records that selected finite symmetry elements represent the
@@ -68,10 +68,12 @@ theorem bridge_virasoro_eq : B.bridge.virasoro = B.virasoro :=
   rfl
 
 /-- Compatibility alias retained for downstream source stability. -/
-alias bridge_affine_eq_theorem := bridge_affine_eq
+theorem bridge_affine_eq_theorem : B.bridge.affine = B.affine :=
+  B.bridge_affine_eq
 
 /-- Compatibility alias retained for downstream source stability. -/
-alias bridge_virasoro_eq_theorem := bridge_virasoro_eq
+theorem bridge_virasoro_eq_theorem : B.bridge.virasoro = B.virasoro :=
+  B.bridge_virasoro_eq
 
 /--
 Concrete lightcone-current realization carried by the bridge.
@@ -167,6 +169,17 @@ theorem virasoro_acts_on_uMinusCurrent
   have h :=
     B.bridge.virasoro_acts_on_currents m n B.uMinusRoot hact
   simpa [uMinusCurrent, B.bridge_virasoro_eq_theorem, B.bridge_affine_eq_theorem] using h
+
+/-- The bridge central charge remains the Sugawara-calibrated central charge. -/
+@[rep_depth operator]
+theorem centralCharge_calibrated :
+    (hcc : B.bridge.centralCharge =
+      B.bridge.level * B.bridge.finiteDimension /
+        (B.bridge.level + B.bridge.dualCoxeterNumber)) →
+    B.bridge.centralCharge =
+      B.bridge.level * B.bridge.finiteDimension /
+        (B.bridge.level + B.bridge.dualCoxeterNumber) :=
+  B.bridge.centralCharge_calibrated
 
 end LightConeAffineCurrentBridge
 

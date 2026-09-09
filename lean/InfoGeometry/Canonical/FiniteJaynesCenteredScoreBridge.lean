@@ -13,7 +13,7 @@ to AF/direct-limit compatibility:
 * centered score `obsᵢ - refᵢ`;
 * zero total centered score under equal total mass;
 * relative-density centering `obsᵢ / refᵢ - 1`, with the nonzero reference
-  property explicit.
+  hypothesis explicit.
 
 No entropy theorem.
 No LDDS/measure limit.
@@ -33,28 +33,21 @@ abbrev FiniteProfile (ι : Type*) :=
 /-- A finite reference weight family.  Positivity/normalization remain explicit hypotheses. -/
 abbrev FiniteReferenceState (ι : Type*) := FiniteProfile ι
 
+namespace FiniteReferenceState
+
+/-- Compatibility projection for the former named reference weight field. -/
+abbrev weight {ι : Type*} (R : FiniteReferenceState ι) : ι → ℝ := R
+
+end FiniteReferenceState
+
 /-- A finite Jaynes pair: observation data with equal total mass to the reference. -/
-structure FiniteJaynesPairDatum (ι : Type*) [Fintype ι] where
+structure FiniteJaynesPair (ι : Type*) [Fintype ι] where
   /-- Reference/background finite LDDS weights. -/
   reference : FiniteReferenceState ι
   /-- Observed finite density/profile on the same atoms. -/
   observation : FiniteProfile ι
-
-def FiniteJaynesPairValid {ι : Type*} [Fintype ι]
-    (P : FiniteJaynesPairDatum ι) : Prop :=
-  ∑ i : ι, P.observation i = ∑ i : ι, P.reference i
-
-def FiniteJaynesPair (ι : Type*) [Fintype ι] :=
-  {P : FiniteJaynesPairDatum ι // FiniteJaynesPairValid P}
-
-namespace FiniteJaynesPair
-
-abbrev reference {ι : Type*} [Fintype ι] (P : FiniteJaynesPair ι) := P.1.reference
-abbrev observation {ι : Type*} [Fintype ι] (P : FiniteJaynesPair ι) := P.1.observation
-abbrev equal_mass {ι : Type*} [Fintype ι] (P : FiniteJaynesPair ι) :
-    ∑ i : ι, P.observation i = ∑ i : ι, P.reference i := P.2
-
-end FiniteJaynesPair
+  /-- Jaynes-compatible finite normalization: observed and reference masses agree. -/
+  equal_mass : ∑ i : ι, observation i = ∑ i : ι, reference i
 
 namespace FiniteReferenceStateOps
 
@@ -168,8 +161,9 @@ theorem weight_mul_relativeCenteredScore_eq_centeredScore_of_positive
     R obs (FiniteReferenceStateOps.weight_ne_zero_of_positive R hR i)
 
 /-- Convert this finite bridge datum to the LDDS-centering datum from `JaynesLDDSCentering`. -/
-def toFiniteLDDSDatum (R : FiniteReferenceState ι) (obs : ι → ℝ) : FiniteLDDSDatum ι :=
-  (obs, R)
+def toFiniteLDDSDatum (R : FiniteReferenceState ι) (obs : ι → ℝ) : FiniteLDDSDatum ι where
+  density := obs
+  reference := R
 
 omit [Fintype ι] in
 /-- The LDDS centered score agrees with the relative centered score here. -/

@@ -33,7 +33,7 @@ theorem bivariant_hilbert_polya_extraction
     {K1 : Type*} [AddCommGroup K1]
     {A Ctxt : Type}
     [InfoGeometry.Canonical.KasparovKreinCategory.KasparovKreinData]
-    (k : CuntzKTheoryPairing.TrivialK0Model) (x : K1)
+    (k : CuntzKTheoryPairing.O2_K0) (x : K1)
     (chain : InfoGeometry.Canonical.KasparovKreinCategory.KKProductChain (A := A) (C := Ctxt))
     (hPair :
       AnomalousKMSFlow.anomalousIndex H C =
@@ -51,7 +51,7 @@ theorem bivariant_hilbert_polya_extraction
   have hPair' :
       AnomalousKMSFlow.anomalousIndex H C =
         (inferInstance : CuntzKTheoryPairing.ConnesChernPairing
-          CuntzKTheoryPairing.TrivialK0Model K1).pair k x := by
+          CuntzKTheoryPairing.O2_K0 K1).pair k x := by
     simpa [InfoGeometry.Canonical.KasparovKreinCategory.kkBoundaryPairing] using hPair
   exact InfoGeometry.Canonical.UnifiedAnomalyArchitecture.unified_architecture_of_anomaly_proof
     (f := f) hConvex hSymm σ hσ hσ_ne

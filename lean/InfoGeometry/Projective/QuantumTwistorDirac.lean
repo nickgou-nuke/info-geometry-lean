@@ -10,7 +10,7 @@ import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportOper
 # Quantum Twistor Dirac Operator & Spectral Triple
 
 This module records the spectral-triple interface around the quantum
-Grassmannian coordinate ring. The bounded-commutator property is carried as
+Grassmannian coordinate ring. The bounded-commutator hypothesis is carried as
 an explicit field of the spectral-triple structure; this file does not invent a
 separate projector-level theorem.
 -/

@@ -27,7 +27,7 @@ def SatisfiesFiniteArnoldCohen (j : J) (w12 w23 w31 : ZornSequence.obj j) : Prop
 The macroscopic continuous BCFW property: the elements in the colimit satisfy 
 the Arnold-Cohen mixed relation under the descended continuum multiplication.
 -/
-def SatisfiesContinuumArnoldCohen (W12 W23 W31 : ↑(colimit ZornSequence)) : Prop :=
+def SatisfiesContinuumArnoldCohen (W12 W23 W31 : ↑(zornContinuumModule R ZornSequence)) : Prop :=
   M.colimitMul (M.colimitMul W12 W23) W31 + 
   M.colimitMul (M.colimitMul W23 W31) W12 + 
   M.colimitMul (M.colimitMul W31 W12) W23 = 0

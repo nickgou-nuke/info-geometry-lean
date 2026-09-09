@@ -73,5 +73,4 @@ theorem stageObservationRange_factorization
   rfl
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeTopCat
-
 end

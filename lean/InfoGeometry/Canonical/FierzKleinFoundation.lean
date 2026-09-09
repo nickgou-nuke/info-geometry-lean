@@ -266,9 +266,9 @@ def IsRegularFierz (F : FierzBilinears) : Prop :=
   F.sigma ^ 2 + F.omega ^ 2 ≠ 0
 
 /--
-Normalization property for a Fierz package.
+Normalization witness for a Fierz package.
 
-The property avoids burying division-by-zero obligations in definitions.
+The witness avoids burying division-by-zero obligations in definitions.
 -/
 @[rep_depth operator]
 structure FierzNormalization (F : FierzBilinears) where
@@ -355,22 +355,6 @@ theorem fierzKleinCoordinates_holds
   · exact normalizedScalarPhase_on_quadric F N
   · exact chiralPlucker_on_klein F
 
-/-- The scalar-phase component of a normalized Fierz--Klein coordinate lies on the scalar quadric. -/
-@[rep_depth operator]
-theorem fierzKleinCoordinates_scalarPhase_on_quadric
-    (F : FierzBilinears)
-    (N : FierzNormalization F) :
-    IsOnScalarPhaseFierzQuadric (fierzKleinCoordinates F N).scalarPhase := by
-  simpa [fierzKleinCoordinates] using normalizedScalarPhase_on_quadric F N
-
-/-- The Plücker component of a normalized Fierz--Klein coordinate lies on the Klein quadric. -/
-@[rep_depth operator]
-theorem fierzKleinCoordinates_plucker_on_klein
-    (F : FierzBilinears)
-    (N : FierzNormalization F) :
-    IsOnKleinQuadric (fierzKleinCoordinates F N).plucker := by
-  simpa [fierzKleinCoordinates] using chiralPlucker_on_klein F
-
 /-! ## 6. Area defects and residual bookkeeping -/
 
 /--
@@ -400,15 +384,6 @@ theorem kleinAreaDefect_chiralPlucker_eq_zero
   kleinAreaDefect_eq_zero_of_on_klein
     (chiralPlucker F)
     (chiralPlucker_on_klein F)
-
-/-- Normalized Fierz--Klein coordinates have zero Klein area defect. -/
-@[rep_depth operator]
-theorem fierzKleinCoordinates_kleinAreaDefect_eq_zero
-    (F : FierzBilinears)
-    (N : FierzNormalization F) :
-    kleinAreaDefect (fierzKleinCoordinates F N).plucker = 0 := by
-  simpa [fierzKleinCoordinates, kleinAreaDefect] using
-    kleinAreaDefect_chiralPlucker_eq_zero F
 
 /--
 Drazin/scalar-phase area defect.
@@ -464,14 +439,6 @@ theorem normalizedScalarPhase_drazinAreaDefect_eq_zero
   drazinScalarPhaseAreaDefect_eq_zero_of_on_quadric
     (normalizedScalarPhase F N)
     (normalizedScalarPhase_on_quadric F N)
-
-/-- Normalized Fierz--Klein coordinates have zero scalar-phase defect. -/
-@[rep_depth operator]
-theorem fierzKleinCoordinates_scalarPhaseDefect_eq_zero
-    (F : FierzBilinears)
-    (N : FierzNormalization F) :
-    drazinScalarPhaseAreaDefect (fierzKleinCoordinates F N).scalarPhase = 0 := by
-  simpa [fierzKleinCoordinates] using normalizedScalarPhase_drazinAreaDefect_eq_zero F N
 
 /-! ## 7. Expectation-only Drazin-horizon readout -/
 

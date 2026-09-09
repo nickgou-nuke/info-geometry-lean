@@ -57,7 +57,7 @@ theorem jordan_local_comm {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R
 
 /- #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES -/
 
-/-- Explicit property of strict convexity for the partition functional (Free Energy).
+/-- Explicit witness of strict convexity for the partition functional (Free Energy).
     This establishes the strictly convex potential generating the Hessian metric. -/
 class StrictlyConvexPotential {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
   [InnerSpace V R] (ψ : V → R) (grad_ψ : V → V) where
@@ -65,7 +65,7 @@ class StrictlyConvexPotential {V : Type u} [AddCommGroup V] {R : Type u} [CommRi
 
 /-- CONDITIONAL THEOREM: Thermodynamic distance is strictly positive for distinct states,
     proving the thermodynamic arrow of time as gradient descent along the Hessian metric.
-    Conditioned explicitly on the StrictlyConvexPotential property. -/
+    Conditioned explicitly on the StrictlyConvexPotential witness. -/
 theorem bregman_divergence_pos {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
   [InnerSpace V R] (ψ : V → R) (grad_ψ : V → V)
   [StrictlyConvexPotential ψ grad_ψ] (x y : V) (h : x ≠ y) :

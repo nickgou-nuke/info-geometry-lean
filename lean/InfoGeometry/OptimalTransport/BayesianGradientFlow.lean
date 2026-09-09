@@ -1,52 +1,22 @@
 import Mathlib.Tactic
 
+/-!
+# Algebraic boundary of the Bayesian gradient-flow lane
+
+This upstream entry point is retained as a small, truthful interface.  The
+analytic Wasserstein and entropy-flow theorems are not asserted here; the
+reusable theorem below is the exact one-dimensional log-barrier identity.
+-/
+
 namespace InfoGeometry.OptimalTransport
 
-/-!
-# Algebraic optimal-transport interfaces
+noncomputable def barrierSecondDeriv (x : ℝ) : ℝ := 1 / x ^ 2
 
-This module records a metric-shaped predicate and an elementary rational
-barrier identity.  It does not construct a probability space, a Wasserstein
-geometry, a gradient flow, or a causal optimization algorithm.
--/
+noncomputable def barrierThirdDeriv (x : ℝ) : ℝ := -2 / x ^ 3
 
-variable {M : Type*} [TopologicalSpace M] -- The Manifold of States
-variable {P : Type*} -- The Space of Probability Distributions over M
-
-/--
-Proof-facing interface for a Wasserstein-type metric on probability states.
-A later analytic layer can identify this distance with the full W₂ formula;
-this module only records the metric axioms it can actually use.
--/
-def WassersteinMetric (P : Type*) : Prop :=
-  ∃ dist : P → P → ℝ,
-    (∀ p q : P, 0 ≤ dist p q) ∧
-    (∀ p : P, dist p p = 0) ∧
-    (∀ p q : P, dist p q = dist q p) ∧
-    (∀ p q : P, dist p q = 0 → p = q) ∧
-    (∀ p q r : P, dist p r ≤ dist p q + dist q r)
-
-/-! Shannon entropy is intentionally not defined on an arbitrary type `P`.
-    A probability law, finite support, or reference measure is required before
-    an entropy functional has mathematical meaning; use the finite Jaynes
-    entropy owner for that concrete construction. -/
-
-/-- The rational function `1 / x²`. -/
-noncomputable def BarrierSecondDeriv (x : ℝ) : ℝ :=
-  1 / (x^2)
-
-/-- The rational function `-2 / x³`. -/
-noncomputable def BarrierThirdDeriv (x : ℝ) : ℝ :=
-  -2 / (x^3)
-
-/-- Squared rational identity for the two barrier functions above. -/
-theorem causal_barrier_self_concordance (x : ℝ) :
-  (BarrierThirdDeriv x)^2 = 4 * (BarrierSecondDeriv x)^3 := by
-  unfold BarrierThirdDeriv BarrierSecondDeriv
-  -- (-2 / x^3)^2 = 4 / x^6
-  -- 4 * (1 / x^2)^3 = 4 / x^6
-  have h1 : (-2 / x^3)^2 = 4 / x^6 := by ring
-  have h2 : 4 * (1 / x^2)^3 = 4 / x^6 := by ring
-  rw [h1, h2]
+theorem barrier_self_concordance_squared (x : ℝ) :
+    (barrierThirdDeriv x) ^ 2 = 4 * (barrierSecondDeriv x) ^ 3 := by
+  unfold barrierThirdDeriv barrierSecondDeriv
+  ring
 
 end InfoGeometry.OptimalTransport

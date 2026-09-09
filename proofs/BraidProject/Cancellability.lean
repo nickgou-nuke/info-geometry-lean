@@ -15,7 +15,7 @@ theorem grid_of_eq {u v u' v' : FreeMonoid' ℕ} (h : BraidMonoidInf.mk (u * v')
   rw [BraidMonoidInf.one_of_eq_mk_one ha.symm, BraidMonoidInf.one_of_eq_mk_one hb.symm] at griddy
   exact griddy
 
-theorem left_cancellative (a b c : PresentedMonoid braid_rels_m_inf) (h1 : c * a = c * b) : a = b := by
+theorem left_cancellative (a b c : BraidPresentedMonoid braid_rels_m_inf) (h1 : c * a = c * b) : a = b := by
   induction' a with a'
   induction' b with b'
   induction' c with c'
@@ -41,7 +41,7 @@ theorem left_cancellative (a b c : PresentedMonoid braid_rels_m_inf) (h1 : c * a
   rw [mul_one, mul_one] at h7
   exact h7
 
-theorem right_cancellative (a b c : PresentedMonoid braid_rels_m_inf) (h1 : a * c = b * c) : a = b := by
+theorem right_cancellative (a b c : BraidPresentedMonoid braid_rels_m_inf) (h1 : a * c = b * c) : a = b := by
   apply BraidMonoidInf.eq_iff_reverse_eq_reverse.mp at h1
   rw [BraidMonoidInf.reverse_braid_mul, BraidMonoidInf.reverse_braid_mul] at h1
   exact BraidMonoidInf.eq_iff_reverse_eq_reverse.mpr (left_cancellative _ _ _ h1)
@@ -102,17 +102,17 @@ theorem existence : ∀ a b, ∃ c d, grid a b c d := by
 --   rw [mid_is] at bottom_grid
 --   rcases splittable_vertically_of_grid bottom_grid _ _ rfl with ⟨bot_vert, d₁, d₂, bottom_left, bottom_right, d_is⟩
 --   use bot_vert
---   apply PresentedMonoid.sound
+--   apply BraidPresentedMonoid.sound
 --   rw [mul_assoc]
 --   apply Con'Gen.Rel.mul (Con'Gen.Rel.refl _)
---   sorry
+--   unproved obligation
 
 -- theorem existence : ∀ a b, ∃ c d, grid a b c d := by
---   sorry
+--   unproved obligation
 
 -- ome of these fields (like one_mul
 -- should be set up once I ge the regular monoid things done
-instance : CancelMonoid (PresentedMonoid braid_rels_m_inf) where
+instance : CancelMonoid (BraidPresentedMonoid braid_rels_m_inf) where
     mul_right_cancel := fun a b c => right_cancellative b c a
     mul_left_cancel := fun a b c => left_cancellative b c a
     -- what the ? ?

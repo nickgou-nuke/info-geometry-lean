@@ -21,28 +21,34 @@ open scoped InnerProductSpace
 
 namespace InfoGeometry.Canonical.CelikKocakCantorOperators
 
+/-- Binary addresses of depth `n`. -/
+abbrev CantorAddress (n : ℕ) := Fin n → Bool
+
+/-- Complex-valued functions on the finite endpoint set `V_n`. -/
+abbrev FunctionSpace (n : ℕ) := CantorAddress n → ℂ
+
 namespace CantorAddress
 
 variable {n : ℕ}
 
 /-- Flip the bit at address slot `j`. -/
-def flipAt (j : Fin n) (x : ((Fin n) → Bool)) : ((Fin n) → Bool) :=
+def flipAt (j : Fin n) (x : CantorAddress n) : CantorAddress n :=
   fun k => if k = j then ! (x k) else x k
 
-@[simp] theorem flipAt_apply_eq (j : Fin n) (x : ((Fin n) → Bool)) :
+@[simp] theorem flipAt_apply_eq (j : Fin n) (x : CantorAddress n) :
     flipAt j x j = ! (x j) := by
   simp [flipAt]
 
-@[simp] theorem flipAt_apply_ne {j k : Fin n} (h : k ≠ j) (x : ((Fin n) → Bool)) :
+@[simp] theorem flipAt_apply_ne {j k : Fin n} (h : k ≠ j) (x : CantorAddress n) :
     flipAt j x k = x k := by
   simp [flipAt, h]
 
-theorem flipAt_involutive (j : Fin n) (x : ((Fin n) → Bool)) :
+theorem flipAt_involutive (j : Fin n) (x : CantorAddress n) :
     flipAt j (flipAt j x) = x := by
   funext k
   by_cases hk : k = j <;> simp [flipAt, hk, Bool.not_not]
 
-theorem flipAt_comm {i j : Fin n} (hij : i ≠ j) (x : ((Fin n) → Bool)) :
+theorem flipAt_comm {i j : Fin n} (hij : i ≠ j) (x : CantorAddress n) :
     flipAt i (flipAt j x) = flipAt j (flipAt i x) := by
   funext k
   by_cases hk_i : k = i
@@ -65,7 +71,7 @@ variable {n : ℕ}
 open CantorAddress
 
 /-- Tilt operator `T_j`: sign on the `j`-th address sector. -/
-def tilt (j : Fin n) : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ) where
+def tilt (j : Fin n) : FunctionSpace n →ₗ[ℂ] FunctionSpace n where
   toFun f := fun x => if x j then -f x else f x
   map_add' := by
     intro f g
@@ -77,7 +83,7 @@ def tilt (j : Fin n) : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bo
     by_cases hx : x j <;> simp [hx]
 
 /-- Switch operator `S_j`: flip the `j`-th address bit. -/
-def switch (j : Fin n) : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ) where
+def switch (j : Fin n) : FunctionSpace n →ₗ[ℂ] FunctionSpace n where
   toFun f := fun x => f (CantorAddress.flipAt j x)
   map_add' := by
     intro f g
@@ -88,11 +94,11 @@ def switch (j : Fin n) : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → 
     ext x
     rfl
 
-@[simp] theorem tilt_apply (j : Fin n) (f : (((Fin n) → Bool) → ℂ)) (x : ((Fin n) → Bool)) :
+@[simp] theorem tilt_apply (j : Fin n) (f : FunctionSpace n) (x : CantorAddress n) :
     tilt j f x = if x j then -f x else f x :=
   rfl
 
-@[simp] theorem switch_apply (j : Fin n) (f : (((Fin n) → Bool) → ℂ)) (x : ((Fin n) → Bool)) :
+@[simp] theorem switch_apply (j : Fin n) (f : FunctionSpace n) (x : CantorAddress n) :
     switch j f x = f (CantorAddress.flipAt j x) :=
   rfl
 
@@ -158,8 +164,8 @@ This is the exact algebraic core needed for the Çelik--Koçak finite
 representation theorem.
 -/
 structure TiltSwitchSystem where
-  T : Fin n → (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)
-  S : Fin n → (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)
+  T : Fin n → FunctionSpace n →ₗ[ℂ] FunctionSpace n
+  S : Fin n → FunctionSpace n →ₗ[ℂ] FunctionSpace n
   T_sq : ∀ j, T j * T j = 1
   S_sq : ∀ j, S j * S j = 1
   T_comm : ∀ i j, T i * T j = T j * T i
@@ -193,14 +199,14 @@ end FunctionSpace
 
 /-- The canonical basis of the finite endpoint function space. -/
 noncomputable def endpointBasis (n : ℕ) :
-    Module.Basis (((Fin n) → Bool)) ℂ ((((Fin n) → Bool) → ℂ)) :=
-  Pi.basisFun ℂ (((Fin n) → Bool))
+    Module.Basis (CantorAddress n) ℂ (FunctionSpace n) :=
+  Pi.basisFun ℂ (CantorAddress n)
 
-@[simp] theorem endpointBasis_apply (n : ℕ) (x : ((Fin n) → Bool)) :
+@[simp] theorem endpointBasis_apply (n : ℕ) (x : CantorAddress n) :
     endpointBasis (n := n) x = Pi.single x (1 : ℂ) := by
   simp [endpointBasis]
 
-theorem endpointBasis_repr_apply (n : ℕ) (f : (((Fin n) → Bool) → ℂ)) (x : ((Fin n) → Bool)) :
+theorem endpointBasis_repr_apply (n : ℕ) (f : FunctionSpace n) (x : CantorAddress n) :
     (endpointBasis (n := n)).repr f x = f x := by
   simp [endpointBasis]
 
@@ -209,7 +215,7 @@ namespace FunctionSpace
 variable {n : ℕ}
 
 /-- The local pair product `T_j * S_j`, used in the recursive Cantor/Clifford strings. -/
-def pairTerm (j : ℕ) : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ) :=
+def pairTerm (j : ℕ) : FunctionSpace n →ₗ[ℂ] FunctionSpace n :=
   if hj : j < n then tilt (n := n) ⟨j, hj⟩ * switch (n := n) ⟨j, hj⟩ else 1
 
 @[simp] theorem pairTerm_of_lt {j : ℕ} (hj : j < n) :
@@ -221,7 +227,7 @@ def pairTerm (j : ℕ) : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → 
   simp [pairTerm, hj]
 
 theorem pairTerm_sq {j : ℕ} (hj : j < n) :
-    pairTerm (n := n) j * pairTerm (n := n) j = - (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)) := by
+    pairTerm (n := n) j * pairTerm (n := n) j = - (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n) := by
   rw [pairTerm_of_lt (n := n) hj]
   calc
     (tilt (n := n) ⟨j, hj⟩ * switch (n := n) ⟨j, hj⟩)
@@ -247,7 +253,7 @@ theorem pairTerm_sq {j : ℕ} (hj : j < n) :
                           * switch (n := n) ⟨j, hj⟩) := by
                           simp [mul_assoc]
                 )
-    _ = - (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)) := by
+    _ = - (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n) := by
               simp [tilt_sq, switch_sq]
 
 theorem pairTerm_commute_of_ne {i j : ℕ} (hij : i ≠ j) :

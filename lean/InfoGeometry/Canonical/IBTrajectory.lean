@@ -98,7 +98,7 @@ theorem pTrajectory_eq_iterate_of_step
 /--
 Banach fixed-point convergence for arbitrary BA-recursive trajectories.
 
-Given a strict contraction property for `ibBlahutArimotoStep prob` on a complete
+Given a strict contraction witness for `ibBlahutArimotoStep prob` on a complete
 encoder metric space, every trajectory satisfying the BA recursion converges to
 the unique fixed point.
 -/

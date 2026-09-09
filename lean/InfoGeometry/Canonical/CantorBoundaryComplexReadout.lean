@@ -1,6 +1,5 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
-import InfoGeometry.Canonical.CantorBoundaryReadoutBounds
 
 /-!
 # Complex readout of the binary Cantor boundary
@@ -15,25 +14,14 @@ noncomputable section
 namespace InfoGeometry.Canonical.CantorBoundaryComplexReadout
 
 open InfoGeometry.Canonical.FractalCantorCliffordFockBridge
-open InfoGeometry.Canonical.CantorBoundaryReadoutBounds
 
 def binaryDigit (b : Bool) : ℂ :=
   if b then 1 else 0
 
-def binaryTerm (w : (ℕ → Bool)) (n : ℕ) : ℂ :=
+def binaryTerm (w : InfiniteBinaryWordSpace) (n : ℕ) : ℂ :=
   binaryDigit (w n) * (1 / 2 : ℂ) ^ (n + 1)
 
-theorem binaryDigit_eq_ofReal (b : Bool) :
-    binaryDigit b = Complex.ofReal (if b then (1 : ℝ) else 0) := by
-  cases b <;> rfl
-
-theorem binaryTerm_eq_ofReal_realTerm
-    (w : (ℕ → Bool)) (n : ℕ) :
-    binaryTerm w n = Complex.ofReal (realBinaryTerm w n) := by
-  cases h : w n <;>
-    simp [binaryTerm, binaryDigit, realBinaryTerm, h, Complex.ofReal_pow]
-
-theorem binaryTerm_summable (w : (ℕ → Bool)) :
+theorem binaryTerm_summable (w : InfiniteBinaryWordSpace) :
     Summable (binaryTerm w) := by
   apply Summable.of_norm_bounded (f := binaryTerm w)
     (g := fun n : ℕ => (1 / 2 : ℝ) ^ (n + 1))
@@ -46,42 +34,14 @@ theorem binaryTerm_summable (w : (ℕ → Bool)) :
     dsimp [binaryTerm, binaryDigit]
     split <;> simp [norm_pow]
 
-noncomputable def binaryReadout (w : (ℕ → Bool)) : ℂ :=
+noncomputable def binaryReadout (w : InfiniteBinaryWordSpace) : ℂ :=
   ∑' n : ℕ, binaryTerm w n
-
-theorem binaryReadout_eq_ofReal (w : (ℕ → Bool)) :
-    binaryReadout w = Complex.ofReal (realBinaryReadout w) := by
-  rw [binaryReadout, realBinaryReadout, Complex.ofReal_tsum]
-  apply tsum_congr
-  intro n
-  exact binaryTerm_eq_ofReal_realTerm w n
-
-theorem binaryReadout_im (w : (ℕ → Bool)) :
-    (binaryReadout w).im = 0 := by
-  rw [binaryReadout_eq_ofReal]
-  rfl
-
-theorem binaryReadout_eq_zero_iff (w : ℕ → Bool) :
-    binaryReadout w = 0 ↔ ∀ n, w n = false := by
-  rw [binaryReadout_eq_ofReal]
-  simpa using realBinaryReadout_eq_zero_iff w
-
-theorem binaryReadout_eq_one_iff (w : ℕ → Bool) :
-    binaryReadout w = 1 ↔ ∀ n, w n = true := by
-  rw [binaryReadout_eq_ofReal]
-  simpa using realBinaryReadout_eq_one_iff w
-
-theorem binaryReadout_norm_le_one (w : (ℕ → Bool)) :
-    ‖binaryReadout w‖ ≤ 1 := by
-  rw [binaryReadout_eq_ofReal, Complex.norm_real, Real.norm_eq_abs,
-    abs_of_nonneg (realBinaryReadout_nonnegative w)]
-  exact realBinaryReadout_le_one w
 
 theorem binaryDigit_complement_add (b : Bool) :
     binaryDigit (!b) + binaryDigit b = 1 := by
   cases b <;> simp [binaryDigit]
 
-theorem binary_readout_complement (w : (ℕ → Bool)) :
+theorem binary_readout_complement (w : InfiniteBinaryWordSpace) :
     binaryReadout (fun n => !w n) + binaryReadout w = 1 := by
   have hgeom : Summable (fun n : ℕ => (1 / 2 : ℂ) ^ n) := by
     exact summable_geometric_of_norm_lt_one (by norm_num)
@@ -106,14 +66,9 @@ theorem binary_readout_complement (w : (ℕ → Bool)) :
   rw [binaryDigit_complement_add]
   ring
 
-theorem binary_readout_complement_eq_one_sub
-    (w : (ℕ → Bool)) :
-    binaryReadout (fun n => !w n) = 1 - binaryReadout w := by
-  exact (eq_sub_iff_add_eq).2 (binary_readout_complement w)
-
 theorem binary_readout_intertwining_of_pointwise_complement
-    (tomita : (ℕ → Bool) → (ℕ → Bool))
-    (w : (ℕ → Bool))
+    (tomita : InfiniteBinaryWordSpace → InfiniteBinaryWordSpace)
+    (w : InfiniteBinaryWordSpace)
     (h_tomita : ∀ n, tomita w n = !w n) :
     binaryReadout (tomita w) + binaryReadout w = 1 := by
   have h_word : tomita w = fun n => !w n := by
@@ -123,8 +78,8 @@ theorem binary_readout_intertwining_of_pointwise_complement
   exact binary_readout_complement w
 
 theorem binary_readout_fixed_state_on_critical_line
-    (tomita : (ℕ → Bool) → (ℕ → Bool))
-    (w : (ℕ → Bool))
+    (tomita : InfiniteBinaryWordSpace → InfiniteBinaryWordSpace)
+    (w : InfiniteBinaryWordSpace)
     (h_tomita : ∀ n, tomita w n = !w n)
     (h_invariant : binaryReadout (tomita w) = star (binaryReadout w)) :
     (binaryReadout w).re = 1 / 2 := by

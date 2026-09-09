@@ -62,7 +62,7 @@ toString
 
 def ShadowKind.describe : ShadowKind → String
 | ShadowKind.sorryDebt => "explicit sorry in proof body"
-| ShadowKind.missingPremise => "proof relies on unstated property"
+| ShadowKind.missingPremise => "proof relies on unstated hypothesis"
 | ShadowKind.overclaimedBridge => "doc claims theorem but no formal proof exists"
 | ShadowKind.archetypeRecurrence => "operator pattern recurs but lacks domain formalization"
 | ShadowKind.failedSynthesis => "conflicting approaches not yet resolved"
@@ -174,17 +174,5 @@ def ShadowStatus.multiplier : ShadowStatus → ℕ
 /-- Total shadow weight — sum of severities weighted by status. -/
 def totalSeverity (items : List (ShadowCone α)) : ℕ :=
 (items.map fun s => s.kind.severity * s.status.multiplier).sum
-
-/-! ### Developmental trace composition -/
-
-/--
-The finite shadow-weight readout is additive under concatenation of traces.
-Thus extending the retained shadow history does not require recomputing the
-contribution of its existing prefix.
--/
-theorem totalSeverity_append
-(xs ys : List (ShadowCone α)) :
-totalSeverity (xs ++ ys) = totalSeverity xs + totalSeverity ys := by
-  simp [totalSeverity, List.map_append, List.sum_append]
 
 end InfoGeometry.SelfReference.Shadow

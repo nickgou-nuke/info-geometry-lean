@@ -123,23 +123,28 @@ theorem representation_commutator (K X : CompatibleCarrier) :
 
 def cantorOrbit (R : CompatibleCuntzRepresentation (Op := Op))
     (w : List Bool) : Op :=
-  orbit R.cuntz R.seed w
+  CantorCuntzBasisPacket.orbit
+    ({ cuntz := R.cuntz, seed := R.seed } : CantorCuntzBasisPacket Op) w
 
 @[simp] theorem cantorOrbit_root :
     cantorOrbit R [] = R.seed := by
-  rfl
+  simp [cantorOrbit, CantorCuntzBasisPacket.orbit]
 
 theorem cantorOrbit_branch (b : Bool) (w : List Bool) :
     cantorOrbit R (b :: w) =
       (if b then CuntzO2Carrier.S_right R.cuntz
       else CuntzO2Carrier.S_left R.cuntz) * cantorOrbit R w := by
-  exact orbit_branch_recursion R.cuntz R.seed b w
+  exact CantorCuntzBasisPacket.orbit_branch_recursion
+    ({ cuntz := R.cuntz, seed := R.seed } : CantorCuntzBasisPacket Op) b w
 
 theorem cantorOrbit_branch_adjoint_same (b : Bool) (w : List Bool) :
-    star (if b then CuntzO2Carrier.S_right R.cuntz
-      else CuntzO2Carrier.S_left R.cuntz) * R.cantorOrbit (b :: w) =
+      star (if b then CuntzO2Carrier.S_right R.cuntz
+      else CuntzO2Carrier.S_left R.cuntz) * cantorOrbit R (b :: w) =
       cantorOrbit R w := by
-  exact orbit_branch_adjoint_same R.cuntz R.seed b w
+  cases b <;>
+    rw [cantorOrbit_branch R _ w] <;>
+    simp [cantorOrbit, CantorCuntzBasisPacket.orbit, ← mul_assoc,
+      CuntzO2Carrier.left_isometry, CuntzO2Carrier.right_isometry]
 
 theorem cantor_root_branching (ξ : ℕ → Bool) :
     (CuntzO2Carrier.leftRangeProjection R.cuntz * R.seed +
@@ -413,7 +418,6 @@ namespace FiniteCuntzTiltFockReadout
 open InfoGeometry.Algebra.CuntzTensorQuotient
 open InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
-open InfoGeometry.Canonical.CuntzKTowerCommutation
 
 theorem toeplitz_orthogonality (n : ℕ) (i j : Fin n) :
     toeplitzSdag n i * toeplitzS n j = if i = j then 1 else 0 := by
@@ -442,35 +446,6 @@ theorem finite_tilted_fock_atom
         (splitDOp (P := P) (R := R) p hp) = negOp idOp := by
   exact ⟨switchOp_sq p hp, tiltOp_sq p,
     tilt_switch_anticomm p hp, splitDOp_sq p hp⟩
-
-structure CompatibleShiftPhase where
-  shift : ∀ n : ℕ, TowerStage n
-  phase : ∀ n : ℕ, TowerStage n
-  shift_compat : ∀ n,
-    InfoGeometry.Clifford.Cl11TensorTower.stageEmbed n (shift n) = shift (n + 1)
-  phase_compat : ∀ n,
-    InfoGeometry.Clifford.Cl11TensorTower.stageEmbed n (phase n) = phase (n + 1)
-  commute : ∀ n, shift n * phase n = phase n * shift n
-
-namespace CompatibleShiftPhase
-
-variable (C : CompatibleShiftPhase)
-
-theorem colimit_commutes :
-    limitElement C.shift * limitK C.phase =
-      limitK C.phase * limitElement C.shift := by
-  exact S_left_commutes_K_limit C.shift C.phase
-    C.shift_compat C.phase_compat C.commute 0
-
-theorem stage_readout (n : ℕ) :
-    ofStage n (C.shift n) * ofStage n (C.phase n) =
-      ofStage n (C.phase n) * ofStage n (C.shift n) :=
-  by
-    simpa only [map_mul] using
-      congrArg (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n)
-        (C.commute n)
-
-end CompatibleShiftPhase
 
 end FiniteCuntzTiltFockReadout
 

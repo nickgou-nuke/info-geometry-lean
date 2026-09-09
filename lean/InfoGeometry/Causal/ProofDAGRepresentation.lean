@@ -39,7 +39,7 @@ This file does not identify graph acyclicity with `Δ_H = 0` by definition.
 - `represented_edge_orthogonality_rev`
 
 ## BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-- `CausalRepresentation` is an explicit property structure connecting a
+- `CausalRepresentation` is an explicit witness structure connecting a
   `ProofDAG` to the local projector algebra.
 
 ## BUCKET 3: OPEN CLOSURE DEBT

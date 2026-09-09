@@ -9,7 +9,7 @@ Mathlib module direct limit.  The common-stage inner product constructed in
 carrier.  This file installs it as a native `InnerProductSpace.Core` and takes
 the uniform completion.
 
-No ambient Hilbert space or compatibility property is assumed: the inner
+No ambient Hilbert space or compatibility witness is assumed: the inner
 product and complex scalar action are both descended from the transition
 isometries.
 -/

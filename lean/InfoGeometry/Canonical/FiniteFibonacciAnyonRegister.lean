@@ -612,7 +612,7 @@ theorem fourBlockDualBasisVector_epsilonPrime_coords
 /-! ## Finite electron-payload independence -/
 
 /--
-A finite `3r` electron-coordinate/payload carrier.  The
+A finite placeholder for the `3r` electron coordinates/payload variables.  The
 braid actions below are pointwise in this payload; no electron correlator or
 coordinate analytic structure is asserted.
 -/

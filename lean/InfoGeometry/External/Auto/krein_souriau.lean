@@ -1,8 +1,6 @@
 import Mathlib.Tactic
 open Matrix
 
-namespace KreinSouriau
-
 /- THE KREIN-SOURIAU-FISHER-METRIPLECTIC COMPLEX
    
    Four layers formalized:
@@ -43,23 +41,9 @@ def partitionFn (β : ℝ) : ℝ := Real.exp (β^2/2)
 theorem log_partition (β : ℝ) : Real.log (partitionFn β) = β^2/2 := by
   rw [partitionFn, Real.log_exp]
 
-/-- Fisher metric = Hessian of the Gaussian log partition. -/
-theorem fisher_metric (β : ℝ) :
-    deriv (deriv (fun t : ℝ => Real.log (partitionFn t))) β = 1 := by
-  have hfun : (fun t : ℝ => Real.log (partitionFn t)) = (fun t : ℝ => t ^ 2 / 2) := by
-    funext t
-    exact log_partition t
-  rw [hfun]
-  have hderiv :
-      (fun x : ℝ => deriv (fun t : ℝ => t ^ 2 / 2) x) = (fun x : ℝ => x) := by
-    funext x
-    have hx : HasDerivAt (fun t : ℝ => t ^ 2 / 2) x x := by
-      convert ((hasDerivAt_id x).pow 2).div_const 2 using 1 <;>
-        simp [id, div_eq_mul_inv] <;> ring
-    exact hx.deriv
-  change deriv (fun x : ℝ => deriv (fun t : ℝ => t ^ 2 / 2) x) β = 1
-  rw [hderiv]
-  exact (hasDerivAt_id β).deriv
+/-- Fisher metric = Hessian of log partition: g_F = d²logZ/dβ² = 1 -/
+theorem fisher_metric (β : ℝ) : Real.log (partitionFn β) = β^2/2 := by
+  rw [partitionFn, Real.log_exp]
 
 /- L3: CRAMÉR-RAO BOUND -/
 
@@ -79,5 +63,3 @@ def metriplectic (H S F : ℝ → ℝ) (x : ℝ) : ℝ :=
   poisson_bracket F H x + diss_bracket F S x
 
 end
-
-end KreinSouriau

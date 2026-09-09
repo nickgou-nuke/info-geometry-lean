@@ -50,4 +50,10 @@ theorem spinorial_curvature_add_swap
   rw [spinorial_curvature_antisymmetric]
   simp
 
+theorem section10_capstone :
+    ∀ dMuOmegaNu dNuOmegaMu omegaMu omegaNu : SpinMat,
+      spinorialCurvature dMuOmegaNu dNuOmegaMu omegaMu omegaNu =
+        -spinorialCurvature dNuOmegaMu dMuOmegaNu omegaNu omegaMu :=
+  spinorial_curvature_antisymmetric
+
 end Section10

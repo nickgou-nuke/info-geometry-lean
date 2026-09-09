@@ -6,7 +6,7 @@ import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
 Finite prime-Cantor lattice Dirac skeleton.
 
-The finite cutoff is a property prime register `P`. Its Cantor lattice is the
+The finite cutoff is a certified prime register `P`. Its Cantor lattice is the
 Boolean cube of square-free occupancy states `S ⊆ P.primes`.
 
 The `p`-axis edge is the bit flip `S ↦ S △ {p}`. The Dirac operator is the
@@ -19,7 +19,7 @@ and the Möbius/Witten character is
 
   `Σ_{S⊆P} (-1)^|S| ∏_{p∈S} q p = ∏_{p∈P} (1 - q p)`.
 
-One may later instantiate `λ p = log p` and `q p = p^{-s}`. This module
+Analytically one later sets `λ p = log p` and `q p = p^{-s}`. This module
 does not assert the infinite Euler product, analytic continuation, or any
 Type-III/Tomita theorem.
 -/
@@ -198,12 +198,10 @@ A finite Dirac packet on the prime-Cantor lattice.
 finite algebraic module.
 -/
 @[rep_depth krein]
-abbrev PrimeCantorDirac (_P : PrimeRegister) := ℕ → ℝ
+structure PrimeCantorDirac (P : PrimeRegister) where
+  axisWeight : ℕ → ℝ
 
 namespace PrimeCantorDirac
-
-abbrev axisWeight {P : PrimeRegister} (D : PrimeCantorDirac P) : ℕ → ℝ :=
-  D
 
 variable {P : PrimeRegister}
 variable (D : PrimeCantorDirac P)
@@ -383,14 +381,24 @@ theorem powerset_signed_weight_eq_prod_one_sub
     rw [hsecond, ih]
     ring
 
-/-- Finite signed subset-sum readout for the registered prime lattice. -/
+/--
+The finite Möbius/Witten character of the prime-Cantor Dirac lattice.
+
+This is the finite algebraic trace
+
+  `Tr(Γ exp(-sH))`
+
+after substituting `q p = p^{-s}`.
+-/
 @[rep_depth thermo]
 def cantorDiracWittenCharacter
     (P : PrimeRegister) (q : ℕ → ℝ) : ℝ :=
   ∑ S ∈ P.primes.powerset,
     (-1 : ℝ) ^ S.card * ∏ p ∈ S, q p
 
-/-- The finite signed subset-sum readout equals its finite Euler product. -/
+/--
+Finite Euler-product form of the Cantor-lattice Dirac Witten character.
+-/
 @[rep_depth thermo]
 theorem cantorDiracWittenCharacter_eq_eulerProduct
     (P : PrimeRegister) (q : ℕ → ℝ) :
@@ -399,19 +407,9 @@ theorem cantorDiracWittenCharacter_eq_eulerProduct
   simpa [cantorDiracWittenCharacter]
     using powerset_signed_weight_eq_prod_one_sub P.primes q
 
-/-- The finite signed readout is nonnegative when each local factor
-`1 - q p` is nonnegative. -/
-theorem cantorDiracWittenCharacter_nonneg_of_q_le_one
-    (P : PrimeRegister) (q : ℕ → ℝ)
-    (hq₁ : ∀ p ∈ P.primes, q p ≤ 1) :
-    0 ≤ cantorDiracWittenCharacter P q := by
-  rw [cantorDiracWittenCharacter_eq_eulerProduct]
-  apply Finset.prod_nonneg
-  intro p hp
-  exact sub_nonneg.mpr (hq₁ p hp)
-
-/-- The finite signed subset-sum readout can be expressed with Mathlib's
-arithmetic Möbius function on squarefree prime products. -/
+/--
+Möbius readout of the Cantor-lattice Dirac Witten character.
+-/
 @[rep_depth thermo]
 theorem cantorDiracWittenCharacter_eq_mobius_sum
     (P : PrimeRegister) (q : ℕ → ℝ) :
@@ -432,7 +430,9 @@ theorem cantorDiracWittenCharacter_eq_mobius_sum
   rw [hμ]
   norm_num
 
-/-- Unit-weight cancellation on every nonempty finite prime register. -/
+/--
+Unit-weight Witten cancellation on every nonempty finite prime-Cantor lattice.
+-/
 @[rep_depth thermo]
 theorem cantorDiracWittenCharacter_unit_cancel
     (P : PrimeRegister) (hP : P.primes.Nonempty) :
@@ -446,12 +446,23 @@ theorem cantorDiracWittenCharacter_unit_cancel
 
 /-! ## 6. Pfaffian skeleton -/
 
-/-- Scalar readout associated with the displayed 2×2 skew block. -/
+/--
+The scalar Pfaffian of the 2×2 skew block
+
+  `[0, a; -a, 0]`
+
+is `a`.
+
+This avoids importing a full Pfaffian API while retaining the exact
+block-Pfaffian structure of the finite Majorana lattice.
+-/
 @[rep_depth krein]
 def skewBlockPfaffian (a : ℝ) : ℝ :=
   a
 
-/-- Finite product of the registered 2×2 skew-block readouts. -/
+/--
+Finite block-Pfaffian product for the prime-Cantor Dirac lattice.
+-/
 @[rep_depth krein]
 def cantorDiracPfaffianProduct
     (P : PrimeRegister) (q : ℕ → ℝ) : ℝ :=

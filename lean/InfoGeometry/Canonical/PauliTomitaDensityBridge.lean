@@ -102,5 +102,3 @@ theorem pauliDensity_right_unitary_invariant
       (tomitaQuadratic_trace_ne_zero_of_ne_zero δ hP)
 
 end InfoGeometry.Canonical.PauliTomitaDensityBridge
-
-end

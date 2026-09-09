@@ -75,7 +75,7 @@ def splitAlbertTraceZero : Submodule ℝ SplitAlbertCarrier :=
     x ∈ splitAlbertTraceZero ↔ splitAlbertTrace x = 0 := by
   rfl
 
-/-- A simple coordinate property with prescribed split-Albert trace. -/
+/-- A simple coordinate witness with prescribed split-Albert trace. -/
 def splitAlbertTraceWitness (r : ℝ) : SplitAlbertCarrier :=
   Pi.single 0 (Pi.single 0 r)
 

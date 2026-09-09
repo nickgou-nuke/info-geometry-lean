@@ -55,6 +55,24 @@ variable (F : Frame (n := n) (E := E))
 def finiteGenerator : TraceOperatorSpace n :=
   metriplecticGenerator F.H F.S F.X
 
+/-! The coupling-weighted readout keeps the frame's existing carriers while
+exposing the single total noncommutative driver. -/
+def finiteWeightedGenerator (γ : ℝ) : TraceOperatorSpace n :=
+  weightedMetriplecticGenerator γ F.H F.S F.X
+
+theorem finiteWeightedGenerator_tracePairing_decomposition
+    (γ : ℝ) (Y : TraceOperatorSpace n) :
+    tracePairingNative (finiteWeightedGenerator F γ) Y =
+      - tracePairingNative F.X (conservativeDriver F.H Y) +
+        γ * tracePairingNative F.X (dissipativeDriver F.S Y) := by
+  exact weighted_metriplectic_generator_decomposition γ F.H F.S F.X Y
+
+theorem finiteWeightedGenerator_self_tracePairing
+    (γ : ℝ) :
+    tracePairingNative (finiteWeightedGenerator F γ) F.X =
+      γ * tracePairingNative (dissipativeDriver F.S F.X) F.X := by
+  exact weighted_metriplectic_generator_self_tracePairing γ F.H F.S F.X
+
 theorem fluid_density_positive : 0 < F.fluid.ρ :=
   F.fluid.density_pos
 
@@ -67,6 +85,19 @@ theorem dissipative_trace_symmetric (Y : TraceOperatorSpace n) :
     tracePairingNative (dissipativeDriver F.S F.X) Y =
       tracePairingNative F.X (dissipativeDriver F.S Y) := by
   exact dissipative_driver_trace_symmetric F.S F.X Y
+
+theorem finiteGenerator_tracePairing_decomposition
+    (Y : TraceOperatorSpace n) :
+    tracePairingNative (finiteGenerator F) Y =
+      - tracePairingNative F.X (conservativeDriver F.H Y) +
+        tracePairingNative F.X (dissipativeDriver F.S Y) := by
+  exact metriplectic_generator_tracePairing_decomposition F.H F.S F.X Y
+
+theorem finiteGenerator_self_tracePairing_eq_dissipative :
+    tracePairingNative (finiteGenerator F) F.X =
+      tracePairingNative (dissipativeDriver F.S F.X) F.X := by
+  exact metriplectic_generator_self_tracePairing_eq_dissipative
+    F.H F.S F.X
 
 theorem conservative_energy_conserved :
     tracePairingNative F.H (conservativeDriver F.H F.X) = 0 := by

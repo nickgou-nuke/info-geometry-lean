@@ -1,3 +1,8 @@
+> Historical brainstorm, preserved for provenance. Its claims of immutable authority,
+> universal termination, finite lower sets, and constant-time verification are not
+> current policy. See the [maintained development principle](../TOPOLOGICAL_PROGRESS_PRINCIPLE.md)
+> for the corrected mathematical scope and the existing Lean owners.
+
 # The Topological Progress Principle
 ### *The Prime Directive of Formal Mathematical Development & High-Assurance Architecture*
 

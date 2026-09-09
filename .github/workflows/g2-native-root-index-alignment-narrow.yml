@@ -1,0 +1,17 @@
+name: G2 Native Root Index Alignment Narrow Check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/Zorn/G2NativeRootIndexAlignment.lean'
+      - '.github/workflows/g2-native-root-index-alignment-narrow.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+      - name: Build focused owner
+        run: lake build InfoGeometry.Algebra.Zorn.G2NativeRootIndexAlignment

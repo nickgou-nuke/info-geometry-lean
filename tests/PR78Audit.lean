@@ -1,0 +1,34 @@
+import InfoGeometry.Algebra.ChiralRealHyperbolicRotor
+import InfoGeometry.Clifford.Cl55RoPESplitTorusBridge
+import InfoGeometry.Clifford.Cl55AttentionRelativePositionBridge
+import InfoGeometry.Clifford.Cl55CayleyRoPEBridge
+#print axioms InfoGeometry.OperatorAlgebra.hyperbolicRotor_mul
+#print axioms InfoGeometry.OperatorAlgebra.hyperbolicRotor_mul_reverse
+#print axioms InfoGeometry.OperatorAlgebra.reverseHyperbolicRotor_mul
+#print axioms InfoGeometry.OperatorAlgebra.hyperbolicRotor_conjugate_mul
+#print axioms InfoGeometry.Clifford.Cl55RoPESplitTorusBridge.ropeRotor55_zero
+#print axioms InfoGeometry.Clifford.Cl55RoPESplitTorusBridge.ropeRotor55_add
+#print axioms InfoGeometry.Clifford.Cl55RoPESplitTorusBridge.ropeRotor55_inv
+#print axioms InfoGeometry.Clifford.Cl55RoPESplitTorusBridge.ropeRotor55_relative
+#print axioms InfoGeometry.Clifford.Cl55RoPESplitTorusBridge.splitRotor55_zero
+#print axioms InfoGeometry.Clifford.Cl55RoPESplitTorusBridge.splitRotor55_add
+#print axioms InfoGeometry.Clifford.Cl55RoPESplitTorusBridge.splitRotor55_inv
+#print axioms InfoGeometry.Clifford.Cl55RoPESplitTorusBridge.splitRotor55_relative
+#print axioms InfoGeometry.Clifford.Cl55RoPESplitTorusBridge.ropeBivector55_sq
+#print axioms InfoGeometry.Clifford.Cl55RoPESplitTorusBridge.bivectorRotor55_add
+#print axioms InfoGeometry.Clifford.Cl55RoPESplitTorusBridge.disjoint_bivector_commute_01_23
+#print axioms InfoGeometry.Clifford.Cl55RoPESplitTorusBridge.bivectorRotor55_commute_01_23
+#print axioms InfoGeometry.Clifford.Cl55RoPESplitTorusBridge.grand_cl55_rope_split_torus_synthesis
+#print axioms InfoGeometry.Clifford.Clifford55.scalarTrace55_mul_comm
+#print axioms InfoGeometry.Clifford.Clifford55.relative_rotor55
+#print axioms InfoGeometry.Clifford.Clifford55.rotatedAttention_relative_position
+#print axioms InfoGeometry.Clifford.Clifford55.clifford_relative_position_product
+#print axioms InfoGeometry.Clifford.Clifford55.cliffordAttention_relative_position
+#print axioms InfoGeometry.Clifford.Clifford55.ellipticCayleyDenInv_right
+#print axioms InfoGeometry.Clifford.Clifford55.ellipticCayleyDenInv_left
+#print axioms InfoGeometry.Clifford.Clifford55.ellipticCayley_eq_neg
+#print axioms InfoGeometry.Clifford.Clifford55.ellipticAxis55_cayley_eq_neg
+#print axioms InfoGeometry.Clifford.Clifford55.ropeBivector55_cayley_eq_neg
+#print axioms InfoGeometry.Clifford.Clifford55.split_cayley_denominator_product_zero
+#print axioms InfoGeometry.Clifford.Clifford55.split_cayley_denominator_product_zero_rev
+#print axioms InfoGeometry.Clifford.Clifford55.hyperbolicAxis55_cayley_denominator_zero_divisor

@@ -28,7 +28,7 @@ theorem rankOne_sandwich (u v x y : H) (Q : H →L[ℂ] H) :
       ⟪v, Q x⟫_ℂ • InnerProductSpace.rankOne ℂ u y := by
   ext z
   simp only [ContinuousLinearMap.comp_apply, InnerProductSpace.rankOne_apply,
-    map_smul, inner_smul_right, ContinuousLinearMap.smul_apply, smul_smul]
+    map_smul, ContinuousLinearMap.smul_apply, smul_smul]
   congr 1
   ring
 
@@ -82,6 +82,7 @@ def operatorTrace (T : H →L[ℂ] H) : ℂ := LinearMap.trace ℂ H T.toLinearM
     operatorTrace (InnerProductSpace.rankOne ℂ x y) = ⟪y,x⟫_ℂ :=
   InnerProductSpace.trace_rankOne x y
 
+omit [FiniteDimensional ℂ H] in
 @[simp] theorem operatorTrace_smul (c : ℂ) (T : H →L[ℂ] H) :
     operatorTrace (c • T) = c * operatorTrace T := by
   change LinearMap.trace ℂ H (c • T.toLinearMap) = _

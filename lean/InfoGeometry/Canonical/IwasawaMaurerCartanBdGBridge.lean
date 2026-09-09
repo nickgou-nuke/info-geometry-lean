@@ -181,9 +181,36 @@ theorem matK_gen_trace (w : R) :
 
 /-! ## 4. Krein-Dirac Scalar Overlap & Weak Value Amplification -/
 
-/-- Krein-Dirac scalar product on 2D state space: ⟨ϕ, ψ⟩_η = ϕ₀ ψ₀ - ϕ₁ ψ₁. -/
+/-- Split bilinear pairing on two coordinates. Over `ℝ` this is the real
+Krein pairing; over `ℂ` a Hermitian pairing additionally needs conjugation. -/
 def kreinDiracPairing (phi psi : Fin 2 → R) : R :=
   phi 0 * psi 0 - phi 1 * psi 1
+
+/-- The transpose conjugated by the existing fundamental symmetry is adjoint
+to the existing split bilinear pairing. -/
+theorem kreinDiracPairing_mulVec
+    (M : Matrix (Fin 2) (Fin 2) R) (phi psi : Fin 2 → R) :
+    kreinDiracPairing (M.mulVec phi) psi =
+      kreinDiracPairing phi ((etaKrein * Mᵀ * etaKrein).mulVec psi) := by
+  simp [kreinDiracPairing, etaKrein, Matrix.mulVec, dotProduct,
+    Matrix.mul_apply, Fin.sum_univ_two, Matrix.vecMul]
+  ring
+
+/-- The split pairing separates vectors, including over rings with zero divisors. -/
+theorem kreinDiracPairing_separates_right (u v : Fin 2 → R) :
+    (∀ phi, kreinDiracPairing phi u = kreinDiracPairing phi v) ↔ u = v := by
+  constructor
+  · intro h
+    have h0 := h ![1, 0]
+    have h1 := h ![0, 1]
+    simp only [kreinDiracPairing, Matrix.cons_val_zero, Matrix.cons_val_one,
+      one_mul, zero_mul, sub_zero, zero_sub, neg_inj] at h0 h1
+    funext i
+    fin_cases i
+    · exact h0
+    · exact h1
+  · rintro rfl phi
+    rfl
 
 /-- Matrix element of operator Ω under Krein metric: ⟨ϕ, Ω ψ⟩_η. -/
 def kreinMatrixElement (phi : Fin 2 → R) (Omega : Matrix (Fin 2) (Fin 2) R) (psi : Fin 2 → R) : R :=

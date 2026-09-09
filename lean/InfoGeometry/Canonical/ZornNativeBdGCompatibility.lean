@@ -143,10 +143,8 @@ theorem zorn_pairing_adjoint
     (Z : ZornC) (hZ : IsBdGCompatible Z) :
     rhoLowerPairing Z = ContinuousLinearMap.adjoint (rhoPairing Z) := by
   apply CblinfunMatrix.matrixOfOp_injective
-  simp only [rhoLowerPairing, rhoPairing]
-  rw [CblinfunMatrix.matrixOfOp_matrixOp]
-  rw [CblinfunMatrix.matrixOfOp_adjoint]
-  rw [CblinfunMatrix.matrixOfOp_matrixOp]
+  simp only [rhoLowerPairing, rhoPairing, CblinfunMatrix.matrixOfOp_adjoint,
+    CblinfunMatrix.matrixOfOp_matrixOp]
   rw [bdgReadout_block21_eq_sigmaVec, bdgReadout_block12_eq_sigmaVec]
   rw [sigmaVec_conjTranspose]
   exact congrArg sigmaVec (funext hZ.2)
@@ -157,10 +155,8 @@ theorem zorn_hole_eq_negative_adjoint
     (Z : ZornC) (hZ : IsBdGCompatible Z) :
     rhoHole Z = -ContinuousLinearMap.adjoint (rhoNormal Z) := by
   apply CblinfunMatrix.matrixOfOp_injective
-  simp only [rhoHole, rhoNormal]
-  rw [CblinfunMatrix.matrixOfOp_matrixOp]
-  rw [matrixOfOp_neg, CblinfunMatrix.matrixOfOp_adjoint]
-  rw [CblinfunMatrix.matrixOfOp_matrixOp]
+  simp only [rhoHole, rhoNormal, matrixOfOp_neg,
+    CblinfunMatrix.matrixOfOp_adjoint, CblinfunMatrix.matrixOfOp_matrixOp]
   have hd := bdgReadout_diagonal_blocks Z
   rw [hd.2, hd.1]
   ext i j
@@ -172,16 +168,15 @@ self-adjointness. -/
 theorem rhoNormal_selfAdjoint
     (Z : ZornC) (hZ : IsHermitianNormalChannel Z) :
     ContinuousLinearMap.adjoint (rhoNormal Z) = rhoNormal Z := by
+  change star Z.a = Z.a at hZ
   apply CblinfunMatrix.matrixOfOp_injective
-  simp only [rhoNormal]
-  rw [CblinfunMatrix.matrixOfOp_adjoint]
+  simp only [rhoNormal, CblinfunMatrix.matrixOfOp_adjoint,
+    CblinfunMatrix.matrixOfOp_matrixOp]
   have hd := bdgReadout_diagonal_blocks Z
   rw [hd.1]
-  have hZa : (starRingEnd ℂ) Z.a = Z.a := by
-    simpa only [starRingEnd_apply] using hZ
   ext i j
   fin_cases i <;> fin_cases j <;>
-    (simp only [Matrix.conjTranspose_apply]; simp [hZa])
+    simp [hZ, Matrix.conjTranspose_apply]
 
 /-- The actual closure theorem from the Zorn block readout to the repository's
 native bounded BdG Hamiltonian. -/
@@ -286,10 +281,11 @@ theorem hermitianNormal_firstOrderFlow
     (hDZ : IsHermitianNormalChannel (D Z))
     (t : ℝ) :
     IsHermitianNormalChannel (firstOrderFlow D Z (t : ℂ)) := by
+  change star Z.a = Z.a at hZ
+  change star (D Z).a = (D Z).a at hDZ
   change star (Z.a + (t : ℂ) * (D Z).a) =
     Z.a + (t : ℂ) * (D Z).a
-  rw [star_add, StarMul.star_mul, hZ, hDZ]
-  simp [Complex.star_def, Complex.conj_ofReal, mul_comm]
+  simp [hZ, hDZ, map_add, map_smul]
 
 /-- The full constrained physical slice is preserved by real first-order
 motion whose tangent remains in the same slice. -/

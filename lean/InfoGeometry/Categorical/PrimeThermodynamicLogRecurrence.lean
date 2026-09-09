@@ -21,6 +21,9 @@ namespace InfoGeometry.Categorical.PrimeThermodynamicLogRecurrence
 open InfoGeometry.Arithmetic.ChiralPrimonGas
 open InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 
+def stagePacket (n : ℕ) (energyWeight : ℕ → ℝ) : PrimeGrandCanonicalPacket :=
+  ⟨primeCutoffRegister n, energyWeight⟩
+
 /-- Recurrence for the primesUpto finset. -/
 theorem primesUpto_succ (n : ℕ) :
     primesUpto (n + 1) =
@@ -50,13 +53,13 @@ theorem primesUpto_succ (n : ℕ) :
 
 /-- Multiplicative finite stage recurrence for the grand-canonical partition function. -/
 theorem stagePartition_succ (n : ℕ) (energyWeight : ℕ → ℝ) (β μ : ℝ) :
-    finiteEulerProduct (primeCutoffRegister (n + 1)) energyWeight β μ =
-      finiteEulerProduct (primeCutoffRegister n) energyWeight β μ *
+    (stagePacket (n + 1) energyWeight).finiteEulerProduct β μ =
+      (stagePacket n energyWeight).finiteEulerProduct β μ *
         if _h : Nat.Prime (n + 1) then
           (1 + Real.exp (-β * (energyWeight (n + 1) - μ)))
         else
           1 := by
-  unfold finiteEulerProduct
+  unfold PrimeGrandCanonicalPacket.finiteEulerProduct
   change (∏ p ∈ primesUpto (n + 1), _) = (∏ p ∈ primesUpto n, _) * _
   rw [primesUpto_succ]
   split_ifs with h
@@ -67,20 +70,21 @@ theorem stagePartition_succ (n : ℕ) (energyWeight : ℕ → ℝ) (β μ : ℝ)
       have hle := hp.1
       omega
   · rw [mul_one]
+    simp [stagePacket]
 
 /-- Additive finite stage recurrence for the logarithmic grand-canonical partition function.
 This provides the discrete boundary definition for the finite differencing `d log Q`. -/
 theorem stageLogPartition_succ (n : ℕ) (energyWeight : ℕ → ℝ) (β μ : ℝ) :
-    Real.log (finiteEulerProduct (primeCutoffRegister (n + 1)) energyWeight β μ) =
-      Real.log (finiteEulerProduct (primeCutoffRegister n) energyWeight β μ) +
+    Real.log ((stagePacket (n + 1) energyWeight).finiteEulerProduct β μ) =
+      Real.log ((stagePacket n energyWeight).finiteEulerProduct β μ) +
         if _h : Nat.Prime (n + 1) then
           Real.log (1 + Real.exp (-β * (energyWeight (n + 1) - μ)))
         else
           0 := by
   rw [stagePartition_succ]
   split_ifs with h
-  · have h1 : 0 < finiteEulerProduct (primeCutoffRegister n) energyWeight β μ := by
-      unfold finiteEulerProduct
+  · have h1 : 0 < (stagePacket n energyWeight).finiteEulerProduct β μ := by
+      unfold PrimeGrandCanonicalPacket.finiteEulerProduct
       apply Finset.prod_pos
       intro p _hp
       exact add_pos_of_nonneg_of_pos zero_le_one (Real.exp_pos _)
@@ -93,7 +97,7 @@ theorem stageLogPartition_succ (n : ℕ) (energyWeight : ℕ → ℝ) (β μ : �
 
 theorem stageLogPartition_eq_sum
     (n : ℕ) (energyWeight : ℕ → ℝ) (β μ : ℝ) :
-    Real.log (finiteEulerProduct (primeCutoffRegister n) energyWeight β μ) =
+    Real.log ((stagePacket n energyWeight).finiteEulerProduct β μ) =
       ∑ k ∈ Finset.range n,
         if _h : Nat.Prime (k + 1) then
           Real.log (1 + Real.exp (-β * (energyWeight (k + 1) - μ)))
@@ -112,9 +116,12 @@ theorem stageLogPartition_eq_sum
           exact (Nat.not_prime_zero hp'.2).elim
         · intro hp
           exact (by simpa using hp : False).elim
-      have hprod : finiteEulerProduct (primeCutoffRegister 0) energyWeight β μ = 1 := by
-        unfold finiteEulerProduct
-        rw [hprimes]
+      have hprod : (stagePacket 0 energyWeight).finiteEulerProduct β μ = 1 := by
+        unfold PrimeGrandCanonicalPacket.finiteEulerProduct
+        change (∏ p ∈ primesUpto 0, _) = 1
+        have hzero : primesUpto 0 = ∅ := by
+          simpa [primeCutoffRegister] using hprimes
+        rw [hzero]
         simp
       rw [hprod]
       simp

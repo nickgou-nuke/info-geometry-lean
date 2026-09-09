@@ -150,12 +150,8 @@ theorem finite_witten_drazin_virasoro_capstone
     drazin_filtered_central_charge_readout
       O virasoroCentralCharge activeCentralCharge nullCentralCharge
       hO hCentralSplit hNullCentral
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · exact hWitten
-  · exact hDrazin.1
-  · exact hDrazin.2.2.1
-  · exact hDrazin.2.2.2.1
-  · exact hDrazin.2.2.2.2
+  exact ⟨hWitten, hDrazin.1, hDrazin.2.2.1, hDrazin.2.2.2.1,
+    hDrazin.2.2.2.2⟩
 
 /-! ## Gull-Doran pseudoscalar readout -/
 

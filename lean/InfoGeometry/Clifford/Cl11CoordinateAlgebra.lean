@@ -240,76 +240,44 @@ theorem innerCommutator_sub_left (K₁ K₂ X : Cl11) :
     sub (sub (mul K₁ X) (mul X K₁)) (sub (mul K₂ X) (mul X K₂))
   ext <;> simp [mul, sub] <;> ring
 
-/-- Grade involution: vectors change sign while the bivector is fixed. -/
-def gradeInvolution (q : Cl11) : Cl11 :=
-  ⟨q.s, -q.e1, -q.e2, q.e12⟩
-
-/-- Clifford reversion: vectors are fixed while the bivector changes sign. -/
+/-- The Clifford reversion on the coordinate algebra. -/
 def reverse (q : Cl11) : Cl11 :=
   ⟨q.s, q.e1, q.e2, -q.e12⟩
 
-/-- Clifford conjugation, the composition of grade involution and reversion. -/
+/-- Grade involution, negating the odd coordinate directions. -/
+def gradeInvolution (q : Cl11) : Cl11 :=
+  ⟨q.s, -q.e1, -q.e2, q.e12⟩
+
+/-- Clifford conjugation: grade involution followed by reversion. -/
 def cliffordConjugate (q : Cl11) : Cl11 :=
-  gradeInvolution (reverse q)
+  ⟨q.s, -q.e1, -q.e2, -q.e12⟩
 
-@[simp] theorem gradeInvolution_involutive (q : Cl11) :
-    gradeInvolution (gradeInvolution q) = q := by
-  ext <;> simp [gradeInvolution]
-
-@[simp] theorem reverse_involutive (q : Cl11) :
-    reverse (reverse q) = q := by
-  ext <;> simp [reverse]
+/-- The scalar embedding of the real coefficient line. -/
+def scalarEmbed (a : ℝ) : Cl11 := ⟨a, 0, 0, 0⟩
 
 @[simp] theorem cliffordConjugate_apply (q : Cl11) :
-    cliffordConjugate q = ⟨q.s, -q.e1, -q.e2, -q.e12⟩ := by
-  rfl
+    cliffordConjugate q = ⟨q.s, -q.e1, -q.e2, -q.e12⟩ := rfl
 
 @[simp] theorem cliffordConjugate_involutive (q : Cl11) :
     cliffordConjugate (cliffordConjugate q) = q := by
-  ext <;> simp [cliffordConjugate, gradeInvolution, reverse]
+  ext <;> simp [cliffordConjugate]
 
-/-- The grade involution is multiplicative. -/
-theorem gradeInvolution_mul (q₁ q₂ : Cl11) :
-    gradeInvolution (q₁ * q₂) = gradeInvolution q₁ * gradeInvolution q₂ := by
-  change gradeInvolution (mul q₁ q₂) = mul (gradeInvolution q₁) (gradeInvolution q₂)
-  ext <;> simp [gradeInvolution, mul] <;> ring
-
-/-- Reversion reverses the order of multiplication. -/
-theorem reverse_mul (q₁ q₂ : Cl11) :
-    reverse (q₁ * q₂) = reverse q₂ * reverse q₁ := by
-  change reverse (mul q₁ q₂) = mul (reverse q₂) (reverse q₁)
-  ext <;> simp [reverse, mul] <;> ring
-
-/-- Clifford conjugation is the split-quaternion anti-involution. -/
-theorem cliffordConjugate_mul (q₁ q₂ : Cl11) :
-    cliffordConjugate (q₁ * q₂) =
-      cliffordConjugate q₂ * cliffordConjugate q₁ := by
-  rw [cliffordConjugate, reverse_mul, gradeInvolution_mul]
-  rfl
-
-/-- Embed a real scalar in the coordinate packet. -/
-def scalarEmbed (r : ℝ) : Cl11 :=
-  ⟨r, 0, 0, 0⟩
-
-/-- Split-quaternion norm with signature `(2,2)`. -/
+/-- The split quadratic norm of the coordinate `Cl(1,1)` carrier. -/
 def splitNorm (q : Cl11) : ℝ :=
-  q.s * q.s - q.e1 * q.e1 + q.e2 * q.e2 - q.e12 * q.e12
+  q.s ^ 2 - q.e1 ^ 2 + q.e2 ^ 2 - q.e12 ^ 2
 
-/-- Multiplication by Clifford conjugation yields the scalar `(2,2)` norm. -/
 theorem mul_cliffordConjugate (q : Cl11) :
     q * cliffordConjugate q = scalarEmbed (splitNorm q) := by
   change mul q (cliffordConjugate q) = scalarEmbed (splitNorm q)
-  ext <;> simp [cliffordConjugate, gradeInvolution, reverse, scalarEmbed, splitNorm, mul] <;>
-    ring
+  ext <;> simp [mul, cliffordConjugate, scalarEmbed, splitNorm] <;> ring
+
+@[simp] theorem splitNorm_cliffordConjugate (q : Cl11) :
+    splitNorm (cliffordConjugate q) = splitNorm q := by
+  simp [splitNorm, cliffordConjugate]
 
 /-- Krein metric readout in coordinates. -/
 def kreinMetric (X Y : Cl11) : ℝ :=
   X.s * Y.s - X.e1 * Y.e1 + X.e2 * Y.e2 - X.e12 * Y.e12
-
-/-- The quadratic readout of the Krein bilinear form is the split norm. -/
-@[simp] theorem kreinMetric_self (q : Cl11) :
-    kreinMetric q q = splitNorm q := by
-  rfl
 
 /-- The Krein metric is symmetric. -/
 theorem kreinMetric_symm (X Y : Cl11) :

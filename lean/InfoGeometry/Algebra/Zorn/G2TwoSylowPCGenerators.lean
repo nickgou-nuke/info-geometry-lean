@@ -3,6 +3,8 @@ import InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 import InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
 import Mathlib.Tactic
 
+set_option maxHeartbeats 2000000
+
 namespace InfoGeometry.Algebra.Zorn.G2TwoSylowPCGenerators
 
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
@@ -47,61 +49,43 @@ theorem pc1_mul (X Y : SplitOctF2) :
     pc1Fun (mul X Y) = mul (pc1Fun X) (pc1Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> rw [← bitToF2_eq_iff] <;>
-    simp only [pc1Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and] <;>
-    ring_nf <;>
-    simp [F2_mul_two]
+  revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
+  native_decide
 
 theorem pc2_mul (X Y : SplitOctF2) :
     pc2Fun (mul X Y) = mul (pc2Fun X) (pc2Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> rw [← bitToF2_eq_iff] <;>
-    simp only [pc2Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and] <;>
-    ring_nf <;>
-    simp [F2_mul_two, F2_mul_four]
+  revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
+  native_decide
 
 theorem pc3_mul (X Y : SplitOctF2) :
     pc3Fun (mul X Y) = mul (pc3Fun X) (pc3Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> rw [← bitToF2_eq_iff] <;>
-    simp only [pc3Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and] <;>
-    ring_nf <;>
-    simp [F2_mul_two, F2_mul_three, F2_mul_four]
+  revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
+  native_decide
 
 theorem pc4_mul (X Y : SplitOctF2) :
     pc4Fun (mul X Y) = mul (pc4Fun X) (pc4Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> rw [← bitToF2_eq_iff] <;>
-    simp only [pc4Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and] <;>
-    ring_nf <;>
-    simp [F2_mul_two]
+  revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
+  native_decide
 
 theorem pc5_mul (X Y : SplitOctF2) :
     pc5Fun (mul X Y) = mul (pc5Fun X) (pc5Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> rw [← bitToF2_eq_iff] <;>
-    simp only [pc5Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and] <;>
-    ring_nf <;>
-    simp [F2_mul_two]
+  revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
+  native_decide
 
 theorem pc6_mul (X Y : SplitOctF2) :
     pc6Fun (mul X Y) = mul (pc6Fun X) (pc6Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-  ext <;> rw [← bitToF2_eq_iff] <;>
-    simp only [pc6Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and] <;>
-    ring_nf <;>
-    simp [F2_mul_two]
+  revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
+  native_decide
 
 theorem pc1_sq (X : SplitOctF2) : pc1Fun (pc1Fun X) = X := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩

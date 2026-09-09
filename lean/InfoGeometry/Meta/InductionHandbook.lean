@@ -203,7 +203,7 @@ theorem BinTree.node_ne_leaf {α : Type}
 Strengthened statement for list reverse over append.
 
 This is the standard "generalize first" move: proving `reverse (xs ++ ys)`
-requires an induction property polymorphic in `ys`.
+requires an induction hypothesis polymorphic in `ys`.
 -/
 theorem reverse_append_demo {α : Type} (xs ys : List α) :
     (xs ++ ys).reverse = ys.reverse ++ xs.reverse := by
@@ -374,7 +374,7 @@ theorem sound (s k : Nat) : TickClosure s (runTicks k s) := by
   | succ k ih =>
       simpa [runTicks_succ] using TickClosure.tick (ih s)
 
-/-- Every relational run has a finite fuel property in `runTicks`. -/
+/-- Every relational run has a finite fuel witness in `runTicks`. -/
 theorem complete {s t : Nat} (h : TickClosure s t) : ∃ k : Nat, runTicks k s = t := by
   induction h with
   | refl =>
@@ -530,7 +530,7 @@ theorem exists_half : ∀ {n : Nat}, Even n → ∃ k : Nat, n = k + k := by
     refine ⟨k + 1, ?_⟩
     omega
 
-/-- Build `Even` evidence from the explicit half property. -/
+/-- Build `Even` evidence from the explicit half witness. -/
 theorem of_exists_half {n : Nat} (h : ∃ k : Nat, n = k + k) : Even n := by
   rcases h with ⟨k, hk⟩
   subst hk
@@ -925,7 +925,7 @@ theorem wfCount_eq_id (n : Nat) : wfCount n = n := by
   | zero => simp
   | succ n ih => simp [wfCount_succ, ih]
 
-/-- Accessibility for `<` in naturals follows directly from the well-foundedness property. -/
+/-- Accessibility for `<` in naturals follows directly from the well-foundedness witness. -/
 theorem wfAccessibleNat (n : Nat) : Acc (· < ·) n := by
   simpa [WellFoundedRelation.rel] using Nat.lt_wfRel.wf.apply n
 
@@ -1065,8 +1065,8 @@ theorem excluded_middle (P : Prop) : P ∨ ¬ P := by
   classical
   exact em P
 
-/-- Extracting a canonical property from `Nonempty` via classical choice. -/
-theorem choose_property_exists {α : Type} (h : Nonempty α) : ∃ a : α, a = Classical.choice h := by
+/-- Extracting a canonical witness from `Nonempty` via classical choice. -/
+theorem choose_witness_exists {α : Type} (h : Nonempty α) : ∃ a : α, a = Classical.choice h := by
   classical
   exact ⟨Classical.choice h, rfl⟩
 

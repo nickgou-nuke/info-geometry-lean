@@ -18,7 +18,7 @@ namespace InfoGeometry.Lint
 inductive VacuityRole where
   | fake_transport
   | pure_conductor
-  | deferred_interface
+  | dead_socket
   | gate
   | orphan_genuine
   | closure_debt
@@ -29,9 +29,9 @@ deriving Repr, BEq, Inhabited
 inductive ContaminationState where
   | clean
   | honest_sorry
-  | forbidden_property
+  | forbidden_axiom
   | opaque_boundary
-  | local_property
+  | local_axiom
   | contaminated
 deriving Repr, BEq, Inhabited
 

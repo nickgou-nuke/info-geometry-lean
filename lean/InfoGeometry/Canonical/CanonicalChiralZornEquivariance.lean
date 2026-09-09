@@ -192,15 +192,19 @@ noncomputable def canonicalColorReflectionCompositionAut :
 
 @[simp] theorem canonicalColorCycleCompositionAut_preserves_detZ (X : CanonicalZorn) :
     InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
         ((canonicalColorCycleCompositionAut : CanonicalLinearAut) X) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X :=
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X :=
   realZornCompositionAut_preserves_det canonicalColorCycleCompositionAut X
 
 @[simp] theorem canonicalColorReflectionCompositionAut_preserves_detZ
     (X : CanonicalZorn) :
     InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
         ((canonicalColorReflectionCompositionAut : CanonicalLinearAut) X) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X :=
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X :=
   realZornCompositionAut_preserves_det canonicalColorReflectionCompositionAut X
 
 /-! ## The actual finite automorphism action
@@ -321,26 +325,6 @@ theorem canonicalColorReflection_cycle_reflection_equiv :
       (canonicalColorCycle (canonicalColorReflection X)) =
     canonicalColorCycle (canonicalColorCycle X)
   exact canonicalColorReflection_cycle_reflection X
-
-theorem canonicalColorCycle_preserves_detZ (X : ZornMatrix R) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (canonicalColorCycle X) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X := by
-  change _ = X.a * X.b - ZornMatrix.dot X.x X.y
-  simp [canonicalColorCycle, canonicalChiralMulEquiv,
-    ChiralZornMatrix.rotateMulEquiv_apply, ChiralZornMatrix.rotateColor,
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, ZornMatrix.dot,
-    InfoGeometry.Physics.Octonion.prevColor]
-  ring
-
-theorem canonicalColorReflection_preserves_detZ (X : ZornMatrix R) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (canonicalColorReflection X) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X := by
-  change _ = X.a * X.b - ZornMatrix.dot X.x X.y
-  simp [canonicalColorReflection, canonicalChiralMulEquiv,
-    ChiralZornMatrix.reflectMulEquiv_apply, ChiralZornMatrix.reflect,
-    ChiralZornMatrix.reflectColor, InfoGeometry.Physics.Octonion.colorDot,
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, ZornMatrix.dot]
-  ring
 
 end
 end InfoGeometry.Canonical

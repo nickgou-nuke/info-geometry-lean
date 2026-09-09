@@ -35,31 +35,36 @@ theorem transportEnd_jointProjector_of_axes
     (hSign cSign : Bool) :
     transportEnd S t (P.jointProjector hSign cSign) =
       P.jointProjector hSign cSign := by
-  have hHyper (sign : Bool) :
-      transportEnd S t
-          (choose sign
-            (CommutingInvolutions.hyperbolicInvolution P).Pleft
-            (CommutingInvolutions.hyperbolicInvolution P).Pright) =
-        choose sign
-          (CommutingInvolutions.hyperbolicInvolution P).Pleft
-          (CommutingInvolutions.hyperbolicInvolution P).Pright := by
-    cases sign <;>
-      simp [choose, CommutingInvolutions.hyperbolicInvolution,
-        InfoGeometry.OperatorAlgebra.ChiralInvolution.Pleft,
-        InfoGeometry.OperatorAlgebra.ChiralInvolution.Pright, hH]
-  have hCircular (sign : Bool) :
-      transportEnd S t
-          (choose sign
-            (CommutingInvolutions.circularInvolution P).Pleft
-            (CommutingInvolutions.circularInvolution P).Pright) =
-        choose sign
-          (CommutingInvolutions.circularInvolution P).Pleft
-          (CommutingInvolutions.circularInvolution P).Pright := by
-    cases sign <;>
-      simp [choose, CommutingInvolutions.circularInvolution,
-        InfoGeometry.OperatorAlgebra.ChiralInvolution.Pleft,
-        InfoGeometry.OperatorAlgebra.ChiralInvolution.Pright, hC]
-  unfold CommutingInvolutions.jointProjector
-  rw [transportEnd_mul, hHyper, hCircular]
+  let F := conjEnd (S.U t : NeutralSpace E ≃L[ℝ] NeutralSpace E)
+  change F P.hyperbolic = P.hyperbolic at hH
+  change F P.circular = P.circular at hC
+  change F (P.jointProjector hSign cSign) = P.jointProjector hSign cSign
+  cases hSign <;> cases cSign <;>
+    simp only [CommutingInvolutions.jointProjector, choose,
+      CommutingInvolutions.hyperbolicInvolution,
+      CommutingInvolutions.circularInvolution,
+      InfoGeometry.OperatorAlgebra.ChiralInvolution.Pleft,
+      InfoGeometry.OperatorAlgebra.ChiralInvolution.Pright,
+      Bool.false_eq_true, if_false, if_true,
+      map_mul, map_smul, map_add, map_sub, map_one, hH, hC]
+
+/-- Fixing both axes makes vector transport preserve each joint-projector range. -/
+theorem transport_mem_jointProjector_range
+    (S : SpinConnection E) (t : ℝ)
+    (P : CommutingInvolutions (EndN (E := E)))
+    (hH : transportEnd S t P.hyperbolic = P.hyperbolic)
+    (hC : transportEnd S t P.circular = P.circular)
+    (hSign cSign : Bool) (v : NeutralSpace E)
+    (hv : v ∈ LinearMap.range (P.jointProjector hSign cSign).toLinearMap) :
+    (S.U t : NeutralSpace E ≃L[ℝ] NeutralSpace E) v ∈
+      LinearMap.range (P.jointProjector hSign cSign).toLinearMap := by
+  rcases hv with ⟨w, rfl⟩
+  let U : NeutralSpace E ≃L[ℝ] NeutralSpace E := S.U t
+  refine ⟨U w, ?_⟩
+  have h := congrArg (fun A : EndN (E := E) => A (U w))
+    (transportEnd_jointProjector_of_axes S t P hH hC hSign cSign)
+  change U (P.jointProjector hSign cSign (U.symm (U w))) =
+    P.jointProjector hSign cSign (U w) at h
+  simpa only [ContinuousLinearEquiv.symm_apply_apply] using h.symm
 
 end InfoGeometry.Canonical.SpinConnectionPolarization

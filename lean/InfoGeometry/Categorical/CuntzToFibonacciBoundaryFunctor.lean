@@ -1,7 +1,6 @@
 import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.CategoryTheory.Functor.Basic
 import Mathlib.CategoryTheory.Discrete.Basic
-import Mathlib.CategoryTheory.Limits.HasLimits
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Categorical.FibonacciFusionCategoryData
 
@@ -10,7 +9,6 @@ noncomputable section
 namespace InfoGeometry.Categorical.CuntzToFibonacciBoundaryFunctor
 
 open CategoryTheory
-open CategoryTheory.Limits
 open InfoGeometry.Topology
 open InfoGeometry.Categorical.FibonacciFusionCategoryData
 open Matrix
@@ -33,8 +31,8 @@ thereby closing the finite/symbolic part of the categorical bridge.
 * `canonicalAlgebraicMap_eval`
 
 #### BUCKET 3: OPEN CLOSURE DEBT
-* Extension of the algebraic boundary functor to the continuum limit natively
-  through categorical directed inductive colimits (e.g., via TensorColimit or ZornUHFColimit).
+* Analytic extension of the algebraic boundary functor to a full continuous
+  C*-algebraic or braided monoidal functor over the completed Hilbert spaces.
 -/
 
 /-- Mapping from binary Cuntz branch labels to skeletal Fibonacci simple objects.
@@ -85,87 +83,12 @@ theorem canonicalAlgebraicMap_eval :
       canonicalAlgebraicMap.2 = N_tau :=
   ⟨rfl, rfl⟩
 
-/-! ## Finite fusion readouts of the branch map -/
-
-@[simp]
-theorem cuntzShiftToFusionMatrix_false_mul
-    (M : Matrix (Fin 2) (Fin 2) ℕ) :
-    cuntzShiftToFusionMatrix false * M = M := by
-  simpa [cuntzShiftToFusionMatrix, N_unit] using Matrix.one_mul M
-
-@[simp]
-theorem cuntzShiftToFusionMatrix_mul_false
-    (M : Matrix (Fin 2) (Fin 2) ℕ) :
-    M * cuntzShiftToFusionMatrix false = M := by
-  simpa [cuntzShiftToFusionMatrix, N_unit] using Matrix.mul_one M
-
-@[simp]
-theorem cuntzShiftToFusionMatrix_false_mul_true :
-    cuntzShiftToFusionMatrix false * cuntzShiftToFusionMatrix true =
-      cuntzShiftToFusionMatrix true := by
-  simpa [cuntzShiftToFusionMatrix, N_unit] using
-    (Matrix.one_mul N_tau)
-
-@[simp]
-theorem cuntzShiftToFusionMatrix_true_mul_false :
-    cuntzShiftToFusionMatrix true * cuntzShiftToFusionMatrix false =
-      cuntzShiftToFusionMatrix true := by
-  simpa [cuntzShiftToFusionMatrix, N_unit] using
-    (Matrix.mul_one N_tau)
-
-@[simp]
-theorem cuntzShiftToFusionMatrix_true_sq :
-    cuntzShiftToFusionMatrix true * cuntzShiftToFusionMatrix true =
-      cuntzShiftToFusionMatrix false + cuntzShiftToFusionMatrix true := by
-  simpa [cuntzShiftToFusionMatrix] using N_tau_sq_eq_N_unit_add_N_tau
-
-/-! ## Native colimit readout interface
-
-The finite branch functor does not determine a particular directed system by
-itself.  For any supplied diagram of branch labels and compatible target
-cocone, Mathlib's colimit universal property constructs the unique readout.
-This is the theorem-safe categorical extension; choosing a concrete Cuntz
-stage tower is a separate owner concern.
--/
-
-theorem boundary_colimit_readout_exists
-    {J : Type*} [Category J]
-    (D : J ⥤ Discrete Bool)
-    (c : Cocone D)
-    (hc : IsColimit c)
-    (hFc : IsColimit (CuntzToFibonacciFunctor.mapCocone c))
-    (t : Cocone (D ⋙ CuntzToFibonacciFunctor))
-    :
-    ∃ (readout :
-        CuntzToFibonacciFunctor.obj c.pt ⟶ t.pt),
-      ∀ j, (CuntzToFibonacciFunctor.mapCocone c).ι.app j ≫ readout =
-        t.ι.app j := by
-  refine ⟨hFc.desc t, ?_⟩
-  intro j
-  exact hFc.fac t j
-
-theorem boundary_colimit_readout_unique
-    {J : Type*} [Category J]
-    (D : J ⥤ Discrete Bool)
-    (c : Cocone D) (hc : IsColimit c)
-    (hFc : IsColimit (CuntzToFibonacciFunctor.mapCocone c))
-    (t : Cocone (D ⋙ CuntzToFibonacciFunctor))
-    (f g : CuntzToFibonacciFunctor.obj c.pt ⟶ t.pt)
-    (hf : ∀ j, (CuntzToFibonacciFunctor.mapCocone c).ι.app j ≫ f =
-      t.ι.app j)
-    (hg : ∀ j, (CuntzToFibonacciFunctor.mapCocone c).ι.app j ≫ g =
-      t.ι.app j) :
-    f = g := by
-  apply hFc.hom_ext
-  intro j
-  rw [hf j, hg j]
-
 /--
 Open debt recording the need to lift the discrete symbolic Cuntz-to-Fibonacci
-functor to the continuum limit natively through categorical directed inductive
-colimits (e.g., via ZornUHFColimit or TensorColimit), avoiding analytical continuations.
+functor to a fully continuous analytic braided monoidal functor acting on
+completed Hilbert spaces.
 -/
-def categoricalColimitFunctorDebt : String :=
-  "Lift the discrete CuntzToFibonacciFunctor to the continuum using categorical filtered inductive colimits."
+def analyticOperatorFunctorDebt : String :=
+  "Lift the discrete CuntzToFibonacciFunctor to an analytic C*-algebraic or braided monoidal functor on the Hilbert boundary."
 
 end InfoGeometry.Categorical.CuntzToFibonacciBoundaryFunctor

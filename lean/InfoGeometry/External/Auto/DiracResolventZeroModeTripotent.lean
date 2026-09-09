@@ -112,4 +112,20 @@ theorem bulk_zero_mode_matches_tripotent_defect :
 
 
 
+/-- Main synthesis theorem. -/
+theorem dirac_resolvent_zero_mode_tripotent_synthesis :
+    (∀ s kx ky : ℂ, (D_FM s kx ky).det = 0 ↔ (sI_minus_X s kx ky).det = 0) ∧
+    (∀ s : ℂ, (sI_minus_X s 0 0).det = 0 ↔ s = 0) ∧
+    (sI_minus_X 0 0 0).det = 0 ∧ (tripScale 0).det = 0 := by
+  exact ⟨dirac_zero_iff_resolvent_singular,
+    zero_momentum_scale_zero, bulk_zero_mode_matches_tripotent_defect.1,
+    bulk_zero_mode_matches_tripotent_defect.2⟩
+
+#check det_sI_minus_X
+#check det_D_FM
+#check dirac_zero_iff_resolvent_singular
+#check zero_momentum_scale_zero
+#check bulk_zero_mode_matches_tripotent_defect
+#check dirac_resolvent_zero_mode_tripotent_synthesis
+
 end DiracResolventZeroModeTripotent

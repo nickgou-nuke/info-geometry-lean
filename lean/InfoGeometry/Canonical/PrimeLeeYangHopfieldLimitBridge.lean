@@ -1,5 +1,7 @@
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
+import InfoGeometry.Canonical.RelativeDeterminantScatteringSocket
 
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge
@@ -17,7 +19,7 @@ This file proves finite algebraic facts about the centered chain:
 * the centered occupation coupling equals `κ` times that two-prime coefficient.
 
 The infinite Lee--Yang/Hurwitz transfer to completed `xi` remains a
-proof-carrying interface.  No RH theorem is asserted here.
+proof-carrying socket.  No RH theorem is asserted here.
 -/
 
 noncomputable section

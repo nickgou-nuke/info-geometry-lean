@@ -32,12 +32,10 @@ variable {B : Type u} [CStarAlgebra B] [PartialOrder B] [StarOrderedRing B]
 
 theorem algebraicDescend_eq_topologicalColimitMap_on_stage
     (R : TopologicalRealization (Stage := Stage) (sys := sys) (B := B))
-    (hι_comm : ∀ {i j : I} (hij : i ≤ j),
-      (R.ι j).comp (sys.map hij) = R.ι i)
     (i : I) (x : Stage i) :
-    algebraicDescend Stage sys R hι_comm
+    algebraicDescend Stage sys R
         (algebraicStarDirectLimitOf Stage sys i x) =
-      topologicalColimitMap Stage sys R hι_comm
+      topologicalColimitMap Stage sys R
         (topologicalInjection Stage sys i x) := by
   rw [algebraicDescend_of, topologicalColimitMap_inclusion]
 

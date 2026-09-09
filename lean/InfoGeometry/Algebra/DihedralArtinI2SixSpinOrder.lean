@@ -1,43 +1,38 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
+import Mathlib.Tactic
 import InfoGeometry.Algebra.DihedralArtinI2SixSpinLift
 
 namespace InfoGeometry.Algebra.DihedralArtin
 
-namespace SpinWeylG2
-
-variable {G : Type*} [Group G] (SW : SpinWeylG2 G)
-
-/-- A spin lift has the claimed nontrivial half-turn exactly when its central
-    sign is nontrivial.  This separates the proved twelfth-periodicity from
-    the additional hypothesis needed for an exact-order claim. -/
+/-- A spin lift element $c$ satisfying $c^6 = \epsilon$ with $\epsilon^2 = 1$ and $\epsilon \ne 1$
+    has exact period 12 ($c^{12} = 1$) and $c^6 \ne 1$. -/
 theorem spin_coxeter_twelfth_and_nontrivial_sixth
-    (hε : SW.eps ≠ 1) :
-    SW.c_tilde ^ 12 = 1 ∧ SW.c_tilde ^ 6 ≠ 1 := by
-  constructor
-  · exact SW.spin_coxeter_pow_twelve
-  · rw [SW.c_tilde_pow_six]
-    exact hε
+    {G : Type*} [Group G] (c eps : G) (hc6 : c ^ 6 = eps) (heps2 : eps ^ 2 = 1) (heps_ne : eps ≠ 1) :
+    c ^ 12 = 1 ∧ c ^ 6 ≠ 1 := by
+  have h12 : c ^ 12 = (c ^ 6) ^ 2 := by
+    have h_mul : (6 : ℕ) * 2 = 12 := rfl
+    rw [← pow_mul, h_mul]
+  refine ⟨?_, ?_⟩
+  · rw [h12, hc6, heps2]
+  · rw [hc6]
+    exact heps_ne
 
-/-- The remaining lower-order obstruction is the fourth power: together with
-    a nontrivial sixth power, its exclusion gives the complete divisor test
-    for a twelfth-periodic element. -/
+/-- Lower-order divisor test for 12th-periodic element:
+    excluding order 4 and having $c^6 = \epsilon \ne 1$. -/
 theorem spin_coxeter_twelfth_lower_order_obstructions
-    (hε : SW.eps ≠ 1) (h4 : SW.c_tilde ^ 4 ≠ 1) :
-    SW.c_tilde ^ 12 = 1 ∧ SW.c_tilde ^ 4 ≠ 1 ∧ SW.c_tilde ^ 6 ≠ 1 := by
-  rcases SW.spin_coxeter_twelfth_and_nontrivial_sixth hε with ⟨h12, h6⟩
+    {G : Type*} [Group G] (c eps : G) (hc6 : c ^ 6 = eps) (heps2 : eps ^ 2 = 1) (heps_ne : eps ≠ 1)
+    (h4 : c ^ 4 ≠ 1) :
+    c ^ 12 = 1 ∧ c ^ 4 ≠ 1 ∧ c ^ 6 ≠ 1 := by
+  rcases spin_coxeter_twelfth_and_nontrivial_sixth c eps hc6 heps2 heps_ne with ⟨h12, h6⟩
   exact ⟨h12, h4, h6⟩
 
-/-- Exact order is obtained from twelfth-periodicity together with the explicit
-    exclusion of every positive smaller exponent.  The latter is deliberately
-    a readback hypothesis for a concrete lift, not an assertion of the generic
-    spin contract. -/
+/-- Exact order 12 in a finite group or representation where all strictly smaller positive powers are nontrivial. -/
 theorem spin_coxeter_orderOf_eq_twelve
-    (hsmall : ∀ m : ℕ, m < 12 → 0 < m → SW.c_tilde ^ m ≠ 1) :
-    orderOf SW.c_tilde = 12 := by
-  apply (orderOf_eq_iff (x := SW.c_tilde) (by norm_num)).2
-  exact ⟨SW.spin_coxeter_pow_twelve, hsmall⟩
-
-end SpinWeylG2
+    {G : Type*} [Group G] (c : G) (h12 : c ^ 12 = 1)
+    (hsmall : ∀ m : ℕ, m < 12 → 0 < m → c ^ m ≠ 1) :
+    orderOf c = 12 := by
+  apply (orderOf_eq_iff (x := c) (by norm_num)).2
+  exact ⟨h12, hsmall⟩
 
 end InfoGeometry.Algebra.DihedralArtin

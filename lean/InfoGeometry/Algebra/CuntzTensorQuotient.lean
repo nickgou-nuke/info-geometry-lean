@@ -186,41 +186,6 @@ theorem toeplitz_orthogonality (n : ℕ) (i j : Fin n) :
   rw [← map_mul]
   simpa using RingQuot.mkAlgHom_rel ℂ (CuntzToeplitzRel.orth i j)
 
-/-! ## Dagger descending to the Cuntz--Toeplitz quotient -/
-
-theorem dagger_CuntzToeplitzRel {n : ℕ} : ∀ {x y : CuntzTensor n},
-    CuntzToeplitzRel n x y → CuntzToeplitzRel n (star x) (star y) := by
-  intro x y h
-  rcases h with ⟨i, j⟩
-  by_cases hij : i = j
-  · subst j
-    simpa using CuntzToeplitzRel.orth (n := n) i i
-  · have hji : j ≠ i := fun h => hij h.symm
-    simpa [hij, hji] using CuntzToeplitzRel.orth (n := n) j i
-
-instance (n : ℕ) : StarRing (CuntzToeplitzAlg n) :=
-  RingQuot.starRing (CuntzToeplitzRel n)
-    (fun _ _ h => dagger_CuntzToeplitzRel h)
-
-theorem star_toeplitzMk (n : ℕ) (x : CuntzTensor n) :
-    star (toeplitzMk n x) = toeplitzMk n (star x) := by
-  change star ((RingQuot.mkAlgHom ℂ (CuntzToeplitzRel n)) x) =
-    (RingQuot.mkAlgHom ℂ (CuntzToeplitzRel n)) (star x)
-  simp [RingQuot.mkAlgHom_def, RingQuot.mkRingHom_def]
-  rfl
-
-@[simp] theorem star_toeplitzS (n : ℕ) (i : Fin n) :
-    star (toeplitzS n i) = toeplitzSdag n i := by
-  rw [toeplitzS, toeplitzSdag, star_toeplitzMk]
-  change toeplitzMk n (star (S n i)) = toeplitzMk n (Sdag n i)
-  simp
-
-@[simp] theorem star_toeplitzSdag (n : ℕ) (i : Fin n) :
-    star (toeplitzSdag n i) = toeplitzS n i := by
-  rw [toeplitzSdag, toeplitzS, star_toeplitzMk]
-  change toeplitzMk n (star (Sdag n i)) = toeplitzMk n (S n i)
-  simp
-
 /-- The Cuntz quotient satisfies `Sᵢ† Sⱼ = δᵢⱼ`. -/
 theorem cuntz_orthogonality (n : ℕ) (i j : Fin n) :
     cuntzSdag n i * cuntzS n j = if i = j then 1 else 0 := by
@@ -248,6 +213,41 @@ theorem cuntz_distinct_orthogonal (n : ℕ) {i j : Fin n} (hij : i ≠ j) :
 
 /-! ## Dagger descends through the Cuntz relations -/
 
+theorem dagger_CuntzToeplitzRel {n : ℕ} : ∀ {x y : CuntzTensor n},
+    CuntzToeplitzRel n x y → CuntzToeplitzRel n (star x) (star y) := by
+  intro x y h
+  rcases h with ⟨i, j⟩
+  change CuntzToeplitzRel n (dagger n (Sdag n i * S n j))
+    (dagger n (if i = j then 1 else 0))
+  by_cases hij : i = j
+  · subst j
+    simpa using CuntzToeplitzRel.orth (n := n) i i
+  · have hji : j ≠ i := fun h => hij h.symm
+    simpa [hij, hji] using CuntzToeplitzRel.orth (n := n) j i
+
+instance (n : ℕ) : StarRing (CuntzToeplitzAlg n) :=
+  RingQuot.starRing (CuntzToeplitzRel n)
+    (fun _ _ h => dagger_CuntzToeplitzRel h)
+
+theorem star_toeplitzMk (n : ℕ) (x : CuntzTensor n) :
+    star (toeplitzMk n x) = toeplitzMk n (star x) := by
+  change star ((RingQuot.mkAlgHom ℂ (CuntzToeplitzRel n)) x) =
+    (RingQuot.mkAlgHom ℂ (CuntzToeplitzRel n)) (star x)
+  simp [RingQuot.mkAlgHom_def, RingQuot.mkRingHom_def]
+  rfl
+
+theorem star_toeplitzS (n : ℕ) (i : Fin n) :
+    star (toeplitzS n i) = toeplitzSdag n i := by
+  rw [toeplitzS, toeplitzSdag, star_toeplitzMk]
+  change toeplitzMk n (dagger n (S n i)) = toeplitzMk n (Sdag n i)
+  simp
+
+theorem star_toeplitzSdag (n : ℕ) (i : Fin n) :
+    star (toeplitzSdag n i) = toeplitzS n i := by
+  rw [toeplitzSdag, toeplitzS, star_toeplitzMk]
+  change toeplitzMk n (dagger n (Sdag n i)) = toeplitzMk n (S n i)
+  simp
+
 theorem dagger_CuntzRel {n : ℕ} : ∀ {x y : CuntzTensor n},
     CuntzRel n x y → CuntzRel n (star x) (star y) := by
   intro x y h
@@ -271,12 +271,6 @@ theorem star_cuntzMk (n : ℕ) (x : CuntzTensor n) :
     (RingQuot.mkAlgHom ℂ (CuntzRel n)) (star x)
   simp [RingQuot.mkAlgHom_def, RingQuot.mkRingHom_def]
   rfl
-
-@[simp] theorem star_cuntzAlg_algebraMap (n : ℕ) (c : ℂ) :
-    star (algebraMap ℂ (CuntzAlg n) c) = algebraMap ℂ (CuntzAlg n) c := by
-  rw [← (cuntzMk n).commutes c, star_cuntzMk]
-  change cuntzMk n (dagger n (algebraMap ℂ (CuntzTensor n) c)) = _
-  rw [dagger_algebraMap]
 
 /-- Star swaps the quotient generator `Sᵢ` with its formal adjoint. -/
 theorem star_cuntzS (n : ℕ) (i : Fin n) :
@@ -328,7 +322,7 @@ theorem cuntz_range_projectors_orthogonal (n : ℕ) {i j : Fin n} (hij : i ≠ j
 /-- Range projectors are self-adjoint: `(Sᵢ Sᵢ†)† = Sᵢ Sᵢ†`. -/
 theorem cuntz_range_projector_star (n : ℕ) (i : Fin n) :
     star (cuntzS n i * cuntzSdag n i) = cuntzS n i * cuntzSdag n i := by
-  rw [star_mul, star_cuntzSdag, star_cuntzS]
+  simp [star_mul, star_cuntzS, star_cuntzSdag]
 
 /-- Partial isometry: `(Sᵢ Sᵢ†) * Sᵢ = Sᵢ`. The range projector absorbs Sᵢ. -/
 theorem cuntz_range_projector_mul_S (n : ℕ) (i : Fin n) :

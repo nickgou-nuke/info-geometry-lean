@@ -241,5 +241,4 @@ theorem v5_v4_anticommutator_grade_neg_two :
     ConformalGrade.negOne ConformalGrade.negTwo v5_grade v4_grade
   rfl
 
-
 end InfoGeometry.Canonical.O55FiveGradeClosure

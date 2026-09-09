@@ -141,7 +141,7 @@ structure TomitaRealifiedDrazinBoundaryPolarization
     (K Op : Type*)
     [Ring Op]
     (D : KreinDrazinBoundarySupport K Op) where
-  /-- Realification property connecting complex Tomita data to Krein polarization. -/
+  /-- Realification witness connecting complex Tomita data to Krein polarization. -/
   tomitaRealification : TomitaKreinRealificationWitness
   /-- Predicate selecting the generalized-zero/Drazin-defect sector. -/
   generalizedZeroSector : K → Prop
@@ -242,7 +242,7 @@ structure KreinFormHomogeneous
     ∀ c : ℝ, ∀ x, D.carrier.kreinForm (c • x) (c • x) =
       c ^ 2 * D.carrier.kreinForm x x
 
-/-- Real projective scaling preserves Krein nullity under a homogeneity property. -/
+/-- Real projective scaling preserves Krein nullity under a homogeneity witness. -/
 theorem projective_scaling_preserves_null
     {K Op : Type*}
     [Ring Op]
@@ -567,7 +567,7 @@ theorem kreinForm_act_act_eq (v w : V) :
 
 end KreinConformalSymmetry
 
-/-- Boundary-preservation property for a conformal symmetry. -/
+/-- Boundary-preservation witness for a conformal symmetry. -/
 structure PreservesDrazinKreinBoundary
     {V Op : Type*}
     [Ring Op]
@@ -614,7 +614,7 @@ def ConormalToNullCone
   fun v => K.kreinForm x v
 
 /--
-Krein-symmetric form property, used only for tangent/conormal geometry.
+Krein-symmetric form witness, used only for tangent/conormal geometry.
 
 This is separate from the Drazin split and from the boundary-location
 definition.

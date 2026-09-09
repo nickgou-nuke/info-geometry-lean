@@ -6,7 +6,7 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.OperatorAlgebra.KANLightConeAffineBridge
 
-KAN-structured lightcone/affine bridge.
+KAN-structured lightcone/affine socket.
 
 This file fuses two existing owner surfaces:
 
@@ -35,7 +35,7 @@ open InfoGeometry.OperatorAlgebra.WeylWeightBalance
 KAN-organized lightcone affine bridge.
 
 The `kanShadow` field supplies the compact/Cartan/nilpotent representation
-shadow.  The `affineLightCone` field supplies the actual affine-current data.
+shadow.  The `affineLightCone` field supplies the actual affine-current socket.
 No equality or preservation law is bundled between them; the projections below
 are the canonical readbacks used by later theorem-owner modules.
 -/
@@ -47,11 +47,11 @@ structure Bridge
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg] where
   /-- KAN/Bogoliubov representation shadow. -/
   kanShadow :
-    BogoliubovKANShadowData E
+    BogoliubovKANShadowPacket E
       (Bog := Bog) (Korth := Korth) (Asplit := Asplit)
       (Nshear := Nshear) (CartanDiag := CartanDiag)
 
-  /-- Lightcone directions routed through the affine/Virasoro owner. -/
+  /-- Lightcone directions routed through the affine/Virasoro owner socket. -/
   affineLightCone :
     LightConeAffineCurrentBridge Finite Alg
 
@@ -90,12 +90,12 @@ abbrev diagonalShadow : CartanDiag :=
 
 /-! ## Lightcone affine-current readbacks -/
 
-/-- Positive lightcone root as routed through the affine-current owner. -/
+/-- Positive lightcone root as routed through the affine-current socket. -/
 @[rep_depth operator]
 abbrev uPlusRoot : Finite :=
   B.affineLightCone.uPlusRoot
 
-/-- Negative lightcone root as routed through the affine-current owner. -/
+/-- Negative lightcone root as routed through the affine-current socket. -/
 @[rep_depth operator]
 abbrev uMinusRoot : Finite :=
   B.affineLightCone.uMinusRoot
@@ -200,23 +200,20 @@ theorem virasoro_acts_on_uMinusCurrent
 
 /-- Sugawara central-charge calibration inherited from the affine/Virasoro owner. -/
 @[rep_depth operator]
-  theorem centralCharge_calibrated :
+theorem centralCharge_calibrated :
     (hcc : B.affineLightCone.bridge.centralCharge =
       B.affineLightCone.bridge.level * B.affineLightCone.bridge.finiteDimension /
         (B.affineLightCone.bridge.level + B.affineLightCone.bridge.dualCoxeterNumber)) →
     B.affineLightCone.bridge.centralCharge =
       B.affineLightCone.bridge.level * B.affineLightCone.bridge.finiteDimension /
         (B.affineLightCone.bridge.level + B.affineLightCone.bridge.dualCoxeterNumber) :=
-  by
-  intro hcc
-  exact AffineVirasoroBridge.AffineVirasoroBridgeDatum.centralCharge_calibrated
-    B.affineLightCone.bridge hcc
+  B.affineLightCone.centralCharge_calibrated
 
 /-! ## Weight/mode balance interface -/
 
 /--
 The affine central selector is explicitly gated by mode balance.  This is the
-mode-balance data used by later Sugawara/Virasoro modules; no central term is
+mode-balance socket used by later Sugawara/Virasoro modules; no central term is
 claimed away from `m+n=0`.
 -/
 @[rep_depth operator]

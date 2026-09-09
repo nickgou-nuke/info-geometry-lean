@@ -40,19 +40,19 @@ theorem relativeModularOperator_fin_two_readout
 
 theorem relativeSurprisalOperator_fin_two_readout
     (q q0 : PositiveRay Two) :
-    relativeSurprisalOperator q q0 =
+    relativeModularHamiltonianOperator q q0 =
       !![relativeModularPotential q q0 0, 0;
          0, relativeModularPotential q q0 1] := by
   ext i j
   fin_cases i <;> fin_cases j
-  · change relativeSurprisalOperator q q0 0 0 = relativeModularPotential q q0 0
-    exact relativeSurprisalOperator_diag q q0 0
-  · change relativeSurprisalOperator q q0 0 1 = 0
+  · change relativeModularHamiltonianOperator q q0 0 0 = relativeModularPotential q q0 0
+    exact relativeModularHamiltonianOperator_diag q q0 0
+  · change relativeModularHamiltonianOperator q q0 0 1 = 0
     exact relativeModularHamiltonianOperator_offdiag q q0 (by decide)
-  · change relativeSurprisalOperator q q0 1 0 = 0
+  · change relativeModularHamiltonianOperator q q0 1 0 = 0
     exact relativeModularHamiltonianOperator_offdiag q q0 (by decide)
-  · change relativeSurprisalOperator q q0 1 1 = relativeModularPotential q q0 1
-    exact relativeSurprisalOperator_diag q q0 1
+  · change relativeModularHamiltonianOperator q q0 1 1 = relativeModularPotential q q0 1
+    exact relativeModularHamiltonianOperator_diag q q0 1
 
 theorem relativeModularVolumeShadow_fin_two_readout
   (q q0 : PositiveRay Two) :
@@ -63,13 +63,13 @@ theorem relativeModularVolumeShadow_fin_two_readout
 
 theorem relativeSurprisal_trace_fin_two_readout
     (q q0 : PositiveRay Two) :
-    Matrix.trace (relativeSurprisalOperator q q0) =
+    Matrix.trace (relativeModularHamiltonianOperator q q0) =
       relativeModularPotential q q0 0 + relativeModularPotential q q0 1 := by
   rw [Matrix.trace]
   simp only [Fin.sum_univ_two]
-  change relativeSurprisalOperator q q0 0 0 +
-      relativeSurprisalOperator q q0 1 1 =
+  change relativeModularHamiltonianOperator q q0 0 0 +
+      relativeModularHamiltonianOperator q q0 1 1 =
     relativeModularPotential q q0 0 + relativeModularPotential q q0 1
-  rw [relativeSurprisalOperator_diag, relativeSurprisalOperator_diag]
+  rw [relativeModularHamiltonianOperator_diag, relativeModularHamiltonianOperator_diag]
 
 end InfoGeometry.Canonical.SplitCartanRelativeModularTwoByTwoBridge

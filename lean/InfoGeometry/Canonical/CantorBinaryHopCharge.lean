@@ -55,38 +55,31 @@ theorem bitCharge_hopBit (b : Bool) :
     bitCharge (hopBit b) = bitCharge b + 1 := by
   cases b <;> decide
 
+/-- Binary words from the Cantor basis lane. -/
+abbrev CBinaryWord := InfoGeometry.Canonical.CantorCuntzBasis.BinaryWord
+
 /-- Total parity charge of a finite binary Cantor word. -/
-def wordCharge : List Bool → ZMod 2
+def wordCharge : CBinaryWord → ZMod 2
   | [] => 0
   | b :: w => bitCharge b + wordCharge w
-
-@[simp]
-theorem wordCharge_append (u v : List Bool) :
-    wordCharge (u ++ v) = wordCharge u + wordCharge v := by
-  induction u with
-  | nil => simp [wordCharge]
-  | cons b u ih =>
-      simp [wordCharge, ih, add_assoc]
 
 /--
 Head-hop on a binary word.
 
 The empty word is fixed. A nonempty word has its first bit flipped.
 -/
-def hopHead : List Bool →
-    List Bool
+def hopHead : CBinaryWord → CBinaryWord
   | [] => []
   | b :: w => hopBit b :: w
 
 @[simp]
 theorem hopHead_nil :
-    hopHead ([] : List Bool) = [] := by
+    hopHead ([] : CBinaryWord) = [] := by
   rfl
 
 /-- Head-hop is involutive. -/
 @[simp]
-theorem hopHead_involutive
-    (w : List Bool) :
+theorem hopHead_involutive (w : CBinaryWord) :
     hopHead (hopHead w) = w := by
   cases w with
   | nil => rfl
@@ -94,22 +87,18 @@ theorem hopHead_involutive
       cases b <;> rfl
 
 /-- On a nonempty word, one head-hop flips total `ZMod 2` charge. -/
-theorem charge_flip_once_cons
-    (b : Bool)
-    (w : List Bool) :
+theorem charge_flip_once_cons (b : Bool) (w : CBinaryWord) :
     wordCharge (hopHead (b :: w)) = wordCharge (b :: w) + 1 := by
   cases b <;> simp [hopHead, wordCharge, bitCharge_hopBit, add_assoc, add_left_comm, add_comm]
 
 /-- After two head-hops, total charge returns. -/
-theorem charge_flip_twice
-    (w : List Bool) :
+theorem charge_flip_twice (w : CBinaryWord) :
     wordCharge (hopHead (hopHead w)) = wordCharge w := by
   simp
 
 @[simp]
 theorem charge_hopHead_nil :
-    wordCharge
-        (hopHead ([] : List Bool)) = 0 := by
+    wordCharge (hopHead ([] : CBinaryWord)) = 0 := by
   rfl
 
 /-! ## Matrix realization of the local Boolean hop -/

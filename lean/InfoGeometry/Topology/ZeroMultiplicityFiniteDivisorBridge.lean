@@ -52,6 +52,5 @@ theorem complex_residue_charge_eq_neg_vonMangoldtResidue
   rw [residue_chargeForm]
   simp [divisorPacketOfZero, vonMangoldtChannelResidue]
 
-end InfoGeometry.Topology.ZeroMultiplicityFiniteDivisorBridge
 
-end
+end InfoGeometry.Topology.ZeroMultiplicityFiniteDivisorBridge

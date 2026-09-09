@@ -4,8 +4,6 @@ noncomputable section
 
 namespace InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 
-namespace Recovered
-
 /-!
 Recovered base definitions for `InfoGeometry.External.Auto.ZetaCoordinateSymmetry`.
 
@@ -15,7 +13,7 @@ definitions recovered from `sandbox/ZetaCoordinateSymmetry.lean`; using local
 definitions rather than cross-namespace aliases is important because the live
 proof scripts simplify by unfolding these names directly.
 
-No analytic zeta function or Riemann-property claim is introduced here.
+No analytic zeta function or Riemann-hypothesis claim is introduced here.
 -/
 
 /-- Complex conjugation in zeta spectral coordinates: `s ↦ conj s`. -/
@@ -49,7 +47,5 @@ def CriticalLine (s : ℂ) : Prop :=
 @[simp] theorem criticalLine_iff_re_eq_half (s : ℂ) :
     CriticalLine s ↔ s.re = (1 / 2 : ℝ) := by
   rfl
-
-end Recovered
 
 end InfoGeometry.Arithmetic.ZetaCoordinateSymmetry

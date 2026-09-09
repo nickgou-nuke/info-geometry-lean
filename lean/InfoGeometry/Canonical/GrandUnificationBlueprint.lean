@@ -80,8 +80,4 @@ def UnificationComplete : Prop :=
     (L : BayesianLoop E) (IST : InfoSpectralTriple E),
     AnomalyInflowClosure L IST
 
-theorem unificationComplete : UnificationComplete := by
-  intro E _ _ _ _ L IST hFlat
-  exact anomaly_inflow_cancellation L IST hFlat
-
 end InfoGeometry.Canonical.GrandUnificationBlueprint

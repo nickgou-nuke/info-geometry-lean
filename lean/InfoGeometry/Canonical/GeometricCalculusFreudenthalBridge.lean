@@ -7,7 +7,7 @@ import InfoGeometry.Canonical.GeometricCalculusSurgery
 Structural bridge from Stokes/Clifford boundary flux to Freudenthal charge
 horizons.
 
-The bridge is property-gated. It does not assert that every Stokes flux equals
+The bridge is witness-gated. It does not assert that every Stokes flux equals
 black-hole entropy. Instead, it records the exact data needed for such a
 statement:
 
@@ -304,6 +304,8 @@ structure OperatorFreudenthalBoundaryFluxBridge
   resolvent : CliffordResolventFamily (P := P) D.A
   normalizationFactor : ℝ
   observer : RealEnd E →L[ℝ] ℝ
+  stokes :
+    StokesTheoremWitness D.A resolvent D.boundary
   horizonOperator_eq_flux :
     D.horizonOperator =
       geometricCoreProjector D.A resolvent D.boundary normalizationFactor
@@ -361,7 +363,7 @@ abbrev OperatorFreudenthalBoundaryFluxConstructionProblem
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup P] [NormedSpace ℝ P]
     (D : OperatorFreudenthalBoundaryDatum.{uE, uP, uQ, uΩ} E P Charge) :=
-  OperatorFreudenthalBoundaryFluxBridge D
+  OperatorFreudenthalBoundaryFluxBridge.{uE, uP, uQ, uΩ, uVolume} D
 
 /--
 Construct an operator/Freudenthal flux bridge from explicit witnesses.
@@ -371,7 +373,7 @@ observer and arbitrary Freudenthal charge geometry, the scalar flux/entropy
 equality is not constructible; it must be supplied by the concrete
 Clifford/Stokes/Freudenthal model.
 -/
-def operatorFreudenthalBoundaryFluxBridge_from_propertyes
+def operatorFreudenthalBoundaryFluxBridge_from_witnesses
     {E : Type uE} {P : Type uP} {Q : Type uQ}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup P] [NormedSpace ℝ P]
@@ -380,6 +382,7 @@ def operatorFreudenthalBoundaryFluxBridge_from_propertyes
     (resolvent : CliffordResolventFamily (P := P) D.A)
     (normalizationFactor : ℝ)
     (observer : RealEnd E →L[ℝ] ℝ)
+    (stokes : StokesTheoremWitness.{uE, uP, uVolume, uΩ} D.A resolvent D.boundary)
     (horizonOperator_eq_flux :
       D.horizonOperator =
         geometricCoreProjector D.A resolvent D.boundary normalizationFactor)
@@ -387,11 +390,12 @@ def operatorFreudenthalBoundaryFluxBridge_from_propertyes
       FluxEqualsBoundaryEntropy
         D.A resolvent D.boundary normalizationFactor observer
         D.geometry D.boundaryCharges) :
-    OperatorFreudenthalBoundaryFluxBridge D where
+    OperatorFreudenthalBoundaryFluxBridge.{uE, uP, uQ, uΩ, uVolume} D where
   phase := phase
   resolvent := resolvent
   normalizationFactor := normalizationFactor
   observer := observer
+  stokes := stokes
   horizonOperator_eq_flux := horizonOperator_eq_flux
   scalarFlux_eq_entropy := scalarFlux_eq_entropy
 

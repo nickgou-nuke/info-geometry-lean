@@ -42,7 +42,7 @@ variable
 /--
 Pull back a matrix automorphy factor along a group homomorphism.
 
-The property `hsmul` says that the `G`-action is exactly the action induced
+The hypothesis `hsmul` says that the `G`-action is exactly the action induced
 from the `H`-action through `φ`.
 -/
 def pullback

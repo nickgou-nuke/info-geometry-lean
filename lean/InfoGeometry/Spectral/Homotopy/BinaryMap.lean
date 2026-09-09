@@ -20,6 +20,10 @@ instance {X Y Z : PointedReadout} : CoeFun (BinaryPointedMap X Y Z)
     (fun _ => X.carrier → Y.carrier → Z.carrier) where
   coe f := f.toFun
 
+def productPointed (X Y : PointedReadout) : PointedReadout where
+  carrier := X.carrier × Y.carrier
+  base := (X.base, Y.base)
+
 @[simp] theorem map_base_left_apply {X Y Z : PointedReadout}
     (f : BinaryPointedMap X Y Z) (y : Y.carrier) :
     f X.base y = Z.base :=
@@ -31,9 +35,11 @@ instance {X Y Z : PointedReadout} : CoeFun (BinaryPointedMap X Y Z)
   f.map_base_right x
 
 def toPointedMap {X Y Z : PointedReadout} (f : BinaryPointedMap X Y Z) :
-    PointedMap (Pointed.mk (X.carrier × Y.carrier) (X.base, Y.base)) Z where
+    PointedMap (productPointed X Y) Z where
   toFun := fun p => f p.1 p.2
-  map_base := by simp
+  map_base := by
+    change f X.base Y.base = Z.base
+    exact f.map_base_left Y.base
 
 @[simp] theorem toPointedMap_apply {X Y Z : PointedReadout}
     (f : BinaryPointedMap X Y Z) (p : X.carrier × Y.carrier) :

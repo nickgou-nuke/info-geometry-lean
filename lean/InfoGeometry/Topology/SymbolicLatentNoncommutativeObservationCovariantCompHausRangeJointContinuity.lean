@@ -79,5 +79,3 @@ theorem operatorObservationRangeCovariantFlowJointAction_slice
   rfl
 
 end InfoGeometry.Topology
-
-end

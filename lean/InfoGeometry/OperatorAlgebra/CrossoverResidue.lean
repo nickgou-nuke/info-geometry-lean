@@ -19,6 +19,7 @@ No ethical interpretation is encoded.
 
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ConformalCrossover
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -436,5 +437,49 @@ theorem right_residue_vorticity_negative
   simp [Chirality.sign]
 
 end DivisorResolutionAudit
+
+/-! ## 6. Boundary between residue audit and fluid regularity -/
+
+/--
+A resolved divisor has smooth nonzero seeds with chiral vorticity signs.
+It does not prove any PDE regularity theorem.
+-/
+theorem crossoverResidueOwnerTarget :
+  ∀ (V NewState : Type*)
+    [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup NewState] [Module ℝ NewState],
+  ∀ C : ConformalCrossoverDatum V,
+  ∀ Smooth : NewState → Prop,
+  ∀ Vort : ChiralVorticityReadout NewState,
+  ∀ D : HawkingPointDivisor C,
+  ∀ A : DivisorResolutionAudit Smooth Vort.orientation D,
+  ∀ R : HawkingPointResidue C,
+  ∀ hR : R ∈ D.residues,
+    (DivisorResolutionAudit.resolve A R hR).seed ≠ 0 ∧
+      Smooth (DivisorResolutionAudit.resolve A R hR).seed ∧
+      Vort.vorticitySign (DivisorResolutionAudit.resolve A R hR).seed =
+        Chirality.sign R.chirality := by
+  intro V NewState _ _ _ _ C Smooth Vort D A R hR
+  let S := DivisorResolutionAudit.resolve A R hR
+  refine ⟨S.seed_ne_zero, S.seed_smooth, ?_⟩
+  rw [Vort.vorticitySign_eq_orientation]
+  rw [S.orientation_matches]
+
+/-- Single-residue readout from a supplied divisor-resolution audit. -/
+theorem resolvedResidue_seed_smooth_sign
+    {V NewState : Type*}
+    [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup NewState] [Module ℝ NewState]
+    {C : ConformalCrossoverDatum V}
+    {Smooth : NewState → Prop}
+    {Vort : ChiralVorticityReadout NewState}
+    {D : HawkingPointDivisor C}
+    (A : DivisorResolutionAudit Smooth Vort.orientation D)
+    {R : HawkingPointResidue C} (hR : R ∈ D.residues) :
+    (DivisorResolutionAudit.resolve A R hR).seed ≠ 0 ∧
+      Smooth (DivisorResolutionAudit.resolve A R hR).seed ∧
+      Vort.vorticitySign (DivisorResolutionAudit.resolve A R hR).seed =
+        Chirality.sign R.chirality :=
+  crossoverResidueOwnerTarget V NewState C Smooth Vort D A R hR
 
 end InfoGeometry.OperatorAlgebra.CrossoverResidue

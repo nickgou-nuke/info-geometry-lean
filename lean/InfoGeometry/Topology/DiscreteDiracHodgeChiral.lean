@@ -60,14 +60,6 @@ def IsCoexact (δ : EndCochain n) (x : Cochains n) : Prop :=
 def IsDiracHarmonic (d δ : EndCochain n) (x : Cochains n) : Prop :=
   (diracHodge d δ).mulVec x = 0
 
-/-- Clifford-Hodge operator `∇ = d - δ`. -/
-def cliffordDirac (d δ : EndCochain n) : EndCochain n :=
-  d - δ
-
-/-- Clifford-monogenic finite cochains: kernel of `∇ = d - δ`. -/
-def IsCliffordMonogenic (d δ : EndCochain n) (x : Cochains n) : Prop :=
-  (cliffordDirac d δ).mulVec x = 0
-
 /-- Laplace-harmonic finite cochains: kernel of `L`. -/
 def IsLaplaceHarmonic (d δ : EndCochain n) (x : Cochains n) : Prop :=
   (hodgeLaplacian d δ).mulVec x = 0
@@ -102,40 +94,6 @@ theorem diracHarmonic_is_laplaceHarmonic
   unfold IsLaplaceHarmonic
   rw [← diracHodge_sq_eq_hodgeLaplacian d δ hd hδ]
   exact diracHarmonic_sq_zero d δ hx
-
-/-- Under nilpotence, the Clifford-Dirac square is the negative Hodge Laplacian. -/
-theorem cliffordDirac_sq_eq_neg_hodgeLaplacian
-    (d δ : EndCochain n)
-    (hd : d * d = 0)
-    (hδ : δ * δ = 0) :
-    cliffordDirac d δ * cliffordDirac d δ = - hodgeLaplacian d δ := by
-  unfold cliffordDirac hodgeLaplacian
-  rw [sub_mul, mul_sub, mul_sub, hd, hδ]
-  ext i j
-  simp
-  abel
-
-/-- Under nilpotence, Clifford-monogenic cochains are Laplace-harmonic. -/
-theorem cliffordMonogenic_is_laplaceHarmonic
-    (d δ : EndCochain n)
-    (hd : d * d = 0)
-    (hδ : δ * δ = 0)
-    {x : Cochains n}
-    (hx : IsCliffordMonogenic d δ x) :
-    IsLaplaceHarmonic d δ x := by
-  unfold IsLaplaceHarmonic
-  have hsq : (cliffordDirac d δ * cliffordDirac d δ).mulVec x = 0 := by
-    have h := congrArg ((cliffordDirac d δ).mulVec) hx
-    have h' :
-        (cliffordDirac d δ).mulVec
-            ((cliffordDirac d δ).mulVec x) = 0 := by
-      simpa using h
-    simpa [Matrix.mulVec_mulVec] using h'
-  have hneg : (-hodgeLaplacian d δ).mulVec x = 0 := by
-    simpa [cliffordDirac_sq_eq_neg_hodgeLaplacian d δ hd hδ] using hsq
-  have hneg' : -(hodgeLaplacian d δ).mulVec x = 0 := by
-    simpa [Matrix.neg_mulVec] using hneg
-  exact neg_eq_zero.mp hneg'
 
 /-- If chirality anticommutes with `d` and `δ`, then it anticommutes with `D=d+δ`. -/
 theorem chirality_anticommutes_diracHodge
@@ -192,6 +150,13 @@ theorem eckmann_exact_orthogonal_coexact {n0 n1 n2 : ℕ}
   rcases hx with ⟨u, rfl⟩
   rcases hy with ⟨v, rfl⟩
   exact eckmann_coboundary_orthogonal_coexact d0 d1 hComplex u v
+
+/-- The degree-one Eckmann Laplacian expands to `d₁ᵀ d₁ + d₀ d₀ᵀ`. -/
+theorem eckmann_degree_one_laplacian_readout {n0 n1 n2 : ℕ}
+    (d0 : Matrix (Fin n1) (Fin n0) ℝ)
+    (d1 : Matrix (Fin n2) (Fin n1) ℝ) :
+    eckmannLaplacian1 d0 d1 = d1.transpose * d1 + d0 * d0.transpose :=
+  rfl
 
 /-- Degree-one harmonicity is the conjunction of closedness and coclosedness. -/
 theorem eckmann_harmonic1_readout {n0 n1 n2 : ℕ}

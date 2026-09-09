@@ -133,18 +133,7 @@ theorem connesGenerator_eq_zero_of_deRham_zero
     (hConnes : connesGenerator = deRhamLogForm)
     (hZero : deRhamLogForm = 0) :
     connesGenerator = 0 := by
-    rw [hConnes, hZero]
-
-theorem connesGenerator_zero_iff_deRham_zero
-    {Op : Type u} [AddGroup Op]
-    (deRhamLogForm connesGenerator : Op)
-    (hConnes : connesGenerator = deRhamLogForm) :
-    connesGenerator = 0 ↔ deRhamLogForm = 0 := by
-  constructor
-  · intro hZero
-    rw [← hConnes, hZero]
-  · intro hZero
-    rw [hConnes, hZero]
+  rw [hConnes, hZero]
 
 /-- Vanishing modular-Hamiltonian difference forces equality of Hamiltonians. -/
 theorem hamiltonians_equal_of_difference_zero

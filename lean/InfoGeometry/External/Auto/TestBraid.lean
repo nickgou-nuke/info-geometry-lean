@@ -3,8 +3,6 @@ import Mathlib.Tactic
 open Matrix
 open Complex
 
-namespace TestBraid
-
 section TemperleyLieb
 
 variable {F : Type*} [Field F]
@@ -85,5 +83,3 @@ lemma braid_adj_left (i j : ℕ) (h : i = j + 1 ∨ j = i + 1) (hA : A ≠ 0) :
     _ = σ_adj_nf A e i j := rfl
 
 end TemperleyLieb
-
-end TestBraid

@@ -1034,6 +1034,162 @@ def lawful_path_docs(
     return docs
 
 
+def downward_closure(preds: list[list[int]], seeds: Iterable[int]) -> set[int]:
+    """Compute the downward premise closure \\downarrow S in the poset DAG.
+
+    Kuratowski closure: all nodes that reach S backward along dependency edges.
+    """
+    visited: set[int] = set()
+    queue = deque(seeds)
+    while queue:
+        curr = queue.popleft()
+        if curr in visited:
+            continue
+        visited.add(curr)
+        for p in preds[curr]:
+            if p not in visited:
+                queue.append(p)
+    return visited
+
+
+def upward_closure(forward: list[list[int]], seeds: Iterable[int]) -> set[int]:
+    """Compute the upward consequence cone \\uparrow S in the poset DAG.
+
+    Aleksandrōv future cone: all nodes reachable from S forward along dependency edges.
+    """
+    visited: set[int] = set()
+    queue = deque(seeds)
+    while queue:
+        curr = queue.popleft()
+        if curr in visited:
+            continue
+        visited.add(curr)
+        for nxt in forward[curr]:
+            if nxt not in visited:
+                queue.append(nxt)
+    return visited
+
+
+def causal_corridor(
+    forward: list[list[int]], preds: list[list[int]], src: int, dst: int
+) -> set[int]:
+    """Compute the causal proof corridor [src, dst] = (\\uparrow {src}) \\cap (\\downarrow {dst}).
+
+    Order interval between premise src and consequence dst.
+    """
+    up = upward_closure(forward, [src])
+    down = downward_closure(preds, [dst])
+    return up.intersection(down)
+
+
+def verify_kuratowski_axioms(
+    preds: list[list[int]], set_a: set[int], set_b: set[int]
+) -> dict[str, bool]:
+    """Verify the 4 Kuratowski closure axioms formalized in AlexandrovKuratowskiHodgeClosureCapstone.lean:
+    1. empty: \\downarrow \\emptyset = \\emptyset
+    2. extensivity: S \\subseteq \\downarrow S
+    3. union distributivity: \\downarrow (A \\cup B) = \\downarrow A \\cup \\downarrow B
+    4. idempotence: \\downarrow (\\downarrow S) = \\downarrow S
+    """
+    empty_closed = len(downward_closure(preds, [])) == 0
+    cl_a = downward_closure(preds, set_a)
+    cl_b = downward_closure(preds, set_b)
+    extensivity = set_a.issubset(cl_a) and set_b.issubset(cl_b)
+    cl_union = downward_closure(preds, set_a.union(set_b))
+    union_distrib = cl_union == cl_a.union(cl_b)
+    cl_cl_a = downward_closure(preds, cl_a)
+    idempotence = cl_cl_a == cl_a
+
+    return {
+        "empty_preserved": empty_closed,
+        "extensivity": extensivity,
+        "union_distributivity": union_distrib,
+        "idempotence": idempotence,
+        "all_axioms_hold": empty_closed and extensivity and union_distrib and idempotence,
+    }
+
+
+def verify_aleksandrov_duality(
+    forward: list[list[int]], preds: list[list[int]], all_nodes: set[int], set_s: set[int]
+) -> dict[str, bool]:
+    """Verify Aleksandrōv topological duality formalized in AlexandrovKuratowskiHodgeClosureCapstone.lean:
+    - The complement of a lower set is an upper set.
+    - The complement of an upper set is a lower set.
+    """
+    lower_s = downward_closure(preds, set_s)
+    upper_s = upward_closure(forward, set_s)
+
+    compl_lower = all_nodes - lower_s
+    is_upper = True
+    for x in compl_lower:
+        for y in forward[x]:
+            if y not in compl_lower:
+                is_upper = False
+                break
+        if not is_upper:
+            break
+
+    compl_upper = all_nodes - upper_s
+    is_lower = True
+    for y in compl_upper:
+        for x in preds[y]:
+            if x not in compl_upper:
+                is_lower = False
+                break
+        if not is_lower:
+            break
+
+    return {
+        "compl_lower_is_upper": is_upper,
+        "compl_upper_is_lower": is_lower,
+        "aleksandrov_duality_holds": is_upper and is_lower,
+    }
+
+
+def causal_corridor_docs(
+    graph: QuotientGraph,
+    *,
+    run_id: str,
+    limit: int = 100,
+) -> list[dict[str, Any]]:
+    """Generate causal corridor overlay documents connecting premise and consequence nodes,
+    verifying reflexive collapse corridor(a, a) = {a}.
+    """
+    docs = []
+    reflexive_holds = True
+    for i in range(min(len(graph.nodes), 50)):
+        corr = causal_corridor(graph.forward, graph.preds, i, i)
+        if corr != {i}:
+            reflexive_holds = False
+            break
+
+    count = 0
+    for u in range(len(graph.nodes)):
+        if count >= limit:
+            break
+        for v in graph.forward[u]:
+            if count >= limit:
+                break
+            corr = causal_corridor(graph.forward, graph.preds, u, v)
+            docs.append(
+                {
+                    "_key": f"corridor_{graph.keys[u]}__{graph.keys[v]}"[:250],
+                    "schema": SCHEMA,
+                    "run_id": run_id,
+                    "source_key": graph.keys[u],
+                    "target_key": graph.keys[v],
+                    "corridor_size": len(corr),
+                    "intermediate_node_keys": [
+                        graph.keys[k] for k in list(corr)[:20] if k not in {u, v}
+                    ],
+                    "reflexive_collapse_certified": reflexive_holds,
+                    "labels": ["overlay:arango_dag", "role:causal_corridor"],
+                }
+            )
+            count += 1
+    return docs
+
+
 def wl_label_docs(graph: QuotientGraph, *, run_id: str, rounds: int, limit: int) -> list[dict[str, Any]]:
     labels = [
         stable_hash(

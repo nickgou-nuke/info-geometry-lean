@@ -20,7 +20,7 @@ observables satisfy Fierz identities.  It records:
 * modular fixedness of that horizon;
 * operator-valued Fierz channel maps;
 * explicit zero-mode certificates for those channel observables;
-* an explicit Fierz-admissibility property.
+* an explicit Fierz-admissibility witness.
 
 With those witnesses, the Fierz--Klein conclusion is derived from the existing
 foundation theorem.
@@ -94,10 +94,10 @@ def OperatorFierzChannelsAreHorizonZeroModes
   (∀ μ : I4, IsModularZeroMode flow (C.vector μ D.AD)) ∧
   (∀ μ : I4, IsModularZeroMode flow (C.axial μ D.AD))
 
-/-! ## 2. Operator Erlangen data -/
+/-! ## 2. Operator Erlangen socket -/
 
 /--
-Operator Erlangen Fierz--Klein data.
+Operator Erlangen Fierz--Klein socket.
 
 This structure represents the Type III operator lift of the classical
 Fierz--Klein bridge:
@@ -218,7 +218,7 @@ end OperatorErlangenFierzKlein
 
 /-! ## 3. Owner target -/
 
-/-- Parameterized owner target for the operator Erlangen Fierz--Klein data. -/
+/-- Parameterized owner target for the operator Erlangen Fierz--Klein socket. -/
 @[rep_depth operator]
 def OperatorErlangenFierzKleinTarget
     (Obs : Type u)

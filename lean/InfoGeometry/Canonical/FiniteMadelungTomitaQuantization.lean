@@ -130,33 +130,32 @@ theorem positivePolarState_transpose_mul_self
 
 /-! ## Finite ancestor and chiral standing/travelling waves -/
 
-def ancestor (Ξ Υ : ℝ → ℝ) (t : ℝ) : RealChiralPhase := (Ξ t, Υ t)
+def ancestor (Ξ Υ : ℝ → ℝ) (t : ℝ) : RealChiralPhase := ⟨Ξ t, Υ t⟩
 
 def hestenesConjugate (Ξ Υ : ℝ → ℝ) (t : ℝ) : RealChiralPhase :=
-  (Ξ t, -Υ t)
+  ⟨Ξ t, -Υ t⟩
 
 theorem hestenesConjugate_involutive (Ξ Υ : ℝ → ℝ) (t : ℝ) :
-    hestenesConjugate (fun u => (ancestor Ξ Υ u).1)
-      (fun u => -(ancestor Ξ Υ u).2) t = ancestor Ξ Υ t := by
+    hestenesConjugate (fun u => (ancestor Ξ Υ u).scalar)
+      (fun u => -(ancestor Ξ Υ u).bivector) t = ancestor Ξ Υ t := by
   simp [hestenesConjugate, ancestor]
 
 theorem hestenesConjugate_normSq (Ξ Υ : ℝ → ℝ) (t : ℝ) :
     normSq (hestenesConjugate Ξ Υ t) = normSq (ancestor Ξ Υ t) := by
   simp [hestenesConjugate, ancestor, normSq]
-  ring
 
 def standingPlus (Ξ Υ : ℝ → ℝ) (t : ℝ) : ℝ := Ξ t + Υ t
 
 def standingMinus (Ξ Υ : ℝ → ℝ) (t : ℝ) : ℝ := Ξ t - Υ t
 
 theorem ancestor_reconstruct (Ξ Υ : ℝ → ℝ) (t : ℝ) :
-    ((standingPlus Ξ Υ t + standingMinus Ξ Υ t) / 2,
-      (standingPlus Ξ Υ t - standingMinus Ξ Υ t) / 2) = ancestor Ξ Υ t := by
-  simp [standingPlus, standingMinus, ancestor]
+    (⟨(standingPlus Ξ Υ t + standingMinus Ξ Υ t) / 2,
+      (standingPlus Ξ Υ t - standingMinus Ξ Υ t) / 2⟩ : RealChiralPhase) = ancestor Ξ Υ t := by
+  ext <;> simp [standingPlus, standingMinus, ancestor]
 
 theorem standing_reconstruct (Ξ Υ : ℝ → ℝ) (t : ℝ) :
-    standingPlus Ξ Υ t = (ancestor Ξ Υ t).1 + (ancestor Ξ Υ t).2 ∧
-    standingMinus Ξ Υ t = (ancestor Ξ Υ t).1 - (ancestor Ξ Υ t).2 := by
+    standingPlus Ξ Υ t = (ancestor Ξ Υ t).scalar + (ancestor Ξ Υ t).bivector ∧
+    standingMinus Ξ Υ t = (ancestor Ξ Υ t).scalar - (ancestor Ξ Υ t).bivector := by
   constructor <;> rfl
 
 theorem ancestor_normSq (Ξ Υ : ℝ → ℝ) (t : ℝ) :
@@ -198,6 +197,20 @@ theorem finite_madelung_polar_iff_ancestor_normSq_pos
 
 /-! ## Logarithmic radial and phase rates -/
 
+/-- Oriented radial rate numerator `scalar * d.1 + bivector * d.2`. -/
+def radialNumerator (z : RealChiralPhase) (d : ℝ × ℝ) : ℝ :=
+  z.scalar * d.1 + z.bivector * d.2
+
+/-- Chiral radial rate `radialNumerator / normSq`. -/
+def chiralRadialRate (z : RealChiralPhase) (d : ℝ × ℝ) : ℝ :=
+  radialNumerator z d / normSq z
+
+theorem chiralPhaseRate_mul_normSq (z : RealChiralPhase) (d : ℝ × ℝ)
+    (hz : normSq z ≠ 0) :
+    normSq z * chiralPhaseRate z d = phaseNumerator z d := by
+  unfold chiralPhaseRate
+  exact mul_div_cancel₀ _ hz
+
 theorem ancestor_log_normSq_derivative
     (Ξ Υ dΞ dΥ : ℝ → ℝ) (t : ℝ)
     (hΞ : HasDerivAt Ξ (dΞ t) t)
@@ -205,8 +218,16 @@ theorem ancestor_log_normSq_derivative
     (hρ : normSq (ancestor Ξ Υ t) ≠ 0) :
     HasDerivAt (fun u => Real.log (normSq (ancestor Ξ Υ u)))
       (2 * chiralRadialRate (ancestor Ξ Υ t) (dΞ t, dΥ t)) t := by
-  simpa [ancestor] using
-    hasDerivAt_log_normSq_of_components Ξ Υ (dΞ t) (dΥ t) t hΞ hΥ hρ
+  have h_normSq : HasDerivAt (fun u => normSq (ancestor Ξ Υ u))
+      (2 * Ξ t * dΞ t + 2 * Υ t * dΥ t) t := by
+    exact hasDerivAt_normSq_of_components Ξ Υ (dΞ t) (dΥ t) t hΞ hΥ
+  have h_comp := (Real.hasDerivAt_log hρ).comp t h_normSq
+  convert h_comp using 1
+  unfold chiralRadialRate radialNumerator ancestor
+  have h_rw : 2 * ((Ξ t * dΞ t + Υ t * dΥ t) / normSq ⟨Ξ t, Υ t⟩) =
+      (normSq ⟨Ξ t, Υ t⟩)⁻¹ * (2 * Ξ t * dΞ t + 2 * Υ t * dΥ t) := by
+    ring
+  rw [h_rw]
 
 theorem phase_current_quadrature
     (Ξ Υ dΞ dΥ : ℝ → ℝ) (t : ℝ)
@@ -214,8 +235,8 @@ theorem phase_current_quadrature
     normSq (ancestor Ξ Υ t) *
         chiralPhaseRate (ancestor Ξ Υ t) (dΞ t, dΥ t) =
       Ξ t * dΥ t - Υ t * dΞ t := by
-  simpa [ancestor, phaseNumerator] using
-    chiralPhaseRate_mul_normSq (ancestor Ξ Υ t) (dΞ t, dΥ t) hρ
+  unfold chiralPhaseRate phaseNumerator ancestor
+  exact mul_div_cancel₀ _ hρ
 
 /-! ## Finite current conservation -/
 
@@ -343,7 +364,7 @@ theorem diagonalHamiltonian_boltzmann_trace_eq_partition {n : ℕ}
     [Nonempty (Fin n)] (energy : Fin n → ℝ) (β : ℝ) :
     Matrix.trace
         (NormedSpace.exp ((-β) • diagonalHamiltonian energy)) =
-      InfoGeometry.Thermal.Hamiltonian.partition energy β := by
+      (⟨energy⟩ : InfoGeometry.Thermal.Hamiltonian n).partition β := by
   have hdiag :
       (-β) • diagonalHamiltonian energy =
         Matrix.diagonal (fun i => -β * energy i) := by
@@ -359,15 +380,15 @@ theorem diagonalHamiltonian_boltzmann_trace_eq_partition {n : ℕ}
 theorem diagonalHamiltonian_thermal_density_trace_one {n : ℕ}
     [Nonempty (Fin n)] (energy : Fin n → ℝ) (β : ℝ) :
     Matrix.trace
-        (InfoGeometry.Thermal.Hamiltonian.densityMatrix energy β) = 1 := by
+        ((⟨energy⟩ : InfoGeometry.Thermal.Hamiltonian n).densityMatrix β) = 1 := by
   rw [InfoGeometry.Thermal.Hamiltonian.densityMatrix,
     Matrix.trace_diagonal]
-  exact InfoGeometry.Thermal.Hamiltonian.gibbsWeight_sum_one energy β
+  exact InfoGeometry.Thermal.Hamiltonian.gibbsWeight_sum_one ⟨energy⟩ β
 
 theorem diagonalHamiltonian_thermal_density_self_adjoint {n : ℕ}
     [Nonempty (Fin n)] (energy : Fin n → ℝ) (β : ℝ) :
-    (InfoGeometry.Thermal.Hamiltonian.densityMatrix energy β).transpose =
-      InfoGeometry.Thermal.Hamiltonian.densityMatrix energy β := by
+    ((⟨energy⟩ : InfoGeometry.Thermal.Hamiltonian n).densityMatrix β).transpose =
+      (⟨energy⟩ : InfoGeometry.Thermal.Hamiltonian n).densityMatrix β := by
   ext i j
   by_cases hij : i = j
   · subst j
@@ -376,16 +397,16 @@ theorem diagonalHamiltonian_thermal_density_self_adjoint {n : ℕ}
 
 theorem diagonalHamiltonian_thermal_density_posSemidef {n : ℕ}
     [Nonempty (Fin n)] (energy : Fin n → ℝ) (β : ℝ) :
-    (InfoGeometry.Thermal.Hamiltonian.densityMatrix energy β).PosSemidef := by
+    ((⟨energy⟩ : InfoGeometry.Thermal.Hamiltonian n).densityMatrix β).PosSemidef := by
   rw [InfoGeometry.Thermal.Hamiltonian.densityMatrix]
   exact Matrix.PosSemidef.diagonal (fun i =>
-    InfoGeometry.Thermal.Hamiltonian.gibbsWeight_nonneg energy β i)
+    InfoGeometry.Thermal.Hamiltonian.gibbsWeight_nonneg ⟨energy⟩ β i)
 
 theorem diagonalHamiltonian_thermal_density_basis_eigenvector {n : ℕ}
     [Nonempty (Fin n)] (energy : Fin n → ℝ) (β : ℝ) (i : Fin n) :
-    InfoGeometry.Thermal.Hamiltonian.densityMatrix energy β *ᵥ
+    (⟨energy⟩ : InfoGeometry.Thermal.Hamiltonian n).densityMatrix β *ᵥ
         (Pi.single i (1 : ℝ)) =
-      InfoGeometry.Thermal.Hamiltonian.gibbsWeight energy β i •
+      (⟨energy⟩ : InfoGeometry.Thermal.Hamiltonian n).gibbsWeight β i •
         (Pi.single i (1 : ℝ) : Fin n → ℝ) := by
   rw [InfoGeometry.Thermal.Hamiltonian.densityMatrix]
   rw [Matrix.diagonal_mulVec_single]
@@ -398,9 +419,9 @@ theorem diagonalHamiltonian_thermal_density_basis_eigenvector {n : ℕ}
 theorem diagonalHamiltonian_thermal_expectation_eq_trace {n : ℕ}
     [Nonempty (Fin n)] (energy observable : Fin n → ℝ) (β : ℝ) :
     Matrix.trace
-        (InfoGeometry.Thermal.Hamiltonian.densityMatrix energy β *
+        ((⟨energy⟩ : InfoGeometry.Thermal.Hamiltonian n).densityMatrix β *
           diagonalHamiltonian observable) =
-      InfoGeometry.Thermal.Hamiltonian.thermalState energy β observable := by
+      (⟨energy⟩ : InfoGeometry.Thermal.Hamiltonian n).thermalState β ⟨observable⟩ := by
   simp [InfoGeometry.Thermal.Hamiltonian.densityMatrix,
     diagonalHamiltonian, InfoGeometry.Thermal.Hamiltonian.thermalState,
     Matrix.diagonal_mul_diagonal, Matrix.trace_diagonal]
@@ -471,8 +492,8 @@ theorem finiteJostDeterminant_logDeriv_eq_sum_inv_of_ne_zero {n : ℕ}
     apply hz
     rw [finiteJostDeterminant_eq_energy_product]
     exact Finset.prod_eq_zero (Finset.mem_univ i) hzero
-  · intro i hi
-    simpa using (hasDerivAt_id z).sub_const (energy i)
+  · intro i _hi
+    simp
 
 theorem finiteJostDeterminant_zero_iff_eigenstate {n : ℕ}
     (energy : Fin n → ℝ) (z : ℝ) :
@@ -550,19 +571,38 @@ theorem finite_relative_modular_inverse_right
 
 /-! ## Finite diagonal surprisal and direct-limit trace readout -/
 
+abbrev relativeSurprisalOperator {n : ℕ} [Nonempty (Fin n)]
+    (q q0 : PositiveRay (Fin n)) : InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal.FinMat n :=
+  relativeModularHamiltonianOperator q q0
+
+theorem relativeSurprisalOperator_diag
+    {n : ℕ} [Nonempty (Fin n)]
+    (q q0 : PositiveRay (Fin n)) (i : Fin n) :
+    relativeSurprisalOperator q q0 i i =
+      relativeModularPotential q q0 i :=
+  relativeModularHamiltonianOperator_diag q q0 i
+
+theorem relativeSurprisalOperator_cocycle
+    {n : ℕ} [Nonempty (Fin n)]
+    (q q0 q1 : PositiveRay (Fin n)) :
+    relativeSurprisalOperator q q1 =
+      relativeSurprisalOperator q q0 +
+        relativeSurprisalOperator q0 q1 :=
+  relativeModularHamiltonianOperator_cocycle q q0 q1
+
 theorem finite_relative_surprisal_diagonal
     {n : ℕ} [Nonempty (Fin n)]
     (q q0 : PositiveRay (Fin n)) (i : Fin n) :
-    relativeSurprisalOperator (n := n) q q0 i i =
+    relativeSurprisalOperator q q0 i i =
       relativeModularPotential q q0 i := by
   exact relativeSurprisalOperator_diag q q0 i
 
 theorem finite_relative_surprisal_cocycle
     {n : ℕ} [Nonempty (Fin n)]
     (q q0 q1 : PositiveRay (Fin n)) :
-    relativeSurprisalOperator (n := n) q q1 =
-      relativeSurprisalOperator (n := n) q q0 +
-        relativeSurprisalOperator (n := n) q0 q1 := by
+    relativeSurprisalOperator q q1 =
+      relativeSurprisalOperator q q0 +
+        relativeSurprisalOperator q0 q1 := by
   exact relativeSurprisalOperator_cocycle q q0 q1
 
 theorem finite_trace_commutator_colimit_zero

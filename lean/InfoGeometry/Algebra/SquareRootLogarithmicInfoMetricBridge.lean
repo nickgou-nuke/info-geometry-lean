@@ -35,4 +35,22 @@ theorem logarithmic_primon_energy_additivity (n m : ℝ) (hn : 0 < n) (hm : 0 < 
     Real.log (n * m) = Real.log n + Real.log m :=
   Real.log_mul (ne_of_gt hn) (ne_of_gt hm)
 
+/-- **Theorem 4: Master Square Root & Logarithmic Info-Geometry Synthesis**.
+    Unifies:
+    1. Dirac Clifford linearization (γ^μ p_μ)^2 = p0^2 - p1^2.
+    2. Fisher-Rao metric √y transformation 4 u^2 (du)^2 = (dy)^2.
+    3. Primon logarithmic energy additivity Real.log (n * m) = Real.log n + Real.log m. -/
+theorem master_square_root_logarithmic_info_synthesis
+    {R : Type*} [CommRing R] (g0 g1 p0 p1 : R)
+    (h00 : g0 * g0 = 1) (h11 : g1 * g1 = -1) (h01 : g0 * g1 + g1 * g0 = 0)
+    (u du dy : ℝ) (h_diff : 2 * u * du = dy)
+    (n m : ℝ) (hn : 0 < n) (hm : 0 < m) :
+    ((g0 * p0 + g1 * p1) * (g0 * p0 + g1 * p1) = (p0 * p0 - p1 * p1) * 1) ∧
+    (4 * (u * u) * (du * du) = dy * dy) ∧
+    (Real.log (n * m) = Real.log n + Real.log m) := ⟨
+  dirac_square_root_linearization g0 g1 p0 p1 h00 h11 h01,
+  fisher_rao_square_root_metric u du dy h_diff,
+  logarithmic_primon_energy_additivity n m hn hm
+⟩
+
 end InfoGeometry.Algebra.SquareRootLogarithmicInfoMetricBridge

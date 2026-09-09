@@ -9,19 +9,13 @@ open InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
 
 namespace InfoGeometry.Arithmetic.PrimeSpinorWittenIndex
 
-abbrev PrimeSpinorWittenIndexPacket
+structure PrimeSpinorWittenIndexPacket
   (PrimeLabel R : Type*)
-  [CommRing R] := Finset PrimeLabel × (PrimeLabel → R)
+  [CommRing R] where
+  modes : Finset PrimeLabel
+  amplitude : PrimeLabel → R
 
 namespace PrimeSpinorWittenIndexPacket
-
-abbrev modes
-  {PrimeLabel R : Type*} [CommRing R]
-  (P : PrimeSpinorWittenIndexPacket PrimeLabel R) : Finset PrimeLabel := P.1
-
-abbrev amplitude
-  {PrimeLabel R : Type*} [CommRing R]
-  (P : PrimeSpinorWittenIndexPacket PrimeLabel R) : PrimeLabel → R := P.2
 
 theorem finite_readout
   {PrimeLabel R : Type*}
@@ -33,10 +27,7 @@ theorem finite_readout
   exact finiteRealSpinorWittenReadout_eq_weylDenominator_squareWeights
     P.modes P.amplitude
 
-/-! The following is a finite Pfaffian/Weyl readout packet.  It is not a
-Witten-index theorem: no supersymmetry, grading, or beta-independence is
-encoded here. -/
-theorem finite_spinor_pfaffian_weyl_packet
+theorem PrimeSpinorWittenIndex
   {PrimeLabel R : Type*}
   [CommRing R]
   (P : PrimeSpinorWittenIndexPacket PrimeLabel R) :

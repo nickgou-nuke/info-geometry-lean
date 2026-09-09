@@ -103,4 +103,30 @@ theorem odd_negative_pole_extinguished {k : ℕ} {c : ℂ}
     ring
   · exact pg_fixed_axis_extinction hodd hrel
 
+/-- Main synthesis: nonsymmorphic glide phases impose a holographic scale filter. -/
+theorem glide_dirac_selection_rule_synthesis :
+    (∀ {k : ℕ} {c : ℂ}, Odd k → c = pgPhase k * c → c = 0) ∧
+    (∀ s : ℂ, ∀ k : ℕ, fixedAxisDiracDet s k = 0 ↔ s^2 = (k : ℂ)^2) ∧
+    (∀ k : ℕ, fixedAxisDiracDet (k : ℂ) k = 0) ∧
+    (∀ k : ℕ, fixedAxisDiracDet (-(k : ℂ)) k = 0) ∧
+    (∀ M : GlideDiracMode, M.coeff ≠ 0 → ¬ Odd M.k) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · intro k c hodd hrel
+    exact pg_fixed_axis_extinction hodd hrel
+  · intro s k
+    exact fixedAxis_zero_mode_iff s k
+  · intro k
+    exact fixedAxis_positive_pole k
+  · intro k
+    exact fixedAxis_negative_pole k
+  · intro M hnz
+    exact nonzero_mode_not_odd M hnz
+
+#check pg_fixed_axis_extinction
+#check fixedAxis_zero_mode_iff
+#check odd_mode_extinguished
+#check nonzero_mode_not_odd
+#check odd_positive_pole_extinguished
+#check glide_dirac_selection_rule_synthesis
+
 end GlideDiracSelectionRule

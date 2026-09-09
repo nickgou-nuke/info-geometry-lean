@@ -68,9 +68,11 @@ theorem finiteCartanSouriauEntropy_affine_invariant
     (h_heat_cov : ∀ (g : G) (β : Fin 2 → ℝ),
       souriauChargeMeanFunctional D (action.Ad g β) =
         coadjoint (action.Ad g) (souriauChargeMeanFunctional D β) + cocycle g)
+    (h_zero_cocycle : cocycle g = 0)
     (β : Fin 2 → ℝ) :
     souriauEntropy (finiteCartanSouriauAction D G action cocycle)
         (action.Ad g β) =
       souriauEntropy (finiteCartanSouriauAction D G action cocycle) β := by
-  exact SouriauCoadjoint.souriau_entropy_affine_invariance
-    (finiteCartanSouriauAction D G action cocycle) g h_Psi_cov h_heat_cov β
+  exact SouriauCoadjoint.souriau_entropy_linear_invariance
+    (finiteCartanSouriauAction D G action cocycle) g h_Psi_cov h_heat_cov
+    h_zero_cocycle β

@@ -100,7 +100,7 @@ theorem stageFunctionalRestriction_eq_finite
     (Ω : L.LimitFunctional)
     (hΩ : L.ExtendsFamily F Ω)
     (n : ℕ) :
-    stageFunctionalRestriction L n Ω = F n := by
+    stageFunctionalRestriction L n Ω = F.omega n := by
   ext x
   exact hΩ n x
 
@@ -116,7 +116,7 @@ theorem finite_metric_of_restricted_global_functionals
     (n : ℕ)
     (dStage : (A n →ₗ[R] R) → (A n →ₗ[R] R) → ℝ) :
     dStage (stageFunctionalRestriction L n Ω) (stageFunctionalRestriction L n Ψ) =
-      dStage (F n) (G n) := by
+      dStage (F.omega n) (G.omega n) := by
   rw [stageFunctionalRestriction_eq_finite L F Ω hΩ n]
   rw [stageFunctionalRestriction_eq_finite L G Ψ hΨ n]
 

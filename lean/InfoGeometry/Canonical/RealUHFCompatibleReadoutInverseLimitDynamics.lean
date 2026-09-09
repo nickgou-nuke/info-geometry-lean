@@ -108,5 +108,4 @@ theorem scalarDilationReadoutInverseLimitAction_transport
   exact coordinateTopCatHom_action_square n t
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitDynamics
-
 end

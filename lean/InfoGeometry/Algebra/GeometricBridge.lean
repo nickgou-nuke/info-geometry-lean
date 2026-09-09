@@ -4,7 +4,7 @@ import InfoGeometry.Algebra.JordanCayleyInversionOs
 import InfoGeometry.Algebra.JordanCayleyInversionOsQ
 import InfoGeometry.Algebra.SplitOctonionIsomorphism
 import InfoGeometry.Algebra.KleinSpinorOrbit
-import InfoGeometry.Algebra.KleinSpinorOrbitClosure
+import InfoGeometry.Algebra.KleinSpinorOrbitSocketClosure
 
 /-! # Geometric bridge: Jordan-Cayley inversion and Klein-quadric coordinate packets
 

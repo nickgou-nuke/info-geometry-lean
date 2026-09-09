@@ -96,6 +96,39 @@ theorem lieProduct_antisymm (A B : MatrixQuantumCarrier) :
   unfold lieProduct
   abel_nf
 
+/-- Existing finite complex-structure matrices satisfy the quaternion relations. -/
+theorem md002_quaternion_complex_structure_packet :
+    UnifiedMatrixBasis.complexI * UnifiedMatrixBasis.complexI =
+        -(1 : Matrix (Fin 4) (Fin 4) ℝ) ∧
+    UnifiedMatrixBasis.complexJ * UnifiedMatrixBasis.complexJ =
+        -(1 : Matrix (Fin 4) (Fin 4) ℝ) ∧
+    UnifiedMatrixBasis.complexK * UnifiedMatrixBasis.complexK =
+        -(1 : Matrix (Fin 4) (Fin 4) ℝ) ∧
+    UnifiedMatrixBasis.complexI * UnifiedMatrixBasis.complexJ = UnifiedMatrixBasis.complexK ∧
+    UnifiedMatrixBasis.complexJ * UnifiedMatrixBasis.complexK = UnifiedMatrixBasis.complexI ∧
+    UnifiedMatrixBasis.complexK * UnifiedMatrixBasis.complexI = UnifiedMatrixBasis.complexJ :=
+  UnifiedMatrixBasis.quaternion_relations
+
+/-- Repaired theorem-safe Chapter 2 packet. -/
+theorem repaired_MD002_foundational_conventions_packet
+    (c dt dx dy dz : ℂ) (hc : IsPauliNormalization c)
+    (A B : MatrixQuantumCarrier) :
+    Matrix.det (normalizedPauliSpacetimeMatrix c dt dx dy dz) =
+        c * c * (dt * dt - (dx * dx + dy * dy + dz * dz)) ∧
+    (-2 : ℂ) * Matrix.det (normalizedPauliSpacetimeMatrix c dt dx dy dz) =
+        -(dt * dt) + (dx * dx + dy * dy + dz * dz) ∧
+    UnifiedMatrixBasis.hilbertSchmidt (c • UnifiedMatrixBasis.I₂)
+        (c • UnifiedMatrixBasis.I₂) = (1 / 2 : ℂ) ∧
+    jordanProduct A B = jordanProduct B A ∧
+    lieProduct B A = - lieProduct A B ∧
+    UnifiedMatrixBasis.complexI * UnifiedMatrixBasis.complexJ = UnifiedMatrixBasis.complexK := by
+  exact ⟨normalizedPauliSpacetimeMatrix_det c dt dx dy dz,
+    normalized_interval_eq_minkowski_minus_plus_plus_plus c dt dx dy dz hc,
+    normalized_hilbertSchmidt_identity_self c hc,
+    jordanProduct_comm A B,
+    lieProduct_antisymm A B,
+    md002_quaternion_complex_structure_packet.2.2.2.1⟩
+
 end InfoGeometry.Physics.MD002FoundationalConventions
 
 end noncomputable section

@@ -3,11 +3,7 @@ import Mathlib.Algebra.Ring.MinimalAxioms
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Data.Fin.Basic
 import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.Group.TransferInstance
-import Mathlib.Algebra.Module.TransferInstance
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Ring
+import Mathlib.Tactic
 
 /-!
 # Zorn vector matrices: split-octonion invariant interface
@@ -155,14 +151,6 @@ theorem cross_basis_decomposition (x y : ZornVec3 R) :
     cross (basis 0 : ZornVec3 R) (basis 2) = fun i => -basis 1 i := by
   ext i
   fin_cases i <;> simp [cross, basis]
-
-/-- Vector triple product Jacobi identity:
-    `cross x (cross y z) + cross y (cross z x) + cross z (cross x y) = 0`.
-    This is the coordinate manifestation of the ε_ijk Levi-Civita cyclic sum.
--/
-theorem cross_jacobi (x y z : ZornVec3 R) :
-    cross x (cross y z) + cross y (cross z x) + cross z (cross x y) = fun _ => 0 := by
-  ext i <;> fin_cases i <;> simp [cross, ZornVec3.cross] <;> ring
 
 /-- Coordinate dot product is symmetric over a commutative ring. -/
 theorem dot_comm (x y : ZornVec3 R) :
@@ -336,6 +324,20 @@ namespace ZornVectorMatrix
 
 variable {R : Type*} [CommRing R]
 
+/-- Canonical coordinate equivalence for the Zorn vector-matrix carrier. -/
+def coordEquiv : ZornVectorMatrix R ≃
+    (R × (Fin 3 → R) × (Fin 3 → R) × R) where
+  toFun X := (X.a, X.v, X.w, X.b)
+  invFun X := ⟨X.1, X.2.1, X.2.2.1, X.2.2.2⟩
+  left_inv X := by cases X; rfl
+  right_inv X := by rcases X with ⟨a, v, w, b⟩; rfl
+
+/-- The Cartan readout is the first diagonal coordinate. -/
+def cartanChargeFn (X : ZornVectorMatrix R) : R := X.a
+
+/-- Alias exposing the same canonical Cartan readout as an invariant. -/
+def cartanCharge (X : ZornVectorMatrix R) : R := cartanChargeFn X
+
 def zero : ZornVectorMatrix R :=
   ⟨0, fun _ => 0, fun _ => 0, 0⟩
 
@@ -392,6 +394,20 @@ def sub (X Y : ZornVectorMatrix R) : ZornVectorMatrix R :=
 def smul (r : R) (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
   ⟨r * X.a, fun i => r * X.v i, fun i => r * X.w i, r * X.b⟩
 
+@[simp] theorem add_a (X Y : ZornVectorMatrix R) : (add X Y).a = X.a + Y.a := rfl
+@[simp] theorem add_v (X Y : ZornVectorMatrix R) (i : Fin 3) :
+    (add X Y).v i = X.v i + Y.v i := rfl
+@[simp] theorem add_w (X Y : ZornVectorMatrix R) (i : Fin 3) :
+    (add X Y).w i = X.w i + Y.w i := rfl
+@[simp] theorem add_b (X Y : ZornVectorMatrix R) : (add X Y).b = X.b + Y.b := rfl
+
+@[simp] theorem smul_a (r : R) (X : ZornVectorMatrix R) : (smul r X).a = r * X.a := rfl
+@[simp] theorem smul_v (r : R) (X : ZornVectorMatrix R) (i : Fin 3) :
+    (smul r X).v i = r * X.v i := rfl
+@[simp] theorem smul_w (r : R) (X : ZornVectorMatrix R) (i : Fin 3) :
+    (smul r X).w i = r * X.w i := rfl
+@[simp] theorem smul_b (r : R) (X : ZornVectorMatrix R) : (smul r X).b = r * X.b := rfl
+
 /-- Zorn product. Non-associative; do not package as ordinary matrix product. -/
 def mul (X Y : ZornVectorMatrix R) : ZornVectorMatrix R :=
   ⟨X.a * Y.a + ZornVec3.dot X.v Y.w,
@@ -408,7 +424,7 @@ def norm (X : ZornVectorMatrix R) : R :=
 def conj (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
   ⟨X.b, fun i => -X.v i, fun i => -X.w i, X.a⟩
 
-/-- Associator `(XY)Z - X(YZ)`, used to property non-associativity. -/
+/-- Associator `(XY)Z - X(YZ)`, used to witness non-associativity. -/
 def associator (X Y Z : ZornVectorMatrix R) : ZornVectorMatrix R :=
   sub (mul (mul X Y) Z) (mul X (mul Y Z))
 
@@ -441,6 +457,42 @@ theorem zero_add (X : ZornVectorMatrix R) :
 theorem add_left_neg (X : ZornVectorMatrix R) :
     add (neg X) X = zero := by
   ext i <;> simp [add, neg, zero]
+
+private def nsmulZorn : Nat → ZornVectorMatrix R → ZornVectorMatrix R
+  | 0, _ => zero
+  | n + 1, X => add (nsmulZorn n X) X
+
+private def zsmulZorn : Int → ZornVectorMatrix R → ZornVectorMatrix R
+  | Int.ofNat n, X => nsmulZorn n X
+  | Int.negSucc n, X => neg (nsmulZorn (n + 1) X)
+
+instance : AddCommGroup (ZornVectorMatrix R) where
+  add := add
+  add_assoc := add_assoc
+  zero := zero
+  zero_add := zero_add
+  add_zero := add_zero
+  neg := neg
+  neg_add_cancel := by
+    intro X
+    exact add_left_neg X
+  nsmul := nsmulZorn
+  zsmul := zsmulZorn
+  add_comm := add_comm
+
+@[simp] theorem zero_a : (0 : ZornVectorMatrix R).a = 0 := rfl
+@[simp] theorem zero_v (i : Fin 3) : (0 : ZornVectorMatrix R).v i = 0 := rfl
+@[simp] theorem zero_w (i : Fin 3) : (0 : ZornVectorMatrix R).w i = 0 := rfl
+@[simp] theorem zero_b : (0 : ZornVectorMatrix R).b = 0 := rfl
+@[simp] theorem explicit_zero_a : (zero : ZornVectorMatrix R).a = 0 := rfl
+@[simp] theorem explicit_zero_v (i : Fin 3) : (zero : ZornVectorMatrix R).v i = 0 := rfl
+@[simp] theorem explicit_zero_w (i : Fin 3) : (zero : ZornVectorMatrix R).w i = 0 := rfl
+@[simp] theorem explicit_zero_b : (zero : ZornVectorMatrix R).b = 0 := rfl
+
+@[simp] theorem neg_a' (X : ZornVectorMatrix R) : (-X).a = -X.a := rfl
+@[simp] theorem neg_v' (X : ZornVectorMatrix R) (i : Fin 3) : (-X).v i = -X.v i := rfl
+@[simp] theorem neg_w' (X : ZornVectorMatrix R) (i : Fin 3) : (-X).w i = -X.w i := rfl
+@[simp] theorem neg_b' (X : ZornVectorMatrix R) : (-X).b = -X.b := rfl
 
 @[simp] theorem diagonalPart_add_offDiagonalPart (X : ZornVectorMatrix R) :
     add (diagonalPart X) (offDiagonalPart X) = X := by
@@ -509,6 +561,40 @@ theorem smul_add (r : R) (X Y : ZornVectorMatrix R) :
 theorem add_smul (r s : R) (X : ZornVectorMatrix R) :
     smul (r + s) X = add (smul r X) (smul s X) := by
   ext i <;> simp [smul, add, right_distrib]
+
+instance : Module R (ZornVectorMatrix R) where
+  smul := smul
+  one_smul := one_smul
+  mul_smul := by
+    intro r s X
+    apply ZornVectorMatrix.ext
+    · change (r * s) * X.a = r * (s * X.a)
+      ring
+    · funext i
+      change (r * s) * X.v i = r * (s * X.v i)
+      ring
+    · funext i
+      change (r * s) * X.w i = r * (s * X.w i)
+      ring
+    · change (r * s) * X.b = r * (s * X.b)
+      ring
+  smul_add := smul_add
+  smul_zero := smul_zero
+  add_smul := add_smul
+  zero_smul := zero_smul
+
+@[simp] theorem add_a' (X Y : ZornVectorMatrix R) : (X + Y).a = X.a + Y.a := rfl
+@[simp] theorem add_v' (X Y : ZornVectorMatrix R) (i : Fin 3) :
+    (X + Y).v i = X.v i + Y.v i := rfl
+@[simp] theorem add_w' (X Y : ZornVectorMatrix R) (i : Fin 3) :
+    (X + Y).w i = X.w i + Y.w i := rfl
+@[simp] theorem add_b' (X Y : ZornVectorMatrix R) : (X + Y).b = X.b + Y.b := rfl
+@[simp] theorem smul_a' (r : R) (X : ZornVectorMatrix R) : (r • X).a = r * X.a := rfl
+@[simp] theorem smul_v' (r : R) (X : ZornVectorMatrix R) (i : Fin 3) :
+    (r • X).v i = r * X.v i := rfl
+@[simp] theorem smul_w' (r : R) (X : ZornVectorMatrix R) (i : Fin 3) :
+    (r • X).w i = r * X.w i := rfl
+@[simp] theorem smul_b' (r : R) (X : ZornVectorMatrix R) : (r • X).b = r * X.b := rfl
 
 theorem mul_smul (r : R) (X Y : ZornVectorMatrix R) :
     mul X (smul r Y) = smul r (mul X Y) := by
@@ -1165,7 +1251,7 @@ theorem associator_flexible (X Y : ZornVectorMatrix R) :
       Fin.sum_univ_three]
     ring
 
-theorem nonassociative_property [Nontrivial R] :
+theorem nonassociative_witness [Nontrivial R] :
     mul (mul (U 0 : ZornVectorMatrix R) (U 1)) (U 2) ≠
       mul (U 0) (mul (U 1) (U 2)) := by
   intro h
@@ -1397,7 +1483,7 @@ theorem commutatorJacobiator_eq_associator_alternating
   ext i <;> simp [sub, add, neg] <;> abel_nf
 
 /--
-Concrete Jacobiator property for the element commutator.
+Concrete Jacobiator witness for the element commutator.
 
 This theorem is intentionally a computation, not a Lie-algebra wrapper: the
 Zorn product is non-associative, and its element commutator does not satisfy
@@ -1430,7 +1516,7 @@ theorem commutator_jacobi_U_zero_U_one_U_two_ne_zero (h6 : (6 : R) ≠ 0) :
   simp [diagonal, zero] at ha
   exact h6 ha
 
-/-- Norm readout of the upper-sector Jacobiator property. -/
+/-- Norm readout of the upper-sector Jacobiator witness. -/
 theorem norm_commutator_jacobi_U_zero_U_one_U_two :
     norm (commutatorJacobiator (U 0 : ZornVectorMatrix R) (U 1) (U 2)) =
       -(36 : R) := by
@@ -1466,7 +1552,7 @@ theorem commutator_jacobi_V_zero_V_one_V_two_ne_zero (h6 : (6 : R) ≠ 0) :
   simp [diagonal, zero] at ha
   exact h6 ha
 
-/-- Norm readout of the lower-sector Jacobiator property. -/
+/-- Norm readout of the lower-sector Jacobiator witness. -/
 theorem norm_commutator_jacobi_V_zero_V_one_V_two :
     norm (commutatorJacobiator (V 0 : ZornVectorMatrix R) (V 1) (V 2)) =
       -(36 : R) := by
@@ -1769,29 +1855,6 @@ theorem norm_inverseCandidate {K : Type*} [Field K]
   unfold inverseCandidate
   rw [← mul_scalar, norm_mul, norm_scalar, norm_conj]
   ring
-
-/-- Zorn quadratic identity: `X² - tr(X)·X + N(X)·1 = 0`.
-
-This is the coordinate manifestation of the characteristic polynomial
-`λ² - tr(X)λ + N(X) = 0` evaluated at the matrix `X` itself.
--/
-theorem quadratic_identity (X : ZornVectorMatrix R) :
-    sub (mul X X) (smul (trace X) X) = neg (smul (norm X) one) := by
-  cases X with
-  | mk a v w b =>
-  apply ZornVectorMatrix.ext
-  · simp [mul, trace, norm, one, smul, add, neg, sub, ZornVec3.dot]
-    ring
-  · funext i
-    fin_cases i <;>
-    simp [mul, trace, norm, one, smul, add, neg, sub, ZornVec3.dot, ZornVec3.cross] <;>
-    ring
-  · funext i
-    fin_cases i <;>
-    simp [mul, trace, norm, one, smul, add, neg, sub, ZornVec3.dot, ZornVec3.cross] <;>
-    ring
-  · simp [mul, trace, norm, one, smul, add, neg, sub, ZornVec3.dot, Fin.sum_univ_three]
-    ring
 
 /-- On the non-isotropic locus, the inverse candidate has norm `(norm X)⁻¹`. -/
 theorem norm_inverseCandidate_of_ne_zero {K : Type*} [Field K]
@@ -2430,39 +2493,6 @@ instance : LieAlgebra R (Derivation (R := R)) :=
 
 end Derivation
 
-/-!
-The theorem packet above keeps scalar multiplication and multiplication
-explicit rather than installing a `Ring` instance.  This is intentional: the
-Zorn product is distributive and has a norm-composition law, but it is not
-associative.
--/
-
-def coordEquiv : ZornVectorMatrix R ≃ (R × (Fin 3 → R) × (Fin 3 → R) × R) where
-  toFun X := (X.a, X.v, X.w, X.b)
-  invFun t := ⟨t.1, t.2.1, t.2.2.1, t.2.2.2⟩
-  left_inv X := by cases X; rfl
-  right_inv t := by rcases t with ⟨a, v, w, b⟩; rfl
-
-instance : Add (ZornVectorMatrix R) := ⟨add⟩
-instance : Zero (ZornVectorMatrix R) := ⟨zero⟩
-instance : Neg (ZornVectorMatrix R) := ⟨neg⟩
-
-instance : AddCommGroup (ZornVectorMatrix R) :=
-  Equiv.addCommGroup coordEquiv
-
-instance : SMul R (ZornVectorMatrix R) := ⟨smul⟩
-
-instance : Module R (ZornVectorMatrix R) :=
-  Equiv.module R coordEquiv
-
-/-- A concrete rational Cartan coordinate. -/
-def cartanChargeFn (X : ZornVectorMatrix ℚ) : ℚ := X.a
-
-def cartanCharge : ZornVectorMatrix ℚ →ₗ[ℚ] ℚ where
-  toFun := cartanChargeFn
-  map_add' := by intro X Y; rfl
-  map_smul' := by intro r X; rfl
-
 /-- The finite charge labels used by this explicitly specified state sector. -/
 def chargeValue : Fin 6 → ℚ :=
   ![0, -1, 1 / 3, -(1 / 3), 2 / 3, -(2 / 3)]
@@ -2489,6 +2519,13 @@ theorem charge_image :
     · exact ⟨3, rfl⟩
     · exact ⟨4, rfl⟩
     · exact ⟨5, rfl⟩
+
+/-!
+The theorem packet above keeps scalar multiplication and multiplication
+explicit rather than installing a `Ring` instance.  This is intentional: the
+Zorn product is distributive and has a norm-composition law, but it is not
+associative.
+-/
 
 end ZornVectorMatrix
 end InfoGeometry.Algebra

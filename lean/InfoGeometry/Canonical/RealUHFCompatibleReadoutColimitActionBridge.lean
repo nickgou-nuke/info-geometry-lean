@@ -57,5 +57,4 @@ theorem scalarDilationTopologicalColimitAction_normalizedTrace_postcomposition
     normalizedTraceReadoutAtTime_eq_postcomposition]
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutColimitActionBridge
-
 end

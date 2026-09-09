@@ -22,7 +22,7 @@ namespace InfoGeometry.ProjectiveFoundation
 /--
 The center of `G` acts trivially on `X`.
 
-This is the exact property needed to descend a `G`-action on `X` to an
+This is the exact hypothesis needed to descend a `G`-action on `X` to an
 action of `G ⧸ Subgroup.center G`.
 -/
 class CenterActsTrivially

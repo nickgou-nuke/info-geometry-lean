@@ -6,7 +6,7 @@ import InfoGeometry.Arithmetic.ArithmeticSuperchargeHopfBridge
 # InfoGeometry.Arithmetic.SpectorSuperchargeCentralBridge
 
 Finite bridge from the Spector/Witten prime-bit corridor to the existing
-supercharge and central-charge interfaces.
+supercharge and central-charge sockets.
 
 This file does not prove a supersymmetric field theory, a super-Virasoro
 representation, a BPS bound, or an infinite zeta theorem.  It packages the
@@ -24,7 +24,7 @@ All theorem statements below are finite arithmetic or algebraic readbacks of
 already-owned owner surfaces.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-The central-charge component is a supplied property field.  This file does not
+The central-charge component is a supplied witness field.  This file does not
 construct it.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
@@ -53,11 +53,11 @@ structure SpectorSuperchargeCentralReadout
   /-- Finite prime-bit register carrying the Witten cancellation. -/
   register : PrimeRegister
 
-  /-- Nonempty register property needed for finite Witten cancellation. -/
+  /-- Nonempty register hypothesis needed for finite Witten cancellation. -/
   hNonempty : register.primes.Nonempty
 
   /-- Supplied odd-supercharge / Hamiltonian / parity packet. -/
-  supercharge : ParitySuperchargeData Op
+  supercharge : ParitySuperchargePacket Op
 
   /-- Supplied central-charge readout. -/
   centralCharge : Op
@@ -102,7 +102,7 @@ theorem centralCharge_commutes_theorem (X : Op) :
 Finite Spector readout with supercharge and central-charge bookkeeping.
 
 This packages the finite Witten cancellation with the parity-evenness of the
-supplied supercharge Hamiltonian and the explicit central-charge property.
+supplied supercharge Hamiltonian and the explicit central-charge witness.
 -/
 theorem spector_finite_witten_supercharge_central_packet :
     PrimonSupergradedGasAlgebra.finitePrimonWittenIndex R.register = 0 ∧

@@ -76,7 +76,7 @@ theorem ell_basis_left_square (a : Fin 4) :
 coordinates on the existing Zorn carrier; no loxodromic commutation claim is
 made here. -/
 
-def splitPlaneI (a b : ℝ) : CZ :=
+noncomputable def splitPlaneI (a b : ℝ) : CZ :=
   a • quaternionBasis 1 + b • ellBasis 1
 
 theorem i_ell_i_anticommute :
@@ -120,7 +120,7 @@ theorem splitPlaneI_sq_eq_neg_splitPlaneQuadratic (a b : ℝ) :
 quadratic law.  The scalar direction is intentionally excluded: its two
 coordinate generators are idempotent rather than square-zero. -/
 
-def imaginarySplitPlane (a : Fin 3) (x y : ℝ) : CZ :=
+noncomputable def imaginarySplitPlane (a : Fin 3) (x y : ℝ) : CZ :=
   x • quaternionBasis a.succ + y • ellBasis a.succ
 
 noncomputable def imaginarySplitPlaneNullPlus (a : Fin 3) : CZ :=
@@ -282,8 +282,9 @@ theorem lUnit_left_mul_left_mul (X : CZ) :
 determinant quadratic form.  This is the concrete para-metric sign law for
 the selected axis. -/
 theorem lUnit_left_det_neg (X : CZ) :
-    ZornMatrix.detZ (zMul lUnit X) = -ZornMatrix.detZ X := by
-  simp [ZornMatrix.detZ, zMul, lUnit,
+    ZornMatrix.detZ realCrossProduct3 (zMul lUnit X) =
+      -ZornMatrix.detZ realCrossProduct3 X := by
+  simp [ZornMatrix.detZ, realCrossProduct3, zMul, lUnit,
     InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross,
     smul_eq_mul]

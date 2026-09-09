@@ -84,7 +84,9 @@ theorem propagator_eq_normedSpace_exp
     (hg : Quaternion.normSq g = 1) (eta : ℝ) :
     NormedSpace.exp (eta • V.connectionGenerator) = R.propagator eta := by
   have hsq : V.connectionGenerator ^ 2 = (1 : EndH) := by
-    simpa [pow_two] using R.generator_sq hg
+    change V.connectionGenerator.comp V.connectionGenerator =
+      ContinuousLinearMap.id ℝ H₂
+    exact R.generator_sq hg
   simpa [propagator] using
     (InfoGeometry.Physics.HestenesKreinOperatorCalculus.exp_of_sq_eq_one
       V.connectionGenerator hsq eta)

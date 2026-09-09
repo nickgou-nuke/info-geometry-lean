@@ -13,7 +13,7 @@ The genuine Delaunay owner supplies the flip-word matrix and its invariance
 under the finite move relation.  The remaining presented-group step is
 therefore exposed here through the native `PureBraid.lift` interface: a
 concrete generator map and its relator proof are explicit inputs, not an
-identity-valued property.
+identity-valued witness.
 -/
 
 namespace InfoGeometry.Topology.Delaunay

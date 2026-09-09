@@ -50,5 +50,4 @@ theorem realReadout_eq_stage_zero (D : Data) :
   realReadout_eq_stage D 0
 
 end InfoGeometry.Canonical.RealUHFCompatibleProjectionReadoutBridge
-
 end

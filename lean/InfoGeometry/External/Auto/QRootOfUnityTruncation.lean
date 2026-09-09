@@ -54,6 +54,19 @@ theorem paritySign_sq (S : RootOfUnityStage) (n : S.State) :
   unfold paritySign
   split <;> norm_num
 
+/-- Capstone: finite root-of-unity stages are finite, exclude their endpoint, and carry
+an involutive signed metric. -/
+theorem finite_root_of_unity_truncation_synthesis (S : RootOfUnityStage) :
+    Fintype.card S.State = S.k ∧
+    ¬ S.Admissible S.k ∧
+    (∀ n : S.State, S.paritySign n * S.paritySign n = 1) := by
+  constructor
+  · exact state_card S
+  constructor
+  · exact boundary_not_admissible S
+  · intro n
+    exact paritySign_sq S n
+
 end RootOfUnityStage
 
 end QRootOfUnityTruncation

@@ -195,7 +195,7 @@ def PrimitiveSetsAboveFiniteStatement : Prop :=
 /--
 Infinite formulation of the primitive-sets-above problem using `tsum`.
 
-The summability property is explicit, so the theorem surface does not hide
+The summability hypothesis is explicit, so the theorem surface does not hide
 any analytic convergence obligations.
 -/
 def PrimitiveSetsAboveInfiniteStatement : Prop :=
@@ -1268,7 +1268,7 @@ theorem primitiveDivisorFiber_mem {A : Finset ℕ} {d a : ℕ}
 /--
 Division by a fixed `d` is injective on the `d`-divisible fiber.
 
-No `d ≠ 0` property is needed: when `d = 0`, the fiber consists only of
+No `d ≠ 0` hypothesis is needed: when `d = 0`, the fiber consists only of
 elements divisible by `0`, hence only `0`.
 -/
 theorem primitiveDivisorFiber_div_injective
@@ -1428,7 +1428,7 @@ Repackage the original divisor sigma-sum as an outer finite sum over divisors,
 with each inner divisor fiber rewritten as a scaled primitive-weight sum on the
 quotient support.
 
-The explicit nonzero-support property excludes the degenerate `a = 0` case,
+The explicit nonzero-support hypothesis excludes the degenerate `a = 0` case,
 for which `a.divisors = ∅` but `d ∣ a` would otherwise create spurious fiber
 terms on the quotient side.
 -/
@@ -1498,7 +1498,7 @@ Repackage the divisor sigma-sum against the quotient primitive weight as an
 outer finite sum over divisors, with inner fibers collapsed to quotient
 primitive-weight sums.
 
-The explicit nonzero-support property excludes the degenerate `a = 0` case,
+The explicit nonzero-support hypothesis excludes the degenerate `a = 0` case,
 for which `a.divisors = ∅` but `d ∣ a` would otherwise create spurious fiber
 terms on the quotient side.
 -/
@@ -1898,7 +1898,7 @@ The "good" part is handled by applying `PrimitiveSetsAboveFiniteStatement`
 recursively to the quotient Q_d = {a/d | a ∈ A, d ∣ a}, which is primitive and
 supported above x/d ≥ x₀ for d ≤ x/x₀.
 
-The "large" part (d > x/x₀) is the remaining filtered-colimit closure relation.
+The "large" part (d > x/x₀) is the remaining filtered-colimit closure socket.
 Three connected lemmas close this gap:
 
 1. `primitiveWeightSum_vonMangoldt_sigma_le_log_mul_add` — the harmonic-sum
@@ -1996,7 +1996,7 @@ that the prime diagonal contributes `1/(p log p)`, not `1/p`.
 
 We record the **shape** of the correct analytic input as an opaque `Prop`
 placeholder. Downstream propositions that require this estimate should take it as
-an explicit property rather than relying on a false uniform bound.
+an explicit hypothesis rather than relying on a false uniform bound.
 
 Two earlier drafts of this `Prop` were also false:
 
@@ -2039,108 +2039,46 @@ def primitiveLogSquaredPairKernel (a d : ℕ) : ℝ :=
   else
     0
 
-/-- The corrected divisor-pair kernel vanishes on the zero-weight boundary. -/
-theorem primitiveLogSquaredPairKernel_eq_zero_of_le_one
-    {a d : ℕ} (ha : a ≤ 1) :
-    primitiveLogSquaredPairKernel a d = 0 := by
-  simp [primitiveLogSquaredPairKernel, not_lt.mpr ha]
+/--
+Correct analytic input for the large-divisor lane.
 
-/-- Above the cutoff, every corrected divisor-pair kernel term is nonnegative. -/
-theorem primitiveLogSquaredPairKernel_nonneg
-    {a d : ℕ} (ha : 1 < a) :
-    0 ≤ primitiveLogSquaredPairKernel a d := by
-  simp only [primitiveLogSquaredPairKernel, if_pos ha]
-  exact div_nonneg (realVonMangoldt_nonneg d) (by positivity)
+The sum is over **divisor pairs** `(a, d)` from `A.sigma (fun a => a.divisors)`,
+filtered to large divisors `d > x / x₀`. The kernel `Λ(d) / (a * (log a)²)` is
+attached to the original element `a`, not the divisor `d` alone.
 
-/-- The full corrected pair-kernel sum is nonnegative on support above `2`. -/
-theorem primitiveLogSquaredPairKernel_sigma_nonneg_of_supportedAbove_two
-    (A : Finset ℕ)
-    (hA : SupportedAboveFinset 2 A) :
-    0 ≤ Finset.sum (A.sigma fun a => a.divisors)
-        (fun y => primitiveLogSquaredPairKernel y.1 y.2) := by
-  refine Finset.sum_nonneg ?_
-  intro y hy
-  have hya : y.1 ∈ A := (Finset.mem_sigma.mp hy).1
-  have ha : 1 < y.1 :=
-    lt_of_lt_of_le (by decide : 1 < (2 : ℕ)) (hA hya)
-  exact primitiveLogSquaredPairKernel_nonneg ha
+This avoids both defects present in divisor-only formulations:
+- The prime diagonal: `Λ(p) / (p * (log p)²) = 1/(p log p) = primitiveWeight p`. ✓
+- The quotient term is automatically scaled: summing over `d | a` gives
+  `primitiveWeight a`, so the contribution from each `a` is bounded by `primitiveWeight a`.
 
-/-- The corrected divisor-pair kernel has the exact primitive-weight marginal. -/
-theorem primitiveLogSquaredPairKernel_sum_divisors
-    {a : ℕ} (ha : 1 < a) :
-    Finset.sum a.divisors (primitiveLogSquaredPairKernel a) =
-      primitiveWeight a := by
-  have hlog : Real.log (a : ℝ) ≠ 0 := by
-    exact ne_of_gt (Real.log_pos (by exact_mod_cast ha))
-  rw [show
-      (Finset.sum a.divisors (primitiveLogSquaredPairKernel a)) =
-        (1 / ((a : ℝ) * (Real.log (a : ℝ)) ^ 2)) *
-          (Finset.sum a.divisors realVonMangoldt) by
-      simp only [primitiveLogSquaredPairKernel, if_pos ha]
-      rw [Finset.mul_sum]
-      congr 1
-      funext d
-      ring]
-  rw [sum_realVonMangoldt_divisors]
-  simp only [primitiveWeight, if_pos ha]
-  field_simp
+**Not asserted**: we do not claim this is provable from current Mathlib; it is an
+owner-surface placeholder recording the correct analytic shape.
+-/
+def PrimitiveLargeDivisorAnalyticInput : Prop :=
+  ∀ ε : ℝ, 0 < ε →
+    ∃ x₀ : ℕ, ∀ {A : Finset ℕ} {x : ℕ},
+      x₀ ≤ x →
+      PrimitiveFinset A →
+      SupportedAboveFinset x A →
+      let largePairs :=
+        (A.sigma fun a => a.divisors).filter (fun y => x / x₀ < y.2)
+      Finset.sum largePairs (fun y => primitiveLogSquaredPairKernel y.1 y.2) ≤ ε
 
-/-- Summing the corrected pair kernel over a finite support recovers its weight sum. -/
-theorem primitiveLogSquaredPairKernel_sigma_eq_weightSum
-    (A : Finset ℕ)
-    (hA : ∀ a ∈ A, 1 < a) :
-    Finset.sum (A.sigma fun a => a.divisors)
-        (fun y => primitiveLogSquaredPairKernel y.1 y.2) =
-      primitiveWeightSum A := by
-  classical
-  calc
-    Finset.sum (A.sigma fun a => a.divisors)
-        (fun y => primitiveLogSquaredPairKernel y.1 y.2) =
-        Finset.sum A (fun a =>
-          Finset.sum a.divisors (primitiveLogSquaredPairKernel a)) := by
-            rw [Finset.sum_sigma']
-    _ = Finset.sum A primitiveWeight := by
-      apply Finset.sum_congr rfl
-      intro a ha
-      exact primitiveLogSquaredPairKernel_sum_divisors (hA a ha)
-    _ = primitiveWeightSum A := by rfl
+/--
+Assembly statement: the analytic input implies the finite ESS statement.
 
-/-- Support above `2` supplies the positivity hypothesis for the divisor kernel. -/
-theorem primitiveLogSquaredPairKernel_sigma_eq_weightSum_of_supportedAbove_two
-    (A : Finset ℕ)
-    (hA : SupportedAboveFinset 2 A) :
-    Finset.sum (A.sigma fun a => a.divisors)
-        (fun y => primitiveLogSquaredPairKernel y.1 y.2) =
-      primitiveWeightSum A := by
-  apply primitiveLogSquaredPairKernel_sigma_eq_weightSum A
-  intro a ha
-  exact lt_of_lt_of_le (by decide : 1 < (2 : ℕ)) (hA ha)
-
-/-- Any support threshold at least `2` gives the same divisor-kernel identity. -/
-theorem primitiveLogSquaredPairKernel_sigma_eq_weightSum_of_supportedAbove
-    {x : ℕ} (hx : 2 ≤ x)
-    (A : Finset ℕ)
-    (hA : SupportedAboveFinset x A) :
-    Finset.sum (A.sigma fun a => a.divisors)
-        (fun y => primitiveLogSquaredPairKernel y.1 y.2) =
-      primitiveWeightSum A := by
-  apply primitiveLogSquaredPairKernel_sigma_eq_weightSum_of_supportedAbove_two A
-  intro a ha
-  exact le_trans hx (hA ha)
-
-/-- Primitive weights have nonnegative finite total mass on support above `2`. -/
-theorem primitiveWeightSum_nonneg_of_supportedAbove_two
-    (A : Finset ℕ)
-    (hA : SupportedAboveFinset 2 A) :
-    0 ≤ primitiveWeightSum A := by
-  rw [← primitiveLogSquaredPairKernel_sigma_eq_weightSum_of_supportedAbove_two A hA]
-  exact primitiveLogSquaredPairKernel_sigma_nonneg_of_supportedAbove_two A hA
+Kept as a `Prop` (not a `theorem ... := by sorry`) because this module does not
+claim the analytic proof. This records the logical dependence without asserting
+an unproved or false theorem.
+-/
+def PrimitiveWeightSumAssemblyFromAnalyticInput : Prop :=
+  PrimitiveLargeDivisorAnalyticInput → PrimitiveSetsAboveFiniteStatement
 
 /-
 Lichtman–ESS bound: the good-divisor sum is bounded by `(1 + ε) · ψ(x/x₀)`.
 
 For A primitive supported above x, with good divisors defined by
-`x₀ ≤ max (x / d) 2`, the property `2 < x₀` forces `x₀ > 2`, hence the
+`x₀ ≤ max (x / d) 2`, the hypothesis `2 < x₀` forces `x₀ > 2`, hence the
 condition `x₀ ≤ max (x / d) 2` implies `x₀ ≤ x / d` (since `max (x/d) 2 = x₀`
 would require `x₀ ≤ 2`, contradiction). So all good `d` satisfy `d ≤ x / x₀ < x`.
 Since A is supported above x, no element of A is a good divisor, and the
@@ -2160,7 +2098,7 @@ RHS `(x / x₀ : ℕ)` can be zero. Concrete counterexample: `x₀ = 2`, `x = 1`
 /--
 Explicit Chebyshev/good-divisor input for the finite primitive-set assembly.
 
-This is deliberately a named proposition, not an ax!om.  The theorem
+This is deliberately a named proposition, not an axiom.  The theorem
 `goodDivisorSumChebyshevBound` below proves it from the local good-divisor
 argument and the Mathlib Chebyshev estimate `Chebyshev.psi_le_const_mul_self`.
 -/

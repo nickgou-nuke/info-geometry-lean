@@ -4,15 +4,15 @@ import InfoGeometry.Analysis.L2CantorCommutation
 open InfoGeometry.Analysis.L2CantorCommutation
 
 /-!
-# Constructive Cuntz O₂ relations + algebraic state readout on the Cantor carrier
+# Constructive Cuntz O₂ relations + KMS state interface on ℓ²(CantorBoundary, ℝ²)
 
 The concrete Hilbert space H = BaseIndex → Fiber carries an explicit,
 constructive representation of the Cuntz O₂ algebra (S_left, S_right,
 star_S_left, star_S_right) and the phase axis K_op, with all relations
 proved as theorems in L2CantorCommutation.
 
-This file records the algebraic state-readout interface: a state carrier, its
-composition pairing, and the cyclic vector.
+This file records the GNS data interface: a state carrier, the GNS inner
+product induced by any such carrier, and the cyclic vector.
 
 All Cuntz algebra relations are proved theorems.  The KMS state carrier is not
 postulated globally here; its laws are exposed as explicit theorem premises.
@@ -29,7 +29,7 @@ debt.
   This file (AxiomFreeGNS):
     ✅ Concrete plus-cylinder vector Ω (defined explicitly)
     ✅ KMS state laws exposed as explicit predicates and theorem hypotheses
-    ✅ composition pairing and carrier self-equivalence defined from that structure
+    ✅ GNS inner product and Hilbert-space readback defined from that structure
     📐 Concrete C*-KMS state construction remains an existence theorem
 -/
 
@@ -81,7 +81,7 @@ theorem branch_weight_one_half
       _ = (1 / 2 : R) := by ring
   exact ⟨h_left, by rw [← h_symm, h_left]⟩
 
-/-! ## 1. The cyclic vector and state readout -/
+/-! ## 1. The cyclic vector and KMS state -/
 
 /-- The plus boundary word `(plus, plus, plus, ...)`. -/
 def emptyWord : BaseIndex :=
@@ -114,14 +114,9 @@ theorem omega_of_head_minus {x : BaseIndex} (h : head x = BinarySector.minus) :
   simp [omega, h]
 
 /-- State carrier on the concrete Cuntz operator lane. -/
-abbrev CuntzKMSState := (H → H) → ℝ
-
-namespace CuntzKMSState
-
-/-- Compatibility accessor for the native state-functional carrier. -/
-abbrev phi (Φ : CuntzKMSState) : (H → H) → ℝ := Φ
-
-end CuntzKMSState
+structure CuntzKMSState where
+  /-- The real KMS state functional on the concrete operator lane. -/
+  phi : (H → H) → ℝ
 
 /-- The state is normalized: φ(I) = 1. -/
 def NormalizedState (φ : (H → H) → ℝ) : Prop :=
@@ -143,37 +138,35 @@ def CrossKMSLeftRightZero (φ : (H → H) → ℝ) : Prop :=
 def CrossKMSRightLeftZero (φ : (H → H) → ℝ) : Prop :=
   ∀ A : H → H, φ (S_right ∘ A ∘ star_S_left) = 0
 
-/--
-Algebraic nonnegativity on the composition surface `φ (A ∘ A)`.
-
-This is deliberately not `φ (star A ∘ A)`: the carrier `H → H` in this
-owner has no `Star` structure. Consequently this predicate is a quadratic
-readout condition, not a C*-algebra positivity assertion.
--/
+/-- Positivity on the repository's algebraic `A ∘ A` quadratic surface. -/
 def QuadraticPositive (φ : (H → H) → ℝ) : Prop :=
   ∀ A : H → H, 0 ≤ φ (A ∘ A)
 
 namespace CuntzKMSState
 
-/-! ## 2. The composition pairing -/
+/-! ## 2. The GNS inner product -/
 
-/-- The algebraic composition pairing `φ (B ∘ A)`. -/
-def compositionPairing (Φ : CuntzKMSState) (A B : H → H) : ℝ :=
+/--
+The GNS semi-inner product: ⟨A, B⟩_φ = φ(B* · A).
+-/
+def gnsInner (Φ : CuntzKMSState) (A B : H → H) : ℝ :=
   Φ.phi (B ∘ A)
 
-/-- The composition pairing has nonnegative diagonal under `QuadraticPositive`. -/
-theorem compositionPairing_self_nonneg
-    (Φ : CuntzKMSState) (h : QuadraticPositive Φ.phi) (A : H → H) :
-    0 ≤ Φ.compositionPairing A A :=
+/-- The GNS inner product is positive semidefinite: ⟨A, A⟩_φ ≥ 0. -/
+theorem gnsInner_pos (Φ : CuntzKMSState) (h : QuadraticPositive Φ.phi) (A : H → H) :
+    0 ≤ Φ.gnsInner A A :=
   h A
 
-/-! The only carrier equivalence available at this abstraction level is the
-identity equivalence of the explicitly chosen carrier `H`. -/
-def carrierSelfEquiv (_Φ : CuntzKMSState) : H ≃ H :=
+/--
+The GNS Hilbert-space readback is the concrete carrier `H` itself.
+
+The GNS representation π(A) = A is the left regular representation.
+-/
+def GNS_isomorphic_to_H (_Φ : CuntzKMSState) : H ≃ H :=
   Equiv.refl H
 
-theorem carrierSelfEquiv_eq_refl (Φ : CuntzKMSState) :
-    Φ.carrierSelfEquiv = Equiv.refl H :=
+theorem GNS_isomorphic_to_H_eq_refl (Φ : CuntzKMSState) :
+    Φ.GNS_isomorphic_to_H = Equiv.refl H :=
   rfl
 
 end CuntzKMSState

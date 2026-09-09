@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.DrazinCentralizerErlangen
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbert
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
 import InfoGeometry.Arithmetic.RHQuantumStabilityBridge
 
 /-!
@@ -10,7 +10,7 @@ Thin calibration packet connecting the Drazin/Fierz centralizer surface to the
 Majorana/Mellin critical-line surface.
 
 This module does not claim a new analytic equivalence.  It packages an explicit
-compatibility property between:
+compatibility witness between:
 
 * the Drazin expectation readout carried by `FinalDrazinFierzLaw`;
 * the Majorana zero-mode normalizability packet;
@@ -24,7 +24,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.DrazinMajoranaMellinBridge
 
 open InfoGeometry.Canonical.DrazinCentralizerErlangen
-open InfoGeometry.Arithmetic.MajoranaPolyaHilbert
+open InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
 
 /--
 Calibration packet for the Drazin centralizer and Majorana/Mellin sector.
@@ -39,9 +39,9 @@ structure DrazinMajoranaMellinCalibration
   drazin :
     InfoGeometry.Canonical.DrazinCentralizerErlangen.FinalDrazinFierzLaw Obs
   majorana :
-    MajoranaZeroModeNormalizabilityData ZeroMode NormReadout
+    MajoranaZeroModeNormalizabilityPacket ZeroMode NormReadout
   mellin :
-    MellinPlancherelCriticalLineData MellinWave MellinNorm
+    MellinPlancherelCriticalLinePacket MellinWave MellinNorm
   channel :
     InfoGeometry.Canonical.DrazinFierzBridge.FierzChannel
   scalarReadout : ℝ

@@ -2,6 +2,8 @@ import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 import InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
 import Mathlib.Tactic
 
+set_option maxHeartbeats 2000000
+
 namespace InfoGeometry.Algebra.Zorn.G2TwoOuterGenerators
 
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
@@ -77,21 +79,15 @@ theorem g2Fun_mul (X Y : SplitOctF2) :
     g2Fun (mul X Y) = mul (g2Fun X) (g2Fun Y) := by
   rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
   rcases Y with ⟨a', b', x0', x1', x2', y0', y1', y2'⟩
-  ext <;> rw [← bitToF2_eq_iff]
-  all_goals
-    simp only [g2Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and]
-    ring_nf; simp [F2_mul_two, F2_mul_three, F2_mul_four]
+  revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
+  native_decide
 
 theorem g4Fun_mul (X Y : SplitOctF2) :
     g4Fun (mul X Y) = mul (g4Fun X) (g4Fun Y) := by
   rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
   rcases Y with ⟨a', b', x0', x1', x2', y0', y1', y2'⟩
-  ext <;> rw [← bitToF2_eq_iff]
-  all_goals
-    simp only [g4Fun, mul, add2, mul2, dot3, cross0, cross1, cross2,
-      bitToF2_xor, bitToF2_and]
-    ring_nf; simp [F2_mul_two]
+  revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
+  native_decide
 
 def g2Equiv : SplitOctF2 ≃ SplitOctF2 where
   toFun := g2Fun

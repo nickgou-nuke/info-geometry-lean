@@ -1,6 +1,7 @@
 import InfoGeometry.Algebra.Zorn.G2CoordinateWeylAction
 import InfoGeometry.Algebra.Zorn.G2CyclotomicSignedRootBridge
 import InfoGeometry.Algebra.Zorn.G2RootWeylNormalForm
+import InfoGeometry.Algebra.Zorn.G2WeylDihedralEquiv
 import InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge
 import InfoGeometry.Algebra.Zorn.G2TwoRootSystem
 import InfoGeometry.Algebra.Zorn.G2ZornDerivationRootRepresentation
@@ -327,6 +328,35 @@ def finiteReflectionPhase : Root → Root
     | 5 => 1
     | _ => 0)
 
+/-! The finite and concrete cyclotomic reflections use different axes in the
+    long sector.  The canonical comparison is the sector-dependent shift
+    `k ↦ k + 1` there, while the short sector is unchanged. -/
+
+def finiteToConcretePhaseCalibration : Root → Root
+  | (false, k) => (false, k)
+  | (true, k) => (true, k + 1)
+
+theorem finiteToConcretePhaseCalibration_bijective :
+    Function.Bijective finiteToConcretePhaseCalibration := by
+  native_decide
+
+noncomputable def finiteToConcretePhaseEquiv : Root ≃ Root :=
+  Equiv.ofBijective finiteToConcretePhaseCalibration
+    finiteToConcretePhaseCalibration_bijective
+
+theorem finiteToConcretePhaseCalibration_reflection_conjugacy (r : Root) :
+    finiteToConcretePhaseCalibration (finiteReflectionPhase r) =
+      InfoGeometry.Algebra.Zorn.G2CyclotomicSignedRootBridge.cyclotomicS1Fun
+        (finiteToConcretePhaseCalibration r) := by
+  rcases r with ⟨b, k⟩
+  cases b <;> fin_cases k <;> decide
+
+theorem finiteToConcretePhaseEquiv_reflection_conjugacy (r : Root) :
+    finiteToConcretePhaseEquiv (finiteReflectionPhase r) =
+      InfoGeometry.Algebra.Zorn.G2CyclotomicSignedRootBridge.cyclotomicS1Perm
+        (finiteToConcretePhaseEquiv r) := by
+  exact finiteToConcretePhaseCalibration_reflection_conjugacy r
+
 theorem finiteReflectionPhase_bijective :
     Function.Bijective finiteReflectionPhase := by
   native_decide
@@ -366,6 +396,15 @@ def finitePhaseWeylAction (p : WeylG2) : Root → Root :=
     fun r => finiteReflectionPhase (finiteCoxeterPhasePowNat p.1.val r)
   else
     finiteCoxeterPhasePowNat p.1.val
+
+theorem finitePhaseWeylAction_mul_semidirect (p q : WeylG2) :
+    finitePhaseWeylAction (weylMul p q) =
+      finitePhaseWeylAction p ∘ finitePhaseWeylAction q := by
+  rw [weylMul_eq_weylSemidirectMul]
+  rcases p with ⟨kp, bp⟩
+  rcases q with ⟨kq, bq⟩
+  fin_cases kp <;> fin_cases kq <;> cases bp <;> cases bq <;>
+    native_decide
 
 theorem finitePhaseWeylAction_bijective (p : WeylG2) :
     Function.Bijective (finitePhaseWeylAction p) := by
@@ -426,6 +465,18 @@ theorem finiteRootCyclotomicEquiv_weylRootAction
       finitePhaseWeylAction]
     rw [cActionPow]
     exact finiteRootCyclotomicEquiv_cActionPowNat k.val r
+
+theorem weylRootAction_mul_semidirect (p q : WeylG2) :
+    weylRootAction (weylMul p q) =
+      weylRootAction p ∘ weylRootAction q := by
+  funext r
+  apply finiteRootCyclotomicEquiv.injective
+  simp only [Function.comp_apply]
+  rw [finiteRootCyclotomicEquiv_weylRootAction,
+    finiteRootCyclotomicEquiv_weylRootAction,
+    finiteRootCyclotomicEquiv_weylRootAction]
+  rw [finitePhaseWeylAction_mul_semidirect]
+  rfl
 
 def finitePhaseFixed (p : WeylG2) (q : Root) : Prop :=
   finitePhaseWeylAction p q = q

@@ -22,25 +22,19 @@ is constructed from 3 ladder operators, creating 3 color states.
 namespace PeirceLadder
 
 /-- The real matrix carrier for a complex structure on a two-dimensional real plane. -/
-abbrev ComplexStructure :=
-  {J : Matrix (Fin 2) (Fin 2) ℝ // J * J = -1}
-
-namespace ComplexStructure
-
-abbrev J (C : ComplexStructure) : Matrix (Fin 2) (Fin 2) ℝ := C.1
-
-abbrev J_squared (C : ComplexStructure) : C.J * C.J = -1 := C.2
-
-end ComplexStructure
+structure ComplexStructure where
+  J : Matrix (Fin 2) (Fin 2) ℝ
+  J_squared : J * J = -1
 
 /-- The standard real complex structure `[[0, -1], [1, 0]]`. -/
 def standardJ : Matrix (Fin 2) (Fin 2) ℝ := !![(0 : ℝ), -1; 1, 0]
 
 /-- Example: the standard real complex-structure matrix satisfies `J² = -I`. -/
 def standardComplexStructure : ComplexStructure :=
-  ⟨standardJ, by
-    ext i j
-    fin_cases i <;> fin_cases j <;> norm_num [standardJ]⟩
+  { J := standardJ
+    J_squared := by
+      ext i j
+      fin_cases i <;> fin_cases j <;> norm_num [standardJ] }
 
 /-- 
 Zorn matrix 2×2 projectors for isolating color sectors.

@@ -6,7 +6,7 @@ import InfoGeometry.Probability.HomologicalProbability
 /-!
 # InfoGeometry.Arithmetic.PrimonFreeEnergyRelativeTrace
 
-Hypothesis-gated free-energy and relative-trace interface for the MBK/primon program.
+Witness-gated free-energy and relative-trace socket for the MBK/primon program.
 
 This file records the theorem-safe version of the conceptual passage
 
@@ -117,6 +117,20 @@ theorem GibbsKMS_freeEnergy_ge_gibbs
   have hgap := GibbsKMS_freeEnergy_gap_nonneg gk ρ hrel hβ
   linarith
 
+/--
+Root-corridor identification of the primitive-set analytic-input lane.
+
+This is only the definitional owner surface currently available in
+`PrimitiveSetsAbove`: the analytic input implies the finite primitive-set
+statement. It does not assert a Mellin functional equation or critical-axis
+theorem.
+-/
+theorem primitiveMellinParityIdentification :
+    InfoGeometry.Arithmetic.PrimitiveWeightSumAssemblyFromAnalyticInput =
+      (InfoGeometry.Arithmetic.PrimitiveLargeDivisorAnalyticInput →
+        InfoGeometry.Arithmetic.PrimitiveSetsAboveFiniteStatement) :=
+  rfl
+
 /-! ## 8b. Mathlib-backed completed-zeta parity lane -/
 
 /--
@@ -142,7 +156,7 @@ theorem completedRiemannZeta_parity_identification (s : ℂ) :
 The uncompleted zeta functional equation, reexported from mathlib.
 
 This is the Mellin/Dirichlet symmetry lane in explicit form. The additional
-non-pole property is exactly the one required by mathlib's theorem, so this
+non-pole hypothesis is exactly the one required by mathlib's theorem, so this
 file reexports `riemannZeta_one_sub` rather than proving a fresh variant.
 -/
 theorem riemannZeta_functionalEquation_symmetry

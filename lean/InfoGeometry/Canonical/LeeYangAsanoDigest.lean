@@ -11,7 +11,7 @@ import InfoGeometry.Canonical.LeeYangStabilityPacket
 # InfoGeometry.Canonical.LeeYangAsanoDigest
 
 Lean-native digest of the Asano/Ruelle proof family behind the Lee--Yang
-finite stability interface.
+finite stability socket.
 
 This file records the theorem shapes extracted from the literature:
 
@@ -19,10 +19,8 @@ This file records the theorem shapes extracted from the literature:
 * Grace's theorem for multiaffine symmetric diagonal slices;
 * the finite Lee--Yang source claim already used by the repository.
 
-The unrestricted source claim is deliberately kept separate and is refuted
-below.  The closed-and-bounded source claim is consumed by the downstream
-native topological reduction owner; no endpoint property is silently treated
-as an unconditional theorem in this digest.
+No contraction proof is claimed here.  The file is the theorem-packet and
+owner-map surface that keeps the missing proof substrate explicit.
 -/
 
 noncomputable section
@@ -242,7 +240,7 @@ theorem no_root_at_right_pole_of_det_ne_zero
   exact hdet hdet_zero
 
 /--
-Graph constraint from the zero-free property.
+Graph constraint from the zero-free hypothesis.
 
 If `z1 ∉ K1`, and the second-variable root is defined, then that root must
 lie in `K2`; otherwise one obtains a forbidden zero off `K1 × K2`.
@@ -271,7 +269,7 @@ theorem rootMap_z2_mem_K2_of_zero_free
     hz1 hnot hroot
 
 /--
-Dual graph constraint from the zero-free property.
+Dual graph constraint from the zero-free hypothesis.
 
 If `z2 ∉ K2`, and the first-variable root is defined, then that root must
 lie in `K1`.
@@ -329,7 +327,7 @@ theorem factor_det_zero
 /--
 Zero locus of the determinant-zero factorization.
 
-Under the determinant-zero property, the vanishing of `P.eval z1 z2`
+Under the determinant-zero hypothesis, the vanishing of `P.eval z1 z2`
 is equivalent to one of the linear factors vanishing.
 -/
 @[rep_depth thermo]
@@ -805,7 +803,7 @@ Unrestricted nondegenerate Asano-Ruelle source claim.
 
 This strengthens the unrestricted shape by adding `P.D ≠ 0` and
 `P.A * P.D - P.B * P.C ≠ 0`, but still without any closed/circular-region
-property on `K₁`, `K₂`.
+hypothesis on `K₁`, `K₂`.
 -/
 @[rep_depth thermo]
 def AsanoRuelleLemmaSourceClaimUnrestrictedNondegenerate : Prop :=
@@ -888,9 +886,10 @@ def AsanoRuelleLemmaSourceClaimClosedBounded : Prop :=
         ∀ z : ℂ, z ∉ asanoForbiddenSet K1 K2 → P.contract z ≠ 0
 
 
+
 /--
 Asano-Ruelle source claim from the explicit endpoint-nondegenerate branch
-property.
+hypothesis.
 
 This theorem is fully constructive in Lean and routes through
 `Analysis.AsanoContractionNative` (no `sorry`).
@@ -999,34 +998,44 @@ theorem GraceSourceData.coordinate_affine
         z * D.Φ (Function.update y i 1) :=
   D.multiaffine i y z
 
-/-
+/--
+Grace theorem source claim for a multiaffine symmetric diagonal slice.
+
+The exact proof is literature-owned; the Lean file stores the theorem shape
+so that later formalization can target it directly.
+-/
+@[rep_depth thermo]
+def GraceTheoremSourceClaim (n : ℕ) : Prop :=
+  ∀ (K : Set ℂ) (D : GraceSourceData n),
+    (∀ z : ℂ, D.Q.IsRoot z → z ∈ K) →
+      ∀ y : Fin n → ℂ, (∀ i : Fin n, y i ∉ K) → D.Φ y ≠ 0
+
+/--
 The exact finite Lee--Yang source claim is the theorem shape already used by
 the repository.
 -/
-/- Package the standard Lee--Yang property back into the source-claim shape. -/
 @[rep_depth thermo]
-theorem leeYangPolydiscSourceClaim_of_property
+def LeeYangPolydiscSourceClaim (N : ℕ) : Prop :=
+  ∀ (D : FinitePrimeChainData N) (lam : ℝ), 0 < lam →
+    (∀ y : Fin N → ℂ,
+      (∀ i : Fin N, PrimeHurwitzLimit.InUnitDisk (y i)) →
+        multiPartition D lam y ≠ 0) ∧
+    (∀ y : Fin N → ℂ,
+      (∀ i : Fin N, PrimeHurwitzLimit.OutsideUnitDisk (y i)) →
+        multiPartition D lam y ≠ 0)
+
+/-- Package the standard Lee--Yang witness back into the source-claim shape. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem leeYangPolydiscSourceClaim_of_witness
     (LY : LeeYangPolydiscWitness) :
-    ∀ N : ℕ, ∀ (D : FinitePrimeChainData N) (lam : ℝ), 0 < lam →
-      (∀ y : Fin N → ℂ,
-        (∀ i : Fin N, PrimeHurwitzLimit.InUnitDisk (y i)) →
-          multiPartition D lam y ≠ 0) ∧
-      (∀ y : Fin N → ℂ,
-        (∀ i : Fin N, PrimeHurwitzLimit.OutsideUnitDisk (y i)) →
-          multiPartition D lam y ≠ 0) := by
+    ∀ N : ℕ, LeeYangPolydiscSourceClaim N := by
   intro N D lam hLam
   exact ⟨LY.1 D lam hLam, LY.2 D lam hLam⟩
 
-/-- Package the source claim into the standard Lee--Yang property surface. -/
-@[rep_depth thermo]
+/-- Package the source claim into the standard Lee--Yang witness surface. -/
+@[bridge_target_tag, rep_depth thermo]
 def leeYangPolydiscWitness_of_sourceClaim
-    (H : ∀ N : ℕ, ∀ (D : FinitePrimeChainData N) (lam : ℝ), 0 < lam →
-      (∀ y : Fin N → ℂ,
-        (∀ i : Fin N, PrimeHurwitzLimit.InUnitDisk (y i)) →
-          multiPartition D lam y ≠ 0) ∧
-      (∀ y : Fin N → ℂ,
-        (∀ i : Fin N, PrimeHurwitzLimit.OutsideUnitDisk (y i)) →
-          multiPartition D lam y ≠ 0)) :
+    (H : ∀ N : ℕ, LeeYangPolydiscSourceClaim N) :
     LeeYangPolydiscWitness := by
   constructor
   · intro N D lam hLam y hy
@@ -1053,7 +1062,7 @@ theorem polynomialEval_affine_of_natDegree_le_one
 
 /--
 A family represented by degree-at-most-one polynomial slices is separately
-affine.  The polynomial family owns the property; no affine law is stored as an
+affine.  The polynomial family owns the witness; no affine law is stored as an
 independent structure field.
 -/
 theorem separatelyAffine_of_polynomialSlices
@@ -1253,7 +1262,7 @@ Main Asano induction source claim.
 This records the missing repeated-contraction theorem shape without claiming a
 kernel-checked proof.  The multiaffine linearity step is discharged by
 `asanoInductiveStep_of_supportDegree`; the remaining source-claim mismatch is
-the absent closedness property for the two contracted forbidden sets.
+the absent closedness hypothesis for the two contracted forbidden sets.
 -/
 def AsanoInductiveStepSourceClaim : Prop :=
   ∀ {n : ℕ} (P : MvPolynomial (Fin 2 ⊕ Fin n) ℂ),

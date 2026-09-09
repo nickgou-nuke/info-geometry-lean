@@ -10,7 +10,7 @@ namespace InfoGeometry.FermiGT
 The file records a finite algebraic version of the Fermi/Gamow--Teller
 distinction.  The metric and Lie action are explicit data; the main theorem
 reads back the carried Fermi isometry law and the carried GT non-isometry
-property.  No differential-geometric manifold theorem is asserted here.
+witness.  No differential-geometric manifold theorem is asserted here.
 -/
 
 /-! ## 1. D4-style algebraic carrier -/
@@ -80,6 +80,7 @@ theorem trialityVector_mem_GT {𝔤 : D4LieAlgebra} (grading : TKKGrading 𝔤) 
 structure TKKPotential (State : Type*) where
   potential : State → ℝ
   metric : State → State → ℝ
+  kahlerCertificate : potential = potential
 
 def informationMetric {State : Type*} (Φ : TKKPotential State) : State → State → ℝ :=
   Φ.metric

@@ -73,4 +73,16 @@ theorem graded_partition_vanishes_at_one_punctured :
     field_simp [hs1]
   simpa using hquot.congr' heq
 
+/-- Consolidated statement of the Souriau--Möbius coupling. -/
+theorem souriau_moebius_coupling_synthesis :
+    (∀ β : ℂ, bosonicPartitionFunction β = riemannZeta β) ∧
+    (∀ β : ℂ, gradedPartitionFunction β = (riemannZeta β)⁻¹) ∧
+    (∀ β : ℂ, 1 < β.re → moebiusLSeriesPartition β = gradedPartitionFunction β) ∧
+    (∀ β : ℂ, 1 < β.re → bosonicPartitionFunction β * moebiusLSeriesPartition β = 1) ∧
+    Tendsto gradedPartitionFunction (𝓝[≠] (1 : ℂ)) (𝓝 0) := by
+  exact ⟨fun _ => rfl, fun _ => rfl,
+    fun β hβ => moebius_lseries_eq_reciprocal_zeta hβ,
+    fun β hβ => bosonic_mul_moebius_partition hβ,
+    graded_partition_vanishes_at_one_punctured⟩
+
 end InfoGeometry.GrandUnification.SouriauMoebius

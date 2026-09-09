@@ -7,14 +7,14 @@ Witness-gated bridge between primitive-set arithmetic, finite Riemann-gas
 partition readouts, and Souriau-style thermodynamic calibration.
 
 This module does not prove the Erdős primitive-set theorem, the Riemann
-property, analytic continuation of `ζ`, or an infinite Euler product.  It
+hypothesis, analytic continuation of `ζ`, or an infinite Euler product.  It
 formalizes the conservative finite bridge:
 
 * energy level `E_n = log n`;
 * finite restricted partition `∑ n∈A, exp (-β log n)`;
 * primitive weight as the integral of that restricted partition over `β > 1`;
 * model-specific Souriau entropy/objective readouts calibrated to the
-  primitive arithmetic readouts by explicit property fields.
+  primitive arithmetic readouts by explicit witness fields.
 -/
 
 noncomputable section
@@ -111,7 +111,7 @@ theorem primitiveWeightSum_eq_integral_finiteZetaPartition
   simpa [primitiveFiniteZetaPartition] using
     primitiveWeightSum_eq_integral_mellinKernel A
 
-/-! ## 2. Primitive admissibility and MaxEnt property -/
+/-! ## 2. Primitive admissibility and MaxEnt witness -/
 
 /-- A finite primitive configuration supported above a threshold. -/
 structure PrimitiveAdmissibleFinset where
@@ -168,12 +168,12 @@ theorem objective_nonneg
 end PrimitiveAdmissibleFinset
 
 /--
-Finite MaxEnt-style optimizer property for the primitive arithmetic objective.
+Finite MaxEnt-style optimizer witness for the primitive arithmetic objective.
 
 This is proof-carrying optimization data.  It does not assert that primes are
-the optimizer unless such a property is supplied.
+the optimizer unless such a witness is supplied.
 -/
-structure FinitePrimitiveMaxEntData
+structure FinitePrimitiveMaxEntWitness
     (threshold : ℕ)
     (candidate : Finset ℕ) where
   candidate_primitive : PrimitiveFinset candidate
@@ -184,22 +184,22 @@ structure FinitePrimitiveMaxEntData
       SupportedAboveFinset threshold A →
         primitiveWeightSum A ≤ primitiveWeightSum candidate
 
-namespace FinitePrimitiveMaxEntData
+namespace FinitePrimitiveMaxEntWitness
 
 variable {threshold : ℕ} {candidate : Finset ℕ}
 
 /-- Re-export of the supplied primitive-weight maximality law. -/
 theorem weight_le_candidate
-    (W : FinitePrimitiveMaxEntData threshold candidate)
+    (W : FinitePrimitiveMaxEntWitness threshold candidate)
     (A : Finset ℕ)
     (hPrim : PrimitiveFinset A)
     (hSupp : SupportedAboveFinset threshold A) :
     primitiveWeightSum A ≤ primitiveWeightSum candidate :=
   W.maximizes_weight A hPrim hSupp
 
-/-- The candidate of a finite MaxEnt property is itself admissible finite data. -/
+/-- The candidate of a finite MaxEnt witness is itself admissible finite data. -/
 def candidateAdmissible
-    (W : FinitePrimitiveMaxEntData threshold candidate) :
+    (W : FinitePrimitiveMaxEntWitness threshold candidate) :
     PrimitiveAdmissibleFinset where
   support := candidate
   threshold := threshold
@@ -207,13 +207,13 @@ def candidateAdmissible
   supportedAbove := W.candidate_supported
 
 @[simp] theorem candidateAdmissible_objective
-    (W : FinitePrimitiveMaxEntData threshold candidate) :
+    (W : FinitePrimitiveMaxEntWitness threshold candidate) :
     W.candidateAdmissible.objective = primitiveWeightSum candidate := by
   rfl
 
-end FinitePrimitiveMaxEntData
+end FinitePrimitiveMaxEntWitness
 
-/-! ## 3. Souriau calibration interface -/
+/-! ## 3. Souriau calibration socket -/
 
 /--
 Souriau-style primitive zeta calibration.
@@ -240,6 +240,15 @@ structure PrimitiveSouriauZetaCalibration (State : Type*) where
   /-- Calibrated model-specific objective (action/readout) over `State`. -/
   objectiveReadout : State → ℝ
 
+  /--
+  Legacy compatibility name for legacy free-energy/action wording.
+
+  This field is intentionally aligned with `objectiveReadout`; the bridge does
+  not claim physical Helmholtz free energy unless the model supplies that
+  interpretation separately.
+  -/
+  freeEnergyReadout : State → ℝ
+
   /-- Partition calibration against the restricted finite zeta partition. -/
   partition_eq_finiteZetaPartition :
     ∀ A : Finset ℕ, ∀ β : ℝ,
@@ -256,19 +265,15 @@ structure PrimitiveSouriauZetaCalibration (State : Type*) where
     ∀ A : Finset ℕ,
       entropyReadout (stateOfFinset A) = objectiveReadout (stateOfFinset A)
 
+  /-- Legacy free-energy/action readout is calibrated to the primary objective. -/
+  freeEnergy_eq_objective :
+    ∀ A : Finset ℕ,
+      freeEnergyReadout (stateOfFinset A) = objectiveReadout (stateOfFinset A)
+
 namespace PrimitiveSouriauZetaCalibration
 
 variable {State : Type*}
 variable (C : PrimitiveSouriauZetaCalibration State)
-
-/-- The legacy free-energy name is the calibrated objective readout. -/
-def freeEnergyReadout : State → ℝ :=
-  C.objectiveReadout
-
-theorem freeEnergy_eq_objective (A : Finset ℕ) :
-    C.freeEnergyReadout (C.stateOfFinset A) =
-      C.objectiveReadout (C.stateOfFinset A) := by
-  rfl
 
 /-- The calibrated model partition is nonnegative on encoded finite supports. -/
 theorem partitionReadout_nonneg
@@ -392,12 +397,12 @@ theorem freeEnergy_le_iff_weight_le
   rw [C.freeEnergy_eq_primitiveWeightSum A, C.freeEnergy_eq_primitiveWeightSum B]
 
 /--
-A primitive MaxEnt property calibrates to entropy maximality in any Souriau
+A primitive MaxEnt witness calibrates to entropy maximality in any Souriau
 model satisfying `PrimitiveSouriauZetaCalibration`.
 -/
 theorem entropyReadout_le_candidate_of_maxEnt
     {threshold : ℕ} {candidate A : Finset ℕ}
-    (W : FinitePrimitiveMaxEntData threshold candidate)
+    (W : FinitePrimitiveMaxEntWitness threshold candidate)
     (hPrim : PrimitiveFinset A)
     (hSupp : SupportedAboveFinset threshold A) :
     C.entropyReadout (C.stateOfFinset A) ≤
@@ -407,12 +412,12 @@ theorem entropyReadout_le_candidate_of_maxEnt
   exact W.weight_le_candidate A hPrim hSupp
 
 /--
-A primitive MaxEnt property calibrates to objective maximality in any
+A primitive MaxEnt witness calibrates to objective maximality in any
 Souriau model satisfying `PrimitiveSouriauZetaCalibration`.
 -/
 theorem objectiveReadout_le_candidate_of_maxEnt
     {threshold : ℕ} {candidate A : Finset ℕ}
-    (W : FinitePrimitiveMaxEntData threshold candidate)
+    (W : FinitePrimitiveMaxEntWitness threshold candidate)
     (hPrim : PrimitiveFinset A)
     (hSupp : SupportedAboveFinset threshold A) :
     C.objectiveReadout (C.stateOfFinset A) ≤
@@ -425,7 +430,7 @@ theorem objectiveReadout_le_candidate_of_maxEnt
 theorem entropy_le_candidate_of_maxEnt
     {threshold : ℕ} {candidate A : Finset ℕ}
     (C : PrimitiveSouriauZetaCalibration State)
-    (W : FinitePrimitiveMaxEntData threshold candidate)
+    (W : FinitePrimitiveMaxEntWitness threshold candidate)
     (hPrim : PrimitiveFinset A)
     (hSupp : SupportedAboveFinset threshold A) :
     C.entropyReadout (C.stateOfFinset A) ≤
@@ -439,7 +444,7 @@ theorem entropy_le_candidate_of_maxEnt
 theorem objective_le_candidate_of_maxEnt
     {threshold : ℕ} {candidate A : Finset ℕ}
     (C : PrimitiveSouriauZetaCalibration State)
-    (W : FinitePrimitiveMaxEntData threshold candidate)
+    (W : FinitePrimitiveMaxEntWitness threshold candidate)
     (hPrim : PrimitiveFinset A)
     (hSupp : SupportedAboveFinset threshold A) :
     C.objectiveReadout (C.stateOfFinset A) ≤
@@ -454,7 +459,7 @@ Legacy compatibility: free-energy maximality follows from objective naming.
 -/
 theorem freeEnergyReadout_le_candidate_of_maxEnt
     {threshold : ℕ} {candidate A : Finset ℕ}
-    (W : FinitePrimitiveMaxEntData threshold candidate)
+    (W : FinitePrimitiveMaxEntWitness threshold candidate)
     (hPrim : PrimitiveFinset A)
     (hSupp : SupportedAboveFinset threshold A) :
     C.freeEnergyReadout (C.stateOfFinset A) ≤
@@ -467,7 +472,7 @@ theorem freeEnergyReadout_le_candidate_of_maxEnt
 theorem entropyReadout_le_candidate_of_admissible_maxEnt
     (A : PrimitiveAdmissibleFinset)
     {candidate : Finset ℕ}
-    (W : FinitePrimitiveMaxEntData A.threshold candidate) :
+    (W : FinitePrimitiveMaxEntWitness A.threshold candidate) :
     C.entropyReadout (C.stateOfFinset A.support) ≤
       C.entropyReadout (C.stateOfFinset candidate) := by
   rw [C.entropy_eq_primitiveWeightSum A.support,
@@ -478,7 +483,7 @@ theorem entropyReadout_le_candidate_of_admissible_maxEnt
 theorem objectiveReadout_le_candidate_of_admissible_maxEnt
     (A : PrimitiveAdmissibleFinset)
     {candidate : Finset ℕ}
-    (W : FinitePrimitiveMaxEntData A.threshold candidate) :
+    (W : FinitePrimitiveMaxEntWitness A.threshold candidate) :
     C.objectiveReadout (C.stateOfFinset A.support) ≤
       C.objectiveReadout (C.stateOfFinset candidate) := by
   rw [C.objective_eq_primitiveWeightSum A.support,
@@ -490,7 +495,7 @@ theorem entropy_le_candidate_of_admissible_maxEnt
     (A : PrimitiveAdmissibleFinset)
     {candidate : Finset ℕ}
     (C : PrimitiveSouriauZetaCalibration State)
-    (W : FinitePrimitiveMaxEntData A.threshold candidate) :
+    (W : FinitePrimitiveMaxEntWitness A.threshold candidate) :
     C.entropyReadout (C.stateOfFinset A.support) ≤
       C.entropyReadout (C.stateOfFinset candidate) :=
   by
@@ -503,7 +508,7 @@ theorem objective_le_candidate_of_admissible_maxEnt
     (A : PrimitiveAdmissibleFinset)
     {candidate : Finset ℕ}
     (C : PrimitiveSouriauZetaCalibration State)
-    (W : FinitePrimitiveMaxEntData A.threshold candidate) :
+    (W : FinitePrimitiveMaxEntWitness A.threshold candidate) :
     C.objectiveReadout (C.stateOfFinset A.support) ≤
       C.objectiveReadout (C.stateOfFinset candidate) :=
   by
@@ -514,7 +519,7 @@ theorem objective_le_candidate_of_admissible_maxEnt
 theorem freeEnergyReadout_le_candidate_of_admissible_maxEnt
     (A : PrimitiveAdmissibleFinset)
     {candidate : Finset ℕ}
-    (W : FinitePrimitiveMaxEntData A.threshold candidate) :
+    (W : FinitePrimitiveMaxEntWitness A.threshold candidate) :
     C.freeEnergyReadout (C.stateOfFinset A.support) ≤
       C.freeEnergyReadout (C.stateOfFinset candidate) := by
   rw [C.freeEnergy_eq_objective A.support,
@@ -558,6 +563,7 @@ def identityPrimitiveSouriauZetaCalibration :
   partitionReadout := primitiveFiniteZetaPartition
   entropyReadout := primitiveWeightSum
   objectiveReadout := primitiveWeightSum
+  freeEnergyReadout := primitiveWeightSum
   partition_eq_finiteZetaPartition := by
     intro A β
     rfl
@@ -565,6 +571,9 @@ def identityPrimitiveSouriauZetaCalibration :
     intro A
     rfl
   entropy_eq_objective := by
+    intro A
+    rfl
+  freeEnergy_eq_objective := by
     intro A
     rfl
 

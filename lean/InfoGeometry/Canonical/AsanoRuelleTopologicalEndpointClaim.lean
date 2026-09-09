@@ -35,7 +35,8 @@ theorem asanoRuelleTopologicalEndpointClaim_of_no_zero_left
     (hNondeg : A * D - B * C ≠ 0)
     (hQ : A + D * z = 0) :
     InfoGeometry.AsanoRuelle.asanoRuelleTopologicalEndpointClaim
-      K1 K2 B C D := by
+      K1 K2 hK1_closed hK2_closed hK2_bdd A B C D z
+        hPhi_zerofree hD hNondeg hQ := by
   exact asano_endpoint_disjunction_left
     A B C D K1 K2 hD hNondeg hK1_closed hK2_bdd
     hK1_no_zero hPhi_zerofree

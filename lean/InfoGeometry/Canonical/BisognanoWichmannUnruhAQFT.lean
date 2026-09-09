@@ -23,14 +23,8 @@ structure PhysicalConstants where
   kB : ℂ
 
 /-- Rindler Observer Acceleration Parameter. -/
-abbrev RindlerObserver := ℂ
-
-namespace RindlerObserver
-
-/-- Compatibility accessor for the native acceleration parameter. -/
-abbrev acc (obs : RindlerObserver) : ℂ := obs
-
-end RindlerObserver
+structure RindlerObserver where
+  acc : ℂ
 
 namespace BisognanoWichmannUnruh
 

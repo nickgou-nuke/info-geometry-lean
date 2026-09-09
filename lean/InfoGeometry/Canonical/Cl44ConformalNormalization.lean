@@ -1,6 +1,7 @@
 import Mathlib.Tactic.NormNum
 import InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
 import InfoGeometry.Exceptional.Freudenthal
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # `Cl(4,4)` conformal normalization
@@ -255,7 +256,7 @@ theorem freudenthal_e8_count :
 /--
 Triality belongs to the `D₄` Levi layer of the quadratic route.
 
-This is a dimension-normalized property saying that the triality package lives
+This is a dimension-normalized witness saying that the triality package lives
 over the `so(4,4)` rotation sector, not as an outer symmetry of the full
 `D₅` conformal closure.
 -/
@@ -293,10 +294,7 @@ end TrialityLeviPlacement
 
 /-! ## 6. Native operatorial conformal route -/
 
-open InfoGeometry.Canonical.PhaseSpaceConformalKKTBridge
-open InfoGeometry.Canonical.SouriauConformalKKT
-open ConformalGibbsSouriauOperatorContext
-open InfoGeometry.Quantum
+open InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
 
 section NativeOperatorRoute
 
@@ -313,13 +311,12 @@ closure owner.  This predicate records the actual master relation,
 operator-admissibility gate, Jordan--Lie closure, and triality-supercharge law.
 -/
 def NativeCl44ConformalRoute
-    (T : SplitTrialityKernel)
-    (C : ConformalGibbsSouriauOperatorContext (α := α) (H := H))
-    (tkkParameter : ℝ) : Prop :=
+    (P : SplitCl44TKKJordanLiePacket (α := α) (H := H)) : Prop :=
   QuadraticLightConeConformalRoute
-    ∧ C.SatisfiesOperatorTKKMasterRelation tkkParameter
-    ∧ C.IsOperatorAdmissible
-    ∧ T.trialitySupercharge.comp T.trialitySupercharge =
+    ∧ P.closure.gibbs.SatisfiesOperatorTKKMasterRelation P.closure.tkkParameter
+    ∧ P.closure.gibbs.IsOperatorAdmissible
+    ∧ P.closure.SatisfiesKKT_TKK_Weyl_JordanLieClosure
+    ∧ P.triality.trialitySupercharge.comp P.triality.trialitySupercharge =
         LinearMap.id
 
 /--
@@ -329,22 +326,31 @@ compatibility component.
 -/
 @[rep_depth transport]
 theorem nativeCl44ConformalRoute
-    (T : SplitTrialityKernel)
-    (C : ConformalGibbsSouriauOperatorContext (α := α) (H := H))
-    (tkkParameter : ℝ)
-    (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hOperatorAdmissible : C.IsOperatorAdmissible) :
-    NativeCl44ConformalRoute T C tkkParameter :=
+    (P : SplitCl44TKKJordanLiePacket (α := α) (H := H)) :
+    NativeCl44ConformalRoute P :=
   ⟨QuadraticLightConeConformalRoute.canonical,
-    hTKK,
-    hOperatorAdmissible,
-    SplitTrialityKernel.trialitySupercharge_sq_eq_id T⟩
+    P.tkkMasterRelation,
+    P.operatorAdmissible,
+    P.satisfiesKKT_TKK_Weyl_JordanLieClosure,
+    P.triality.trialitySupercharge_sq_eq_id⟩
+
 end NativeOperatorRoute
 
-theorem cl44ConformalNormalization_properties :
-    QuadraticLightConeConformalRoute ∧
-      SpinFactorConformalRoute ∧
-      TrialityLeviPlacement :=
+/-! ## 7. Compatibility owner target -/
+
+/--
+Compatibility target for the dimension normalization.  The actual operatorial
+owner is `NativeCl44ConformalRoute`.
+-/
+@[owner_target_tag]
+def Cl44ConformalNormalizationOwnerTarget : Prop :=
+  QuadraticLightConeConformalRoute
+    ∧ SpinFactorConformalRoute
+    ∧ TrialityLeviPlacement
+
+/-- The corrected normalization owner target is inhabited. -/
+theorem cl44ConformalNormalizationOwnerTarget :
+    Cl44ConformalNormalizationOwnerTarget :=
   ⟨QuadraticLightConeConformalRoute.canonical,
     SpinFactorConformalRoute.canonical,
     TrialityLeviPlacement.canonical⟩

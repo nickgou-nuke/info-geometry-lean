@@ -64,28 +64,6 @@ variable {P : HestenesKreinKMSPacket (E := E)}
 variable {V : HestenesKreinVacuum P}
 variable (B : Bridge P V)
 
-@[simp] theorem detUnits_one : B.detUnits 1 = 1 := by
-  exact map_one B.detUnits
-
-@[simp] theorem log_det_one :
-    Real.log ((B.detUnits 1 : ℝˣ) : ℝ) = 0 := by
-  rw [B.detUnits_one]
-  simp
-
-theorem log_det_inv_eq_neg_log_det (U : Units EndH) :
-    Real.log ((B.detUnits U⁻¹ : ℝˣ) : ℝ) =
-      -Real.log ((B.detUnits U : ℝˣ) : ℝ) := by
-  rw [map_inv]
-  simpa using Real.log_inv ((B.detUnits U : ℝˣ) : ℝ)
-
-theorem vacuumExpectation_opLog_inv_eq_neg
-    (U : Units EndH) :
-    V.vacuumRealState (B.opLog ((U⁻¹ : Units EndH) : EndH)) =
-      -V.vacuumRealState (B.opLog (U : EndH)) := by
-  rw [← B.log_det_eq_vacuumExpectation U⁻¹,
-    ← B.log_det_eq_vacuumExpectation U]
-  exact B.log_det_inv_eq_neg_log_det U
-
 
 /--
 Logarithmic product law for the multiplicative determinant/phase-volume channel.
@@ -102,17 +80,6 @@ theorem log_det_product_eq_sum_log_det
   have hW : ((B.detUnits W : ℝˣ) : ℝ) ≠ 0 := Units.ne_zero _
   rw [map_mul B.detUnits U W]
   simpa using Real.log_mul hU hW
-
-theorem log_det_product_comm (U W : Units EndH) :
-    Real.log ((B.detUnits (U * W) : ℝˣ) : ℝ) =
-      Real.log ((B.detUnits (W * U) : ℝˣ) : ℝ) := by
-  rw [B.log_det_product_eq_sum_log_det, B.log_det_product_eq_sum_log_det]
-  exact add_comm _ _
-
-theorem detUnits_conj (U W : Units EndH) :
-    B.detUnits (U * W * U⁻¹) = B.detUnits W := by
-  simp only [map_mul, map_inv]
-  simp [mul_assoc]
 
 /--
 Log-determinant product law read through Hestenes/Krein vacuum expectations.
@@ -162,22 +129,6 @@ theorem vacuumExpectation_list_sum
         _ = V.vacuumRealState A +
               (atoms.map (fun A : EndH => V.vacuumRealState A)).sum := by
                 rw [ih]
-
-theorem vacuumExpectation_list_sum_append
-    (atoms₁ atoms₂ : List EndH) :
-    V.vacuumRealState (atoms₁ ++ atoms₂).sum =
-      V.vacuumRealState atoms₁.sum + V.vacuumRealState atoms₂.sum := by
-  calc
-    V.vacuumRealState (atoms₁ ++ atoms₂).sum =
-        ((atoms₁ ++ atoms₂).map
-          (fun A : EndH => V.vacuumRealState A)).sum :=
-      vacuumExpectation_list_sum (V := V) (atoms₁ ++ atoms₂)
-    _ = (atoms₁.map (fun A : EndH => V.vacuumRealState A)).sum +
-        (atoms₂.map (fun A : EndH => V.vacuumRealState A)).sum := by
-      rw [List.map_append, List.sum_append]
-    _ = V.vacuumRealState atoms₁.sum + V.vacuumRealState atoms₂.sum := by
-      rw [vacuumExpectation_list_sum (V := V) atoms₁,
-        vacuumExpectation_list_sum (V := V) atoms₂]
 
 /--
 If a finite Wigner--Jones/symmetry atom family splits the identity, then its

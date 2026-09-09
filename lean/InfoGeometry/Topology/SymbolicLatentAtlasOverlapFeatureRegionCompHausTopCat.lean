@@ -125,5 +125,3 @@ theorem SymbolicLatentAtlas.overlapFeatureRegionObservation_transition_symm_comm
   exact congrFun (H.symm.intertwines_on_overlap x.1 hxji) l
 
 end InfoGeometry.Topology
-
-end

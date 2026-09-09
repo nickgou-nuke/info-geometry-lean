@@ -72,6 +72,5 @@ theorem SymbolicLatentModularFlow.orbitClosureFlowCompHausHom_trans_apply
     Φ.act (t + s) y.1 = Φ.act (s + t) y.1 := by rw [add_comm]
     _ = Φ.act s (Φ.act t y.1) := Φ.add_apply s t y.1
 
-end InfoGeometry.Topology
 
-end
+end InfoGeometry.Topology

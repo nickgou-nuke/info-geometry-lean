@@ -3,6 +3,7 @@ import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra
 
 /-!
 # The Weyl-Ordered Berry–Keating Dilation Bridge
@@ -92,6 +93,33 @@ theorem map_one : D 1 = 0 := by
 
 end ComplexDerivation
 
+/-- The function-field presentation and the operator-form owner's linear-map
+presentation carry exactly the same derivations. -/
+def complexDerivationEquivOpDerivation :
+    ComplexDerivation A ≃
+      InfoGeometry.OperatorAlgebra.ExteriorAlgebra.OpDerivation ℂ A where
+  toFun D :=
+    { toLinearMap :=
+        { toFun := D.toFun
+          map_add' := D.map_add'
+          map_smul' := D.map_smul' }
+      leibniz' := D.leibniz' }
+  invFun D :=
+    { toFun := D.toLinearMap
+      map_add' := D.toLinearMap.map_add
+      map_smul' := D.toLinearMap.map_smul
+      leibniz' := D.leibniz' }
+  left_inv D := by cases D; rfl
+  right_inv D := by cases D; rfl
+
+@[simp] theorem complexDerivationEquivOpDerivation_apply
+    (D : ComplexDerivation A) (X : A) :
+    complexDerivationEquivOpDerivation D X = D X := rfl
+
+@[simp] theorem complexDerivationEquivOpDerivation_symm_apply
+    (D : InfoGeometry.OperatorAlgebra.ExteriorAlgebra.OpDerivation ℂ A) (X : A) :
+    complexDerivationEquivOpDerivation.symm D X = D X := rfl
+
 /-!
 =============================================================================
 PART 1: The Dimensionless Symmetrized Operator B_{D, K}
@@ -106,9 +134,24 @@ def opQ (K X : A) : A :=
 def opP (D : ComplexDerivation A) (X : A) : A :=
   D X
 
-/-- Euler / Dilation derivation: Θ(X) = K * D(X). -/
+/-- Euler operator: Θ(X) = K * D(X). On a noncommutative algebra this need
+not be a derivation; its Leibniz defect is computed below. -/
 def opEuler (K : A) (D : ComplexDerivation A) (X : A) : A :=
   K * D X
+
+/-- The obstruction to the Euler operator satisfying the Leibniz rule. -/
+theorem opEuler_leibniz_defect (K : A) (D : ComplexDerivation A) (X Y : A) :
+    opEuler K D (X * Y) - (opEuler K D X * Y + X * opEuler K D Y) =
+      (K * X - X * K) * D Y := by
+  simp only [opEuler, D.leibniz, mul_add, sub_mul, mul_assoc]
+  abel
+
+/-- Commutation of the coordinate with the first factor removes the defect. -/
+theorem opEuler_leibniz_of_commute (K : A) (D : ComplexDerivation A) (X Y : A)
+    (h : Commute K X) :
+    opEuler K D (X * Y) = opEuler K D X * Y + X * opEuler K D Y := by
+  apply sub_eq_zero.mp
+  rw [opEuler_leibniz_defect, h.eq, sub_self, zero_mul]
 
 /-- General commutator of operators on A. -/
 def opComm (T₁ T₂ : A → A) (X : A) : A :=

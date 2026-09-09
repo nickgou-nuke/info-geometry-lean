@@ -102,6 +102,36 @@ theorem three_coordinate_trace (x y z : ℂ) :
   simp [gradedBitSelector, finiteBooleanTrace]
   ring
 
+/-- Arbitrary finite Boolean trace also equals the finite Mobius/Fock product. -/
+theorem finite_uhf_boolean_trace_synthesis :
+    (∀ xs : List ℂ, finiteBooleanTrace xs = gradedProduct xs) ∧
+    (∀ xs : List ℂ, ∀ x : ℂ,
+      finiteBooleanTrace (xs ++ [x]) = finiteBooleanTrace xs * (1 - x)) ∧
+    (∀ x : ℂ, gradedBitSelector false x + gradedBitSelector true x = 1 - x) ∧
+    (∀ x y : ℂ,
+      (gradedBitSelector false x * gradedBitSelector false y) +
+        (gradedBitSelector false x * gradedBitSelector true y) +
+        (gradedBitSelector true x * gradedBitSelector false y) +
+        (gradedBitSelector true x * gradedBitSelector true y)
+        =
+      finiteBooleanTrace [x, y]) ∧
+    (∀ x y z : ℂ,
+      (gradedBitSelector false x * gradedBitSelector false y * gradedBitSelector false z) +
+        (gradedBitSelector false x * gradedBitSelector false y * gradedBitSelector true z) +
+        (gradedBitSelector false x * gradedBitSelector true y * gradedBitSelector false z) +
+        (gradedBitSelector false x * gradedBitSelector true y * gradedBitSelector true z) +
+        (gradedBitSelector true x * gradedBitSelector false y * gradedBitSelector false z) +
+        (gradedBitSelector true x * gradedBitSelector false y * gradedBitSelector true z) +
+        (gradedBitSelector true x * gradedBitSelector true y * gradedBitSelector false z) +
+        (gradedBitSelector true x * gradedBitSelector true y * gradedBitSelector true z)
+        =
+      finiteBooleanTrace [x, y, z]) := by
+  exact ⟨finiteBooleanTrace_eq_gradedProduct,
+    finiteBooleanTrace_snoc,
+    one_coordinate_trace,
+    two_coordinate_trace,
+    three_coordinate_trace⟩
+
 end FiniteUHFBooleanTrace
 
 end noncomputable section

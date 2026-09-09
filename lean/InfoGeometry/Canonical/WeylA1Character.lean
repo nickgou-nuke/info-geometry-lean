@@ -130,7 +130,7 @@ theorem su2Character_eq_div
 /--
 The diagonal-torus `SU(2)` Weyl quotient
 `χ_m(e^{iθ}) = (e^{i(m+1)θ} - e^{-i(m+1)θ}) / (e^{iθ} - e^{-iθ})`,
-under the explicit nonzero-denominator property.
+under the explicit nonzero-denominator hypothesis.
 -/
 @[rep_depth thermo]
 theorem su2Character_exp_eq_div
@@ -147,7 +147,7 @@ theorem su2Character_exp_eq_div
 /--
 The diagonal-torus `SU(2)` Weyl quotient in the classical sine form
 `χ_m(e^{iθ}) = sin((m+1)θ) / sin θ`, under the explicit nonzero-denominator
-property.
+hypothesis.
 -/
 @[rep_depth thermo]
 theorem su2Character_exp_eq_sin_div

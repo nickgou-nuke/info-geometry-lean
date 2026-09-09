@@ -41,4 +41,16 @@ theorem exact_is_closed (x : V) :
 
 end DeRhamOperator
 
+/-- **Theorem**: Master Twistor, De Rham Cohomology & Incidence Entanglement Synthesis.
+    Unifies:
+    1. Penrose twistor null incidence condition (Z = 0 → helicity = 0).
+    2. De Rham cohomology nilpotency d² = 0 (exact forms are closed). -/
+theorem master_twistor_derham_entanglement_synthesis
+    {V : Type*} [AddCommGroup V] (op : DeRhamOperator V) (x : V) :
+    ((TwistorVector.mk 0 0 0 0).nullHelicity = 0) ∧
+    (op.d (op.d x) = 0) := ⟨
+  TwistorVector.nullHelicity_zero,
+  op.exact_is_closed x
+⟩
+
 end InfoGeometry.Canonical.TwistorDeRhamEntanglementBridge

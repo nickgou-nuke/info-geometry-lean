@@ -371,7 +371,7 @@ theorem fisher_positive_definite
 noncomputable def expLogPotential
     {d : ℕ}
     (F : FiniteExpFamily (α := α) d) :
-    InfoGeometry.LogPotential (Fin d → ℝ) :=
-  fun θ => logPartition F θ
+    InfoGeometry.LogPotential (Fin d → ℝ) where
+  ψ := logPartition F
 
 end InfoGeometry.Information

@@ -1,55 +1,67 @@
 import InfoGeometry.SuperMetriplectic.Axioms
+import InfoGeometry.Canonical.MoorePenrose
+import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Meta.Architecture
 
 /-!
-# Native Schur/Drazin inverse bridge
+# SuperMetriplectic Inverse Bridge
 
-The former owner converted scalar inverse records over `ℝ`.  The maintained
-interface is generic in the noncommutative carrier: inverse laws are fields of
-`OperatorSchurDrazinBlock`, and these lemmas merely expose them at the public
-boundary.
+Small theorem-backed bridge from the conservative scalar inverse-shadow packets in
+`SuperMetriplectic.Axioms` to the repo-owned inverse predicates in
+`Canonical.MoorePenrose` and `Canonical.Drazin`.
+
+This file does not manufacture operatorial inverse kernels from scalar data.
+It only certifies that the scalar shadow structures are honest instances of the
+same inverse laws on the one-dimensional body lane, and that the hidden block in
+`ScalarSchurDrazinBlock` carries those certified scalar shadows.
 -/
 
 namespace InfoGeometry.SuperMetriplectic.InverseBridge
 
-open InfoGeometry.Canonical.MoorePenrose
-open InfoGeometry.Canonical.Drazin
+open InfoGeometry.Canonical
 
-variable {A : Type*} [Ring A] [StarRing A]
+/--
+A scalar Penrose witness is an honest Moore-Penrose inverse witness on `ℝ`.
+-/
+@[rep_depth transport]
+theorem toIsMoorePenroseInverse
+    (P : InfoGeometry.SuperMetriplectic.ScalarPenroseInverse) :
+    MoorePenrose.IsMoorePenroseInverse P.a P.aPlus := by
+  refine MoorePenrose.IsMoorePenroseInverse.mk ?_ ?_ ?_ ?_
+  · exact P.aba
+  · exact P.bab
+  · simp
+  · simp
 
-@[rep_depth operator]
-theorem block_hasMoorePenroseInverse
-    (B : OperatorSchurDrazinBlock A) :
-    IsMoorePenroseInverse B.LΘΘ B.penroseElement :=
-  B.penrose_is_inverse
+/--
+A scalar Drazin witness is an honest Drazin inverse witness on `ℝ`.
+-/
+@[rep_depth transport]
+theorem toIsDrazinInverse
+    (D : InfoGeometry.SuperMetriplectic.ScalarDrazinInverse) :
+    Drazin.IsDrazinInverse D.a D.aD D.index := by
+  exact Drazin.IsDrazinInverse.mk D.commute D.reflexive D.spectral
 
-@[rep_depth operator]
-theorem block_hasDrazinInverse
-    (B : OperatorSchurDrazinBlock A) :
-    IsDrazinInverse B.LΘΘ B.drazinElement B.index :=
-  B.drazin_is_inverse
+/--
+The hidden scalar block of a `ScalarSchurDrazinBlock` carries a certified
+Moore-Penrose shadow witness.
+-/
+@[rep_depth transport]
+theorem hiddenBlock_hasMoorePenroseShadow
+    (B : InfoGeometry.SuperMetriplectic.ScalarSchurDrazinBlock) :
+    MoorePenrose.IsMoorePenroseInverse B.LΘΘ B.penrose.aPlus := by
+  have hP := toIsMoorePenroseInverse B.penrose
+  simpa [B.penrose_matches_hidden] using hP
 
-@[rep_depth operator]
-theorem block_drazinProjection_idempotent
-    (B : OperatorSchurDrazinBlock A) :
-    (B.LΘΘ * B.drazinElement) * (B.LΘΘ * B.drazinElement) =
-      B.LΘΘ * B.drazinElement := by
-  exact IsDrazinInverse.projection_is_idempotent B.drazin_is_inverse
-
-@[rep_depth operator]
-theorem block_drazinComplementaryProjection_idempotent
-    (B : OperatorSchurDrazinBlock A) :
-    (1 - B.LΘΘ * B.drazinElement) *
-        (1 - B.LΘΘ * B.drazinElement) =
-      1 - B.LΘΘ * B.drazinElement := by
-  exact IsDrazinInverse.complementaryProjection_is_idempotent B.drazin_is_inverse
-
-@[rep_depth operator]
-theorem block_penroseRangeProjection_idempotent
-    (B : OperatorSchurDrazinBlock A) :
-    (B.LΘΘ * B.penroseElement) *
-        (B.LΘΘ * B.penroseElement) =
-      B.LΘΘ * B.penroseElement := by
-  exact IsMoorePenroseInverse.rightProjector_idempotent B.penrose_is_inverse
+/--
+The hidden scalar block of a `ScalarSchurDrazinBlock` carries a certified Drazin
+shadow witness.
+-/
+@[rep_depth transport]
+theorem hiddenBlock_hasDrazinShadow
+    (B : InfoGeometry.SuperMetriplectic.ScalarSchurDrazinBlock) :
+    Drazin.IsDrazinInverse B.LΘΘ B.drazin.aD B.drazin.index := by
+  have hD := toIsDrazinInverse B.drazin
+  simpa [B.drazin_matches_hidden] using hD
 
 end InfoGeometry.SuperMetriplectic.InverseBridge

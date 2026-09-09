@@ -14,7 +14,7 @@ Jaynes data.  The key point is deliberately modest:
 * then it sends the additive centered score to the next additive centered
   score.
 
-With an additional explicit mass-preservation property, equal-mass Jaynes
+With an additional explicit mass-preservation hypothesis, equal-mass Jaynes
 pairs transport to equal-mass Jaynes pairs.
 
 No probability measure limit.
@@ -47,7 +47,7 @@ def PreservesMass (Φ : ProfileTransport ι κ) : Prop :=
 /-- A profile transport sends one finite reference state to another. -/
 def MapsReference (Φ : ProfileTransport ι κ)
     (R : FiniteReferenceState ι) (S : FiniteReferenceState κ) : Prop :=
-  Φ R = S
+  Φ R.weight = S.weight
 
 /-- A profile transport sends one observation profile to another. -/
 def MapsObservation (Φ : ProfileTransport ι κ)
@@ -68,7 +68,7 @@ theorem map_centeredScore
     (hobs : MapsObservation Φ obs obs') :
     Φ (centeredScore R obs) = centeredScore S obs' := by
   unfold centeredScore
-  rw [hsub obs R, hobs, href]
+  rw [hsub obs R.weight, hobs, href]
 
 /-- Equal-mass Jaynes compatibility transports along a mass-preserving map. -/
 theorem map_equal_mass
@@ -84,9 +84,9 @@ theorem map_equal_mass
   calc
     ∑ j : κ, obs' j = ∑ j : κ, (Φ obs) j := by rw [hobs]
     _ = ∑ i : ι, obs i := hmassΦ obs
-    _ = ∑ i : ι, R i := hmass
-    _ = ∑ j : κ, (Φ R) j := by rw [hmassΦ R]
-    _ = ∑ j : κ, S j := by rw [href]
+    _ = ∑ i : ι, R.weight i := hmass
+    _ = ∑ j : κ, (Φ R.weight) j := by rw [hmassΦ R.weight]
+    _ = ∑ j : κ, S.weight j := by rw [href]
 
 /-- Build the next finite Jaynes pair from a compatible mass-preserving transport. -/
 def transportJaynesPair
@@ -97,10 +97,11 @@ def transportJaynesPair
     (hmassΦ : PreservesMass Φ)
     (href : MapsReference Φ P.reference S)
     (hobs : MapsObservation Φ P.observation obs') :
-    FiniteJaynesPair κ :=
-  ⟨{ reference := S
-     observation := obs' }, by
-      exact map_equal_mass Φ P.reference S P.observation obs' hmassΦ href hobs P.equal_mass⟩
+    FiniteJaynesPair κ where
+  reference := S
+  observation := obs'
+  equal_mass := by
+    exact map_equal_mass Φ P.reference S P.observation obs' hmassΦ href hobs P.equal_mass
 
 /-- The transported Jaynes pair has the transported centered score. -/
 theorem transportJaynesPair_centeredScore
@@ -115,7 +116,6 @@ theorem transportJaynesPair_centeredScore
     Φ (centeredScore P.reference P.observation) =
       centeredScore (transportJaynesPair Φ P S obs' hmassΦ href hobs).reference
         (transportJaynesPair Φ P S obs' hmassΦ href hobs).observation := by
-  change Φ (centeredScore P.reference P.observation) = centeredScore S obs'
   exact map_centeredScore Φ P.reference S P.observation obs' hsub href hobs
 
 omit [Fintype ι] in

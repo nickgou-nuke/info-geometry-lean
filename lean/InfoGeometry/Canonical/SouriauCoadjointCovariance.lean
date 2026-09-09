@@ -16,17 +16,9 @@ abbrev LieDual (V : Type*) [NormedAddCommGroup V] [NormedSpace ℝ V] :=
 def coadjoint (Ad : V ≃L[ℝ] V) : LieDual V → LieDual V :=
   fun μ => μ.comp (Ad.symm : V →L[ℝ] V)
 
-abbrev LieGroupAction (G V : Type*)
-    [NormedAddCommGroup V] [NormedSpace ℝ V] :=
-  G → V ≃L[ℝ] V
-
-namespace LieGroupAction
-
-abbrev Ad {G V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
-    (act : LieGroupAction G V) : G → V ≃L[ℝ] V :=
-  act
-
-end LieGroupAction
+structure LieGroupAction (G V : Type*)
+    [NormedAddCommGroup V] [NormedSpace ℝ V] where
+  Ad : G → V ≃L[ℝ] V
 
 structure SouriauThermodynamicAction (G V : Type*)
     [NormedAddCommGroup V] [NormedSpace ℝ V] where
@@ -64,48 +56,6 @@ theorem dual_pairing_invariance
     (act : LieGroupAction G V) (g : G)
     (μ : LieDual V) (β : V) :
     coadjoint (act.Ad g) μ (act.Ad g β) = μ β := by
-  simp [coadjoint]
-
-/-! ## Differential transport of a potential -/
-
-theorem hasFDerivAt_precompose_inverse
-    (g : V ≃L[ℝ] V) (ψ : V → ℝ) (x : V)
-    (φ : V →L[ℝ] ℝ) (hψ : HasFDerivAt ψ φ x) :
-    HasFDerivAt (fun y => ψ (g.symm y))
-      (φ.comp (g.symm : V →L[ℝ] V)) (g x) := by
-  have hg : HasFDerivAt (fun y : V => g.symm y)
-      (g.symm : V →L[ℝ] V) (g x) := g.symm.hasFDerivAt
-  have hψ' : HasFDerivAt ψ φ (g.symm (g x)) := by
-    simpa using hψ
-  simpa [Function.comp_def] using hψ'.comp (g x) hg
-
-theorem hasFDerivAt_precompose_inverse_coadjoint
-    (g : V ≃L[ℝ] V) (ψ : V → ℝ) (x : V)
-    (φ : LieDual V) (hψ : HasFDerivAt ψ φ x) :
-    HasFDerivAt (fun y => ψ (g.symm y))
-      (coadjoint g φ) (g x) := by
-  simpa [coadjoint] using
-    hasFDerivAt_precompose_inverse g ψ x φ hψ
-
-theorem legendreMap_precompose_inverse_naturality
-    (g : V ≃L[ℝ] V) (ψ : V → ℝ)
-    (legendre : V → LieDual V) (x : V)
-    (hlegendre : HasFDerivAt ψ (legendre x) x) :
-    HasFDerivAt (fun y => ψ (g.symm y))
-      (coadjoint g (legendre x)) (g x) := by
-  exact hasFDerivAt_precompose_inverse_coadjoint
-    g ψ x (legendre x) hlegendre
-
-theorem legendre_pairing_transport_invariant
-    (g : V ≃L[ℝ] V) (legendre : V → LieDual V)
-    (x v : V) :
-    coadjoint g (legendre x) (g v) = legendre x v := by
-  simp [coadjoint]
-
-theorem coadjoint_symm_coadjoint
-    (g : V ≃L[ℝ] V) (μ : LieDual V) :
-    coadjoint g.symm (coadjoint g μ) = μ := by
-  ext v
   simp [coadjoint]
 
 /-- Souriau Group Entropy S(β) = ⟨β, Q(β)⟩ + Ψ(β) -/
@@ -158,28 +108,6 @@ theorem souriau_entropy_linear_invariance
   rw [heatVector_linear_covariance sys g h_heat_cov h_zero_cocycle β]
   rw [Psi_linear_invariance sys g h_Psi_cov h_zero_cocycle β]
   rw [dual_pairing_invariance sys.action g (sys.heatVector β) β]
-
-/-- 🏆 THEOREM 5: Full Affine Invariance of Souriau Entropy
-    S(Ad_g β) = S(β) unconditionally, because the symplectic cocycle anomalies
-    in the Massieu potential and the heat vector exactly cancel. -/
-theorem souriau_entropy_affine_invariance
-    (sys : SouriauThermodynamicAction G V)
-    (g : G)
-    (h_Psi_cov : ∀ (g : G) (β : V),
-      sys.Psi (sys.action.Ad g β) = sys.Psi β - sys.cocycle g (sys.action.Ad g β))
-    (h_heat_cov : ∀ (g : G) (β : V),
-      sys.heatVector (sys.action.Ad g β) =
-        coadjoint (sys.action.Ad g) (sys.heatVector β) + sys.cocycle g)
-    (β : V) :
-    souriauEntropy sys (sys.action.Ad g β) = souriauEntropy sys β := by
-  dsimp [souriauEntropy]
-  rw [h_heat_cov g β]
-  rw [h_Psi_cov g β]
-  have h_eval : (coadjoint (sys.action.Ad g) (sys.heatVector β) + sys.cocycle g) (sys.action.Ad g β) =
-      coadjoint (sys.action.Ad g) (sys.heatVector β) (sys.action.Ad g β) + sys.cocycle g (sys.action.Ad g β) := rfl
-  rw [h_eval]
-  rw [dual_pairing_invariance sys.action g (sys.heatVector β) β]
-  ring
 
 /- The finite-dimensional linear action maps are continuous in the product
   topology on `n → ℝ`; this is the topological action edge underlying the

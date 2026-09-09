@@ -10,7 +10,7 @@ import Mathlib.Tactic
 Explicit free-entropy diffusion bridge on the canonical Souriau and current
 owner surfaces.
 
-This file does not introduce a heuristic diffusion model or a bundled interface.
+This file does not introduce a heuristic diffusion model or a bundled socket.
 It names the free-entropy potential explicitly as the Souriau Massieu
 potential, reads its score derivatives from the owner theorems, and packages
 the finite Fisher/Onsager packet together with the completed current H²

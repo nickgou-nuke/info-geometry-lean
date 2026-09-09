@@ -12,7 +12,7 @@ electromagnetic potential $A_\mu$ and the electromagnetic tensor $F_{\mu\nu}$.
 
 ## The Grade-Parity Obstruction
 
-The user property proposes:
+The user hypothesis proposes:
 $$A_\mu = \xi \text{Tr}[Q^* \gamma_5 \gamma_\mu Q]$$
 $$F_{\mu\nu} = \eta \text{Tr}[Q^* \gamma_5 [\gamma_\mu, \gamma_\nu] Q]$$
 

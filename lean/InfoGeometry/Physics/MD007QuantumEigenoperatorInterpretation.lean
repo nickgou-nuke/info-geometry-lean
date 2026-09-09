@@ -222,6 +222,27 @@ theorem depolarizing_E21 (p : ℂ) :
     simp [depolarizingChannel, trace2, E21, UnifiedMatrixBasis.I₂, Fin.sum_univ_two]
     <;> ring
 
+/-- Repaired theorem-safe Chapter 7 finite quantum/eigenoperator packet. -/
+theorem repaired_MD007_quantum_eigenoperator_packet (ρ : MatrixQuantumCarrier) (p : ℂ) :
+    outer ket1 ket1 = E11 ∧
+    outer ket1 ket2 = E12 ∧
+    ρ = ρ 0 0 • E11 + ρ 0 1 • E12 + ρ 1 0 • E21 + ρ 1 1 • E22 ∧
+    expectation E11 ρ = ρ 0 0 ∧
+    expectation E12 ρ = ρ 1 0 ∧
+    expectation UnifiedMatrixBasis.σ₁ ρ = ρ 1 0 + ρ 0 1 ∧
+    expectation UnifiedMatrixBasis.σ₃ ρ = ρ 0 0 - ρ 1 1 ∧
+    E11 * ρ * E11 = ρ 0 0 • E11 ∧
+    UnifiedMatrixBasis.σ₁ = E12 + E21 ∧
+    trace2 (depolarizingChannel p ρ) = trace2 ρ ∧
+    depolarizingChannel p E12 = (1 - p) • E12 := by
+  exact ⟨outer_ket1_ket1, outer_ket1_ket2, operator_decompose ρ,
+    expectation_E11 ρ, expectation_E12 ρ,
+    expectation_sigma1 ρ, expectation_sigma3 ρ,
+    luders_numerator_E11 ρ,
+    sigma1_eigenoperator_decomposition,
+    depolarizing_trace p ρ,
+    depolarizing_E12 p⟩
+
 end InfoGeometry.Physics.MD007QuantumEigenoperatorInterpretation
 
 end noncomputable section

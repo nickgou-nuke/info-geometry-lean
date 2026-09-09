@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/DIIISuperfluid.lean
 
-Class DIII superfluid/BdG symmetry definitions.
+Class DIII superfluid/BdG symmetry sockets.
 
 This module keeps DIII as a concrete physical symmetry-class branch:
 
@@ -16,6 +16,7 @@ or a richer index/winding datum depending on dimension and interaction regime.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -35,7 +36,7 @@ abbrev EndR
 /--
 Algebraic DIII sign datum.
 
-This is the pure sign skeleton behind the real-linear DIII maps.  It proves
+This is the pure sign skeleton behind the real-linear DIII sockets.  It proves
 the formal consequences of the Altland-Zirnbauer DIII signs without choosing a
 particular carrier or Hamiltonian representation.
 -/
@@ -253,7 +254,7 @@ structure DIIISuperfluidDatum
   Xi_BdG :
     Xi.comp BdG = -(BdG.comp Xi)
 
-  /-- Time-reversal symmetry in the real-space/no-momentum-reversal model. -/
+  /-- Time-reversal symmetry in the real-space/no-momentum-reversal socket. -/
   Theta_BdG :
     Theta.comp BdG = BdG.comp Theta
 
@@ -359,6 +360,12 @@ variable
     [NormedAddCommGroup H] [NormedSpace ℝ H]
     (D : MomentumDIIISuperfluidDatum Kpt H)
 
+/-- Momentum reversal is an involution. -/
+alias invK_invK := MomentumDIIISuperfluidDatum.invK_involutive
+
+/-- Re-export the chiral oddness law. -/
+alias chiral_odd := MomentumDIIISuperfluidDatum.chiral
+
 end MomentumDIIISuperfluidDatum
 
 /-! ## 4. Owner theorem -/
@@ -371,7 +378,7 @@ operators, and topological invariant must be supplied by a model.  What it
 proves is not mere inhabitation; it exposes the kernel-checked sign,
 phase-reversal, chiral, and BdG covariance laws carried by that datum.
 -/
-theorem dIIISuperfluid_properties :
+theorem dIIISuperfluidOwnerTarget :
   ∀ (H : Type uH) [NormedAddCommGroup H] [NormedSpace ℝ H],
     ∀ D : DIIISuperfluidDatum H,
       D.K.comp D.K = -(ContinuousLinearMap.id ℝ H) ∧

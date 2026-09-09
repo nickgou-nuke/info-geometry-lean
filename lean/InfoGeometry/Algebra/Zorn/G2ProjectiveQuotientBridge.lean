@@ -20,6 +20,8 @@ geometry via quotients and covering maps.
 
 /-! ## Step 1: SplitOctF2 cardinality -/
 
+instance : Zero SplitOctF2 := ⟨zero⟩
+
 theorem splitOctF2_card_eq_256 : Fintype.card SplitOctF2 = 256 := splitOctF2_card
 
 /-! ## Step 2: Projective space -/
@@ -42,7 +44,7 @@ noncomputable instance : MulAction SplitOctF2Aut projectiveSplitOctF2 where
   smul g v := ⟨(g.1).symm v.1, by
     intro h
     have h0 : g.1 0 = 0 := by
-      have hadd := g.2.2.1 0 (0 : SplitOctF2)
+      have hadd := g.2.2.1 0 0
       have hself : add (g.1 0) (g.1 0) = 0 := add_self (g.1 0)
       have h00 : add 0 0 = 0 := add_self 0
       rw [h00] at hadd
@@ -56,14 +58,10 @@ noncomputable instance : MulAction SplitOctF2Aut projectiveSplitOctF2 where
   ⟩
   one_smul v := by
     apply Subtype.ext
-    change (1 : SplitOctF2Aut).1.symm v.1 = v.1
-    dsimp [One.one, refl_symm]
     rfl
   mul_smul g h v := by
     apply Subtype.ext
-    change (g * h).1.symm v.1 = g.1.symm (h.1.symm v.1)
-    change (g.1.trans h.1).symm v.1 = g.1.symm (h.1.symm v.1)
-    rw [symm_trans_apply]
+    rfl
 
 /-- The action is faithful on projective space. -/
 theorem projective_action_faithful (g : SplitOctF2Aut)
@@ -72,15 +70,14 @@ theorem projective_action_faithful (g : SplitOctF2Aut)
   apply Equiv.ext
   intro X
   have h0 : g.1 0 = 0 := by
-    have hadd := g.2.2.1 0 (0 : SplitOctF2)
+    have hadd := g.2.2.1 0 0
     have hself : add (g.1 0) (g.1 0) = 0 := add_self (g.1 0)
     have h00 : add 0 0 = 0 := add_self 0
     rw [h00] at hadd
     exact hadd.trans hself
   by_cases hX : X = 0
   · rw [hX, h0]
-    have h₁ : (1 : SplitOctF2Aut) = ⟨Equiv.refl _, _⟩ := rfl
-    simp [h₁, Equiv.refl_apply]
+    rfl
   · have hproj := h ⟨X, hX⟩
     dsimp at hproj
     have h' : g.1.symm X = X := Subtype.mk.inj hproj

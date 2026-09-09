@@ -16,7 +16,7 @@ pure-braid matrix audit does not carry:
 
 The proved content here is intentionally minimal:
 
-* `DelaunayFlipMorphism` transports the existing move property;
+* `DelaunayFlipMorphism` transports the existing move witness;
 * `matrix_of_morphism_well_defined` is exactly the already-proved Rohozhkin
   matrix invariance under `DelaunayEquiv`;
 * the compensation field carries concrete Cl(1,1) relations.
@@ -34,13 +34,8 @@ open InfoGeometry.Canonical.ConformalFiveGradeInversion
 open InfoGeometry.Canonical.Globality
 
 /-- An object in the Delaunay flip groupoid boundary is a witnessed flip word. -/
-abbrev DelaunayFlipObject (n : ℕ) := DelaunayFlipWord n
-
-namespace DelaunayFlipObject
-
-abbrev word {n : ℕ} (X : DelaunayFlipObject n) : DelaunayFlipWord n := X
-
-end DelaunayFlipObject
+structure DelaunayFlipObject (n : ℕ) where
+  word : DelaunayFlipWord n
 
 /--
 Finite local compensation data carried alongside a Delaunay object.

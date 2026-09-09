@@ -19,6 +19,7 @@ open InfoGeometry.Lie.SplitOctonionAxialPeirceTrifactor
 open InfoGeometry.Lie.SplitOctonionAxialDrazinDefect
 open InfoGeometry.Singular.Drazin
 open InfoGeometry.Canonical.ZornMatrix
+open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 abbrev CZ := InfoGeometry.Canonical.ZornMatrix ℝ
 
@@ -118,17 +119,19 @@ theorem axialCartanFlow_commutes_activeDefectInvolution
 preserves the native Zorn determinant, hence the transported Klein null cone. -/
 theorem axialCartanFlow_preserves_active_det
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) (Z : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
         (axialActiveSupport (axialCartanFlow k t Z)) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (axialActiveSupport Z) := by
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
+        (axialActiveSupport Z) := by
   rw [axialCartanFlow_commutes_activeSupport]
   exact axialCartanCompositionAut_preserves_det k hk t (axialActiveSupport Z)
 
 theorem axialCartanFlow_active_det_eq_zero_iff
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) (Z : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
         (axialActiveSupport (axialCartanFlow k t Z)) = 0 ↔
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (axialActiveSupport Z) = 0 := by
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
+        (axialActiveSupport Z) = 0 := by
   rw [axialCartanFlow_preserves_active_det k hk t Z]
 
 

@@ -15,7 +15,7 @@ If `pᵢⱼ = xᵢ yⱼ - xⱼ yᵢ` are the Plücker coordinates of a decomposa
 No Grassmannian scheme.
 No Schubert calculus.
 No Hodge-star wrapper.
-No ax!om.
+No axiom.
 -/
 
 namespace InfoGeometry.Projective.Quadrics.PluckerKlein

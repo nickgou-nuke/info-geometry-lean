@@ -10,7 +10,7 @@ Finite graph/Hodge carrier on the prime-indexed Cantor cube.
 
 This module pays the finite exterior-space debt:
 
-* vertices are finite subsets of a property prime register;
+* vertices are finite subsets of a certified prime register;
 * prime-axis graph motion is the already-owned Majorana bit flip;
 * creation and annihilation are concrete partial maps on basis vertices;
 * the occupied chiral Hodge block `ε_p ι_p` is exactly the number projector;
@@ -19,7 +19,7 @@ This module pays the finite exterior-space debt:
 No infinite Euler product.
 No analytic continuation.
 No Hilbert--Polya claim.
-No zeta/RH interface.
+No zeta/RH socket.
 -/
 
 noncomputable section
@@ -31,7 +31,7 @@ namespace InfoGeometry.Arithmetic.PrimeCantorGraphDirac
 open InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
-/-! ## 1. Finite Cantor vertices over a property prime register -/
+/-! ## 1. Finite Cantor vertices over a certified prime register -/
 
 /-- A vertex of the finite prime Cantor cube is a subset of the prime register. -/
 @[rep_depth thermo]
@@ -274,7 +274,7 @@ theorem hodgeSquareReadout_eq_occupancyReadout
 Finite prime-weighted arithmetic number energy on a Cantor vertex.
 
 This is the diagonal Hamiltonian readout
-`H(S) = ∑_{p∈S} weight p`, restricted to the property prime register.
+`H(S) = ∑_{p∈S} weight p`, restricted to the certified prime register.
 -/
 @[rep_depth thermo]
 def weightedNumberEnergy
@@ -359,7 +359,7 @@ This is the concrete creation-energy lemma:
 
   `H(S ∪ {p}) = H(S) + weight p`
 
-provided `p` is in the property prime register and not already occupied.
+provided `p` is in the certified prime register and not already occupied.
 -/
 @[rep_depth thermo]
 theorem weightedNumberEnergy_insert_of_not_mem

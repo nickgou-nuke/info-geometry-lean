@@ -39,19 +39,6 @@ noncomputable def weylSign (n : ℕ+) : ℂ :=
   -- The Weyl sign ε(w_n) is only defined for permutations,
   -- which correspond to squarefree n (no double occupancies).
 
-theorem weylSign_mul (m n : ℕ+) :
-    weylSign (m * n) = weylSign m * weylSign n := by
-  have hmul :
-      BostConnesSystem.liouville ((m : ℕ) * (n : ℕ)) =
-        BostConnesSystem.liouville (m : ℕ) *
-          BostConnesSystem.liouville (n : ℕ) := by
-    exact BostConnesSystem.liouville_mul
-      (m := (m : ℕ)) (n := (n : ℕ))
-      (Nat.one_le_iff_ne_zero.mpr m.ne_zero)
-      (Nat.one_le_iff_ne_zero.mpr n.ne_zero)
-      m.ne_zero n.ne_zero
-  simpa [weylSign] using congrArg (fun z : ℤ => (z : ℂ)) hmul
-
 /- ## The Möbius Inversion = Weyl Denominator Formula -/
 
 /-

@@ -46,7 +46,7 @@ modular conjugation.
 language it plays the role of the algebraic generator of modular flow, replacing
 external spacetime derivatives.
 
-The two former generic-`Prop` property slots are now concrete:
+The two former generic-`Prop` witness slots are now concrete:
 
 * **Weight–generator commutativity**: the modular weight commutes with the
   modular generator (the minimal algebraic content of "weight is a function
@@ -201,7 +201,7 @@ Real Hestenes rotor-flow.
 This is the real/Krein replacement for a complex modular automorphism group.
 The flow is represented by real bounded endomorphism rotors and their inverses.
 
-The former generic `Prop` property for the generator relation is replaced by
+The former generic `Prop` witness for the generator relation is replaced by
 a concrete one-parameter group law `rotor(s+t) = rotor(s) * rotor(t)`.
 -/
 

@@ -70,7 +70,7 @@ theorem mixedIndex_val_sub (k l : ZMod 6) :
 
 theorem weylNF_val (p : ZMod 6) (b : Bool) :
     weylNF p.val b = weylNF p b := by
-  simp [weylNF, c_pow_mod]
+  simp [weylNF]
 
 theorem weylNF_mul_rot_refl_canonical (k l : ZMod 6) :
     weylNF k false * weylNF l true = weylNF (mixedIndex k l).val true := by
@@ -99,6 +99,75 @@ theorem weylNF_mul_rot_refl_exact (k l : ZMod 6) :
 theorem weylNF_mul_refl_refl_exact (k l : ZMod 6) :
     weylNF k true * weylNF l true = weylNF (l - k) false := by
   rw [weylNF_mul_refl_refl_canonical, mixedIndex_val_sub, weylNF_val]
+
+/-! The transported normal-form product is the inversion semidirect law on
+    `ZMod 6 × Bool`.  We keep this as an explicit operation rather than
+    installing a conflicting global group instance on the product alias. -/
+
+def weylSemidirectMul : WeylG2 → WeylG2 → WeylG2
+  | (k, false), (l, false) => (k + l, false)
+  | (k, false), (l, true) => (l - k, true)
+  | (k, true), (l, false) => (k + l, true)
+  | (k, true), (l, true) => (l - k, false)
+
+theorem dihedralParameterMap_mul (g h : DihedralGroup 6) :
+    dihedralParameterMap (g * h) =
+      weylSemidirectMul (dihedralParameterMap g) (dihedralParameterMap h) := by
+  cases g <;> cases h <;> rfl
+
+theorem weylMul_eq_weylSemidirectMul (p q : WeylG2) :
+    weylMul p q = weylSemidirectMul p q := by
+  rcases p with ⟨k, b⟩
+  rcases q with ⟨l, d⟩
+  cases b <;> cases d
+  · apply weylNF_injective
+    simpa [weylSemidirectMul] using
+      (weylNF_weylMul (k, false) (l, false)).trans
+        (weylNF_mul_rot_rot k l)
+  · apply weylNF_injective
+    simpa [weylSemidirectMul] using
+      (weylNF_weylMul (k, false) (l, true)).trans
+        (weylNF_mul_rot_refl_exact k l)
+  · apply weylNF_injective
+    simpa [weylSemidirectMul] using
+      (weylNF_weylMul (k, true) (l, false)).trans
+        (weylNF_mul_refl_rot k l)
+  · apply weylNF_injective
+    simpa [weylSemidirectMul] using
+        (weylNF_weylMul (k, true) (l, true)).trans
+        (weylNF_mul_refl_refl_exact k l)
+
+theorem dihedralParameterMap_mul_weylMul (g h : DihedralGroup 6) :
+    dihedralParameterMap (g * h) =
+      weylMul (dihedralParameterMap g) (dihedralParameterMap h) := by
+  rw [dihedralParameterMap_mul, weylMul_eq_weylSemidirectMul]
+
+theorem weylSemidirectMul_assoc (p q r : WeylG2) :
+    weylSemidirectMul (weylSemidirectMul p q) r =
+      weylSemidirectMul p (weylSemidirectMul q r) := by
+  rw [← weylMul_eq_weylSemidirectMul, ← weylMul_eq_weylSemidirectMul,
+    ← weylMul_eq_weylSemidirectMul, ← weylMul_eq_weylSemidirectMul]
+  exact weylMul_assoc p q r
+
+theorem weylSemidirectMul_one_left (p : WeylG2) :
+    weylSemidirectMul (0, false) p = p := by
+  rw [← weylMul_eq_weylSemidirectMul]
+  exact weyl_one_mul p
+
+theorem weylSemidirectMul_one_right (p : WeylG2) :
+    weylSemidirectMul p (0, false) = p := by
+  rw [← weylMul_eq_weylSemidirectMul]
+  exact weyl_mul_one p
+
+theorem weylSemidirectMul_inv_left (p : WeylG2) :
+    weylSemidirectMul (weylInv p) p = (0, false) := by
+  rw [← weylMul_eq_weylSemidirectMul]
+  exact weylInv_mul_self p
+
+theorem weylSemidirectMul_inv_right (p : WeylG2) :
+    weylSemidirectMul p (weylInv p) = (0, false) := by
+  rw [← weylMul_eq_weylSemidirectMul]
+  exact weyl_mul_inv_self p
 
 noncomputable def dihedralWeylHom : DihedralGroup 6 →* weylG2Subgroup where
   toFun := dihedralWeylSubgroupEquiv

@@ -122,7 +122,7 @@ lemma commute_nat_cast (x : A) (n : ℕ) : Commute x (n : A) := by
 One unipotent Jordan multiplication step:
 `(1 + nε)(1 + ε) = 1 + (n + 1)ε` when `ε² = 0`.
 
-The `lambda` and commutation property are retained so the step has the same
+The `lambda` and commutation hypothesis are retained so the step has the same
 parameter surface as the full monodromy winding theorem.
 -/
 lemma monodromy_unipotent_step_mul

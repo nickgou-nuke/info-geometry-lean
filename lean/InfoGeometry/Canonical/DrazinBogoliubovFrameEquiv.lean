@@ -18,14 +18,14 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 open InfoGeometry.Canonical.BogoliubovCartanEigenOperator
 
 /--
-Drazin property for a Cartan eigen-operator in the doubled-real bounded operator lane.
+Drazin witness for a Cartan eigen-operator in the doubled-real bounded operator lane.
 -/
 def IsDrazinCartanEigenOperator
     (H A B : EndH) (k : ℕ) (lam : ℝ) : Prop :=
   InfoGeometry.Canonical.Drazin.IsDrazinInverse A B k ∧
     IsCartanEigenOperator (E := E) H A lam
 
-/-- Accessor: Drazin property component. -/
+/-- Accessor: Drazin witness component. -/
 theorem isDrazinInverse_of_isDrazinCartanEigenOperator
     {H A B : EndH} {k : ℕ} {lam : ℝ}
     (h : IsDrazinCartanEigenOperator (E := E) H A B k lam) :
@@ -39,11 +39,11 @@ theorem isCartanEigenOperator_of_isDrazinCartanEigenOperator
     IsCartanEigenOperator (E := E) H A lam :=
   h.2
 
-/-- Drazin projection readback for a property pair `(A,B)`. -/
+/-- Drazin projection readback for a witness pair `(A,B)`. -/
 def drazinProjection (A B : EndH) : EndH :=
   InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection A B
 
-/-- Complementary Drazin projection readback for a property pair `(A,B)`. -/
+/-- Complementary Drazin projection readback for a witness pair `(A,B)`. -/
 def drazinComplementaryProjection (A B : EndH) : EndH :=
   InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection A B
 
@@ -55,7 +55,7 @@ theorem drazinProjection_add_complementaryProjection (A B : EndH) :
     (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_add_complementaryProjection
       (a := A) (b := B))
 
-/-- Readback: Drazin projection is idempotent under a Drazin-Cartan property. -/
+/-- Readback: Drazin projection is idempotent under a Drazin-Cartan witness. -/
 theorem drazinProjection_is_idempotent_of_isDrazinCartanEigenOperator
     {H A B : EndH} {k : ℕ} {lam : ℝ}
     (h : IsDrazinCartanEigenOperator (E := E) H A B k lam) :
@@ -69,7 +69,7 @@ theorem drazinProjection_is_idempotent_of_isDrazinCartanEigenOperator
     InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_is_idempotent
       (a := A) (b := B) h.1
 
-/-- Readback: Drazin projection commutes with the owner operator under property. -/
+/-- Readback: Drazin projection commutes with the owner operator under witness. -/
 theorem drazinProjection_comm_self_of_isDrazinCartanEigenOperator
     {H A B : EndH} {k : ℕ} {lam : ℝ}
     (h : IsDrazinCartanEigenOperator (E := E) H A B k lam) :
@@ -83,7 +83,7 @@ theorem drazinProjection_comm_self_of_isDrazinCartanEigenOperator
 
 /--
 Frame-transport statement schema: if a frame transports Cartan adjoint on `A`,
-then Drazin-Cartan property transports to the framed operator.
+then Drazin-Cartan witness transports to the framed operator.
 -/
 theorem isDrazinCartanEigenOperator_conjugate
     {Hsrc Htgt U Uinv A B : EndH} {k : ℕ} {lam : ℝ}
@@ -107,25 +107,14 @@ structure ChiralDrazinKreinPackage where
   A : EndH
   AD : EndH
   k : ℕ
+  hDrazin : InfoGeometry.Canonical.Drazin.IsDrazinInverse A AD k
   ΓS : EndH
   J : EndH
   eps : EndH
   K : EndH
-
-/-! The package is a carrier of operators.  Its Drazin/Krein laws are
-explicit propositions below rather than fields hidden in a data wrapper. -/
-
-def ChiralDrazinKreinPackage.HasDrazinLaw
-    (P : ChiralDrazinKreinPackage (E := E)) : Prop :=
-  InfoGeometry.Canonical.Drazin.IsDrazinInverse P.A P.AD P.k
-
-def ChiralDrazinKreinPackage.HasKreinCl11Laws
-    (P : ChiralDrazinKreinPackage (E := E)) : Prop :=
-  (∀ x y : H₂,
-      KreinSpace.kreinInner (H := H₂) (P.J x) (P.J y) =
-        KreinSpace.kreinInner (H := H₂) x y) ∧
-    P.J * drazinProjection P.A P.AD = drazinProjection P.A P.AD * P.J ∧
-    P.eps * P.eps = 1 ∧ P.J * P.J = -1 ∧ P.eps * P.J = -P.J * P.eps
+  form_preserved : ∀ x y : H₂, KreinSpace.kreinInner (H := H₂) (J x) (J y) = KreinSpace.kreinInner (H := H₂) x y
+  drazin_split_compatible : J * drazinProjection A AD = drazinProjection A AD * J
+  cl11_laws : eps * eps = 1 ∧ J * J = -1 ∧ eps * J = -J * eps
 
 /--
 A Bogoliubov frame represented over a fixed owner package.
@@ -133,17 +122,11 @@ A Bogoliubov frame represented over a fixed owner package.
 structure BogoliubovFrameOver (P : ChiralDrazinKreinPackage (E := E)) where
   U : EndH
   Uinv : EndH
-
-def BogoliubovFrameOver.HasFrameLaws
-    (P : ChiralDrazinKreinPackage (E := E)) : Prop :=
-  ∀ (F : BogoliubovFrameOver (E := E) P),
-    F.Uinv.comp F.U = 1 ∧
-    F.U.comp F.Uinv = 1 ∧
-    F.U * drazinProjection P.A P.AD = drazinProjection P.A P.AD * F.U ∧
-    F.U * P.J = P.J * F.U ∧
-    (∀ x y : H₂,
-      KreinSpace.kreinInner (H := H₂) (F.U x) (F.U y) =
-        KreinSpace.kreinInner (H := H₂) x y)
+  left_inv : Uinv.comp U = 1
+  right_inv : U.comp Uinv = 1
+  compatible_with_drazin_split : U * drazinProjection P.A P.AD = drazinProjection P.A P.AD * U
+  compatible_with_phase_axis : U * P.J = P.J * U
+  compatible_with_krein_form : ∀ x y : H₂, KreinSpace.kreinInner (H := H₂) (U x) (U y) = KreinSpace.kreinInner (H := H₂) x y
 
 /--
 Frame equivalence relation: existence of a structure-preserving automorphism
@@ -165,7 +148,7 @@ namespace EquivalentBogoliubovFrames
 variable {P : ChiralDrazinKreinPackage (E := E)}
 variable {F G : BogoliubovFrameOver (E := E) P}
 
-/-- Readback: frame equivalence carries a property Drazin-projector commutation property. -/
+/-- Readback: frame equivalence carries a certified Drazin-projector commutation witness. -/
 theorem preserves_drazinProjection_comm
     (hEq : EquivalentBogoliubovFrames (E := E) P F G) :
     ∃ U : EndH,
@@ -174,7 +157,7 @@ theorem preserves_drazinProjection_comm
   rcases hEq with ⟨U, hP, _hJ, _hEps, _hK, _hFrame⟩
   exact ⟨U, hP⟩
 
-/-- Readback: equivalent frames are linked by a property representative action on frame maps. -/
+/-- Readback: equivalent frames are linked by a certified representative action on frame maps. -/
 theorem frame_action
     (hEq : EquivalentBogoliubovFrames (E := E) P F G) :
     ∃ U : EndH, U.comp F.U = G.U := by
@@ -183,7 +166,7 @@ theorem frame_action
 
 /--
 Projected frame readout is invariant under equivalent Bogoliubov frames,
-assuming the readout is invariant under property Drazin-projector-preserving
+assuming the readout is invariant under certified Drazin-projector-preserving
 representative actions.
 -/
 theorem projected_frame_readout_invariant

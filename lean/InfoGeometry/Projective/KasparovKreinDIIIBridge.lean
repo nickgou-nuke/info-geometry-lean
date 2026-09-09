@@ -15,7 +15,7 @@ import InfoGeometry.Projective.FiveGradedTopologicalBridge
 - `finite_andreev_diii_signature_packet`
 - `canonical_diii_proxy_sign_readback`
 - `canonical_diii_proxy_root_readback`
-- `krein_kasparov_grade_split_from_property`
+- `krein_kasparov_grade_split_from_witness`
 - `krein_kasparov_mixed_commutator_gZero`
 - `klein_bottle_trace_absorption`
 
@@ -31,8 +31,8 @@ import InfoGeometry.Projective.FiveGradedTopologicalBridge
   boundary.
 - Replace the `KleinBottleTopology` trace interface by a full KO-theoretic
   anomaly theorem.
-- Relate any Betti/rank property to protected Majorana modes only after the
-  external de Rham computation is genuinely property.
+- Relate any Betti/rank certificate to protected Majorana modes only after the
+  external de Rham computation is genuinely certified.
 
 This module deliberately avoids asserting a physical DIII theorem for spacetime.
 It records the finite algebraic
@@ -40,7 +40,7 @@ compatibilities currently available in the repo:
 
 1. finite Andreev particle-hole rotation;
 2. canonical DIII symmetry laws on the doubled real BdG carrier;
-3. split-Krein KKT decomposition for a supplied Kasparov cycle property;
+3. split-Krein KKT decomposition for a supplied Kasparov cycle witness;
 4. matrix-level Klein-bottle trace absorption under explicit orthogonality and
    trace-zero hypotheses.
 -/
@@ -70,30 +70,26 @@ This combines:
 * the electron/hole channel flip square `C² = 1`;
 * the concrete `2×2` horizon isometry plus trace-zero/GW readback.
 -/
-theorem finite_andreev_twin_square_readback (state : InfallingParticle) :
-    AndreevTwin (AndreevTwin state) = -state :=
-  andreevTwin_sq state
-
-theorem finite_andreev_twin_norm_readback (state : InfallingParticle) :
-    InfoGeometry.Physics.FermionicAndreevReflection.amplitudeNormSq
+theorem finite_andreev_diii_signature_packet
+    (state : InfallingParticle)
+    (ψ : AndreevAmplitude) :
+    AndreevTwin (AndreevTwin state) = -state ∧
+      InfoGeometry.Physics.FermionicAndreevReflection.amplitudeNormSq
           (AndreevTwin state) =
-        InfoGeometry.Physics.FermionicAndreevReflection.amplitudeNormSq state :=
-  andreevTwin_normSq state
-
-theorem finite_andreev_twin_fourth_readback (state : InfallingParticle) :
-    AndreevTwin (AndreevTwin (AndreevTwin (AndreevTwin state))) = state :=
-  andreevTwin_fourth state
-
-theorem finite_andreev_flip_square_readback (ψ : AndreevAmplitude) :
-    andreevFlipLinear (andreevFlipLinear ψ) = ψ :=
-  andreevFlipLinear_sq ψ
-
-theorem concrete_andreev_horizon_information_readback :
-    concreteAndreevHorizonSMatrix.closure.moebiusParity.transpose *
-        concreteAndreevHorizonSMatrix.closure.moebiusParity =
-      concreteAndreevHorizonSMatrix.closure.I ∧
-    concreteAndreevHorizonSMatrix.closure.gromovWittenIndex = 0 :=
-  concreteAndreevHorizon_information_preservation
+        InfoGeometry.Physics.FermionicAndreevReflection.amplitudeNormSq
+          state ∧
+      AndreevTwin (AndreevTwin (AndreevTwin (AndreevTwin state))) = state ∧
+      andreevFlipLinear (andreevFlipLinear ψ) = ψ ∧
+      ((concreteAndreevHorizonSMatrix.closure.moebiusParity.transpose *
+          concreteAndreevHorizonSMatrix.closure.moebiusParity =
+            concreteAndreevHorizonSMatrix.closure.I) ∧
+        concreteAndreevHorizonSMatrix.closure.gromovWittenIndex = 0) := by
+  exact ⟨
+    andreevTwin_sq state,
+    andreevTwin_normSq state,
+    andreevTwin_fourth state,
+    andreevFlipLinear_sq ψ,
+    concreteAndreevHorizon_information_preservation⟩
 
 -- 2. Canonical DIII symmetry laws on the doubled real BdG carrier.
 
@@ -150,10 +146,10 @@ variable [InfoGeometry.Krein.KreinSpace H]
 variable [InfoGeometry.Krein.KreinGradedModule H]
 
 /--
-Given the explicit `gradeCLM = eps` property, the odd phase of the real
+Given the explicit `gradeCLM = eps` witness, the odd phase of the real
 split-Krein Kasparov cycle splits into `g₁ ⊕ g₋₁`.
 -/
-theorem krein_kasparov_grade_split_from_property
+theorem krein_kasparov_grade_split_from_witness
     (X : RealSplitKreinKasparovCycle A B H)
     (hGrade : InfoGeometry.Krein.KreinGradedModule.gradeCLM (H := H) =
       X.cl11.eps) :
@@ -218,14 +214,14 @@ theorem klein_bottle_trace_absorption
   InfoGeometry.Canonical.KleinBottleTopology.klein_topology_trace_closure
     M Pparity hOrth hTrace
 
- /-- Concrete `2×2` topological readback of finite Andreev/DIII isometry and
+/-- Concrete `2×2` topological socket readback of finite Andreev/DIII isometry and
 trace-zero data. -/
-theorem concreteTopologicalInvariants2_packet :
-    ((InfoGeometry.Projective.Topology.concreteTopologicalInvariants2).closure.moebiusParity.transpose *
-        (InfoGeometry.Projective.Topology.concreteTopologicalInvariants2).closure.moebiusParity =
-      (InfoGeometry.Projective.Topology.concreteTopologicalInvariants2).closure.I) ∧
-    (InfoGeometry.Projective.Topology.concreteTopologicalInvariants2).closure.gromovWittenIndex = 0 := by
-  simpa [InfoGeometry.Projective.Topology.concreteTopologicalInvariants2] using
+theorem concreteTopologicalSocket2_packet :
+    (concreteTopologicalSocket2.inv.closure.moebiusParity.transpose *
+        concreteTopologicalSocket2.inv.closure.moebiusParity =
+      concreteTopologicalSocket2.inv.closure.I) ∧
+    concreteTopologicalSocket2.inv.closure.gromovWittenIndex = 0 := by
+  simpa [concreteTopologicalSocket2] using
     concreteAndreevHorizon_information_preservation
 
 end InfoGeometry.Projective.KasparovKreinDIIIBridge

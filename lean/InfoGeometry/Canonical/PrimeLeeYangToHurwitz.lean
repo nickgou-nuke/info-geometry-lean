@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
 import InfoGeometry.Canonical.PrimeHurwitzLimit
 import InfoGeometry.Canonical.PrimeLeeYangConvergence
@@ -8,13 +9,13 @@ import InfoGeometry.Analysis.LeeYangRootLimit
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangToHurwitz
 
-Relay layer from the prime convergence interface to the Hurwitz zero-transfer
-interface.
+Relay layer from the prime convergence socket to the Hurwitz zero-transfer
+socket.
 
 This file does not prove any prime-to-`xi` convergence statement and does not
 prove RH. It isolates the transfer step that comes after the analytic
-convergence property. The Clifford-wavelet layer is imported only as the
-candidate source of that convergence property.
+convergence witness. The Clifford-wavelet layer is imported only as the
+candidate source of that convergence witness.
 -/
 
 noncomputable section
@@ -26,16 +27,36 @@ open InfoGeometry.Canonical.PrimeHurwitzLimit
 open InfoGeometry.Canonical.PrimeLeeYangConvergence
 open InfoGeometry.Analysis.LeeYangRootLimit
 
+/--
+Bridge packet from a convergence witness to a Hurwitz transfer witness.
+
+The packet is intentionally explicit: it keeps the convergence data and the
+Hurwitz data separate while allowing downstream code to relay the latter.
+-/
+@[socket_debt_tag, rep_depth operator]
+structure PrimeLeeYangToHurwitzWitness
+    (Ξ : CompletedXiZeroPredicate)
+    (A : LeeYangApproximants) where
+  /-- The convergence socket that feeds the Hurwitz relay. -/
+  convergence :
+    PrimeLeeYangConvergenceSocket Ξ A
+
+  /-- The Hurwitz zero-transfer witness itself. -/
+  hurwitz :
+    CorrectHurwitzZeroTransferWitness Ξ A
+
+  /-- The two sockets describe the same limiting Cayley readout. -/
+  convergence_limit_eq_hurwitz_limit :
+    convergence.limitF = hurwitz.limitF
+
 variable {Ξ : CompletedXiZeroPredicate}
 variable {A : LeeYangApproximants}
-
-
 
 /--
 Completed-`xi` zeros map to the Lee--Yang circle when they are limits of
 actual roots of the finite renormalized approximants.
 
-Unlike the former relay theorem, this statement consumes no property packet and
+Unlike the former relay theorem, this statement consumes no witness packet and
 does not store the desired zero-location conclusion as data.
 -/
 @[rep_depth operator]

@@ -75,8 +75,8 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 local notation "EndE" => E →L[ℝ] E
 
-/-- On the property conformal surface, the conformal dilation generator is
-exactly the property inverse-kernel dilation gap. -/
+/-- On the certified conformal surface, the conformal dilation generator is
+exactly the certified inverse-kernel dilation gap. -/
 @[rep_depth krein] theorem CertifiedConformalInference.D_eq_dilationGap
     (CCI : CertifiedConformalInference E) :
     CCI.toConformalInference.D = CCI.toCertifiedInverseKernel.dilationGap := by
@@ -85,7 +85,7 @@ exactly the property inverse-kernel dilation gap. -/
 
 section
 
-/-- The conformal chiral grading is exactly twice the property inverse-kernel
+/-- The conformal chiral grading is exactly twice the certified inverse-kernel
 dilation gap. -/
 @[rep_depth krein] theorem CertifiedConformalInference.chiralGrading_eq_two_smul_dilationGap
     (CCI : CertifiedConformalInference E) :
@@ -97,7 +97,7 @@ dilation gap. -/
         (CI := CCI.toConformalInference))
 
 /-- Under the explicit `g₁ / g₋₁` KKT hypotheses, the Moore-Penrose chiral gap
-on the property conformal surface lies in grade zero. -/
+on the certified conformal surface lies in grade zero. -/
 @[rep_depth krein] theorem CertifiedConformalInference.mpChiralGap_isGZero
     (X : RealSplitCl11Action E)
     (CCI : CertifiedConformalInference E)
@@ -107,7 +107,7 @@ on the property conformal surface lies in grade zero. -/
   InfoGeometry.Canonical.KKTGeneralizedInverseBridge.mpChiralGap_isGZero
     (X := X) (CIK := CCI.toCertifiedInverseKernel) hA hAMP
 
-/-- Under the explicit `g₁ / g₋₁` KKT hypotheses, the property inverse-kernel
+/-- Under the explicit `g₁ / g₋₁` KKT hypotheses, the certified inverse-kernel
 dilation gap on the conformal surface lies in grade zero. -/
 @[rep_depth krein] theorem CertifiedConformalInference.dilationGap_isGZero
     (X : RealSplitCl11Action E)
@@ -118,7 +118,7 @@ dilation gap on the conformal surface lies in grade zero. -/
   InfoGeometry.Canonical.KKTGeneralizedInverseBridge.dilationGap_isGZero
     (X := X) (CIK := CCI.toCertifiedInverseKernel) hA hAMP
 
-/-- Under the explicit `g₁ / g₋₁` KKT hypotheses, the property Drazin core
+/-- Under the explicit `g₁ / g₋₁` KKT hypotheses, the certified Drazin core
 projector on the conformal surface lies in grade zero. -/
 @[rep_depth krein] theorem CertifiedConformalInference.drazinCoreProj_isGZero
     (X : RealSplitCl11Action E)

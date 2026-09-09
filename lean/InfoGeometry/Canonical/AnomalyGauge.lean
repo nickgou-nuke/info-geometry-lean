@@ -85,5 +85,17 @@ theorem anomaly_generates_krein_infinitesimal_isometry
   exact skew_adjoint_is_krein_skew_adjoint _
     (ChiralAnomaly_is_SkewAdjoint G G_pinv D_inv k hMP hD hD_symm)
 
+/--
+Legacy name for the infinitesimal-isometry statement.
+-/
+@[deprecated anomaly_generates_krein_infinitesimal_isometry (since := "2026-03-21")]
+theorem anomaly_generates_isometry
+    (G G_pinv D_inv : HilbertDoubled E →L[ℝ] HilbertDoubled E) (k : ℕ)
+    (hMP : IsMoorePenroseInverse G G_pinv)
+    (hD : IsDrazinInverse G D_inv k)
+    (hD_symm : (Drazin_Projector G D_inv k hD)† = Drazin_Projector G D_inv k hD) :
+    IsKreinSkewAdjointH (E := E) (ChiralAnomaly G G_pinv D_inv k hMP hD) :=
+  anomaly_generates_krein_infinitesimal_isometry G G_pinv D_inv k hMP hD hD_symm
+
 end KreinAnomaly
 end InfoGeometry.Canonical.AnomalyGauge

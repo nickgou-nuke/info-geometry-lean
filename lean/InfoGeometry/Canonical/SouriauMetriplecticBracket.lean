@@ -30,48 +30,9 @@ def metriplecticBracket (D : Data Obs) (a h : Obs) : ℝ :=
 def metriplecticEvolution (D : Data Obs) (dH dS dA : Obs) : ℝ :=
   D.poisson dA dH + D.metric dA dS
 
-theorem metriplecticEvolution_eq_bracket_of_entropy
-    (D : Data Obs) (dH dA : Obs) :
-    metriplecticEvolution D dH D.S dA = bracket D dA dH := rfl
-
-theorem metriplecticEvolution_entropy_nonneg (D : Data Obs) :
-    0 ≤ metriplecticEvolution D D.H D.S D.S := by
-  unfold metriplecticEvolution
-  exact InfoGeometry.Geometry.MetriplecticStructure.entropy_total_evolution_nonnegative D
-
 theorem bracket_energy_observable_zero (D : Data Obs) (h : Obs) :
     D.poisson D.H h + D.metric D.H D.S = D.poisson D.H h := by
   rw [D.metric_H_casimir, add_zero]
-
-theorem bracket_energy_energy_zero (D : Data Obs) :
-    bracket D D.H D.H = 0 := by
-  unfold bracket
-  rw [D.poisson_self, D.metric_H_casimir]
-  simp
-
-theorem bracket_hamiltonian_entropy_zero (D : Data Obs) :
-    bracket D D.H D.S = 0 := by
-  unfold bracket
-  rw [InfoGeometry.Geometry.MetriplecticStructure.poisson_energy_entropy_zero D,
-    D.metric_H_casimir D.S]
-  simp
-
-theorem bracket_entropy_entropy_eq_metric (D : Data Obs) :
-    bracket D D.S D.S = D.metric D.S D.S := by
-  unfold bracket
-  rw [D.poisson_self]
-  simp
-
-theorem bracket_entropy_entropy_nonneg (D : Data Obs) :
-    0 ≤ bracket D D.S D.S := by
-  rw [bracket_entropy_entropy_eq_metric]
-  exact D.metric_nonneg D.S
-
-theorem bracket_entropy_hamiltonian_eq_metric (D : Data Obs) :
-    bracket D D.S D.H = D.metric D.S D.S := by
-  unfold bracket
-  rw [D.poisson_S_casimir]
-  simp
 
 theorem continuous_metriplecticEvolution_of
     [TopologicalSpace Obs] [TopologicalSpace X]

@@ -140,7 +140,7 @@ structure DrazinMPProjectorCommutator
       CI.spectralChiralProjector * CI.metricChiralProjector
         - CI.metricChiralProjector * CI.spectralChiralProjector
 
-/-- The Drazin / MP commutator packet is inhabited by the property owner. -/
+/-- The Drazin / MP commutator packet is inhabited by the certified owner. -/
 theorem commutator_eq_projector_obstruction
     (CCI : CertifiedConformalInference H) :
     DrazinMPProjectorCommutator CCI.toConformalInference := by

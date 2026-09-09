@@ -40,7 +40,8 @@ available. -/
 theorem principalLeftIdeal_eq_native_idempotentCorner
     (f : ChiralActionAlgebra) (hf : f * f = f) :
     principalLeftIdeal f =
-      (InfoGeometry.Algebra.IdempotentCornerCommutant.principalLeftIdeal f hf :
+      (InfoGeometry.Algebra.IdempotentCornerCommutant.principalLeftIdealSubmodule
+        (R := ℝ) f :
         Set ChiralActionAlgebra) := by
   ext x
   constructor
@@ -170,17 +171,22 @@ theorem principalRightIdeal_mul_principalLeftIdeal_in_native_corner
     {phi psi : ChiralActionAlgebra}
     (hphi : phi ∈ principalRightIdeal f)
     (hpsi : psi ∈ principalLeftIdeal f) :
-    ∃ c : InfoGeometry.Algebra.IdempotentCornerCommutant.corner f hf,
+    ∃ c : InfoGeometry.Algebra.IdempotentCornerCommutant.Corner f,
       c.1 = phi * psi := by
   rcases principalRightIdeal_mul_principalLeftIdeal_in_corner f hphi hpsi with
     ⟨c, hc⟩
   refine ⟨⟨phi * psi, ?_⟩, rfl⟩
-  rw [hc]
   constructor
-  · simp [mul_assoc, hf]
   · calc
-      f * (f * (c * f)) = (f * f) * (c * f) := by rw [mul_assoc]
-      _ = f * (c * f) := by rw [hf]
+      f * (phi * psi) = f * (f * c * f) := by rw [hc]
+      _ = (f * f) * c * f := by simp only [mul_assoc]
+      _ = f * c * f := by rw [hf]
+      _ = phi * psi := hc.symm
+  · calc
+      (phi * psi) * f = (f * c * f) * f := by rw [hc]
+      _ = f * c * (f * f) := by simp only [mul_assoc]
+      _ = f * c * f := by rw [hf]
+      _ = phi * psi := hc.symm
 
 def principalTwoSidedIdeal (f : ChiralActionAlgebra) :
     Set ChiralActionAlgebra :=

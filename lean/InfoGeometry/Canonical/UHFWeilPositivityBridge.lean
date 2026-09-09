@@ -2,18 +2,21 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic
-import InfoGeometry.Canonical.UHFInductiveColimitBoundary
+import InfoGeometry.Canonical.UHFInductiveLimitBoundary
 
 /-!
-# Weil Positivity and Modular Flow Unitarity on the UHF Inductive Colimit
+# Finite diagonal trace positivity and phase-multiplier invariance
 
 This module formalizes:
 1. Star involution on the finite diagonal algebras: `star f w = conj (f w)`.
 2. Positivity of the stage trace on positive elements: $\tau_n(f^* f) \ge 0$.
 3. Inductive colimit compatibility of the positive cone:
    $$\tau_{n+1}(\operatorname{diagEmbedSucc}_n(f)^* \operatorname{diagEmbedSucc}_n(f)) = \tau_n(f^* f)$$
-4. Exact unitarity of the modular flow:
+4. Invariance of the trace of a squared modulus under a unit-modulus multiplier:
    $$\tau_n(\sigma_t(f)^* \sigma_t(f)) = \tau_n(f^* f)$$
+
+These are finite diagonal-algebra statements and successor compatibility laws.
+They do not establish Weil's criterion, a KMS state, or a modular automorphism group.
 -/
 
 noncomputable section
@@ -27,6 +30,7 @@ set_option linter.unusedSimpArgs false
 namespace InfoGeometry.Canonical.UHFWeilPositivity
 
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
+open InfoGeometry.Canonical.UHFInductiveLimitBoundary
 
 /-- Star involution on the stage diagonal algebra DiagAlg n = (BitWord n → ℂ). -/
 def diagStar (n : ℕ) (f : DiagAlg n) : DiagAlg n :=
@@ -50,7 +54,7 @@ theorem star_mul_self_re_eq_normSq (z : ℂ) :
     rw [mul_comm, star_def, mul_conj]
   rw [this, ofReal_re]
 
-/-- 🏆 THEOREM 1: Positivity of the Stage Trace on Positive Elements (Weil Positivity). -/
+/-- The normalized finite trace is nonnegative on a squared modulus. -/
 theorem stageTrace_star_mul_self_re_nonneg (n : ℕ) (f : DiagAlg n) :
     0 ≤ (stageTrace n (diagMul n (diagStar n f) f)).re := by
   dsimp [stageTrace, diagMul, diagStar]
@@ -59,7 +63,7 @@ theorem stageTrace_star_mul_self_re_nonneg (n : ℕ) (f : DiagAlg n) :
     intro w hw
     exact normSq_nonneg (f w)
   have h_factor : 0 ≤ 1 / (2 ^ n : ℝ) := by positivity
-  have h_c_div : (1 / (2 ^ n : ℂ)) = ↑(1 / (2 ^ n : ℝ)) := by push_cast; rfl
+  have h_c_div : (2 ^ n : ℂ)⁻¹ = ↑(1 / (2 ^ n : ℝ)) := by push_cast; simp
   rw [h_c_div]
   simp only [mul_re, ofReal_re, ofReal_im, zero_mul, sub_zero]
   have h_sum_re : (∑ w : BitWord n, (starRingEnd ℂ) (f w) * f w).re =
@@ -89,18 +93,18 @@ theorem stageTrace_star_compat (n : ℕ) (f : DiagAlg n) :
       stageTrace n (diagMul n (diagStar n f) f) := by
   rw [← diagEmbedSucc_star_comm]
   rw [← diagEmbedSucc_mul_comm]
-  exact stageTrace_compatible_succ n (diagMul n (diagStar n f) f)
+  exact stageTrace_diagEmbedSucc n (diagMul n (diagStar n f) f)
 
 /-- Phase multiplier on the complex circle: z * star z = 1. -/
 structure PhaseFactor (n : ℕ) where
   u : BitWord n → ℂ
   u_unitary : ∀ w, star (u w) * u w = 1
 
-/-- Modular unitary phase flow. -/
+/-- Pointwise multiplication by the supplied unit-modulus function. -/
 def modularPhaseFlow (n : ℕ) (U : PhaseFactor n) (f : DiagAlg n) : DiagAlg n :=
   fun w => U.u w * f w
 
-/-- 🏆 THEOREM 5: Exact Unitarity of the Modular Phase Flow on the UHF Stage Algebra. -/
+/-- A unit-modulus multiplier preserves the pointwise squared modulus. -/
 theorem modularPhaseFlow_unitary (n : ℕ) (U : PhaseFactor n) (f : DiagAlg n) :
     diagMul n (diagStar n (modularPhaseFlow n U f)) (modularPhaseFlow n U f) =
       diagMul n (diagStar n f) f := by
@@ -114,7 +118,7 @@ theorem modularPhaseFlow_unitary (n : ℕ) (U : PhaseFactor n) (f : DiagAlg n) :
   rw [this, h_u]
   ring
 
-/-- 🏆 THEOREM 6: Modular Flow Trace Invariance (Conservation of Weil Energy). -/
+/-- A unit-modulus multiplier preserves the normalized trace of a squared modulus. -/
 theorem stageTrace_modularPhaseFlow_invariant (n : ℕ) (U : PhaseFactor n) (f : DiagAlg n) :
     stageTrace n (diagMul n (diagStar n (modularPhaseFlow n U f)) (modularPhaseFlow n U f)) =
       stageTrace n (diagMul n (diagStar n f) f) := by

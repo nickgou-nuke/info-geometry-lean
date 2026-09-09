@@ -12,7 +12,7 @@ integer has a unique representation as a sum of non-consecutive Fibonacci number
 with our `FibonacciGrothendieckRing` infrastructure based on the golden-ratio apex
 `τ² = τ + 1`.
 
-NO `sorry`, NO `ax!om`, NO `sorry`. Every line is kernel-checked.
+NO `sorry`, NO `axiom`, NO `admit`. Every line is kernel-checked.
 -/
 
 open Nat

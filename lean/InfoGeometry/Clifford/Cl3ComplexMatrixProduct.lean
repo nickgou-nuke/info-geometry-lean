@@ -65,6 +65,7 @@ noncomputable def gen : Vec3 →ₗ[ℂ] ProdMat2C where
   map_smul' c v := by
     ext i j <;> fin_cases i <;> fin_cases j <;> simp [s1, s2, s3, mul_add] <;> ring
 
+set_option maxHeartbeats 800000 in
 lemma gen_sq (v : Vec3) : gen v * gen v = algebraMap ℂ ProdMat2C (q3 v) := by
   rcases v with ⟨a,b,c⟩
   ext i j <;> fin_cases i <;> fin_cases j <;>
@@ -316,14 +317,17 @@ lemma cl3BasisWord_mem_span (i : Fin 8) : cl3BasisWord i ∈ cl3Span :=
     _ = e1 * (e2 * (e3 * e3)) := by rw [mul_assoc]
     _ = e1 * e2 := by rw [e3_sq, mul_one]
 
+set_option maxHeartbeats 800000 in
 lemma e1_mul_basis_mem (i : Fin 8) : e1 * cl3BasisWord i ∈ cl3Span := by
   fin_cases i <;>
     simp [cl3BasisWord, cl3Span]
 
+set_option maxHeartbeats 800000 in
 lemma e2_mul_basis_mem (i : Fin 8) : e2 * cl3BasisWord i ∈ cl3Span := by
   fin_cases i <;>
     simp [cl3BasisWord, cl3Span]
 
+set_option maxHeartbeats 800000 in
 lemma e3_mul_basis_mem (i : Fin 8) : e3 * cl3BasisWord i ∈ cl3Span := by
   fin_cases i <;>
     simp [cl3BasisWord, cl3Span]

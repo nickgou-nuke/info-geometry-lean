@@ -31,35 +31,29 @@ A positive-state domain.
 `State` may later be instantiated by density matrices, positive trace-class
 operators, weights, or a finite-dimensional positive cone.
 -/
-abbrev PositiveStateDomain (State : Type*) := Set State
-
-/-- Compatibility accessor for the positive-state carrier. -/
-abbrev PositiveStateDomain.carrier (Ω : PositiveStateDomain State) : Set State := Ω
+structure PositiveStateDomain
+    (State : Type*) where
+  carrier : Set State
 
 /-- A point of a positive-state domain. -/
-abbrev PositiveState
+structure PositiveState
     {State : Type*}
-    (Ω : PositiveStateDomain State) :=
-  {val : State // val ∈ Ω.carrier}
+    (Ω : PositiveStateDomain State) where
+  val : State
+  mem : val ∈ Ω.carrier
 
 namespace PositiveState
 
 variable {State : Type*} {Ω : PositiveStateDomain State}
 
-/-- Compatibility accessor for the underlying state. -/
-abbrev val (ρ : PositiveState Ω) : State := ρ.1
-
-/-- Compatibility accessor for domain membership. -/
-abbrev mem (ρ : PositiveState Ω) : ρ.val ∈ Ω.carrier := ρ.2
-
 instance : CoeOut (PositiveState Ω) State where
-  coe ρ := ρ.1
+  coe ρ := ρ.val
 
 @[simp]
 theorem coe_mk
     (x : State)
     (hx : x ∈ Ω.carrier) :
-    ((⟨x, hx⟩ : PositiveState Ω) : State) = x :=
+    ((PositiveState.mk x hx : PositiveState Ω) : State) = x :=
   rfl
 
 /-- Positive states are equal when their underlying states are equal. -/
@@ -159,8 +153,9 @@ variable (H : KMSHolonomyTransport State Ω)
 
 /-- Transported positive state. -/
 def transported
-    (ρ : PositiveState Ω) : PositiveState Ω :=
-  ⟨H.transport ρ.val, H.preserves_domain ρ.val ρ.mem⟩
+    (ρ : PositiveState Ω) : PositiveState Ω where
+  val := H.transport ρ.val
+  mem := H.preserves_domain ρ.val ρ.mem
 
 end KMSHolonomyTransport
 
@@ -258,7 +253,7 @@ theorem detailed_balance_of_cost_zero
 
 end BuresDetailedBalanceBridge
 
-/-! ## 6. KMS/Bilingual analyticity compatibility -/
+/-! ## 6. KMS/Bilingual analyticity compatibility socket -/
 
 /--
 Compatibility between bilingual analyticity and KMS/Wilson holonomy transport.

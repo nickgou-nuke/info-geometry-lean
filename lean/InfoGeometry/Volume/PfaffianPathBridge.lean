@@ -18,7 +18,7 @@ This file records the separate signed combinatorial owner surface:
 * Pfaffian² = determinant/even-volume shadow.
 
 The full Lindström--Gessel--Viennot and signed Pfaffian expansion theorems
-are property-gated here.
+are witness-gated here.
 -/
 
 noncomputable section
@@ -40,16 +40,16 @@ structure FinitePathMatrixPacket where
   /-- Source/sink labels. -/
   Index : Type*
 
-  /-- Finite index property. -/
+  /-- Finite index witness. -/
   indexFinite : Fintype Index
 
-  /-- Decidable equality property. -/
+  /-- Decidable equality witness. -/
   indexDecidableEq : DecidableEq Index
 
   /-- Path type from source `i` to sink `j`. -/
   Path : Index → Index → Type*
 
-  /-- Finite path-set property. -/
+  /-- Finite path-set witness. -/
   pathFinite : ∀ i j : Index, Fintype (Path i j)
 
   /-- Path amplitude. -/
@@ -83,7 +83,7 @@ structure FinitePathMatrixPacket where
   Witness that the determinant equals the signed path-family expansion.
 
   This is the determinant expansion owner.  The stronger LGV reduction to
-  nonintersecting paths should be a separate property with graph hypotheses.
+  nonintersecting paths should be a separate witness with graph hypotheses.
   -/
   det_eq_signedPathFamilyExpansion :
     (letI : Fintype Index := indexFinite
@@ -112,16 +112,16 @@ structure SkewPairingMatrixPacket where
   /-- Boundary endpoints / defects to be paired. -/
   Boundary : Type*
 
-  /-- Finite endpoint property. -/
+  /-- Finite endpoint witness. -/
   boundaryFinite : Fintype Boundary
 
-  /-- Decidable equality property. -/
+  /-- Decidable equality witness. -/
   boundaryDecidableEq : DecidableEq Boundary
 
   /-- Antisymmetric pair-weight matrix. -/
   W : Matrix Boundary Boundary ℝ
 
-  /-- Skewness property. -/
+  /-- Skewness witness. -/
   skew : ∀ i j : Boundary, W i j = - W j i
 
 /--
@@ -137,7 +137,7 @@ structure PfaffianMatchingExpansionPacket where
   /-- Perfect pairings/matchings of the boundary endpoints. -/
   PerfectPairing : Type*
 
-  /-- Finite perfect-pairing property. -/
+  /-- Finite perfect-pairing witness. -/
   pairingFinite : Fintype PerfectPairing
 
   /-- Sign of a perfect pairing. Usually ±1. -/
@@ -175,11 +175,6 @@ structure PfaffianMatchingExpansionPacket where
   pfaffian_sq_eq_determinantEvenVolume :
     pfaffianAmplitude ^ 2 = determinantEvenVolume
 
-theorem PfaffianMatchingExpansionPacket.pairingSign_eq_one_or_neg_one
-    (P : PfaffianMatchingExpansionPacket) (p : P.PerfectPairing) :
-    P.pairingSign p = 1 ∨ P.pairingSign p = -1 := by
-  exact sq_eq_one_iff.mp (P.pairingSign_sq p)
-
 /--
 The signed Pfaffian is the signed sum over perfect pairings.
 -/
@@ -201,18 +196,6 @@ theorem determinant_even_volume_eq_pfaffian_sq
     P.determinantEvenVolume = P.pfaffianAmplitude ^ 2 := by
   exact P.pfaffian_sq_eq_determinantEvenVolume.symm
 
-theorem PfaffianMatchingExpansionPacket.determinantEvenVolume_nonneg
-    (P : PfaffianMatchingExpansionPacket) :
-    0 ≤ P.determinantEvenVolume := by
-  rw [← P.pfaffian_sq_eq_determinantEvenVolume]
-  exact sq_nonneg _
-
-theorem PfaffianMatchingExpansionPacket.determinantEvenVolume_eq_zero_iff
-    (P : PfaffianMatchingExpansionPacket) :
-    P.determinantEvenVolume = 0 ↔ P.pfaffianAmplitude = 0 := by
-  rw [← P.pfaffian_sq_eq_determinantEvenVolume]
-  exact sq_eq_zero_iff
-
 /-! ## 3. Compatibility with positive-branch Pfaffian -/
 
 /--
@@ -222,7 +205,7 @@ The existing file owns a nonnegative branch such as
 
   pf_pos(W)^2 = |det W|.
 
-This property says that this positive branch is the absolute value of the
+This witness says that this positive branch is the absolute value of the
 signed combinatorial Pfaffian.
 -/
 structure PositiveBranchPfaffianCompatibility
@@ -235,19 +218,6 @@ structure PositiveBranchPfaffianCompatibility
 
   pf_pos_eq_abs_signed :
     pf_pos = |P.pfaffianAmplitude|
-
-theorem PositiveBranchPfaffianCompatibility.pf_pos_nonneg
-    {P : PfaffianMatchingExpansionPacket}
-    (C : PositiveBranchPfaffianCompatibility P) :
-    0 ≤ C.pf_pos := by
-  rw [C.pf_pos_eq_abs_signed]
-  exact abs_nonneg _
-
-theorem PositiveBranchPfaffianCompatibility.pf_pos_eq_zero_iff
-    {P : PfaffianMatchingExpansionPacket}
-    (C : PositiveBranchPfaffianCompatibility P) :
-    C.pf_pos = 0 ↔ P.pfaffianAmplitude = 0 := by
-  rw [C.pf_pos_eq_abs_signed, abs_eq_zero]
 
 /-! ## 4. Chiral arrow interpretation -/
 
@@ -311,9 +281,9 @@ Owner-side bridge theorem currently available from explicit Pfaffian/path data:
 the Pfaffian matching packet carries the even-volume shadow identity.
 
 This is the honest theorem currently owed by the packet. Stronger signed path /
-chiral-word comparison theorems require property terms, not just property types.
+chiral-word comparison theorems require witness terms, not just witness types.
 -/
-theorem pfaffian_sq_eq_determinantEvenVolume
+theorem constructPfaffianPathBridgeTarget
     (P : PfaffianPathBridgePacket) :
     P.pfaffianPairings.pfaffianAmplitude ^ 2 =
       P.pfaffianPairings.determinantEvenVolume :=

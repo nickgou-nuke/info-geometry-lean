@@ -105,7 +105,7 @@ theorem sector_covEnergyNumber_nonneg_of_fermion
   simp only [sector, hG]
   exact Finset.sum_nonneg (fun p hp =>
     localEnergyNumberCovariance_fermion_nonneg
-      (G.register.property p hp) beta nu)
+      (G.register.prime_mem p hp) beta nu)
 
 /-- The local covariance quadratic form is a square weighted by the local
 fermionic variance. -/

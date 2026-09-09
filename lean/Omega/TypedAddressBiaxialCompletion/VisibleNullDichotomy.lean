@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.FailureSupport
+import Omega.TypedAddressBiaxialCompletion.FailureWitnessSupport
 import Omega.TypedAddressBiaxialCompletion.OffsliceDichotomy
 
 namespace Omega.TypedAddressBiaxialCompletion

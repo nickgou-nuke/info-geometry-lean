@@ -11,7 +11,7 @@ This module formalizes the dictionary:
 * anomaly residue       = projective obstruction;
 * Poincare height       = positive scale reconstructed from anomaly data.
 
-It does not prove GR, holography, or AdS/CFT.  It provides the property layer
+It does not prove GR, holography, or AdS/CFT.  It provides the witness layer
 where a concrete model may identify anomaly/capacity data with a geometric
 height.
 -/
@@ -45,20 +45,18 @@ An inertial operator stage.
 The inertial condition is that `E` commutes with every observable in the chosen
 sector.
 -/
-abbrev InertialStage
-    (Op : Type*) [Ring Op] :=
-  {p : Op × Set Op //
-    ∀ x : Op, x ∈ p.2 → commutator p.1 x = 0}
+structure InertialStage
+    (Op : Type*) [Ring Op] where
+  E : Op
+  observables : Set Op
+
+  inertial_commutes :
+    ∀ x : Op, x ∈ observables → commutator E x = 0
 
 namespace InertialStage
 
 variable {Op : Type*} [Ring Op]
 variable (I : InertialStage Op)
-
-abbrev E : Op := I.1.1
-abbrev observables : Set Op := I.1.2
-abbrev inertial_commutes :
-    ∀ x : Op, x ∈ I.observables → commutator I.E x = 0 := I.2
 
 /-- Named form of the inertial commutator condition. -/
 theorem commutator_eq_zero
@@ -76,22 +74,15 @@ A driven flow on an operator algebra.
 
 This abstracts a modular/chemical-potential/curvature deformation.
 -/
-abbrev DrivenOperatorFlow
-    (Op : Type*) [Ring Op] :=
-  {f : ℝ → Op → Op //
-    (∀ x : Op, f 0 x = x) ∧
-      ∀ s t x, f (s + t) x = f s (f t x)}
+structure DrivenOperatorFlow
+    (Op : Type*) [Ring Op] where
+  flow : ℝ → Op → Op
 
-namespace DrivenOperatorFlow
+  flow_zero :
+    ∀ x : Op, flow 0 x = x
 
-variable {Op : Type*} [Ring Op]
-
-abbrev flow (F : DrivenOperatorFlow Op) : ℝ → Op → Op := F.1
-abbrev flow_zero (F : DrivenOperatorFlow Op) : ∀ x : Op, F.flow 0 x = x := F.2.1
-abbrev flow_add (F : DrivenOperatorFlow Op) :
-    ∀ s t x, F.flow (s + t) x = F.flow s (F.flow t x) := F.2.2
-
-end DrivenOperatorFlow
+  flow_add :
+    ∀ s t x, flow (s + t) x = flow s (flow t x)
 
 /--
 Shear produced by applying the flow to an observable before taking the
@@ -119,7 +110,7 @@ def HasDrivenShear
 /--
 A covariant readout of operator strain.
 
-This is the Erlangen interface for quantities such as effective metric,
+This is the Erlanger socket for quantities such as effective metric,
 curvature, Einstein tensor, stress tensor, or anomaly current.
 -/
 structure CovariantReadout
@@ -165,24 +156,25 @@ The primitive equation is
 
 `height * anomaly = capacity 1`.
 -/
-abbrev FiniteAnomalyHeightDatum
-    (Op : Type*) [Monoid Op] :=
-  {p : (Op → ℝ) × (ℝ × ℝ) //
-    0 < p.1 1 ∧
-      0 < p.2.1 ∧
-      p.2.2 * p.2.1 = p.1 1}
+structure FiniteAnomalyHeightDatum
+    (Op : Type*) [Monoid Op] where
+  capacity : Op → ℝ
+  anomaly : ℝ
+  height : ℝ
+
+  capacity_pos :
+    0 < capacity 1
+
+  anomaly_pos :
+    0 < anomaly
+
+  height_relation :
+    height * anomaly = capacity 1
 
 namespace FiniteAnomalyHeightDatum
 
 variable {Op : Type*} [Monoid Op]
 variable (H : FiniteAnomalyHeightDatum Op)
-
-abbrev capacity : Op → ℝ := H.1.1
-abbrev anomaly : ℝ := H.1.2.1
-abbrev height : ℝ := H.1.2.2
-abbrev capacity_pos : 0 < H.capacity 1 := H.2.1
-abbrev anomaly_pos : 0 < H.anomaly := H.2.2.1
-abbrev height_relation : H.height * H.anomaly = H.capacity 1 := H.2.2.2
 
 /-- The reconstructed height is positive. -/
 theorem height_pos :
@@ -212,22 +204,15 @@ Extended-height datum allowing the flat/anomaly-zero branch.
 Use this when the model wants to interpret `anomaly = 0` as an infinite or
 boundary height.
 -/
-abbrev ExtendedAnomalyHeightDatum
-    (Op : Type*) [Monoid Op] :=
-  {p : (Op → ℝ≥0∞) × (ℝ≥0∞ × ℝ≥0∞) //
-    p.2.2 * p.2.1 = p.1 1}
+structure ExtendedAnomalyHeightDatum
+    (Op : Type*) [Monoid Op] where
+  capacity : Op → ℝ≥0∞
+  anomaly : ℝ≥0∞
+  height : ℝ≥0∞
 
-namespace ExtendedAnomalyHeightDatum
-
-variable {Op : Type*} [Monoid Op]
-variable (H : ExtendedAnomalyHeightDatum Op)
-
-abbrev capacity : Op → ℝ≥0∞ := H.1.1
-abbrev anomaly : ℝ≥0∞ := H.1.2.1
-abbrev height : ℝ≥0∞ := H.1.2.2
-abbrev height_relation : H.height * H.anomaly = H.capacity 1 := H.2
-
-end ExtendedAnomalyHeightDatum
+  /-- Reconstruction law in extended nonnegative scalars. -/
+  height_relation :
+    height * anomaly = capacity 1
 
 /-! ## 5. Anomaly as projective obstruction -/
 
@@ -235,28 +220,71 @@ end ExtendedAnomalyHeightDatum
 A protected anomaly/topological obstruction datum.
 
 The grading or Clifford charge alone does not imply a nonzero anomaly.  This
-structure records the model-specific theorem or property that an anomaly is
+structure records the model-specific theorem or hypothesis that an anomaly is
 protected by a topological charge.
 -/
-abbrev ProtectedAnomalyDatum
-    (State : Type*) :=
-  {p : (State → ℝ) × (State → ℤ) //
+structure ProtectedAnomalyDatum
+    (State : Type*) where
+  anomalyReadout : State → ℝ
+  topologicalCharge : State → ℤ
+
+  anomaly_protected_by_charge :
     ∀ s : State,
-      p.2 s ≠ 0 →
-        p.1 s ≠ 0}
+      topologicalCharge s ≠ 0 →
+        anomalyReadout s ≠ 0
 
-namespace ProtectedAnomalyDatum
+/--
+A stabilization witness for the “flat membrane snaps into tubule” mechanism.
 
-variable {State : Type*}
-variable (P : ProtectedAnomalyDatum State)
+This is intentionally model-level.  Clifford grading plus anomaly data do not
+alone prove stability; a variational/energy certificate is required.
+-/
+structure AnomalousTubuleStabilizationWitness
+    (State : Type*) where
+  flatVacuum : State → Prop
+  stableNonflat : State → Prop
 
-abbrev anomalyReadout : State → ℝ := P.1.1
-abbrev topologicalCharge : State → ℤ := P.1.2
-abbrev anomaly_protected_by_charge :
+  anomaly : State → ℝ
+  topologicalCharge : State → ℤ
+  energy : State → ℝ
+
+  /-- Protected nonzero anomaly and charge force a stable non-flat solution. -/
+  anomaly_charge_forces_stable_nonflat :
     ∀ s : State,
-      P.topologicalCharge s ≠ 0 →
-        P.anomalyReadout s ≠ 0 := P.2
+      anomaly s ≠ 0 →
+      topologicalCharge s ≠ 0 →
+        ∃ y : State, stableNonflat y
 
-end ProtectedAnomalyDatum
+/-! ## 6. GR/Erlanger witness layer -/
+
+/--
+An Erlanger-GR reconstruction witness.
+
+This says that effective geometric data are reconstructed from driven operator
+shear and anomaly-height data.  It does not assert the Einstein equations as a
+universal theorem.
+-/
+structure ErlangerGRReconstructionWitness
+    (G : Type*) (Op : Type*) [Group G] [Ring Op]
+    (α : SymmetryAction G Op)
+    (Geometry : Type*) where
+  inertial : InertialStage Op
+  drivenFlow : DrivenOperatorFlow Op
+
+  curvatureReadout :
+    CurvatureFromShear G Op α Geometry
+
+  /-- Model-specific effective geometry extracted from shear. -/
+  effectiveGeometry :
+    Op → Geometry
+
+  effectiveGeometry_eq_curvature :
+    ∀ shear : Op,
+      effectiveGeometry shear =
+        curvatureReadout.curvatureOf shear
+
+  /-- Height/scale reconstructed from anomaly data. -/
+  heightDatum :
+    FiniteAnomalyHeightDatum Op
 
 end InfoGeometry.Geometry.AnomalousErlangerHeight

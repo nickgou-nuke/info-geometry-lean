@@ -53,7 +53,7 @@ theorem tracial_limit_persistence
   -- Applying the global extension limit property
   rw [h_extends n (x * y)]
   rw [h_extends n (y * x)]
-  -- Closing with the local tracial property
+  -- Closing with the local tracial hypothesis
   exact h_local_trace n x y
 
 /-!
@@ -68,14 +68,8 @@ action at the finite stages and prove its colimit persistence.
 A localized modular automorphism proxy at stage n. 
 In full Tomita-Takesaki theory, this is `σ_t(x) = Δ^{it} x Δ^{-it}`.
 -/
-abbrev ModularAutomorphism (n : ℕ) := Stage n →+* Stage n
-
-namespace ModularAutomorphism
-
-/-- Compatibility accessor for the native stage ring homomorphism. -/
-abbrev auto (σ : ModularAutomorphism n) : Stage n →+* Stage n := σ
-
-end ModularAutomorphism
+structure ModularAutomorphism (n : ℕ) where
+  auto : Stage n →+* Stage n
 
 /-- The modular automorphism sequence must be structurally compatible with the bonding map. -/
 def IsCompatibleModularFlow (σ : ∀ n, ModularAutomorphism n) : Prop :=

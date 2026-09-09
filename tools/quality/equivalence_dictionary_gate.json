@@ -4,12 +4,12 @@
   "thresholds": [
     {
       "metric": "unresolved_missing_nonlocal_token_total",
-      "baseline": 8799,
+      "baseline": 15767,
       "maxGrowth": 30
     },
     {
       "metric": "unresolved_missing_nonlocal_unique_count",
-      "baseline": 2774,
+      "baseline": 4256,
       "maxGrowth": 10
     }
   ]

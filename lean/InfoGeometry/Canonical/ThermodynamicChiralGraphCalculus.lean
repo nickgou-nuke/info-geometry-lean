@@ -50,7 +50,7 @@ inductive ThermoTerm : Type
   | tensor : ThermoTerm → ThermoTerm → ThermoTerm
   | trace : ThermoTerm → ThermoTerm
 
-/-- A finite cycle property is represented here by its ordered edge list.
+/-- A finite cycle witness is represented here by its ordered edge list.
 
 The well-formedness/closure proof is intentionally separated from this readout
 packet, so graph-navigation tooling can propose cycles before Lean owner files
@@ -296,7 +296,7 @@ theorem cycleCurvatureLog_eq_zero_of_logAffinity_eq_gaugeBoundary
     intro e he
     exact hexact e he)
 
-/-- Owner-facing property packet for the log/product Wilson identity on one cycle.
+/-- Owner-facing hypothesis packet for the log/product Wilson identity on one cycle.
 
 The analytic proof of this law needs positivity of all rate ratios plus a list
 `log`/`prod` exchange theorem.  The packet keeps the boundary explicit without
@@ -304,6 +304,16 @@ using placeholder proofs: a later owner module may construct this structure from
 positivity assumptions. -/
 def LogWilsonCycleLaw (C : Cycle E) : Prop :=
   G.DetailedBalanceOnCycle C ↔ G.cycleCurvatureLog C = 0
+
+namespace LogWilsonCycleLaw
+
+/-- Compatibility theorem for the former one-field law packet. -/
+theorem detailedBalance_iff_zero_log_curvature
+    (h : G.LogWilsonCycleLaw C) :
+    G.DetailedBalanceOnCycle C ↔ G.cycleCurvatureLog C = 0 :=
+  h
+
+end LogWilsonCycleLaw
 
 /-- Global detailed balance relative to a chosen family of cycles. -/
 def GlobalDetailedBalance (cycles : Set (Cycle E)) : Prop :=
@@ -369,20 +379,20 @@ linear algebra. -/
 structure SchnakenbergDecomposition [Fintype E] [DecidableEq V] (A : EdgeField (E := E)) where
   gradientPart : EdgeField (E := E)
   cyclePart : EdgeField (E := E)
-  gradient_property : G.IsGradientFlow gradientPart
-  cycle_property : G.IsCycleFlow cyclePart
+  gradient_certificate : G.IsGradientFlow gradientPart
+  cycle_certificate : G.IsCycleFlow cyclePart
   reconstruct : ∀ e, A e = gradientPart e + cyclePart e
   unique : ∀ B C : EdgeField (E := E),
     G.IsGradientFlow B → G.IsCycleFlow C → (∀ e, A e = B e + C e) →
       B = gradientPart ∧ C = cyclePart
 
 /-- Read back the Schnakenberg decomposition as an existence-and-uniqueness theorem
-from its metric/owner property. -/
+from its metric/owner certificate. -/
 theorem schnakenberg_decomposition [Fintype E] [DecidableEq V]
     (A : EdgeField (E := E)) (H : G.SchnakenbergDecomposition A) :
     ∃! P : EdgeField (E := E) × EdgeField (E := E),
       G.IsGradientFlow P.1 ∧ G.IsCycleFlow P.2 ∧ ∀ e, A e = P.1 e + P.2 e := by
-  refine ⟨(H.gradientPart, H.cyclePart), ⟨H.gradient_property, H.cycle_property,
+  refine ⟨(H.gradientPart, H.cyclePart), ⟨H.gradient_certificate, H.cycle_certificate,
     H.reconstruct⟩, ?_⟩
   intro P hP
   rcases P with ⟨B, C⟩
@@ -407,14 +417,8 @@ theorem cycleCurvatureLog_of_gradient_eq_zero
 /-- A time-indexed thermodynamic graph.  We use finite/discrete time here to keep
 Mandal--Jarzynski style pumping constraints algebraic and fast; continuous-time
 integration can later be an owner layer over this readout. -/
-abbrev DrivenThermoGraph (Time : Type) := Time → DirectedThermoGraph V E
-
-namespace DrivenThermoGraph
-
-def graphAt (D : DrivenThermoGraph (V := V) (E := E) Time) :
-    Time → DirectedThermoGraph V E := D
-
-end DrivenThermoGraph
+structure DrivenThermoGraph (Time : Type) where
+  graphAt : Time → DirectedThermoGraph V E
 
 /-- Discrete pumped-current/holonomy readout over one driving period. -/
 noncomputable def DrivenThermoGraph.integratedPumpedCurrent {Time : Type} [Fintype Time]
@@ -422,7 +426,7 @@ noncomputable def DrivenThermoGraph.integratedPumpedCurrent {Time : Type} [Finty
   ∑ t, (D.graphAt t).cycleCurvatureLog C
 
 /-- Barrier-only driving packet: at each time the cycle log-affinity is exact and
-the chosen cycle is gauge-closed.  This is the algebraic no-pumping property. -/
+the chosen cycle is gauge-closed.  This is the algebraic no-pumping hypothesis. -/
 structure DrivenThermoGraph.BarrierDrivenGraph {Time : Type} [Fintype Time]
     (D : DrivenThermoGraph (V := V) (E := E) Time) (C : Cycle E) where
   gaugeClosed : ∀ t, (D.graphAt t).GaugeClosedCycle C
@@ -502,7 +506,7 @@ theorem pathForwardBackwardRatio_eq_exp_pathEntropyProduction
 /-- Abstract finite-ensemble integral fluctuation law: the expectation of
 `exp(-σ)` is one.  The expectation functional is supplied by the owner
 probability model over paths. -/
-structure IntegralFluctuationData (PathSample : Type) where
+structure IntegralFluctuationLaw (PathSample : Type) where
   entropyProduction : PathSample → ℝ
   expectation : (PathSample → ℝ) → ℝ
   exp_neg_entropy_expectation_eq_one :
@@ -510,18 +514,31 @@ structure IntegralFluctuationData (PathSample : Type) where
 
 /-- Integral fluctuation theorem readback from the owner probability packet. -/
 theorem integral_fluctuation_theorem {PathSample : Type}
-    (L : IntegralFluctuationData PathSample) :
+    (L : IntegralFluctuationLaw PathSample) :
     L.expectation (fun ω => Real.exp (-(L.entropyProduction ω))) = 1 :=
   L.exp_neg_entropy_expectation_eq_one
 
 /-- A path-level Gallavotti--Cohen style ratio packet connecting forward/backward
 path probabilities to entropy production. -/
-structure PathProbabilityRatioData (PathSample : Type) where
+structure PathProbabilityRatioLaw (PathSample : Type) where
   forwardProbability : PathSample → ℝ
   backwardProbability : PathSample → ℝ
   entropyProduction : PathSample → ℝ
   ratio_law : ∀ ω, forwardProbability ω / backwardProbability ω =
     Real.exp (entropyProduction ω)
+
+/-- Forward/backward path probability ratio equals exponentiated path entropy
+production by direct readback from the owner law. -/
+theorem forward_backward_path_probability_ratio_eq_exp_entropy
+    {PathSample : Type} (L : PathProbabilityRatioLaw PathSample) (ω : PathSample) :
+    L.forwardProbability ω / L.backwardProbability ω = Real.exp (L.entropyProduction ω) :=
+  L.ratio_law ω
+
+/-- Read back the detailed-balance/log-curvature equivalence from an owner law. -/
+theorem detailedBalanceOnCycle_iff_cycleCurvatureLog_eq_zero_of_law
+    (C : Cycle E) (H : G.LogWilsonCycleLaw C) :
+    G.DetailedBalanceOnCycle C ↔ G.cycleCurvatureLog C = 0 :=
+  H.detailedBalance_iff_zero_log_curvature
 
 /-- Auxiliary: the Wilson loop equals `exp` of the additive log-curvature,
 under positivity of all rate ratios along the cycle.
@@ -569,11 +586,11 @@ theorem globalDetailedBalance_iff_allLogCurvaturesVanish_of_pos
   constructor
   · intro hDB C hC
     exact
-      (G.logWilsonCycleLaw_of_pos C (hpos C hC)).1
+      (G.logWilsonCycleLaw_of_pos C (hpos C hC)).detailedBalance_iff_zero_log_curvature.1
         (hDB C hC)
   · intro hLog C hC
     exact
-      (G.logWilsonCycleLaw_of_pos C (hpos C hC)).2
+      (G.logWilsonCycleLaw_of_pos C (hpos C hC)).detailedBalance_iff_zero_log_curvature.2
         (hLog C hC)
 
 /-! ### Kirchhoff conservation law -/
@@ -594,7 +611,7 @@ structure KirchhoffConservation [Fintype E] [DecidableEq V] where
 
 /-! ### Entropy production nonnegativity -/
 
-/-- Entropy production nonnegativity property.
+/-- Entropy production nonnegativity certificate.
 
 This is still semantic: pointwise nonnegativity is supplied by an owner proof,
 while total nonnegativity follows by summing finite nonnegative contributions. -/
@@ -650,7 +667,7 @@ theorem entropyProduction_nonneg_of_stochastic_rates [Fintype E]
     G.stochasticCurrent_mul_stochasticAffinity_nonneg_of_positive_flux e
       (hforward e) (hreverse e)
 
-/-- Build the entropy-production nonnegativity property from pointwise edge
+/-- Build the entropy-production nonnegativity certificate from pointwise edge
 certificates. -/
 def entropyProductionNonnegOfPointwise [Fintype E]
     (h : ∀ e, 0 ≤ G.flow e * G.affinity e) :
@@ -709,7 +726,7 @@ structure EquilibriumExistenceUniqueness
   isEquilibrium : G.IsEquilibriumDistribution distribution
   unique : ∀ π, G.IsEquilibriumDistribution π → π = distribution
 
-/-- Read back existence and uniqueness from the owner property. -/
+/-- Read back existence and uniqueness from the owner certificate. -/
 theorem existsUnique_equilibriumDistribution
     [Fintype V] [Fintype E] [DecidableEq V]
     (H : G.EquilibriumExistenceUniqueness) :
@@ -785,7 +802,7 @@ inductive TriangleVertex : Type
 /-- Oriented edges of the explicit triangle example. -/
 inductive TriangleEdge : Type
   | AB | BC | CA
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 namespace ChiralTriangleGraph
 
@@ -807,50 +824,16 @@ def graph (T : ChiralTriangleRates) : DirectedThermoGraph TriangleVertex Triangl
     | TriangleEdge.AB => T.kBA
     | TriangleEdge.BC => T.kCB
     | TriangleEdge.CA => T.kAC
-  conductance
-    | TriangleEdge.AB => T.kAB
-    | TriangleEdge.BC => T.kBC
-    | TriangleEdge.CA => T.kCA
-  bias
-    | TriangleEdge.AB => T.kBA
-    | TriangleEdge.BC => T.kCB
-    | TriangleEdge.CA => T.kAC
-  capacity
-    | TriangleVertex.A => 1
-    | TriangleVertex.B => 1
-    | TriangleVertex.C => 1
-  probability
-    | TriangleVertex.A => 1 / 3
-    | TriangleVertex.B => 1 / 3
-    | TriangleVertex.C => 1 / 3
-  potential
-    | TriangleVertex.A => 0
-    | TriangleVertex.B => 0
-    | TriangleVertex.C => 0
-  flow
-    | TriangleEdge.AB => T.kAB - T.kBA
-    | TriangleEdge.BC => T.kBC - T.kCB
-    | TriangleEdge.CA => T.kCA - T.kAC
-  affinity
-    | TriangleEdge.AB => Real.log (T.kAB / T.kBA)
-    | TriangleEdge.BC => Real.log (T.kBC / T.kCB)
-    | TriangleEdge.CA => Real.log (T.kCA / T.kAC)
-
-theorem graph_entropyProduction_nonneg_of_pos
-    (T : ChiralTriangleRates)
-    (hAB : 0 < T.kAB) (hBA : 0 < T.kBA)
-    (hBC : 0 < T.kBC) (hCB : 0 < T.kCB)
-    (hCA : 0 < T.kCA) (hAC : 0 < T.kAC) :
-    0 ≤ DirectedThermoGraph.entropyProduction (graph T) := by
-  apply DirectedThermoGraph.entropyProduction_nonneg_of_pointwise
-  intro e
-  cases e with
-  | AB =>
-      simpa [graph] using irreversibleFluxAffinity_nonneg_of_pos hAB hBA
-  | BC =>
-      simpa [graph] using irreversibleFluxAffinity_nonneg_of_pos hBC hCB
-  | CA =>
-      simpa [graph] using irreversibleFluxAffinity_nonneg_of_pos hCA hAC
+  -- DEBT_ID: CTG_TRIVIAL_READOUTS
+  -- DEBT_KIND: ZERO_DATUM
+  -- ZERO_DATUM: Trivial placeholders for triangle graph model
+  conductance := fun _ => 0
+  bias := fun _ => 0
+  capacity := fun _ => 0
+  probability := fun _ => 0
+  potential := fun _ => 0
+  flow := fun _ => 0
+  affinity := fun _ => 0
 
 /-- The ordered oriented triangle cycle `A → B → C → A`. -/
 def cycle : Cycle TriangleEdge where
@@ -936,7 +919,7 @@ end DirectedThermoGraph
 
 The syntax-level resource predicate is declared before packets that consume
 it, so those packets can refer to the actual owner rather than an untyped
-semantic property.
+semantic certificate.
 -/
 
 namespace ThermoTerm
@@ -974,7 +957,7 @@ end ThermoTerm
 
 The fields are deliberately proof-carrying assumptions/witnesses, not analytic
 closure claims.  Later modules can replace these fields by owner theorems. -/
-structure ThermodynamicGraphLambdaData where
+structure ThermodynamicGraphLambdaPacket where
   term : ThermoTerm
   Vertex : Type
   Edge : Type
@@ -984,40 +967,45 @@ structure ThermodynamicGraphLambdaData where
   probabilisticSemantics : ∀ v : Vertex, 0 ≤ graph.probability v
   circuitSemantics : DirectedThermoGraph.CircuitSemantics graph
   wilsonLoopSemantics : DirectedThermoGraph.WilsonLoopSemantics graph
+  semanticInterpretation_cert : DirectedThermoGraph.ThermodynamicSemantics graph
+  linearResourceDiscipline_cert : ThermoTerm.IsLinear term
+  probabilisticSemantics_cert : ∀ v : Vertex, 0 ≤ graph.probability v
+  circuitSemantics_cert : DirectedThermoGraph.CircuitSemantics graph
+  wilsonLoopSemantics_cert : DirectedThermoGraph.WilsonLoopSemantics graph
 
-namespace ThermodynamicGraphLambdaData
+namespace ThermodynamicGraphLambdaPacket
 
-@[simp] theorem semanticInterpretation_holds (P : ThermodynamicGraphLambdaData) :
+@[simp] theorem semanticInterpretation_holds (P : ThermodynamicGraphLambdaPacket) :
     DirectedThermoGraph.ThermodynamicSemantics P.graph :=
-  P.semanticInterpretation
+  P.semanticInterpretation_cert
 
-@[simp] theorem linearResourceDiscipline_holds (P : ThermodynamicGraphLambdaData) :
+@[simp] theorem linearResourceDiscipline_holds (P : ThermodynamicGraphLambdaPacket) :
     ThermoTerm.IsLinear P.term :=
-  P.linearResourceDiscipline
+  P.linearResourceDiscipline_cert
 
-@[simp] theorem probabilisticSemantics_holds (P : ThermodynamicGraphLambdaData) :
+@[simp] theorem probabilisticSemantics_holds (P : ThermodynamicGraphLambdaPacket) :
     ∀ v : P.Vertex, 0 ≤ P.graph.probability v :=
-  P.probabilisticSemantics
+  P.probabilisticSemantics_cert
 
-@[simp] theorem circuitSemantics_holds (P : ThermodynamicGraphLambdaData) :
+@[simp] theorem circuitSemantics_holds (P : ThermodynamicGraphLambdaPacket) :
     DirectedThermoGraph.CircuitSemantics P.graph :=
-  P.circuitSemantics
+  P.circuitSemantics_cert
 
-@[simp] theorem wilsonLoopSemantics_holds (P : ThermodynamicGraphLambdaData) :
+@[simp] theorem wilsonLoopSemantics_holds (P : ThermodynamicGraphLambdaPacket) :
     DirectedThermoGraph.WilsonLoopSemantics P.graph :=
-  P.wilsonLoopSemantics
+  P.wilsonLoopSemantics_cert
 
 /-- Construct a packet from the actual syntax and probability obligations.
 
 The graph readout fields are supplied by their native definitions and theorems;
-they are not additional semantic property fields. -/
+they are not additional semantic witness sockets. -/
 def ofReadouts
     (term : ThermoTerm)
     (V E : Type)
     (graph : DirectedThermoGraph V E)
     (hlinear : ThermoTerm.IsLinear term)
     (hprob : ∀ v : V, 0 ≤ graph.probability v) :
-    ThermodynamicGraphLambdaData where
+    ThermodynamicGraphLambdaPacket where
   term := term
   Vertex := V
   Edge := E
@@ -1027,8 +1015,13 @@ def ofReadouts
   probabilisticSemantics := hprob
   circuitSemantics := DirectedThermoGraph.circuitSemantics_holds graph
   wilsonLoopSemantics := DirectedThermoGraph.wilsonLoopSemantics_holds graph
+  semanticInterpretation_cert := DirectedThermoGraph.thermodynamicSemantics_holds graph
+  linearResourceDiscipline_cert := hlinear
+  probabilisticSemantics_cert := hprob
+  circuitSemantics_cert := DirectedThermoGraph.circuitSemantics_holds graph
+  wilsonLoopSemantics_cert := DirectedThermoGraph.wilsonLoopSemantics_holds graph
 
-end ThermodynamicGraphLambdaData
+end ThermodynamicGraphLambdaPacket
 
 end
 
@@ -1172,12 +1165,10 @@ end ThermoTerm
 /-! ### Trace/port closure correctness -/
 
 /-- Abstract port signature for graph terms. -/
-abbrev PortSignature := Nat → Prop
+structure PortSignature where
+  openPort : Nat → Prop
 
 namespace PortSignature
-
-abbrev openPort (S : PortSignature) : Nat → Prop :=
-  S
 
 /-- A port signature is closed when no open port remains. -/
 def IsClosed (S : PortSignature) : Prop :=
@@ -1188,8 +1179,8 @@ def OnlyPort (S : PortSignature) (p : Nat) : Prop :=
   ∀ q, S.openPort q → q = p
 
 /-- Closing a port removes that port from the open-port predicate. -/
-def tracePort (S : PortSignature) (p : Nat) : PortSignature :=
-  fun q => S.openPort q ∧ q ≠ p
+def tracePort (S : PortSignature) (p : Nat) : PortSignature where
+  openPort q := S.openPort q ∧ q ≠ p
 
 /-- If `p` is the only possible open port, tracing/closing `p` leaves a closed
 signature. -/

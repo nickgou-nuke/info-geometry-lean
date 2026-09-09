@@ -127,7 +127,7 @@ theorem N_tau_real_mulVec_goldenEigenvector :
 Owner-backed readout for the finite Fibonacci braiding data:
 `F² = 1`, `det F = -1`, `B = F R F`, and the supplied Artin relation.
 
-The Artin equality is intentionally an explicit matrix property. This avoids
+The Artin equality is intentionally an explicit matrix hypothesis. This avoids
 claiming an analytic hexagon/phase proof before the cyclotomic computation is
 formalized in Lean.
 -/
@@ -144,11 +144,11 @@ theorem finite_braiding_input_readout
         fibonacciFusionMatrix τ s * fibonacciRMatrix q * fibonacciFusionMatrix τ s ∧
       fibonacciRMatrix q * fibonacciBMatrix q τ s * fibonacciRMatrix q =
         fibonacciBMatrix q τ s * fibonacciRMatrix q * fibonacciBMatrix q τ s := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact InfoGeometry.Categorical.FibonacciBraiding.F_sq τ s s_sq tau_sq_add_tau
-  · exact InfoGeometry.Categorical.FibonacciBraiding.det_F τ s s_sq tau_sq_add_tau
-  · exact InfoGeometry.Categorical.FibonacciBraiding.B_eq_FRF q τ s
-  · exact artin
+  exact ⟨
+    F_sq τ s s_sq tau_sq_add_tau,
+    det_F τ s s_sq tau_sq_add_tau,
+    B_eq_FRF q τ s,
+    artin⟩
 
 /-! ## Zorn/inductive-support readout -/
 

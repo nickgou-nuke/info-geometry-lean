@@ -9,7 +9,7 @@ Minimal sesquilinear readback on the complexification of the split `(1,1)` lane.
 
 This file adds an explicit complex sesquilinear pairing whose real restriction
 recovers the existing split bilinear/quadratic forms from `SplitQ11`.
-No new property packet and no placeholder theorem.
+No new witness packet and no placeholder theorem.
 -/
 
 noncomputable section

@@ -39,7 +39,7 @@ theorem modularPotential_is_exact_oneForm (q x x₀ : PositiveRay α) :
       dZeroForm (scalarPotential_zeroForm q) x x₀ := by
   funext a
   dsimp [dZeroForm, scalarPotential_zeroForm]
-  linarith [relativeModularPotential_transitive_cocycle q x x₀ a]
+  linarith [relativeModularPotential_cocycle q x x₀ a]
 
 /-- The discrete exterior derivative of a 1-form on a 2-simplex:
     (d₁ ω)(x, x₀, x₁) = ω(x₀, x₁) - ω(x, x₁) + ω(x, x₀). -/
@@ -60,19 +60,21 @@ theorem modularPotential_antisymm (q q₀ : PositiveRay α) :
     relativeModularPotential q₀ q =
       fun a => -relativeModularPotential q q₀ a := by
   funext a
-  exact relativeModularPotential_antisymm q q₀ a
+  have h := relativeModularPotential_cocycle q q₀ q a
+  simp only [relativeModularPotential_self] at h
+  linarith
 
 /-- Closed loop: V(q, q₀) + V(q₀, q) = 0. -/
 theorem modularPotential_closed_loop (q q₀ : PositiveRay α) (a : α) :
     relativeModularPotential q q₀ a + relativeModularPotential q₀ q a = 0 := by
-  have h_anti := relativeModularPotential_antisymm q q₀ a
+  have h_anti := congrFun (modularPotential_antisymm q q₀) a
   linarith
 
 /-- Path independence: V(q, q₀) + V(q₀, q₁) = V(q, q₁). -/
 theorem path_independence_of_exact_oneForm (q q₀ q₁ : PositiveRay α) (a : α) :
     relativeModularPotential q q₀ a + relativeModularPotential q₀ q₁ a =
       relativeModularPotential q q₁ a := by
-  exact (relativeModularPotential_transitive_cocycle q q₀ q₁ a).symm
+  exact (relativeModularPotential_cocycle q q₀ q₁ a).symm
 
 /-- A 1-form is closed if its d₁ is zero. -/
 def IsClosedOneForm (ω : OneForm α) : Prop :=
@@ -137,7 +139,7 @@ theorem modularPotential_is_closed_oneForm :
     IsClosedOneForm (relativeModularPotential (α := α)) := by
   intro x x₀ x₁ a
   unfold dOneForm
-  have h_cocycle := relativeModularPotential_transitive_cocycle x x₀ x₁ a
+  have h_cocycle := relativeModularPotential_cocycle x x₀ x₁ a
   linarith
 
 /-- The modular potential 1-form is exact. -/
@@ -179,8 +181,8 @@ theorem canonical_dictionary_of_algebraic_thermodynamics :
     (∀ (q q₀ : PositiveRay α) (a : α), relativeModularPotential q₀ q a = -relativeModularPotential q q₀ a) ∧
     (∀ (q q₀ q₁ : PositiveRay α) (a : α), relativeModularPotential q q₁ a = relativeModularPotential q q₀ a + relativeModularPotential q₀ q₁ a) ∧
     (∀ (q q₀ : PositiveRay α) (a : α), relativeDensity q q₀ a = Real.exp (-relativeModularPotential q q₀ a)) :=
-  ⟨fun q q₀ a => relativeModularPotential_antisymm q q₀ a,
-   fun q q₀ q₁ a => relativeModularPotential_transitive_cocycle q q₀ q₁ a,
+  ⟨fun q q₀ a => congrFun (modularPotential_antisymm q q₀) a,
+   fun q q₀ q₁ a => relativeModularPotential_cocycle q q₀ q₁ a,
    fun q q₀ a => by
      rw [relativeDensity_eq_exp_relativeLogDensity]
      rw [relativeModularPotential_eq_neg_relativeLogDensity]

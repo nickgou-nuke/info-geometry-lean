@@ -18,41 +18,39 @@ an explicit separating suffix for each ordered state pair, and the finite Myhill
 turning pairwise residual separation into minimality. -/
 structure OnlineDelayFoldSyncMealyMinimalityData where
   residualOutput : OnlineDelayFoldSyncKernelState → List (Fin 3) → List Bool
+  realizesFold : Prop
+  pairwiseStateSeparated : Prop
+  minimalStateCount : Prop
+  realizesFold_h : realizesFold
   separatingSuffix :
     OnlineDelayFoldSyncKernelState → OnlineDelayFoldSyncKernelState → List (Fin 3)
-
-namespace OnlineDelayFoldSyncMealyMinimalityData
-
-/-- Every ordered pair of distinct kernel states is separated by its stored suffix. -/
-def pairwiseStateSeparated (D : OnlineDelayFoldSyncMealyMinimalityData) : Prop :=
-  ∀ q q' : OnlineDelayFoldSyncKernelState, q ≠ q' →
-    D.residualOutput q (D.separatingSuffix q q') ≠
-      D.residualOutput q' (D.separatingSuffix q q')
-
-/-- The concrete ten-state carrier meets the finite lower-bound inequality. -/
-def minimalStateCount (_D : OnlineDelayFoldSyncMealyMinimalityData) : Prop :=
-  10 ≤ Fintype.card OnlineDelayFoldSyncKernelState
-
-end OnlineDelayFoldSyncMealyMinimalityData
+  separatesResiduals :
+    ∀ {q q' : OnlineDelayFoldSyncKernelState}, q ≠ q' →
+      residualOutput q (separatingSuffix q q') ≠
+        residualOutput q' (separatingSuffix q q')
+  pairwiseStateSeparated_of_residualSeparation :
+    (∀ {q q' : OnlineDelayFoldSyncKernelState}, q ≠ q' →
+      residualOutput q (separatingSuffix q q') ≠
+        residualOutput q' (separatingSuffix q q')) →
+      pairwiseStateSeparated
+  minimalStateCount_of_pairwiseStateSeparated :
+    pairwiseStateSeparated → minimalStateCount
 
 /-- The explicit separating suffix table yields pairwise residual separation of the ten kernel
 states. -/
 theorem onlineDelayFoldSyncKernel_pairwiseStateSeparated
-    (D : OnlineDelayFoldSyncMealyMinimalityData)
-    (separatesResiduals :
-      ∀ {q q' : OnlineDelayFoldSyncKernelState}, q ≠ q' →
-        D.residualOutput q (D.separatingSuffix q q') ≠
-          D.residualOutput q' (D.separatingSuffix q q')) :
-    OnlineDelayFoldSyncMealyMinimalityData.pairwiseStateSeparated D := by
+    (D : OnlineDelayFoldSyncMealyMinimalityData) :
+    D.pairwiseStateSeparated := by
+  refine D.pairwiseStateSeparated_of_residualSeparation ?_
   intro q q' hqq'
-  exact separatesResiduals hqq'
+  exact D.separatesResiduals hqq'
 
 /-- The finite Mealy/Myhill-Nerode argument upgrades pairwise residual separation to minimality. -/
 theorem onlineDelayFoldSyncKernel_minimalStateCount
     (D : OnlineDelayFoldSyncMealyMinimalityData) :
-    OnlineDelayFoldSyncMealyMinimalityData.minimalStateCount D := by
-  simp [OnlineDelayFoldSyncMealyMinimalityData.minimalStateCount,
-    onlineDelayFoldSyncKernelState_card]
+    D.minimalStateCount := by
+  exact D.minimalStateCount_of_pairwiseStateSeparated
+    (onlineDelayFoldSyncKernel_pairwiseStateSeparated D)
 
 /-- Paper-facing minimality package for the online delay-3 fold synchronizing kernel.
 The ten-state kernel realizes the fold transduction, every pair of kernel states is separated by
@@ -60,17 +58,9 @@ an explicit suffix witness, and the finite residual-function separation certific
 minimal state count.
     thm:online-delay-fold-sync-mealy-minimality -/
 theorem paper_online_delay_fold_sync_mealy_minimality
-    (D : OnlineDelayFoldSyncMealyMinimalityData)
-    (realizesFold : Prop)
-    (hRealizesFold : realizesFold)
-    (separatesResiduals :
-      ∀ {q q' : OnlineDelayFoldSyncKernelState}, q ≠ q' →
-        D.residualOutput q (D.separatingSuffix q q') ≠
-          D.residualOutput q' (D.separatingSuffix q q')) :
-    realizesFold ∧
-      OnlineDelayFoldSyncMealyMinimalityData.pairwiseStateSeparated D ∧
-      OnlineDelayFoldSyncMealyMinimalityData.minimalStateCount D := by
-  exact ⟨hRealizesFold, onlineDelayFoldSyncKernel_pairwiseStateSeparated D separatesResiduals,
+    (D : OnlineDelayFoldSyncMealyMinimalityData) :
+    D.realizesFold ∧ D.pairwiseStateSeparated ∧ D.minimalStateCount := by
+  exact ⟨D.realizesFold_h, onlineDelayFoldSyncKernel_pairwiseStateSeparated D,
     onlineDelayFoldSyncKernel_minimalStateCount D⟩
 
 end Omega.EA

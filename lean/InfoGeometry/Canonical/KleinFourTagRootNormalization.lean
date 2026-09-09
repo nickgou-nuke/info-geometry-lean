@@ -39,13 +39,7 @@ def v4RootMap : V4 → V4Group
 
 theorem v4RootMap_mul (g h : V4) :
     v4RootMap (g * h) = v4RootMap g * v4RootMap h := by
-  obtain rfl | rfl | rfl | rfl :=
-    tag_eq_id_or_P_or_T_or_PT (g : V4Add)
-  all_goals
-    obtain rfl | rfl | rfl | rfl :=
-      tag_eq_id_or_P_or_T_or_PT (h : V4Add)
-    all_goals
-      decide
+  fin_cases g <;> fin_cases h <;> decide
 
 def v4RootHom : V4 →* V4Group where
   toFun := v4RootMap
@@ -56,17 +50,8 @@ noncomputable def v4RootEquiv : V4 ≃* V4Group := by
   refine MulEquiv.ofBijective v4RootHom ?_
   constructor
   · intro g h hgh
-    obtain rfl | rfl | rfl | rfl :=
-      tag_eq_id_or_P_or_T_or_PT (g : V4Add)
-    all_goals
-      obtain rfl | rfl | rfl | rfl :=
-        tag_eq_id_or_P_or_T_or_PT (h : V4Add)
-      all_goals
-        simpa [v4RootHom, v4RootMap,
-          InfoGeometry.Geometry.KleinFourTag.id,
-          InfoGeometry.Geometry.KleinFourTag.P,
-          InfoGeometry.Geometry.KleinFourTag.T,
-          InfoGeometry.Geometry.KleinFourTag.PT] using hgh
+    fin_cases g <;> fin_cases h <;>
+      simp_all [v4RootHom, v4RootMap, Multiplicative.ofAdd]
   · intro g
     cases g with
     | I => exact ⟨Multiplicative.ofAdd InfoGeometry.Geometry.KleinFourTag.id, v4RootMap_id⟩

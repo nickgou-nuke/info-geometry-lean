@@ -21,8 +21,16 @@ theorem paper_conclusion73_sumproduct_exponential_law
     (hMulCS : alpha ^ (4 : ℕ) ≤ betaMul * prodGrowth)
     (hGap : betaAdd * betaMul ≤ alpha ^ (6 : ℕ) * Real.exp (-kappa)) :
     Real.rpow alpha (1 + kappa / (2 * Real.log alpha)) ≤ max sumGrowth prodGrowth := by
-  have h72 := paper_conclusion72_energy_complementarity alpha betaAdd betaMul kappa
-    (by linarith) hβAdd hβMul hGap
+  let D : EnergyComplementarityData :=
+    { alpha := alpha
+      betaAdd := betaAdd
+      betaMul := betaMul
+      kappa := kappa
+      alpha_pos := by linarith
+      betaAdd_pos := hβAdd
+      betaMul_pos := hβMul
+      jointGap := hGap }
+  have h72 := paper_conclusion72_energy_complementarity D
   have hαpos : 0 < alpha := by linarith
   have hlogαpos : 0 < Real.log alpha := Real.log_pos hα
   have hlogαne : Real.log alpha ≠ 0 := ne_of_gt hlogαpos
@@ -41,7 +49,7 @@ theorem paper_conclusion73_sumproduct_exponential_law
   have hGrowthLog :
       2 * Real.log alpha + kappa ≤ Real.log sumGrowth + Real.log prodGrowth := by
     have h72' : Real.log betaAdd + Real.log betaMul ≤ 6 * Real.log alpha - kappa := by
-      simpa using h72
+      simpa [D, EnergyComplementarityConclusion] using h72
     linarith
   have hMaxLog :
       Real.log sumGrowth + Real.log prodGrowth ≤ 2 * Real.log (max sumGrowth prodGrowth) := by

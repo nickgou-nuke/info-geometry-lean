@@ -19,8 +19,8 @@ open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 
 def ZornZeroRelated (u v : OctImIsotropicPoint) : Prop :=
   u.1 ≠ v.1 ∧
-    (mul (embed u.1) (embed v.1) = 0 ∧
-      mul (embed v.1) (embed u.1) = 0)
+    (mul (embed u.1) (embed v.1) = zero ∧
+      mul (embed v.1) (embed u.1) = zero)
 
 instance (u : OctImIsotropicPoint) :
     DecidablePred (ZornZeroRelated u) := by

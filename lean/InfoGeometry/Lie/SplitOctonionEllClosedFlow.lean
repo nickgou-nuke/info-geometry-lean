@@ -88,11 +88,12 @@ theorem ellFlowPhi_coord (t : ℝ) (Z : CZ) :
 quadratic form.  This is a norm-preservation statement, not a claim that the
 uniform flow preserves the full nonassociative multiplication. -/
 theorem ellFlowPhi_preserves_det (t : ℝ) (Z : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (ellFlowPhi t Z) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Z := by
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (ellFlowPhi t Z) =
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 Z := by
   rw [ellFlowPhi_coord]
   simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
-    dot, Equiv.smul_def, coordEquiv,
+    realCrossProduct3, InfoGeometry.Canonical.ZornMatrix.dot,
+    Equiv.smul_def, coordEquiv, Fin.sum_univ_three, smul_eq_mul,
     Real.exp_neg]
   field_simp [Real.exp_ne_zero]
 
@@ -101,24 +102,24 @@ theorem ellFlowPhi_preserves_det (t : ℝ) (Z : CZ) :
 This is stated directly from determinant preservation, so it records the
 quadratic-form isometry without introducing a second bilinear-form wrapper. -/
 theorem ellFlowPhi_preserves_det_polarization (t : ℝ) (X Y : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (ellFlowPhi t (X + Y)) -
-          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (ellFlowPhi t X) -
-            InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (ellFlowPhi t Y) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (X + Y) -
-            InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X -
-            InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Y := by
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (ellFlowPhi t (X + Y)) -
+          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (ellFlowPhi t X) -
+            InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (ellFlowPhi t Y) =
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (X + Y) -
+            InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X -
+            InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 Y := by
   have h_add : ellFlowPhi t (X + Y) = ellFlowPhi t X + ellFlowPhi t Y :=
     map_add (ellFlowPhi t) X Y
   have h_sum :
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3
           (ellFlowPhi t X + ellFlowPhi t Y) =
-        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (X + Y) := by
+        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (X + Y) := by
     rw [← h_add, ellFlowPhi_preserves_det]
   rw [h_add, h_sum, ellFlowPhi_preserves_det, ellFlowPhi_preserves_det]
 
 theorem ellFlowPhi_preserves_det_eq_zero_iff (t : ℝ) (Z : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (ellFlowPhi t Z) = 0 ↔
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Z = 0 := by
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 (ellFlowPhi t Z) = 0 ↔
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 Z = 0 := by
   rw [ellFlowPhi_preserves_det]
 
 /-

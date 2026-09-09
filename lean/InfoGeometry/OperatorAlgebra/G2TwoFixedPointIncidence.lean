@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 
 /-!
-# Fixed-point incidence ledger for the `G₂(2)` outer `C₂` property
+# Fixed-point incidence ledger for the `G₂(2)` outer `C₂` witness
 
 This module is the Lean twin of
 `tools/sympy/g2_2_fixed_point_incidence.py`.
@@ -75,5 +75,17 @@ theorem fixed_internal_line_edge_accounting :
 theorem fixedInternalLineCount_ne_fanoPlaneLineCount :
     fixedInternalLineCount ≠ fanoPlaneLineCount := by
   norm_num [fixedInternalLineCount, fanoPlaneLineCount]
+
+/-- Consolidated theorem-safe incidence packet. -/
+theorem fixed_point_incidence_packet :
+    h2PointCount = 63 ∧
+      h2PointGraphEdgeCount = 189 ∧
+      h2LineCount = 63 ∧
+      outerC2FixedPointCount = 7 ∧
+      fixedInternalEdgeCount = 9 ∧
+      fixedInternalLineCount = 3 ∧
+      fixedIncidentLineCount = 15 ∧
+      fixedInternalLineCount ≠ fanoPlaneLineCount := by
+  exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, fixedInternalLineCount_ne_fanoPlaneLineCount⟩
 
 end InfoGeometry.OperatorAlgebra.G2TwoFixedPointIncidence

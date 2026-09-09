@@ -2,8 +2,8 @@ import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 import InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE
-import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
-import Mathlib.LinearAlgebra.QuadraticForm.Basic
+import InfoGeometry.Meta.OwnerTarget
+
 /-!
 # InfoGeometry.Arithmetic.PrimonMajoranaWittenCharacter
 
@@ -14,7 +14,7 @@ This file is a finite-cutoff owner surface for the primon Majorana character:
 * local Euler/Witten factor `1 - exp (-s log p)`;
 * spinor square-root amplitude `exp (-(s/2) log p)`;
 * finite Witten character as a finite product;
-* split-Majorana CAR and OPE laws;
+* split-Majorana CAR and OPE sockets;
 * signed `2 × 2` Pfaffian block readout;
 * two-state Hamiltonian Witten trace.
 
@@ -141,13 +141,13 @@ theorem finiteSpinorPairing_eq_wittenCharacter
   intro p _hp
   exact localSpinorPairing_plus_minus s p
 
-/-! ## 4. Split-Majorana CAR and OPE laws -/
+/-! ## 4. Split-Majorana CAR and OPE sockets -/
 
 /-- Anticommutator in a ring. -/
 def anticommutator {Op : Type*} [Ring Op] (x y : Op) : Op :=
   x * y + y * x
 
-/-- Law-bearing split-Majorana CAR datum. -/
+/-- Law-bearing split-Majorana CAR socket. -/
 structure SplitMajoranaCAR
     (Prime Op : Type*) [DecidableEq Prime] [Ring Op] where
   c : Prime → Op
@@ -160,48 +160,6 @@ structure SplitMajoranaCAR
       if p = q then -(2 : Op) else 0
   c_d :
     ∀ p q, anticommutator (c p) (d q) = 0
-
-open QuadraticForm
-
-/-- 
-Native Mathlib construction of the split-Majorana CAR datum using the universal Clifford algebra.
-This explicitly proves that the CAR algebraic relations can be satisfied without contradiction
-(thereby paying off the formal closure debt of the previous mock `structure`).
--/
-def splitMajoranaCAROfPolar
-    {Prime : Type*} [DecidableEq Prime]
-    {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (Q : QuadraticForm ℝ V)
-    (basis_c : Prime → V)
-    (basis_d : Prime → V)
-    (hcc : ∀ p q, QuadraticMap.polar Q (basis_c p) (basis_c q) = if p = q then 2 else 0)
-    (hdd : ∀ p q, QuadraticMap.polar Q (basis_d p) (basis_d q) = if p = q then -2 else 0)
-    (hcd : ∀ p q, QuadraticMap.polar Q (basis_c p) (basis_d q) = 0) :
-    SplitMajoranaCAR Prime (CliffordAlgebra Q) where
-  c := fun p => CliffordAlgebra.ι Q (basis_c p)
-  d := fun p => CliffordAlgebra.ι Q (basis_d p)
-  c_c := by
-    intro p q
-    unfold anticommutator
-    rw [CliffordAlgebra.ι_mul_ι_add_swap]
-    rw [hcc p q]
-    split_ifs
-    · push_cast; rfl
-    · push_cast; rfl
-  d_d := by
-    intro p q
-    unfold anticommutator
-    rw [CliffordAlgebra.ι_mul_ι_add_swap]
-    rw [hdd p q]
-    split_ifs
-    · push_cast; rfl
-    · push_cast; rfl
-  c_d := by
-    intro p q
-    unfold anticommutator
-    rw [CliffordAlgebra.ι_mul_ι_add_swap]
-    rw [hcd p q]
-    push_cast; rfl
 
 namespace SplitMajoranaCAR
 
@@ -224,7 +182,7 @@ theorem c_d_holds (p q : Prime) :
 
 end SplitMajoranaCAR
 
-/-- property-gated (Native Closure Mandated: Closure Debt) split-Majorana OPE datum. -/
+/-- witness-gated (Native Closure Mandated: Closure Debt) split-Majorana OPE datum. -/
 structure SplitMajoranaOPEDatum
     (Prime Field Singular : Type*) [DecidableEq Prime] [Zero Singular] [One Singular]
     [Neg Singular] where
@@ -246,11 +204,11 @@ variable {Prime Field Singular : Type*}
 variable [DecidableEq Prime] [Zero Singular] [One Singular] [Neg Singular]
 
 /--
-Transport a concrete split-Majorana OPE owner datum to the arithmetic property
+Transport a concrete split-Majorana OPE owner datum to the arithmetic witness
 packet.
 
 This is an owner-side transport: the equalities live in the datum itself, and
-the arithmetic layer merely re-expresses their proposition-valued readouts.
+the arithmetic socket merely re-expresses them as proof-carrying fields.
 -/
 def toArithmeticSplitMajoranaOPE
     (O : SplitMajoranaOPEDatum Prime Field Singular) :
@@ -266,6 +224,24 @@ def toArithmeticSplitMajoranaOPE
     O.singular (O.dField p) (O.dField q) = if p = q then -1 else 0
   cd_regular := fun p q =>
     O.singular (O.cField p) (O.dField q) = 0
+  cc_proof := O.c_c_singular
+  dd_proof := O.d_d_singular
+  cd_proof := O.c_d_regular
+
+theorem toArithmeticSplitMajoranaOPE_cc_holds
+    (O : SplitMajoranaOPEDatum Prime Field Singular) (p q : Prime) :
+    (toArithmeticSplitMajoranaOPE O).cc_singular p q := by
+  exact O.c_c_singular p q
+
+theorem toArithmeticSplitMajoranaOPE_dd_holds
+    (O : SplitMajoranaOPEDatum Prime Field Singular) (p q : Prime) :
+    (toArithmeticSplitMajoranaOPE O).dd_singular p q := by
+  exact O.d_d_singular p q
+
+theorem toArithmeticSplitMajoranaOPE_cd_regular_holds
+    (O : SplitMajoranaOPEDatum Prime Field Singular) (p q : Prime) :
+    (toArithmeticSplitMajoranaOPE O).cd_regular p q := by
+  exact O.c_d_regular p q
 
 end SplitMajoranaOPEDatum
 
@@ -396,10 +372,18 @@ theorem finiteTwoStateWittenTrace_eq_wittenCharacter
   intro p _hp
   exact localTwoStateWittenTrace_eq_localWittenFactor p s
 
-/-! ## 7. Finite Majorana/Witten identities -/
+/-! ## 7. Owner target -/
+
+/-- Owner target for the finite primon Majorana Witten character surface. -/
+@[owner_target_tag]
+def PrimonMajoranaWittenCharacterOwnerTarget : Prop :=
+  ∀ (P : Finset ℕ) (s : ℝ),
+    finiteTwoStateWittenTrace P s = finiteWittenCharacter P s ∧
+    finiteSpinorPairing P s = finiteWittenCharacter P s ∧
+    finiteMajoranaPfaffian P s = finiteWittenCharacter P s
 
 /-- The finite two-state trace, spinor pairing, and signed Pfaffian products agree. -/
-theorem primonMajoranaWittenCharacter_properties :
+theorem primonMajoranaWittenCharacterOwnerTarget :
     ∀ (P : Finset ℕ) (s : ℝ),
       finiteTwoStateWittenTrace P s = finiteWittenCharacter P s ∧
       finiteSpinorPairing P s = finiteWittenCharacter P s ∧

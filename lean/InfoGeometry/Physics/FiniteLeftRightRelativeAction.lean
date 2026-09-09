@@ -1,5 +1,6 @@
 import InfoGeometry.Physics.RegularBimoduleCommutant
 import InfoGeometry.Physics.AlgebraicTomitaTakesakiBridge
+import InfoGeometry.Krein.TwoSheetKreinIdealBridge
 
 /-!
 # Finite left/right relative action
@@ -15,6 +16,21 @@ namespace InfoGeometry.Physics.FiniteLeftRightRelativeAction
 open InfoGeometry.Physics.RegularBimoduleCommutant
 
 variable {R A : Type*} [CommSemiring R] [Ring A] [Algebra R A]
+
+open InfoGeometry.Krein
+
+theorem antiAutomorphism_leftPrincipal_iff_rightPrincipal
+    (J : AntiAutomorphism A) (f x : A) :
+    x ∈ leftPrincipal f ↔ J.toFun x ∈ rightPrincipal (J.toFun f) := by
+  constructor
+  · rintro ⟨a, rfl⟩
+    refine ⟨J.toFun a, ?_⟩
+    exact (J.map_mul a f).symm
+  · rintro ⟨a, ha⟩
+    have hxa : J.toFun (J.toFun x) = J.toFun (J.toFun f * a) :=
+      congrArg J.toFun ha.symm
+    rw [J.inv x, J.map_mul, J.inv f] at hxa
+    exact ⟨J.toFun a, hxa.symm⟩
 
 /-- The relative left/right generator on the regular bimodule. -/
 def relativeAction (a : A) : A →ₗ[R] A :=
@@ -37,6 +53,12 @@ def commutantQuadraticAction
 @[simp] theorem relativeAction_apply (a x : A) :
     relativeAction (R := R) a x = a * x - x * a := by
   simp [relativeAction, leftAction, rightAction]
+
+theorem map_relativeAction_apply
+    {B : Type*} [Ring B] (f : A →+* B) (a x : A) :
+    f (relativeAction (R := R) a x) =
+      f a * f x - f x * f a := by
+  rw [relativeAction_apply, map_sub, map_mul, map_mul]
 
 theorem leftRight_commute (a b : A) :
     (leftAction (R := R) a).comp (rightAction (R := R) b) =

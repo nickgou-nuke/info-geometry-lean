@@ -13,13 +13,15 @@ noncomputable section
 namespace InfoGeometry.Topology.UnitIntervalEuclideanTransportBackend
 
 open InfoGeometry.Thermo.BuresWassersteinKMSCost
+open InfoGeometry.Topology.BuresWassersteinTransportTopCat
 
 abbrev UnitInterval := Set.Icc (0 : ℝ) 1
+def unitIntervalDomain : PositiveStateDomain ℝ := ⟨UnitInterval⟩
 
 def unitIntervalEuclideanDatum :
-    BuresWassersteinDatum ℝ (Ω := UnitInterval) where
-  dist := fun ρ σ => dist ρ σ
-  squaredDist := fun ρ σ => dist ρ σ ^ 2
+    BuresWassersteinDatum ℝ (Ω := unitIntervalDomain) where
+  dist := fun ρ σ => dist ρ.val σ.val
+  squaredDist := fun ρ σ => dist ρ.val σ.val ^ 2
   dist_nonneg := by
     intro ρ σ
     exact dist_nonneg
@@ -28,20 +30,28 @@ def unitIntervalEuclideanDatum :
     exact sq_nonneg _
   dist_self := by
     intro ρ
-    exact dist_self ρ
+    exact dist_self ρ.val
   squaredDist_self := by
     intro ρ
     rw [dist_self]
     simp
 
 theorem unitIntervalEuclideanDatum_squaredDist_continuous :
-    Continuous (fun p : PositiveState UnitInterval × PositiveState UnitInterval =>
+    Continuous (fun p : PositiveState unitIntervalDomain × PositiveState unitIntervalDomain =>
       unitIntervalEuclideanDatum.squaredDist p.1 p.2) := by
-  exact continuous_dist.pow 2
+  have hval : Continuous (fun ρ : PositiveState unitIntervalDomain =>
+      (ρ.val : ℝ)) := continuous_positiveState_val
+  simpa [unitIntervalEuclideanDatum] using
+    (continuous_dist.comp
+      ((hval.comp continuous_fst).prodMk (hval.comp continuous_snd))).pow 2
 
 theorem unitIntervalEuclideanDatum_dist_continuous :
-    Continuous (fun p : PositiveState UnitInterval × PositiveState UnitInterval =>
+    Continuous (fun p : PositiveState unitIntervalDomain × PositiveState unitIntervalDomain =>
       unitIntervalEuclideanDatum.dist p.1 p.2) := by
-  exact continuous_dist
+  have hval : Continuous (fun ρ : PositiveState unitIntervalDomain =>
+      (ρ.val : ℝ)) := continuous_positiveState_val
+  simpa [unitIntervalEuclideanDatum] using
+    continuous_dist.comp
+      ((hval.comp continuous_fst).prodMk (hval.comp continuous_snd))
 
 end InfoGeometry.Topology.UnitIntervalEuclideanTransportBackend

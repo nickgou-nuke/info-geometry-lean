@@ -5,7 +5,7 @@ import InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge
 import InfoGeometry.Topology.DelaunayAdjacentStructures
 
 /-!
-# Penrose / DAG / Amplituhedron Rosetta Data
+# Penrose / DAG / Amplituhedron Rosetta Carrier
 
 This file records the theorem-safe form of the slogan that the DAG graph, split
 quaternion matrix model, Penrose net, Klein quadric lane, amplituhedron lane,
@@ -13,7 +13,7 @@ and Delaunay tessellation lane are "the same".
 
 The kernel-checked content is deliberately narrower:
 
-* a `RosettaData` record identifies each lane with a common
+* a `RosettaCarrier` is explicit data identifying each lane with a common
   carrier type;
 * all transport between lanes is by the supplied equivalences;
 * existing owner files provide finite readbacks for the DAG, split quaternion,
@@ -45,36 +45,36 @@ Explicit common-carrier datum.
 For each lane, `Carrier lane` is that lane's local model, and `toCommon lane`
 is the supplied equivalence into the chosen common carrier.
 -/
-structure RosettaData where
+structure RosettaCarrier where
   Carrier : RosettaLane → Type u
   Common : Type v
   toCommon : ∀ lane : RosettaLane, Carrier lane ≃ Common
 
-namespace RosettaData
+namespace RosettaCarrier
 
 /-- Transport between any two lanes through the supplied common carrier. -/
-def laneEquiv (R : RosettaData) (a b : RosettaLane) :
+def laneEquiv (R : RosettaCarrier) (a b : RosettaLane) :
     R.Carrier a ≃ R.Carrier b :=
   (R.toCommon a).trans (R.toCommon b).symm
 
 /-- Two lane elements are the same Rosetta datum when their common images agree. -/
-def SameInCommon (R : RosettaData) {a b : RosettaLane}
+def SameInCommon (R : RosettaCarrier) {a b : RosettaLane}
     (x : R.Carrier a) (y : R.Carrier b) : Prop :=
   R.toCommon a x = R.toCommon b y
 
 @[simp]
-theorem toCommon_laneEquiv (R : RosettaData) (a b : RosettaLane)
+theorem toCommon_laneEquiv (R : RosettaCarrier) (a b : RosettaLane)
     (x : R.Carrier a) :
     R.toCommon b (R.laneEquiv a b x) = R.toCommon a x := by
   simp [laneEquiv]
 
 @[simp]
-theorem laneEquiv_sameInCommon (R : RosettaData) (a b : RosettaLane)
+theorem laneEquiv_sameInCommon (R : RosettaCarrier) (a b : RosettaLane)
     (x : R.Carrier a) :
     R.SameInCommon x (R.laneEquiv a b x) := by
   simp [SameInCommon]
 
-theorem sameInCommon_iff_laneEquiv_eq (R : RosettaData)
+theorem sameInCommon_iff_laneEquiv_eq (R : RosettaCarrier)
     {a b : RosettaLane} (x : R.Carrier a) (y : R.Carrier b) :
     R.SameInCommon x y ↔ R.laneEquiv a b x = y := by
   constructor
@@ -89,13 +89,13 @@ theorem sameInCommon_iff_laneEquiv_eq (R : RosettaData)
     simp [SameInCommon]
 
 /-- Predicates on the common carrier transport to every lane. -/
-theorem transport_common_predicate (R : RosettaData)
+theorem transport_common_predicate (R : RosettaCarrier)
     (P : R.Common → Prop) {a b : RosettaLane}
     (x : R.Carrier a) (h : P (R.toCommon a x)) :
     P (R.toCommon b (R.laneEquiv a b x)) := by
   simpa using h
 
-end RosettaData
+end RosettaCarrier
 
 /-! ## Owner readbacks for the six lanes -/
 
@@ -154,14 +154,31 @@ theorem delaunay_pure_braid_descent_readback {moving : ℕ}
 Compact packet: the carrier supplies the cross-lane identification; the owner
 files supply the currently closed readbacks.
 -/
-theorem rosetta_dag_amplituhedron_equiv (R : RosettaData) :
-    Nonempty (R.Carrier RosettaLane.dagGraph ≃
-      R.Carrier RosettaLane.amplituhedron) :=
-  ⟨R.laneEquiv RosettaLane.dagGraph RosettaLane.amplituhedron⟩
-
-theorem rosetta_penrose_origin_glide :
-    InfoGeometry.Geometry.PenroseKlein.KleinBottleRel
-      ((0 : ℝ), (0 : ℝ)) (0, 1) := by
+theorem rosetta_owner_readback_packet {moving : ℕ}
+    (R : RosettaCarrier)
+    (D : TwistorAmplituhedronBridgeDatum moving)
+    (i : Fin 3) :
+    Nonempty (R.Carrier RosettaLane.dagGraph ≃ R.Carrier RosettaLane.amplituhedron) ∧
+    Nonempty
+      (InfoGeometry.Projective.SplitQuaternion ≃ₐ[ℝ]
+        Matrix (Fin 2) (Fin 2) ℝ) ∧
+    InfoGeometry.Geometry.PenroseKlein.KleinBottleRel ((0 : ℝ), (0 : ℝ)) (0, 1) ∧
+    InfoGeometry.Projective.KleinQuadric.Plucker6.IsKlein (D.lines.line i) ∧
+    D.rank.data.totalRank *
+      InfoGeometry.Projective.PenroseSpinTiling.spinTilingMultiplicity =
+        D.rank.stateBudget ∧
+    ∃ ρ :
+      InfoGeometry.Topology.RohozhkinBoundary.RohozhkinPureBraidGroup moving →*
+        InfoGeometry.Topology.RohozhkinBoundary.RohozhkinMatrixUnits moving,
+      ∀ g :
+        InfoGeometry.Topology.PureBraid.PureBraidGenerator
+          (InfoGeometry.Topology.Delaunay.rohozhkinTotalPoints moving),
+        ρ (InfoGeometry.Topology.PureBraid.of g) = InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge.rohozhkinProjectiveBraidPacketGen D.rohozhkin.packet g := by
+  refine ⟨⟨R.laneEquiv RosettaLane.dagGraph RosettaLane.amplituhedron⟩,
+    split_quaternion_matrix_equiv_readback,
+    ?_, klein_quadric_line_readback D i,
+    amplituhedron_rank_budget_readback D,
+    delaunay_pure_braid_descent_readback D⟩
   simpa using penrose_klein_glide_readback (0 : ℝ) (0 : ℝ)
 
 end InfoGeometry.Projective.PenroseDAGAmplituhedronRosetta

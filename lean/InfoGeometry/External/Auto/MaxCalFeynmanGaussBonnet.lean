@@ -1,16 +1,9 @@
 -- We use basic types from Prelude to avoid missing imports.
 -- Continuous paths represented abstractly as functions.
 
-namespace LegacyMaxCalFeynmanGaussBonnet
-
 /-- A Krein space is represented abstractly -/
-abbrev KreinSpace := Nat
-
-namespace KreinSpace
-
-abbrev dim (k : KreinSpace) : Nat := k
-
-end KreinSpace
+structure KreinSpace where
+  dim : Nat
 
 /-- Continuous Path in Phase Space -/
 def Path : Type := Nat → Nat
@@ -32,5 +25,3 @@ def FeynmanPathIntegral (k : KreinSpace) : Nat :=
 theorem max_cal_feynman_iso (k : KreinSpace) :
   FeynmanPathIntegral k = MaxCalOptimization ThermodynamicFreeEnergyAction := by
   rfl
-
-end LegacyMaxCalFeynmanGaussBonnet

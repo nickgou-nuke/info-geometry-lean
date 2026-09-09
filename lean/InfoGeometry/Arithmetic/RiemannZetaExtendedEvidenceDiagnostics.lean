@@ -1,0 +1,36 @@
+import InfoGeometry.Arithmetic.RiemannZetaGeometricDynamicsCorridor
+import InfoGeometry.Arithmetic.RiemannZetaExtendedEvidenceLogosMap
+
+open InfoGeometry.Arithmetic.RiemannZetaGeometricDynamicsCorridor
+open InfoGeometry.Arithmetic.RiemannZetaExtendedEvidenceLogosMap
+
+#check arithmeticSemigroup_mul_assoc
+#check vonMangoldt_eq_actualZetaLogDerivative
+#check moebius_zeta_convolution_inverse
+#check cayley_reflection_to_inversion
+#check cayley_critical_line_to_unit_circle
+#check apollonius_unit_circle_iff_zero_leaf
+#check apollonius_fisher_positive
+#check apollonius_fisher_critical_leaf
+#check information_geometric_potential_nonnegative
+#check actual_zeta_entropy_gradient_eq_vonMangoldt
+#check actual_zeta_metriplectic_flow_nonnegative
+#check dilation_group_law
+#check dilation_preserves_critical_line
+#check dilation_preserves_unit_circle
+#check uniform_transfer_preserves_one
+#check geometric_dynamical_packet
+#check edge_count_matches_chain
+
+#print axioms vonMangoldt_eq_actualZetaLogDerivative
+#print axioms moebius_zeta_convolution_inverse
+#print axioms cayley_critical_line_to_unit_circle
+#print axioms apollonius_fisher_positive
+#print axioms actual_zeta_metriplectic_flow_nonnegative
+#print axioms dilation_preserves_unit_circle
+#print axioms uniform_transfer_preserves_one
+#print axioms geometric_dynamical_packet
+#print axioms edge_count_matches_chain
+
+#audit_extended_riemann_zeta_edges
+

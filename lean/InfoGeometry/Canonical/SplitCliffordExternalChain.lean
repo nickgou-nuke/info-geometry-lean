@@ -47,10 +47,10 @@ open VirasoroProject
 
 set_option synthInstance.maxHeartbeats 200000
 
-/-- The concrete split-`Cl(1,1)` datum already yields a primitive Majorana CAR property. -/
+/-- The concrete split-`Cl(1,1)` datum already yields a primitive Majorana CAR witness. -/
 theorem splitClifford_cl11_majorana_car
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    InfoGeometry.Quantum.RealMajoranaCategory.MajoranaCAR
+    InfoGeometry.Quantum.RealMajoranaCategory.MajoranaCARWitness
       (InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E)
       (InfoGeometry.Quantum.RealMajoranaCategory.SplitCliffordDatum.majoranaPairing
         (InfoGeometry.Quantum.RealMajoranaCategory.cl11SplitCliffordDatum E))
@@ -289,8 +289,7 @@ theorem lightconeSugawara_centralCharge_calibrated
         (S.sugawara.bridge.level + S.sugawara.bridge.dualCoxeterNumber) :=
   by
     rw [S.uses_lightcone_affine_bridge] at hcc ⊢
-    exact InfoGeometry.OperatorAlgebra.KANLightConeAffineBridge.Bridge.centralCharge_calibrated
-      S.kanAffine hcc
+    exact S.kanAffine.affineLightCone.centralCharge_calibrated hcc
 
 /--
 The theorem-only canonical chain:
@@ -319,7 +318,7 @@ theorem splitClifford_fiveGraded_witten_virasoro_chain
           Unit (fun _ _ => ())
     · constructor
       · exact finiteRealMajoranaWittenIndex_cancel P hP
-      · exact virasoro_project_is_property
+      · exact virasoro_project_is_certified
 
 /--
 Split-Clifford CAR anchor plus the external Heisenberg/Sugawara owner surface.
@@ -359,9 +358,9 @@ theorem splitClifford_externalHeisenbergSugawara_chain
 /--
 The literature-facing bosonization spine:
 
-- the split triality channels are the concrete CAR property;
+- the split triality channels are the concrete CAR witness;
 - the split supercharge lane already carries the CAR/CCR oscillator spine;
-- the external Heisenberg/Sugawara implementation is independently property,
+- the external Heisenberg/Sugawara implementation is independently certified,
   including the concrete Verma-to-Fock highest-weight map.
 
 This theorem is a theorem-only bundle of the already proved source and target
@@ -370,7 +369,7 @@ surface facts.  It does not claim a new split-to-Heisenberg morphism.
 theorem splitClifford_literature_bosonization_chain
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (α : ℂ) :
-    (InfoGeometry.Quantum.RealMajoranaCategory.CARRelation
+    (InfoGeometry.Quantum.RealMajoranaCategory.CARWitness
       (InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E)
       (InfoGeometry.Quantum.vectorToLeftSpinor (E := E))
       (InfoGeometry.Quantum.vectorToRightSpinor (E := E))) ∧
@@ -390,7 +389,7 @@ theorem splitClifford_literature_bosonization_chain
         (VirasoroProject.ChargedFockSpace.vacuum ℂ α) = 0) ∧
     (InfoGeometry.OperatorAlgebra.VirasoroProjectBridge.heisenbergSugawaraDatum.centralCharge = 1) := by
   constructor
-  · exact triality_channels_CARRelation (E := E)
+  · exact triality_channels_CARWitness (E := E)
   · constructor
     · exact cliffordConcreteIsCARPair (E := E)
     · rcases externalHeisenberg_virasoroVermaToChargedFockSpace_highestWeight α with
@@ -446,21 +445,19 @@ theorem splitClifford_zeroModeSeed_boundary_and_externalHeisenbergSugawara_chain
 /-- The finite Cantor/Krein sector lattice is complete. -/
 noncomputable instance splitClifford_finiteCantorKreinSectorSet_completeLattice
     (n : Nat) :
-    CompleteLattice
-      (Set ((Fin n → InfoGeometry.OperatorAlgebra.ErlangenNet.BinarySector) × Bool)) := by
+    CompleteLattice (InfoGeometry.Topology.FiniteCantorKreinSectorSet n) := by
   infer_instance
 
 /-- The Cuntz projection sector lattice is complete. -/
-noncomputable instance splitClifford_CuntzIdempotentSectorSet_completeLattice
+noncomputable instance splitClifford_CuntzProjectionSectorSet_completeLattice
     {Op : Type} [Ring Op] [StarRing Op] :
-    CompleteLattice
-      (Set (InfoGeometry.Topology.CuntzO2Carrier.CuntzIdempotent (Op := Op))) := by
+    CompleteLattice (InfoGeometry.Topology.CuntzProjectionSectorSet (Op := Op)) := by
   infer_instance
 
 /-- The fixed-point sector lattice is complete. -/
 noncomputable instance splitClifford_selfSimilarSectors_completeLattice
     {L : Type} [CompleteLattice L] (R : L →o L) :
-    CompleteLattice (Function.fixedPoints R) :=
+    CompleteLattice (InfoGeometry.Topology.SelfSimilarSectors R) :=
   InfoGeometry.Topology.selfSimilarSectorsCompleteLattice R
 
 /-- The refinement/coarse-graining adjunction is the canonical Galois connection. -/

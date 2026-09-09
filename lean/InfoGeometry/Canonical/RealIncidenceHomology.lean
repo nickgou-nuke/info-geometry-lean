@@ -19,7 +19,7 @@ It provides:
 * the theorem `boundaries_le_cycles` needed before quotient homology is valid;
 * degree-0/1 incidence edges for `DAG.TripleSystem`;
 * real object-potential coboundaries `δ⁰ φ(edge) = φ(target) - φ(source)`;
-* a Hestenes phase-semilinear chain-complex interface.
+* a Hestenes phase-semilinear chain-complex socket.
 
 It does not construct singular homology, de Rham cohomology, quotient-space
 homology groups, higher incidence faces, or scalar-complex coefficient lanes.

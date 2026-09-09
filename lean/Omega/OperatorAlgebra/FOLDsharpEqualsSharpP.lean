@@ -29,20 +29,20 @@ def foldsharp_equals_sharpp_fold_family.fiberCount
 
 /-- A finite verifier family with `n`-bit inputs. -/
 structure foldsharp_equals_sharpp_verifier_family where
-  Candidate : ℕ → Type
-  instFintypeCandidate : ∀ n, Fintype (Candidate n)
-  instDecidableEqCandidate : ∀ n, DecidableEq (Candidate n)
-  verifier : ∀ n, BitVec n → Candidate n → Bool
+  Witness : ℕ → Type
+  instFintypeWitness : ∀ n, Fintype (Witness n)
+  instDecidableEqWitness : ∀ n, DecidableEq (Witness n)
+  verifier : ∀ n, BitVec n → Witness n → Bool
 
-attribute [instance] foldsharp_equals_sharpp_verifier_family.instFintypeCandidate
-attribute [instance] foldsharp_equals_sharpp_verifier_family.instDecidableEqCandidate
+attribute [instance] foldsharp_equals_sharpp_verifier_family.instFintypeWitness
+attribute [instance] foldsharp_equals_sharpp_verifier_family.instDecidableEqWitness
 
-/-- The accepted-candidate count realized by a verifier family at an `n`-bit input. -/
-def foldsharp_equals_sharpp_verifier_family.acceptedCount
+/-- The witness count realized by a verifier family at an `n`-bit input. -/
+def foldsharp_equals_sharpp_verifier_family.witnessCount
     (V : foldsharp_equals_sharpp_verifier_family) (n : ℕ) (x : BitVec n) : ℕ := by
-  letI := V.instFintypeCandidate n
-  letI := V.instDecidableEqCandidate n
-  exact verifierCandidateCount (V.verifier n) x
+  letI := V.instFintypeWitness n
+  letI := V.instDecidableEqWitness n
+  exact verifierWitnessCount (V.verifier n) x
 
 /-- Fold-side realization of a counting function. -/
 def foldsharp_equals_sharpp_is_foldsharp (f : ∀ n, BitVec n → ℕ) : Prop :=
@@ -50,21 +50,21 @@ def foldsharp_equals_sharpp_is_foldsharp (f : ∀ n, BitVec n → ℕ) : Prop :=
 
 /-- Verifier-side realization of a counting function. -/
 def foldsharp_equals_sharpp_is_sharpp (f : ∀ n, BitVec n → ℕ) : Prop :=
-  ∃ V : foldsharp_equals_sharpp_verifier_family, ∀ n x, V.acceptedCount n x = f n x
+  ∃ V : foldsharp_equals_sharpp_verifier_family, ∀ n x, V.witnessCount n x = f n x
 
-/-- Regard a fold family as a verifier by checking whether a candidate lands in the target
+/-- Regard a fold family as a verifier by checking whether a candidate witness lands in the target
 fiber. -/
 def foldsharp_equals_sharpp_fold_to_sharpp
     (F : foldsharp_equals_sharpp_fold_family) : foldsharp_equals_sharpp_verifier_family where
-  Candidate := F.Omega
-  instFintypeCandidate := F.instFintypeOmega
-  instDecidableEqCandidate := F.instDecidableEqOmega
+  Witness := F.Omega
+  instFintypeWitness := F.instFintypeOmega
+  instDecidableEqWitness := F.instDecidableEqOmega
   verifier := fun n x ω => decide (F.fold n ω = x)
 
 private def foldsharp_equals_sharpp_fold_to_sharpp_equiv
     (F : foldsharp_equals_sharpp_fold_family) (n : ℕ) (x : BitVec n) :
     foldFiber (F.fold n) x ≃
-      verifierCandidates ((foldsharp_equals_sharpp_fold_to_sharpp F).verifier n) x where
+      verifierWitnesses ((foldsharp_equals_sharpp_fold_to_sharpp F).verifier n) x where
   toFun ω := ⟨ω.1, by simpa [foldsharp_equals_sharpp_fold_to_sharpp] using ω.2⟩
   invFun w := ⟨w.1, by simpa [foldsharp_equals_sharpp_fold_to_sharpp] using w.2⟩
   left_inv ω := by
@@ -78,32 +78,32 @@ private def foldsharp_equals_sharpp_fold_to_sharpp_equiv
 theorem foldsharp_equals_sharpp_fold_to_sharpp_count
     (F : foldsharp_equals_sharpp_fold_family) :
     ∀ n x,
-      (foldsharp_equals_sharpp_fold_to_sharpp F).acceptedCount n x =
+      (foldsharp_equals_sharpp_fold_to_sharpp F).witnessCount n x =
         F.fiberCount n x := by
   intro n x
   letI := F.instFintypeOmega n
   letI := F.instDecidableEqOmega n
   exact Fintype.card_congr (foldsharp_equals_sharpp_fold_to_sharpp_equiv F n x).symm
 
-/-- Realize a verifier family as the verifier fold on accepted `(input, candidate)` pairs. -/
+/-- Realize a verifier family as the verifier fold on accepted `(input, witness)` pairs. -/
 noncomputable def foldsharp_equals_sharpp_sharpp_to_fold
     (V : foldsharp_equals_sharpp_verifier_family) : foldsharp_equals_sharpp_fold_family where
-    Omega := fun n => { p : BitVec n × V.Candidate n // V.verifier n p.1 p.2 = true }
-    instFintypeOmega := by
-      intro n
-      letI := V.instFintypeCandidate n
-      letI := V.instDecidableEqCandidate n
-      infer_instance
-    instDecidableEqOmega := by
-      intro n
-      letI := V.instFintypeCandidate n
-      letI := V.instDecidableEqCandidate n
-      infer_instance
-    fold := fun n => verifierFold (V.verifier n)
+  Omega := fun n => { p : BitVec n × V.Witness n // V.verifier n p.1 p.2 = true }
+  instFintypeOmega := by
+    intro n
+    letI := V.instFintypeWitness n
+    letI := V.instDecidableEqWitness n
+    infer_instance
+  instDecidableEqOmega := by
+    intro n
+    letI := V.instFintypeWitness n
+    letI := V.instDecidableEqWitness n
+    infer_instance
+  fold := fun n => verifierFold (V.verifier n)
 
 private def foldsharp_equals_sharpp_sharpp_to_fold_equiv
     (V : foldsharp_equals_sharpp_verifier_family) (n : ℕ) (x : BitVec n) :
-    foldFiber (verifierFold (V.verifier n)) x ≃ verifierCandidates (V.verifier n) x where
+    foldFiber (verifierFold (V.verifier n)) x ≃ verifierWitnesses (V.verifier n) x where
   toFun p := by
     rcases p with ⟨⟨⟨x', w⟩, hw⟩, hx⟩
     exact ⟨w, by simpa using hx ▸ hw⟩
@@ -116,15 +116,15 @@ private def foldsharp_equals_sharpp_sharpp_to_fold_equiv
     rcases w with ⟨w, hw⟩
     rfl
 
-/-- The verifier fold on accepted pairs has the advertised candidate counts as fiber multiplicities. -/
+/-- The verifier fold on accepted pairs has the advertised witness counts as fiber multiplicities. -/
 theorem foldsharp_equals_sharpp_sharpp_to_fold_count
     (V : foldsharp_equals_sharpp_verifier_family) :
     ∀ n x,
       (foldsharp_equals_sharpp_sharpp_to_fold V).fiberCount n x =
-        V.acceptedCount n x := by
+        V.witnessCount n x := by
   intro n x
-  letI := V.instFintypeCandidate n
-  letI := V.instDecidableEqCandidate n
+  letI := V.instFintypeWitness n
+  letI := V.instDecidableEqWitness n
   exact Fintype.card_congr (foldsharp_equals_sharpp_sharpp_to_fold_equiv V n x)
 
 /-- The finite fold-counting class and the finite verifier-counting class coincide. -/

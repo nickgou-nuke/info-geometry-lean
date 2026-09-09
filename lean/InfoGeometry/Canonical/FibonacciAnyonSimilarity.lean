@@ -7,7 +7,7 @@ import Mathlib.Data.Real.Basic
 This file avoids local relation and trace wrapper definitions.  Similarity is
 stated directly as conjugacy by a mathlib unit `Aˣ`, and trace invariance is
 stated for an explicit function `τ : A → ℝ` with an explicit cyclicity
-property.
+hypothesis.
 
 The original involutive-gauge relation `∃ F, F * F = 1 ∧ X = F * Y * F` is not
 transitive in an arbitrary noncommutative ring without extra commutation
@@ -59,7 +59,7 @@ theorem trace_similarity_invariant (X Y : A)
       _ = τ Y := by simp
   rw [h_eq]
 
-/-- An involutive element `F` gives a unit, hence a canonical similarity property. -/
+/-- An involutive element `F` gives a unit, hence a canonical similarity witness. -/
 theorem braid_generators_similar (B1 B2 F : A)
     (hF : F * F = 1) (h_B2 : B2 = F * B1 * F) :
     ∃ u : Aˣ, B2 = (u : A) * B1 * ((u⁻¹ : Aˣ) : A) := by

@@ -76,4 +76,18 @@ def innerModularFlow (u : G) : ModularFlow G where
   sigma_one' := sigma_one u
   sigma_comp' := sigma_comp u
 
+/-- Main synthesis theorem: algebraic automorphism group. -/
+theorem modular_automorphism_group_synthesis (u : G) :
+    (∀ a : G, sigma u 0 a = a) ∧
+    (∀ n : ℤ, sigma u n 1 = 1) ∧
+    (∀ n : ℤ, ∀ a b : G, sigma u n (a * b) = sigma u n a * sigma u n b) ∧
+    (∀ m n : ℤ, ∀ a : G, sigma u m (sigma u n a) = sigma u (m + n) a) := by
+  exact ⟨sigma_zero u, sigma_one u, sigma_mul u, sigma_comp u⟩
+
+#check sigma_zero
+#check sigma_mul
+#check sigma_comp
+#check innerModularFlow
+#check modular_automorphism_group_synthesis
+
 end ModularAutomorphismGroup

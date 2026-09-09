@@ -380,7 +380,7 @@ variable [KreinSpace (DoubledSpace E)] [KreinGradedModule (DoubledSpace E)]
 
 /--
 Source-side packaging: from nonzero transported central charge with boundary
-identified to the source seed, obtain a localized source/sink property together
+identified to the source seed, obtain a localized source/sink witness together
 with source-seed derivative readout anchor invariance.
 -/
 @[rep_depth transport] theorem
@@ -454,7 +454,7 @@ with source-seed derivative readout anchor invariance.
 
 /--
 Sink-side packaging: from nonzero transported central charge with boundary
-identified to the sink seed, obtain a localized source/sink property together
+identified to the sink seed, obtain a localized source/sink witness together
 with sink-seed derivative readout anchor invariance.
 -/
 @[rep_depth transport] theorem

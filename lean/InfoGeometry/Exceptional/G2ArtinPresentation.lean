@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.GroupTheory.PresentedGroup
+import Mathlib.GroupTheory.QuotientGroup.Defs
 import InfoGeometry.Algebra.Zorn.G2CoordinateWordActionBridge
 import InfoGeometry.Algebra.Zorn.G2CoordinateWeylAction
 import InfoGeometry.Algebra.Zorn.G2LongestElementBridge
@@ -122,6 +123,51 @@ noncomputable def coordinateAction : ArtinG2 →* Equiv.Perm G2CoordinateRoot :=
     coordinateAction sigmaOne = s2Root := by
   simp [sigmaOne, simpleReflections]
 
+/-! The Artin presentation is symmetric in its two generators. -/
+
+def generatorSwap : Generator → ArtinG2
+  | 0 => sigmaOne
+  | 1 => sigmaZero
+
+theorem generatorSwap_relation :
+    FreeGroup.lift generatorSwap relation = 1 := by
+  simp only [relation, map_mul, map_inv, FreeGroup.lift_apply_of,
+    generatorSwap, sigmaZero, sigmaOne]
+  apply mul_inv_eq_one.mpr
+  simpa [sigmaZero, sigmaOne] using artin_relation.symm
+
+noncomputable def artinGeneratorSwap : ArtinG2 →* ArtinG2 :=
+  PresentedGroup.toGroup (f := generatorSwap) (rels := relations) (by
+    intro r hr
+    have hr' : r = relation := by
+      simpa [relations] using hr
+    rw [hr']
+    exact generatorSwap_relation)
+
+@[simp] theorem artinGeneratorSwap_sigmaZero :
+    artinGeneratorSwap sigmaZero = sigmaOne := by
+  change PresentedGroup.toGroup (f := generatorSwap) (rels := relations) _
+      (PresentedGroup.of 0) = sigmaOne
+  rw [PresentedGroup.toGroup.of]
+  rfl
+
+@[simp] theorem artinGeneratorSwap_sigmaOne :
+    artinGeneratorSwap sigmaOne = sigmaZero := by
+  change PresentedGroup.toGroup (f := generatorSwap) (rels := relations) _
+      (PresentedGroup.of 1) = sigmaZero
+  rw [PresentedGroup.toGroup.of]
+  rfl
+
+theorem artinGeneratorSwap_involutive :
+    artinGeneratorSwap.comp artinGeneratorSwap = MonoidHom.id ArtinG2 := by
+  apply PresentedGroup.ext
+  intro i
+  fin_cases i
+  · change artinGeneratorSwap sigmaOne = sigmaZero
+    exact artinGeneratorSwap_sigmaOne
+  · change artinGeneratorSwap sigmaZero = sigmaOne
+    exact artinGeneratorSwap_sigmaZero
+
 def garsideWord : FreeGroup Generator :=
   FreeGroup.of 0 * FreeGroup.of 1 * FreeGroup.of 0 *
     FreeGroup.of 1 * FreeGroup.of 0 * FreeGroup.of 1
@@ -183,6 +229,83 @@ theorem garsideWord_is_longest_readback :
       using g2LongestNF_word_canonical
   rw [← hword]
   rfl
+
+/-! The Coxeter involution kernel is the normal closure of the two square
+    relators.  The Artin generator swap preserves it. -/
+
+def involutionKernel : Subgroup ArtinG2 :=
+  Subgroup.normalClosure ({sigmaZero ^ 2, sigmaOne ^ 2} : Set ArtinG2)
+
+instance : involutionKernel.Normal := by
+  unfold involutionKernel
+  infer_instance
+
+theorem artinGeneratorSwap_mem_involutionKernel {g : ArtinG2}
+    (hg : g ∈ involutionKernel) :
+    artinGeneratorSwap g ∈ involutionKernel := by
+  letI : involutionKernel.Normal := by
+    dsimp [involutionKernel]
+    infer_instance
+  letI : (involutionKernel.comap artinGeneratorSwap).Normal :=
+    Subgroup.Normal.comap (H := involutionKernel) (f := artinGeneratorSwap) inferInstance
+  have hsubset :
+      ({sigmaZero ^ 2, sigmaOne ^ 2} : Set ArtinG2) ⊆
+        involutionKernel.comap artinGeneratorSwap := by
+    intro x hx
+    rcases hx with rfl | rfl
+    · change artinGeneratorSwap (sigmaZero ^ 2) ∈ involutionKernel
+      rw [map_pow, artinGeneratorSwap_sigmaZero]
+      exact Subgroup.subset_normalClosure (by simp)
+    · change artinGeneratorSwap (sigmaOne ^ 2) ∈ involutionKernel
+      rw [map_pow, artinGeneratorSwap_sigmaOne]
+      exact Subgroup.subset_normalClosure (by simp)
+  have hle : involutionKernel ≤ involutionKernel.comap artinGeneratorSwap := by
+    exact Subgroup.normalClosure_le_normal hsubset
+  exact hle hg
+
+abbrev WeylQuotient := ArtinG2 ⧸ involutionKernel
+
+def artinQuotientMap : ArtinG2 →* WeylQuotient :=
+  QuotientGroup.mk' involutionKernel
+
+theorem artinGeneratorSwap_quotient_kernel_le :
+    involutionKernel ≤ (artinQuotientMap.comp artinGeneratorSwap).ker := by
+  intro g hg
+  change artinQuotientMap (artinGeneratorSwap g) = 1
+  exact (QuotientGroup.eq_one_iff _).2
+    (artinGeneratorSwap_mem_involutionKernel hg)
+
+def descendedArtinGeneratorSwap : WeylQuotient →* WeylQuotient :=
+  QuotientGroup.lift involutionKernel
+    (artinQuotientMap.comp artinGeneratorSwap)
+    artinGeneratorSwap_quotient_kernel_le
+
+@[simp] theorem descendedArtinGeneratorSwap_mk (g : ArtinG2) :
+    descendedArtinGeneratorSwap (artinQuotientMap g) =
+      artinQuotientMap (artinGeneratorSwap g) := by
+  exact QuotientGroup.lift_mk' _ _ _
+
+theorem artinQuotientMap_swap_commutes (g : ArtinG2) :
+    artinQuotientMap (artinGeneratorSwap g) =
+      descendedArtinGeneratorSwap (artinQuotientMap g) := by
+  symm
+  exact descendedArtinGeneratorSwap_mk g
+
+theorem descendedArtinGeneratorSwap_involutive :
+    descendedArtinGeneratorSwap.comp descendedArtinGeneratorSwap =
+      MonoidHom.id WeylQuotient := by
+  apply MonoidHom.ext
+  intro w
+  obtain ⟨g, rfl⟩ := QuotientGroup.mk'_surjective involutionKernel w
+  simp only [MonoidHom.coe_comp]
+  change descendedArtinGeneratorSwap
+      (descendedArtinGeneratorSwap (artinQuotientMap g)) =
+    artinQuotientMap g
+  rw [descendedArtinGeneratorSwap_mk, descendedArtinGeneratorSwap_mk]
+  have hswap : artinGeneratorSwap (artinGeneratorSwap g) = g := by
+    have h := DFunLike.congr_fun artinGeneratorSwap_involutive g
+    simpa [MonoidHom.coe_comp] using h
+  exact congrArg artinQuotientMap hswap
 
 end
 end InfoGeometry.Exceptional.G2ArtinPresentation

@@ -652,6 +652,16 @@ theorem rootSpace_eq_jointEigenspace (j : nonzeroIndex) :
     rootSpace j.1 = jointEigenspace (rootWeight j.1) := by
   exact (jointEigenspace_eq_span_rootDerivation j.1 j.2.1 j.2.2).symm
 
+theorem rootSpace_bracket_mem_jointEigenspace_add
+    (i j : nonzeroIndex) {X Y : Der}
+    (hX : X ∈ rootSpace i.1) (hY : Y ∈ rootSpace j.1) :
+    ⁅X, Y⁆ ∈ jointEigenspace (rootWeight i.1 + rootWeight j.1) := by
+  apply lie_mem_jointEigenspace_add (rootWeight i.1) (rootWeight j.1)
+  · rw [← rootSpace_eq_jointEigenspace i]
+    exact hX
+  · rw [← rootSpace_eq_jointEigenspace j]
+    exact hY
+
 theorem rootSpace_finrank (j : nonzeroIndex) :
     Module.finrank ℝ (rootSpace j.1) = 1 := by
   letI : FiniteDimensional ℝ Der :=

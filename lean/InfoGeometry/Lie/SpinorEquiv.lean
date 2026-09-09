@@ -8,7 +8,7 @@ import Mathlib.Analysis.SpecialFunctions.Complex.Log
 
 import InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
 import InfoGeometry.Canonical.NilpotentItakuraSaito
-import InfoGeometry.Algebra.CuntzTraceConjugation
+import InfoGeometry.Algebra.CuntzTraceSocketConjugation
 import InfoGeometry.Algebra.FibonacciGrothendieckRing
 import InfoGeometry.Topology.AmplituhedronBoundary
 import Omega.CircleDimension.StokesHomologyExactSplitting
@@ -27,7 +27,7 @@ open Units
 
 open InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
 open InfoGeometry.Canonical.NilpotentItakuraSaito
-open InfoGeometry.Algebra.CuntzTraceConjugation
+open InfoGeometry.Algebra.CuntzTraceSocketConjugation
 open InfoGeometry.Algebra.FibonacciGrothendieckRing
 open Omega.CircleDimension.StokesHomologyExactSplitting
 open InfoGeometry.Topology.ThermodynamicGauge
@@ -37,16 +37,14 @@ namespace InfoGeometry.Lie.SpinorEquiv
 /-! ## Section 1: The Three Itakura Strands as de Rham Models -/
 
 /-- 1. **Araki/Itakura-Saito** → Curvature form `F = dA + A ∧ A`
-    The `NoncommutativeItakuraSaitoModel.divergence` is the operator Bregman
+    The `NoncommutativeItakuraSaitoPacket.divergence` IS the operator Bregman
     divergence, which under the bridge becomes `Tr(F ∧ F)` — the second Chern form. -/
 theorem araki_itakura_is_curvature_form :
-    ∀ (P : NoncommutativeItakuraSaitoModel (Matrix (Fin 2) (Fin 2) ℂ))
-      (hzero : ∀ X : Matrix (Fin 2) (Fin 2) ℂ,
-        P.readout.readout (P.readout.product X 0) = 0)
+    ∀ (P : NoncommutativeItakuraSaitoPacket (Matrix (Fin 2) (Fin 2) ℂ))
       (X : Matrix (Fin 2) (Fin 2) ℂ),
       P.divergence X X = 0 := by
-  intro P hzero X
-  exact P.divergence_self hzero X
+  intro P X
+  exact P.divergence_self X
 
 /-- 2. **Thermodynamic Gauge** → Connection 1-form `A`
     The `thermodynamic_gauge_connection` IS a connection 1-form;
@@ -60,12 +58,11 @@ theorem thermodynamic_gauge_is_connection :
   exact entropy_production_eq_commutator flow
 
 /-- 3. **Nilpotent Itakura-Saito** → de Rham differential `d`
-    `nilItakuraSaito K = nilExp K - 1 - K = 0` on the finite truncated lane.
+    `nilItakuraSaito K = nilExp K - 1 - K = 0` for `K² = 0` (with `K : M2C`)
     is the finite-model of `d ∘ d = 0` in the de Rham complex. -/
-theorem nilpotent_itakura_realizes_d_squared_zero
-    (K : BiquaternionKANnilpotent.M2C) (hK : K * K = 0) :
-    nilItakuraSaito K = 0 ∧ K * K = 0 := by
-  exact ⟨nilItakuraSaito_zero K, hK⟩
+theorem nilpotent_itakura_realizes_d_squared_zero (K : M2C) (hK : K * K = 0) :
+    (nilItakuraSaito K = 0) := by
+  exact nilItakuraSaito_zero K
 
 /-! ## Section 2: Stokes Exact Splitting → de Rham Theorem -/
 

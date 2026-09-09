@@ -290,6 +290,16 @@ theorem native_short_long_chainBotCoeff :
 
 abbrev P := InfoGeometry.Lie.CanonicalZornIsKilling.canonicalZornRootSystem
 
+@[simp] theorem nativeRootIndex_root (i : nonzeroIndex) :
+    P.root (nativeRootIndex i) = nativeRootWeightMathlib i := rfl
+
+theorem nativeRootIndex_weylGroup_apply_root (g : P.weylGroup)
+    (i : nonzeroIndex) :
+        P.root (P.weylGroupToPerm g (nativeRootIndex i)) =
+          g • nativeRootWeightMathlib i := by
+  rw [← RootPairing.weylGroup_apply_root]
+  rfl
+
 theorem native_short_coroot_on_long_root :
     (P.root (nativeRootIndex nativeLongSimpleIndex))
         (P.coroot (nativeRootIndex nativeShortSimpleIndex)) = -3 := by

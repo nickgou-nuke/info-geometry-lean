@@ -17,7 +17,7 @@ with a normalized positive state on `A∞`, induces:
 * compatibility of that universal map with every represented stage
   observable.
 
-No commutativity or diagonalization property is used.
+No commutativity or diagonalization hypothesis is used.
 -/
 
 noncomputable section
@@ -59,8 +59,7 @@ def stageTargetGNSMap
     (i : I) :
     ((restrictedStateFamily Stage sys cocone Ω).state i).functional.GNS →
       Ω.functional.GNS :=
-  gnsMap (ContinuousStarInductiveSystem.StarInductiveCocone.leg
-    (Stage := Stage) (sys := sys) cocone i) Ω
+  gnsMap (cocone.ι i) Ω
 
 /-- The stage-to-target map agrees with the star-cocone leg on the dense
 algebraic GNS vectors. -/
@@ -69,13 +68,9 @@ algebraic GNS vectors. -/
     stageTargetGNSMap Stage sys cocone Ω i
         (((restrictedStateFamily Stage sys cocone Ω).state i).functional.toPreGNS a :
           ((restrictedStateFamily Stage sys cocone Ω).state i).functional.GNS) =
-      (Ω.functional.toPreGNS
-        (ContinuousStarInductiveSystem.StarInductiveCocone.leg
-          (Stage := Stage) (sys := sys) cocone i a) :
+      (Ω.functional.toPreGNS (cocone.ι i a) :
         Ω.functional.GNS) :=
-  gnsMap_toPreGNS
-    (ContinuousStarInductiveSystem.StarInductiveCocone.leg
-      (Stage := Stage) (sys := sys) cocone i) Ω a
+  gnsMap_toPreGNS (cocone.ι i) Ω a
 
 /-- The stage-to-target GNS maps commute with the filtered transitions on the
 whole completed spaces. -/
@@ -87,15 +82,11 @@ theorem stageTargetGNSMap_transition
       stageTargetGNSMap Stage sys cocone Ω i := by
   apply UniformSpace.Completion.denseRange_coe.equalizer
   · exact
-      (gnsMap_isometry
-        (ContinuousStarInductiveSystem.StarInductiveCocone.leg
-          (Stage := Stage) (sys := sys) cocone j) Ω).continuous.comp
+      (gnsMap_isometry (cocone.ι j) Ω).continuous.comp
         (filteredGNSMap_isometry Stage sys
           (restrictedStateFamily Stage sys cocone Ω) hij).continuous
   · exact
-      (gnsMap_isometry
-        (ContinuousStarInductiveSystem.StarInductiveCocone.leg
-          (Stage := Stage) (sys := sys) cocone i) Ω).continuous
+      (gnsMap_isometry (cocone.ι i) Ω).continuous
   · funext x
     obtain ⟨a, rfl⟩ :=
       (((restrictedStateFamily Stage sys cocone Ω).state i).functional.toPreGNS).surjective x
@@ -116,8 +107,7 @@ theorem stageTargetGNSMap_transition
       stageTargetGNSMap_toPreGNS]
     have hleg := congrArg
       (fun f : Stage i →⋆ₐ[ℂ] Ainf => f a)
-      (ContinuousStarInductiveSystem.StarInductiveCocone.compatibility
-        (Stage := Stage) (sys := sys) cocone hij)
+      (cocone.ι_comm hij)
     exact congrArg
       (fun y : Ainf =>
         (Ω.functional.toPreGNS y :
@@ -130,27 +120,21 @@ def gnsTargetInductiveCocone :
       ℂ
       (gnsDirectInductiveSystem Stage sys
         (restrictedStateFamily Stage sys cocone Ω))
-      Ω.functional.GNS :=
-  ⟨(fun i =>
-      (gnsMapCLM
-        (ContinuousStarInductiveSystem.StarInductiveCocone.leg
-          (Stage := Stage) (sys := sys) cocone i) Ω).toLinearMap), by
+      Ω.functional.GNS where
+  psi := fun i =>
+    (gnsMapCLM (cocone.ι i) Ω).toLinearMap
+  psi_comm := by
     intro i j hij
     ext x
     change
-      gnsMapCLM
-        (ContinuousStarInductiveSystem.StarInductiveCocone.leg
-          (Stage := Stage) (sys := sys) cocone j) Ω
+      gnsMapCLM (cocone.ι j) Ω
           (filteredGNSMapCLM Stage sys
             (restrictedStateFamily Stage sys cocone Ω) hij x) =
-        gnsMapCLM
-          (ContinuousStarInductiveSystem.StarInductiveCocone.leg
-            (Stage := Stage) (sys := sys) cocone i) Ω x
+        gnsMapCLM (cocone.ι i) Ω x
     rw [filteredGNSMapCLM_apply, gnsMapCLM_apply, gnsMapCLM_apply]
     exact congrFun
       (stageTargetGNSMap_transition
         Stage sys cocone Ω hij) x
-  ⟩
 
 /-- The categorical `ModuleCat` cocone induced by the target GNS
 representation. -/
@@ -253,18 +237,14 @@ theorem descendGNSColimit_representation
         (gnsColimitInclusion Stage sys
           (restrictedStateFamily Stage sys cocone Ω) i
           (((restrictedStateFamily Stage sys cocone Ω).state i).functional.gnsStarAlgHom a x)) =
-      Ω.functional.gnsStarAlgHom
-        (ContinuousStarInductiveSystem.StarInductiveCocone.leg
-          (Stage := Stage) (sys := sys) cocone i a)
+      Ω.functional.gnsStarAlgHom (cocone.ι i a)
         (descendGNSColimit Stage sys cocone Ω
           (gnsColimitInclusion Stage sys
             (restrictedStateFamily Stage sys cocone Ω) i x)) := by
   rw [descendGNSColimit_stage, descendGNSColimit_stage]
   have hintertwine :=
     congrFun
-      (gnsMap_intertwines
-        (ContinuousStarInductiveSystem.StarInductiveCocone.leg
-          (Stage := Stage) (sys := sys) cocone i) Ω a) x
+      (gnsMap_intertwines (cocone.ι i) Ω a) x
   exact hintertwine
 
 end CStarStateColimit.Native.FilteredGNSColimit

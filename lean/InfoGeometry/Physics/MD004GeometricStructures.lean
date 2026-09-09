@@ -218,6 +218,34 @@ theorem omega0_nondegenerate (u : Coord8) (h : ∀ v : Coord8, omega0 u v = 0) :
     subst b0; subst a0; subst b1; subst a1; subst b2; subst a2; subst b3; subst a3
     rfl
 
+/-- Repaired theorem-safe Chapter 4 finite geometry packet. -/
+theorem repaired_MD004_geometric_structures_packet (a b : Coord4) (u v : Coord8) :
+    I4 (I4 a) = neg4 a ∧
+    J4 (J4 a) = neg4 a ∧
+    K4 (K4 a) = neg4 a ∧
+    I4 (J4 a) = K4 a ∧
+    dot4 (I4 a) (I4 b) = dot4 a b ∧
+    dot4 (J4 a) (J4 b) = dot4 a b ∧
+    dot4 (K4 a) (K4 b) = dot4 a b ∧
+    omegaI b a = - omegaI a b ∧
+    omegaJ b a = - omegaJ a b ∧
+    omegaK b a = - omegaK a b ∧
+    (∀ x : Coord4, (∀ y : Coord4, omegaI x y = 0) → x = zero4) ∧
+    (∀ x : Coord4, (∀ y : Coord4, omegaJ x y = 0) → x = zero4) ∧
+    (∀ x : Coord4, (∀ y : Coord4, omegaK x y = 0) → x = zero4) ∧
+    J0 (J0 u) = neg8 u ∧
+    dot8 (J0 u) (J0 v) = dot8 u v ∧
+    omega0 v u = - omega0 u v ∧
+    (∀ x : Coord8, (∀ y : Coord8, omega0 x y = 0) → x = zero8) := by
+  exact ⟨I4_sq a, J4_sq a, K4_sq a, I4_mul_J4 a,
+    I4_preserves_dot4 a b, J4_preserves_dot4 a b, K4_preserves_dot4 a b,
+    omegaI_skew a b, omegaJ_skew a b, omegaK_skew a b,
+    fun x h => omegaI_nondegenerate x h,
+    fun x h => omegaJ_nondegenerate x h,
+    fun x h => omegaK_nondegenerate x h,
+    J0_sq u, J0_preserves_dot8 u v, omega0_skew u v,
+    fun x h => omega0_nondegenerate x h⟩
+
 end InfoGeometry.Physics.MD004GeometricStructures
 
 end noncomputable section

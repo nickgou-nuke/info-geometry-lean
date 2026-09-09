@@ -16,10 +16,10 @@ Theorem-safe adapter separating three Hestenes--Krein structures:
 * `K`-linearity / Hestenes analyticity: operators commute with the internal
   phase axis `clockAxis`;
 * phase covariance of a supplied operator flow;
-* the existing operator-thermodynamic KMS boundary property.
+* the existing operator-thermodynamic KMS boundary certificate.
 
 The file does not derive the analytic strip theorem from `K² = -1`.  The
-ordinary KMS boundary remains the proof-carrying property owned by
+ordinary KMS boundary remains the proof-carrying certificate owned by
 `OperatorThermodynamics.KMSState`; this bridge does not duplicate those proof
 fields.
 -/
@@ -79,31 +79,11 @@ structure Bridge where
   beta :
     ℝ
 
-  /-- Existing operator-thermodynamic KMS property. -/
+  /-- Existing operator-thermodynamic KMS certificate. -/
   kms :
     KMSState EndH flow beta
 
 
 end Core
-
-namespace Bridge
-
-variable {E : Type 0}
-variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-
-local notation "H₂" => DoubledSpace E
-local notation "EndH" => H₂ →L[ℝ] H₂
-
-variable (B : Bridge (E := E))
-
-theorem flow_neg_apply (t : ℝ) (A : EndH) :
-    B.flow.flow (-t) (B.flow.flow t A) = A := by
-  exact OperatorFlow.flow_neg_apply B.flow t A
-
-theorem flow_mul_apply (t : ℝ) (A C : EndH) :
-    B.flow.flow t (A * C) = B.flow.flow t A * B.flow.flow t C := by
-  exact OperatorFlow.flow_mul_apply B.flow t A C
-
-end Bridge
 
 end InfoGeometry.Krein.HestenesAnalyticKMSBridge

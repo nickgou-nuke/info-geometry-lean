@@ -26,7 +26,7 @@ def m2_b_function_roots : List ℚ := [-1]
 /--
   Bernstein-Sato rational-root quantization.
 
-  This is the kernel-checked content carried by the `BernsteinSato` property:
+  This is the kernel-checked content carried by the `BernsteinSato` witness:
   every real root of the real scalar extension of `b_poly` is the image of a
   rational number.
 -/

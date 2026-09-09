@@ -51,9 +51,7 @@ abbrev ClInfinity :=
 /-- The stage-5 window is definitionally the recursive split `Cl(n,n)` stage at `n = 5`. -/
 theorem cl55_window_is_stage_five :
     Cl55Window = SplitClNNAlg 5 :=
-  by
-    change SplitCl55Alg = SplitClNNAlg 5
-    simpa [Cl55Window]
+  rfl
 
 /--
 Owner-backed Bott step:
@@ -74,9 +72,7 @@ def cl44_tensor_cl11_as_cl55 :
 /-- The named `Cl(5,5)` tensor step is exactly the recursive owner step at `n = 4`. -/
 theorem cl55_tensor_step_eq_owner :
     cl55_as_cl11_tensor_cl44 = splitCliffordTensorStepEquiv 4 :=
-  by
-    change splitCl55_headCl11TensorCl44Equiv = splitCliffordTensorStepEquiv 4
-    exact splitCl55_headCl11TensorCl44Equiv_eq_owner
+  rfl
 
 /--
 Compatibility between the split `Cl(4,4)` stage and the recursive stage-4
@@ -92,6 +88,25 @@ theorem cl44_spinorMatrix4_basis_compatibility
           (InfoGeometry.Clifford.SpinorRep.SplitQuad 4) x) =
       InfoGeometry.Clifford.SpinorRep.recursiveGamma 4 x := by
   simpa using InfoGeometry.Clifford.SpinorRep.spinorRepresentation_ι 4 x
+
+/--
+Combined owner packet for the stage-4 recursive spinor basis and the stage-5
+`Cl(1,1)` tensor polarization.
+
+The first conjunct is the explicit spinor-basis compatibility theorem above;
+the second conjunct is the repo-owned `Cl(5,5)` tensor-step equality.
+-/
+theorem cl44_spinorMatrix4_and_cl55_tensor_polarization :
+    (∀ x : InfoGeometry.Clifford.SpinorRep.SplitSpace 4,
+      InfoGeometry.Clifford.SpinorRep.spinorRepresentation 4
+          (CliffordAlgebra.ι
+            (InfoGeometry.Clifford.SpinorRep.SplitQuad 4) x) =
+        InfoGeometry.Clifford.SpinorRep.recursiveGamma 4 x) ∧
+    (splitCl55_headCl11TensorCl44Equiv = splitCliffordTensorStepEquiv 4) := by
+  constructor
+  · intro x
+    simpa using InfoGeometry.Clifford.SpinorRep.spinorRepresentation_ι 4 x
+  · exact splitCl55_headCl11TensorCl44Equiv_eq_owner
 
 /--
 Finite `Cl(5,5)` window absorption in the direct limit:
@@ -136,7 +151,7 @@ theorem cl55_predicate_lifts_to_finite_tail
 /-! ## Narain / `O(5,5)` metric layer -/
 
 /-- Rational/integral split-charge symmetry at the five-mode Narain window. -/
-def RationalO55Window :=
+abbrev RationalO55Window :=
   NarainChargeSymmetry 5
 
 /-- Momentum/winding swap as an `O(5,5)`-style split-charge symmetry. -/

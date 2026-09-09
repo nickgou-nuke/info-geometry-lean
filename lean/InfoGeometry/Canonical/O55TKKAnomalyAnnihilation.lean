@@ -34,7 +34,7 @@ A finite anomaly ledger whose transformed readout is invariant under the
 supplied `O(5,5)` action.
 
 `residual_eq_transformed_sub_anomaly` makes the residual an equation-level law,
-not a property/prose interface.  The annihilation theorem below is just the
+not a certificate/prose socket.  The annihilation theorem below is just the
 algebraic consequence of this law and `o55_invariant`.
 -/
 @[rep_depth transport]

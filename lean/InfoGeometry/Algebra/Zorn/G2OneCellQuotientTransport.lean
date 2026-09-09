@@ -21,7 +21,7 @@ open InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 
 theorem cell_one_quotient_witness
-    (i : Fin 189) (hi : i ∈ orbitCells 1) :
+    (i : Fin 189) :
     (hfac : flagRepresentative i =
       collect (leftFactorWord 1 i) *
         weylNF (orbitWeyl 1).1 (orbitWeyl 1).2 *
@@ -36,7 +36,7 @@ theorem cell_one_quotient_witness
   exact quotient_orbit_witness_of_collected_factorization 1 i hfac
 
 theorem all_cells_quotient_witness
-    (k : Fin 12) (i : Fin 189) (hi : i ∈ orbitCells k) :
+    (k : Fin 12) (i : Fin 189) :
     (hfac : flagRepresentative i =
       collect (leftFactorWord k i) *
         weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
@@ -51,7 +51,7 @@ theorem all_cells_quotient_witness
   exact quotient_orbit_witness_of_collected_factorization k i hfac
 
 theorem all_cells_orbitEnum_hcell
-    (k : Fin 12) (i : Fin 189) (hi : i ∈ orbitCells k) :
+    (k : Fin 12) (i : Fin 189) :
     (hfac : flagRepresentative i =
       collect (leftFactorWord k i) *
         weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
@@ -63,10 +63,10 @@ theorem all_cells_orbitEnum_hcell
             (weylNF (orbitWeyl k).1 (orbitWeyl k).2) :
               G2FlagCellQuotientWitness.CarrierQuotient) := by
   intro hfac
-  exact all_cells_quotient_witness k i hi hfac
+  exact all_cells_quotient_witness k i hfac
 
 theorem all_cells_representative_mem
-    (k : Fin 12) (i : Fin 189) (hi : i ∈ orbitCells k) :
+    (k : Fin 12) (i : Fin 189) :
     (hfac : flagRepresentative i =
       collect (leftFactorWord k i) *
         weylNF (orbitWeyl k).1 (orbitWeyl k).2 *
@@ -79,7 +79,7 @@ theorem all_cells_representative_mem
     unipotentSubgroup
     (weylNF (orbitWeyl k).1 (orbitWeyl k).2)
     (flagRepresentative i)).2
-  obtain ⟨b, hb, hq⟩ := all_cells_quotient_witness k i hi hfac
+  obtain ⟨b, hb, hq⟩ := all_cells_quotient_witness k i hfac
   exact ⟨b, hb, hq.symm⟩
 
 end InfoGeometry.Algebra.Zorn.G2OneCellQuotientTransport

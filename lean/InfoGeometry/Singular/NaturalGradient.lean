@@ -47,6 +47,6 @@ then the Natural Gradient is consistent with the metric's own symmetries.
 -/
 theorem natural_gradient_symmetry (G G_pinv : Mat n)
     (h : IsMoorePenroseInverse G G_pinv) :
-    (G * G_pinv)† = G * G_pinv := h.ab_adj_eq
+    (G * G_pinv)† = G * G_pinv := h.eq3
 
 end InfoGeometry.Singular.NaturalGradient

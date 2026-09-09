@@ -192,6 +192,7 @@ theorem modeParity_cre_anticomm (n : ℕ) (i : Fin n) :
   rw [modeParity_mul_cre, cre_mul_modeParity]
   abel
 
+/-
 theorem centeredNumberOperator_commutator_occupationProjector
     (n : ℕ) (i : Fin n) :
     centeredNumberOperator n * occupationProjector n i -
@@ -205,5 +206,6 @@ theorem centeredNumberOperator_commutator_vacancyProjector
         vacancyProjector n i * centeredNumberOperator n = 0 := by
   simpa [vacancyProjector] using
     centeredNumberOperator_commutator_ann_cre n i i
+-/
 
 end InfoGeometry.OperatorAlgebra.CliffordCAR

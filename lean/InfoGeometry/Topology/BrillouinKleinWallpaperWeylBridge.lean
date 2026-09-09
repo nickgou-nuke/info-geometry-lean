@@ -48,12 +48,10 @@ theorem brillouin_klein_wallpaper_weyl_packet :
                 latticeEmbed t 3 + latticeEmbed t 4 = 0) ∧
               matVec5 sigmaXMatrix (latticeEmbed t) = latticeEmbed (sigmaX t) ∧
               matVec5 sigmaDMatrix (latticeEmbed t) = latticeEmbed (sigmaD t)) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · exact concrete_pg_generates_klein_bottle_relation
-  · intro theta; simp [klein_bottle_z2_invariant]
-  · intro Path inst a b int_charge
-    exact fermion_doubling_violation a b int_charge
-  · intro theta n; exact klein_bottle_invariant_gauge_stable theta (-theta) n
-  · exact wallpaper_to_affine_weyl_d5_packet
+  exact ⟨concrete_pg_generates_klein_bottle_relation,
+    (fun theta => by simp [klein_bottle_z2_invariant]),
+    (fun a b int_charge => fermion_doubling_violation a b int_charge),
+    (fun theta n => klein_bottle_invariant_gauge_stable theta (-theta) n),
+    wallpaper_to_affine_weyl_d5_packet⟩
 
 end InfoGeometry.Topology.BrillouinKleinWallpaperWeylBridge

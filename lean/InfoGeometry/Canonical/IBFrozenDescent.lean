@@ -285,7 +285,7 @@ theorem ibFrozenFreeEnergy_eq_gap_minus_logPartition
           rw [Finset.sum_sub_distrib]
 
 /--
-Derived decomposition property for the Gibbs-slice frozen step.
+Derived decomposition hypothesis for the Gibbs-slice frozen step.
 -/
 lemma ibFrozenFreeEnergy_hStepDecomp
     (prob : IBProblem (X := X) (Y := Y))
@@ -311,7 +311,7 @@ lemma ibFrozenFreeEnergy_hStepDecomp
   simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h
 
 /--
-Derived decomposition property for an arbitrary encoder policy `p`.
+Derived decomposition hypothesis for an arbitrary encoder policy `p`.
 -/
 lemma ibFrozenFreeEnergy_hPDecomp
     (prob : IBProblem (X := X) (Y := Y))
@@ -366,7 +366,7 @@ theorem baFrozenTargetGapWithGibbs_step_eq_zero
           (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) x)
         ((ibBlahutArimotoStepFrozenGibbs
           (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) x) = 0 := by
-    unfold InfoGeometry.fin_kl_div InfoGeometry.KL.kl_div
+    unfold InfoGeometry.fin_kl_div InfoGeometry.kl_div
     simpa using
       (InformationTheory.klDiv_self
         (μ := (((ibBlahutArimotoStepFrozenGibbs
@@ -667,7 +667,7 @@ theorem baFrozenTargetGapWith_step_eq_zero
       InfoGeometry.fin_kl_div
         ((ibBlahutArimotoStepFrozen prob qT mY_givenT) x)
         ((ibBlahutArimotoStepFrozen prob qT mY_givenT) x) = 0 := by
-    unfold InfoGeometry.fin_kl_div InfoGeometry.KL.kl_div
+    unfold InfoGeometry.fin_kl_div InfoGeometry.kl_div
     simpa using
       (InformationTheory.klDiv_self
         (μ := (((ibBlahutArimotoStepFrozen prob qT mY_givenT) x).toMeasure)))
@@ -744,7 +744,7 @@ theorem baFrozenTargetGap_step_eq_zero
       InfoGeometry.fin_kl_div
         ((ibBlahutArimotoStep prob pOld) x)
         ((ibBlahutArimotoStep prob pOld) x) = 0 := by
-    unfold InfoGeometry.fin_kl_div InfoGeometry.KL.kl_div
+    unfold InfoGeometry.fin_kl_div InfoGeometry.kl_div
     simpa using
       (InformationTheory.klDiv_self
         (μ := (((ibBlahutArimotoStep prob pOld) x).toMeasure)))

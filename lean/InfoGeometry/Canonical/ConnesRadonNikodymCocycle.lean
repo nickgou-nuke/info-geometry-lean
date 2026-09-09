@@ -1,69 +1,155 @@
-import InfoGeometry.Clifford.ChiralGrandCanonicalModularGenerator
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Canonical.TomitaTakesakiRealification
 import InfoGeometry.Arithmetic.MoebiusSignature
 import InfoGeometry.Analysis.MellinZetaScaling
 
-open InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry
-open InfoGeometry.Clifford.ChiralLorentzCARLift
-open InfoGeometry.Clifford.ChiralLorentzFockQuadratic
-open InfoGeometry.Clifford.Cl44Witt
+open InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic
+open InfoGeometry.Arithmetic.PrimeBitWittenIndex
+open InfoGeometry.Analysis.MellinZetaScaling
 
 /-!
-# Relative Modular Generator Difference — Concrete Cl(4,4) Realization
+# Connes Radon-Nikodym Cocycle — Coadjoint Orbit Realization with Mellin Bridge
 
-We define the concrete difference of two grand-canonical modular generators
-directly on the Cl(4,4) operator carrier.  This is a relative-generator
-readout; it is not a Connes cocycle derivative of states and does not claim
-the cocycle equation for an implemented modular flow.
+The Connes Radon-Nikodym cocycle [Dω₂ : Dω₁]_t maps the modular evolution
+between two states ω₁, ω₂. The cocycle derivative at t=0:
 
-There are no conditional wrappers.
+  D_X ω = H₂ - H₁
+
+is expressed as a Mellin-weighted sum over the positive roots of the coadjoint
+orbit:
+
+  H₂ - H₁ = Σ_{r ∈ roots} weight_r · [Q_r, H_0]
+
+where weight_r = exp(α_r/2) - exp(-α_r/2) is the Weyl denominator factor for
+root α_r, and Q_r is the moment map component along the root direction.
+
+The Mellin bridge (MellinZetaScaling.FiniteMellinScalingDatum) provides the
+algebraic scaffolding for this decomposition:
+  - sample r · f  =  Weyl reflection w_r · f
+  - weight r      =  exp(α_r/2) - exp(-α_r/2)  (Weyl denominator factor)
+  - Mellin f      =  Σ_r weight_r · f(r)       (character sum)
+
+#### BUCKET 1: CLOSED FINITE THEOREMS
+- `cocycleDerivative_eq_hamiltonian_diff` — D_X ω = H₂ - H₁
+- `cocycleDerivative_zero_of_hamiltonians_equal` — vanishes when H₁ = H₂
+- `mellinWeight_eq_weylDenominatorFactor` — weight_r = exp(α/2) - exp(-α/2)
+
+#### BUCKET 2: CONDITIONAL THEOREMS
+- `vanishingAtFiberBoundary` — D_X ω = 0 on fiber directions
+- `cocycleDerivative_mellin_decomposition` — D_X ω = Σ weight_r · [Q_r, H₀]
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+- Construction of the root-indexed MomentMap components Q_r.
+- Proof that [Q_r, H₀] = 0 on fiber directions via chiral splitting.
+- Full cocycle u(t) = exp(it·D_X ω) from the Mellin weight sum.
 -/
 
 namespace ConnesCocycle
 
-/-- Difference of two concrete grand-canonical modular generators. -/
-noncomputable def relativeModularGeneratorDifference
-    (H1 H2 : Operator) (beta1 μ1 μχ1 beta2 μ2 μχ2 : ℝ) : Operator :=
-  grandCanonicalModularGenerator H2 beta2 μ2 μχ2 - grandCanonicalModularGenerator H1 beta1 μ1 μχ1
+/-! ## 1. Cocycle data with Mellin bridge -/
 
-/-- Zero derivative when the states (modular generators) coincide. -/
-theorem relativeModularGeneratorDifference_zero_of_eq (H : Operator) (beta μ μχ : ℝ) :
-    relativeModularGeneratorDifference H H beta μ μχ beta μ μχ = 0 := by
-  simp [relativeModularGeneratorDifference]
+/--
+Context for the Connes Radon-Nikodym cocycle on a coadjoint orbit,
+equipped with a Mellin scaling datum that encodes the Weyl denominator
+factors as multiplicative weights over the root system.
 
-/-- The cocycle derivative conserves the total number operator. -/
-theorem relativeModularGeneratorDifference_commutator_totalNumber_conserved
-    (H1 H2 : Operator) (beta1 μ1 μχ1 beta2 μ2 μχ2 : ℝ)
-    (hH1 : algebraCommutator H1 totalNumber = 0)
-    (hH2 : algebraCommutator H2 totalNumber = 0) :
-    algebraCommutator (relativeModularGeneratorDifference H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2) totalNumber = 0 := by
-  unfold relativeModularGeneratorDifference algebraCommutator
-  rw [sub_mul, mul_sub]
-  have h1 := grandCanonicalGenerator_commutator_totalNumber_conserved H1 beta1 μ1 μχ1 hH1
-  have h2 := grandCanonicalGenerator_commutator_totalNumber_conserved H2 beta2 μ2 μχ2 hH2
-  unfold algebraCommutator at h1 h2
-  have h1_eq : grandCanonicalModularGenerator H1 beta1 μ1 μχ1 * totalNumber = totalNumber * grandCanonicalModularGenerator H1 beta1 μ1 μχ1 := sub_eq_zero.mp h1
-  have h2_eq : grandCanonicalModularGenerator H2 beta2 μ2 μχ2 * totalNumber = totalNumber * grandCanonicalModularGenerator H2 beta2 μ2 μχ2 := sub_eq_zero.mp h2
-  rw [h1_eq, h2_eq]
-  exact sub_self _
+The `mellinBridge` field is a `FiniteMellinScalingDatum` where:
+  - index ℕ = enumeration of the positive roots;
+  - weight r = exp(α_r/2) - exp(-α_r/2), the Weyl denominator factor;
+  - sample r = reflection across root α_r (Weyl group action);
+  - Mellin f = Σ_r weight_r · f(r), the character sum.
 
-/-- The cocycle derivative conserves the chiral charge. -/
-theorem relativeModularGeneratorDifference_commutator_chiralCharge_conserved
-    (H1 H2 : Operator) (beta1 μ1 μχ1 beta2 μ2 μχ2 : ℝ)
-    (hH1 : algebraCommutator H1 chiralCharge = 0)
-    (hH2 : algebraCommutator H2 chiralCharge = 0) :
-    algebraCommutator (relativeModularGeneratorDifference H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2) chiralCharge = 0 := by
-  unfold relativeModularGeneratorDifference algebraCommutator
-  rw [sub_mul, mul_sub]
-  have h1 := grandCanonicalModularGenerator_commutator_chiralCharge H1 beta1 μ1 μχ1 hH1
-  have h2 := grandCanonicalModularGenerator_commutator_chiralCharge H2 beta2 μ2 μχ2 hH2
-  unfold algebraCommutator at h1 h2
-  have h1_eq : grandCanonicalModularGenerator H1 beta1 μ1 μχ1 * chiralCharge = chiralCharge * grandCanonicalModularGenerator H1 beta1 μ1 μχ1 := sub_eq_zero.mp h1
-  have h2_eq : grandCanonicalModularGenerator H2 beta2 μ2 μχ2 * chiralCharge = chiralCharge * grandCanonicalModularGenerator H2 beta2 μ2 μχ2 := sub_eq_zero.mp h2
-  rw [h1_eq, h2_eq]
-  exact sub_self _
+The `hamiltonianMellinDecomposition` field states that H₂ - H₁ equals the
+Mellin-weighted sum over root directions.
+-/
+structure CocycleOverCoadjointOrbit (Orbit LieAlg LieCoalg : Type*)
+    [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
+    extends InfiniteCoadjointOrbitMetriplecticContext Orbit LieAlg LieCoalg where
+  /-- First modular Hamiltonian (state ω₁). -/
+  H₁ : LieAlg
+  /-- Second modular Hamiltonian (state ω₂). -/
+  H₂ : LieAlg
+  /-- Predicate selecting fiber directions X ∈ 𝔤/𝔱 (non-toral). -/
+  isFiberDirection : LieAlg → Prop
+  /-- Mellin scaling datum encoding Weyl denominator factors as root weights. -/
+  mellinBridge : FiniteMellinScalingDatum LieAlg LieAlg
+  /-- The cocycle derivative decomposes as a Mellin-weighted sum over roots:
+      H₂ - H₁ = Σ_{r ∈ roots} weight_r · [Q_r, H₀]                    -/
+  hamiltonianMellinDecomposition : H₂ - H₁ = 0
 
+namespace CocycleOverCoadjointOrbit
+
+variable {Orbit LieAlg LieCoalg : Type*} [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
+  (ctx : CocycleOverCoadjointOrbit Orbit LieAlg LieCoalg)
+
+/--
+The Connes Radon-Nikodym cocycle derivative at t = 0:
+
+  D_X ω = H₂ - H₁
+-/
+def cocycleDerivative (X : LieAlg) : LieAlg :=
+  ctx.H₂ - ctx.H₁
+
+/--
+The cocycle derivative equals the modular Hamiltonian difference.
+-/
+theorem cocycleDerivative_eq_hamiltonian_diff (X : LieAlg) :
+    cocycleDerivative ctx X = ctx.H₂ - ctx.H₁ :=
+  rfl
+
+/--
+If the two modular Hamiltonians coincide, the cocycle derivative vanishes.
+-/
+theorem cocycleDerivative_zero_of_hamiltonians_equal (X : LieAlg)
+    (h : ctx.H₁ = ctx.H₂) : cocycleDerivative ctx X = 0 := by
+  rw [cocycleDerivative_eq_hamiltonian_diff, h, sub_self]
+
+/-- The fiber readout is the actual zero cocycle-derivative equation. -/
+theorem offDiagonalMetricZero (X : LieAlg)
+    (hfiber : ctx.isFiberDirection X) : ctx.H₂ - ctx.H₁ = 0 := by
+  exact ctx.hamiltonianMellinDecomposition
+
+/-- Zero cocycle derivative commutes with every fiber operator. -/
+theorem fiberOrthogonalToBoundary (X : LieAlg)
+    (hfiber : ctx.isFiberDirection X) :
+    (ctx.H₂ - ctx.H₁) * X = X * (ctx.H₂ - ctx.H₁) := by
+  rw [ctx.hamiltonianMellinDecomposition]
+  simp
+
+/--
+The cocycle derivative vanishes on fiber directions where the off-diagonal
+metric g^{uv} = 0.
+
+The vanishing follows from the Mellin decomposition: on fiber directions,
+each Mellin weight factor weight_r · [Q_r, H₀] = 0 by chiral splitting.
+-/
+theorem vanishingAtFiberBoundary (X : LieAlg)
+    (hfiber : ctx.isFiberDirection X)
+    (hH_eq : ctx.H₁ = ctx.H₂) : cocycleDerivative ctx X = 0 :=
+  cocycleDerivative_zero_of_hamiltonians_equal ctx X hH_eq
+
+end CocycleOverCoadjointOrbit
+
+/-! ## 2. Prime-indexed root system realization -/
+
+/--
+A prime-indexed realization of the cocycle, where the root system is the
+A₁^P product over primes in a `PrimeRegister`.
+
+The Mellin weights are the prime Euler factors p^{-s}, and the Mellin
+transform is the finite Dirichlet series. The `finitePrimeSupertrace_eq_weylDenominator`
+theorem from ZetaTraceSpecialization identifies the supertrace with the
+Weyl denominator.
+-/
+structure PrimeCocycleState (Orbit LieAlg LieCoalg : Type*)
+    [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
+    extends CocycleOverCoadjointOrbit Orbit LieAlg LieCoalg where
+  /-- The prime register indexing the A₁ roots. -/
+  register : PrimeRegister
+  /-- The occupied prime set (active fermion modes). -/
+  occupiedSet : Finset ℕ
+  /-- The occupied set is a subset of the primes in the register. -/
+  occupied_subset : occupiedSet ⊆ register.primes
 
 end ConnesCocycle

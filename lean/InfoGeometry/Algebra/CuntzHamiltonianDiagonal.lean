@@ -60,35 +60,6 @@ theorem hamiltonian_diagonalization (n : ℕ) (ε : Fin n → ℂ) (i j : Fin n)
   · subst j; rw [hamiltonian_diag n ε i]; simp
   · rw [hamiltonian_off_diag n ε i j hij]; simp [hij]
 
-theorem hamiltonian_pow_diagonalization
-    (n : ℕ) (ε : Fin n → ℂ) (k : ℕ) (i j : Fin n) :
-    (cuntzS n i * cuntzSdag n i) * (hamiltonian n ε) ^ k *
-        (cuntzS n j * cuntzSdag n j) =
-      (if i = j then (ε i) ^ k • (cuntzS n i * cuntzSdag n i) else 0) := by
-  change P n i * (hamiltonian n ε) ^ k * P n j = _
-  by_cases hij : i = j
-  · subst j
-    calc
-      P n i * (hamiltonian n ε) ^ k * P n i =
-          (P n i * (hamiltonian n ε) ^ k) * P n i := by
-            rw [mul_assoc]
-      _ = ((ε i) ^ k • P n i) * P n i := by
-            rw [P_mul_H_pow]
-      _ = (ε i) ^ k • P n i := by
-            rw [smul_mul_assoc, P_idem]
-      _ = if i = i then (ε i) ^ k • (cuntzS n i * cuntzSdag n i) else 0 := by
-            simp [P]
-  · calc
-      P n i * (hamiltonian n ε) ^ k * P n j =
-          (P n i * (hamiltonian n ε) ^ k) * P n j := by
-            rw [mul_assoc]
-      _ = ((ε i) ^ k • P n i) * P n j := by
-            rw [P_mul_H_pow]
-      _ = 0 := by
-            rw [smul_mul_assoc, P_ortho n hij, smul_zero]
-      _ = if i = j then (ε i) ^ k • P n i else 0 := by
-            simp [hij]
-
 /-- The Hamiltonian commutes with each range projector:
     H P_i = P_i H = ε_i P_i. -/
 theorem hamiltonian_commutes_projector (n : ℕ) (ε : Fin n → ℂ) (i : Fin n) :

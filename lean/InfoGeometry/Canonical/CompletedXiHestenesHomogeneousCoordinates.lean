@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.HestenesComplexTranslation
+import InfoGeometry.Projective.ApolloniusNatural
 
 /-!
 # Completed Xi in Hestenes Homogeneous and Klein-Cylinder Coordinates
@@ -32,6 +33,7 @@ open Complex Matrix
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.HestenesComplexTranslation
+open InfoGeometry.Projective.ApolloniusNatural
 
 /-! ## 1. Homogeneous coordinates -/
 
@@ -515,6 +517,37 @@ theorem tauCoord_actCartan
   rw [hScaleC]
   ring_nf
 
+/-! ## 3.5. Bridge to the existing Apollonius `CP¹` owner lane -/
+
+/-- Reading the Apollonius ray through the existing `τ`-coordinate recovers the
+natural affine projective coordinate. -/
+theorem tauCoord_apolloniusRay
+    (ξ θ : ℝ) :
+    tauCoord (apolloniusRay ξ θ) =
+      Complex.exp ((ξ : ℂ) + Complex.I * (θ : ℂ)) := by
+  simp [apolloniusRay, tauCoord]
+
+/-- The Apollonius `CP¹` ray lies on the Lee--Yang unit circle exactly at zero
+projective scale. This imports the zero-scale statement from the projective
+owner and exposes it through the existing `τ`/Cayley lane. -/
+theorem onLeeYangCircle_tauCoord_apolloniusRay_iff_zero_scale
+    (ξ θ : ℝ) :
+    OnLeeYangCircle (tauCoord (apolloniusRay ξ θ)) ↔ ξ = 0 := by
+  change Complex.normSq (tauCoord (apolloniusRay ξ θ)) = 1 ↔ ξ = 0
+  rw [tauCoord_apolloniusRay]
+  have hnorm :
+      Complex.normSq (Complex.exp ((ξ : ℂ) + Complex.I * (θ : ℂ))) =
+        Real.exp (2 * ξ) := by
+    simpa [apolloniusRay] using apollonius_ray_z0_normSq ξ θ
+  rw [hnorm]
+  constructor
+  · intro h
+    have h0 : Real.exp (2 * ξ) = Real.exp 0 := by simpa using h
+    have hξ : 2 * ξ = 0 := Real.exp_injective h0
+    linarith
+  · intro h
+    rw [h, mul_zero, Real.exp_zero]
+
 /-! ## 4. Existing native Cayley critical-circle theorem -/
 
 /-- The critical line is exactly the unit-circle locus of
@@ -840,6 +873,6 @@ theorem kleinGlide_of_OnSeam
 
 end LogCylinderCoordinate
 
-end InfoGeometry.Canonical.CompletedXiHestenesHomogeneousCoordinates
+end CompletedXiHestenesHomogeneousCoordinates
 
-end
+end Canonical

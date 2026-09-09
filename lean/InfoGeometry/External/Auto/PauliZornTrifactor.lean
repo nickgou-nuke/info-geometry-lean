@@ -93,19 +93,11 @@ def dot3 (p q : Fin 3 → ℝ) : ℝ :=
   ∑ i : Fin 3, p i * q i
 
 /-- Real Zorn vector matrix container for determinant bridge. -/
-abbrev RZorn := ℝ × (Fin 3 → ℝ) × (Fin 3 → ℝ) × ℝ
-
-namespace RZorn
-
-abbrev alpha (Z : RZorn) : ℝ := Z.1
-
-abbrev p (Z : RZorn) : Fin 3 → ℝ := Z.2.1
-
-abbrev q (Z : RZorn) : Fin 3 → ℝ := Z.2.2.1
-
-abbrev beta (Z : RZorn) : ℝ := Z.2.2.2
-
-end RZorn
+structure RZorn where
+  alpha : ℝ
+  p : Fin 3 → ℝ
+  q : Fin 3 → ℝ
+  beta : ℝ
 
 /-- Zorn determinant/norm form. -/
 def zornDet (Z : RZorn) : ℝ :=
@@ -128,8 +120,7 @@ theorem dot3_spatial (x y z : ℝ) :
 
 theorem zornDet_pauliToZorn (t x y z : ℝ) :
     zornDet (pauliToZorn t x y z) = minkowskiNorm t x y z := by
-  simp [zornDet, RZorn.alpha, RZorn.beta, RZorn.p, RZorn.q,
-    pauliToZorn, dot3_spatial, minkowskiNorm]
+  simp [zornDet, pauliToZorn, dot3_spatial, minkowskiNorm]
   ring
 
 /-- Null Pauli vectors map to determinant-null Zorn paravectors. -/
@@ -148,11 +139,38 @@ def pureLower (q : Fin 3 → ℝ) : RZorn :=
 
 theorem zornDet_pureUpper (p : Fin 3 → ℝ) :
     zornDet (pureUpper p) = 0 := by
-  simp [zornDet, RZorn.alpha, RZorn.beta, RZorn.p, RZorn.q, pureUpper, dot3]
+  simp [zornDet, pureUpper, dot3]
 
 theorem zornDet_pureLower (q : Fin 3 → ℝ) :
     zornDet (pureLower q) = 0 := by
-  simp [zornDet, RZorn.alpha, RZorn.beta, RZorn.p, RZorn.q, pureLower, dot3]
+  simp [zornDet, pureLower, dot3]
+
+/--
+Consolidated bridge: trifactor roots, Pauli determinant grading, and Zorn
+determinant-null embedding of the parabolic/null sector.
+-/
+theorem pauli_zorn_trifactor_synthesis :
+    (∀ op : ℝ, CubicProjector op ↔ op * (op - 1) * (op + 1) = 0) ∧
+    CubicProjector (-1) ∧
+    CubicProjector 0 ∧
+    CubicProjector 1 ∧
+    (∀ t x y z : ℝ,
+      (pauliHermitian t x y z).det = (minkowskiNorm t x y z : ℂ)) ∧
+    (∀ t x y z : ℝ,
+      zornDet (pauliToZorn t x y z) = minkowskiNorm t x y z) ∧
+    (∀ t x y z : ℝ, minkowskiNorm t x y z = 0 →
+      zornDet (pauliToZorn t x y z) = 0) ∧
+    (∀ p : Fin 3 → ℝ, zornDet (pureUpper p) = 0) ∧
+    (∀ q : Fin 3 → ℝ, zornDet (pureLower q) = 0) := by
+  exact ⟨cubic_projector_iff_trifactor,
+    cubic_roots.1,
+    cubic_roots.2.1,
+    cubic_roots.2.2,
+    pauliHermitian_det,
+    zornDet_pauliToZorn,
+    fun t x y z h => zorn_null_of_pauli_null h,
+    zornDet_pureUpper,
+    zornDet_pureLower⟩
 
 end PauliZornTrifactor
 

@@ -32,9 +32,9 @@ theorem liftOp_vector_state_recovers_omega (a : Alg n) :
   exact vector_state_recovers_omega p a
 
 /-- Cyclicity for the bounded-operator orbit of `omegaVec`. -/
-theorem liftOp_cyclic_property (x : GNS p) :
+theorem liftOp_cyclic_witness (x : GNS p) :
     ∃ a : Alg n, liftOp p a (omegaVec p) = x := by
-  rcases cyclic_property p x with ⟨a, ha⟩
+  rcases cyclic_witness p x with ⟨a, ha⟩
   refine ⟨a, ?_⟩
   rw [liftOp_omegaVec_eq_restrict]
   exact ha

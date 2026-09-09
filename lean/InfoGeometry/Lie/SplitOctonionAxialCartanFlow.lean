@@ -181,8 +181,9 @@ noncomputable def axialCartanCompositionAut
 
 theorem axialCartanCompositionAut_preserves_det
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) (Z : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (axialCartanFlow k t Z) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Z := by
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        realCrossProduct3 (axialCartanFlow k t Z) =
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 Z := by
   simpa only [axialCartanCompositionAut_apply] using
     (realZornCompositionAut_preserves_det
       (axialCartanCompositionAut k hk t) Z)

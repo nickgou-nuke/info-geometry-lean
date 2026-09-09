@@ -71,11 +71,10 @@ theorem master_graded_connection_bianchi_synthesis
     (matrixExteriorDerivative D.d (matrixExteriorDerivative D.d A) = 0) ∧
     (matrixExteriorDerivative D.d (A * A) =
       matrixExteriorDerivative D.d A * A - A * matrixExteriorDerivative D.d A) ∧
-    (covariantDerivative A D.d (curvatureFromConnection D.d A) = 0) := by
-  constructor
-  · exact matrixExteriorDerivative_sq_zero D A
-  constructor
-  · exact matrix_one_form_square_leibniz D A hA
-  · exact graded_connection_curvature_bianchi D A hA
+    (covariantDerivative A D.d (curvatureFromConnection D.d A) = 0) := ⟨
+  matrixExteriorDerivative_sq_zero D A,
+  matrix_one_form_square_leibniz D A hA,
+  graded_connection_curvature_bianchi D A hA
+⟩
 
 end InfoGeometry.Canonical.GradedConnectionBianchiBridge

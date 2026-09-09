@@ -8,7 +8,7 @@ This module does not claim a solution of the Clay Navier-Stokes problem.
 It formalizes a conditional operator-accounting statement:
 
   projected classical extreme shear / closure failure
-    + operator snap transition property
+    + operator snap transition witness
     + topological obstruction ledger
       => protected hidden/tubule sector.
 
@@ -78,7 +78,7 @@ A snap bridge from projected classical extreme behavior to hidden-sector
 operator resolution.
 
 This is the precise mathematical replacement for an informal statement like
-"the singularity snaps into a chiral tubule": it is a property-gated routing
+"the singularity snaps into a chiral tubule": it is a witness-gated routing
 law from a projected extreme event into a hidden/topological sector.
 -/
 structure NavierStokesOperatorSnapBridge
@@ -127,7 +127,7 @@ theorem not_projected_extreme_of_hidden_trivial
 
 end NavierStokesOperatorSnapBridge
 
-/-! ## 3. Chiral tubule snap property -/
+/-! ## 3. Chiral tubule snap witness -/
 
 /--
 Navier-Stokes snap data routed through the chiral tubule boundary API.
@@ -197,25 +197,25 @@ structure ClassicalExtremeTubuleRouting
     (H : BregmanHessianDatum Op)
     (G : DualFlatOperatorGeometry Op)
     (T : ThermalDriveDatum Op) where
-  property :
+  witness :
     NavierStokesTubuleSnapWitness Op Classical Charge Residue H G T
 
   /-- Projected classical extreme behavior implies topological snap boundary. -/
   extreme_implies_snap :
     ∀ U : Op,
-      property.classical.ClassicalExtreme (property.classical.project U) →
+      witness.classical.ClassicalExtreme (witness.classical.project U) →
         IsTopologicalSnapBoundary H U
 
   /-- Projected classical extreme behavior implies extreme shear. -/
   extreme_implies_shear :
     ∀ U : Op,
-      property.classical.ClassicalExtreme (property.classical.project U) →
-        IsExtremeShear G property.transitionLaw.threshold U
+      witness.classical.ClassicalExtreme (witness.classical.project U) →
+        IsExtremeShear G witness.transitionLaw.threshold U
 
   /-- Projected classical extreme behavior implies thermal criticality. -/
   extreme_implies_thermal :
     ∀ U : Op,
-      property.classical.ClassicalExtreme (property.classical.project U) →
+      witness.classical.ClassicalExtreme (witness.classical.project U) →
         IsThermallyCritical T U
 
 namespace ClassicalExtremeTubuleRouting
@@ -237,11 +237,11 @@ once the routing bridge supplies snap, shear, and thermal criticality.
 theorem classical_extreme_implies_tubule
     (U : Op)
     (hExtreme :
-      R.property.classical.ClassicalExtreme
-        (R.property.classical.project U)) :
+      R.witness.classical.ClassicalExtreme
+        (R.witness.classical.project U)) :
     ∃ C : ChiralTubuleCrystallization Op Charge Residue H,
       C.boundaryState = U :=
-  R.property.transitionLaw.snap_implies_crystallization
+  R.witness.transitionLaw.snap_implies_crystallization
     U
     (R.extreme_implies_snap U hExtreme)
     (R.extreme_implies_shear U hExtreme)
@@ -348,7 +348,7 @@ theorem projected_extreme_has_gradeTwo_memory
 
 /--
 If hidden grade-two memory is zero, then the projected classical extreme event
-does not occur under this five-grade resolution property.
+does not occur under this five-grade resolution witness.
 -/
 theorem not_projected_extreme_of_no_gradeTwo_memory
     (x y : J)
@@ -362,19 +362,77 @@ theorem not_projected_extreme_of_no_gradeTwo_memory
 
 end NavierStokesFiveGradeResolution
 
-theorem navierStokes_hidden_nontrivial
-    {State Classical Hidden : Type*}
-    (B : NavierStokesOperatorSnapBridge State Classical Hidden)
-    (s : State)
-    (hExtreme : B.classical.ClassicalExtreme (B.classical.project s)) :
-    B.operator.HiddenNontrivial (B.operator.hiddenReadout s) := by
+/-! ## 6. Guardrail owner targets -/
+
+/--
+Owner target for a Navier-Stokes operator snap bridge.
+
+This is intentionally model-gated: a concrete model must supply the routing
+law from projected extreme behavior to hidden-sector activation.
+-/
+def NavierStokesOperatorSnapBridgeOwnerTarget
+    (State Classical Hidden : Type*) : Prop :=
+  ∀ B : NavierStokesOperatorSnapBridge State Classical Hidden,
+  ∀ s : State,
+    B.classical.ClassicalExtreme (B.classical.project s) →
+      B.operator.HiddenNontrivial (B.operator.hiddenReadout s)
+
+/-- Installed snap bridges satisfy the owner hidden-sector activation target. -/
+theorem navierStokesOperatorSnapBridgeOwnerTarget
+    (State Classical Hidden : Type*) :
+    NavierStokesOperatorSnapBridgeOwnerTarget State Classical Hidden := by
+  intro B s hExtreme
   exact B.projected_extreme_implies_hidden_nontrivial s hExtreme
 
-theorem protectedNavierStokes_no_relaxation
-    {State Charge : Type*} [Zero Charge]
-    (S : ProtectedNavierStokesSnapSector State Charge)
-    (t : ℝ) :
-    S.obstructionFlow.flow t S.snappedState ∉ S.obstructionFlow.Flat := by
+/--
+Owner target for a protected post-snap sector.
+-/
+def ProtectedNavierStokesSnapSectorOwnerTarget
+    (State Charge : Type*) [Zero Charge] : Prop :=
+  ∀ S : ProtectedNavierStokesSnapSector State Charge,
+  ∀ t : ℝ,
+    S.obstructionFlow.flow t S.snappedState ∉ S.obstructionFlow.Flat
+
+/-- Installed protected snap sectors satisfy the owner no-relaxation target. -/
+theorem protectedNavierStokesSnapSectorOwnerTarget
+    (State Charge : Type*) [Zero Charge] :
+    ProtectedNavierStokesSnapSectorOwnerTarget State Charge := by
+  intro S t
+  exact S.cannot_relax_to_flat t
+
+/--
+Installed-owner target: once a snap bridge is supplied, projected classical
+extreme behavior activates the hidden/topological sector.
+-/
+def NavierStokesOperatorSnapBridgeInstalledTarget
+    (State Classical Hidden : Type*) : Prop :=
+  ∀ B : NavierStokesOperatorSnapBridge State Classical Hidden,
+  ∀ s : State,
+    B.classical.ClassicalExtreme (B.classical.project s) →
+      B.operator.HiddenNontrivial (B.operator.hiddenReadout s)
+
+/-- Installed snap bridges satisfy the hidden-sector activation target. -/
+theorem navierStokesOperatorSnapBridgeInstalledTarget
+    (State Classical Hidden : Type*) :
+    NavierStokesOperatorSnapBridgeInstalledTarget State Classical Hidden := by
+  intro B s hExtreme
+  exact B.projected_extreme_implies_hidden_nontrivial s hExtreme
+
+/--
+Installed-owner target: once a protected post-snap sector is supplied, the
+snapped state cannot flow back into the flat sector.
+-/
+def ProtectedNavierStokesSnapSectorInstalledTarget
+    (State Charge : Type*) [Zero Charge] : Prop :=
+  ∀ S : ProtectedNavierStokesSnapSector State Charge,
+  ∀ t : ℝ,
+    S.obstructionFlow.flow t S.snappedState ∉ S.obstructionFlow.Flat
+
+/-- Installed protected snap sectors satisfy the no-relaxation target. -/
+theorem protectedNavierStokesSnapSectorInstalledTarget
+    (State Charge : Type*) [Zero Charge] :
+    ProtectedNavierStokesSnapSectorInstalledTarget State Charge := by
+  intro S t
   exact S.cannot_relax_to_flat t
 
 end InfoGeometry.Canonical.NavierStokesSnapBridge

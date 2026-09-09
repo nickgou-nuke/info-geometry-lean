@@ -59,5 +59,3 @@ theorem SymbolicLatentChartEquivalence.latentFeatureRegionCompHausIso_inv_comp
   rfl
 
 end InfoGeometry.Topology
-
-end

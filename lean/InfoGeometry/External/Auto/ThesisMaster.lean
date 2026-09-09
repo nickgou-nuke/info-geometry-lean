@@ -13,7 +13,7 @@ A standalone Lean integration target for the five-chapter thesis architecture:
 
 The file is deliberately standalone rather than importing local project modules, because
 the current verification harness runs `lake env lean /home/goutev/auto/proofs/...` from
-an external Lake project.  The theorem names below act as a compact master property
+an external Lake project.  The theorem names below act as a compact master certificate
 for the algebraic cores formalized throughout the proof stack.
 -/
 
@@ -117,5 +117,26 @@ theorem Trip_poly_zero : Trip^3 - Trip = 0 := by
   rw [Trip_tripotent]
   simp
 
+
+/-- Master theorem: concrete algebraic certificates. -/
+theorem master_thesis_synthesis :
+    (∀ t x y z : ℂ, (spacetimeMatrix t x y z).det = t^2 - x^2 - y^2 - z^2) ∧
+    (5 : ℕ) ∉ ({1, 2, 3, 4, 6} : Finset ℕ) ∧
+    goldenTrace^2 - goldenTrace - 1 = 0 ∧
+    Znil * Znil = 0 ∧
+    riemannReflectReal (1/2 : ℚ) = 1/2 ∧
+    kleinReflect 0 = 0 ∧
+    recenterCriticalLine (1/2 : ℚ) = 0 ∧
+    Trip^3 - Trip = 0 := by
+  exact ⟨spacetime_det, five_not_crystallographic_order, goldenTrace_quadratic,
+    Znil_square_zero, riemann_fixed_half, klein_fixed_zero, riemann_to_klein_fixed_coordinate,
+    Trip_poly_zero⟩
+
+
+#check spacetime_det
+#check five_not_crystallographic_order
+#check Znil_square_zero
+#check Trip_poly_zero
+#check master_thesis_synthesis
 
 end ThesisMaster

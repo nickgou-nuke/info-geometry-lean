@@ -118,6 +118,19 @@ noncomputable def defectAugmentedFreeEnergy
   β * KLterm CIK + lam * defectCentralNorm (E := E) CIK
 
 /--
+Target surface: one Sinkhorn step should not increase the defect-augmented
+free energy.
+-/
+@[rep_depth transport]
+def sinkhornStep_nonincreasing_defectAugmentedFreeEnergy_target
+    (step : CertifiedInverseKernel H₂ → CertifiedInverseKernel H₂)
+    (KLterm : CertifiedInverseKernel H₂ → ℝ)
+    (β lam : ℝ) : Prop :=
+  ∀ CIK : CertifiedInverseKernel H₂,
+    defectAugmentedFreeEnergy (E := E) KLterm β lam (step CIK)
+      ≤ defectAugmentedFreeEnergy (E := E) KLterm β lam CIK
+
+/--
 Constructive monotonicity criterion for the defect-augmented objective:
 if one Sinkhorn-like step is nonincreasing on both the KL term and the defect
 central norm, then the combined objective is nonincreasing.
@@ -135,9 +148,8 @@ theorem sinkhornStep_nonincreasing_defectAugmentedFreeEnergy_of_component_bounds
     (hDefect :
       ∀ CIK : CertifiedInverseKernel H₂,
         defectCentralNorm (E := E) (step CIK) ≤ defectCentralNorm (E := E) CIK) :
-    (∀ CIK : CertifiedInverseKernel H₂,
-      defectAugmentedFreeEnergy (E := E) KLterm β lam (step CIK)
-        ≤ defectAugmentedFreeEnergy (E := E) KLterm β lam CIK) := by
+    sinkhornStep_nonincreasing_defectAugmentedFreeEnergy_target
+      (E := E) step KLterm β lam := by
   intro CIK
   unfold defectAugmentedFreeEnergy
   have hKLscaled : β * KLterm (step CIK) ≤ β * KLterm CIK :=
@@ -148,14 +160,56 @@ theorem sinkhornStep_nonincreasing_defectAugmentedFreeEnergy_of_component_bounds
     mul_le_mul_of_nonneg_left (hDefect CIK) hLam
   exact add_le_add hKLscaled hDefectScaled
 
+/--
+Target surface: Cartan commutator closure for the `(even, odd)` split.
+
+This is the strict operator-algebraic replacement for informal Goldstone
+language.
+-/
+@[rep_depth krein]
+def commutator_preserves_cartan_target (Γ : EndH) : Prop :=
+  (∀ {X Y : EndH}, isEven (E := E) Γ X → isEven (E := E) Γ Y →
+      isEven (E := E) Γ (DrazinSupercharge.commutator X Y))
+    ∧
+  (∀ {X Y : EndH}, isEven (E := E) Γ X → isOdd (E := E) Γ Y →
+      isOdd (E := E) Γ (DrazinSupercharge.commutator X Y))
+    ∧
+  (∀ {X Y : EndH}, isOdd (E := E) Γ X → isOdd (E := E) Γ Y →
+      isEven (E := E) Γ (DrazinSupercharge.commutator X Y))
+
+/--
+Target surface: the projector mismatch anomaly lies in the Cartan-odd sector.
+-/
+@[rep_depth krein]
+def anomaly_in_oddSector_target
+    (CIK : CertifiedInverseKernel H₂) : Prop :=
+  isOdd (E := E) CIK.GammaS (projectorMismatchAnomaly (E := E) CIK)
+
+/--
+Target surface: phase-axis commutators are Cartan-odd.
+-/
+@[rep_depth krein]
+def phase_commutator_in_odd_target
+    (Γ K I : EndH) : Prop :=
+  isOdd (E := E) Γ (DrazinSupercharge.commutator K I)
+
+/--
+Target surface: router residual is uniformly bounded by the defect-central
+channel size.
+-/
+@[rep_depth transport]
+def routerResidual_bounded_by_defectCentral_target
+    (routerResidual : CertifiedInverseKernel H₂ → EndH) : Prop :=
+  ∃ c : ℝ, 0 ≤ c ∧
+    ∀ CIK : CertifiedInverseKernel H₂,
+      ‖routerResidual CIK‖ ≤ c * defectCentralNorm (E := E) CIK
+
 /-- Vanishing closure: zero router residual satisfies the defect-central bound. -/
 @[rep_depth transport, capstone]
-theorem norm_zero_routerResidual_bounded_by_defectCentral
+theorem routerResidual_bounded_by_defectCentral_target_vanishes_of_zero
     (routerResidual : CertifiedInverseKernel H₂ → EndH)
     (hZero : ∀ CIK : CertifiedInverseKernel H₂, routerResidual CIK = 0) :
-    ∃ c : ℝ, 0 ≤ c ∧
-      ∀ CIK : CertifiedInverseKernel H₂,
-        ‖routerResidual CIK‖ ≤ c * defectCentralNorm (E := E) CIK := by
+    routerResidual_bounded_by_defectCentral_target (E := E) routerResidual := by
   refine ⟨1, zero_le_one, ?_⟩
   intro CIK
   rw [hZero CIK, norm_zero, one_mul]
@@ -165,65 +219,15 @@ theorem norm_zero_routerResidual_bounded_by_defectCentral
 Target surface: in the operatorial scale/shape split, a scalar Weyl-scale
 coefficient exists that dominates the defect-central norm.
 -/
-theorem commutator_even_even_isEven
-    (Γ X Y : EndH)
-    (hX : isEven (E := E) Γ X)
-    (hY : isEven (E := E) Γ Y) :
-    isEven (E := E) Γ (DrazinSupercharge.commutator X Y) := by
-  unfold isEven at hX hY ⊢
-  dsimp [DrazinSupercharge.commutator]
-  calc
-    (X * Y - Y * X) * Γ = X * (Y * Γ) - Y * (X * Γ) := by
-      rw [sub_mul, mul_assoc, mul_assoc]
-    _ = X * (Γ * Y) - Y * (Γ * X) := by rw [hY, hX]
-    _ = Γ * (X * Y - Y * X) := by
-      have hXY : X * (Γ * Y) = Γ * (X * Y) := by
-        rw [← mul_assoc, hX, mul_assoc]
-      have hYX : Y * (Γ * X) = Γ * (Y * X) := by
-        rw [← mul_assoc, hY, mul_assoc]
-      rw [hXY, hYX, mul_sub]
-
-theorem commutator_even_odd_isOdd
-    (Γ X Y : EndH)
-    (hX : isEven (E := E) Γ X)
-    (hY : isOdd (E := E) Γ Y) :
-    isOdd (E := E) Γ (DrazinSupercharge.commutator X Y) := by
-  unfold isEven at hX
-  unfold isOdd at hY ⊢
-  dsimp [DrazinSupercharge.commutator]
-  calc
-    (X * Y - Y * X) * Γ = X * (Y * Γ) - Y * (X * Γ) := by
-      rw [sub_mul, mul_assoc, mul_assoc]
-    _ = X * (-(Γ * Y)) - Y * (Γ * X) := by rw [hY, hX]
-    _ = -(Γ * (X * Y - Y * X)) := by
-      have hXY : X * (-(Γ * Y)) = -(Γ * (X * Y)) := by
-        rw [mul_neg, ← mul_assoc, hX, mul_assoc]
-      have hYX : Y * (Γ * X) = -(Γ * (Y * X)) := by
-        rw [← mul_assoc, hY, neg_mul, mul_assoc]
-      rw [hXY, hYX]
-      rw [mul_sub]
-      abel
-
-theorem commutator_odd_odd_isEven
-    (Γ X Y : EndH)
-    (hX : isOdd (E := E) Γ X)
-    (hY : isOdd (E := E) Γ Y) :
-    isEven (E := E) Γ (DrazinSupercharge.commutator X Y) := by
-  unfold isOdd at hX
-  unfold isOdd at hY
-  unfold isEven at ⊢
-  dsimp [DrazinSupercharge.commutator]
-  calc
-    (X * Y - Y * X) * Γ = X * (Y * Γ) - Y * (X * Γ) := by
-      rw [sub_mul, mul_assoc, mul_assoc]
-    _ = X * (-(Γ * Y)) - Y * (-(Γ * X)) := by rw [hY, hX]
-    _ = Γ * (X * Y - Y * X) := by
-      have hXY : X * (-(Γ * Y)) = Γ * (X * Y) := by
-        rw [mul_neg, ← mul_assoc, hX, neg_mul, neg_neg, mul_assoc]
-      have hYX : Y * (-(Γ * X)) = Γ * (Y * X) := by
-        rw [mul_neg, ← mul_assoc, hY, neg_mul, neg_neg, mul_assoc]
-      rw [hXY, hYX]
-      rw [mul_sub]
+@[rep_depth transport]
+def weylScale_absorbs_defect_of_scaleShapeSplit_target : Prop :=
+  ∀ {CIK : CertifiedInverseKernel H₂} {H_gen : EndH},
+    LiftedScaleShapeCompatibility CIK H_gen →
+    ∃ (val : ℝ) (scalePart shapePart : EndH),
+      H_gen = scalePart + shapePart ∧
+      scalePart = val • (1 : EndH) ∧
+      shapePart = CIK.spectralProjector * shapePart * CIK.spectralProjector ∧
+      defectCentralNorm (E := E) CIK ≤ |val|
 
 end Core
 

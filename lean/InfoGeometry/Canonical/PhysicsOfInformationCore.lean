@@ -250,16 +250,11 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
 Optional spectral hook surface for the corpus:
-the bridge can carry an external property chiral package without altering the
+the bridge can carry an external certified chiral package without altering the
 routing-side invariants.
 -/
-abbrev SpectralHookDatum := CertifiedChiralSpectralTriple E
-
-namespace SpectralHookDatum
-
-def chiralPackage (S : SpectralHookDatum (E := E)) : CertifiedChiralSpectralTriple E := S
-
-end SpectralHookDatum
+structure SpectralHookDatum where
+  chiralPackage : CertifiedChiralSpectralTriple E
 
 /-- Spectral obstruction operator exposed at the hook level. -/
 noncomputable def spectralObstruction (S : SpectralHookDatum (E := E)) : E →L[ℝ] E :=

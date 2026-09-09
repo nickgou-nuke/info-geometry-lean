@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/TopologicalSuperconductorEdge.lean
 
-Topological-superconductor edge property.
+Topological-superconductor edge witness.
 
 This module separates ordinary Andreev electron/hole closure from the stronger
 claim that a superconducting boundary hosts Majorana-type edge modes.
@@ -20,10 +20,10 @@ namespace InfoGeometry.OperatorAlgebra.TopologicalSuperconductorEdge
 open InfoGeometry.OperatorAlgebra.AndreevBoundary
 open InfoGeometry.OperatorAlgebra.ClosureInvolution
 
-/-! ## 1. BdG edge-mode property -/
+/-! ## 1. BdG edge-mode witness -/
 
 /--
-BdG edge-mode property.
+BdG edge-mode witness.
 
 This is separate from ordinary Andreev reflection. It records the extra data
 usually needed to call a boundary mode Majorana-like in a topological
@@ -38,8 +38,7 @@ superconductor setting:
 This module does not derive topological superconductivity from Andreev
 reflection.
 -/
-/-
-structure BdGEdgeModeData
+structure BdGEdgeModeWitness
     (Boundary V : Type*)
     [AddCommGroup V] [Module ℝ V] where
   boundaryDatum :
@@ -85,13 +84,13 @@ structure BdGEdgeModeData
   topologicalIndex_ne_zero :
     topologicalIndex ≠ 0
 
-namespace BdGEdgeModeData
+namespace BdGEdgeModeWitness
 
 variable
     {Boundary V : Type*}
     [AddCommGroup V] [Module ℝ V]
 
-variable (T : BdGEdgeModeData Boundary V)
+variable (T : BdGEdgeModeWitness Boundary V)
 
 /-- The edge mode is fixed by closure. -/
 theorem theta_edgeMode_eq_edgeMode :
@@ -137,52 +136,6 @@ theorem andreev_imbalance_anti_fixed :
         -(T.boundaryDatum.electron - T.boundaryDatum.hole) :=
   T.boundaryDatum.electron_hole_imbalance_anti_fixed
 
-end BdGEdgeModeData
--/
-
-theorem theta_edgeMode_eq_edgeMode
-    {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (boundaryDatum : AndreevBoundaryDatum V) (edgeMode : V)
-    (hfixed : edgeMode ∈ boundaryDatum.closure.Fixed) :
-    boundaryDatum.closure.theta edgeMode = edgeMode :=
-  boundaryDatum.closure.theta_eq_self_of_fixed hfixed
-
-theorem edgeMode_is_zero_energy
-    {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (H : V →ₗ[ℝ] V) (edgeMode : V) (hzero : H edgeMode = 0) :
-    H edgeMode = 0 := hzero
-
-theorem edgeMode_is_localized
-    {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (LocalizedAt : Boundary → V → Prop) (boundaryLocation : Boundary)
-    (edgeMode : V) (hlocalized : LocalizedAt boundaryLocation edgeMode) :
-    LocalizedAt boundaryLocation edgeMode := hlocalized
-
-theorem topologicalIndex_nonzero (topologicalIndex : ℤ)
-    (h : topologicalIndex ≠ 0) : topologicalIndex ≠ 0 := h
-
-theorem edgeMode_majorana_edge_grammar
-    {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (boundaryDatum : AndreevBoundaryDatum V) (H : V →ₗ[ℝ] V)
-    (edgeMode : V) (hne : edgeMode ≠ 0)
-    (hfixed : edgeMode ∈ boundaryDatum.closure.Fixed)
-    (hzero : H edgeMode = 0) :
-    edgeMode ≠ 0 ∧
-      boundaryDatum.closure.theta edgeMode = edgeMode ∧ H edgeMode = 0 := by
-  exact ⟨hne, theta_edgeMode_eq_edgeMode boundaryDatum edgeMode hfixed, hzero⟩
-
-theorem andreev_diagonal_fixed
-    {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (boundaryDatum : AndreevBoundaryDatum V) :
-    boundaryDatum.electron + boundaryDatum.hole ∈ boundaryDatum.closure.Fixed :=
-  boundaryDatum.electron_hole_diagonal_fixed
-
-theorem andreev_imbalance_anti_fixed
-    {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (boundaryDatum : AndreevBoundaryDatum V) :
-    boundaryDatum.closure.theta
-        (boundaryDatum.electron - boundaryDatum.hole) =
-      -(boundaryDatum.electron - boundaryDatum.hole) :=
-  boundaryDatum.electron_hole_imbalance_anti_fixed
+end BdGEdgeModeWitness
 
 end InfoGeometry.OperatorAlgebra.TopologicalSuperconductorEdge

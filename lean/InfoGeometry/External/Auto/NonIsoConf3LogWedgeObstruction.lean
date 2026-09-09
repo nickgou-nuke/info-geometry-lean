@@ -18,25 +18,21 @@ has nonzero `dx0∧dy0` coefficient.
 namespace NonIsoConf3LogWedgeObstruction
 
 /-- Four-dimensional integer vector used for the concrete evaluation. -/
-abbrev Vec4 := ℤ × ℤ × ℤ × ℤ
-
-namespace Vec4
-
-abbrev t (v : Vec4) : ℤ := v.1
-
-abbrev x (v : Vec4) : ℤ := v.2.1
-
-abbrev y (v : Vec4) : ℤ := v.2.2.1
-
-abbrev z (v : Vec4) : ℤ := v.2.2.2
-
-end Vec4
+structure Vec4 where
+  t : ℤ
+  x : ℤ
+  y : ℤ
+  z : ℤ
+  deriving DecidableEq, Repr
 
 /-- Minkowski-style split quadric over the integers. -/
 def q4 (v : Vec4) : ℤ := v.t ^ 2 - v.x ^ 2 - v.y ^ 2 - v.z ^ 2
 
-def sub (a b : Vec4) : Vec4 :=
-  (a.t - b.t, a.x - b.x, a.y - b.y, a.z - b.z)
+def sub (a b : Vec4) : Vec4 where
+  t := a.t - b.t
+  x := a.x - b.x
+  y := a.y - b.y
+  z := a.z - b.z
 
 /-- Signature sign for coordinate `0,1,2,3`. -/
 def sig : Fin 4 → ℤ

@@ -734,7 +734,7 @@ theorem complexSpinRelatedRepresentation_components
   exact ⟨rfl, rfl, rfl⟩
 
 /-- Capstone: one spin element now simultaneously supplies an orthogonal
-vector action, both chiral actions, Clifford covariance, and a property
+vector action, both chiral actions, Clifford covariance, and a certified
 Cartan related triple on the canonical Zorn carriers. -/
 theorem canonical_spin_related_triality_closure
     (g : ComplexSpin44) (V : Vector8)

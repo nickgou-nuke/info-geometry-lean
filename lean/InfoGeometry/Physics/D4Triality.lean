@@ -35,17 +35,10 @@ inductive TrialityBranch
 deriving DecidableEq, Fintype, Repr
 
 /-- `\mathrm{vector}\oplus\mathrm{spinorPlus}\oplus\mathrm{spinorMinus}`. -/
-abbrev TrialityPacket (R : Type*) :=
-  (Fin 8 → R) × (Fin 8 → R) × (Fin 8 → R)
-
-/-- Compatibility accessor for the vector branch. -/
-abbrev TrialityPacket.vector (P : TrialityPacket R) : Fin 8 → R := P.1
-
-/-- Compatibility accessor for the positive-spinor branch. -/
-abbrev TrialityPacket.spinorPlus (P : TrialityPacket R) : Fin 8 → R := P.2.1
-
-/-- Compatibility accessor for the negative-spinor branch. -/
-abbrev TrialityPacket.spinorMinus (P : TrialityPacket R) : Fin 8 → R := P.2.2
+structure TrialityPacket (R : Type*) where
+  vector : Fin 8 → R
+  spinorPlus : Fin 8 → R
+  spinorMinus : Fin 8 → R
 
 /-- `P\mapsto P_b`. -/
 def TrialityPacket.branch {R : Type*} (P : TrialityPacket R) : TrialityBranch → Fin 8 → R :=
@@ -56,15 +49,14 @@ def TrialityPacket.branch {R : Type*} (P : TrialityPacket R) : TrialityBranch �
 
 /-- `f\mapsto P_f`. -/
 def TrialityPacket.ofBranch {R : Type*} (f : TrialityBranch → Fin 8 → R) : TrialityPacket R :=
-  (f TrialityBranch.vector,
-    f TrialityBranch.spinorPlus,
-    f TrialityBranch.spinorMinus)
+  { vector := f TrialityBranch.vector
+    spinorPlus := f TrialityBranch.spinorPlus
+    spinorMinus := f TrialityBranch.spinorMinus }
 
 /-- `S_3` action on the three branches. -/
-abbrev TrialityAction := Equiv.Perm TrialityBranch
-
-/-- Compatibility accessor for the underlying triality permutation. -/
-abbrev TrialityAction.perm (τ : TrialityAction) : Equiv.Perm TrialityBranch := τ
+structure TrialityAction where
+  perm : Equiv.Perm TrialityBranch -- Permutation of the three branches
+deriving DecidableEq
 
 /-- `\tau\cdot P`. -/
 def TrialityAction.apply {R : Type*} (τ : TrialityAction) (P : TrialityPacket R) : TrialityPacket R :=
@@ -78,7 +70,7 @@ theorem TrialityAction.apply_branch {R : Type*} (τ : TrialityAction) (P : Trial
 
 /-- Finite `S_3` triality action set. -/
 def S3Triality : Finset TrialityAction :=
-  Finset.univ.image (fun σ : Equiv.Perm TrialityBranch => σ)
+  Finset.univ.image fun σ : Equiv.Perm TrialityBranch => ({ perm := σ } : TrialityAction)
 
 /-- `\tau\in S_3`. -/
 def TrialityAction.inS3 (τ : TrialityAction) : Prop := τ ∈ S3Triality
@@ -88,10 +80,8 @@ theorem S3Triality_card : S3Triality.card = 6 := by
   decide
 
 /-- `\mathrm{Fin}\,3` permutation on Zorn matrices. -/
-abbrev ColorPermutationAction := Equiv.Perm (Fin 3)
-
-/-- Compatibility accessor for the underlying color permutation. -/
-abbrev ColorPermutationAction.perm (τ : ColorPermutationAction) : Equiv.Perm (Fin 3) := τ
+structure ColorPermutationAction where
+  perm : Equiv.Perm (Fin 3)
 
 /-- `\tau\cdot Z`. -/
 def ColorPermutationAction.apply (τ : ColorPermutationAction) (Z : ZornMatrix) : ZornMatrix :=

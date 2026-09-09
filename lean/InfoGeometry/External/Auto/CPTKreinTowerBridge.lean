@@ -137,6 +137,52 @@ theorem pairEmb_bracket_compat (x y : M2R) :
     pairBracket (pairEmb x) (pairEmb y) = pairEmb (x * y - y * x) := by
   simp [pairEmb, pairBracket]
 
+/-- A minimal non-trivial growth package: the outer stage is a doubled carrier,
+the inner stage sits inside it by append-zero, and the reflection/bracket data
+commute with that inclusion. -/
+structure BlockGrowthPackage where
+  stage0 : Type
+  stage1 : Type
+  emb : stage0 → stage1
+  J0 : stage0 → stage0
+  J1 : stage1 → stage1
+  bracket0 : stage0 → stage0 → stage0
+  bracket1 : stage1 → stage1 → stage1
+  emb_J : ∀ x, emb (J0 x) = J1 (emb x)
+  emb_bracket : ∀ x y, emb (bracket0 x y) = bracket1 (emb x) (emb y)
+
+/-- Concrete block-growth package for the CPT/Krein carrier. -/
+def blockGrowthPackage : BlockGrowthPackage where
+  stage0 := M2R
+  stage1 := PairCarrier
+  emb := pairEmb
+  J0 := realMirror
+  J1 := pairMirror
+  bracket0 := fun x y => x * y - y * x
+  bracket1 := pairBracket
+  emb_J := by
+    intro x
+    exact (pairEmb_mirror_comm x).symm
+  emb_bracket := by
+    intro x y
+    exact (pairEmb_bracket_compat x y).symm
+
+/-- The non-trivial growth package is internally consistent. -/
+theorem blockGrowthPackage_synthesis :
+    (∀ x : blockGrowthPackage.stage0,
+      blockGrowthPackage.emb (blockGrowthPackage.J0 x) =
+        blockGrowthPackage.J1 (blockGrowthPackage.emb x)) ∧
+    (∀ x y : blockGrowthPackage.stage0,
+      blockGrowthPackage.emb (blockGrowthPackage.bracket0 x y) =
+        blockGrowthPackage.bracket1 (blockGrowthPackage.emb x) (blockGrowthPackage.emb y)) ∧
+    (∀ x : blockGrowthPackage.stage1,
+      blockGrowthPackage.J1 (blockGrowthPackage.J1 x) = x) := by
+  constructor
+  · exact blockGrowthPackage.emb_J
+  constructor
+  · exact blockGrowthPackage.emb_bracket
+  · exact pairMirror_sq
+
 /-- Block lift of the `2×2` carrier into a doubled `4×4` carrier.
 
 This is the concrete "outer `2×2` acting on inner `2×2`" move:

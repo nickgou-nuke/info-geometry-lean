@@ -109,4 +109,46 @@ theorem z2Invariant_periodic (n : ℤ) : z2Invariant (n + 2) = z2Invariant n := 
   unfold z2Invariant
   omega
 
+/-- Main synthesis theorem for the paper digest. -/
+theorem projective_crystal_symmetry_synthesis :
+    Mx * Ly = - (Ly * Mx) ∧
+    Mx * Ly * Mx = -Ly ∧
+    (∀ z : ℂ, halfReciprocalShiftPhase (halfReciprocalShiftPhase z) = z) ∧
+    (∀ half : ℝ, ∀ k : ℝ × ℝ, kGlide half (kGlide half k) = (k.1, k.2 + 2 * half)) ∧
+    (∀ n : ℤ, z2Invariant (n + 2) = z2Invariant n) := by
+  constructor
+  · ext i j
+    fin_cases i
+    · fin_cases j
+      · simp [Mx, Ly, Matrix.mul_apply, Matrix.neg_apply, Fin.sum_univ_two]
+      · simp [Mx, Ly, Matrix.mul_apply, Matrix.neg_apply, Fin.sum_univ_two]
+    · fin_cases j
+      · simp [Mx, Ly, Matrix.mul_apply, Matrix.neg_apply, Fin.sum_univ_two]
+      · simp [Mx, Ly, Matrix.mul_apply, Matrix.neg_apply, Fin.sum_univ_two]
+  constructor
+  · calc
+      Mx * Ly * Mx = (Mx * Ly) * Mx := by rw [mul_assoc]
+      _ = (-(Ly * Mx)) * Mx := by rw [Mx_Ly_anticomm]
+      _ = -(Ly * (Mx * Mx)) := by simp [mul_assoc]
+      _ = -Ly := by rw [Mx_sq]; simp
+  constructor
+  · intro z
+    simp [halfReciprocalShiftPhase]
+  constructor
+  · intro half k
+    cases k with
+    | mk kx ky =>
+      simp [kGlide]
+      ring
+  · intro n
+    unfold z2Invariant
+    omega
+
+#check trivial_twoCocycle
+#check Mx_Ly_anticomm
+#check Mx_conj_Ly
+#check kGlide_sq
+#check z2Invariant_periodic
+#check projective_crystal_symmetry_synthesis
+
 end ProjectiveCrystalSymmetry

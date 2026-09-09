@@ -5,7 +5,7 @@ import Mathlib.Tactic
 - psi_comp_iota_seq: finite chain/cone compatibility by induction, using
   `psi_comm`
 - protected_states_survive_colimit: conditional nonvanishing transport from an
-  explicit kernel-lifting property and a finite-stage protection predicate
+  explicit kernel-lifting hypothesis and a finite-stage protection predicate
 
 #### BUCKET 2: CONDITIONAL — requires the stated cone/kernel witnesses
 #### BUCKET 3: No theorem in this file asserts a universal-property, topological,
@@ -60,7 +60,7 @@ def IsTopologicallyProtected (n : ℕ) (x : A n) : Prop :=
   ∀ m, iota_seq A iota n m x ≠ 0
 
 omit psi_comm in
-/-- Under the explicit kernel-lifting property, stagewise nonvanishing
+/-- Under the explicit kernel-lifting hypothesis, stagewise nonvanishing
 implies nonvanishing of the target map. This is conditional algebraic transport,
 not a universal-property or analytic colimit theorem. -/
 theorem protected_states_survive_colimit (n : ℕ) (x : A n)

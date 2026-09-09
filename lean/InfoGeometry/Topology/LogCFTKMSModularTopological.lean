@@ -168,5 +168,3 @@ theorem logCFTKMSCanonical_flowHomeomorph_comp
         congrArg (fun Y : EndH => Y x) h.symm
     exact hstep.trans hzero
   simpa [Homeomorph.trans] using h₀
-
-end

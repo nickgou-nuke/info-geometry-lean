@@ -191,7 +191,7 @@ lemma fenchel_legendre_equivalence
     subst hη
     exact fenchelGap_zero_of_gradient hGrad θ
 
-/-- `fenchel_legendre_equivalence` with an explicit name for its value-matching property. -/
+/-- `fenchel_legendre_equivalence` with an explicit name for its value-matching hypothesis. -/
 lemma fenchelGap_zero_iff_eq_deriv_of_dual_value_match
     {f fStar : ℝ → ℝ}
     (hGrad : IsGradientDual f fStar)

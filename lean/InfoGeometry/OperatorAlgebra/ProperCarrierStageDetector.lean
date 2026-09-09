@@ -21,12 +21,12 @@ of the ambient algebra to a finite carrier stage.
 The extension theorem is conditional on:
 * monotone finite-stage carrier inclusions;
 * self-duality at each stage;
-* an explicit stage-index property placing every ambient element in a finite
+* an explicit stage-index witness placing every ambient element in a finite
   carrier stage.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 No analytic modular-theory claim is made here.  This file only converts a
-concrete finite-stage indexing property into the detector premise needed for the
+concrete finite-stage indexing witness into the detector premise needed for the
 proper-carrier self-dual cone colimit theorem.
 -/
 
@@ -36,24 +36,12 @@ open InfoGeometry.OperatorAlgebra.SelfDualConeColimit
 open InfoGeometry.OperatorAlgebra.ProperCarrierSelfDualConeExtension
 
 /--
-A concrete proper-carrier property: every ambient element is assigned to a finite
+A concrete proper-carrier witness: every ambient element is assigned to a finite
 carrier stage containing it.
 -/
 structure HasFiniteCarrierStage {E : Type*} (K : ℕ → Set E) where
   stage : E → ℕ
   mem_stage : ∀ x : E, x ∈ K (stage x)
-
-/-- The stage-index structure is equivalent to pointwise finite-stage coverage. -/
-theorem hasFiniteCarrierStage_iff_exists_stage
-    {E : Type*} (K : ℕ → Set E) :
-    Nonempty (HasFiniteCarrierStage K) ↔ ∀ x : E, ∃ n : ℕ, x ∈ K n := by
-  constructor
-  · rintro ⟨h⟩ x
-    exact ⟨h.stage x, h.mem_stage x⟩
-  · intro h
-    classical
-    let stage : E → ℕ := fun x => Classical.choose (h x)
-    exact ⟨⟨stage, fun x => Classical.choose_spec (h x)⟩⟩
 
 /--
 A concrete stage index yields the detector premise: if an element pairs
@@ -70,7 +58,7 @@ theorem dualPositive_implies_finiteStage_membership
   exact ⟨hstage.stage x, hstage.mem_stage x⟩
 
 /--
-Proper-carrier extension theorem from an explicit stage-index property.
+Proper-carrier extension theorem from an explicit stage-index witness.
 -/
 theorem properCarrier_selfDualCone_extends_of_stageIndex
     {E : Type*}
@@ -84,7 +72,7 @@ theorem properCarrier_selfDualCone_extends_of_stageIndex
   exact dualPositive_implies_finiteStage_membership pairing K hstage
 
 /--
-An explicit stage-index property says exactly that the directed union covers the
+An explicit stage-index witness says exactly that the directed union covers the
 whole ambient carrier.
 -/
 theorem iUnion_eq_univ_of_finiteCarrierStage
@@ -101,7 +89,7 @@ theorem iUnion_eq_univ_of_finiteCarrierStage
 
 /--
 Membership in the algebraic colimit carrier is equivalent to dual positivity
-against the same carrier, under the explicit stage-index property.
+against the same carrier, under the explicit stage-index witness.
 -/
 theorem properCarrier_stageIndex_mem_iff_dual_positive
     {E : Type*}

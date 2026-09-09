@@ -30,12 +30,10 @@ def bregmanTriadicCore {Q K V : Type*} [BregmanDivergence Q K]
   route := route
 
 /-- Minimal 1D Hessian geometry package. -/
-abbrev HessianGeometry1D := ℝ → ℝ
+structure HessianGeometry1D where
+  potential : ℝ → ℝ
 
 namespace HessianGeometry1D
-
-/-- Compatibility accessor for the native potential function. -/
-abbrev potential (H : HessianGeometry1D) : ℝ → ℝ := H
 
 /-- Hessian metric in 1D (totalized second derivative). -/
 noncomputable def metric (H : HessianGeometry1D) (x : ℝ) : ℝ :=
@@ -63,7 +61,8 @@ noncomputable def divergence (H : HessianGeometry1D) (x y : ℝ) : ℝ :=
     H.divergence x y = H.potential x - H.potential y - (H.dualMap y) * (x - y) := rfl
 
 /-- Any 1D `LogPotential` induces a 1D Hessian geometry. -/
-noncomputable def ofLogPotential (L : InfoGeometry.LogPotential ℝ) : HessianGeometry1D := L
+noncomputable def ofLogPotential (L : InfoGeometry.LogPotential ℝ) : HessianGeometry1D where
+  potential := L.ψ
 
 /-- A named Bregman divergence instance attached to `H`. -/
 noncomputable def bregmanDiv (H : HessianGeometry1D) : BregmanDivergence ℝ ℝ where
@@ -90,7 +89,7 @@ end HessianGeometry1D
 
 /-- Multivariate Hessian geometry package on an inner product space `E`.
 `grad` is the primal gradient and `metricOp` is recovered as `fderiv grad`.
-The non-negativity property for the induced Bregman divergence is carried
+The non-negativity witness for the induced Bregman divergence is carried
 constructively as part of the datum.
 -/
 structure HessianGeometry (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
@@ -129,7 +128,7 @@ noncomputable def divergence (x y : E) : ℝ :=
 Non-negativity of the Bregman divergence.
 
 This is not inferred from differentiability alone.  It is derived from the
-convexity/first-order lower-bound property carried by each concrete
+convexity/first-order lower-bound witness carried by each concrete
 `HessianGeometry` constructor.
 -/
 theorem divergence_nonneg (x y : E) :

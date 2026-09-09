@@ -4,6 +4,7 @@ import Mathlib.Analysis.InnerProductSpace.Adjoint
 import InfoGeometry.Analysis.FractalMeasure.Basic
 import InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure
 import InfoGeometry.Canonical.CuntzCantorBoundaryShift
+import InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
 
 /-!
 # The Hilbert-level Cantor transport
@@ -25,6 +26,7 @@ open scoped ENNReal
 open InfoGeometry.Analysis.FractalMeasure.Basic
 open InfoGeometry.Canonical.CuntzCantorBoundaryShift
 open InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure
+open InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
 
 abbrev Boundary := ℕ → Bool
 abbrev μC : Measure Boundary := fractalMeasure
@@ -339,7 +341,7 @@ theorem prependBit_measure_map_eq_two_restrict_branch (b : Bool) :
     · rintro ⟨y, rfl⟩ i hi
       by_cases hi0 : i = 0
       · subst i; simp [prependBit]
-      · simp [prependBit, hi0, Set.mem_univ]
+      · simp [prependBit, hi0]
     · intro hx
       refine ⟨tail x, ?_⟩
       apply prependBit_tail_of_head

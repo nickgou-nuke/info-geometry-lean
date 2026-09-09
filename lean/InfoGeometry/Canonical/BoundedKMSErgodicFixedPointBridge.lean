@@ -9,7 +9,7 @@ noncomputable section
 /-!
 # InfoGeometry.Canonical.BoundedKMSErgodicFixedPointBridge
 
-Ergodic/self-similar fixed-point data over the state-functional bounded KMS
+Ergodic/self-similar fixed-point socket over the state-functional bounded KMS
 condition bridge.
 
 This is the `StateFunctional EndH` / `KMSAnalyticCertificate` counterpart of
@@ -32,7 +32,6 @@ section Core
 
 variable {E LieAlgebra : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable [AddMonoid LieAlgebra]
 
 local notation "EndH" => E →L[ℝ] E
 
@@ -48,7 +47,7 @@ local instance : IsScalarTower ℝ EndH EndH :=
   inferInstance
 
 /--
-Operator ergodic/self-similar data over the state-functional bounded KMS
+Operator ergodic/self-similar socket over the state-functional bounded KMS
 bridge.
 
 `ergodicMean` is supplied smoothing data.  Concrete models may realize it as
@@ -57,7 +56,7 @@ laws and regular-support stability.
 -/
 @[rep_depth thermo]
 structure Bridge where
-  /-- State-functional KMS data for the bounded modular flow. -/
+  /-- State-functional KMS socket for the bounded modular flow. -/
   kms :
     InfoGeometry.Canonical.BoundedKMSConditionBridge.Bridge
       (E := E) (LieAlgebra := LieAlgebra)

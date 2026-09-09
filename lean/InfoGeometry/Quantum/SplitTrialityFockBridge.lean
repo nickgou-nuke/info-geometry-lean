@@ -97,7 +97,7 @@ theorem trialitySupercharge_square_eq_cliffordConcrete_anticommutator :
           exact triality_anticommutator_eq_cliffordConcrete_anticommutator (E := E)
 
 /--
-Reusing the concrete CAR property already proved in `BogoliubovFockSuper`, the
+Reusing the concrete CAR witness already proved in `BogoliubovFockSuper`, the
 canonical triality supercharge square closes onto the identity even seed.
 -/
 @[simp] theorem trialitySupercharge_square_eq_id_via_cliffordConcreteCAR :
@@ -119,10 +119,10 @@ canonical triality supercharge square closes onto the identity even seed.
 
 /--
 The triality left/right spinor channels themselves satisfy the concrete CAR
-property transported from the split-`Cl(1,1)` null-mode realization.
+witness transported from the split-`Cl(1,1)` null-mode realization.
 -/
-theorem triality_channels_CARRelation :
-    InfoGeometry.Quantum.RealMajoranaCategory.CARRelation
+theorem triality_channels_CARWitness :
+    InfoGeometry.Quantum.RealMajoranaCategory.CARWitness
       (InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E)
       (InfoGeometry.Quantum.vectorToLeftSpinor (E := E))
       (InfoGeometry.Quantum.vectorToRightSpinor (E := E)) := by

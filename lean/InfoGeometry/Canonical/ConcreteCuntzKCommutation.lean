@@ -14,14 +14,14 @@ open InfoGeometry.Topology
 # Concrete Cuntz/K-linear commutation
 
 The Cuntz left shift S_left and the phase axis K = J·ε commute on the
-concrete product carrier H = ((ℕ → BinarySector) → ℝ) × DoubledSpace E,
+concrete product carrier H = (BinaryCantorBoundary → ℝ) × DoubledSpace E,
 because S_left acts on the base (Cantor boundary) and K acts on the fiber
 (DoubledSpace).
 
 The operator-level theorem below isolates the remaining concrete construction:
 once the actual Cuntz left branch is supplied as a continuous doubled operator
 with identical action on both real sheets, `concrete_S_left_KLinear` proves the
-`KLinear` property needed by `e2_isSelfAdjoint_of_left_KLinear`.
+`KLinear` hypothesis needed by `e2_isSelfAdjoint_of_left_KLinear`.
 -/
 
 section ConcreteCuntzKCommutation
@@ -32,8 +32,8 @@ local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
 
 /-- Real-valued functions on the binary Cuntz/Cantor boundary. -/
-abbrev BinarySectorFunctionSpace :=
-  (ℕ → BinarySector) → ℝ
+abbrev BinaryCantorBoundaryFunctionSpace :=
+  BinaryCantorBoundary → ℝ
 
 /--
 The concrete product carrier: product of the Cantor boundary function space
@@ -43,7 +43,7 @@ This replaces the abstract ℓ²(CantorBoundary) ⊗ ℂ² tensor product by the
 simpler product representation for the commutation readback.
 -/
 structure ConcreteHilbert where
-  base : BinarySectorFunctionSpace
+  base : BinaryCantorBoundaryFunctionSpace
   fiber : H₂
 
 /--
@@ -91,20 +91,6 @@ theorem concrete_S_left_K_commute (ψ : ConcreteHilbert (E := E)) :
     concrete_S_left (E := E) (concrete_K (E := E) ψ) =
       concrete_K (E := E) (concrete_S_left (E := E) ψ) :=
   rfl
-
-theorem concrete_S_left_iterate_K_commute
-    (n : ℕ) (ψ : ConcreteHilbert (E := E)) :
-    (concrete_S_left (E := E))^[n]
-      (concrete_K (E := E) ψ) =
-      concrete_K (E := E)
-        ((concrete_S_left (E := E))^[n] ψ) := by
-  induction n generalizing ψ with
-  | zero => rfl
-  | succ n ih =>
-      rw [Function.iterate_succ_apply]
-      rw [concrete_S_left_K_commute]
-      rw [Function.iterate_succ_apply]
-      exact ih (concrete_S_left (E := E) ψ)
 
 /--
 Any doubled operator that applies the same real operator to both doubled

@@ -4,7 +4,7 @@ import InfoGeometry.Arithmetic.PrimeMajoranaOPE
 /-!
 # InfoGeometry.Quantum.PrimeMajoranaOPE
 
-OPE interface for Prime Majorana fields.
+OPE Socket for Prime Majorana fields.
 This module defines the structural predicates for the Operator Product Expansion
 (OPE) limits of the split-Majorana prime gas. 
 It intentionally defers the actual analytic mode expansions to a later, full CFT
@@ -46,15 +46,18 @@ def IsCDRegular {PrimeLabel Field Kernel : Type*}
   ∀ p q, OPE.singularPart (OPE.c p) (OPE.d q) = OPE.regularPart
 
 /--
-Equation-level quantum OPE data induces the arithmetic property packet.
+Equation-level quantum OPE data induces the arithmetic witness packet.
 
 This is a genuine transport theorem from explicit singular-part equalities into
-the property-gated `Arithmetic.PrimeMajoranaOPE` surface; it does not claim any
+the witness-gated `Arithmetic.PrimeMajoranaOPE` surface; it does not claim any
 analytic VOA/Laurent construction beyond the supplied equations.
 -/
 def toArithmeticSplitMajoranaOPE
     {PrimeLabel Field Kernel : Type*} [Zero Kernel] [Neg Kernel]
-    (OPE : SplitMajoranaOPE PrimeLabel Field Kernel) :
+    (OPE : SplitMajoranaOPE PrimeLabel Field Kernel)
+    (hcc : IsCCOPE OPE)
+    (hdd : IsDDOPE OPE)
+    (hcd : IsCDRegular OPE) :
     InfoGeometry.Arithmetic.PrimeMajoranaOPE.SplitMajoranaOPE PrimeLabel Field Kernel where
   cField := OPE.c
   dField := OPE.d
@@ -67,5 +70,8 @@ def toArithmeticSplitMajoranaOPE
     OPE.singularPart (OPE.d p) (OPE.d q) = OPE.negDeltaPole p q
   cd_regular := fun p q =>
     OPE.singularPart (OPE.c p) (OPE.d q) = OPE.regularPart
+  cc_proof := hcc
+  dd_proof := hdd
+  cd_proof := hcd
 
 end InfoGeometry.Quantum.PrimeMajoranaOPE

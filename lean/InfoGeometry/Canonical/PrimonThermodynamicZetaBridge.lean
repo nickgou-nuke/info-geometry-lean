@@ -51,6 +51,7 @@ open InfoGeometry.Canonical.PrimonZetaRegularization
 open InfoGeometry.Canonical.Determinant
 open InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
+open InfoGeometry.Canonical.UHFInductiveLimitBoundary
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open CategoryTheory CategoryTheory.Limits
 

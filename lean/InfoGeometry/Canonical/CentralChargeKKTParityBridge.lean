@@ -70,7 +70,7 @@ theorem operatorialCentralChargeParity_eq_transport_slice
         =
       operatorialCentralCharge (A := A) (B := B) (E := E) X hX :=
     operatorialCentralCharge_eq_transport_slice (A := A) (B := B) (E := E) V X hX hEven t
-  -- Align the transported-slice property with the theorem statement property.
+  -- Align the transported-slice witness with the theorem statement witness.
   change
       (operatorialCentralCharge (A := A) (B := B) (E := E) X hX : ZMod 2)
         =

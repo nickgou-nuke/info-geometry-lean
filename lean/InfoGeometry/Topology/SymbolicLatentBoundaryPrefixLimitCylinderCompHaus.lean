@@ -143,5 +143,3 @@ theorem boundaryReadoutToPrefixLimitCompHausHom_preimage_prefixLimitCylinder_dis
   exact colimitBoundaryCylinder_disjoint_of_ne S length hwv
 
 end InfoGeometry.Topology.SymbolicLatentBoundaryPrefixLimitCylinderCompHaus
-
-end

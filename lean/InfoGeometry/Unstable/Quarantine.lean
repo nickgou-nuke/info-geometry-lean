@@ -1,13 +1,3 @@
-import InfoGeometry.Canonical.CuntzCanonicalKMSFunctional
-import InfoGeometry.Canonical.SplitG2HodgeWedgeCharacterization
-import InfoGeometry.Canonical.BerryHolonomy
-import InfoGeometry.Canonical.SouriauBerryPhaseMonodromyBridge
-import InfoGeometry.Canonical.CalabiYauGrandDualityBridge
-import InfoGeometry.Canonical.OperatorObservationPrequantumBridge
-import InfoGeometry.Canonical.StandardSplitQuaternionCalibrationBridge
-import InfoGeometry.Quantum.DoubleCopyBridge
-import InfoGeometry.Canonical.CheegerMullerAnalyticTorsionBridge
-import InfoGeometry.Canonical.ExpectationBilinearCommutantCorrespondence
 import InfoGeometry.Canonical.AQFTOperatorInterface
 import InfoGeometry.Canonical.AnomalyDilationBridge
 import InfoGeometry.Canonical.BeliefDynamics
@@ -55,8 +45,21 @@ import InfoGeometry.Prequantum.Connection
 import InfoGeometry.Prequantum.Quotient
 import InfoGeometry.Projective.TwistorBridge
 import InfoGeometry.Exploration.Symphony.Basic
+import InfoGeometry.Exploration.Symphony.Draft
 import InfoGeometry.Unstable.SingularUnitaryBridge
 import InfoGeometry.Unstable.YangMillsBridge
+import InfoGeometry.Canonical.BerryHolonomy
+import InfoGeometry.Canonical.CalabiYauGrandDualityBridge
+import InfoGeometry.Canonical.CheegerMullerAnalyticTorsionBridge
+import InfoGeometry.Canonical.CuntzCanonicalKMSFunctional
+import InfoGeometry.Canonical.ExpectationBilinearCommutantCorrespondence
+import InfoGeometry.Canonical.OperatorObservationPrequantumBridge
+import InfoGeometry.Canonical.SouriauBerryPhaseMonodromyBridge
+import InfoGeometry.Canonical.SplitG2HodgeWedgeCharacterization
+import InfoGeometry.Canonical.StandardSplitQuaternionCalibrationBridge
+import InfoGeometry.Quantum.DoubleCopyBridge
+import InfoGeometry.Canonical.DeepHorizon
+import InfoGeometry.Canonical.ChiralTorsionBridge
 
 namespace InfoGeometry
 
@@ -64,7 +67,7 @@ namespace InfoGeometry
 # InfoGeometry.Unstable.Quarantine
 
 Quarantine surface for modules that are currently not accepted on the canonical
-publication path due to scaffold/property-vacuity concerns.
+publication path due to scaffold/assumption-vacuity concerns.
 
 Policy:
 - These modules are intentionally excluded from `InfoGeometry.Canonical.All`.

@@ -85,9 +85,6 @@ theorem gradeSpace_anticommutator_of_sum
     apply gradeSpace_mul_of_sum h g k hy hx
     rw [hgrade, add_comm]
   exact add_mem hxy hyx
-
-
-
 /-- `thetaOp` intertwines with `adD` up to a sign. -/
 theorem theta_adD (x : Alg 5) : thetaOp (adD x) = - adD (thetaOp x) := by
   dsimp [adD]
@@ -156,7 +153,7 @@ theorem theta_maps_even (g : ConformalGrade) (x : CliffordAlgebra.even (Qsplit 5
 
 def HomogeneousElementEven := Σ (g : ConformalGrade), gradeSpaceEven g
 
-abbrev homogeneousGradeEven (x : HomogeneousElementEven) : ConformalGrade := x.1
+def homogeneousGradeEven (x : HomogeneousElementEven) : ConformalGrade := x.1
 
 def homogeneousThetaEven (x : HomogeneousElementEven) : HomogeneousElementEven :=
   ⟨ConformalGrade.swap x.1, ⟨thetaOpEven x.2.1, theta_maps_even x.1 x.2.1 x.2.2⟩⟩

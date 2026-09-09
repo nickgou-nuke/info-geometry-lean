@@ -7,10 +7,10 @@ open scoped InnerProductSpace
 # Spatial Derivative–Certified Reduction Bridge
 
 Support-restricted realization of the noncommutative spatial derivative and
-its relative Hamiltonian on the property Drazin regular lane.
+its relative Hamiltonian on the certified Drazin regular lane.
 
 No diagonalization or scalar determinant is used.  The hypotheses identify the
-property reduction's operator and logarithm hook with the typed
+certified reduction's operator and logarithm hook with the typed
 spatial-derivative realization; the conclusions are then derived from the
 existing `Preg/Pzero` owner laws.
 -/
@@ -50,7 +50,7 @@ variable
         Phase Core}
 
 /--
-The property regular modular operator is the `Preg` compression of the
+The certified regular modular operator is the `Preg` compression of the
 realized noncommutative spatial derivative.
 -/
 theorem deltaReg_eq_compress_realizedSpatialDerivative
@@ -67,7 +67,7 @@ theorem deltaReg_eq_compress_realizedSpatialDerivative
       (V := E) c (I.realizedSpatialDerivative φ ψ) hDelta
 
 /--
-When the property logarithm hook is the logarithm orientation
+When the certified logarithm hook is the logarithm orientation
 `deltaLog = -K(φ,ψ)`, its ambient negative-log generator is the `Preg`
 compression of the relative Hamiltonian itself.
 -/
@@ -92,7 +92,7 @@ Complete noncommutative regular-support packet for an ordered weight pair:
 * `Preg` supports `Kambient` on both sides;
 * `Pzero` annihilates `Kambient` on both sides.
 -/
-theorem spatialDerivative_propertyReduction_packet
+theorem spatialDerivative_certifiedReduction_packet
     (I : InfoGeometry.OperatorAlgebra.SpatialDerivativeBogoliubovIntertwiner.Intertwiner
       (E := E) modularCore)
     (c : CertifiedModularReduction (E := H₂))

@@ -49,7 +49,7 @@ def MTC_BMatrix (q : Units ℂ) (τ s : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
 /--
 Bundled finite hypotheses for the finite Fibonacci shadow.
 
-This restores the historical input owner as a subtype: its property is the
+This restores the historical input owner as a subtype: its certificate is the
 actual square-root, fusion, and Artin equality, not a separate evidence field.
 -/
 def MTC_FiniteInput : Type _ :=
@@ -103,12 +103,14 @@ Mac Lane triangle-style graph law on the Zorn diagonal shell.
 Interpreting the first leg as a diagonal source factor matches the local
 associator-vanishing branch recorded in `ProjectiveLine.lean`.
 -/
-theorem diagonal_associator_vanishes
+theorem MacLane_Triangle_Equation
     {R : Type*} [CommRing R]
     {V : Type*} [AddCommGroup V] [Module R V]
     (B : V →ₗ[R] V →ₗ[R] R)
+    (_v_i : ZornMatrix R V)
     (v_j x : ZornMatrix R V)
-    (z : R) :
+    (z : R)
+    (_hx : half_eq_e1 x) :
     associator B (ZornMatrix.diag (1 : R) z) x (star (mul B v_j x)) = ZornMatrix.diag 0 0 := by
   exact op1_associator_vanishes_of_diag_left (B := B) v_j x z
 

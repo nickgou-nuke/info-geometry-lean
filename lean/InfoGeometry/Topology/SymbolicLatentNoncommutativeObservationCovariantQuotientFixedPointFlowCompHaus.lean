@@ -114,5 +114,3 @@ theorem operatorObservationQuotientCovariantFixedPointFlowHom_isIso
         exact descendedCovariantOperatorObservationFlow_zero Φ q.1
 
 end InfoGeometry.Topology
-
-end

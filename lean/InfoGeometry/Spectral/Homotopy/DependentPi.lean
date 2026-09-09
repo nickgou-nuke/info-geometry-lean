@@ -3,16 +3,17 @@ import InfoGeometry.Spectral.Homotopy.Suspension
 /-!
 # Dependent pointed function carriers
 
-This is the ordinary carrier-level portion of the old `pointed_pi` file.
-Pointwise homotopy and truncation properties are separate from this API.
+Finite carrier-level dependent products for the spectral homotopy port.
+This file deliberately does not claim a topological dependent-product theorem.
 -/
 
 namespace InfoGeometry.Spectral.Homotopy.DependentPi
 
 open InfoGeometry.Spectral.Homotopy.Suspension
 
-def PiPointed {ι : Type*} (F : ι → Type*) (base : ∀ i, F i) : PointedReadout :=
-  Pointed.mk (∀ i, F i) base
+def PiPointed {ι : Type*} (F : ι → Type*) (base : ∀ i, F i) : PointedReadout where
+  carrier := ∀ i, F i
+  base := base
 
 @[simp] theorem PiPointed_base {ι : Type*} (F : ι → Type*) (base : ∀ i, F i) (i : ι) :
     (PiPointed F base).base i = base i :=
@@ -54,7 +55,7 @@ theorem PiPointed.map_comp {ι : Type*} {F G H : ι → Type*}
   rfl
 
 def PiPointed.constant {ι : Type*} (F : ι → Type*) (base : ∀ i, F i) :
-    PointedMap (Pointed.mk PUnit PUnit.unit) (PiPointed F base) where
+    PointedMap ({ carrier := PUnit, base := PUnit.unit } : PointedReadout) (PiPointed F base) where
   toFun := fun _ => base
   map_base := rfl
 

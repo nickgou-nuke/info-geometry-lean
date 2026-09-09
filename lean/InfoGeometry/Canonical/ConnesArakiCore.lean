@@ -50,7 +50,7 @@ variable {T : SinkhornTrajectory n}
 /--
 Canonical constructor using the flow-derived unit cocycle and unit scalar bridge.
 
-This removes a free cocycle property in the common "existential packaging" use
+This removes a free cocycle witness in the common "existential packaging" use
 case: only the Casini bridge on the fixed flow-native cocycle lane is required.
 -/
 noncomputable def ofUnitCocycle

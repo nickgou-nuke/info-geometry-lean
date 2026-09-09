@@ -7,7 +7,7 @@ This file formalizes the algebraic part of the regularization pipeline.
 
 The analytic boundedness claims are represented as explicit coordinate
 contracts.  That is intentional: Lean should not hide the unbounded-operator
-work behind a `sorry`.  The finite SymPy property in
+work behind a `sorry`.  The finite SymPy witness in
 `regularization_cayley_pipeline.py` checks the concrete diagonal model.
 -/
 
@@ -23,7 +23,7 @@ def regularize (T : A) : A := T - 1
 /--
 A squashed coordinate in the bounded stage is an element of a normed algebra.
 
-There is no separate boundedness property: membership in a `NormedRing`
+There is no separate boundedness certificate: membership in a `NormedRing`
 already gives the finite norm required by the bounded coordinate model.
 -/
 abbrev SquashedCoordinate (A : Type*) [NormedRing A] :=
@@ -166,7 +166,7 @@ def mapCayley (U : CayleyCoordinate A) : CayleyCoordinate A where
 
 end UnifiedAdjointData
 
-/-- Scalar Cayley transform used by the finite property:
+/-- Scalar Cayley transform used by the finite witness:
 `C(t) = (t - i)/(t + i)`. -/
 def scalarCayley (t : ℝ) : ℂ := ((t : ℂ) - Complex.I) / ((t : ℂ) + Complex.I)
 

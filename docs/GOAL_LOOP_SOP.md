@@ -3,6 +3,15 @@
 > Status: `production — 2026-06-03`
 > Scope: self-evolving autonomous pipeline for closing certificate debt.
 
+## Normative Proof-Development Doctrine
+
+All Lean closure work performed by the goal loop follows
+[the Topological Progress Principle](TOPOLOGICAL_PROGRESS_PRINCIPLE.md).
+Do not convert a missing proof into an assumption, proxy carrier, surrogate
+theorem, or unverified external claim. Prove the nearest kernel-checkable
+predecessor that advances the original goal and preserve that goal until it is
+proved. Runtime routing follows [the canonical pipeline](CANONICAL_AGENT_PIPELINE.md).
+
 ## Architecture
 
 The goal loop is implemented as a systemd daemon (`evolution-worker.service`)

@@ -112,28 +112,6 @@ theorem bregmanPrimal_closed (x x0 : ℝ) :
       Real.exp x - Real.exp x0 - Real.exp x0 * (x - x0) := by
   rfl
 
-/-- Factorization of the exponential Bregman remainder at the reference point. -/
-theorem bregmanPrimal_factorized (x x0 : ℝ) :
-    bregmanPrimal x x0 =
-      Real.exp x0 * (Real.exp (x - x0) - 1 - (x - x0)) := by
-  unfold bregmanPrimal f gradPrimal
-  have hx : Real.exp x = Real.exp x0 * Real.exp (x - x0) := by
-    calc
-      Real.exp x = Real.exp ((x - x0) + x0) := by ring_nf
-      _ = Real.exp (x - x0) * Real.exp x0 := by rw [Real.exp_add]
-      _ = Real.exp x0 * Real.exp (x - x0) := by ring
-  rw [hx]
-  ring
-
-/-- Translating both log-coordinates scales the primal divergence. -/
-theorem bregmanPrimal_shift (c x x0 : ℝ) :
-    bregmanPrimal (x + c) (x0 + c) =
-      Real.exp c * bregmanPrimal x x0 := by
-  rw [bregmanPrimal_factorized, bregmanPrimal_factorized]
-  have hdiff : (x + c) - (x0 + c) = x - x0 := by ring
-  rw [hdiff, Real.exp_add]
-  ring
-
 /-- Nonnegativity of primal Bregman divergence for the exponential potential. -/
 theorem bregmanPrimal_nonneg (x x0 : ℝ) :
     0 ≤ bregmanPrimal x x0 := by
@@ -202,50 +180,6 @@ theorem bregmanDual_eq_kl_form (y y0 : ℝ) (hy : 0 < y) (hy0 : 0 < y0) :
   rw [Real.log_div (ne_of_gt hy) (ne_of_gt hy0)]
   ring
 
-/-- Positive scaling acts covariantly on the dual Bregman divergence. -/
-theorem bregmanDual_scale (c y y0 : ℝ)
-    (hc : 0 < c) (hy : 0 < y) (hy0 : 0 < y0) :
-    bregmanDual (c * y) (c * y0) = c * bregmanDual y y0 := by
-  rw [bregmanDual_eq_kl_form (c * y) (c * y0) (mul_pos hc hy) (mul_pos hc hy0),
-    bregmanDual_eq_kl_form y y0 hy hy0]
-  have hratio : c * y / (c * y0) = y / y0 := by
-    field_simp [ne_of_gt hc, ne_of_gt hy0]
-  rw [hratio]
-  ring
-
-/-! The exponential-coordinate form of the primal/dual scaling square. -/
-theorem bregmanDual_exp_shift (c x x0 : ℝ) :
-    bregmanDual (Real.exp (c + x)) (Real.exp (c + x0)) =
-      Real.exp c * bregmanDual (Real.exp x) (Real.exp x0) := by
-  calc
-    bregmanDual (Real.exp (c + x)) (Real.exp (c + x0)) =
-        bregmanDual (Real.exp c * Real.exp x) (Real.exp c * Real.exp x0) := by
-          rw [Real.exp_add, Real.exp_add]
-    _ = Real.exp c * bregmanDual (Real.exp x) (Real.exp x0) := by
-          exact bregmanDual_scale (Real.exp c) (Real.exp x) (Real.exp x0)
-            (Real.exp_pos c) (Real.exp_pos x) (Real.exp_pos x0)
-
-/-- The dual exponential Bregman divergence is nonnegative on positive inputs. -/
-theorem bregmanDual_nonneg (y y0 : ℝ) (hy : 0 < y) (hy0 : 0 < y0) :
-    0 ≤ bregmanDual y y0 := by
-  rw [bregmanDual_eq_kl_form y y0 hy hy0]
-  have hratio : 0 < y0 / y := div_pos hy0 hy
-  have hlogbase : Real.log (y0 / y) ≤ y0 / y - 1 := by
-    simpa using Real.log_le_sub_one_of_pos hratio
-  have hlogrel :
-      Real.log (y / y0) = -Real.log (y0 / y) := by
-    rw [Real.log_div (ne_of_gt hy) (ne_of_gt hy0),
-      Real.log_div (ne_of_gt hy0) (ne_of_gt hy)]
-    ring
-  have hlower : 1 - y0 / y ≤ Real.log (y / y0) := by
-    linarith
-  have hmul :
-      y * (1 - y0 / y) ≤ y * Real.log (y / y0) :=
-    mul_le_mul_of_nonneg_left hlower (le_of_lt hy)
-  have hrewrite : y * (1 - y0 / y) = y - y0 := by
-    field_simp [ne_of_gt hy]
-  linarith
-
 /-- Dual Bregman divergence at matched exponential coordinates. -/
 theorem bregmanDual_exp_closed (x x0 : ℝ) :
     bregmanDual (Real.exp x) (Real.exp x0) =
@@ -264,47 +198,6 @@ theorem bregmanPrimal_eq_bregmanDual_matched (x x0 : ℝ) :
   rw [Real.log_exp, Real.log_exp]
   ring
 
-/-- The positive dual divergence vanishes exactly at the reference point. -/
-theorem bregmanDual_eq_zero_iff (y y0 : ℝ) (hy : 0 < y) (hy0 : 0 < y0) :
-    bregmanDual y y0 = 0 ↔ y = y0 := by
-  constructor
-  · intro h
-    have hprimal : bregmanPrimal (Real.log y0) (Real.log y) = 0 := by
-      rw [bregmanPrimal_eq_bregmanDual_matched]
-      simpa [Real.exp_log hy, Real.exp_log hy0] using h
-    have hlog : Real.log y0 = Real.log y :=
-      (bregmanPrimal_eq_zero_iff (Real.log y0) (Real.log y)).mp hprimal
-    have hexp := congrArg Real.exp hlog
-    have hy0y : y0 = y := by
-      simpa [Real.exp_log hy, Real.exp_log hy0] using hexp
-    exact hy0y.symm
-  · intro h
-    subst y
-    have hprimal : bregmanPrimal (Real.log y0) (Real.log y0) = 0 :=
-      (bregmanPrimal_eq_zero_iff (Real.log y0) (Real.log y0)).mpr rfl
-    rw [bregmanPrimal_eq_bregmanDual_matched] at hprimal
-    simpa [Real.exp_log hy0] using hprimal
-
-/-- Nonnegativity on the exponential-coordinate chart. -/
-theorem bregmanDual_exp_nonneg (x x0 : ℝ) :
-    0 ≤ bregmanDual (Real.exp x) (Real.exp x0) := by
-  exact bregmanDual_nonneg (Real.exp x) (Real.exp x0)
-    (Real.exp_pos x) (Real.exp_pos x0)
-
-/-- On exponential coordinates, the dual divergence vanishes exactly on the diagonal. -/
-theorem bregmanDual_exp_eq_zero_iff (x x0 : ℝ) :
-    bregmanDual (Real.exp x) (Real.exp x0) = 0 ↔ x = x0 := by
-  constructor
-  · intro h
-    have hexp : Real.exp x = Real.exp x0 :=
-      (bregmanDual_eq_zero_iff (Real.exp x) (Real.exp x0)
-        (Real.exp_pos x) (Real.exp_pos x0)).mp h
-    exact Real.exp_injective hexp
-  · intro h
-    subst x
-    exact (bregmanDual_eq_zero_iff (Real.exp x0) (Real.exp x0)
-      (Real.exp_pos x0) (Real.exp_pos x0)).mpr rfl
-
 /-- Matched-coordinate dual divergence in explicit KL form. -/
 theorem bregmanDual_exp_eq_kl_form (x x0 : ℝ) :
     bregmanDual (Real.exp x) (Real.exp x0) =
@@ -321,14 +214,14 @@ theorem fenchelObj_le_fStar (x y : ℝ) (hy : 0 < y) :
   have h := fenchel_young_exp x y hy
   linarith
 
-/-- The property point `x = log y` attains the Fenchel upper bound on `y>0`. -/
+/-- The witness point `x = log y` attains the Fenchel upper bound on `y>0`. -/
 theorem fenchelObj_at_log_eq_fStar (y : ℝ) (hy : 0 < y) :
     fenchelObj y (Real.log y) = fStar y := by
   unfold fenchelObj f fStar
   rw [Real.exp_log hy]
 
 /--
-Supremum readout via explicit property:
+Supremum readout via explicit witness:
 `f*(y)` is the greatest element of the range of the Fenchel objective
 `x ↦ y*x - exp x` on `y>0`.
 -/

@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.CuntzCompatiblePointLimit
 /-!
 # Restriction of compatible Cuntz inverse-limit points to upper tails
 
-This owner connects the generic compatible Cuntz property family on the full
+This owner connects the generic compatible Cuntz witness family on the full
 inductive system to the corresponding family on an upper tail.  The result is
 an equality of actual `TopCat` inverse-limit readouts, obtained by the limit
 universal property.
@@ -35,7 +35,7 @@ variable [∀ n, PartialOrder (Stage n)]
 variable [∀ n, StarOrderedRing (Stage n)]
 variable (T : CuntzStarTower Stage)
 
-/-- Restrict a compatible Cuntz property family to the stages at or above `m`. -/
+/-- Restrict a compatible Cuntz witness family to the stages at or above `m`. -/
 def upperTailCompatibleCuntzPointFamily
     (family : CompatibleCuntzPointFamily T.toContinuousStarInductiveSystem)
     (m : ℕ) :
@@ -44,14 +44,14 @@ def upperTailCompatibleCuntzPointFamily
   c := fun j => family.c j.1
   cstar := fun j => family.cstar j.1
   relation := fun j => family.relation j.1
-  map_c := by
+  compatible_c := by
     intro j k hjk
     simpa [upperTailContinuousStarSystem] using
-      family.map_c (show j.1 ≤ k.1 from hjk)
-  map_cstar := by
+      family.compatible_c (show j.1 ≤ k.1 from hjk)
+  compatible_cstar := by
     intro j k hjk
     simpa [upperTailContinuousStarSystem] using
-      family.map_cstar (show j.1 ≤ k.1 from hjk)
+      family.compatible_cstar (show j.1 ≤ k.1 from hjk)
 
 theorem upperTailCompatibleCuntzPointFamily_point
     (family : CompatibleCuntzPointFamily T.toContinuousStarInductiveSystem)
@@ -83,23 +83,23 @@ theorem compatibleCuntzPointLimitMap_restrict
     ((cuntzCompatiblePointLimitMap
         T.toContinuousStarInductiveSystem family ≫
       upperTailQCCRZeroFiberRestrictionMap Stage T m) ≫
-      limit.π
+      topologicalInverseProjection
         (qCcrParameterZeroFiberTopologicalDiagram
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) j) u =
       ((cuntzCompatiblePointLimitMap
           (upperTailContinuousStarSystem Stage T m)
           (upperTailCompatibleCuntzPointFamily Stage T family m) ≫
-        limit.π
+        topologicalInverseProjection
         (qCcrParameterZeroFiberTopologicalDiagram
         (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) j) u)
   rw [Category.assoc, upperTailQCCRZeroFiberRestrictionMap_projection]
   change
-    limit.π
+    topologicalInverseProjection
         (qCcrParameterZeroFiberTopologicalDiagram Stage
           T.toContinuousStarInductiveSystem) j.1
         (cuntzCompatiblePointLimitMap
           T.toContinuousStarInductiveSystem family u) =
-      limit.π
+      topologicalInverseProjection
         (qCcrParameterZeroFiberTopologicalDiagram
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) j
         (cuntzCompatiblePointLimitMap
@@ -150,26 +150,26 @@ theorem compatibleCuntzPointLimitMap_between
         (upperTailContinuousStarSystem Stage T m)
         (upperTailCompatibleCuntzPointFamily Stage T family m) ≫
       upperTailQCCRZeroFiberRestrictionMap_between Stage T m n hmn) ≫
-      limit.π
+      topologicalInverseProjection
         (qCcrParameterZeroFiberTopologicalDiagram
           (UpperTailStage Stage n) (upperTailContinuousStarSystem Stage T n)) j) u =
       ((cuntzCompatiblePointLimitMap
           (upperTailContinuousStarSystem Stage T n)
           (upperTailCompatibleCuntzPointFamily Stage T family n) ≫
-        limit.π
+        topologicalInverseProjection
           (qCcrParameterZeroFiberTopologicalDiagram
             (UpperTailStage Stage n) (upperTailContinuousStarSystem Stage T n)) j)) u
   rw [Category.assoc,
     upperTailQCCRZeroFiberRestrictionMap_between_projection]
   change
-    limit.π
+    topologicalInverseProjection
         (qCcrParameterZeroFiberTopologicalDiagram
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m))
         ⟨j.1, le_trans hmn j.2⟩
         (cuntzCompatiblePointLimitMap
           (upperTailContinuousStarSystem Stage T m)
           (upperTailCompatibleCuntzPointFamily Stage T family m) u) =
-      limit.π
+      topologicalInverseProjection
           (qCcrParameterZeroFiberTopologicalDiagram
             (UpperTailStage Stage n) (upperTailContinuousStarSystem Stage T n)) j
           (cuntzCompatiblePointLimitMap

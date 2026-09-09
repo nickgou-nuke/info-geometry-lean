@@ -1,0 +1,13 @@
+import InfoGeometry.Topology.BinaryBarrierTwistedGluing
+
+#print axioms InfoGeometry.Topology.BinaryBarrierTwistedGluing.flip_involutive
+#print axioms InfoGeometry.Topology.BinaryBarrierTwistedGluing.odds_flip
+#print axioms InfoGeometry.Topology.BinaryBarrierTwistedGluing.logit_flip
+#print axioms InfoGeometry.Topology.BinaryBarrierTwistedGluing.barrier_flip
+#print axioms InfoGeometry.Topology.BinaryBarrierTwistedGluing.project_endpoint
+#print axioms InfoGeometry.Topology.BinaryBarrierTwistedGluing.barrier_respects_gluing
+#print axioms InfoGeometry.Topology.BinaryBarrierTwistedGluing.descendedBarrier_project
+#print axioms InfoGeometry.Topology.BinaryBarrierTwistedGluing.continuous_project
+#print axioms InfoGeometry.Topology.BinaryBarrierTwistedGluing.continuous_fibreBarrier
+#print axioms InfoGeometry.Topology.BinaryBarrierTwistedGluing.continuous_descendedBarrier
+#print axioms InfoGeometry.Topology.BinaryBarrierTwistedGluing.descendedBarrier_unique

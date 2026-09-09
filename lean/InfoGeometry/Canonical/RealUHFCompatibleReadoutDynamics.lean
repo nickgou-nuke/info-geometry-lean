@@ -176,5 +176,3 @@ theorem continuous_identityStageFlow_pullback :
       Continuous (fun p : ℝ × CompatibleContinuousReadoutFamily => p.2))
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutDynamics
-
-end

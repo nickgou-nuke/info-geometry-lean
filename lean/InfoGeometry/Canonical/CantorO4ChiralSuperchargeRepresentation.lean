@@ -45,25 +45,29 @@ theorem groupedS1star_S1 : groupedS1star * groupedS1 = 1 := by
   dsimp [groupedS1star, groupedS1]
   simp only [smul_mul_assoc, add_mul, mul_add]
   rw [cuntz_ortho, cuntz_ortho, cuntz_ortho, cuntz_ortho]
-  simp <;> norm_num [div_eq_mul_inv] <;> module
+  simp only [Fin.reduceEq, ↓reduceIte, add_zero, zero_add]
+  rw [← add_smul]
+  norm_num
 
 theorem groupedS2star_S2 : groupedS2star * groupedS2 = 1 := by
   dsimp [groupedS2star, groupedS2]
   simp only [smul_mul_assoc, add_mul, mul_add]
   rw [cuntz_ortho, cuntz_ortho, cuntz_ortho, cuntz_ortho]
-  simp <;> norm_num [div_eq_mul_inv] <;> module
+  simp only [Fin.reduceEq, ↓reduceIte, add_zero, zero_add]
+  rw [← add_smul]
+  norm_num
 
 theorem groupedS1star_S2 : groupedS1star * groupedS2 = 0 := by
   dsimp [groupedS1star, groupedS2]
   simp only [smul_mul_assoc, add_mul, mul_add]
   rw [cuntz_ortho, cuntz_ortho, cuntz_ortho, cuntz_ortho]
-  simp <;> norm_num [div_eq_mul_inv] <;> module
+  simp only [Fin.reduceEq, ↓reduceIte, add_zero, smul_zero]
 
 theorem groupedS2star_S1 : groupedS2star * groupedS1 = 0 := by
   dsimp [groupedS2star, groupedS1]
   simp only [smul_mul_assoc, add_mul, mul_add]
   rw [cuntz_ortho, cuntz_ortho, cuntz_ortho, cuntz_ortho]
-  simp <;> norm_num [div_eq_mul_inv] <;> module
+  simp only [Fin.reduceEq, ↓reduceIte, add_zero, smul_zero]
 
 /-! The grouped family is complete only on a projection sector, not on the full
     O₄ carrier. -/
@@ -130,23 +134,41 @@ theorem groupedComplement_idempotent :
           rw [groupedComplement_mul_projection]
           simp
 
+theorem groupedS1_apply_branch_two (g : (ℕ → Fin 4) → ℂ) :
+    groupedS1 g (fun _ : ℕ => (2 : Fin 4)) = 0 := by
+  change (cuntzS 0 g (fun _ => 2)) + (cuntzS 1 g (fun _ => 2)) = 0
+  dsimp [cuntzS, headN]
+  ring
+
+theorem groupedS2_groupedS2star_apply_branch_two :
+    (groupedS2 * groupedS2star)
+        (fun w : ℕ → Fin 4 => if headN w = (2 : Fin 4) then (1 : ℂ) else 0)
+        (fun _ : ℕ => (2 : Fin 4)) = (1 / 2 : ℂ) := by
+  change (cuntzS 2 (groupedS2star (fun w => if headN w = 2 then (1 : ℂ) else 0)) (fun _ => 2)) +
+         (cuntzS 3 (groupedS2star (fun w => if headN w = 2 then (1 : ℂ) else 0)) (fun _ => 2)) = 1 / 2
+  dsimp [cuntzS, headN]
+  have htail : tailN (fun _ : ℕ => (2 : Fin 4)) = (fun _ : ℕ => (2 : Fin 4)) := rfl
+  rw [htail, add_zero]
+  change (1 / 2 : ℂ) * (cuntzT 2 (fun w => if headN w = 2 then (1 : ℂ) else 0) (fun _ => 2) +
+                       cuntzT 3 (fun w => if headN w = 2 then (1 : ℂ) else 0) (fun _ => 2)) = 1 / 2
+  dsimp [cuntzT, prependN, headN]
+  ring
+
 theorem groupedProjection_apply_branch_two :
     groupedProjection
         (fun w : ℕ → Fin 4 =>
           if headN w = (2 : Fin 4) then (1 : ℂ) else 0)
         (fun _ : ℕ => (2 : Fin 4)) = (1 / 2 : ℂ) := by
-  have hdecomp : groupedProjection =
-      (1 / 2 : ℂ) •
-        (matrixUnit (0 : Fin 4) 0 + matrixUnit 0 1 +
-          matrixUnit 1 0 + matrixUnit 1 1 +
-          matrixUnit 2 2 + matrixUnit 2 3 +
-          matrixUnit 3 2 + matrixUnit 3 3) := by
-    dsimp [groupedProjection, groupedS1, groupedS2, groupedS1star,
-      groupedS2star, matrixUnit]
-    simp only [mul_smul_comm, add_mul, mul_add, smul_add]
-    abel
-  rw [hdecomp]
-  simp [matrixUnit_apply, headN, tailN, prependN]
+  change (groupedS1 * groupedS1star)
+           (fun w => if headN w = 2 then (1 : ℂ) else 0) (fun _ => 2) +
+         (groupedS2 * groupedS2star)
+           (fun w => if headN w = 2 then (1 : ℂ) else 0) (fun _ => 2) = 1 / 2
+  have h1_eval : (groupedS1 * groupedS1star)
+      (fun w => if headN w = 2 then (1 : ℂ) else 0) (fun _ => 2) = 0 := by
+    change groupedS1 (groupedS1star (fun w => if headN w = 2 then (1 : ℂ) else 0)) (fun _ => 2) = 0
+    exact groupedS1_apply_branch_two (groupedS1star (fun w => if headN w = 2 then (1 : ℂ) else 0))
+  rw [h1_eval, groupedS2_groupedS2star_apply_branch_two]
+  ring
 
 theorem groupedComplement_ne_zero : groupedComplement ≠ 0 := by
   intro h

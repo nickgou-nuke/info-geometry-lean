@@ -12,12 +12,19 @@ attention implementation is represented by this carrier.
 namespace InfoGeometry.Clifford.Clifford55
 
 open Matrix
+open InfoGeometry.Clifford.Cl55RoPESplitTorusBridge
 
 noncomputable section
 
-/-- Scalar part readout through the faithful native spinor matrix model. -/
+/-- Unnormalized trace readout through the faithful native spinor matrix model. -/
 def scalarTrace55 (x : Cl55) : ℝ :=
   Matrix.trace (cl55SpinorAlgEquiv x)
+
+/-- Cyclicity of the trace transported through the native algebra equivalence. -/
+theorem scalarTrace55_mul_comm (x y : Cl55) :
+    scalarTrace55 (x * y) = scalarTrace55 (y * x) := by
+  simp only [scalarTrace55, map_mul]
+  exact Matrix.trace_mul_comm _ _
 
 /-- Bilinear readout of two Clifford states. -/
 def cliffordAttentionBilinear (q k : Cl55) : ℝ :=
@@ -29,8 +36,8 @@ def rotatedQuery55 (i : Fin 5) (theta m : ℝ) (q : Cl55) : Cl55 :=
 
 /-- Position-rotated key state using the inverse rotor on the right.
 
-This convention is chosen so that the bilinear product isolates the relative
-rotor between the two positions. -/
+Trace cyclicity combines these outer rotors into the relative angle `m - n`.
+The untraced product does not in general have this simplification. -/
 def rotatedKey55 (i : Fin 5) (theta n : ℝ) (k : Cl55) : Cl55 :=
   k * ropeRotor55 i (-(n * theta))
 
@@ -39,9 +46,23 @@ theorem relative_rotor55
     (i : Fin 5) (theta m n : ℝ) :
     ropeRotor55 i (-(m * theta)) * ropeRotor55 i (n * theta) =
       ropeRotor55 i ((n - m) * theta) := by
-  rw [ropeRotor55_mul]
+  rw [ropeRotor55_add]
   congr
   ring
+
+/-- The defined left-query/right-key actions depend only on the position
+difference after taking the trace; the order of `q * k` is preserved. -/
+theorem rotatedAttention_relative_position
+    (i : Fin 5) (theta m n : ℝ) (q k : Cl55) :
+    cliffordAttentionBilinear (rotatedQuery55 i theta m q)
+        (rotatedKey55 i theta n k) =
+      scalarTrace55 (ropeRotor55 i ((m - n) * theta) * (q * k)) := by
+  unfold cliffordAttentionBilinear rotatedQuery55 rotatedKey55
+  rw [← mul_assoc, scalarTrace55_mul_comm
+    (ropeRotor55 i (m * theta) * q * k) (ropeRotor55 i (-(n * theta)))]
+  simp only [mul_assoc]
+  rw [← mul_assoc (ropeRotor55 i (-(n * theta)))
+    (ropeRotor55 i (m * theta)), relative_rotor55]
 
 /-- Relative-position form for a left/right transported product.
 
@@ -71,25 +92,6 @@ theorem cliffordAttention_relative_position
       scalarTrace55 (q * ropeRotor55 i ((n - m) * theta) * k) := by
   unfold cliffordAttentionBilinear
   rw [clifford_relative_position_product]
-
-/-- A typed query/key embedding packet.  No neural-network semantics are
-assumed beyond the supplied linear maps into the native Clifford carrier. -/
-structure AttentionEmbeddingDatum (X : Type*) [AddCommGroup X] [Module ℝ X] where
-  WQ : X →ₗ[ℝ] Cl55
-  WK : X →ₗ[ℝ] Cl55
-
-/-- Relative-position attention readout after arbitrary supplied linear query
-and key embeddings. -/
-theorem embeddedAttention_relative_position
-    {X : Type*} [AddCommGroup X] [Module ℝ X]
-    (D : AttentionEmbeddingDatum X)
-    (i : Fin 5) (theta m n : ℝ) (xm xn : X) :
-    cliffordAttentionBilinear
-        (D.WQ xm * ropeRotor55 i (-(m * theta)))
-        (ropeRotor55 i (n * theta) * D.WK xn) =
-      scalarTrace55
-        (D.WQ xm * ropeRotor55 i ((n - m) * theta) * D.WK xn) := by
-  exact cliffordAttention_relative_position i theta m n (D.WQ xm) (D.WK xn)
 
 end
 

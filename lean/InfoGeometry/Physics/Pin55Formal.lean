@@ -39,7 +39,10 @@ def ε₅ : Fin 10 → ℚ := fun i => if i = 5 then 1 else 0
 theorem ε₀_ε₅_orth : q55.IsOrtho ε₀ ε₅ := by
   simp [q55, QuadraticMap.IsOrtho, ε₀, ε₅, proj_apply]
 
-/-! ## 2. Finite Clifford relations and projective sign shadow -/
+/-! ## 2. Pin(5,5) and V4 reflections -/
+
+abbrev pinGroup55 : Submonoid (CliffordAlgebra q55) := pinGroup q55
+abbrev spinGroup55 : Submonoid (CliffordAlgebra q55) := spinGroup q55
 
 def r₀ : CliffordAlgebra q55 := ι q55 ε₀
 def r₅ : CliffordAlgebra q55 := ι q55 ε₅
@@ -72,51 +75,6 @@ theorem v4_relation : (r₀ * r₅) * (r₀ * r₅) = 1 := by
 /-- Projective sign equivalence in the Clifford algebra: equality up to central sign. -/
 def ProjectiveSignEq (x y : CliffordAlgebra q55) : Prop :=
   x = y ∨ x = -y
-
-/-- Projective sign equivalence is reflexive. -/
-theorem projectiveSignEq_refl (x : CliffordAlgebra q55) : ProjectiveSignEq x x := by
-  left
-  rfl
-
-/-- Projective sign equivalence is symmetric. -/
-theorem projectiveSignEq_symm {x y : CliffordAlgebra q55} (h : ProjectiveSignEq x y) :
-    ProjectiveSignEq y x := by
-  rcases h with h | h
-  · left
-    simpa [h]
-  · right
-    simpa [h] using (neg_neg y).symm
-
-/-- Projective sign equivalence is transitive. -/
-theorem projectiveSignEq_trans {x y z : CliffordAlgebra q55} :
-    ProjectiveSignEq x y → ProjectiveSignEq y z → ProjectiveSignEq x z := by
-  intro hxy hyz
-  rcases hxy with hxy | hxy
-  · cases hyz with
-    | inl hyz => left; exact hxy.trans hyz
-    | inr hyz => right; exact hxy.trans (by simpa [hyz] )
-  · cases hyz with
-    | inl hyz => right; exact hxy.trans (by simpa [hyz] )
-    | inr hyz =>
-        left
-        calc
-          x = -y := hxy
-          _ = -(-z) := by rw [hyz]
-          _ = z := by simp
-
-/-- Projective sign is respected by left multiplication by a common factor. -/
-theorem projectiveSignEq_mul_left {x y z : CliffordAlgebra q55}
-    (h : ProjectiveSignEq x y) : ProjectiveSignEq (z * x) (z * y) := by
-  rcases h with h | h
-  · left; simpa [h]
-  · right; simpa [h, neg_mul]
-
-/-- Projective sign is respected by right multiplication by a common factor. -/
-theorem projectiveSignEq_mul_right {x y z : CliffordAlgebra q55}
-    (h : ProjectiveSignEq x y) : ProjectiveSignEq (x * z) (y * z) := by
-  rcases h with h | h
-  · left; simpa [h]
-  · right; simpa [h, mul_neg]
 
 /-- Exact involutivity of `r₀`. -/
 theorem r₀_projective_involutive : ProjectiveSignEq (r₀ * r₀) 1 := by

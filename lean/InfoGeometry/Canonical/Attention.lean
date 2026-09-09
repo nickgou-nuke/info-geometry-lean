@@ -43,8 +43,8 @@ noncomputable def attentionParams
     (q : S_plus)
     (ctx : ContextWindow n S_minus V)
     (matchForm : S_plus →ₗ[ℝ] S_minus →ₗ[ℝ] ℝ) :
-    GrandCanonicalParams (Fin n) :=
-  fun i => interactionEnergy q (ctx.keys i) matchForm
+    GrandCanonicalParams (Fin n) where
+  energy := fun i => interactionEnergy q (ctx.keys i) matchForm
 
 /-- The Attention Weights are exactly the Gibbs distribution.
 The inverse temperature β corresponds to `1 / √d`. -/
@@ -101,5 +101,26 @@ lemma attentionWeights_le_one
   haveI : Nonempty (Fin n) := ⟨⟨0, Fact.out⟩⟩
   simpa [attentionWeights] using
     gibbsWeight_le_one (attentionParams q ctx matchForm) β i
+
+/-! A constant value field is unchanged by the normalized attention average. -/
+theorem attentionHead_eq_constant_value
+    (q : S_plus)
+    (ctx : ContextWindow n S_minus V)
+    (matchForm : S_plus →ₗ[ℝ] S_minus →ₗ[ℝ] ℝ)
+    (β : ℝ) (v : V)
+    (hvalues : ∀ i, ctx.values i = v) :
+    attentionHead q ctx matchForm β = v := by
+  unfold attentionHead
+  calc
+    ∑ i, attentionWeights q ctx matchForm β i • ctx.values i =
+        ∑ i, attentionWeights q ctx matchForm β i • v := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      rw [hvalues i]
+    _ = (∑ i, attentionWeights q ctx matchForm β i) • v := by
+      rw [Finset.sum_smul]
+    _ = v := by
+      rw [attentionWeights_sum_one]
+      exact one_smul ℝ v
 
 end InfoGeometry.Canonical.Attention

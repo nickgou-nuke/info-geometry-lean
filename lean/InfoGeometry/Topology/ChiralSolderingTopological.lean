@@ -175,7 +175,7 @@ theorem continuous_zorn_add :
   apply continuous_induced_rng.mpr
   change Continuous (fun p : Zorn × Zorn =>
     ZornMatrix.coordEquiv (p.1 + p.2))
-  simp only [ZornMatrix.coordEquiv, ZornMatrix.add_apply]
+  simp only [ZornMatrix.coordEquiv, ZornMatrix.add]
   change Continuous (fun p : Zorn × Zorn =>
     (p.1.a + p.2.a, Vec3.add p.1.v p.2.v,
       Vec3.add p.1.w p.2.w, p.1.b + p.2.b))

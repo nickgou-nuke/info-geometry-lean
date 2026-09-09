@@ -21,6 +21,55 @@ open InfoGeometry.Compatibility
 open InfoGeometry.Arithmetic.CenteredXiTwinKernel
 open InfoGeometry.Clifford.Cl11InfiniteCarrier
 
+theorem intoCarrier_smul (n : ℕ) (r : ℝ) (A : Stage n) :
+    intoCarrier n (r • A) = r • intoCarrier n A := by
+  change InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n (r • A) =
+    r • InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n A
+  rw [Algebra.smul_def, Algebra.smul_def]
+  change InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n
+      (algebraMap ℝ (Stage n) r * A) =
+    InfoGeometry.Clifford.Cl11TensorTowerLimit.realAlgebraMap r *
+      InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n A
+  rw [InfoGeometry.Clifford.Cl11TensorTowerLimit.realAlgebraMap_stage n r]
+  exact map_mul (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n) _ _
+
+/-- Real phase plane element in stage `1 + k`. -/
+def phasePlaneStage (k : ℕ) (s b : ℝ) : Stage (1 + k) :=
+  s • (1 : Stage (1 + k)) + b • (finiteAdvance 1 k phaseAxisStage)
+
+theorem phasePlane_intoCarrier (k : ℕ) (s b : ℝ) :
+    intoCarrier (1 + k) (phasePlaneStage k s b) =
+      s • (1 : CompatibleCarrier) + b • globalPhaseAxis := by
+  unfold phasePlaneStage
+  rw [map_add, intoCarrier_smul, intoCarrier_smul, map_one, phaseAxis_limit_image]
+
+theorem phasePlaneStage_mul (k : ℕ) (s1 b1 s2 b2 : ℝ) :
+    phasePlaneStage k s1 b1 * phasePlaneStage k s2 b2 =
+      phasePlaneStage k (s1 * s2 - b1 * b2) (s1 * b2 + b1 * s2) := by
+  unfold phasePlaneStage
+  have hsq := phaseAxis_finiteAdvance_sq k
+  have h1 (r : ℝ) (A : Stage (1 + k)) : (r • (1 : Stage (1 + k))) * A = r • A := by
+    rw [Algebra.smul_mul_assoc, one_mul]
+  have h2 (r : ℝ) (A : Stage (1 + k)) : A * (r • (1 : Stage (1 + k))) = r • A := by
+    rw [mul_smul_comm, mul_one]
+  have h3 (r1 r2 : ℝ) (A B : Stage (1 + k)) :
+      (r1 • A) * (r2 • B) = (r1 * r2) • (A * B) := by
+    rw [Algebra.smul_mul_assoc, mul_smul_comm, smul_smul]
+  simp only [add_mul, mul_add, h1, h2, h3]
+  rw [hsq]
+  simp only [smul_neg, sub_eq_add_neg]
+  module
+
+theorem phasePlane_intoCarrier_conj_mul (k : ℕ) (s b : ℝ) :
+    intoCarrier (1 + k) (phasePlaneStage k s b) *
+        intoCarrier (1 + k) (phasePlaneStage k s (-b)) =
+      (s ^ 2 + b ^ 2) • (1 : CompatibleCarrier) := by
+  rw [← map_mul, phasePlaneStage_mul]
+  have h1 : s * s - b * -b = s ^ 2 + b ^ 2 := by ring
+  have h2 : s * -b + b * s = 0 := by ring
+  rw [h1, h2, phasePlane_intoCarrier]
+  simp
+
 /-- The finite-to-colimit realization of the canonical scalar/bivector monoid. -/
 def chiralPhaseLift (k : ℕ) : ChiralPhase →* CompatibleCarrier where
   toFun z :=
@@ -105,8 +154,8 @@ theorem hestenesAncestor_phaseCurrent_eq_density_mul_phaseRate
       (hbar / mass) *
         (RealChiralPhase.normSq (hestenesAncestor Phi t) *
           RealChiralPhase.chiralPhaseRate (hestenesAncestor Phi t) (dcos, dsin)) := by
-  exact RealChiralPhase.phaseCurrent_eq_density_mul_phaseRate
-    hbar mass (hestenesAncestor Phi t) (dcos, dsin) hρ
+  unfold RealChiralPhase.phaseCurrent RealChiralPhase.chiralPhaseRate
+  rw [mul_div_cancel₀ _ hρ]
 
 theorem hasDerivAt_hestenesAncestor_phaseCurrent
     (hbar mass : ℝ) (Phi : ℝ → ℝ)
@@ -119,9 +168,19 @@ theorem hasDerivAt_hestenesAncestor_phaseCurrent
         (hestenesAncestor Phi u) (dcos u, dsin u))
       ((hbar / mass) *
         (cosineQuadrature Phi t * ddsin - sineQuadrature Phi t * ddcos)) t := by
-  exact RealChiralPhase.hasDerivAt_phaseCurrent_of_components
-    hbar mass (fun u => cosineQuadrature Phi u) (fun u => sineQuadrature Phi u)
-    dcos dsin ddcos ddsin t hcos hsin hdcos hdsin
+  have h_prod1 : HasDerivAt (fun u => cosineQuadrature Phi u * dsin u)
+      (dcos t * dsin t + cosineQuadrature Phi t * ddsin) t :=
+    hcos.mul hdsin
+  have h_prod2 : HasDerivAt (fun u => sineQuadrature Phi u * dcos u)
+      (dsin t * dcos t + sineQuadrature Phi t * ddcos) t :=
+    hsin.mul hdcos
+  have h_sub : HasDerivAt (fun u => cosineQuadrature Phi u * dsin u - sineQuadrature Phi u * dcos u)
+      (cosineQuadrature Phi t * ddsin - sineQuadrature Phi t * ddcos) t := by
+    have h := h_prod1.sub h_prod2
+    convert h using 1
+    ring
+  have h_mul := h_sub.const_mul (hbar / mass)
+  exact h_mul
 
 theorem hasDerivAt_hestenesAncestor_phaseCurrent_zero
     (hbar mass : ℝ) (Phi : ℝ → ℝ)

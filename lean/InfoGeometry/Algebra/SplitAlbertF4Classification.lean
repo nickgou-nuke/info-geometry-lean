@@ -112,21 +112,9 @@ def f4BasisCount : ℕ := 52
 theorem f4Basis_card_eq : f4BasisCount = dimF4Derivations := by
   rfl
 
-/-- 
-  MASTER THEOREM: The 52-dimensional generating elements f4Basis(i) are genuine
-  Leibniz derivations of the Jordan product on H₃(𝕆_s).
--/
-theorem f4Basis_is_jordan_derivation (i : Fin 52) :
-    H3ZornJordanDerivation (f4Basis i : Module.End ℝ (H3Zorn ℝ)) := by
-  exact (f4Basis i).property
-
-/-- 
-  MASTER THEOREM: The Lie bracket of any two F₄ basis derivations is again
-  a genuine Leibniz Jordan derivation in 𝔣₄.
--/
-theorem f4Basis_commutator_closed (i j : Fin 52) :
-    H3ZornJordanDerivation ⁅(f4Basis i : Module.End ℝ (H3Zorn ℝ)), (f4Basis j : Module.End ℝ (H3Zorn ℝ))⁆ := by
-  exact H3ZornJordanDerivation_lie (f4Basis_is_jordan_derivation i) (f4Basis_is_jordan_derivation j)
+/- The explicit `f4Basis` carrier is not owned by this dimension-only module;
+   its trace-level owner is separate.  The generator theorem is deferred until
+   that carrier is imported here. -/
 
 end InfoGeometry.Algebra.F4Classification
 

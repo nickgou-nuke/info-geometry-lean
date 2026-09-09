@@ -21,7 +21,7 @@ structure SplitCurrentEndTransport
   Jlift : Int → V →ₗ[𝕜] V
   transported :
     ∀ n : Int, ∀ v : V,
-      S.embed (Jlift n v) = Jsrc n v
+      S.embed (Jlift n v) = Jsrc.modeAction n v
   truncLift :
     ∀ v : V, ∀ᶠ n : Int in atTop, Jlift n v = 0
   wickLift :
@@ -37,10 +37,33 @@ variable [AddCommGroup Carrier] [Module 𝕜 Carrier]
 variable {S : SplitSourceCarrier 𝕜 V Carrier}
 variable {Jsrc : SplitSourceCurrent 𝕜 V Carrier S}
 
+def toHeisenbergWitness
+    (T : SplitCurrentEndTransport S Jsrc) :
+    SplitCliffordHeisenbergWitness 𝕜 V :=
+  packagedHeisenbergWitness T.Jlift T.truncLift T.wickLift
+
 def toCurrentHeisenbergRep
     (T : SplitCurrentEndTransport S Jsrc) :
     InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep 𝕜 V :=
-  { J := T.Jlift, trunc := T.truncLift, comm := T.wickLift }
+  (toHeisenbergWitness T).toCurrentHeisenbergRep
+
+theorem toCurrentHeisenbergRep_readout
+    (T : SplitCurrentEndTransport S Jsrc) :
+    (T.toCurrentHeisenbergRep.J = T.Jlift)
+      ∧ (T.toCurrentHeisenbergRep.trunc = T.truncLift)
+      ∧ (∀ m n : Int,
+          (T.toCurrentHeisenbergRep.J m).commutator (T.toCurrentHeisenbergRep.J n) =
+            if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0)
+      ∧ (∀ n : Int, ∀ v : V,
+          S.embed (T.toCurrentHeisenbergRep.J n v) = Jsrc.modeAction n v) := by
+  constructor
+  · rfl
+  constructor
+  · rfl
+  constructor
+  · exact T.toCurrentHeisenbergRep.comm
+  · intro n v
+    exact T.transported n v
 
 end SplitCurrentEndTransport
 

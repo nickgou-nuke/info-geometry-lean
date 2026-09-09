@@ -19,7 +19,7 @@ The theorem-safe translation is:
 * infinitesimal Cartan law: `ad_H X = [H,X] = λ • X`;
 * exponential adjoint readout: `Φ_t X = exp(tH) X exp(-tH) = exp(tλ) • X`.
 
-The integration step is property-gated.  This file does not prove analytic ODE
+The integration step is witness-gated.  This file does not prove analytic ODE
 existence, uniqueness, or noncommutative exponential calculus.
 -/
 
@@ -85,7 +85,7 @@ theorem cartanEigenOperator_conjugate
 
 end Algebraic
 
-/-! ## 2. Exponential-flow calibration interface -/
+/-! ## 2. Exponential-flow calibration socket -/
 
 section ExponentialFlow
 
@@ -95,7 +95,7 @@ variable [AddCommGroup V] [Module ℝ V]
 /--
 A supplied exponential eigen-flow.
 
-The integrated calibration is `Φ_t(X) = exp(tλ) X`.  This is an interface,
+The integrated calibration is `Φ_t(X) = exp(tλ) X`.  This is a socket,
 not an analytic ODE theorem.
 -/
 @[rep_depth operator]
@@ -176,6 +176,11 @@ structure CartanEigenAdjointExponentialCalibration where
   exponential_adjoint_law :
     ∀ t : ℝ, expH t * X * expNegH t = Real.exp (t * weight) • X
 
+namespace CartanEigenAdjointExponentialCalibration
+
+variable (C : CartanEigenAdjointExponentialCalibration (R := R))
+
+end CartanEigenAdjointExponentialCalibration
 
 end InnerAdjoint
 

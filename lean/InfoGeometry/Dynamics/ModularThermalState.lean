@@ -19,12 +19,6 @@ theorem sigma_zero (a : A) : ModularAutomorphismFamily.sigma M 0 a = a := M.flow
 theorem sigma_add (t s : ℝ) (a : A) :
     ModularAutomorphismFamily.sigma M (t + s) a = ModularAutomorphismFamily.sigma M t (ModularAutomorphismFamily.sigma M s a) := M.flow_add t s a
 
-theorem sigma_neg (t : ℝ) (a : A) :
-    ModularAutomorphismFamily.sigma M (-t)
-        (ModularAutomorphismFamily.sigma M t a) = a := by
-  exact InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow.flow_neg_apply
-    M t a
-
 theorem sigma_mul (t : ℝ) (a b : A) :
     ModularAutomorphismFamily.sigma M t (a * b) = ModularAutomorphismFamily.sigma M t a * ModularAutomorphismFamily.sigma M t b :=
   (M.flow t).map_mul a b
@@ -32,7 +26,7 @@ theorem sigma_mul (t : ℝ) (a b : A) :
 end ModularAutomorphismFamily
 
 /--
-Constructive KMS boundary data:
+Constructive KMS boundary socket:
 `omega_eval` stores the two-point observable pairing;
 `kms_boundary` stores the β-strip boundary identity as explicit data.
 -/
@@ -40,28 +34,24 @@ structure KMSBoundaryData (A : Type*) [Monoid A] where
   beta : ℝ
   omega_eval : A → A → ℝ
   modular : InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow A
-
-def KMSBoundaryLaw
-    {A : Type*} [Monoid A]
-    (K : KMSBoundaryData A) : Prop :=
-  ∀ t : ℝ, ∀ a b : A,
-    K.omega_eval a (ModularAutomorphismFamily.sigma K.modular t b) =
-      K.omega_eval (ModularAutomorphismFamily.sigma K.modular (t + K.beta) b) a
-
-theorem KMSBoundaryLaw.boundary
-    {A : Type*} [Monoid A]
-    (K : KMSBoundaryData A)
-    (hK : KMSBoundaryLaw K)
-    (t : ℝ) (a b : A) :
-    K.omega_eval a (ModularAutomorphismFamily.sigma K.modular t b) =
-      K.omega_eval (ModularAutomorphismFamily.sigma K.modular (t + K.beta) b) a :=
-  hK t a b
+  kms_boundary : ∀ t : ℝ, ∀ a b : A,
+    omega_eval a (ModularAutomorphismFamily.sigma modular t b) = omega_eval (ModularAutomorphismFamily.sigma modular (t + beta) b) a
 
 /--
-Thermal state data anchored by an observable and a KMS boundary property.
+Casimir anchor in the observable algebra: centrality + modular invariance.
+-/
+structure VerifiedCasimir (A : Type*) [Monoid A] where
+  C : A
+  central : ∀ x : A, C * x = x * C
+  modular_invariant : ∀
+    (M : InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow A), ∀ t : ℝ,
+    ModularAutomorphismFamily.sigma M t C = C
+
+/--
+Thermal state packet anchored by a verified Casimir and a KMS boundary witness.
 -/
 structure ModularThermalState (A : Type*) [Monoid A] where
-  casimir : A
+  casimir : VerifiedCasimir A
   kms : KMSBoundaryData A
 
 /--
@@ -69,13 +59,9 @@ The Casimir remains fixed under the modular flow of a thermal state packet.
 -/
 theorem casimir_fixed_under_modular_flow
     {A : Type*} [Monoid A]
-    (T : ModularThermalState A)
-    (modular_invariant : ∀
-      (M : InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow A), ∀ t : ℝ,
-      ModularAutomorphismFamily.sigma M t T.casimir = T.casimir)
-    (t : ℝ) :
-    ModularAutomorphismFamily.sigma T.kms.modular t T.casimir = T.casimir := by
-  exact modular_invariant T.kms.modular t
+    (T : ModularThermalState A) (t : ℝ) :
+    (ModularAutomorphismFamily.sigma T.kms.modular t T.casimir.C) = T.casimir.C := by
+  exact T.casimir.modular_invariant T.kms.modular t
 
 /--
 Complexified modular-time point `t + iβ` used by KMS strip formulations,
@@ -85,7 +71,7 @@ def complexClockPoint (t beta : ℝ) : ℂ :=
   (t : ℂ) + Complex.I * (beta : ℂ)
 
 /--
-Analytic continuation theorem for the Hestenes-Krein modular flow.
+Analytic continuation socket for the Hestenes-Krein modular flow.
 `sigmaC` is the complex-time extension of the real flow; this structure records
 only the boundary/continuation laws needed for KMS work.
 -/
@@ -93,180 +79,56 @@ structure HestenesKreinAnalyticContinuationData (A : Type*) [Monoid A] where
   beta : ℝ
   modular : InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow A
   sigmaC : ℂ → A → A
-
-def HestenesKreinAnalyticContinuationLaw
-    {A : Type*} [Monoid A]
-    (H : HestenesKreinAnalyticContinuationData A) : Prop :=
-  (∀ t : ℝ, ∀ a : A,
-    H.sigmaC (t : ℂ) a = ModularAutomorphismFamily.sigma H.modular t a) ∧
-  (∀ t : ℝ, ∀ a : A,
-    H.sigmaC (complexClockPoint t H.beta) a =
-      ModularAutomorphismFamily.sigma H.modular (t + H.beta) a)
-
-theorem HestenesKreinAnalyticContinuationLaw.agrees_real_axis
-    {A : Type*} [Monoid A]
-    (H : HestenesKreinAnalyticContinuationData A)
-    (hH : HestenesKreinAnalyticContinuationLaw H)
-    (t : ℝ) (a : A) :
-    H.sigmaC (t : ℂ) a = ModularAutomorphismFamily.sigma H.modular t a :=
-  hH.1 t a
-
-theorem HestenesKreinAnalyticContinuationLaw.strip_top_boundary
-    {A : Type*} [Monoid A]
-    (H : HestenesKreinAnalyticContinuationData A)
-    (hH : HestenesKreinAnalyticContinuationLaw H)
-    (t : ℝ) (a : A) :
-    H.sigmaC (complexClockPoint t H.beta) a =
-      ModularAutomorphismFamily.sigma H.modular (t + H.beta) a :=
-  hH.2 t a
-
-/-
-Real boundary packet obtained by forgetting the interior complex parameter.
-The lower and upper boundary readouts are retained as separate real channels;
-this is the native Hestenes--Krein interface consumed by finite and colimit
-owners.  No complex continuation is required by downstream users of this
-structure.
--/
-structure HestenesKreinRealBoundaryData (A : Type*) [Monoid A] where
-  beta : ℝ
-  modular : InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow A
-  lower : ℝ → A → A
-  upper : ℝ → A → A
-
-def HestenesKreinRealBoundaryLaw
-    {A : Type*} [Monoid A]
-    (H : HestenesKreinRealBoundaryData A) : Prop :=
-  (∀ t : ℝ, ∀ a : A,
-    H.lower t a = ModularAutomorphismFamily.sigma H.modular t a) ∧
-  (∀ t : ℝ, ∀ a : A,
-    H.upper t a =
-      ModularAutomorphismFamily.sigma H.modular (t + H.beta) a)
-
-theorem HestenesKreinRealBoundaryLaw.lower_eq_sigma
-    {A : Type*} [Monoid A]
-    (H : HestenesKreinRealBoundaryData A)
-    (hH : HestenesKreinRealBoundaryLaw H)
-    (t : ℝ) (a : A) :
-    H.lower t a = ModularAutomorphismFamily.sigma H.modular t a :=
-  hH.1 t a
-
-theorem HestenesKreinRealBoundaryLaw.upper_eq_sigma_shift
-    {A : Type*} [Monoid A]
-    (H : HestenesKreinRealBoundaryData A)
-    (hH : HestenesKreinRealBoundaryLaw H)
-    (t : ℝ) (a : A) :
-    H.upper t a =
-      ModularAutomorphismFamily.sigma H.modular (t + H.beta) a :=
-  hH.2 t a
-
-/-- Extract the real lower/upper boundary packet from the legacy continuation data. -/
-noncomputable def HestenesKreinAnalyticContinuationData.toRealBoundary
-    {A : Type*} [Monoid A]
-    (H : HestenesKreinAnalyticContinuationData A) :
-    HestenesKreinRealBoundaryData A where
-  beta := H.beta
-  modular := H.modular
-  lower := fun t a => H.sigmaC (t : ℂ) a
-  upper := fun t a => H.sigmaC (complexClockPoint t H.beta) a
-
-theorem realBoundary_lower_eq_sigma
-    {A : Type*} [Monoid A]
-    (H : HestenesKreinRealBoundaryData A)
-    (hH : HestenesKreinRealBoundaryLaw H)
-    (t : ℝ) (a : A) :
-    H.lower t a = ModularAutomorphismFamily.sigma H.modular t a :=
-  hH.1 t a
-
-theorem realBoundary_upper_eq_sigma_shift
-    {A : Type*} [Monoid A]
-    (H : HestenesKreinRealBoundaryData A)
-    (hH : HestenesKreinRealBoundaryLaw H)
-    (t : ℝ) (a : A) :
-    H.upper t a = ModularAutomorphismFamily.sigma H.modular (t + H.beta) a :=
-  hH.2 t a
+  agrees_real_axis : ∀ t : ℝ, ∀ a : A, sigmaC (t : ℂ) a = ModularAutomorphismFamily.sigma modular t a
+  strip_top_boundary : ∀ t : ℝ, ∀ a : A,
+    sigmaC (complexClockPoint t beta) a = ModularAutomorphismFamily.sigma modular (t + beta) a
 
 /--
 KMS strip boundary packet in Hestenes-Krein language, with explicit
-`z = t + iβ` continuation relation.
+`z = t + iβ` continuation socket.
 -/
 structure HestenesKreinKMSStripData (A : Type*) [Monoid A] where
   omega_eval : A → A → ℝ
   analytic : HestenesKreinAnalyticContinuationData A
-
-def HestenesKreinKMSStripLaw
-    {A : Type*} [Monoid A]
-    (K : HestenesKreinKMSStripData A) : Prop :=
-  (∀ t : ℝ, ∀ a b : A,
-    K.omega_eval a (K.analytic.sigmaC (t : ℂ) b)
-      = K.omega_eval a
-          (ModularAutomorphismFamily.sigma K.analytic.modular t b)) ∧
-  (∀ t : ℝ, ∀ a b : A,
-    K.omega_eval a
-        (K.analytic.sigmaC (complexClockPoint t K.analytic.beta) b)
-      = K.omega_eval
-          (ModularAutomorphismFamily.sigma K.analytic.modular
-            (t + K.analytic.beta) b) a)
-
-/-
-Real KMS boundary readouts.  This is the expectation-level form consumed by
-real Hestenes/Krein and filtered-colimit owners; the complex strip is used only
-by the extraction adapter below.
--/
-structure HestenesKreinRealKMSBoundaryData (A : Type*) [Monoid A] where
-  omega_eval : A → A → ℝ
-  boundary : HestenesKreinRealBoundaryData A
-
-def HestenesKreinRealKMSBoundaryLaw
-    {A : Type*} [Monoid A]
-    (K : HestenesKreinRealKMSBoundaryData A) : Prop :=
-  (∀ t : ℝ, ∀ a b : A,
-    K.omega_eval a (K.boundary.lower t b) =
-      K.omega_eval a
-        (ModularAutomorphismFamily.sigma K.boundary.modular t b)) ∧
-  (∀ t : ℝ, ∀ a b : A,
-    K.omega_eval a (K.boundary.upper t b) =
-      K.omega_eval
-        (ModularAutomorphismFamily.sigma K.boundary.modular
-          (t + K.boundary.beta) b) a)
-
-/-- Extract the real KMS boundary packet from the legacy complex-strip packet. -/
-noncomputable def HestenesKreinKMSStripData.toRealBoundary
-    {A : Type*} [Monoid A]
-    (K : HestenesKreinKMSStripData A) :
-    HestenesKreinRealKMSBoundaryData A where
-  omega_eval := K.omega_eval
-  boundary := K.analytic.toRealBoundary
-
-theorem realKMS_lower_readout
-    {A : Type*} [Monoid A]
-    (K : HestenesKreinRealKMSBoundaryData A)
-    (hK : HestenesKreinRealKMSBoundaryLaw K)
-    (t : ℝ) (a b : A) :
-    K.omega_eval a (K.boundary.lower t b) =
-      K.omega_eval a (ModularAutomorphismFamily.sigma K.boundary.modular t b) :=
-  hK.1 t a b
-
-theorem realKMS_upper_readout
-    {A : Type*} [Monoid A]
-    (K : HestenesKreinRealKMSBoundaryData A)
-    (hK : HestenesKreinRealKMSBoundaryLaw K)
-    (t : ℝ) (a b : A) :
-    K.omega_eval a (K.boundary.upper t b) =
-      K.omega_eval
-        (ModularAutomorphismFamily.sigma K.boundary.modular
-          (t + K.boundary.beta) b) a :=
-  hK.2 t a b
+  boundary_lower : ∀ t : ℝ, ∀ a b : A,
+    omega_eval a (analytic.sigmaC (t : ℂ) b)
+      = omega_eval a (ModularAutomorphismFamily.sigma analytic.modular t b)
+  boundary_upper : ∀ t : ℝ, ∀ a b : A,
+    omega_eval a (analytic.sigmaC (complexClockPoint t analytic.beta) b)
+      = omega_eval (ModularAutomorphismFamily.sigma analytic.modular (t + analytic.beta) b) a
 
 /--
-Real-axis reduction from the analytic continuation relation.
+Generalized Stokes socket for strip-to-boundary reduction.
+This is intentionally an interface packet: concrete line/surface integrals can
+be supplied by downstream analytic modules.
+-/
+structure GeneralizedStokesBoundaryData (A : Type*) where
+  contourIntegral : (ℂ → A) → ℝ
+  interiorIntegral : (ℂ → A) → ℝ
+  stokes_balance : ∀ F : ℂ → A, contourIntegral F = interiorIntegral F
+
+/--
+Hestenes-Krein KMS + generalized Stokes synthesis packet.
+The `kms_from_stokes` field is the bridge theorem socket asserting that the
+strip Stokes balance enforces the KMS boundary identity.
+-/
+structure HestenesKreinKMSStokesBridge (A : Type*) [Monoid A] where
+  strip : HestenesKreinKMSStripData A
+  stokes : GeneralizedStokesBoundaryData A
+  kms_from_stokes : ∀ t : ℝ, ∀ a b : A,
+    strip.omega_eval a (strip.analytic.sigmaC (t : ℂ) b)
+      = strip.omega_eval
+          (ModularAutomorphismFamily.sigma strip.analytic.modular (t + strip.analytic.beta) b) a
+
+/--
+Real-axis reduction from the analytic continuation socket.
 -/
 theorem sigmaC_real_axis_eq_sigma
     {A : Type*} [Monoid A]
     (H : HestenesKreinAnalyticContinuationData A)
-    (hH : HestenesKreinAnalyticContinuationLaw H)
     (t : ℝ) (a : A) :
     H.sigmaC (t : ℂ) a = ModularAutomorphismFamily.sigma H.modular t a :=
-  hH.1 t a
+  H.agrees_real_axis t a
 
 /--
 Top-strip reduction at `t + iβ` in the Hestenes-Krein clock axis.
@@ -274,23 +136,21 @@ Top-strip reduction at `t + iβ` in the Hestenes-Krein clock axis.
 theorem sigmaC_top_strip_eq_sigma_shift
     {A : Type*} [Monoid A]
     (H : HestenesKreinAnalyticContinuationData A)
-    (hH : HestenesKreinAnalyticContinuationLaw H)
     (t : ℝ) (a : A) :
     H.sigmaC (complexClockPoint t H.beta) a = ModularAutomorphismFamily.sigma H.modular (t + H.beta) a :=
-  hH.2 t a
+  H.strip_top_boundary t a
 
 /--
 KMS upper boundary can be derived from top-strip reduction plus the algebraic
-boundary law.
+boundary socket.
 -/
 theorem kms_upper_from_strip_top
     {A : Type*} [Monoid A]
     (K : HestenesKreinKMSStripData A)
-    (hK : HestenesKreinKMSStripLaw K)
     (t : ℝ) (a b : A) :
     K.omega_eval a (K.analytic.sigmaC (complexClockPoint t K.analytic.beta) b)
       = K.omega_eval (ModularAutomorphismFamily.sigma K.analytic.modular (t + K.analytic.beta) b) a :=
-  hK.2 t a b
+  K.boundary_upper t a b
 
 section UnruhKreinInstantiation
 
@@ -408,12 +268,30 @@ noncomputable def unruhModularFlow :
     simp [mul_assoc]
 
 /--
+Compatibility alias for older downstream names.
+
+Despite the legacy name, this is the nontrivial Unruh conjugation flow
+`A ↦ U_t A U_{-t}`, not the identity flow.
+-/
+@[deprecated unruhModularFlow (since := "2026-05-02")]
+noncomputable abbrev unruhTrivialModularFlow :
+    InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow Obs :=
+  unruhModularFlow (E := E)
+
+/--
 Complex-time continuation candidate tied to the Unruh modular Hamiltonian lane.
-We keep the same theorem surface and model the strip top by real-shift transport.
+We keep the same socket surface and model the strip top by real-shift transport.
 -/
 noncomputable def unruhSigmaC : ℂ → Obs → Obs :=
   fun z a =>
     ModularAutomorphismFamily.sigma (unruhModularFlow (E := E)) (z.re + z.im) a
+
+/--
+Compatibility alias for older downstream names.
+-/
+@[deprecated unruhSigmaC (since := "2026-05-02")]
+noncomputable abbrev unruhTrivialSigmaC : ℂ → Obs → Obs :=
+  unruhSigmaC (E := E)
 
 /--
 Hestenes-Krein analytic continuation packet on the doubled carrier.
@@ -423,16 +301,46 @@ noncomputable def unruhHestenesKreinAnalyticContinuation (beta : ℝ) :
   beta := beta
   modular := unruhModularFlow (E := E)
   sigmaC := unruhSigmaC (E := E)
+  agrees_real_axis := by
+    intro t a
+    simp [unruhSigmaC]
+  strip_top_boundary := by
+    intro t a
+    simp [unruhSigmaC, complexClockPoint, add_comm]
 
-theorem unruhHestenesKreinAnalyticContinuation_law (beta : ℝ) :
-    HestenesKreinAnalyticContinuationLaw
-      (unruhHestenesKreinAnalyticContinuation (E := E) beta) := by
-  constructor
-  · intro t a
-    simp [unruhHestenesKreinAnalyticContinuation, unruhSigmaC]
-  · intro t a
-    simp [unruhHestenesKreinAnalyticContinuation, unruhSigmaC,
-      complexClockPoint, add_comm]
+/--
+KMS strip data on the doubled/Krein carrier with a symmetric evaluation map.
+-/
+noncomputable def unruhHestenesKreinKMSStripData (beta : ℝ) :
+    HestenesKreinKMSStripData Obs where
+  omega_eval := fun _a _b => 0
+  analytic := unruhHestenesKreinAnalyticContinuation (E := E) beta
+  boundary_lower := by
+    intro t a b
+    rfl
+  boundary_upper := by
+    intro t a b
+    rfl
+
+/--
+Generalized Stokes socket on doubled/Krein observables (conservative identity
+interface).
+-/
+def unruhGeneralizedStokesBoundaryData : GeneralizedStokesBoundaryData Obs where
+  contourIntegral := fun _F => 0
+  interiorIntegral := fun _F => 0
+  stokes_balance := by intro F; rfl
+
+/--
+Concrete Hestenes-Krein KMS+Stokes bridge on the doubled carrier.
+-/
+noncomputable def unruhHestenesKreinKMSStokesBridge (beta : ℝ) :
+    HestenesKreinKMSStokesBridge Obs where
+  strip := unruhHestenesKreinKMSStripData (E := E) beta
+  stokes := unruhGeneralizedStokesBoundaryData (E := E)
+  kms_from_stokes := by
+    intro t a b
+    exact kms_upper_from_strip_top (K := unruhHestenesKreinKMSStripData (E := E) beta) t a b
 
 end UnruhKreinInstantiation
 

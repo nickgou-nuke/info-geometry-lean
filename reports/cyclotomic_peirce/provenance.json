@@ -1,0 +1,15 @@
+{
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "base_commit": "b0fa422e6cb6d3da5be7cbbb5ecfae5c12f3237b",
+  "branch": "exterior-cyclotomic-peirce-reconstruction",
+  "lean_toolchain": "leanprover/lean4:v4.28.1",
+  "mathlib_revision": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+  "source_attachment": "Pasted markdown(20260906-080631).md",
+  "source_sha256": "a172653f6796d7a3de57fb26f4fbc27d61dc28e0de1632c2c6ed8c27a46b1748",
+  "new_Lean_files": 5,
+  "public_theorems": 60,
+  "public_definitions": 19,
+  "Lean_elaboration_executed": false,
+  "local_launcher_exit_status": 127,
+  "independent_exact_regressions_executed": true
+}

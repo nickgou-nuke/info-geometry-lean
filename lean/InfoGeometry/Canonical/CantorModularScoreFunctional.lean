@@ -13,7 +13,7 @@ The original finite point-density lane uses `Fin (2^n)`:
 * functional `η_{w,n}(f) = ∫ f Y_{w,n} dμ_n`.
 
 This file also exposes the same finite centering pattern directly on the
-Cantor-cylinder level carrier `(Fin n → Bool) → ℝ`:
+Cantor-cylinder level carrier `BinaryWord n → ℝ`:
 
 `scoreAt w f = f w - uniformMean f`.
 
@@ -80,171 +80,133 @@ theorem eta_one_eq_zero
   simp
 
 /-- Uniform finite-level mean of a real observable on level-`n` binary words. -/
-def uniformMean {n : Nat} (f : (Fin n → Bool) → ℝ) : ℝ :=
-  (Fintype.card ((Fin n → Bool)) : ℝ)⁻¹ * ∑ w : (Fin n → Bool), f w
+def uniformMean {n : Nat} (f : BinaryWord n → ℝ) : ℝ :=
+  (Fintype.card (BinaryWord n) : ℝ)⁻¹ * ∑ w : BinaryWord n, f w
 
-/-- Point density on `(Fin n → Bool)`: `Δ_w(v) = card * 1_{v=w}`. -/
-def pointDensity {n : Nat} (w : (Fin n → Bool)) : (Fin n → Bool) → ℝ :=
-  fun v => if v = w then (Fintype.card ((Fin n → Bool)) : ℝ) else 0
-
-theorem pointDensity_sum {n : Nat} (w : (Fin n → Bool)) :
-    ∑ v : (Fin n → Bool), pointDensity w v =
-      (Fintype.card ((Fin n → Bool)) : ℝ) := by
-  classical
-  unfold pointDensity
-  simp
+/-- Point density on `BinaryWord n`: `Δ_w(v) = card * 1_{v=w}`. -/
+def pointDensity {n : Nat} (w : BinaryWord n) : BinaryWord n → ℝ :=
+  fun v => if v = w then (Fintype.card (BinaryWord n) : ℝ) else 0
 
 /-- Centered finite-level score at a chosen binary word. -/
-def scoreAt {n : Nat} (w : (Fin n → Bool)) (f : (Fin n → Bool) → ℝ) : ℝ :=
+def scoreAt {n : Nat} (w : BinaryWord n) (f : BinaryWord n → ℝ) : ℝ :=
   f w - uniformMean f
-
-theorem uniformMean_pointDensity {n : Nat} (w : (Fin n → Bool)) :
-    uniformMean (pointDensity w) = 1 := by
-  unfold uniformMean
-  rw [pointDensity_sum]
-  have hcard : (Fintype.card ((Fin n → Bool)) : ℝ) ≠ 0 := by
-    exact_mod_cast Fintype.card_ne_zero
-  field_simp [hcard]
-
-theorem scoreAt_pointDensity {n : Nat} (w : (Fin n → Bool)) :
-    scoreAt w (pointDensity w) =
-      (Fintype.card ((Fin n → Bool)) : ℝ) - 1 := by
-  unfold scoreAt
-  rw [uniformMean_pointDensity]
-  simp [pointDensity]
 
 /-- Centered score written in `Δ-1` form against the uniform mean. -/
 theorem scoreAt_eq_uniformMean_delta_sub_one
-    {n : Nat} (w : (Fin n → Bool)) (a : (Fin n → Bool) → ℝ) :
+    {n : Nat} (w : BinaryWord n) (a : BinaryWord n → ℝ) :
     scoreAt w a = uniformMean (fun v => (pointDensity w v - 1) * a v) := by
   classical
   unfold scoreAt uniformMean pointDensity
-  let cardN : ℝ := (Fintype.card ((Fin n → Bool)) : ℝ)
+  let cardN : ℝ := (Fintype.card (BinaryWord n) : ℝ)
   have hcard : cardN ≠ 0 := by
     dsimp [cardN]
-    exact_mod_cast (Fintype.card_ne_zero (α := (Fin n → Bool)))
+    exact_mod_cast (Fintype.card_ne_zero (α := BinaryWord n))
   have hsum :
-      (∑ v : (Fin n → Bool), (if v = w then cardN else (0 : ℝ)) * a v) =
+      (∑ v : BinaryWord n, (if v = w then cardN else (0 : ℝ)) * a v) =
         cardN * a w := by
     classical
     have hsum' :
-        (∑ v ∈ (Finset.univ : Finset ((Fin n → Bool))),
+        (∑ v ∈ (Finset.univ : Finset (BinaryWord n)),
             (if v = w then cardN else (0 : ℝ)) * a v) =
           (if w = w then cardN else (0 : ℝ)) * a w := by
       refine Finset.sum_eq_single (a := w)
-        (s := (Finset.univ : Finset ((Fin n → Bool))))
-        (f := fun v : (Fin n → Bool) => (if v = w then cardN else (0 : ℝ)) * a v) ?_ ?_
+        (s := (Finset.univ : Finset (BinaryWord n)))
+        (f := fun v : BinaryWord n => (if v = w then cardN else (0 : ℝ)) * a v) ?_ ?_
       · intro v hv hvw
         simp [hvw]
       · intro hw
         simp at hw
     simpa [Finset.mem_univ, if_pos rfl] using hsum'
   have hsum_sub :
-      (∑ v : (Fin n → Bool), ((if v = w then cardN else (0 : ℝ)) - 1) * a v)
-        = (∑ v : (Fin n → Bool), (if v = w then cardN else (0 : ℝ)) * a v)
-            - ∑ v : (Fin n → Bool), a v := by
+      (∑ v : BinaryWord n, ((if v = w then cardN else (0 : ℝ)) - 1) * a v)
+        = (∑ v : BinaryWord n, (if v = w then cardN else (0 : ℝ)) * a v)
+            - ∑ v : BinaryWord n, a v := by
     calc
-      (∑ v : (Fin n → Bool), ((if v = w then cardN else (0 : ℝ)) - 1) * a v)
-          = ∑ v : (Fin n → Bool), ((if v = w then cardN else (0 : ℝ)) * a v - a v) := by
+      (∑ v : BinaryWord n, ((if v = w then cardN else (0 : ℝ)) - 1) * a v)
+          = ∑ v : BinaryWord n, ((if v = w then cardN else (0 : ℝ)) * a v - a v) := by
               refine Finset.sum_congr rfl ?_
               intro v hv
               ring
-      _ = (∑ v : (Fin n → Bool), (if v = w then cardN else (0 : ℝ)) * a v)
-            - ∑ v : (Fin n → Bool), a v := by
+      _ = (∑ v : BinaryWord n, (if v = w then cardN else (0 : ℝ)) * a v)
+            - ∑ v : BinaryWord n, a v := by
               simp [Finset.sum_sub_distrib]
   have hrhs :
-      cardN⁻¹ * ∑ v : (Fin n → Bool), ((if v = w then cardN else (0 : ℝ)) - 1) * a v
-        = a w - cardN⁻¹ * ∑ v : (Fin n → Bool), a v := by
+      cardN⁻¹ * ∑ v : BinaryWord n, ((if v = w then cardN else (0 : ℝ)) - 1) * a v
+        = a w - cardN⁻¹ * ∑ v : BinaryWord n, a v := by
     calc
-      cardN⁻¹ * ∑ v : (Fin n → Bool), ((if v = w then cardN else (0 : ℝ)) - 1) * a v
+      cardN⁻¹ * ∑ v : BinaryWord n, ((if v = w then cardN else (0 : ℝ)) - 1) * a v
           = cardN⁻¹ *
-              (∑ v : (Fin n → Bool), (if v = w then cardN else (0 : ℝ)) * a v
-                - ∑ v : (Fin n → Bool), a v) := by
+              (∑ v : BinaryWord n, (if v = w then cardN else (0 : ℝ)) * a v
+                - ∑ v : BinaryWord n, a v) := by
                 rw [hsum_sub]
-      _ = cardN⁻¹ * (cardN * a w - ∑ v : (Fin n → Bool), a v) := by
+      _ = cardN⁻¹ * (cardN * a w - ∑ v : BinaryWord n, a v) := by
             rw [hsum]
-      _ = cardN⁻¹ * (cardN * a w) - cardN⁻¹ * ∑ v : (Fin n → Bool), a v := by
+      _ = cardN⁻¹ * (cardN * a w) - cardN⁻¹ * ∑ v : BinaryWord n, a v := by
             ring
-      _ = a w - cardN⁻¹ * ∑ v : (Fin n → Bool), a v := by
+      _ = a w - cardN⁻¹ * ∑ v : BinaryWord n, a v := by
             field_simp [hcard]
   exact hrhs.symm
 
 /-- The finite level of binary words is nonempty. -/
 theorem binaryWord_card_ne_zero (n : Nat) :
-    (Fintype.card ((Fin n → Bool)) : ℝ) ≠ 0 := by
+    (Fintype.card (BinaryWord n) : ℝ) ≠ 0 := by
   exact_mod_cast Fintype.card_ne_zero
 
 /-- The uniform mean of the constant-one observable is one. -/
 theorem uniformMean_one (n : Nat) :
-    uniformMean (n := n) (fun _ : (Fin n → Bool) => (1 : ℝ)) = 1 := by
+    uniformMean (n := n) (fun _ : BinaryWord n => (1 : ℝ)) = 1 := by
   unfold uniformMean
   rw [sum_const]
   norm_num
 
 /-- The finite centered score vanishes on the constant-one observable. -/
-theorem scoreAt_one {n : Nat} (w : (Fin n → Bool)) :
-    scoreAt w (fun _ : (Fin n → Bool) => (1 : ℝ)) = 0 := by
+theorem scoreAt_one {n : Nat} (w : BinaryWord n) :
+    scoreAt w (fun _ : BinaryWord n => (1 : ℝ)) = 0 := by
   simp [scoreAt, uniformMean_one]
 
 /-- The uniform mean is additive. -/
-theorem uniformMean_add {n : Nat} (f g : (Fin n → Bool) → ℝ) :
+theorem uniformMean_add {n : Nat} (f g : BinaryWord n → ℝ) :
     uniformMean (fun w => f w + g w) = uniformMean f + uniformMean g := by
   unfold uniformMean
   rw [sum_add_distrib]
   ring
 
 /-- The uniform mean is homogeneous under real scaling. -/
-theorem uniformMean_smul {n : Nat} (c : ℝ) (f : (Fin n → Bool) → ℝ) :
+theorem uniformMean_smul {n : Nat} (c : ℝ) (f : BinaryWord n → ℝ) :
     uniformMean (fun w => c * f w) = c * uniformMean f := by
   unfold uniformMean
   rw [← mul_sum]
   ring
 
-theorem uniformMean_sub {n : Nat} (f g : (Fin n → Bool) → ℝ) :
-    uniformMean (fun w => f w - g w) = uniformMean f - uniformMean g := by
-  unfold uniformMean
-  rw [sum_sub_distrib]
-  ring
-
 /-- The finite centered score is additive. -/
-theorem scoreAt_add {n : Nat} (w : (Fin n → Bool)) (f g : (Fin n → Bool) → ℝ) :
+theorem scoreAt_add {n : Nat} (w : BinaryWord n) (f g : BinaryWord n → ℝ) :
     scoreAt w (fun v => f v + g v) = scoreAt w f + scoreAt w g := by
   simp [scoreAt, uniformMean_add]
   ring
 
 /-- The finite centered score is homogeneous under real scaling. -/
-theorem scoreAt_smul {n : Nat} (w : (Fin n → Bool)) (c : ℝ) (f : (Fin n → Bool) → ℝ) :
+theorem scoreAt_smul {n : Nat} (w : BinaryWord n) (c : ℝ) (f : BinaryWord n → ℝ) :
     scoreAt w (fun v => c * f v) = c * scoreAt w f := by
   simp [scoreAt, uniformMean_smul]
   ring
 
-theorem scoreAt_sub {n : Nat} (w : (Fin n → Bool))
-    (f g : (Fin n → Bool) → ℝ) :
-    scoreAt w (fun v => f v - g v) = scoreAt w f - scoreAt w g := by
-  simp [scoreAt, uniformMean_sub]
-  ring
-
 /-- The finite centered score as a linear map on level-`n` observables. -/
-def scoreLinear {n : Nat} (w : (Fin n → Bool)) :
-    ((Fin n → Bool) → ℝ) →ₗ[ℝ] ℝ where
+def scoreLinear {n : Nat} (w : BinaryWord n) :
+    (BinaryWord n → ℝ) →ₗ[ℝ] ℝ where
   toFun f := scoreAt w f
   map_add' f g := scoreAt_add w f g
   map_smul' c f := by
     exact scoreAt_smul w c f
 
 /-- Readback for the finite centered-score linear map. -/
-theorem scoreLinear_apply {n : Nat} (w : (Fin n → Bool)) (f : (Fin n → Bool) → ℝ) :
+theorem scoreLinear_apply {n : Nat} (w : BinaryWord n) (f : BinaryWord n → ℝ) :
     scoreLinear w f = scoreAt w f :=
   rfl
 
 /-- The finite centered-score linear map kills constants. -/
-theorem scoreLinear_one {n : Nat} (w : (Fin n → Bool)) :
-    scoreLinear w (fun _ : (Fin n → Bool) => (1 : ℝ)) = 0 := by
+theorem scoreLinear_one {n : Nat} (w : BinaryWord n) :
+    scoreLinear w (fun _ : BinaryWord n => (1 : ℝ)) = 0 := by
   exact scoreAt_one w
-
-theorem scoreLinear_zero {n : Nat} (w : (Fin n → Bool)) :
-    scoreLinear w (0 : (Fin n → Bool) → ℝ) = 0 := by
-  simp [scoreLinear, scoreAt, uniformMean]
 
 end
 

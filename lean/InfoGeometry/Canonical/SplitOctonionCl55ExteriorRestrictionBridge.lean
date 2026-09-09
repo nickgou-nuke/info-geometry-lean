@@ -116,21 +116,21 @@ theorem exterior3ToExterior5_injective :
 
 noncomputable def exterior3ToCl55Carrier :
     Exterior3 →ₗ[ℝ] Cl55 :=
-  cl55ExteriorEquiv.symm.toLinearMap.comp
+  (CliffordAlgebra.equivExterior Q55).symm.toLinearMap.comp
     exterior3ToExterior5.toLinearMap
 
 theorem exterior3ToCl55Carrier_injective :
     Function.Injective exterior3ToCl55Carrier := by
   intro x y h
   apply exterior3ToExterior5_injective
-  have h' := congrArg cl55ExteriorEquiv h
-  simpa [exterior3ToCl55Carrier] using h'
+  apply (CliffordAlgebra.equivExterior Q55).symm.injective
+  simpa [exterior3ToCl55Carrier] using h
 
 theorem exterior3ToCl55Carrier_generator (v : V3) :
     exterior3ToCl55Carrier (ExteriorAlgebra.ι ℝ v) =
       ι55 (threeToFive v) := by
-  apply cl55ExteriorEquiv.injective
-  simp [exterior3ToCl55Carrier, cl55ExteriorEquiv_ι]
+  apply (CliffordAlgebra.equivExterior Q55).injective
+  simp [exterior3ToCl55Carrier, CliffordAlgebra.changeForm_ι]
 
 theorem exterior3ToCl55Carrier_basis_generator (i : Fin 3) :
     exterior3ToCl55Carrier (ExteriorAlgebra.ι ℝ (basisVector3 i)) =

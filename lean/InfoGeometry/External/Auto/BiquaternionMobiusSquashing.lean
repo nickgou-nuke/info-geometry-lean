@@ -124,4 +124,19 @@ theorem mobius_biquaternion_closure (p q r t a b : ℂ)
       Matrix.smul_apply, Matrix.sub_apply, Matrix.add_apply, Fin.sum_univ_two] <;>
     field_simp [h] <;> ring
 
+theorem biquaternion_mobius_squashing_synthesis_full :
+    (∀ z : ℂ, z + 1 ≠ 0 → scalarCayley z = z → fixedPointPolynomial z = 0) ∧
+    σ1 * σ1 = 1 ∧
+    (∀ s a b : ℂ, (s - a)^2 - b^2 ≠ 0 →
+      (s • (1 : M2C) - Xab a b) * resolventCandidate s a b = 1) ∧
+    (∀ s a b : ℂ, (s • (1 : M2C) - Xab a b).det = (s - a)^2 - b^2) := by
+  exact ⟨(fun z hz hfix => scalarCayley_fixed_poly_of_fixed z hz hfix), σ1_sq,
+    resolvent_identity, resolvent_det⟩
+
+#check scalarCayley_fixed_poly_of_fixed
+#check resolvent_identity
+#check cayley_biquaternion_closure
+#check mobius_biquaternion_closure
+#check biquaternion_mobius_squashing_synthesis_full
+
 end BiquaternionMobiusSquashing

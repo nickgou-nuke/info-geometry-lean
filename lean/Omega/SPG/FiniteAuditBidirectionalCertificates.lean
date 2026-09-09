@@ -7,31 +7,33 @@ index families `Instance`, `Theta`, and `Mode` describe the bounded audit table 
 `Bad` records the local failure predicate; and the remaining fields abstract the complexity
 consequences proved from full-table verification, bad-witness extraction, and deterministic
 enumeration. -/
-def fullTableCertified {Instance Theta Mode : Type}
-    (Bad : Instance → Theta → Mode → Prop) : Prop :=
-  ∀ i θ m, ¬ Bad i θ m
-
-def badWitnessCertified {Instance Theta Mode : Type}
-    (Bad : Instance → Theta → Mode → Prop) : Prop :=
-  ∃ i θ m, Bad i θ m
+structure FiniteAuditBidirectionalCertificateData (Instance Theta Mode : Type) where
+  finiteInstance : Finite Instance
+  finiteTheta : Finite Theta
+  finiteMode : Finite Mode
+  Bad : Instance → Theta → Mode → Prop
+  fullTableCertified : Prop
+  badWitnessCertified : Prop
+  enumerableInPolyTime : Prop
+  inNP : Prop
+  inCoNP : Prop
+  inP : Prop
+  fullTableCertificate : fullTableCertified
+  badWitnessCertificate : badWitnessCertified
+  np_of_fullTable : fullTableCertified → inNP
+  conp_of_badWitness : badWitnessCertified → inCoNP
+  p_of_enumeration : fullTableCertified → badWitnessCertified → enumerableInPolyTime → inP
 
 /-- Finite bidirectional audit certificates: validating the whole bounded audit table gives the
 `NP` side, extracting one bad witness gives the `coNP` side, and deterministic polynomial-time
 enumeration upgrades the same finite package to `P`.
     thm:spg-finite-audit-bidirectional-certificates-np-conp -/
 theorem paper_spg_finite_audit_bidirectional_certificates_np_conp {Instance Theta Mode : Type}
-    (Bad : Instance → Theta → Mode → Prop)
-    (enumerableInPolyTime inNP inCoNP inP : Prop)
-    (fullTableCertificate : fullTableCertified Bad)
-    (badWitnessCertificate : badWitnessCertified Bad)
-    (np_of_fullTable : fullTableCertified Bad → inNP)
-    (conp_of_badWitness : badWitnessCertified Bad → inCoNP)
-    (p_of_enumeration : fullTableCertified Bad → badWitnessCertified Bad →
-      enumerableInPolyTime → inP) :
-    inNP ∧ inCoNP ∧ (enumerableInPolyTime → inP) := by
+    (h : FiniteAuditBidirectionalCertificateData Instance Theta Mode) :
+    h.inNP ∧ h.inCoNP ∧ (h.enumerableInPolyTime → h.inP) := by
   refine
-    ⟨np_of_fullTable fullTableCertificate, conp_of_badWitness badWitnessCertificate, ?_⟩
+    ⟨h.np_of_fullTable h.fullTableCertificate, h.conp_of_badWitness h.badWitnessCertificate, ?_⟩
   intro henum
-  exact p_of_enumeration fullTableCertificate badWitnessCertificate henum
+  exact h.p_of_enumeration h.fullTableCertificate h.badWitnessCertificate henum
 
 end Omega.SPG

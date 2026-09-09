@@ -67,7 +67,7 @@ theorem kms_stationarity :
 Stationarity for an explicitly supplied KMS/reference functional.
 
 The analytic assertion that `kms_state` is the KMS state is represented by the
-identification property `h_kms`; this theorem only transports the installed
+identification hypothesis `h_kms`; this theorem only transports the installed
 Markov stationarity law through that identification.
 -/
 theorem kms_reference_stationarity
@@ -79,12 +79,12 @@ theorem kms_reference_stationarity
 
 /-- Read back the global functional on a finite embedded stage. -/
 theorem stage_readback (n : ℕ) (x : A n) :
-    S.global (S.limit.inj n x) = S.family n x :=
+    S.global (S.limit.inj n x) = S.family.omega n x :=
   S.limit.limit_functional_recovers_stage S.family S.global S.extendsFamily n x
 
 /-- The stationary Bayesian update has the same finite-stage readback. -/
 theorem bayesianUpdate_stage_readback (n : ℕ) (x : A n) :
-    S.bayesianUpdate (S.limit.inj n x) = S.family n x := by
+    S.bayesianUpdate (S.limit.inj n x) = S.family.omega n x := by
   rw [S.bayesianUpdate_eq_global]
   exact S.stage_readback n x
 
@@ -93,20 +93,20 @@ theorem kms_stage_readback
     (kms_state : S.limit.LimitFunctional)
     (h_kms : kms_state = S.global)
     (n : ℕ) (x : A n) :
-    kms_state (S.limit.inj n x) = S.family n x := by
+    kms_state (S.limit.inj n x) = S.family.omega n x := by
   subst kms_state
   exact S.stage_readback n x
 
 /-- Compatibility of the finite family is recovered from the global extension. -/
 theorem compatibility (n : ℕ) (x : A n) :
-    S.family (n + 1) (bond n x) = S.family n x :=
+    S.family.omega (n + 1) (bond n x) = S.family.omega n x :=
   S.limit.extending_limit_functional_implies_compatible S.family S.global S.extendsFamily n x
 
 /-- State compatibility through the local conditional expectation. -/
 theorem local_expectation_state_compatibility
     (n : ℕ)
     (x : S.limit.AInf) :
-    S.global x = S.family n ((S.expectations n).E x) :=
+    S.global x = S.family.omega n ((S.expectations n).E x) :=
   TensorInductiveLimit.ConditionalExpectation.state_compatibility
     (S.expectations n) S.family S.global S.extendsFamily x
 
@@ -247,7 +247,7 @@ relations:
 The twist is stored as an algebra endomorphism because the KMS boundary
 operation must preserve the observable algebra structure.
 -/
-structure KMSStationarityData where
+structure KMSStationarityPacket where
   markov : MarkovDualOperator L
   kmsState : LimitState L
   kmsTwist : L.AInf →ₐ[R] L.AInf
@@ -261,10 +261,10 @@ structure KMSStationarityData where
     markov.Tstar s = s → s = kmsState
   stationary : markov.Tstar kmsState = kmsState
 
-namespace KMSStationarityData
+namespace KMSStationarityPacket
 
 variable {L}
-variable (K : KMSStationarityData L)
+variable (K : KMSStationarityPacket L)
 
 /-- Readback: the supplied KMS state is stationary for the Markov dual update. -/
 theorem kms_stationary : K.markov.Tstar K.kmsState = K.kmsState :=
@@ -305,7 +305,7 @@ theorem fixed_state_eq_kms_of_unique
     s = K.kmsState :=
   K.uniqueInvariant s hs
 
-end KMSStationarityData
+end KMSStationarityPacket
 
 /-! ## Bayesian projection as an explicit minimizer -/
 

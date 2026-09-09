@@ -7,15 +7,15 @@ namespace Omega.UnitCirclePhaseArithmetic
 noncomputable section
 
 /-- Concrete finite-verification package extending the conclusion-67 bootstrap datum with finite
-angle representatives and finitely many exceptional small scales. Every angle reduces to an angle
+angle representatives and finitely many exceptional small scales. Every angle reduces to a witness
 class, and every large scale is modeled by the same norm controlled by conclusion 67. -/
 structure Conclusion68FiniteVerificationData extends Conclusion67ScaleBootstrapData where
-  angleClasses : Finset ℤ
-  scaleValues : Finset ℕ
+  angleWitnesses : Finset ℤ
+  scaleWitnesses : Finset ℕ
   twistedNorm : ℕ → ℤ → ℝ
   angleClass : ℤ → ℤ
-  smallScale_mem : ∀ ⦃M : ℕ⦄, M < seedScale → M ∈ scaleValues
-  angleClass_mem : ∀ θ : ℤ, angleClass θ ∈ angleClasses
+  smallScale_mem : ∀ ⦃M : ℕ⦄, M < seedScale → M ∈ scaleWitnesses
+  angleClass_mem : ∀ θ : ℤ, angleClass θ ∈ angleWitnesses
   angleClass_invariant : ∀ (M : ℕ) (θ : ℤ), twistedNorm M θ = twistedNorm M (angleClass θ)
   largeScale_eq_opNorm : ∀ ⦃M : ℕ⦄ ⦃θ : ℤ⦄, seedScale ≤ M → twistedNorm M θ = opNorm M
 
@@ -29,7 +29,7 @@ def uniformTwistedSpectralGap (D : Conclusion68FiniteVerificationData) : Prop :=
 /-- Finite verification checks: it is enough to verify the finitely many angle representatives on
 the finitely many exceptional scales. -/
 def finiteVerificationChecks (D : Conclusion68FiniteVerificationData) : Prop :=
-  ∀ M ∈ D.scaleValues, ∀ θ ∈ D.angleClasses,
+  ∀ M ∈ D.scaleWitnesses, ∀ θ ∈ D.angleWitnesses,
     D.twistedNorm M θ ≤ 1 / (M : ℝ) ^ D.decayExponent
 
 end Conclusion68FiniteVerificationData
@@ -46,8 +46,8 @@ theorem paper_conclusion68_finite_verification (D : Conclusion68FiniteVerificati
     have hbootstrap := paper_conclusion67_scale_bootstrap D.toConclusion67ScaleBootstrapData
     intro M θ
     by_cases hsmall : M < D.seedScale
-    · have hMmem : M ∈ D.scaleValues := D.smallScale_mem hsmall
-      have hθmem : D.angleClass θ ∈ D.angleClasses := D.angleClass_mem θ
+    · have hMmem : M ∈ D.scaleWitnesses := D.smallScale_mem hsmall
+      have hθmem : D.angleClass θ ∈ D.angleWitnesses := D.angleClass_mem θ
       have hbound := hfinite M hMmem (D.angleClass θ) hθmem
       rw [D.angleClass_invariant M θ]
       exact hbound

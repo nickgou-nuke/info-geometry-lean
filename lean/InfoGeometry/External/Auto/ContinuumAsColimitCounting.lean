@@ -48,6 +48,10 @@ abbrev FourWord (n : ℕ) : Type :=
 abbrev FourDiagAlg (n : ℕ) : Type :=
   FourWord n → ℂ
 
+/-- Four-symbol Cantor boundary. -/
+abbrev FourCantorBoundary : Type :=
+  ℕ → Fin 4
+
 /-- Stage `n` in the four-lane boundary has `4^n` finite counting cells. -/
 theorem fourword_count (n : ℕ) :
     Fintype.card (FourWord n) = 4 ^ n := by
@@ -68,15 +72,15 @@ def diagEmbedSucc4 (n : ℕ) : FourDiagAlg n → FourDiagAlg (n + 1) :=
   fun f w => f (prefixSucc4 n w)
 
 /-- Restrict a four-symbol boundary point to its first `n` symbols. -/
-def boundaryPrefix4 (n : ℕ) (b : ℕ → Fin 4) : FourWord n :=
+def boundaryPrefix4 (n : ℕ) (b : FourCantorBoundary) : FourWord n :=
   fun i => b i.1
 
 /-- Four-lane finite-cylinder realization of a stage-`n` diagonal observable. -/
-def cylinder4 (n : ℕ) (f : FourDiagAlg n) : (ℕ → Fin 4) → ℂ :=
+def cylinder4 (n : ℕ) (f : FourDiagAlg n) : FourCantorBoundary → ℂ :=
   fun b => f (boundaryPrefix4 n b)
 
 theorem boundaryPrefix4_succ_eq_prefixSucc4
-    (n : ℕ) (b : ℕ → Fin 4) :
+    (n : ℕ) (b : FourCantorBoundary) :
     prefixSucc4 n (boundaryPrefix4 (n + 1) b) = boundaryPrefix4 n b := by
   ext i
   rfl
@@ -143,6 +147,38 @@ theorem finite_count_observable_mem_colimit (n : ℕ) (f : DiagAlg n) :
     cylinder n f ∈ CylinderColimit :=
   cylinder_mem_colimit n f
 
+/-! ## 4. Finite synthesis -/
+
+/-- Finite synthesis for counting refinement, reference entropy, and compatible
+cylinder embeddings. -/
+theorem continuum_as_colimit_of_counting_synthesis
+    (n : ℕ) (f : DiagAlg n) :
+    Fintype.card (BitWord n) = 2 ^ n ∧
+    Fintype.card (BitWord (n + 1)) = 2 * Fintype.card (BitWord n) ∧
+    jaynesRelativeEntropy (Finset.univ : Finset (BitWord n))
+      (finiteCountingReference n) (finiteCountingReference n) = 0 ∧
+    cylinder (n + 1) (diagEmbedSucc n f) = cylinder n f ∧
+    cylinder n f ∈ CylinderColimit := by
+  exact ⟨bitword_count n,
+    bitword_count_succ n,
+    finite_counting_reference_entropy_self n,
+    counting_refinement_preserves_cylinder n f,
+    finite_count_observable_mem_colimit n f⟩
+
+/-- Four-lane version matching the Cuntz `O_4`/Cantor boundary: finite counts
+grow by `4`, but reference-relative entropy and cylinder observables remain
+compatible under the explicit successor maps. -/
+theorem continuum_as_four_lane_colimit_counting_synthesis
+    (n : ℕ) (f : FourDiagAlg n) :
+    Fintype.card (FourWord n) = 4 ^ n ∧
+    Fintype.card (FourWord (n + 1)) = 4 * Fintype.card (FourWord n) ∧
+    jaynesRelativeEntropy (Finset.univ : Finset (FourWord n))
+      (finiteCountingReference4 n) (finiteCountingReference4 n) = 0 ∧
+    cylinder4 (n + 1) (diagEmbedSucc4 n f) = cylinder4 n f := by
+  exact ⟨fourword_count n,
+    fourword_count_succ n,
+    finite_counting_reference4_entropy_self n,
+    cylinder4_compatible_succ n f⟩
 
 end ContinuumAsColimitCounting
 

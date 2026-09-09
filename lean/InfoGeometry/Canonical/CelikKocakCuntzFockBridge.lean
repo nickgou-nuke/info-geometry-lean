@@ -1,30 +1,31 @@
 import InfoGeometry.Canonical.CuntzCliffordBottBridge
 import InfoGeometry.Canonical.CuntzMapKreinBridge
-import InfoGeometry.Topology.FractalCantorFock
+import InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket
+import InfoGeometry.Topology.FractalCantorFockWitness
 
 /-!
 # Çelik--Koçak Split Fock Data as a Cuntz Clock
 
-This file records the honest finite relation:
+This file records the honest finite bridge:
 
 `creation / annihilation CAR data -> Cuntz clock branches -> Cl(1,1) Bott tower`.
 
 It does not assert that a concrete Cuntz algebra is isomorphic to the analytic
 infinite Clifford/Fock completion.  The Cuntz/Fock identification is exposed as
-explicit compatibility, and the direct-limit consequences are inherited from the already
+explicit data, and the direct-limit consequences are inherited from the already
 proved `CuntzCliffordBottBridge`.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 The Cuntz branches read back to creation/annihilation under the supplied split
 Fock clock, and the CAR/nilpotence laws transfer to those branches.
 
-#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT COMPATIBILITY
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 The `Cl(1,1)` direct-limit statements require an encoder compatible with the
 Cuntz clock and Bott bonding maps.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 The analytic infinite Fock completion, `O_2`/CAR isomorphism, K-theory
-vanishing, and historical attribution beyond the existing interface citation.
+vanishing, and historical attribution beyond the existing socket citation.
 -/
 
 set_option autoImplicit false
@@ -35,126 +36,69 @@ namespace InfoGeometry.Canonical.CelikKocakCuntzFockBridge
 
 open InfoGeometry.Canonical.CuntzMapKreinBridge
 open InfoGeometry.Canonical.CuntzCliffordBottBridge
-open InfoGeometry.Topology.FractalCantorFock
+open InfoGeometry.Topology.FractalCantorFockWitness
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
-
-theorem realCARPair_creation_annihilation_eq_one
-    (C : RealCARPair Op) :
-    C.creation * C.annihilation + C.annihilation * C.creation = 1 := by
-  rw [add_comm]
-  exact C.car
-
-theorem realCARPair_creation_sq_zero
-    (C : RealCARPair Op) :
-    C.creation * C.creation = 0 :=
-  C.nilpotent_creation
-
-theorem realCARPair_annihilation_sq_zero
-    (C : RealCARPair Op) :
-    C.annihilation * C.annihilation = 0 :=
-  C.nilpotent_annihilation
 
 /--
 Split Fock clock data: a real CAR pair whose creation/annihilation operators
 are the left/right branches of a witnessed Cuntz modular step.
 -/
-def IsSplitFockCuntzClock
-    {Op : Type*} [Ring Op] [StarRing Op]
-    (car : RealCARPair Op)
-    (clock : DiscreteCuntzModularStep Op) : Prop :=
-  clock.S_left = car.creation ∧
-    clock.S_right = car.annihilation
+@[rep_depth operator]
+structure SplitFockCuntzClock (Op : Type*) [Ring Op] [StarRing Op] where
+  car : RealCARPair Op
+  clock : DiscreteCuntzModularStep Op
+  left_eq_creation : clock.S_left = car.creation
+  right_eq_annihilation : clock.S_right = car.annihilation
 
 namespace SplitFockCuntzClock
 
-variable (car : RealCARPair Op)
-variable (clock : DiscreteCuntzModularStep Op)
+variable (F : SplitFockCuntzClock Op)
 
 /-- The left Cuntz branch is the split-Fock creation operator. -/
 @[rep_depth operator]
-theorem left_branch_eq_creation
-    (h : IsSplitFockCuntzClock car clock) :
-    clock.S_left = car.creation :=
-  h.1
+theorem left_branch_eq_creation :
+    F.clock.S_left = F.car.creation :=
+  F.left_eq_creation
 
 /-- The right Cuntz branch is the split-Fock annihilation operator. -/
 @[rep_depth operator]
-theorem right_branch_eq_annihilation
-    (h : IsSplitFockCuntzClock car clock) :
-    clock.S_right = car.annihilation :=
-  h.2
+theorem right_branch_eq_annihilation :
+    F.clock.S_right = F.car.annihilation :=
+  F.right_eq_annihilation
 
 /-- The left Cuntz/Fock branch is nilpotent under the supplied CAR data. -/
 @[rep_depth operator]
-theorem left_branch_sq_zero
-    (h : IsSplitFockCuntzClock car clock) :
-    clock.S_left * clock.S_left = 0 := by
-  rw [h.1]
-  exact car.creation_sq_zero
+theorem left_branch_sq_zero :
+    F.clock.S_left * F.clock.S_left = 0 := by
+  rw [F.left_eq_creation]
+  exact F.car.creation_sq_zero
 
 /-- The right Cuntz/Fock branch is nilpotent under the supplied CAR data. -/
 @[rep_depth operator]
-theorem right_branch_sq_zero
-    (h : IsSplitFockCuntzClock car clock) :
-    clock.S_right * clock.S_right = 0 := by
-  rw [h.2]
-  exact car.annihilation_sq_zero
+theorem right_branch_sq_zero :
+    F.clock.S_right * F.clock.S_right = 0 := by
+  rw [F.right_eq_annihilation]
+  exact F.car.annihilation_sq_zero
 
 /-- The Cuntz/Fock branches satisfy the CAR anticommutator in creation/right order. -/
 @[rep_depth operator]
-theorem branch_creation_annihilation_car
-    (h : IsSplitFockCuntzClock car clock) :
-    clock.S_right * clock.S_left + clock.S_left * clock.S_right = 1 := by
-  rw [h.1, h.2]
-  exact car.anticommutator_eq_one
+theorem branch_creation_annihilation_car :
+    F.clock.S_right * F.clock.S_left + F.clock.S_left * F.clock.S_right = 1 := by
+  rw [F.left_eq_creation, F.right_eq_annihilation]
+  exact F.car.anticommutator_eq_one
 
 /-- The Cuntz/Fock branches satisfy the CAR anticommutator in left/right order. -/
 @[rep_depth operator]
-theorem branch_left_right_car
-    (h : IsSplitFockCuntzClock car clock) :
-    clock.S_left * clock.S_right + clock.S_right * clock.S_left = 1 := by
-  rw [h.1, h.2]
+theorem branch_left_right_car :
+    F.clock.S_left * F.clock.S_right + F.clock.S_right * F.clock.S_left = 1 := by
+  rw [F.left_eq_creation, F.right_eq_annihilation]
   calc
-    car.creation * car.annihilation + car.annihilation * car.creation
-        = car.annihilation * car.creation + car.creation * car.annihilation := by
+    F.car.creation * F.car.annihilation + F.car.annihilation * F.car.creation
+        = F.car.annihilation * F.car.creation + F.car.creation * F.car.annihilation := by
           rw [add_comm]
-    _ = 1 := car.anticommutator_eq_one
-
-@[rep_depth operator]
-theorem branch_right_left_idempotent
-    (h : IsSplitFockCuntzClock car clock) :
-    (clock.S_right * clock.S_left) *
-        (clock.S_right * clock.S_left) =
-      clock.S_right * clock.S_left := by
-  rw [h.1, h.2]
-  exact car.annihilation_creation_idempotent
-
-@[rep_depth operator]
-theorem branch_left_right_idempotent
-    (h : IsSplitFockCuntzClock car clock) :
-    (clock.S_left * clock.S_right) *
-        (clock.S_left * clock.S_right) =
-      clock.S_left * clock.S_right := by
-  rw [h.1, h.2]
-  exact car.creation_annihilation_idempotent
-
-@[rep_depth operator]
-theorem branch_right_left_orthogonal_left_right
-    (h : IsSplitFockCuntzClock car clock) :
-    (clock.S_right * clock.S_left) *
-        (clock.S_left * clock.S_right) = 0 := by
-  rw [h.1, h.2]
-  exact car.annihilation_creation_orthogonal
-
-@[rep_depth operator]
-theorem branch_left_right_orthogonal_right_left
-    (h : IsSplitFockCuntzClock car clock) :
-    (clock.S_left * clock.S_right) *
-        (clock.S_right * clock.S_left) = 0 := by
-  rw [h.1, h.2]
-  exact car.creation_annihilation_orthogonal
+    _ = 1 := F.car.anticommutator_eq_one
 
 /-! ## Bott-limit transport for the split Fock clock -/
 
@@ -172,13 +116,13 @@ theorem constant_in_cl11_limit
     (seed : Op)
     (hcompat : ∀ n : ℕ,
       InfoGeometry.Clifford.Cl11TensorTower.stageEmbed n
-          (encode n (Nat.iterate clock.sigma n seed)) =
-        encode (n + 1) (Nat.iterate clock.sigma (n + 1) seed)) :
+          (encode n (Nat.iterate F.clock.sigma n seed)) =
+        encode (n + 1) (Nat.iterate F.clock.sigma (n + 1) seed)) :
     ∀ n : ℕ,
-      ofStage n (encode n (Nat.iterate clock.sigma n seed)) =
+      ofStage n (encode n (Nat.iterate F.clock.sigma n seed)) =
         ofStage 0 (encode 0 seed) := by
   exact cuntz_clock_constant_in_cl11_limit
-    (M := clock) (encode := encode) (seed := seed) hcompat
+    (M := F.clock) (encode := encode) (seed := seed) hcompat
 
 /--
 Creation seeds remain square-zero after transport through a compatible
@@ -189,14 +133,14 @@ theorem creation_seed_square_zero_in_cl11_limit
     (encode : ∀ n : ℕ, Op → Stage n)
     (hcompat : ∀ n : ℕ,
       InfoGeometry.Clifford.Cl11TensorTower.stageEmbed n
-          (encode n (Nat.iterate clock.sigma n car.creation)) =
-        encode (n + 1) (Nat.iterate clock.sigma (n + 1) car.creation))
-    (hencode0 : encode 0 car.creation * encode 0 car.creation = 0) :
+          (encode n (Nat.iterate F.clock.sigma n F.car.creation)) =
+        encode (n + 1) (Nat.iterate F.clock.sigma (n + 1) F.car.creation))
+    (hencode0 : encode 0 F.car.creation * encode 0 F.car.creation = 0) :
     ∀ n : ℕ,
-      ofStage n (encode n (Nat.iterate clock.sigma n car.creation)) *
-          ofStage n (encode n (Nat.iterate clock.sigma n car.creation)) = 0 := by
+      ofStage n (encode n (Nat.iterate F.clock.sigma n F.car.creation)) *
+          ofStage n (encode n (Nat.iterate F.clock.sigma n F.car.creation)) = 0 := by
   exact cuntz_clock_square_zero_in_cl11_limit
-    (M := clock) (encode := encode) (seed := car.creation)
+    (M := F.clock) (encode := encode) (seed := F.car.creation)
     (hcompat := hcompat) (h0 := hencode0)
 
 /--
@@ -208,14 +152,14 @@ theorem annihilation_seed_square_zero_in_cl11_limit
     (encode : ∀ n : ℕ, Op → Stage n)
     (hcompat : ∀ n : ℕ,
       InfoGeometry.Clifford.Cl11TensorTower.stageEmbed n
-          (encode n (Nat.iterate clock.sigma n car.annihilation)) =
-        encode (n + 1) (Nat.iterate clock.sigma (n + 1) car.annihilation))
-    (hencode0 : encode 0 car.annihilation * encode 0 car.annihilation = 0) :
+          (encode n (Nat.iterate F.clock.sigma n F.car.annihilation)) =
+        encode (n + 1) (Nat.iterate F.clock.sigma (n + 1) F.car.annihilation))
+    (hencode0 : encode 0 F.car.annihilation * encode 0 F.car.annihilation = 0) :
     ∀ n : ℕ,
-      ofStage n (encode n (Nat.iterate clock.sigma n car.annihilation)) *
-          ofStage n (encode n (Nat.iterate clock.sigma n car.annihilation)) = 0 := by
+      ofStage n (encode n (Nat.iterate F.clock.sigma n F.car.annihilation)) *
+          ofStage n (encode n (Nat.iterate F.clock.sigma n F.car.annihilation)) = 0 := by
   exact cuntz_clock_square_zero_in_cl11_limit
-    (M := clock) (encode := encode) (seed := car.annihilation)
+    (M := F.clock) (encode := encode) (seed := F.car.annihilation)
     (hcompat := hcompat) (h0 := hencode0)
 
 end SplitFockCuntzClock

@@ -1,0 +1,18 @@
+import InfoGeometry.Twistor.FiniteAmbitwistorParaKahler
+
+namespace InfoGeometry.Twistor.FiniteAmbitwistorParaKahler.Audit
+
+#print axioms isAmbitwistor_rescaling
+#print axioms paraBerryForm_skew
+#print axioms paraProjectorPlus_add_minus
+#print axioms quantized_coordinate_commutator_boundary_defect
+#print axioms quantized_shear_preserves_phase_form
+#print axioms ambitwistorHeisenberg_center_commutes
+#print axioms traceFour_ambitwistorRankOne
+#print axioms isAmbitwistor_rankOne_nilpotent
+#print axioms ambitwistorReadout_add
+#print axioms ambitwistorReadout_one
+#print axioms ambitwistorReadout_rescalePre
+#print axioms ambitwistorReadout_rescalePost
+
+end InfoGeometry.Twistor.FiniteAmbitwistorParaKahler.Audit

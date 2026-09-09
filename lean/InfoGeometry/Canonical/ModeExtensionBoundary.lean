@@ -21,7 +21,7 @@ it provides names `u_{±,n}` and `ε_n` without pretending that the nonzero mode
 or normal-ordering anomaly have been derived.
 
 Repository policy boundary:
-this file does not construct the affine current property
+this file does not construct the affine current witness
 `J : Int → V →ₗ[𝕜] V` with truncation/commutator laws.
 -/
 

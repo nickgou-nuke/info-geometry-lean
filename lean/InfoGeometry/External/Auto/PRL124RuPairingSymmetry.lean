@@ -6,6 +6,7 @@ namespace PRL124RuPairingSymmetry
 
 abbrev Q := ℚ
 
+def doi : String := "10.1103/PhysRevLett.124.062501"
 def nucleusA : ℕ := 88
 def protonNumberZ : ℕ := 44
 def neutronNumberN : ℕ := 44
@@ -37,18 +38,13 @@ def casimirSU2FromTwoJ (twoJ : ℕ) : Q := (twoJ * (twoJ + 2) : Q) / 4
 def spinCasimir (I : ℕ) : Q := casimirSU2FromTwoJ (2*I)
 def isospinCasimir (T : ℕ) : Q := casimirSU2FromTwoJ (2*T)
 
-abbrev PairingState := ℕ × ℕ
+structure PairingState where
+  T : ℕ
+  I : ℕ
+  deriving DecidableEq, Repr
 
-namespace PairingState
-
-abbrev T (P : PairingState) : ℕ := P.1
-
-abbrev I (P : PairingState) : ℕ := P.2
-
-end PairingState
-
-def isovectorPair : PairingState := (1, 0)
-def isoscalarPair : PairingState := (0, 1)
+def isovectorPair : PairingState := ⟨1, 0⟩
+def isoscalarPair : PairingState := ⟨0, 1⟩
 
 def isovectorPairT : ℕ := isovectorPair.T
 def isovectorPairI : ℕ := isovectorPair.I

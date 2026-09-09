@@ -86,3 +86,5 @@ def normalizedConf3DeRhamPacket
   (p, data)
 
 end
+
+end InfoGeometry.Topology.Conf3DeRhamCandidateTopological

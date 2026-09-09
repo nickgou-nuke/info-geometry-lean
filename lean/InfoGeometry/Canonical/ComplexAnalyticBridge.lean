@@ -31,13 +31,25 @@ def doubledPhaseStructure : PhaseStructure H₂ℝ where
   K := clockAxis (E := ℝ)
   K_square := clockAxis_sq (E := ℝ)
 
+/-- Compatibility name for the doubled real phase structure. -/
+abbrev H2_phaseStructure : PhaseStructure H₂ℝ :=
+  doubledPhaseStructure
+
 /-- Complex number as a point of the real doubled carrier. -/
 def complexToDoubled (z : ℂ) : H₂ℝ :=
   to_doubled z.re z.im
 
+/-- Compatibility name for `complexToDoubled`. -/
+abbrev to_doubled_real (z : ℂ) : H₂ℝ :=
+  complexToDoubled z
+
 /-- Recover a complex number from the real doubled carrier. -/
 def doubledToComplex (v : H₂ℝ) : ℂ :=
   Complex.equivRealProdCLM.symm (WithLp.fst v, WithLp.snd v)
+
+/-- Compatibility name for `doubledToComplex`. -/
+abbrev from_doubled_real (v : H₂ℝ) : ℂ :=
+  doubledToComplex v
 
 @[simp] theorem doubledToComplex_complexToDoubled (z : ℂ) :
     doubledToComplex (complexToDoubled z) = z := by
@@ -93,6 +105,10 @@ def complexDoubledCLE : ℂ ≃L[ℝ] H₂ℝ where
   left_inv := doubledToComplex_complexToDoubled
   right_inv := complexToDoubled_doubledToComplex
 
+/-- Compatibility name for `complexDoubledCLE`. -/
+abbrev complex_equiv_H2 : ℂ ≃L[ℝ] H₂ℝ :=
+  complexDoubledCLE
+
 @[simp] theorem complexToDoubledCLM_apply (z : ℂ) :
     complexToDoubledCLM z = complexToDoubled z := rfl
 
@@ -115,6 +131,13 @@ def analyticAtToCauchyAnalyticAt
     (h_an : AnalyticAt ℂ f z) :
     CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z :=
   analyticAt_complex_to_cauchyAnalyticAt h_an
+
+/-- Compatibility name for the one-way complex-to-Hestenes bridge. -/
+abbrev analyticAt_implies_cauchyAnalyticAt
+    {f : ℂ → ℂ} {z : ℂ}
+    (h_an : AnalyticAt ℂ f z) :
+    CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z :=
+  analyticAtToCauchyAnalyticAt h_an
 
 /-- Lift a complex map to the doubled real carrier by transport across `complexDoubledCLE`. -/
 def lifted (f : ℂ → ℂ) : H₂ℝ → H₂ℝ :=

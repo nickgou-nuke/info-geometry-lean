@@ -86,5 +86,3 @@ theorem topologicalCovariantRangeAction_add
   exact F.base.operatorAction_add s t _
 
 end InfoGeometry.Topology
-
-end

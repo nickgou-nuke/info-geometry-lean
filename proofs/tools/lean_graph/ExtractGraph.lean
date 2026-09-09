@@ -13,7 +13,7 @@ import proofs.ConformalCGA
 import proofs.ArtinCentralizerMonodromy
 import proofs.Q8NuclearChirality
 import Lean
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 import proofs.TwoSheetChiralTKKDerivations
 import proofs.ChiralTensorRecoupling
 import proofs.TLChain

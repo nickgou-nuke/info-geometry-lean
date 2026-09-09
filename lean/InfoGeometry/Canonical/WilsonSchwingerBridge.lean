@@ -44,20 +44,7 @@ def schwingerCentralDefectRealization
     InfoGeometry.Canonical.BoundaryMatrixUnitWick.occ a -
       InfoGeometry.Canonical.BoundaryMatrixUnitWick.occ c
   defect_eq := by
-    rw [schwingerWilsonLoop, centralDefectLoop_defect]
-    rw [← Int.cast_smul_eq_zsmul A
-      (InfoGeometry.Canonical.BoundaryMatrixUnitWick.occ a -
-        InfoGeometry.Canonical.BoundaryMatrixUnitWick.occ c) (1 : A)]
-    simp only [smul_eq_mul]
-    change
-      (algebraMap ℤ A
-        (InfoGeometry.Canonical.BoundaryMatrixUnitWick.occ a -
-          InfoGeometry.Canonical.BoundaryMatrixUnitWick.occ c)) * (1 : A) =
-      (algebraMap ℤ A
-        (InfoGeometry.Canonical.BoundaryMatrixUnitWick.occ a -
-          InfoGeometry.Canonical.BoundaryMatrixUnitWick.occ c)) *
-        (unitDiamond A).P
-    rw [show (unitDiamond A).P = (1 : A) by rfl]
+    simp [schwingerWilsonLoop, centralDefectLoop_defect, unitDiamond]
 
 /--
 The conditional Wick/Schwinger central term can be read as a Wilson-loop

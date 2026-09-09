@@ -44,9 +44,7 @@ theorem quotient_hodgeDirac_eq_sum_majorana (n : ℕ) :
 theorem quotient_range_projector_eq_primon_P (n : ℕ) (i : Fin n) :
     (quotientCuntzNAlgebra n).S i * star ((quotientCuntzNAlgebra n).S i) =
       P n i := by
-  change cuntzS n i * star (cuntzS n i) =
-    cuntzS n i * cuntzSdag n i
-  rw [star_cuntzS]
+  simp [quotientCuntzNAlgebra, P, star_cuntzS]
 
 /-- Abstract range-projector idempotence specializes to the primon projector. -/
 theorem quotient_primon_projector_idempotent_via_CuntzN (n : ℕ) (i : Fin n) :

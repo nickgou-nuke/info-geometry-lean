@@ -105,7 +105,7 @@ theorem exactBerryPhase_one
     exactBerryPhase (R := R) k 1 τ = 1 :=
   InfoGeometry.Algebraic.exactBerryPhase_one (R := R) k τ
 
-/-- Exact phase cocycles stay explicit under the compatibility property. -/
+/-- Exact phase cocycles stay explicit under the compatibility hypothesis. -/
 noncomputable abbrev exactModularBerryCocycle
     {R : Type*} [PhaseRotorGroup R] {k : ℤ}
     (h : ExactPhaseCompatibility (R := R) k) :

@@ -99,15 +99,10 @@ theorem parityOp_mul_dMajorana :
 end PrimeMajoranaCAR.ExteriorCARPair
 
 /-- Prime-indexed family of local split-Majorana CAR owners. -/
-abbrev PrimeLocalCARFamily (PrimeLabel Op : Type*) [Ring Op] :=
-  PrimeLabel → PrimeMajoranaCAR.ExteriorCARPair Op
+structure PrimeLocalCARFamily (PrimeLabel Op : Type*) [Ring Op] where
+  pair : PrimeLabel → PrimeMajoranaCAR.ExteriorCARPair Op
 
 namespace PrimeLocalCARFamily
-
-abbrev pair {PrimeLabel Op : Type*} [Ring Op]
-    (F : PrimeLocalCARFamily PrimeLabel Op) :
-    PrimeLabel → PrimeMajoranaCAR.ExteriorCARPair Op :=
-  F
 
 variable {PrimeLabel Op : Type*} [Ring Op]
 
@@ -137,7 +132,7 @@ theorem sameModeCurrentD (F : PrimeLocalCARFamily PrimeLabel Op) :
 
 /--
 Transport the concrete same-mode current action to the symbolic arithmetic
-current interface.
+current socket.
 
 Boundary: this only packages same-mode local action laws. Distinct-prime OPE
 relations and Laurent/VOA semantics remain open owner debt.
@@ -212,7 +207,7 @@ theorem offDiagCurrentD :
 
 /--
 Concrete transport of the normalized Weyl-gauge owner current into the symbolic
-current interface.
+current socket.
 
 The current laws are packaged as conjunctions of same-mode action and
 off-diagonal commutation. Laurent/OPE singular-part semantics still remain open.

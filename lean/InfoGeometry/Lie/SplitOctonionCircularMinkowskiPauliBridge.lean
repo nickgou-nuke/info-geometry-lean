@@ -21,6 +21,9 @@ open InfoGeometry.Geometry.PauliParavectorBridge
 
 abbrev Momentum := Fin 4 → ℝ
 
+def minkowskiCoordinates (v : Minkowski4) : Momentum :=
+  ![v.t, v.x, v.y, v.z]
+
 def minkowskiSq (u : Momentum) : ℝ :=
   u 0 * u 0 - (u 1 * u 1 + u 2 * u 2 + u 3 * u 3)
 
@@ -55,14 +58,15 @@ theorem pauliMatrix_isHermitian (v : Minkowski4) :
 
 theorem circularWittQuadratic_diagonal_eq_minkowski_q
     (v : Minkowski4) :
-    circularWittQuadratic (minkowskiDiagonalEmbedding v) = v.q := by
-  simp [Minkowski4.q, minkowskiSq,
+    circularWittQuadratic (minkowskiDiagonalEmbedding (minkowskiCoordinates v)) = v.q := by
+  simp [minkowskiCoordinates, Minkowski4.q, minkowskiSq,
     circularWittQuadratic_diagonal_eq_minkowskiSq]
   ring
 
 theorem circularWittQuadratic_diagonal_eq_canonical_pauliDet
     (v : Minkowski4) :
-    (circularWittQuadratic (minkowskiDiagonalEmbedding v) : ℂ) =
+    (circularWittQuadratic
+      (minkowskiDiagonalEmbedding (minkowskiCoordinates v)) : ℂ) =
       Matrix.det (pauliMatrix v) := by
   rw [det_pauliMatrix]
   simp [circularWittQuadratic_diagonal_eq_minkowski_q]

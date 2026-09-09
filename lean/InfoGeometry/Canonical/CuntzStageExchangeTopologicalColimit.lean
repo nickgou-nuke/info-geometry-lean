@@ -100,5 +100,3 @@ def exchangeTopologicalColimitIso
   inv_hom_id := exchangeTopologicalColimitMap_involution Stage T Θ hcompat hsq
 
 end InfoGeometry.Canonical.CuntzStageExchangeTopologicalColimit
-
-end

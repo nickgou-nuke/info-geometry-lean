@@ -100,7 +100,8 @@ theorem isKlein_activeExteriorProjectiveMap_mk_iff
     _root_.InfoGeometry.Projective.ExteriorKleinProjective.IsKlein
         (activeExteriorProjectiveMap
           (Projectivization.mk ℝ X hX)) ↔
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X.1 = 0 := by
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X.1 = 0 := by
   rw [activeExteriorProjectiveMap, Projectivization.map_mk,
     _root_.InfoGeometry.Projective.ExteriorKleinProjective.isKlein_mk_iff]
   change exteriorKleinForm (activeExteriorLinearEquiv X) = 0 ↔ _
@@ -113,7 +114,8 @@ theorem isDecomposable_activeExteriorProjectiveMap_mk_iff
     _root_.InfoGeometry.Projective.ExteriorKleinProjective.IsDecomposable
         (activeExteriorProjectiveMap
           (Projectivization.mk ℝ X hX)) ↔
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X.1 = 0 := by
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X.1 = 0 := by
   rw [← _root_.InfoGeometry.Projective.ExteriorKleinProjective.isKlein_iff_isDecomposable]
   exact isKlein_activeExteriorProjectiveMap_mk_iff X hX
 

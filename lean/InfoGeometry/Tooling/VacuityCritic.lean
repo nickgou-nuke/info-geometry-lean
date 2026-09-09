@@ -21,7 +21,7 @@ structure InspectionField where
 known placeholder token. -/
 def InspectionField.hasContent (field : InspectionField) : Bool :=
   !field.key.isEmpty && !field.value.isEmpty &&
-    field.value != "sorry" && field.value != "sorry"
+    field.value != "sorry" && field.value != "admit"
 
 /-- An inspected Lean declaration together with its concrete inspection fields. -/
 structure InspectedDeclaration where

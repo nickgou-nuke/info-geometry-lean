@@ -13,7 +13,7 @@ This module keeps the algebra explicit:
 * the split reflection `σ ↦ 1 - σ` with `t` fixed,
 * a finite normalized prime holonomy readout.
 
-No placeholder interfaces.
+No sockets.
 No certificates.
 No analytic continuation theorem.
 -/
@@ -166,22 +166,6 @@ theorem reconstruct_mul (u v u' v' : ℝ) :
       reconstruct (u * u') (v * v') := by
   ext <;> simp [mul, reconstruct] <;> ring
 
-/-- Split conjugation reverses the hyperbolic coordinate. -/
-def reverse (x : SplitComplex) : SplitComplex :=
-  reconstruct (rightPart x) (leftPart x)
-
-theorem mul_reverse_eq_norm_smul_one (x : SplitComplex) :
-    mul x (reverse x) = smul (norm x) one := by
-  cases x <;>
-    simp [reverse, norm, leftPart, rightPart, reconstruct, mul, smul, one] <;>
-    constructor <;> ring
-
-theorem mul_reverse_eq_one_of_norm_one
-    (x : SplitComplex) (hx : norm x = 1) :
-    mul x (reverse x) = one := by
-  rw [mul_reverse_eq_norm_smul_one, hx]
-  simp [smul, one]
-
 /-- The split norm is multiplicative. -/
 theorem norm_mul (x y : SplitComplex) :
     norm (mul x y) = norm x * norm y := by
@@ -222,6 +206,9 @@ def rightCone (s : SplitSouriauTemperature) : ℝ :=
 /-- Split reflection with `t` fixed. -/
 def splitReflection (s : SplitSouriauTemperature) : SplitSouriauTemperature :=
   ⟨1 - s.sigma, s.time⟩
+
+/-- Compatibility alias for the split reflection. -/
+abbrev antiunitaryReflection := splitReflection
 
 /-- Carrier-level split reflection in left/right coordinates. -/
 def splitReflectionComplex (z : SplitComplex) : SplitComplex :=
@@ -285,16 +272,5 @@ theorem normalizedPrimeHolonomySplit_norm_eq_one_of_critical
   have hsum : (-(t * period) + t * period) = 0 := by
     ring
   rw [hsum, Real.exp_zero]
-
-/-- The critical normalized holonomy has the explicit split inverse `reverse`. -/
-theorem normalizedPrimeHolonomySplit_mul_reverse_eq_one_of_critical
-    (sigma t period : ℝ) (hσ : sigma = (1 / 2 : ℝ)) :
-    SplitComplex.mul
-        (normalizedPrimeHolonomySplit sigma t period)
-        (SplitComplex.reverse
-          (normalizedPrimeHolonomySplit sigma t period)) =
-      SplitComplex.one := by
-  apply SplitComplex.mul_reverse_eq_one_of_norm_one
-  exact normalizedPrimeHolonomySplit_norm_eq_one_of_critical sigma t period hσ
 
 end InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics

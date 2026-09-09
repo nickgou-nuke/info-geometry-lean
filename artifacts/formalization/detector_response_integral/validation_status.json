@@ -1,0 +1,48 @@
+{
+  "public_proof_implementations": 54,
+  "private_proof_helpers": 2,
+  "source_scan": "passed_no_placeholders_or_custom_axiom_declarations",
+  "symbolic_checks": "4 passed",
+  "synthetic_quadrature_cases": "4 passed",
+  "measured_detector_validation": false,
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "base_commit": "fdce23724bcbd3cc63f78c6e0cdca7e371d99c1f",
+  "lean_toolchain": "leanprover/lean4:v4.28.1",
+  "mathlib_rev": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+  "formal_scope_frontier": [
+    "Cartesian-to-polar/ray Jacobian equality",
+    "Sharp global volume-response/solid-angle bound",
+    "Microscopic full-energy acceptance construction",
+    "Correlated two-photon response",
+    "Quantified VPD approximation"
+  ],
+  "authoring_session": {
+    "status": "candidate_not_kernel_verified",
+    "local_lean_exit_code": 127,
+    "local_lean_result": "NOT RUN: lake is unavailable.",
+    "kernel_verified": false
+  },
+  "status": "native_owner_targets_kernel_checked",
+  "kernel_verified": true,
+  "verification_scope": "Targeted locked build; not the repository master build",
+  "verification_date": "2026-09-09",
+  "build_exit_code": 0,
+  "build_jobs": 8207,
+  "build_targets": [
+    "InfoGeometry.Nuclear.DetectorResponseAudit",
+    "InfoGeometry.Nuclear.DetectorResponseBridgeAudit",
+    "InfoGeometry.Nuclear.All"
+  ],
+  "source_root": "lean/InfoGeometry/Nuclear",
+  "owner_sha256": {
+    "DetectorResponseCore.lean": "dcae2d6c24817e276db145a715317e25d35d5b6cbb4aae957cca27141c15ac40",
+    "DetectorResponseAudit.lean": "149f52ed090cc06a82867eed07dfe335e8f2eeb10d30108767e965280087b888",
+    "DetectorResponseIntegral.lean": "f08b1468d3c84980056b1ca435b5ed199d3665a0793ee0f1ece8998c98e0251a",
+    "DetectorInformationGeometryAudit.lean": "04029a90472fa4bd02242bc10b381274b8f8ca4b4283dd67ab32f32d2ff52a05",
+    "DetectorResponseBridgeAudit.lean": "13b6eb4c454932aa3ef5a79ae49c6f6d9f00bcba94c423c6294621e8dea7283d",
+    "DetectorBeerLambert.lean": "591f3d125d39dd6cd0e7053af2aa2b9e719fd9d690fcc113b47ec3de96869211",
+    "DetectorDiskIntegral.lean": "5322ae0bc7080b88cfea0ec9ab9cb380bc9d25548899ca2b0eca21920e71157a",
+    "DetectorTransportKernel.lean": "aeea58509fe4c817fdcc8bec58efd4ca48a9a8b2b18dffb36a9473f533f632f8",
+    "DetectorVolumeResponse.lean": "02653272f1dfd71aee52d396026e92e3a5c63896d45318a5d86a442d786cbf78"
+  }
+}

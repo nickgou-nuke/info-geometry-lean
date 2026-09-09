@@ -30,7 +30,7 @@ bridge through logarithmic linearization.
 noncomputable def exactBridgeOfVolumeCharacter {A : Type*} [Monoid A]
     (vol : A →* ℝˣ) :
     ExactMultiplicativeToAdditiveBridge A ℝˣ ℝ where
-  toExactAbelianizingBridge := vol
+  toExactAbelianizingBridge := ⟨vol⟩
   toAdditiveLinearization := logAbsUnitsLinearization
 
 /-- High-level logarithmic generator induced by a scalar RN bridge. -/

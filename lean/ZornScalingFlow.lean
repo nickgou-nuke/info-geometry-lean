@@ -1,1 +1,1 @@
-../proofs/ZornScalingFlow.lean
+/media/goutev/SP DS72/auto/proofs/ZornScalingFlow.lean

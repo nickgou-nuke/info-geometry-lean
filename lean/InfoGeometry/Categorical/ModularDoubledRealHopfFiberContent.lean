@@ -47,7 +47,7 @@ namespace FibonacciFusionShadow
 
 variable {R : Type r} [CommSemiring R]
 
-abbrev tau (F : FibonacciFusionShadow R) : R := F.1
+def tau (F : FibonacciFusionShadow R) : R := F.1
 
 theorem tau_sq (F : FibonacciFusionShadow R) : F.tau ^ 2 = 1 + F.tau := F.2
 
@@ -86,7 +86,7 @@ structure FiberMonodromy
   act : Loop → F.Total → F.Total
   act_one : ∀ x : F.Total, act 1 x = x
   act_mul : ∀ (g h : Loop) (x : F.Total), act (g * h) x = act g (act h x)
-  projection_act : ∀ (g : Loop) (x : F.Total), F.projection (act g x) = F.projection x
+  projection_preserved : ∀ (g : Loop) (x : F.Total), F.projection (act g x) = F.projection x
 
 namespace FiberMonodromy
 
@@ -95,7 +95,7 @@ variable {F : ModularDoubledRealHopf.{u, v}} {Loop : Type m} [Monoid Loop]
 /-- Monodromy sends each point to the same fiber over the base. -/
 theorem sameFiber_act (M : FiberMonodromy F Loop) (g : Loop) (x : F.Total) :
     F.SameFiber (M.act g x) x := by
-  exact M.projection_act g x
+  exact M.projection_preserved g x
 
 end FiberMonodromy
 
@@ -158,17 +158,13 @@ theorem rotate_three (x : ConnectionSector) :
 end ConnectionSector
 
 /-- A cyclic `Z3` action shadow on a carrier. -/
-abbrev Z3Action (X : Type s) :=
-  {rotate : X → X // ∀ x : X, rotate (rotate (rotate x)) = x}
+structure Z3Action (X : Type s) where
+  rotate : X → X
+  rotate_three : ∀ x : X, rotate (rotate (rotate x)) = x
 
 namespace Z3Action
 
 variable {X : Type s}
-
-abbrev rotate (A : Z3Action X) : X → X := A.1
-
-abbrev rotate_three (A : Z3Action X) :
-    ∀ x : X, A.rotate (A.rotate (A.rotate x)) = x := A.2
 
 /-- Any order-three rotation is injective. -/
 theorem injective (A : Z3Action X) : Function.Injective A.rotate := by
@@ -181,8 +177,9 @@ theorem injective (A : Z3Action X) : Function.Injective A.rotate := by
 end Z3Action
 
 /-- The canonical `Z3` action on the three connection sectors. -/
-def connectionSectorZ3 : Z3Action ConnectionSector :=
-  ⟨ConnectionSector.rotate, ConnectionSector.rotate_three⟩
+def connectionSectorZ3 : Z3Action ConnectionSector where
+  rotate := ConnectionSector.rotate
+  rotate_three := ConnectionSector.rotate_three
 
 /-- Concrete sector readout: one full `Z3` cycle returns to the vector sector. -/
 theorem connectionSectorZ3_vector_cycle :

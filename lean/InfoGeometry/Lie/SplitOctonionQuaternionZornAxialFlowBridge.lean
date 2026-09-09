@@ -8,6 +8,7 @@ namespace InfoGeometry.Lie.SplitOctonionQuaternionZornAxialFlowBridge
 
 open SplitOctonion
 open InfoGeometry.Algebra.Zorn
+open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 open InfoGeometry.Canonical.SplitOctonionQuaternionZornPolarBridge
 open InfoGeometry.Lie.SplitOctonionAxialCartanFlow
 open InfoGeometry.Lie.SplitOctonionAxialCartanErlangen
@@ -92,9 +93,11 @@ theorem splitOctonionAxialCartanTransport_preserves_hyperbolic
 theorem splitOctonionAxialCartanTransport_preserves_canonicalZorn_null
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) (X : SplitOctonion) :
     InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+          InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
         (splitOctonionCanonicalZornEquiv
           (splitOctonionAxialCartanTransport k t X)) = 0 ↔
       InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+          InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
         (splitOctonionCanonicalZornEquiv X) = 0 := by
   rw [splitOctonionCanonicalZornEquiv_norm,
     splitOctonionCanonicalZornEquiv_norm,
@@ -104,9 +107,11 @@ def splitOctonionCanonicalNullTransportEquiv
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) :
     {X : SplitOctonion //
         InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+          InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
           (splitOctonionCanonicalZornEquiv X) = 0} ≃
       {X : SplitOctonion //
         InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+          InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
           (splitOctonionCanonicalZornEquiv X) = 0} where
   toFun X :=
     ⟨splitOctonionAxialCartanTransport k t X.1,
@@ -151,12 +156,12 @@ theorem splitOctonionAxialCartanTransport_preserves_polarRho
 theorem splitOctonionAxialCartanTransport_preserves_canonicalZorn_polar
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ)
     (X Y : SplitOctonion) :
-    polarZ
+    polarZ realCrossProduct3
         (splitOctonionCanonicalZornEquiv
           (splitOctonionAxialCartanTransport k t X))
         (splitOctonionCanonicalZornEquiv
           (splitOctonionAxialCartanTransport k t Y)) =
-      polarZ
+      polarZ realCrossProduct3
         (splitOctonionCanonicalZornEquiv X)
         (splitOctonionCanonicalZornEquiv Y) := by
   simp only [splitOctonionAxialCartanTransport_apply,
@@ -168,12 +173,12 @@ theorem splitOctonionAxialCartanTransport_preserves_canonicalZorn_polar
 theorem splitOctonionAxialCartanTransport_preserves_canonicalZorn_incident
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ)
     (X Y : SplitOctonion) :
-    IncidentRep
+    IncidentRep realCrossProduct3
         (splitOctonionCanonicalZornEquiv
           (splitOctonionAxialCartanTransport k t X))
         (splitOctonionCanonicalZornEquiv
           (splitOctonionAxialCartanTransport k t Y)) ↔
-      IncidentRep (splitOctonionCanonicalZornEquiv X)
+      IncidentRep realCrossProduct3 (splitOctonionCanonicalZornEquiv X)
         (splitOctonionCanonicalZornEquiv Y) := by
   simp only [splitOctonionAxialCartanTransport_apply,
     Equiv.apply_symm_apply]

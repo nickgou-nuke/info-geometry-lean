@@ -40,7 +40,7 @@ structure RapidityFourVector where
 
 /-- The complex four-vector used by the existing Pauli soldering owner. -/
 def rapidityComplex (r : RapidityFourVector) : FourMomentum :=
-  (r.time, (r.x, (r.y, r.z)))
+  ⟨r.time, r.x, r.y, r.z⟩
 
 /-- Solder a rapidity four-vector to its chiral `2 × 2` Pauli block. -/
 def solderRapidity (r : RapidityFourVector) : M2C :=
@@ -50,12 +50,13 @@ def solderRapidity (r : RapidityFourVector) : M2C :=
     solderRapidity r =
       !![(r.time : ℂ) + r.z, (r.x : ℂ) - Complex.I * r.y;
          (r.x : ℂ) + Complex.I * r.y, (r.time : ℂ) - r.z] := by
-  rfl
+  simp [solderRapidity, pauliMomentum, rapidityComplex]
 
 theorem solderRapidity_det (r : RapidityFourVector) :
     (solderRapidity r).det =
       (r.time : ℂ) ^ 2 - r.x ^ 2 - r.y ^ 2 - r.z ^ 2 := by
-  exact det_pauliMomentum (rapidityComplex r)
+  simpa [solderRapidity, rapidityComplex, minkowskiSq] using
+    det_pauliMomentum (rapidityComplex r)
 
 /-! ## Gram density and trace normalization -/
 

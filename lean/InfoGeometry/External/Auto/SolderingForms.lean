@@ -2,8 +2,6 @@ import Mathlib.Tactic
 
 open Matrix
 
-namespace SolderingForms
-
 /-!
 # Pauli/Cartan Soldering Forms
 
@@ -209,7 +207,3 @@ theorem pauli_soldering_theorem :
     trace_solder_t, trace_solder_x, trace_solder_y, trace_solder_z,
     solder_x_trace_of_solder, solder_y_trace_of_solder, solder_z_trace_of_solder,
     solder_roundtrip, det_spinorDyad⟩
-
-end
-
-end SolderingForms

@@ -23,7 +23,7 @@ The closed result is deliberately finite:
   `ℚ⁵ ⊕ ℚ⁵`.
 
 This does not construct the global crystallographic wallpaper group, a Pin
-double cover, or an analytic Cartan bundle.  Those remain higher-level interfaces;
+double cover, or an analytic Cartan bundle.  Those remain higher-level sockets;
 this module supplies the exact finite algebraic cross-section used by them.
 -/
 
@@ -113,21 +113,21 @@ theorem pin55LiftOfWallpaperRoot_isD5Root (i : Fin 8) :
     IsD5Root (pin55LiftOfWallpaperRoot i) := by
   fin_cases i
   · refine ⟨0, 2, 0, 0, by decide, ?_⟩
-    funext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
   · refine ⟨0, 2, 1, 0, by decide, ?_⟩
-    funext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
   · refine ⟨1, 2, 0, 0, by decide, ?_⟩
-    funext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
   · refine ⟨1, 2, 1, 0, by decide, ?_⟩
-    funext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
   · refine ⟨0, 1, 0, 0, by decide, ?_⟩
-    funext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
   · refine ⟨0, 1, 1, 1, by decide, ?_⟩
-    funext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
   · refine ⟨0, 1, 0, 1, by decide, ?_⟩
-    funext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
   · refine ⟨0, 1, 1, 0, by decide, ?_⟩
-    funext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
 
 /-! ## Wallpaper action and Weyl lifts -/
 
@@ -226,7 +226,7 @@ def projectWeyl2 (M : Mat5Q) : Mat2Q :=
 /-- The `D₅` cross-section projects exactly to the wallpaper `D₄` matrices. -/
 theorem weylD5CrossSection_projects_wallpaper (g : Fin 8) :
     projectWeyl2 (weylD5CrossSection g) = wallpaperD4 g := by
-  fin_cases g <;> ext i j <;> fin_cases i <;> fin_cases j <;> native_decide
+  fin_cases g <;> native_decide
 
 /-- The cross-section representatives are signed orthogonal matrices. -/
 theorem weylD5CrossSection_orthogonal (g : Fin 8) :
@@ -243,15 +243,15 @@ theorem weylD5CrossSection_action_projects_wallpaper (g r : Fin 8) :
       matVec2 (wallpaperD4 g) (wallpaperB2Root r) := by
   fin_cases g <;> fin_cases r <;> native_decide
 
-/-- Explicit `D₅` root property data for the lifted `D₄` action. -/
+/-- Explicit `D₅` root witness data for the lifted `D₄` action. -/
 structure D5RootData where
   i : Fin 5
   j : Fin 5
   si : Fin 2
   sj : Fin 2
 
-/-- Data table for the transformed lifted roots. -/
-def d5ActionData : Fin 8 → Fin 8 → D5RootData
+/-- Witness table for the transformed lifted roots. -/
+def d5ActionWitness : Fin 8 → Fin 8 → D5RootData
   | 0, 0 => ⟨0, 2, 0, 0⟩
   | 0, 1 => ⟨0, 2, 1, 0⟩
   | 0, 2 => ⟨1, 2, 0, 0⟩
@@ -317,24 +317,24 @@ def d5ActionData : Fin 8 → Fin 8 → D5RootData
   | 7, 6 => ⟨0, 1, 0, 1⟩
   | 7, 7 => ⟨0, 1, 1, 0⟩
 
-/-- The property table always chooses two distinct `D₅` coordinates. -/
-theorem d5ActionData_ne (g r : Fin 8) :
-    (d5ActionData g r).i ≠ (d5ActionData g r).j := by
+/-- The witness table always chooses two distinct `D₅` coordinates. -/
+theorem d5ActionWitness_ne (g r : Fin 8) :
+    (d5ActionWitness g r).i ≠ (d5ActionWitness g r).j := by
   fin_cases g <;> fin_cases r <;> decide
 
 /-- The `D₅` action table agrees with matrix multiplication on lifted roots. -/
 theorem weylD5CrossSection_action_root_eq (g r : Fin 8) :
     matVec5 (weylD5CrossSection g) (pin55LiftOfWallpaperRoot r) =
-      d5RootOf (d5ActionData g r).i (d5ActionData g r).j
-        (d5ActionData g r).si (d5ActionData g r).sj := by
+      d5RootOf (d5ActionWitness g r).i (d5ActionWitness g r).j
+        (d5ActionWitness g r).si (d5ActionWitness g r).sj := by
   fin_cases g <;> fin_cases r <;> native_decide
 
 /-- The lifted cross-section action preserves the finite `D₅` root system. -/
 theorem weylD5CrossSection_preserves_lifted_d5_roots (g r : Fin 8) :
     IsD5Root (matVec5 (weylD5CrossSection g) (pin55LiftOfWallpaperRoot r)) := by
-  refine ⟨(d5ActionData g r).i, (d5ActionData g r).j,
-    (d5ActionData g r).si, (d5ActionData g r).sj,
-    d5ActionData_ne g r, ?_⟩
+  refine ⟨(d5ActionWitness g r).i, (d5ActionWitness g r).j,
+    (d5ActionWitness g r).si, (d5ActionWitness g r).sj,
+    d5ActionWitness_ne g r, ?_⟩
   exact weylD5CrossSection_action_root_eq g r
 
 /-! ## Split `O(5,5)` metric preservation -/
@@ -354,8 +354,7 @@ def o55BlockLift (P : Mat5Q) : MatSplit55Q :=
 theorem weylD5CrossSection_preserves_splitMetric55 (g : Fin 8) :
     (o55BlockLift (weylD5CrossSection g)).transpose * splitMetric55 *
         o55BlockLift (weylD5CrossSection g) = splitMetric55 := by
-  ext a b
-  fin_cases g <;> fin_cases a <;> fin_cases b <;> native_decide
+  fin_cases g <;> native_decide
 
 /-- Compact packet collecting the finite wallpaper/root/metric cross-section. -/
 theorem wallpaper_pin55_root_cross_section_packet (g r : Fin 8) :

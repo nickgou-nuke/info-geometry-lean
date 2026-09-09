@@ -12,7 +12,7 @@ variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 /-!
 Thin bulk/boundary readback for the operator-first `osp(1|2)` tripotent lane.
 
-This file does not add a new property model. It only packages the existing
+This file does not add a new witness model. It only packages the existing
 `O^3 = O` projector split from `InfoGeometry.Algebra.OSp12` using the same
 bulk/boundary completeness and orthogonality language already owned by
 `InfoGeometry.Canonical.FibonacciParafermionAtoms`.

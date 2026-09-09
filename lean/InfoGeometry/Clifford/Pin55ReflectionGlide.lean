@@ -1,11 +1,10 @@
 import Mathlib.Tactic
 
 /-!
-# Finite Witt-coordinate pair-flip/glide action
+# Finite `Pin(5,5)` reflection/glide socket
 
-This module proves finite split-signature pair-flip/glide identities in a
-legacy Witt-coordinate carrier.  The native quadratic carrier and native
-split-Pin action are owned by `Clifford55`.
+This module proves the finite split-signature reflection/glide identities used
+by the `Pin(5,5)` interpretation.
 
 The carrier is the explicit split vector space `R^5 ⊕ R^5` with hyperbolic
 pairing
@@ -14,8 +13,8 @@ pairing
 
 We prove:
 
-* the first-pair sign flip preserves the split pairing;
-* the pair flip is involutive;
+* the first-pair sign reflection preserves the split `O(5,5)` pairing;
+* the reflection is involutive;
 * a glide obtained by composing that reflection with a half-translation along
   an invariant coordinate squares to a unit translation.
 
@@ -30,12 +29,9 @@ None.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 
-The map called `pinReflection` below flips both members of the first
-hyperbolic pair.  It is therefore a codimension-two sign flip, equivalently a
-product of one positive and one negative coordinate reflection, not a single
-hyperplane reflection.  The map called `glide` is consequently a pair glide,
-not a hyperplane glide reflection.  No Clifford cover, topological covering,
-or physical-spacetime theorem is asserted here.
+This is not a full Clifford algebra model of `Pin(5,5)`, a proof of the double
+cover map `Pin(5,5) -> O(5,5)`, or a theorem about physical spacetime.  Those
+require a full Clifford representation and sandwich-action formalization.
 -/
 
 noncomputable section
@@ -94,23 +90,17 @@ lemma flipFirst_addAtOne_comm (a : ℝ) (v : Fin 5 → ℝ) : flipFirst (addAtOn
 
 -- END LEMMAS
 
-/-- First-hyperbolic-pair sign flip, flipping both `p 0` and `w 0`. -/
+/-- Pin-style reflection flipping the first split pair. -/
 def pinReflection (x : Split55) : Split55 :=
   { p := flipFirst x.p, w := flipFirst x.w }
 
-/-- Translation along the invariant null/Witt `p 1` coordinate. -/
+/-- Translation along an invariant positive coordinate. -/
 def translateP (a : ℝ) (x : Split55) : Split55 :=
   { p := addAtOne a x.p, w := x.w }
 
-/-- Pair glide: apply the pair flip, then a half-translation in the null coordinate. -/
+/-- Glide: first reflect, then translate by a half-step along an invariant coordinate. -/
 def glide (x : Split55) : Split55 :=
   translateP (1 / 2) (pinReflection x)
-
-/-- Canonical semantic name for the legacy `pinReflection` definition. -/
-abbrev firstPairSignFlip := pinReflection
-
-/-- Canonical semantic name for the legacy `glide` definition. -/
-abbrev nullPairGlide := glide
 
 /-- The first-pair sign reflection preserves the split `O(5,5)` pairing. -/
 theorem pinReflection_preserves_splitPair (x y : Split55) :
@@ -134,34 +124,6 @@ theorem translateP_add (a b : ℝ) (x : Split55) :
   apply Split55.ext
   · exact addAtOne_add a b x.p
   · rfl
-
-/-- Zero translation is the identity map. -/
-@[simp] theorem translateP_zero (x : Split55) :
-    translateP 0 x = x := by
-  apply Split55.ext
-  · funext i
-    by_cases h : i = 1 <;> simp [translateP, addAtOne, h]
-  · rfl
-
-/-- Translation by the opposite parameter is a two-sided inverse. -/
-theorem translateP_neg_add (a : ℝ) (x : Split55) :
-    translateP (-a) (translateP a x) = x := by
-  rw [translateP_add, neg_add_cancel, translateP_zero]
-
-theorem translateP_add_neg (a : ℝ) (x : Split55) :
-    translateP a (translateP (-a) x) = x := by
-  rw [translateP_add, add_neg_cancel, translateP_zero]
-
-/-- Every split translation is a bijection, with inverse translation `-a`. -/
-theorem translateP_bijective (a : ℝ) :
-    Function.Bijective (translateP a) := by
-  refine ⟨?_, ?_⟩
-  · intro x y hxy
-    have h := congrArg (translateP (-a)) hxy
-    simpa only [translateP_neg_add a x, translateP_neg_add a y] using h
-  · intro y
-    refine ⟨translateP (-a) y, ?_⟩
-    exact translateP_add_neg a y
 
 /-- The reflection commutes with translations along the chosen invariant coordinate. -/
 theorem pinReflection_translateP_comm (a : ℝ) (x : Split55) :

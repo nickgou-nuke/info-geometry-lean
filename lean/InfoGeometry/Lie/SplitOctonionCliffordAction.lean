@@ -15,9 +15,9 @@ Mathlib's universal property produces an algebra homomorphism
 `CliffordAlgebra leftCliffordQuadratic →ₐ[ℝ] Module.End ℝ CanonicalZorn`.
 
 The source and target of this homomorphism are associative. The split-octonion
-carrier serves as the representation module. In particular, this file keeps the
-associative Clifford algebra and the nonassociative split-octonion carrier in
-distinct roles.
+carrier is only the representation module. In particular, this file does not
+claim that split octonions form an associative subalgebra of a Clifford algebra,
+or that `X ↦ imaginaryLeftMul X` preserves split-octonion multiplication.
 -/
 
 noncomputable section
@@ -41,23 +41,6 @@ noncomputable def leftCliffordQuadratic : QuadraticForm ℝ Imaginary :=
 @[simp] theorem leftCliffordQuadratic_apply (X : Imaginary) :
     leftCliffordQuadratic X = (-1 / 2 : ℝ) * imaginaryPolar X X := by
   simp [leftCliffordQuadratic, leftCliffordBilin, imaginaryPolarBilin_apply]
-
-/-- The Clifford polar form is the negative native determinant polarization.
-
-Mathlib's quadratic polar has no hidden factor of `1 / 2`: it is
-`Q (X + Y) - Q X - Q Y`.  Since `imaginaryPolarBilin` is symmetric, the
-`-1 / 2` normalization in `leftCliffordBilin` therefore yields exactly the
-negative bilinear pairing. -/
-@[simp] theorem leftCliffordQuadratic_polar (X Y : Imaginary) :
-    QuadraticMap.polar leftCliffordQuadratic X Y =
-      -imaginaryPolarBilin X Y := by
-  rw [QuadraticMap.polar]
-  simp only [leftCliffordQuadratic_apply]
-  rw [← imaginaryPolarBilin_apply, ← imaginaryPolarBilin_apply,
-    ← imaginaryPolarBilin_apply]
-  simp only [map_add, LinearMap.add_apply]
-  rw [imaginaryPolarBilin_isSymm.eq Y X]
-  ring
 
 /-- Left multiplication by imaginary split octonions, bundled as a real-linear
 map into the associative endomorphism algebra of the full carrier. -/
@@ -98,12 +81,12 @@ the imaginary hyperplane.  This fixes the sign convention of the resulting
 split Clifford representation. -/
 @[simp] theorem leftCliffordQuadratic_eq_neg_det (X : Imaginary) :
     leftCliffordQuadratic X =
-      -ZornMatrix.detZ X.1 := by
+      -ZornMatrix.detZ realCrossProduct3 X.1 := by
   have hquad := realZorn_quadratic X.1
   have htrace : realZornTrace X.1 = 0 := (mem_imaginary_iff X.1).mp X.2
   rw [htrace, zero_smul] at hquad
   change X.1 * X.1 +
-    ZornMatrix.detZ X.1 • (1 : CanonicalZorn) = 0 at hquad
+    ZornMatrix.detZ realCrossProduct3 X.1 • (1 : CanonicalZorn) = 0 at hquad
   rw [imaginary_sq_eq_leftCliffordQuadratic] at hquad
   rw [← add_smul] at hquad
   have hone : (1 : CanonicalZorn) ≠ 0 := by
@@ -115,7 +98,7 @@ split Clifford representation. -/
     rw [h1a, h0a] at ha
     norm_num at ha
   have hscalar : leftCliffordQuadratic X +
-      ZornMatrix.detZ X.1 = 0 := by
+      ZornMatrix.detZ realCrossProduct3 X.1 = 0 := by
     exact (smul_eq_zero.mp hquad).resolve_right hone
   linarith
 
@@ -145,8 +128,8 @@ theorem imaginaryLeftMul_sq (X : Imaginary) :
   rw [one_zMul]
 
 /-- Native Mathlib Clifford representation on the eight-dimensional
-split-octonion carrier. This is an operator representation on the
-nonassociative split-octonion module. -/
+split-octonion carrier. This is an operator representation, not an embedding of
+the nonassociative split-octonion algebra as an associative subalgebra. -/
 noncomputable def splitOctonionLeftCliffordRepresentation :
     CliffordAlgebra leftCliffordQuadratic →ₐ[ℝ] Module.End ℝ CanonicalZorn :=
   CliffordAlgebra.lift leftCliffordQuadratic ⟨imaginaryLeftMul, imaginaryLeftMul_sq⟩
@@ -166,13 +149,5 @@ theorem imaginaryLeftMul_anticommutator (X Y : Imaginary) :
   have h := congrArg splitOctonionLeftCliffordRepresentation
     (CliffordAlgebra.ι_mul_ι_add_swap (Q := leftCliffordQuadratic) X Y)
   simpa using h
-
-/-- The same operator identity in the native determinant-polar coordinates. -/
-theorem imaginaryLeftMul_anticommutator_eq_neg_imaginaryPolar (X Y : Imaginary) :
-    imaginaryLeftMul X * imaginaryLeftMul Y +
-        imaginaryLeftMul Y * imaginaryLeftMul X =
-      algebraMap ℝ (Module.End ℝ CanonicalZorn)
-        (-imaginaryPolarBilin X Y) := by
-  rw [imaginaryLeftMul_anticommutator, leftCliffordQuadratic_polar]
 
 end InfoGeometry.Lie.SplitOctonionImaginaryAction

@@ -7,8 +7,6 @@ import Mathlib.CategoryTheory.Limits.Types.Filtered
 open CategoryTheory
 open CategoryTheory.Limits
 
-namespace UhfCantorBoundary
-
 /-!
   UHF bulk (finite diagonal stages) → Cantor boundary, with MASA correction.
   The point is: the boundary is from the diagonal MASA, not from the full UHF spectrum.
@@ -35,13 +33,16 @@ def diagonalDiagram : ℕ ⥤ Type := Functor.ofSequence diagonalEmbed
 /-- The `2`-adic/UHF-bulk colimit over diagonal finite levels (as a type-level colimit). -/
 def uHFColimit : Type := colimit diagonalDiagram
 
+/-- Infinite binary strings: `CantorBoundary = {0,1}^ℕ`. -/
+def CantorBoundary : Type := ℕ → Bool
+
 /-- Finite-to-infinite readout (zero padding beyond stage). -/
-def finiteToBoundary (n : ℕ) : DiagonalLevel n → (ℕ → Bool) :=
+def finiteToBoundary (n : ℕ) : DiagonalLevel n → CantorBoundary :=
   fun b k => if h : k < n then b ⟨k, h⟩ else false
 
-/-- Cocone from finite levels into `(ℕ → Bool)`. -/
+/-- Cocone from finite levels into `CantorBoundary`. -/
 def boundaryCocone : Cocone diagonalDiagram where
-  pt := (ℕ → Bool)
+  pt := CantorBoundary
   ι := NatTrans.ofSequence
     (app := finiteToBoundary)
     (naturality := by
@@ -60,20 +61,20 @@ def boundaryCocone : Cocone diagonalDiagram where
         · simp [finiteToBoundary, hkn, hk])
 
 /-- Map from the colimit to the Cantor boundary (projective readout). -/
-noncomputable def fromColimitBoundary : colimit diagonalDiagram → (ℕ → Bool) :=
+noncomputable def fromColimitBoundary : colimit diagonalDiagram → CantorBoundary :=
   colimit.desc (F := diagonalDiagram) (c := boundaryCocone)
 
 /-- Canonical identification of the boundary type. -/
-def cantor_boundary_identification : (ℕ → Bool) ≃ (ℕ → Bool) :=
+def cantor_boundary_identification : CantorBoundary ≃ (ℕ → Bool) :=
   Equiv.refl _
 
 /-- Correction statement (for comments/theory):
 `Spec(UHF_{2^∞})` is not used here;
-`Spec(D_{2^∞})` (diagonal MASA) is realized as (ℕ → Bool). -/
-def cantor_is_diagonal_spectrum : (ℕ → Bool) ≃ (ℕ → Bool) :=
+`Spec(D_{2^∞})` (diagonal MASA) is realized as CantorBoundary. -/
+def cantor_is_diagonal_spectrum : CantorBoundary ≃ (ℕ → Bool) :=
   cantor_boundary_identification
 
-/-- General Zorn pattern (nonempty chain property ⇒ maximal extension). -/
+/-- General Zorn pattern (nonempty chain hypothesis ⇒ maximal extension). -/
 theorem zorn_refinement_exists
     {S : Set (Set ℕ)}
     (h : ∀ c ⊆ S, IsChain (· ⊆ ·) c → c.Nonempty →
@@ -85,5 +86,3 @@ theorem zorn_refinement_exists
 A preorder is a thin category (`SmallCategory`) in which homs encode ≤. -/
 def diagonal_prefix_category (C : Type*) [Preorder C] : SmallCategory C :=
   (inferInstance : SmallCategory C)
-
-end UhfCantorBoundary

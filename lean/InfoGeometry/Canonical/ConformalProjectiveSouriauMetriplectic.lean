@@ -31,6 +31,7 @@ structure ConformalProjectiveSouriauMetriplecticBridge (R : Type*) [CommRing R] 
   
   h_mp : IsMoorePenroseInverse a b_mp
   h_dr : IsDrazinInverse a b_dr k
+  h_dr_star : star (a * b_dr) = a * b_dr
 
 namespace ConformalProjectiveSouriauMetriplecticBridge
 
@@ -38,10 +39,9 @@ variable {R : Type*} [CommRing R] [StarRing R]
 variable (B : ConformalProjectiveSouriauMetriplecticBridge R)
 
 /-- The Einstein anomaly associated with the bridge is skew-adjoint. -/
-theorem anomaly_skew_adjoint
-    (h_dr_star : star (B.a * B.b_dr) = B.a * B.b_dr) :
+theorem anomaly_skew_adjoint :
     star (EinsteinAnomaly B.a B.b_mp B.b_dr) = - (EinsteinAnomaly B.a B.b_mp B.b_dr) :=
-  einsteinAnomaly_skew_adjoint B.a B.b_mp B.b_dr B.k B.h_mp B.h_dr h_dr_star
+  einsteinAnomaly_skew_adjoint B.a B.b_mp B.b_dr B.k B.h_mp B.h_dr B.h_dr_star
 
 /-- InfoGeometry.Topology.Metriplectic energy is conserved. -/
 theorem energy_conserved :

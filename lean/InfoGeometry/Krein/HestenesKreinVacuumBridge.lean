@@ -23,57 +23,34 @@ local instance instTopologicalRingEndH : IsTopologicalRing EndH := inferInstance
 local instance instCompleteSpaceEndH : CompleteSpace EndH := inferInstance
 
 /--
-Vacuum vector data for the Hestenes/Krein real KMS packet.
+Vacuum vector socket for the Hestenes/Krein real KMS packet.
 
 This file does not prove a global Haagerup--Araki standard-form uniqueness
 statement.  The cyclic/separating/uniqueness content remains an explicit
-property supplied by the Hestenes--Krein owner.  Locally, this bridge proves
+certificate supplied by the Hestenes--Krein owner.  Locally, this bridge proves
 the Krein readbacks that follow from the supplied witnesses.
 -/
 @[rep_depth krein]
-abbrev HestenesKreinVacuum (P : HestenesKreinKMSPacket (E := E)) :=
-  {omega : E //
-    omega ∈ P.HestenesNaturalCone ∧
-    KreinSpace.kreinInner (H := E) omega omega = 1 ∧
-    KreinSpace.jCLM (H := E) omega = omega ∧
-    (∀ t : ℝ, P.rotor t omega = omega) ∧
-    (∀ (t : ℝ) (A : EndH),
-      P.hestenesExpectation omega (P.modularFlow.flow t A) =
-        P.hestenesExpectation omega A)}
+structure HestenesKreinVacuum (P : HestenesKreinKMSPacket (E := E)) where
+  /-- Vacuum vector representative. -/
+  omega : E
 
-namespace HestenesKreinVacuum
+  /-- The vacuum lies in the Hestenes/Krein natural cone. -/
+  omega_in_cone : omega ∈ P.HestenesNaturalCone
 
-abbrev omega {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] [KreinSpace E]
-    {P : HestenesKreinKMSPacket (E := E)}
-    (V : HestenesKreinVacuum P) : E := V.1
-abbrev omega_in_cone {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] [KreinSpace E]
-    {P : HestenesKreinKMSPacket (E := E)}
-    (V : HestenesKreinVacuum P) : V.1 ∈ P.HestenesNaturalCone := V.2.1
-abbrev omega_normalized {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] [KreinSpace E]
-    {P : HestenesKreinKMSPacket (E := E)}
-    (V : HestenesKreinVacuum P) :
-    KreinSpace.kreinInner (H := E) V.1 V.1 = 1 := V.2.2.1
-abbrev J_fixes_omega {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] [KreinSpace E]
-    {P : HestenesKreinKMSPacket (E := E)}
-    (V : HestenesKreinVacuum P) :
-    KreinSpace.jCLM (H := E) V.1 = V.1 := V.2.2.2.1
-abbrev rotor_fixes_omega {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] [KreinSpace E]
-    {P : HestenesKreinKMSPacket (E := E)}
-    (V : HestenesKreinVacuum P) : ∀ t : ℝ, P.rotor t V.1 = V.1 := V.2.2.2.2.1
-abbrev omega_expectation_flow_invariant {E : Type*} [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E] [CompleteSpace E] [KreinSpace E]
-    {P : HestenesKreinKMSPacket (E := E)}
-    (V : HestenesKreinVacuum P) :
-    ∀ (t : ℝ) (A : E →L[ℝ] E),
-      P.hestenesExpectation V.1 (P.modularFlow.flow t A) =
-        P.hestenesExpectation V.1 A := V.2.2.2.2.2
+  /-- Krein normalization `[Ω, Ω]_J = 1`. -/
+  omega_normalized : KreinSpace.kreinInner (H := E) omega omega = 1
 
-end HestenesKreinVacuum
+  /-- The Krein fundamental symmetry fixes the vacuum. -/
+  J_fixes_omega : KreinSpace.jCLM (H := E) omega = omega
+
+  /-- The real modular rotor fixes the vacuum vector. -/
+  rotor_fixes_omega : ∀ t : ℝ, P.rotor t omega = omega
+
+  /-- The vacuum expectation is invariant under the real modular flow. -/
+  omega_expectation_flow_invariant :
+    ∀ (t : ℝ) (A : EndH),
+      P.hestenesExpectation omega (P.modularFlow.flow t A) = P.hestenesExpectation omega A
 
 
 namespace HestenesKreinVacuum
@@ -86,46 +63,12 @@ variable (V : HestenesKreinVacuum P)
 def vacuumRealState (A : EndH) : ℝ :=
   P.hestenesExpectation V.omega A
 
-@[simp] theorem vacuumRealState_zero :
-    V.vacuumRealState (0 : EndH) = 0 := by
-  simp [vacuumRealState, HestenesKreinKMSPacket.hestenesExpectation]
-
-theorem vacuumRealState_add (A B : EndH) :
-    V.vacuumRealState (A + B) =
-      V.vacuumRealState A + V.vacuumRealState B := by
-  simp [vacuumRealState, HestenesKreinKMSPacket.hestenesExpectation,
-    inner_add_left]
-
-theorem vacuumRealState_smul (r : ℝ) (A : EndH) :
-    V.vacuumRealState (r • A) = r * V.vacuumRealState A := by
-  simp [vacuumRealState, HestenesKreinKMSPacket.hestenesExpectation,
-    real_inner_smul_left]
-
-theorem vacuumRealState_neg (A : EndH) :
-    V.vacuumRealState (-A) = -V.vacuumRealState A := by
-  simpa using V.vacuumRealState_smul (-1) A
-
-theorem vacuumRealState_sub (A B : EndH) :
-    V.vacuumRealState (A - B) =
-      V.vacuumRealState A - V.vacuumRealState B := by
-  simp [sub_eq_add_neg, V.vacuumRealState_add, V.vacuumRealState_neg]
-
 /-- The vacuum state is normalized on the identity observable. -/
 @[rep_depth krein]
 theorem vacuumRealState_id :
     V.vacuumRealState (1 : EndH) = 1 := by
   unfold vacuumRealState HestenesKreinKMSPacket.hestenesExpectation
   simpa using V.omega_normalized
-
-theorem vacuumRealState_eq_zero_of_annihilates_vacuum
-    (A : EndH) (hA : A V.omega = 0) :
-    V.vacuumRealState A = 0 := by
-  simp [vacuumRealState, HestenesKreinKMSPacket.hestenesExpectation, hA]
-
-theorem vacuumRealState_eq_of_apply_eq
-    (A B : EndH) (hAB : A V.omega = B V.omega) :
-    V.vacuumRealState A = V.vacuumRealState B := by
-  simp [vacuumRealState, HestenesKreinKMSPacket.hestenesExpectation, hAB]
 
 /-- The rotor fixes the vacuum vector. -/
 @[rep_depth krein]

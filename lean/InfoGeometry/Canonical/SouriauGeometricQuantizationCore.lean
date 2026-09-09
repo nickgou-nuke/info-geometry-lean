@@ -248,5 +248,3 @@ theorem standardPlane_scaled_curvature_relation
 end ConcreteWitness
 
 end
-end Canonical
-end InfoGeometry

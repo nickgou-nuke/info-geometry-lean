@@ -150,15 +150,78 @@ theorem attention_flow_riemannian_dissipation (s : SimplexState ι) (g : ι → 
     rw [h_zero, mul_zero]
   rw [h_vanish, sub_zero]
 
+/-! The attention potential is monotone along the natural-gradient flow. -/
+theorem attention_flow_potential_nonincreasing (s : SimplexState ι) (g : ι → ℝ) :
+    potentialTimeDerivative s g ≤ 0 := by
+  rw [attention_flow_riemannian_dissipation]
+  exact neg_nonpos.mpr (fisherRaoVelocityNormSq_nonneg s g)
+
+theorem attention_flow_potential_eq_zero_of_constant_gradient
+    (s : SimplexState ι) (c : ℝ) (h : ∀ i, g i = c) :
+    potentialTimeDerivative s g = 0 := by
+  rw [attention_flow_riemannian_dissipation]
+  unfold fisherRaoVelocityNormSq expectation
+  have he : ∑ i, s.p i * g i = c := by
+    calc
+      ∑ i, s.p i * g i = ∑ i, s.p i * c := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        rw [h i]
+      _ = c * ∑ i, s.p i := by
+        calc
+          ∑ i, s.p i * c = ∑ i, c * s.p i := by
+            apply Finset.sum_congr rfl
+            intro i hi
+            ring
+          _ = c * ∑ i, s.p i := by rw [Finset.mul_sum]
+      _ = c := by rw [s.sum_one, mul_one]
+  rw [he]
+  simp [h]
+
+theorem attentionFlowVelocity_eq_zero_of_constant_gradient
+    (s : SimplexState ι) (c : ℝ) (h : ∀ i, g i = c) :
+    attentionFlowVelocity s g = 0 := by
+  funext i
+  unfold attentionFlowVelocity fisherRaoNaturalGradient expectation
+  have he : ∑ j, s.p j * g j = c := by
+    calc
+      ∑ j, s.p j * g j = ∑ j, s.p j * c := by
+        apply Finset.sum_congr rfl
+        intro j hj
+        rw [h j]
+      _ = c * ∑ j, s.p j := by
+        calc
+          ∑ j, s.p j * c = ∑ j, c * s.p j := by
+            apply Finset.sum_congr rfl
+            intro j hj
+            ring
+          _ = c * ∑ j, s.p j := by rw [Finset.mul_sum]
+      _ = c := by rw [s.sum_one, mul_one]
+  rw [h i, he]
+  simp
+
 /-!
 =============================================================================
 PART 2: Cauchy–Schwarz Polyak–Łojasiewicz Lower Bounds and Step Dissipation
 =============================================================================
 -/
 
-/-- The Dissipative Entropy Production / Dirichlet Energy: σ(p) = ∑_i (p_i)^2. -/
-def entropyProductionRate (s : SimplexState ι) : ℝ :=
+/--
+Collision probability / quadratic concentration (simplex $L^2$-mass):
+$\sum_i (p_i)^2$.
+
+Note: This is the collision probability or Rényi-2 concentration statistic of the
+probability vector ($H_2(p) = -\log \sum_i p_i^2$), which bounds the quadratic
+entropy production proxy under causally masked/nonreciprocal attention couplings.
+-/
+def collisionConcentration (s : SimplexState ι) : ℝ :=
   ∑ i, (s.p i) ^ 2
+
+/--
+Compatibility alias for `collisionConcentration` in attention dissipation contexts.
+-/
+abbrev entropyProductionRate (s : SimplexState ι) : ℝ :=
+  collisionConcentration s
 
 /-- Cardinality of the token index set as a real number. -/
 def tokenCount (ι : Type*) [Fintype ι] : ℝ :=
@@ -174,8 +237,8 @@ theorem tokenCount_pos [Nonempty ι] : 0 < tokenCount ι := by
     ∑_i (p_i)^2 ≥ 1 / |ι|.
 -/
 theorem attention_cauchy_schwarz_simplex_lower_bound [Nonempty ι] (s : SimplexState ι) :
-    (1 : ℝ) / tokenCount ι ≤ entropyProductionRate s := by
-  dsimp [entropyProductionRate, tokenCount]
+    (1 : ℝ) / tokenCount ι ≤ collisionConcentration s := by
+  dsimp [collisionConcentration, entropyProductionRate, tokenCount]
   have h_card_pos : 0 < (Fintype.card ι : ℝ) := Nat.cast_pos.mpr Fintype.card_pos
   have h_dev_nonneg : 0 ≤ ∑ i, (s.p i - (1 : ℝ) / (Fintype.card ι : ℝ)) ^ 2 := by
     apply sum_nonneg; intro i _; exact sq_nonneg _

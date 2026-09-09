@@ -88,5 +88,4 @@ theorem continuous_normalizedTraceInverseLimitPoint_evaluation_time
     normalizedTraceInverseLimitPoint n X
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitCanonicalPointDynamics
-
 end

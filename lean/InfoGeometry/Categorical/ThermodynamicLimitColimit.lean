@@ -1,21 +1,39 @@
 import Mathlib.CategoryTheory.Category.Basic
-import Mathlib.CategoryTheory.Filtered.Basic
 import Mathlib.CategoryTheory.Limits.HasLimits
+import Mathlib.CategoryTheory.Filtered.Basic
 
-/-!
-# Native thermodynamic colimits
+universe u v w
 
-For a filtered diagram `F : J ⥤ C`, Mathlib is the sole owner of the
-thermodynamic/direct limit.  Use the native declarations directly:
+namespace InfoGeometry.Categorical
 
-* `colimit F` for the limiting object;
-* `colimit.cocone F` for its canonical cocone;
-* `colimit.isColimit F` for the universal property;
-* `colimit.ι`, `colimit.desc`, `colimit.ι_desc`, and `colimit.hom_ext` for
-  stage maps, descent, and uniqueness.
+open CategoryTheory
+open CategoryTheory.Limits
 
-This routing module intentionally declares no aliases or custom evidence
-structures.  The filtered property remains available through the imported
-`IsFiltered` API, while existence of a particular colimit is expressed by
-Mathlib's `HasColimit` instance.
+/-
+The category of finite causal wedges/subcomplexes is modeled as a filtered category.
+A functor `F : J ⥤ C` assigns a local observable algebra or state space to each finite wedge.
 -/
+variable {J : Type v} [SmallCategory J] [IsFiltered J]
+variable {C : Type u} [Category.{v} C]
+variable (F : J ⥤ C) [HasColimit F]
+
+/--
+We define the infinite (thermodynamic / geometric limit) as the direct colimit
+over the filtered poset/category of finite subregions.
+-/
+noncomputable def ThermodynamicLimit : C :=
+  colimit F
+
+/--
+The canonical cocone associated with the thermodynamic limit, packaging the local-to-global inclusions.
+-/
+noncomputable def ThermodynamicLimitCocone : Cocone F :=
+  colimit.cocone F
+
+/--
+The universal property of the thermodynamic limit: it is the initial cocone.
+-/
+noncomputable def ThermodynamicLimitIsColimit : IsColimit (ThermodynamicLimitCocone F) :=
+  colimit.isColimit F
+
+end InfoGeometry.Categorical

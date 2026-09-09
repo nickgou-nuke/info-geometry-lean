@@ -59,18 +59,18 @@ theorem radialCartanFlow_zero (x : LogCylinderCoordinate) :
 theorem radialCartanFlow_add (s t : ℝ) (x : LogCylinderCoordinate) :
     radialCartanFlow (s + t) x =
       radialCartanFlow s (radialCartanFlow t x) := by
-  ext <;>
-    simp [radialCartanFlow, transverseTranslation] <;>
-    ring
+  ext
+  · simp [radialCartanFlow, transverseTranslation]; ring
+  · simp [radialCartanFlow, transverseTranslation]
 
 /-- The Weyl/radial mirror conjugates the Cartan flow to its inverse. -/
 theorem radialMirror_radialCartanFlow_radialMirror
     (t : ℝ) (x : LogCylinderCoordinate) :
     radialMirror (radialCartanFlow t (radialMirror x)) =
       radialCartanFlow (-t) x := by
-  ext <;>
-    simp [radialMirror, radialCartanFlow, transverseTranslation] <;>
-    ring
+  ext
+  · simp [radialMirror, radialCartanFlow, transverseTranslation]; ring
+  · simp [radialMirror, radialCartanFlow, transverseTranslation]
 
 theorem radialCartanFlow_rho (t : ℝ) (x : LogCylinderCoordinate) :
     (radialCartanFlow t x).rho = x.rho + 2 * t := by
@@ -104,14 +104,14 @@ theorem prime_souriau_partition_euler_product
     (energyWeight : ℕ → ℝ)
     (T : GeometricTemperature) :
     souriauPartition (primeSouriauMomentMap P energyWeight) T =
-      finiteEulerProduct P energyWeight T.beta T.mu :=
+      (PrimeGrandCanonicalPacket.mk P energyWeight).finiteEulerProduct T.beta T.mu :=
   primeSouriauPartition_eq_finiteEulerProduct P energyWeight T
 
 theorem prime_log_souriau_partition_euler_product
     (P : PrimeRegister)
     (T : GeometricTemperature) :
     souriauPartition (primeSouriauMomentMap P logPrimeEnergyWeight) T =
-      finiteEulerProduct P logPrimeEnergyWeight T.beta T.mu :=
+      (PrimeGrandCanonicalPacket.mk P logPrimeEnergyWeight).finiteEulerProduct T.beta T.mu :=
   prime_souriau_partition_euler_product P logPrimeEnergyWeight T
 
 end InfoGeometry.Canonical.NativeSouriauHestenesRadialBridge

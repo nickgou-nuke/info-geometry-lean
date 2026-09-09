@@ -1,0 +1,14 @@
+import InfoGeometry.Canonical.PolarizedBoundary55PristineChain
+
+/-! Transitive axiom audit for the polarized-boundary chain. -/
+
+#print axioms InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55.NativeZorn
+#print axioms InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55.boundaryZornHyperbolicEquiv
+#print axioms InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55.boundaryZornHyperbolic_quadratic
+#print axioms InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55.zornEmbedding
+#print axioms InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55.zornEmbedding_injective
+#print axioms InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55.zornEmbedding_norm
+#print axioms InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55.naive_spatial_inclusion
+#print axioms InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55.zornEmbedding_null_iff
+#print axioms InfoGeometry.Canonical.PolarizedBoundary55PristineChain.source_involution_packet
+#print axioms InfoGeometry.Canonical.PolarizedBoundary55PristineChain.boundary_chiral_packet

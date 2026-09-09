@@ -6,7 +6,7 @@
   over an arbitrary field-like type R.
 -/
 
-/-- Abstract formulation of a Riemannian Manifold for zero-sorry algebraic modeling -/
+/-- Abstract formulation of a Riemannian Manifold for complete algebraic modeling -/
 class RiemannianManifold (M : Type) (R : Type) where
   metric_tensor : M → R
   volume_form : M → R

@@ -1,5 +1,6 @@
 import InfoGeometry.Clifford.Cl55QuadraticSpinAction
 import InfoGeometry.Clifford.Clifford55
+import InfoGeometry.OperatorAlgebra.FiveGradeActionPreservation
 
 /-!
 # The `Cl(5,5)` modular derivation readout
@@ -14,6 +15,7 @@ noncommutative Clifford algebra; no scalar or diagonal model is introduced.
 namespace InfoGeometry.Clifford.Clifford55
 
 open InfoGeometry.Clifford
+open InfoGeometry.OperatorAlgebra
 
 abbrev cl55Commutator (K x : Cl55) : Cl55 :=
   commutatorAction K x
@@ -88,5 +90,43 @@ theorem cl55ModularDerivation_bracket (K L x : Cl55) :
 theorem cl55ModularDerivation_eq_lieAlgebra_ad (K : Cl55) :
     cl55ModularDerivation K = LieAlgebra.ad ℝ Cl55 K := by
   exact commutatorActionLinear_eq_lieAlgebra_ad K
+
+theorem cl55ModularDerivation_preserves_grade
+    (K X : Cl55) (k : ℤ)
+    (hK : K ∈ gradeSubmodule numberOperator55 0)
+    (hX : X ∈ gradeSubmodule numberOperator55 k) :
+    cl55ModularDerivation K X ∈ gradeSubmodule numberOperator55 k := by
+  change HasOperatorGrade numberOperator55
+    (K * X - X * K) k
+  exact InfoGeometry.OperatorAlgebra.grade_zero_commutator_preserves
+    (N := numberOperator55) (K := K) (X := X) hK hX
+
+theorem cl55ModularDerivation_mapsToGrade
+    (K : Cl55)
+    (hK : K ∈ gradeSubmodule numberOperator55 0) :
+    InfoGeometry.OperatorAlgebra.MapsToGradeBetween
+      (fun j : ℤ => (gradeSubmodule numberOperator55 j : Set Cl55))
+      (fun j : ℤ => (gradeSubmodule numberOperator55 j : Set Cl55))
+      (fun _ : Unit => cl55ModularDerivation K)
+      (fun _ j => j) := by
+  intro _ j X hX
+  exact cl55ModularDerivation_preserves_grade K X j hK hX
+
+theorem cl55ModularDerivation_preserves_grade_family
+    (K : Cl55) (hK : K ∈ gradeSubmodule numberOperator55 0) :
+    InfoGeometry.OperatorAlgebra.PreservesGrade
+      (fun j : ℤ => (gradeSubmodule numberOperator55 j : Set Cl55))
+      (fun _ : Unit => cl55ModularDerivation K) := by
+  intro _ j X hX
+  exact cl55ModularDerivation_preserves_grade K X j hK hX
+
+theorem cl55GradeZeroModular_mapsToGrade
+    (N : Cl55) :
+    InfoGeometry.OperatorAlgebra.MapsToGrade
+      (fun j : ℤ => (gradeSubmodule N j : Set Cl55))
+      (fun K : {X : Cl55 // X ∈ gradeSubmodule N 0} =>
+        fun X => cl55ModularDerivation K.1 X)
+      (fun _ j => j) := by
+  exact InfoGeometry.OperatorAlgebra.grade_zero_commutator_mapsToGrade N
 
 end InfoGeometry.Clifford.Clifford55

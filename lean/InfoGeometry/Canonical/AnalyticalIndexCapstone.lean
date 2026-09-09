@@ -100,9 +100,7 @@ theorem fullThermoGeoIndexCapstone_of_states
     (hGeoAlg : SinkhornRicciIndexInvariant n T flow D Γ)
     (hClosure : SinkhornKMSClosure n T.traj K ω β) :
     FullThermoGeoIndexCapstone n T flow D Γ K ω β := by
-  refine ⟨?_, ?_⟩
-  · exact hGeoAlg
-  · exact hClosure
+  exact ⟨hGeoAlg, hClosure⟩
 
 /-- Lemma `FullThermoGeoIndexCapstone`. -/
 lemma FullThermoGeoIndexCapstone.geometricAlgebraicState

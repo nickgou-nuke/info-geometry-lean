@@ -65,7 +65,9 @@ Constructive `SL(2, ℝ)` matrix unit: an invertible `2 × 2` real matrix whose
 determinant is one.
 -/
 structure SL2RUnit where
+  /-- The underlying invertible matrix. -/
   unit : Mat2ˣ
+  /-- Determinant-one condition. -/
   det_one : Matrix.det (unit : Mat2) = 1
 
 /-- Adjoint/conjugation action by a supplied special-linear matrix unit. -/

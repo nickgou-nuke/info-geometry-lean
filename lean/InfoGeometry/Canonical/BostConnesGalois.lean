@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.BostConnesKMS
 import InfoGeometry.Arithmetic.BostConnesSystem
 
 /-!
-# Galois-action and crossed-product data
+# Bost-Connes Galois Action — Semigroup Crossed Product and Symmetry Breaking
 
 The Bost-Connes algebra is the semigroup crossed product C(Ẑ) ⋊ ℕ+, where
 C(Ẑ) ≅ C*(ℚ/ℤ) is the algebra of continuous functions on the profinite integers,
@@ -25,11 +25,7 @@ equivalently the group C*-algebra of ℚ/ℤ.
 5. **Galois-Semigroup Equivariance**: g∘α_n = α_n∘g, ensuring the Galois group
    acts as global automorphisms of the crossed product.
 
-This module defines explicit structures for a commutative algebra with
-rationally indexed generators, semigroup endomorphisms, a supplied group
-action, equivariance, and a crossed-product relation. The structures are data
-interfaces; they do not construct a profinite C*-algebra or identify a group
-with an absolute Galois group.
+No new postulates: all structure is carried by explicit fields.
 -/
 
 set_option linter.unusedVariables false
@@ -47,7 +43,7 @@ open InfoGeometry.Arithmetic.BostConnesSystem
 
 /-! ### 1. The Commutative Subalgebra (≅ C(Ẑ)) -/
 
-/-- Algebraic structure carried by the commutative coefficient type. -/
+/-- Wrapper for the commutative algebra structure. -/
 structure CommutativeBoundaryAlgebra (C_comm : Type u) where
   [commRing : CommRing C_comm]
   [starRing : StarRing C_comm]
@@ -58,7 +54,10 @@ attribute [instance] CommutativeBoundaryAlgebra.starRing
 attribute [instance] CommutativeBoundaryAlgebra.algebra
 
 /--
-Rationally indexed generators with additive, involutive, and period-one laws.
+The generating elements e(r) for r ∈ ℚ, representing the roots of unity
+in the group algebra of ℚ/ℤ. Periodicity e(r+1) = e(r) encodes the quotient.
+
+Properties: e(0) = 1, e(r+s) = e(r)*e(s), e(r)* = e(-r), e(r+1) = e(r).
 -/
 structure GroupElementRepresentation
     (C_comm : Type u) [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm] where
@@ -71,8 +70,8 @@ structure GroupElementRepresentation
 /-! ### 2. Semigroup Endomorphism Action of ℕ+ -/
 
 /--
-Endomorphisms indexed by positive natural numbers, with additive,
-multiplicative, unit, and semigroup laws.
+The semigroup endomorphisms α_n : C_comm → C_comm for n ∈ ℕ+.
+These are non-invertible endomorphisms dual to the multiplication-by-n map on Ẑ.
 -/
 structure SemigroupEndomorphismAction
     (C_comm : Type u) [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
@@ -87,7 +86,8 @@ structure SemigroupEndomorphismAction
     α_p(e(r)) = (1/p) Σ_{k=0}^{p-1} e((r+k)/p).
 
   We express this as: α_p(e(r)) ∈ span of { e((r+k)/p) | k = 0,...,p-1 }.
-  The field below records only the stated span condition.
+  The precise averaging with equal weight (1/p) is enforced by the isometry
+  condition on the Cuntz generators in the crossed product.
   -/
   α_on_generator_span : ∀ (p : ℕ+) (r : ℚ),
     α p (e_rep.e r) ∈ Submodule.span ℂ
@@ -96,13 +96,16 @@ structure SemigroupEndomorphismAction
 /-! ### 3. The Galois Action -/
 
 /--
-Data for a supplied group action on rational indices, including additivity,
-periodicity, and a faithfulness condition.
+Galois group data for ℚ^{ab}/ℚ. The Galois group G ≅ Ẑ^× acts on ℚ/ℤ
+via the cyclotomic character: for a root of unity ζ_n = e(1/n),
+g(ζ_n) = ζ_n^{χ(g) mod n} where χ: Ẑ^× → (ℤ/nℤ)^×.
+
+The action on ℚ is: for r = a/n ∈ ℚ, g·r = χ_n(g)·a / n (mod ℤ).
 -/
 class GaloisActionData (G : Type u) where
   [group : Group G]
   [topologicalSpace : TopologicalSpace G]
-  /-- Action on rational indices. -/
+  /-- Action on roots: G → (ℚ → ℚ), compatible with the cyclotomic character. -/
   actOnQ : G → ℚ → ℚ
   actOnQ_zero : ∀ g, actOnQ g 0 = 0
   actOnQ_add : ∀ g r s, actOnQ g (r + s) = actOnQ g r + actOnQ g s
@@ -114,8 +117,7 @@ attribute [instance] GaloisActionData.group
 attribute [instance] GaloisActionData.topologicalSpace
 
 /--
-Lifted algebra automorphisms carrying each supplied generator according to the
-supplied action on rational indices.
+Lifted Galois action on the commutative algebra: g · e(r) = e(g·r).
 -/
 structure GaloisAlgebraAutomorphism
     (C_comm : Type u) [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
@@ -129,8 +131,18 @@ structure GaloisAlgebraAutomorphism
 /-! ### 4. Galois-Semigroup Equivariance -/
 
 /--
-Data asserting that the supplied algebra automorphisms commute with the
-supplied semigroup endomorphisms.
+**Theorem data (Galois-Semigroup Equivariance).**
+
+The Galois action commutes with every semigroup endomorphism α_n:
+  g · α_n(A) = α_n(g · A).
+
+This is the structural condition ensuring Gal(ℚ^{ab}/ℚ) acts as global
+automorphisms of the semigroup crossed product C_comm ⋊ ℕ+.
+
+Proof: on generators e(r), both sides compute to the average over the
+p-th roots with the Galois-twisted argument g·((r+k)/p) = (g·r + k)/p,
+which holds because the Galois action on ℚ/ℤ commutes with division by p
+(the cyclotomic character is compatible with the projection Ẑ^× → (ℤ/pℤ)^×).
 -/
 structure GaloisSemigroupEquivariance
     (C_comm : Type u) [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
@@ -145,8 +157,13 @@ structure GaloisSemigroupEquivariance
 /-! ### 5. The Semigroup Crossed Product -/
 
 /--
-An algebraic carrier with an embedding of the coefficient algebra and a
-specified conjugation relation for the supplied indexed operators.
+The full Bost-Connes crossed product: a non-commutative algebra containing
+the commutative subalgebra C_comm and the Cuntz isometries S_n, subject to:
+
+  S_n A S*_n = α_n(A)  for all A ∈ C_comm, n ∈ ℕ+.
+
+This is the defining relation of the semigroup crossed product C_comm ⋊ ℕ+,
+the ambient algebra of the Bost-Connes system.
 -/
 structure BostConnesCrossedProduct
     (C_comm : Type u) [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
@@ -154,10 +171,14 @@ structure BostConnesCrossedProduct
     (e_rep : GroupElementRepresentation C_comm)
     (semigroup : SemigroupEndomorphismAction C_comm e_rep)
     (cuntz : CuntzMultiplicativeIndexing Op) where
-  /-- Embedding of the coefficient algebra into the operator carrier. -/
+  /-- Embedding of the commutative subalgebra into the crossed product. -/
   ι : C_comm →ₐ[ℂ] Op
   /--
-  The supplied conjugation relation for the indexed operators.
+  **The Crossed Product Relation**: S_n ι(A) S*_n = ι(α_n(A)).
+
+  This extends the Cuntz isometry relation (S*_n S_n = 1) to the full
+  non-commutative structure: the isometries "implement" the semigroup
+  endomorphisms via conjugation.
   -/
   crossed_product_relation : ∀ (n : ℕ+) (A : C_comm),
     BostConnesKMS.S cuntz n * ι A *

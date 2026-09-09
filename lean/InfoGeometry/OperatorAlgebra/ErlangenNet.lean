@@ -34,22 +34,17 @@ namespace InfoGeometry.OperatorAlgebra.ErlangenNet
 
 open InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
 
-/-- Native dependent carrier for local algebras and their embeddings. -/
-abbrev LocalObservableFrame (Alg Frame : Type*) :=
-  Σ localAlg : Frame → Type*, (∀ f, localAlg f → Alg)
+/--
+Local observable frame carrier.
 
-abbrev LocalObservableFrame.localAlg
-    {Alg Frame : Type*} (F : LocalObservableFrame Alg Frame) := F.1
-
-abbrev LocalObservableFrame.embed
-    {Alg Frame : Type*} (F : LocalObservableFrame Alg Frame) :
-    ∀ f, F.localAlg f → Alg := F.2
-
-def LocalObservableFrame.mk
-    {Alg Frame : Type*}
-    (localAlg : Frame → Type*)
-    (embed : ∀ f, localAlg f → Alg) : LocalObservableFrame Alg Frame :=
-  ⟨localAlg, embed⟩
+`localAlg f` is the local algebraic language seen in frame `f`; `embed` maps it
+into the ambient algebra `Alg`. No observable predicate, commutativity law, or
+Type III law is assumed here.
+-/
+structure LocalObservableFrame
+    (Alg Frame : Type*) where
+  localAlg : Frame → Type*
+  embed : ∀ f, localAlg f → Alg
 
 namespace LocalObservableFrame
 
@@ -62,15 +57,15 @@ theorem embed_apply (f : Frame) (x : F.localAlg f) :
 
 end LocalObservableFrame
 
-/-- A frame transform is natively an action-shaped function. -/
-abbrev FrameTransformCarrier (Frame Sym : Type*) := Sym → Frame → Frame
+/--
+Frame-transform carrier.
 
-abbrev FrameTransformCarrier.act
-    {Frame Sym : Type*} (G : FrameTransformCarrier Frame Sym) := G
-
-def FrameTransformCarrier.mk
-    {Frame Sym : Type*} (act : Sym → Frame → Frame) :
-    FrameTransformCarrier Frame Sym := act
+No preservation law is stored here. Preservation theorems must be proved in an
+owner module from concrete action data.
+-/
+structure FrameTransformCarrier
+    (Frame Sym : Type*) where
+  act : Sym → Frame → Frame
 
 namespace FrameTransformCarrier
 
@@ -83,27 +78,21 @@ theorem act_apply (g : Sym) (f : Frame) :
 
 end FrameTransformCarrier
 
-/-! `LocalSectorAlphabet` is only an adapter around Mathlib's native `Fintype`. -/
-abbrev LocalSectorAlphabet (Symbol : Type*) := Fintype Symbol
+/--
+Finite symbolic sector alphabet.
 
-abbrev LocalSectorAlphabet.instFintype
-    {Symbol : Type*} (A : LocalSectorAlphabet Symbol) : Fintype Symbol := A
-
-def LocalSectorAlphabet.mk
-    {Symbol : Type*} (instFintype : Fintype Symbol) :
-    LocalSectorAlphabet Symbol := instFintype
+Finiteness is carrier data via `Fintype`; no topology is asserted.
+-/
+structure LocalSectorAlphabet
+    (Symbol : Type*) where
+  instFintype : Fintype Symbol
 
 attribute [instance] LocalSectorAlphabet.instFintype
 
-/-- A local sector split is natively a labeling function. -/
-abbrev LocalSectorSplit (Frame Symbol : Type*) := Frame → Symbol
-
-abbrev LocalSectorSplit.label
-    {Frame Symbol : Type*} (S : LocalSectorSplit Frame Symbol) := S
-
-def LocalSectorSplit.mk
-    {Frame Symbol : Type*} (label : Frame → Symbol) :
-    LocalSectorSplit Frame Symbol := label
+/-- Local sector labeling carrier. -/
+structure LocalSectorSplit
+    (Frame Symbol : Type*) where
+  label : Frame → Symbol
 
 namespace LocalSectorSplit
 
@@ -138,72 +127,50 @@ abbrev SectorBoundary (Symbol : Type*) :=
 abbrev FiniteSectorWord (Symbol : Type*) (n : ℕ) :=
   Fin n → Symbol
 
-/-- Native triple carrier for Cartan, Weyl, and Casimir readouts. -/
-abbrev CartanWeylCasimirLabel
-    (CartanWeight WeylShape CasimirReadout : Type*) :=
-  CartanWeight × (WeylShape × CasimirReadout)
+/--
+Cartan/Weyl/Casimir label carrier.
 
-abbrev CartanWeylCasimirLabel.cartan
-    {CartanWeight WeylShape CasimirReadout : Type*}
-    (L : CartanWeylCasimirLabel CartanWeight WeylShape CasimirReadout) := L.1
+This is a structured label, not a theorem. It records the invariant-style
+readout data used to refine symbolic sector codes.
+-/
+structure CartanWeylCasimirLabel
+    (CartanWeight WeylShape CasimirReadout : Type*) where
+  cartan : CartanWeight
+  weylShape : WeylShape
+  casimir : CasimirReadout
 
-abbrev CartanWeylCasimirLabel.weylShape
-    {CartanWeight WeylShape CasimirReadout : Type*}
-    (L : CartanWeylCasimirLabel CartanWeight WeylShape CasimirReadout) := L.2.1
+namespace CartanWeylCasimirLabel
 
-abbrev CartanWeylCasimirLabel.casimir
-    {CartanWeight WeylShape CasimirReadout : Type*}
-    (L : CartanWeylCasimirLabel CartanWeight WeylShape CasimirReadout) := L.2.2
+variable {CartanWeight WeylShape CasimirReadout : Type*}
+variable (L : CartanWeylCasimirLabel CartanWeight WeylShape CasimirReadout)
 
-def CartanWeylCasimirLabel.mk
-    {CartanWeight WeylShape CasimirReadout : Type*}
-    (cartan : CartanWeight) (weylShape : WeylShape) (casimir : CasimirReadout) :
-    CartanWeylCasimirLabel CartanWeight WeylShape CasimirReadout :=
-  (cartan, (weylShape, casimir))
+end CartanWeylCasimirLabel
 
+/--
+Iterated observable sectorization carrier.
 
-/-- Native product carrier for the iterated observable sectorization surface. -/
-abbrev IteratedObservableSectorization
-    (Alg Frame Sym Symbol Label : Type*) :=
-  LocalObservableFrame Alg Frame ×
-    (FrameTransformCarrier Frame Sym ×
-      (LocalSectorAlphabet Symbol ×
-        (LocalSectorSplit Frame Symbol ×
-          ((Symbol → Frame → Frame) ×
-            (((n : ℕ) → Frame → FiniteSectorWord Symbol n) ×
-              ((Frame → SectorBoundary Symbol) × (Frame → Label)))))))
+This packages observable frames, symmetry action, sector split, transition
+operation, finite codes, infinite boundary codes, and labels. It is the
+combinatorial operator-Erlangen net surface.
+-/
+structure IteratedObservableSectorization
+    (Alg Frame Sym Symbol Label : Type*) where
+  frames : LocalObservableFrame Alg Frame
+  transforms : FrameTransformCarrier Frame Sym
+  alphabet : LocalSectorAlphabet Symbol
+  split : LocalSectorSplit Frame Symbol
 
-abbrev IteratedObservableSectorization.frames
-    {Alg Frame Sym Symbol Label : Type*}
-    (N : IteratedObservableSectorization Alg Frame Sym Symbol Label) := N.1
+  /-- Sector transition on frames. -/
+  transition : Symbol → Frame → Frame
 
-abbrev IteratedObservableSectorization.transforms
-    {Alg Frame Sym Symbol Label : Type*}
-    (N : IteratedObservableSectorization Alg Frame Sym Symbol Label) := N.2.1
+  /-- Finite-depth symbolic code of a frame. -/
+  finiteCode : (n : ℕ) → Frame → FiniteSectorWord Symbol n
 
-abbrev IteratedObservableSectorization.alphabet
-    {Alg Frame Sym Symbol Label : Type*}
-    (N : IteratedObservableSectorization Alg Frame Sym Symbol Label) := N.2.2.1
+  /-- Infinite symbolic boundary code of a frame. -/
+  boundaryCode : Frame → SectorBoundary Symbol
 
-abbrev IteratedObservableSectorization.split
-    {Alg Frame Sym Symbol Label : Type*}
-    (N : IteratedObservableSectorization Alg Frame Sym Symbol Label) := N.2.2.2.1
-
-abbrev IteratedObservableSectorization.transition
-    {Alg Frame Sym Symbol Label : Type*}
-    (N : IteratedObservableSectorization Alg Frame Sym Symbol Label) := N.2.2.2.2.1
-
-abbrev IteratedObservableSectorization.finiteCode
-    {Alg Frame Sym Symbol Label : Type*}
-    (N : IteratedObservableSectorization Alg Frame Sym Symbol Label) := N.2.2.2.2.2.1
-
-abbrev IteratedObservableSectorization.boundaryCode
-    {Alg Frame Sym Symbol Label : Type*}
-    (N : IteratedObservableSectorization Alg Frame Sym Symbol Label) := N.2.2.2.2.2.2.1
-
-abbrev IteratedObservableSectorization.sectorLabel
-    {Alg Frame Sym Symbol Label : Type*}
-    (N : IteratedObservableSectorization Alg Frame Sym Symbol Label) := N.2.2.2.2.2.2.2
+  /-- Cartan/Weyl/Casimir or other invariant-style label of a frame. -/
+  sectorLabel : Frame → Label
 
 namespace IteratedObservableSectorization
 
@@ -245,25 +212,33 @@ theorem boundaryCode_entry (f : Frame) (i : ℕ) :
 
 end IteratedObservableSectorization
 
-/-- Native product of a symbolic label and the existing Weyl readout owner. -/
-abbrev WeylRefinedSectorLabel (Obj Label : Type*) :=
-  (Obj → Label) × WeylHomogeneousOperatorReadout Obj
+/--
+Weyl-refined sector label carrier.
 
-abbrev WeylRefinedSectorLabel.label
-    {Obj Label : Type*} (W : WeylRefinedSectorLabel Obj Label) := W.1
-
-abbrev WeylRefinedSectorLabel.homogeneousReadout
-    {Obj Label : Type*} (W : WeylRefinedSectorLabel Obj Label) := W.2
-
-def WeylRefinedSectorLabel.mk
-    {Obj Label : Type*} (label : Obj → Label)
-    (homogeneousReadout : WeylHomogeneousOperatorReadout Obj) :
-    WeylRefinedSectorLabel Obj Label := (label, homogeneousReadout)
+This links a symbolic/invariant label with an existing repo-local Weyl
+homogeneous readout interface. The scale law is owned by
+`WeylHomogeneousOperatorReadout`; this structure adds no new law.
+-/
+structure WeylRefinedSectorLabel
+    (Obj Label : Type*) where
+  label : Obj → Label
+  homogeneousReadout : WeylHomogeneousOperatorReadout Obj
 
 namespace WeylRefinedSectorLabel
 
 variable {Obj Label : Type*}
 variable (W : WeylRefinedSectorLabel Obj Label)
+
+@[rep_depth operator]
+theorem label_apply (x : Obj) :
+    W.label x = W.label x := rfl
+
+@[rep_depth operator]
+theorem homogeneous_readout_scale (c : ℝ) (x : Obj) :
+    W.homogeneousReadout.readout (W.homogeneousReadout.scale c x)
+      =
+    c ^ W.homogeneousReadout.weight * W.homogeneousReadout.readout x :=
+  W.homogeneousReadout.readout_scale c x
 
 end WeylRefinedSectorLabel
 

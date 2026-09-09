@@ -124,4 +124,19 @@ theorem spin_quat_isomorphism (q : Quat) (hPure : q.q0 = 0) :
       rw [show Complex.I ^ 2 = (-1 : ℂ) by simp [pow_two, Complex.I_mul_I]]
       ring_nf
 
+theorem section7_capstone :
+    (∀ A B Ap Bp : Fin 2,
+       (∑ a : Fin 4, ∑ b : Fin 4, eta4 a b * sigma a A Ap * sigma b B Bp)
+       = (-2 : ℂ) * eps A B * eps Ap Bp) ∧
+    eTetradᵀ * eta4 * eTetrad = eta4 ∧
+    (∑ a : Fin 4, sigma a * sigma a) =
+      (4 : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) ∧
+    (∀ mu A B, spinConnection mu A B = 0) ∧
+    (∀ a mu nu A Ap,
+      (∑ B : Fin 2, spinConnection mu A B * soldering a nu B Ap)
+        - (∑ Bp : Fin 2, soldering a nu A Bp * spinConnection mu Bp Ap) = 0) ∧
+    (∀ q : Quat, q.q0 = 0 → spinToQuat (quatToSpin q) = q) := by
+  exact ⟨pauli_identity, tetrad_metric_flat, pauli_sum_sq,
+    spin_connection_vanishes_flat, soldering_covariant_constancy_flat, spin_quat_isomorphism⟩
+
 end Section7

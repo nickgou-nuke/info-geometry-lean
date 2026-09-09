@@ -38,7 +38,7 @@ section Ward
 
 variable {Alg Op : Type*}
 variable [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
-variable [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
+variable [NormedAddCommGroup Op] [NormedSpace ℝ Op]
 
 /--
 Jaynes/Virasoro Ward packet:
@@ -51,7 +51,7 @@ The Virasoro residual structure is supplied by the Ward packet itself.
 -/
 structure JaynesVirasoroWardPacket where
   /-- Jaynes thermodynamic packet. -/
-  jaynes : InfoGeometry.Canonical.OperatorThermodynamics.OperatorFirstThermodynamicsPacket Unit Op
+  jaynes : InfoGeometry.Canonical.OperatorThermodynamics.OperatorThermodynamicsPacket Op
   /-- Virasoro Ward equilibrium packet. -/
   ward : VirasoroWardEquilibriumPacket Alg Op
   /-- Compatibility of the free-energy readout. -/

@@ -59,6 +59,5 @@ theorem splitLogPotential_eq_neg_add_log
   unfold splitLogPotential
   rw [Real.log_mul hp.ne' hq.ne']
 
-end InfoGeometry.Canonical.ComplexProjectiveKahlerPotential
 
-end
+end InfoGeometry.Canonical.ComplexProjectiveKahlerPotential

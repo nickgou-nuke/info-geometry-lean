@@ -9,12 +9,9 @@ namespace InfoGeometry.Categorical.PrimeThermodynamicLimitCapstone
 open InfoGeometry.Arithmetic.PrimeOccupationAlgebra
 open InfoGeometry.Categorical.PrimeThermodynamicDirectLimit
 
-@[rep_depth thermo]
-abbrev BostConnesUniversalSpace :=
-  PrimonAlgebra
+abbrev BostConnesUniversalSpace := PrimonAlgebra
 
-instance : CommRing BostConnesUniversalSpace :=
-  inferInstance
+instance : CommRing BostConnesUniversalSpace := inferInstance
 
 theorem finiteStage_embeds_exactly (n : ℕ) :
     Function.Injective (stageLimitOf n) :=
@@ -22,7 +19,6 @@ theorem finiteStage_embeds_exactly (n : ℕ) :
 
 theorem universalSpace_exhaustion (x : BostConnesUniversalSpace) :
     ∃ (n : ℕ) (y : PrimeStage n), stageLimitOf n y = x := by
-  -- `BostConnesUniversalSpace` is defined via a Quotient over the Sigma type of stages.
   rcases Quotient.exists_rep x with ⟨⟨n, y⟩, rfl⟩
   exact ⟨n, y, rfl⟩
 

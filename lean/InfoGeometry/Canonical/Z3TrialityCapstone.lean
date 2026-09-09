@@ -21,7 +21,7 @@ comparison theorem:
 * a tripotent operator `O^3 = O` gives the Hadjiivanov/OSp-style
   vacuum/up/down projector split;
 * the modular Hopf cross-flux square vanishes under an explicit nilpotence
-  property;
+  hypothesis;
 * the golden ratio satisfies the Fibonacci dimension equation.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
@@ -103,7 +103,7 @@ theorem celik_pauli_and_real_majorana_packets :
 /--
 Conditional Hadjiivanov/OSp-style tripotent projector packet.
 
-From the explicit property `O^3 = O`, the real operator lane supplies the
+From the explicit witness `O^3 = O`, the real operator lane supplies the
 vacuum/up/down projector idempotence, completeness, support decomposition, and
 up/down orthogonality.
 -/
@@ -134,7 +134,7 @@ theorem hadjiivanov_tripotent_projector_packet
 Conditional modular Hopf packet.
 
 The finite coproduct lane proves the centered coproduct expansion and
-cross-flux square-zero theorem from the explicit nilpotence property `N * N = 0`.
+cross-flux square-zero theorem from the explicit nilpotence witness `N * N = 0`.
 -/
 theorem hopf_nilpotent_cross_flux_packet
     {R A : Type*} [CommRing R] [Ring A] [Algebra R A]

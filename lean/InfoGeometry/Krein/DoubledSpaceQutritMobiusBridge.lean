@@ -28,22 +28,18 @@ abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
 
 theorem qutritMobiusOperator_zero_eq_matrixClockAxis :
     qutritMobiusOperator 0 = matrixClockAxis := by
-  rw [qutritMobiusOperator_zero]
   rfl
 
 theorem qutritMobiusOperator_one_eq_parabolicK :
-    qutritMobiusOperator 1 = InfoGeometry.Physics.K (R := ℝ) := by
-  rw [qutritMobiusOperator_one]
+    qutritMobiusOperator 1 = InfoGeometry.Algebra.HypercomplexTriad.N := by
   rfl
 
 theorem qutritMobiusOperator_one_eq_logCFTGenerator :
-    qutritMobiusOperator 1 = InfoGeometry.Physics.N_log (R := ℝ) := by
-  rw [qutritMobiusOperator_one]
+    qutritMobiusOperator 1 = InfoGeometry.Algebra.HypercomplexTriad.N := by
   rfl
 
 theorem qutritMobiusOperator_two_eq_matrixEpsilon :
     qutritMobiusOperator 2 = matrixEpsilon := by
-  rw [qutritMobiusOperator_two]
   rfl
 
 theorem ρclock_qutrit_elliptic :
@@ -54,7 +50,7 @@ theorem ρclock_qutrit_elliptic :
 
 theorem ρclock_qutrit_parabolic :
     ρclock (E := E) (qutritMobiusOperator 1) =
-      ρclock (E := E) (InfoGeometry.Physics.K (R := ℝ)) := by
+      ρclock (E := E) (InfoGeometry.Algebra.HypercomplexTriad.N) := by
   rw [qutritMobiusOperator_one_eq_parabolicK]
 
 theorem ρclock_qutrit_hyperbolic :

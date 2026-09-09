@@ -13,7 +13,7 @@ This file does not claim the full Ruelle/Asano theorem.
 It packages the algebraic `D = 0` branch, the determinant-zero transfer
 branch, and the quadratic reduction used by the Möbius case.
 
-No property packets.
+No witness packets.
 No `sorry`.
 No convergence claim.
 -/
@@ -90,18 +90,6 @@ theorem z₂_eq_asanoRootMap_of_asanoPhi_eq_zero
       exact hdiv.symm
     _ = (-(A + B * z1)) / (C + D * z1) := by rw [hlin]
     _ = -((A + B * z1) / (C + D * z1)) := by ring
-
-@[rep_depth thermo]
-theorem asanoPhi_eq_zero_iff_eq_asanoRootMap
-    {A B C D z1 z2 : ℂ}
-    (hden : C + D * z1 ≠ 0) :
-    asanoPhi A B C D z1 z2 = 0 ↔
-      z2 = asanoRootMap A B C D z1 := by
-  constructor
-  · exact z₂_eq_asanoRootMap_of_asanoPhi_eq_zero hden
-  · intro hroot
-    rw [hroot]
-    exact asanoPhi_rootMap_zero hden
 
 @[rep_depth thermo]
 theorem asano_contraction_D_eq_zero_no_root

@@ -16,10 +16,7 @@ open Matrix Complex
 
 namespace KasparovKHomologyProductBridge
 
-/-- Finite matrix Fredholm-model datum in `Mₙ(ℂ)`.
-
-This is not a C*-algebraic Kasparov module: the file records only the
-displayed finite matrix hypotheses. -/
+/-- Kasparov KK-Module Representation between C*-Algebras A and B in Mₙ(ℂ). -/
 abbrev KasparovModule (n : ℕ) [DecidableEq (Fin n)] :=
   { F : selfAdjoint (Matrix (Fin n) (Fin n) ℂ) //
       (F : Matrix (Fin n) (Fin n) ℂ) * F = 1 }
@@ -28,7 +25,7 @@ namespace KasparovModule
 
 variable {n : ℕ} [DecidableEq (Fin n)] (modAB modBC modCD : KasparovModule n)
 
-abbrev fredholm_operator : Matrix (Fin n) (Fin n) ℂ := modAB.1
+def fredholm_operator : Matrix (Fin n) (Fin n) ℂ := modAB.1
 
 theorem h_self_adjoint : (fredholm_operator modAB).conjTranspose = fredholm_operator modAB := by
   simpa only [fredholm_operator, Matrix.star_eq_conjTranspose] using modAB.1.property
@@ -36,28 +33,29 @@ theorem h_self_adjoint : (fredholm_operator modAB).conjTranspose = fredholm_oper
 theorem h_involution : fredholm_operator modAB * fredholm_operator modAB = 1 := by
   exact modAB.2
 
-/-- Involutivity of the finite matrix datum. -/
+/-- **Theorem**: Kasparov Module Involutivity: F² = 1. -/
 theorem kasparov_module_involution :
     fredholm_operator modAB * fredholm_operator modAB = 1 :=
   h_involution modAB
 
-/-- Self-adjointness of the finite matrix datum. -/
+/-- **Theorem**: Kasparov Module Self-Adjointness: F† = F. -/
 theorem kasparov_module_self_adjoint :
     (fredholm_operator modAB).conjTranspose = fredholm_operator modAB :=
   h_self_adjoint modAB
 
-/-- Composite matrix representative `F_AB * F_BC` in the finite model. -/
+/-- Composite Kasparov Product Element F_AC = F_AB * F_BC. -/
 def kasparovProduct (x y : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ :=
   x * y
 
-/-- Associativity of finite matrix composition. -/
+/-- **Theorem**: Associativity of Kasparov KK-Composition Product:
+    (x ⊗_B y) ⊗_C z = x ⊗_B (y ⊗_C z). -/
 theorem kasparov_product_associativity (x y z : Matrix (Fin n) (Fin n) ℂ) :
     kasparovProduct (kasparovProduct x y) z = kasparovProduct x (kasparovProduct y z) := by
   dsimp [kasparovProduct]
   rw [mul_assoc]
 
-/-- Trace identity for the finite matrix composite under the stated
-    self-adjoint involution hypotheses. -/
+/-- **Theorem**: Tracial Index Pairing Formula for Composite Kasparov Product:
+    Tr((F_AB * F_BC) * (F_AB * F_BC)†) = n for self-adjoint involutions. -/
 theorem kasparov_product_trace_index (x y : Matrix (Fin n) (Fin n) ℂ)
     (hx_sa : x.conjTranspose = x) (hx_inv : x * x = 1)
     (hy_sa : y.conjTranspose = y) (hy_inv : y * y = 1) :

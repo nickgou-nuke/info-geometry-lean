@@ -93,6 +93,25 @@ theorem occupationExpansion_snoc (xs : List ℂ) (x : ℂ) :
       simp [gradedProduct, gradedLocal]
       ring
 
+/--
+Finite Mobius coefficient synthesis: the graded determinant is exactly the
+even-minus-odd occupation expansion, with local coefficient `(-1)^F`.
+-/
+theorem finite_mobius_coefficient_synthesis :
+    (∀ xs : List ℂ, occupationExpansion xs = gradedProduct xs) ∧
+    mobiusWordCoefficient 0 = 1 ∧
+    (∀ k : ℕ, mobiusWordCoefficient (k + 1) = -mobiusWordCoefficient k) ∧
+    (∀ x y z : ℂ,
+      occupationExpansion [x, y, z] =
+        1 - (x + y + z) + (x * y + x * z + y * z) - x * y * z) ∧
+    (∀ xs : List ℂ, ∀ x : ℂ,
+      occupationExpansion (xs ++ [x]) = occupationExpansion xs * (1 - x)) := by
+  exact ⟨occupationExpansion_eq_gradedProduct,
+    mobiusWordCoefficient_zero,
+    mobiusWordCoefficient_succ,
+    three_mode_coefficients,
+    occupationExpansion_snoc⟩
+
 end FiniteMobiusCoefficient
 
 end noncomputable section

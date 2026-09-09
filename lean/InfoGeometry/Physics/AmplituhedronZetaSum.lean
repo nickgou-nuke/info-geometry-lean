@@ -12,15 +12,10 @@ open InfoGeometry.Canonical.BostConnesKMS
 This file does not install the Euler/zeta readout as a theorem.  The claim is
 kept as an explicit proposition until it is routed through the repository's
 categorical/Hestenes--Krein colimit zeta owner. -/
-theorem finite_amplituhedron_partition_sum_eq_kms_readout
-    (β : ℝ) (S : Finset ℕ) :
-    ∑ n ∈ S,
-        Complex.exp (- (β : ℂ) * Real.log (n + 1 : ℝ)) =
-      ∑ n ∈ S,
-        ((kmsProjectionReadout β 1
-          ⟨n + 1, Nat.succ_pos n⟩ ⟨n + 1, Nat.succ_pos n⟩) : ℂ) := by
-  apply Finset.sum_congr rfl
-  intro n hn
-  simpa using amplituhedron_volume_summand_eq_kms_readout β n
+def amplituhedron_partition_sum_eq_zeta_statement : Prop :=
+  ∀ β : ℝ, 1 < β →
+    (∑' (n : ℕ),
+      ((kmsProjectionReadout β 1 ⟨n + 1, Nat.succ_pos n⟩ ⟨n + 1, Nat.succ_pos n⟩) : ℂ)) =
+        riemannZeta (β : ℂ)
 
 end InfoGeometry.Physics.AmplituhedronZetaSum

@@ -44,7 +44,7 @@ theorem CliffordVectorAnticommutes_of_isOrtho {u v : M} (h : Q.IsOrtho u v) :
 /--
 Geometric-algebra substrate readout.
 
-This now has a genuine finite logical property: the anti-commutator vanishes
+This now has a genuine finite logical witness: the anti-commutator vanishes
 whenever the vectors are orthogonal for the chosen quadratic form.
 -/
 theorem rotor_substrate_readout_of_isOrtho (u v : M)

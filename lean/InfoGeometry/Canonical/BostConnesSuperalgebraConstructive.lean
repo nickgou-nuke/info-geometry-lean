@@ -9,7 +9,7 @@ Bost--Connes/Cuntz/Witten-parity interface.
 The proof boundary is explicit:
 
 * no concrete infinite UHF algebra is postulated;
-* no KMS phase transition, BEC statement, or Riemann-property consequence is
+* no KMS phase transition, BEC statement, or Riemann-hypothesis consequence is
   claimed;
 * the algebra carrier, Witten parity, state, and Cuntz equivariance are
   proof-carrying data;
@@ -28,7 +28,7 @@ supplied parity-invariance or anti-invariance premises.
 #### BUCKET 3: OPEN CLOSURE DEBT
 Infinite UHF/C*-completion, Bost--Connes KMS phase transition, Galois action,
 BEC interpretation, Tate adelic functional equation, zeta continuation, and
-Riemann-property consequences.
+Riemann-hypothesis consequences.
 -/
 
 noncomputable section
@@ -146,19 +146,17 @@ Proof-carrying Cuntz carrier with Witten parity equivariance.
 The left branch is declared parity-even and the right branch parity-odd.  This
 is model data, not derived from bare Cuntz relations.
 -/
-structure ParityEquivariantCuntzData
+structure ParityEquivariantCuntzCarrier
     (Op : Type*) [Ring Op] [StarRing Op] where
   parity : StarWittenParity Op
-  cuntz : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op
-  left_even : ParityEven parity
-    (InfoGeometry.Topology.CuntzO2Carrier.S_left cuntz)
-  right_odd : ParityOdd parity
-    (InfoGeometry.Topology.CuntzO2Carrier.S_right cuntz)
+  cuntz : CantorCuntzO2Carrier Op
+  left_even : ParityEven parity cuntz.S_left
+  right_odd : ParityOdd parity cuntz.S_right
 
-namespace ParityEquivariantCuntzData
+namespace ParityEquivariantCuntzCarrier
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
-variable (E : ParityEquivariantCuntzData Op)
+variable (E : ParityEquivariantCuntzCarrier Op)
 
 /-- The Cuntz-derived CAR generator is parity-odd under the supplied branch grading. -/
 theorem carFromCuntz_parity_odd :
@@ -166,6 +164,16 @@ theorem carFromCuntz_parity_odd :
   unfold ParityOdd carFromCuntz
   rw [map_mul, E.parity.map_star, E.left_even, E.right_odd]
   simp
+
+/-- Re-export: the Cuntz-derived CAR generator is nilpotent. -/
+theorem carFromCuntz_sq_zero :
+    carFromCuntz E.cuntz * carFromCuntz E.cuntz = 0 :=
+  InfoGeometry.Canonical.carFromCuntz_sq_eq_zero E.cuntz
+
+/-- Re-export: the Cuntz-derived CAR generator satisfies `{a,a*}=1`. -/
+theorem carFromCuntz_anticommutator_star_eq_one :
+    cantorAnticommutator (carFromCuntz E.cuntz) (star (carFromCuntz E.cuntz)) = 1 :=
+  InfoGeometry.Canonical.carFromCuntz_anticommutator_star_eq_one E.cuntz
 
 /--
 If the state is invariant under the supplied Witten parity, then the
@@ -177,7 +185,7 @@ theorem invariant_state_supertrace_carFromCuntz_eq_zero
   supertrace_eq_zero_of_invariant_state_on_odd
     E.parity φ hφ (E.carFromCuntz_parity_odd)
 
-end ParityEquivariantCuntzData
+end ParityEquivariantCuntzCarrier
 
 end InfoGeometry.Canonical.BostConnesSuperalgebraConstructive
 

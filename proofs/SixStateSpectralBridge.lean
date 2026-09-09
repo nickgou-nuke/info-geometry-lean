@@ -1,5 +1,5 @@
 import proofs.HexagonalSixRootTiling
-import proofs.TwoSheetThreeColorWeyl
+import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 import Mathlib.Tactic
 
 /-!

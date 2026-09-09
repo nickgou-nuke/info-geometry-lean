@@ -29,18 +29,11 @@ The parity test from the Fibonacci factors detects the bad `1 mod 3` path compon
 those component-level implications are supplied the classification package turns parity into the
 contractible-versus-sphere dichotomy. -/
 theorem paper_pom_fiber_parity_homotopy_equivalence
-    {badModThreeComponent allComponentsAvoidBadModThree joinDecomposition
-        contractibleCase sphereCase : Prop}
-    (hJoinDecomposition : joinDecomposition)
-    (badModThreeComponentForcesContraction :
-      badModThreeComponent → joinDecomposition → contractibleCase)
-    (allGoodComponentsGiveSphere :
-      allComponentsAvoidBadModThree → joinDecomposition → sphereCase)
-    (L : List ℕ)
-    (hBad : (∃ ℓ ∈ L, ℓ % 3 = 1) → badModThreeComponent)
-    (hGood : (∀ ℓ ∈ L, ℓ % 3 ≠ 1) → allComponentsAvoidBadModThree) :
-    (((L.map (fun ℓ => Nat.fib (ℓ + 2))).prod % 2 = 0) → contractibleCase) ∧
-      (((L.map (fun ℓ => Nat.fib (ℓ + 2))).prod % 2 = 1) → sphereCase) := by
+    (D : FiberIndependenceComplexClassificationData) (L : List ℕ)
+    (hBad : (∃ ℓ ∈ L, ℓ % 3 = 1) → D.badModThreeComponent)
+    (hGood : (∀ ℓ ∈ L, ℓ % 3 ≠ 1) → D.allComponentsAvoidBadModThree) :
+    (((L.map (fun ℓ => Nat.fib (ℓ + 2))).prod % 2 = 0) → D.contractibleCase) ∧
+      (((L.map (fun ℓ => Nat.fib (ℓ + 2))).prod % 2 = 1) → D.sphereCase) := by
   refine ⟨?_, ?_⟩
   · intro hEven
     have hNotAllGood : ¬ ∀ ℓ ∈ L, ℓ % 3 ≠ 1 := by
@@ -49,10 +42,10 @@ theorem paper_pom_fiber_parity_homotopy_equivalence
         (paper_pom_fiber_parity_mod3 L).2 hAllGood
       omega
     rcases exists_bad_mod_three_component L hNotAllGood with ⟨ℓ, hℓ, hBadℓ⟩
-    exact badModThreeComponentForcesContraction
-      (hBad ⟨ℓ, hℓ, hBadℓ⟩) hJoinDecomposition
+    exact D.badModThreeComponentForcesContraction
+      (hBad ⟨ℓ, hℓ, hBadℓ⟩) D.hasJoinDecomposition
   · intro hOdd
     have hAllGood : ∀ ℓ ∈ L, ℓ % 3 ≠ 1 := (paper_pom_fiber_parity_mod3 L).1 hOdd
-    exact allGoodComponentsGiveSphere (hGood hAllGood) hJoinDecomposition
+    exact D.allGoodComponentsGiveSphere (hGood hAllGood) D.hasJoinDecomposition
 
 end Omega.POM

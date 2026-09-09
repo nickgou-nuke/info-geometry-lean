@@ -148,21 +148,6 @@ noncomputable def tomitaConjOp
     InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism E :=
   (modular_j (E := E)).comp (T.comp (modular_j (E := E)))
 
-/-- Tomita/PHS conjugation is an involution on the operator carrier. -/
-@[rep_depth krein]
-theorem tomitaConjOp_involutive
-    (T : InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism E) :
-    tomitaConjOp (tomitaConjOp T) = T := by
-  apply ContinuousLinearMap.ext
-  intro u
-  have hJ2 (z : DoubledSpace E) :
-      modular_j (E := E) (modular_j (E := E) z) = z := by
-    change ((modular_j (E := E)).comp (modular_j (E := E))) z = z
-    rw [modular_j_involution E]
-    rfl
-  simp only [tomitaConjOp, ContinuousLinearMap.comp_apply]
-  rw [hJ2, hJ2]
-
 /-- Tomita/PHS conjugation swaps the concrete split-null creation operator to annihilation. -/
 @[rep_depth krein]
 theorem tomitaConj_creation_eq_annihilation :
@@ -207,42 +192,6 @@ theorem concrete_majorana_swap_is_phs_invariant :
   simp [InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteCreation_apply_to_doubled,
     InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteAnnihilation_apply_to_doubled,
     add_comm]
-
-/-! ### Hestenes presentation of the same real CAR channels -/
-
-@[rep_depth krein]
-theorem hestenesPionPlus_eq_concreteCARCreation :
-    InfoGeometry.Krein.hestenesPionPlus (E := E) =
-      concreteCARCreation (E := E) := by
-  apply ContinuousLinearMap.ext
-  intro u
-  have hu : to_doubled (WithLp.fst u) (WithLp.snd u) = u := by
-    apply DoubledSpace.ext <;> simp [to_doubled]
-  rw [← hu]
-  apply DoubledSpace.ext <;>
-    simp [InfoGeometry.Krein.hestenesPionPlus,
-      InfoGeometry.Krein.modular_j_to_doubled,
-      InfoGeometry.Krein.clockAxis_to_doubled,
-      concreteCARCreation,
-      InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteCreation_apply_to_doubled] <;>
-    module
-
-@[rep_depth krein]
-theorem hestenesPionMinus_eq_concreteCARAnnihilation :
-    InfoGeometry.Krein.hestenesPionMinus (E := E) =
-      concreteCARAnnihilation (E := E) := by
-  apply ContinuousLinearMap.ext
-  intro u
-  have hu : to_doubled (WithLp.fst u) (WithLp.snd u) = u := by
-    apply DoubledSpace.ext <;> simp [to_doubled]
-  rw [← hu]
-  apply DoubledSpace.ext <;>
-    simp [InfoGeometry.Krein.hestenesPionMinus,
-      InfoGeometry.Krein.modular_j_to_doubled,
-      InfoGeometry.Krein.clockAxis_to_doubled,
-      concreteCARAnnihilation,
-      InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteAnnihilation_apply_to_doubled] <;>
-    module
 
 /--
 Single exported finite spine for the doubled real Krein map:

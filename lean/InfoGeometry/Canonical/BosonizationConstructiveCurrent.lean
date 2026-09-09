@@ -441,7 +441,7 @@ variable (B : Module.Basis ℤ R M)
 /--
 The normalized raw CAR packet constructed from the exterior-Fock modes.
 
-This is not an property interface: every field is filled by the CAR theorems
+This is not an assumption interface: every field is filled by the CAR theorems
 proved in `CanonicalNormalOrdering` from exterior multiplication and
 Clifford/exterior contraction.
 -/
@@ -606,7 +606,7 @@ variable (C : RawCARAlgebra A)
 /--
 Forget the explicit central field after an explicit `central = 1` normalization.
 
-This is only a normalization map, not a theorem interface: the CAR law with
+This is only a normalization map, not a theorem socket: the CAR law with
 `central` is converted to the existing normalized `RawCARModeCompletion`.
 -/
 def toModeCompletion (hK : C.central = 1) : RawCARModeCompletion A where
@@ -787,7 +787,7 @@ theorem cutoffBulkBoundaryTerm_eq_reindexedBulkBoundaryTerm
         rw [Finset.sum_sub_distrib]
 
 /--
-Pointwise support property for the noncentral boundary summand.
+Pointwise support witness for the noncentral boundary summand.
 
 If the two shifted labels have the same cutoff membership, this reindexed
 summand is zero.  Thus the only possible noncentral support is at the cutoff

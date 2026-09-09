@@ -61,4 +61,12 @@ theorem theta_involutive (v : Vec10) : theta (theta v) = v := by
 theorem theta_core_even (v : Vec10) : theta (theta (theta v)) = theta v := by
   rw [theta_involutive]
 
+/-- Closed finite packet for the Cartan split block laws. -/
+theorem cartan_finite_laws_packet :
+    (∀ u v : Vec10, etaPair (boost u) v + etaPair u (boost v) = 0) ∧
+      (∀ v : Vec10, theta (boost (theta v)) = -boost v) ∧
+      (∀ v : Vec10, theta (theta v) = v) ∧
+      (∀ v : Vec10, theta (theta (theta v)) = theta v) := by
+  exact ⟨boost_so55_skew, theta_boost_theta_odd, theta_involutive, theta_core_even⟩
+
 end InfoGeometry.OperatorAlgebra.G22CartanFiniteLaws

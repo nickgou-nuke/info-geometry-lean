@@ -115,4 +115,4 @@ theorem riemannXi_star_of_datum
     (h : RiemannXiSchwarzHypothesis) (s : ℂ) :
     riemannXi (star s) = star (riemannXi s) := h s
 
-end InfoGeometry.Arithmetic.ActualRiemannXiSchwarzBridge
+end ActualRiemannXiSchwarzBridge

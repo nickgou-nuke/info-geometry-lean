@@ -18,7 +18,7 @@ repo's finite braid/Yang--Baxter owner without upgrading either side.
   and the Peirce-compressed payload is invariant under the adjacent
   Yang--Baxter/Artin rewrite.
 * The concrete split-octonion multiplication layer still has a nonzero
-  associator property, so nilpotency of repeated basis slots is not promoted
+  associator witness, so nilpotency of repeated basis slots is not promoted
   here to a general cancellation theorem for nonassociative Yang--Baxter
   residues.
 
@@ -139,7 +139,7 @@ theorem peirceCompressedBraidReadout_commute_rewrite
 Concrete obstruction against the stronger claim that the Peirce-Witt nilpotent
 slots automatically cancel all nonassociative residues.
 
-This re-exports the multiplication owner's nonzero associator property in the
+This re-exports the multiplication owner's nonzero associator witness in the
 same file as the Yang--Baxter readout bridge, keeping the scope boundary visible.
 -/
 theorem peirceWitt_nonassociative_obstruction :

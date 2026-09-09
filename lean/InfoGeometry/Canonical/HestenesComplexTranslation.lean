@@ -24,7 +24,7 @@ This file adds the theorem-level spine:
 * complex-linearity as commuting with the Hestenes phase axis;
 * positive boost signum as the sign of the real Hestenes boost sector.
 
-No new property packets are introduced.
+No new witness packets are introduced.
 -/
 
 namespace InfoGeometry.Canonical.HestenesComplexTranslation

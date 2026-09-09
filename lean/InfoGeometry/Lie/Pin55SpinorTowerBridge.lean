@@ -106,7 +106,9 @@ theorem zornBiAction_diag_minus_vanishes (Z W : CanonicalZorn) :
 
 /-- On the 16D bi-split-octonionic carrier, `zornBiAction` satisfies the Clifford squaring law. -/
 theorem zornBiAction_clifford_law (Z : CanonicalZorn) (pq : BiSplitOctonions) :
-    zornBiAction Z (zornBiAction Z pq) = - InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Z • pq :=
+    zornBiAction Z (zornBiAction Z pq) =
+      -InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 Z • pq :=
   zornBiAction_sq Z pq
 
 end

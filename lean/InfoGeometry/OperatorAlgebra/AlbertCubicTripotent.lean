@@ -4,7 +4,7 @@ import Mathlib.Tactic
 namespace InfoGeometry.OperatorAlgebra.Albert
 
 /--
-A property-gated cubic characteristic interface over an associative `K`-algebra.
+A witness-gated cubic characteristic interface over an associative `K`-algebra.
 
 This is an algebraic shadow of a Freudenthal/Albert characteristic polynomial,
 not a construction of the Albert algebra, OP², or an exceptional Lie group.

@@ -28,6 +28,11 @@ namespace DAG.AlgebraicExponential
 def algebraicExp {A : Type*} [Ring A] (N : A) (_hN : N * N = 0) : A :=
   1 + N
 
+@[simp]
+theorem algebraicExp_eq_one_add {A : Type*} [Ring A] (N : A) (hN : N * N = 0) :
+    algebraicExp N hN = 1 + N :=
+  rfl
+
 /-- The inverse candidate for `exp(N)` is `exp(-N) = 1 - N`. -/
 @[simp]
 theorem algebraicExp_neg_eq_one_sub {A : Type*} [Ring A] (N : A) (hN : N * N = 0) :
@@ -47,6 +52,15 @@ theorem algebraicExp_neg_mul {A : Type*} [Ring A] (N : A) (hN : N * N = 0) :
   simp [algebraicExp]
   noncomm_ring [hN]
 
+/--
+The DAG algebraic exponential is the same unit already owned by the
+tessellation nilpotent-flow lane.
+-/
+theorem algebraicExp_unit_eq_tessellationUnit {A : Type*} [Ring A]
+    (N : A) (hN : N * N = 0) :
+    (InfoGeometry.Tessellation.oneAddSquareZeroUnit N hN : A) = algebraicExp N hN :=
+  rfl
+
 /-! ## Timed nilpotent sector over a noncommutative ring -/
 
 /--
@@ -56,6 +70,11 @@ For scalar time, specialize `T` through the owner algebra map for the carrier.
 -/
 def timedNilpotentExp {A : Type*} [Ring A] (N T : A) : A :=
   1 + T * N
+
+@[simp]
+theorem timedNilpotentExp_zero {A : Type*} [Ring A] (N : A) :
+    timedNilpotentExp N 0 = 1 := by
+  simp [timedNilpotentExp]
 
 /--
 Group law in the square-zero `N` sector.

@@ -75,5 +75,3 @@ theorem SymbolicLatentAtlas.relativeFeatureRegionInDomainCompHausObservation_fac
   exact A.relativeFeatureRegionInDomainObservation_factorization k R
 
 end InfoGeometry.Topology
-
-end

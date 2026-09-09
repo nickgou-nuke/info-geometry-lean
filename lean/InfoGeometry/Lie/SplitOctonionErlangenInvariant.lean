@@ -14,13 +14,15 @@ namespace InfoGeometry.Lie.SplitOctonionErlangenInvariant
 
 open InfoGeometry.Lie.SplitOctonionImaginaryAction
 open InfoGeometry.Algebra.Zorn
+open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 
 noncomputable def canonicalDetQuadratic :
     QuadraticForm ℝ
       InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalZorn :=
   QuadraticMap.ofPolar
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+    (fun X => InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X)
     (by
       intro r X
       have ha : (r • X).a = r * X.a := by
@@ -36,11 +38,13 @@ noncomputable def canonicalDetQuadratic :
         rw [Equiv.smul_def InfoGeometry.Canonical.ZornMatrix.coordEquiv]
         rfl
       simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3,
         InfoGeometry.Canonical.ZornMatrix.dot, ha, hb, hx, hy]
       ring)
     (by
       intro X Y Z
       simp [QuadraticMap.polar, InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3,
         InfoGeometry.Canonical.ZornMatrix.dot]
       ring)
     (by
@@ -58,6 +62,7 @@ noncomputable def canonicalDetQuadratic :
         rw [Equiv.smul_def InfoGeometry.Canonical.ZornMatrix.coordEquiv]
         rfl
       simp [QuadraticMap.polar, InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3,
         InfoGeometry.Canonical.ZornMatrix.dot, ha, hb, hx, hy,
         smul_eq_mul]
       ring)
@@ -65,9 +70,10 @@ noncomputable def canonicalDetQuadratic :
 theorem realZornCompositionAut_preserves_polar
     (φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut)
     (X Y : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalZorn) :
-    polarZ ((φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) X)
+    polarZ InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+        ((φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) X)
         ((φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) Y) =
-      polarZ X Y := by
+      polarZ InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X Y := by
   unfold polarZ
   rw [← map_add (φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut)
       X Y,
@@ -88,16 +94,16 @@ noncomputable def realZornCompositionAut_quadratic_isometry
     canonicalDetQuadratic
         ((φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) X) =
       canonicalDetQuadratic X := by
-  exact QuadraticMap.IsometryEquiv.map_app
-    (realZornCompositionAut_quadratic_isometry φ) X
+  simpa [canonicalDetQuadratic] using
+    (InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut_preserves_det φ X)
 
 theorem realZornCompositionAut_preserves_incident
     (φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut)
     (X Y : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalZorn) :
-    IncidentRep
+    IncidentRep InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
         ((φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) X)
         ((φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) Y) ↔
-      IncidentRep X Y := by
+      IncidentRep InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X Y := by
   unfold IncidentRep
   rw [realZornCompositionAut_preserves_polar]
 
@@ -112,22 +118,30 @@ theorem imaginaryAut_preserves_square_zero
 theorem imaginaryAut_preserves_polar
     (φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut)
     (X Y : Imaginary) :
-    polarZ (imaginaryAut φ X).1 (imaginaryAut φ Y).1 = polarZ X.1 Y.1 := by
+    polarZ InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+        (imaginaryAut φ X).1 (imaginaryAut φ Y).1 =
+      polarZ InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X.1 Y.1 := by
   unfold polarZ
   calc
-    _ = ZornMatrix.detZ
+    _ = ZornMatrix.detZ realCrossProduct3
           ((φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) X.1 +
             (φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) Y.1) -
-        ZornMatrix.detZ ((φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) X.1) -
-          ZornMatrix.detZ ((φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) Y.1) := by
+        ZornMatrix.detZ realCrossProduct3
+          ((φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) X.1) -
+          ZornMatrix.detZ realCrossProduct3
+            ((φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) Y.1) := by
       rfl
-    _ = ZornMatrix.detZ
+    _ = ZornMatrix.detZ realCrossProduct3
           ((φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut)
             (X.1 + Y.1)) -
-        ZornMatrix.detZ ((φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) X.1) -
-          ZornMatrix.detZ ((φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) Y.1) := by
+        ZornMatrix.detZ realCrossProduct3
+          ((φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) X.1) -
+          ZornMatrix.detZ realCrossProduct3
+            ((φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalLinearAut) Y.1) := by
       rw [map_add]
-    _ = ZornMatrix.detZ (X.1 + Y.1) - ZornMatrix.detZ X.1 - ZornMatrix.detZ Y.1 := by
+    _ = ZornMatrix.detZ realCrossProduct3 (X.1 + Y.1) -
+          ZornMatrix.detZ realCrossProduct3 X.1 -
+          ZornMatrix.detZ realCrossProduct3 Y.1 := by
       rw [InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut_preserves_det,
         InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut_preserves_det,
         InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut_preserves_det]
@@ -135,8 +149,9 @@ theorem imaginaryAut_preserves_polar
 theorem imaginaryAut_preserves_incident
     (φ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut)
     (X Y : Imaginary) :
-    IncidentRep (imaginaryAut φ X).1 (imaginaryAut φ Y).1 ↔
-      IncidentRep X.1 Y.1 := by
+    IncidentRep InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+        (imaginaryAut φ X).1 (imaginaryAut φ Y).1 ↔
+      IncidentRep InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X.1 Y.1 := by
   unfold IncidentRep
   rw [imaginaryAut_preserves_polar]
 

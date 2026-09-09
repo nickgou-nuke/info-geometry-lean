@@ -213,6 +213,9 @@ theorem u4_v4_add_v4_u4 : u4 * v4 + v4 * u4 = 1 := by
   rw [h_polar] at h
   exact h
 
+theorem h_u5_u4_anti_2 : u5 * u4 = - (u4 * u5) := u5_u4_anti
+theorem h_v5_u4_anti_2 : v5 * u4 = - (u4 * v5) := v5_u4_anti
+
 theorem adD4_u4 : D4 * u4 - u4 * D4 = u4 := by
   dsimp [D4]
   rw [smul_mul_assoc, Algebra.mul_smul_comm, sub_mul, mul_sub, ← smul_sub]
@@ -262,17 +265,17 @@ theorem adD5_u4 : D5 * u4 - u4 * D5 = 0 := by
   have h1 : u5 * v5 * u4 = u4 * (u5 * v5) := by
     calc
       u5 * v5 * u4 = u5 * (v5 * u4) := by noncomm_ring
-      _ = u5 * (- (u4 * v5)) := by rw [v5_u4_anti]
+      _ = u5 * (- (u4 * v5)) := by rw [h_v5_u4_anti_2]
       _ = - (u5 * u4 * v5) := by noncomm_ring
-      _ = - (- (u4 * u5) * v5) := by rw [u5_u4_anti]
+      _ = - (- (u4 * u5) * v5) := by rw [h_u5_u4_anti_2]
       _ = u4 * u5 * v5 := by noncomm_ring
       _ = u4 * (u5 * v5) := by noncomm_ring
   have h2 : v5 * u5 * u4 = u4 * (v5 * u5) := by
     calc
       v5 * u5 * u4 = v5 * (u5 * u4) := by noncomm_ring
-      _ = v5 * (- (u4 * u5)) := by rw [u5_u4_anti]
+      _ = v5 * (- (u4 * u5)) := by rw [h_u5_u4_anti_2]
       _ = - (v5 * u4 * u5) := by noncomm_ring
-      _ = - (- (u4 * v5) * u5) := by rw [v5_u4_anti]
+      _ = - (- (u4 * v5) * u5) := by rw [h_v5_u4_anti_2]
       _ = u4 * v5 * u5 := by noncomm_ring
       _ = u4 * (v5 * u5) := by noncomm_ring
   rw [h1, h2]
@@ -555,3 +558,4 @@ theorem theta_D : thetaOp D = -D := by
   rw [h_add, h1]
   have h2 : -D5 + -D4 = -(D5 + D4) := by abel
   rw [h2]
+

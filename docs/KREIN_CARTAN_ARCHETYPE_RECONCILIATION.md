@@ -85,7 +85,7 @@ During this audit another writer replaced and staged
 distinguished from the subsequent candidate. This audit has not overwritten
 that candidate.
 
-`manage_task list` is unavailable in this session. Approval for process
-inspection plus the shared build lock has been requested before compilation.
+Before compilation, inspect running compiler processes and use the repository's
+shared build lock for Lake builds. The user corrected the stale task-tool memo.
 Browser-harness requires local Chrome remote debugging before literature
 verification can proceed. No claim of exhaustive literature review is made.

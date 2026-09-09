@@ -4681,3 +4681,4 @@ import InfoGeometry.Canonical.ModularWedgeAAVInterferenceBridge
 import InfoGeometry.Canonical.KreinRindlerBogoliubovBridge
 import InfoGeometry.Canonical.IwasawaMaurerCartanBdGBridge
 import InfoGeometry.Canonical.KMSShearTubuleKleinPrimonBridge
+import InfoGeometry.Canonical.PinModularPeirceBostConnesBridge

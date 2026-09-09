@@ -1,0 +1,23 @@
+{
+  "status": "candidate_not_kernel_verified",
+  "local_lean_exit_code": 127,
+  "local_lean_result": "NOT RUN: lake is unavailable.",
+  "public_proof_implementations": 54,
+  "private_proof_helpers": 2,
+  "source_scan": "passed_no_placeholders_or_custom_axiom_declarations",
+  "symbolic_checks": "4 passed",
+  "synthetic_quadrature_cases": "4 passed",
+  "kernel_verified": false,
+  "measured_detector_validation": false,
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "base_commit": "fdce23724bcbd3cc63f78c6e0cdca7e371d99c1f",
+  "lean_toolchain": "leanprover/lean4:v4.28.1",
+  "mathlib_rev": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+  "formal_scope_frontier": [
+    "Cartesian-to-polar/ray Jacobian equality",
+    "Sharp global volume-response/solid-angle bound",
+    "Microscopic full-energy acceptance construction",
+    "Correlated two-photon response",
+    "Quantified VPD approximation"
+  ]
+}

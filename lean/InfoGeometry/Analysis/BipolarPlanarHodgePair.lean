@@ -71,6 +71,13 @@ theorem hodgeRotate_dPsiCoeff (x y : ℝ) :
     hodgeRotate (dPsiCoeff x y) = -dPhiCoeff x y := by
   rw [dPsiCoeff_eq_hodgeRotate_dPhiCoeff, hodgeRotate_sq]
 
+theorem deriv_phiXY_eq_dPhiCoeff_zero
+    {x y : ℝ}
+    (h0 : x ^ 2 + y ^ 2 ≠ 0)
+    (h1 : (x - 1) ^ 2 + y ^ 2 ≠ 0) :
+    deriv (fun t => BipolarBoundaryTrace.phiXY t y) x = dPhiCoeff x y 0 := by
+  exact (BipolarBoundaryTrace.hasDerivAt_phiXY h0 h1).deriv
+
 theorem dPhiCoeff_half_tangent_zero (y : ℝ) : dPhiCoeff (1 / 2) y 1 = 0 := by
   simp [dPhiCoeff]
   ring
@@ -81,6 +88,19 @@ theorem dPhiCoeff_half_normal (y : ℝ) :
   simp [dPhiCoeff]
   field_simp [ne_of_gt hp]
   ring
+
+theorem dPsiCoeff_half_normal_zero (y : ℝ) :
+    dPsiCoeff (1 / 2) y 0 = 0 := by
+  rw [dPsiCoeff_eq_hodgeRotate_dPhiCoeff]
+  change -dPhiCoeff (1 / 2) y 1 = 0
+  rw [dPhiCoeff_half_tangent_zero]
+  simp
+
+theorem dPsiCoeff_half_tangent (y : ℝ) :
+    dPsiCoeff (1 / 2) y 1 = 1 / ((1 / 4 : ℝ) + y ^ 2) := by
+  rw [dPsiCoeff_eq_hodgeRotate_dPhiCoeff]
+  change dPhiCoeff (1 / 2) y 0 = 1 / ((1 / 4 : ℝ) + y ^ 2)
+  exact dPhiCoeff_half_normal y
 
 theorem planar_hodge_packet (x y : ℝ) :
     dPsiCoeff x y = hodgeRotate (dPhiCoeff x y) ∧

@@ -114,6 +114,10 @@ def criticalLine (y : ℝ) : ℂ :=
     (criticalLine y).im = y := by
   simp [criticalLine]
 
+theorem criticalLine_onCanonicalCriticalLine (y : ℝ) :
+    OnCriticalLine (criticalLine y) := by
+  simp [OnCriticalLine]
+
 /-- Canonical squared-norm readback: the vertical bisector maps to the unit circle. -/
 theorem normSq_crossRatio01_criticalLine (y : ℝ) :
     Complex.normSq (crossRatio01 (criticalLine y)) = 1 :=

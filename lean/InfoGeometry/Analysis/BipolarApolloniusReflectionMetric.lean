@@ -64,6 +64,10 @@ theorem eta_eq_iff_apollonius {s : ℂ} (hs : s ∈ punctured01) (c : ℝ) :
       (div_eq_iff (ne_of_gt hdpos)).2 h
     rw [hratioeq, Real.log_exp]
 
+theorem eta_eq_zero_iff_equidistant {s : ℂ} (hs : s ∈ punctured01) :
+    eta s = 0 ↔ ‖s‖ = ‖1 - s‖ := by
+  simpa using (eta_eq_iff_apollonius hs 0)
+
 def metricDensity (s : ℂ) : ℝ := Complex.normSq (dlog01 s)
 
 theorem metricDensity_eq {s : ℂ} (hs : s ∈ punctured01) :

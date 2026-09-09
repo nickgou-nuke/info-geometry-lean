@@ -1,5 +1,5 @@
 import proofs.HestenesTransportedOddHodge
-import proofs.HestenesEvenPauliEquiv
+import InfoGeometry.Canonical.HestenesEvenPauliEquiv
 
 /-!
 # Balanced eigenspaces of transported Hodge

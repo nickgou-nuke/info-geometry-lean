@@ -206,6 +206,35 @@ theorem E12_comm_E21 :
     matrixComm E12 E21 = UnifiedMatrixBasis.σ₃ := by
   ext i j <;> fin_cases i <;> fin_cases j <;> simp [matrixComm, E11, E12, E21, E22, UnifiedMatrixBasis.σ₃, Matrix.mul_apply, Fin.sum_univ_two]
 
+/-- Repaired theorem-safe Chapter 6 finite operator/eigenoperator packet. -/
+theorem repaired_MD006_operator_eigenoperator_packet (A B X : MatrixQuantumCarrier) :
+    leftMul A (rightMul B X) = rightMul B (leftMul A X) ∧
+    leftMul A (leftMul B X) - leftMul B (leftMul A X) = leftMul (matrixComm A B) X ∧
+    rightMul A (rightMul B X) - rightMul B (rightMul A X) = rightMul (matrixComm B A) X ∧
+    leftMul UnifiedMatrixBasis.σ₃ E12 = E12 ∧
+    rightMul UnifiedMatrixBasis.σ₃ E12 = -E12 ∧
+    E12 * E21 = E11 ∧
+    E21 * E12 = E22 ∧
+    E11 = InfoGeometry.Physics.MD003IsomorphicRepresentations.biquatMatrix
+      (1 / 2) 0 0 (Complex.I / 2) ∧
+    E12 = InfoGeometry.Physics.MD003IsomorphicRepresentations.biquatMatrix
+      0 (Complex.I / 2) (-1 / 2) 0 ∧
+    matrixComm UnifiedMatrixBasis.σ₃ E12 = (2 : ℂ) • E12 ∧
+    matrixComm UnifiedMatrixBasis.σ₃ E21 = (-2 : ℂ) • E21 ∧
+    matrixComm E12 E21 = UnifiedMatrixBasis.σ₃ := by
+  exact ⟨leftMul_rightMul_commute A B X,
+    leftMul_commutator_action A B X,
+    rightMul_commutator_action A B X,
+    sigma3_E12_joint_eigen.1,
+    sigma3_E12_joint_eigen.2,
+    matrixUnit_cross_products.1,
+    matrixUnit_cross_products.2,
+    E11_biquat_decomposition,
+    E12_biquat_decomposition,
+    sigma3_comm_E12,
+    sigma3_comm_E21,
+    E12_comm_E21⟩
+
 end InfoGeometry.Physics.MD006OperatorEigenoperators
 
 end noncomputable section

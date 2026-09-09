@@ -1,0 +1,19 @@
+import InfoGeometry.GrandUnification.ModularTransport
+import InfoGeometry.GrandUnification.SpectralThermalNormalization
+
+/-!
+# Checks — Modular transport cocycle bridge
+-/
+
+namespace InfoGeometry.GrandUnification.Checks
+
+#check InfoGeometry.GrandUnification.modularTransportBridgeTarget
+#check InfoGeometry.GrandUnification.constructModularTransportBridgeTarget
+#check InfoGeometry.GrandUnification.tomitaGromovBridgeTarget
+#check InfoGeometry.GrandUnification.constructTomitaGromovBridgeTarget
+#check InfoGeometry.GrandUnification.spectralThermalNormalization_partition_pos
+#check InfoGeometry.GrandUnification.spectralThermalNormalization_partitionPotential_eq_logZ
+#check InfoGeometry.GrandUnification.spectralThermalNormalization_negativeLogGibbsDensity
+#check InfoGeometry.GrandUnification.spectralThermalNormalization_statewise_log_generator
+
+end InfoGeometry.GrandUnification.Checks

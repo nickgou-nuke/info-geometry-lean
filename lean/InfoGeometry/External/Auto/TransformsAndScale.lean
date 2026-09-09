@@ -17,8 +17,6 @@ The Cayley Transform serves as the exact topological bridge, mapping the hyperbo
 half-plane to the elliptic unit disk.
 -/
 
-namespace TransformsAndScale
-
 noncomputable section
 
 /-- The Cayley Transform: W = (z - i) / (z + i)
@@ -126,6 +124,4 @@ theorem cayley_real_unit_circle (x : ℝ) :
   simp [Complex.normSq]
   nlinarith [sq_nonneg x]
 
-end
-
-end TransformsAndScale
+end noncomputable section

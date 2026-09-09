@@ -688,8 +688,9 @@ theorem modularCPT_supergraded_lie_package :
     modularConjugationJ_anticommutator_modularSignEpsilon (E := E)⟩
 
 /-- Canonical modular CPT supercharge, `Q := Jε`. -/
-noncomputable def modularCPTSupercharge : Supercharge (E := E) :=
-  ⟨modularComplexI (E := E), modularComplexI_isOdd (E := E)⟩
+noncomputable def modularCPTSupercharge : Supercharge (E := E) where
+  Q := modularComplexI (E := E)
+  odd := modularComplexI_isOdd (E := E)
 
 /-- The modular CPT supercharge squares to `-Id`. -/
 lemma modularCPTSupercharge_hamiltonian :
@@ -707,8 +708,8 @@ lemma modularCPTSupercharge_maps_plus_to_minus
 /-- The modular CPT supercharge agrees with the legacy dilation generator. -/
 lemma modularCPTSupercharge_Q_eq_dilationOperator :
     (modularCPTSupercharge (E := E)).Q = dilationOperator (E := E) := by
-  simpa [modularCPTSupercharge, Supercharge.Q] using
-    (modularComplexI_eq_dilationOperator (E := E))
+  change modularComplexI (E := E) = dilationOperator (E := E)
+  exact modularComplexI_eq_dilationOperator (E := E)
 
 /-- `Q = Jε` maps grade-minus states to grade-plus states. -/
 lemma modularCPTSupercharge_maps_minus_to_plus

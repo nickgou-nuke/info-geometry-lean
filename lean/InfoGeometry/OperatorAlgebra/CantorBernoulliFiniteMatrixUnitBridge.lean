@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.CantorKMSState
 import InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzOperatorTreeBridge
 import InfoGeometry.OperatorAlgebra.CantorBernoulliCylinderMultiplicationBridge
 import InfoGeometry.OperatorAlgebra.CantorBernoulliGaugeStateBridge
+import InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge
 
 /-!
 # Fixed-depth matrix units for the Bernoulli Cuntz tree
@@ -20,9 +21,11 @@ namespace InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Canonical.CantorKMSState
 open InfoGeometry.Canonical.CantorBernoulliL2OperatorTransport
+open InfoGeometry.Canonical.CantorKMSState
 open InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzOperatorTreeBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliCylinderMultiplicationBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliGaugeStateBridge
+open InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge
 
 def bitWordUnit (n : ℕ) (u v : BitWord n) :
     InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzCStarRealization.BoundedL2Operator :=
@@ -150,7 +153,7 @@ it does not extend `DiagTrace` to the completed concrete C*-algebra.
 -/
 theorem bitWordUnit_diag_eq_diagTrace_cylinder (n : ℕ) (u : BitWord n) :
     canonicalGaugeState (List.ofFn u) (List.ofFn u) =
-      DiagTrace n (cylinderIndicator n u) := by
+      DiagTrace n (InfoGeometry.Canonical.CantorKMSState.cylinderIndicator n u) := by
   rw [canonicalGaugeState_proj, DiagTrace_cylinderIndicator]
   simp [List.length_ofFn, inv_pow]
 
@@ -166,6 +169,9 @@ theorem bitWordUnit_level_gauge_sum_one (n : ℕ) :
   classical
   simp_rw [canonicalGaugeState_proj, List.length_ofFn]
   simp [Finset.sum_const]
+
+def extendBitWord (n : ℕ) (w : BitWord n) (b : Bool) : BitWord (n + 1) :=
+  (bitWordEquiv n).symm (w, b)
 
 private theorem list_ofFn_extendBitWord (n : ℕ) (w : BitWord n) (b : Bool) :
     List.ofFn (extendBitWord n w b) = List.ofFn w ++ [b] := by

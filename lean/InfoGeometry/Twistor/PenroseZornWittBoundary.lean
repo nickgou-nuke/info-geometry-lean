@@ -84,7 +84,8 @@ noncomputable def penroseWittZornMap : Twistor4 →ₗ[ℝ] CZ :=
 
 /-- Reduced norm in literal circular Peirce coordinates. -/
 theorem real8CircularPeirce_norm (c : Real8) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (real8CircularPeirceEquiv c) =
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 (real8CircularPeirceEquiv c) =
       c 0 * c 4 - (c 1 * c 5 + c 2 * c 6 + c 3 * c 7) := by
   have hcoord (i : Fin 8) :
       circularCoordinate
@@ -98,9 +99,11 @@ theorem real8CircularPeirce_norm (c : Real8) :
 /-- Main Witt-polarization theorem: the Zorn reduced norm of the polarized
 Penrose carrier is exactly the real split-signature `(4,4)` sheet norm. -/
 theorem penroseWittZorn_norm_eq_splitSignature (Z : Twistor4) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (penroseWittZornMap Z) =
+    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 (penroseWittZornMap Z) =
       penroseRealSplitSignature Z := by
   change InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
       (real8CircularPeirceEquiv (penroseWittCoordinates Z)) = _
   rw [real8CircularPeirce_norm]
   simp [penroseWittCoordinates, penroseRealSplitSignature]
@@ -109,7 +112,8 @@ theorem penroseWittZorn_norm_eq_splitSignature (Z : Twistor4) :
 /-- Nullness is preserved exactly by the Witt-polarized Penrose-to-Zorn map. -/
 theorem penrose_split_null_iff_zorn_null (Z : Twistor4) :
     penroseRealSplitSignature Z = 0 ↔
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (penroseWittZornMap Z) = 0 := by
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 (penroseWittZornMap Z) = 0 := by
   rw [penroseWittZorn_norm_eq_splitSignature]
 
 /- The two Penrose presentations are related by the existing explicit
@@ -125,7 +129,8 @@ theorem penroseTwistor4Carrier_quadratic_eq_splitSignature (Z : Twistor4) :
 
 theorem penroseTwistor4Carrier_quadratic_eq_wittZorn_norm (Z : Twistor4) :
     twistorRealQuadraticForm (penroseTwistor4CarrierEquiv Z) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (penroseWittZornMap Z) := by
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+      InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 (penroseWittZornMap Z) := by
   rw [penroseTwistor4Carrier_quadratic_eq_splitSignature,
     penroseWittZorn_norm_eq_splitSignature]
 

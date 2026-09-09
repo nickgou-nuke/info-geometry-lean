@@ -31,6 +31,10 @@ theorem zeta12_thirteenPotent_equation :
     zeta12 ^ 13 = zeta12 :=
   zeta12_in_thirteenPotentHull
 
+theorem zeta12_power_sum_eq_zero :
+    ∑ i ∈ Finset.range 12, zeta12 ^ i = 0 := by
+  exact zeta12_primitive.geom_sum_eq_zero (by norm_num)
+
 /-- The C12 phase is not in any smaller nontrivial potency degree. -/
 theorem zeta12_minimal_nPotency :
     zeta12 ^ 13 = zeta12 ∧
@@ -41,7 +45,7 @@ theorem zeta12_minimal_nPotency :
   have hpow : zeta12 ^ (n - 1) = 1 := by
     have hmul : zeta12 ^ (n - 1) * zeta12 = 1 * zeta12 := by
       rw [← pow_succ, hsub]
-      simpa [hEq]
+      simp [hEq]
     exact mul_right_cancel₀ (by exact zeta12_primitive.ne_zero (by norm_num)) hmul
   have hdvd : 12 ∣ n - 1 := zeta12_primitive.dvd_of_pow_eq_one (n - 1) hpow
   have hpos : 0 < n - 1 := by omega

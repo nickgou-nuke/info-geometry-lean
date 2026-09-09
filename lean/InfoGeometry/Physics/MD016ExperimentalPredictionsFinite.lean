@@ -128,6 +128,24 @@ theorem omegaRatios_sum_one (gamma : ℝ) (hgamma : 1 + gamma ≠ 0) :
   unfold omegaLambdaRatio omegaMatterRatio
   field_simp [hgamma]
 
+/-- Repaired theorem-safe Chapter 16 finite prediction-algebra packet. -/
+theorem repaired_MD016_prediction_packet
+    (sigmaSM alpha E Lambda angular baseline sensitivity delta c beta f f0 gamma : ℝ)
+    (hf0 : f0 ≠ 0) (hgamma : 1 + gamma ≠ 0) :
+    modifiedCrossSection sigmaSM alpha E Lambda angular - sigmaSM =
+      sigmaSM * (alpha * E ^ 2 / Lambda ^ 2 * angular) ∧
+    linearTrialityAngleShift baseline sensitivity delta - baseline = sensitivity * delta ∧
+    gwSpeedShadow c beta f0 f0 = c * (1 - beta) ∧
+    c - gwSpeedShadow c beta f f0 = c * beta * (f / f0) ^ 2 ∧
+    darkEnergyEOS (6 / 100 : ℝ) = -98 / 100 ∧
+    omegaLambdaRatio gamma + omegaMatterRatio gamma = 1 := by
+  exact ⟨modifiedCrossSection_excess sigmaSM alpha E Lambda angular,
+    linearTrialityAngleShift_sub_baseline baseline sensitivity delta,
+    gwSpeedShadow_reference_frequency c beta f0 hf0,
+    gwSpeedShadow_deficit c beta f f0,
+    darkEnergyEOS_sample,
+    omegaRatios_sum_one gamma hgamma⟩
+
 end InfoGeometry.Physics.MD016ExperimentalPredictionsFinite
 
 end noncomputable section

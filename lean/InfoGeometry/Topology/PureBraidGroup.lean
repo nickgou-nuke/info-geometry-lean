@@ -40,18 +40,6 @@ def b {n : ℕ} (i j : Fin n) (hij : i < j) : FreeGroup (PureBraidGenerator n) :
 def relatorEq {α : Type*} (lhs rhs : FreeGroup α) : FreeGroup α :=
   lhs * rhs⁻¹
 
-@[simp] theorem lift_relatorEq_eq_one_iff
-    {α G : Type*} [Group G] (f : α → G)
-    (lhs rhs : FreeGroup α) :
-    FreeGroup.lift f (relatorEq lhs rhs) = 1 ↔
-      FreeGroup.lift f lhs = FreeGroup.lift f rhs := by
-  unfold relatorEq
-  rw [map_mul, map_inv]
-  constructor
-  · exact eq_of_mul_inv_eq_one
-  · intro h
-    rw [h, mul_inv_cancel]
-
 /-- Far-commutativity relator for noninterleaving ordered pairs.
 
 The membership condition in `pureBraidRelations` supplies either

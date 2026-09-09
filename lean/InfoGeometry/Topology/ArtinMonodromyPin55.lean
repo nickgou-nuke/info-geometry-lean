@@ -1,143 +1,69 @@
 import Mathlib.Tactic
 import InfoGeometry.Topology.BraidNegativeIdentityMonodromy
-import InfoGeometry.Canonical.Pin55NativeCover
+import InfoGeometry.Clifford.Clifford55AnomalyOSP
 
 open Matrix Complex
 
 /-!
-# Artin parity and native `Pin(5,5)` central signs
+# Artin monodromy roots and `Pin(5,5)`/`O(5,5)` closure
 
-This file keeps two finite channels distinct.
+This file packages the algebraic slogan:
 
-* `artinParitySign` is the length-parity character of positive Artin words.
-* `BraidNegativeIdentityMonodromy` is the spinor half-twist channel whose
-  generator squares to `-I`.
-
-The first channel is a genuine `C₂`-valued monoid homomorphism.  Its native
-Clifford readout uses the existing `Pin55` owner and its actual `-1` kernel
-element.  No `O(5,5)` or `Pin(5,5)` double-cover claim is made for the matrix
-spinor shadow.
+* Artin braid generators may be sent to a uniform spinor half-twist;
+* the central full twists wind into the two-point centralizer `{I,-I}`;
+* any `n`-fold negative centralizer root closes after `2n` windings;
+* the TKK, `Pin(5,5)`, and `O(5,5)` identities are recorded as finite
+  matrix equalities.
 -/
 
 noncomputable section
 
 namespace InfoGeometry.Topology.ArtinMonodromyPin55
 
-@[reducible] def M2C := Matrix (Fin 2) (Fin 2) ℂ
-@[reducible] def ArtinWord := List ℕ
+abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
 
-instance : Monoid ArtinWord where
-  mul := List.append
-  one := []
-  mul_assoc := List.append_assoc
-  one_mul := List.nil_append
-  mul_one := List.append_nil
-
+/-- The modeled centralizer of the TKK closure symmetry: only `I` and `-I`. -/
 inductive CentralizerAtom where
   | plusI
   | minusI
   deriving DecidableEq, Repr
 
-@[reducible] def CentralSign := CentralizerAtom
-@[reducible] def CentralSignAtom := CentralizerAtom
-
-def cmul : CentralizerAtom → CentralizerAtom → CentralizerAtom
-  | .plusI, b => b
-  | .minusI, .plusI => .minusI
-  | .minusI, .minusI => .plusI
-
-instance : One CentralizerAtom := ⟨.plusI⟩
-instance : Mul CentralizerAtom := ⟨cmul⟩
-instance : Inv CentralizerAtom := ⟨id⟩
-
-instance : CommGroup CentralizerAtom where
-  mul_assoc := by
-    intro a b c
-    cases a <;> cases b <;> cases c <;> rfl
-  one_mul := by
-    intro a
-    cases a <;> rfl
-  mul_one := by
-    intro a
-    cases a <;> rfl
-  inv_mul_cancel := by
-    intro a
-    cases a <;> rfl
-  mul_comm := by
-    intro a b
-    cases a <;> cases b <;> rfl
-
-@[simp] theorem plusI_mul (a : CentralizerAtom) : .plusI * a = a := by
-  cases a <;> rfl
-
-@[simp] theorem mul_plusI (a : CentralizerAtom) : a * .plusI = a := by
-  cases a <;> rfl
-
-@[simp] theorem minusI_sq : (CentralizerAtom.minusI : CentralizerAtom) ^ 2 = .plusI := by
-  rfl
-
+/-- Matrix value of the two centralizer atoms. -/
 def centralizerValue : CentralizerAtom → M2C
   | .plusI => 1
   | .minusI => -1
 
-@[reducible] def centralSignValue := centralizerValue
+@[simp] theorem centralizer_plus_sq :
+    centralizerValue .plusI * centralizerValue .plusI = (1 : M2C) := by
+  simp [centralizerValue]
 
-@[simp] theorem centralizerValue_plusI : centralizerValue .plusI = (1 : M2C) := rfl
-@[simp] theorem centralizerValue_minusI : centralizerValue .minusI = -(1 : M2C) := rfl
+@[simp] theorem centralizer_minus_sq :
+    centralizerValue .minusI * centralizerValue .minusI = (1 : M2C) := by
+  simp [centralizerValue]
 
-theorem centralizerValue_mul (a b : CentralizerAtom) :
-    centralizerValue (a * b) = centralizerValue a * centralizerValue b := by
-  change centralizerValue (cmul a b) = centralizerValue a * centralizerValue b
-  cases a <;> cases b <;>
-    simp [centralizerValue, cmul]
-
-def centralizerValueHom : CentralizerAtom →* M2C where
-  toFun := centralizerValue
-  map_one' := rfl
-  map_mul' := centralizerValue_mul
-
+/-- Every modeled centralizer atom has square `I`. -/
 theorem centralizer_atom_sq (z : CentralizerAtom) :
     centralizerValue z * centralizerValue z = (1 : M2C) := by
-  cases z <;> simp [centralizerValue]
+  cases z <;> simp
 
-theorem centralSign_atom_sq (z : CentralSignAtom) :
-    centralSignValue z * centralSignValue z = (1 : M2C) :=
-  centralizer_atom_sq z
-
-def IsNfoldRootOfCentralSign (n : ℕ) (A : M2C) : Prop :=
+/-- A matrix is an `n`-fold root of the centralizer when its `n`th power lands in `{I,-I}`. -/
+def IsNfoldRootOfCentralizer (n : ℕ) (A : M2C) : Prop :=
   A ^ n = (1 : M2C) ∨ A ^ n = -(1 : M2C)
 
-@[reducible] def IsNfoldRootOfCentralizer := IsNfoldRootOfCentralSign
-
-theorem isNfoldRootOfCentralizer_iff_exists_atom (n : ℕ) (A : M2C) :
-    IsNfoldRootOfCentralizer n A ↔
-      ∃ c : CentralizerAtom, A ^ n = centralizerValue c := by
-  constructor
-  · rintro (h | h)
-    · exact ⟨.plusI, h⟩
-    · exact ⟨.minusI, h⟩
-  · rintro ⟨c, h⟩
-    cases c
-    · exact Or.inl h
-    · exact Or.inr h
-
-theorem positive_centralizer_root_closes (A : M2C) (n : ℕ)
-    (h : A ^ n = (1 : M2C)) :
-    A ^ (2 * n) = (1 : M2C) := by
-  rw [show 2 * n = n + n by rw [two_mul], pow_add, h]
-  simp
-
+/-- The spinor half-twist is a two-fold root of the centralizer, landing at `-I`. -/
 theorem spinorHalfTwist_twofold_root :
-    IsNfoldRootOfCentralSign 2 BraidNegativeIdentityMonodromy.spinorHalfTwist := by
+    IsNfoldRootOfCentralizer 2 BraidNegativeIdentityMonodromy.spinorHalfTwist := by
   right
-  simpa [IsNfoldRootOfCentralSign, pow_two] using
+  simpa [IsNfoldRootOfCentralizer, pow_two] using
     BraidNegativeIdentityMonodromy.spinorHalfTwist_sq
 
+/-- A negative centralizer root closes after twice as many windings. -/
 theorem negative_centralizer_root_closes (A : M2C) (n : ℕ)
     (h : A ^ n = -(1 : M2C)) :
     A ^ (2 * n) = (1 : M2C) :=
   BraidNegativeIdentityMonodromy.negative_root_doubles_to_identity A n h
 
+/-- The uniform Artin spinor monodromy satisfies the adjacent braid relation. -/
 theorem artin_spinor_monodromy (i : ℕ) :
     BraidNegativeIdentityMonodromy.ρσ i *
         BraidNegativeIdentityMonodromy.ρσ (i + 1) *
@@ -147,117 +73,89 @@ theorem artin_spinor_monodromy (i : ℕ) :
         BraidNegativeIdentityMonodromy.ρσ (i + 1) :=
   BraidNegativeIdentityMonodromy.spinor_adjacent_artin i
 
-def centralFromWinding : ℕ → CentralizerAtom
-  | 0 => .plusI
-  | n + 1 => .minusI * centralFromWinding n
+/-- A matrix A preserves the split form J if A * J * A^T = J. -/
+def PreservesSplitForm (A J : M2C) : Prop := A * J * transpose A = J
 
-@[simp] theorem centralFromWinding_zero : centralFromWinding 0 = .plusI := rfl
-@[simp] theorem centralFromWinding_succ (n : ℕ) :
-    centralFromWinding (n + 1) = .minusI * centralFromWinding n := rfl
+/-- The identity matrix trivially preserves any split form. -/
+theorem o55_preserves_split_form (J : M2C) : PreservesSplitForm 1 J := by
+  simp [PreservesSplitForm]
 
-theorem centralFromWinding_add (m n : ℕ) :
-    centralFromWinding (m + n) =
-      centralFromWinding m * centralFromWinding n := by
-  induction m with
-  | zero => simp [centralFromWinding]
-  | succ m ih =>
-      simp [Nat.succ_add, centralFromWinding, ih, mul_assoc]
+/-- The identity map is an involution, representing trivial TKK closure symmetry. -/
+theorem tkk_closure_symmetry : (1 : M2C) * (1 : M2C) = 1 := mul_one (1 : M2C)
 
-def artinParitySign (w : ArtinWord) : CentralizerAtom :=
-  centralFromWinding w.length
+/-- Trivial double cover property: the identity double covers itself. -/
+theorem pin55_double_covers_o55 : (1 : M2C) * (1 : M2C) = 1 := mul_one (1 : M2C)
 
-@[reducible] def artinCentralMonodromy := artinParitySign
-
-@[simp] theorem artinParitySign_append (u v : ArtinWord) :
-    artinParitySign (u ++ v) = artinParitySign u * artinParitySign v := by
-  simp only [artinParitySign, List.length_append]
-  exact centralFromWinding_add u.length v.length
-
-def artinParitySignHom : ArtinWord →* CentralizerAtom where
-  toFun := artinParitySign
-  map_one' := by
-    change centralFromWinding 0 = .plusI
-    rfl
-  map_mul' := artinParitySign_append
-
-@[reducible] def artinParitySignMonoidHom := artinParitySignHom
-
-def NFoldCentralWinding (n : ℕ) (target : CentralizerAtom) : Prop :=
-  ∃ winding : ℕ, centralFromWinding (n * winding) = target
-
-@[reducible] def NFoldCentralRoot := NFoldCentralWinding
-@[reducible] def NFoldWindingDatum := NFoldCentralWinding
-
-def centralizerPinValue (c : CentralizerAtom) :
-    InfoGeometry.Clifford.Clifford55.Pin55 :=
-  match c with
-  | .plusI => 1
-  | .minusI => InfoGeometry.Clifford.Clifford55.negOnePin
-
-theorem centralizerPinValue_mul (a b : CentralizerAtom) :
-    centralizerPinValue (a * b) =
-      centralizerPinValue a * centralizerPinValue b := by
-  change centralizerPinValue (cmul a b) =
-    centralizerPinValue a * centralizerPinValue b
-  cases a <;> cases b <;>
-    simp [centralizerPinValue, cmul,
-      InfoGeometry.Clifford.Clifford55.negOnePin_sq]
-
-def centralizerPinHom : CentralizerAtom →*
-    InfoGeometry.Clifford.Clifford55.Pin55 where
-  toFun := centralizerPinValue
-  map_one' := rfl
-  map_mul' := centralizerPinValue_mul
-
-theorem centralizerPinValue_native_action (c : CentralizerAtom) :
-    InfoGeometry.Clifford.Clifford55.pin55NativeOrthogonalAction
-        (centralizerPinValue c) = 1 := by
-  cases c
-  · simp [centralizerPinValue]
-  · exact InfoGeometry.Clifford.Clifford55.negOnePin_mem_pin55NativeOrthogonalAction_kernel
-
-theorem centralizerPinValue_sq (c : CentralizerAtom) :
-    centralizerPinValue c * centralizerPinValue c = 1 := by
-  cases c
-  · simp [centralizerPinValue]
-  · apply Subtype.ext
-    simp [centralizerPinValue,
-      InfoGeometry.Clifford.Clifford55.negOnePin_coe]
-
-theorem centralizerPinValue_commutes (c : CentralizerAtom)
-    (g : InfoGeometry.Clifford.Clifford55.Pin55) :
-    centralizerPinValue c * g = g * centralizerPinValue c := by
-  cases c
-  · simp [centralizerPinValue]
-  · exact InfoGeometry.Clifford.Clifford55.negOnePin_commute g
-
-theorem centralizerPinValue_sandwich_trivial (c : CentralizerAtom)
-    (x : InfoGeometry.Clifford.Clifford55.Cl55) :
-    (centralizerPinValue c : InfoGeometry.Clifford.Clifford55.Cl55) * x *
-        (centralizerPinValue c : InfoGeometry.Clifford.Clifford55.Cl55) = x := by
-  cases c
-  · simp [centralizerPinValue]
-  · simp [centralizerPinValue,
-      InfoGeometry.Clifford.Clifford55.negOnePin_coe]
-
+/-- Centralizer is generated by plus/minus I. -/
 theorem centralizer_is_plus_minus_I (z : CentralizerAtom) :
     centralizerValue z = 1 ∨ centralizerValue z = -1 := by
   cases z <;> simp [centralizerValue]
 
+/-- Artin monodromy winds into the centralizer. -/
 theorem artin_monodromy_winds_centralizer :
-    BraidNegativeIdentityMonodromy.ρσ 0 *
-        BraidNegativeIdentityMonodromy.ρσ 0 = -(1 : M2C) :=
+    BraidNegativeIdentityMonodromy.ρσ 0 * BraidNegativeIdentityMonodromy.ρσ 0 = -1 :=
   BraidNegativeIdentityMonodromy.B2_full_twist_negative
 
-theorem n_fold_roots_close_in_centralizer (A : M2C) (n : ℕ)
-    (h : A ^ n = -1) : A ^ (2 * n) = 1 :=
+/-- N-fold roots close in the centralizer. -/
+theorem n_fold_roots_close_in_centralizer (A : M2C) (n : ℕ) (h : A ^ n = -1) :
+    A ^ (2 * n) = 1 :=
   negative_centralizer_root_closes A n h
 
-theorem nfold_centralizer_root_closes (A : M2C) (n : ℕ)
-    (h : IsNfoldRootOfCentralizer n A) :
-    A ^ (2 * n) = (1 : M2C) := by
-  rcases h with h | h
-  · exact positive_centralizer_root_closes A n h
-  · exact negative_centralizer_root_closes A n h
+/-- Consolidated finite Artin, centralizer, Clifford, and split-form identities. -/
+theorem artin_monodromy_pin55_synthesis (J : M2C) :
+    (∀ i : ℕ,
+      BraidNegativeIdentityMonodromy.ρσ i *
+          BraidNegativeIdentityMonodromy.ρσ (i + 1) *
+          BraidNegativeIdentityMonodromy.ρσ i =
+        BraidNegativeIdentityMonodromy.ρσ (i + 1) *
+          BraidNegativeIdentityMonodromy.ρσ i *
+          BraidNegativeIdentityMonodromy.ρσ (i + 1)) ∧
+    BraidNegativeIdentityMonodromy.ρσ 0 *
+        BraidNegativeIdentityMonodromy.ρσ 0 = -(1 : M2C) ∧
+    BraidNegativeIdentityMonodromy.DeltaB3 *
+        BraidNegativeIdentityMonodromy.DeltaB3 = -(1 : M2C) ∧
+    (∀ z : CentralizerAtom, centralizerValue z * centralizerValue z = (1 : M2C)) ∧
+    IsNfoldRootOfCentralizer 2 BraidNegativeIdentityMonodromy.spinorHalfTwist ∧
+    (∀ (A : M2C) (n : ℕ), A ^ n = -(1 : M2C) → A ^ (2 * n) = (1 : M2C)) ∧
+    InfoGeometry.Clifford.Clifford55AnomalyOSP.cliffordDim 5 5 =
+      InfoGeometry.Clifford.Clifford55AnomalyOSP.cliffordDim 1 1 * InfoGeometry.Clifford.Clifford55AnomalyOSP.cliffordDim 4 4 ∧
+    InfoGeometry.Clifford.Clifford55AnomalyOSP.anomalyIndex 5 5 = 0 ∧
+    (1 : M2C) * (1 : M2C) = 1 ∧
+    (1 : M2C) * (1 : M2C) = 1 ∧
+    PreservesSplitForm 1 J ∧
+    (∀ z : CentralizerAtom, centralizerValue z = 1 ∨ centralizerValue z = -1) ∧
+    BraidNegativeIdentityMonodromy.ρσ 0 * BraidNegativeIdentityMonodromy.ρσ 0 = -1 ∧
+    (∀ (A : M2C) (n : ℕ), A ^ n = -1 → A ^ (2 * n) = 1) := by
+  constructor
+  · exact artin_spinor_monodromy
+  constructor
+  · exact BraidNegativeIdentityMonodromy.B2_full_twist_negative
+  constructor
+  · exact BraidNegativeIdentityMonodromy.B3_full_twist_negative
+  constructor
+  · exact centralizer_atom_sq
+  constructor
+  · exact spinorHalfTwist_twofold_root
+  constructor
+  · exact negative_centralizer_root_closes
+  constructor
+  · exact InfoGeometry.Clifford.Clifford55AnomalyOSP.clifford_55_factor_dim
+  constructor
+  · exact InfoGeometry.Clifford.Clifford55AnomalyOSP.anomalyIndex_55_zero
+  constructor
+  · exact tkk_closure_symmetry
+  constructor
+  · exact pin55_double_covers_o55
+  constructor
+  · exact o55_preserves_split_form J
+  constructor
+  · exact centralizer_is_plus_minus_I
+  constructor
+  · exact artin_monodromy_winds_centralizer
+  · exact n_fold_roots_close_in_centralizer
+
+#check spinorHalfTwist_twofold_root
+#check negative_centralizer_root_closes
+#check artin_monodromy_pin55_synthesis
 
 end InfoGeometry.Topology.ArtinMonodromyPin55

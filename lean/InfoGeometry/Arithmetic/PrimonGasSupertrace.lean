@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 
 /-!
@@ -102,36 +101,6 @@ structure MobiusCoefficient where
   coeff_sq_eq_one_of_squarefree :
     ∀ n : ℕ, IsSquarefreeState n → coeff n ^ 2 = 1
 
-/-! ## Native Mathlib Mobius coefficient
-
-The general `MobiusCoefficient` interface remains available for model-specific
-coefficients.  The canonical arithmetic coefficient below is not an evidence
-packet: it is Mathlib's `ArithmeticFunction.moebius`, coerced to `ℝ`.
--/
-
-def mathlibMobiusCoefficient (n : ℕ) : ℝ :=
-  (ArithmeticFunction.moebius n : ℤ)
-
-theorem mathlibMobiusCoefficient_eq_zero_of_not_squarefree
-    {n : ℕ} (h : ¬ IsSquarefreeState n) :
-    mathlibMobiusCoefficient n = 0 := by
-  unfold mathlibMobiusCoefficient
-  rw [ArithmeticFunction.moebius_eq_zero_of_not_squarefree h]
-  norm_num
-
-theorem mathlibMobiusCoefficient_sq_eq_one_of_squarefree
-    {n : ℕ} (h : IsSquarefreeState n) :
-    mathlibMobiusCoefficient n ^ 2 = 1 := by
-  unfold mathlibMobiusCoefficient
-  exact_mod_cast ArithmeticFunction.moebius_sq_eq_one_of_squarefree h
-
-def canonicalMobiusCoefficient : MobiusCoefficient where
-  coeff := mathlibMobiusCoefficient
-  coeff_eq_zero_of_not_squarefree :=
-    fun n h => mathlibMobiusCoefficient_eq_zero_of_not_squarefree h
-  coeff_sq_eq_one_of_squarefree :=
-    fun n h => mathlibMobiusCoefficient_sq_eq_one_of_squarefree h
-
 namespace MobiusCoefficient
 
 variable (μ : MobiusCoefficient)
@@ -185,32 +154,44 @@ theorem finiteSupertrace_eq_squarefree_filter
 
 end MobiusCoefficient
 
+/-- `\langle Z_B,Z_{\mathrm{sf}},\mathrm{Str}\rangle`. -/
+structure FinitePrimonThermalPacket where
+  support : Finset ℕ
+  beta : ℝ
+  mobius : MobiusCoefficient
+
+namespace FinitePrimonThermalPacket
+
+variable (P : FinitePrimonThermalPacket)
+
 /-- `Z_B`. -/
-def bosonicPartition (support : Finset ℕ) (beta : ℝ) : ℝ :=
-  finiteBosonicPartition support beta
+def bosonicPartition : ℝ :=
+  finiteBosonicPartition P.support P.beta
 
 /-- `Z_{\mathrm{sf}}`. -/
-def squarefreePartition (support : Finset ℕ) (beta : ℝ) : ℝ :=
-  finiteSquarefreePartition support beta
+def squarefreePartition : ℝ :=
+  finiteSquarefreePartition P.support P.beta
 
-lemma bosonicPartition_nonneg (support : Finset ℕ) (beta : ℝ) :
-    0 ≤ bosonicPartition support beta := by
-  exact finiteBosonicPartition_nonneg support beta
+lemma bosonicPartition_nonneg :
+    0 ≤ P.bosonicPartition := by
+  exact finiteBosonicPartition_nonneg P.support P.beta
 
-lemma squarefreePartition_nonneg (support : Finset ℕ) (beta : ℝ) :
-    0 ≤ squarefreePartition support beta := by
-  exact finiteSquarefreePartition_nonneg support beta
+lemma squarefreePartition_nonneg :
+    0 ≤ P.squarefreePartition := by
+  exact finiteSquarefreePartition_nonneg P.support P.beta
 
 /-- `\mathrm{Str}`. -/
-def supertrace (mobius : MobiusCoefficient) (support : Finset ℕ) (beta : ℝ) : ℝ :=
-  mobius.finiteSupertrace support beta
+def supertrace : ℝ :=
+  P.mobius.finiteSupertrace P.support P.beta
 
 /-- `\mathrm{Str}(A,\beta)=\sum_{A\cap\mathrm{SqFree}} \mu(n)w_\beta(n)`. -/
-theorem supertrace_eq_squarefree_filter (mobius : MobiusCoefficient) (support : Finset ℕ) (beta : ℝ) :
-    supertrace mobius support beta =
-      ∑ n ∈ support.filter IsSquarefreeState,
-        mobius.coeff n * primonBoltzmannWeight beta n := by
+theorem supertrace_eq_squarefree_filter :
+    P.supertrace =
+      ∑ n ∈ P.support.filter IsSquarefreeState,
+        P.mobius.coeff n * primonBoltzmannWeight P.beta n := by
   classical
-  exact mobius.finiteSupertrace_eq_squarefree_filter support beta
+  exact P.mobius.finiteSupertrace_eq_squarefree_filter P.support P.beta
+
+end FinitePrimonThermalPacket
 
 end InfoGeometry.Arithmetic.PrimonGasSupertrace

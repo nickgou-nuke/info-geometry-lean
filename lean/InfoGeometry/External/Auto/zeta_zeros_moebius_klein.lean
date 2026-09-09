@@ -8,7 +8,7 @@ This file records the formal geometry of the dictionary
 `s ↦ 1 - s`, critical line `Re(s) = 1/2`, zeta potential
 `|ζ(s)|²`, and Bost-Connes thermodynamic bookkeeping.
 
-It does **not** prove the Riemann property.  Statements with RH-strength
+It does **not** prove the Riemann hypothesis.  Statements with RH-strength
 content, such as "all nontrivial zeros lie on the critical line", are explicit
 fields of a model structure.  The Lean theorems below prove the algebraic and
 topological facts available from those fields.
@@ -172,5 +172,20 @@ theorem criticalLine_middle (s : ℂ) :
   CriticalLine s ↔ s.re = ((0 : ℝ) + 1) / 2 := by
   unfold CriticalLine
   norm_num
+
+/-- Capstone package: Möbius involution, critical strip preservation, potential
+minimum at zeros, and the Klein throat construction. -/
+theorem goutev_zeta_synthesis (Z : ZetaFunctionalEquation) :
+    (∀ s, zetaInvolution (zetaInvolution s) = s) ∧
+    (∀ s, CriticalLine s ↔ (zetaInvolution s).re = s.re) ∧
+    (∀ s, CriticalStrip s → CriticalStrip (zetaInvolution s)) ∧
+    (∀ ρ, Z.zeta ρ = 0 → ∀ s, zetaPotential Z ρ ≤ zetaPotential Z s) ∧
+    (kleinBottleFromCriticalZeros Z).throat = {s | CriticalLine s} ∧
+    (1 / 2 : ℝ) = ((0 : ℝ) + 1) / 2 := by
+  exact ⟨zetaInvolution_involutive, criticalLine_fixed_re,
+    criticalStrip_involution, by
+      intro ρ hρ
+      exact zeta_zero_is_potential_minimum Z hρ,
+    (kleinBottleFromCriticalZeros Z).h_throat, middle_of_zero_and_one⟩
 
 end noncomputable section

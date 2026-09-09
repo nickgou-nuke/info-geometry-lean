@@ -61,3 +61,4 @@ theorem kleinBottleA2RootMonodromy_factors_through_S3
     data.glide_conj_translation⟩
 
 end InfoGeometry.Topology.KleinBottleA2RootMonodromy
+end InfoGeometry.Topology

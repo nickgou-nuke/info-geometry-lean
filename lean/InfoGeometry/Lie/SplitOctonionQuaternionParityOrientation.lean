@@ -50,7 +50,7 @@ theorem nativeScalarTriple_swapJK (u v w : V3) :
     nativeScalarTriple (swapJK u) (swapJK v) (swapJK w) =
       -nativeScalarTriple u v w := by
   rw [nativeScalarTriple_eq_det3, nativeScalarTriple_eq_det3]
-  simp [swapJK, InfoGeometry.Physics.ZornMatrixSU3.det3]
+  simp [swapJK, det3]
   ring
 
 /-- Equivalently, the cross product acquires the determinant sign of the

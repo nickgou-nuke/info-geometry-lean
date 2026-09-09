@@ -93,4 +93,21 @@ theorem e1_mul_e0_mul_e1 : e1 * e0 * e1 = e1 := by
     dsimp [Matrix.mul_apply] <;>
     simp [e0, e1, Fin.sum_univ_eight]
 
+/-! ## TL₃(2) synthesis -/
+
+/-- The full TL₂(2) chain relations on 3 sites are verified. -/
+theorem tl3_chain_synthesis :
+    (e0 * e0 = (2 : ℂ) • e0) ∧
+    (e1 * e1 = (2 : ℂ) • e1) ∧
+    (e0 * e1 * e0 = e0) ∧
+    (e1 * e0 * e1 = e1) :=
+  ⟨e0_sq, e1_sq, e0_mul_e1_mul_e0, e1_mul_e0_mul_e1⟩
+
+#check e4_sq
+#check e0_sq
+#check e1_sq
+#check e0_mul_e1_mul_e0
+#check e1_mul_e0_mul_e1
+#check tl3_chain_synthesis
+
 end InfoGeometry.External.Auto.TLChain

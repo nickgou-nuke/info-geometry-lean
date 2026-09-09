@@ -50,4 +50,53 @@ theorem mixedSymplecticBracket_lie_mem
   exact (symplecticOperatorLieSubalgebra D).lie_mem T.property
     (mixedSymplecticBracket D X Y).property
 
+theorem symplecticRankTwo_add_left (X X' Y : FreudenthalCharge J) :
+    symplecticRankTwo D (X + X') Y = symplecticRankTwo D X Y + symplecticRankTwo D X' Y := by
+  apply LinearMap.ext
+  intro Z
+  rw [LinearMap.add_apply, symplecticRankTwo_apply, symplecticRankTwo_apply, symplecticRankTwo_apply]
+  rw [smul_add, symplecticForm_add_left, add_smul]
+  abel
+
+theorem symplecticRankTwo_add_right (X Y Y' : FreudenthalCharge J) :
+    symplecticRankTwo D X (Y + Y') = symplecticRankTwo D X Y + symplecticRankTwo D X Y' := by
+  rw [symplecticRankTwo_swap D X (Y + Y'), symplecticRankTwo_add_left,
+      symplecticRankTwo_swap D Y X, symplecticRankTwo_swap D Y' X]
+
+@[simp] theorem mixedSymplecticBracket_add_left (X X' Y : FreudenthalCharge J) :
+    mixedSymplecticBracket D (X + X') Y = mixedSymplecticBracket D X Y + mixedSymplecticBracket D X' Y := by
+  apply Subtype.ext
+  exact symplecticRankTwo_add_left D X X' Y
+
+@[simp] theorem mixedSymplecticBracket_add_right (X Y Y' : FreudenthalCharge J) :
+    mixedSymplecticBracket D X (Y + Y') = mixedSymplecticBracket D X Y + mixedSymplecticBracket D X Y' := by
+  apply Subtype.ext
+  exact symplecticRankTwo_add_right D X Y Y'
+
+theorem mixedSymplecticBracket_smul_left (r : ℝ)
+    (X Y : FreudenthalCharge J) :
+    mixedSymplecticBracket D (r • X) Y =
+      r • mixedSymplecticBracket D X Y := by
+  apply Subtype.ext
+  apply LinearMap.ext
+  intro Z
+  simp [mixedSymplecticBracket, symplecticRankTwo]
+  have h : symplecticFormLinear D (r • X) Z =
+      r * symplecticFormLinear D X Z := by
+    change FreudenthalCharge.symplecticForm D (r • X) Z =
+      r * FreudenthalCharge.symplecticForm D X Z
+    rw [FreudenthalCharge.symplectic_form_skew,
+      symplecticForm_smul_right,
+      FreudenthalCharge.symplectic_form_skew]
+    ring
+  rw [h]
+  module
+
+theorem mixedSymplecticBracket_smul_right (r : ℝ)
+    (X Y : FreudenthalCharge J) :
+    mixedSymplecticBracket D X (r • Y) =
+      r • mixedSymplecticBracket D X Y := by
+  rw [mixedSymplecticBracket_swap, mixedSymplecticBracket_smul_left,
+    mixedSymplecticBracket_swap]
+
 end InfoGeometry.Exceptional.Freudenthal

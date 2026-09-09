@@ -247,7 +247,7 @@ structure ContinuitySystem (n : ℕ) where
   P : Fin n → ℝ          -- Probability density vector
   dP_dt : Fin n → ℝ      -- Time derivative ∂P/∂t
   divFlux : Fin n → ℝ    -- Flux divergence ∇ · (P v)
-  -- Conservation ax!om: ∂P/∂t + ∇ · (P v) = 0
+  -- Conservation axiom: ∂P/∂t + ∇ · (P v) = 0
   h_continuity : ∀ i, dP_dt i + divFlux i = 0
   -- Zero total divergence (boundary/closed system condition): ∑ᵢ divFluxᵢ = 0
   h_div_sum_zero : ∑ i, divFlux i = 0

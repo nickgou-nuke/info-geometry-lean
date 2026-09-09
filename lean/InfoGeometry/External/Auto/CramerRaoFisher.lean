@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Cramér-Rao and Fisher Curvature
@@ -13,7 +13,7 @@ The file proves the checkable core:
 * the dual Hessian is the reciprocal Fisher curvature;
 * inversion of a positive partition function flips the log-potential.
 
-This is a finite real model.  It does not prove the Riemann property or
+This is a finite real model.  It does not prove the Riemann hypothesis or
 analytic properties of the Riemann zeta function.
 -/
 
@@ -119,7 +119,7 @@ theorem inverse_partition_log_duality {Z : ℝ} :
   unfold fermionicInverseLogPotential bosonicLogPotential
   rw [Real.log_inv]
 
-/-- Consolidated finite Cramér--Rao/Fisher package. -/
+/-- Consolidated finite CRB/Fenchel package. -/
 theorem cramer_rao_fisher_synthesis {I variance Z : ℝ}
     (hI : 0 < I) (hprod : 1 ≤ I * variance) (hZ : 0 < Z) :
     cramerRaoBound I ≤ variance ∧
@@ -127,6 +127,7 @@ theorem cramer_rao_fisher_synthesis {I variance Z : ℝ}
     (∀ θ E, deriv (fun x : ℝ => deriv (fisherQuadratic I) x) θ *
       deriv (fun x : ℝ => deriv (dualFisherQuadratic I) x) E = 1) ∧
     fermionicInverseLogPotential Z = -bosonicLogPotential Z := by
+  have _ := hZ
   exact ⟨cramerRao_from_information_product hI hprod,
     fun θ E => fisher_fenchel_young hI,
     fun θ E => hessian_inverse_duality (I := I) (θ := θ) (E := E) (ne_of_gt hI),

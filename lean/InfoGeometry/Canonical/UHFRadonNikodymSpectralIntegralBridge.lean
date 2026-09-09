@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Canonical.UHFWeilPositivityBridge
 
 /-!
-# Radon-Nikodym Spectral Integral and Absence of Cohomological Anomaly in the UHF Colimit
+# Positive weighted finite traces and successor compatibility
 
 This module formalizes:
 1. The Radon-Nikodym spectral weight operator on UHF stage algebras:
@@ -15,8 +15,12 @@ This module formalizes:
    $$I_n(f) = \tau_n(\Delta_{\mathrm{RN}, n}(f^* f))$$
 3. Compatibility across the direct inductive colimit tower:
    $$I_{n+1}(\iota_n(f)) = I_n(f)$$
-4. Complete absence of cohomological anomaly on the Critical Line:
+4. Reduction to the unweighted trace when every weight equals one:
    $$\left. \alpha_{\mathrm{RN}}(w) \right|_{\text{critical}} = 0 \implies I_n(f) = \tau_n(f^* f)$$
+
+The carrier here is a finite family of strictly positive real weights. No
+cohomology group, critical-line identification, or Radon–Nikodym theorem is
+constructed by these declarations.
 -/
 
 noncomputable section
@@ -30,6 +34,7 @@ set_option linter.unusedSimpArgs false
 namespace InfoGeometry.Canonical.UHFRadonNikodymAnomaly
 
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
+open InfoGeometry.Canonical.UHFInductiveLimitBoundary
 open InfoGeometry.Canonical.UHFWeilPositivity
 
 /-- Discrete Radon-Nikodym weight factor on BitWord n. -/
@@ -45,7 +50,7 @@ def weightedIntegrand (n : ℕ) (W : StageCocycleWeight n) (f : DiagAlg n) : Dia
 def stageSpectralIntegral (n : ℕ) (W : StageCocycleWeight n) (f : DiagAlg n) : ℝ :=
   (stageTrace n (weightedIntegrand n W f)).re
 
-/-- Trivial cocycle weight on the critical line (weight = 1 identically). -/
+/-- The constant weight one. -/
 def trivialWeight (n : ℕ) : StageCocycleWeight n where
   weight := fun _ => 1
   weight_pos := fun _ => by norm_num
@@ -65,7 +70,7 @@ theorem stageSpectralIntegral_trivial_eq_trace (n : ℕ) (f : DiagAlg n) :
 theorem stageSpectralIntegral_nonneg (n : ℕ) (W : StageCocycleWeight n) (f : DiagAlg n) :
     0 ≤ stageSpectralIntegral n W f := by
   dsimp [stageSpectralIntegral, stageTrace, weightedIntegrand]
-  have h_c_div : (1 / (2 ^ n : ℂ)) = ↑(1 / (2 ^ n : ℝ)) := by push_cast; rfl
+  have h_c_div : (2 ^ n : ℂ)⁻¹ = ↑(1 / (2 ^ n : ℝ)) := by push_cast; simp
   rw [h_c_div]
   simp only [mul_re, ofReal_re, ofReal_im, zero_mul, sub_zero]
   have h_sum_re : (∑ w : BitWord n, ((W.weight w : ℂ) * (starRingEnd ℂ) (f w) * f w)).re =
@@ -100,9 +105,10 @@ theorem stageSpectralIntegral_colimit_compat (n : ℕ) (W : StageCocycleWeight n
     funext w
     dsimp [weightedIntegrand, embedWeight, diagEmbedSucc]
   rw [h_diag]
-  rw [stageTrace_compatible_succ n (weightedIntegrand n W f)]
+  rw [stageTrace_diagEmbedSucc n (weightedIntegrand n W f)]
 
-/-- 🏆 THEOREM 4: Complete Absence of Cohomological Anomaly (H^1 = 0 Identity). -/
+/-- Successor compatibility specialized to the constant weight one.
+The historical name does not assert vanishing of a cohomology group. -/
 theorem absence_of_cohomological_anomaly (n : ℕ) (f : DiagAlg n) :
     stageSpectralIntegral (n + 1) (embedWeight n (trivialWeight n)) (diagEmbedSucc n f) =
       (stageTrace n (diagMul n (diagStar n f) f)).re := by

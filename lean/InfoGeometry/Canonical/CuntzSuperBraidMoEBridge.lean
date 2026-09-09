@@ -24,7 +24,7 @@ kernel-checked owner facts.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 
-The Cuntz projection packet assumes an explicit `CuntzNAlgebra (N := 6)` property.
+The Cuntz projection packet assumes an explicit `CuntzNAlgebra (N := 6)` witness.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 

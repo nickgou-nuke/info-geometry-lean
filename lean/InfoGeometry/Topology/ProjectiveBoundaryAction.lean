@@ -7,9 +7,9 @@ namespace InfoGeometry.Topology
 # Actions on the unimodular projective boundary
 
 An action on representatives descends precisely when it preserves the unit
-scaling relation.  The preservation obligations are fields rather than
-axioms hidden in a quotient lift; a matrix/determinant construction can
-instantiate them later.
+scaling relation.  The preservation obligation is an explicit field consumed
+by the quotient lift; a matrix/determinant construction can instantiate it
+later.
 -/
 
 structure ProjectiveBoundaryAction (R : Type*) [CommRing R] where

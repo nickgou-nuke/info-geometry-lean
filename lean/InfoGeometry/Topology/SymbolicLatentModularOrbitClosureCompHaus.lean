@@ -61,6 +61,5 @@ theorem symbolicLatentModularOrbitClosureCompHausTopCatHom_isClosedEmbedding
   simpa [symbolicLatentModularOrbitClosureCompHaus] using
     (Φ.orbitClosure_isClosedEmbedding x)
 
-end InfoGeometry.Topology
 
-end
+end InfoGeometry.Topology

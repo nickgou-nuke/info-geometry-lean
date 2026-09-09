@@ -56,7 +56,9 @@ theorem q55ExchangePermutationMonodromy_eq_braidPermutation
     (q55UnorderedCoveringPermutationMonodromy 3 p).comp
         (exchangeClassMapOfOrderedPaths Q55 3 p sigma1 sigma2
           gamma0 gamma1 hArtin) = braidPermutation := by
-  apply b3_hom_ext
+  apply PresentedGroup.ext
+  intro g
+  cases g
   · change q55UnorderedCoveringPermutationMonodromy 3 p
         (exchangeClassMapOfOrderedPaths Q55 3 p sigma1 sigma2
           gamma0 gamma1 hArtin

@@ -57,12 +57,11 @@ theorem exists_pureBraidMatrixRepresentation_of_relators (moving : ℕ)
     (hrel : respectsPureBraidRelations gen) :
     ∃ ρ : RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving,
       ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving), ρ (of g) = gen g := by
-  refine ⟨?_, ?_⟩
-  · exact pureBraidMatrixRepresentationOfRelators moving gen hrel
-  · exact pureBraidMatrixRepresentationOfRelators_of moving gen hrel
+  exact ⟨pureBraidMatrixRepresentationOfRelators moving gen hrel,
+    pureBraidMatrixRepresentationOfRelators_of moving gen hrel⟩
 
 /-
-The historical identity assignment was only a vacuous compatibility property.
+The historical identity assignment was only a vacuous compatibility witness.
 Retain the names as a migration surface, but route them directly through the
 generic native descent theorem with an explicit generator assignment and
 relator proof.
@@ -100,10 +99,7 @@ theorem trivial_pureBraid_descent_packet (moving : ℕ)
     respectsPureBraidRelations (trivialPureBraidGenerator moving gen) ∧
     ∃ ρ : RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving,
       ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving), ρ (of g) = gen g := by
-  refine ⟨?_, ?_⟩
-  · exact hrel
-  · refine ⟨?_, ?_⟩
-    · exact trivialPureBraidRepresentation moving gen hrel
-    · exact trivialPureBraidRepresentation_of moving gen hrel
+  exact ⟨hrel, ⟨trivialPureBraidRepresentation moving gen hrel,
+    trivialPureBraidRepresentation_of moving gen hrel⟩⟩
 
 end InfoGeometry.Topology.RohozhkinBoundary

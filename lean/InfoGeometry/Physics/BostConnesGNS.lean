@@ -3,43 +3,43 @@ import Mathlib.NumberTheory.LSeries.RiemannZeta
 import Mathlib.Algebra.Algebra.Basic
 
 /-!
-# Abstract cyclic representation and zeta readout
+# Bost-Connes/GNS carrier interface
 
-This file contains a small algebraic representation record and a scalar zeta
-readout.  The assumptions are only those displayed below; no C*-algebra,
-state, or phase-transition structure is constructed here.
+This file contains a small abstract GNS representation record and a zeta-valued
+partition readout.  It does not construct the Bost--Connes C*-dynamical system
+or prove a phase-transition theorem.
 -/
 
 namespace InfoGeometry.Physics.BostConnes
 
 open Complex
 
-/--
-The algebraic carrier used by this finite readout owner. Its content is the
-native Mathlib `Algebra ℂ A` instance; no C*- or KMS structure is implied.
--/
-abbrev BostConnesAlgebra (A : Type*) [Ring A] [Algebra ℂ A] := Algebra ℂ A
+/-- The abstract C*-algebra analog for the Bost-Connes system. -/
+class BostConnesAlgebra (A : Type*) [Ring A] [Algebra ℂ A]
 
-/-- An algebra representation with a chosen cyclic vector. -/
+/-- The Gelfand-Naimark-Segal (GNS) representation mapping for a state. -/
 structure GNSRepresentation (A H : Type*) [Ring A] [Algebra ℂ A] [AddCommGroup H] [Module ℂ H] where
   pi : A →ₐ[ℂ] (H →ₗ[ℂ] H)
   vacuum : H
   cyclic : ∀ h : H, ∃ a : A, pi a vacuum = h
 
-/-- The declared scalar partition readout. -/
+/-- The Bost-Connes partition function mapping to the Riemann Zeta function. -/
 noncomputable def partitionFunction (β : ℂ) : ℂ :=
   riemannZeta β
 
-/-- A scalar readout named by the temperature parameter. -/
+/-- The abstract KMS state functional parameterized by inverse temperature β. -/
 noncomputable def kmsState (β : ℂ) : ℂ :=
   partitionFunction β
 
-/-- Reference parameter used by the readout. -/
+/-- The critical inverse temperature where the phase transition occurs. -/
 def criticalBeta : ℂ := 1
+
+/-- Definitional readout of the chosen value at `β = 1`. -/
+theorem kmsState_critical : kmsState criticalBeta = riemannZeta 1 := rfl
 
 /-- A cyclic representation has a preimage observable for every state vector,
 by the `cyclic` field. -/
-theorem cyclic_vacuum_representation_exists
+theorem kms_yields_cyclic_vacuum_representation
     (A H : Type*) [Ring A] [Algebra ℂ A] [AddCommGroup H] [Module ℂ H]
     (rep : GNSRepresentation A H) (state_vector : H) :
     ∃ (observable : A), rep.pi observable rep.vacuum = state_vector := by

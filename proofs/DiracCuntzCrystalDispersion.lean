@@ -1,6 +1,6 @@
 import proofs.ThermalBoostLorentzSuperalgebra
 import proofs.CuntzP6MWallpaperBoundary
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 
 /-!
 # Dirac--Cuntz crystal finite dispersion

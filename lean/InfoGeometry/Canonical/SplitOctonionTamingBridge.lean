@@ -1,5 +1,5 @@
 import InfoGeometry.Clifford.BottPeriodicity
-import InfoGeometry.Jordan.Core
+import InfoGeometry.Core.Jordan
 import InfoGeometry.OperatorAlgebra.DrazinEntropyFunctional
 import InfoGeometry.Quantum.SplitTrialityKernel
 
@@ -58,7 +58,7 @@ theorem splitOctonionCliffordShadow_eq_splitBottOwner :
 section Jordan
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
-variable [InfoGeometry.Jordan.JordanAlgebra V]
+variable [InfoGeometry.Core.JordanAlgebra V]
 
 /--
 Jordan taming keeps the symmetric product in the formally supported lane.
@@ -68,13 +68,13 @@ This is the repository-owned Jordan identity for the ambient
 theorem jordan_taming_identity
     (x y : V) :
     (x ⊙ x) ⊙ (x ⊙ y) = x ⊙ ((x ⊙ x) ⊙ y) :=
-  InfoGeometry.Jordan.jordanProd_identity x y
+  InfoGeometry.Core.jordan_prod_identity x y
 
 /-- The tamed Jordan product is commutative. -/
 theorem jordan_taming_comm
     (x y : V) :
     x ⊙ y = y ⊙ x :=
-  InfoGeometry.Jordan.jordanProd_comm x y
+  InfoGeometry.Core.jordan_prod_comm x y
 
 end Jordan
 

@@ -40,6 +40,49 @@ def parse_args() -> argparse.Namespace:
     return p.parse_args()
 
 
+def strip_lean_strings(source: str) -> str:
+    out: list[str] = []
+    in_str = False
+    in_char = False
+    i = 0
+    n = len(source)
+    while i < n:
+        ch = source[i]
+        if in_str:
+            if ch == "\\" and i + 1 < n:
+                out.extend([" ", " "])
+                i += 2
+                continue
+            if ch == '"':
+                in_str = False
+            out.append("\n" if ch == "\n" else " ")
+            i += 1
+            continue
+        if in_char:
+            if ch == "\\" and i + 1 < n:
+                out.extend([" ", " "])
+                i += 2
+                continue
+            if ch == "'":
+                in_char = False
+            out.append("\n" if ch == "\n" else " ")
+            i += 1
+            continue
+        if ch == '"':
+            in_str = True
+            out.append(" ")
+            i += 1
+            continue
+        if ch == "'" and i + 2 < n and source[i + 2] == "'":
+            in_char = True
+            out.append(" ")
+            i += 1
+            continue
+        out.append(ch)
+        i += 1
+    return "".join(out)
+
+
 def main() -> int:
     args = parse_args()
     scan_root = normalize_user_path(args.root, ROOT / args.root)
@@ -57,10 +100,11 @@ def main() -> int:
         if path.is_symlink() and not path.exists():
             continue
         text = path.read_text(encoding="utf-8")
-        code = strip_lean_comments(text)
-        if BAD_BODY_RE.search(code):
-            failures.append(f"{path}: banned proof-hole token found")
-        for i, line in enumerate(text.splitlines(), start=1):
+        code = strip_lean_comments(text, preserve_lines=True)
+        code_no_str = strip_lean_strings(code)
+        for i, line in enumerate(code_no_str.splitlines(), start=1):
+            if BAD_BODY_RE.search(line):
+                failures.append(f"{path}:{i}: banned proof-hole token found in line: {line.strip()}")
             m = DECL_RE.match(line)
             if not m:
                 continue

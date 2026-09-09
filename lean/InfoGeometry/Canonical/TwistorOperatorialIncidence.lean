@@ -40,7 +40,7 @@ theorem operatorialIncidence_iff_chiralAnomalyOperator_zero
     exact hLift
 
 /--
-Operatorial incidence is equivalent to vanishing of the property projector
+Operatorial incidence is equivalent to vanishing of the certified projector
 obstruction operator.
 -/
 theorem operatorialIncidence_iff_projectorObstructionOperator_zero

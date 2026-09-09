@@ -234,4 +234,3 @@ theorem split_norm_eq_gibbs_posterior_logit
   exact hencoding
 
 end InfoGeometry.Physics.SplitOctonionLogitBridge
-

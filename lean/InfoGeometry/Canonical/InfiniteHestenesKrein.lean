@@ -47,6 +47,8 @@ structure HestenesKreinTower where
   bond : ∀ n : ℕ, Stage n →+* Stage (n + 1)
   /-- Compatible cone into a target ring. -/
   toLimit : ∀ n : ℕ, Stage n →+* Limit
+  /-- Cone compatibility. -/
+  hcone : CompatibleCone bond toLimit
   /-- Stagewise phase axis. -/
   phaseAxis : ∀ n : ℕ, Stage n
   /-- Stagewise modular weight. -/
@@ -61,6 +63,12 @@ structure HestenesKreinTower where
   /-- Stage-zero Krein self-adjointness. -/
   generator_krein_selfadjoint_zero :
     phaseAxis 0 * modularGenerator 0 * phaseAxis 0 = modularGenerator 0
+  /-- Phase-axis transport. -/
+  phaseAxis_step : ∀ n : ℕ, bond n (phaseAxis n) = phaseAxis (n + 1)
+  /-- Modular-weight transport. -/
+  modularWeight_step : ∀ n : ℕ, bond n (modularWeight n) = modularWeight (n + 1)
+  /-- Modular-generator transport. -/
+  modularGenerator_step : ∀ n : ℕ, bond n (modularGenerator n) = modularGenerator (n + 1)
 
 namespace HestenesKreinTower
 
@@ -68,9 +76,7 @@ variable (P : HestenesKreinTower (Stage := Stage) (Limit := Limit))
 
 /-- The phase axis squares to `-1` at every finite stage. -/
 theorem phaseAxis_square_all :
-    (hphaseAxis : ∀ n : ℕ, P.bond n (P.phaseAxis n) = P.phaseAxis (n + 1)) →
     ∀ n : ℕ, P.phaseAxis n * P.phaseAxis n = -(1 : Stage n) := by
-  intro hphaseAxis
   intro n
   induction n with
   | zero =>
@@ -79,7 +85,7 @@ theorem phaseAxis_square_all :
       calc
         P.phaseAxis (n + 1) * P.phaseAxis (n + 1)
             = P.bond n (P.phaseAxis n) * P.bond n (P.phaseAxis n) := by
-                rw [hphaseAxis n]
+                rw [P.phaseAxis_step n]
         _ = P.bond n (P.phaseAxis n * P.phaseAxis n) := by
               rw [map_mul]
         _ = P.bond n (-(1 : Stage n)) := by
@@ -89,14 +95,9 @@ theorem phaseAxis_square_all :
 
 /-- The modular weight commutes with the modular generator at every stage. -/
 theorem modularWeight_commutes_modularGenerator_all :
-    (hmodularWeight :
-      ∀ n : ℕ, P.bond n (P.modularWeight n) = P.modularWeight (n + 1)) →
-    (hmodularGenerator :
-      ∀ n : ℕ, P.bond n (P.modularGenerator n) = P.modularGenerator (n + 1)) →
     ∀ n : ℕ,
       P.modularWeight n * P.modularGenerator n =
         P.modularGenerator n * P.modularWeight n := by
-  intro hmodularWeight hmodularGenerator
   intro n
   induction n with
   | zero =>
@@ -105,21 +106,17 @@ theorem modularWeight_commutes_modularGenerator_all :
       calc
         P.modularWeight (n + 1) * P.modularGenerator (n + 1)
             = P.bond n (P.modularWeight n * P.modularGenerator n) := by
-                simp [hmodularWeight n, hmodularGenerator n, map_mul]
+                simp [P.modularWeight_step n, P.modularGenerator_step n, map_mul]
         _ = P.bond n (P.modularGenerator n * P.modularWeight n) := by
               rw [ih]
         _ = P.modularGenerator (n + 1) * P.modularWeight (n + 1) := by
-              simp [hmodularWeight n, hmodularGenerator n, map_mul]
+              simp [P.modularWeight_step n, P.modularGenerator_step n, map_mul]
 
 /-- The phase axis is Krein self-adjoint at every stage. -/
 theorem generator_kreinSelfadjoint_all :
-    (hphaseAxis : ∀ n : ℕ, P.bond n (P.phaseAxis n) = P.phaseAxis (n + 1)) →
-    (hmodularGenerator :
-      ∀ n : ℕ, P.bond n (P.modularGenerator n) = P.modularGenerator (n + 1)) →
     ∀ n : ℕ,
       P.phaseAxis n * P.modularGenerator n * P.phaseAxis n =
         P.modularGenerator n := by
-  intro hphaseAxis hmodularGenerator
   intro n
   induction n with
   | zero =>
@@ -128,16 +125,14 @@ theorem generator_kreinSelfadjoint_all :
       calc
         P.phaseAxis (n + 1) * P.modularGenerator (n + 1) * P.phaseAxis (n + 1)
             = P.bond n (P.phaseAxis n * P.modularGenerator n * P.phaseAxis n) := by
-                simp [hphaseAxis n, hmodularGenerator n, map_mul, mul_assoc]
+                simp [P.phaseAxis_step n, P.modularGenerator_step n, map_mul, mul_assoc]
         _ = P.bond n (P.modularGenerator n) := by
               rw [ih]
         _ = P.modularGenerator (n + 1) := by
-              rw [hmodularGenerator n]
+              rw [P.modularGenerator_step n]
 
 /-- The phase axis has stage-independent image in the compatible target. -/
-theorem phaseAxis_limit_image (n : ℕ)
-    (hcone : CompatibleCone P.bond P.toLimit)
-    (hphaseAxis : ∀ k : ℕ, P.bond k (P.phaseAxis k) = P.phaseAxis (k + 1)) :
+theorem phaseAxis_limit_image (n : ℕ) :
     P.toLimit n (P.phaseAxis n) = P.toLimit 0 (P.phaseAxis 0) := by
   induction n with
   | zero =>
@@ -146,15 +141,12 @@ theorem phaseAxis_limit_image (n : ℕ)
       calc
         P.toLimit (n + 1) (P.phaseAxis (n + 1))
             = P.toLimit (n + 1) (P.bond n (P.phaseAxis n)) := by
-                rw [hphaseAxis n]
-        _ = P.toLimit n (P.phaseAxis n) := hcone n (P.phaseAxis n)
+                rw [P.phaseAxis_step n]
+        _ = P.toLimit n (P.phaseAxis n) := P.hcone n (P.phaseAxis n)
         _ = P.toLimit 0 (P.phaseAxis 0) := ih
 
 /-- The modular weight has stage-independent image in the compatible target. -/
-theorem modularWeight_limit_image (n : ℕ)
-    (hcone : CompatibleCone P.bond P.toLimit)
-    (hmodularWeight :
-      ∀ k : ℕ, P.bond k (P.modularWeight k) = P.modularWeight (k + 1)) :
+theorem modularWeight_limit_image (n : ℕ) :
     P.toLimit n (P.modularWeight n) = P.toLimit 0 (P.modularWeight 0) := by
   induction n with
   | zero =>
@@ -163,15 +155,12 @@ theorem modularWeight_limit_image (n : ℕ)
       calc
         P.toLimit (n + 1) (P.modularWeight (n + 1))
             = P.toLimit (n + 1) (P.bond n (P.modularWeight n)) := by
-                rw [hmodularWeight n]
-        _ = P.toLimit n (P.modularWeight n) := hcone n (P.modularWeight n)
+                rw [P.modularWeight_step n]
+        _ = P.toLimit n (P.modularWeight n) := P.hcone n (P.modularWeight n)
         _ = P.toLimit 0 (P.modularWeight 0) := ih
 
 /-- The modular generator has stage-independent image in the compatible target. -/
-theorem modularGenerator_limit_image (n : ℕ)
-    (hcone : CompatibleCone P.bond P.toLimit)
-    (hmodularGenerator :
-      ∀ k : ℕ, P.bond k (P.modularGenerator k) = P.modularGenerator (k + 1)) :
+theorem modularGenerator_limit_image (n : ℕ) :
     P.toLimit n (P.modularGenerator n) = P.toLimit 0 (P.modularGenerator 0) := by
   induction n with
   | zero =>
@@ -180,8 +169,8 @@ theorem modularGenerator_limit_image (n : ℕ)
       calc
         P.toLimit (n + 1) (P.modularGenerator (n + 1))
             = P.toLimit (n + 1) (P.bond n (P.modularGenerator n)) := by
-                rw [hmodularGenerator n]
-        _ = P.toLimit n (P.modularGenerator n) := hcone n (P.modularGenerator n)
+                rw [P.modularGenerator_step n]
+        _ = P.toLimit n (P.modularGenerator n) := P.hcone n (P.modularGenerator n)
         _ = P.toLimit 0 (P.modularGenerator 0) := ih
 
 end HestenesKreinTower

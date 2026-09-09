@@ -35,6 +35,6 @@ theorem coordinateTopCatHom_compatibility_apply
       coordinateTopCatHom (n + 1) ρ X := by
   exact compatible_apply ρ n X
 
-end InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitTopCat
+end RealUHFCompatibleStateInverseLimitTopCat
 
-end
+end Canonical

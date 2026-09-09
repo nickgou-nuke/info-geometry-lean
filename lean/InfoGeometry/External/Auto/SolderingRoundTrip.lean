@@ -9,46 +9,40 @@ The four real coordinates can be read as a vector, a quaternion-coordinate
 tuple, or a real split Pauli matrix.  The maps are algebraic inverses.
 -/
 
-abbrev Vec4 := ℝ × ℝ × ℝ × ℝ
+@[ext]
+structure Vec4 where
+  t : ℝ
+  x : ℝ
+  y : ℝ
+  z : ℝ
 
-namespace Vec4
+@[ext]
+structure Quat4 where
+  scalar : ℝ
+  i : ℝ
+  j : ℝ
+  k : ℝ
 
-abbrev t (v : Vec4) : ℝ := v.1
+def vecToQuat (v : Vec4) : Quat4 where
+  scalar := v.t
+  i := v.x
+  j := v.y
+  k := v.z
 
-abbrev x (v : Vec4) : ℝ := v.2.1
-
-abbrev y (v : Vec4) : ℝ := v.2.2.1
-
-abbrev z (v : Vec4) : ℝ := v.2.2.2
-
-end Vec4
-
-abbrev Quat4 := ℝ × ℝ × ℝ × ℝ
-
-namespace Quat4
-
-abbrev scalar (q : Quat4) : ℝ := q.1
-
-abbrev i (q : Quat4) : ℝ := q.2.1
-
-abbrev j (q : Quat4) : ℝ := q.2.2.1
-
-abbrev k (q : Quat4) : ℝ := q.2.2.2
-
-end Quat4
-
-def vecToQuat (v : Vec4) : Quat4 := (v.t, v.x, v.y, v.z)
-
-def quatToVec (q : Quat4) : Vec4 := (q.scalar, q.i, q.j, q.k)
+def quatToVec (q : Quat4) : Vec4 where
+  t := q.scalar
+  x := q.i
+  y := q.j
+  z := q.k
 
 def vecToMatrix (v : Vec4) : Matrix (Fin 2) (Fin 2) ℝ :=
   !![v.t + v.z, v.x + v.y; v.x - v.y, v.t - v.z]
 
-noncomputable def matrixToVec (M : Matrix (Fin 2) (Fin 2) ℝ) : Vec4 :=
-  ((M 0 0 + M 1 1) / 2,
-   (M 0 1 + M 1 0) / 2,
-   (M 0 1 - M 1 0) / 2,
-   (M 0 0 - M 1 1) / 2)
+noncomputable def matrixToVec (M : Matrix (Fin 2) (Fin 2) ℝ) : Vec4 where
+  t := (M 0 0 + M 1 1) / 2
+  x := (M 0 1 + M 1 0) / 2
+  y := (M 0 1 - M 1 0) / 2
+  z := (M 0 0 - M 1 1) / 2
 
 def quatToMatrix (q : Quat4) : Matrix (Fin 2) (Fin 2) ℝ :=
   vecToMatrix (quatToVec q)

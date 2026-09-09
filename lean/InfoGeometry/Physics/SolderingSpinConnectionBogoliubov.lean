@@ -50,12 +50,6 @@ theorem solder_char (lam t x y z : ℂ) :
   rw [Complex.I_sq]
   ring
 
-theorem solder_trace (t x y z : ℂ) :
-    Matrix.trace (solder t x y z) = 2 * t := by
-  simp [solder, σ1, σ2, σ3, Matrix.trace_fin_two,
-    Matrix.smul_apply, Matrix.add_apply]
-  ring
-
 /-! ## Tetrad metric construction -/
 
 /-- Minkowski metric in internal frame. -/

@@ -1,7 +1,5 @@
 import Init
 
-namespace LogDeterminantHomomorphism
-
 class TensorProduct (α : Type) where
   tensor : α → α → α
   dim : α → Int
@@ -23,5 +21,3 @@ theorem neg_log_det_jacobian_tensor_additivity
   - ((TensorProduct.dim A) * LogDetHomomorphism.logDet (LogDetHomomorphism.jacobian B)) := by
   rw [LogDetHomomorphism.log_det_jacobian A B]
   omega
-
-end LogDeterminantHomomorphism

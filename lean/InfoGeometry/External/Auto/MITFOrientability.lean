@@ -214,6 +214,25 @@ theorem range_Sminus_eq_eigenspace_neg_one
       _ = y := by
               simpa [smul_add] using half_smul_add_self y
 
+/-- Main orientability/chiral parity synthesis theorem. -/
+theorem orientability_projector_synthesis
+    (Ω : EndR V) (hΩ : IsInvolution Ω) :
+    Splus Ω + Sminus Ω = 1 ∧
+    (Splus Ω).comp (Splus Ω) = Splus Ω ∧
+    (Sminus Ω).comp (Sminus Ω) = Sminus Ω ∧
+    (Splus Ω).comp (Sminus Ω) = 0 ∧
+    (Sminus Ω).comp (Splus Ω) = 0 ∧
+    LinearMap.range (Splus Ω) = Ω.eigenspace (1 : ℝ) ∧
+    LinearMap.range (Sminus Ω) = Ω.eigenspace (-1 : ℝ) := by
+  exact ⟨
+    Splus_add_Sminus Ω,
+    Splus_idempotent Ω hΩ,
+    Sminus_idempotent Ω hΩ,
+    Splus_comp_Sminus Ω hΩ,
+    Sminus_comp_Splus Ω hΩ,
+    range_Splus_eq_eigenspace_one Ω hΩ,
+    range_Sminus_eq_eigenspace_neg_one Ω hΩ
+  ⟩
 
 end Orientability
 end MITF

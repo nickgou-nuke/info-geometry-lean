@@ -55,19 +55,6 @@ def cuntzGNSStageToHilbertColimit (n : ℕ) :
   exact gnsStageToHilbertColimit_transition
     Stage (cuntzSystem Stage T) ω hmn x
 
-theorem cuntzGNSStageToHilbertColimit_norm
-    (n : ℕ) (x : CuntzGNSStage Stage T ω n) :
-    ‖cuntzGNSStageToHilbertColimit Stage T ω n x‖ = ‖x‖ := by
-  exact (cuntzGNSStageToHilbertColimit Stage T ω n).norm_map x
-
-theorem cuntzGNSStageToHilbertColimit_inner
-    (n : ℕ) (x y : CuntzGNSStage Stage T ω n) :
-    inner ℂ
-        (cuntzGNSStageToHilbertColimit Stage T ω n x)
-        (cuntzGNSStageToHilbertColimit Stage T ω n y) =
-      inner ℂ x y := by
-  exact (cuntzGNSStageToHilbertColimit Stage T ω n).inner_map_map x y
-
 /-- The union of all finite-stage GNS images is dense in the colimit. -/
 theorem dense_iUnion_range_cuntzGNSStageToHilbertColimit :
     Dense

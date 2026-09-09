@@ -149,9 +149,18 @@ theorem native_cartan_root_eigenrelation
     ⁅nativeDerivationLieHom (axialCartanLieEquiv k),
       nativeDerivationLieHom (rootDerivation j)⁆ =
       (rootWeight j k : ℝ) • nativeDerivationLieHom (rootDerivation j) := by
-  change nativeDerivationLieHom (adCartan k (rootDerivation j)) = _
-  rw [adCartan_rootDerivation]
-  rfl
+  calc
+    ⁅nativeDerivationLieHom (axialCartanLieEquiv k),
+        nativeDerivationLieHom (rootDerivation j)⁆ =
+        nativeDerivationLieHom ⁅axialCartanLieEquiv k, rootDerivation j⁆ := by
+      symm
+      exact nativeDerivationLieHom_map_lie _ _
+    _ = nativeDerivationLieHom
+        ((rootWeight j k : ℝ) • rootDerivation j) := by
+      rw [show ⁅axialCartanLieEquiv k, rootDerivation j⁆ =
+        adCartan k (rootDerivation j) by rfl, adCartan_rootDerivation]
+    _ = (rootWeight j k : ℝ) • nativeDerivationLieHom (rootDerivation j) := by
+      simp only [map_smul]
 
 /-! The actual block readout is obtained by applying the canonical matrix
 realization to the already existing root derivations.  No new root basis or

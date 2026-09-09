@@ -2,6 +2,7 @@ import InfoGeometry.SuperMetriplectic.Axioms
 import InfoGeometry.SuperMetriplectic.ChiralBridge
 import InfoGeometry.SuperMetriplectic.UnifiedOwnerClosureBridge
 import InfoGeometry.SuperMetriplectic.UnifiedOwnerTriadBridge
+import InfoGeometry.SuperMetriplectic.UnifiedOwnerEntropyBridge
 import InfoGeometry.SuperMetriplectic.DrazinCartanShadowBridge
 import InfoGeometry.SuperMetriplectic.DrazinProjectorConstraintBridge
 import InfoGeometry.SuperMetriplectic.TriadBridge
@@ -20,9 +21,6 @@ import InfoGeometry.SuperMetriplectic.Cl44WeylD4
 import InfoGeometry.SuperMetriplectic.InformationSuperGas
 import InfoGeometry.SuperMetriplectic.SupervolumeFunctional
 import InfoGeometry.SuperMetriplectic.CasimirZeta
-import InfoGeometry.SuperMetriplectic.CasimirHessianFisherBridge
-import InfoGeometry.SuperMetriplectic.OnsagerCasimirMoebiusBridge
-import InfoGeometry.SuperMetriplectic.OnsagerCasimirMoebiusMetricBridge
 import InfoGeometry.SuperMetriplectic.SeeleyDeWitt
 import InfoGeometry.SuperMetriplectic.InformationEquilibrium
 import InfoGeometry.SuperMetriplectic.DarkEnergyMapping

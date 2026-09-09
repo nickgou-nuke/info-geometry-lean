@@ -118,7 +118,7 @@ noncomputable def iteratedSerreAssociatedGradedEquivOfKZero
 
 /--
 A three-term Gysin fragment is an actual exact sequence of additive groups.
-Its maps and exactness property are mathematical data, rather than a `True`
+Its maps and exactness witness are mathematical data, rather than a `True`
 placeholder.
 -/
 abbrev GysinSequence

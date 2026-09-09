@@ -27,7 +27,15 @@ import InfoGeometry.LLM.Llama4PythonBlockSpec
 import InfoGeometry.LLM.PromptDefectRegularization
 import InfoGeometry.LLM.TrialityMoE
 import InfoGeometry.LLM.SinkhornDefectFlow
-import InfoGeometry.LLM.BogoliubovSinkhornRouting
+import InfoGeometry.LLM.AttentionEntropyProductionFlow
+import InfoGeometry.LLM.FiniteVectorSpinKernel
+import InfoGeometry.LLM.SpinTransformerMeanField
+import InfoGeometry.LLM.SpinTransformerPathEntropy
+import InfoGeometry.LLM.SpinTransformerFixedPoint
+import InfoGeometry.LLM.SpinTransformerQuenchRelax
+import InfoGeometry.LLM.SphericalVMFExponentialFamily
+import InfoGeometry.LLM.SphericalVMFFieldDerivatives
+import InfoGeometry.LLM.ContinuousMeanFieldClosure
 import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionEuclidean
 import InfoGeometry.Canonical.AttentionSplit
@@ -47,6 +55,10 @@ Unified entrypoint for LLM-oriented formalization layers:
 - geometric multi-head attention and output projection
 - canonical transformer-block scaffold (attention + residual + normalization + MLP)
 - causal-mask transformer interface
+- Riemannian natural gradient flow and simplex PL dissipation
+- discrete vector-spin Markov kernels and mean-field dynamics
+- non-reciprocal housekeeping entropy production proxies
+- finite quench trajectories vs infinite-horizon fixed points
 -/
 
 end InfoGeometry

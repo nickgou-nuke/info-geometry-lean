@@ -266,7 +266,7 @@ theorem BoundaryKMSReadout.galoisTranslate_semigroup_generator_readout
 /--
 Algebraic cyclotomic faithful separation of zero-temperature branches.
 
-This is the postulat3-free core of the proposed `Q_ab` argument.  It does not
+This is the postulate-free core of the proposed `Q_ab` argument.  It does not
 construct `Q_ab`, roots of unity, or the complex embedding.  Instead, it proves
 the formal implication needed by the Bost--Connes symmetry-breaking corridor:
 if the phase observables evaluate as
@@ -321,7 +321,7 @@ embedding of the cyclotomic boundary generators, `ι(e(r))`.
 
 The field `eval_shift` records the zero-temperature ground-state condition:
 nontrivial positive-integer Cuntz shifts have zero left expectation against
-all observables.  This is a proof-carrying property, not an analytic
+all observables.  This is a proof-carrying assumption, not an analytic
 classification of all KMS states.
 -/
 def HeckeCuntzExtremeGroundState

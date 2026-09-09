@@ -77,7 +77,7 @@ theorem compactified_doubling_step_two_torsion
 /--
 The exact algebraic doubling step for compactified thermal coordinates.
 
-The explicit property `h2Cancel` records the only ring-theoretic cancellation
+The explicit hypothesis `h2Cancel` records the only ring-theoretic cancellation
 used: multiplication by `2` has no kernel.  This avoids silently assuming a
 field or characteristic-zero domain.
 -/
@@ -93,7 +93,7 @@ theorem compactified_doubling_step
 /--
 Cross-multiplied compactified-coordinate relation.
 
-This is the finite algebraic interface `T * (1 + q) = 1 - q`; it is not a KMS
+This is the finite algebraic socket `T * (1 + q) = 1 - q`; it is not a KMS
 condition, an operator logarithm identity, or a functional-calculus statement.
 -/
 def CompactifiedRelation (q T : R) : Prop :=

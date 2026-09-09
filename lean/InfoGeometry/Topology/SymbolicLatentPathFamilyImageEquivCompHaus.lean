@@ -106,5 +106,3 @@ theorem SymbolicLatentChartEquivalence.imageHomeomorphCompHausIso_trans_val
   rfl
 
 end InfoGeometry.Topology
-
-end

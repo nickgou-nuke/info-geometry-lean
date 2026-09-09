@@ -4,9 +4,9 @@ import InfoGeometry.Canonical.DrazinModularPersistence
 import InfoGeometry.Meta.Architecture
 
 /-!
-# Drazin centralizer Erlangen data
+# Drazin centralizer Erlangen socket
 
-Final theorem-safe data:
+Final theorem-safe socket:
 
 ```text
 Drazin stabilization
@@ -27,7 +27,7 @@ This file does not introduce a competing modular-flow API.  It uses the repo
 `InfoGeometry.OperatorAlgebra.Thermodynamics.ModularFlow`.
 
 It also does not claim that arbitrary observables satisfy Fierz identities.
-Residual vanishing is kept as an explicit law of the supplied data.
+Residual vanishing is kept as an explicit law of the supplied socket.
 -/
 
 noncomputable section
@@ -212,8 +212,8 @@ def centralizerExpectationFierzVector
     (φ : InfoGeometry.Canonical.DrazinFierzBridge.ExpectationState Obs)
     (C : InfoGeometry.Canonical.DrazinFierzBridge.FierzChannelMap Obs)
     (D : DrazinSupportData Obs) :
-    InfoGeometry.Canonical.DrazinFierzBridge.NormalizedFierzCoordinates :=
-  fun ch => centralizerExpectationFierzCoordinate φ C D ch
+    InfoGeometry.Canonical.DrazinFierzBridge.NormalizedFierzCoordinates where
+  coord := fun ch => centralizerExpectationFierzCoordinate φ C D ch
 
 /--
 Expectation-only Fierz vector attached to a centralizer sanctuary.
@@ -229,7 +229,7 @@ def sanctuaryExpectationFierzVector
     InfoGeometry.Canonical.DrazinFierzBridge.NormalizedFierzCoordinates :=
   centralizerExpectationFierzVector S.state C S.horizon
 
-/-! ## 2A. State-relative Witten balance -/
+/-! ## 2A. State-relative Witten balance socket -/
 
 /--
 State-relative boson/fermion balance.
@@ -274,13 +274,13 @@ def IsStateRelativeWittenBalanced
     (W : StateRelativeWittenBalance Obs) : Prop :=
   stateRelativeWittenIndex W = 0
 
-/-! ## 3. Final centralizer Erlangen data -/
+/-! ## 3. Final centralizer Erlangen socket -/
 
 /--
 Final expectation-only Drazin/Fierz centralizer law.
 
 The field `residual_vanishes` is explicitly supplied.  This prevents
-laundering a Fierz identity through the centralizer property alone.
+laundering a Fierz identity through the centralizer hypothesis alone.
 -/
 @[rep_depth operator]
 structure DrazinCentralizerFierzLaw

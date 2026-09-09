@@ -123,37 +123,31 @@ theorem SU3ColorWeyl_braid_relation :
 /-! ## Complexified split quadratic form and zero-divisors -/
 
 /-- Coordinate model for a complexified split-octonion vector. -/
-abbrev Split8 := Fin 8 → ℂ
-
-namespace Split8
-
-def x0 (x : Split8) : ℂ := x 0
-def x1 (x : Split8) : ℂ := x 1
-def x2 (x : Split8) : ℂ := x 2
-def x3 (x : Split8) : ℂ := x 3
-def x4 (x : Split8) : ℂ := x 4
-def x5 (x : Split8) : ℂ := x 5
-def x6 (x : Split8) : ℂ := x 6
-def x7 (x : Split8) : ℂ := x 7
-
-end Split8
+structure Split8 where
+  x0 : ℂ
+  x1 : ℂ
+  x2 : ℂ
+  x3 : ℂ
+  x4 : ℂ
+  x5 : ℂ
+  x6 : ℂ
+  x7 : ℂ
 
 /-- The complexified split quadratic form has a concrete nonzero isotropic vector. -/
 def splitQuadratic (x : Split8) : ℂ :=
   x.x0^2 + x.x1^2 + x.x2^2 + x.x3^2 - x.x4^2 - x.x5^2 - x.x6^2 - x.x7^2
 
 /-- A concrete nonzero isotropic vector: `(1,0,0,0,1,0,0,0)`. -/
-def nullVector : Split8 :=
-  fun i => if i = 0 then 1 else if i = 4 then 1 else 0
+def nullVector : Split8 where
+  x0 := 1; x1 := 0; x2 := 0; x3 := 0; x4 := 1; x5 := 0; x6 := 0; x7 := 0
 
 /-- The concrete vector lies on the split null cone. -/
 theorem nullVector_norm_zero : splitQuadratic nullVector = 0 := by
-  simp [splitQuadratic, nullVector, Split8.x0, Split8.x1, Split8.x2,
-    Split8.x3, Split8.x4, Split8.x5, Split8.x6, Split8.x7]
+  simp [splitQuadratic, nullVector]
 
 /-- The concrete null vector is nonzero. -/
 theorem nullVector_nonzero : nullVector.x0 ≠ 0 := by
-  norm_num [nullVector, Split8.x0]
+  norm_num [nullVector]
 
 /-- Minimal Zorn-style split-octonion coordinates. -/
 structure Zorn where
@@ -447,7 +441,7 @@ theorem tripotentScaleDet_zero_mode :
 
 /--
 The cofactor multiplying the zero-mode factor is nonzero at `s = 0`.
-This is the algebraic property that the zero-mode root is simple.
+This is the algebraic certificate that the zero-mode root is simple.
 -/
 theorem tripotentScaleCofactor_zero :
     tripotentScaleCofactor 0 = -1 := by

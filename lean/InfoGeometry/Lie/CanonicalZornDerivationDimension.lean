@@ -1,9 +1,7 @@
 import InfoGeometry.Lie.CanonicalZornDerivation
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 
 set_option linter.unusedSimpArgs false
 set_option linter.unusedTactic false
-set_option maxHeartbeats 800000
 
 noncomputable section
 namespace InfoGeometry.Lie.CanonicalZornDerivationDimension
@@ -80,7 +78,7 @@ def derivationParameters (D : VDer) : Params := fun i =>
   else if i = 12 then (D (V 1)).w 2
   else (D (V 2)).w 2
 
-theorem derivationParameters_parameterDerivation (p : Params) :
+private theorem derivationParameters_parameterDerivation (p : Params) :
     derivationParameters (parameterDerivation p) = p := by
   funext i
   fin_cases i <;>

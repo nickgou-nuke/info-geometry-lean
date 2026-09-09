@@ -165,7 +165,9 @@ end PolynomialWeakDrazin
 structure MarkovWeakDrazinProjection {R : Type u} [Ring R]
     (A B groupInverseProjection : Matrix (Fin n) (Fin n) R) (k : ℕ) where
   weak : IsWeakDrazinAt A B k
-  formula_eq_groupProjection : 1 - B * A = groupInverseProjection
+  weakProjection : Matrix (Fin n) (Fin n) R
+  weakProjection_eq_formula : weakProjection = 1 - B * A
+  projection_eq_groupProjection : weakProjection = groupInverseProjection
 
 namespace MarkovWeakDrazinProjection
 
@@ -173,20 +175,14 @@ variable {R : Type u} [Ring R]
 variable {A B groupInverseProjection : Matrix (Fin n) (Fin n) R} {k : ℕ}
 variable (M : MarkovWeakDrazinProjection A B groupInverseProjection k)
 
-/-- The explicit weak-Drazin projection formula. -/
-def weakProjection
-    (_M : MarkovWeakDrazinProjection A B groupInverseProjection k) :
-    Matrix (Fin n) (Fin n) R :=
-  1 - B * A
-
 /-- The weak-Drazin projection agrees with the supplied group-inverse projection. -/
 theorem projection_readout : M.weakProjection = groupInverseProjection :=
-  M.formula_eq_groupProjection
+  M.projection_eq_groupProjection
 
 /-- The stored weak projection is the explicit matrix formula `1 - B * A`. -/
 theorem weakProjection_formula :
     M.weakProjection = 1 - B * A :=
-  rfl
+  M.weakProjection_eq_formula
 
 end MarkovWeakDrazinProjection
 

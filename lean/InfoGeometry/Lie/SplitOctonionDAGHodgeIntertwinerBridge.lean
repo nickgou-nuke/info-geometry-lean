@@ -5,14 +5,15 @@ import InfoGeometry.Lie.SplitOctonionExteriorAlgebraPeirceBridge
 set_option linter.unusedSimpArgs false
 
 /-!
-# Split-Octonion DAG Hodge Intertwiner Bridge
+# Split-Octonion DAG Hodge Intertwiner Transport
 
-This owner module formalizes the explicit graded intertwiner $F : C^\bullet_{\text{DAG}} \to \Lambda^\bullet \mathbb{R}^3 \cong \mathbb{O}_s$
-and establishes the exact intertwining commuting squares between the discrete DAG Hodge complex
-and the split-octonion / exterior algebra carrier:
+This owner module formalizes conditional transport for a supplied linear
+intertwiner $F$ between finite carriers and establishes the corresponding
+intertwining commuting squares.  It does not construct an identification of
+the repository's concrete DAG complex with a split-octonion carrier:
 
-1. **Explicit Graded Linear Isomorphism:**
-   $$F : C^\bullet_{\text{DAG}} \simeq_{\text{graded}} \Lambda^\bullet \mathbb{R}^3 \cong \mathbb{O}_s$$
+1. **Supplied Linear Intertwiner:**
+   $$F : C^\bullet_{\text{DAG}} \to \Lambda^\bullet \mathbb{R}^3$$
 
 2. **Differential Intertwining:**
    $$\boxed{F \circ d_{\text{DAG}} = d_{\mathbb{O}_s} \circ F}$$

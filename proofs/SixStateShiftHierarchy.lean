@@ -1,5 +1,5 @@
 import Mathlib
-import proofs.TwoSheetThreeColorWeyl
+import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 import proofs.SixStateGeneralizedPauliBasis
 import proofs.CRTGeneralizedPauliSix
 

@@ -3,22 +3,32 @@ import Mathlib.Tactic
 /-!
 # UHF Inductive Colimit Boundary
 
-This module formalizes the diagonal-MASA/cylinder colimit structure of the
-UHF algebra:
-1. **Binary Words as Finite Prefixes:** `BitWord n = Fin n → Bool`.
-2. **Successor Embedding:** `diagEmbedSucc n : DiagAlg n → DiagAlg (n + 1)`.
-3. **Cylinder Functions on Cantor Space:** `cylinder n f : (ℕ → Bool) → ℂ`.
-4. **Normalized Trace Functional:**
-   $$\tau_n(f) = \frac{1}{2^n} \sum_{w \in \operatorname{BitWord}(n)} f(w)$$
-5. **Colimit Trace Invariance:**
-   $$\tau_{n+1}(\operatorname{diagEmbedSucc}_n(f)) = \tau_n(f)$$
+This module promotes the audited diagonal-MASA/cylinder part of
+`external_refs/auto/proofs/UHFInductiveColimit.lean` into the owned
+`InfoGeometry` namespace.
+
+## Proof Boundary Audit
+
+Closed finite layer:
+* binary words as finite Cantor prefixes;
+* the diagonal successor embedding `f ↦ f ∘ prefixSucc`;
+* preservation of `0`, `1`, addition, and multiplication;
+* injectivity of the successor embedding;
+* compatibility of finite-cylinder observables with successor embeddings;
+* finite constant observables as compatible cylinder functions.
+
+Deliberately not claimed here:
+* a C*-completion of the full UHF algebra;
+* a topology or measure on Cantor space;
+* a spectral theorem for the diagonal MASA;
+* any KMS, thermodynamic, zeta, or holographic interpretation.
+
+The point of the file is the finite algebraic colimit skeleton only.
 -/
 
 noncomputable section
 
 namespace InfoGeometry.Canonical.UHFInductiveColimitBoundary
-
-open Finset
 
 /-- Binary words of length `n`. -/
 abbrev BitWord (n : ℕ) : Type :=
@@ -27,6 +37,10 @@ abbrev BitWord (n : ℕ) : Type :=
 /-- Diagonal finite-dimensional algebra at stage `n`. -/
 abbrev DiagAlg (n : ℕ) : Type :=
   BitWord n → ℂ
+
+/-- Cantor boundary carrier for the diagonal cylinder model. -/
+abbrev CantorBoundary : Type :=
+  ℕ → Bool
 
 /-- Prefix a word of length `n + 1` down to length `n`. -/
 def prefixSucc (n : ℕ) (w : BitWord (n + 1)) : BitWord n :=
@@ -77,34 +91,17 @@ theorem diagEmbedSucc_injective (n : ℕ) :
   simpa [diagEmbedSucc_apply, prefixSucc_extendSucc] using happ
 
 /-- Restrict a boundary point to its first `n` bits. -/
-def boundaryPrefix (n : ℕ) (b : (ℕ → Bool)) : BitWord n :=
+def boundaryPrefix (n : ℕ) (b : CantorBoundary) : BitWord n :=
   fun i => b i.1
 
-theorem boundaryPrefix_surjective (n : ℕ) :
-    Function.Surjective (boundaryPrefix n) := by
-  intro w
-  let b : ℕ → Bool := fun i => if h : i < n then w ⟨i, h⟩ else false
-  refine ⟨b, ?_⟩
-  ext i
-  simp [boundaryPrefix, b]
-
 /-- Finite-cylinder realization of a stage-`n` diagonal observable. -/
-def cylinder (n : ℕ) (f : DiagAlg n) : (ℕ → Bool) → ℂ :=
+def cylinder (n : ℕ) (f : DiagAlg n) : CantorBoundary → ℂ :=
   fun b => f (boundaryPrefix n b)
 
-theorem cylinder_apply (n : ℕ) (f : DiagAlg n) (b : (ℕ → Bool)) :
+theorem cylinder_apply (n : ℕ) (f : DiagAlg n) (b : CantorBoundary) :
     cylinder n f b = f (boundaryPrefix n b) := rfl
 
-theorem cylinder_injective (n : ℕ) :
-    Function.Injective (cylinder n) := by
-  intro f g hfg
-  apply funext
-  intro w
-  obtain ⟨b, hb⟩ := boundaryPrefix_surjective n w
-  have hpoint := congrFun hfg b
-  simpa [cylinder, hb] using hpoint
-
-theorem boundaryPrefix_succ_eq_prefixSucc (n : ℕ) (b : (ℕ → Bool)) :
+theorem boundaryPrefix_succ_eq_prefixSucc (n : ℕ) (b : CantorBoundary) :
     prefixSucc n (boundaryPrefix (n + 1) b) = boundaryPrefix n b := by
   ext i
   rfl
@@ -126,12 +123,12 @@ theorem cylinder_mul (n : ℕ) (f g : DiagAlg n) :
   rfl
 
 theorem cylinder_one (n : ℕ) :
-    cylinder n 1 = (1 : (ℕ → Bool) → ℂ) := by
+    cylinder n 1 = (1 : CantorBoundary → ℂ) := by
   ext b
   rfl
 
 /-- Finite-cylinder functions: the concrete algebraic diagonal colimit carrier. -/
-def CylinderColimit : Set ((ℕ → Bool) → ℂ) :=
+def CylinderColimit : Set (CantorBoundary → ℂ) :=
   Set.range (fun p : Sigma DiagAlg => cylinder p.1 p.2)
 
 theorem cylinder_mem_colimit (n : ℕ) (f : DiagAlg n) :
@@ -161,90 +158,32 @@ theorem constant_cylinder_compatible (n : ℕ) (z : ℂ) :
       cylinder n (constantStageObservable n z) := by
   exact cylinder_compatible_succ n (constantStageObservable n z)
 
-/-! ## 2. Colimit Normalized Trace Functional -/
-
-/-- Normalized trace functional on the stage-`n` diagonal algebra. -/
-def stageTrace (n : ℕ) (f : DiagAlg n) : ℂ :=
-  (1 / (2 ^ n : ℂ)) * ∑ w : BitWord n, f w
-
-/-- Trace of the unit element is 1. -/
-theorem stageTrace_one (n : ℕ) :
-    stageTrace n 1 = 1 := by
-  dsimp [stageTrace]
-  have h_card : Fintype.card (BitWord n) = 2 ^ n := by
-    dsimp [BitWord]
-    simp
-  have h_sum : ∑ w : BitWord n, (1 : ℂ) = (2 ^ n : ℂ) := by
-    rw [sum_const, nsmul_eq_mul]
-    simp [h_card]
-  rw [h_sum]
-  have h_two_pow_ne : (2 ^ n : ℂ) ≠ 0 := by
-    exact pow_ne_zero n (by norm_num)
-  exact one_div_mul_cancel h_two_pow_ne
-
-/-- Additivity of the trace functional. -/
-theorem stageTrace_add (n : ℕ) (f g : DiagAlg n) :
-    stageTrace n (f + g) = stageTrace n f + stageTrace n g := by
-  dsimp [stageTrace]
-  rw [← mul_add]
-  congr 1
-  exact sum_add_distrib
-
-/-- Scalar homogeneity of the trace functional. -/
-theorem stageTrace_smul (n : ℕ) (c : ℂ) (f : DiagAlg n) :
-    stageTrace n (c • f) = c * stageTrace n f := by
-  dsimp [stageTrace]
-  rw [← mul_sum]
-  ring
-
-/-- Extract the last bit of a word of length `n + 1`. -/
-def lastBit (n : ℕ) (w : BitWord (n + 1)) : Bool :=
-  w ⟨n, Nat.lt_succ_self n⟩
-
-/-- Word decomposition bijection into prefix and last bit. -/
-def bitWordSuccEquiv (n : ℕ) : BitWord (n + 1) ≃ (BitWord n × Bool) where
-  toFun w := (prefixSucc n w, lastBit n w)
-  invFun p := extendSucc n p.1 p.2
-  left_inv w := by
-    ext ⟨i, hi⟩
-    dsimp [extendSucc, prefixSucc, lastBit]
-    by_cases h : i < n
-    · simp [h]
-    · have hi_eq : i = n := by omega
-      subst hi_eq
-      simp
-  right_inv := by
-    rintro ⟨w, b⟩
-    ext x
-    · dsimp
-      have h := prefixSucc_extendSucc n w b
-      rw [h]
-    · dsimp [lastBit, extendSucc]
-      simp
-
-/-- 🏆 THEOREM: The normalized trace is invariant under the diagonal successor embedding. -/
-theorem stageTrace_compatible_succ (n : ℕ) (f : DiagAlg n) :
-    stageTrace (n + 1) (diagEmbedSucc n f) = stageTrace n f := by
-  dsimp [stageTrace]
-  have h_sum_succ : (∑ w : BitWord (n + 1), diagEmbedSucc n f w) = 2 * (∑ w : BitWord n, f w) := by
-    have h_equiv := (bitWordSuccEquiv n).symm.sum_comp (diagEmbedSucc n f)
-    rw [← h_equiv]
-    rw [Fintype.sum_prod_type]
-    have h_bool : ∀ w : BitWord n, (∑ b : Bool, diagEmbedSucc n f ((bitWordSuccEquiv n).symm (w, b))) = 2 * f w := by
-      intro w
-      dsimp [diagEmbedSucc, bitWordSuccEquiv]
-      have h_pref : ∀ b : Bool, prefixSucc n (extendSucc n w b) = w := fun b => prefixSucc_extendSucc n w b
-      simp [h_pref]
-    simp_rw [h_bool]
-    rw [← mul_sum]
-  rw [h_sum_succ]
-  have h_pow : (2 ^ (n + 1) : ℂ) = 2 * (2 ^ n : ℂ) := by
-    rw [pow_succ]
-    ring
-  rw [h_pow]
-  have h_two_ne : (2 : ℂ) ≠ 0 := by norm_num
-  have h_two_pow_ne : (2 ^ n : ℂ) ≠ 0 := pow_ne_zero n (by norm_num)
-  have h_prod_ne : (2 : ℂ) * (2 ^ n : ℂ) ≠ 0 := mul_ne_zero h_two_ne h_two_pow_ne
-  field_simp [h_prod_ne, h_two_pow_ne]
+/--
+Consolidated diagonal UHF/MASA colimit package: successor embeddings preserve
+algebra operations, are injective, and finite constants define compatible
+cylinder observables in the algebraic colimit carrier.
+-/
+theorem diagonal_uhf_colimit_synthesis :
+    (∀ n : ℕ, Function.Injective (diagEmbedSucc n)) ∧
+    (∀ n : ℕ, ∀ f g : DiagAlg n,
+      diagEmbedSucc n (f + g) = diagEmbedSucc n f + diagEmbedSucc n g) ∧
+    (∀ n : ℕ, ∀ f g : DiagAlg n,
+      diagEmbedSucc n (f * g) = diagEmbedSucc n f * diagEmbedSucc n g) ∧
+    (∀ n : ℕ, diagEmbedSucc n 1 = (1 : DiagAlg (n + 1))) ∧
+    (∀ n : ℕ, ∀ f : DiagAlg n,
+      cylinder (n + 1) (diagEmbedSucc n f) = cylinder n f) ∧
+    (∀ n : ℕ, ∀ z : ℂ,
+      diagEmbedSucc n (constantStageObservable n z) =
+        constantStageObservable (n + 1) z) ∧
+    (∀ n : ℕ, ∀ f : DiagAlg n, cylinder n f ∈ CylinderColimit) := by
+  exact ⟨diagEmbedSucc_injective,
+    diagEmbedSucc_add,
+    diagEmbedSucc_mul,
+    diagEmbedSucc_one,
+    cylinder_compatible_succ,
+    constantStageObservable_embed,
+    cylinder_mem_colimit⟩
 
 end InfoGeometry.Canonical.UHFInductiveColimitBoundary
+
+end noncomputable section

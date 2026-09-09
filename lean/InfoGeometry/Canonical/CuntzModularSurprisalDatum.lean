@@ -62,6 +62,5 @@ theorem prime_power_sample_eq_iterate
       ((sigma n primes (Real.log p)).toLinearMap) ^ k :=
   nat_power_sample_eq_iterate primes K p k
 
-end InfoGeometry.Canonical.CuntzModularSurprisalDatum
 
-end
+end InfoGeometry.Canonical.CuntzModularSurprisalDatum

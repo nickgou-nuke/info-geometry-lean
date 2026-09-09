@@ -86,9 +86,11 @@ theorem circularNullBoundaryMk_eq_iff
       _ = x := by simp
 
 theorem circularNullBoundary_diagonal_minkowski_iff
-    (v : Minkowski4) (hv : minkowskiDiagonalEmbedding v ≠ 0) :
+    (v : Minkowski4)
+    (hv : minkowskiDiagonalEmbedding (minkowskiCoordinates v) ≠ 0) :
     InfoGeometry.Twistor.IsNull circularPeirceQuadratic
-        (Projectivization.mk ℝ (minkowskiDiagonalEmbedding v) hv) ↔
+        (Projectivization.mk ℝ
+          (minkowskiDiagonalEmbedding (minkowskiCoordinates v)) hv) ↔
       v.IsNull := by
   rw [circularProjectiveNull_mk_iff]
   exact circularPeirceQuadratic_diagonal_eq_minkowski_q v ▸ Iff.rfl

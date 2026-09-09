@@ -69,19 +69,6 @@ def susyHamiltonianTopCatHom : TopCat.of R ⟶ TopCat.of R :=
 def defectProjectionTopCatHom : TopCat.of R ⟶ TopCat.of R :=
   leftMulTopCatHom g.P0
 
-theorem fullTwistTopCatHom_comm_susyHamiltonianTopCatHom
-    (D : ToeplitzBraidData g) :
-    fullTwistTopCatHom g D ≫ susyHamiltonianTopCatHom g =
-      susyHamiltonianTopCatHom g ≫ fullTwistTopCatHom g D := by
-  apply TopCat.hom_ext
-  apply ContinuousMap.ext
-  intro x
-  change g.susyHamiltonian * (fullTwist g D * x) =
-    fullTwist g D * (g.susyHamiltonian * x)
-  simpa only [mul_assoc] using
-    congrArg (fun z : R => z * x)
-      (fullTwist_commutes_hamiltonian g D).symm
-
 theorem braidedCubicSuperchargeTopCatHom_cube
     (D : ToeplitzBraidData g) :
     braidedCubicSuperchargeTopCatHom g D ≫
@@ -120,32 +107,5 @@ theorem defectProjectionTopCatHom_comp_braidedCubicSupercharge_zero
   intro x
   change braidedCubicSupercharge g D * (g.P0 * x) = (0 : R) * x
   rw [← mul_assoc, braidedCubicSupercharge_vacuum_annihilation_right g D]
-
-theorem defectProjectionTopCatHom_idempotent :
-    defectProjectionTopCatHom g ≫ defectProjectionTopCatHom g =
-      defectProjectionTopCatHom g := by
-  apply TopCat.hom_ext
-  apply ContinuousMap.ext
-  intro x
-  change g.P0 * (g.P0 * x) = g.P0 * x
-  rw [← mul_assoc, defectProjection_sq]
-
-theorem defectProjectionTopCatHom_comp_susyHamiltonian_zero :
-    defectProjectionTopCatHom g ≫ susyHamiltonianTopCatHom g =
-      leftMulTopCatHom (0 : R) := by
-  apply TopCat.hom_ext
-  apply ContinuousMap.ext
-  intro x
-  change g.susyHamiltonian * (g.P0 * x) = (0 : R) * x
-  rw [← mul_assoc, susyHamiltonian_defect_annihilation_right g]
-
-theorem susyHamiltonianTopCatHom_comp_defectProjection_zero :
-    susyHamiltonianTopCatHom g ≫ defectProjectionTopCatHom g =
-      leftMulTopCatHom (0 : R) := by
-  apply TopCat.hom_ext
-  apply ContinuousMap.ext
-  intro x
-  change g.P0 * (g.susyHamiltonian * x) = (0 : R) * x
-  rw [← mul_assoc, susyHamiltonian_defect_annihilation_left g]
 
 end InfoGeometry.Canonical.ToeplitzCuntzThreeBraidCubicTopologicalBridge

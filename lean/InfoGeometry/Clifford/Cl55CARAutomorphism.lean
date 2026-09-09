@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55CARSpinAutomorphism
+import InfoGeometry.Clifford.Cl55OperatorFiveGradeClosure
 
 /-!
 # The `Spin(5,5)` action as an automorphism group of the CAR algebra
@@ -13,6 +14,7 @@ noncomputable section
 namespace InfoGeometry.Clifford.Clifford55
 
 open InfoGeometry.Clifford.ChiralLorentzCARLift
+open InfoGeometry.OperatorAlgebra
 
 noncomputable def spinCARAutomorphism :
     Spin55 →* (Cl55 ≃+* Cl55) where
@@ -28,6 +30,24 @@ noncomputable def spinCARAutomorphism :
 @[simp] theorem spinCARAutomorphism_apply (g : Spin55) (x : Cl55) :
     spinCARAutomorphism g x = spinCliffordRingEquiv g x :=
   rfl
+
+theorem spinCARAutomorphism_maps_grade_family (g : Spin55) :
+    MapsToGradeBetween
+      (fun k : ℤ => (cl55GradeSubmodule k : Set Cl55))
+      (fun k : ℤ =>
+        (spinTransportedCl55GradeSubmodule g k : Set Cl55))
+      (fun _ : Unit => spinCARAutomorphism g)
+      (fun _ k => k) := by
+  simpa only [spinCARAutomorphism_apply] using
+    spinTransported_maps_grade_family g
+
+/- The CAR-facing owner exposes the corresponding exact image equality. -/
+theorem spinCARAutomorphism_grade_image (g : Spin55) (k : ℤ) :
+    (spinCARAutomorphism g : Cl55 ≃+* Cl55) ''
+        (cl55GradeSubmodule k : Set Cl55) =
+      (spinTransportedCl55GradeSubmodule g k : Set Cl55) := by
+  simpa only [spinCARAutomorphism_apply] using
+    spinTransported_grade_image g k
 
 theorem spinCARAutomorphism_preserves_car (g : Spin55) (i : Fin 5) :
     spinCARAutomorphism g (annihilation55 i) *

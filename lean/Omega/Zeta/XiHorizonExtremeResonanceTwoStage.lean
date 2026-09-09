@@ -1,5 +1,5 @@
 import Omega.Zeta.XiHorizonEndpointAtomChristoffel
-import Omega.Zeta.XiHorizonReflectionBound
+import Omega.Zeta.XiHorizonReflectionFiniteWitness
 
 open Filter
 open scoped Topology
@@ -14,7 +14,7 @@ theorem paper_xi_horizon_extreme_resonance_two_stage (alpha : Nat → Complex)
     ((∀ n : Nat, Complex.abs (alpha n) < 1) ∧ ((∃ N : Nat, 1 ≤ Complex.abs (alpha N)) → False)) ∧
       (D.atomMass = D.inverseSqNorm ∧ Tendsto D.christoffel atTop (𝓝 D.atomMass)) := by
   refine ⟨?_, ?_⟩
-  · exact xi_horizon_reflection_bound alpha hSchur
+  · exact paper_xi_horizon_reflection_finite_witness alpha hSchur
   · exact paper_xi_horizon_endpoint_atom_christoffel D
 
 end

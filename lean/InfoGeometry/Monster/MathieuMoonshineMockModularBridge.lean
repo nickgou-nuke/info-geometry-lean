@@ -4,6 +4,7 @@ import InfoGeometry.Quantum.GolayLeechStabilizerCode
 
 open InfoGeometry.Monster.MoonshineGradedDimensions
 open InfoGeometry.Quantum.GolayLeechStabilizerCode
+open InfoGeometry.Combinatorics.ExtendedBinaryGolay
 
 noncomputable section
 
@@ -41,14 +42,20 @@ theorem m24_irrep_dims_pos (n : ℕ) (h1 : 1 ≤ n) (h2 : n ≤ 5) :
   · decide
   · decide
 
-/-- Definition of Golay minimum distance for historical compatibility -/
-def golay_min_distance : ℕ := 8
-
-/-- Theorem: Extended Binary Golay Code G₂₄ minimum distance is positive -/
-theorem golay_min_distance_pos : 0 < golay_min_distance := by decide
-
-/-- Theorem: Product of M₂₄ order and Golay code minimum distance -/
-theorem m24_order_mul_golay_distance :
-    m24_order * golay_min_distance = 1958584320 := rfl
+/-! The native Golay owner exposes minimum weight through its exact finite
+    hypotheses; this bridge keeps that theorem rather than inventing an
+    unsupported scalar `golay_min_distance`. -/
+theorem golay_minimum_weight_eight
+    (h4 : ∀ m : Message, 4 ∣ hammingWeight (encode m))
+    (hInjective : ∀ m : Message, encode m ≠ 0 →
+      ∃ f : Fin 23 → Fin (hammingWeight (encode m) ^ 2 -
+        hammingWeight (encode m) + 1), Function.Injective f) :
+    (∀ (w : Word24), w ∈
+      (InfoGeometry.Canonical.GolayLeechStabilizerCode.golayCode : Finset Word24) →
+      w ≠ 0 → 8 ≤ hammingWeight w) ∧
+      (∃ w, w ∈
+        (InfoGeometry.Canonical.GolayLeechStabilizerCode.golayCode : Finset Word24) ∧
+        hammingWeight w = 8) :=
+  golay_stabilizer_distance_eight h4 hInjective
 
 end InfoGeometry.Monster.MathieuMoonshineMockModularBridge

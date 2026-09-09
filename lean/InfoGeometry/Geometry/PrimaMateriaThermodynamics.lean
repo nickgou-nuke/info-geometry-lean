@@ -25,7 +25,7 @@ def kmsOpenStrip (β : ℝ) : Set ℂ :=
 /-!
 The KMS condition is not a real-time trace identity.  It is an analytic
 boundary-value condition on a complex-time strip.  The boundary function is
-part of the mathematical property because a real one-parameter action alone
+part of the mathematical witness because a real one-parameter action alone
 does not determine its analytic continuation.
 -/
 structure IsKMSState
@@ -96,7 +96,7 @@ theorem IsKMSState.is_positive_linear_holds
     ∀ a : A, 0 ≤ (K.state (star a * a)).re :=
   K.state_positive
 
-/-- Candidate density carrying an Unruh-temperature KMS boundary property.
+/-- Candidate density carrying an Unruh-temperature KMS boundary witness.
 
 No Wasserstein flow is part of this type, so stationarity is not represented by
 an unrelated proposition field.
@@ -138,7 +138,7 @@ theorem PrimaMateriaFixedPoint.is_fixed_point_holds
 
 /--
 Compatibility theorem for the former `matches_unruh_kms` field.  An inverse
-temperature explicitly equal to `2π` carries the installed Unruh KMS property.
+temperature explicitly equal to `2π` carries the installed Unruh KMS witness.
 -/
 def PrimaMateriaFixedPoint.matches_unruh_kms
     [StarRing A] [Algebra ℂ A]

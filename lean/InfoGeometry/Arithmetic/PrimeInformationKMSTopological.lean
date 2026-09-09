@@ -16,6 +16,36 @@ open scoped BigOperators
 
 namespace InfoGeometry.Arithmetic.PrimeInformationKMS
 
+open FinitePrimeInformationKMSPacket (boltzmannWeight)
+
+/-- Finite prime partition function on a mode set. -/
+def partition (modes : Finset ℕ) (beta : ℝ) : ℝ :=
+  ∑ p ∈ modes, boltzmannWeight beta p
+
+/-- The partition function is positive on a nonempty mode set. -/
+theorem partition_pos (modes : Finset ℕ) (beta : ℝ) (h_nonempty : modes.Nonempty) :
+    0 < partition modes beta := by
+  unfold partition boltzmannWeight
+  exact Finset.sum_pos
+    (fun p _ => Real.exp_pos _)
+    h_nonempty
+
+/-- Normalized prime probability on a mode set. -/
+def normalizedProbability (modes : Finset ℕ) (beta : ℝ) (p : ℕ) : ℝ :=
+  boltzmannWeight beta p / partition modes beta
+
+/-- The normalized finite probabilities sum to one. -/
+theorem normalizedProbability_sum_eq_one (modes : Finset ℕ) (beta : ℝ) (h_nonempty : modes.Nonempty) :
+    ∑ p ∈ modes, normalizedProbability modes beta p = 1 := by
+  unfold normalizedProbability
+  have hZne : partition modes beta ≠ 0 := (partition_pos modes beta h_nonempty).ne'
+  calc
+    ∑ p ∈ modes, boltzmannWeight beta p / partition modes beta =
+      (∑ p ∈ modes, boltzmannWeight beta p) / partition modes beta := by
+        symm
+        exact Finset.sum_div (s := modes) (f := fun p => boltzmannWeight beta p) (a := partition modes beta)
+    _ = 1 := div_self hZne
+
 noncomputable def partitionContinuousMap
     (modes : Finset ℕ) : C(ℝ, ℝ) :=
   ContinuousMap.mk

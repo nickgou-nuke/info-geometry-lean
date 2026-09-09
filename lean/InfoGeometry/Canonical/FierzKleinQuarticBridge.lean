@@ -273,19 +273,6 @@ theorem spacetimeIntervalQuartic_eq_zero_of_interval_zero
   rw [h]
   ring
 
-/-- The concrete interval quartic vanishes exactly on the null cone. -/
-@[rep_depth operator]
-theorem spacetimeIntervalQuartic_eq_zero_iff_interval_zero
-    (X : _root_.InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
-    spacetimeIntervalQuartic X = 0 ↔
-      _root_.InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X = 0 := by
-  constructor
-  · intro h
-    have hsq : (_root_.InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X)^2 = 0 := by
-      simpa [spacetimeIntervalQuartic] using h
-    exact sq_eq_zero_iff.mp hsq
-  · exact spacetimeIntervalQuartic_eq_zero_of_interval_zero X
-
 /-- The concrete interval quartic is the square of the Klein readout on this Plücker slice. -/
 @[rep_depth operator]
 theorem spacetimeIntervalQuartic_eq_kleinQ_sq
@@ -314,23 +301,6 @@ theorem spacetimeQuarticEntropyReadout_eq_pi_mul_abs_interval
     spacetimeQuarticEntropyReadout X = Real.pi * |_root_.InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X| := by
   unfold spacetimeQuarticEntropyReadout spacetimeIntervalQuartic
   rw [Real.sqrt_sq_eq_abs]
-
-/-- The entropy-style quartic readout vanishes exactly on the null interval. -/
-@[rep_depth operator]
-theorem spacetimeQuarticEntropyReadout_eq_zero_iff_interval_zero
-    (X : _root_.InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
-    spacetimeQuarticEntropyReadout X = 0 ↔
-      _root_.InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X = 0 := by
-  constructor
-  · intro h
-    have habs : |_root_.InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X| = 0 := by
-      have hmul : Real.pi * |_root_.InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X| = 0 := by
-        simpa [spacetimeQuarticEntropyReadout_eq_pi_mul_abs_interval X] using h
-      exact (mul_eq_zero.mp hmul).resolve_left Real.pi_ne_zero
-    exact abs_eq_zero.mp habs
-  · intro h
-    rw [spacetimeQuarticEntropyReadout_eq_pi_mul_abs_interval X, h]
-    simp
 
 /-- The algebraic entropy-style readout scales quadratically under uniform scaling. -/
 @[rep_depth operator]
@@ -419,23 +389,6 @@ theorem spacetimeFierzKleinCoordinates_on_variety_iff_interval_zero
   · exact interval_eq_zero_of_spacetimeFierzKleinCoordinates_on_variety X
   · exact spacetimeFierzKleinCoordinates_on_variety_of_interval_zero X
 
-/-- The concrete spacetime Fierz--Klein slice has zero Klein defect exactly on the null cone. -/
-@[rep_depth operator]
-theorem spacetimeFierzKleinCoordinates_kleinAreaDefect_eq_zero_iff_interval_zero
-    (X : _root_.InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
-    kleinAreaDefect (spacetimeFierzKleinCoordinates X).plucker = 0 ↔
-      _root_.InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X = 0 := by
-  constructor
-  · intro h
-    have hvar : IsOnFierzKleinVariety (spacetimeFierzKleinCoordinates X) := by
-      refine ⟨unitScalarPhase_on_quadric, ?_⟩
-      simpa [spacetimeFierzKleinCoordinates, kleinAreaDefect] using h
-    exact (spacetimeFierzKleinCoordinates_on_variety_iff_interval_zero X).mp hvar
-  · intro h
-    have hvar : IsOnFierzKleinVariety (spacetimeFierzKleinCoordinates X) :=
-      spacetimeFierzKleinCoordinates_on_variety_of_interval_zero X h
-    exact hvar.2
-
 /-- Concrete boundary predicate for the interval-square quartic on the spacetime slice. -/
 @[rep_depth operator]
 def IsConcreteSpacetimeFierzKleinQuarticBoundary
@@ -498,26 +451,5 @@ theorem intervalQuarticSqrtAreaFunctional_eq_zero_of_interval_zero
   unfold intervalQuarticSqrtAreaFunctional
   rw [spacetimeIntervalQuartic_eq_zero_of_interval_zero X h]
   simp
-
-/-- The algebraic square-root area functional vanishes exactly on the null cone. -/
-@[rep_depth operator]
-theorem intervalQuarticSqrtAreaFunctional_eq_zero_iff_interval_zero
-    (X : _root_.InfoGeometry.Canonical.RealSpacetime4x4Closure.RealSpacetime4x4) :
-    intervalQuarticSqrtAreaFunctional X = 0 ↔
-      _root_.InfoGeometry.Canonical.RealSpacetime4x4Closure.interval X = 0 := by
-  constructor
-  · intro h
-    have hsqrt : Real.sqrt (spacetimeIntervalQuartic X) = 0 := by
-      have hmul : Real.pi * Real.sqrt (spacetimeIntervalQuartic X) = 0 := by
-        simpa [intervalQuarticSqrtAreaFunctional] using h
-      have hpi : Real.pi ≠ 0 := Real.pi_ne_zero
-      exact (mul_eq_zero.mp hmul).resolve_left hpi
-    have hnonneg : 0 ≤ spacetimeIntervalQuartic X := by
-      dsimp [spacetimeIntervalQuartic]
-      positivity
-    have hsq : spacetimeIntervalQuartic X = 0 := by
-      exact (Real.sqrt_eq_zero hnonneg).mp hsqrt
-    exact (spacetimeIntervalQuartic_eq_zero_iff_interval_zero X).mp hsq
-  · exact fun h => intervalQuarticSqrtAreaFunctional_eq_zero_of_interval_zero X h
 
 end InfoGeometry.Canonical.FierzKleinQuarticBridge

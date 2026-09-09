@@ -17,7 +17,7 @@ structure PairRow where
   targetDecl : String
 deriving Repr
 
-structure KernelEquivalenceRow where
+structure CertificateRow where
   sourceDecl : String
   targetDecl : String
   mode : String
@@ -106,7 +106,7 @@ private def tierByMode (mode : String) : String :=
 private def defEq (a b : Expr) : MetaM Bool := do
   withNewMCtxDepth <| withTransparency .all <| isDefEq a b
 
-private def checkPair (mode : String) (source target : Name) : MetaM KernelEquivalenceRow := do
+private def checkPair (mode : String) (source target : Name) : MetaM CertificateRow := do
   let env ← getEnv
   let sourceDecl := toString source
   let targetDecl := toString target
@@ -240,7 +240,7 @@ private def runExport
   let pairs ← readPairs pairsPath
   let env ← importModules (parseImports importModsStr) {} 0
   let rows ← runMetaWithEnv env do
-    let mut out : Array KernelEquivalenceRow := #[]
+    let mut out : Array CertificateRow := #[]
     for row in pairs do
       out := out.push (← checkPair mode (dottedName row.sourceDecl) (dottedName row.targetDecl))
     pure out

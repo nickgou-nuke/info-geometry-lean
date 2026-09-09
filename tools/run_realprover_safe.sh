@@ -15,7 +15,7 @@ export REALPROVER_LEANSEARCH_URL="${REALPROVER_LEANSEARCH_URL:-http://127.0.0.1:
 export REALPROVER_LEAN_TEST_PATH="${REALPROVER_LEAN_TEST_PATH:-$REPO_ROOT}"
 export REALPROVER_INTERACTIVE_PATH="${REALPROVER_INTERACTIVE_PATH:-$REPO_ROOT/external_refs/interactive}"
 export REALPROVER_LEAN_ENV_PATH="${REALPROVER_LEAN_ENV_PATH:-$HOME/.elan/bin}"
-readonly REALPROVER_EXPECTED_TOOLCHAIN="leanprover/lean4:v4.28.0"
+readonly REALPROVER_EXPECTED_TOOLCHAIN="leanprover/lean4:v4.28.1"
 
 usage() {
   cat <<'EOF'
@@ -32,10 +32,10 @@ Environment:
   REALPROVER_PYTHON            Python runtime; default repo/.venv-py312/bin/python.
   REALPROVER_MODEL_PATH        HF model snapshot path; default FrenzyMath/REAL-Prover local mirror.
   REALPROVER_LEANSEARCH_URL    LeanSearch-PS endpoint; default http://127.0.0.1:18080/retrieve_premises.
-  REALPROVER_LEAN_TEST_PATH    Lean workspace; default repo root, pinned to Lean 4.28.0.
+  REALPROVER_LEAN_TEST_PATH    Lean workspace; default repo root, pinned to Lean 4.28.1.
   REALPROVER_INTERACTIVE_PATH  interactive submodule; default external_refs/interactive.
   REALPROVER_LEAN_ENV_PATH     elan bin path; default ~/.elan/bin.
-  REALPROVER_EXPECTED_TOOLCHAIN is intentionally fixed by this wrapper to leanprover/lean4:v4.28.0.
+  REALPROVER_EXPECTED_TOOLCHAIN is intentionally fixed by this wrapper to leanprover/lean4:v4.28.1.
 EOF
 }
 
@@ -110,7 +110,7 @@ print(f"lean_search={lean_search}")
 print(f"lean_test_path={c.LEAN_TEST_PATH}")
 print(f"interactive_path={c.interactive_path}")
 print(f"lean_env_path={c.LEAN_ENV_PATH}")
-print("expected_toolchain=leanprover/lean4:v4.28.0")
+print("expected_toolchain=leanprover/lean4:v4.28.1")
 '
   )
 }

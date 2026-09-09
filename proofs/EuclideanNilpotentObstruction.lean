@@ -1,5 +1,5 @@
 import Mathlib
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 
 /-!
 # Euclidean Nilpotent Obstruction

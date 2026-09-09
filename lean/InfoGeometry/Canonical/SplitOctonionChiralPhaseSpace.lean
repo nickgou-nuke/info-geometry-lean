@@ -245,6 +245,17 @@ def paraJ (X : Phase) : Phase := (X.1, -X.2)
   rcases X with ⟨q, p⟩
   simp [paraJ]
 
+@[simp] theorem paraJ_add (X Y : Phase) :
+    paraJ (X + Y) = paraJ X + paraJ Y := by
+  rcases X with ⟨q, p⟩
+  rcases Y with ⟨r, s⟩
+  simp [paraJ, add_comm]
+
+@[simp] theorem paraJ_smul (c : ℝ) (X : Phase) :
+    paraJ (c • X) = c • paraJ X := by
+  rcases X with ⟨q, p⟩
+  simp [paraJ]
+
 theorem omega_paraJ_paraJ (X Y : Phase) :
     omega (paraJ X) (paraJ Y) = -omega X Y := by
   rcases X with ⟨q, p⟩

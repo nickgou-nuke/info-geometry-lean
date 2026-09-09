@@ -25,30 +25,30 @@ instance arnoldMajoranaNetworkSetoidInstance (n : Nat) :
 
 def expertFunctionEquiv (V : Type*) : Expert V ≃ (V → V) where
   toFun e := e.apply
-  invFun f := f
-  left_inv e := rfl
+  invFun f := ⟨f⟩
+  left_inv e := by cases e; rfl
   right_inv f := rfl
 
 instance expertTopologicalSpace (V : Type*) [TopologicalSpace V] :
     TopologicalSpace (Expert V) :=
-  inferInstance
+  TopologicalSpace.induced (expertFunctionEquiv V).toFun inferInstance
 
 def moeLayerFunctionEquiv (n : Nat) (V : Type*) :
     MoELayer n V ≃ (Fin n → Expert V) where
   toFun M := M.experts
-  invFun f := f
-  left_inv M := rfl
+  invFun f := ⟨f⟩
+  left_inv M := by cases M; rfl
   right_inv f := rfl
 
 instance moeLayerTopologicalSpace (n : Nat) (V : Type*)
     [TopologicalSpace V] : TopologicalSpace (MoELayer n V) :=
-  inferInstance
+  TopologicalSpace.induced (moeLayerFunctionEquiv n V).toFun inferInstance
 
 def arnoldMajoranaNetworkFunctionEquiv (n : Nat) :
     ArnoldMajoranaNetwork n E ≃
       (Fin n → (ArnoldMajoranaCarrier E → ArnoldMajoranaCarrier E)) where
   toFun N := fun e => (N.moe.experts e).apply
-  invFun f := { moe := fun e => f e }
+  invFun f := { moe := ⟨fun e => ⟨f e⟩⟩ }
   left_inv N := by cases N; rfl
   right_inv f := rfl
 
@@ -149,7 +149,7 @@ theorem continuous_symmetricExpertNormReadout
       Continuous (fun N =>
         ((arnoldMajoranaNetworkFunctionEquiv (E := E) n N) e) v) :=
     (continuous_apply v).comp he'
-  simpa [symmetricExpertNormReadout] using hev.norm
+  exact hev.norm
 
 theorem symmetricExpertNormReadout_nonneg
     (n : Nat) (v : ArnoldMajoranaCarrier E)

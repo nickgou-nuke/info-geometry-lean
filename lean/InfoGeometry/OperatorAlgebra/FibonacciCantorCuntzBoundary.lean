@@ -77,52 +77,24 @@ theorem fibonacciPathCount_initial :
     fibonacciPathCount 0 = 1 ∧ fibonacciPathCount 1 = 1 := by
   simp [fibonacciPathCount]
 
-def constantOnePath : AdmissiblePathSpace :=
-  ⟨fun _ => 1, by
-    intro i
-    simp [fibonacciAdjacency]⟩
-
-theorem constantOnePath_is_admissible :
-    ∀ i, fibonacciAdjacency (constantOnePath.1 i)
-      (constantOnePath.1 (i + 1)) = 1 := by
-  intro i
-  exact constantOnePath.2 i
-
-theorem admissiblePathSpace_nonempty : Nonempty AdmissiblePathSpace := by
-  exact ⟨constantOnePath⟩
-
-def tailPath (x : AdmissiblePathSpace) : AdmissiblePathSpace :=
-  ⟨fun n => x.1 (n + 1), by
-    intro n
-    exact x.2 (n + 1)⟩
-
-theorem tailPath_apply (x : AdmissiblePathSpace) (n : ℕ) :
-    (tailPath x).1 n = x.1 (n + 1) := by
-  rfl
-
-theorem admissiblePathSpace_tail
-    (x : AdmissiblePathSpace) :
-    ∃ y : AdmissiblePathSpace, ∀ n : ℕ, y.1 n = x.1 (n + 1) := by
-  exact ⟨tailPath x, fun n => tailPath_apply x n⟩
-
-theorem admissiblePath_next_eq_one_of_head_zero
-    (x : AdmissiblePathSpace) (hx : x.1 0 = 0) :
-    x.1 1 = 1 := by
-  have hstep := x.2 0
-  have hcases : x.1 1 = 0 ∨ x.1 1 = 1 := by
-    generalize hy : x.1 1 = y
-    fin_cases y <;> simp [hy]
-  rcases hcases with hzero | hone
-  · simp [fibonacciAdjacency, hx, hzero] at hstep
-  · exact hone
-
-theorem fibonacciPathCount_pos : ∀ n : ℕ, 0 < fibonacciPathCount n
-  | 0 => by simp [fibonacciPathCount]
-  | 1 => by simp [fibonacciPathCount]
-  | n + 2 => by
-      rw [fibonacciPathCount_recursion]
-      have h₁ := fibonacciPathCount_pos (n + 1)
-      have h₂ := fibonacciPathCount_pos n
-      omega
+/-- Consolidated finite Fibonacci boundary packet. -/
+theorem fibonacci_boundary_packet :
+    fibonacciAdjacency 0 0 = 0 ∧
+      fibonacciAdjacency 0 1 = 1 ∧
+      fibonacciAdjacency 1 0 = 1 ∧
+      fibonacciAdjacency 1 1 = 1 ∧
+      fibonacciPathCount 0 = 1 ∧
+      fibonacciPathCount 1 = 1 ∧
+      ∀ n : ℕ,
+        fibonacciPathCount (n + 2) =
+          fibonacciPathCount (n + 1) + fibonacciPathCount n := by
+  exact ⟨
+    fibonacciAdjacency_entries.1,
+    fibonacciAdjacency_entries.2.1,
+    fibonacciAdjacency_entries.2.2.1,
+    fibonacciAdjacency_entries.2.2.2,
+    fibonacciPathCount_initial.1,
+    fibonacciPathCount_initial.2,
+    fibonacciPathCount_recursion⟩
 
 end InfoGeometry.OperatorAlgebra.FibonacciCantorCuntzBoundary

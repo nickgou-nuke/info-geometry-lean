@@ -91,5 +91,4 @@ noncomputable def orbitClosureFixedPointCompHaus
   (reversalData J hJ).orbitClosureFixedPointCompHaus ρ hρ
 
 end InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitReversal
-
 end

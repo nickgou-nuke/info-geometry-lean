@@ -51,10 +51,10 @@ namespace GeometricQuantumTensor
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Accessor for the symmetric metric component. -/
-abbrev g (Q : QGT E) : LinearMap.BilinForm ℝ (DoubledSpace E) := Q.metric
+def g (Q : QGT E) : LinearMap.BilinForm ℝ (DoubledSpace E) := Q.metric
 
 /-- Accessor for the antisymmetric Berry component. -/
-abbrev Ω (Q : QGT E) : LinearMap.BilinForm ℝ (DoubledSpace E) := Q.berry
+def Ω (Q : QGT E) : LinearMap.BilinForm ℝ (DoubledSpace E) := Q.berry
 
 /-- Owner-name form of the Kähler compatibility law. -/
 @[simp] theorem compat_complex_i

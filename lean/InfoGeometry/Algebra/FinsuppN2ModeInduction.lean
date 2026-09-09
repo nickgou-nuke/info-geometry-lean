@@ -8,7 +8,7 @@ an arbitrary-family formulation: the infinite mode carrier is an algebraic
 direct sum `ι →₀ A`, so finite support is built into the type, exactly as the
 Witt algebra uses `ℤ →₀ 𝕜`.
 
-No analytic limit is asserted.  No wrapper/property/law fields are used.
+No analytic limit is asserted.  No wrapper/certificate/law fields are used.
 -/
 
 namespace InfoGeometry.Algebra.FinsuppN2ModeInduction

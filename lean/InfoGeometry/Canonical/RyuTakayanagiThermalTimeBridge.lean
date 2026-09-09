@@ -47,22 +47,11 @@ The underlying thermal-time/monodromy bridge already supplies:
 This extension adds a winding-to-depth readout for the RT lane together with the
 explicit additive laws needed to make that readout behave like a genuine clock.
 -/
-structure BridgeData where
-  thermalData : ThermalTimeMonodromyBridge.BridgeData (E := E)
+structure BridgeData extends ThermalTimeMonodromyBridge.BridgeData (E := E) where
   depthOfWinding : ℤ → ℕ
+  depth_zero : depthOfWinding 0 = 0
   depth_add : ∀ m n : ℤ,
     depthOfWinding (m + n) = depthOfWinding m + depthOfWinding n
-
-abbrev BridgeData.modularData (B : BridgeData (E := E)) := B.thermalData.modularData
-abbrev BridgeData.calibration (B : BridgeData (E := E)) := B.thermalData.calibration
-abbrev BridgeData.radius (B : BridgeData (E := E)) := B.thermalData.radius
-abbrev BridgeData.radius_pos (B : BridgeData (E := E)) : 0 < B.radius := B.thermalData.radius_pos
-
-theorem BridgeData.depth_zero (B : BridgeData (E := E)) :
-    B.depthOfWinding 0 = 0 := by
-  have h := B.depth_add 0 0
-  simp only [zero_add] at h
-  omega
 
 /-- RT entropy readout attached to a winding label. -/
 def entropyOfWinding (B : BridgeData (E := E)) (k : ℤ) : ℝ :=
@@ -150,7 +139,7 @@ theorem modularAutomorphismGroup_timeOfWinding_add
       modularAutomorphismGroup B.modularData (B.calibration.timeOfWinding m)
         (modularAutomorphismGroup B.modularData (B.calibration.timeOfWinding n) A) := by
   exact ThermalTimeMonodromyBridge.modularAutomorphismGroup_timeOfWinding_add
-    (B := B.thermalData) m n A
+    (B := B.toBridgeData) m n A
 
 /--
 The winding label controls both lanes simultaneously:
@@ -179,7 +168,7 @@ theorem monodromy_and_ryuTakayanagi_of_winding
     (n : ℂ) * (∮ z in C((0 : ℂ), B.radius), poleForm z) = logarithmicPhase n ∧
     entropyOfWinding B n = areaOfWinding B n / (4 * effectiveNewtonConstant) := by
   refine ⟨?_, ?_⟩
-  · exact deRhamClass_of_calibrated_winding (B := B.thermalData) n
+  · exact deRhamClass_of_calibrated_winding (B := B.toBridgeData) n
   · exact ryuTakayanagi_formula_of_winding (B := B) n
 
 /--
@@ -191,7 +180,7 @@ theorem holonomy_and_ryuTakayanagi_of_winding
     Complex.exp ((n : ℂ) * (∮ z in C((0 : ℂ), B.radius), poleForm z)) = (1 : ℂ) ∧
     entropyOfWinding B n = areaOfWinding B n / (4 * effectiveNewtonConstant) := by
   refine ⟨?_, ?_⟩
-  · exact wilsonPhase_of_calibrated_winding (B := B.thermalData) n
+  · exact wilsonPhase_of_calibrated_winding (B := B.toBridgeData) n
   · exact ryuTakayanagi_formula_of_winding (B := B) n
 
 /--
@@ -207,8 +196,8 @@ theorem full_clock_readout
       entropyOfWinding B n = areaOfWinding B n / (4 * effectiveNewtonConstant) := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · rw [toAdditiveModularFlow_apply]
-  · exact deRhamClass_of_calibrated_winding (B := B.thermalData) n
-  · exact wilsonPhase_of_calibrated_winding (B := B.thermalData) n
+  · exact deRhamClass_of_calibrated_winding (B := B.toBridgeData) n
+  · exact wilsonPhase_of_calibrated_winding (B := B.toBridgeData) n
   · exact ryuTakayanagi_formula_of_winding (B := B) n
 
 /--
@@ -218,8 +207,9 @@ shows every additive `ℤ → ℕ` readout is forced to coincide with it.
 -/
 def zeroDepthBridge
     (B : ThermalTimeMonodromyBridge.BridgeData (E := E)) : BridgeData (E := E) where
-  thermalData := B
+  toBridgeData := B
   depthOfWinding := fun _ => 0
+  depth_zero := rfl
   depth_add := by
     intro m n
     simp
@@ -255,26 +245,10 @@ Non-collapsing one-sided refinement: instead of requiring a group homomorphism
 `ℕ`. This is the smallest honest interface that supports a nontrivial additive
 readout.
 -/
-structure PositiveBranchBridgeData where
-  thermalData : ThermalTimeMonodromyBridge.BridgeData (E := E)
+structure PositiveBranchBridgeData extends ThermalTimeMonodromyBridge.BridgeData (E := E) where
   depthOfStep : ℕ → ℕ
+  depth_zero : depthOfStep 0 = 0
   depth_add : ∀ m n : ℕ, depthOfStep (m + n) = depthOfStep m + depthOfStep n
-
-abbrev PositiveBranchBridgeData.modularData
-    (B : PositiveBranchBridgeData (E := E)) := B.thermalData.modularData
-abbrev PositiveBranchBridgeData.calibration
-    (B : PositiveBranchBridgeData (E := E)) := B.thermalData.calibration
-abbrev PositiveBranchBridgeData.radius
-    (B : PositiveBranchBridgeData (E := E)) := B.thermalData.radius
-abbrev PositiveBranchBridgeData.radius_pos
-    (B : PositiveBranchBridgeData (E := E)) : 0 < B.radius := B.thermalData.radius_pos
-
-theorem PositiveBranchBridgeData.depth_zero
-    (B : PositiveBranchBridgeData (E := E)) :
-    B.depthOfStep 0 = 0 := by
-  have h := B.depth_add 0 0
-  simp only [zero_add] at h
-  omega
 
 /-- RT entropy readout on the positive winding branch. -/
 def entropyOfStep (B : PositiveBranchBridgeData (E := E)) (n : ℕ) : ℝ :=
@@ -313,7 +287,7 @@ theorem modularAutomorphismGroup_timeOfStep_add
       modularAutomorphismGroup B.modularData (B.calibration.timeOfWinding (m : ℤ))
         (modularAutomorphismGroup B.modularData (B.calibration.timeOfWinding (n : ℤ)) A) := by
   simpa using ThermalTimeMonodromyBridge.modularAutomorphismGroup_timeOfWinding_add
-    (B := B.thermalData) (m : ℤ) (n : ℤ) A
+    (B := B.toBridgeData) (m : ℤ) (n : ℤ) A
 
 theorem positiveBranch_full_clock_readout
     (B : PositiveBranchBridgeData (E := E)) (n : ℕ) (A : EndH E) :
@@ -324,8 +298,8 @@ theorem positiveBranch_full_clock_readout
       entropyOfStep B n = areaOfStep B n / (4 * effectiveNewtonConstant) := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · rw [toAdditiveModularFlow_apply]
-  · exact deRhamClass_of_calibrated_winding (B := B.thermalData) (n : ℤ)
-  · exact wilsonPhase_of_calibrated_winding (B := B.thermalData) (n : ℤ)
+  · exact deRhamClass_of_calibrated_winding (B := B.toBridgeData) (n : ℤ)
+  · exact wilsonPhase_of_calibrated_winding (B := B.toBridgeData) (n : ℤ)
   · exact ryuTakayanagi_formula_of_step (B := B) n
 
 /--
@@ -334,8 +308,9 @@ number itself.
 -/
 def identityDepthPositiveBranchBridge
     (B : ThermalTimeMonodromyBridge.BridgeData (E := E)) : PositiveBranchBridgeData (E := E) where
-  thermalData := B
+  toBridgeData := B
   depthOfStep := fun n => n
+  depth_zero := rfl
   depth_add := by
     intro m n
     rfl

@@ -56,4 +56,13 @@ theorem zeta_mobius_cancels_observable (f : ArithmeticFunction ℤ) :
   unfold ZBosonKernel FermionParityKernel
   rw [mul_assoc, coe_zeta_mul_moebius, mul_one]
 
+/-- Consolidated Primon zeta/Möbius package with genuine arithmetic facts. -/
+theorem primon_zeta_mobius_synthesis :
+    ZBosonKernel * FermionParityKernel = PrimonVacuumKernel ∧
+    FermionParityKernel * ZBosonKernel = PrimonVacuumKernel ∧
+    (∀ f : ArithmeticFunction ℤ, (f * ZBosonKernel) * FermionParityKernel = f) ∧
+    (∀ p : ℕ, p.Prime → fermionParity p = -1) := by
+  exact ⟨zeta_mobius_vacuum_cancellation, mobius_zeta_vacuum_cancellation,
+    zeta_mobius_cancels_observable, fun p hp => fermion_parity_prime hp⟩
+
 end noncomputable section

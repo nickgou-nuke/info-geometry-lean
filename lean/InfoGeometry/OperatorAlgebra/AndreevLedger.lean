@@ -10,7 +10,7 @@ This module formalizes the algebraic core only:
 * the closure-fixed diagonal mode `electron + hole`;
 * the anti-fixed orthogonal mode `electron - hole`;
 * a BdG Hamiltonian ledger where particle-hole symmetry flips energy;
-* a property-gated Majorana zero-mode and vortex-core memory layer.
+* a witness-gated Majorana zero-mode and vortex-core memory layer.
 
 No Navier-Stokes regularity statement is asserted.
 No claim is made that every vortex hosts a Majorana zero mode.
@@ -18,6 +18,7 @@ No claim is made that every vortex hosts a Majorana zero mode.
 
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -195,21 +196,8 @@ theorem particle_hole_flips_energy
             rw [hψ]
     _ = -(ε • B.theta ψ) := by
             rw [B.theta.map_smul]
-        _ = (-ε) • B.theta ψ := by
+    _ = (-ε) • B.theta ψ := by
             simp
-
-/-- Particle-hole energy pairing is reversible. -/
-theorem particle_hole_flips_energy_iff
-    {ψ : V}
-    {ε : ℝ} :
-    B.IsEnergyEigenvector ψ ε ↔
-      B.IsEnergyEigenvector (B.theta ψ) (-ε) := by
-  constructor
-  · intro hψ
-    exact B.particle_hole_flips_energy hψ
-  · intro hθψ
-    have h := B.particle_hole_flips_energy hθψ
-    simpa [B.theta_involutive ψ] using h
 
 /-- Particle-hole symmetry preserves the zero-energy subspace. -/
 theorem particle_hole_preserves_zeroMode
@@ -231,7 +219,7 @@ end BdGHamiltonianLedger
 /-! ## 4. Majorana zero-mode witnesses -/
 
 /--
-A Majorana zero-mode property.
+A Majorana zero-mode witness.
 
 This is intentionally proof-bearing:
 
@@ -253,7 +241,7 @@ variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 variable {B : BdGHamiltonianLedger V}
 
 /--
-Construct a Majorana zero-mode property from an Andreev pair, provided the
+Construct a Majorana zero-mode witness from an Andreev pair, provided the
 diagonal mode is zero-energy for the supplied BdG Hamiltonian.
 -/
 def ofAndreevPair
@@ -271,5 +259,79 @@ theorem theta_mode_eq_mode
   (B.mem_fixed_iff M.mode).mp M.fixed
 
 end MajoranaZeroMode
+
+/-! ## 5. Vortex-core memory, witness-gated (Native Closure Mandated: Closure Debt) -/
+
+/--
+A witness that a particular vortex core carries a Majorana zero mode.
+
+This is deliberately not derived from the mere existence of a vortex. In
+physical models, vortex-core Majorana modes require topological superconducting
+conditions and an actual BdG/topological proof.
+-/
+structure VortexCoreMajoranaWitness
+    (Core V : Type*)
+    [AddCommGroup V] [Module ℝ V]
+    (B : BdGHamiltonianLedger V) where
+  /-- Vortex core label/location. -/
+  core : Core
+
+  /-- Majorana zero mode attached to this core. -/
+  majorana : MajoranaZeroMode B
+
+  /-- Core-indexed linear subspace of states localized at the vortex core. -/
+  localizationSubspace : Core → Submodule ℝ V
+
+  /-- The Majorana mode belongs to the localization subspace of its core. -/
+  localized_at_core :
+    majorana.mode ∈ localizationSubspace core
+
+namespace VortexCoreMajoranaWitness
+
+variable
+    {Core V : Type*}
+    [AddCommGroup V] [Module ℝ V]
+    {B : BdGHamiltonianLedger V}
+
+variable (W : VortexCoreMajoranaWitness Core V B)
+
+/-- The vortex-core witness supplies a BdG zero mode. -/
+theorem core_mode_zero :
+    B.IsZeroMode W.majorana.mode :=
+  W.majorana.zero_energy
+
+/-- The vortex-core witness supplies particle-hole self-conjugacy. -/
+theorem core_mode_fixed :
+    W.majorana.mode ∈ B.Fixed :=
+  W.majorana.fixed
+
+/-- The vortex-core Majorana mode lies in the core's owned localization
+subspace. -/
+theorem core_mode_localized :
+    W.majorana.mode ∈ W.localizationSubspace W.core :=
+  W.localized_at_core
+
+end VortexCoreMajoranaWitness
+
+/-! ## 6. Owner theorem -/
+
+/--
+An Andreev electron/hole swap has a particle-hole fixed diagonal mode.
+-/
+theorem andreevLedgerOwnerTarget :
+  ∀ (V : Type*) [AddCommGroup V] [Module ℝ V],
+  ∀ A : Ledger V,
+  ∀ P : AndreevPair A,
+    P.evenMajorana ∈ A.Fixed := by
+  intro V _ _ A P
+  exact P.evenMajorana_fixed
+
+/-- Packet readout for an Andreev pair: the diagonal mode is fixed and self-conjugate. -/
+theorem andreevPair_majorana_packet
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    {A : Ledger V} (P : AndreevPair A) :
+    P.evenMajorana ∈ A.Fixed ∧
+      A.theta P.evenMajorana = P.evenMajorana := by
+  exact ⟨andreevLedgerOwnerTarget V A P, P.theta_evenMajorana_eq_evenMajorana⟩
 
 end InfoGeometry.OperatorAlgebra.AndreevLedger

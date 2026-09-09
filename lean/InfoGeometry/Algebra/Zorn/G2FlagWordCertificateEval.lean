@@ -16,6 +16,42 @@ theorem flagRepresentative_mem (i : Fin 189) :
     flagRepresentative i ∈ flagGeneratedSubgroup := by
   exact evaluateWord_mem_flagGeneratedSubgroup (flagRepWords i)
 
+/-! A native decomposition lemma for later predecessor certificates.  The
+    index relation is intentionally left explicit: this theorem proves the
+    algebraic word step, while a separate certificate must identify the
+    suffix with a valid predecessor in the same cell. -/
+theorem flagRepresentative_eq_token_mul_of_word_eq_cons
+    (i : Fin 189) (g : FlagGenerator × Int) (w : FlagWord)
+    (h : flagRepWords i = g :: w) :
+    flagRepresentative i = evaluateToken g * evaluateWord w := by
+  unfold flagRepresentative
+  rw [h, evaluateWord_cons]
+
+theorem flagRepresentative_eq_generator_mul_of_predecessor_word
+    (i j : Fin 189) (g : FlagGenerator)
+    (h : flagRepWords i = (g, 1) :: flagRepWords j) :
+    flagRepresentative i = flagGeneratorValue g * flagRepresentative j := by
+  unfold flagRepresentative
+  rw [h, evaluateWord_cons]
+  simp [evaluateToken]
+
+/-! The first genuine same-cell word seam is suffix-oriented: the word at
+    index 2 extends the word at index 1 by the two-token suffix `(4,1),(1,1)`.
+    This is intentionally kept at the word/evaluator boundary; factorized
+    compatibility is a separate obligation. -/
+theorem flagRepWords_2_eq_append_1 :
+    flagRepWords (2 : Fin 189) =
+      flagRepWords (1 : Fin 189) ++ [((4 : Fin 8), 1), ((1 : Fin 8), 1)] := by
+  decide
+
+theorem flagRepresentative_2_eq_right_step_1 :
+    flagRepresentative (2 : Fin 189) =
+      flagRepresentative (1 : Fin 189) *
+        evaluateWord [((4 : Fin 8), 1), ((1 : Fin 8), 1)] := by
+  unfold flagRepresentative
+  rw [flagRepWords_2_eq_append_1, evaluateWord_append]
+
+
 set_option maxRecDepth 100000 in
 theorem flagCells_partition :
     Finset.univ.biUnion flagCells = Finset.univ := by

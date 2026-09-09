@@ -316,9 +316,9 @@ theorem chiralSliceIsoAlong_of_const_finrank
       (hMinus s 0)⟩
 
 /--
-No-zero-crossing property on chiral kernel dimensions along a path.
+No-zero-crossing hypothesis on chiral kernel dimensions along a path.
 
-This is the analytic frontier property needed to prevent kernel jumps:
+This is the analytic frontier assumption needed to prevent kernel jumps:
 continuity and grading anticommutation alone do not force this.
 -/
 def ChiralNoZeroCrossingAlong [FiniteDimensional ℝ V]
@@ -499,7 +499,7 @@ theorem chiralSliceIsoAlong_of_noZeroEigenCrossing
 Path-level no-zero-eigenvalue-crossing closure:
 chiral-slice isomorphism is derived via the no-zero-eigenvalue-crossing route.
 
-This is not a continuity-only theorem: the local gap property is the precise
+This is not a continuity-only theorem: the local gap hypothesis is the precise
 analytic protection condition currently formalized.
 -/
 theorem chiralSliceIsoAlong_of_noZeroEigenCrossing_path
@@ -692,7 +692,7 @@ theorem chiralSliceIsoAlong_of_conjugacy
     exact ⟨eMap.trans (LinearEquiv.ofEq _ _ hMap)⟩
 
 /--
-Modular-flow / Clifford-bundle transport property for the chiral kernel slices.
+Modular-flow / Clifford-bundle transport hypothesis for the chiral kernel slices.
 
 At each scale `s`, transport by `σ s` and Clifford action `clAct ℓ` sends the
 `±` chiral kernel slice at `s` to the baseline slice at `0`. The designated
@@ -866,8 +866,8 @@ theorem indexInvariantAlong_of_modularCliffordTransport
       (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit) hTrans)
 
 /--
-Direct primitive-property form of modular/Clifford transport invariance:
-no bundled transport property is required.
+Direct primitive-hypothesis form of modular/Clifford transport invariance:
+no bundled transport witness is required.
 -/
 theorem indexInvariantAlong_of_modularCliffordTransport_components
     [FiniteDimensional ℝ V]

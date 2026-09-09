@@ -13,7 +13,7 @@ This file proves the elementary Clifford/Majorana parity facts directly.
 No Lee--Yang theorem.
 No Hurwitz limit theorem.
 No Clifford wavelet convergence claim.
-No RH-level property.
+No RH-level witness.
 -/
 
 noncomputable section
@@ -150,13 +150,19 @@ theorem d_anticommutes_mobiusParity :
 
 /-- Hodge--Dirac carrier obtained by reading `c` as the odd Dirac generator. -/
 @[rep_depth operator]
-def hodgeDiracCarrierFromC : HodgeDiracLaplacianCarrier A :=
-  (atom.mobiusParity, atom.c, atom.c * atom.c, atom.mobiusParity)
+def hodgeDiracCarrierFromC : HodgeDiracLaplacianCarrier A where
+  hodgeStar := atom.mobiusParity
+  dirac := atom.c
+  laplacian := atom.c * atom.c
+  centralReadout := atom.mobiusParity
 
 /-- Hodge--Dirac carrier obtained by reading `d` as the odd Dirac generator. -/
 @[rep_depth operator]
-def hodgeDiracCarrierFromD : HodgeDiracLaplacianCarrier A :=
-  (atom.mobiusParity, atom.d, atom.d * atom.d, atom.mobiusParity)
+def hodgeDiracCarrierFromD : HodgeDiracLaplacianCarrier A where
+  hodgeStar := atom.mobiusParity
+  dirac := atom.d
+  laplacian := atom.d * atom.d
+  centralReadout := atom.mobiusParity
 
 /-- Carrier-level readback: `c` anticommutes with the supplied parity/Hodge axis. -/
 @[rep_depth operator]

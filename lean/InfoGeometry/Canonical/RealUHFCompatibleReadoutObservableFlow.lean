@@ -55,5 +55,4 @@ theorem reversed_observable_flow (D : ReversalData) (t : ℝ) (ρ : carrier) :
   rw [D.reverses_flow]
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutObservableFlow
-
 end

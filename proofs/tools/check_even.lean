@@ -1,4 +1,4 @@
-import proofs.HestenesClPlus14
+import InfoGeometry.Canonical.HestenesClPlus14
 #check CliffordAlgebra.evenOdd.gradedMonoid
 #check SetLike.GradedMonoid
 #check CliffordAlgebra.evenOdd

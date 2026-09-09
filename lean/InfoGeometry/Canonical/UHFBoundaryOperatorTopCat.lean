@@ -19,61 +19,63 @@ open InfoGeometry.Canonical.UHFBoundaryOperatorTopology
 open InfoGeometry.Canonical.CuntzCantorBoundaryShift
 open InfoGeometry.Canonical.UHFBoundaryExactSequence
 
+abbrev BoundaryFunction := CantorBoundary → ℂ
+
 def S_L_opTopCatHom :
-    TopCat.of ((ℕ → Bool) → ℂ) ⟶ TopCat.of ((ℕ → Bool) → ℂ) :=
+    TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
   TopCat.ofHom
     { toFun := S_L_op
       continuous_toFun := continuous_S_L_op }
 
 def S_R_opTopCatHom :
-    TopCat.of ((ℕ → Bool) → ℂ) ⟶ TopCat.of ((ℕ → Bool) → ℂ) :=
+    TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
   TopCat.ofHom
     { toFun := S_R_op
       continuous_toFun := continuous_S_R_op }
 
 def star_S_L_opTopCatHom :
-    TopCat.of ((ℕ → Bool) → ℂ) ⟶ TopCat.of ((ℕ → Bool) → ℂ) :=
+    TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
   TopCat.ofHom
     { toFun := star_S_L_op
       continuous_toFun := continuous_star_S_L_op }
 
 def star_S_R_opTopCatHom :
-    TopCat.of ((ℕ → Bool) → ℂ) ⟶ TopCat.of ((ℕ → Bool) → ℂ) :=
+    TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
   TopCat.ofHom
     { toFun := star_S_R_op
       continuous_toFun := continuous_star_S_R_op }
 
 def UHF_boundary_topCatHom :
-    TopCat.of ((ℕ → Bool) → ℂ) ⟶ TopCat.of ((ℕ → Bool) → ℂ) :=
+    TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
   TopCat.ofHom
     { toFun := UHF_boundary_op
       continuous_toFun := continuous_UHF_boundary_op }
 
 def UHF_Laplacian_opTopCatHom :
-    TopCat.of ((ℕ → Bool) → ℂ) ⟶ TopCat.of ((ℕ → Bool) → ℂ) :=
+    TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
   TopCat.ofHom
     { toFun := UHF_Laplacian_op
       continuous_toFun := continuous_UHF_Laplacian_op }
 
-@[simp] theorem UHF_Laplacian_opTopCatHom_apply (f : (ℕ → Bool) → ℂ) :
-    UHF_Laplacian_opTopCatHom f = UHF_Laplacian_op f := by
-  rfl
+def UHF_laplacian_topCatHom :
+    TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
+  UHF_Laplacian_opTopCatHom
 
-@[simp] theorem S_L_opTopCatHom_apply (f : (ℕ → Bool) → ℂ) :
-    S_L_opTopCatHom f = S_L_op f := by
-  rfl
+def S_L_topCatHom :
+    TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
+  S_L_opTopCatHom
 
-@[simp] theorem S_R_opTopCatHom_apply (f : (ℕ → Bool) → ℂ) :
-    S_R_opTopCatHom f = S_R_op f := by
-  rfl
+def S_R_topCatHom :
+    TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
+  S_R_opTopCatHom
 
-@[simp] theorem star_S_L_opTopCatHom_apply (f : (ℕ → Bool) → ℂ) :
-    star_S_L_opTopCatHom f = star_S_L_op f := by
-  rfl
+def star_S_L_topCatHom :
+    TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
+  star_S_L_opTopCatHom
 
-@[simp] theorem star_S_R_opTopCatHom_apply (f : (ℕ → Bool) → ℂ) :
-    star_S_R_opTopCatHom f = star_S_R_op f := by
-  rfl
+def star_S_R_topCatHom :
+    TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
+  star_S_R_opTopCatHom
 
 theorem star_S_L_opTopCatHom_comp_S_L_opTopCatHom :
     S_L_opTopCatHom ≫ star_S_L_opTopCatHom = 𝟙 _ := by

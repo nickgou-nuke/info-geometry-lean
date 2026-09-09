@@ -18,7 +18,7 @@ exponential decay of correlations to the KMS ground state.
 
 At `Re(s) = 0`, the scalar factor `|2^{-it}|` has modulus `1`, so the
 positive-real-part contraction estimate no longer applies.  This elementary
-bound is separate from any Lee--Yang or Riemann-property statement.
+bound is separate from any Lee--Yang or Riemann-hypothesis statement.
 
 ## The Spectral Gap Typeclass
 

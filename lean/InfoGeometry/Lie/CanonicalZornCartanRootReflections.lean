@@ -350,6 +350,17 @@ theorem nativeCartanReflectionsOnCartan_braid :
   simpa [shortReflectionOnCartan, longReflectionOnCartan,
     LinearMap.comp_apply, pow_succ] using h
 
+theorem nativeCartanReflectionsOnCartan_order_six :
+    (shortReflectionOnCartan.comp longReflectionOnCartan) ^ 6 = LinearMap.id := by
+  apply LinearMap.ext
+  intro k
+  apply Subtype.ext
+  ext i
+  fin_cases i <;>
+    simp [shortReflectionOnCartan, longReflectionOnCartan,
+      shortReflection, longReflection, LinearMap.comp_apply, pow_succ] <;>
+    ring
+
 theorem shortReflection_image_allRootWeights :
     weightPullback shortReflectionOnCartan ''
         (shortRootWeights ∪ longRootWeights) =

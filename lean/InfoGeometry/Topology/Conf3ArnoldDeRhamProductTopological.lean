@@ -111,3 +111,4 @@ def conf3ArnoldDeRhamProductDeRhamCandidate
   rfl
 
 end
+end InfoGeometry.Topology.Conf3ArnoldDeRhamProductTopological

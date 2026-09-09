@@ -40,7 +40,7 @@ namespace CertifiedInverseKernel
 
 variable (CIK : CertifiedInverseKernel E)
 
-/-- Ambient scalar generator attached to the property inverse kernel. -/
+/-- Ambient scalar generator attached to the certified inverse kernel. -/
 @[rep_depth operator]
 noncomputable def ambientGenerator (t : ℝ) : EndH :=
   t • CIK.A

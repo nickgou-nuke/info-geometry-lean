@@ -112,6 +112,20 @@ PART 2: The Total Dynamical Semigroup Generator (Modular + Dissipation)
 def totalDynamicalGenerator (K : A) (D_diss : A → A) (X : A) : A :=
   adK K X + D_diss X
 
+/--
+The total generator is itself inner when the dissipative channel is inner.
+
+This is the canonical associative resolution of the ``rotational plus
+irrotational'' split: the split remains available through
+`totalDynamicalGenerator`, while the combined operator is exactly
+`ad (K + B)`.  No analogue is asserted for a nonassociative commutator.
+-/
+theorem totalDynamicalGenerator_inner (K B X : A) :
+    totalDynamicalGenerator K (adK B) X = adK (K + B) X := by
+  dsimp [totalDynamicalGenerator, adK]
+  simp only [add_mul, mul_add]
+  abel
+
 /-- 
   THEOREM 2 (Master Semigroup Backreaction Theorem):
   The commutator of an outer geometric derivation D with the total semigroup generator ℒ is:

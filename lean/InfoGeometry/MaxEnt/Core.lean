@@ -182,7 +182,7 @@ def HasExponentialRNFormSigmaFinite
 ## Dual/Fenchel Finite-Support API
 
 This section exposes the proved finite-support route from primal MaxEnt
-optimality to exponential-family RN form. No extra bundled property layer
+optimality to exponential-family RN form. No extra bundled certificate layer
 is kept in the stable surface.
 -/
 

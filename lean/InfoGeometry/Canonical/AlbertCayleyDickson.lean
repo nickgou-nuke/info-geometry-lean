@@ -34,14 +34,14 @@ The construction itself is purely algebraic; we do not package a ring
 structure on the doubled type here.
 -/
 @[ext]
-structure AlbertStep (F A : Type*) [CommRing F] [NonAssocRing A] [Module F A] [SMulCommClass F A A] [IsScalarTower F A A]
+structure AlbertStep (F A : Type*) [CommRing F] [Ring A] [Algebra F A]
     [StarRing A] (γ : F) where
   p : A
   q : A
 
 namespace AlbertStep
 
-variable {F A : Type*} [CommRing F] [NonAssocRing A] [Module F A] [SMulCommClass F A A] [IsScalarTower F A A] [StarRing A]
+variable {F A : Type*} [CommRing F] [Ring A] [Algebra F A] [StarRing A]
 
 def zeroElem {γ : F} : AlbertStep F A γ :=
   ⟨0, 0⟩
@@ -93,20 +93,14 @@ def splitMinus : AlbertStep F A (1 : F) :=
   ⟨1, -1⟩
 
 @[simp] theorem splitPlus_sq :
-    mul (splitPlus (F := F) (A := A)) (splitPlus (F := F) (A := A)) = ⟨(2 : A), (2 : A)⟩ := by
-  ext
-  · simp [splitPlus, mul]
-    rw [one_add_one_eq_two]
-  · simp [splitPlus, mul]
-    rw [one_add_one_eq_two]
+    mul (splitPlus (F := F) (A := A)) (splitPlus (F := F) (A := A))
+      = ⟨(2 : A), (2 : A)⟩ := by
+  ext <;> simp [splitPlus, mul] <;> norm_num
 
 @[simp] theorem splitMinus_sq :
-    mul (splitMinus (F := F) (A := A)) (splitMinus (F := F) (A := A)) = ⟨(2 : A), -(2 : A)⟩ := by
-  ext
-  · simp [splitMinus, mul]
-    rw [one_add_one_eq_two]
-  · simp [splitMinus, mul]
-    rw [← neg_add, one_add_one_eq_two]
+    mul (splitMinus (F := F) (A := A)) (splitMinus (F := F) (A := A))
+      = ⟨(2 : A), -(2 : A)⟩ := by
+  ext <;> simp [splitMinus, mul] <;> norm_num
 
 @[simp] theorem splitPlus_mul_splitMinus :
     mul (splitPlus (F := F) (A := A)) (splitMinus (F := F) (A := A)) = 0 := by

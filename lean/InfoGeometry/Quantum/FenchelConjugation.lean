@@ -3,8 +3,8 @@ import InfoGeometry.Quantum.HurwitzFenchel
 /-!
 # InfoGeometry.Quantum.FenchelConjugation
 
-This file formalizes the coordinate conjugation involution used by the finite
-Fenchel readout.
+This file formalizes the geometric reflection (conjugation) as the exact
+operatorial coordinate swap of the Fenchel-Legendre transform.
 
 In standard optimization, mapping a vector to its dual coordinate relies on the gradient:
 $y = \nabla f(x)$.
@@ -25,20 +25,29 @@ namespace InfoGeometry.Quantum
 The explicit geometric reflection formula for Hurwitz conjugation.
 $\overline{x} = 2 \langle x, 1 \rangle 1 - x$
 -/
-noncomputable def fenchel_conjugation (x : ComplexCoordinate) : ComplexCoordinate :=
+noncomputable def fenchel_conjugation (x : HurwitzSpace) : HurwitzSpace :=
   let tr := 2 * hurwitz_inner x hurwitz_one
   (tr - x.1, -x.2)
 
-/-- The coordinate reflection matches the algebraic conjugation operation. -/
-theorem fenchel_conjugation_eq_coordinate_conj (x : ComplexCoordinate) :
+/--
+HONEST THEOREM DEBT:
+The geometric reflection perfectly matches the algebraic conjugation operation.
+
+-- DEBT_KIND: SORRY
+-/
+theorem fenchel_conjugation_eq_hurwitz_conj (x : HurwitzSpace) :
     fenchel_conjugation x = hurwitz_conj x := by
   ext
   · dsimp [fenchel_conjugation, hurwitz_inner, hurwitz_one, hurwitz_conj]
     ring
   · dsimp [fenchel_conjugation, hurwitz_conj]
 
-/-- Conjugation is involutive in the finite coordinate model. -/
-theorem fenchel_loop_reflexivity (x : ComplexCoordinate) :
+/--
+HONEST THEOREM DEBT:
+The Operatorial Fenchel Loop evaluates reflexivity directly.
+$\overline{\overline{x}} = x$
+-/
+theorem fenchel_loop_reflexivity (x : HurwitzSpace) :
     fenchel_conjugation (fenchel_conjugation x) = x := by
   ext
   · dsimp [fenchel_conjugation, hurwitz_inner, hurwitz_one]

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.BostConnes.BostConnesThermofield
 import InfoGeometry.Dynamics.ModularThermalState
 
@@ -92,6 +93,28 @@ theorem bracket_modes_normalized
         (virasoroCentralCoefficient m n : ℝ) • V.central := by
   exact hnorm m n
 
+/-- The Virasoro bracket law is a direct projection of the explicit field. -/
+theorem virasoro_bracket_holds :
+    (hnorm :
+      ∀ m n : ℤ,
+        ⁅V.Lmode m, V.Lmode n⁆ =
+          (m - n : ℝ) • V.Lmode (m + n) +
+            (virasoroCentralCoefficient m n : ℝ) • V.central) →
+    ∀ m n : ℤ,
+      ⁅V.Lmode m, V.Lmode n⁆ =
+        (m - n : ℝ) • V.Lmode (m + n) +
+          (virasoroCentralCoefficient m n : ℝ) • V.central := by
+  intro hnorm
+  intro m n
+  exact hnorm m n
+
+/-- Central-commutation is a direct projection of the explicit field. -/
+theorem central_commutes_holds :
+    (hcentral : ∀ X : Alg, ⁅V.central, X⁆ = 0) →
+    ∀ X : Alg, ⁅V.central, X⁆ = 0 := by
+  intro hcentral
+  exact hcentral
+
 end VirasoroDatum
 
 /-! ## 2. Sugawara construction -/
@@ -115,6 +138,13 @@ structure SugawaraDatum where
 namespace SugawaraDatum
 
 variable (S : SugawaraDatum)
+
+/-- Explicit projection of the Sugawara central charge law. -/
+theorem centralCharge_eq :
+    (hS : S.centralCharge = (S.level * S.dimG) / (S.level + S.hDual)) →
+    S.centralCharge = (S.level * S.dimG) / (S.level + S.hDual) := by
+  intro hS
+  exact hS
 
 /-- The Sugawara compatibility law is installed by the bridge calibration. -/
 theorem sugawara_holds :
@@ -222,6 +252,13 @@ theorem central_commutes_with
     ⁅A.kCentral, X⁆ = 0 := by
   exact hcentral X
 
+/-- Current central commutation is a direct projection of the explicit field. -/
+theorem current_central_commutes_holds :
+    (hcentral : ∀ X : Alg, ⁅A.kCentral, X⁆ = 0) →
+    ∀ X : Alg, ⁅A.kCentral, X⁆ = 0 := by
+  intro hcentral
+  exact hcentral
+
 end AffineCurrentDatum
 
 /-! ## 3. Affine-Virasoro bridge -/
@@ -313,7 +350,7 @@ theorem virasoro_acts_on_currents_holds :
 
 end AffineVirasoroBridgeDatum
 
-/-! ## 4. E8/E9-style calibration -/
+/-! ## 4. E8/E9-style calibration socket -/
 
 /--
 Exceptional affine-Virasoro calibration.
@@ -435,6 +472,63 @@ variable
     [AddCommGroup State] [Module ℝ State]
 
 variable (M : ModularHelicalCalibration Alg State)
+
+/-- Zero-time identity for the modular flow. -/
+theorem modularFlow_zero
+    (hzero : ∀ s : State, M.modularFlow 0 s = s)
+    (s : State) : M.modularFlow 0 s = s :=
+  hzero s
+
+/-- Additive law for the modular flow. -/
+theorem modularFlow_add (t₁ t₂ : ℝ) (s : State) :
+    (hadd : ∀ (t₁ t₂ : ℝ) (s : State),
+      M.modularFlow (t₁ + t₂) s = M.modularFlow t₁ (M.modularFlow t₂ s)) →
+    M.modularFlow (t₁ + t₂) s = M.modularFlow t₁ (M.modularFlow t₂ s) := by
+  intro hadd
+  exact hadd t₁ t₂ s
+
+/-- Zero-time identity for the L₀ flow. -/
+theorem L0Flow_zero
+    (hzero : ∀ s : State, M.L0Flow 0 s = s)
+    (s : State) : M.L0Flow 0 s = s :=
+  hzero s
+
+/--
+Bisognano–Wichmann / HHW identification:
+the modular flow coincides with the L₀-generated helical flow.
+
+`∀ t s, modularFlow t s = L0Flow t s`.
+-/
+theorem modular_flow_is_L0 (t : ℝ) (s : State) :
+    (hident : ∀ (t : ℝ) (s : State), M.modularFlow t s = M.L0Flow t s) →
+    M.modularFlow t s = M.L0Flow t s := by
+  intro hident
+  exact hident t s
+
+/--
+The Virasoro/helical reparametrization law follows from modular-flow calibration.
+-/
+theorem modularFlow_eq_L0Flow :
+    (hident : ∀ (t : ℝ) (s : State), M.modularFlow t s = M.L0Flow t s) →
+    ∀ (t : ℝ) (s : State), M.modularFlow t s = M.L0Flow t s := by
+  intro hident
+  exact hident
+
+/-- The affine/helical symmetry action has identity at parameter `0`. -/
+theorem affine_symmetry_identity_holds :
+    (hzero : ∀ s : State, M.modularFlow 0 s = s) →
+    ∀ s : State, M.modularFlow 0 s = s := by
+  intro hzero
+  exact hzero
+
+/-- The affine/helical symmetry action is closed under composition. -/
+theorem affine_symmetry_composition_holds :
+    (hadd : ∀ (t₁ t₂ : ℝ) (s : State),
+      M.modularFlow (t₁ + t₂) s = M.modularFlow t₁ (M.modularFlow t₂ s)) →
+    ∀ (t₁ t₂ : ℝ) (s : State),
+      M.modularFlow (t₁ + t₂) s = M.modularFlow t₁ (M.modularFlow t₂ s) := by
+  intro hadd
+  exact hadd
 
 /-- Left inverse law for affine/helical symmetry flow. -/
 theorem affine_symmetry_left_inverse (t : ℝ) (s : State) :

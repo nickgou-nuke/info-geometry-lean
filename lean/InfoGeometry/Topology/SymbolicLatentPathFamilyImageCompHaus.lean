@@ -60,5 +60,3 @@ theorem observedSymbolicLatentPathFamilyImageCompHaus_factorization
   exact observedSymbolicLatentPathFamilyImage_evaluation_factorization S H h_obs
 
 end InfoGeometry.Topology
-
-end

@@ -131,6 +131,14 @@ theorem branchAdjoint_true_comp_branch_false (n : ℕ) :
   simp [branch, branchAdjoint, lastBit_extendSucc,
     prefixSucc_extendSucc, extendSucc_prefixSucc_lastBit]
 
+theorem branchAdjoint_comp_branch_of_ne (n : ℕ) {b c : Bool} (h : b ≠ c) :
+    (branchAdjoint n b).comp (branch n c) = 0 := by
+  cases b <;> cases c
+  · exact (h rfl).elim
+  · exact branchAdjoint_false_comp_branch_true n
+  · exact branchAdjoint_true_comp_branch_false n
+  · exact (h rfl).elim
+
 theorem branch_range_partition (n : ℕ) :
     (branch n false).comp (branchAdjoint n false) +
         (branch n true).comp (branchAdjoint n true) =

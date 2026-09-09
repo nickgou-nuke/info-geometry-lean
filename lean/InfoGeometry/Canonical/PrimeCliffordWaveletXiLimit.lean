@@ -6,13 +6,13 @@ import InfoGeometry.Analysis.CliffordWaveletTransform
 /-!
 # InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
 
-Prime-specific Clifford wavelet limit interface.
+Prime-specific Clifford wavelet limit socket.
 
 This file connects the Clifford-wavelet reconstruction machinery to the
 renormalized prime Lee--Yang approximants.
 
 It does not prove RH.  It formulates the exact Hestenes--Krein/filtered-colimit
-wavelet theorem that would replace the raw Hurwitz-style convergence property.
+wavelet theorem that would replace the raw Hurwitz-style convergence witness.
 -/
 
 noncomputable section
@@ -32,15 +32,9 @@ The concrete owner should later replace this by the completed Riemann `xi`
 function.
 -/
 @[rep_depth operator]
-abbrev CompletedXiFunction :=
-  {xi : ℂ → ℂ // ∃ s, xi s ≠ 0}
-
-namespace CompletedXiFunction
-
-abbrev xi (X : CompletedXiFunction) : ℂ → ℂ := X.1
-abbrev nontrivial (X : CompletedXiFunction) : ∃ s, X.xi s ≠ 0 := X.2
-
-end CompletedXiFunction
+structure CompletedXiFunction where
+  xi : ℂ → ℂ
+  nontrivial : ∃ s, xi s ≠ 0
 
 /-- Prime Lee--Yang approximants with nonvanishing renormalization. -/
 @[rep_depth operator]
@@ -104,7 +98,7 @@ structure PrimeCliffordWaveletRealization
   locallyUniformRenormalizedLimit :
     TendstoLocallyUniformly waveletPartial waveletLimit Filter.atTop
 
-/-- Extract the Hurwitz-ready convergence property from the Clifford wavelet
+/-- Extract the Hurwitz-ready convergence witness from the Clifford wavelet
 realization. -/
 @[rep_depth operator]
 def locallyUniformLimit_of_cliffordWaveletRealization

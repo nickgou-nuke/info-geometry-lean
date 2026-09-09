@@ -91,7 +91,7 @@ theorem case1Z_eq :
     case1Z = 7 / 2 := by
   norm_num [case1Z]
 
-/-- Hartwig's Case 1 bordered property satisfies the Moore--Penrose equations. -/
+/-- Hartwig's Case 1 bordered witness satisfies the Moore--Penrose equations. -/
 theorem case1Border_isMoorePenrose :
     MoorePenrose.IsMoorePenroseInverse case1Border case1BorderMP := by
   refine MoorePenrose.IsMoorePenroseInverse.mk ?_ ?_ ?_ ?_
@@ -110,7 +110,7 @@ def case1SchurMP : Mat2 ℚ :=
   !![5 / 7, 0;
      0, 0]
 
-/-- The Case 1 Schur-complement property satisfies the Moore--Penrose equations. -/
+/-- The Case 1 Schur-complement witness satisfies the Moore--Penrose equations. -/
 theorem case1Schur_isMoorePenrose :
     MoorePenrose.IsMoorePenroseInverse case1Schur case1SchurMP := by
   refine MoorePenrose.IsMoorePenroseInverse.mk ?_ ?_ ?_ ?_
@@ -140,7 +140,7 @@ def case3BorderMP : Mat3 ℚ :=
      0, -5, 1;
      0, 1, 0]
 
-/-- The Case 3 bordered property satisfies the Moore--Penrose equations. -/
+/-- The Case 3 bordered witness satisfies the Moore--Penrose equations. -/
 theorem case3Border_isMoorePenrose :
     MoorePenrose.IsMoorePenroseInverse case3Border case3BorderMP := by
   refine MoorePenrose.IsMoorePenroseInverse.mk ?_ ?_ ?_ ?_
@@ -159,7 +159,7 @@ def case3SchurMP : Mat2 ℚ :=
   !![1 / 2, 0;
      0, -5]
 
-/-- The Case 3 Schur-complement property satisfies the Moore--Penrose equations. -/
+/-- The Case 3 Schur-complement witness satisfies the Moore--Penrose equations. -/
 theorem case3Schur_isMoorePenrose :
     MoorePenrose.IsMoorePenroseInverse case3Schur case3SchurMP := by
   refine MoorePenrose.IsMoorePenroseInverse.mk ?_ ?_ ?_ ?_
@@ -197,7 +197,7 @@ def borderPermutationUnit : (Mat3 ℚ)ˣ where
 def unitConj (u : (Mat3 ℚ)ˣ) (A : Mat3 ℚ) : Mat3 ℚ :=
   (u : Mat3 ℚ) * A * ((u⁻¹ : (Mat3 ℚ)ˣ) : Mat3 ℚ)
 
-/-- Hartwig's Case 1 Moore--Penrose property is stable under the permutation action. -/
+/-- Hartwig's Case 1 Moore--Penrose witness is stable under the permutation action. -/
 theorem case1_conjugated_border_isMoorePenrose :
     MoorePenrose.IsMoorePenroseInverse
       (unitConj borderPermutationUnit case1Border)

@@ -102,5 +102,4 @@ theorem compatibleOrbitClosureToInverseStageObservationRange_factorization
   rfl
 
 end InfoGeometry.Canonical.RealUHFCompatibleInverseLimitObservableComparison
-
 end

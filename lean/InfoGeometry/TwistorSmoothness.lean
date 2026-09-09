@@ -81,7 +81,7 @@ Mellin-bound Cantor stages"; no smooth structure is asserted here.
 -/
 theorem smoothness_as_colimit
     (C :
-      InfoGeometry.Categorical.ModularDoubledRealTwistorColimit.FractalScaleProjectionData)
+      InfoGeometry.Categorical.ModularDoubledRealTwistorColimit.FractalScaleProjectionColimit)
     (n : ℕ) (x : C.StageTotal n) :
     C.limitProjection (C.stageToLimit n x) =
       C.baseToLimit n (C.stageProjection n x) :=

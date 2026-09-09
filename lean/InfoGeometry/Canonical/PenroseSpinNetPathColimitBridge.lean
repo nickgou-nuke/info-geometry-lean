@@ -61,6 +61,27 @@ def pathCoconeOfLegs
         intro i j f
         simpa using hnat f }
 
+/--
+If every competing cocone admits an explicit factorization through a chosen path
+cocone, and that factorization is unique, then the chosen cocone is colimiting.
+-/
+def pathCoconeIsColimitOfExplicitDesc
+    (P : FinitePatch (α := α))
+    (F : J ⥤ CategoryTheory.Paths (PatchVertex (α := α) P))
+    (c : Cocone F)
+    (desc : ∀ s : Cocone F, c.pt ⟶ s.pt)
+    (fac : ∀ s : Cocone F, ∀ j : J, c.ι.app j ≫ desc s = s.ι.app j)
+    (uniq : ∀ (s : Cocone F) (m : c.pt ⟶ s.pt),
+      (∀ j : J, c.ι.app j ≫ m = s.ι.app j) → m = desc s) :
+    IsColimit c where
+  desc := desc
+  fac := by
+    intro s j
+    exact fac s j
+  uniq := by
+    intro s m hm
+    exact uniq s m hm
+
 end PathCocones
 
 section PathColimit
@@ -253,7 +274,7 @@ theorem transported_pathEndpoint_limit_eq
     (pathEndpointLocalState (α := α) (𝕜 := 𝕜) (T := T) (D := D) (S := S) (Twr.stage n) p x)
 
 /--
-Finite proof-graph property extracted from a path endpoint: source, target, and the
+Finite proof-graph witness extracted from a path endpoint: source, target, and the
 underlying order edge in the patch proof graph.
 -/
 structure PathEndpointGraphData
@@ -283,7 +304,7 @@ def mapPathEndpointGraphData
   cases y
   rfl
 
-/-- The canonical proof-graph property carried by a finite patch path. -/
+/-- The canonical proof-graph witness carried by a finite patch path. -/
 def pathEndpointGraphWitness
     (P : FinitePatch (α := α))
     {a b : CategoryTheory.Paths (PatchVertex (α := α) P)}
@@ -305,7 +326,7 @@ def pathEndpointGraphWitness
     (pathEndpointGraphWitness (α := α) P p).target = b :=
   rfl
 
-/-- Endpoint equality relating a path-endpoint local state to its proof-graph property. -/
+/-- Endpoint equality relating a path-endpoint local state to its proof-graph witness. -/
 def pathEndpointGraphEquivAt
     (P : FinitePatch (α := α)) :
     localState (α := α) S P → PathEndpointGraphData (α := α) P → Prop
@@ -365,7 +386,7 @@ def pathEndpointGraphGradReadout
         (patchDirectedProofGraph (α := α) P) f y.source y.target =
           f y.target - f y.source
 
-theorem pathEndpointGraphForwardConeProperty_of_property
+theorem pathEndpointGraphForwardConeProperty_of_witness
     {P : FinitePatch (α := α)}
     {a b : CategoryTheory.Paths (PatchVertex (α := α) P)}
     (p : a ⟶ b) :
@@ -373,7 +394,7 @@ theorem pathEndpointGraphForwardConeProperty_of_property
       (pathEndpointGraphWitness (α := α) P p) := by
   exact patchPath_target_mem_forwardConeIn (α := α) (p := p)
 
-theorem pathEndpointGraphBackwardConeProperty_of_property
+theorem pathEndpointGraphBackwardConeProperty_of_witness
     {P : FinitePatch (α := α)}
     {a b : CategoryTheory.Paths (PatchVertex (α := α) P)}
     (p : a ⟶ b) :
@@ -381,7 +402,7 @@ theorem pathEndpointGraphBackwardConeProperty_of_property
       (pathEndpointGraphWitness (α := α) P p) := by
   exact patchPath_source_mem_backwardConeIn (α := α) (p := p)
 
-theorem pathEndpointGraphIncidenceProperty_of_property
+theorem pathEndpointGraphIncidenceProperty_of_witness
     {P : FinitePatch (α := α)}
     {a b : CategoryTheory.Paths (PatchVertex (α := α) P)}
     (p : a ⟶ b) :
@@ -389,7 +410,7 @@ theorem pathEndpointGraphIncidenceProperty_of_property
       (pathEndpointGraphWitness (α := α) P p) := by
   exact incidence_of_patchPath (S := S) p
 
-theorem pathEndpointGraphGradReadout_of_property
+theorem pathEndpointGraphGradReadout_of_witness
     {P : FinitePatch (α := α)}
     (f : PatchVertex (α := α) P → ℝ)
     {a b : CategoryTheory.Paths (PatchVertex (α := α) P)}
@@ -399,7 +420,7 @@ theorem pathEndpointGraphGradReadout_of_property
   exact patchGrad_apply_of_path (α := α) (P := P) (f := f) p
 
 /--
-Comparison tower between path-endpoint local states and finite proof-graph property
+Comparison tower between path-endpoint local states and finite proof-graph witness
 states on the same patch tower.
 -/
 def pathEndpointGraphComparisonTower

@@ -19,6 +19,28 @@ namespace GradedExactCouple
 variable {R : Type u} [Ring R]
 variable {I : Type v}
 
+/-- Explicit data needed to identify a stabilized page with the associated
+graded piece at a fixed iterated-stage index.  This package keeps the
+reconstruction hypotheses visible instead of treating stabilization alone as
+an abutment theorem. -/
+structure FiltrationReconstructionData
+    (S : Stage R I) (h : BoundedPageStabilization S) (p : I) (N : ℕ) where
+  hN : h.bound ((iteratedStage S N).jDeg ((iteratedStage S N).iDeg p)) ≤ N
+  hk :
+    (iteratedStage S N).couple.k
+      ((iteratedStage S N).jDeg ((iteratedStage S N).iDeg p)) = 0
+  hIncoming :
+    ∀ n, N ≤ n →
+      (iteratedStage S n).couple.differential
+        ((iteratedStage S n).couple.differentialDegree.symm
+          ((iteratedStage S N).jDeg ((iteratedStage S N).iDeg p))) = 0
+  hOutgoing :
+    ∀ n, N ≤ n →
+      (iteratedStage S n).couple.differential
+        ((iteratedStage S n).couple.differentialDegree
+          ((iteratedStage S n).couple.differentialDegree.symm
+            ((iteratedStage S N).jDeg ((iteratedStage S N).iDeg p)))) = 0
+
 /-- A page in the stabilized tail is canonically linearly equivalent to the
 associated graded quotient of the stable exact-couple filtration, under the
 explicit adjacent-differential and `k`-vanishing hypotheses. -/
@@ -77,7 +99,19 @@ noncomputable def stableIteratedPageEquivAssociatedGraded
       (iteratedStage S N).couple.associatedGraded 0
         ((iteratedStage S N).iDeg p) :=
   (stablePageEquiv S h _ N hN).symm.trans
-    (stabilizedPageEquivAssociatedGraded S p N N le_rfl hk hIncoming hOutgoing)
+  (stabilizedPageEquivAssociatedGraded S p N N le_rfl hk hIncoming hOutgoing)
+
+/-- Reconstruction obtained from the explicit data package. -/
+noncomputable def stablePageEquivAssociatedGradedOfData
+    (S : Stage R I) (h : BoundedPageStabilization S) (p : I) (N : ℕ)
+    (d : FiltrationReconstructionData S h p N) :
+    stablePage S h
+        ((iteratedStage S N).jDeg ((iteratedStage S N).iDeg p))
+      ≃ₗ[R]
+      (iteratedStage S N).couple.associatedGraded 0
+        ((iteratedStage S N).iDeg p) :=
+  stableIteratedPageEquivAssociatedGraded S h p N d.hN d.hk
+    d.hIncoming d.hOutgoing
 
 /-- The same index-correct reconstruction, followed by the canonical
 associated-graded-to-`E` equivalence supplied by the exact-couple

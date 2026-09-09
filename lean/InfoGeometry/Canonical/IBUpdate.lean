@@ -962,7 +962,7 @@ theorem ibBlahutArimotoStep_pointwise_massNndist_le_of_normalize_intrinsicNonzer
   simpa [ibBlahutArimotoStep] using hNormalize p q x
 
 /--
-Internal normalize-form zero-contraction property:
+Internal normalize-form zero-contraction witness:
 slice-wise score-ray equivalence implies the normalize inequality with `K = 0`.
 -/
 theorem baNormalize_pointwise_massNndist_le_zero_of_sameScoreRay
@@ -1205,7 +1205,7 @@ Intrinsic normalize-Lipschitz estimate (nonzero `Kc`) with projective cone
 upper control derived internally from BA score structure.
 
 Compared to `baNormalize_pointwise_massNndist_le_of_massRecipLipschitz`, this
-eliminates the external `hScoreUpper` property by using
+eliminates the external `hScoreUpper` hypothesis by using
 `baScore_toReal_le_one`.
 -/
 theorem baNormalize_pointwise_massNndist_le_of_massRecipLipschitz_intrinsicUpper
@@ -1468,7 +1468,7 @@ theorem ibBlahutArimotoStep_encoderNndist_le_of_pointwise
 
 /--
 Constructive contraction packaging:
-`K < 1` plus a Lipschitz property for the BA step map yields `ContractingWith K`.
+`K < 1` plus a Lipschitz witness for the BA step map yields `ContractingWith K`.
 -/
 theorem ibBlahutArimotoStep_contracting_of_lipschitz
     [EMetricSpace (X → FinProb T)]

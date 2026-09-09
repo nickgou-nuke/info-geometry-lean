@@ -11,9 +11,9 @@ Klein four group `V₄` and the quaternionic `Q₈` shadow:
   table;
 * the quotient map `Q₈ → V₄` that kills the central sign `±1`;
 * explicit quaternionic generator relations for the standard `Q₈` basis;
-* a projective-sign property showing that the generator commutator is central.
+* a projective-sign witness showing that the generator commutator is central.
 
-The standard 2×2 complex matrix property for the projective representation is
+The standard 2×2 complex matrix witness for the projective representation is
 kept in the external certificates.  This file stays theorem-safe and finite:
 it does not assert a full Schur-multiplier classification theorem.
 -/

@@ -17,7 +17,7 @@ This executes the compilation of all Lean 4 modules across the repository (over 
 * `InfoGeometry.KasparovKreinDIIIBridge` (Verifies the Class DIII equivalence)
 
 ## 2. The Strict "Native Lean Closure" Policy
-As defined in `GEMINI.md`:
+As defined in `docs/root-archive/GEMINI.md`:
 > "Effective immediately, every mathematical claim must be discharged by a native Lean proof."
 
 **Rules of Execution:**

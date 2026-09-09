@@ -233,41 +233,25 @@ theorem eigenspace_decomposition (M : ZornMatrix) :
     · ext <;> simp [add, zero, Pi.add_apply, add_assoc, add_left_comm, add_comm]
 
 /-!
-## 7. Finite Mersenne readouts
-
-The definition below is an arithmetic readout only.  It does not assert a
-dimension theorem for `SU(3)`, `G₂`, or any other Lie group.  Those proposed
-interpretations require separate representation-theoretic bridges.
+## 7. Mersenne Hierarchy Connection (TODO)
 -/
 
 /-- 
-The function records the finite arithmetic values `2^n - 1`.
+Associate Cl(n,n) tower levels with Mersenne primes:
+- n=1: M₂ = 3 (dimension of color space)
+- n=2: ???
+- n=3: M₃ = 7 (dimension of imaginary octonions)
+- n=7: M₇ = 127 (??? )
+
+This connects the discrete arithmetic hierarchy to the continuous
+geometric representation structure.
 -/
 def mersenneDimension (n : ℕ) : ℕ :=
   2^n - 1
 
-@[simp] theorem mersenneDimension_zero :
-    mersenneDimension 0 = 0 := by
-  simp [mersenneDimension]
-
-@[simp] theorem mersenneDimension_one :
-    mersenneDimension 1 = 1 := by
-  norm_num [mersenneDimension]
-
-@[simp] theorem mersenneDimension_two :
-    mersenneDimension 2 = 3 := by
-  norm_num [mersenneDimension]
-
-@[simp] theorem mersenneDimension_three :
-    mersenneDimension 3 = 7 := by
-  norm_num [mersenneDimension]
-
-@[simp] theorem mersenneDimension_seven :
-    mersenneDimension 7 = 127 := by
-  norm_num [mersenneDimension]
-
-theorem mersenne_readout_137 :
-    mersenneDimension 2 + mersenneDimension 3 + mersenneDimension 7 = 137 := by
-  norm_num [mersenneDimension]
+-- TODO: Prove connections between mersenneDimension and:
+-- - dim(SU(3)) = 8
+-- - dim(G₂) = 14
+-- - 137 = 3 + 7 + 127 decomposition
 
 end InfoGeometry.Physics.ZornMatrixSU3

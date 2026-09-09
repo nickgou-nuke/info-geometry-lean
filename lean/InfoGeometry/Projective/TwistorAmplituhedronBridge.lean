@@ -29,8 +29,10 @@ separate amplituhedron owner.
   relation kernel-annihilation theorem.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-No conditional theorem is exported here until an explicit comparison carries
-mathematical content beyond returning its own equality hypothesis.
+- `amplituhedron_boundary_readout_of_comparison`: an amplituhedron boundary
+  readout follows only from an explicit comparison map and equality.
+- `bcfw_readout_of_cooperad_comparison`: a BCFW-style readout follows only from
+  an explicit comparison premise.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 - Formalize the Grassmannian/Klein-quadric line correspondence used by
@@ -39,7 +41,7 @@ mathematical content beyond returning its own equality hypothesis.
 - Prove any comparison between Arnold/cooperad relations and BCFW recursion.
 - Prove any comparison between Rohozhkin/Delaunay flips and plabic graph moves.
 - Replace the candidate `Conf₃` rank fixture by an independently audited
-  D-module/Singular property if the project needs a final rank theorem.
+  D-module/Singular certificate if the project needs a final rank theorem.
 -/
 
 namespace InfoGeometry.Projective.TwistorAmplituhedronBridge
@@ -65,20 +67,16 @@ theorem common_twistor_incidence_forces_null_boundary
     q22 (X - Y) = 0 :=
   incident_points_null_separated Z X Y hX hY hPi
 
-/- The Penrose projective null twistor owner exposes a concrete point. -/
-noncomputable abbrev penrose_projective_null_twistor_point :
-    PenroseProjectiveNullTwistor :=
-  penroseProjectiveNullTwistor
-
+/-- The Penrose projective null twistor space has a concrete inhabitant. -/
 theorem penrose_projective_null_twistor_readout :
     Nonempty PenroseProjectiveNullTwistor :=
-  ⟨penrose_projective_null_twistor_point⟩
+  penroseProjectiveNullTwistor_nonempty
 
 /--
 Readout of the existing candidate `Conf₃` spin-tiled rank arithmetic.
 
 This is still the candidate fixture from `NonIsoConf3RankIngestion`, not a
-property external D-module computation.
+certified external D-module computation.
 -/
 theorem candidate_conf3_spin_tiled_rank32_readout :
     candidateLocalBettiData.totalRank *
@@ -115,5 +113,36 @@ theorem arnold_mixed_relation_kernel_readout
     φ (arnoldMixedRelation R M w12 w23 w31) = 0 :=
   arnold_mixed_relation_vanishes_under_kernel_membership
     R M w12 w23 w31 φ hKer
+
+/--
+The only theorem-safe amplituhedron boundary bridge in this module.
+
+If a separate owner identifies a local null-boundary event with an
+amplituhedron boundary datum, this theorem reads that datum back.  No such
+comparison is proved here.
+-/
+theorem amplituhedron_boundary_readout_of_comparison
+    {Boundary : Type*}
+    (boundaryOfNullEvent : Prop → Boundary)
+    (targetBoundary : Boundary)
+    (nullEvent : Prop)
+    (hComparison : boundaryOfNullEvent nullEvent = targetBoundary) :
+    boundaryOfNullEvent nullEvent = targetBoundary :=
+  hComparison
+
+/--
+The only theorem-safe BCFW/cooperad bridge in this module.
+
+The premise `hComparison` is where a future amplituhedron owner must prove that
+the selected cooperad relation is represented by the selected BCFW readout.
+-/
+theorem bcfw_readout_of_cooperad_comparison
+    {CooperadRelation BCFWReadout : Type*}
+    (toBCFW : CooperadRelation → BCFWReadout)
+    (relation : CooperadRelation)
+    (target : BCFWReadout)
+    (hComparison : toBCFW relation = target) :
+    toBCFW relation = target :=
+  hComparison
 
 end InfoGeometry.Projective.TwistorAmplituhedronBridge

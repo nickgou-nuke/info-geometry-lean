@@ -7,7 +7,7 @@ namespace InfoGeometry.Topology.Amplituhedron
 structure PositroidCell (k n : ℕ) where
   cell_id : ℕ
   dimension : ℕ
-  -- Combinatorial data (such as a decorated permutation) can be supplied here
+  -- Combinatorial data (such as a decorated permutation) can be socketed here
 
 /--
   The partial order structure on positroid cells.
@@ -30,7 +30,7 @@ instance (k n : ℕ) (o : PositroidOrder k n) : PartialOrder (PositroidCell k n)
 
 /--
   A representation-independent bound calculated by Macaulay2.
-  This acts as the target interface for the automated code injection.
+  This acts as the target socket for the automated code injection.
 -/
 abbrev CertifiedCellBound (k n : ℕ) (cell : PositroidCell k n) : Type :=
   Σ' m2_calculated_dim : ℕ, cell.dimension = m2_calculated_dim

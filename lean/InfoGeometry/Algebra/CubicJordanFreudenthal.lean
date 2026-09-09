@@ -107,10 +107,7 @@ theorem freudenthal_architecture :
       crossProduct X Y =
         subAlbert (adjointQuad (addAlbert X Y))
           (addAlbert (adjointQuad X) (adjointQuad Y))) := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact freudenthal_diagonal
-  · exact cyclicShift_three
-  · exact cyclicShift_injective
-  · exact adjointQuad_polarization
+  exact ⟨freudenthal_diagonal, cyclicShift_three, cyclicShift_injective,
+    adjointQuad_polarization⟩
 
 end InfoGeometry.Algebra.CubicJordanFreudenthal

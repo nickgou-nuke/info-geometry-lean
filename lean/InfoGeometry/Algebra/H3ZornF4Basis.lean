@@ -4,8 +4,9 @@ import InfoGeometry.Algebra.QuadraticJordanH3Zorn
 /-!
 # H₃ Zorn coordinate probes for the split-Albert route
 
-This file contains only concrete carrier-level probes.  The F₄ derivation
-basis is developed in the dedicated derivation-owner files.
+This file contains only concrete carrier-level probes.  It does not claim that
+these probes form a basis of the F₄ derivation algebra; that requires a proved
+derivation theory and is not installed here.
 -/
 
 namespace InfoGeometry.Algebra.H3Zorn

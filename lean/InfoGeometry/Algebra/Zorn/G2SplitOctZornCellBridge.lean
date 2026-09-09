@@ -39,6 +39,14 @@ theorem boolToZMod_and (a b : Bool) :
     boolToZMod (a && b) = boolToZMod a * boolToZMod b := by
   cases a <;> cases b <;> rfl
 
+@[simp] theorem boolToZMod_add2 (a b : Bool) :
+    boolToZMod (add2 a b) = boolToZMod a + boolToZMod b := by
+  cases a <;> cases b <;> rfl
+
+@[simp] theorem boolToZMod_mul2 (a b : Bool) :
+    boolToZMod (mul2 a b) = boolToZMod a * boolToZMod b := by
+  cases a <;> cases b <;> rfl
+
 def toZornCell (X : SplitOctF2) : ZornCell (ZMod 2) where
   r := boolToZMod X.a
   s := boolToZMod X.b
@@ -72,12 +80,22 @@ theorem toZornCell_add (X Y : SplitOctF2) :
 
 theorem toZornCell_mul (X Y : SplitOctF2) :
     toZornCell (mul X Y) = ZornCell.mulZ (toZornCell X) (toZornCell Y) := by
-  rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
-  rcases Y with ⟨a', b', x0', x1', x2', y0', y1', y2'⟩
-  simp [toZornCell, mul, ZornCell.mulZ, add2, mul2, dot3, cross0, cross1,
-    cross2, boolToZMod_xor, boolToZMod_and, sub_eq_add_neg]
-  ring_nf
-  simp
+  cases X with
+  | mk a b x0 x1 x2 y0 y1 y2 =>
+    cases Y with
+    | mk a' b' x0' x1' x2' y0' y1' y2' =>
+      dsimp [toZornCell, mul, ZornCell.mulZ]
+      congr 1 <;>
+        simp [mul2, dot3, cross0, cross1, cross2, boolToZMod_and,
+          sub_eq_add_neg] <;> ring
+
+theorem zModToBool_add (a b : ZMod 2) :
+    zModToBool (a + b) = (zModToBool a ^^ zModToBool b) := by
+  fin_cases a <;> fin_cases b <;> rfl
+
+theorem zModToBool_mul (a b : ZMod 2) :
+    zModToBool (a * b) = (zModToBool a && zModToBool b) := by
+  fin_cases a <;> fin_cases b <;> rfl
 
 theorem detZ_toZornCell (X : SplitOctF2) :
     ZornCell.detZ (toZornCell X) = boolToZMod (zornNorm X) := by
@@ -85,6 +103,8 @@ theorem detZ_toZornCell (X : SplitOctF2) :
   simp [toZornCell, ZornCell.detZ, zornNorm, dot3, mul2, add2,
     boolToZMod_xor, boolToZMod_and, sub_eq_add_neg]
   ring_nf
+  cases a <;> cases b <;> cases x0 <;> cases x1 <;> cases x2 <;>
+    cases y0 <;> cases y1 <;> cases y2 <;> rfl
 
 def nativePolar (X Y : SplitOctF2) : ZMod 2 :=
   ZornCell.polarZ (toZornCell X) (toZornCell Y)

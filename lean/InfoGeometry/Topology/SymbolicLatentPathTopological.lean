@@ -85,5 +85,3 @@ theorem symbolicLatentPathEndpointsEvaluation_snd
     (γ : SymbolicLatentPath X) :
     (symbolicLatentPathEndpointsEvaluation (X := X) γ).2 = γ.finish :=
   rfl
-
-end

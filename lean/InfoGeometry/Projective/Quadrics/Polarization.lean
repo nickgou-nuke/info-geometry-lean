@@ -14,7 +14,7 @@ This file is finite algebra only:
 * no Schubert-calculus claim;
 * no Klein-quadric Grassmannian theorem;
 * no Gromov--Witten/Chow-ring identification;
-* no ax!om.
+* no axiom.
 
 The existing projective-null and Zorn/split-octonion polar-incidence lanes remain
 the concrete projective-quadric owners.
@@ -152,7 +152,7 @@ theorem poincare_polarization
 #### Conditional surface
 
 `poincare_polarization` is conditional on a concrete trilinear linear map, a
-symmetry property for the first two slots, and a chosen `unitClass : V`.
+symmetry hypothesis for the first two slots, and a chosen `unitClass : V`.
 
 #### Open closure debt
 

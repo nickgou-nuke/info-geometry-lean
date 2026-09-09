@@ -66,8 +66,8 @@ noncomputable def vectorToPaper : Vector →ₗ[ℝ] Paper where
           | mk y' z' =>
             apply InfoGeometry.Algebra.ZornMatrix.ext
             · rfl
-            · rfl
-            · rfl
+            · ext i; fin_cases i <;> rfl
+            · ext i; fin_cases i <;> rfl
             · change -((t + t')) = -t + -t'
               ring
   map_smul' c v := by
@@ -77,8 +77,8 @@ noncomputable def vectorToPaper : Vector →ₗ[ℝ] Paper where
       | mk y z =>
         apply InfoGeometry.Algebra.ZornMatrix.ext
         · rfl
-        · rfl
-        · rfl
+        · ext i; fin_cases i <;> rfl
+        · ext i; fin_cases i <;> rfl
         · change -(c * t) = c * -t
           ring
 
@@ -198,8 +198,8 @@ noncomputable def paperToVector : Paper →ₗ[ℝ] Vector where
             (a - b) / 2 + (a' - b') / 2
           ring
         · apply Prod.ext
-          · rfl
-          · rfl
+          · ext i; fin_cases i <;> rfl
+          · ext i; fin_cases i <;> rfl
   map_smul' c X := by
     cases X with
     | mk a v w b =>
@@ -207,8 +207,8 @@ noncomputable def paperToVector : Paper →ₗ[ℝ] Vector where
       · change (c * a - c * b) / 2 = c * ((a - b) / 2)
         ring
       · apply Prod.ext
-        · rfl
-        · rfl
+        · ext i; fin_cases i <;> rfl
+        · ext i; fin_cases i <;> rfl
 
 theorem vectorToPaper_trace_zero (v : Vector) :
     paperTraceZero (vectorToPaper v) := by
@@ -1118,7 +1118,11 @@ theorem appendixD_parameterUnit_mem_span (j : Fin 14) :
       (hm : parameterUnit j r ∈ S) : parameterUnit j ∈ S := by
     have hs := S.smul_mem r⁻¹ hm
     have heq : r⁻¹ • parameterUnit j r = parameterUnit j := by
-      rw [parameterUnit_eq_smul, smul_smul, inv_mul_cancel₀ hr, one_smul]
+      ext i
+      simp only [parameterUnit, Pi.smul_apply, smul_eq_mul]
+      split_ifs with h
+      · exact inv_mul_cancel₀ hr
+      · ring
     exact heq ▸ hs
   change parameterUnit j ∈ S
   have h0 := hmem 0

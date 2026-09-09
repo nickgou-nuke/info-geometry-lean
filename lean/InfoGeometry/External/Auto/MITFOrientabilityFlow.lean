@@ -247,5 +247,16 @@ theorem splitLoss_vanishes
     splitLeakage Ω F = 0 := by
   exact splitLeakage_eq_zero Ω F hΩ hcomm
 
+/-- The orientability projectors and the split leakage vanish under a commuting flow. -/
+theorem projector_synthesis
+    (Ω F : EndR V) (hΩ : IsInvolution Ω)
+    (hcomm : PreservesSplit Ω F) :
+    F.comp (Splus Ω) = (Splus Ω).comp F ∧
+    F.comp (Sminus Ω) = (Sminus Ω).comp F ∧
+    splitLeakage Ω F = 0 := by
+  exact ⟨(commutes_with_projectors Ω F hcomm).1,
+    (commutes_with_projectors Ω F hcomm).2,
+    splitLoss_vanishes Ω F hΩ hcomm⟩
+
 end OrientabilityFlow
 end MITF

@@ -28,18 +28,14 @@ def geometricReciprocalSingularity (Z : ℂ → ℂ) (s : ℂ) : Prop :=
   Z s = 0
 
 /-- Minimal split-signature paravector coordinate model (Hestenes/Krein spirit). -/
-abbrev SplitParavector := ℝ × ℝ
-
-namespace SplitParavector
-
-def scalar (v : SplitParavector) : ℝ := v.1
-def bivector (v : SplitParavector) : ℝ := v.2
-
-end SplitParavector
+structure SplitParavector where
+  scalar : ℝ
+  bivector : ℝ
+  deriving DecidableEq
 
 /-- Split determinant/paravector norm. -/
 def SplitParavector.det (v : SplitParavector) : ℝ :=
-  SplitParavector.scalar v ^ 2 - SplitParavector.bivector v ^ 2
+  v.scalar ^ 2 - v.bivector ^ 2
 
 /-- Parabolic boundary of the split model. -/
 def SplitParavector.parabolic (v : SplitParavector) : Prop :=
@@ -47,7 +43,7 @@ def SplitParavector.parabolic (v : SplitParavector) : Prop :=
 
 /-- Split paravector temperature from complex inverse-temperature coordinates. -/
 def paravector_temperature (σ γ : ℝ) : SplitParavector :=
-  (σ, γ)
+  { scalar := σ, bivector := γ }
 
 /-- Backward-compatible camel-case alias used elsewhere. -/
 def paravectorTemperature (σ γ : ℝ) : SplitParavector :=
@@ -74,18 +70,33 @@ theorem geometric_paravector_det (σ γ : ℝ) :
 /-- Parabolic criterion in coordinates. -/
 theorem geometric_lightcone_iff_det_zero (σ γ : ℝ) :
     (paravector_temperature σ γ).parabolic ↔ σ ^ 2 = γ ^ 2 := by
-  simp [SplitParavector.parabolic, SplitParavector.det,
-    SplitParavector.scalar, SplitParavector.bivector, paravector_temperature]
+  simp [SplitParavector.parabolic, SplitParavector.det, paravector_temperature]
   constructor <;> intro h <;> nlinarith
 
 /-- Layer-12 bridge schema: graded-index poles sit on parabolic boundary. -/
 def riemann_zeros_to_lightcones_model (Z : ℂ → ℂ) : Prop :=
   ∀ s, Z s = 0 → (paravector_temperature s.re s.im).parabolic
 
-/-- The core Layer-12 assertion, kept as a model-theoretic ax!om field. -/
+/-- The core Layer-12 assertion, kept as a model-theoretic axiom field. -/
 theorem riemann_zeros_are_lightcones {Z : ℂ → ℂ}
     (H : riemann_zeros_to_lightcones_model Z) :
     ∀ s, Z s = 0 → (paravector_temperature s.re s.im).parabolic := by
   simpa using H
+
+/-- Consolidated geometric-zeta package: graded reciprocal pole, paravector
+    determinant, and explicit lightcone compatibility schema. -/
+theorem geometric_zeta_lightcone_synthesis :
+    (∀ Z : ℂ → ℂ, ∀ s, geometricReciprocalSingularity Z s ↔ Z s = 0) ∧
+    (∀ Z : ℂ → ℂ, ∀ s, geometricReciprocalSingularity Z s →
+      Z_fermion_graded Z s = 0) ∧
+    (∀ σ γ : ℝ, (paravector_temperature σ γ).det = σ ^ 2 - γ ^ 2) ∧
+    (∀ σ γ : ℝ, (paravector_temperature σ γ).parabolic ↔ σ ^ 2 = γ ^ 2) := by
+  exact ⟨
+    fun Z s => geometricGradedIndexPole_iff_denominator_zero,
+    fun Z s hs => by
+      exact geometricGradedIndex_singularity Z hs,
+    fun σ γ => geometric_paravector_det σ γ,
+    fun σ γ => geometric_lightcone_iff_det_zero σ γ
+  ⟩
 
 end noncomputable section

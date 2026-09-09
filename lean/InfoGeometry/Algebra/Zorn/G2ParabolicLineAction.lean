@@ -66,4 +66,21 @@ theorem lineShear_lineInfinity :
     lineOne = nativeLineAction lineShear (pcGenerator_fix 0) lineInfinity := by
   rfl
 
+theorem parabolicReflection_baseLineVector_readback :
+    (lineInfinity : NativeLine).1 =
+      lineSet (octImAction parabolicReflection baseLineVector) := by
+  change (lineSet baseLineVector).image (octImAction parabolicReflection) = _
+  rw [← lineSet_action parabolicReflection
+    (by simpa [parabolicReflection] using swap01Aut_fix_nativeBasePoint)
+    baseLineVector]
+
+theorem lineShear_lineInfinityVector_readback :
+    (lineOne : NativeLine).1 =
+      lineSet (octImAction lineShear
+        (octImAction parabolicReflection baseLineVector)) := by
+  change (lineInfinity : NativeLine).1.image (octImAction lineShear) = _
+  rw [parabolicReflection_baseLineVector_readback]
+  rw [← lineSet_action lineShear (pcGenerator_fix 0)
+    (octImAction parabolicReflection baseLineVector)]
+
 end InfoGeometry.Algebra.Zorn.G2ParabolicLineAction

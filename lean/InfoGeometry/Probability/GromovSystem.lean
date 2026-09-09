@@ -65,9 +65,7 @@ theorem relativeVolume_mem_unit_interval (ambient event : Finset α)
     (h : ambient.card ≠ 0) :
     (0 : ℚ) ≤ ((ambient ∩ event).card : ℚ) / (ambient.card : ℚ) ∧
       ((ambient ∩ event).card : ℚ) / (ambient.card : ℚ) ≤ 1 := by
-  refine ⟨?_, ?_⟩
-  · exact relativeVolume_nonneg ambient event
-  · exact relativeVolume_le_one ambient event h
+  exact ⟨relativeVolume_nonneg ambient event, relativeVolume_le_one ambient event h⟩
 
 /-- The finite rational cardinality ratio of the whole nonempty ambient set is one. -/
 theorem relativeVolume_self (ambient : Finset α) (h : ambient.card ≠ 0) :

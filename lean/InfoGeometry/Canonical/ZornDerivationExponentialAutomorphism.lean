@@ -75,9 +75,10 @@ theorem expDerivation_inv_rev (D : canonicalZornDerivations) (t : ℝ)
 /-- 🏆 THEOREM 7: Derivation exponential preserves the split-octonion determinant / composition norm. -/
 theorem expDerivation_preserves_detZ (t : ℝ)
     (X : InfoGeometry.Lie.CanonicalZornDerivation.CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (zornFlowLinearEquiv D.1 t X) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X :=
-  InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge.zornFlow_preserves_detZ D t X
+    InfoGeometry.Canonical.ZornMatrix.detZ (zornFlowLinearEquiv D.1 t X) =
+      InfoGeometry.Canonical.ZornMatrix.detZ X := by
+  exact InfoGeometry.Canonical.RealSplitOctonionAut.preserves_detZ
+    (InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge.zornFlowRealAut D t) X
 
 /-- 🏆 THEOREM 8: The canonical derivation flow as a group homomorphism into RealSplitOctonionAut. -/
 noncomputable def expDerivation_groupHom :

@@ -15,6 +15,7 @@ The key distinction:
 
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.StinespringDilation
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -270,15 +271,16 @@ structure LFunctionHelicalBranch
   divisor : SpectralDivisorDatum
   calibration :
     HelicalSpectralChargeCalibration State helix divisor
+  /-- Intended zeta/L/scattering determinant for this model. -/
+  referenceSpectralFunction : ℂ → ℂ
+  /-- The divisor's spectral function is exactly the intended function. -/
+  divisor_L_eq_reference :
+    divisor.L = referenceSpectralFunction
 
 namespace LFunctionHelicalBranch
 
 variable {State : Type*}
 variable (B : LFunctionHelicalBranch State)
-
-/-- The branch's spectral function is the one owned by its divisor. -/
-def referenceSpectralFunction : ℂ → ℂ :=
-  B.divisor.L
 
 /-- The helical sheet of a state is the divisor charge of its spectral region. -/
 theorem sheet_eq_divisor_charge
@@ -291,7 +293,7 @@ theorem sheet_eq_divisor_charge
 reference function. -/
 theorem spectral_function_calibrated :
     B.divisor.L = B.referenceSpectralFunction :=
-  rfl
+  B.divisor_L_eq_reference
 
 end LFunctionHelicalBranch
 
@@ -301,7 +303,7 @@ end LFunctionHelicalBranch
 Once a helical Stinespring calibration is supplied, the hidden sector carries
 the visible sheet charge.
 -/
-theorem helicalStinespring_sheet_eq_visible :
+theorem helicalStinespringOwnerTarget :
   ∀ (Sys Comm : Type*)
     [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
     [NormedAddCommGroup Comm] [NormedSpace ℝ Comm],
@@ -326,7 +328,7 @@ theorem helicalStinespring_sheet_packet
     K.hiddenHelix.sheet (D.hiddenFlow x) = K.visibleHelix.sheet x ∧
       K.hiddenHelix.sheet (D.hiddenFlow (K.visibleHelix.flow (2 * Real.pi) x)) =
         K.visibleHelix.sheet x + 1 := by
-  exact ⟨helicalStinespring_sheet_eq_visible Sys Comm C D K x,
+  exact ⟨helicalStinespringOwnerTarget Sys Comm C D K x,
     K.one_turn_hidden_charge x⟩
 
 end InfoGeometry.OperatorAlgebra.HelicalTimeStinespring

@@ -108,4 +108,25 @@ theorem unipotentSubgroup_le_nativeFlagStabilizer :
   obtain ⟨e, rfl⟩ := hu
   exact pcWord_mem_nativeFlagStabilizer e
 
+/-- Left multiplication by a unipotent element preserves the flag
+    stabilizer.  This is the subgroup-theoretic transport used when applying
+    the successive peeling operators to a stabilizer element. -/
+theorem unipotent_mul_mem_nativeFlagStabilizer
+    {u g : SplitOctF2Aut}
+    (hu : u ∈ unipotentSubgroup)
+    (hg : g ∈ nativeFlagStabilizer) :
+    u * g ∈ nativeFlagStabilizer := by
+  exact nativeFlagStabilizer.mul_mem
+    (unipotentSubgroup_le_nativeFlagStabilizer hu) hg
+
+/-- The same transport for two successive unipotent factors. -/
+theorem unipotent_mul_mul_mem_nativeFlagStabilizer
+    {u v g : SplitOctF2Aut}
+    (hu : u ∈ unipotentSubgroup)
+    (hv : v ∈ unipotentSubgroup)
+    (hg : g ∈ nativeFlagStabilizer) :
+    u * v * g ∈ nativeFlagStabilizer := by
+  exact unipotent_mul_mem_nativeFlagStabilizer
+    (unipotentSubgroup.mul_mem hu hv) hg
+
 end InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerTransport

@@ -14,12 +14,11 @@ open Real
 namespace MERAHolography
 
 /-- MERA Isometry Condition wᵗ w = 1. -/
-abbrev MERAIsometry := {w : ℝ // w * w = 1}
+structure MERAIsometry where
+  w_val : ℝ
+  w_isometry : w_val * w_val = 1
 
 namespace MERAIsometry
-
-abbrev w_val (w : MERAIsometry) : ℝ := w.1
-abbrev w_isometry (w : MERAIsometry) : w.w_val * w.w_val = 1 := w.2
 
 variable (w : MERAIsometry)
 

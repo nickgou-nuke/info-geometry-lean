@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2IntrinsicBaseFiberBounds
+import InfoGeometry.Algebra.Zorn.G2IntrinsicLineFiberTransport
 import Mathlib.Data.Finset.Card
 
 /-!
@@ -15,15 +16,10 @@ open InfoGeometry.Algebra.Zorn.G2InvariantIncidenceCandidates
 open InfoGeometry.Algebra.Zorn.G2IntrinsicFlagAction
 open InfoGeometry.Algebra.Zorn.G2NativeOnePointStabilizer
 open InfoGeometry.Algebra.Zorn.G2IntrinsicBaseFiberBounds
+open InfoGeometry.Algebra.Zorn.G2IntrinsicLineFiberTransport
 
 abbrev Point :=
   InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.OctImIsotropicPoint
-
-instance intrinsicLineFinite (p : Point) : Finite (IntrinsicLine p) :=
-  Finite.of_injective (fun L : IntrinsicLine p => L.1) Subtype.val_injective
-
-noncomputable instance intrinsicLineFintype (p : Point) : Fintype (IntrinsicLine p) :=
-  Fintype.ofFinite (IntrinsicLine p)
 
 def admissiblePair (s : Finset Point) : Prop :=
   s.card = 2 ∧
@@ -100,5 +96,11 @@ theorem intrinsicLine_base_card :
     Fintype.card (IntrinsicLine nativeBaseIsotropicPoint) = 3 := by
   rw [Fintype.card_congr intrinsicLineToAdmissiblePair]
   simpa only [Fintype.card_coe] using admissiblePairs_card
+
+theorem intrinsicLineFiber_card_eq_three
+    (p : Point) :
+    Fintype.card (IntrinsicLine p) = 3 := by
+  rw [intrinsicLineFiber_card_eq_base_of_point_transitive p]
+  exact intrinsicLine_base_card
 
 end InfoGeometry.Algebra.Zorn.G2IntrinsicBaseLineCensus

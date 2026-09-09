@@ -40,7 +40,7 @@ variable {E : Type*}
 
 /--
 Singular extension of the bulk transport law:
-when the property boundary obstruction vanishes, the logarithmic transport
+when the certified boundary obstruction vanishes, the logarithmic transport
 observable closes on the non-anomalous sector contributions.
 -/
 private theorem logDivergence_eq_bulkSectors_of_boundaryScale_eq_zero
@@ -63,7 +63,7 @@ private theorem radial_transport_closes_of_boundaryScale_eq_zero
   exact S.regular_radial_transport_closes_of_boundaryScale_eq_zero hBoundary
 
 /--
-The scalar anomaly term is exactly the norm-shadow of the property projector
+The scalar anomaly term is exactly the norm-shadow of the certified projector
 commutator obstruction carried by the primitive boundary layer.
 -/
 private theorem anomalyTerm_eq_projectorObstruction_norm
@@ -75,7 +75,7 @@ private theorem anomalyTerm_eq_projectorObstruction_norm
     S.boundary.boundaryScale_eq_projectorObstruction_norm]
 
 /--
-Boundary-anomaly freeness is equivalent to commutation of the property Drazin
+Boundary-anomaly freeness is equivalent to commutation of the certified Drazin
 and Moore-Penrose projectors in the primitive singular boundary layer.
 -/
 private theorem boundaryGenerator_eq_zero_iff_projectors_commute

@@ -12,7 +12,7 @@ classical in the explicit Zorn carrier:
 * the carrier has real finrank `8`;
 * it has a nonzero null vector;
 * it is noncommutative;
-* the bundled Zorn carrier has a concrete nonzero associator property.
+* the bundled Zorn carrier has a concrete nonzero associator witness.
 
 No wrapper theorems, no classification claims, no exceptional-group claims.
 -/
@@ -72,7 +72,7 @@ namespace Bundled
 open InfoGeometry.Canonical.SplitOctonionClassificationCore
 open SplitOctonionClassificationCore.ZornMatrix
 
-/-- The bundled Zorn carrier has a concrete nonzero associator property. -/
+/-- The bundled Zorn carrier has a concrete nonzero associator witness. -/
 theorem zornMatrix_nonassociative_exists :
     ∃ x y z : InfoGeometry.Canonical.ZornMatrix ℝ,
       SplitOctonionClassificationCore.ZornMatrix.associator (R := ℝ) x y z ≠ 0 := by

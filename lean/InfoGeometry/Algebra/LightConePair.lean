@@ -1,7 +1,7 @@
 /-
 InfoGeometry/Algebra/LightConePair.lean
 
-A theorem-safe local lightcone compensation interface.
+A theorem-safe local lightcone compensation socket.
 
 This file proves only the finite associative-algebra identities following from
 nilpotent generators `ePlus`, `eMinus` with anticommutator one.  It does not
@@ -21,24 +21,17 @@ A lightcone compensation pair in an associative ring.
 The hypotheses are the local algebraic engine
 `e₊² = e₋² = 0` and `e₊e₋ + e₋e₊ = 1`.
 -/
-def LightConePair (R : Type*) [Ring R] :=
-  Subtype (fun p : R × R =>
-    p.1 * p.1 = 0 ∧ p.2 * p.2 = 0 ∧ p.1 * p.2 + p.2 * p.1 = 1)
+structure LightConePair (R : Type*) [Ring R] where
+  ePlus : R
+  eMinus : R
+  ePlus_sq : ePlus * ePlus = 0
+  eMinus_sq : eMinus * eMinus = 0
+  anticomm : ePlus * eMinus + eMinus * ePlus = 1
 
 namespace LightConePair
 
 variable {R : Type*} [Ring R]
 variable (P : LightConePair R)
-
-abbrev ePlus : R := P.1.1
-
-abbrev eMinus : R := P.1.2
-
-def ePlus_sq : ePlus P * ePlus P = 0 := P.2.1
-
-def eMinus_sq : eMinus P * eMinus P = 0 := P.2.2.1
-
-def anticomm : ePlus P * eMinus P + eMinus P * ePlus P = 1 := P.2.2.2
 
 /-- The positive lightcone projector `p₊ = e₊e₋`. -/
 def pPlus : R := P.ePlus * P.eMinus

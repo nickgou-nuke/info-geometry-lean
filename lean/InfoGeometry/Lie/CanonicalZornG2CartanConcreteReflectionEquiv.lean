@@ -77,6 +77,43 @@ def canonicalLongParameterDualEquiv : Parameter ≃ₗ[ℝ] Parameter :=
   LinearEquiv.ofInvolutive canonicalLongParameterDualLinear
     longDual_involution
 
+theorem canonicalShortParameterDualEquiv_sq :
+    canonicalShortParameterDualEquiv ^ 2 = 1 := by
+  apply LinearEquiv.ext
+  intro s
+  exact shortDual_involution s
+
+theorem canonicalLongParameterDualEquiv_sq :
+    canonicalLongParameterDualEquiv ^ 2 = 1 := by
+  apply LinearEquiv.ext
+  intro s
+  exact longDual_involution s
+
+theorem canonicalParameterDual_order_six :
+    (canonicalShortParameterDualLinear.comp canonicalLongParameterDualLinear) ^ 6 =
+      LinearMap.id := by
+  apply LinearMap.ext
+  intro s
+  funext i
+  fin_cases i <;>
+    simp [canonicalShortParameterDualLinear,
+      canonicalLongParameterDualLinear,
+      canonicalShortReflectionDualReal,
+      canonicalLongReflectionDualReal,
+      LinearMap.comp_apply, pow_succ] <;>
+    ring
+
+theorem canonicalParameterDualEquiv_order_six :
+    (canonicalShortParameterDualEquiv * canonicalLongParameterDualEquiv) ^ 6 =
+      1 := by
+  apply LinearEquiv.ext
+  intro s
+  have h := congrArg (fun f : (Parameter →ₗ[ℝ] Parameter) => f s)
+    canonicalParameterDual_order_six
+  simpa [canonicalShortParameterDualEquiv,
+    canonicalLongParameterDualEquiv, LinearEquiv.mul_apply,
+    pow_succ] using h
+
 @[simp] theorem canonicalShortParameterDualEquiv_apply (s : Parameter) :
     canonicalShortParameterDualEquiv s = canonicalShortReflectionDualReal s := rfl
 

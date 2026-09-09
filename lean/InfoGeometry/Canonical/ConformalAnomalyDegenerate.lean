@@ -79,7 +79,7 @@ Degenerate package from the proof-carrying unit-relative-volume bit.
     (M := M) hScaleFromKahler bit
 
 /--
-The local unit-relative-volume property already forces the normal-phase equation.
+The local unit-relative-volume witness already forces the normal-phase equation.
 
 This gives downstream users a direct theorem-backed readback from the local
 constructive bit to `CI.IsNormalInference`, instead of forcing them to unpack
@@ -95,10 +95,10 @@ constructive bit to `CI.IsNormalInference`, instead of forcing them to unpack
     (M := M) hScaleFromKahler bit).2.2.2
 
 /--
-The local unit-relative-volume property also forces the degenerate projector
+The local unit-relative-volume witness also forces the degenerate projector
 obstruction to vanish, via the normal-phase package.  This gives downstream
 callers a direct constructive readback and avoids carrying a separate raw
-`CI.projectorObstruction = 0` property after the RN/Kähler bit is available.
+`CI.projectorObstruction = 0` hypothesis after the RN/Kähler bit is available.
 -/
 @[rep_depth operator] theorem projectorObstruction_eq_zero_of_unitRelativeVolumeBit
     {n : Nat}

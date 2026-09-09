@@ -35,9 +35,9 @@ noncomputable def anticommutator (A B : EndS (S := S)) : EndS (S := S) :=
   A.comp B + B.comp A
 
 /--
-Constructive CAR property for a real Majorana field `γ` with pairing `g`.
+Constructive CAR witness for a real Majorana field `γ` with pairing `g`.
 -/
-def MajoranaCAR (g : S → S → ℝ) (γ : S → EndS (S := S)) : Prop :=
+def MajoranaCARWitness (g : S → S → ℝ) (γ : S → EndS (S := S)) : Prop :=
   ∀ u v : S,
     anticommutator (γ u) (γ v)
       = (2 * g u v) • ContinuousLinearMap.id ℝ S
@@ -74,7 +74,7 @@ Primitive constructive CAR theorem: the split-Clifford Majorana field already
 realizes CAR in the real channel.
 -/
 theorem car_realization_of_clifford :
-    MajoranaCAR (S := S) (pairing (S := S)) M.gamma := by
+    MajoranaCARWitness (S := S) (pairing (S := S)) M.gamma := by
   intro u v
   simpa [pairing] using M.car u v
 
@@ -546,18 +546,13 @@ because transport acts by an isometric real automorphism on the Majorana mode
 space.
 -/
 theorem car_realization_of_clifford :
-    MajoranaCAR (S := S) (fun u v => inner ℝ u v) (transportGamma (T := T)) := by
+    MajoranaCARWitness (S := S) (fun u v => inner ℝ u v) (transportGamma (T := T)) := by
   intro u v
   exact T.transportGamma_car u v
 
 /-- Transport a polarization involution by Bogoliubov conjugation. -/
 noncomputable def transportP (P0 : KPolarization (S := S) M) : EndS (S := S) :=
   T.B.comp (P0.P.comp T.Binv)
-
-@[simp] lemma transportP_apply_B
-    (P0 : KPolarization (S := S) M) (x : S) :
-    T.transportP P0 (T.B x) = T.B (P0.P x) := by
-  simp [transportP, ContinuousLinearMap.comp_assoc]
 
 /--
 `T` preserves polarization iff it commutes with the polarization involution.
@@ -592,12 +587,6 @@ theorem preserves_or_mixes (P0 : KPolarization (S := S) M) :
   by_cases h : T.preservesPolarization P0
   · exact Or.inl h
   · exact Or.inr h
-
-theorem mixesPolarization_iff_transportP_ne
-    (P0 : KPolarization (S := S) M) :
-    T.mixesPolarization P0 ↔ T.transportP P0 ≠ P0.P := by
-  simpa [mixesPolarization, ne_eq] using
-    not_congr (T.preservesPolarization_iff_transportP_eq P0)
 
 /-- If polarization is preserved, `B` maps `plus` into `plus`. -/
 lemma map_plus_of_preserves

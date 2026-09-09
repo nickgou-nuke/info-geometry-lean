@@ -7,6 +7,7 @@ import Mathlib.MeasureTheory.Measure.MeasureSpace
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Tactic
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Probability.HomologicalProbability
@@ -477,7 +478,7 @@ def observablePreimage
 **Definition 7.3 — Support invariant with measure-like properties.**
 
 `Inv` may be ideals, subspaces, filtered modules, or spectra ordered by
-inclusion.  The cup-product ax!om requires a multiplication on `Inv`.
+inclusion.  The cup-product axiom requires a multiplication on `Inv`.
 -/
 def SupportInvariantMeasureLike
     (O Inv : Type*) [Preorder Inv] [Mul Inv]
@@ -489,7 +490,7 @@ def SupportInvariantMeasureLike
 **Definition 7.4 — Homological probability theory.**
 
 Assigns an ordered invariant to each observable event, monotone w.r.t.
-event inclusion.  The `[Preorder Inv]` makes the monotonicity ax!om non-trivial.
+event inclusion.  The `[Preorder Inv]` makes the monotonicity axiom non-trivial.
 -/
 def HomologicalProbabilityTheory (O Inv : Type*) [Preorder Inv] : Type _ :=
   {assign : Set O → Inv // ∀ (U V : Set O), U ⊆ V → assign U ≤ assign V}
@@ -835,7 +836,7 @@ section TypeIIIProbability
 **Definition 15.1 — Tracial state.**
 
 `φ` is tracial if `φ(ab) = φ(ba)` for all `a, b`.
-Type III von Neumann factors sorry no finite normal tracial state.
+Type III von Neumann factors admit no finite normal tracial state.
 -/
 def IsTracialState {A : Type*} [Ring A] (φ : A → ℝ) : Prop :=
   ∀ a b : A, φ (a * b) = φ (b * a)
@@ -997,7 +998,7 @@ theorem hurwitzDimension_spec :
 
 Ordinary probability does not require a division algebra.  Hurwitz algebras
 appear only in amplitude, spinorial, Jordan, or exceptional symmetric contexts.
-Parameterized by a divisibility property `isNormedRealDivAlg` on type `D`.
+Parameterized by a divisibility hypothesis `isNormedRealDivAlg` on type `D`.
 -/
 def HurwitzExceptionalPrinciple
     (_D : Type*) (dim : ℕ)
@@ -1293,7 +1294,7 @@ def GWBundleIsomorphismStatement
 /--
 **Theorem 22.5 — Affine closure encodes GW boundary data.**
 
-Owner-surface statement: an `AffineClosure` property is sufficient to reconstruct
+Owner-surface statement: an `AffineClosure` witness is sufficient to reconstruct
 the GW bundle isomorphism — the boundary localization residues at `BX` determine
 the quantum cohomology ring, hence the GW isomorphism between bundles with equal
 equivariant Chern classes.
@@ -1306,11 +1307,11 @@ def AffineClosureOwnerStatement
   GWBundleIsomorphismStatement Bundle ChernClass chernClasses gwTheory
 
 /--
-**Definition 22.6 — Erlangen–Langlands five-graded owner property.**
+**Definition 22.6 — Erlangen–Langlands five-graded owner witness.**
 
 Packages the five-graded symmetry group acting on a homogeneous space, the
 affine closure of that space, and the GW-bundle isomorphism principle into a
-single owner property.  This is the §22 Erlangen–Langlands owner target.
+single owner witness.  This is the §22 Erlangen–Langlands owner target.
 -/
 abbrev ErlangenFiveGradedOwnerWitness
     (Sym X XBar BX G Bundle ChernClass : Type*)
@@ -1431,7 +1432,7 @@ The homological degree of such a curve is the **coroot** `αˇ ∈ CoRootLat`.
 point `p` to `q`; `orbitDegree` labels each by its coroot; `coroot_surjective`
 asserts every positive coroot arises from some orbit curve.
 -/
-structure LieOrbitCurveData
+structure LieOrbitCurveWitness
     (G T FixedPts CoRootLat : Type*)
     (TorusOrbits : FixedPts → FixedPts → Type*) where
   /-- The homogeneous target space `G/P`. -/
@@ -1492,11 +1493,11 @@ def KleinGromovAlignmentStatement
       gwInvariant α = locShadow locData
 
 /--
-**Definition 23.5 — Klein-Gromov master owner property.**
+**Definition 23.5 — Klein-Gromov master owner witness.**
 
 Packages the full Klein-Gromov Synthesis:
 - The Erlangen target `G/P` (homogeneous space structure)
-- Torus-orbit curve property (coroot SL₂ orbits = rational curves)
+- Torus-orbit curve witness (coroot SL₂ orbits = rational curves)
 - Weyl-graph localization datum (virtual localization data)
 - GW–localization alignment (GW = Weyl-graph shadow)
 
@@ -1512,7 +1513,7 @@ abbrev KleinGromovOwnerWitness
     (gwInvariant : CoRootLat → GWClass)
     (locShadow   : WeylGraphLocalizationData WeylGroup CoRootLat Vertex Edge → GWClass) : Type _ :=
   HomogeneousTarget G P X mulG oneG embed ×
-    (LieOrbitCurveData G T Vertex CoRootLat TorusOrbits ×
+    (LieOrbitCurveWitness G T Vertex CoRootLat TorusOrbits ×
       (Σ' weylGraph : WeylGraphLocalizationData WeylGroup CoRootLat Vertex Edge,
         KleinGromovAlignmentStatement WeylGroup CoRootLat Vertex GWClass
           Edge gwInvariant locShadow))
@@ -1619,7 +1620,7 @@ The lecture's hidden spine:
    `ωₚ(M) ~ a_D · Vol(M)^{(D-1)/D} · p^{1/D}` (cycle *p*-width Weyl law).
    Volume is the leading coefficient of asymptotic homological/spectral growth.
 
-The five property packets below track the exact chapter structure of the roadmap.
+The five witness packets below track the exact chapter structure of the roadmap.
 -/
 
 /--
@@ -1773,7 +1774,7 @@ end CycleVolumeSpectrumPacket
 **Theorem 24.4a — Cycle-spectrum packet agrees with §8 `spectralValue`.**
 
 The `spectralVal` of a `CycleVolumeSpectrumPacket` equals the `spectralValue`
-of §8 (mechanically verified directly from the `spectralVal_eq` ax!om).
+of §8 (mechanically verified directly from the `spectralVal_eq` axiom).
 -/
 theorem cycleSpectrumPacket_spectralVal_eq
     (pkt : CycleVolumeSpectrumPacket) (α : pkt.HomologyClass) :
@@ -2021,7 +2022,7 @@ end ClassicalRadonNikodymPacket
 /--
 **Packet 25.2 — Noncommutative Radon–Nikodym / Tomita–Takesaki layer.**
 
-Theorem-bank safe: packages comparison statements rather than asserting
+Theorem-bank safe: packages comparison witnesses rather than asserting
 type-isomorphism between modular operators and classical RN densities.
 
 - `Δ_{ψ|φ}` or `[Dψ:Dφ]_t` plays the role of `dψ/dφ`.
@@ -2077,7 +2078,7 @@ def classicalToModularWitness
     cl.klDivergence⟩
 
 /--
-In the commutative specialization, the modular Radon-Nikodym property is the
+In the commutative specialization, the modular Radon-Nikodym witness is the
 actual equality of the multiplication operator readout and the cocycle readout.
 -/
 theorem classicalToModularWitness_modularNCRadonNikodymWitness_iff
@@ -2132,7 +2133,8 @@ Owner-target readback for the Gibbs/KMS free-energy identity.
 
 This packages the actual packet theorem as a graph-visible proof surface.
 -/
-theorem freeEnergyEntropyRelation_eq
+@[owner_target_tag]
+theorem freeEnergyEntropyRelation_ownerTarget
     (gk : GibbsKMSPacket) :
     ∀ ρ : gk.ObservableAlgebra,
       gk.relativeEntropyToGibbs ρ =
@@ -2450,7 +2452,7 @@ end SpectralVolumeWeightPacket
 /--
 **Theorem 26.1a — Spectral weight is Boltzmann-tilted spectral volume.**
 
-The Boltzmann weight `w_i(β) = v_i e^{-βE_i}/Z_β` by the packet ax!om.
+The Boltzmann weight `w_i(β) = v_i e^{-βE_i}/Z_β` by the packet axiom.
 Mechanically verified: no `by rfl`.
 -/
 theorem spectralWeight_is_boltzmannTilt
@@ -2467,9 +2469,8 @@ In supergeometry, volume is replaced by a Berezinian or supervolume:
   `Str(A) = Tr(A_even) - Tr(A_odd)`.
 The superpartition function is `Z_super(β) = Str(e^{-βH})`.
 
-An arithmetic prime-gas formula of the form
-  `Str(e^{-sH_F}) = Σ_{n≥1} μ(n)/n^s = 1/ζ(s)`
-is a downstream analytic target, not a theorem supplied by this packet.
+Arithmetic prime-gas example (Spector):
+  `Str(e^{-sH_F}) = Σ_{n≥1} μ(n)/n^s = 1/ζ(s)`.
 
 **Precision:** A supertrace is NOT a positive measure.  It is a signed/graded
 index-type functional.  Positivity must be recovered by restricting to an even
@@ -2498,9 +2499,9 @@ abbrev superPartitionFunction (P : SupertraceSupervolumePacket) : ℝ := P.2.2.2
 end SupertraceSupervolumePacket
 
 /--
-**Theorem 26.2a — Supertrace ax!om stated cleanly.**
+**Theorem 26.2a — Supertrace axiom stated cleanly.**
 
-The supertrace is the even-minus-odd difference by ax!om.
+The supertrace is the even-minus-odd difference by axiom.
 Mechanically verified: no `by rfl`.
 -/
 theorem supertrace_eq_even_minus_odd
@@ -2511,7 +2512,7 @@ theorem supertrace_eq_even_minus_odd
 /--
 **Packet 26.3 — Modular volume bridge packet (grand synthesis hub).**
 
-Thin property hub collecting comparison data between:
+Thin witness hub collecting comparison data between:
 - Classical logarithmic measure model (log RN density, KL divergence);
 - Von Neumann modular model (relative modular operator, Araki entropy);
 - Spectral/Weyl geometry (density of states, asymptotic volume).
@@ -2679,31 +2680,27 @@ section SpectralThermalNormalization
 
 The former packet stored analytic claims as `Type*` witnesses.  The native
 operator-first owner is `Canonical.SouriauOperatorialLogPotential`, whose
-operatorial state and RN data carry the operator-valued Hamiltonian, trace
-readout, Gibbs density, and modular surprisal.
+`SouriauLieThermoData` carries the moment map, geometric inverse temperature,
+pairing, positive partition function, and statewise Gibbs log generator.
 -/
 
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
-abbrev SpectralThermalNormalizationData
-    (State LieAlgebra Obs : Type*) [AddMonoid LieAlgebra]
-    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs] :=
-  OperatorialSouriauStateData State LieAlgebra Obs
+abbrev SpectralThermalNormalizationData (State LieAlgebra LieDual : Type*) :=
+  SouriauLieThermoData State LieAlgebra LieDual
 
-theorem boltzmannPotential_is_operatorial_hamiltonian_readout
-    {State LieAlgebra Obs : Type*} [AddMonoid LieAlgebra]
-    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
-    (D : SpectralThermalNormalizationData State LieAlgebra Obs)
+theorem boltzmannPotential_is_beta_times_energy
+    {State LieAlgebra LieDual : Type*}
+    (D : SpectralThermalNormalizationData State LieAlgebra LieDual)
     (e : State) :
-    D.K_beta e = D.family.traceReadout (D.operatorialHamiltonian e) :=
-  rfl
+    D.K_beta e = D.pairing (D.momentMap e) D.beta :=
+  D.K_beta_eq_pairing e
 
 theorem spectralThermalNormalization_partition_pos
-    {State LieAlgebra Obs : Type*} [AddMonoid LieAlgebra]
-    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
-    (D : SpectralThermalNormalizationData State LieAlgebra Obs) :
-    0 < D.family.partitionFunction :=
-  D.family.partitionFunction_pos
+    {State LieAlgebra LieDual : Type*}
+    (D : SpectralThermalNormalizationData State LieAlgebra LieDual) :
+    0 < D.partitionFunction :=
+  D.partitionFunction_pos
 
 theorem logRN_potential_form
     (pkt : SpectralVolumeWeightPacket)
@@ -2720,14 +2717,11 @@ theorem logRN_potential_form
   field_simp [ne_of_gt pkt.partitionFunction_pos]
 
 theorem spectralThermalNormalization_statewise_log_generator
-    {State LieAlgebra Obs : Type*} [AddMonoid LieAlgebra]
-    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
-    (D : OperatorialRNDatum State LieAlgebra Obs)
+    {State LieAlgebra LieDual : Type*}
+    (D : SpectralThermalNormalizationData State LieAlgebra LieDual)
     (e : State) :
-    D.souriau.K_beta e =
-      D.modularPotential e - D.souriau.partitionPotential := by
-  rw [D.modularPotential_eq_K_beta_add_partitionPotential e]
-  ring
+    D.K_beta e = -Real.log (D.gibbsDensity e) - D.partitionPotential :=
+  D.modularHamiltonian_statewise_neg_log_gibbs_sub_PartitionPotential e
 
 end SpectralThermalNormalization
 

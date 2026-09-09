@@ -7,42 +7,29 @@ variable (L : Type*) [AddCommGroup L] [Module R L] [LieRing L] [LieAlgebra R L]
 
 
 /-- A phenomenological Charge Symmetry Breaking (CSB) force. -/
-abbrev CSB_Force := L →ₗ[R] L
-
-namespace CSB_Force
-
-abbrev correction (f : CSB_Force R L) : L →ₗ[R] L := f
-
-end CSB_Force
+structure CSB_Force where
+  correction : L →ₗ[R] L
 
 /-- A phenomenological Charge Independence Breaking (CIB) force. -/
-abbrev CIB_Force := L →ₗ[R] L
-
-namespace CIB_Force
-
-abbrev correction (f : CIB_Force R L) : L →ₗ[R] L := f
-
-end CIB_Force
+structure CIB_Force where
+  correction : L →ₗ[R] L
 
 /-- A generalized Skyrme interaction. -/
-abbrev SkyrmeInteraction := L →ₗ[R] L
+structure SkyrmeInteraction where
+  base_functional : L →ₗ[R] L
 
-namespace SkyrmeInteraction
-
-abbrev base_functional (f : SkyrmeInteraction R L) : L →ₗ[R] L := f
-
-end SkyrmeInteraction
-
-/-- Decompose a Skyrme functional into a projected part plus a residual. -/
-theorem triality_projector_decomposition
+/-- The phenomenological addition of CSB and CIB to a Skyrme functional
+is mathematically equivalent to the geometric action of the TrialityProjector
+in the TKK algebra. -/
+theorem triality_subsumes_phenomenology
     (tkk : TKKAlgebra R L)
     (sk : SkyrmeInteraction R L) :
     ∃ (csb : CSB_Force R L) (cib : CIB_Force R L),
       sk.base_functional + csb.correction + cib.correction =
       (TrialityProjector : L →ₗ[R] L) ∘ₗ sk.base_functional := by
   let projected : L →ₗ[R] L := (TrialityProjector : L →ₗ[R] L) ∘ₗ sk.base_functional
-  let csb : CSB_Force R L := projected - sk.base_functional
-  let cib : CIB_Force R L := 0
+  let csb : CSB_Force R L := { correction := projected - sk.base_functional }
+  let cib : CIB_Force R L := { correction := 0 }
   refine ⟨csb, cib, ?_⟩
   ext x
   classical

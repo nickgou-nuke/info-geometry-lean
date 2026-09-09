@@ -132,7 +132,7 @@ theorem symmetric_pair_properties (θ : InvolutiveLieAut L) :
     (∀ {x y}, x ∈ (symmetricLie θ).oddSubmodule →
       y ∈ (symmetricLie θ).oddSubmodule →
       ⁅x, y⁆ ∈ (symmetricLie θ).evenLieSubalgebra) :=
-  SymmetricLieAlgebra.symmetric_pair_properties (symmetricLie θ)
+  SymmetricLieAlgebra.symmetric_pair_axioms (symmetricLie θ)
 
 theorem bracket_grade_closed_readout
     (G : FiveGradedLieAlgebra ℝ)

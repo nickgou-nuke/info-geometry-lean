@@ -2,6 +2,9 @@ import InfoGeometry.Lie.CanonicalZornG2AppendixDSourceBridge
 
 noncomputable section
 
+set_option linter.unnecessarySeqFocus false
+set_option linter.unnecessarySimpa false
+
 namespace InfoGeometry.Lie.CanonicalZornG2AppendixDParameterSpan
 
 open InfoGeometry.Lie.CanonicalZornG2AppendixDSourceBridge

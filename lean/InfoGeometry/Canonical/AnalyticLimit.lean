@@ -7,7 +7,7 @@ import InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
 # Finite inverse-zeta cutoffs and their filtered limit
 
 This module uses the actual finite Möbius Dirichlet polynomial and fermionic
-Euler product.  It contains no equality field and no reflexive limit property.
+Euler product.  It contains no equality field and no reflexive limit witness.
 The infinite statement is represented by Mathlib's `Filter.Tendsto`.
 -/
 

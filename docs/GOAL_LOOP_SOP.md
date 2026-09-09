@@ -5,13 +5,12 @@
 
 ## Normative Proof-Development Doctrine
 
-All Lean closure work performed by the goal loop is governed by
-[`TOPOLOGICAL_PROGRESS_PRINCIPLE.md`](TOPOLOGICAL_PROGRESS_PRINCIPLE.md).
-In particular, the loop must not convert a missing proof edge into an assumption,
-proxy proof carrier, surrogate theorem, or unverified external claim. If the
-standing target is not immediately provable, the loop must prove the nearest
-kernel-checkable predecessor that genuinely advances the target-relevant verified
-frontier, or report that the next admissible step is genuinely external-data-limited.
+All Lean closure work performed by the goal loop follows
+[the Topological Progress Principle](TOPOLOGICAL_PROGRESS_PRINCIPLE.md).
+Do not convert a missing proof into an assumption, proxy carrier, surrogate
+theorem, or unverified external claim. Prove the nearest kernel-checkable
+predecessor that advances the original goal and preserve that goal until it is
+proved. Runtime routing follows [the canonical pipeline](CANONICAL_AGENT_PIPELINE.md).
 
 ## Architecture
 

@@ -21,7 +21,7 @@ Not closed here:
 * repeated contraction;
 * Grace/Ruelle characterization.
 
-No property packets.
+No witness packets.
 No `sorry`.
 -/
 

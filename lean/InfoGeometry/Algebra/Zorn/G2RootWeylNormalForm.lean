@@ -21,9 +21,6 @@ open InfoGeometry.Algebra.Zorn.G2PositiveRootCoordinateBridge
 def rootWeylNF (p : WeylG2) : Equiv.Perm G2CoordinateRoot :=
   if p.2 then s1Root.trans (cRoot ^ p.1.val) else cRoot ^ p.1.val
 
-@[simp] theorem rootWeylNF_eq_coordinateWeylAction (p : WeylG2) :
-    rootWeylNF p = coordinateWeylAction p := rfl
-
 @[simp] theorem rootWeylNF_one : rootWeylNF (0, false) = 1 := by
   simp [rootWeylNF]
 
@@ -31,5 +28,9 @@ def rootWeylNF (p : WeylG2) : Equiv.Perm G2CoordinateRoot :=
     rootWeylNF (1, false) = cRoot := by
   change cRoot ^ (1 : ℕ) = cRoot
   simp
+
+theorem rootWeylNF_reflection_orientation (k : ZMod 6) :
+    rootWeylNF (k, true) = coordinateWeylAction (-k, true) := by
+  fin_cases k <;> decide
 
 end InfoGeometry.Algebra.Zorn.G2RootWeylNormalForm

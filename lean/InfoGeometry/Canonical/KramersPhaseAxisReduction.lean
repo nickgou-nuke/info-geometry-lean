@@ -180,7 +180,7 @@ theorem abstract_kramers_diverges_from_intrinsic_of_not_phaseReduction
 Single capstone package for abstract-vs-intrinsic Kramers comparison:
 1. unique right factorization through `K`,
 2. exact criterion for equality with the intrinsic phase axis,
-3. pointwise divergence property when reduction fails.
+3. pointwise divergence witness when reduction fails.
 -/
 @[rep_depth krein]
 theorem abstract_kramers_phaseReduction_package

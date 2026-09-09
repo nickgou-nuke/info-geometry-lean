@@ -32,6 +32,10 @@ end WeylLineIntegrator
 abbrev WeylHolonomyMap (S P : Type*) := S → P
 
 namespace WeylHolonomyMap
+
+/-- Projection-compatible name for the direct holonomy readout. -/
+abbrev toHolonomy (H : WeylHolonomyMap S P) : S → P := H
+
 end WeylHolonomyMap
 
 /-- Bundled generated-flow transport with attached Weyl scale track. -/
@@ -371,7 +375,7 @@ def holonomy
     (H : WeylHolonomyMap S P)
     (B : WeylGaugeField X A)
     (γ : WeylTrajectory I X) : P :=
-  H (Λ.integrateConnection B γ)
+  H.toHolonomy (Λ.integrateConnection B γ)
 
 
 section FiniteHolonomy

@@ -10,8 +10,8 @@ BUCKET 1: CLOSED FINITE THEOREMS
 - tri_facet_pow_even
 
 BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-- All inductive spectral power theorems are conditional on the explicit property hO : O ^ 3 = O
-  and the field characteristic property h2 : (2 : A) ≠ 0.
+- All inductive spectral power theorems are conditional on the explicit witness hO : O ^ 3 = O
+  and the field characteristic witness h2 : (2 : A) ≠ 0.
 
 BUCKET 3: OPEN CLOSURE DEBT
 - None.

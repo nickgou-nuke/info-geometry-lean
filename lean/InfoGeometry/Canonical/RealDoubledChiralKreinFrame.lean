@@ -22,6 +22,7 @@ namespace InfoGeometry.Canonical.RealDoubledChiralKreinFrame
 
 open InfoGeometry.Krein
 open InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
+open InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinComplements
 
 abbrev FourSpace := EuclideanSpace ℝ (Fin 4)
 abbrev KreinFrame4 := DoubledSpace FourSpace
@@ -53,27 +54,21 @@ theorem frameBasis_inner (i j : Fin 4) :
 
 theorem plusFrame_isotropic (i j : Fin 4) :
     chiralKreinForm (E := FourSpace) (plusFrame i) (plusFrame j) = 0 := by
-  exact chiralKreinForm_left_isotropic (E := FourSpace)
-    (frameBasis i) (frameBasis j)
+  simp [plusFrame, chiralKreinForm_to_doubled]
 
 theorem minusFrame_isotropic (i j : Fin 4) :
     chiralKreinForm (E := FourSpace) (minusFrame i) (minusFrame j) = 0 := by
-  exact chiralKreinForm_right_isotropic (E := FourSpace)
-    (frameBasis i) (frameBasis j)
+  simp [minusFrame, chiralKreinForm_to_doubled]
 
 theorem plusFrame_minusFrame_pairing (i j : Fin 4) :
     chiralKreinForm (E := FourSpace) (plusFrame i) (minusFrame j) =
       if i = j then 1 else 0 := by
-  simpa [plusFrame, minusFrame, frameBasis_inner] using
-    (chiralKreinForm_left_right (E := FourSpace)
-      (frameBasis i) (frameBasis j))
+  simp [plusFrame, minusFrame, chiralKreinForm_to_doubled, frameBasis_inner]
 
 theorem minusFrame_plusFrame_pairing (i j : Fin 4) :
     chiralKreinForm (E := FourSpace) (minusFrame i) (plusFrame j) =
       if i = j then 1 else 0 := by
-  simpa [minusFrame, plusFrame, frameBasis_inner] using
-    (chiralKreinForm_right_left (E := FourSpace)
-      (frameBasis i) (frameBasis j))
+  simp [minusFrame, plusFrame, chiralKreinForm_to_doubled, frameBasis_inner]
 
 @[simp] theorem etaChiral_plusFrame (i : Fin 4) :
     etaChiral (E := FourSpace) (plusFrame i) = minusFrame i := by
@@ -89,8 +84,7 @@ theorem minusFrame_plusFrame_pairing (i j : Fin 4) :
 
 @[simp] theorem gamma5_minusFrame (i : Fin 4) :
     gamma5 (E := FourSpace) (minusFrame i) = -minusFrame i := by
-  rw [minusFrame, gamma5_to_doubled]
-  apply DoubledSpace.ext <;> simp
+  apply DoubledSpace.ext <;> simp [minusFrame, gamma5, spectral_epsilon]
 
 /-! ## Fundamental symmetry, chirality, and the induced positive/symplectic forms -/
 
@@ -135,14 +129,14 @@ theorem doubledComplexStructure_sq :
   exact chiralComplexStructure_sq (E := FourSpace)
 
 @[simp] theorem doubledComplexStructure_plusFrame (i : Fin 4) :
-    doubledComplexStructure (plusFrame i) = -minusFrame i := by
-  rw [plusFrame, chiralComplexStructure_to_doubled]
+    doubledComplexStructure (plusFrame i) = minusFrame i := by
+  rw [plusFrame, complex_i_to_doubled]
   apply DoubledSpace.ext <;> simp [minusFrame]
 
 @[simp] theorem doubledComplexStructure_minusFrame (i : Fin 4) :
-    doubledComplexStructure (minusFrame i) = plusFrame i := by
-  rw [minusFrame, chiralComplexStructure_to_doubled]
-  simp [plusFrame]
+    doubledComplexStructure (minusFrame i) = -plusFrame i := by
+  rw [minusFrame, complex_i_to_doubled]
+  apply DoubledSpace.ext <;> simp [plusFrame]
 
 theorem hilbertizedForm_eq_inner (u v : KreinFrame4) :
     chiralHilbertForm (E := FourSpace) u v = inner ℝ u v := by
@@ -167,7 +161,7 @@ Hilbertized complex structure `J = Γ ∘ R`.  With the convention
 theorem symplecticForm_eq_neg_hilbertized_complexStructure
     (u v : KreinFrame4) :
     chiralSymplecticForm (E := FourSpace) u v =
-      -chiralHilbertForm (E := FourSpace)
+      chiralHilbertForm (E := FourSpace)
         (doubledComplexStructure u) v := by
   have hu : to_doubled (WithLp.fst u) (WithLp.snd u) = u :=
     DoubledSpace.ext rfl rfl

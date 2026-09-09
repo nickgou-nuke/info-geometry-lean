@@ -30,15 +30,33 @@ open InfoGeometry.Canonical.ChiralLightConeTensorTower
 
 /-! ## 1. Boundary functions -/
 
+/-- A boundary function on the symbolic chiral Cantor-type boundary. -/
+abbrev BoundaryFunction
+    (Value : Type*) :=
+  ChiralBoundary → Value
+
+/--
+A bundled boundary-function space.
+
+This is deliberately just a carrier. Topology, measure, norm, Hilbert
+structure, and spectral-triple structure are later witnesses.
+-/
+@[rep_depth krein]
+abbrev BoundaryFunctionSpace (Value : Type*) :=
+  BoundaryFunction Value
+
 namespace BoundaryFunctionSpace
 
 variable {Value : Type*}
 
+def function (F : BoundaryFunctionSpace Value) : BoundaryFunction Value :=
+  F
+
 /-- Extensional equality for bundled boundary functions. -/
 @[ext, rep_depth krein]
 theorem ext
-    {F G : (ChiralBoundary → Value)}
-    (h : ∀ ξ : ChiralBoundary, F ξ = G ξ) :
+    {F G : BoundaryFunctionSpace Value}
+    (h : ∀ ξ : ChiralBoundary, F.function ξ = G.function ξ) :
     F = G := by
   exact funext h
 
@@ -98,8 +116,8 @@ def restrictToCylinder
     {Value : Type*} [Zero Value]
     {n : ℕ}
     (w : CausalWord n)
-    (f : (ChiralBoundary → Value)) :
-    (ChiralBoundary → Value) := by
+    (f : BoundaryFunction Value) :
+    BoundaryFunction Value := by
   classical
   exact fun ξ =>
     if ξ ∈ prefixCylinder w then f ξ else 0
@@ -110,7 +128,7 @@ theorem restrictToCylinder_eq_of_mem
     {Value : Type*} [Zero Value]
     {n : ℕ}
     (w : CausalWord n)
-    (f : (ChiralBoundary → Value))
+    (f : BoundaryFunction Value)
     {ξ : ChiralBoundary}
     (hξ : ξ ∈ prefixCylinder w) :
     restrictToCylinder w f ξ = f ξ := by
@@ -123,7 +141,7 @@ theorem restrictToCylinder_eq_zero_of_not_mem
     {Value : Type*} [Zero Value]
     {n : ℕ}
     (w : CausalWord n)
-    (f : (ChiralBoundary → Value))
+    (f : BoundaryFunction Value)
     {ξ : ChiralBoundary}
     (hξ : ξ ∉ prefixCylinder w) :
     restrictToCylinder w f ξ = 0 := by
@@ -136,7 +154,7 @@ theorem restrictToCylinder_idem
     {Value : Type*} [Zero Value]
     {n : ℕ}
     (w : CausalWord n)
-    (f : (ChiralBoundary → Value)) :
+    (f : BoundaryFunction Value) :
     restrictToCylinder w (restrictToCylinder w f) =
       restrictToCylinder w f := by
   classical
@@ -253,17 +271,6 @@ theorem prefixWordBoundary_extends_prefix
   intro k
   exact prefixWordBoundary_of_lt w ξ k.2
 
-@[simp, rep_depth krein]
-theorem prefixWordBoundary_one_eq_consBoundary
-    (a : CausalArrow)
-    (ξ : ChiralBoundary) :
-    prefixWordBoundary (fun _ : Fin 1 => a) ξ = consBoundary a ξ := by
-  funext k
-  cases k with
-  | zero => rfl
-  | succ m =>
-      simp [prefixWordBoundary, consBoundary]
-
 /-! ## 6. Prefix shift / pullback operators -/
 
 /--
@@ -275,8 +282,8 @@ This is the safe pre-Cuntz operation. It is not yet a Cuntz isometry.
 def prefixPullback
     {Value : Type*}
     (a : CausalArrow)
-    (f : (ChiralBoundary → Value)) :
-    (ChiralBoundary → Value) :=
+    (f : BoundaryFunction Value) :
+    BoundaryFunction Value :=
   fun ξ => f (consBoundary a ξ)
 
 /-- Pull back a boundary function along finite-prefix insertion. -/
@@ -284,16 +291,16 @@ def prefixPullback
 def prefixWordPullback
     {Value : Type*} {n : ℕ}
     (w : CausalWord n)
-    (f : (ChiralBoundary → Value)) :
-    (ChiralBoundary → Value) :=
+    (f : BoundaryFunction Value) :
+    BoundaryFunction Value :=
   fun ξ => f (prefixWordBoundary w ξ)
 
 /-- Tail pullback, evaluating a function after forgetting the first symbol. -/
 @[rep_depth krein]
 def tailPullback
     {Value : Type*}
-    (f : (ChiralBoundary → Value)) :
-    (ChiralBoundary → Value) :=
+    (f : BoundaryFunction Value) :
+    BoundaryFunction Value :=
   fun ξ => f (tailBoundary ξ)
 
 /-- Pulling back by prefix and then tail recovers the prefixed evaluation. -/
@@ -301,230 +308,60 @@ def tailPullback
 theorem tailPullback_prefixPullback_eval
     {Value : Type*}
     (a : CausalArrow)
-    (f : (ChiralBoundary → Value))
+    (f : BoundaryFunction Value)
     (ξ : ChiralBoundary) :
     tailPullback (prefixPullback a f) (consBoundary a ξ) = f (consBoundary a ξ) := by
-  rfl
-
-@[simp, rep_depth krein]
-theorem prefixPullback_tailPullback
-    {Value : Type*}
-    (a : CausalArrow)
-    (f : (ChiralBoundary → Value))
-    (ξ : ChiralBoundary) :
-    prefixPullback a (tailPullback f) ξ = f ξ := by
-  change f (tailBoundary (consBoundary a ξ)) = f ξ
-  rw [tailBoundary_consBoundary]
-
-theorem prefixPullback_surjective
-    {Value : Type*}
-    (a : CausalArrow) :
-    Function.Surjective (prefixPullback a :
-      (ChiralBoundary → Value) → (ChiralBoundary → Value)) := by
-  intro f
-  refine ⟨tailPullback f, ?_⟩
-  funext ξ
-  exact prefixPullback_tailPullback a f ξ
-
-theorem tailPullBack_injective
-    {Value : Type*} :
-    Function.Injective (tailPullback :
-      (ChiralBoundary → Value) → (ChiralBoundary → Value)) := by
-  intro f g h
-  funext ξ
-  have h' := congrFun h (consBoundary ChiralArrow.plus ξ)
-  simpa [prefixPullback, tailPullback, tailBoundary_consBoundary] using h'
-
-@[simp, rep_depth krein]
-theorem tailPullback_prefixPullback_apply
-    {Value : Type*}
-    (a : CausalArrow)
-    (f : (ChiralBoundary → Value))
-    (ξ : ChiralBoundary) :
-    tailPullback (prefixPullback a f) ξ =
-      f (consBoundary a (tailBoundary ξ)) := by
   rfl
 
 /-- Prefix pullback respects function equality. -/
 @[rep_depth krein]
 theorem prefixPullback_congr
     {Value : Type*}
-    {f g : (ChiralBoundary → Value)}
+    {f g : BoundaryFunction Value}
     (hfg : f = g)
     (a : CausalArrow) :
     prefixPullback a f = prefixPullback a g := by
   rw [hfg]
-
-@[simp, rep_depth krein]
-theorem prefixPullback_apply
-    {Value : Type*}
-    (a : CausalArrow)
-    (f : (ChiralBoundary → Value))
-    (ξ : ChiralBoundary) :
-    prefixPullback a f ξ = f (consBoundary a ξ) := by
-  rfl
-
-theorem prefixPullback_add
-    {Value : Type*} [Add Value]
-    (a : CausalArrow)
-    (f g : ChiralBoundary → Value) :
-    prefixPullback a (f + g) =
-      prefixPullback a f + prefixPullback a g := by
-  funext ξ
-  rfl
-
-theorem prefixPullback_smul
-    {R Value : Type*} [SMul R Value]
-    (a : CausalArrow)
-    (r : R)
-    (f : ChiralBoundary → Value) :
-    prefixPullback a (r • f) =
-      r • prefixPullback a f := by
-  funext ξ
-  rfl
-
-theorem prefixPullback_zero
-    {Value : Type*} [Zero Value]
-    (a : CausalArrow) :
-    prefixPullback a (0 : ChiralBoundary → Value) = 0 := by
-  funext ξ
-  rfl
-
-theorem prefixPullback_mul
-    {Value : Type*} [Mul Value]
-    (a : CausalArrow)
-    (f g : ChiralBoundary → Value) :
-    prefixPullback a (f * g) =
-      prefixPullback a f * prefixPullback a g := by
-  funext ξ
-  rfl
-
-theorem prefixPullback_star
-    {Value : Type*} [Star Value]
-    (a : CausalArrow)
-    (f : ChiralBoundary → Value) :
-    prefixPullback a (star f) =
-      star (prefixPullback a f) := by
-  funext ξ
-  rfl
-
-@[simp, rep_depth krein]
-theorem prefixPullback_tailBoundary
-    {Value : Type*}
-    (a : CausalArrow)
-    (f : (ChiralBoundary → Value))
-    (ξ : ChiralBoundary) :
-    prefixPullback a f (tailBoundary (consBoundary a ξ)) =
-      f (consBoundary a ξ) := by
-  rw [tailBoundary_consBoundary]
-  rfl
-
-@[simp, rep_depth krein]
-theorem prefixPullback_comp
-    {Value : Type*}
-    (a b : CausalArrow)
-    (f : (ChiralBoundary → Value))
-    (ξ : ChiralBoundary) :
-    prefixPullback a (prefixPullback b f) ξ =
-      f (consBoundary b (consBoundary a ξ)) := by
-  rfl
-
-theorem prefixPullback_comp_fun
-    {Value : Type*}
-    (a b : CausalArrow)
-    (f : (ChiralBoundary → Value)) :
-    prefixPullback a (prefixPullback b f) =
-      fun ξ => f (consBoundary b (consBoundary a ξ)) := by
-  funext ξ
-  exact prefixPullback_comp a b f ξ
-
-theorem prefixPullback_comp_eq_prefixWordPullback_two
-    {Value : Type*}
-    (a b : CausalArrow)
-    (f : (ChiralBoundary → Value)) :
-    prefixPullback a (prefixPullback b f) =
-      prefixWordPullback (fun k : Fin 2 => if k = 0 then b else a) f := by
-  funext ξ
-  apply congrArg f
-  funext k
-  cases k with
-  | zero => rfl
-  | succ k =>
-      cases k with
-      | zero => rfl
-      | succ k => simp [prefixWordBoundary]
-
-theorem tailPullback_prefixPullback_fun
-    {Value : Type*}
-    (a : CausalArrow)
-    (f : (ChiralBoundary → Value)) :
-    tailPullback (prefixPullback a f) =
-      fun ξ => f (consBoundary a (tailBoundary ξ)) := by
-  funext ξ
-  exact tailPullback_prefixPullback_apply a f ξ
 
 /-- Finite-prefix pullback evaluates by inserting the finite prefix. -/
 @[simp, rep_depth krein]
 theorem prefixWordPullback_apply
     {Value : Type*} {n : ℕ}
     (w : CausalWord n)
-    (f : (ChiralBoundary → Value))
+    (f : BoundaryFunction Value)
     (ξ : ChiralBoundary) :
     prefixWordPullback w f ξ = f (prefixWordBoundary w ξ) := by
   rfl
 
-@[simp, rep_depth krein]
-theorem prefixWordPullback_one_eq_prefixPullback
-    {Value : Type*}
-    (a : CausalArrow)
-    (f : (ChiralBoundary → Value)) :
-    prefixWordPullback (fun _ : Fin 1 => a) f = prefixPullback a f := by
-  funext ξ
-  simp [prefixWordPullback, prefixPullback,
-    prefixWordBoundary_one_eq_consBoundary]
+/-! ## 7. Future Cuntz/IFS socket boundary -/
 
-theorem prefixWordPullback_add
-    {Value : Type*} [Add Value] {n : ℕ}
-    (w : CausalWord n)
-    (f g : ChiralBoundary → Value) :
-    prefixWordPullback w (f + g) =
-      prefixWordPullback w f + prefixWordPullback w g := by
-  funext ξ
-  rfl
+/--
+A pre-Cuntz boundary action package.
 
-theorem prefixWordPullback_smul
-    {R Value : Type*} [SMul R Value] {n : ℕ}
-    (w : CausalWord n)
-    (r : R)
-    (f : ChiralBoundary → Value) :
-    prefixWordPullback w (r • f) =
-      r • prefixWordPullback w f := by
-  funext ξ
-  rfl
+This records the carrier operations that a future Cuntz/IFS module may refine
+into actual isometries satisfying Cuntz laws. This structure itself does not
+assert those laws.
+-/
+@[rep_depth krein]
+structure PrefixBoundaryAction
+    (Value : Type*) where
+  /-- Pullback along `u⁺` prefix. -/
+  plusPullback :
+    BoundaryFunction Value → BoundaryFunction Value
+  /-- Pullback along `u⁻` prefix. -/
+  minusPullback :
+    BoundaryFunction Value → BoundaryFunction Value
+  /-- Tail pullback. -/
+  tail :
+    BoundaryFunction Value → BoundaryFunction Value
 
-theorem prefixWordPullback_zero
-    {Value : Type*} [Zero Value] {n : ℕ}
-    (w : CausalWord n) :
-    prefixWordPullback w (0 : ChiralBoundary → Value) = 0 := by
-  funext ξ
-  rfl
-
-theorem prefixWordPullback_mul
-    {Value : Type*} [Mul Value] {n : ℕ}
-    (w : CausalWord n)
-    (f g : ChiralBoundary → Value) :
-    prefixWordPullback w (f * g) =
-      prefixWordPullback w f * prefixWordPullback w g := by
-  funext ξ
-  rfl
-
-theorem prefixWordPullback_star
-    {Value : Type*} [Star Value] {n : ℕ}
-    (w : CausalWord n)
-    (f : ChiralBoundary → Value) :
-    prefixWordPullback w (star f) =
-      star (prefixWordPullback w f) := by
-  funext ξ
-  rfl
+/-- Canonical pre-Cuntz prefix action on boundary functions. -/
+@[rep_depth krein]
+def canonicalPrefixBoundaryAction
+    (Value : Type*) :
+    PrefixBoundaryAction Value where
+  plusPullback := prefixPullback ChiralArrow.plus
+  minusPullback := prefixPullback ChiralArrow.minus
+  tail := tailPullback
 
 end InfoGeometry.Canonical.CantorCliffordFunctionModel

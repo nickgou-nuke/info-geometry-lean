@@ -10,7 +10,7 @@ namespace Omega.Zeta
 open Omega.Folding
 
 /-- Concrete seed for the already verified bin-fold two-point law. -/
-def xiTimePart9saUniformBaselineSeed : FoldBinTwoStateAsymptoticData := Unit.unit
+def xiTimePart9saUniformBaselineSeed : FoldBinTwoStateAsymptoticData := ()
 
 /-- Concrete xi-facing package for the fixed binary experiment: the exact Fibonacci last-bit
 counts and limiting two-point masses come from the bin-fold package, while the Le Cam comparison

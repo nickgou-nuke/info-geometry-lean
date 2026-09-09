@@ -7,7 +7,7 @@ import InfoGeometry.Meta.Architecture
 # InfoGeometry.Canonical.IncompressibleBitBridge
 
 The repo-native "bit" used here is not a finite Hilbert-space toy. It is a
-unit relative-volume property:
+unit relative-volume witness:
 
 - in the RN/Kähler lane, `relativeVolumeChangeRN = 1`;
 - in the Cramer-Rao/Monge-Ampere lane, incompressibility forces zero log-volume
@@ -162,7 +162,7 @@ theorem unitOfAction_eq_zero_of_unitRelativeVolumeBit
 
 /--
 Unit relative-volume bit packet: normal inference and zero unit of action are
-derived together from the same bit property.
+derived together from the same bit witness.
 -/
 @[rep_depth thermo, capstone]
 theorem normalInference_and_unitOfAction_eq_zero_of_unitRelativeVolumeBit
@@ -188,7 +188,7 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 /--
 Cramer-Rao/Monge-Ampere form of the incompressible information bit.
 
-This records the owner property `IncompressibleMongeAmpere H`; the determinant
+This records the owner assumption `IncompressibleMongeAmpere H`; the determinant
 and log-volume conclusions are derived by `MongeAmpereCramerRao`.
 -/
 @[rep_depth operator]
@@ -407,7 +407,7 @@ theorem normalInference_and_unitOfAction_eq_zero_of_incompressibleBit_of_chiralS
       (CI := CI) (H := H) bit x hScaleFromPotential
 
 /--
-Non-vacuity property (operator-owner form): if the conformal unit of action is
+Non-vacuity witness (operator-owner form): if the conformal unit of action is
 provably nonzero while the chiral scale is read from the Cramer-Rao
 volume-potential owner, then no incompressible Cramer-Rao bit can exist.
 -/

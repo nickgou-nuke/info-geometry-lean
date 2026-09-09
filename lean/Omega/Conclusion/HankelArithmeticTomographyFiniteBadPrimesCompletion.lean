@@ -12,7 +12,7 @@ theorem paper_conclusion_hankel_arithmetic_tomography_finite_bad_primes_completi
     (E : Omega.Zeta.XiHankelFinitefieldDeterministicCompletionData p d δ) (a0 a1 : ZMod p)
     (ha0 : a0 != 0) :
     (D.fullRankModPrimeIffPrimeNotDvdContent ∧ D.badPrimesExactlyPrimeDivisors ∧
-        D.contentDvdEveryDeterminant) ∧
+        D.contentDvdEveryWitness) ∧
       (∃ n < Nat.log2 (2 * Delta),
         Nat.Prime (Omega.Folding.nthPrime n) ∧
           Omega.Folding.nthPrime n ∉ Delta.primeFactors) ∧

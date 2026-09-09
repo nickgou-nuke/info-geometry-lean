@@ -1,0 +1,40 @@
+{
+  "basis": [
+    "C",
+    "B",
+    "X",
+    "p",
+    "v",
+    "pi",
+    "scale"
+  ],
+  "checked_residuals": {
+    "aitchison_speed": "0",
+    "barrier_hessian": "0",
+    "completion": "0",
+    "connection": "0",
+    "energy": "0",
+    "fisher_pullback": "0",
+    "fourth_cumulant": "0",
+    "geodesic": "0",
+    "hamilton_p": "0",
+    "hamilton_pi": "0",
+    "homogeneity": "0",
+    "rescale": "0",
+    "simplex": "0",
+    "third_centered_moment": "0"
+  },
+  "nonzero": [
+    "C",
+    "B",
+    "p",
+    "1-p",
+    "scale"
+  ],
+  "object": "binary_simplex_response",
+  "ring": "Real",
+  "round_trip_scope": "CAS inverse coordinate rescaling only; Lean kernel audit is separate",
+  "round_trip_verified": true,
+  "source_sha256": "af6b5a323ff815e3542e0afefc0c7236332cfecb09d5c2d7389a2c331122419e",
+  "sympy_source": "scripts/verify_simplex_response.py"
+}

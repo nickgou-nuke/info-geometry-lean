@@ -31,5 +31,3 @@ theorem symbolicObservationRangeCompHausHomOfMorphism_eq_conjugatedQuotient
   exact (symbolicObservationQuotientRangeCompHausNaturalIso.hom.naturality F).symm
 
 end InfoGeometry.Topology
-
-end

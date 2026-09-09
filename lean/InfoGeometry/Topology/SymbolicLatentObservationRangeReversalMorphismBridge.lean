@@ -52,5 +52,3 @@ theorem symbolicObservationRangeCompHausHomOfMorphism_eq_reversal
   rw [symbolicObservationQuotientCompHausHomOfMorphism_eq_reversal R h_cont F hF]
 
 end InfoGeometry.Topology
-
-end

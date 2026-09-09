@@ -16,7 +16,7 @@ open InfoGeometry.Krein
 
 /--
 Construct a `HestenesKreinSpace` from an involutive self-dual carrier,
-assuming the standard positivity property for the induced Hilbert pairing.
+assuming the standard positivity witness for the induced Hilbert pairing.
 -/
 def hestenesKreinSpaceFromCarrier
     (X : InvolutiveSelfDualCarrier)
@@ -41,21 +41,6 @@ theorem BogoliubovTilt.preserves_krein_form {V : Type*}
     HestenesKreinSpace.krein_form (Θ.toLinearMap u) (Θ.toLinearMap v) =
       HestenesKreinSpace.krein_form u v := by
   exact Θ.preserves_krein u v
-
-/-- Krein separation is the squared-form readout on differences. -/
-def kreinSeparation {V : Type*} [AddCommGroup V] [Module ℝ V] [HestenesKreinSpace V]
-    (u v : V) : ℝ :=
-  HestenesKreinSpace.krein_form (u - v) (u - v)
-
-/-- Bogoliubov transport preserves the Krein separation readout. -/
-theorem BogoliubovTilt.preserves_kreinSeparation {V : Type*}
-    [AddCommGroup V] [Module ℝ V] [HestenesKreinSpace V]
-    (Θ : BogoliubovTilt V) (u v : V) :
-    kreinSeparation (Θ.toLinearMap u) (Θ.toLinearMap v) =
-      kreinSeparation u v := by
-  unfold kreinSeparation
-  simpa [BogoliubovTilt.toLinearMap, map_sub] using
-    Θ.preserves_krein_form (u - v) (u - v)
 
 /-- A nilpotent carrier transition has grade one in the `SupergradedHopping` interface. -/
 theorem triple_nilpotent_grade_one {A : Type*} [Ring A]

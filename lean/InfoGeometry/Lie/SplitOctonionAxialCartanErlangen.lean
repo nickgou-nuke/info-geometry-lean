@@ -331,15 +331,15 @@ theorem axialCartanCompositionAut_commute
 
 theorem axialCartanFlow_preserves_polar
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) (X Y : CZ) :
-    polarZ (axialCartanFlow k t X) (axialCartanFlow k t Y) =
-      polarZ X Y := by
+    polarZ realCrossProduct3 (axialCartanFlow k t X) (axialCartanFlow k t Y) =
+      polarZ realCrossProduct3 X Y := by
   exact realZornCompositionAut_preserves_polar
     (axialCartanCompositionAut k hk t) X Y
 
 theorem axialCartanFlow_preserves_incident
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) (X Y : CZ) :
-    IncidentRep (axialCartanFlow k t X) (axialCartanFlow k t Y) ↔
-      IncidentRep X Y := by
+    IncidentRep realCrossProduct3 (axialCartanFlow k t X) (axialCartanFlow k t Y) ↔
+      IncidentRep realCrossProduct3 X Y := by
   exact realZornCompositionAut_preserves_incident
     (axialCartanCompositionAut k hk t) X Y
 

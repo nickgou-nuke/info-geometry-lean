@@ -14,6 +14,7 @@ Berezinian, core-trace, or regularized determinant.
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -650,7 +651,7 @@ end ChiralTopologicalChargeBridge
 /-! ## 6. Determinant obstruction readout -/
 
 /-- The determinant obstruction follows algebraically from the adjoint determinant datum. -/
-theorem jUnitaryTopologicalCharge_det_sq :
+theorem jUnitaryTopologicalChargeOwnerTarget :
   ∀ (Op : Type*) [Monoid Op],
   ∀ Adj : AdjointDatum Op,
   ∀ Det : AdjointDeterminantDatum Op Adj,
@@ -660,5 +661,16 @@ theorem jUnitaryTopologicalCharge_det_sq :
     Det.det U.op ^ 2 = 1 := by
   intro Op _ Adj Det J hJ U
   exact JUnitary.det_sq_eq_one Det hJ U
+
+/-- Packet readout for a concrete `J`-unitary determinant obstruction. -/
+theorem jUnitaryTopologicalCharge_packet
+    (Op : Type*) [Monoid Op]
+    (Adj : AdjointDatum Op)
+    (Det : AdjointDeterminantDatum Op Adj)
+    (J : Op)
+    (hJ : Det.det J ≠ 0)
+    (U : JUnitary Adj J) :
+    Det.det U.op ^ 2 = 1 :=
+  jUnitaryTopologicalChargeOwnerTarget Op Adj Det J hJ U
 
 end InfoGeometry.OperatorAlgebra.TopologicalCharge

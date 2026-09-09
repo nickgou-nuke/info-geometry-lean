@@ -15,6 +15,14 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
 noncomputable def PolarNewtonStep (X X_inv : Matrix n n ℝ) : Matrix n n ℝ :=
   (1/2 : ℝ) • (X + X_invᵀ)
 
+/-- The formal structure of the Polar Decomposition G = P * U -/
+structure PolarDecomposition (G : Matrix n n ℝ) where
+  U : Matrix n n ℝ  -- The unitary factor (msign(G))
+  P : Matrix n n ℝ  -- The positive semidefinite factor
+  decomp : G = P * U
+  unitary : U * Uᵀ = 1
+  self_adjoint : Pᵀ = P
+
 /--
   If the Newton iteration converges to a fixed point U, U must be orthogonal.
   X_{k+1} = X_k ⟹ U = 1/2(U + U^{-T}) ⟹ U = U^{-T} ⟹ U * Uᵀ = I.

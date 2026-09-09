@@ -9,7 +9,7 @@ noncomputable section
 /-!
 # InfoGeometry.Krein.BoundedKMSHestenesBridge
 
-Adapter from the bounded Souriau/Drazin KMS datum to the existing
+Adapter from the bounded Souriau/Drazin KMS socket to the existing
 Hestenes/Krein real-form KMS packet.
 
 This file does not reprove the analytic KMS strip theorem, and it does not
@@ -28,7 +28,6 @@ section Core
 
 variable {E LieAlgebra : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [KreinSpace E]
-variable [AddMonoid LieAlgebra]
 
 local notation "EndH" => E →L[ℝ] E
 
@@ -49,13 +48,13 @@ local instance : IsScalarTower ℝ EndH EndH :=
 Bounded KMS to Hestenes/Krein real-form bridge.
 
 The complex-valued bounded KMS state remains the owner of the abstract analytic
-property.  The Hestenes packet supplies the real phase axis, rotor
+certificate.  The Hestenes packet supplies the real phase axis, rotor
 implementation, and Krein-cone preservation.  The equality field identifies
 the Hestenes observable flow with the bounded modular flow datum.
 -/
 @[rep_depth krein]
 structure BoundedKMSHestenesBridge where
-  /-- Bounded Souriau/Drazin state-functional KMS datum. -/
+  /-- Bounded Souriau/Drazin state-functional KMS socket. -/
   boundedKMS :
     InfoGeometry.Canonical.BoundedKMSConditionBridge.Bridge
       (E := E) (LieAlgebra := LieAlgebra)
@@ -78,10 +77,10 @@ structure BoundedKMSHestenesBridge where
     ∀ A : EndH, realState A = (boundedKMS.state.eval A).re
 
   /--
-  Hestenes real-form KMS boundary property.
+  Hestenes real-form KMS boundary witness.
 
-  This is intentionally explicit: the complex analytic property is a
-  property-level proposition in the operator-thermodynamic API, not a concrete
+  This is intentionally explicit: the complex analytic certificate is a
+  witness-level proposition in the operator-thermodynamic API, not a concrete
   formula from which the real boundary law can be unfolded automatically.
   -/
   hestenesKMS :
@@ -105,7 +104,7 @@ theorem realState_eq_eval_re_apply
     B.realState A = (B.boundedKMS.state.eval A).re :=
   B.realState_eq_eval_re A
 
-/-- Re-export the bounded complex KMS analytic property. -/
+/-- Re-export the bounded complex KMS analytic certificate. -/
 @[rep_depth krein]
 theorem bounded_kms_boundary_holds :
     B.boundedKMS.kms.boundaryCondition :=

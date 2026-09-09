@@ -36,4 +36,10 @@ theorem logBranchShift_add (m n : ℤ) :
     logBranchShift (m + n) = logBranchShift m + logBranchShift n :=
   BiquaternionNegativeRootsLog.logBranchShift_add m n
 
+/-- Consolidated monodromy socket: square roots of `-I` plus additive branch shifts. -/
+theorem logarithm_monodromy_synthesis :
+    ((Complex.I • σ₂) * (Complex.I • σ₂) = -(1 : M2C)) ∧
+    (∀ m n : ℤ, logBranchShift (m + n) = logBranchShift m + logBranchShift n) := by
+  exact ⟨BiquaternionNegativeRootsLog.iσ₂_square_root_neg_one, logBranchShift_add⟩
+
 end InfoGeometry.Canonical.BiquaternionLogarithmMonodromy

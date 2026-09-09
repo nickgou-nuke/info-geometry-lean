@@ -15,27 +15,28 @@ namespace InfoGeometry.Spectral.Homotopy.Cogroup
 open InfoGeometry.Spectral.Homotopy.Suspension
 
 def pair {X Y Z : PointedReadout} (f : PointedMap X Y) (g : PointedMap X Z) :
-    PointedMap X (Pointed.mk (Y.carrier × Z.carrier) (Y.base, Z.base)) where
+    PointedMap X { carrier := Y.carrier × Z.carrier, base := (Y.base, Z.base) } where
   toFun x := (f x, g x)
   map_base := by
     change (f X.base, g X.base) = (Y.base, Z.base)
     exact Prod.ext f.map_base g.map_base
 
 def fst {X Y : PointedReadout} :
-    PointedMap (Pointed.mk (X.carrier × Y.carrier) (X.base, Y.base)) X where
+    PointedMap { carrier := X.carrier × Y.carrier, base := (X.base, Y.base) } X where
   toFun := Prod.fst
   map_base := rfl
 
 def snd {X Y : PointedReadout} :
-    PointedMap (Pointed.mk (X.carrier × Y.carrier) (X.base, Y.base)) Y where
+    PointedMap { carrier := X.carrier × Y.carrier, base := (X.base, Y.base) } Y where
   toFun := Prod.snd
   map_base := rfl
 
 def prodEquiv (X Y Z : PointedReadout) :
     PointedEquiv
-      (Pointed.mk (X.carrier → Y.carrier × Z.carrier) (fun _ => (Y.base, Z.base)))
-      (Pointed.mk ((X.carrier → Y.carrier) × (X.carrier → Z.carrier))
-        (fun _ => Y.base, fun _ => Z.base)) where
+      { carrier := X.carrier → (Y.carrier × Z.carrier),
+        base := fun _ => (Y.base, Z.base) }
+      { carrier := (X.carrier → Y.carrier) × (X.carrier → Z.carrier),
+        base := (fun _ => Y.base, fun _ => Z.base) } where
   toEquiv :=
     { toFun := fun f => (fun x => (f x).1, fun x => (f x).2)
       invFun := fun fg x => (fg.1 x, fg.2 x)

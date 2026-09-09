@@ -24,6 +24,7 @@ noncomputable section
 namespace InfoGeometry.Thermo.SusceptibilityOnsagerStress
 
 open InfoGeometry.Thermo.SusceptibilityHessian
+
 /-! ## 1. Two-operator Onsager forms -/
 
 /--
@@ -447,8 +448,32 @@ theorem derivedStress_swap
 
 end SusceptibilityOnsagerStressPacket
 
-/-! ## 7. Onsager/stress properties -/
-theorem susceptibilityOnsagerStress_properties
+/-! ## 7. Owner target -/
+
+/--
+Owner target for installing a susceptibility/Onsager/stress/derivation packet.
+-/
+def SusceptibilityOnsagerStressOwnerTarget
+    (Op Field Response Carrier : Type*)
+    [NormedAddCommGroup Op] [NormedSpace ℝ Op] [Mul Op]
+    [NormedAddCommGroup Field] [NormedSpace ℝ Field]
+    [NormedAddCommGroup Response] [NormedSpace ℝ Response]
+    [AddCommMonoid Carrier] [Module ℝ Carrier] : Prop :=
+  ∀ (P : SusceptibilityOnsagerStressPacket Op Field Response Carrier),
+    (∀ (A B : Op),
+      P.operatorOnsager.form A B = P.operatorOnsager.form B A) ∧
+    (∀ (U : Op) (E₁ E₂ : Field),
+      P.onsagerPairing.pairing U E₁ E₂ = P.onsagerPairing.pairing U E₂ E₁) ∧
+    (∀ (U : Op) (X Y : Carrier),
+      P.stressTensor.stress U X Y = P.stressTensor.stress U Y X) ∧
+    (∀ (U : Op),
+      P.derivedStress.derivedStress U = P.stressTensor.stress (P.derivation U))
+
+/--
+Any installed susceptibility/Onsager/stress packet satisfies the owner-side
+reciprocity, symmetry, and readback laws already proved in this file.
+-/
+theorem susceptibilityOnsagerStressOwnerTarget
     (Op Field Response Carrier : Type*)
     [NormedAddCommGroup Op] [NormedSpace ℝ Op] [Mul Op]
     [NormedAddCommGroup Field] [NormedSpace ℝ Field]

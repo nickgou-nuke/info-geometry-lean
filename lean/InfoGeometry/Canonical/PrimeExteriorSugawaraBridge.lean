@@ -1,5 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
+import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge
 import InfoGeometry.Canonical.PrimeBooleanCubeSugawara
 
@@ -45,36 +47,30 @@ theorem vertexOfState_card_eq
   rw [vertexOfState]
   exact card_natSetOfState S
 
-/-- The finite bridge carrier is already the square-free exterior state.
+/--
+Finite bridge packet from the exterior Möbius lane to the Sugawara readout.
 
-The former packet added no proof or additional data beyond this field, so the
-native carrier is `SquareFreeState P` itself. -/
-abbrev PrimeExteriorSugawaraPacket (P : PrimeCutoff) := SquareFreeState P
+It stores a square-free exterior state together with the corresponding Boolean
+vertex and the two finite readouts on that shared carrier.
+-/
+structure PrimeExteriorSugawaraPacket (P : PrimeCutoff) where
+  state : SquareFreeState P
+  vertex : Vertex P
+  vertex_eq : vertex = vertexOfState state
 
 namespace PrimeExteriorSugawaraPacket
-
-/-- Compatibility readout for the former packet field. -/
-abbrev state {P : PrimeCutoff} (B : PrimeExteriorSugawaraPacket P) : SquareFreeState P := B
-
-/-- The Boolean vertex canonically attached to the square-free state. -/
-abbrev vertex {P : PrimeCutoff}
-    (B : PrimeExteriorSugawaraPacket P) : Vertex P :=
-  vertexOfState B.state
-
-@[simp] theorem vertex_eq {P : PrimeCutoff}
-    (B : PrimeExteriorSugawaraPacket P) :
-    B.vertex = vertexOfState B.state :=
-  rfl
 
 variable {P : PrimeCutoff}
 
 /-- The Möbius readout on the exterior state is the global chirality `Γ`. -/
+@[bridge_target_tag]
 theorem mobius_eq_Gamma (B : PrimeExteriorSugawaraPacket P) :
     ArithmeticFunction.moebius (stateNat B.state) =
       InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.Gamma B.state := by
   exact InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge.mobius_stateNat_eq_Gamma B.state
 
 /-- The Sugawara readout on the attached Boolean vertex is the state cardinality. -/
+@[bridge_target_tag]
 theorem centralCharge_eq_card (B : PrimeExteriorSugawaraPacket P) :
     (booleanCubeSugawaraPacket P B.vertex).bridge.centralCharge = B.state.card := by
   rw [B.vertex_eq]
@@ -87,5 +83,26 @@ theorem centralCharge_eq_card (B : PrimeExteriorSugawaraPacket P) :
       rw [vertexOfState_card_eq]
 
 end PrimeExteriorSugawaraPacket
+
+/-- Canonical owner target for the finite exterior-to-Sugawara bridge. -/
+@[owner_target_tag]
+def PrimeExteriorSugawaraOwnerTarget : Prop :=
+  ∀ {P : PrimeCutoff} (S : SquareFreeState P),
+    ArithmeticFunction.moebius (stateNat S) =
+      InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.Gamma S ∧
+    (booleanCubeSugawaraPacket P (vertexOfState S)).bridge.centralCharge = S.card
+
+/-- The finite exterior-to-Sugawara owner target is witnessed by the bridge lemmas. -/
+theorem primeExteriorSugawaraOwnerTarget :
+    ∀ {P : PrimeCutoff} (S : SquareFreeState P),
+      ArithmeticFunction.moebius (stateNat S) =
+        InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.Gamma S ∧
+      (booleanCubeSugawaraPacket P (vertexOfState S)).bridge.centralCharge = S.card := by
+  intro P S
+  constructor
+  · exact PrimeExteriorSugawaraPacket.mobius_eq_Gamma
+      (⟨S, vertexOfState S, rfl⟩ : PrimeExteriorSugawaraPacket P)
+  · exact PrimeExteriorSugawaraPacket.centralCharge_eq_card
+      (⟨S, vertexOfState S, rfl⟩ : PrimeExteriorSugawaraPacket P)
 
 end InfoGeometry.Canonical.PrimeExteriorSugawaraBridge

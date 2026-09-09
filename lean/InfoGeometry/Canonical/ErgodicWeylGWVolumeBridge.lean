@@ -8,8 +8,8 @@ noncomputable section
 /-!
 # InfoGeometry.Canonical.ErgodicWeylGWVolumeBridge
 
-Adapter joining the ergodic fixed-point interface to the existing Weyl/GW
-physical-volume interface.
+Adapter joining the ergodic fixed-point socket to the existing Weyl/GW
+physical-volume socket.
 
 This file does not introduce a new GW-volume owner and does not assert an
 infinite-dimensional determinant theorem.  Phase-volume/determinant invariance
@@ -34,7 +34,6 @@ section Core
 
 variable {E H LieAlgebra Functional State G T Target Coeff Word : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable [AddMonoid LieAlgebra]
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 variable [KreinSpace (DoubledSpace H)]
 variable [Fintype Word] [DecidableEq Word]
@@ -46,7 +45,7 @@ Fusion of an ergodic self-similar fixed-point readout with the already-owned
 standard-form face Weyl/GW physical-volume readout.
 
 `phaseVolume` is a determinant/phase-volume scalar readout only where the model
-supplies it.  Its modular-flow and renormalization invariance are property
+supplies it.  Its modular-flow and renormalization invariance are witness
 fields, not derived Type-III determinant claims.
 -/
 @[rep_depth projective]

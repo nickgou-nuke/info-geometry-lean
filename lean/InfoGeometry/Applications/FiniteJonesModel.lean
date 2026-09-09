@@ -4,7 +4,7 @@ InfoGeometry/Applications/FiniteJonesModel.lean
 Concrete finite two-channel Jones model.
 
 This is a small application-facing facade over the Fresnel/Jones reflection
-theorems.  It names the `s/p` carrier, projectors, and diagonal Jones operators
+socket.  It names the `s/p` carrier, projectors, and diagonal Jones operators
 used by finite optical Erlanger instantiations.
 
 It proves the first concrete optical laboratory facts:
@@ -220,7 +220,21 @@ def FiniteJonesEvent.IsBrewster
     (E : FiniteJonesEvent) : Prop :=
   E.r_p = 0
 
+/-- A Brewster witness is exactly the canonical collapse proposition. -/
+abbrev FiniteJonesEvent.BrewsterWitness
+    (E : FiniteJonesEvent) : Prop :=
+  E.IsBrewster
+
 namespace FiniteJonesEvent
+
+namespace BrewsterWitness
+
+/-- Historical projection name, now a direct theorem from the proposition. -/
+theorem rp_zero {E : FiniteJonesEvent} (w : BrewsterWitness E) :
+    E.r_p = 0 :=
+  w
+
+end BrewsterWitness
 
 /-- Every finite Jones event decomposes into its `s/p` channel projectors. -/
 theorem operator_decomposition
@@ -235,6 +249,15 @@ theorem operator_eq_s_core_of_brewster
     E.operator = E.r_s • Ps := by
   dsimp [operator, IsBrewster] at *
   exact diagonalJones_brewster E.r_s E.r_p hE
+
+/--
+Constructive-witness variant of `operator_eq_s_core_of_brewster`.
+-/
+theorem operator_eq_s_core_of_witness
+    (E : FiniteJonesEvent)
+    (w : BrewsterWitness E) :
+    E.operator = E.r_s • Ps := by
+  exact operator_eq_s_core_of_brewster E w.rp_zero
 
 end FiniteJonesEvent
 

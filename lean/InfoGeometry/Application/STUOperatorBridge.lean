@@ -252,9 +252,26 @@ Surgery packet at an operator boundary.
 `D` is its Drazin inverse relation.
 `ρ` is the state/operator being compressed.
 -/
-def operatorSurgery
-    (singularOperator drazinInverse : EndH) : Prop :=
-  IsDrazinInverse singularOperator drazinInverse
+structure OperatorSurgeryPacket where
+  state :
+    EndH
+
+  singularOperator :
+    EndH
+
+  drazinInverse :
+    EndH
+
+  drazin_inverse :
+    IsDrazinInverse singularOperator drazinInverse
+
+  coreState :
+    EndH :=
+      drazinCoreCompression singularOperator drazinInverse state
+
+  radicalState :
+    EndH :=
+      drazinNilCompression singularOperator drazinInverse state
 
 /-! ### 5. Black-hole/qubit dictionary as an operator structure -/
 

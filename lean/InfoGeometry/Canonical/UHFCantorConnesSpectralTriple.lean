@@ -26,22 +26,25 @@ theorem stageCommutatorNorm_nonneg (D a : A) :
     0 ≤ stageCommutatorNorm D a := by
   exact norm_nonneg _
 
+def stageSpectralTriple (D : A) : ConnesSpectral.SpectralTriple A where
+  dirac := D
+
 def stageLipschitz (D a : A) : Prop :=
-  ConnesSpectral.SpectralTriple.LipschitzFunction D a
+  (stageSpectralTriple D).LipschitzFunction a
 
 def stageConnesDistance (D : A) (p q : A → ℝ) (d : ℝ) : Prop :=
-  ConnesSpectral.SpectralTriple.StateDistanceBound D p q d
+  (stageSpectralTriple D).StateDistanceBound p q d
 
 theorem stageConnesDistance_symm (D : A) (p q : A → ℝ) (d : ℝ)
     (h : stageConnesDistance D p q d) :
     stageConnesDistance D q p d :=
-  ConnesSpectral.SpectralTriple.distance_bound_symmetry D p q d h
+  (stageSpectralTriple D).distance_bound_symmetry p q d h
 
 theorem stageConnesDistance_triangle (D : A) (p q r : A → ℝ) (d1 d2 : ℝ)
     (h1 : stageConnesDistance D p q d1)
     (h2 : stageConnesDistance D q r d2) :
     stageConnesDistance D p r (d1 + d2) :=
-  ConnesSpectral.SpectralTriple.distance_bound_triangle D p q r d1 d2 h1 h2
+  (stageSpectralTriple D).distance_bound_triangle p q r d1 d2 h1 h2
 
 theorem stageCommutatorNorm_map
     {B : Type*} [NormedRing B]

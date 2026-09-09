@@ -26,3 +26,4 @@ theorem scratch_traceBilin_jordanLmul_assoc (a x y : H3Zorn ℝ) :
 end
 
 end InfoGeometry.Algebra
+

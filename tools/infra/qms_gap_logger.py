@@ -21,7 +21,7 @@ from tools.pathing import normalize_user_path, repo_root
 from tools.quality import audit_constructivity
 
 ROOT = repo_root()
-LEAN_TOOLCHAIN = "leanprover/lean4:v4.28.0"
+LEAN_TOOLCHAIN = "leanprover/lean4:v4.28.1"
 DIAG_RE = re.compile(
     r"^(?P<path>.*?):(?P<line>\d+):(?P<col>\d+): (?P<kind>error|warning)(?:\([^)]*\))?: (?P<msg>.*)$"
 )

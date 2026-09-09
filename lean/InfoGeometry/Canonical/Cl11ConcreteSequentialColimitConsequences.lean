@@ -17,11 +17,31 @@ namespace InfoGeometry.Canonical.Cl11ConcreteSequentialColimitConsequences
 
 noncomputable section
 
-open InfoGeometry.Canonical.Cl11SequentialStageSystemBridge
+open InfoGeometry.Canonical.Cl11SequentialColimitSystemBridge
 open InfoGeometry.Clifford.Cl11InfiniteCarrier
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
 
 abbrev Limit := InfoGeometry.Clifford.Cl11TensorTowerLimit.Limit
+
+/-- The sequential function-level transition is the native iterated ring
+embedding, at every finite depth. -/
+theorem cl11_bondSeq_eq_finiteAdvance (n m : ℕ)
+    (x : InfoGeometry.Clifford.Cl11TensorTowerLimit.Stage n) :
+    cl11System.bondSeq n m x = finiteAdvance n m x := by
+  induction m with
+  | zero =>
+      simp [InfoGeometry.Canonical.InductiveColimitBridge.SequentialColimitSystem.bondSeq,
+        finiteAdvance]
+  | succ m ih =>
+      rw [InfoGeometry.Canonical.InductiveColimitBridge.SequentialColimitSystem.bondSeq_succ,
+        ih]
+      change stageBond (n + m)
+          (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap stageBond n
+            (n + m) (Nat.le_add_right n m) x) =
+        InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap stageBond n
+          (n + m + 1) (Nat.le_add_right n (m + 1)) x
+      rw [InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap_succ]
+      rfl
 
 /-! The concrete image of the first-stage Hestenes phase representative. -/
 def phaseAxisImage : Limit :=
@@ -47,9 +67,8 @@ theorem phaseAxisImage_sq :
 theorem phaseAxisImage_finiteAdvance (k : ℕ) :
     ofStage (1 + k)
         (finiteAdvance 1 k phaseAxisStage) = phaseAxisImage := by
-  change intoCarrier (1 + k) (finiteAdvance 1 k phaseAxisStage) =
-    intoCarrier 1 phaseAxisStage
-  exact intoCarrier_finiteAdvance 1 k phaseAxisStage
+  rw [← cl11_bondSeq_eq_finiteAdvance]
+  exact cl11_toLimit_bondSeq 1 k phaseAxisStage
 
 /-! The concrete phase element induces the usual inner derivation law. -/
 theorem phaseAxisImage_commutator_derivation (X Y : Limit) :

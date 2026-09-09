@@ -69,11 +69,45 @@ theorem quaternion_norm_scalar (Q : Quat) :
     Section8.Quat.conj Q * Q = Section8.Quat.scalar (Section8.Quat.normSq Q) :=
   Section22.quaternion_conj_mul_self_scalar Q
 
+/-- The Hamilton basis includes the Section 24 `ijk = -1` relation. -/
+theorem hamilton_basis_with_triple :
+    Section8.Quat.qi * Section8.Quat.qi = -(1 : Quat)
+      ∧ Section8.Quat.qj * Section8.Quat.qj = -(1 : Quat)
+      ∧ Section8.Quat.qk * Section8.Quat.qk = -(1 : Quat)
+      ∧ Section8.Quat.qi * Section8.Quat.qj = Section8.Quat.qk
+      ∧ Section8.Quat.qj * Section8.Quat.qk = Section8.Quat.qi
+      ∧ Section8.Quat.qk * Section8.Quat.qi = Section8.Quat.qj
+      ∧ (Section8.Quat.qi * Section8.Quat.qj) * Section8.Quat.qk =
+        -(1 : Quat) :=
+  Section8.Quat.basis_laws
+
 /-- The finite metric readout from quaternionic vielbein coefficients is symmetric. -/
 theorem quaternion_metric_symmetric
     (e : Fin 4 → Fin 4 → ℝ) (mu nu : Fin 4) :
     Section22.quaternionInducedMetric e mu nu =
       Section22.quaternionInducedMetric e nu mu :=
   Section22.quaternionInducedMetric_symmetric e mu nu
+
+theorem section24_capstone :
+    (∀ Q : Quat,
+      Section8.Quat.conj Q * Q =
+        Section8.Quat.scalar (Section8.Quat.normSq Q)) ∧
+    (Section8.Quat.qi * Section8.Quat.qi = -(1 : Quat)
+      ∧ Section8.Quat.qj * Section8.Quat.qj = -(1 : Quat)
+      ∧ Section8.Quat.qk * Section8.Quat.qk = -(1 : Quat)
+      ∧ Section8.Quat.qi * Section8.Quat.qj = Section8.Quat.qk
+      ∧ Section8.Quat.qj * Section8.Quat.qk = Section8.Quat.qi
+      ∧ Section8.Quat.qk * Section8.Quat.qi = Section8.Quat.qj
+      ∧ (Section8.Quat.qi * Section8.Quat.qj) * Section8.Quat.qk =
+        -(1 : Quat)) ∧
+    (∀ e : Fin 4 → Fin 4 → ℝ, ∀ mu nu : Fin 4,
+      Section22.quaternionInducedMetric e mu nu =
+        Section22.quaternionInducedMetric e nu mu) ∧
+    (∀ kappa : ℂ, ∀ B : Fin 4 → Fin 4 → Fin 4 → ℂ,
+      ∀ lam mu nu : Fin 4,
+        torsionCommutatorShadow kappa B lam nu mu =
+          -torsionCommutatorShadow kappa B lam mu nu) := by
+  exact ⟨quaternion_norm_scalar, hamilton_basis_with_triple,
+    quaternion_metric_symmetric, torsionCommutatorShadow_antisymmetric⟩
 
 end Section24

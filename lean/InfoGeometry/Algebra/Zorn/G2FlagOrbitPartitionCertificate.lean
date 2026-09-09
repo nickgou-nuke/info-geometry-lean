@@ -49,11 +49,26 @@ theorem orbitCellAnchor_eq_weylNF (k : Fin 12) :
   apply autMatrix_injective
   fin_cases k <;> decide
 
+/-! Public Bruhat-index compatibility seam.  The finite orbit index and the
+    canonical Weyl normal form agree at the certified zero-residual anchor;
+    the statement deliberately exposes no stronger identification of the
+    complete quotient carrier. -/
+theorem g2Weyl_bruhat_index_compatibility (k : Fin 12) :
+    flagRepresentative (orbitCellAnchor k) =
+      weylNF (orbitWeyl k).1 (orbitWeyl k).2 :=
+  orbitCellAnchor_eq_weylNF k
+
 theorem orbitCellAnchor_quotient_eq (k : Fin 12) :
     orbitEnum (orbitCellAnchor k) =
       (QuotientGroup.mk (weylNF (orbitWeyl k).1 (orbitWeyl k).2) :
         SplitOctF2Aut ⧸ unipotentSubgroup) := by
   rw [orbitEnum, quotientRepresentative, orbitCellAnchor_eq_weylNF]
+
+theorem g2Weyl_bruhat_quotient_index_compatibility (k : Fin 12) :
+    orbitEnum (orbitCellAnchor k) =
+      (QuotientGroup.mk (weylNF (orbitWeyl k).1 (orbitWeyl k).2) :
+        SplitOctF2Aut ⧸ unipotentSubgroup) :=
+  orbitCellAnchor_quotient_eq k
 
 
 end InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate

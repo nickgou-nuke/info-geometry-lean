@@ -47,6 +47,12 @@ theorem bab_eq_b (h : IsMoorePenroseInverse A B) : B * A * B = B := h.2.1
 theorem ab_adj_eq (h : IsMoorePenroseInverse A B) : (A * B)† = A * B := h.2.2.1
 theorem ba_adj_eq (h : IsMoorePenroseInverse A B) : (B * A)† = B * A := h.2.2.2
 
+-- Backward-compatible aliases.
+theorem eq1 (h : IsMoorePenroseInverse A B) : A * B * A = A := h.aba_eq_a
+theorem eq2 (h : IsMoorePenroseInverse A B) : B * A * B = B := h.bab_eq_b
+theorem eq3 (h : IsMoorePenroseInverse A B) : (A * B)† = A * B := h.ab_adj_eq
+theorem eq4 (h : IsMoorePenroseInverse A B) : (B * A)† = B * A := h.ba_adj_eq
+
 end IsMoorePenroseInverse
 
 /-- Star distributes over a triple product. -/
@@ -277,6 +283,27 @@ theorem isMoorePenroseInverse_moorePenroseInverse
   · -- star (BA) = BA
     rw [hBA]
     exact IsSelfAdjoint.star_eq (isSelfAdjoint_starProjection Kp)
+
+theorem moorePenroseInverse_range_projector_eq_starProjection
+    (A : E →L[𝕜] F)
+    (hClosedRange : IsClosed (A.range : Set F)) :
+    A.comp (moorePenroseInverse A hClosedRange) =
+      (A.range).starProjection := by
+  let B := moorePenroseInverse A hClosedRange
+  let R : Submodule 𝕜 F := A.range
+  let Kp : Submodule 𝕜 E := (A.ker)ᗮ
+  let e := mpEquiv A hClosedRange
+  haveI : CompleteSpace R := hClosedRange.completeSpace_coe
+  ext y
+  let y_proj : R := Submodule.orthogonalProjection R y
+  let x_perp : Kp := e.symm y_proj
+  have he_x : e x_perp = y_proj := e.apply_symm_apply y_proj
+  have h_Axp : A (x_perp : E) = (y_proj : F) := by
+    have hval := congrArg Subtype.val he_x
+    simpa [e, mpEquiv, mpRestricted] using hval
+  change A ((e.symm (Submodule.orthogonalProjection R y) : Kp) : E) =
+    R.starProjection y
+  exact h_Axp
 
 /-- Legacy existence wrapper for endomorphisms. -/
 theorem exists_moorePenroseInverse_of_closedRange

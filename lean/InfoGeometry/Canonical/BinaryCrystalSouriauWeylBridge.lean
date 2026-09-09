@@ -30,7 +30,29 @@ that wants to invoke the owner theorems directly.
 @[rep_depth transport]
 structure BinaryCrystalSouriauWeylBridge
     (G : Type*) [Group G] [MulAction G BinaryLattice] (𝔤 : Type*) where
-  crystal : BinaryCrystalWeylBlochData G
-  souriauWeyl : SouriauWeylPartitionData 𝔤
+  crystal : BinaryCrystalWeylBlochPacket G
+  souriauWeyl : SouriauWeylPartitionPacket 𝔤
+
+namespace BinaryCrystalSouriauWeylBridge
+
+variable {G : Type*} [Group G] [MulAction G BinaryLattice] {𝔤 : Type*}
+variable (B : BinaryCrystalSouriauWeylBridge G 𝔤)
+
+/-- The binary crystal side retains the depth-parity readout. -/
+@[rep_depth transport]
+theorem binaryCrystal_ownerTarget :
+    (∀ w : BinaryLattice,
+      binaryUnitCell w =
+        ({w} : Set BinaryLattice)
+          ∪ binaryUnitCell (TypeIIIModularCantorSystem.BinaryWord.child w false)
+          ∪ binaryUnitCell (TypeIIIModularCantorSystem.BinaryWord.child w true))
+    ∧ (∀ w : BinaryLattice, ∀ b : Bool,
+        wordParity (TypeIIIModularCantorSystem.BinaryWord.child w b) = not (wordParity w))
+    ∧ (∀ {G : Type*} [Group G] [MulAction G BinaryLattice]
+        (g : G) (f : BinaryCrystalObservable) (w : BinaryLattice),
+        adjointAction (G := G) g f (g • w) = f w) :=
+  binaryCrystalWeylBlochOwnerTarget
+
+end BinaryCrystalSouriauWeylBridge
 
 end InfoGeometry.Canonical.BinaryCrystalSouriauWeyl

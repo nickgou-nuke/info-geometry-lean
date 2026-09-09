@@ -113,7 +113,7 @@ def covariance
     W.waveletTransform (signalAction g f) =
       coefficientAction g (W.waveletTransform f)
 
-/-- A covariance property evaluates to the corresponding transform identity. -/
+/-- A covariance witness evaluates to the corresponding transform identity. -/
 theorem waveletTransform_covariant
     (W : CliffordWaveletModel)
     (signalAction :
@@ -144,56 +144,6 @@ theorem waveletTransform_reconstruction
     (coeff : SimilitudeParameter W.V → W.A) :
     W.waveletTransform (W.reconstruction coeff) = coeff :=
   hRep coeff
-
-/- The supplied left and right inverse laws imply the native bijectivity
-contract for the wavelet transform.  The converse is deliberately exposed
-with an existential inverse below: bijectivity alone does not identify the
-model's stored `reconstruction` field. -/
-theorem admissible_and_reproducingKernel_bijective
-    (W : CliffordWaveletModel) :
-    W.admissible ∧ W.reproducingKernel → Function.Bijective W.waveletTransform := by
-  intro h
-  exact Function.bijective_iff_has_inverse.mpr
-    ⟨W.reconstruction, h.1, h.2⟩
-
-/-- Any bijective wavelet transform has a (possibly non-stored) two-sided
-inverse.  This is the exact converse available without identifying the
-model's reconstruction field with the chosen inverse. -/
-theorem bijective_waveletTransform_has_inverse
-    (W : CliffordWaveletModel) (hBijective : Function.Bijective W.waveletTransform) :
-    ∃ inverse,
-      Function.LeftInverse inverse W.waveletTransform ∧
-      Function.RightInverse inverse W.waveletTransform := by
-  exact Function.bijective_iff_has_inverse.mp hBijective
-
-/-- The canonical inverse selected by Mathlib for a bijective wavelet transform.
-
-This is a function-level construction, not an additional reconstruction field:
-the stored `reconstruction` is identified with it only when that equality is
-proved separately.
--/
-noncomputable def bijectiveWaveletInverse
-    (W : CliffordWaveletModel)
-    (_hBijective : Function.Bijective W.waveletTransform) :
-    (SimilitudeParameter W.V → W.A) → W.Signal :=
-  letI : Nonempty W.Signal := ⟨W.wavelet⟩
-  Function.invFun W.waveletTransform
-
-theorem bijectiveWaveletInverse_leftInverse
-    (W : CliffordWaveletModel)
-    (hBijective : Function.Bijective W.waveletTransform) :
-    Function.LeftInverse (bijectiveWaveletInverse W hBijective)
-      W.waveletTransform := by
-  letI : Nonempty W.Signal := ⟨W.wavelet⟩
-  exact Function.leftInverse_invFun hBijective.1
-
-theorem bijectiveWaveletInverse_rightInverse
-    (W : CliffordWaveletModel)
-    (hBijective : Function.Bijective W.waveletTransform) :
-    Function.RightInverse (bijectiveWaveletInverse W hBijective)
-      W.waveletTransform := by
-  letI : Nonempty W.Signal := ⟨W.wavelet⟩
-  exact Function.rightInverse_invFun hBijective.2
 
 end CliffordWaveletModel
 

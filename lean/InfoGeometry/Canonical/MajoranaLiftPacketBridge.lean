@@ -85,6 +85,17 @@ theorem onsager_phaseChannel_signFlip
     -(InfoGeometry.Canonical.RelationalInformationCore.channelPhaseAxis (JConjugate X)) := by
   exact JConjugate_channelPhaseAxis_eq_neg_channelPhaseAxis_JConjugate (E := E) X
 
+/-- Compatibility name for the canonical DIII proxy Majorana root laws. -/
+@[rep_depth transport]
+theorem packetOfCanonicalDIIIProxy_root_laws :
+    (canonicalDIIIProxy (E := E)).C = modular_j (E := E)
+      ∧ -((canonicalDIIIProxy (E := E)).S) = spectral_epsilon (E := E)
+      ∧ (canonicalDIIIProxy (E := E)).T = complex_i (E := E)
+      ∧ (canonicalDIIIProxy (E := E)).T.comp
+          (canonicalDIIIProxy (E := E)).T =
+            -(ContinuousLinearMap.id ℝ H₂) :=
+  canonicalDIIIProxy_majorana_root_laws (E := E)
+
 /-- The canonical Majorana conjugation is the DIII particle-hole operator. -/
 @[rep_depth transport]
 theorem packetOfCanonicalDIIIProxy_J_eq_C :
@@ -99,8 +110,8 @@ theorem packetOfCanonicalDIIIProxy_eps_eq_neg_S :
     canonicalMajoranaEps (E := E) =
       -((canonicalDIIIProxy (E := E)).S) := by
   symm
-  rw [canonicalDIIIProxy_S_eq_neg_spectral_epsilon]
-  simp
+  simpa using congrArg Neg.neg
+    (canonicalDIIIProxy_S_eq_neg_spectral_epsilon (E := E))
 
 /-- The canonical Majorana phase axis is the DIII time-reversal operator. -/
 @[rep_depth transport]

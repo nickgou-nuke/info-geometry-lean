@@ -3,7 +3,7 @@ import InfoGeometry.Krein.DoubledAdjoint
 import InfoGeometry.Krein.CarrierTransport
 
 /-!
-# Primon/Krein ring constraints
+# Primon/Krein ring constraints (Lean-safe socket)
 
 This module records explicit algebraic constraints for doubled real operator lanes:
 
@@ -11,7 +11,7 @@ This module records explicit algebraic constraints for doubled real operator lan
 - Krein-self-adjointness via the doubled Krein adjoint,
 - one-parameter flow law preserving the doubled Krein pairing.
 
-It contains only finite operator predicates and their consequences.
+It is a structural packet surface: no analytic zeta/RH/zero-location claims.
 -/
 
 noncomputable section
@@ -89,22 +89,24 @@ theorem isKreinSelfAdjoint_iff_doubledKreinInner
     simpa [IsKreinSelfAdjoint, doubledKreinAdjoint_eq_kreinAdjoint] using hK
 
 /--
-The subtype of doubled real operators satisfying the two finite constraints.
+Static ring-constraint packet for a doubled real operator.
+
+This is the minimal algebraic surface needed for the hyperbolic/chiral lane.
 -/
-abbrev PrimonOperatorConstraint : Type _ :=
+abbrev PrimonOperatorConstraintPacket : Type _ :=
   Σ' op : EndH (E := E),
     IsOffBlockDiagonal (E := E) op ∧
       IsKreinSelfAdjoint (E := E) op
 
-namespace PrimonOperatorConstraint
+namespace PrimonOperatorConstraintPacket
 
-variable (constraint : PrimonOperatorConstraint (E := E))
+variable (packet : PrimonOperatorConstraintPacket (E := E))
 
-abbrev op : EndH (E := E) := constraint.1
-abbrev offBlockDiagonal : IsOffBlockDiagonal (E := E) constraint.1 := constraint.2.1
-abbrev kreinSelfAdjoint : IsKreinSelfAdjoint (E := E) constraint.1 := constraint.2.2
+abbrev op : EndH (E := E) := packet.1
+abbrev offBlockDiagonal : IsOffBlockDiagonal (E := E) packet.1 := packet.2.1
+abbrev kreinSelfAdjoint : IsKreinSelfAdjoint (E := E) packet.1 := packet.2.2
 
-end PrimonOperatorConstraint
+end PrimonOperatorConstraintPacket
 
 /--
 One-parameter doubled flow with explicit Krein-invariance law.
@@ -121,7 +123,7 @@ structure HyperbolicPrimonFlow where
         doubledKreinInner (E := E) u v
 
 /--
-Generator-level constrained flow.
+Generator-level constrained flow packet.
 
 This keeps all operatorial constraints explicit and local to the doubled carrier.
 -/
@@ -130,24 +132,24 @@ structure HyperbolicPrimonFlowWithGenerator extends HyperbolicPrimonFlow (E := E
   generator_offBlockDiagonal : IsOffBlockDiagonal (E := E) generator
   generator_kreinSelfAdjoint : IsKreinSelfAdjoint (E := E) generator
 
-/-- Any constrained generator has an off-block-diagonal generator. -/
+/-- Re-export: any constrained generator packet has an off-block-diagonal generator. -/
 theorem generator_is_offBlockDiagonal
     (F : HyperbolicPrimonFlowWithGenerator (E := E)) :
     IsOffBlockDiagonal (E := E) F.generator :=
   F.generator_offBlockDiagonal
 
-/-- Any constrained generator has a Krein-self-adjoint generator. -/
+/-- Re-export: any constrained generator packet has a Krein-self-adjoint generator. -/
 theorem generator_is_kreinSelfAdjoint
     (F : HyperbolicPrimonFlowWithGenerator (E := E)) :
     IsKreinSelfAdjoint (E := E) F.generator :=
   F.generator_kreinSelfAdjoint
 
 /--
-Read a `HyperbolicPrimonFlow` as a `CarrierTransport` on the canonical
+Bridge: read a `HyperbolicPrimonFlow` as a `CarrierTransport` on the canonical
 `doubledCarrier`.
 
 Since `doubledCarrier` stores the ambient Hilbert bilinear pairing, this bridge
-requires an explicit pairing-preservation property for that pairing.
+requires an explicit pairing-preservation witness for that pairing.
 -/
 noncomputable def HyperbolicPrimonFlow.toCarrierTransport
     (F : HyperbolicPrimonFlow (E := E))

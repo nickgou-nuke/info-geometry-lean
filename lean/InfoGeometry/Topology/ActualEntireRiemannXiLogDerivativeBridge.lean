@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge
+import InfoGeometry.Arithmetic.ActualRiemannXiRegularityBridge
 import InfoGeometry.Topology.ZetaLogDerivativeDeRhamPeriodBridge
 import InfoGeometry.Topology.ActualRiemannXiLogDerivativeBridge
 
@@ -66,7 +67,7 @@ theorem actualEntireXiOmegaForm_eq_actualXiOmegaForm
   have hRiemann : HasDerivAt
       InfoGeometry.Arithmetic.RiemannZetaEquivalences.riemannXi
       (deriv InfoGeometry.Arithmetic.RiemannZetaEquivalences.riemannXi s) s := by
-    exact (InfoGeometry.Arithmetic.RiemannZetaEquivalences.differentiableAt_riemannXi
+    exact (InfoGeometry.Arithmetic.ActualRiemannXiRegularityBridge.differentiableAt_riemannXi_of_ne
       hs0 hs1).hasDerivAt
   have hDeriv : deriv entireRiemannXi s =
       deriv InfoGeometry.Arithmetic.RiemannZetaEquivalences.riemannXi s :=

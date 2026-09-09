@@ -54,6 +54,31 @@ theorem annihilation_annihilation_bracket_grade_minus_two (i j : Fin 5) :
     annihilation_mem_gradeSubmodule j
   simpa using (gradeSubmodule_bracket_mem (k := (-1 : ℤ)) (l := (-1 : ℤ)) hi hj)
 
+private noncomputable def minkowski4CoordinateEquiv :
+    Minkowski4 ≃ₗ[ℝ] (Fin 4 → ℝ) :=
+  { toFun := fun v i => Fin.cases v.t (fun j => Fin.cases v.x (fun k =>
+      Fin.cases v.y (fun _ => v.z) k) j) i
+    invFun := fun f => ⟨f 0, f 1, f 2, f 3⟩
+    left_inv := by
+      intro v
+      apply Minkowski4.ext <;> rfl
+    right_inv := by
+      intro f
+      funext i
+      fin_cases i <;> rfl
+    map_add' := by
+      intro u v
+      funext i
+      fin_cases i <;> rfl
+    map_smul' := by
+      intro a v
+      funext i
+      fin_cases i <;> rfl }
+
+private theorem minkowski4_finrank : Module.finrank ℝ Minkowski4 = 4 := by
+  rw [(minkowski4CoordinateEquiv).finrank_eq]
+  simp [Module.finrank_fintype_fun_eq_card]
+
 theorem no_linearEquiv_wittPosOne_minkowski4 :
     ¬ Nonempty (wittPosOne ≃ₗ[ℝ] Minkowski4) := by
   intro h
@@ -61,8 +86,7 @@ theorem no_linearEquiv_wittPosOne_minkowski4 :
   have hfin := LinearEquiv.finrank_eq e
   rw [wittPosOne_finrank_eq_five] at hfin
   have hfour : Module.finrank ℝ Minkowski4 = 4 := by
-    simpa [Minkowski4] using
-      (Module.finrank_fintype_fun_eq_card ℝ (η := Fin 4))
+    exact minkowski4_finrank
   rw [hfour] at hfin
   norm_num at hfin
 
@@ -73,8 +97,7 @@ theorem no_linearEquiv_wittNegOne_minkowski4 :
   have hfin := LinearEquiv.finrank_eq e
   rw [wittNegOne_finrank_eq_five] at hfin
   have hfour : Module.finrank ℝ Minkowski4 = 4 := by
-    simpa [Minkowski4] using
-      (Module.finrank_fintype_fun_eq_card ℝ (η := Fin 4))
+    exact minkowski4_finrank
   rw [hfour] at hfin
   norm_num at hfin
 

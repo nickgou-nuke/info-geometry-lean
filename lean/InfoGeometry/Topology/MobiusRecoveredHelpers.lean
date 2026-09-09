@@ -10,19 +10,21 @@ namespace InfoGeometry.Topology.MobiusRecoveredHelpers
 
 open Complex
 
+abbrev RiemannSphere := InfoGeometry.RiemannSphere
+abbrev MobiusTransform := InfoGeometry.MobiusTransform
+
 namespace MobiusTransform
 
-noncomputable def eval (M : InfoGeometry.MobiusTransform)
-    (z : InfoGeometry.RiemannSphere) : InfoGeometry.RiemannSphere :=
+noncomputable def eval (M : MobiusTransform) (z : RiemannSphere) : RiemannSphere :=
   InfoGeometry.MobiusTransform.eval M z
 
-def equiv (M1 M2 : InfoGeometry.MobiusTransform) : Prop :=
+def equiv (M1 M2 : MobiusTransform) : Prop :=
   InfoGeometry.MobiusTransform.equiv M1 M2
 
 end MobiusTransform
 
 /-- The inverse Möbius transform. -/
-def inv (M : InfoGeometry.MobiusTransform) : InfoGeometry.MobiusTransform :=
+def inv (M : MobiusTransform) : MobiusTransform :=
   { a := M.d,
     b := -M.b,
     c := -M.c,
@@ -35,7 +37,7 @@ def inv (M : InfoGeometry.MobiusTransform) : InfoGeometry.MobiusTransform :=
       exact h }
 
 /-- Composition of Möbius transforms. -/
-def comp (M1 M2 : InfoGeometry.MobiusTransform) : InfoGeometry.MobiusTransform :=
+def comp (M1 M2 : MobiusTransform) : MobiusTransform :=
   { a := M1.a * M2.a + M1.b * M2.c,
     b := M1.a * M2.b + M1.b * M2.d,
     c := M1.c * M2.a + M1.d * M2.c,
@@ -49,7 +51,7 @@ def comp (M1 M2 : InfoGeometry.MobiusTransform) : InfoGeometry.MobiusTransform :
       rw [h_ring]
       exact mul_ne_zero h1 h2 }
 
-lemma eval_inv (M : InfoGeometry.MobiusTransform) (z : InfoGeometry.RiemannSphere) :
+lemma eval_inv (M : MobiusTransform) (z : RiemannSphere) :
     M.eval ((inv M).eval z) = z := by
   cases z with
   | none =>
@@ -127,12 +129,11 @@ lemma eval_inv (M : InfoGeometry.MobiusTransform) (z : InfoGeometry.RiemannSpher
         _ = (z' * (M.c * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.d)) / (M.c * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.d) := by rw [h_cross]
         _ = z' := by rw [mul_div_cancel_right₀ _ h_denom]
 
-lemma eval_inv_left (M : InfoGeometry.MobiusTransform) (z : InfoGeometry.RiemannSphere) :
+lemma eval_inv_left (M : MobiusTransform) (z : RiemannSphere) :
     (inv M).eval (M.eval z) = z := by
   simpa [inv] using (eval_inv (inv M) z)
 
-lemma eval_comp (M1 M2 : InfoGeometry.MobiusTransform)
-    (z : InfoGeometry.RiemannSphere) :
+lemma eval_comp (M1 M2 : MobiusTransform) (z : RiemannSphere) :
     (comp M1 M2).eval z = M1.eval (M2.eval z) := by
   cases z with
   | none =>

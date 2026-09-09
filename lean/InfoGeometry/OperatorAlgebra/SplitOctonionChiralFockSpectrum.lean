@@ -26,7 +26,7 @@ def degree (w : Occupation3) : ℕ :=
   InfoGeometry.OperatorAlgebra.CliffordCARFockParity.fermionNumber w
 
 def reflected (w : Occupation3) : Occupation3 :=
-  (InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complementEquiv 3) w
+  InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complement w
 
 @[simp] theorem total_states : Fintype.card Occupation3 = 8 := by
   decide
@@ -171,18 +171,18 @@ def deltaMode (w : Occupation3) : Function3 := fun x => if x = w then 1 else 0
       have h' := congrArg reflected h
       have hxx : reflected (reflected x) = x := by
         simpa [reflected] using
-          InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complementEquiv_involutive 3 x
+          InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complement_involutive x
       exact hxx.symm.trans h'
     have hrr : reflected (reflected w) = w := by
       simpa [reflected] using
-        InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complementEquiv_involutive 3 w
+        InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complement_involutive w
     simp [deltaMode, h, hx, hrr]
   · have hx : x ≠ reflected w := by
       intro hx
       apply h
       rw [hx]
       simpa [reflected] using
-        InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complementEquiv_involutive 3 w
+        InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complement_involutive w
     simp [deltaMode, h, hx]
 
 theorem numberOperator_reflection (f : Function3) :
@@ -229,7 +229,7 @@ def chiralityOperator : Function3 →ₗ[ℝ] Function3 where
   change f (reflected (reflected w)) = f w
   rw [show reflected (reflected w) = w by
     simpa [reflected] using
-      InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complementEquiv_involutive 3 w]
+      InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complement_involutive w]
 
 @[simp] theorem chiralityOperator_sq :
     chiralityOperator.comp chiralityOperator = LinearMap.id := by
@@ -262,7 +262,7 @@ theorem numberOperator_reflection_conjugate :
     3 * f w - (degree w : ℝ) * f w
   rw [show reflected (reflected w) = w by
     simpa [reflected] using
-      InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complementEquiv_involutive 3 w]
+      InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complement_involutive w]
   rw [degree_reflected, Nat.cast_sub (degree_le_three w)]
   ring
 
@@ -296,7 +296,7 @@ def complexStructureOperator : Function3 →ₗ[ℝ] Function3 :=
       (paritySign (reflected w) * f (reflected (reflected w))) = -f w
   rw [show reflected (reflected w) = w by
     simpa [reflected] using
-      InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complementEquiv_involutive 3 w]
+      InfoGeometry.OperatorAlgebra.SplitCliffordRealForms.Occupation.complement_involutive w]
   rw [paritySign_reflected]
   calc
     paritySign w * (-paritySign w * f w) =

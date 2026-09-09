@@ -6,7 +6,7 @@ import InfoGeometry.Algebra.Zorn.G2CanonicalResidualFibers
 import InfoGeometry.Algebra.Zorn.G2CanonicalResidualPCWords
 
 /-!
-# Ordered inversion coordinates for Bruhat residual fibers
+# Ordered inversion coordinates for Bruhat residual product images
 
 This owner provides only the finite ordering interface.  It deliberately does
 not identify Boolean coordinates with a concrete residual subgroup: that
@@ -84,7 +84,7 @@ noncomputable def correctedSimpleResidualEquiv :
     apply Subtype.ext
     exact hxe
 
-/-- Coordinate form of the corrected simple residual equivalence. -/
+/-- Coordinate form of the corrected simple product-image equivalence. -/
 noncomputable def correctedSimpleResidualCoordinateEquiv :
     (Fin 5 → Bool) ≃ residualSubgroup (2, true) :=
   zeroBitPCExponentEquiv.symm.trans correctedSimpleResidualEquiv
@@ -213,9 +213,9 @@ theorem canonicalResidualImage_card :
 noncomputable def orderedInversionRoots (p : WeylG2) :
     Fin (dihedralLength p) ≃
       { α : G2PositiveRoot // α ∈ bruhatInversionRoots p } :=
-  (Finite.equivFinOfCardEq
+      (Finite.equivFinOfCardEq
       (by
-        simp [Nat.card_eq_fintype_card, bruhatInversionRoots_card p])).symm
+        simp [Nat.card_eq_fintype_card, bruhatInversionRoots_card_eq_length p])).symm
 
 @[simp]
 theorem orderedInversionRoots_apply (p : WeylG2)

@@ -25,9 +25,9 @@ structure ThreeEndCertificateIrreducibilityData where
       core.budget.modeBudgetPassed ∧
       ¬ core.budget.registerBudgetPassed
   missingAddressWitness :
-    core.boundary.radiusBlindspotClosed ∧
-      core.boundary.endpointHeatClosed ∧
-      ¬ core.boundary.addressCollisionClosed
+    core.boundary.axes.radiusBlindspotClosed ∧
+      core.boundary.axes.endpointHeatClosed ∧
+      ¬ core.boundary.axes.addressCollisionClosed
 
 namespace ThreeEndCertificateIrreducibilityData
 
@@ -48,14 +48,11 @@ open ThreeEndCertificateIrreducibilityData
 Each putative verifier that keeps only two ends is refuted by the omission witness for the third
 end, using the conclusion-level orthogonality package. -/
 theorem paper_conclusion_three_end_certificate_irreducibility
-    (D : ThreeEndCertificateIrreducibilityData)
-    (hBoundaryAddress : D.core.boundary.radiusBlindspotClosed →
-      D.core.boundary.endpointHeatClosed →
-        ¬ D.core.boundary.addressCollisionClosed →
-          D.core.boundary.verifierResult ≠ .certificate) :
+    (D : ThreeEndCertificateIrreducibilityData) :
     (D.addrDefSoundComplete → False) ∧
       (D.addrLinSoundComplete → False) ∧
       (D.defLinSoundComplete → False) := by
+  have hBoundaryAddress := D.core.boundary.address_non_substitutable
   have hBudgetRegister := D.core.budget.register_failure_obstructs
   have hClosureFailure := D.core.closure.failure_of_toeplitz
   refine ⟨?_, ?_⟩

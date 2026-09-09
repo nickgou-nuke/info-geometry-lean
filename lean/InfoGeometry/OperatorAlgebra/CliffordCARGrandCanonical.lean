@@ -36,19 +36,35 @@ theorem chiralCharge_eq_numberPlus_sub_numberMinus :
 
 theorem numberPlus_numberMinus_commute :
     numberPlus * numberMinus - numberMinus * numberPlus = 0 := by
-  have h := mixedGenerator_commutator_mixedGenerator 2 0 0 1 1
+  have h01 : ann 2 0 * cre 2 1 = -(cre 2 1 * ann 2 0) := by
+    have h := car_identity 2 0 1
+    simp at h
+    exact eq_neg_of_add_eq_zero_left h
+  have h10 : ann 2 1 * cre 2 0 = -(cre 2 0 * ann 2 1) := by
+    have h := car_identity 2 1 0
+    simp at h
+    exact eq_neg_of_add_eq_zero_left h
+  have hcc : cre 2 0 * cre 2 1 = -(cre 2 1 * cre 2 0) := by
+    have h := cre_cre_anticomm 2 0 1
+    exact eq_neg_of_add_eq_zero_left h
+  have haa : ann 2 0 * ann 2 1 = -(ann 2 1 * ann 2 0) := by
+    have h := ann_ann_anticomm 2 0 1
+    exact eq_neg_of_add_eq_zero_left h
+  unfold numberPlus numberMinus
   calc
-    numberPlus * numberMinus - numberMinus * numberPlus =
-        mixedGenerator 2 0 0 * mixedGenerator 2 1 1 -
-          mixedGenerator 2 1 1 * mixedGenerator 2 0 0 := by
-      unfold mixedGenerator
-      apply InfoGeometry.OperatorAlgebra.commutator_sub_central
-      intro z
-      simpa [Algebra.smul_def] using
-        (Algebra.commutes (R := ℝ) (A := TwoSheetCAR) (1 / 2 : ℝ) z)
+    cre 2 0 * ann 2 0 * (cre 2 1 * ann 2 1) -
+        cre 2 1 * ann 2 1 * (cre 2 0 * ann 2 0) =
+        cre 2 0 * (ann 2 0 * cre 2 1) * ann 2 1 -
+          cre 2 1 * (ann 2 1 * cre 2 0) * ann 2 0 := by noncomm_ring
+    _ = cre 2 0 * (-(cre 2 1 * ann 2 0)) * ann 2 1 -
+          cre 2 1 * (-(cre 2 0 * ann 2 1)) * ann 2 0 := by rw [h01, h10]
+    _ = -(cre 2 0 * cre 2 1) * (ann 2 0 * ann 2 1) +
+          (cre 2 1 * cre 2 0) * (ann 2 1 * ann 2 0) := by
+      simp only [smul_eq_mul, neg_mul]
+      noncomm_ring
     _ = 0 := by
-      norm_num at h
-      exact h
+      rw [hcc, haa]
+      noncomm_ring
 
 theorem totalNumber_chiralCharge_commute :
     totalNumber * chiralCharge - chiralCharge * totalNumber = 0 := by

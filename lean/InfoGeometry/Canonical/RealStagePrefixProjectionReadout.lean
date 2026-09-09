@@ -302,5 +302,3 @@ theorem closure_range_prefixRankDyadicTopCatHom :
     closure_range_prefixRankDyadicPoint
 
 end InfoGeometry.Canonical
-
-end

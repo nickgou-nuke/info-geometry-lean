@@ -76,6 +76,66 @@ theorem embedded_cylinder_projection (n : ℕ) (w : BitWord n) :
       cylinder n (cylinderProjectionStage n w) :=
   cylinder_compatible_succ n (cylinderProjectionStage n w)
 
+/-- The parent cylinder projection splits into its two one-bit children. -/
+theorem cylinderProjection_child_sum (n : ℕ) (w : BitWord n) :
+    cylinderProjection (n + 1) (prefixWord false w) +
+        cylinderProjection (n + 1) (prefixWord true w) =
+      cylinderProjection n w := by
+  funext x
+  change cylinderProjection (n + 1) (prefixWord false w) x +
+      cylinderProjection (n + 1) (prefixWord true w) x =
+    cylinderProjection n w x
+  rw [cylinderProjection_apply, cylinderProjection_apply,
+    cylinderProjection_apply]
+  have hboundary :
+      boundaryPrefix (n + 1) x =
+        extendSucc n (boundaryPrefix n x) (x n) := by
+    ext i
+    by_cases hi : i.1 < n
+    · simp [boundaryPrefix, prefixBoundary, extendSucc, hi]
+    · have hi' : i.1 = n := by omega
+      have hi_eq : i = ⟨n, Nat.lt_succ_self n⟩ := Fin.ext hi'
+      subst i
+      simp [boundaryPrefix, prefixBoundary, extendSucc]
+  rw [hboundary]
+  cases hb : x n with
+  | false =>
+      have hfalse :
+          extendSucc n (boundaryPrefix n x) false = extendSucc n w false ↔
+            boundaryPrefix n x = w := by
+        constructor
+        · intro h
+          have hp := congrArg (prefixSucc n) h
+          rw [prefixSucc_extendSucc, prefixSucc_extendSucc] at hp
+          exact hp
+        · intro h
+          subst w
+          rfl
+      have hcross :
+          extendSucc n (boundaryPrefix n x) false ≠ extendSucc n w true := by
+        intro h
+        have hp := congrFun h ⟨n, Nat.lt_succ_self n⟩
+        simp [extendSucc] at hp
+      simp [prefixWord, hfalse, hcross]
+  | true =>
+      have htrue :
+          extendSucc n (boundaryPrefix n x) true = extendSucc n w true ↔
+            boundaryPrefix n x = w := by
+        constructor
+        · intro h
+          have hp := congrArg (prefixSucc n) h
+          rw [prefixSucc_extendSucc, prefixSucc_extendSucc] at hp
+          exact hp
+        · intro h
+          subst w
+          rfl
+      have hcross :
+          extendSucc n (boundaryPrefix n x) true ≠ extendSucc n w false := by
+        intro h
+        have hp := congrFun h ⟨n, Nat.lt_succ_self n⟩
+        simp [extendSucc] at hp
+      simp [prefixWord, htrue, hcross]
+
 theorem finite_cylinder_packet (n : ℕ) (w w' : BitWord n) :
     cylinderProjection n w * cylinderProjection n w = cylinderProjection n w ∧
     (w ≠ w' → cylinderProjection n w * cylinderProjection n w' = 0) ∧

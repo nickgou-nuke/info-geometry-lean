@@ -12,7 +12,7 @@ namespace InfoGeometry.OperatorAlgebra
 The two-by-two trace identity.
 
 For any `2 × 2` matrix `A` and any `2 × 2` matrix `B` of determinant `1`,
-`tr(A) tr(B) = tr(AB) + tr(AB⁻¹)`.  The determinant property is needed only
+`tr(A) tr(B) = tr(AB) + tr(AB⁻¹)`.  The determinant hypothesis is needed only
 for `B`, since the inverse in the identity is `B⁻¹`.
 -/
 theorem sl2c_trace_identity {R : Type*} [CommRing R]

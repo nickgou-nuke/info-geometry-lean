@@ -41,6 +41,6 @@ theorem affineKksForm_contragredient_invariant
   unfold affineKksForm
   rw [kksForm_contragredient_invariant e hLie μ X Y, hθ]
 
-end InfoGeometry.Canonical.SouriauKKSContragredientBridge
+end SouriauKKSContragredientBridge
 
-end
+end Canonical

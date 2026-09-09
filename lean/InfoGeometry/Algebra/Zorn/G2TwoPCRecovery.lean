@@ -289,11 +289,33 @@ lemma peel0_apply_basis8_4 (f : SplitOctF2Aut) :
   · rw [automorphism_mul_apply, pc1Aut_basis8_4]
   · simp
 
+lemma peel0_apply_basis8_2 (f : SplitOctF2Aut) :
+    (peel0 f).1 (basis8 2) = f.1 (basis8 2) := by
+  dsimp [peel0]
+  split
+  · rw [automorphism_mul_apply, pc1Aut_basis8_2]
+  · simp
+
 lemma peel0_apply_basis8_6 (f : SplitOctF2Aut) :
     (peel0 f).1 (basis8 6) = f.1 (basis8 6) := by
   dsimp [peel0]
   split
   · rw [automorphism_mul_apply, pc1Aut_basis8_6]
+  · simp
+
+lemma pc1Aut_basis8_5 :
+    pc1Aut.1 (basis8 5) = add (basis8 4) (basis8 5) := by
+  ext <;> rfl
+
+lemma peel0_apply_basis8_5 (f : SplitOctF2Aut) :
+    (peel0 f).1 (basis8 5) =
+      if (f.1 (basis8 7)).x0 then
+        f.1 (add (basis8 4) (basis8 5))
+      else
+        f.1 (basis8 5) := by
+  dsimp [peel0]
+  split
+  · rw [automorphism_mul_apply, pc1Aut_basis8_5]
   · simp
 
 lemma pc1Aut_basis8_7 :

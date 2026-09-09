@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.HolographicEntanglementSymmetry
 import InfoGeometry.Arithmetic.PrimeParafermionGrandCanonicalClock
-
+import InfoGeometry.Canonical.PrimeParafermionGrandCanonicalClock
 
 /-!
 # RosettaTimeClock
@@ -31,6 +31,22 @@ export InfoGeometry.Canonical.HolographicEntanglementSymmetry (
   time_is_positive_branch_winding
 )
 
+export InfoGeometry.Canonical.PrimeParafermionGrandCanonicalClock (
+  parafermionLocalFactor
+  stateProbability
+  stateSurprisal
+  stateSurprisal_eq_massieu_sub_logWeight
+  stateSurprisal_eq_boltzmannEntropy
+  parafermionMassieu
+  parafermionGrandPotential
+  Q_kappa
+  ln_Q_is_massieu
+  PrimeParafermionGrandCanonicalPacket
+  fermionicCollapse_eq_primeSuperalgebra
+  signedCollapse_eq_primeSuperalgebra
+  z3_localFactor_eq_trinomial
+  positiveBranchThermalTime
+)
 
 export InfoGeometry.Arithmetic.PrimeParafermionGrandCanonicalClock (
   LogQClockCalibration
@@ -39,7 +55,7 @@ export InfoGeometry.Arithmetic.PrimeParafermionGrandCanonicalClock (
 namespace PrimeParafermionRosettaBridge
 
 open InfoGeometry.Arithmetic.PrimeParafermionGrandCanonicalClock
-
+open InfoGeometry.Canonical.PrimeParafermionGrandCanonicalClock
 open InfoGeometry.Canonical.YangMillsContinuum
 open InfoGeometry.Canonical.YangMillsContinuum.ModularRadonNikodymData
 open InfoGeometry.Canonical.TrialitySpin8Permutations
@@ -63,7 +79,7 @@ theorem parafermion_massieu_reads_as_rosetta_time
       ((n : ℤ) : ℂ) * (∮ z in C((0 : ℂ), B.radius), poleForm z) = logarithmicPhase (n : ℤ) ∧
       Complex.exp (((n : ℤ) : ℂ) * (∮ z in C((0 : ℂ), B.radius), poleForm z)) = (1 : ℂ) ∧
       subtreeEntropy n = minimalSurfaceArea n / (4 * effectiveNewtonConstant) := by
-  exact positive_branch_time_clock_theorem (B := B) P
+  exact positiveBranchThermalTime (B := B) P
 
 /--
 Rosetta-facing semantic capstone: the `κ`-truncated parafermion Massieu

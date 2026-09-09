@@ -40,16 +40,6 @@ theorem realBinaryReadout_allFalse :
     realBinaryReadout (fun _ : ℕ => false) = 0 := by
   simp [realBinaryReadout, realBinaryTerm]
 
-theorem realBinaryReadout_allTrue :
-    realBinaryReadout (fun _ : ℕ => true) = 1 := by
-  have h := realBinaryReadout_complement (fun _ : ℕ => false)
-  simpa [realBinaryReadout_allFalse] using h
-
-theorem realBinaryReadout_range_reflection (w : ℕ → Bool) :
-    1 - realBinaryReadout w ∈ Set.range realBinaryReadout := by
-  refine ⟨fun n => !w n, ?_⟩
-  exact realBinaryReadout_complement_eq_one_sub w
-
 theorem finitePrefixReadout_mem_realBinaryReadout_range
     (bs : List Bool) :
     finitePrefixReadout bs ∈ Set.range realBinaryReadout := by

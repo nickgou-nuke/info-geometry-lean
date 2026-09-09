@@ -32,7 +32,7 @@ def nilpotentFluxCharge : ℝ := tr2 nilpotentCrossFlux
 /--
 The local cross-flux seed has unit charge.
 
-This gives a concrete finite property for the `c = 1` normalization at the
+This gives a concrete finite witness for the `c = 1` normalization at the
 `2×2` seed level.
 -/
 theorem nilpotentFluxCharge_eq_one : nilpotentFluxCharge = 1 := by

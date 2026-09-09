@@ -18,9 +18,9 @@ open InfoGeometry.Clifford.FanoOctonionParavector
 open InfoGeometry.Clifford.OctonionParavectorBridge
 open InfoGeometry.Clifford.ProjectedCliffordAssociatorDefect
 
-private def x0 : OctonionCarrier := imaginary (basisVector 0)
-private def x1 : OctonionCarrier := imaginary (basisVector 1)
-private def x4 : OctonionCarrier := imaginary (basisVector 4)
+private def x0 : Paravector R7 := imaginary (basisVector 0)
+private def x1 : Paravector R7 := imaginary (basisVector 1)
+private def x4 : Paravector R7 := imaginary (basisVector 4)
 
 theorem fano_associator_eq :
     paravectorMul fanoOctonionParavectorData

@@ -46,7 +46,7 @@ theorem real_doubled_hypercomplex_atom :
     superGrade_emergentK⟩
 
 /--
-The real log-determinant property from `KreinDeterminantAnalyticity`:
+The real log-determinant witness from `KreinDeterminantAnalyticity`:
 the explicit trace-zero hyperbolic scale flow has determinant one and
 therefore zero log-volume.
 -/
@@ -57,5 +57,29 @@ theorem trace_zero_scale_has_zero_log_volume (θ : ℝ) :
         (InfoGeometry.Quantum.KreinDeterminantAnalyticity.hyperbolicFlow θ) = 0 := by
   exact ⟨InfoGeometry.Quantum.KreinDeterminantAnalyticity.hyperbolicFlow_analytic θ,
     InfoGeometry.Quantum.KreinDeterminantAnalyticity.logVolume_hyperbolic θ⟩
+
+/--
+Combined local synthesis:
+
+complex/hypercomplex phase, logarithmic scale, and projective nilpotent
+boundary are represented here by concrete operator blocks rather than by
+separate scalar number systems.
+-/
+theorem kan_logdet_unification_synthesis :
+    (∀ θ β : ℝ, ∀ z : ℂ,
+      (KPart θ * APart β * NPart z).det = 1 ∧
+        nilpotentShear z * nilpotentShear z = 0 ∧
+        (nilpotentShear z).det = 0) ∧
+    (emergentK * emergentK = -(1 : M2R) ∧ emergentK.det = 1) ∧
+    (∀ θ : ℝ,
+      InfoGeometry.Quantum.KreinDeterminantAnalyticity.logVolume
+        (InfoGeometry.Quantum.KreinDeterminantAnalyticity.hyperbolicFlow θ) = 0) := by
+  constructor
+  · intro θ β z
+    exact ⟨det_KAN θ β z, nilpotentShear_sq z, det_nilpotentShear z⟩
+  constructor
+  · exact ⟨emergentK_sq, emergentK_det⟩
+  · intro θ
+    exact InfoGeometry.Quantum.KreinDeterminantAnalyticity.logVolume_hyperbolic θ
 
 end InfoGeometry.Canonical.KANLogDetUnification

@@ -101,7 +101,45 @@ for k in range(12):
             if candidate:
                 break
         if candidate is None:
-            raise RuntimeError(f"no constant entry witness for pair {k},{l}")
-        print(f"PAIR_SEPARATOR {k} {l} {candidate[0]} {candidate[1]} {candidate[2]}")
+            entries = [(i, j) for i in range(8) for j in range(8)]
+            # Build the finite hitting-set instance once.  A row is an
+            # assignment of the 12 PC bits; an entry covers that row exactly
+            # when the two matrices differ there.  Greedy set cover is used
+            # only to discover a small explicit certificate.  The resulting
+            # entries are independently checked by the Lean owner.
+            polys = {
+                (i, j): sp.Poly(left_weyl[k][i][j], *vars, modulus=2)
+                for i, j in entries
+            }
+            uncovered = set(range(1 << 12))
+            chosen = []
+            while uncovered:
+                best = max(
+                    entries,
+                    key=lambda entry: sum(
+                        evaluates_to(polys[entry], assignment)
+                        != int(weyl[l][entry[0]][entry[1]])
+                        for assignment in uncovered
+                    ),
+                )
+                covered = {
+                    assignment for assignment in uncovered
+                    if evaluates_to(polys[best], assignment)
+                    != int(weyl[l][best[0]][best[1]])
+                }
+                if not covered:
+                    break
+                chosen.append(best)
+                uncovered -= covered
+            if uncovered:
+                raise RuntimeError(f"no finite entry separator set for pair {k},{l}")
+            print(
+                "PAIR_SEPARATOR_SET",
+                k,
+                l,
+                " ".join(f"{i},{j}" for i, j in chosen),
+            )
+        else:
+            print(f"PAIR_SEPARATOR {k} {l} {candidate[0]} {candidate[1]} {candidate[2]}")
 
 print("PAIR_SEPARATOR_COUNT=66")

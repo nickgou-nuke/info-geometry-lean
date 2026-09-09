@@ -153,5 +153,41 @@ theorem primon_trifactor_projector_packet (T : A) (hT : T ^ 3 = T) :
     bosonicTrifactorProjector T - fermionicTrifactorProjector T = T :=
   trifactor_capstone T hT
 
+/-! ## Explicit conjectural/spectral boundary predicate -/
+
+/--
+An explicit proposition-level socket for the informal phrase
+"RH is stable, unbroken supersymmetry at the boundary".
+
+The components are deliberately named assumptions.  This definition does not
+prove any of them.
+-/
+def RHSupersymmetricBoundaryScenario
+    (stableMassGap wittenBalanceOnCriticalLine boundarySUSYUnbroken
+      zerosOnCriticalLine : Prop) : Prop :=
+  stableMassGap ∧ wittenBalanceOnCriticalLine ∧ boundarySUSYUnbroken ∧ zerosOnCriticalLine
+
+/-! ## Conditional supercharge socket -/
+
+section Supercharge
+
+variable {V : Type*} [AddCommMonoid V]
+
+/--
+Explicit socket for the supersymmetric quantum-mechanics relation `Q² = H`.
+
+It is intentionally a predicate: this file does not construct the analytic
+Hamiltonian or prove a mass gap.
+-/
+def SuperchargeSquaresToHamiltonian (Q H : V →+ V) : Prop :=
+  Q.comp Q = H
+
+/-- If the supplied supercharge squares to the Hamiltonian, then its square is `H`. -/
+theorem supercharge_square_readout
+    {Q H : V →+ V} (hQ : SuperchargeSquaresToHamiltonian Q H) :
+    Q.comp Q = H :=
+  hQ
+
+end Supercharge
 
 end InfoGeometry.Arithmetic.SupersymmetricPrimonGas

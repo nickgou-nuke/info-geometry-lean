@@ -1,0 +1,26 @@
+import InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre
+
+/-!
+# Checks for the Operator Erlangen--Legendre packet
+-/
+
+noncomputable section
+
+namespace InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre.Checks
+
+/- The former packet API was removed from the owner.  Keep this check module
+   executable while checking the current owner surface instead. -/
+#check OperatorErlangenLegendrePacket
+#check InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre.OperatorErlangenLegendrePacket.modular_derivation_eq_commutator
+#check InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre.OperatorErlangenLegendrePacket.stabilizer_iff_eval_invariant_readback
+#check InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre.OperatorErlangenLegendrePacket.freeEnergyReadout_eq_eval_exponentialWeight_readback
+#check InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre.OperatorErlangenLegendrePacket.StateStabilizer
+#check InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre.OperatorErlangenLegendrePacket.mem_stateStabilizer_iff
+#check InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre.OperatorErlangenLegendrePacket.spectraFirstGuard
+#check InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre.OperatorErlangenLegendrePacket.diagonalPrimitiveGuard
+#check OperatorErlangenLegendreTarget
+#check operatorErlangenLegendreTarget
+#check HilbertPolyaOperatorPacket
+#check InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre.HilbertPolyaOperatorPacket.criticalLine_zero_iff_spectral_value
+
+end InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre.Checks

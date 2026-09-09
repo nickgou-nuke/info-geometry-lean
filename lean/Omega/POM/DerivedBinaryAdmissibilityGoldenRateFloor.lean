@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.POM.OptimalSuccessBound
+import Omega.POM.WitnessExtractionOptimalSuccess
 
 namespace Omega.POM
 
@@ -14,7 +14,7 @@ theorem paper_derived_binary_admissibility_golden_rate_floor (m B : ℕ) (ε : �
   have hFibPos : 0 < Nat.fib (m + 2) := Nat.fib_pos.mpr (by omega)
   let x : Fin (Nat.fib (m + 2)) := ⟨0, hFibPos⟩
   obtain ⟨Succ, hSuccDef, hBound⟩ :=
-    pom_optimal_success_bound
+    paper_pom_witness_extraction_optimal_success
       (X := Fin (Nat.fib (m + 2)))
       (d := fun _ => Nat.fib (m + 2))
       (hd := fun _ => Nat.succ_le_of_lt hFibPos)

@@ -151,7 +151,7 @@ theorem zeroRectangularHolonomyOn_of_isExactOn
     (isConservativeOn_of_isExactOn hU hExact)
 
 /--
-Primitive exactness is a sufficient zero-holonomy analyticity property.
+Primitive exactness is a sufficient zero-holonomy analyticity certificate.
 -/
 def primitiveExactness_to_zeroHolonomy_cauchyAnalyticAt
     {U : Set ℂ} {f : ℂ → ℂ} {z : ℂ}
@@ -175,7 +175,7 @@ def isExactOn_to_doubled_cauchyAnalyticAt
 
 /--
 Primitive exactness is also a sufficient doubled-space zero-holonomy
-analyticity property.
+analyticity certificate.
 -/
 def primitiveExactness_to_zeroHolonomy_doubled_cauchyAnalyticAt
     {U : Set ℂ} {f : ℂ → ℂ} {z : ℂ}
@@ -209,7 +209,7 @@ theorem complexLinearGenerator_commutes_complexIMap
     (complexLinearGenerator_commutes_phaseAxis X)
 
 /--
-For a repo `CauchyAnalyticAt` property, the stored derivative commutes with the
+For a repo `CauchyAnalyticAt` witness, the stored derivative commutes with the
 phase axis.  This is the derivative-level Cauchy-Riemann/clock-axis law.
 -/
 theorem cauchyAnalyticAt_derivative_commutes_phaseAxis

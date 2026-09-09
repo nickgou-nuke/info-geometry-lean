@@ -2,8 +2,6 @@ import Mathlib.Tactic
 
 open Complex
 
-namespace KleinBottle
-
 /-!
 # The Klein Bottle Geometry and Möbius Symmetry
 
@@ -58,7 +56,7 @@ def M (z : ℂ) : ℂ := star z
 
 /-- Half-turn rotation (by π). 
     This generates a cone point singularity of order 2 in the orbifold. -/
-def KleinHalfTurn (z : ℂ) : ℂ := -z
+def H (z : ℂ) : ℂ := -z
 
 /-- The real line is exactly the set of fixed points for the mirror reflection,
     forming the boundary of the non-orientable orbifold. -/
@@ -71,12 +69,12 @@ theorem mirror_involution (z : ℂ) : M (M z) = z := by
 
 /-- The origin is the unique fixed point of the half-turn, 
     forming an orbifold cone point. -/
-theorem cone_point_origin : KleinHalfTurn 0 = 0 := by
-  simp [KleinHalfTurn]
+theorem cone_point_origin : H 0 = 0 := by
+  simp [H]
 
 /-- A half-turn is order two, the local group of a cone point of order 2. -/
-theorem half_turn_involution (z : ℂ) : KleinHalfTurn (KleinHalfTurn z) = z := by
-  simp [KleinHalfTurn]
+theorem half_turn_involution (z : ℂ) : H (H z) = z := by
+  simp [H]
 
 /-- The glide reflection G is composed of the mirror reflection M
     followed by a translation by 1. -/
@@ -115,13 +113,11 @@ theorem non_orientable_orbifold_theorem :
     (∀ z, G (T z) = T_inv (G z)) ∧
     (∀ z, G (G z) = z + 2) ∧
     (∀ z, M (M z) = z) ∧
-    (∀ z, KleinHalfTurn (KleinHalfTurn z) = z) ∧
+    (∀ z, H (H z) = z) ∧
     M (0 : ℂ) = 0 ∧
-    KleinHalfTurn (0 : ℂ) = 0 ∧
+    H (0 : ℂ) = 0 ∧
     orientationSign OrbifoldLocalSymmetry.mirrorBoundary = -1 ∧
     orientationSign OrbifoldLocalSymmetry.glideTwist = -1 := by
   exact ⟨klein_bottle_relation, glide_reflection_sq, mirror_involution,
     half_turn_involution, by simp [M], cone_point_origin,
     mirror_orientation_reversing, glide_orientation_reversing⟩
-
-end KleinBottle

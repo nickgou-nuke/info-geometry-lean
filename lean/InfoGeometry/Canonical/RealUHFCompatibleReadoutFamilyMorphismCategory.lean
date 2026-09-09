@@ -119,5 +119,3 @@ theorem toTopCatHom_comp
   exact comp_map_apply Φ Ψ ρ
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutFamilyMorphismCategory
-
-end

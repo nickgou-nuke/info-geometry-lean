@@ -2,8 +2,6 @@ import InfoGeometry.Algebra.AlternativeDerivations
 import InfoGeometry.Algebra.Zorn.CanonicalDerivationBridge
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
 
-set_option synthInstance.maxHeartbeats 100000
-
 noncomputable section
 namespace InfoGeometry.Lie.SplitOctonionStandardDerivation
 
@@ -134,16 +132,8 @@ theorem directCanonicalStanDerMap_apply_normal_form (x y z : CanonicalZorn) :
           (3 : ℕ) • ((X * Y) * Z - X * (Y * Z))) := congrArg _ hinner
     _ = ((x * y - y * x) * z - z * (x * y - y * x)) -
         3 • ((x * y) * z - x * (y * z)) := by
-      have hsub (a b : AbstractKingdon) : kingdonCanonicalLinearEquiv (a - b) =
-          kingdonCanonicalLinearEquiv a - kingdonCanonicalLinearEquiv b :=
-        kingdonCanonicalLinearEquiv.map_sub a b
-      have hmul (a b : AbstractKingdon) : kingdonCanonicalLinearEquiv (a * b) =
-          kingdonCanonicalLinearEquiv a * kingdonCanonicalLinearEquiv b := by
-        rw [kingdonCanonicalLinearEquiv_mul, zMul_eq_canonical_mul]
-      have hnsmul (n : ℕ) (a : AbstractKingdon) : kingdonCanonicalLinearEquiv (n • a) =
-          n • kingdonCanonicalLinearEquiv a :=
-        (kingdonCanonicalLinearEquiv.toAddMonoidHom).map_nsmul a n
-      simp only [hsub, hmul, hnsmul, X, Y, Z, LinearEquiv.apply_symm_apply]
+      simp only [map_sub, map_nsmul, X, Y, Z, zMul_eq_canonical_mul,
+        kingdonCanonicalLinearEquiv_mul, LinearEquiv.apply_symm_apply]
 
 /-- Baez's standard derivation with canonical split-octonion inputs. -/
 noncomputable def canonicalStandardDerivationOfCanonical (x y : CanonicalZorn) :
@@ -414,7 +404,7 @@ private theorem scaledParameterUnit_mem
     simp [smul_smul, hr]
   rwa [heq] at hm
 
-theorem parameterUnit_six_mem :
+private theorem parameterUnit_six_mem :
     canonicalParameterLinearEquiv (parameterUnit 6) ∈ standardDerivationSpan := by
   let A := canonicalStandardDerivationOfCanonical (canonicalU 0) (canonicalV 0)
   let B := canonicalStandardDerivationOfCanonical (canonicalU 1) (canonicalV 1)
@@ -437,7 +427,7 @@ theorem parameterUnit_six_mem :
       norm_num [parameterUnit, h6, h13, Fin.ext_iff]
   rwa [heq] at hm
 
-theorem parameterUnit_thirteen_mem :
+private theorem parameterUnit_thirteen_mem :
     canonicalParameterLinearEquiv (parameterUnit 13) ∈ standardDerivationSpan := by
   let A := canonicalStandardDerivationOfCanonical (canonicalU 0) (canonicalV 0)
   let B := canonicalStandardDerivationOfCanonical (canonicalU 1) (canonicalV 1)
@@ -461,7 +451,7 @@ theorem parameterUnit_thirteen_mem :
       norm_num [parameterUnit, h6, h13, Fin.ext_iff]
   rwa [heq] at hm
 
-noncomputable def parameterUnitsInSpan : Fin 14 → standardDerivationSpan := ![
+private noncomputable def parameterUnitsInSpan : Fin 14 → standardDerivationSpan := ![
   ⟨canonicalParameterLinearEquiv (parameterUnit 0),
     scaledParameterUnit_mem canonicalE11 (canonicalV 0) 0 1 (by norm_num)
       standardColumn_E11_V0⟩,
@@ -502,13 +492,13 @@ noncomputable def parameterUnitsInSpan : Fin 14 → standardDerivationSpan := ![
   ⟨canonicalParameterLinearEquiv (parameterUnit 13), parameterUnit_thirteen_mem⟩
 ]
 
-theorem parameterUnitsInSpan_coe (j : Fin 14) :
+private theorem parameterUnitsInSpan_coe (j : Fin 14) :
     (parameterUnitsInSpan j : canonicalZornDerivations) =
       canonicalParameterLinearEquiv (parameterUnit j) := by
   revert j
   simp [Fin.forall_iff_succ, parameterUnitsInSpan]
 
-theorem parameterUnit_mem (j : Fin 14) :
+private theorem parameterUnit_mem (j : Fin 14) :
     canonicalParameterLinearEquiv (parameterUnit j) ∈ standardDerivationSpan := by
   rw [← parameterUnitsInSpan_coe j]
   exact (parameterUnitsInSpan j).property

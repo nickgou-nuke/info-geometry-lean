@@ -78,6 +78,48 @@ theorem kleinHamiltonian_sq_zero_of_discriminant_zero {α β γ kx ky : ℝ}
   rw [kleinHamiltonian_sq, h]
   simp
 
+/--
+A Klein-glide braid packet is definitionally its clockwise group charge.
+The opposite orientation and glide relation are derived from group inversion,
+so no three-field evidence wrapper is required.
+-/
+abbrev KleinGlideBraidPacket (B : Type*) [Group B] :=
+  B
+
+namespace KleinGlideBraidPacket
+
+/-- Clockwise charge readback from the wrapper-free packet. -/
+def clockwise {B : Type*} [Group B] (P : KleinGlideBraidPacket B) : B :=
+  P
+
+/-- Orientation reversal of a group-valued braid charge. -/
+def counterclockwise {B : Type*} [Group B] (clockwise : B) : B :=
+  clockwise⁻¹
+
+/-- Reversing orientation sends a braid charge to its group inverse. -/
+@[simp]
+theorem counterclockwise_eq_inverse
+    {B : Type*} [Group B] (clockwise : B) :
+    counterclockwise clockwise = clockwise⁻¹ :=
+  rfl
+
+/-- The canonical Klein glide reverses orientation by group inversion. -/
+@[simp]
+theorem glideRelation
+    {B : Type*} [Group B] (P : KleinGlideBraidPacket B) :
+    counterclockwise P.clockwise = P.clockwise⁻¹ :=
+  rfl
+
+/-- Non-self-inverse packet charges distinguish the two loop orientations. -/
+theorem orientations_inequivalent
+    {B : Type*} [Group B] (P : KleinGlideBraidPacket B)
+    (h : P.clockwise⁻¹ ≠ P.clockwise) :
+    counterclockwise P.clockwise ≠ P.clockwise := by
+  rw [counterclockwise_eq_inverse]
+  exact h
+
+end KleinGlideBraidPacket
+
 /-- If a braid charge is not self-inverse, the two loop orientations are inequivalent. -/
 theorem orientations_inequivalent_of_not_self_inverse
     {B : Type*} [Group B]

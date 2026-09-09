@@ -119,4 +119,6 @@ theorem artin_braid_relation : s0 * s1 * s0 = s1 * s0 * s1 := by
         (Complex.I • ((1 : Matrix (Fin 8) (Fin 8) ℂ) - e1)) := by
       simp [smul_mul_assoc, mul_smul_comm, smul_smul]
 
+#check artin_braid_relation
+
 end InfoGeometry.Physics.JonesBraidB3

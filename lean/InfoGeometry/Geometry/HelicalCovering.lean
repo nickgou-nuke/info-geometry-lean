@@ -309,7 +309,7 @@ end MonodromyEvent
 /--
 A packet of sheet amplitudes/readouts.
 
-This is the abstract interface for statements such as:
+This is the abstract socket for statements such as:
 
 `Ψ = Σ_N c_N |N⟩`.
 
@@ -367,36 +367,56 @@ theorem maps_to_branch
 
 end SpectralDivisorMonodromyCalibration
 
+/-! ## 7. Owner targets -/
 
-/-! ## 7. Native covering and monodromy theorems -/
+/-- Owner target for helical-cover branch exclusion on the zero sheet. -/
+def HelicalCoveringOwnerTarget
+    (Base Cover : Type*) : Prop :=
+  ∀ C : HelicalCovering Base Cover,
+    ∀ x : Cover,
+      x ∈ C.zeroSheet →
+        ¬ C.LiesOverBranch x
 
-theorem helicalCovering_zeroSheet_not_over_branch
+/-- The helical-cover owner target is the zero-sheet branch exclusion law. -/
+theorem helicalCoveringOwnerTarget
     (Base Cover : Type*) :
-    ∀ C : HelicalCovering Base Cover,
-      ∀ x : Cover,
-        x ∈ C.zeroSheet → ¬ C.LiesOverBranch x := by
+    HelicalCoveringOwnerTarget Base Cover := by
   intro C x hx
   exact C.zeroSheet_not_over_branch hx
 
-theorem deckAction_readouts
+/-- Owner target for deck/monodromy readout laws on a supplied helical cover. -/
+def DeckActionOwnerTarget
+    {Base Cover : Type*}
+    (C : HelicalCovering Base Cover) : Prop :=
+  ∀ D : DeckAction C,
+    (∀ x : Cover, C.project (D.step x) = C.project x) ∧
+      (∀ x : Cover, C.winding (D.step x) = C.winding x + 1) ∧
+        (∀ x : Cover, C.winding (D.stepInv x) = C.winding x - 1)
+
+/-- A deck action supplies the projection and winding readouts for sheet steps. -/
+theorem deckActionOwnerTarget
     {Base Cover : Type*}
     (C : HelicalCovering Base Cover) :
-    ∀ D : DeckAction C,
-      (∀ x : Cover, C.project (D.step x) = C.project x) ∧
-        (∀ x : Cover, C.winding (D.step x) = C.winding x + 1) ∧
-          (∀ x : Cover, C.winding (D.stepInv x) = C.winding x - 1) := by
+    DeckActionOwnerTarget C := by
   intro D
   exact ⟨
     (fun x => D.project_step x),
     (fun x => D.winding_step x),
     (fun x => D.winding_stepInv x)⟩
 
-theorem spectralDivisor_maps_to_branch
+/-- Owner target for spectral-divisor monodromy calibration readout. -/
+def SpectralDivisorMonodromyOwnerTarget
+    (Spectral Base Cover : Type*) : Prop :=
+  ∀ C : HelicalCovering Base Cover,
+    ∀ S : SpectralDivisorMonodromyCalibration Spectral Base Cover C,
+      ∀ s : Spectral,
+        s ∈ S.spectralDivisor →
+          S.logPhaseReadout s ∈ C.branchLocus
+
+/-- A spectral-divisor calibration supplies the branch-locus readout. -/
+theorem spectralDivisorMonodromyOwnerTarget
     (Spectral Base Cover : Type*) :
-    ∀ C : HelicalCovering Base Cover,
-      ∀ S : SpectralDivisorMonodromyCalibration Spectral Base Cover C,
-        ∀ s : Spectral,
-          s ∈ S.spectralDivisor → S.logPhaseReadout s ∈ C.branchLocus := by
+    SpectralDivisorMonodromyOwnerTarget Spectral Base Cover := by
   intro C S s hs
   exact S.maps_to_branch hs
 

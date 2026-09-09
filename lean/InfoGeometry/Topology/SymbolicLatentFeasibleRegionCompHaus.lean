@@ -47,5 +47,3 @@ theorem symbolicLatentFeasibleRegionObservationCompHausTopCatHom_apply
   rfl
 
 end InfoGeometry.Topology
-
-end

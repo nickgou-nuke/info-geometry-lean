@@ -137,11 +137,7 @@ theorem gaugeStateFamily_bitWord_matrix_readout
           (bitWordStageStarAlgEquiv n A)) =
       bitWordMatrixGaugeReadout n A := by
   rw [gaugeStateFamily_readout]
-  change cstarMatrixTraceFunctional n
-      (CStarMatrix.ofMatrixStarAlgEquiv
-        (bitWordStageStarAlgEquiv n A)) = _
   rw [cstarMatrixTraceFunctional_apply]
-  change matrixTraceState n (bitWordStageStarAlgEquiv n A) = _
   symm
   exact bitWordMatrixGaugeReadout_transport n A
 

@@ -18,6 +18,7 @@ The result can be exported both as a `CircularPolarization` and as the
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -171,57 +172,21 @@ theorem Pleft_sub_Pright :
             rw [smul_smul]
             norm_num
 
-@[simp] theorem chi_mul_Pleft :
-    C.chi * C.Pleft = C.Pleft := by
-  dsimp [Pleft]
-  rw [Algebra.mul_smul_comm]
-  congr 1
-  calc
-    C.chi * ((1 : Op) + C.chi) = C.chi + C.chi * C.chi := by
-      noncomm_ring
-    _ = C.chi + 1 := by rw [C.chi_sq]
-    _ = (1 : Op) + C.chi := by abel
+@[simp] theorem chi_mul_Pleft : C.chi * C.Pleft = C.Pleft := by
+  rw [← C.Pleft_sub_Pright, sub_mul, C.Pleft_idem, C.Pright_mul_Pleft, sub_zero]
 
-@[simp] theorem chi_mul_Pright :
-    C.chi * C.Pright = -C.Pright := by
-  dsimp [Pright]
-  rw [Algebra.mul_smul_comm]
-  have h : C.chi * ((1 : Op) - C.chi) =
-      -((1 : Op) - C.chi) := by
-    calc
-      C.chi * ((1 : Op) - C.chi) = C.chi - C.chi * C.chi := by
-        noncomm_ring
-      _ = C.chi - 1 := by rw [C.chi_sq]
-      _ = -((1 : Op) - C.chi) := by abel
-  rw [h, smul_neg]
+@[simp] theorem chi_mul_Pright : C.chi * C.Pright = -C.Pright := by
+  rw [← C.Pleft_sub_Pright, sub_mul, C.Pleft_mul_Pright, C.Pright_idem, zero_sub]
 
-@[simp] theorem Pleft_mul_chi :
-    C.Pleft * C.chi = C.Pleft := by
-  dsimp [Pleft]
-  rw [smul_mul_assoc]
-  congr 1
-  calc
-    ((1 : Op) + C.chi) * C.chi = C.chi + C.chi * C.chi := by
-      noncomm_ring
-    _ = C.chi + 1 := by rw [C.chi_sq]
-    _ = (1 : Op) + C.chi := by abel
+@[simp] theorem Pleft_mul_chi : C.Pleft * C.chi = C.Pleft := by
+  rw [← C.Pleft_sub_Pright, mul_sub, C.Pleft_idem, C.Pleft_mul_Pright, sub_zero]
 
-@[simp] theorem Pright_mul_chi :
-    C.Pright * C.chi = -C.Pright := by
-  dsimp [Pright]
-  rw [smul_mul_assoc]
-  have h : ((1 : Op) - C.chi) * C.chi =
-      -((1 : Op) - C.chi) := by
-    calc
-      ((1 : Op) - C.chi) * C.chi = C.chi - C.chi * C.chi := by
-        noncomm_ring
-      _ = C.chi - 1 := by rw [C.chi_sq]
-      _ = -((1 : Op) - C.chi) := by abel
-  rw [h, smul_neg]
+@[simp] theorem Pright_mul_chi : C.Pright * C.chi = -C.Pright := by
+  rw [← C.Pleft_sub_Pright, mul_sub, C.Pright_mul_Pleft, C.Pright_idem, zero_sub]
 
 /--
 Export the constructive involution as the broader proof-carrying
-`CircularPolarization` interface.
+`CircularPolarization` socket.
 -/
 def toCircularPolarization : CircularPolarization Op where
   chi := C.chi
@@ -254,7 +219,7 @@ end ChiralInvolution
 /-! ## 2. Symmetries preserving the involution preserve the projectors -/
 
 /--
-A minimal real-algebra symmetry action for chiral involutions.
+A minimal real-algebra symmetry action socket for chiral involutions.
 
 This is deliberately small: it records only the preservation laws needed to
 prove that `chi`-preserving dynamics preserves the derived projectors.
@@ -269,6 +234,9 @@ structure ChiralInvolutionAction
   map_add :
     ∀ (g : G) (x y : Op), act g (x + y) = act g x + act g y
 
+  map_sub :
+    ∀ (g : G) (x y : Op), act g (x - y) = act g x - act g y
+
   map_mul :
     ∀ (g : G) (x y : Op), act g (x * y) = act g x * act g y
 
@@ -280,27 +248,6 @@ namespace ChiralInvolutionAction
 variable {G Op : Type*} [Group G] [Ring Op] [Algebra ℝ Op]
 variable (A : ChiralInvolutionAction G Op)
 variable (C : ChiralInvolution Op)
-
-theorem map_sub
-    (g : G) (x y : Op) :
-    A.act g (x - y) = A.act g x - A.act g y := by
-  have hzero : A.act g 0 = 0 := by
-    have h := A.map_add g (0 : Op) 0
-    apply add_left_cancel (a := A.act g 0)
-    simpa using h.symm
-  have hneg : A.act g (-y) = -A.act g y := by
-    have h := A.map_add g y (-y)
-    apply add_left_cancel (a := A.act g y)
-    calc
-      A.act g y + A.act g (-y) = A.act g (y + -y) := h.symm
-      _ = A.act g 0 := by rw [add_neg_cancel]
-      _ = 0 := hzero
-      _ = A.act g y + -A.act g y := by simp
-  calc
-    A.act g (x - y) = A.act g (x + -y) := by rw [sub_eq_add_neg]
-    _ = A.act g x + A.act g (-y) := A.map_add g x (-y)
-    _ = A.act g x + -A.act g y := by rw [hneg]
-    _ = A.act g x - A.act g y := by rw [sub_eq_add_neg]
 
 /-- If a symmetry fixes `chi`, it fixes the left projector derived from `chi`. -/
 theorem map_Pleft_of_chi_invariant
@@ -316,7 +263,7 @@ theorem map_Pright_of_chi_invariant
     (hchi : A.act g C.chi = C.chi) :
     A.act g C.Pright = C.Pright := by
   dsimp [ChiralInvolution.Pright]
-  rw [A.map_smul, map_sub A, A.map_one, hchi]
+  rw [A.map_smul, A.map_sub, A.map_one, hchi]
 
 /-- A left support/image condition for a projector. -/
 def leftImage
@@ -380,7 +327,7 @@ end ChiralInvolutionAction
 /--
 Constructing chiral projector stages from involutions.
 -/
-theorem chiralProjectorFromInvolution_properties :
+theorem chiralProjectorFromInvolutionOwnerTarget :
   ∀ (Op : Type*) [Ring Op] [Algebra ℝ Op],
   ∀ C : ChiralInvolution Op,
     C.Pleft * C.Pleft = C.Pleft ∧
@@ -398,5 +345,17 @@ theorem chiralProjectorFromInvolution_properties :
     C.Pleft_add_Pright,
     C.Pleft_sub_Pright
   ⟩
+
+/-- Direct packet for one chiral involution's two projectors. -/
+theorem chiralProjectorFromInvolution_packet
+    {Op : Type*} [Ring Op] [Algebra ℝ Op]
+    (C : ChiralInvolution Op) :
+    C.Pleft * C.Pleft = C.Pleft ∧
+      C.Pright * C.Pright = C.Pright ∧
+      C.Pleft * C.Pright = 0 ∧
+      C.Pright * C.Pleft = 0 ∧
+      C.Pleft + C.Pright = 1 ∧
+      C.Pleft - C.Pright = C.chi :=
+  chiralProjectorFromInvolutionOwnerTarget Op C
 
 end InfoGeometry.OperatorAlgebra

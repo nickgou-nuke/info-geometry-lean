@@ -1,0 +1,16 @@
+import InfoGeometry.Nuclear.ApollonianBipolarField
+
+#print axioms InfoGeometry.Nuclear.ApollonianBipolarField.inter_polar_dist_eq
+#print axioms InfoGeometry.Nuclear.ApollonianBipolarField.inter_polar_dist_pos
+#print axioms InfoGeometry.Nuclear.ApollonianBipolarField.linearizer_eq_scaled_dist
+#print axioms InfoGeometry.Nuclear.ApollonianBipolarField.linearizer_extract_d0
+#print axioms InfoGeometry.Nuclear.ApollonianBipolarField.linearizer_virtual_root
+#print axioms InfoGeometry.Nuclear.ApollonianBipolarField.linearizer_pos
+#print axioms InfoGeometry.Nuclear.ApollonianBipolarField.midpoint_abs_dist_eq
+#print axioms InfoGeometry.Nuclear.ApollonianBipolarField.midpoint_ratio_eq_one
+#print axioms InfoGeometry.Nuclear.ApollonianBipolarField.flux_eq_activity_coupling
+#print axioms InfoGeometry.Nuclear.ApollonianBipolarField.coupling_eq_inv_sq_linearizer
+#print axioms InfoGeometry.Nuclear.ApollonianBipolarField.photopeak_aperture_microscopic
+#print axioms InfoGeometry.Nuclear.ApollonianBipolarField.virtual_summing_area_microscopic
+#print axioms InfoGeometry.Nuclear.ApollonianBipolarField.apollonian_cross_quotient_peak_to_total
+#print axioms InfoGeometry.Nuclear.ApollonianBipolarField.apollonian_unit_cascade_peak_to_total

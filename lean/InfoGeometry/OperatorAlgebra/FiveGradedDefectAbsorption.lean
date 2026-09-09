@@ -13,13 +13,14 @@ Thus `[g_-1, g_+1]` still lands in `g_0`. The `g_+2` memory sector absorbs
 defects through same-side brackets, contact terms, cocycles, or
 representation-specific closure maps, not by violating the grading rule.
 
-This file is an accounting interface. It does not prove a concrete `E7`, `E8`,
+This file is an accounting socket. It does not prove a concrete `E7`, `E8`,
 Virasoro, black-hole unitarity, Page-curve, or holographic-recovery theorem.
 -/
 
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -36,7 +37,7 @@ variable
 /--
 Same positive-grade brackets land in the top contact/memory grade.
 
-This reuses the repository's existing constructive five-grading interface from
+This reuses the repository's existing constructive five-grading socket from
 `SuperTKKConformalClosure`.
 -/
 theorem plus_one_plus_one_mem_plus_two
@@ -83,6 +84,19 @@ structure ThreeGradeClosureDefect
     (State Defect : Type*) where
   defect : State → Defect
 
+namespace ThreeGradeClosureDefect
+
+variable {State Defect : Type*}
+variable (D : ThreeGradeClosureDefect State Defect)
+
+/-- The closure-defect readout is the supplied defect function. -/
+theorem defect_readout
+    (s : State) :
+    D.defect s = D.defect s :=
+  rfl
+
+end ThreeGradeClosureDefect
+
 /--
 Absorption of a three-grade closure defect into the positive grade-two
 memory/contact sector of a five-graded algebra.
@@ -112,6 +126,15 @@ variable (A : DefectAbsorbedInPlusTwo L State Defect G D)
 
 /-- The closure defect is stored in the top contact/memory grade. -/
 theorem defect_is_plus_two_memory
+    (s : State) :
+    A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo :=
+  A.defect_mem_plus_two s
+
+/--
+The old TKK closure defect is represented by a top-grade element in the
+extended algebra.
+-/
+theorem absorption
     (s : State) :
     A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo :=
   A.defect_mem_plus_two s
@@ -192,7 +215,7 @@ theorem ricciFlux_eq_plusTwoReadout_of_curvature_stationary
 
 end TKKDefectAbsorbedInPlusTwo
 
-/-! ## 4. Black-hole information ledger interface -/
+/-! ## 4. Black-hole information ledger socket -/
 
 /--
 A black-hole information ledger in a five-graded extension.
@@ -362,7 +385,7 @@ theorem recursive_visibleLoss_eq_gradeTwoGain
 
 end GradeTwoInformationLedger
 
-/-! ## 6. BPS/central-charge bound interface -/
+/-! ## 6. BPS/central-charge bound socket -/
 
 /--
 A BPS/central-charge bound.
@@ -370,7 +393,7 @@ A BPS/central-charge bound.
 This is the formal statement that a mass/energy readout is bounded below by a
 central or grade-two charge readout.
 
-The structure is intentionally scalar and property-gated. A concrete
+The structure is intentionally scalar and witness-gated. A concrete
 supergravity, Virasoro, or horizon model supplies the charge norm and the proof
 of the inequality.
 -/
@@ -429,10 +452,10 @@ end BPSBoundDatum
 /--
 Five-grade defect absorption readout.
 
-Once a five-grade absorption property is supplied, every old closure defect is
+Once a five-grade absorption witness is supplied, every old closure defect is
 represented in the `g_+2` memory sector.
 -/
-theorem fiveGradeDefectAbsorption_mem_plusTwo :
+theorem fiveGradeDefectAbsorptionOwnerTarget :
   ∀ (L State Defect : Type*)
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Defect] [Module ℝ Defect],
@@ -444,13 +467,32 @@ theorem fiveGradeDefectAbsorption_mem_plusTwo :
   intro L State Defect _ _ _ _ _ _ G D A s
   exact A.defect_is_plus_two_memory s
 
+/-- Packet readout for one five-grade defect absorption witness. -/
+theorem fiveGradeDefectAbsorption_packet
+    (L State Defect : Type*)
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup Defect] [Module ℝ Defect]
+    (G : FiveGrading L)
+    (D : ThreeGradeClosureDefect State Defect)
+    (A : DefectAbsorbedInPlusTwo L State Defect G D)
+    (s : State) :
+    A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo :=
+  fiveGradeDefectAbsorptionOwnerTarget L State Defect G D A s
+
 /--
 Owner target for installing a BPS/central-charge bound.
 -/
-theorem bpsBound_properties
-    {State : Type*} (B : BPSBoundDatum State) :
+def BPSBoundOwnerTarget
+    (State : Type*) : Prop :=
+  ∀ B : BPSBoundDatum State,
     (∀ s : State, 0 ≤ B.centralNorm s) ∧
-      (∀ s : State, B.centralNorm s ≤ B.mass s) := by
+      (∀ s : State, B.centralNorm s ≤ B.mass s)
+
+/-- Installed BPS data satisfy the central-norm lower-bound target. -/
+theorem bpsBoundOwnerTarget
+    (State : Type*) :
+    BPSBoundOwnerTarget State := by
+  intro B
   exact ⟨B.centralNorm_nonnegative, B.centralNorm_le_mass⟩
 
 end InfoGeometry.OperatorAlgebra.FiveGradedDefectAbsorption

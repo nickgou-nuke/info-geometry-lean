@@ -1,5 +1,5 @@
 import InfoGeometry.Categorical.InductivePosetColimit
-import InfoGeometry.Causal.ProofDAGRepresentation
+import InfoGeometry.Canonical.ProofDAGRepresentationBridge
 import InfoGeometry.Canonical.CausalFunctor
 import InfoGeometry.Projective.Twistor.Incidence
 
@@ -29,7 +29,7 @@ open CategoryTheory
 open CategoryTheory.Limits
 open Set
 open InfoGeometry.Categorical.InductivePosetColimit
-open InfoGeometry.Causal.ProofDAGRepresentation
+open InfoGeometry.Canonical.ProofDAGRepresentationBridge
 open InfoGeometry.Projective.Twistor
 
 universe u v uJ

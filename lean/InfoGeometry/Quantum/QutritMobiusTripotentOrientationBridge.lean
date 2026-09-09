@@ -79,54 +79,15 @@ def qutritMobiusClass : Fin 3 → MobiusClass
 def qutritMobiusOperator (i : Fin 3) : RealMat2 :=
   opSquareMatrix (qutritOpSquareClass i)
 
-@[simp] theorem qutritMobiusOperator_zero :
-    qutritMobiusOperator 0 = !![0, -1; 1, 0] := by
-  ext a b
-  fin_cases a <;> fin_cases b <;>
-    simp [qutritMobiusOperator, qutritOpSquareClass, opSquareMatrix,
-      InfoGeometry.Algebra.HypercomplexTriad.I]
-
-@[simp] theorem qutritMobiusOperator_one :
-    qutritMobiusOperator 1 = !![0, 1; 0, 0] := by
-  ext a b
-  fin_cases a <;> fin_cases b <;>
-    simp [qutritMobiusOperator, qutritOpSquareClass, opSquareMatrix,
-      InfoGeometry.Algebra.HypercomplexTriad.N]
-
-@[simp] theorem qutritMobiusOperator_two :
-    qutritMobiusOperator 2 = !![1, 0; 0, -1] := by
-  ext a b
-  fin_cases a <;> fin_cases b <;>
-    simp [qutritMobiusOperator, qutritOpSquareClass, opSquareMatrix,
-      InfoGeometry.Algebra.HypercomplexTriad.E]
-
-@[simp] theorem qutritMobiusOperator_apply (i : Fin 3) (a b : Fin 2) :
-    qutritMobiusOperator i a b =
-      opSquareMatrix (qutritOpSquareClass i) a b := by
-  rfl
-
-@[simp] theorem qutritMobiusOperator_entry (i : Fin 3) (a b : Fin 2) :
-    qutritMobiusOperator i a b =
-      match i.1 with
-      | 0 => (if a = 0 ∧ b = 1 then (-1 : ℝ) else if a = 1 ∧ b = 0 then 1 else 0)
-      | 1 => (if a = 0 ∧ b = 1 then 1 else 0)
-      | _ => (if a = 0 ∧ b = 0 then 1 else if a = 1 ∧ b = 1 then -1 else 0) := by
-  fin_cases i <;> fin_cases a <;> fin_cases b <;>
-    simp [qutritMobiusOperator, qutritOpSquareClass, opSquareMatrix,
-      InfoGeometry.Algebra.HypercomplexTriad.I,
-      InfoGeometry.Algebra.HypercomplexTriad.N,
-      InfoGeometry.Algebra.HypercomplexTriad.E]
+/-- Trace-zero complex generators corresponding respectively to `I`, `N`, and `E`. -/
+def qutritMobiusGenerator : Fin 3 → sl2C
+  | ⟨0, _⟩ => ⟨0, -1, 1⟩
+  | ⟨1, _⟩ => ⟨0, 1, 0⟩
+  | ⟨2, _⟩ => ⟨1, 0, 0⟩
 
 /-- Entrywise complexification of a real `2 × 2` operator. -/
 def complexifyRealMat2 (A : RealMat2) : ComplexMat2 :=
   fun i j => (A i j : ℂ)
-
-/-- Trace-zero complex generators corresponding respectively to `I`, `N`, and `E`. -/
-def qutritMobiusGenerator (i : Fin 3) : sl2C :=
-  match i with
-  | ⟨0, _⟩ => sl2C.ofCoords 0 (-1) 1
-  | ⟨1, _⟩ => sl2C.ofCoords 0 1 0
-  | ⟨2, _⟩ => sl2C.ofCoords 1 0 0
 
 /-- The `sl₂(ℂ)` generator matrix is exactly the complexified Möbius operator. -/
 theorem qutritMobiusGenerator_matrix_eq_operator (i : Fin 3) :
@@ -134,23 +95,20 @@ theorem qutritMobiusGenerator_matrix_eq_operator (i : Fin 3) :
   refine Fin.cases ?_ ?_ i
   · ext a b
     fin_cases a <;> fin_cases b <;> simp [qutritMobiusGenerator, qutritMobiusOperator,
-      qutritOpSquareClass, complexifyRealMat2, sl2C.matrix, sl2C.ofCoords,
-      sl2C.a, sl2C.b, sl2C.c, opSquareMatrix,
+      qutritOpSquareClass, complexifyRealMat2, sl2C.matrix, opSquareMatrix,
       InfoGeometry.Algebra.HypercomplexTriad.I]
   · intro i
     refine Fin.cases ?_ ?_ i
     · ext a b
       fin_cases a <;> fin_cases b <;> simp [qutritMobiusGenerator, qutritMobiusOperator,
-        qutritOpSquareClass, complexifyRealMat2, sl2C.matrix, sl2C.ofCoords,
-        sl2C.a, sl2C.b, sl2C.c, opSquareMatrix,
+        qutritOpSquareClass, complexifyRealMat2, sl2C.matrix, opSquareMatrix,
         InfoGeometry.Algebra.HypercomplexTriad.N]
     · intro i
       have hi : i = 0 := Fin.eq_zero i
       subst i
       ext a b
       fin_cases a <;> fin_cases b <;> simp [qutritMobiusGenerator, qutritMobiusOperator,
-        qutritOpSquareClass, complexifyRealMat2, sl2C.matrix, sl2C.ofCoords,
-        sl2C.a, sl2C.b, sl2C.c, opSquareMatrix,
+        qutritOpSquareClass, complexifyRealMat2, sl2C.matrix, opSquareMatrix,
         InfoGeometry.Algebra.HypercomplexTriad.E]
 
 /-- Operator square laws: `I² = -1`, `N² = 0`, and `E² = 1`. -/
@@ -170,17 +128,14 @@ theorem qutritMobiusGenerator_discriminant :
         | .loxodromic => 0 := by
   intro i
   refine Fin.cases ?_ ?_ i
-  · norm_num [qutritMobiusGenerator, qutritMobiusClass, sl2C.discriminant,
-      sl2C.ofCoords, sl2C.a, sl2C.b, sl2C.c]
+  · norm_num [qutritMobiusGenerator, qutritMobiusClass, sl2C.discriminant]
   · intro i
     refine Fin.cases ?_ ?_ i
-    · norm_num [qutritMobiusGenerator, qutritMobiusClass, sl2C.discriminant,
-        sl2C.ofCoords, sl2C.a, sl2C.b, sl2C.c]
+    · norm_num [qutritMobiusGenerator, qutritMobiusClass, sl2C.discriminant]
     · intro i
       have hi : i = 0 := Fin.eq_zero i
       subst i
-      norm_num [qutritMobiusGenerator, qutritMobiusClass, sl2C.discriminant,
-        sl2C.ofCoords, sl2C.a, sl2C.b, sl2C.c]
+      norm_num [qutritMobiusGenerator, qutritMobiusClass, sl2C.discriminant]
 
 /-- The real qutrit triad does not contain the genuinely complex loxodromic class. -/
 theorem qutritMobiusClass_ne_loxodromic (i : Fin 3) :
@@ -209,8 +164,7 @@ theorem tripotentMobiusGenerator_discriminant :
         | .pos => 4 := by
   intro s
   cases s <;> norm_num [tripotentMobiusGenerator, tripotentStateEquivQutritLabel,
-    InfoGeometry.Physics.tripotentStateIndex, qutritMobiusGenerator,
-    sl2C.discriminant, sl2C.ofCoords, sl2C.a, sl2C.b, sl2C.c]
+    InfoGeometry.Physics.tripotentStateIndex, qutritMobiusGenerator, sl2C.discriminant]
 
 /-- Finite one-parameter matrix flow generated by the selected Möbius operator. -/
 def qutritMobiusMatrixFlow (i : Fin 3) (t : ℂ) : ComplexMat2 :=

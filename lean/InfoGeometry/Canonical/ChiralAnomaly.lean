@@ -271,7 +271,7 @@ noncomputable def sinkhornIterateTrajectory
   step := sinkhornIterate_step (n := n) M0 hrow hcol
 
 /--
-Generated doubly-stochastic Sinkhorn trajectory from explicit balancing property
+Generated doubly-stochastic Sinkhorn trajectory from explicit balancing hypothesis
 along the recursive iterate sequence.
 -/
 noncomputable def sinkhornIterateDoublyStochasticTrajectory

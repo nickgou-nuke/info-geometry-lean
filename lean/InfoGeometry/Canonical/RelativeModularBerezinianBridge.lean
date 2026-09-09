@@ -132,7 +132,7 @@ potential.
 The finite Berezinian/supervolume potential anchors the value at the vacuum
 `0`; the operatorial fluctuation is the repo-native indefinite quadratic
 Krein potential.  This is the concrete lane where the second derivative is
-proved, not merely carried as a property.
+proved, not merely carried as a hypothesis.
 -/
 @[rep_depth operator]
 noncomputable def relativeModularSupervolumeKreinQuadraticPotential
@@ -387,7 +387,7 @@ structure RelativeModularSupervolumeKreinHessianLift where
         (n := n) qPlus q0Plus qMinus q0Minus
   /--
   The analytic second variation is the Krein Hessian form.
-  This is the explicit noncommutative/operatorial property supplied by the
+  This is the explicit noncommutative/operatorial hypothesis supplied by the
   modular-flow model.
   -/
   secondVariation_eq_kreinInner :

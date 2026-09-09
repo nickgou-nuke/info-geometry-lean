@@ -140,7 +140,7 @@ structure HestenesKreinTower where
 attribute [instance] HestenesKreinTower.hAdd HestenesKreinTower.hMod
 
 /-- A colimit-lift interface mirroring the repo's direct-limit style. -/
-structure HestenesKreinCompatibleLift (T : HestenesKreinTower) where
+structure HestenesKreinColimitLimit (T : HestenesKreinTower) where
   Carrier : Type*
   [hAdd : AddCommGroup Carrier]
   [hMod : Module ℝ Carrier]
@@ -151,7 +151,7 @@ structure HestenesKreinCompatibleLift (T : HestenesKreinTower) where
   J_compat : ∀ n (x : T.Stage n), Jlim (inc n x) = inc n (T.mirror n x)
   I_compat : ∀ n (x : T.Stage n), Ilim (inc n x) = inc n (T.rotor n x)
 
-attribute [instance] HestenesKreinCompatibleLift.hAdd HestenesKreinCompatibleLift.hMod
+attribute [instance] HestenesKreinColimitLimit.hAdd HestenesKreinColimitLimit.hMod
 
 /-- The one-stage constant tower built from the concrete matrix carrier. -/
 def oneStageTower : HestenesKreinTower where
@@ -170,8 +170,8 @@ def oneStageTower : HestenesKreinTower where
     intro n x y
     rfl
 
-/-- The corresponding one-stage compatible-lift package. -/
-def oneStageCompatibleLift : HestenesKreinCompatibleLift oneStageTower where
+/-- The corresponding one-stage colimit-lift package. -/
+def oneStageColimit : HestenesKreinColimitLimit oneStageTower where
   Carrier := M2R
   inc := fun _ => LinearMap.id
   hInc := by
@@ -186,5 +186,35 @@ def oneStageCompatibleLift : HestenesKreinCompatibleLift oneStageTower where
   I_compat := by
     intro n x
     rfl
+
+/-- The concrete carrier theorem: rotor, mirror, and bracket compatibility
+all hold on the matrix carrier. -/
+theorem matrixStage_synthesis :
+    (∀ x : matrixStage.Carrier, matrixStage.rotor (matrixStage.rotor x) = -x) ∧
+    (∀ x : matrixStage.Carrier, matrixStage.mirror (matrixStage.mirror x) = x) ∧
+    (∀ x y : matrixStage.Carrier,
+      matrixStage.mirror (matrixStage.bracket x y) =
+        matrixStage.bracket (matrixStage.mirror x) (matrixStage.mirror y)) := by
+  constructor
+  · intro x
+    exact matrixStage.rotor_sq x
+  constructor
+  · intro x
+    exact matrixStage.mirror_sq x
+  · intro x y
+    exact matrixStage.bracket_mirror x y
+
+/-- The colimit-interface theorem: the lifted mirror and rotor commute with the
+stage inclusion in the finite constant system. -/
+theorem oneStageColimit_synthesis :
+    (∀ n (x : oneStageTower.Stage n), oneStageColimit.Jlim (oneStageColimit.inc n x) =
+      oneStageColimit.inc n (oneStageTower.mirror n x)) ∧
+    (∀ n (x : oneStageTower.Stage n), oneStageColimit.Ilim (oneStageColimit.inc n x) =
+      oneStageColimit.inc n (oneStageTower.rotor n x)) := by
+  constructor
+  · intro n x
+    exact oneStageColimit.J_compat n x
+  · intro n x
+    exact oneStageColimit.I_compat n x
 
 end HestenesKreinColimitBridge

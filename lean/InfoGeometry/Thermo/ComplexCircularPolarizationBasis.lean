@@ -14,8 +14,8 @@ This module formalizes the real-linear split
 
 and the corresponding factorization of the elementary Boltzmann weight.
 
-No interface.
-No property.
+No socket.
+No certificate.
 No zeta claim.
 -/
 

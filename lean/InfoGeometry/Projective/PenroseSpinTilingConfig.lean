@@ -26,7 +26,7 @@ None.
   counting polynomial.
 - Compute or certify the actual algebraic de Rham cohomology of
   `C^8 \ V(q(a) q(b) q(a-b))`.
-- Relate the configured local Betti list to that property de Rham computation.
+- Relate the configured local Betti list to that certified de Rham computation.
 
 This module records the finite arithmetic checks and the rank configuration
 used by the Penrose spin tiling layer for the singular Klein-quadric
@@ -70,6 +70,40 @@ theorem pointCount_F5_verified :
   unfold tateMotivePolynomial
   norm_num
 
+/-- A finite point-count datum certified by the candidate counting polynomial. -/
+def PointCountEvidence : Type :=
+  {p : ℤ × ℤ // tateMotivePolynomial p.1 = p.2}
+
+namespace PointCountEvidence
+
+/-- The finite-field size parameter carried by the point-count evidence. -/
+abbrev q (E : PointCountEvidence) : ℤ :=
+  E.1.1
+
+/-- The certified point count carried by the evidence. -/
+abbrev count (E : PointCountEvidence) : ℤ :=
+  E.1.2
+
+/-- The defining point-count equality carried by the evidence. -/
+theorem count_eq (E : PointCountEvidence) :
+    tateMotivePolynomial (q E) = count E :=
+  E.2
+
+/-- Construct point-count evidence from its parameter, count, and equality. -/
+def mk (q count : ℤ) (h : tateMotivePolynomial q = count) :
+    PointCountEvidence :=
+  ⟨(q, count), h⟩
+
+end PointCountEvidence
+
+/-- The `q = 3` point-count evidence. -/
+def pointCountF3Evidence : PointCountEvidence :=
+  PointCountEvidence.mk 3 1296 pointCount_F3_verified
+
+/-- The `q = 5` point-count evidence. -/
+def pointCountF5Evidence : PointCountEvidence :=
+  PointCountEvidence.mk 5 175200 pointCount_F5_verified
+
 /-- The configured total de Rham rank target for the spin-tiling model. -/
 def assumedTotalDeRhamRank : ℕ := 32
 
@@ -98,30 +132,20 @@ theorem spinTiledDeRhamRank_eq_assumedTotalDeRhamRank :
 /-- Explicit rank-configuration record used by downstream capstone modules. -/
 structure SpinTilingRankConfig where
   bettiNumbers : List ℕ
+  localRank : ℕ
   multiplicity : ℕ
-
-namespace SpinTilingRankConfig
-
-/-- The local rank determined by the stored Betti signature. -/
-abbrev localRank (C : SpinTilingRankConfig) : ℕ := C.bettiNumbers.sum
-
-/-- The total rank determined by multiplicity and local rank. -/
-abbrev totalRank (C : SpinTilingRankConfig) : ℕ := C.multiplicity * C.localRank
-
-theorem localRank_eq (C : SpinTilingRankConfig) :
-    C.bettiNumbers.sum = C.localRank := by
-  rfl
-
-theorem totalRank_eq (C : SpinTilingRankConfig) :
-    C.multiplicity * C.localRank = C.totalRank := by
-  rfl
-
-end SpinTilingRankConfig
+  totalRank : ℕ
+  localRank_eq : bettiNumbers.sum = localRank
+  totalRank_eq : multiplicity * localRank = totalRank
 
 /-- The canonical rank-32 Penrose spin-tiling configuration. -/
 def rank32Config : SpinTilingRankConfig where
   bettiNumbers := verifiedBettiNumbers
+  localRank := localBettiRank
   multiplicity := spinTilingMultiplicity
+  totalRank := assumedTotalDeRhamRank
+  localRank_eq := rfl
+  totalRank_eq := spinTiledDeRhamRank_eq_assumedTotalDeRhamRank
 
 /-- The canonical configuration records total rank `32`. -/
 theorem rank32Config_totalRank : rank32Config.totalRank = 32 := by

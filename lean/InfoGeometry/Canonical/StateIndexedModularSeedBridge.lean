@@ -14,7 +14,7 @@ This file is a translator/coherence surface:
 - it derives a state-indexed seed presentation from the owned KMS lane,
 - it does not replace canonical owners,
 - and it proves equality to `canonicalModularSeed` under an explicit bounded
-  compatibility property.
+  compatibility witness.
 -/
 
 namespace InfoGeometry.Canonical.StateIndexedModularSeedBridge
@@ -44,7 +44,7 @@ local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
 /--
 State-indexed input packet:
-- a property inverse-kernel lane property,
+- a certified inverse-kernel lane witness,
 - and a KMS-compatible state-functional packet on the owned Unruh lane.
 -/
 @[rep_depth transport]
@@ -97,29 +97,40 @@ theorem modularTransportGenerator_stateIndexedBivectorSeed
     _ = -(-(H.comp (ContinuousLinearMap.id ℝ H₂))) := by simp
     _ = H := by simp
 
+/--
+Bounded witness class used to identify the state-indexed seed with the
+canonical projected-even seed:
+- normalized inverse-temperature (`β = 1`),
+- and generator calibration to the projected-even Drazin lane.
+-/
+@[rep_depth transport]
+structure BoundedCanonicalSeedWitness where
+  datum : StateIndexedSeedDatum (E := E)
+  hInverseTemperature_one : datum.kms.inverseTemperature = 1
+  hTwoPi_calibration :
+    DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK datum.CIK
+      =
+    (2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E)
+
 /-- On bounded witnesses, the state-indexed boost generator is exactly `H_D`. -/
 @[rep_depth transport]
 theorem stateIndexedBoostGenerator_eq_superHamiltonian_of_boundedWitness
-    (datum : StateIndexedSeedDatum (E := E))
-    (hInverseTemperature_one : datum.kms.inverseTemperature = 1)
-    (hTwoPi_calibration :
-      DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK datum.CIK =
-        (2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E)) :
-    stateIndexedBoostGenerator (E := E) datum
+    (W : BoundedCanonicalSeedWitness (E := E)) :
+    stateIndexedBoostGenerator (E := E) W.datum
       =
-    DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK datum.CIK := by
+    DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK W.datum.CIK := by
   calc
-    stateIndexedBoostGenerator (E := E) datum
+    stateIndexedBoostGenerator (E := E) W.datum
         =
-      (datum.kms.inverseTemperature * (2 * Real.pi))
+      (W.datum.kms.inverseTemperature * (2 * Real.pi))
         • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
           rfl
     _ = (1 * (2 * Real.pi)) • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
-          simp [hInverseTemperature_one]
+          simp [W.hInverseTemperature_one]
     _ = (2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
           simp
-    _ = DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK datum.CIK := by
-          simpa using hTwoPi_calibration.symm
+    _ = DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK W.datum.CIK := by
+          simpa using W.hTwoPi_calibration.symm
 
 /--
 Capstone translator theorem:
@@ -128,20 +139,15 @@ projected-even modular seed.
 -/
 @[rep_depth transport]
 theorem stateIndexedBivectorSeed_eq_canonicalModularSeed_of_boundedWitness
-    (datum : StateIndexedSeedDatum (E := E))
-    (hInverseTemperature_one : datum.kms.inverseTemperature = 1)
-    (hTwoPi_calibration :
-      DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK datum.CIK =
-        (2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E)) :
-    stateIndexedBivectorSeed (E := E) datum
+    (W : BoundedCanonicalSeedWitness (E := E)) :
+    stateIndexedBivectorSeed (E := E) W.datum
       =
-    canonicalBivectorSeed (E := E) datum.CIK := by
+    canonicalBivectorSeed (E := E) W.datum.CIK := by
   have hGen :
-      stateIndexedBoostGenerator (E := E) datum
+      stateIndexedBoostGenerator (E := E) W.datum
         =
-      DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK datum.CIK :=
-    stateIndexedBoostGenerator_eq_superHamiltonian_of_boundedWitness (E := E) datum
-      hInverseTemperature_one hTwoPi_calibration
+      DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK W.datum.CIK :=
+    stateIndexedBoostGenerator_eq_superHamiltonian_of_boundedWitness (E := E) W
   unfold stateIndexedBivectorSeed canonicalBivectorSeed
   simp [hGen]
 
@@ -151,16 +157,11 @@ state-indexed seed and canonical seed induce the same modular generator.
 -/
 @[rep_depth transport]
 theorem stateIndexed_transportGenerator_eq_canonical_of_boundedWitness
-    (datum : StateIndexedSeedDatum (E := E))
-    (hInverseTemperature_one : datum.kms.inverseTemperature = 1)
-    (hTwoPi_calibration :
-      DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK datum.CIK =
-        (2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E)) :
-    modularTransportGenerator (E := E) (stateIndexedBivectorSeed (E := E) datum)
+    (W : BoundedCanonicalSeedWitness (E := E)) :
+    modularTransportGenerator (E := E) (stateIndexedBivectorSeed (E := E) W.datum)
       =
-    modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) datum.CIK) := by
-  rw [stateIndexedBivectorSeed_eq_canonicalModularSeed_of_boundedWitness (E := E) datum
-    hInverseTemperature_one hTwoPi_calibration]
+    modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) W.datum.CIK) := by
+  rw [stateIndexedBivectorSeed_eq_canonicalModularSeed_of_boundedWitness (E := E) W]
 
 end Core
 

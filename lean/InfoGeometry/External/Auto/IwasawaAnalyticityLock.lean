@@ -14,7 +14,7 @@ This file records the conservative version of the "analyticity lock" vocabulary.
 The finite theorem is genuine: if the finite KAN log-determinant equals the
 modeled spectral/log-scale coordinate, then the determinant-trace defect is zero.
 
-The infinite theorem is deliberately packaged as a property.  It states the
+The infinite theorem is deliberately packaged as a certificate.  It states the
 exact remaining obligation: zero finite defects must pass to the chosen colimit
 or regularized determinant interface.
 -/
@@ -94,7 +94,7 @@ theorem iwasawa_analyticity_limit_lock
   exact (L.inc n).map_zero
 
 /--
-Colimit property for the analytic lock.
+Colimit certificate for the analytic lock.
 
 This is the honest infinite interface: a construction of a colimit or
 regularized determinant must provide the global defect and prove that the
@@ -107,7 +107,7 @@ structure ColimitTraceDefectModel extends FiniteTraceDefectModel where
 
 /--
 Infinite Iwasawa analyticity lock, conditional only on the explicit colimit
-property above.  No infinite determinant or trace-class theorem is smuggled in.
+certificate above.  No infinite determinant or trace-class theorem is smuggled in.
 -/
 theorem infinite_iwasawa_analyticity_lock (M : ColimitTraceDefectModel) :
     M.colimitDefect = 0 :=

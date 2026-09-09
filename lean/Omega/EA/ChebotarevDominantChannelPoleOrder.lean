@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.EA.ChebotarevSecondMainTerm
+import Omega.EA.ChebotarevSecondMainTermWitness
 
 namespace Omega.EA
 
@@ -45,7 +45,7 @@ theorem paper_kernel_artin_dominant_channel_pole_order :
     · norm_num [artinAuxiliaryFactor1, artinDominantPoleLocation]
     · norm_num [artinAuxiliaryFactor2, artinDominantPoleLocation]
   · rcases
-      kernel_chebotarev_second_main_term
+      paper_kernel_chebotarev_second_main_term_witness
         artinDominantWitnessCoeff (by norm_num [artinDominantWitnessCoeff]) with
         ⟨_hexp, hnonzero, hosc⟩
     exact ⟨hnonzero, hosc⟩

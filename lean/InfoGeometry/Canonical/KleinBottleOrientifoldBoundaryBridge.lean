@@ -6,12 +6,12 @@ import InfoGeometry.Canonical.CantorSimplicialHomotopy
 /-!
 # InfoGeometry.Canonical.KleinBottleOrientifoldBoundaryBridge
 
-Bridge from the existing orientifold property packet to the matrix-level Klein
+Bridge from the existing orientifold hypothesis packet to the matrix-level Klein
 boundary operator used by `KleinBottleTopology`.
 
 This file is intentionally modest:
 
-- the orientifold packet remains property data;
+- the orientifold packet remains hypothesis data;
 - the boundary operator is supplied explicitly;
 - the conclusion is only trace closure for finite boundary operators, and the
   corresponding closure for the existing Cantor simplicial packet.
@@ -41,7 +41,7 @@ open InfoGeometry.Canonical.CantorSimplicialHomotopy
 /--
 Explicit parity operator needed by the matrix-level Klein gluing theorem.
 
-The orientifold and prime-gas property packets were not used by the trace
+The orientifold and prime-gas hypothesis packets were not used by the trace
 argument and therefore do not belong to this operator owner.
 -/
 structure OrientifoldBoundaryOperatorPacket where
@@ -61,7 +61,7 @@ theorem orientifold_packet_trace_closed
 
 /--
 The same bridge closes every boundary face of the existing Cantor simplicial
-packet, provided the packet already carries the `chiral_balance` trace property.
+packet, provided the packet already carries the `chiral_balance` trace witness.
 -/
 theorem orientifold_packet_closes_cantor_boundary_faces
     (B : OrientifoldBoundaryOperatorPacket)

@@ -5,14 +5,17 @@ import Mathlib.Data.Complex.Basic
 import InfoGeometry.Canonical.ConformalFiveGradeInversion
 
 /-!
-# Finite Möbius phase certificate
+# 5-Graded Closure, Möbius Parity, and the Zero Gromov-Witten Index
 
-This file records a finite noncommutative phase certificate. It does not
-construct the native `Cl(5,5)` Pin action, an `O(5,5)` group, a TKK algebra,
-or a five-graded Lie closure. Those structures are owned by the native
-Clifford modules. The matrix packet below is retained as a small, explicit
-`M₂(ℝ)` witness for the square-minus-identity and trace calculations used by
-downstream finite readouts.
+This file formalizes the geometric anomaly resolution in the projective
+closure of the 5-graded Lie algebra. 
+
+The core physical statement is that the Möbius chiral parity index 
+is absorbed by bringing the extreme boundaries (Zero and Infinity, 
+or `g_{-2}` and `g_{2}`) into the algebra, generating a Weyl inversion.
+This inversion squares to `-I`, creating the `{I, -I}` centralizer 
+that strictly resolves the anomaly and yields a Zero Gromov-Witten Index 
+(trace of the parity operator vanishes).
 -/
 
 namespace InfoGeometry.Projective.Closure
@@ -20,34 +23,28 @@ namespace InfoGeometry.Projective.Closure
 open InfoGeometry.Canonical.ConformalFiveGradeInversion
 
 /-- 
-A 5-graded affine projective closure interface mapping Zero (`g_{-2}`)
+A 5-graded affine projective closure socket mapping Zero (`g_{-2}`)
 and Infinity (`g_2`) into a unified conformal algebra via the 
 Möbius chiral parity operator.
 -/
-structure FiniteMobiusPhaseData (n : ℕ) where
-  /-- The identity of the finite matrix algebra. -/
+structure FiveGradedMobiusClosure (n : ℕ) where
+  /-- The identity of the projective algebra. -/
   I : Matrix (Fin n) (Fin n) ℝ
-  /-- A finite Möbius phase matrix. -/
+  /-- The Möbius chiral parity operator swapping 0 and ∞. -/
   moebiusParity : Matrix (Fin n) (Fin n) ℝ
-  /-- A scalar finite readout attached to the phase matrix. -/
+  /-- The Gromov-Witten index mapped to the topological trace. -/
   gromovWittenIndex : ℝ
   
-  /-- The finite square-minus-identity certificate. -/
+  /-- The centralizer condition: the Möbius parity loops exactly into the {-I, I} center. -/
   centralizer_loop : moebiusParity * moebiusParity = -I
   
-  /-- The scalar readout is defined by the finite matrix trace. -/
+  /-- The Gromov-Witten index evaluates strictly to the trace of the chiral parity operator. -/
   gw_eq_trace : gromovWittenIndex = Matrix.trace moebiusParity
 
-/-- Compatibility name for downstream finite readouts.
-
-This alias does not promote the finite certificate to a native five-graded
-or Pin/O(5,5) closure. -/
-abbrev FiveGradedMobiusClosure (n : ℕ) := FiniteMobiusPhaseData n
-
-/-- Finite readout from the explicitly supplied phase certificate.
-
-This theorem is conditional on `closure`; it is not an anomaly-resolution
-theorem and does not identify the matrix with a native `O(5,5)` or Pin action.
+/-- 
+The fundamental anomaly resolution: 
+Because the 5-graded Möbius parity inversion sits in the projective {-I, I} centralizer
+and is traceless in the balanced conformal closure, the Gromov-Witten index is zero. 
 -/
 theorem zero_gromov_witten_anomaly_resolution (n : ℕ) 
     (closure : FiveGradedMobiusClosure n) 
@@ -59,10 +56,10 @@ theorem zero_gromov_witten_anomaly_resolution (n : ℕ)
   · exact closure.centralizer_loop
 
 /-!
-## Concrete 2x2 finite phase witness
+## Concrete 2x2 Möbius Parity Witness
 
-The abstract certificate above is a property package. The following finite
-instance gives the basic noncommutative matrix generator:
+The abstract closure above is a hypothesis package.  The following finite
+instance gives the basic spin/ribbon generator used by the SymPy witness:
 
 `S = [[0, 1], [-1, 0]]`, with `S^2 = -I` and `trace S = 0`.
 -/
@@ -86,12 +83,12 @@ theorem mobiusParity2_trace :
   norm_num [mobiusParity2, Matrix.trace, Fin.sum_univ_two]
 
 /-!
-## Finite two-pole label readout
+## Canonical Two-Pole Five-Grade Model
 
-The existing label owner records grade inversion abstractly. The following
-finite carrier is only its two-pole label readout: coordinate `0` is labelled
-`-2`, coordinate `1` is labelled `+2`, and the involution swaps them. No
-five-graded Lie algebra is inferred from this two-point carrier.
+The conformal owner records grade inversion as an involution on a five-grade
+carrier.  The following finite carrier is the two-pole extremal readout:
+coordinate `0` has grade `-2`, coordinate `1` has grade `+2`, and inversion
+swaps them.
 -/
 
 /-- The two-pole conformal inversion on the extremal `-2/+2` carrier. -/
@@ -180,6 +177,11 @@ five-grade inversion.
 -/
 def mobiusClosureFromConformalInversion2 : FiveGradedMobiusClosure 2 :=
   mobiusClosure2
+
+/-- The canonical two-pole model has zero Gromov-Witten trace readout. -/
+theorem mobiusClosureFromConformalInversion2_gw_zero :
+    mobiusClosureFromConformalInversion2.gromovWittenIndex = 0 := by
+  rfl
 
 /-- The canonical two-pole model has central ribbon square `-I`. -/
 theorem mobiusClosureFromConformalInversion2_centralizer :

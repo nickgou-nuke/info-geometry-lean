@@ -22,7 +22,7 @@ Zeta vacuum transitions into an Automorphic L-Function vacuum.
 The Langlands Functoriality is physically realized as the thermodynamic 
 equivalence of partition functions across dual gauge configurations.
 
-UTMOST MANDATE: No property-gating. The twisted Euler product is derived directly 
+UTMOST MANDATE: No witness-gating. The twisted Euler product is derived directly 
 from the twisted Weyl denominator.
 -/
 
@@ -37,25 +37,13 @@ A Gauge Field (Character) over the Prime Roots.
 Evaluates the Aharonov-Bohm phase acquired by a Bloch wave traversing a prime cycle.
 -/
 @[rep_depth transport]
-abbrev GaugeTwist (G : Type*) [Group G] := ℕ →* ℂ
-
-namespace GaugeTwist
-
-variable {G : Type*} [Group G]
-
-/-- The character evaluating on positive roots (primes), yielding a complex phase. -/
-abbrev χ (twist : GaugeTwist G) : ℕ → ℂ := twist
-
-/-- Multiplicativity is the native `MonoidHom.map_mul` law. -/
-theorem is_multiplicative (twist : GaugeTwist G) (a b : ℕ) :
-    χ twist (a * b) = χ twist a * χ twist b :=
-  twist.map_mul a b
-
-/-- The identity element has no phase shift. -/
-theorem maps_one_to_one (twist : GaugeTwist G) : χ twist 1 = 1 :=
-  twist.map_one
-
-end GaugeTwist
+structure GaugeTwist (G : Type*) [Group G] where
+  /-- The character evaluating on positive roots (primes), yielding a complex phase. -/
+  χ : ℕ → ℂ
+  /-- Multiplicativity ensures it forms a valid gauge representation (1D representation). -/
+  is_multiplicative : ∀ a b, χ (a * b) = χ a * χ b
+  /-- The identity element has no phase shift. -/
+  maps_one_to_one : χ 1 = 1
 
 /--
 The Twisted Euler Product (The L-Function).
@@ -65,13 +53,13 @@ The positive roots α (primes) are weighted by the gauge field χ(p).
 def twistedEulerProduct 
     {G : Type*} [Group G]
     (positiveRoots : Finset ℕ) (temperature_s : ℂ) (twist : GaugeTwist G) : ℂ :=
-    ∏ p ∈ positiveRoots, (1 - GaugeTwist.χ twist p * InfoGeometry.Thermodynamics.souriauEvaluation p temperature_s)⁻¹
+  ∏ p ∈ positiveRoots, (1 - twist.χ p * InfoGeometry.Thermodynamics.souriauEvaluation p temperature_s)⁻¹
 
 lemma twistedEulerProduct_ne_zero
     {G : Type*} [Group G]
     (positiveRoots : Finset ℕ) (temperature_s : ℂ) (twist : GaugeTwist G)
     (h : ∀ p ∈ positiveRoots,
-      1 - GaugeTwist.χ twist p * InfoGeometry.Thermodynamics.souriauEvaluation p temperature_s ≠ 0) :
+      1 - twist.χ p * InfoGeometry.Thermodynamics.souriauEvaluation p temperature_s ≠ 0) :
     twistedEulerProduct positiveRoots temperature_s twist ≠ 0 := by
   unfold twistedEulerProduct
   exact Finset.prod_ne_zero_iff.mpr (fun p hp => inv_ne_zero (h p hp))
@@ -115,11 +103,11 @@ This is the generalized statistical sum of the twisted vacuum.
 @[rep_depth transport]
 def twistedPartitionFunction : ℂ :=
   ∏ p ∈ TB.base_bridge.positiveRoots, 
-    (1 - GaugeTwist.χ TB.gauge p * InfoGeometry.Thermodynamics.souriauEvaluation p TB.base_bridge.temperature.s)⁻¹
+    (1 - TB.gauge.χ p * InfoGeometry.Thermodynamics.souriauEvaluation p TB.base_bridge.temperature.s)⁻¹
 
 lemma twistedPartitionFunction_ne_zero
     (h : ∀ p ∈ TB.base_bridge.positiveRoots,
-      1 - GaugeTwist.χ TB.gauge p * InfoGeometry.Thermodynamics.souriauEvaluation p TB.base_bridge.temperature.s ≠ 0) :
+      1 - TB.gauge.χ p * InfoGeometry.Thermodynamics.souriauEvaluation p TB.base_bridge.temperature.s ≠ 0) :
     TB.twistedPartitionFunction ≠ 0 := by
   unfold twistedPartitionFunction
   exact Finset.prod_ne_zero_iff.mpr (fun p hp => inv_ne_zero (h p hp))

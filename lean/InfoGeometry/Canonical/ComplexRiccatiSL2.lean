@@ -107,6 +107,5 @@ theorem basisF_sq : basisF * basisF = 0 := by
   fin_cases i <;> fin_cases j <;>
     simp [basisF, Matrix.mul_apply, Fin.sum_univ_two]
 
-end InfoGeometry.Canonical.ComplexRiccatiSL2
 
-end
+end InfoGeometry.Canonical.ComplexRiccatiSL2

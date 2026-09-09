@@ -13,6 +13,7 @@ it does not by itself decide whether the mirror preserves or flips chirality.
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ModularSignCPT
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -510,12 +511,12 @@ theorem J_conj_chi :
 
 end CPTBranch
 
-/-! ## 4. Algebra/commutant routing -/
+/-! ## 4. Algebra/commutant routing socket -/
 
 /--
 Algebra/commutant routing for the CPT chiral-flip branch.
 
-This is an algebraic interface for the statement:
+This is an algebraic socket for the statement:
 
 `α_J(M) = M'` and `α_J(P_L) = P_R`.
 -/
@@ -536,11 +537,11 @@ structure CPTAlgebraCommutantBranch
   /-- Multiplicative/additive CPT mirror on represented operators. -/
   alphaJ : Op →+* Op
 
-  /-- Tomita routing property: algebra-side elements mirror into the commutant. -/
+  /-- Tomita routing hypothesis: algebra-side elements mirror into the commutant. -/
   alphaJ_maps_algebra_to_commutant :
     ∀ a : Op, InAlgebra a → InCommutant (alphaJ a)
 
-  /-- Chiral-flip property: the left projector mirrors to the right projector. -/
+  /-- Chiral-flip hypothesis: the left projector mirrors to the right projector. -/
   alphaJ_P_left :
     alphaJ P_left = P_right
 
@@ -739,19 +740,31 @@ end IntegratedCPTSymmetryBranch
 
 /-! ## 6. Owner targets -/
 
+/--
+Owner target for the integrated CPT symmetry branch.
 
-/-! ## 6. Integrated CPT symmetry theorem -/
+Once the modular-sign CPT structure, chiral mirror structure, and calibration
+fields are supplied, the left/right exchange and charge flip statements are
+theorems.
+-/
+@[owner_target_tag]
+def CPTSymmetryBranchOwnerTarget : Prop :=
+  ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
+  ∀ C : IntegratedCPTSymmetryBranch H,
+    C.modularCPT.J.comp C.chiralMirror.Pleft =
+        C.chiralMirror.Pright.comp C.modularCPT.J ∧
+    C.modularCPT.J.comp C.chiralMirror.Pright =
+        C.chiralMirror.Pleft.comp C.modularCPT.J ∧
+    (∀ v : H,
+      C.chiralMirror.chiralCharge (C.modularCPT.J v) =
+        -C.chiralMirror.chiralCharge v)
 
-theorem cptSymmetryBranch :
-    ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
-    ∀ C : IntegratedCPTSymmetryBranch H,
-      C.modularCPT.J.comp C.chiralMirror.Pleft =
-          C.chiralMirror.Pright.comp C.modularCPT.J ∧
-      C.modularCPT.J.comp C.chiralMirror.Pright =
-          C.chiralMirror.Pleft.comp C.modularCPT.J ∧
-      (∀ v : H,
-        C.chiralMirror.chiralCharge (C.modularCPT.J v) =
-          -C.chiralMirror.chiralCharge v) := by
+/--
+The CPT branch owner target is proved from the modular sign and chiral mirror
+data.
+-/
+theorem cptSymmetryBranchOwnerTarget :
+    CPTSymmetryBranchOwnerTarget := by
   intro H _ _ C
   exact C.CPT_exchanges_chiral_sectors
 

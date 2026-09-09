@@ -148,5 +148,3 @@ def PinKleinTotalOrbitQuotient {data : KleinMonodromyData} : Type :=
 steps; no rank-six vector-bundle identification is asserted. -/
 
 end InfoGeometry.Topology
-
-end

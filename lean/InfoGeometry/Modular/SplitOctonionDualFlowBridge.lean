@@ -9,7 +9,7 @@ noncomputable section
 namespace InfoGeometry.Modular.SplitOctonionDualFlowBridge
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
-open InfoGeometry.OperatorAlgebra.SplitOctonions.DerivationData
+open InfoGeometry.OperatorAlgebra.SplitOctonions.DerivationWitness
 open InfoGeometry.Lie.G2FromSplitOctonions
 
 def commZ (K X : SplitOct) : SplitOct := subZ (mulZ K X) (mulZ X K)
@@ -37,8 +37,8 @@ theorem derivation_commZ_comm_of_invariant {D : DerivSpace} (hD : IsDeriv D)
   simp [commZ, subZ, mulZ, zeroZ]
 
 theorem rot01_commZ_comm (K X : SplitOct) :
-    subZ (rot01Derivation (commZ K X)) (commZ K (rot01Derivation X)) =
-      commZ (rot01Derivation K) X :=
+    subZ (D01 (commZ K X)) (commZ K (D01 X)) =
+      commZ (D01 K) X :=
   derivation_commZ_comm D01_deriv K X
 
 end InfoGeometry.Modular.SplitOctonionDualFlowBridge

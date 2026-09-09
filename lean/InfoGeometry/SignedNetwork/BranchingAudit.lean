@@ -1,0 +1,10 @@
+import InfoGeometry.SignedNetwork.BranchingFrontier
+
+/-! Axiom audit for the finite branching owners. -/
+#print axioms InfoGeometry.SignedNetwork.BranchingInitialization.abs_mul_seedSign
+#print axioms InfoGeometry.SignedNetwork.BranchingInitialization.weighted_seed_sum
+#print axioms InfoGeometry.SignedNetwork.BranchingEventLaw.sum_probability
+#print axioms InfoGeometry.SignedNetwork.BranchingEventLaw.applyEvent_signed
+#print axioms InfoGeometry.SignedNetwork.BranchingEnsembleGenerator.population_birthPositive
+#print axioms InfoGeometry.SignedNetwork.BranchingEnsembleGenerator.signedReal_birthPositive_sub
+#print axioms InfoGeometry.SignedNetwork.BranchingQubitGenerator.synthesis_analysis_pauli

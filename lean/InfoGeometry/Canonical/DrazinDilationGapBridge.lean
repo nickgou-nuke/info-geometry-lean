@@ -7,7 +7,7 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.Canonical.DrazinDilationGapBridge
 
-Black-Book-safe bridge from the generic dilation-gap interface to the repository
+Black-Book-safe bridge from the generic dilation-gap socket to the repository
 owned `CertifiedInverseKernel` Drazin supercharge lane.
 
 The theorem-owned identities here are:
@@ -20,7 +20,7 @@ The theorem-owned identities here are:
 * `Q_D = [P_D, Γ_G]`;
 * `{Γ_S, Q_D} = 0`.
 
-This file does not assert that every property kernel automatically carries a
+This file does not assert that every certified kernel automatically carries a
 thermodynamic heat/memory split.
 -/
 

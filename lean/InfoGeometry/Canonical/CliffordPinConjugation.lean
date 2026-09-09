@@ -11,7 +11,7 @@ variable {Q : QuadraticForm R M}
 /-- A Pin element acts on Clifford generators by a genuine vector of `M`.
 
 This is the carrier-level consequence of Mathlib's Pin/Lipschitz theorem;
-the existential property is extracted from the canonical linear-map range,
+the existential witness is extracted from the canonical linear-map range,
 not supplied as an abstract compatibility field.
 -/
 theorem exists_vector_of_pin_conjugation

@@ -27,7 +27,7 @@ open InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 /--
 A **super Lie algebra** over ℝ is the carrier-level alias for `SuperLieRing`.
 
-See `InfoGeometry.Algebra.SuperLieRing` for the full ax!om list.
+See `InfoGeometry.Algebra.SuperLieRing` for the full axiom list.
 -/
 class SuperLieAlgebra (L : Type*) extends InfoGeometry.Algebra.SuperLieRing L
 

@@ -38,7 +38,7 @@ structure ObserverL5 (CIK : CertifiedInverseKernel H₂) where
 
 /--
 The observer slice lies in the spectral compact Cartan sector because it is
-orientation-fixing with respect to the property grading `Γ_S`.
+orientation-fixing with respect to the certified grading `Γ_S`.
 -/
 theorem observerLocalSlice_isSpectralCompact
     (CIK : CertifiedInverseKernel H₂)
@@ -48,7 +48,7 @@ theorem observerLocalSlice_isSpectralCompact
   simpa using obs.isOrientationFixing
 
 /--
-Deviation of the observer slice from the property Drazin spectral projector.
+Deviation of the observer slice from the certified Drazin spectral projector.
 
 This is the smallest upstream algebraic datum for comparing observer-induced
 residuals with the canonical inverse-kernel lane.
@@ -247,9 +247,9 @@ def ObserverDeviationControlledByZD
     ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖
 
 /--
-|A constructive property for `ObserverDeviationControlledByZD`. It carries the
+|A constructive witness for `ObserverDeviationControlledByZD`. It carries the
 |norm bound as data, allowing downstream theorems to consume a concrete proof
-|object instead of a bare `Prop` property.
+|object instead of a bare `Prop` hypothesis.
 |-/
 structure ObserverDeviationControl (CIK : CertifiedInverseKernel H₂) (obs : ObserverL5 CIK) where
   bound : ‖CIK.spectralComplementaryProjector *
@@ -268,9 +268,9 @@ theorem ObserverDeviationControlledByZD.of_control
 
 /--
 The exact deviation-channel control predicate is equivalent to the existence of
-an explicit owner-side `ObserverDeviationControl` property packet. This lets
+an explicit owner-side `ObserverDeviationControl` witness packet. This lets
 callers route through the proof-carrying bound record instead of a bare
-`Prop` property.
+`Prop` hypothesis.
 -/
 theorem observerDeviationControlledByZD_iff_nonempty_control
     (CIK : CertifiedInverseKernel H₂)
@@ -284,7 +284,7 @@ theorem observerDeviationControlledByZD_iff_nonempty_control
 
 /--
 A bare owner-side `ObserverDeviationControlledByZD` proof can always be repacked
-as an explicit `ObserverDeviationControl` property packet.
+as an explicit `ObserverDeviationControl` witness packet.
 -/
 theorem observerDeviationControl_of_deviationControlledByZD
     (CIK : CertifiedInverseKernel H₂)
@@ -295,7 +295,7 @@ theorem observerDeviationControl_of_deviationControlledByZD
 
 /--
 A bare owner-side `ObserverDeviationControlledByZD` proof can always be repacked
-as an explicit `ObserverDeviationControl` property packet.
+as an explicit `ObserverDeviationControl` witness packet.
 -/
 theorem nonempty_observerDeviationControl_of_deviationControlledByZD
     (CIK : CertifiedInverseKernel H₂)
@@ -306,7 +306,7 @@ theorem nonempty_observerDeviationControl_of_deviationControlledByZD
     (CIK := CIK) (obs := obs) hControl⟩
 
 /--
-If an explicit owner-side `ObserverDeviationControl` property packet exists, then
+If an explicit owner-side `ObserverDeviationControl` witness packet exists, then
 so does the original deviation-channel control predicate.
 -/
 theorem observerDeviationControlledByZD_of_nonempty_control
@@ -318,7 +318,7 @@ theorem observerDeviationControlledByZD_of_nonempty_control
 
 /--
 The residual `Z_D` budget is equivalent to the existence of an explicit
-owner-side `ObserverDeviationControl` property packet. This removes the
+owner-side `ObserverDeviationControl` witness packet. This removes the
 intermediate bare `ObserverDeviationControlledByZD` proposition from the
 readback route.
 -/
@@ -394,7 +394,7 @@ theorem observerDeviationControlledByZD_iff_observerDefectResidual_norm_le_ZD
 
 /--
 If the compressed observer-deviation channel itself vanishes, then the `Z_D`
-control predicate is constructed without any residual-bound property.
+control predicate is constructed without any residual-bound hypothesis.
 -/
 theorem observerDeviationControlledByZD_of_compressedDeviation_eq_zero
     (CIK : CertifiedInverseKernel H₂)
@@ -413,7 +413,7 @@ theorem observerDeviationControlledByZD_of_compressedDeviation_eq_zero
 
 /--
 If the compressed observer-deviation channel vanishes, then we obtain an
-explicit owner-side `ObserverDeviationControl` property packet. This removes the
+explicit owner-side `ObserverDeviationControl` witness packet. This removes the
 need to carry the bare `ObserverDeviationControlledByZD` proposition on the
 compressed-deviation-zero branch.
 -/
@@ -530,7 +530,7 @@ theorem compressedDeviation_eq_zero_iff_deviationControlledByZD_of_ZD_eq_zero
       (CIK := CIK) (obs := obs) hControl hZD
 
 /--
-Constructive zero-`Z_D` collapse from an explicit deviation-control property.
+Constructive zero-`Z_D` collapse from an explicit deviation-control witness.
 
 This is the proof-carrying companion to
 `observerDefectResidual_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero`: the
@@ -577,7 +577,7 @@ theorem two_smul_observerDefectResidual_eq_projectorCompression_commutator_local
               (CIK := CIK) (obs := obs) (sigma := sigma)]
 
 /--
-If the observer slice agrees with the property spectral projector, the observer
+If the observer slice agrees with the certified spectral projector, the observer
 orientation residual collapses to the canonical commutator seed.
 -/
 theorem observerOrientationResidual_eq_commutator_spectralProjector_of_deviation_eq_zero
@@ -591,7 +591,7 @@ theorem observerOrientationResidual_eq_commutator_spectralProjector_of_deviation
   simp [DrazinSupercharge.commutator]
 
 /--
-If the observer slice agrees with the property spectral projector, the defect
+If the observer slice agrees with the certified spectral projector, the defect
 residual is exactly the defect-block compression of the canonical commutator
 seed.
 -/
@@ -608,7 +608,7 @@ theorem observerDefectResidual_eq_projectorCompression_commutator_spectralProjec
   simp [DrazinSupercharge.commutator, mul_assoc]
 
 /--
-If the observer slice agrees with the property spectral projector, the defect
+If the observer slice agrees with the certified spectral projector, the defect
 residual vanishes constructively: the defect-block compression of
 `[P_D, G]` is zero because `Q₀ P_D = 0 = P_D Q₀`.
 -/
@@ -638,7 +638,7 @@ theorem observerDefectResidual_eq_zero_of_deviation_eq_zero
     _ = 0 := by simp
 
 /--
-If the observer slice agrees with the property spectral projector, the
+If the observer slice agrees with the certified spectral projector, the
 observer-defect residual satisfies the `Z_D` budget constructively: the
 residual itself is zero, so the remaining inequality is just `0 ≤ ‖Z_D‖`.
 -/
@@ -657,7 +657,7 @@ theorem observerDefectResidual_norm_le_ZD_of_deviation_eq_zero
       norm_nonneg (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)
 
 /--
-If the observer slice agrees with the property spectral projector, the exact
+If the observer slice agrees with the certified spectral projector, the exact
 deviation-channel control predicate is constructed directly.
 -/
 theorem observerDeviationControlledByZD_of_deviation_eq_zero
@@ -669,8 +669,8 @@ theorem observerDeviationControlledByZD_of_deviation_eq_zero
   exact observerDefectResidual_norm_le_ZD_of_deviation_eq_zero (CIK := CIK) (obs := obs) hDev
 
 /--
-Constructive property-packet route: if the observer slice agrees with the
-property spectral projector, then the owner-side `ObserverDeviationControl`
+Constructive witness-packet route: if the observer slice agrees with the
+certified spectral projector, then the owner-side `ObserverDeviationControl`
 record is available directly. This removes the need to carry the bare
 `ObserverDeviationControlledByZD` proposition on the deviation-zero branch.
 -/
@@ -775,7 +775,7 @@ theorem observerDeviationControlledByZD_of_aligned
   exact observerDefectResidual_norm_le_ZD_of_aligned (CIK := CIK) (obs := obs) hAlign
 
 /--
-Constructive property-packet route: an aligned observer yields an explicit
+Constructive witness-packet route: an aligned observer yields an explicit
 `ObserverDeviationControl` record, so downstream constructors can consume the
 proof object directly instead of a bare `ObserverDeviationControlledByZD`
 proposition.
@@ -809,7 +809,7 @@ theorem observerOrientationStrain_eq_zero_iff
 /--
 If the compressed observer-deviation channel vanishes, then the scalarized
 observer strain already vanishes. This lets downstream callers carry the
-smaller compressed property instead of a separate `observerOrientationStrain = 0`
+smaller compressed witness instead of a separate `observerOrientationStrain = 0`
 packet.
 -/
 theorem observerOrientationStrain_eq_zero_of_compressedDeviation_eq_zero
@@ -826,9 +826,9 @@ theorem observerOrientationStrain_eq_zero_of_compressedDeviation_eq_zero
         (CIK := CIK) (obs := obs) hZero)
 
 /--
-If the observer slice agrees with the property spectral projector, then the
+If the observer slice agrees with the certified spectral projector, then the
 scalarized observer strain already vanishes. This exposes the smaller
-`observerProjectorDeviation = 0` property as a direct owner route to the
+`observerProjectorDeviation = 0` witness as a direct owner route to the
 strain-zero surface.
 -/
 theorem observerOrientationStrain_eq_zero_of_deviation_eq_zero
@@ -872,7 +872,7 @@ theorem observerDefectResidual_norm_le_ZD_of_strain_eq_zero
 
 /--
 Zero scalarized observer strain constructs the exact deviation-channel control
-predicate, replacing a bridge-local residual-budget property by an honest
+predicate, replacing a bridge-local residual-budget hypothesis by an honest
 owner-level theorem.
 -/
 theorem observerDeviationControlledByZD_of_strain_eq_zero
@@ -887,7 +887,7 @@ theorem observerDeviationControlledByZD_of_strain_eq_zero
     (CIK := CIK) (obs := obs) hStrain
 
 /--
-Constructive property-packet route: zero scalarized observer strain yields an
+Constructive witness-packet route: zero scalarized observer strain yields an
 explicit `ObserverDeviationControl` record, so downstream callers can carry the
 proof object directly instead of a bare `ObserverDeviationControlledByZD`
 proposition.
@@ -901,7 +901,7 @@ theorem observerDeviationControl_of_strain_eq_zero
       (CIK := CIK) (obs := obs) hStrain }
 
 /--
-Under zero central defect, constructive deviation-control property packets force
+Under zero central defect, constructive deviation-control witness packets force
 zero scalarized observer strain.
 -/
 theorem observerOrientationStrain_eq_zero_of_control_of_ZD_eq_zero
@@ -917,9 +917,9 @@ theorem observerOrientationStrain_eq_zero_of_control_of_ZD_eq_zero
 
 /--
 Under zero central defect, scalarized observer strain is equivalent to the
-existence of an explicit owner-side `ObserverDeviationControl` property packet.
+existence of an explicit owner-side `ObserverDeviationControl` witness packet.
 This strengthens the zero-`Z_D` lane from a bare proposition to a concrete
-proof-carrying bound property.
+proof-carrying bound certificate.
 -/
 theorem observerOrientationStrain_eq_zero_iff_nonempty_control_of_ZD_eq_zero
     (CIK : CertifiedInverseKernel H₂)
@@ -935,7 +935,7 @@ theorem observerOrientationStrain_eq_zero_iff_nonempty_control_of_ZD_eq_zero
 
 /--
 Zero scalarized observer strain produces an explicit owner-side deviation-control
-property packet.
+witness packet.
 -/
 theorem nonempty_observerDeviationControl_of_strain_eq_zero
     (CIK : CertifiedInverseKernel H₂)
@@ -946,7 +946,7 @@ theorem nonempty_observerDeviationControl_of_strain_eq_zero
 
 /--
 Under zero central defect, the existence of an explicit owner-side deviation-control
-property packet forces zero scalarized observer strain.
+witness packet forces zero scalarized observer strain.
 -/
 theorem observerOrientationStrain_eq_zero_of_nonempty_control_of_ZD_eq_zero
     (CIK : CertifiedInverseKernel H₂)
@@ -960,8 +960,8 @@ theorem observerOrientationStrain_eq_zero_of_nonempty_control_of_ZD_eq_zero
 
 /--
 Zero observer-defect residual already produces an explicit owner-side deviation-control
-property packet. This removes the intermediate scalarized-strain property from
-callers that already own the exact residual-zero property.
+witness packet. This removes the intermediate scalarized-strain hypothesis from
+callers that already own the exact residual-zero witness.
 -/
 theorem observerDeviationControl_of_observerDefectResidual_eq_zero
     (CIK : CertifiedInverseKernel H₂)
@@ -974,7 +974,7 @@ theorem observerDeviationControl_of_observerDefectResidual_eq_zero
 
 /--
 Zero observer-defect residual already forces the exact owner-side `Z_D`
-deviation-control predicate via the explicit property packet above.
+deviation-control predicate via the explicit witness packet above.
 -/
 theorem observerDeviationControlledByZD_of_observerDefectResidual_eq_zero
     (CIK : CertifiedInverseKernel H₂)
@@ -987,8 +987,8 @@ theorem observerDeviationControlledByZD_of_observerDefectResidual_eq_zero
 
 /--
 Under zero central defect, zero observer-defect residual is equivalent to the
-existence of an explicit owner-side deviation-control property packet. This
-removes the intermediate scalarized-strain property from the zero-`Z_D` owner
+existence of an explicit owner-side deviation-control witness packet. This
+removes the intermediate scalarized-strain hypothesis from the zero-`Z_D` owner
 lane.
 -/
 theorem observerDefectResidual_eq_zero_iff_nonempty_control_of_ZD_eq_zero
@@ -1012,9 +1012,9 @@ theorem observerDefectResidual_eq_zero_iff_nonempty_control_of_ZD_eq_zero
 
 /--
 Under zero central defect, the existence of an explicit owner-side deviation-control
-property packet directly forces the observer-defect residual to vanish. This is the
+witness packet directly forces the observer-defect residual to vanish. This is the
 one-way export of `observerDefectResidual_eq_zero_iff_nonempty_control_of_ZD_eq_zero`
-for downstream callers that already own the property packet.
+for downstream callers that already own the witness packet.
 -/
 theorem observerDefectResidual_eq_zero_of_nonempty_control_of_ZD_eq_zero
     (CIK : CertifiedInverseKernel H₂)
@@ -1029,7 +1029,7 @@ theorem observerDefectResidual_eq_zero_of_nonempty_control_of_ZD_eq_zero
 /--
 Under zero central defect, scalarized observer strain is equivalent to the
 observer-side `Z_D` deviation-control predicate. This lets downstream callers use
-whichever property they already own instead of carrying both packets.
+whichever witness they already own instead of carrying both packets.
 -/
 theorem observerOrientationStrain_eq_zero_iff_deviationControlledByZD_of_ZD_eq_zero
   (CIK : CertifiedInverseKernel H₂)
@@ -1049,7 +1049,7 @@ theorem observerOrientationStrain_eq_zero_iff_deviationControlledByZD_of_ZD_eq_z
 Under zero central defect, exact owner-side `Z_D` deviation control directly
 forces zero scalarized observer strain. This is the one-way export of
 `observerOrientationStrain_eq_zero_iff_deviationControlledByZD_of_ZD_eq_zero`
-for downstream callers that already own the control property.
+for downstream callers that already own the control witness.
 -/
 theorem observerOrientationStrain_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
     (CIK : CertifiedInverseKernel H₂)

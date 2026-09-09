@@ -4,6 +4,7 @@ import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Canonical.PrimeGasMaxEnt
 
@@ -21,7 +22,7 @@ It formalizes the final theorem-safe reduction:
 3. the renormalized approximants converge through the repository's
    Hestenes--Krein/categorical colimit readout to the Cayley pullback of the
    completed `xi` function;
-4. the supplied zero-transfer property moves zero-freeness from the finite
+4. the supplied zero-transfer witness moves zero-freeness from the finite
    approximants to the colimit limit on the two connected components of the
    complement of the circle;
 5. the Cayley map sends the Lee--Yang unit circle to the Riemann critical line.
@@ -63,75 +64,6 @@ theorem cayleyInv_cayley
 def OnUnitCircle
     (z : ℂ) : Prop :=
   Complex.normSq z = 1
-
-@[rep_depth operator]
-theorem onUnitCircle_mul
-    (z w : ℂ) (hz : OnUnitCircle z) (hw : OnUnitCircle w) :
-    OnUnitCircle (z * w) := by
-  unfold OnUnitCircle at *
-  rw [Complex.normSq_mul, hz, hw]
-  norm_num
-
-@[rep_depth operator]
-theorem onUnitCircle_inv
-    (z : ℂ) (hz : OnUnitCircle z) :
-    OnUnitCircle z⁻¹ := by
-  unfold OnUnitCircle at *
-  rw [Complex.normSq_inv, hz]
-  norm_num
-
-@[rep_depth operator]
-theorem onUnitCircle_inv_iff (z : ℂ) :
-    OnUnitCircle z⁻¹ ↔ OnUnitCircle z := by
-  constructor
-  · intro hz
-    simpa using onUnitCircle_inv z⁻¹ hz
-  · exact onUnitCircle_inv z
-
-@[rep_depth operator]
-theorem onUnitCircle_div
-    (z w : ℂ) (hz : OnUnitCircle z) (hw : OnUnitCircle w) :
-    OnUnitCircle (z / w) := by
-  rw [div_eq_mul_inv]
-  exact onUnitCircle_mul z w⁻¹ hz (onUnitCircle_inv w hw)
-
-@[rep_depth operator]
-theorem onUnitCircle_pow
-    (z : ℂ) (hz : OnUnitCircle z) :
-    ∀ m : ℕ, OnUnitCircle (z ^ m)
-  | 0 => by
-      simp [OnUnitCircle]
-  | m + 1 => by
-      rw [pow_succ]
-      exact onUnitCircle_mul (z ^ m) z (onUnitCircle_pow z hz m) hz
-
-@[rep_depth operator]
-theorem onUnitCircle_finset_prod
-    {ι : Type*} (s : Finset ι) (f : ι → ℂ)
-    (hf : ∀ i ∈ s, OnUnitCircle (f i)) :
-    OnUnitCircle (s.prod f) := by
-  classical
-  induction s using Finset.induction_on with
-  | empty =>
-      simp [OnUnitCircle]
-  | @insert i s hi ih =>
-      rw [Finset.prod_insert hi]
-      exact onUnitCircle_mul _ _ (hf i (by simp))
-        (ih (fun j hj => hf j (by simp [hj])))
-
-@[rep_depth operator]
-theorem onUnitCircle_neg
-    (z : ℂ) (hz : OnUnitCircle z) :
-    OnUnitCircle (-z) := by
-  unfold OnUnitCircle at *
-  rw [Complex.normSq_neg, hz]
-
-@[rep_depth operator]
-theorem onUnitCircle_conj
-    (z : ℂ) (hz : OnUnitCircle z) :
-    OnUnitCircle (star z) := by
-  unfold OnUnitCircle at *
-  simpa [Complex.normSq] using hz
 
 /-- The open disk inside the Lee--Yang unit circle. -/
 @[rep_depth operator]
@@ -235,13 +167,13 @@ theorem cayley_critical_of_unit
 /-- Reflection across the critical line corresponds to inversion on the circle. -/
 @[rep_depth operator]
 theorem cayley_reflection_to_inversion
-    (s : ℂ) (hs0 : s ≠ 0) :
+    (s : ℂ) (hs0 : s ≠ 0) (hs1 : s ≠ 1) :
     cayley (1 - s) = (cayley s)⁻¹ := by
   unfold cayley
-  field_simp [hs0]
+  field_simp [hs0, hs1]
   ring
 
-/-- Native proof-carrying Cayley geometry property. -/
+/-- Native proof-carrying Cayley geometry witness. -/
 @[rep_depth operator]
 theorem canonicalCayleyCriticalWitness :
     (∀ s : ℂ, s ≠ 1 → cayleyInv (cayley s) = s) ∧
@@ -251,7 +183,7 @@ theorem canonicalCayleyCriticalWitness :
   ⟨cayleyInv_cayley_eq,
     cayley_unit_of_critical,
       cayley_critical_of_unit,
-        (fun s hs0 _hs1 => cayley_reflection_to_inversion s hs0)⟩
+        cayley_reflection_to_inversion⟩
 
 end CayleyCriticalWitness
 
@@ -284,7 +216,7 @@ def LeeYangApproximants.renormZ
   A.R N z * A.Z N z
 
 /--
-Convergence property for a renormalized approximant family.
+Convergence witness for a renormalized approximant family.
 
 The current field is represented with Mathlib's compact-open/local-uniform
 predicate, but the intended owner is the repository's filtered
@@ -350,7 +282,7 @@ theorem zero_on_unit_of_inner_outer_zero_free
 end ZeroFreeDomainTransfer
 
 /--
-Hurwitz-style zero-transfer property.
+Hurwitz-style zero-transfer witness.
 
 This is the hard colimit-transfer part.  Mathematically it should be produced
 from filtered Hestenes--Krein/categorical convergence of the renormalized
@@ -388,7 +320,7 @@ structure HurwitzZeroTransferWitness
     ∀ s : ℂ, Ξ.XiZero s → zeroFreeTransfer.limitF (cayley s) = 0
 
 /-- Hurwitz conclusion: every completed-`xi` zero maps to the Lee--Yang circle. -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem hurwitz_xiZeros_map_to_unit_circle
     {Ξ : CompletedXiZeroPredicate}
     {A : LeeYangApproximants}
@@ -401,7 +333,7 @@ theorem hurwitz_xiZeros_map_to_unit_circle
     (HurwitzZeroTransferWitness.xiZero_to_limitZero H s hs)
 
 /-- Conditional RH theorem from the Lee--Yang/Hurwitz package. -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem RH_of_Hurwitz_LeeYang_limit
     (Ξ : CompletedXiZeroPredicate)
     (C : (∀ s : ℂ, s ≠ 1 → cayleyInv (cayley s) = s) ∧
@@ -419,23 +351,13 @@ theorem RH_of_Hurwitz_LeeYang_limit
   rcases C with ⟨_, _, critical_of_unit, _⟩
   exact critical_of_unit s hs_ne_one hcircle
 
-/-- The Hurwitz/Lee--Yang conclusion with the canonical Cayley witness. -/
-@[rep_depth operator]
-theorem RH_of_Hurwitz_LeeYang_limit_cayley
-    (Ξ : CompletedXiZeroPredicate)
-    (A : LeeYangApproximants)
-    (H : HurwitzZeroTransferWitness Ξ A) :
-    RiemannHypothesis Ξ := by
-  exact RH_of_Hurwitz_LeeYang_limit
-    Ξ CayleyCriticalWitness.canonicalCayleyCriticalWitness A H
-
-/-! ## Stronger split-domain property -/
+/-! ## Stronger split-domain witness -/
 
 /--
-Corrected Hurwitz-style property with the colimit-convergence and zero-free
+Corrected Hurwitz-style witness with the colimit-convergence and zero-free
 pieces split.
 
-This is the stronger future-facing form: the convergence property is a
+This is the stronger future-facing form: the convergence witness is a
 first-class field, and the zero-free complement transfer is explicitly carried
 by `ZeroFreeDomainTransfer`.
 -/
@@ -464,31 +386,8 @@ structure CorrectHurwitzZeroTransferWitness
   xi_zero_iff_limit_zero :
     ∀ s : ℂ, s ≠ 1 → (Ξ.XiZero s ↔ limitF (cayley s) = 0)
 
-/-- The corrected split-domain witness contains the original transfer data. -/
-@[rep_depth operator]
-def CorrectHurwitzZeroTransferWitness.toHurwitzZeroTransferWitness
-    {Ξ : CompletedXiZeroPredicate}
-    {A : LeeYangApproximants}
-    (H : CorrectHurwitzZeroTransferWitness Ξ A) :
-    HurwitzZeroTransferWitness Ξ A :=
-  { zeroFreeTransfer := H.transfer
-    locallyUniformRenormalizedLimit := by
-      simpa [H.transfer_limitF] using H.locallyUniformRenormalizedLimit
-    nontrivialLimitOnComplement := by
-      constructor
-      · simpa [H.transfer_limitF] using H.nontrivial_in
-      · simpa [H.transfer_limitF] using H.nontrivial_out
-    noSpuriousZeros := by
-      intro z hz
-      apply H.noSpuriousZeros z
-      simpa [H.transfer_limitF] using hz
-    xiZero_to_limitZero := by
-      intro s hs
-      rw [H.transfer_limitF]
-      exact (H.xi_zero_iff_limit_zero s (Ξ.zero_ne_one s hs)).mp hs }
-
-/-- Zero-location transfer for the corrected split-domain Hurwitz property. -/
-@[rep_depth operator]
+/-- Zero-location transfer for the corrected split-domain Hurwitz witness. -/
+@[bridge_target_tag, rep_depth operator]
 theorem corrected_hurwitz_xiZeros_map_to_unit_circle
     {Ξ : CompletedXiZeroPredicate}
     {A : LeeYangApproximants}
@@ -509,7 +408,7 @@ theorem corrected_hurwitz_xiZeros_map_to_unit_circle
 Final conditional RH theorem from the corrected split-domain
 Hurwitz/Lee--Yang package.
 -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem RH_from_Correct_Hurwitz_LeeYang
     (Ξ : CompletedXiZeroPredicate)
     (C : (∀ s : ℂ, s ≠ 1 → cayleyInv (cayley s) = s) ∧
@@ -526,15 +425,5 @@ theorem RH_from_Correct_Hurwitz_LeeYang
     corrected_hurwitz_xiZeros_map_to_unit_circle H s hs_ne_one hs
   rcases C with ⟨_, _, critical_of_unit, _⟩
   exact critical_of_unit s hs_ne_one hcircle
-
-/-- The corrected split-domain conclusion with the canonical Cayley witness. -/
-@[rep_depth operator]
-theorem RH_from_Correct_Hurwitz_LeeYang_cayley
-    (Ξ : CompletedXiZeroPredicate)
-    (A : LeeYangApproximants)
-    (H : CorrectHurwitzZeroTransferWitness Ξ A) :
-    RiemannHypothesis Ξ := by
-  exact RH_from_Correct_Hurwitz_LeeYang
-    Ξ CayleyCriticalWitness.canonicalCayleyCriticalWitness A H
 
 end InfoGeometry.Canonical.PrimeHurwitzLimit

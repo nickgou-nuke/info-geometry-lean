@@ -1,5 +1,5 @@
 import proofs.WeakIsospinSU2
-import proofs.ChiralCausalCone
+import InfoGeometry.Canonical.ChiralCausalCone
 import proofs.ChiralAffineBogoliubovWeld
 
 /-!

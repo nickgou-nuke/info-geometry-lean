@@ -3,7 +3,6 @@ import InfoGeometry.Canonical.KMSCocycleGeneratorBridge
 import InfoGeometry.Canonical.BekensteinBound
 import InfoGeometry.Canonical.ModularWeldBridge
 import InfoGeometry.Volume.ConnesCocycle
-import InfoGeometry.Canonical.TransportLieDerivative
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Exponential
 set_option linter.unnecessarySimpa false
@@ -73,10 +72,6 @@ noncomputable def modularHamiltonian
 /-- Operator commutator `[K, A] = K A - A K`. -/
 def commutator (K A : EndH E) : EndH E :=
   K * A - A * K
-
-@[simp] theorem commutator_eq_lie (K A : EndH E) :
-    commutator K A = ⁅K, A⁆ := by
-  rfl
 
 @[simp] lemma modularOperator_eq_rn
     (M : ModularRadonNikodymData E) :
@@ -169,112 +164,6 @@ theorem modularAutomorphismGroup_additive
   intro s t A
   exact modularAutomorphismGroup_add (M := M) s t A
 
-theorem modularAutomorphismGroup_map_commutator
-    (M : ModularRadonNikodymData E) (A B : EndH E) (t : ℝ) :
-    modularAutomorphismGroup M t (commutator A B) =
-      commutator (modularAutomorphismGroup M t A)
-        (modularAutomorphismGroup M t B) := by
-  dsimp [modularAutomorphismGroup, modularShift, commutator, InfoGeometry.Krein.modular_shift, InfoGeometry.Krein.krein_modular_shift]
-  have hExpNeg : NormedSpace.exp ((-t) • M.modularHamiltonian) * NormedSpace.exp (t • M.modularHamiltonian) = 1 := by
-    have hComm : Commute ((-t) • M.modularHamiltonian) (t • M.modularHamiltonian) := by
-      rw [neg_smul]
-      exact (Commute.refl (t • M.modularHamiltonian)).neg_left
-    have hz : (-t) • M.modularHamiltonian + t • M.modularHamiltonian = 0 := by
-      rw [neg_smul, neg_add_cancel]
-    rw [← NormedSpace.exp_add_of_commute hComm, hz, NormedSpace.exp_zero]
-  simp only [mul_sub, sub_mul]
-  calc
-    NormedSpace.exp (t • M.modularHamiltonian) * (A * B) * NormedSpace.exp ((-t) • M.modularHamiltonian) -
-      NormedSpace.exp (t • M.modularHamiltonian) * (B * A) * NormedSpace.exp ((-t) • M.modularHamiltonian)
-      = (NormedSpace.exp (t • M.modularHamiltonian) * A * (NormedSpace.exp ((-t) • M.modularHamiltonian) *
-          NormedSpace.exp (t • M.modularHamiltonian)) * B * NormedSpace.exp ((-t) • M.modularHamiltonian)) -
-        (NormedSpace.exp (t • M.modularHamiltonian) * B * (NormedSpace.exp ((-t) • M.modularHamiltonian) *
-          NormedSpace.exp (t • M.modularHamiltonian)) * A * NormedSpace.exp ((-t) • M.modularHamiltonian)) := by
-            rw [hExpNeg]
-            simp only [mul_one]
-            repeat rw [mul_assoc]
-    _ = (NormedSpace.exp (t • M.modularHamiltonian) * A * NormedSpace.exp ((-t) • M.modularHamiltonian)) *
-          (NormedSpace.exp (t • M.modularHamiltonian) * B * NormedSpace.exp ((-t) • M.modularHamiltonian)) -
-        (NormedSpace.exp (t • M.modularHamiltonian) * B * NormedSpace.exp ((-t) • M.modularHamiltonian)) *
-          (NormedSpace.exp (t • M.modularHamiltonian) * A * NormedSpace.exp ((-t) • M.modularHamiltonian)) := by
-            repeat rw [mul_assoc]
-
-@[simp] theorem modularAutomorphismGroup_map_one
-    (M : ModularRadonNikodymData E) (t : ℝ) :
-    modularAutomorphismGroup M t (1 : EndH E) = 1 := by
-  simpa [modularAutomorphismGroup] using
-    (InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv
-      (H := E) M.modularHamiltonian t).map_one
-
-theorem modularAutomorphismGroup_map_mul
-    (M : ModularRadonNikodymData E) (A B : EndH E) (t : ℝ) :
-    modularAutomorphismGroup M t (A * B) =
-      modularAutomorphismGroup M t A * modularAutomorphismGroup M t B := by
-  simpa [modularAutomorphismGroup] using
-    (InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv
-      (H := E) M.modularHamiltonian t).map_mul A B
-
-theorem modularAutomorphismGroup_map_add
-    (M : ModularRadonNikodymData E) (A B : EndH E) (t : ℝ) :
-    modularAutomorphismGroup M t (A + B) =
-      modularAutomorphismGroup M t A + modularAutomorphismGroup M t B := by
-  simpa [modularAutomorphismGroup] using
-    (InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv
-      (H := E) M.modularHamiltonian t).map_add A B
-
-theorem modularAutomorphismGroup_map_smul
-    (M : ModularRadonNikodymData E) (r : ℝ) (A : EndH E) (t : ℝ) :
-    modularAutomorphismGroup M t (r • A) =
-      r • modularAutomorphismGroup M t A := by
-  simp [modularAutomorphismGroup, InfoGeometry.Krein.krein_modular_shift]
-
-theorem modularAutomorphismGroup_map_neg
-    (M : ModularRadonNikodymData E) (A : EndH E) (t : ℝ) :
-    modularAutomorphismGroup M t (-A) =
-      -modularAutomorphismGroup M t A := by
-  simpa [modularAutomorphismGroup] using
-    (InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv
-      (H := E) M.modularHamiltonian t).map_neg A
-
-theorem modularAutomorphismGroup_map_sub
-    (M : ModularRadonNikodymData E) (A B : EndH E) (t : ℝ) :
-    modularAutomorphismGroup M t (A - B) =
-      modularAutomorphismGroup M t A - modularAutomorphismGroup M t B := by
-  simpa [sub_eq_add_neg] using
-    (modularAutomorphismGroup_map_add (M := M) A (-B) t).trans
-    (by rw [modularAutomorphismGroup_map_neg (M := M) B t])
-
-theorem modularAutomorphismGroup_map_pow
-    (M : ModularRadonNikodymData E) (A : EndH E) (n : ℕ) (t : ℝ) :
-    modularAutomorphismGroup M t (A ^ n) =
-      (modularAutomorphismGroup M t A) ^ n := by
-  induction n with
-  | zero => simp [modularAutomorphismGroup_map_one (M := M) t]
-  | succ n ih =>
-      rw [pow_succ, modularAutomorphismGroup_map_mul, ih, pow_succ]
-
-theorem modularAutomorphismGroup_commute_iff
-    (M : ModularRadonNikodymData E) (A B : EndH E) (t : ℝ) :
-    Commute (modularAutomorphismGroup M t A)
-      (modularAutomorphismGroup M t B) ↔ Commute A B := by
-  let e : EndH E ≃ₐ[ℝ] EndH E :=
-    InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv
-      (H := E) M.modularHamiltonian t
-  have he : e A * e B = e B * e A ↔ A * B = B * A := by
-    constructor
-    · intro h
-      apply e.injective
-      calc
-        e (A * B) = e A * e B := _root_.map_mul e A B
-        _ = e B * e A := h
-        _ = e (B * A) := (_root_.map_mul e B A).symm
-    · intro h
-      calc
-        e A * e B = e (A * B) := (_root_.map_mul e A B).symm
-        _ = e (B * A) := congrArg e h
-        _ = e B * e A := _root_.map_mul e B A
-  simpa [e, modularAutomorphismGroup] using he
-
 /--
 Infinitesimal modular-flow generator at the origin:
 the derivative of `σ_τ(A)` at `τ = 0` is the commutator with the modular Hamiltonian.
@@ -284,73 +173,8 @@ theorem hasDerivAt_modularAutomorphismGroup_zero_eq_commutator
     HasDerivAt (fun τ : ℝ => modularAutomorphismGroup M τ A)
       (commutator M.modularHamiltonian A) 0 := by
   simpa [modularAutomorphismGroup] using
-      (hasDerivAt_modularShift_zero_eq_commutator
+    (hasDerivAt_modularShift_zero_eq_commutator
       (K := M.modularHamiltonian) (A := A))
-
-theorem hasDerivAt_modularAutomorphismGroup_zero_eq_lie
-    (M : ModularRadonNikodymData E) (A : EndH E) :
-    HasDerivAt (fun τ : ℝ => modularAutomorphismGroup M τ A)
-      ⁅M.modularHamiltonian, A⁆ 0 := by
-  simpa only [commutator_eq_lie] using
-    (hasDerivAt_modularAutomorphismGroup_zero_eq_commutator
-      (M := M) (A := A))
-
-/--
-Exact modular shift fixes an observable that commutes with the modular generator.
--/
-theorem modularShift_eq_self_of_commute
-    (K A : EndH E) (t : ℝ) (hComm : A * K = K * A) :
-    modularShift (E := E) K t A = A := by
-  have hCommute : Commute A K := hComm
-  have hCommScaled : Commute A (t • K) := by simpa using hCommute.smul_right t
-  have hCommExp : Commute A (NormedSpace.exp (t • K)) := by simpa using hCommScaled.exp_right
-  have hScaledNeg : Commute (t • K) ((-t) • K) := by
-    rw [neg_smul]
-    exact (Commute.refl (t • K)).neg_right
-  dsimp [modularShift, InfoGeometry.Krein.modular_shift, InfoGeometry.Krein.krein_modular_shift]
-  calc
-    (NormedSpace.exp (t • K) * A) * NormedSpace.exp ((-t) • K)
-        = (A * NormedSpace.exp (t • K)) * NormedSpace.exp ((-t) • K) := by
-            rw [hCommExp.eq]
-    _ = A * (NormedSpace.exp (t • K) * NormedSpace.exp ((-t) • K)) := by
-          rw [mul_assoc]
-    _ = A * NormedSpace.exp (t • K + (-t) • K) := by
-          rw [← NormedSpace.exp_add_of_commute hScaledNeg]
-    _ = A * NormedSpace.exp (0 : EndH E) := by
-          have hz : t • K + (-t) • K = (0 : EndH E) := by
-            rw [neg_smul, add_neg_cancel]
-          rw [hz]
-    _ = A * 1 := by rw [NormedSpace.exp_zero]
-    _ = A := mul_one A
-
-/--
-Modular flow fixes an observable for all parameter times `t` if and only if
-the observable commutes with the modular Hamiltonian generator.
--/
-theorem modularAutomorphismGroup_fixed_all_iff_commute
-    (M : ModularRadonNikodymData E) (A : EndH E) :
-    (∀ t : ℝ, modularAutomorphismGroup M t A = A) ↔ A * M.modularHamiltonian = M.modularHamiltonian * A := by
-  constructor
-  · intro hFixed
-    have hDeriv :
-        HasDerivAt (fun t : ℝ => modularAutomorphismGroup M t A) (0 : EndH E) 0 := by
-      have hConst :
-          (fun t : ℝ => modularAutomorphismGroup M t A) = fun _ : ℝ => A := by
-        funext t
-        exact hFixed t
-      rw [hConst]
-      simpa using (hasDerivAt_const (x := (0 : ℝ)) (c := A))
-    have hFlowDeriv :=
-      (hasDerivAt_modularAutomorphismGroup_zero_eq_commutator
-        (M := M) (A := A)).deriv
-    have hBracket : commutator M.modularHamiltonian A = 0 := by
-      exact hFlowDeriv.symm.trans hDeriv.deriv
-    have hSub : M.modularHamiltonian * A - A * M.modularHamiltonian = 0 := hBracket
-    have hEq : M.modularHamiltonian * A = A * M.modularHamiltonian := sub_eq_zero.mp hSub
-    exact hEq.symm
-  · intro hComm t
-    simpa [modularAutomorphismGroup] using
-      (modularShift_eq_self_of_commute M.modularHamiltonian A t hComm)
 
 /-- Scalar derivative corollary for the modular automorphism group at `τ = 0`. -/
 theorem deriv_modularAutomorphismGroup_zero_eq_commutator
@@ -639,7 +463,7 @@ theorem topologicalBekensteinBound_and_sinkhornClosure_of_sampledIB
 
 /--
 Sampled IB cocycle endpoint (closure form):
-Connes cocycle law plus sampled Sinkhorn KMS closure and a pairing property
+Connes cocycle law plus sampled Sinkhorn KMS closure and a pairing witness
 yield the topological Bekenstein bound.
 -/
 theorem topologicalBekensteinBound_of_connesCocycle_and_sinkhornClosure_of_sampledIB_pairingWitness
@@ -676,7 +500,7 @@ theorem topologicalBekensteinBound_of_connesCocycle_and_sinkhornClosure_of_sampl
 
 /--
 Sampled IB cocycle endpoint (control form):
-Connes cocycle law plus sampled Sinkhorn KMS control and a pairing property
+Connes cocycle law plus sampled Sinkhorn KMS control and a pairing witness
 yield the topological Bekenstein bound.
 -/
 theorem topologicalBekensteinBound_of_connesCocycle_and_sinkhornControl_of_sampledIB_pairingWitness
@@ -713,7 +537,7 @@ theorem topologicalBekensteinBound_of_connesCocycle_and_sinkhornControl_of_sampl
 
 /--
 Sampled IB cocycle endpoint (Tomita flow-unit specialization, closure form):
-the Connes cocycle property is derived from the Tomita modular-sign flow and the
+the Connes cocycle witness is derived from the Tomita modular-sign flow and the
 bridge is fixed to `unitScalarBridge`.
 -/
 theorem topologicalBekensteinBound_of_tomitaFlowUnitCocycle_and_sinkhornClosure_of_sampledIB_pairingWitness
@@ -755,7 +579,7 @@ theorem topologicalBekensteinBound_of_tomitaFlowUnitCocycle_and_sinkhornClosure_
 
 /--
 Sampled IB cocycle endpoint (Tomita flow-unit specialization, control form):
-the Connes cocycle property is derived from the Tomita modular-sign flow and the
+the Connes cocycle witness is derived from the Tomita modular-sign flow and the
 bridge is fixed to `unitScalarBridge`.
 -/
 theorem topologicalBekensteinBound_of_tomitaFlowUnitCocycle_and_sinkhornControl_of_sampledIB_pairingWitness

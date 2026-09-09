@@ -3,7 +3,7 @@ import Mathlib.Tactic
 /-!
 # Finite N=2 inductive supercharge transport
 
-No wrappers. No property fields.
+No wrappers. No witness fields.
 
 This proves that an N=2 supercharge closure relation is preserved under
 iterated symmetry/bonding endomorphisms.

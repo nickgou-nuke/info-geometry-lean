@@ -61,10 +61,4 @@ def time (tag : Tag) : ZMod 2 :=
 @[simp] theorem P_add_T : P + T = PT := by
   rfl
 
-theorem tag_eq_id_or_P_or_T_or_PT (tag : Tag) :
-    tag = id ∨ tag = P ∨ tag = T ∨ tag = PT := by
-  rcases tag with ⟨a, b⟩
-  fin_cases a <;> fin_cases b <;>
-    simp [id, P, T, PT]
-
 end InfoGeometry.Geometry.KleinFourTag

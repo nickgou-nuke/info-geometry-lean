@@ -141,17 +141,17 @@ end RealMajoranaCore
 def anticommutator {X : RealMajoranaCore} (A B : X →ₗ[ℝ] X) : X →ₗ[ℝ] X :=
   A * B + B * A
 
-/-- Standard single-mode CAR property for an odd pair `(a, a†)`. -/
-def CARRelation (X : RealMajoranaCore) (a adag : X →ₗ[ℝ] X) : Prop :=
+/-- Standard single-mode CAR witness for an odd pair `(a, a†)`. -/
+def CARWitness (X : RealMajoranaCore) (a adag : X →ₗ[ℝ] X) : Prop :=
   anticommutator a a = 0 ∧
     anticommutator adag adag = 0 ∧
     anticommutator a adag = (LinearMap.id : X →ₗ[ℝ] X)
 
 /--
-Primitive (two-sorted) Majorana CAR property:
+Primitive (two-sorted) Majorana CAR witness:
 mode space `Mode`, state space `X`.
 -/
-def MajoranaCAR (X : RealMajoranaCore) {Mode : Type*}
+def MajoranaCARWitness (X : RealMajoranaCore) {Mode : Type*}
     [AddCommGroup Mode] [Module ℝ Mode]
     (g : Mode → Mode → ℝ) (γ : Mode → X →ₗ[ℝ] X) : Prop :=
   ∀ u v : Mode,
@@ -211,7 +211,7 @@ Primitive constructive theorem:
 the represented split-Clifford generators satisfy Majorana CAR.
 -/
 theorem majorana_car_of_splitClifford :
-    MajoranaCAR X (majoranaPairing D) (majoranaField D) := by
+    MajoranaCARWitness X (majoranaPairing D) (majoranaField D) := by
   intro u v
   rw [majoranaField_anticommutator_eq_polar, majoranaPairing]
   have htwo : (2 : ℝ) * (QuadraticMap.polar D.Q u v / 2) = QuadraticMap.polar D.Q u v := by ring
@@ -264,7 +264,7 @@ noncomputable def cl11SplitCliffordDatum (E : Type*) [NormedAddCommGroup E] [Inn
 /-- Primitive CAR theorem specialized to the concrete doubled-space split-`Cl(1,1)` datum. -/
 theorem majorana_car_of_concrete_cl11 (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] :
-    MajoranaCAR (cl11DoubledCore E)
+    MajoranaCARWitness (cl11DoubledCore E)
       (SplitCliffordDatum.majoranaPairing (cl11SplitCliffordDatum E))
       (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E)) := by
   simpa using
@@ -831,7 +831,7 @@ theorem polarized_ladder_car_of_majorana
     (X : PolarizedMajorana)
     (hCliff : SplitCliffordDatum X.core)
     (hPol : PolarizedLadderRealization X hCliff) :
-    CARRelation X.core
+    CARWitness X.core
       (ladderOfRealization X hCliff hPol).annihil
       (ladderOfRealization X hCliff hPol).create := by
   exact ⟨(ladderOfRealization X hCliff hPol).annihil_sq,
@@ -902,7 +902,7 @@ noncomputable def cl11_concrete_ladder_realization :
 
 /-- Final concrete CAR theorem: canonical spectral polarization + concrete split-`Cl(1,1)` datum. -/
 theorem car_realization_of_clifford_concrete :
-    CARRelation (cl11CanonicalPolarizedMajorana (E := E)).core
+    CARWitness (cl11CanonicalPolarizedMajorana (E := E)).core
       (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := E))
         (cl11SplitCliffordDatum E) (cl11_concrete_ladder_realization (E := E))).annihil
       (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := E))

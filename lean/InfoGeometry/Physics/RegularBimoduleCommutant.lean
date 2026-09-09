@@ -83,6 +83,26 @@ theorem leftAction_comp_rightAction (a b : A) :
   ext x
   simp [leftAction, rightAction, LinearMap.comp_apply, mul_assoc]
 
+theorem leftAction_commutator (a b : A) :
+    (leftAction (R := R) a).comp (leftAction (R := R) b) -
+        (leftAction (R := R) b).comp (leftAction (R := R) a) =
+      leftAction (R := R) (a * b - b * a) := by
+  ext x
+  simp [leftAction, LinearMap.comp_apply, sub_mul, mul_assoc]
+
+theorem rightAction_commutator (a b : A) :
+    (rightAction (R := R) a).comp (rightAction (R := R) b) -
+        (rightAction (R := R) b).comp (rightAction (R := R) a) =
+      -rightAction (R := R) (a * b - b * a) := by
+  ext x
+  simp [rightAction, LinearMap.comp_apply, mul_sub, mul_assoc]
+
+theorem leftAction_eq_rightAction_of_commutes (a : A)
+    (hcentral : ∀ x : A, a * x = x * a) :
+    leftAction (R := R) a = rightAction (R := R) a := by
+  ext x
+  exact hcentral x
+
 theorem leftCommutant_eq_rightActionRange :
     leftCommutant (R := R) = Set.range (fun b : A => rightAction (R := R) b) := by
   apply Set.Subset.antisymm

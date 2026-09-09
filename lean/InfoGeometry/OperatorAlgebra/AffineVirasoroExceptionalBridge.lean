@@ -15,6 +15,7 @@ exceptional finite algebra is isomorphic to a Virasoro algebra.
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 import InfoGeometry.OperatorAlgebra.SuperVirasoroExtension
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -131,7 +132,7 @@ the historical boundary-charge and hidden-memory names denote the same
 finite-ledger projection.  It does not assert an exceptional Sugawara theorem.
 ```
 -/
-theorem exceptionalAffineVirasoroBridge_centralCharge_eq_hiddenGradeMemory :
+theorem exceptionalAffineVirasoroBridgeOwnerTarget :
   ∀ (Finite Affine Vir State Charge : Type*)
     [AddCommGroup Finite] [Module ℝ Finite]
     [AddCommGroup Affine] [Module ℝ Affine]
@@ -143,5 +144,18 @@ theorem exceptionalAffineVirasoroBridge_centralCharge_eq_hiddenGradeMemory :
     B.centralChargeReadout s = B.calibratedHiddenGradeMemoryReadout s := by
   intro Finite Affine Vir State Charge _ _ _ _ _ _ _ _ _ _ _ _ B s
   exact B.centralCharge_eq_hiddenGradeMemory s
+
+/-- Packet readout for one exceptional affine/Virasoro bridge. -/
+theorem exceptionalAffineVirasoroBridge_packet
+    (Finite Affine Vir State Charge : Type*)
+    [AddCommGroup Finite] [Module ℝ Finite]
+    [AddCommGroup Affine] [Module ℝ Affine]
+    [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
+    [AddCommGroup State] [Module ℝ State]
+    [AddCommGroup Charge] [Module ℝ Charge]
+    (B : ExceptionalAffineVirasoroBridge Finite Affine Vir State Charge)
+    (s : State) :
+    B.centralChargeReadout s = B.calibratedHiddenGradeMemoryReadout s :=
+  exceptionalAffineVirasoroBridgeOwnerTarget Finite Affine Vir State Charge B s
 
 end InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge

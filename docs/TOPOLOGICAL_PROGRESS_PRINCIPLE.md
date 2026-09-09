@@ -2,6 +2,7 @@
 
 > Status: normative development doctrine
 > Scope: Lean 4 theorem proving, autonomous proof agents, external-CAS certificate pipelines, and repository closure work
+> Routing authority: [Canonical Agent Pipeline](CANONICAL_AGENT_PIPELINE.md); this document describes mathematical development, not a replacement scheduler.
 
 ## Prime Directive
 
@@ -25,7 +26,7 @@ External Computation
 
 ### Discovery layer — untrusted
 
-GAP, SageMath, Singular, Python, SAT/SMT tools, or custom exporters may discover words, matrices, coefficients, finite enumerations, factorizations, or candidate certificates. Their output is not proof authority.
+GAP, SageMath, Singular, SymPy, Macaulay2, D-module packages, Python, SAT/SMT tools, or custom exporters may discover words, matrices, coefficients, finite enumerations, factorizations, or candidate certificates. Their output is not proof authority.
 
 ### Certificate layer — data only
 
@@ -75,7 +76,7 @@ For a target `T`, write `R_T(S)` for the target-relevant verified region of a ve
 
 ## Topological Closure Invariant
 
-Every development iteration must end in exactly one of three valid states.
+Classify the mathematical result of an iteration using the following outcomes. An operational wait or permission boundary does not establish mathematical progress; report it separately under the current agent pipeline.
 
 ### CLOSED
 
@@ -105,7 +106,7 @@ Do not introduce a structure, class, witness packet, or opaque field whose sole 
 
 ### Teleportation
 
-Do not cross a missing edge with `sorry`, `admit`, a new unsupported `axiom`, or an equivalent disguised assumption when the edge can be refined into smaller proof obligations.
+Do not cross a missing edge with `sorry`, `admit`, a custom `axiom`, or an equivalent disguised assumption. Refine the edge into smaller proof obligations.
 
 ### Mislabeled arithmetic
 
@@ -134,7 +135,7 @@ finite carrier                 as real/Lie carrier
 
 ### Vacuous propositions
 
-The proposition checked by `decide`/`native_decide` must itself be the intended mathematical claim. Avoid implication-shaped row certificates or existential wrappers that can become true for irrelevant reasons.
+The proposition checked by a decision procedure must itself be the intended mathematical claim, and its proof dependencies must meet the repository kernel-audit policy. Avoid implication-shaped row certificates or existential wrappers that can become true for irrelevant reasons.
 
 ## Distributed Finite Certificate Pattern
 
@@ -152,6 +153,10 @@ CAS / GAP
 
 The definition of the row predicate is the critical trust boundary. Distributing a surrogate proposition into hundreds of kernel-valid rows merely distributes semantic debt.
 
+When GAP exports an explicit PC exponent `e`, prove the requested native equality involving `pcWord e`; do not discard the supplied witness and prove only that some witness exists. Avoid monolithic exhaustive decisions when distributed checks of the explicit data are available. A generated table's default branch is not evidence for a universal theorem.
+
+For example, a finite Bruhat development may proceed from explicit witness rows through cell soundness, quotient-row witnesses, orbit membership, covering, and an actual quotient equivalence before deducing cardinality and ambient order. Each arrow needs its own proof; the example does not certify a particular table or group order.
+
 ## Semantic Strength Discipline
 
 Every owner must distinguish:
@@ -168,6 +173,8 @@ An autonomous theorem-proving agent should optimize for **frontier movement**, n
 
 A useful small theorem that unlocks multiple admissible downstream morphisms is greater progress than a large proxy API that leaves the reachable mathematical region unchanged.
 
+A proof-oriented change advances the stated goal by closing a target, proving a missing predecessor, proving a transport/coherence edge between existing owners, or verifying native soundness of explicit external witness data. Renaming an unresolved claim is none of these.
+
 The standing rule is therefore:
 
 > **Never assume across a missing edge. Refine it until a provable edge is exposed.**
@@ -177,7 +184,10 @@ The standing rule is therefore:
 The repository already contains literal foundations for parts of this doctrine:
 
 - `InfoGeometry.Causal.ProofDAGRepresentation`: proof-theoretic dependency order and forward/backward cones;
+- `InfoGeometry.Causal.TopologicalProofDevelopment`: downward-closed state carriers, `dependencyCorridor_antitone_left`, `verifiedToward_mono`, `strict_target_progress`, joins, finite folds, and conditional preorder cocone/colimit constructions;
 - `InfoGeometry.Canonical.PenrosePosetCategoryFoundation`: preorder/category transport, upper-bound cocones, and LUB colimit cocones;
 - the spectral subsystem: genuine spectral and stabilization mathematics in its own algebraic domain.
 
-The interpretation of repository development itself as a directed filtered homotopy theory remains a meta-level program unless and until explicit development-state and higher-path structures are formalized. The doctrine must preserve that boundary.
+The existing development-state module is an abstract order-theoretic model. Membership in its `VerifiedState.carrier` is not an inspection of a Lean environment or a proof of an arbitrary proposition encoded by a node. Actual acceptance still requires checking the corresponding source theorem. The model does not supply higher paths, an optimal proof-search algorithm, or a termination theorem for arbitrary requested goals.
+
+The [historical manifesto](root-archive/The_Topological_Progress_Principle.md) contains stronger claims that are not current policy. In particular, general lower sets need not be finite; corridor inclusion is not automatically strict; the closed interval from a target to itself contains that target; and certificate verification has no universal constant-time bound. Downward closure is extensive, not an interior operation. These corrections preserve the useful progression—dependency order, growing verified states, explicit witness verification, structural assembly—without promoting the analogy to a theorem about all mathematical knowledge.

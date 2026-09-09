@@ -1,6 +1,4 @@
 import Mathlib.Tactic
-import Mathlib.Data.Fintype.Pi
-import Mathlib.Data.Fintype.Prod
 
 /-!
 # Finite `G₂(2)` split-octonion automorphism theorem surface
@@ -10,22 +8,22 @@ This module is the Lean twin of
 
 It formalizes the split Zorn octonion multiplication over `F₂` as an exact
 eight-Boolean algebra.  The companion verifier supplies the external
-enumeration property for the automorphism count `12096`, which the Lean
+enumeration certificate for the automorphism count `12096`, which the Lean
 file reads back only through a conditional theorem.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 
-* Exact `F₂` split-octonion carrier cardinality (`256`).
-* Abstract `G₂(2)` order arithmetic and order comparisons.
+* Exact `F₂` split-octonion carrier cardinality.
+* Exact `G₂(2)` order arithmetic.
 * Exact order separation between `G₂(2)`/`Aut(PSU₃(3))` and `PGL₃(3)`.
 * Concrete Zorn basis multiplication laws over `F₂`.
-* Explicit outer `C₂` property finite permutation readout: degree `63`,
+* Explicit outer `C₂` witness finite permutation readout: degree `63`,
   `28` transpositions, and `7` fixed points.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 
 * `aut_splitOctF2_card_eq_g2twoOrder_from_enumeration` turns the explicit
-  automorphism enumeration property into the theorem-level equality
+  automorphism enumeration certificate into the theorem-level equality
   `|Aut(O_s(F₂))| = |G₂(2)|`.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
@@ -37,20 +35,19 @@ file reads back only through a conditional theorem.
 
 namespace InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 
-set_option maxRecDepth 100000
-set_option maxHeartbeats 0
-
 /-- One bit of the field `F₂`, represented as `Bool`. -/
 abbrev F2Bit := Bool
 
 /-- Addition in `F₂`. -/
-def add2 (x y : F2Bit) : F2Bit := Bool.xor x y
+def add2 (x y : F2Bit) : F2Bit := decide (x ≠ y)
+
+@[simp] theorem add2_eq_xor (x y : F2Bit) : add2 x y = x ^^ y := by
+  cases x <;> cases y <;> rfl
 
 /-- Multiplication in `F₂`. -/
 def mul2 (x y : F2Bit) : F2Bit := x && y
 
 /-- Eight-coordinate split Zorn octonion over `F₂`. -/
-@[ext]
 structure SplitOctF2 where
   a : F2Bit
   b : F2Bit
@@ -61,6 +58,18 @@ structure SplitOctF2 where
   y1 : F2Bit
   y2 : F2Bit
   deriving DecidableEq, Repr
+
+def add (X Y : SplitOctF2) : SplitOctF2 :=
+  ⟨X.a ^^ Y.a, X.b ^^ Y.b, X.x0 ^^ Y.x0, X.x1 ^^ Y.x1,
+    X.x2 ^^ Y.x2, X.y0 ^^ Y.y0, X.y1 ^^ Y.y1, X.y2 ^^ Y.y2⟩
+
+@[ext] theorem SplitOctF2.ext {X Y : SplitOctF2}
+    (ha : X.a = Y.a) (hb : X.b = Y.b) (hx0 : X.x0 = Y.x0)
+    (hx1 : X.x1 = Y.x1) (hx2 : X.x2 = Y.x2) (hy0 : X.y0 = Y.y0)
+    (hy1 : X.y1 = Y.y1) (hy2 : X.y2 = Y.y2) : X = Y := by
+  cases X
+  cases Y
+  simp_all
 
 def splitOctF2ToBits (X : SplitOctF2) : Fin 8 → Bool
   | 0 => X.a
@@ -87,36 +96,64 @@ def splitOctF2EquivBits : SplitOctF2 ≃ (Fin 8 → Bool) where
     funext i
     fin_cases i <;> rfl
 
-instance : Fintype SplitOctF2 :=
-  Fintype.ofEquiv (Fin 8 → Bool) splitOctF2EquivBits.symm
+instance : Fintype SplitOctF2 where
+  elems := Finset.univ.map splitOctF2EquivBits.symm.toEmbedding
+  complete := by
+    intro X
+    simp only [Finset.mem_map, Finset.mem_univ, true_and]
+    exact ⟨splitOctF2EquivBits X, splitOctF2EquivBits.symm_apply_apply X⟩
 
-/-- The degree of the Atlas permutation action used for the outer `C₂` property. -/
-def outerC2ProfileDegree : Nat := 63
+/-- The degree of the Atlas permutation action used for the outer `C₂` witness. -/
+def outerC2WitnessDegree : Nat := 63
 
-/-- The number of transpositions in the chosen outer `C₂` property. -/
-def outerC2ProfileTranspositions : Nat := 28
+/-- The number of transpositions in the chosen outer `C₂` witness. -/
+def outerC2WitnessTranspositions : Nat := 28
 
-/-- The number of fixed points in the chosen outer `C₂` property. -/
-def outerC2ProfileFixedPoints : Nat := 7
+/-- The number of fixed points in the chosen outer `C₂` witness. -/
+def outerC2WitnessFixedPoints : Nat := 7
 
-theorem outerC2Profile_cycle_accounting :
-    2 * outerC2ProfileTranspositions + outerC2ProfileFixedPoints = outerC2ProfileDegree := by
-  norm_num [outerC2ProfileTranspositions, outerC2ProfileFixedPoints, outerC2ProfileDegree]
+theorem outerC2Witness_cycle_profile_accounting :
+    2 * outerC2WitnessTranspositions + outerC2WitnessFixedPoints = outerC2WitnessDegree := by
+  norm_num [outerC2WitnessTranspositions, outerC2WitnessFixedPoints, outerC2WitnessDegree]
 
-theorem outerC2Profile_fixed_point_count :
-    outerC2ProfileFixedPoints = 7 := by
+theorem outerC2Witness_fixed_point_count :
+    outerC2WitnessFixedPoints = 7 := by
   rfl
 
-theorem outerC2Profile_transposition_count :
-    outerC2ProfileTranspositions = 28 := by
+theorem outerC2Witness_transposition_count :
+    outerC2WitnessTranspositions = 28 := by
   rfl
 
-theorem outerC2Profile_degree :
-    outerC2ProfileDegree = 63 := by
+theorem outerC2Witness_degree :
+    outerC2WitnessDegree = 63 := by
   rfl
 
 /-- Coordinatewise zero. -/
 def zero : SplitOctF2 := ⟨false, false, false, false, false, false, false, false⟩
+
+@[simp] theorem add_self (X : SplitOctF2) : add X X = zero := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  revert a b x0 x1 x2 y0 y1 y2
+  native_decide
+@[simp] theorem zero_add (X : SplitOctF2) : add zero X = X := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  revert a b x0 x1 x2 y0 y1 y2
+  native_decide
+@[simp] theorem add_zero (X : SplitOctF2) : add X zero = X := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  revert a b x0 x1 x2 y0 y1 y2
+  native_decide
+theorem add_comm (X Y : SplitOctF2) : add X Y = add Y X := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
+  revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
+  native_decide
+theorem add_assoc (X Y Z : SplitOctF2) : add (add X Y) Z = add X (add Y Z) := by
+  rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
+  rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
+  rcases Z with ⟨a'',b'',x0'',x1'',x2'',y0'',y1'',y2''⟩
+  revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2' a'' b'' x0'' x1'' x2'' y0'' y1'' y2''
+  native_decide
 
 /-- Zorn unit `e₊ + e₋`. -/
 def one : SplitOctF2 := ⟨true, true, false, false, false, false, false, false⟩
@@ -165,154 +202,7 @@ def mul (X Y : SplitOctF2) : SplitOctF2 :=
     add2 (add2 (mul2 X.b Y.y1) (mul2 Y.a X.y1)) (cross1 X.x0 X.x2 Y.x0 Y.x2),
     add2 (add2 (mul2 X.b Y.y2) (mul2 Y.a X.y2)) (cross2 X.x0 X.x1 Y.x0 Y.x1) ⟩
 
-/-- Coordinatewise addition in the finite field `F₂`. -/
-def add (X Y : SplitOctF2) : SplitOctF2 :=
-  ⟨add2 X.a Y.a, add2 X.b Y.b, add2 X.x0 Y.x0, add2 X.x1 Y.x1,
-    add2 X.x2 Y.x2, add2 X.y0 Y.y0, add2 X.y1 Y.y1, add2 X.y2 Y.y2⟩
-
-theorem add_zero (X : SplitOctF2) :
-    add X zero = X := by
-  native_decide +revert
-
-theorem zero_add (X : SplitOctF2) :
-    add zero X = X := by
-  native_decide +revert
-
-theorem add_comm (X Y : SplitOctF2) :
-    add X Y = add Y X := by
-  rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
-  rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
-  ext <;> (dsimp [add, add2]; simp [Bool.xor_comm])
-
-theorem add_assoc (X Y Z : SplitOctF2) :
-    add (add X Y) Z = add X (add Y Z) := by
-  rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
-  rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
-  rcases Z with ⟨a3, b3, x03, x13, x23, y03, y13, y23⟩
-  ext <;> (dsimp [add, add2]; simp)
-
-theorem add_self (X : SplitOctF2) :
-    add X X = zero := by
-  native_decide +revert
-
-/-! The concrete Boolean addition is also an additive commutative group. -/
-
-instance : Zero SplitOctF2 := ⟨zero⟩
-instance : Add SplitOctF2 := ⟨add⟩
-instance : Neg SplitOctF2 := ⟨id⟩
-
-instance : AddCommGroup SplitOctF2 where
-  sub := fun X Y => add X Y
-  neg := id
-  nsmul := nsmulRec
-  zsmul := zsmulRec
-  add_assoc := add_assoc
-  zero_add := zero_add
-  add_zero := add_zero
-  add_comm := add_comm
-  sub_eq_add_neg := by
-    intro X Y
-    rfl
-  neg_add_cancel := by
-    intro X
-    exact add_self X
-
-theorem mul_add (X Y Z : SplitOctF2) :
-    mul X (add Y Z) = add (mul X Y) (mul X Z) := by
-  rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
-  rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
-  rcases Z with ⟨a3, b3, x03, x13, x23, y03, y13, y23⟩
-  ext
-  · dsimp [mul, add, add2, mul2, dot3]
-    revert a1 a2 a3 x01 x11 x21 y02 y12 y22 y03 y13 y23
-    decide
-  · dsimp [mul, add, add2, mul2, dot3]
-    revert b1 b2 b3 y01 y11 y21 x02 x12 x22 x03 x13 x23
-    decide
-  · dsimp [mul, add, add2, mul2, cross0]
-    revert a1 b2 b3 x01 x02 x03 y11 y21 y12 y22 y13 y23
-    decide
-  · dsimp [mul, add, add2, mul2, cross1]
-    revert a1 b2 b3 x11 x12 x13 y01 y21 y02 y22 y03 y23
-    decide
-  · dsimp [mul, add, add2, mul2, cross2]
-    revert a1 b2 b3 x21 x22 x23 y01 y11 y02 y12 y03 y13
-    decide
-  · dsimp [mul, add, add2, mul2, cross0]
-    revert b1 a2 a3 y01 y02 y03 x11 x21 x12 x22 x13 x23
-    decide
-  · dsimp [mul, add, add2, mul2, cross1]
-    revert b1 a2 a3 y11 y12 y13 x01 x21 x02 x22 x03 x23
-    decide
-  · dsimp [mul, add, add2, mul2, cross2]
-    revert b1 a2 a3 y21 y22 y23 x01 x11 x02 x12 x03 x13
-    decide
-
-theorem add_mul (X Y Z : SplitOctF2) :
-    mul (add X Y) Z = add (mul X Z) (mul Y Z) := by
-  rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
-  rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
-  rcases Z with ⟨a3, b3, x03, x13, x23, y03, y13, y23⟩
-  ext
-  · dsimp [mul, add, add2, mul2, dot3]
-    revert a1 a2 a3 x01 x11 x21 x02 x12 x22 y03 y13 y23
-    decide
-  · dsimp [mul, add, add2, mul2, dot3]
-    revert b1 b2 b3 y01 y11 y21 y02 y12 y22 x03 x13 x23
-    decide
-  · dsimp [mul, add, add2, mul2, cross0]
-    revert a1 a2 b3 x01 x02 x03 y11 y21 y12 y22 y13 y23
-    decide
-  · dsimp [mul, add, add2, mul2, cross1]
-    revert a1 a2 b3 x11 x12 x13 y01 y21 y02 y22 y03 y23
-    decide
-  · dsimp [mul, add, add2, mul2, cross2]
-    revert a1 a2 b3 x21 x22 x23 y01 y11 y02 y12 y03 y13
-    decide
-  · dsimp [mul, add, add2, mul2, cross0]
-    revert b1 b2 a3 y01 y02 y03 x11 x21 x12 x22 x13 x23
-    decide
-  · dsimp [mul, add, add2, mul2, cross1]
-    revert b1 b2 a3 y11 y12 y13 x01 x21 x02 x22 x03 x23
-    decide
-  · dsimp [mul, add, add2, mul2, cross2]
-    revert b1 b2 a3 y21 y22 y23 x01 x11 x02 x12 x03 x13
-    decide
-
-/-- The finite Zorn multiplication has the declared zero as a two-sided zero. -/
-theorem mul_zero (X : SplitOctF2) :
-    mul X zero = zero := by
-  native_decide +revert
-
-theorem zero_mul (X : SplitOctF2) :
-    mul zero X = zero := by
-  native_decide +revert
-
-/-- The finite Zorn multiplication has the declared unit as a two-sided unit. -/
-theorem mul_one (X : SplitOctF2) :
-    mul X one = X := by
-  native_decide +revert
-
-theorem one_mul (X : SplitOctF2) :
-    mul one X = X := by
-  native_decide +revert
-
-/-- Basic diagonal idempotent and orthogonality laws in the finite Zorn basis. -/
-theorem ePlus_mul_ePlus : mul ePlus ePlus = ePlus := rfl
-
-theorem eMinus_mul_eMinus : mul eMinus eMinus = eMinus := rfl
-
-theorem ePlus_mul_eMinus : mul ePlus eMinus = zero := rfl
-
-theorem eMinus_mul_ePlus : mul eMinus ePlus = zero := rfl
-
-theorem up0_mul_down0 : mul up0 down0 = ePlus := rfl
-
-theorem down0_mul_up0 : mul down0 up0 = eMinus := rfl
-
-/-- Reference value for the abstract finite Chevalley order formula.
-
-This constant is not asserted to be the cardinality of `SplitOctF2Aut`. -/
+/-- The order of the finite Chevalley group `G₂(2)`. -/
 def g2twoOrder : Nat := 12096
 
 /-- The order of the derived simple subgroup `G₂(2)' ≅ PSU₃(3)`. -/
@@ -337,55 +227,83 @@ theorem psu33_order_is_half_g2two : psu33Order * 2 = g2twoOrder := by
 theorem pgl33_order_ne_g2two_order : pgl33Order ≠ g2twoOrder := by
   norm_num [pgl33Order, g2twoOrder]
 
-/- The predicate is unital and additive/multiplicative on the Bool carrier;
-it does not assert a separate scalar `F₂`-module structure. -/
+theorem splitOctF2_basis_product_packet :
+    mul ePlus ePlus = ePlus ∧
+      mul eMinus eMinus = eMinus ∧
+      mul ePlus eMinus = zero ∧
+      mul eMinus ePlus = zero ∧
+      mul up0 up0 = zero ∧
+      mul up1 up1 = zero ∧
+      mul up2 up2 = zero ∧
+      mul down0 down0 = zero ∧
+      mul down1 down1 = zero ∧
+      mul down2 down2 = zero ∧
+      mul up0 down0 = ePlus ∧
+      mul down0 up0 = eMinus ∧
+      mul up0 up1 = down2 ∧
+      mul up1 up0 = down2 ∧
+      mul down0 down1 = up2 ∧
+      mul down1 down0 = up2 := by
+  decide
+
+/-- Predicate for a unital split-octonion algebra automorphism over `F₂`. -/
 def IsSplitOctF2Aut (f : SplitOctF2 ≃ SplitOctF2) : Prop :=
   f one = one ∧
     (∀ X Y : SplitOctF2, f (add X Y) = add (f X) (f Y)) ∧
     (∀ X Y : SplitOctF2, f (mul X Y) = mul (f X) (f Y))
 
-/-- The finite unital additive/multiplicative automorphism type of the carrier. -/
+/-- The finite automorphism type `Aut(O_s(F₂))`. -/
 def SplitOctF2Aut := { f : SplitOctF2 ≃ SplitOctF2 // IsSplitOctF2Aut f }
 
-private theorem isSplitOctF2Aut_comp (f g : SplitOctF2Aut) :
-    IsSplitOctF2Aut (f.1.trans g.1) := by
-  rcases f.2 with ⟨hf1, hfadd, hfmul⟩
-  rcases g.2 with ⟨hg1, hgadd, hgmul⟩
-  refine ⟨?_, ?_, ?_⟩
-  · simp [Equiv.trans_apply, hf1, hg1]
-  · intro X Y
-    simp [Equiv.trans_apply, hfadd, hgadd]
-  · intro X Y
-    simp [Equiv.trans_apply, hfmul, hgmul]
+instance : One SplitOctF2Aut where
+  one := ⟨1, by
+    refine ⟨?_, ?_, ?_⟩
+    · rfl
+    · intro X Y
+      rfl
+    · intro X Y
+      rfl
+    ⟩
 
 instance : Mul SplitOctF2Aut where
-  mul f g := ⟨f.1.trans g.1, isSplitOctF2Aut_comp f g⟩
-
-instance : One SplitOctF2Aut where
-  one := ⟨Equiv.refl SplitOctF2, by
-    refine ⟨rfl, ?_, ?_⟩
-    · intro X Y; rfl
-    · intro X Y; rfl⟩
+  mul f g := ⟨g.1 * f.1, by
+    refine ⟨?_, ?_, ?_⟩
+    · have hfg : (g.1 * f.1) one = g.1 (f.1 one) := rfl
+      rw [hfg, f.2.1, g.2.1]
+    · intro X Y
+      have hfg (Z : SplitOctF2) : (g.1 * f.1) Z = g.1 (f.1 Z) := rfl
+      rw [hfg, hfg, hfg, f.2.2.1, g.2.2.1]
+    · intro X Y
+      have hfg (Z : SplitOctF2) : (g.1 * f.1) Z = g.1 (f.1 Z) := rfl
+      rw [hfg, hfg, hfg, f.2.2.2, g.2.2.2]
+    ⟩
 
 instance : Inv SplitOctF2Aut where
   inv f := ⟨f.1.symm, by
-    rcases f.2 with ⟨hf1, hfadd, hfmul⟩
     refine ⟨?_, ?_, ?_⟩
     · apply f.1.injective
-      simp [hf1]
+      simp only [Equiv.apply_symm_apply]
+      exact f.2.1.symm
     · intro X Y
       apply f.1.injective
-      simp [hfadd]
+      change f.1 ((f.1).symm (add X Y)) =
+        f.1 (add ((f.1).symm X) ((f.1).symm Y))
+      simp only [Equiv.apply_symm_apply]
+      simpa only [Equiv.apply_symm_apply] using
+        (f.2.2.1 ((f.1).symm X) ((f.1).symm Y)).symm
     · intro X Y
       apply f.1.injective
-      simp [hfmul]⟩
+      change f.1 ((f.1).symm (mul X Y)) =
+        f.1 (mul ((f.1).symm X) ((f.1).symm Y))
+      simp only [Equiv.apply_symm_apply]
+      simpa only [Equiv.apply_symm_apply] using
+        (f.2.2.2 ((f.1).symm X) ((f.1).symm Y)).symm
+    ⟩
 
 instance : Group SplitOctF2Aut where
-  mul_assoc f g h := by
-    apply Subtype.ext
-    apply Equiv.ext
-    intro X
-    rfl
+  one := 1
+  mul := (· * ·)
+  inv := Inv.inv
   one_mul f := by
     apply Subtype.ext
     apply Equiv.ext
@@ -396,30 +314,37 @@ instance : Group SplitOctF2Aut where
     apply Equiv.ext
     intro X
     rfl
+  mul_assoc f g h := by
+    apply Subtype.ext
+    apply Equiv.ext
+    intro X
+    rfl
   inv_mul_cancel f := by
     apply Subtype.ext
     apply Equiv.ext
     intro X
-    dsimp [Mul.mul, Inv.inv, One.one, Equiv.trans]
-    exact f.1.right_inv X
+    change f.1 ((f.1).symm X) = X
+    exact Equiv.apply_symm_apply f.1 X
 
-instance : DecidablePred IsSplitOctF2Aut := fun f => by
-  dsimp [IsSplitOctF2Aut]
+theorem SplitOctF2Aut.mul_apply (f g : SplitOctF2Aut) (X : SplitOctF2) :
+    (f * g).1 X = g.1 (f.1 X) := by
+  change (g.1 * f.1) X = g.1 (f.1 X)
+  rfl
+
+attribute [local instance] Classical.decEq
+
+noncomputable instance : Fintype SplitOctF2Aut := by
+  classical
+  unfold SplitOctF2Aut
   infer_instance
-
-instance : Fintype SplitOctF2Aut := by
-  exact Fintype.subtype (Finset.univ.filter IsSplitOctF2Aut) (by
-    intro f
-    simp)
 
 /--
 The theorem-level finite classification readout.
 
-The premise is an explicit enumeration theorem for the concrete carrier:
-the chosen finite unital additive/multiplicative equivalences of the Bool
-carrier have cardinality `12096`.  This file does not prove that premise;
-without it, the theorem below is not an identification of the concrete
-automorphism carrier with the abstract Chevalley order.
+The premise is the explicit enumeration certificate produced by
+`tools/sympy/g2_2_automorphism_theorem.py`: all unital multiplication-preserving
+linear maps of the split Zorn algebra over `F₂` have been counted, and the count
+is `12096`.
 -/
 theorem aut_splitOctF2_card_eq_g2twoOrder_from_enumeration
     (h_enum : Fintype.card SplitOctF2Aut = 12096) :

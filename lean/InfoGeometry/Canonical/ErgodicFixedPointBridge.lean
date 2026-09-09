@@ -8,7 +8,7 @@ noncomputable section
 /-!
 # Ergodic Fixed-Point Bridge
 
-Witness-gated operator fixed-point data for the bounded KMS/modular lane.
+Witness-gated operator fixed-point socket for the bounded KMS/modular lane.
 
 This file does not prove von Neumann's mean ergodic theorem, does not construct
 an operator integral, and does not assert a type-III centralizer theorem.
@@ -28,7 +28,6 @@ section Core
 
 variable {E LieAlgebra : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable [AddMonoid LieAlgebra]
 
 local notation "EndH" => E →L[ℝ] E
 
@@ -39,7 +38,7 @@ local instance : SMulCommClass ℝ EndH EndH := inferInstance
 local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
 /--
-Operator ergodic/self-similar data over a bounded KMS condition bridge.
+Operator ergodic/self-similar socket over a bounded KMS condition bridge.
 
 `ergodicMean` is a supplied smoothing/readout map.  Concrete models may realize
 it as a Cesaro/integral limit; this bridge only records the fixed-sector laws.
@@ -160,7 +159,7 @@ section Cantor
 variable {Op : Type*} [AddCommMonoid Op]
 
 /--
-Dyadic renormalization data indexed by binary words.
+Dyadic renormalization socket indexed by binary words.
 
 The concrete Cuntz/Jones isometries are not constructed here.  The local
 children and the renormalization law are supplied as operator data.
@@ -168,17 +167,22 @@ children and the renormalization law are supplied as operator data.
 @[rep_depth projective]
 structure CantorDyadicRenormalization (Op : Type*) [AddCommMonoid Op] where
   /-- Cylinder/operator attached to a finite binary word. -/
-  cylinder : List Bool → Op
+  cylinder : BinaryWord → Op
 
   /-- Abstract dyadic renormalization map. -/
   renorm : Op → Op
 
   /-- Supplied dyadic self-similarity law. -/
   renorm_cylinder :
-    ∀ w : List Bool,
+    ∀ w : BinaryWord,
       renorm (cylinder w) =
-        cylinder (TypeIIIModularCantorSystem.child w false) + cylinder (TypeIIIModularCantorSystem.child w true)
+        cylinder (BinaryWord.child w false) + cylinder (BinaryWord.child w true)
 
+namespace CantorDyadicRenormalization
+
+variable (C : CantorDyadicRenormalization Op)
+
+end CantorDyadicRenormalization
 
 end Cantor
 

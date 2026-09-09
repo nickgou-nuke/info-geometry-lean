@@ -20,7 +20,7 @@ open InfoGeometry.Canonical.CantorProjectiveLimit
 open InfoGeometry.Canonical.CantorProjectiveLimit.PrefixProjectiveLimit
 
 def cantorProjectiveLimitTopCatIso :
-    TopCat.of (ℕ → Bool) ≅ TopCat.of PrefixProjectiveLimit where
+    TopCat.of CantorBoundary ≅ TopCat.of PrefixProjectiveLimit where
   hom := TopCat.ofHom
     { toFun := cantorHomeomorphPrefixProjectiveLimit
       continuous_toFun := cantorHomeomorphPrefixProjectiveLimit.continuous }
@@ -66,25 +66,10 @@ theorem projectiveProjection_bonding_square (n : ℕ) :
   change prefixSucc n (π (n + 1) p) = π n p
   exact projection_coherent p n
 
-theorem cantorProjectiveLimit_projection_readout (n : ℕ) (x : (ℕ → Bool)) :
+theorem cantorProjectiveLimit_projection_readout (n : ℕ) (x : CantorBoundary) :
     projectiveProjectionTopCatHom n
         (cantorProjectiveLimitTopCatIso.hom x) =
       boundaryPrefix n x := by
   exact cantorHomeomorph_projection x n
-
-theorem topCat_hom_ext_of_projective_projections
-    {X : Type} [TopologicalSpace X]
-    (f g : TopCat.of X ⟶ TopCat.of PrefixProjectiveLimit)
-    (h : ∀ n : ℕ,
-      f ≫ projectiveProjectionTopCatHom n =
-        g ≫ projectiveProjectionTopCatHom n) :
-    f = g := by
-  apply TopCat.hom_ext
-  apply ContinuousMap.ext
-  intro x
-  apply InfoGeometry.Canonical.CantorProjectiveLimit.ext_of_all_projections_eq
-  intro n
-  have hn := congrArg (fun k => k x) (h n)
-  simpa [TopCat.comp_app] using hn
 
 end InfoGeometry.Canonical.CantorProjectiveLimitTopCat

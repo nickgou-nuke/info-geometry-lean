@@ -69,5 +69,3 @@ def toTopCatHom (Φ : CompatibleReadoutFamilyMap) :
     toTopCatHom Φ ρ = mapFamily Φ.map Φ.map_compatibility ρ := rfl
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutFamilyMorphism
-
-end

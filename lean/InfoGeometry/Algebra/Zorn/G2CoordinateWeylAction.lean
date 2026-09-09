@@ -25,6 +25,20 @@ def phi : Finset (ℤ × ℤ) := phiPlus ∪ phiMinus
 
 abbrev G2CoordinateRoot := {x : ℤ × ℤ // x ∈ phi}
 
+/-! The real Cartan charge readout of a signed coordinate root.  The subtype
+  proof is deliberately irrelevant to the readout: only the canonical
+  integer pair carries the two Cartan coordinates. -/
+def g2CoordinateCharge (x : G2CoordinateRoot) : Fin 2 → ℝ := fun i =>
+  if i = 0 then (x.1.1 : ℝ) else (x.1.2 : ℝ)
+
+@[simp] theorem g2CoordinateCharge_zero (x : G2CoordinateRoot) :
+    g2CoordinateCharge x 0 = (x.1.1 : ℝ) := by
+  simp [g2CoordinateCharge]
+
+@[simp] theorem g2CoordinateCharge_one (x : G2CoordinateRoot) :
+    g2CoordinateCharge x 1 = (x.1.2 : ℝ) := by
+  simp [g2CoordinateCharge]
+
 def positiveRootInFullCarrier (α : G2PositiveRoot) : G2CoordinateRoot :=
   ⟨rootCoordinates α, by
     exact Finset.mem_union_left _ (rootCoordinateEquiv α).property⟩
@@ -134,7 +148,7 @@ theorem cRoot_pow_six : cRoot ^ 6 = 1 := by
   decide
 
 def coordinateWeylAction (w : WeylG2) : G2CoordinateRoot ≃ G2CoordinateRoot :=
-  if w.2 then s1Root.trans (cRoot ^ w.1.val) else cRoot ^ w.1.val
+  if w.2 then s1Root * cRoot ^ w.1.val else cRoot ^ w.1.val
 
 @[simp] theorem coordinateWeylAction_one :
     coordinateWeylAction (0, false) = 1 := by

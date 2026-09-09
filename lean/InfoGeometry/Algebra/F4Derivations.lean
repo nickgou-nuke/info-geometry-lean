@@ -393,3 +393,4 @@ def S3ActsOnPeirce2 (σ : S3Perm) (P : Peirce2Spaces) : Peirce2Spaces :=
   S3_actOnPeirce2 σ P
 
 end
+end InfoGeometry.Algebra

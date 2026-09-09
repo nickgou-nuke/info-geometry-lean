@@ -109,7 +109,7 @@ theorem primeHolonomy_inv_eq_conj_of_criticalLine
     (primeHolonomy_norm_one_of_criticalLine p hp s hs)
 
 /-! The compatibility packet below contains only the two native theorem
-owners above.  It does not introduce an additional analytic property. -/
+owners above.  It does not introduce an additional analytic assumption. -/
 
 @[rep_depth operator]
 structure HolonomyInversionIsConjugation where

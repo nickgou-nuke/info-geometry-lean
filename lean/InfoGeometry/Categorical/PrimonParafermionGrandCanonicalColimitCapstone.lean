@@ -3,24 +3,10 @@ import InfoGeometry.Categorical.PrimeThermodynamicDirectLimit
 import InfoGeometry.Categorical.PrimeThermodynamicStateEquivalence
 import InfoGeometry.Categorical.PrimeThermodynamicDLogQColimit
 import InfoGeometry.Categorical.PrimeStateSumModeEquivalence
-
-/-!
-# Primon Parafermion Grand Canonical Colimit Capstone
-
-This module consolidates the entire colimit theorem DAG for the Primon Gas.
-It proves that the universal categorical thermodynamic state spaces built from
-the State Sum and the Prime Mode finite recurrences are categorically
-equivalent, and that the observables (the partition function `Q` and its
-arbitrary derived readout `D log Q`) are preserved across this equivalence.
-
-This seals the algebraic colimit corridor: every construction is expressed by
-finite stages, compatible maps, and categorical colimit readouts.  This file
-does not identify these state-sum/prime-mode carriers with the separate
-diagonal Gibbs colimit owner.
--/
+import InfoGeometry.Categorical.PrimeThermodynamicReadoutCones
+import InfoGeometry.Categorical.PrimeThermodynamicLimitCapstone
 
 noncomputable section
-
 namespace InfoGeometry.Categorical.PrimonParafermionGrandCanonicalColimitCapstone
 
 open InfoGeometry.Arithmetic.PrimeOccupationAlgebra
@@ -31,19 +17,14 @@ open InfoGeometry.Categorical.PrimeStateSumModeEquivalence
 open InfoGeometry.Categorical.PrimeThermodynamicReadoutCones
 open InfoGeometry.Categorical.PrimeThermodynamicLimitCapstone
 
-/-- The final consolidation of the Primon thermodynamic colimit framework.
-It establishes the categorical equivalence of the two universal stage-built
-carriers and preserves both their partition and derived readouts. -/
 theorem primonThermodynamicColimitCapstone (z s : ℂ) (D : ℂ → ℂ) :
-    ∃ (StateSum PrimeMode : Type)
-      (_instS : CommRing StateSum) (_instP : CommRing PrimeMode)
-      (Equiv : StateSum ≃+* PrimeMode)
+    ∃ (StateSum PrimeMode : Type) (_instS : CommRing StateSum)
+      (_instP : CommRing PrimeMode) (Equiv : StateSum ≃+* PrimeMode)
       (Q_state : StateSum →+* ℂ) (Q_mode : PrimeMode →+* ℂ)
       (D_state : StateSum → ℂ) (D_mode : PrimeMode → ℂ),
-    (∀ x, Q_mode (Equiv x) = Q_state x) ∧
-    (∀ x, D_mode (Equiv x) = D_state x) := by
-  use StateSumUniversalSpace, BostConnesUniversalSpace
-  use inferInstance, inferInstance
+      (∀ x, Q_mode (Equiv x) = Q_state x) ∧
+      (∀ x, D_mode (Equiv x) = D_state x) := by
+  use StateSumUniversalSpace, BostConnesUniversalSpace, inferInstance, inferInstance
   use stateSumPrimeModeColimitEquiv
   use universalStateSumActivityEval z s, universalActivityEval z s
   use D ∘ universalStateSumActivityEval z s, universalDerivedReadout z s D

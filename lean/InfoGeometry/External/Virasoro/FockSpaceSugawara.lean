@@ -17,7 +17,7 @@ construction.
 ## Main definitions
 
 * `sugawaraRepresentation_of_module_uea_heisenbergAlgebra`: A variant of the Sugawara construction
-  where the property is that the space is a module over the universal enveloping algebra of
+  where the hypothesis is that the space is a module over the universal enveloping algebra of
   the Heisenberg algebra with local truncation condition.
 * `ChargedFockSpace.sugawaraRepresentation`: The representation of Virasoro algebra with
   central charge `c=1` on the charged Fock space, obtained by the basic bosonic Sugawara

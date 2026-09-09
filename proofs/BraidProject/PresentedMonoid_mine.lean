@@ -12,17 +12,17 @@ given relations.
 variable {α β : Type*}
 
 /-- The monoid presented by generators `α` and relations `rel`. -/
-def PresentedMonoid (rel : FreeMonoid' α → FreeMonoid' α → Prop) :=
+def BraidPresentedMonoid (rel : FreeMonoid' α → FreeMonoid' α → Prop) :=
   (con'Gen rel).Quotient
 
-namespace PresentedMonoid
+namespace BraidPresentedMonoid
 
-instance (rels : FreeMonoid' α → FreeMonoid' α → Prop) : Monoid (PresentedMonoid rels) :=
+instance (rels : FreeMonoid' α → FreeMonoid' α → Prop) : Monoid (BraidPresentedMonoid rels) :=
   Con'.monoid (con'Gen rels)
 
 /-- Quotient map from the free monoid. -/
 def mk (rels : FreeMonoid' α → FreeMonoid' α → Prop) (a : FreeMonoid' α) :
-    PresentedMonoid rels :=
+    BraidPresentedMonoid rels :=
   _root_.Quotient.mk (con'Gen rels).toSetoid a
 
 @[simp] theorem mul_mk (rels : FreeMonoid' α → FreeMonoid' α → Prop)
@@ -30,16 +30,16 @@ def mk (rels : FreeMonoid' α → FreeMonoid' α → Prop) (a : FreeMonoid' α) 
     mk rels (a * b) = mk rels a * mk rels b := rfl
 
 @[simp] theorem one_def (rels : FreeMonoid' α → FreeMonoid' α → Prop) :
-    mk rels 1 = (1 : PresentedMonoid rels) := rfl
+    mk rels 1 = (1 : BraidPresentedMonoid rels) := rfl
 
 /-- Canonical generator. -/
 def of (rels : FreeMonoid' α → FreeMonoid' α → Prop) (x : α) :
-    PresentedMonoid rels :=
+    BraidPresentedMonoid rels :=
   mk rels (FreeMonoid'.of x)
 
 @[elab_as_elim, induction_eliminator]
 protected theorem inductionOn {rels : FreeMonoid' α → FreeMonoid' α → Prop}
-    {δ : PresentedMonoid rels → Prop} (q : PresentedMonoid rels)
+    {δ : BraidPresentedMonoid rels → Prop} (q : BraidPresentedMonoid rels)
     (h : ∀ a, δ (mk rels a)) : δ q :=
   _root_.Quotient.ind h q
 
@@ -124,7 +124,7 @@ def lift_of_mul {rels : FreeMonoid' α → FreeMonoid' α → Prop} {β : Type*}
     (f : FreeMonoid' α → β)
     (hm : ∀ {a b c d}, f a = f c → f b = f d → f (a * b) = f (c * d))
     (h : ∀ (a b : FreeMonoid' α), rels a b → f a = f b) :
-    PresentedMonoid rels → β :=
+    BraidPresentedMonoid rels → β :=
   fun q =>
     _root_.Quotient.liftOn q f (by
       intro a b hr
@@ -148,7 +148,7 @@ variable {rels : FreeMonoid' α → FreeMonoid' α → Prop}
 variable (h : ∀ a b : FreeMonoid' α, rels a b → FreeMonoid'.lift f a = FreeMonoid'.lift f b)
 
 /-- Extend a generator map respecting the presentation relations to a monoid homomorphism. -/
-def toMonoid : PresentedMonoid rels →* M where
+def toMonoid : BraidPresentedMonoid rels →* M where
   toFun :=
     lift_of_mul (FreeMonoid'.lift f)
       (fun h₁ h₂ => by
@@ -157,15 +157,15 @@ def toMonoid : PresentedMonoid rels →* M where
   map_one' := rfl
   map_mul' := by
     intro x y
-    induction x using PresentedMonoid.inductionOn with
+    induction x using BraidPresentedMonoid.inductionOn with
     | h a =>
-      induction y using PresentedMonoid.inductionOn with
+      induction y using BraidPresentedMonoid.inductionOn with
       | h b =>
         exact MonoidHom.map_mul (FreeMonoid'.lift f) a b
 
 @[simp] theorem toMonoid.of {x : α} :
     (toMonoid f h) (of rels x) = f x := by
-  unfold PresentedMonoid.toMonoid PresentedMonoid.of PresentedMonoid.mk PresentedMonoid.lift_of_mul
+  unfold BraidPresentedMonoid.toMonoid BraidPresentedMonoid.of BraidPresentedMonoid.mk BraidPresentedMonoid.lift_of_mul
   change (FreeMonoid'.lift f) (FreeMonoid'.of x) = f x
   exact FreeMonoid'.lift_eval_of f x
 
@@ -259,4 +259,5 @@ theorem rel_induction_rw {rels : FreeMonoid' α → FreeMonoid' α → Prop}
   | trans h₁ h₂ ih₁ ih₂ =>
       exact h4 _ _ _ ⟨ih₁ (rw_system_cg.mp h₁), ih₂ (rw_system_cg.mp h₂)⟩
 
-end PresentedMonoid
+end BraidPresentedMonoid
+

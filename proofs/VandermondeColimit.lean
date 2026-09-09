@@ -34,7 +34,7 @@ def mobiusMatrix : (k : ℕ) → Matrix (PrimonIdx k) (PrimonIdx k) ℂ
   | k + 1 => fromBlocks (mobiusMatrix k) (-mobiusMatrix k) 0 (mobiusMatrix k)
 
 -- 4. Prove that the inverse of this 2^k × 2^k Vandermonde matrix generates the Möbius inversion homomorphism.
--- 5. Verify completely with ZERO `sorry`s and ZERO `axiom`s.
+-- 5. Verify completely with no proof placeholders or custom axioms.
 theorem vandermonde_mobius_inv : ∀ (k : ℕ), vandermondeMatrix k * mobiusMatrix k = 1
   | 0 => by
       ext ⟨i, hi⟩ ⟨j, hj⟩

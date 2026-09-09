@@ -1,5 +1,4 @@
 import InfoGeometry.ErlangenLanglandsLane
-import InfoGeometry.OperatorAlgebra.KapustinWittenDuality
 import InfoGeometry.Geometry.BilingualUpperHalfPlane
 
 noncomputable section
@@ -11,7 +10,7 @@ namespace ErlangenLanglandsLane
 open InfoGeometry.Automorphic
 open InfoGeometry.Automorphic.SiegelResonance
 open InfoGeometry.OperatorAlgebra.FiniteJonesErlangerBridge
-open InfoGeometry.OperatorAlgebra.KapustinWittenDuality
+open InfoGeometry.OperatorAlgebra.KapustinWittenDualitySocket
 open InfoGeometry.OperatorAlgebra.PhysicalLanglandsHolonomy
 open InfoGeometry.Geometry
 open InfoGeometry.Quantum
@@ -20,10 +19,10 @@ open InfoGeometry.Quantum
 Geometry-side packet for the Erlangen/Langlands lane.
 
 This carries a concrete bilingual upper-half-plane datum and its corresponding
-completed `L`-function property so that the geometric/categorical content is
+completed `L`-function witness so that the geometric/categorical content is
 explicitly retained in the lane pipeline.
 -/
-structure LanglandsLaneGeometryData
+structure LanglandsLaneGeometryPacket
     {E : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {Bulk Boundary : Type*}
@@ -31,7 +30,7 @@ structure LanglandsLaneGeometryData
     [AddCommGroup Boundary] [Module ℝ Boundary]
     (D : Quantum.ProjectivePolarizedBigradedBogoliubovDatum (E := E))
     (W : SiegelEisensteinWitness Bulk Boundary)
-    (P : InfoGeometry.Automorphic.SiegelResonance.ProjectedAutomorphicLFunctionData W)
+    (P : ProjectedAutomorphicLFunctionWitness W)
     (Z : BilingualUpperHalfPlane D) where
     /--
     Chosen Möbius/self-map datum on the indexed upper-half-plane object `Z`.
@@ -42,12 +41,12 @@ structure LanglandsLaneGeometryData
     Completed `L`-function data obtained from the geometric side.
     This is the common interface with the arithmetic packet.
     -/
-    completedLFunction : InfoGeometry.Automorphic.SiegelResonance.CompletedLFunctionData P.L
+    completedLFunction : CompletedLFunctionWitness P.L
 
 /--
 Combined arithmetic/geometry packet for a full lane step.
 -/
-structure LanglandsLaneFullData
+structure LanglandsLaneFullPacket
     {E : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {Bulk Boundary : Type*}
@@ -56,7 +55,7 @@ structure LanglandsLaneFullData
     (D : Quantum.ProjectivePolarizedBigradedBogoliubovDatum (E := E))
     (Z : BilingualUpperHalfPlane D)
     (W : SiegelEisensteinWitness Bulk Boundary)
-    (P : InfoGeometry.Automorphic.SiegelResonance.ProjectedAutomorphicLFunctionData W)
+    (P : ProjectedAutomorphicLFunctionWitness W)
     {Finite Affine Vir State : Type*}
     [AddCommGroup Finite] [Module ℝ Finite]
     [AddCommGroup Affine] [Module ℝ Affine]
@@ -65,12 +64,12 @@ structure LanglandsLaneFullData
     where
   /-- Arithmetic payload from the existing arithmetic lane spine. -/
   arithmetic :
-    LanglandsLaneArithmeticData
+    LanglandsLaneArithmeticPacket
       (W := W) (P := P)
       (FiniteSet := Finite) (AffineSet := Affine) (Vir := Vir) (State := State)
   /-- Geometric payload carrying completed-`L` data in the same codomain. -/
   geometry :
-    LanglandsLaneGeometryData
+    LanglandsLaneGeometryPacket
       D W P Z
   /-- Compatibility constraint between geometry and arithmetic completions. -/
   completed_compat :
@@ -94,9 +93,9 @@ def LanglandsLaneFullTarget
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     (W : SiegelEisensteinWitness Bulk Boundary)
-    (P : InfoGeometry.Automorphic.SiegelResonance.ProjectedAutomorphicLFunctionData W)
+    (P : ProjectedAutomorphicLFunctionWitness W)
     (Full :
-      LanglandsLaneFullData
+      LanglandsLaneFullPacket
         D Z W P
         (Finite := Finite) (Affine := Affine) (Vir := Vir) (State := State))
     {ElectricState MagneticState DualCharge : Type*}
@@ -104,10 +103,11 @@ def LanglandsLaneFullTarget
     {GState GdualState GLoop GdualLoop Scalar : Type*}
     (Wr : WilsonReadoutDatum GState GLoop Scalar)
     (Tr : THooftReadoutDatum GdualState GdualLoop Scalar)
-    (D' : LanglandsDualPair GState GdualState GLoop GdualLoop) :
+    (D' : LanglandsDualPair GState GdualState GLoop GdualLoop)
+    (K : KWPhysicalDualityWitness GState GdualState GLoop GdualLoop Scalar Wr Tr D') :
     Prop :=
     Nonempty
-      {G : LanglandsLaneGeometryData
+      {G : LanglandsLaneGeometryPacket
       D W P Z
       // G.completedLFunction.completedL =
         Full.arithmetic.completedLFunction.completedL}
@@ -115,7 +115,7 @@ def LanglandsLaneFullTarget
   LanglandsLaneCoreTarget
     (W := W) (P := P)
     (packet := Full.arithmetic)
-    S Wr Tr D'
+    S Wr Tr D' K
 
 /--
 Constructive full lane packet with explicit geometry payload.
@@ -123,7 +123,7 @@ Constructive full lane packet with explicit geometry payload.
 The geometry side is retained as explicit output data; the existing arithmetic
 constructor remains the proof engine for the owner-chain target.
 -/
-theorem constructFullLanglandsLaneData
+theorem constructFullLanglandsLanePacket
     {E : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {Bulk Boundary : Type*}
@@ -132,13 +132,13 @@ theorem constructFullLanglandsLaneData
     (D : Quantum.ProjectivePolarizedBigradedBogoliubovDatum (E := E))
     (Z : BilingualUpperHalfPlane D)
     (W : SiegelEisensteinWitness Bulk Boundary)
-    (P : InfoGeometry.Automorphic.SiegelResonance.ProjectedAutomorphicLFunctionData W)
+    (P : ProjectedAutomorphicLFunctionWitness W)
     {Finite Affine Vir State : Type*}
     [AddCommGroup Finite] [Module ℝ Finite]
     [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
-    (Full : LanglandsLaneFullData
+    (Full : LanglandsLaneFullPacket
       D Z W P
       (Finite := Finite) (Affine := Affine) (Vir := Vir) (State := State))
     {ElectricState MagneticState DualCharge : Type*}
@@ -151,7 +151,7 @@ theorem constructFullLanglandsLaneData
       GState GdualState GLoop GdualLoop Scalar Wr Tr G) :
     LanglandsLaneFullTarget
       D Z W P Full
-      S Wr Tr G :=
+      S Wr Tr G K :=
 by
   exact
     ⟨ ⟨Full.geometry, Full.completed_compat⟩,

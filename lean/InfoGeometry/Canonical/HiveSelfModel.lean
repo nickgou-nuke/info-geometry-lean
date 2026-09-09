@@ -43,8 +43,7 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable [FiniteDimensional ℝ E]
 variable [CausalGraph α]
 
-abbrev ShadowBoundary (α : Type*) :=
-  InfoGeometry.SelfReference.Shadow.ShadowCone α
+abbrev ShadowBoundary (α : Type*) := InfoGeometry.SelfReference.ShadowCone α
 
 /--
 Repo-native self-model state.
@@ -68,7 +67,7 @@ structure CognitiveSelfModel (n : Nat) (E α : Type*)
   memoryManifests : Array String
 
   /-- Black-book source-to-lineage packets. -/
-  blackBooks : Array InfoGeometry.Canonical.BlackBookIntegration.BlackBookData
+  blackBooks : Array InfoGeometry.Canonical.BlackBookIntegration.BlackBookPacket
 
   /-- Open debt and shadow content. -/
   shadowDebt : Array String
@@ -118,7 +117,7 @@ def memoryCount : Nat :=
 /-- The number of black-book packets. -/
 def blackBookCount : Nat :=
   Array.size
-    (α := InfoGeometry.Canonical.BlackBookIntegration.BlackBookData)
+    (α := InfoGeometry.Canonical.BlackBookIntegration.BlackBookPacket)
     (CognitiveSelfModel.blackBooks M)
 
 /-- The number of rejection patterns. -/

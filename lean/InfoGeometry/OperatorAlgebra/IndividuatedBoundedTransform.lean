@@ -20,6 +20,7 @@ scalar bound transfers to the chosen operator model.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -110,6 +111,12 @@ theorem scalarBoundedTransform_mem_Ioo
     scalarBoundedTransform t ∈ Set.Ioo (-1 : ℝ) 1 := by
   exact abs_lt.mp (abs_scalarBoundedTransform_lt_one t)
 
+/-- Compatibility alias for the previous snake-case theorem name. -/
+theorem scalar_boundedTransform_sq_le_one
+    (t : ℝ) :
+    scalarBoundedTransform t ^ 2 ≤ 1 :=
+  scalarBoundedTransform_sq_le_one t
+
 /-- The square of the scalar bounded transform is nonnegative. -/
 theorem scalarBoundedTransform_sq_nonneg
     (t : ℝ) :
@@ -123,7 +130,21 @@ theorem scalarBoundedTransform_sq_mem_Icc
   ⟨scalarBoundedTransform_sq_nonneg t,
    scalarBoundedTransform_sq_le_one t⟩
 
-/-! ## 2. Operator lift through explicit functional calculus -/
+/-! ## 2. Scalar bounded-transform contraction -/
+
+/-- The scalar owner target is now constructively proved. -/
+theorem scalarBoundedTransformOwnerTarget :
+    ∀ t : ℝ, scalarBoundedTransform t ^ 2 ≤ 1 := by
+  intro t
+  exact scalarBoundedTransform_sq_le_one t
+
+@[owner_target_tag]
+theorem scalarBoundedTransform_packet :
+    (∀ t : ℝ, 0 ≤ scalarBoundedTransform t ^ 2) ∧
+      (∀ t : ℝ, scalarBoundedTransform t ^ 2 ≤ 1) := by
+  exact ⟨scalarBoundedTransform_sq_nonneg, scalarBoundedTransformOwnerTarget⟩
+
+/-! ## 3. Operator lift through explicit functional calculus -/
 
 /--
 Functional-calculus/order-lift bridge for the bounded transform.
@@ -171,5 +192,32 @@ theorem contraction :
   B.spectral_order_lift scalarBoundedTransform_sq_le_one
 
 end BoundedTransformFunctionalCalculusBridge
+
+/-! ## 4. Operator owner theorem, explicitly bridge-gated -/
+
+/--
+Bridge-gated operator owner theorem.
+
+No operator contraction is asserted without a functional-calculus/order-lift
+bridge.
+-/
+theorem operatorBoundedTransformOwnerTarget :
+  ∀ (Op : Type*) [Ring Op] [StarRing Op] [PartialOrder Op],
+  ∀ B : BoundedTransformFunctionalCalculusBridge Op,
+    star B.F * B.F ≤ 1 := by
+  intro Op _ _ _ B
+  exact B.contraction
+
+/--
+The operator owner packet is discharged from the explicit bridge and the
+constructive scalar theorem.
+-/
+@[owner_target_tag]
+theorem operatorBoundedTransform_packet
+    (Op : Type*) [Ring Op] [StarRing Op] [PartialOrder Op]
+    (B : BoundedTransformFunctionalCalculusBridge Op) :
+    star B.F * B.F ≤ 1 ∧
+      star B.D = B.D := by
+  exact ⟨operatorBoundedTransformOwnerTarget Op B, B.D_selfAdjoint⟩
 
 end InfoGeometry.OperatorAlgebra.IndividuatedBoundedTransform

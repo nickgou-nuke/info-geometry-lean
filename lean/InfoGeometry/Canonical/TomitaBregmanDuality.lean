@@ -61,24 +61,6 @@ theorem tomita_bregman_channel11 :
   rw [tomita_bregman_diagonal]
   norm_num
 
-theorem tomita_bregman_channel01 :
-    TomitaBregmanOp 0 1 = 0 := by
-  rw [tomita_bregman_diagonal]
-  norm_num
-
-theorem tomita_bregman_channel10 :
-    TomitaBregmanOp 1 0 = 0 := by
-  rw [tomita_bregman_diagonal]
-  norm_num
-
-theorem tomita_bregman_commutes_modularBoost :
-    TomitaBregmanOp * InfoGeometry.Canonical.ModularLorentzBoost.K =
-      InfoGeometry.Canonical.ModularLorentzBoost.K * TomitaBregmanOp := by
-  rw [tomita_bregman_diagonal]
-  rw [InfoGeometry.Canonical.ModularLorentzBoost.K_eval]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [Matrix.mul_apply, Fin.sum_univ_two] <;> ring
-
 /-- The `(0,0)` Bregman channel is strictly positive. -/
 theorem tomita_bregman_channel00_pos :
     0 < TomitaBregmanOp 0 0 := by

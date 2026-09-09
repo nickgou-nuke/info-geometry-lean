@@ -68,6 +68,26 @@ theorem amplituhedronInclusion_new_column (n : ℕ)
         ⟨n, Nat.lt_succ_self n⟩ = 0 := by
   simp [amplituhedronInclusion]
 
+theorem firstTwoRows_inclusion_nonnegativeChart
+    (n : ℕ) (C : AmplituhedronAlgebra n)
+    (hC : firstTwoRows C ∈
+      positiveGrassmannianChart (k := 2) (n := n)) :
+    firstTwoRows (amplituhedronInclusion n C) ∈
+      positiveGrassmannianChart (k := 2) (n := n + 1) := by
+  change HasNonnegativeMaximalMinors
+    (firstTwoRows (amplituhedronInclusion n C))
+  change HasNonnegativeMaximalMinors (firstTwoRows C) at hC
+  have hcomm :
+      firstTwoRows (amplituhedronInclusion n C) =
+        appendZeroColumn₂ (firstTwoRows C) := by
+    ext i j
+    by_cases hj : j.val < n
+    · simp [firstTwoRows, amplituhedronInclusion, appendZeroColumn₂, hj]
+    · simp [firstTwoRows, amplituhedronInclusion, appendZeroColumn₂, hj]
+  rw [hcomm]
+  exact appendZeroColumn₂_nonnegative (firstTwoRows C) hC
+
+
 /-- The image of the finite-stage inclusion is the coordinate boundary face
     cut out by the newly appended zero column. -/
 def zeroLastColumnFace (n : ℕ) :

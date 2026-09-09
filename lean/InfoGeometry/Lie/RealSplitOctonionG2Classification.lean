@@ -33,15 +33,31 @@ theorem split_octonion_derivation_bracket_closed
 theorem canonical_split_octonion_derivation_finrank :
     Module.finrank ℝ
       InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations = 14 :=
-  InfoGeometry.Lie.SplitOctonionStandardDerivation.canonical_derivation_finrank
+  canonicalDerivations_finrank
 
 theorem standard_split_octonion_derivations_span :
     InfoGeometry.Lie.SplitOctonionStandardDerivation.standardDerivationSpan = ⊤ :=
-  InfoGeometry.Lie.SplitOctonionStandardDerivation.standardDerivations_span_top
+  canonicalDerivations_span_standard
 
-theorem canonical_rotation_is_derivation :
-    InfoGeometry.Lie.G2FromSplitOctonions.IsDeriv
-      InfoGeometry.OperatorAlgebra.SplitOctonions.DerivationData.rot01Derivation :=
-  InfoGeometry.Lie.G2FromSplitOctonions.D01_deriv
+/-! ## Explicit witness and status boundary -/
+
+inductive RealClassificationStatus where
+  | exactNativeLieAlgebra
+  | nativeLeanGroupEquivalence
+  deriving DecidableEq, Repr
+
+def currentRealClassificationStatus : RealClassificationStatus :=
+  RealClassificationStatus.exactNativeLieAlgebra
+
+theorem current_status_is_exactNativeLieAlgebra :
+    currentRealClassificationStatus = RealClassificationStatus.exactNativeLieAlgebra :=
+  rfl
+
+theorem current_status_records_distinct_group_equivalence_lane :
+    currentRealClassificationStatus ≠ RealClassificationStatus.nativeLeanGroupEquivalence := by
+  decide
+
+theorem canonical_rotation_is_derivation : IsDeriv D01 :=
+  D01_deriv
 
 end InfoGeometry.Lie.RealSplitOctonionG2Classification

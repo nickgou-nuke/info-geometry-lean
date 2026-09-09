@@ -53,5 +53,3 @@ theorem scalarDilationTopCatAction_add (s t : ℝ) :
     scalarDilation_pullback_add_action s t ρ
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutDynamicsTopCatAction
-
-end

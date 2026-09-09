@@ -41,7 +41,7 @@ noncomputable def zornFlowRealAut
       rw [InfoGeometry.Lie.CanonicalZornDerivationExponential.coordLE_zornFlowLinearEquiv]
       have hcoord : coordEnd D.1
           (InfoGeometry.OperatorAlgebra.SplitOctonionPseudoReal.coordLE (1 : CZ)) = 0 := by
-        rw [coordEnd_coordLE, derivation_apply_one]
+        rw [coordEnd_apply_coordLE, derivation_apply_one]
         simp
       exact InfoGeometry.Lie.ContinuousDerivationExponential.flowLinearEquiv_fixed_of_derivation_eq_zero
         (coordEnd D.1)
@@ -110,8 +110,8 @@ theorem zornFlow_preserves_detZ
     (D : canonicalZornDerivations)
     (t : ℝ)
     (X : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (zornFlowLinearEquiv D.1 t X) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X := by
+    InfoGeometry.Canonical.ZornMatrix.detZ (zornFlowLinearEquiv D.1 t X) =
+      InfoGeometry.Canonical.ZornMatrix.detZ X := by
   simpa using
     (RealSplitOctonionAut.preserves_detZ (zornFlowRealAut D t) X)
 
@@ -121,8 +121,11 @@ theorem zornFlow_preserves_null
     (D : canonicalZornDerivations)
     (t : ℝ)
     (X : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull (zornFlowLinearEquiv D.1 t X) ↔
-      InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull X := by
+    InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+        (zornFlowLinearEquiv D.1 t X) ↔
+      InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X := by
   simpa using
     (RealSplitOctonionAut.preserves_null (zornFlowRealAut D t) X)
 
@@ -246,8 +249,8 @@ theorem zornDerivationExpRealAut_apply
 theorem zornDerivationExpRealAut_preserves_detZ
     (D : canonicalZornDerivations)
     (X : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (zornDerivationExpAutomorphism D X) =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X := by
+    InfoGeometry.Canonical.ZornMatrix.detZ (zornDerivationExpAutomorphism D X) =
+      InfoGeometry.Canonical.ZornMatrix.detZ X := by
   simpa [zornDerivationExpRealAut_apply] using
     zornFlow_preserves_detZ D 1 X
 
@@ -256,8 +259,11 @@ theorem zornDerivationExpRealAut_preserves_detZ
 theorem zornDerivationExpRealAut_preserves_null
     (D : canonicalZornDerivations)
     (X : CZ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull (zornDerivationExpAutomorphism D X) ↔
-      InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull X := by
+    InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+        (zornDerivationExpAutomorphism D X) ↔
+      InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull
+        InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X := by
   simpa [zornDerivationExpRealAut_apply] using
     zornFlow_preserves_null D 1 X
 

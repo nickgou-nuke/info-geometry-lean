@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 import InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine
 import InfoGeometry.Canonical.CantorCuntzCliffordBridge
-import InfoGeometry.Topology.FractalCantorFock
+import InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket
 import InfoGeometry.Canonical.CelikKocakKreinSupergradedLift
 import InfoGeometry.Canonical.CuntzMapKreinBridge
 import InfoGeometry.Quantum.RealMajoranaCategory
@@ -33,12 +33,13 @@ open InfoGeometry.Canonical.CelikKocakPaperFormalism
 open InfoGeometry.Canonical.SplitCliffordTensorBridge
 open InfoGeometry.Canonical.SplitCliffordDirectLimit
 open InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine
+open InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket
 open InfoGeometry.Quantum.RealMajoranaCategory
 open InfoGeometry.Canonical.CelikKocakKreinSupergradedLift
 open InfoGeometry.Canonical.CuntzMapKreinBridge
 open InfoGeometry.Quantum
 open InfoGeometry.Clifford.ClNN
-open InfoGeometry.Topology.FractalCantorFock
+open InfoGeometry.Topology.FractalCantorFockWitness
 open InfoGeometry.Krein
 open KreinGradedModule
 
@@ -46,22 +47,25 @@ section RealSplit
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
+/-- Symbolic infinite Cantor boundary. -/
+abbrev CantorBoundary := ℕ → Bool
+
 /-- Head symbol of the Cantor boundary. -/
-def boundaryHead (ξ : (ℕ → Bool)) : Bool :=
+def boundaryHead (ξ : CantorBoundary) : Bool :=
   ξ 0
 
 /-- Prepend one bit to a Cantor boundary word. -/
-def boundaryCons (a : Bool) (ξ : (ℕ → Bool)) : (ℕ → Bool) :=
+def boundaryCons (a : Bool) (ξ : CantorBoundary) : CantorBoundary :=
   fun n =>
     match n with
     | 0 => a
     | Nat.succ m => ξ m
 
 /-- Tail of a Cantor boundary word. -/
-def boundaryTail (ξ : (ℕ → Bool)) : (ℕ → Bool) :=
+def boundaryTail (ξ : CantorBoundary) : CantorBoundary :=
   fun n => ξ (n + 1)
 
-theorem boundary_recursive_decomposition (ξ : (ℕ → Bool)) :
+theorem boundary_recursive_decomposition (ξ : CantorBoundary) :
     ξ = boundaryCons (boundaryHead ξ) (boundaryTail ξ) := by
   funext n
   cases n <;> rfl
@@ -106,7 +110,7 @@ theorem splitClifford_headNullPair_isotropic (n : ℕ) :
 
 /-- The infinite Cantor boundary decomposes recursively into head and tail. -/
 @[rep_depth operator]
-theorem cantorBoundary_recursive_decomposition (ξ : (ℕ → Bool)) :
+theorem cantorBoundary_recursive_decomposition (ξ : CantorBoundary) :
     ξ = boundaryCons (boundaryHead ξ) (boundaryTail ξ) :=
   boundary_recursive_decomposition ξ
 
@@ -116,7 +120,7 @@ infinite Cantor boundary recursion can be packaged together theorem-only.
 -/
 @[rep_depth operator]
 theorem paperSplitClifford_limit_package
-    (n : ℕ) (ξ : (ℕ → Bool)) :
+    (n : ℕ) (ξ : CantorBoundary) :
     ((doubledSpaceCl11Action (E := E)).J = InfoGeometry.Krein.modular_j (E := E))
       ∧
     ((doubledSpaceCl11Action (E := E)).K = InfoGeometry.Krein.complex_i (E := E))
@@ -139,7 +143,7 @@ recursively at the same time.
 -/
 @[rep_depth operator]
 theorem paperSplitClifford_infiniteBoundary_package
-    (z : SplitCliffordInfinity) (ξ : (ℕ → Bool)) :
+    (z : SplitCliffordInfinity) (ξ : CantorBoundary) :
     (∃ n x,
       DirectLimit.Module.of ℝ ℕ SplitClNNAlg
         (fun m n h => splitCliffordMap m n h) n x = z ∧
@@ -160,30 +164,72 @@ section InfiniteBoundary
 variable {Op E : Type*} [Ring Op]
 variable [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
 
-/-- Every split direct-limit point has representatives at arbitrarily deep
-levels.  The Fock carrier is independent data and is therefore not bundled
-into this direct-limit theorem. -/
+/--
+The infinite split boundary complement packages the direct-limit split tower
+together with the analytic Cantor/Fock carrier data.
+
+This is the theorem-backed crossing point from the finite recursive tower to
+the infinite-dimensional owner lane.
+-/
 @[rep_depth operator]
-theorem splitCliffordInfinity_boundary_complement
-    (z : SplitCliffordInfinity) :
+structure SplitCliffordInfiniteBoundaryComplement
+    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] where
+  splitInfinity : SplitCliffordInfinity
+  cantorFock : CelikKocakInfiniteFockCarrierData E
+  expanding_representatives :
     ∀ N : ℕ, ∃ n ≥ N, ∃ x : SplitClNNAlg n,
       DirectLimit.Module.of ℝ ℕ SplitClNNAlg
-        (fun m n h => splitCliffordMap m n h) n x = z := by
+        (fun m n h => splitCliffordMap m n h) n x = splitInfinity
+
+/--
+The infinite split boundary can be packaged with the literature-owned infinite
+Cantor/Fock socket and read back through the socket API.
+-/
+@[rep_depth operator]
+structure SplitCliffordInfiniteSocketComplement
+    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [CompleteSpace E] where
+  boundaryComplement : SplitCliffordInfiniteBoundaryComplement E
+  infiniteSocket : InfiniteCantorCliffordFockSocket E
+  carrier_readout_eq :
+    carrierData_readout (S := infiniteSocket) = boundaryComplement.cantorFock
+
+/-- Any split direct-limit point and any analytic Cantor/Fock carrier determine a crossing packet. -/
+@[rep_depth operator]
+noncomputable def splitCliffordInfinity_boundary_complement
+    (z : SplitCliffordInfinity)
+    (D : CelikKocakInfiniteFockCarrierData E) :
+    SplitCliffordInfiniteBoundaryComplement E := by
+  refine { splitInfinity := z, cantorFock := D, expanding_representatives := ?_ }
+  intro N
+  exact splitCliffordInfinity_unbounded_representatives z N
+
+/-- The split infinite boundary and the Cantor/Fock socket can be packaged together theorem-only. -/
+@[rep_depth operator]
+noncomputable def splitCliffordInfinity_socket_complement
+    (z : SplitCliffordInfinity)
+    (D : CelikKocakInfiniteFockCarrierData E) :
+    SplitCliffordInfiniteSocketComplement E := by
+  refine { boundaryComplement := { splitInfinity := z, cantorFock := D, expanding_representatives := ?_ },
+           infiniteSocket := { carrierData := D },
+           carrier_readout_eq := rfl }
   intro N
   exact splitCliffordInfinity_unbounded_representatives z N
 
 /--
-The split infinite boundary and the concrete CAR property can be packaged
+The split infinite boundary and the concrete CAR witness can be packaged
 together without introducing any new infinite tensor product theorem.
 
-The Cantor/Fock interface lives over a complex carrier `E`, while the concrete CAR
-property lives over a real doubled carrier `F`; the theorem keeps those ambient
+The Cantor/Fock socket lives over a complex carrier `E`, while the concrete CAR
+witness lives over a real doubled carrier `F`; the theorem keeps those ambient
 types separate.
 -/
 @[rep_depth operator]
 theorem splitCliffordInfinity_fock_completion
+    (_z : SplitCliffordInfinity)
+    (_D : CelikKocakInfiniteFockCarrierData E)
     {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F] :
-    CARRelation (cl11CanonicalPolarizedMajorana (E := F)).core
+    CARWitness (cl11CanonicalPolarizedMajorana (E := F)).core
         (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := F))
           (cl11SplitCliffordDatum F) (cl11_concrete_ladder_realization (E := F))).annihil
         (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := F))
@@ -194,17 +240,14 @@ theorem splitCliffordInfinity_fock_completion
 @[rep_depth operator]
 theorem splitCliffordInfinity_leg_partition
     {Op : Type*} [Ring Op] [StarRing Op]
-    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) (seed : Op) :
-    (InfoGeometry.Topology.CuntzO2Carrier.S_left C *
-        star (InfoGeometry.Topology.CuntzO2Carrier.S_left C)) * seed +
-      (InfoGeometry.Topology.CuntzO2Carrier.S_right C *
-        star (InfoGeometry.Topology.CuntzO2Carrier.S_right C)) * seed = seed := by
+    (C : InfoGeometry.Topology.CuntzO2Carrier Op) (seed : Op) :
+    (C.S_left * star C.S_left) * seed + (C.S_right * star C.S_right) * seed = seed := by
   calc
-    ((InfoGeometry.Topology.CuntzO2Carrier.S_left C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_left C)) * seed + ((InfoGeometry.Topology.CuntzO2Carrier.S_right C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_right C)) * seed
-        = (((InfoGeometry.Topology.CuntzO2Carrier.S_left C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_left C)) + ((InfoGeometry.Topology.CuntzO2Carrier.S_right C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_right C))) * seed := by
+    (C.S_left * star C.S_left) * seed + (C.S_right * star C.S_right) * seed
+        = ((C.S_left * star C.S_left) + (C.S_right * star C.S_right)) * seed := by
             rw [add_mul]
     _ = 1 * seed := by
-          rw [show ((InfoGeometry.Topology.CuntzO2Carrier.S_left C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_left C)) + ((InfoGeometry.Topology.CuntzO2Carrier.S_right C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_right C)) = 1 from InfoGeometry.Topology.CuntzO2Carrier.rangeProjection_sum_one C]
+          rw [show (C.S_left * star C.S_left) + (C.S_right * star C.S_right) = 1 from C.range_sum]
     _ = seed := by
           simp
 
@@ -212,22 +255,19 @@ theorem splitCliffordInfinity_leg_partition
 @[rep_depth operator]
 theorem splitCliffordInfinity_leg_orthogonal
     {Op : Type*} [Ring Op] [StarRing Op]
-    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
-    (InfoGeometry.Topology.CuntzO2Carrier.S_left C *
-        star (InfoGeometry.Topology.CuntzO2Carrier.S_left C)) *
-      (InfoGeometry.Topology.CuntzO2Carrier.S_right C *
-        star (InfoGeometry.Topology.CuntzO2Carrier.S_right C)) = 0 := by
+    (C : InfoGeometry.Topology.CuntzO2Carrier Op) :
+    (C.S_left * star C.S_left) * (C.S_right * star C.S_right) = 0 := by
   calc
-    ((InfoGeometry.Topology.CuntzO2Carrier.S_left C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_left C)) * ((InfoGeometry.Topology.CuntzO2Carrier.S_right C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_right C))
-        = (InfoGeometry.Topology.CuntzO2Carrier.S_left C) * (star (InfoGeometry.Topology.CuntzO2Carrier.S_left C) * (InfoGeometry.Topology.CuntzO2Carrier.S_right C)) * star (InfoGeometry.Topology.CuntzO2Carrier.S_right C) := by
+    (C.S_left * star C.S_left) * (C.S_right * star C.S_right)
+        = C.S_left * (star C.S_left * C.S_right) * star C.S_right := by
             simp [mul_assoc]
     _ = 0 := by
-          rw [(InfoGeometry.Topology.CuntzO2Carrier.orthogonal_ranges C).1]
+          rw [C.orthogonal_ranges.1]
           simp
 
 /--
 The split infinite boundary, the Cuntz root branch decomposition, and the
-concrete CAR property can be packaged together in one theorem-backed packet.
+concrete CAR witness can be packaged together in one theorem-backed packet.
 
 This keeps the boundary expansion explicit using only the names already owned
 in this file: the split direct-limit completion, the local binary boundary
@@ -235,15 +275,17 @@ recursion, and the Cuntz leg partition.
 -/
 @[rep_depth operator]
 theorem splitCliffordInfinity_root_branch_completion
+    (_z : SplitCliffordInfinity)
+    (_D : CelikKocakInfiniteFockCarrierData E)
     {Op : Type*} [Ring Op] [StarRing Op]
-    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op)
+    (C : InfoGeometry.Topology.CuntzO2Carrier Op)
     (seed : Op)
-    (ξ : (ℕ → Bool))
+    (ξ : CantorBoundary)
     {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F] :
-    (((InfoGeometry.Topology.CuntzO2Carrier.S_left C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_left C)) * seed + ((InfoGeometry.Topology.CuntzO2Carrier.S_right C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_right C)) * seed = seed) ∧
-      (((InfoGeometry.Topology.CuntzO2Carrier.S_left C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_left C)) * ((InfoGeometry.Topology.CuntzO2Carrier.S_right C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_right C)) = 0) ∧
+    ((C.S_left * star C.S_left) * seed + (C.S_right * star C.S_right) * seed = seed) ∧
+      ((C.S_left * star C.S_left) * (C.S_right * star C.S_right) = 0) ∧
       (ξ = boundaryCons (boundaryHead ξ) (boundaryTail ξ)) ∧
-      CARRelation (cl11CanonicalPolarizedMajorana (E := F)).core
+      CARWitness (cl11CanonicalPolarizedMajorana (E := F)).core
         (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := F))
           (cl11SplitCliffordDatum F) (cl11_concrete_ladder_realization (E := F))).annihil
         (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := F))
@@ -274,13 +316,14 @@ K-theory vanishing, complete positivity, or uniqueness of the KMS state.
 @[rep_depth operator]
 theorem celikKocak_cuntzCAR_splitFock_fixedReadout_packet
     (z : SplitCliffordInfinity)
+    (_D : CelikKocakInfiniteFockCarrierData E)
     {Op : Type*} [Ring Op] [StarRing Op]
-    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op)
+    (C : InfoGeometry.Topology.CuntzO2Carrier Op)
     (φ : Op →+ ℝ)
     (X seed : Op)
-    (ξ : (ℕ → Bool))
-    (hleft : φ ((InfoGeometry.Topology.CuntzO2Carrier.S_left C) * X * star (InfoGeometry.Topology.CuntzO2Carrier.S_left C)) = (1 / 2 : ℝ) * φ X)
-    (hright : φ ((InfoGeometry.Topology.CuntzO2Carrier.S_right C) * X * star (InfoGeometry.Topology.CuntzO2Carrier.S_right C)) = (1 / 2 : ℝ) * φ X)
+    (ξ : CantorBoundary)
+    (hleft : φ (C.S_left * X * star C.S_left) = (1 / 2 : ℝ) * φ X)
+    (hright : φ (C.S_right * X * star C.S_right) = (1 / 2 : ℝ) * φ X)
     {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F] :
     (∃ n x,
       DirectLimit.Module.of ℝ ℕ SplitClNNAlg
@@ -299,12 +342,12 @@ theorem celikKocak_cuntzCAR_splitFock_fixedReadout_packet
       ∧
       (φ (cuntzCarrierMap C X) = φ X)
       ∧
-      (((InfoGeometry.Topology.CuntzO2Carrier.S_left C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_left C)) * seed +
-          ((InfoGeometry.Topology.CuntzO2Carrier.S_right C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_right C)) * seed = seed)
+      ((C.S_left * star C.S_left) * seed +
+          (C.S_right * star C.S_right) * seed = seed)
       ∧
       (ξ = boundaryCons (boundaryHead ξ) (boundaryTail ξ))
       ∧
-      CARRelation (cl11CanonicalPolarizedMajorana (E := F)).core
+      CARWitness (cl11CanonicalPolarizedMajorana (E := F)).core
         (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := F))
           (cl11SplitCliffordDatum F) (cl11_concrete_ladder_realization (E := F))).annihil
         (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := F))
@@ -335,7 +378,7 @@ odd generators, without introducing any new current algebra or Virasoro claim.
 @[rep_depth operator]
 theorem splitCliffordInfinity_supergraded_completion
     (_z : SplitCliffordInfinity)
-    (_D : CelikKocakInfiniteHilbertCarrier E)
+    (_D : CelikKocakInfiniteFockCarrierData E)
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H] [KreinGradedModule H]
     (tiltSwitch : TiltSwitchSystem (H →L[ℝ] H))

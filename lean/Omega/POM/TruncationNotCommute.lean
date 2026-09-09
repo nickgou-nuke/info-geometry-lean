@@ -2,7 +2,7 @@ import Mathlib.Tactic
 
 namespace Omega.POM
 
-/-- Concrete truncation depth for the noncommutation argument. The retained prefix is assumed
+/-- Concrete truncation depth for the noncommutation witness. The retained prefix is assumed
 nonempty so that a tail-triggered rewrite can alter visible data. -/
 structure pom_truncation_not_commute_data where
   keep : ℕ
@@ -39,12 +39,12 @@ def fold_then_restrict (D : pom_truncation_not_commute_data) (w : D.word) : D.re
     else
       w (Fin.castSucc i)
 
-/-- The selected word: all retained bits are `false`, while the extra tail bit is `true`. -/
-def selectedWord (D : pom_truncation_not_commute_data) : D.word :=
+/-- The short witness word: all retained bits are `false`, while the extra tail bit is `true`. -/
+def witnessWord (D : pom_truncation_not_commute_data) : D.word :=
   fun i => i = D.triggerIndex
 
-/-- Noncommutation statement. -/
-def noncommuting_word_exists (D : pom_truncation_not_commute_data) : Prop :=
+/-- Paper-facing noncommutation statement. -/
+def noncommuting_witness_exists (D : pom_truncation_not_commute_data) : Prop :=
   ∃ w : D.word, D.truncate_then_fold w ≠ D.fold_then_restrict w
 
 end pom_truncation_not_commute_data
@@ -53,8 +53,8 @@ end pom_truncation_not_commute_data
 set shows that folding before restriction toggles the first retained coordinate, whereas truncating
 first removes the trigger and leaves the retained prefix unchanged. -/
 theorem paper_pom_truncation_not_commute
-    (D : pom_truncation_not_commute_data) : D.noncommuting_word_exists := by
-  refine ⟨D.selectedWord, ?_⟩
+    (D : pom_truncation_not_commute_data) : D.noncommuting_witness_exists := by
+  refine ⟨D.witnessWord, ?_⟩
   intro hEq
   let i0 : Fin D.keep := ⟨0, D.keep_pos⟩
   have hi0 := congrFun hEq i0
@@ -62,14 +62,14 @@ theorem paper_pom_truncation_not_commute
   have hcast_ne : Fin.castSucc i0 ≠ D.triggerIndex := by
     intro h
     exact (Nat.ne_of_lt i0.is_lt) (congrArg Fin.val h)
-  have hw_prefix : D.selectedWord (Fin.castSucc i0) = false := by
-    simp [pom_truncation_not_commute_data.selectedWord, hcast_ne]
-  have hw_trigger : D.selectedWord D.triggerIndex = true := by
-    simp [pom_truncation_not_commute_data.selectedWord]
-  have hprefix_false : D.truncate_then_fold D.selectedWord i0 = false := by
+  have hw_prefix : D.witnessWord (Fin.castSucc i0) = false := by
+    simp [pom_truncation_not_commute_data.witnessWord, hcast_ne]
+  have hw_trigger : D.witnessWord D.triggerIndex = true := by
+    simp [pom_truncation_not_commute_data.witnessWord]
+  have hprefix_false : D.truncate_then_fold D.witnessWord i0 = false := by
     simp [pom_truncation_not_commute_data.truncate_then_fold,
       pom_truncation_not_commute_data.truncate, hw_prefix]
-  have hfold_true : D.fold_then_restrict D.selectedWord i0 = true := by
+  have hfold_true : D.fold_then_restrict D.witnessWord i0 = true := by
     simp [pom_truncation_not_commute_data.fold_then_restrict, hi0_zero,
       hw_prefix, hw_trigger]
   rw [hprefix_false, hfold_true] at hi0

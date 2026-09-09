@@ -16,14 +16,14 @@ open InfoGeometry.Canonical.CantorBoundaryComplexReadout
 
 /-- Real readout is stable under `N`-prefix agreement. -/
 theorem real_readout_prefix_stability
-    (N : ℕ) (w v : (ℕ → Bool))
+    (N : ℕ) (w v : InfiniteBinaryWordSpace)
     (hprefix : ∀ n < N, w n = v n) :
     |realBinaryReadout w - realBinaryReadout v| ≤ (1 / 2 : ℝ) ^ N := by
   exact abs_realBinaryReadout_sub_le_of_prefix N w v hprefix
 
 /-- Complex readout is stable under `N`-prefix agreement, with the same precision bound. -/
 theorem complex_readout_prefix_stability
-    (N : ℕ) (w v : (ℕ → Bool))
+    (N : ℕ) (w v : InfiniteBinaryWordSpace)
     (hprefix : ∀ n < N, w n = v n) :
     ‖binaryReadout w - binaryReadout v‖ ≤ (1 / 2 : ℝ) ^ N := by
   have hreal :
@@ -38,19 +38,9 @@ theorem complex_readout_prefix_stability
           rw [Complex.norm_def, Complex.normSq_ofReal, ← pow_two, Real.sqrt_sq_eq_abs]
     _ ≤ (1 / 2 : ℝ) ^ N := hreal
 
-theorem complex_readout_prefix_closedBall_mem
-    (N : ℕ) (w v : (ℕ → Bool))
-    (hprefix : ∀ n < N, w n = v n) :
-    binaryReadout v ∈
-      Metric.closedBall (binaryReadout w) ((1 / 2 : ℝ) ^ N) := by
-  rw [Metric.mem_closedBall]
-  have hbound := complex_readout_prefix_stability N w v hprefix
-  rw [dist_eq_norm]
-  simpa [norm_sub_rev] using hbound
-
 /-- Prefix agreement puts values into a dyadic closed interval around the limit. -/
 theorem real_readout_prefix_ball_mem
-    (N : ℕ) (w v : (ℕ → Bool))
+    (N : ℕ) (w v : InfiniteBinaryWordSpace)
     (hprefix : ∀ n < N, w n = v n) :
     realBinaryReadout v ∈ Set.Icc (realBinaryReadout w - (1 / 2 : ℝ) ^ N)
       (realBinaryReadout w + (1 / 2 : ℝ) ^ N) := by
@@ -62,7 +52,7 @@ theorem real_readout_prefix_ball_mem
 
 /-- Same as `real_readout_prefix_stability` but via finite prefix approximants. -/
 theorem readout_stability_via_partial_prefix
-    (N : ℕ) (w v : (ℕ → Bool))
+    (N : ℕ) (w v : InfiniteBinaryWordSpace)
     (hprefix : ∀ n < N, w n = v n) :
     |realBinaryReadout w - realBinaryPartialReadout N v| ≤
       (1 / 2 : ℝ) ^ N + |realBinaryPartialReadout N w - realBinaryPartialReadout N v| := by

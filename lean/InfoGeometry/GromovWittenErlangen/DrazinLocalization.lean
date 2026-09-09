@@ -34,7 +34,7 @@ Drazin decomposition of its Euler denominator, representing the rule:
 structure GWDrazinLocalizationPacket
     (G T Target Coeff Algebra : Type*) [Ring Algebra] [StarRing Algebra] where
   /-- Existing fixed/edge-sector localization graph packet. -/
-  virtualLocalization : VirtualLocalizationOrbitData G T Target Coeff
+  virtualLocalization : VirtualLocalizationOrbitPacket G T Target Coeff
 
   /-- Euler or normal-weight denominator attached to each localization edge. -/
   edgeEulerWeight : virtualLocalization.graph.Edge → Algebra
@@ -125,12 +125,12 @@ end GWDrazinLocalizationPacket
 /--
 Divisor-weight data for a localization graph.
 
-This does not prove the GW divisor ax!om; it only stores finite edge/degree
-weights that a model may use as input to a future theorem-facing divisor ax!om.
+This does not prove the GW divisor axiom; it only stores finite edge/degree
+weights that a model may use as input to a future theorem-facing divisor axiom.
 -/
 structure LocalizationDivisorWeightData
     (G T Target Coeff : Type*) where
-  virtualLocalization : VirtualLocalizationOrbitData G T Target Coeff
+  virtualLocalization : VirtualLocalizationOrbitPacket G T Target Coeff
   DivisorClass : Type*
   divisorDegreeWeight :
     DivisorClass → virtualLocalization.graph.Edge → ℝ

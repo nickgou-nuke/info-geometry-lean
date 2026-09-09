@@ -156,6 +156,16 @@ theorem totalChargeModTwo_local_orientation_choice_invariant
     (fun i _ => orientation_sign_mul_invisible_mod_two (hsign i))
 
 /--
+Finite exactness socket for the semimetal charge map.
+
+If `β : Semimetal → ι → ℤ` sends semimetal data to local Weyl charges, this is
+the exactness consequence `im β ⊆ ker Σ`, where `Σ` is `totalChargeModTwo`.
+-/
+def ExactAtLocalCharges {Semimetal ι : Type} [Fintype ι]
+    (β : Semimetal → ι → ℤ) : Prop :=
+  ∀ s, ModTwoChargeNeutral (β s)
+
+/--
 Conditional form of the Douwes--Stålhammar mod-two cancellation step.
 
 Once the relevant twisted Mayer--Vietoris sequence supplies exactness at the
@@ -165,20 +175,19 @@ has zero total charge in `ZMod 2`.
 theorem exactness_gives_mod_two_charge_cancellation
     {Semimetal ι : Type} [Fintype ι]
     (β : Semimetal → ι → ℤ)
-    (hExact : ∀ s, ModTwoChargeNeutral (β s))
+    (hExact : ExactAtLocalCharges β)
     (s : Semimetal) :
     ModTwoChargeNeutral (β s) :=
   hExact s
 
-/-- A compact property bundling orientable and non-orientable finite cancellation. -/
+/-- A compact certificate bundling orientable and non-orientable finite cancellation. -/
 theorem finite_glide_orbit_charge_cancellation_packet (q : ℤ) :
     (∑ i : Fin 2, orientedWeylCharge q i) = 0 ∧
       (∑ i : Fin 2, nonOrientableWeylCharge i) = 0 ∧
         ((q : ZMod 2) + (q : ZMod 2)) = 0 := by
-  refine ⟨?_, ?_, ?_⟩
-  · exact oriented_pair_charge_cancels q
-  · exact nonorientable_mod_two_charge_cancels
-  · exact same_integer_charge_mod_two_cancels q
+  exact ⟨oriented_pair_charge_cancels q,
+    nonorientable_mod_two_charge_cancels,
+    same_integer_charge_mod_two_cancels q⟩
 
 /-- Reversing the local orientation at every site leaves the finite packet unchanged mod two. -/
 theorem totalChargeModTwo_pointwise_orientation_invariant

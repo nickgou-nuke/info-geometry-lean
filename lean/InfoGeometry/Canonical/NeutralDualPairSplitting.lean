@@ -159,3 +159,4 @@ theorem dualSubmodule_omegaOrthogonal_eq_self :
     simp [neutralOmega_apply, hX, hv]
 
 end InfoGeometry.Canonical.NeutralDualPairSplitting
+

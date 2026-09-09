@@ -82,7 +82,7 @@ theorem braid_not_leakage_of_computational
   intro hLeak
   exact h_disjoint (braid x) (h_comp x hx) hLeak
 
-/-- A supplied braid action preserves leakage under an explicit preservation property. -/
+/-- A supplied braid action preserves leakage under an explicit preservation hypothesis. -/
 theorem braid_preserves_leakage
     (leakageSet : Set L) (braid : L → L)
     (h_leak : ∀ x : L, x ∈ leakageSet → braid x ∈ leakageSet)

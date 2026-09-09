@@ -71,28 +71,28 @@ theorem compactifiedInversion_commutes_boundaryLoopAction_closed
 
 namespace FiniteBoundaryAlgebraicClosure
 
-variable (B : BoundaryLoopClosureData)
+variable (B : BoundaryLoopClosurePacket)
 
 /-- Boundary preservation readback for the finite closure packet. -/
 theorem preserves_boundary
     {p : AlgebraicCompactification ℕ}
     (hp : AlgebraicCompactification.IsBoundary p) :
     AlgebraicCompactification.IsBoundary (boundaryLoopAction B.loop p) :=
-  BoundaryLoopClosureData.preserves_boundary B hp
+  BoundaryLoopClosurePacket.preserves_boundary B hp
 
 /-- Cayley--Möbius inversion readback for the finite closure packet. -/
 theorem cayley_commutes_loop
     (p : AlgebraicCompactification ℕ) :
     B.cayley.compactifiedInversion (boundaryLoopAction B.loop p) =
       boundaryLoopAction B.loop (B.cayley.compactifiedInversion p) :=
-  BoundaryLoopClosureData.cayley_commutes_loop B p
+  BoundaryLoopClosurePacket.cayley_commutes_loop B p
 
 /-- Lifted deck-commutation readback for the finite closure packet. -/
 theorem lifted_commutes_deck
     (x : DoubleCover (AlgebraicCompactification ℕ)) :
     liftedBoundaryLoopAction B.loop (deckInvolution x) =
       deckInvolution (liftedBoundaryLoopAction B.loop x) :=
-  BoundaryLoopClosureData.lifted_commutes_deck B x
+  BoundaryLoopClosurePacket.lifted_commutes_deck B x
 
 end FiniteBoundaryAlgebraicClosure
 

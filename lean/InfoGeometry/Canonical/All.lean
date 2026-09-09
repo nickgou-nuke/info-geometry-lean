@@ -2120,6 +2120,7 @@ import InfoGeometry.Canonical.BraidedYangMillsCurrentBridge
 import InfoGeometry.Canonical.ManakovZornSolitonLaxBridge
 import InfoGeometry.Canonical.AAVWeakMeasurementKleinSeamBridge
 import InfoGeometry.Canonical.DiracKreinMaurerCartanBridge
+import InfoGeometry.Canonical.ModularWedgeAAVInterferenceBridge
 
 namespace InfoGeometry
 

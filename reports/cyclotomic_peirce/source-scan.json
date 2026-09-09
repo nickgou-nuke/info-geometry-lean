@@ -1,9 +1,9 @@
 {
   "new_Lean_files": 5,
-  "public_declarations": 79,
+  "public_declarations": 83,
   "counts": {
     "theorem": 60,
-    "lemma": 0,
+    "lemma": 4,
     "def": 19,
     "abbrev": 0
   },

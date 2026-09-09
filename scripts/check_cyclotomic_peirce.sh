@@ -5,7 +5,7 @@ if ! command -v lake >/dev/null 2>&1; then
   echo 'ERROR: lake is not installed or not on PATH; no Lean elaboration executed.' >&2
   exit 127
 fi
-lake build InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge
 log=$(mktemp)
 trap 'rm -f "$log"' EXIT
 lake env lean lean/InfoGeometry/Canonical/ExteriorCyclotomicPeirceAudit.lean | tee "$log"

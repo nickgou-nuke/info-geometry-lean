@@ -28,6 +28,10 @@ an audit request, not a certificate of elaboration or proof dependencies.
 #print axioms InfoGeometry.Core.FinitePeirceMatrix.binary_existing_components
 #print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.phase
 #print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.projector
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.I_sq
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.I_pow_three
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.I_mul_I_mul
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.mul_I_mul_I
 #print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.phase_fourth
 #print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.projector_fourier_sum
 #print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.projector_eigen

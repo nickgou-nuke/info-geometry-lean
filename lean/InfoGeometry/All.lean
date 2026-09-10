@@ -1,2 +1,7 @@
 import InfoGeometry.AllExhaustive
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Analysis.SimplePoleReflection
+import InfoGeometry.Analysis.PairedHeatTrace
+import InfoGeometry.Analysis.CoerciveBarrierControl
+import InfoGeometry.OperatorAlgebra.PartnerEigenspaces
+import InfoGeometry.OperatorAlgebra.KreinCouplingControl
+import InfoGeometry.Topological.JonesPolynomial

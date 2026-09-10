@@ -756,6 +756,8 @@ import InfoGeometry.Canonical.HarmonicWeakHorizonBridge
 import InfoGeometry.Canonical.HarmonicWeakHorizonAudit
 import InfoGeometry.Canonical.SouriauHodgeTriadBridge
 import InfoGeometry.Canonical.SouriauHodgeTriadAudit
+import InfoGeometry.Canonical.ChiralHodgeZornArchitectureBridge
+import InfoGeometry.Canonical.ChiralHodgeZornArchitectureAudit
 import InfoGeometry.Canonical.TemperleyLiebJonesBridge
 import InfoGeometry.Canonical.KitaevQuantumDoubleGSDBridge
 import InfoGeometry.Canonical.QuantumHallSkyrmionBridge

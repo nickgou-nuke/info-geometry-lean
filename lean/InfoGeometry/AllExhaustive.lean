@@ -2509,6 +2509,7 @@ import InfoGeometry.Canonical.ChiralHodgeDiracKahlerBridge
 import InfoGeometry.Canonical.ParaHyperkahlerHodgeDecompositionBridge
 import InfoGeometry.Canonical.HarmonicWeakHorizonBridge
 import InfoGeometry.Canonical.SouriauHodgeTriadBridge
+import InfoGeometry.Canonical.ChiralHodgeZornArchitectureBridge
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyCalibration
@@ -12341,3 +12342,4 @@ import InfoGeometry.Canonical.ChiralHodgeDiracKahlerBridgeAudit
 import InfoGeometry.Canonical.ParaHyperkahlerHodgeDecompositionBridgeAudit
 import InfoGeometry.Canonical.HarmonicWeakHorizonAudit
 import InfoGeometry.Canonical.SouriauHodgeTriadAudit
+import InfoGeometry.Canonical.ChiralHodgeZornArchitectureAudit

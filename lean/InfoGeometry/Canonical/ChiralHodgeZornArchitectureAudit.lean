@@ -1,0 +1,22 @@
+import InfoGeometry.Canonical.ChiralHodgeZornArchitectureBridge
+
+/-!
+# Axiomatic Audit of ChiralHodgeZornArchitectureBridge
+
+This audit checks the foundational axioms of the ChiralHodgeZornArchitectureBridge module.
+Expected axioms: [propext, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.ChiralHodgeZornArchitecture.certified_chiral_hodge_zorn_synthesis
+#print axioms InfoGeometry.Canonical.ChiralHodgeZornArchitecture.weylDilaton_trace_zero
+#print axioms InfoGeometry.Canonical.ChiralHodgeZornArchitecture.weylDilaton_norm
+#print axioms InfoGeometry.Canonical.ChiralHodgeZornArchitecture.coexactUpper_is_null
+#print axioms InfoGeometry.Canonical.ChiralHodgeZornArchitecture.coexactLower_is_null
+#print axioms InfoGeometry.Canonical.ChiralHodgeZornArchitecture.coexactUpper_sq_zero
+#print axioms InfoGeometry.Canonical.ChiralHodgeZornArchitecture.coexactLower_sq_zero
+#print axioms InfoGeometry.Canonical.ChiralHodgeZornArchitecture.coexact_anticommutator
+#print axioms InfoGeometry.Canonical.ChiralHodgeZornArchitecture.coexact_commutator
+#print axioms InfoGeometry.Canonical.ChiralHodgeZornArchitecture.weylDilaton_comm_coexact
+#print axioms InfoGeometry.Canonical.ChiralHodgeZornArchitecture.matterDoublet_square
+#print axioms InfoGeometry.Canonical.ChiralHodgeZornArchitecture.matterDoublet_norm
+#print axioms InfoGeometry.Canonical.ChiralHodgeZornArchitecture.horizon_weak_scaling

@@ -312,6 +312,19 @@ Formalizing linear connections compatible with a para-complex structure $\tau$ (
 * **Chiral Noether Current & Charge Splitting:** Every Noether current functional $J$ decomposes into orthogonal chiral currents $J = J^+ + J^-$ where $J^+(P_- v) = 0$ and $J^-(P_+ v) = 0$, yielding conserved chiral charges $Q = Q^+ + Q^-$.
   In Lean 4: [`ParaComplexConnectionBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaComplexConnectionBridge.lean) (`conn_comm_peircePlus`, `conn_preserves_holomorphic`, `curvature_comm_tau`, `holomorphic_isotropic`, `chiral_current_sum`, `certified_paracomplex_connection_synthesis`).
 
+### 5.13 Resolvent Diffusion Semigroups & Lie-Trotter-Kato Hodge Splitting
+Formalizing unconditional $L^2$ contractivity, Yosida-Hille discrete semigroup approximations, and exact Lie-Trotter-Kato splitting for the Hodge-Laplacian:
+* **Unconditional $L^2$ Resolvent Contractivity:** On any real inner product space, for any positive semi-definite operator $T \ge 0$ and any scale step $\tau \ge 0$, the resolvent $J_\tau = (I + \tau T)^{-1}$ satisfies:
+  $$\|J_\tau u\| \le \|u\| \quad (\forall u \in E)$$
+  derived from the fundamental energy lower bound $\|v + \tau T v\|^2 \ge \|v\|^2$, eliminating the need for ultraviolet cutoff $\Lambda_{\mathrm{UV}}$.
+* **Exact Topological Fixed-Point Invariance:** Harmonic forms ($\ker T$) are exact stationary states: $J_\tau \gamma_h = \gamma_h$.
+* **Yosida-Hille Iterated Resolvent Powers:** The $n$-fold powers $S_n(t) = J_{t/n}^n = (I + \frac{t}{n}T)^{-n}$ satisfy uniform contractivity $\|S_n(t) u\| \le \|u\|$, scale eigenmodes $T v = \lambda v$ as $((1 + \tau \lambda)^{-1})^n v$, and the Yosida generator $A_\tau = \tau^{-1}(J_\tau - I)$ converges to $-T v$ as $\tau \to 0$ while vanishing identically on $\ker T$.
+* **Exact Lie-Trotter-Kato Hodge Splitting (Zero Commutator Defect):** Because $d^2 = 0$ and $\delta^2 = 0$, the Hodge components $A = d\delta$ and $B = \delta d$ mutually annihilate ($A B = 0$ and $B A = 0$). Consequently, the Lie-Trotter commutator defect vanishes identically for all finite $\tau > 0$:
+  $$(I + \tau A)(I + \tau B) = I + \tau (A + B)$$
+  The product of split resolvents $J_A \circ J_B$ is an EXACT resolvent for the coupled Hodge-Laplacian $A + B = \Delta$.
+* **Decoupled Sector Dynamics:** On exact modes ($B v = 0, A v = \lambda v$), $(J_A \circ J_B) v = (1 + \tau \lambda)^{-1} v$.
+  In Lean 4: [`RGFlowResolventSemigroupBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/RGFlowResolventSemigroupBridge.lean) (`resolvent_unconditional_contractivity`, `resolvent_harmonic_fixed_point`, `iterated_contractivity`, `yosida_hille_discrete_contractivity`, `hodge_trotter_resolvent_exact`, `iterated_split_contractivity`, `hodge_split_harmonic_fixed_point`, `split_resolvent_exact_eigenmode`, `certified_resolvent_semigroup_trotter_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -341,6 +354,7 @@ Formalizing linear connections compatible with a para-complex structure $\tau$ (
 | **Holomorphic-Antiholomorphic-Real Triad** | Para-Complex Peirce / Klein Seam / Zorn Mass Shell | `peirce_sum`, `real_seam_condition`, `zorn2_mass_shell` | **Kernel-Checked (0 gaps)** |
 | **Non-Commutative RG Flow & Weyl Diffusion** | Homothety Group / Hodge Duality / Heat Semigroup | `scaleHomothety_comp`, `energyScale_anti_mono`, `diffusion_intertwining` | **Kernel-Checked (0 gaps)** |
 | **Para-Complex Connections & Chiral Currents** | Para-Complex Connection / Split Peirce / Isotropic Sub-bundles | `conn_comm_peircePlus`, `holomorphic_isotropic`, `chiral_current_sum` | **Kernel-Checked (0 gaps)** |
+| **Resolvent Semigroups & Lie-Trotter Splitting** | Positive Semi-Definite Resolvent / Hodge Splitting | `resolvent_unconditional_contractivity`, `hodge_trotter_resolvent_exact`, `iterated_split_contractivity` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

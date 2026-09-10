@@ -768,6 +768,8 @@ import InfoGeometry.Canonical.RGFlowWeylDiffusionBridge
 import InfoGeometry.Canonical.RGFlowWeylDiffusionAudit
 import InfoGeometry.Canonical.ParaComplexConnectionBridge
 import InfoGeometry.Canonical.ParaComplexConnectionAudit
+import InfoGeometry.Canonical.RGFlowResolventSemigroupBridge
+import InfoGeometry.Canonical.RGFlowResolventSemigroupAudit
 import InfoGeometry.Canonical.TemperleyLiebJonesBridge
 import InfoGeometry.Canonical.KitaevQuantumDoubleGSDBridge
 import InfoGeometry.Canonical.QuantumHallSkyrmionBridge

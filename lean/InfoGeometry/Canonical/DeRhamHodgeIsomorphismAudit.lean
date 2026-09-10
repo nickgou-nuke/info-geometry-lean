@@ -1,0 +1,38 @@
+import InfoGeometry.Canonical.DeRhamHodgeIsomorphismBridge
+
+/-!
+# Axiomatic Audit of DeRhamHodgeIsomorphismBridge
+
+This audit checks the foundational axioms of DeRhamHodgeIsomorphismBridge.
+Expected axioms: [propext, Classical.choice, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.certified_derham_hodge_isomorphism_synthesis
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.exact_orthogonal_coexact
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.exact_orthogonal_harmonic
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.coexact_orthogonal_harmonic
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.exact_and_coexact_eq_zero
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.exact_and_harmonic_eq_zero
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.coexact_and_harmonic_eq_zero
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.isExact_sub
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.isCoexact_sub
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.isHarmonic_sub
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.hodge_decomposition_unique
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.inner_three_orthogonal
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.hodge_energy_conservation
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.laplacian_on_harmonic
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.laplacian_exact_isExact
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.laplacian_coexact_isCoexact
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.laplacian_positive_semidefinite
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.harmonic_iff_laplacian_inner_zero
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.closed_hodge_coexact_zero
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.closed_eq_exact_add_harmonic
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.closed_sub_harmonic_isExact
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.harmonic_diff_exact_eq_zero
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.exactRel_refl
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.exactRel_symm
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.exactRel_trans
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.harmonicToCohomology_injective
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.harmonicToCohomology_surjective
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.deRhamHodgeEquiv
+#print axioms InfoGeometry.Canonical.DeRhamHodgeIsomorphism.DeRhamDegreeK.exists_unique_harmonic_representative

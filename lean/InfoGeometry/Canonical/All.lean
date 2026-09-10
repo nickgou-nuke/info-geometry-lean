@@ -770,6 +770,8 @@ import InfoGeometry.Canonical.ParaComplexConnectionBridge
 import InfoGeometry.Canonical.ParaComplexConnectionAudit
 import InfoGeometry.Canonical.RGFlowResolventSemigroupBridge
 import InfoGeometry.Canonical.RGFlowResolventSemigroupAudit
+import InfoGeometry.Canonical.DeRhamHodgeIsomorphismBridge
+import InfoGeometry.Canonical.DeRhamHodgeIsomorphismAudit
 import InfoGeometry.Canonical.TemperleyLiebJonesBridge
 import InfoGeometry.Canonical.KitaevQuantumDoubleGSDBridge
 import InfoGeometry.Canonical.QuantumHallSkyrmionBridge

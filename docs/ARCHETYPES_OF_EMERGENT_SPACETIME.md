@@ -8,6 +8,10 @@
 > - [`SpectroscopyPoissonCoolingAmariBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/SpectroscopyPoissonCoolingAmariBridge.lean)
 > - [`RyuTakayanagiEntanglementBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/RyuTakayanagiEntanglementBridge.lean)
 > - [`ScaleFreeStringMembraneGrandCapstone.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ScaleFreeStringMembraneGrandCapstone.lean)
+> - [`Sp56FreudenthalBlackHoleBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/Sp56FreudenthalBlackHoleBridge.lean)
+> - [`Sp4ParaHyperkahlerPresymplecticBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/Sp4ParaHyperkahlerPresymplecticBridge.lean)
+> - [`CylinderHodgeDualityFreudenthalBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/CylinderHodgeDualityFreudenthalBridge.lean)
+> - [`ParaHyperkahlerPresymplecticBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaHyperkahlerPresymplecticBridge.lean)
 
 ---
 
@@ -131,6 +135,39 @@ In [`SpectroscopyPoissonCoolingAmariBridge.lean`](file:///home/goutev/repos/info
 
 ---
 
+## 5. Renormalization & Dynamical Synthesis: The Determinant Cleaver
+
+### 5.1 The Universal Determinant Cleaver & Souriau-Klein Decomposition
+The determinant homomorphism $\det : \mathrm{GL}(V) \to \mathbb{R}^\times \times \mathbb{Z}_2$ acts as the universal geometric knife, bifurcating dynamics into:
+1. **Irrotational Souriau Dynamics (Trace Functional $\operatorname{tr} \neq 0$):**
+   Governed by the non-compact Iwasawa $A$-sector. Pure homotheties $X = c \cdot \mathbf{1}_{2n}$ expand phase-space volume:
+   $$\mathcal{L}_{c \cdot \mathbf{1}} \Omega = 2c \, \Omega, \quad \operatorname{tr}(c \cdot \mathbf{1}_{2n}) = 2n \cdot c$$
+   In Lean 4: `lieDeriv_homothety_scale`, `homothety_trace`.
+2. **Rotational Souriau Dynamics (Traceless Algebra $\operatorname{tr} = 0$):**
+   Governed by the unimodular kernel $\mathrm{SL} / \mathrm{Sp}$. Hamiltonian vector fields strictly preserve the presymplectic form:
+   $$\mathcal{L}_X \Omega = 0 \iff M^T J + J M = 0$$
+   In 2D: [`ParaHyperkahlerPresymplecticBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaHyperkahlerPresymplecticBridge.lean) (`lie_deriv_traceless_zero`).  
+   In 4D: [`Sp4ParaHyperkahlerPresymplecticBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/Sp4ParaHyperkahlerPresymplecticBridge.lean) (`lieDeriv_sp4_zero`, `I4_in_sp4`, `J4_in_sp4`, `K4_in_sp4`).
+
+### 5.2 Block Stability of $\mathfrak{sp}(56, \mathbb{R})$ & Protection of the Freudenthal Quartic Cone
+In 56 dimensions ($n=28$), representing $28$ electric and $28$ magnetic black hole charges in $d=4, \mathcal{N}=8$ supergravity under the U-duality group $\mathrm{E}_{7(7)} \subset \mathrm{Sp}(56, \mathbb{R})$:
+* **Block Substrate:** $M = \begin{pmatrix} A & B \\ C & D \end{pmatrix} \in \mathrm{End}(\mathbb{R}^{56})$.
+* **Symplectic Condition:** $A^T = -D, B^T = B, C^T = C \implies \operatorname{tr}(M) = \operatorname{tr}(A) + \operatorname{tr}(D) = 0$.
+* **Souriau Invariance:** $\mathcal{L}_M \Omega_{56} = 0$ (`lieDeriv_sp56_zero`), verified with 0 recursion timeouts via transpose adjoint identities on native `dotProduct`.
+* **Freudenthal Area Law:** The degree-4 homogeneity $\mathcal{Q}_4(s \cdot Q) = s^4 \mathcal{Q}_4(Q)$ rigorously guarantees the Bekenstein-Hawking quadratic area law:
+  $$S_{\mathrm{BH}}(s \cdot Q) = \pi \sqrt{|\mathcal{Q}_4(s \cdot Q)|} = s^2 S_{\mathrm{BH}}(Q)$$
+  In Lean 4: [`Sp56FreudenthalBlackHoleBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/Sp56FreudenthalBlackHoleBridge.lean) (`bekensteinHawking_homothety_scaling56`).
+
+### 5.3 Cohomological Matching via the Hodge Codifferential on the Cylinder Horizon
+On the 2D Apollonian cylinder $M = \mathbb{R} \times S^1$:
+* **Hodge Star & Chirality:** $\star^2 = \Gamma = (-1)^p$, $\star^4 = \operatorname{id}$, $\langle \star \omega, \star \eta \rangle = \langle \omega, \eta \rangle$.
+* **de Rham Nilpotency:** $d^2 = 0$, $\delta^2 = 0$, where the codifferential $\delta = -\star d \star$.
+* **Harmonic Laplacian & Reynolds Mixing:** $\Delta = d\delta + \delta d$. Combining the codifferential with ergodic spatial averaging over the compact 2-torus $\mathbb{T}^2$ yields the exact $1/2$ Reynolds stress tensor pre-factor:
+  $$\frac{1}{2\pi} \int_0^{2\pi} \cos^2(j \theta + \phi) \, d\theta = \frac{1}{2}$$
+  In Lean 4: [`CylinderHodgeDualityFreudenthalBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/CylinderHodgeDualityFreudenthalBridge.lean) and [`NavierStokesTorusErgodicBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/NavierStokesTorusErgodicBridge.lean).
+
+---
+
 ## Master Verification Matrix
 
 | Physical Archetype | Algebraic Carrier | Core Theorem in Lean 4 | Verification Status |
@@ -143,5 +180,42 @@ In [`SpectroscopyPoissonCoolingAmariBridge.lean`](file:///home/goutev/repos/info
 | **Holographic Weaving Loom** | Cuntz $\mathcal{O}_2$ Cantor Boundary | `ryu_takayanagi_identity` | **Kernel-Checked (0 gaps)** |
 | **Spectroscopic Cooling** | Amari Information Geometry | `temperature_strictly_cools` | **Kernel-Checked (0 gaps)** |
 | **Thermodynamic Arrow** | Fisher Information Metric | `causal_cone_arrow_of_time` | **Kernel-Checked (0 gaps)** |
+| **2D Presymplectic Cleaver** | Split Quaternions $\mathrm{Mat}_2(\mathbb{R})$ | `lie_deriv_eq_trace` | **Kernel-Checked (0 gaps)** |
+| **4D Sp(4, ℝ) Para-Hyperkähler** | $\mathfrak{sp}(4, \mathbb{R})$ Endomorphism Triplet | `lieDeriv_I4_omega4`, `omegaI4_eq_euclidean` | **Kernel-Checked (0 gaps)** |
+| **56D Sp(56, ℝ) DSZ Lattice** | $\mathfrak{sp}(56, \mathbb{R})$ Block Endomorphisms | `lieDeriv_sp56_zero`, `sp56_traceless` | **Kernel-Checked (0 gaps)** |
+| **Freudenthal Area Law** | Degree-4 Invariant $\mathcal{Q}_4$ | `bekensteinHawking_homothety_scaling56` | **Kernel-Checked (0 gaps)** |
+| **Cylinder Hodge Duality** | Graded Differential Forms $\Omega^\bullet$ | `hodgeStar_sq_eq_chirality`, `codifferential_sq_zero` | **Kernel-Checked (0 gaps)** |
+| **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
+
+---
+
+## Canonical References
+
+```bibtex
+@book{Souriau1970,
+  author    = {Souriau, Jean-Marie},
+  title     = {Structure des syst{\`e}mes dynamiques},
+  series    = {Ma{\^\i}trises de math{\'e}matiques},
+  publisher = {Dunod},
+  address   = {Paris},
+  year      = {1970}
+}
+
+@article{Klein1872,
+  author  = {Klein, Felix},
+  title   = {Vergleichende Betrachtungen {\"u}ber neuere geometrische Forschungen},
+  journal = {Programm zum Eintritt in die philosophische Facult{\"a}t und den Senat der k. Friedrich-Alexanders-Universit{\"a}t zu Erlangen},
+  year    = {1872}
+}
+
+@article{Freudenthal1954,
+  author  = {Freudenthal, Hans},
+  title   = {Beziehungen der {${\mathfrak e}_7$} und {${\mathfrak e}_8$} zur {O}ktavenebene. {I}},
+  journal = {Indagationes Mathematicae},
+  volume  = {16},
+  pages   = {218--230},
+  year    = {1954}
+}
+```

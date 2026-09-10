@@ -118,9 +118,11 @@ The explicitly defined normalized postselection barrier
 fiberwise matrix barrier `-log det R` or the fluid enstrophy. A further theorem
 constructs a readout with a real pole and identically zero spatial derivative,
 so the algebraic pole alone cannot justify the proposed gradient cascade.
-Enstrophy divergence would require a proved lower bound on actual spatial
-curl over an appropriate region and an integral argument. Divergence of an
-upper bound provides no such lower bound.
+Enstrophy divergence requires a proved lower bound on actual spatial curl
+over an appropriate region and an integral argument. The subsequent
+[spatial reconstruction extension](NAVIER_STOKES_RECONSTRUCTION_ENSTROPHY.md)
+supplies those ingredients for an explicit forced shear and proves reusable
+integral criteria. Divergence of an upper bound provides no such lower bound.
 
 ## Evolution and differential-operator obligations
 
@@ -149,8 +151,10 @@ energy-reversal identities. They do not prove that an overlap pole causes
 unit-probability reflection, supplies a non-associative mass gap, controls
 vortex stretching, or reconstructs a continuation of the same fluid PDE.
 The OpenAI Navier–Stokes terminal theorem is not imported or used to infer
-this proposed mechanism. The exact gauge–spinor evolution, forced PDE
-reconstruction, and spatial continuation estimates remain to be constructed.
+this proposed mechanism. The explicit two-state momentum reconstruction now
+proves a local forced PDE and divergent cube enstrophy; its force also
+diverges at the terminal time. General gauge–spinor evolution for prescribed
+regular forcing and spatial continuation estimates remain to be constructed.
 
 The accompanying draft PR records the native Lean version, the full new
 theorem axiom audit, and the symbolic witness checks. All statements above

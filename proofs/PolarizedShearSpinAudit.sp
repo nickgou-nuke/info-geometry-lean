@@ -74,3 +74,36 @@ assert S.expand((exterior+coderivative)*(exterior-coderivative) +
                 (exterior-coderivative)*(exterior+coderivative) -
                 2*(exterior**2-coderivative**2)) == 0
 print('PASS: spatial current, oscillation, guarded probe algebra, two overlap quadratics, curvature')
+
+# An actual spatial momentum readout and its exact forced Navier--Stokes shear.
+terminal, time, zz = S.symbols('terminal time zz', real=True)
+gap = terminal - time
+preparation = S.Matrix([1, S.exp(S.I*yy)])
+postselection = S.Matrix([gap-xx, xx*S.exp(S.I*yy)])
+transition = S.simplify((postselection.H*preparation)[0])
+assert transition == gap
+coordinates = (xx, yy, zz)
+momentum = [-S.I*preparation.diff(coord) for coord in coordinates]
+reconstructed = S.Matrix([
+    S.simplify((postselection.H*p)[0]/transition) for p in momentum])
+assert reconstructed == S.Matrix([0, xx/gap, 0])
+assert sum(S.diff(reconstructed[i], coordinates[i]) for i in range(3)) == 0
+vorticity = S.Matrix([
+    S.diff(reconstructed[2], yy)-S.diff(reconstructed[1], zz),
+    S.diff(reconstructed[0], zz)-S.diff(reconstructed[2], xx),
+    S.diff(reconstructed[1], xx)-S.diff(reconstructed[0], yy)])
+assert vorticity == S.Matrix([0, 0, 1/gap])
+laplacian = S.Matrix([
+    sum(S.diff(component, coord, 2) for coord in coordinates)
+    for component in reconstructed])
+advection = reconstructed.jacobian(coordinates)*reconstructed
+force = S.Matrix([0, xx/gap**2, 0])
+assert S.simplify(reconstructed.diff(time)+advection-nu*laplacian-force) == S.zeros(3, 1)
+enstrophy_density = (vorticity.T*vorticity)[0]
+cube_enstrophy = S.integrate(enstrophy_density, (xx, 0, 1), (yy, 0, 1), (zz, 0, 1))
+assert S.simplify(cube_enstrophy-gap**-2) == 0
+assert S.limit(cube_enstrophy, time, terminal, dir='-') == S.oo
+assert S.limit(force[1].subs(xx, 1), time, terminal, dir='-') == S.oo
+cutoff = S.symbols('cutoff', positive=True)
+assert S.limit(S.integrate(xx**-4, (xx, cutoff, 1)), cutoff, 0, dir='+') == S.oo
+print('PASS: actual two-state momentum, divergence, curl, forced PDE, cube enstrophy, boundary integral')

@@ -46,7 +46,7 @@ vacuous.
 
 open Lean
 
-namespace InfoGeometry.Lint
+namespace InfoGeometry.Lint.VacuityPack
 
 -- ============================================================
 -- § Helpers
@@ -154,4 +154,4 @@ def renderAllVacuityPackDiags (structName : Name) (pairs : Array VacuityPair) :
     Array MessageData :=
   pairs.map (renderVacuityPackDiag structName)
 
-end InfoGeometry.Lint
+end InfoGeometry.Lint.VacuityPack

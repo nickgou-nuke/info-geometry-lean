@@ -12,6 +12,8 @@ open Matrix
 
 noncomputable section
 
+namespace KreinSouriau
+
 /- L1: KREIN DOUBLED SPACE -/
 
 /-- Complex structure J: J² = -I (the i-operator in real representation) -/
@@ -62,4 +64,5 @@ def diss_bracket (F S : ℝ → ℝ) (x : ℝ) : ℝ := 0
 def metriplectic (H S F : ℝ → ℝ) (x : ℝ) : ℝ :=
   poisson_bracket F H x + diss_bracket F S x
 
-end
+
+end KreinSouriau

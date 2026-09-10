@@ -742,6 +742,7 @@ import InfoGeometry.Canonical.ChiralCuntzFockSpaceBridge
 import InfoGeometry.Canonical.ChiralCuntzAnomalyPartitionBridge
 import InfoGeometry.Canonical.SouriauKleinFreudenthalBridge
 import InfoGeometry.Canonical.ApollonianDeRhamFreudenthalBridge
+import InfoGeometry.Canonical.ParaHyperkahlerPresymplecticBridge
 import InfoGeometry.Canonical.TemperleyLiebJonesBridge
 import InfoGeometry.Canonical.KitaevQuantumDoubleGSDBridge
 import InfoGeometry.Canonical.QuantumHallSkyrmionBridge

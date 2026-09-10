@@ -1,4 +1,4 @@
-namespace Omega.Zeta
+namespace InfoGeometry.External.Automath.Omega.Zeta.Ninefold
 
 /-- Paper label: `thm:xi-hilbert-polya-ninefold-equivalence-doubled-selfadjoint-compression`. -/
 theorem paper_xi_hilbert_polya_ninefold_equivalence_doubled_selfadjoint_compression
@@ -20,4 +20,4 @@ theorem paper_xi_hilbert_polya_ninefold_equivalence_doubled_selfadjoint_compress
   · exact h12.trans (h23.trans h38)
   · exact h12.trans h29
 
-end Omega.Zeta
+end InfoGeometry.External.Automath.Omega.Zeta.Ninefold

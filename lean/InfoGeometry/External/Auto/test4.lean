@@ -2,6 +2,8 @@ import Mathlib.Tactic
 
 open Matrix
 
+namespace Test4
+
 abbrev Q := ℚ
 
 def zeroMatrixA : Matrix (Fin 3) (Fin 3) Q := 0
@@ -18,3 +20,5 @@ lemma zeroCommutator_det_trace_cube_identity :
     simp
   rw [hz, Matrix.det_zero (Nonempty.intro (0 : Fin 3))]
   simp
+
+end Test4

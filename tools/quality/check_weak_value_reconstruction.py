@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check the exact owner closure with the root's Lean/Mathlib pins in isolation.
+"""Check the exact owner closure and report compiler compatibility separately.
 
 The root package includes workstation-only submodule URLs. This checker leaves
 that package, its manifests, and its dependency cache untouched. It copies the
@@ -34,10 +34,10 @@ def main() -> None:
         raise RuntimeError("The repository must have an exact Git Mathlib pin")
     toolchain = (ROOT / "lean-toolchain").read_text()
     work = Path(tempfile.mkdtemp(prefix="weak-value-lean-", dir=os.environ.get("RUNNER_TEMP")))
-    # This immutable Mathlib revision advertises 4.28.0 whereas the repository
-    # checks sources with 4.28.1. Fetch its official cache in a temporary 4.28.0
-    # workspace, then restore the repository pin for every owner-source check.
-    # Normal Lean import/version checks remain enabled; incompatibility is fatal.
+    # The immutable Mathlib pin advertises 4.28.0; the repository requests 4.28.1.
+    # Check source proofs with the cache-compatible compiler first, and then
+    # probe the repository compiler separately. Neither result substitutes for
+    # the other. Root pins and dependency artifacts remain unchanged.
     cache_toolchain = toolchain
     if (mathlib["rev"] == "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
             and toolchain.strip() == "leanprover/lean4:v4.28.1"):
@@ -72,6 +72,7 @@ def main() -> None:
                     raise RuntimeError(f"Unprovisioned dependency {dependency}; refusing to stub it")
         compile_order.append(module)
 
+    stage("InfoGeometry.Canonical.WeakValuePoleBounds")
     stage(TARGET)
     (ROOT / "weak-value-source-hashes.json").write_text(json.dumps({
         "toolchain": toolchain.strip(), "cache_toolchain": cache_toolchain.strip(),
@@ -85,22 +86,20 @@ def main() -> None:
             raise RuntimeError(f"Another {executable} process is active; refusing concurrent compilation")
     lock = acquire_build_lock(None, f"weak-value-narrow:{os.getpid()}", block=True)
     try:
-        # The temporary package resolves only Mathlib and the dependencies locked
-        # by that exact Mathlib commit. The root manifests are never rewritten.
         subprocess.run(["lake", "exe", "cache", "get"], cwd=work, check=True)
         lean_path = subprocess.run(
             ["lake", "env", "printenv", "LEAN_PATH"], cwd=work,
             text=True, stdout=subprocess.PIPE, check=True,
         ).stdout.strip()
-        (work / "lean-toolchain").write_text(toolchain)
         subprocess.run(["lean", "--version"], cwd=work, check=True)
         output = work / ".lake/build/lib/lean"
         env = dict(os.environ, LEAN_PATH=str(output) + os.pathsep + lean_path)
+        failures: list[str] = []
         for module in compile_order:
             relative = Path(*module.split("."))
             target = output / relative.with_suffix(".olean")
             target.parent.mkdir(parents=True, exist_ok=True)
-            print(f"Checking {module} with {toolchain.strip()}", flush=True)
+            print(f"Checking {module} with {cache_toolchain.strip()}", flush=True)
             result = subprocess.run(
                 ["lean", "--root=lean", "-o", str(target),
                  str(Path("lean") / relative.with_suffix(".lean"))],
@@ -110,7 +109,10 @@ def main() -> None:
             print(result.stdout, end="", flush=True)
             if module == TARGET:
                 (ROOT / "weak-value-axioms.log").write_text(result.stdout)
-            result.check_returncode()
+            if result.returncode != 0:
+                failures.append(module)
+        if failures:
+            raise RuntimeError(f"Source-check failures: {failures}")
         if "sorryAx" in result.stdout:
             raise RuntimeError("The axiom closure contains sorryAx")
         for block in re.findall(r"depends on axioms:\s*\[([^]]*)\]", result.stdout):
@@ -121,6 +123,31 @@ def main() -> None:
             relative = Path("lean", *module.split(".")).with_suffix(".lean")
             if hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() != digest:
                 raise RuntimeError(f"Source changed during verification: {module}")
+        evidence = {
+            "source_check_toolchain": cache_toolchain.strip(),
+            "source_check_passed": True, "mathlib_rev": mathlib["rev"],
+            "requested_toolchain": toolchain.strip(),
+            "repository_pin_check_passed": cache_toolchain == toolchain,
+        }
+        (ROOT / "weak-value-verification.json").write_text(json.dumps(evidence, indent=2) + "\n")
+        print(f"Source closure and axiom checks passed under {cache_toolchain.strip()}.", flush=True)
+        if cache_toolchain != toolchain:
+            (work / "lean-toolchain").write_text(toolchain)
+            subprocess.run(["lean", "--version"], cwd=work, check=True)
+            clean_path = os.pathsep.join(p for p in lean_path.split(os.pathsep)
+                                        if "/.elan/toolchains/" not in p)
+            probe_env = dict(os.environ, LEAN_PATH=str(output) + os.pathsep + clean_path)
+            probe = subprocess.run(
+                ["lean", "--root=lean", "lean/InfoGeometry/Canonical/WeakValuePoleBounds.lean"],
+                cwd=work, env=probe_env, text=True,
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            )
+            print(probe.stdout, end="", flush=True)
+            (ROOT / "weak-value-pinned-probe.log").write_text(probe.stdout)
+            evidence["repository_pin_probe_exit_code"] = probe.returncode
+            (ROOT / "weak-value-verification.json").write_text(json.dumps(evidence, indent=2) + "\n")
+            probe.check_returncode()
+            raise RuntimeError("Cache-compatible closure passed; full repository-pin recheck still required")
         subprocess.run(["git", "diff", "--exit-code", "--", "lean-toolchain", "lake-manifest.json", "lakefile.lean"], cwd=ROOT, check=True)
     finally:
         lock.release()

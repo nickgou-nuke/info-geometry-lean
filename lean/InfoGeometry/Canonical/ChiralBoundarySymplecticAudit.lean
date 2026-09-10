@@ -1,0 +1,25 @@
+import InfoGeometry.Canonical.ChiralBoundarySymplecticBridge
+
+/-!
+# Axiomatic Audit of ChiralBoundarySymplecticBridge
+
+This audit checks the foundational axioms of ChiralBoundarySymplecticBridge.
+Expected axioms: [propext, Classical.choice, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.ChiralBoundarySymplectic.certified_chiral_boundary_symplectic_synthesis
+#print axioms InfoGeometry.Canonical.ChiralBoundarySymplectic.ChiralDoubled.symplecticForm_skew
+#print axioms InfoGeometry.Canonical.ChiralBoundarySymplectic.ChiralDoubled.symplecticForm_self_zero
+#print axioms InfoGeometry.Canonical.ChiralBoundarySymplectic.ChiralDoubled.symplecticForm_add_left
+#print axioms InfoGeometry.Canonical.ChiralBoundarySymplectic.ChiralDoubled.symplecticForm_add_right
+#print axioms InfoGeometry.Canonical.ChiralBoundarySymplectic.ChiralDoubled.symplecticForm_smul_left
+#print axioms InfoGeometry.Canonical.ChiralBoundarySymplectic.ChiralDoubled.symplecticForm_smul_right
+#print axioms InfoGeometry.Canonical.ChiralBoundarySymplectic.ChiralDoubled.holomorphic_isotropic
+#print axioms InfoGeometry.Canonical.ChiralBoundarySymplectic.ChiralDoubled.antiholomorphic_isotropic
+#print axioms InfoGeometry.Canonical.ChiralBoundarySymplectic.ChiralDoubled.cross_pairing_recovery
+#print axioms InfoGeometry.Canonical.ChiralBoundarySymplectic.ChiralDoubled.J_sq
+#print axioms InfoGeometry.Canonical.ChiralBoundarySymplectic.ChiralDoubled.symplectic_J_positive
+#print axioms InfoGeometry.Canonical.ChiralBoundarySymplectic.ChiralDoubled.metric_eq_symplectic_J
+#print axioms InfoGeometry.Canonical.ChiralBoundarySymplectic.ChiralDoubled.symplectic_nondegenerate
+#print axioms InfoGeometry.Canonical.ChiralBoundarySymplectic.ChiralDoubled.metric_J_invariant
+#print axioms InfoGeometry.Canonical.ChiralBoundarySymplectic.ChiralDoubled.symplectic_J_invariant

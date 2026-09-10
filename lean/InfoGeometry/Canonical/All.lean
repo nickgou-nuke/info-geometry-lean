@@ -788,6 +788,8 @@ import InfoGeometry.Canonical.ChiralDolbeaultHodgeBridge
 import InfoGeometry.Canonical.ChiralDolbeaultHodgeAudit
 import InfoGeometry.Canonical.TwoBoundaryChiralCurrentBridge
 import InfoGeometry.Canonical.TwoBoundaryChiralCurrentAudit
+import InfoGeometry.Canonical.ChiralBoundarySymplecticBridge
+import InfoGeometry.Canonical.ChiralBoundarySymplecticAudit
 import InfoGeometry.Canonical.TemperleyLiebJonesBridge
 import InfoGeometry.Canonical.KitaevQuantumDoubleGSDBridge
 import InfoGeometry.Canonical.QuantumHallSkyrmionBridge

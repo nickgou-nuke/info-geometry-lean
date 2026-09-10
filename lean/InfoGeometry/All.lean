@@ -107,6 +107,8 @@ import InfoGeometry.Canonical.NavierStokesSingularityClosure
 import InfoGeometry.Canonical.NavierStokesSingularityClosureAudit
 import InfoGeometry.Canonical.ChiralCausalConeSoldering
 import InfoGeometry.Canonical.ChiralCausalConeSolderingAudit
+import InfoGeometry.Canonical.ChiralApollonianCylinderBridge
+import InfoGeometry.Canonical.ChiralApollonianCylinderAudit
 import InfoGeometry.Canonical.H3ZornF4PeirceTrialitySplit
 import InfoGeometry.Canonical.H3ZornTKKCore
 import InfoGeometry.Canonical.H3ZornTKKNative

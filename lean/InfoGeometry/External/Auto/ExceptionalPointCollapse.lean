@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exceptional-point dimensional collapse
@@ -18,7 +19,7 @@ open Matrix Complex
 
 namespace InfoGeometry.GrandUnification.ExceptionalPointCollapse
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev C2 := Matrix (Fin 2) (Fin 1) ℂ
 
 /-- Nontrivial unipotent KAN shear / Drazin defect. -/

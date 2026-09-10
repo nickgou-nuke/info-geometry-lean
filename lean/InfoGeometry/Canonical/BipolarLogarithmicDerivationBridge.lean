@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Information.ModularSurprisalDerivationBridge
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra
 import Mathlib.Tactic
@@ -47,7 +48,7 @@ open InfoGeometry.OperatorAlgebra.ExteriorAlgebra
 open InfoGeometry.Physics.ChiralCausalCone
 open InfoGeometry.Canonical.BipolarLogSL2
 
-abbrev Matrix2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Matrix2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Positive root character on the additive complex Cartan parameter. -/
 def plusRootCharacter (w : ℂ) : ℂ :=

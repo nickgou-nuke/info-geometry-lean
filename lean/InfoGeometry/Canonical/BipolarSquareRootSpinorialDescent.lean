@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarMobiusPunctureEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarLogSL2
 import Mathlib.Tactic
 
@@ -29,7 +30,7 @@ open InfoGeometry.Analysis.BipolarCrossRatioLog
 open InfoGeometry.Analysis.BipolarMobiusPunctureEquiv
 open InfoGeometry.Canonical.BipolarLogSL2
 
-abbrev Matrix2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Matrix2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev Spinor2 := Fin 2 → ℂ
 
 /-- A point of the pullback of the squaring map along `q`. -/

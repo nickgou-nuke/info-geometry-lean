@@ -21,7 +21,7 @@ set_option linter.unusedSimpArgs false
 noncomputable section
 
 abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 open InfoGeometry.Clifford.Cl11Matrix
 

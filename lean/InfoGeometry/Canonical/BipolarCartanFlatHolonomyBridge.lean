@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarSpinHolonomy
 import Mathlib.Tactic
 
@@ -35,7 +36,7 @@ open InfoGeometry.OperatorAlgebra.ExteriorAlgebra
 open InfoGeometry.Physics.ChiralCausalCone
 
 /-- Unambiguous local matrix carrier. -/
-abbrev Matrix2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Matrix2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Complex coordinate differential `v_η + i v_θ`. -/
 def complexCoordinateDifferential (v : Tangent2) : ℂ :=

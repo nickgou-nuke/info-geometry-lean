@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 
 /-!
@@ -18,8 +19,8 @@ open scoped Matrix
 
 namespace InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
-abbrev Mat3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
+abbrev Mat3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 abbrev Mat23C := Matrix (Fin 2 × Fin 3) (Fin 2 × Fin 3) ℂ
 
 def uPlus : Mat2C := !![(1 : ℂ), 0; 0, 0]

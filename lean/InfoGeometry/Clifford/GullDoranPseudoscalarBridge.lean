@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl3ComplexMatrixProduct
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Gull-Doran-Lasenby pseudoscalar bridge, finite owner surface
@@ -31,7 +32,7 @@ set_option linter.unnecessarySeqFocus false
 set_option linter.unusedSimpArgs false
 
 /-- Concrete real `4 × 4` carrier for the realification of `Mat₂(ℂ)`. -/
-abbrev Mat4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev Mat4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /-- Realification of complex multiplication by `I` on two complex coordinates. -/
 def realPhaseAxis : Mat4R :=

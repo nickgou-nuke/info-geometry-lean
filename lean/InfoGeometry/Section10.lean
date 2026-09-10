@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Section9
 
@@ -23,7 +24,7 @@ namespace Section10
 
 open Matrix
 
-abbrev SpinMat := Matrix (Fin 2) (Fin 2) ℂ
+abbrev SpinMat := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Section 10 notation for the spinorial curvature tensor. -/
 abbrev spinorialCurvature : SpinMat → SpinMat → SpinMat → SpinMat → SpinMat :=

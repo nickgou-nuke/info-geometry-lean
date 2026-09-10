@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Fourier--Mellin Dirac zero modes as biquaternion resolvent poles
@@ -22,8 +23,8 @@ namespace DiracResolventZeroModeTripotent
 
 open Matrix
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 
 /-- The Fourier--Mellin transformed Dirac operator. -/
 def D_FM (s kx ky : ℂ) : M2C :=

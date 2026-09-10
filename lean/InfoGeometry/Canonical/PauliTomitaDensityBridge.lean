@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PauliHestenesSpinMomentum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CuntzTomitaQuadraticReadout
 import InfoGeometry.Quantum.PauliSoldering
 
@@ -23,7 +24,7 @@ open InfoGeometry.OperatorAlgebra
 open InfoGeometry.Quantum.PauliSoldering
 open scoped ComplexOrder
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- The soldered matrix attached to a real Pauli paravector. -/
 def solderedMatrix (P : PauliParavector) : M2C :=

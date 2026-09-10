@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.KanCayley
 import InfoGeometry.External.Auto.TraceSeparationFlow
 
@@ -9,7 +10,7 @@ open InfoGeometry.Canonical.Cayley
 
 namespace InfoGeometry.GrandUnification.KANTraceSectorization
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /--
 `Λ = |det g|` split (continuous, phase-free scale) and `η = det g / |det g|` (phase).

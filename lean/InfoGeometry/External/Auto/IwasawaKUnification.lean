@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 
@@ -16,7 +17,7 @@ structure KANComponents where
   x : ℝ
 
 /-- Local real transfer matrix. -/
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Compact phase generator in `sl(2,ℝ)`. -/
 def generatorK (θ : ℝ) : M2R :=

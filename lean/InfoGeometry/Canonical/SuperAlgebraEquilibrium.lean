@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
 
 /-!
@@ -12,7 +13,7 @@ namespace InfoGeometry.Canonical.SuperAlgebraEquilibrium
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Odd generator `Q`. -/
 noncomputable def Q : M2R := N

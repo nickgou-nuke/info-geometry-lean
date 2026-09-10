@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Fixed lines: Brillouin Klein glide axis and Riemann critical line
@@ -91,7 +92,7 @@ theorem surviving_mode_not_odd {k : ℕ} {c : ℂ}
 
 /-! ## Nilpotent Itakura--Saito zero -/
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def nilExp (K : M2C) : M2C := 1 + K
 

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
 
 /-!
@@ -22,7 +23,7 @@ open InfoGeometry.Algebra.HypercomplexTriad
 
 noncomputable section
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /--
 The Vacuum Expectation Value functional `⟨0|M|0⟩`.

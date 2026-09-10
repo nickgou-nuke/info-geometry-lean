@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Soldering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The real `2 × 2` split-quaternion readout
@@ -17,7 +18,7 @@ namespace InfoGeometry.Clifford.SplitQuaternionMatrixReadout
 
 open InfoGeometry.Clifford.Soldering
 
-abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def one : Mat2R := sigma0
 

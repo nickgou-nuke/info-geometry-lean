@@ -1,4 +1,5 @@
 /-
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 Copyright (c) 2026 Canonical InfoGeometry Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Canonical InfoGeometry Contributors
@@ -22,17 +23,22 @@ In the 2-step setting ($k \le n$ with $\Lambda^2 = 0$ on the relevant subspace),
 this simplifies to an exact canonical orthogonal splitting:
 $$x = P_{\mathrm{prim}} x + P_L x$$
 where:
-- $P_L = rac{1}{m} L \Lambda$ projects onto the Lefschetz-raised component.
-- $P_{\mathrm{prim}} = I - rac{1}{m} L \Lambda$ projects onto the primitive kernel $\ker \Lambda$.
+- $P_L = 
+rac{1}{m} L \Lambda$ projects onto the Lefschetz-raised component.
+- $P_{\mathrm{prim}} = I - 
+rac{1}{m} L \Lambda$ projects onto the primitive kernel $\ker \Lambda$.
 
 ## Core Results
 1. `decomp_sum`: Exact decomposition $x = P_{\mathrm{prim}} x + P_L x$.
 2. `P_prim_is_primitive`: $\Lambda(P_{\mathrm{prim}} x) = 0$ for all $x$.
 3. `P_prim_on_primitive`: $P_{\mathrm{prim}} x = x$ on primitive vectors.
 4. `P_prim_idempotent`: $P_{\mathrm{prim}}^2 = P_{\mathrm{prim}}$.
-5. `P_prim_orthogonal_L`: $\langle P_{\mathrm{prim}} x, L y angle = 0$.
-6. `decomp_orthogonal`: $\langle P_{\mathrm{prim}} x, P_L x angle = 0$.
-7. `pythagorean_energy`: $\|x\|^2 = \|P_{\mathrm{prim}} x\|^2 + rac{1}{m} \|\Lambda x\|^2$.
+5. `P_prim_orthogonal_L`: $\langle P_{\mathrm{prim}} x, L y 
+angle = 0$.
+6. `decomp_orthogonal`: $\langle P_{\mathrm{prim}} x, P_L x 
+angle = 0$.
+7. `pythagorean_energy`: $\|x\|^2 = \|P_{\mathrm{prim}} x\|^2 + 
+rac{1}{m} \|\Lambda x\|^2$.
 8. `primitive_energy_le`: $\|P_{\mathrm{prim}} x\|^2 \le \|x\|^2$.
 9. `comm_laplacian_P_L` & `comm_laplacian_P_prim`: Commutation with the Hodge-Laplacian.
 10. `P_prim_preserves_harmonic` & `P_L_preserves_harmonic`: Preservation of harmonic forms.
@@ -60,7 +66,8 @@ namespace LefschetzPrimitiveProjector
 variable {S : LefschetzSL2 (E := E)}
 variable (P : LefschetzPrimitiveProjector S)
 
-/-- The Lefschetz-raised component: $P_L = rac{1}{m} (L \circ \Lambda)$. -/
+/-- The Lefschetz-raised component: $P_L = 
+rac{1}{m} (L \circ \Lambda)$. -/
 noncomputable def P_L : E →ₗ[ℝ] E :=
   (1 / P.m) • (S.L.comp S.Lambda)
 
@@ -123,7 +130,8 @@ theorem decomp_orthogonal (x : E) :
   rw [mul_zero]
 
 /-- Pythagorean energy conservation:
-    $\|x\|^2 = \|P_{\mathrm{prim}} x\|^2 + rac{1}{m} \|\Lambda x\|^2$. -/
+    $\|x\|^2 = \|P_{\mathrm{prim}} x\|^2 + 
+rac{1}{m} \|\Lambda x\|^2$. -/
 theorem pythagorean_energy (x : E) :
     ⟪x, x⟫ = ⟪P.P_prim x, P.P_prim x⟫ + (1 / P.m) * ⟪S.Lambda x, S.Lambda x⟫ := by
   have h_split : x = P.P_prim x + P.P_L x := (P.decomp_sum x).symm

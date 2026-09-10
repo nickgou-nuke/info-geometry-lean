@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.AssociativeOperatorZornCartanPeirce
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.ComplexKramersAntiunitary
 
 /-! Two-boundary matrix coefficients on the existing associative Zorn shell. -/
@@ -10,7 +11,7 @@ open scoped BigOperators Matrix
 open InfoGeometry.Quantum.ComplexKramersAntiunitary
 open InfoGeometry.OperatorAlgebra.AssociativeOperatorZornCartanPeirce
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def matVec (M : Mat2C) (v : H2) : H2 :=
   fun i => ∑ j : Fin 2, M i j * v j

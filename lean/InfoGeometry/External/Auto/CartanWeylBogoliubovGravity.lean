@@ -22,8 +22,8 @@ namespace CartanWeylBogoliubovGravity
 
 open Matrix
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 abbrev M4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /-! ## Pauli soldering and Minkowski metric -/

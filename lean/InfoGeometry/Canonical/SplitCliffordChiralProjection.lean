@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Canonical.ModularLorentzBoost
 
@@ -23,7 +24,7 @@ open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
 open InfoGeometry.Canonical.ModularLorentzBoost
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Left chiral number operator `N_left = a† a = N Nᵀ`. -/
 noncomputable def N_left : M2R := N * Nᵀ

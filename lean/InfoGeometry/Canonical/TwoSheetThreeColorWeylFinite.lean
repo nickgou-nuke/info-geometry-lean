@@ -14,7 +14,7 @@ six states.
 noncomputable section
 namespace TwoSheetThreeColorWeyl
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 abbrev SixIndex := Fin 2 × Fin 3
 abbrev M6C := Matrix SixIndex SixIndex ℂ

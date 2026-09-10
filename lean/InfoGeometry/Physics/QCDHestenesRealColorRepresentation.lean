@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TwoSheetComplexPolarization
 import InfoGeometry.Physics.QCDNativeZornColorRepresentation
 
@@ -35,7 +36,7 @@ open InfoGeometry.Physics.QCDNativeZornColorRepresentation
 abbrev ComplexColorLane := Fin 3 → ℂ
 abbrev RealPair := ℝ × ℝ
 abbrev RealColorLane := Fin 3 → RealPair
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 
 /-- Real/imaginary coordinate equivalence for one complex scalar. -/
 def complexPairEquiv : ℂ ≃ₗ[ℝ] RealPair where

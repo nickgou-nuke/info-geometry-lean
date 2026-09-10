@@ -1,4 +1,5 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-
 # Apollonius global Maurer--Cartan connection
@@ -25,7 +26,7 @@ open InfoGeometry.Apollonius
 open InfoGeometry.Canonical.ApolloniusPauliConnectionBridge
 open InfoGeometry.Canonical.ApolloniusWindingFluxBridge
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- The differential of q(s) = s / (1-s) applied to a complex tangent. -/
 def cayleyDerivative (s : PuncturedPlane) (v : ℂ) : ℂ :=

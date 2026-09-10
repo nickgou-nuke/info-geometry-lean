@@ -1,11 +1,12 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SolovievQuasiparticlePhononEigenproblem
 
 namespace InfoGeometry.Physics.SolovievInteractionParameterBridge
 
 open InfoGeometry.Physics.SolovievQPNMEigenproblem
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- The diagonal quasiparticle/phonon part of the finite truncation. -/
 def diagonalPart (eQ eP : ℝ) : M2R := !![eQ, 0; 0, eP]

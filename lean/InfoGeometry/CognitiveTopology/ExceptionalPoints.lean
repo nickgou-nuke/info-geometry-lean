@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.WallpaperSymmetry
 
 /-!
@@ -33,7 +34,7 @@ namespace InfoGeometry.CognitiveTopology.ExceptionalPoints
 open Matrix InfoGeometry.Topology.Wallpaper
 
 /-- Concrete `2 x 2` complex matrix carrier for the finite EP witness. -/
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- The nilpotent part of the standard size-two Jordan block. -/
 def jordanNilpotent : Mat2C :=

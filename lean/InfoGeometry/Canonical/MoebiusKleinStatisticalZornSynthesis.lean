@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ThreePointMoebiusCrossRatioBridge
 import InfoGeometry.Topology.MobiusCrossRatio
 import InfoGeometry.Topology.ThermodynamicSL2MobiusFlow
@@ -18,7 +19,7 @@ open InfoGeometry.Physics.MD011StatisticalInfoGeometry
 
 /-! ## Projective `2 × 2` matrices -/
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Affine fractional-linear action of a raw complex `2 × 2` matrix. -/
 def matrixMobiusAction (A : Mat2C) (z : ℂ) : ℂ :=
@@ -310,7 +311,7 @@ theorem unruh_temperature_with_constants_sheet_nonneg
 
 /-! ## Statistical moment matrices -/
 
-abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 abbrev Tangent2 := Fin 2 → ℝ
 
 /-- Over `ℝ`, a nonzero determinant has a genuine sign dichotomy. -/

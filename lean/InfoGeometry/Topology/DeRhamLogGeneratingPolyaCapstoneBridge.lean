@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
@@ -157,7 +158,7 @@ theorem twisted_square_eq_sign
 /-! ### 5. Emergent Spacetime Soldering Determinant -/
 
 abbrev FourVector := Fin 4 → ℝ
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Pauli matrix basis σ₀, σ₁, σ₂, σ₃ -/
 def sigma0 : Mat2C := !![1, 0; 0, 1]

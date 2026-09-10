@@ -20,7 +20,7 @@ Proved Theorems:
 3. Braid Triple Product Inequality: $B_{12} B_{23} B_{12} \neq B_{23} B_{12} B_{23}$.
 -/
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev Mat4C := InfoGeometry.Algebra.FiniteSpin.Mat4C
 
 /-- Skew-symmetric 4×4 Moore-Read Pfaffian matrix M_{ij} = 1/(z_i - z_j). -/

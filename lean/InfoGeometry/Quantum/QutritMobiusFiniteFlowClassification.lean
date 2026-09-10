@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.QutritMobiusTripotentOrientationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.MobiusClassification
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
@@ -28,7 +29,7 @@ open InfoGeometry.Geometry
 open InfoGeometry.Canonical.MatrixDetExpTraceJacobi
 open InfoGeometry.Quantum.QutritMobiusTripotentOrientationBridge
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 private lemma smul_pow_even_of_sq_eq_one
     {S : Type*} [NormedRing S] [NormedAlgebra ℂ S]

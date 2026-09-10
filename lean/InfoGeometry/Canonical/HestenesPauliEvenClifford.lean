@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Even
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
 import Mathlib.Tactic.FinCases
 import InfoGeometry.Clifford.Spacetime
@@ -8,7 +9,7 @@ open scoped Matrix
 open CliffordAlgebra
 open InfoGeometry.Canonical.ChiralStokesPauliBasis
 namespace InfoGeometry.Canonical.HestenesPauliEvenClifford
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev Vec13 := InfoGeometry.Clifford.Spacetime.Vec13
 noncomputable abbrev q14 : QuadraticForm ℝ Vec13 := InfoGeometry.Clifford.Spacetime.minkiQ
 noncomputable abbrev ClPlus14 := CliffordAlgebra.even q14

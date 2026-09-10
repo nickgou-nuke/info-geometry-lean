@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix
 
@@ -18,7 +19,7 @@ $\mathcal{C} = \tau_x K$ for the Bogoliubov-de Gennes (BdG) Hamiltonian, proving
    $$\tau_x (h \tau_z)^* \tau_x = - (h \tau_z)^*$$
 -/
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Nambu-Gor'kov particle-hole operator Pauli τ_x matrix: [0 1; 1 0]. -/
 def tauX : Mat2C := !![0, 1; 1, 0]

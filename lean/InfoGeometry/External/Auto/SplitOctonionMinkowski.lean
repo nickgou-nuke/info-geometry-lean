@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Minkowski spacetime inside the complexified split-octonions
@@ -24,7 +25,7 @@ namespace SplitOctonionMinkowski
 
 open Matrix Complex
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Pauli matrices. -/
 def σ1 : M2C := !![0, 1; 1, 0]

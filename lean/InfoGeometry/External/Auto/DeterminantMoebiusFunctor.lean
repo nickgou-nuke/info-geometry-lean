@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Sign
 import InfoGeometry.External.Auto.DeterminantSupergrading
 import InfoGeometry.External.Auto.TrifactorGeometry
@@ -11,7 +12,7 @@ open scoped ArithmeticFunction.Moebius
 
 namespace InfoGeometry.Canonical.DeterminantMoebiusFunctor
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Weyl scale sector of a finite gauge block: absolute determinant. -/
 def detScale (A : M2R) : ℝ := |A.det|

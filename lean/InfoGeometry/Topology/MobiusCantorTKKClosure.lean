@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.CantorBoundaryCuntzFamily
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ArtinMonodromyPin55
 import InfoGeometry.External.Auto.UHFInductiveColimit
 
@@ -25,7 +26,7 @@ open InfoGeometry.Topology.CantorBoundaryCuntzFamily
 open UHFInductiveColimit
 open InfoGeometry.Topology.ArtinMonodromyPin55
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-! ## Möbius symmetry atoms -/
 

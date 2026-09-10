@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix
 
@@ -21,7 +22,7 @@ Proved Theorems:
 4. Strong Trivial Phase Pfaffian Positivity: $\mu^2 > t^2 - \Delta^2 \implies \text{Pf}(A_4) > 0$.
 -/
 
-abbrev Mat4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev Mat4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /-- 4×4 Real skew-symmetric Majorana matrix for 2-site Kitaev chain. -/
 def kitaevMajoranaMatrix4 (mu t delta : ℝ) : Mat4R :=

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Supercharges square
@@ -17,7 +18,7 @@ namespace SuperchargeSquare
 
 open Matrix
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Bulk/spatial supercharge atom. -/
 def Q : M2C := !![0, 1; 1, 0]

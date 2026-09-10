@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.BraidCliffordIntegration
 
 /-!
@@ -14,7 +15,7 @@ open Matrix Complex
 
 namespace InfoGeometry.GrandUnification.ArtinParityFlow
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev M16C := Matrix (Fin 16) (Fin 16) ℂ
 
 /-- Pauli `σₓ`. -/

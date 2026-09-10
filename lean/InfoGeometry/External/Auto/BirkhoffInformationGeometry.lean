@@ -1,8 +1,9 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace BirkhoffInformationGeometry
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def permId : M2R :=
   !![1, 0; 0, 1]

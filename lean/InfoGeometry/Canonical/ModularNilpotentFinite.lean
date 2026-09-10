@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordSourceWickBase
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.OperatorAlgebra.SuperVirasoroExtension
 import Mathlib.Tactic
@@ -17,7 +18,7 @@ open InfoGeometry.Canonical.SplitCliffordSourceWickBase
 open InfoGeometry.Canonical.CurrentSugawaraBridge
 
 /-- Local concrete matrix carrier for this finite nilpotent lane. -/
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Local modular perturbation `Δ = 1 + N`. -/
 def Delta : M2R :=

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitQuaternionMatrices
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.MobiusLoxodromicSpectralParameter
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases
@@ -19,7 +20,7 @@ noncomputable section
 open InfoGeometry.Algebra.SplitQuaternionMatrices
 open InfoGeometry.Projective.MobiusLoxodromicSpectralParameter
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def axis : M2R := sqK
 

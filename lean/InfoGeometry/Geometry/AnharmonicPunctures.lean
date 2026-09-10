@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitAtomInvolutions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Inv
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 
@@ -153,7 +154,7 @@ theorem inversion_log_form (z : Punctured) :
   have h1 : 1 - z.1 ≠ 0 := sub_ne_zero.mpr (Ne.symm z.2.2)
   field_simp [z.2.1, sub_ne_zero.mpr z.2.2, hi, h1] <;> ring
 
-abbrev CMat2 := Matrix (Fin 2) (Fin 2) ℂ
+abbrev CMat2 := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- The coefficient lives in the complexified Cartan, not in R J. -/
 def complexCartanGenerator : CMat2 :=

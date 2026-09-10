@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # 2×2 Matrix → determinant normalization → supergrading → Pauli/KAN chain
@@ -21,7 +22,7 @@ open Matrix Real
 
 namespace InfoGeometry.GrandUnification.Matrix2KANPauliChain
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Coordinate matrix. -/
 def mat2 (a b c d : ℝ) : M2R := !![a, b; c, d]

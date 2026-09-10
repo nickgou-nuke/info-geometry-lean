@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # `Cl(5,5)`, split anomaly cancellation, Bott stability, and `osp(1|2)` atoms
@@ -54,8 +55,8 @@ theorem anomalyIndex_55_zero : anomalyIndex 5 5 = 0 := by
 
 /-! ## `osp(1|2)` atom and tripotency -/
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 abbrev M6C := Matrix (Fin 6) (Fin 6) ℂ
 
 /-- A concrete odd generator. -/

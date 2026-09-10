@@ -2205,6 +2205,8 @@ import InfoGeometry.Canonical.DrazinSpectralFittingBridge
 import InfoGeometry.Canonical.DrazinSpectralFittingAudit
 import InfoGeometry.Canonical.AbjChiralCuntzHallBridge
 import InfoGeometry.Canonical.AbjChiralCuntzHallAudit
+import InfoGeometry.Canonical.ChernSimonsCuntzBoundaryBridge
+import InfoGeometry.Canonical.ChernSimonsCuntzBoundaryAudit
 import InfoGeometry.Canonical.AlbertPeirceModularMixingBridge
 
 namespace InfoGeometry

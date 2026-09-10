@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # KAN / Fourier--Mellin / Dirac-Hodge synthesis
@@ -21,8 +22,8 @@ namespace KANFourierMellinDirac
 
 open Matrix Complex
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 
 /-! ## 1. KAN finite factors -/
 

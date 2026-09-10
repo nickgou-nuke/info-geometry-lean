@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarVariableConnectionAnalyticExterior
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
 
 /-!
@@ -19,7 +20,7 @@ open InfoGeometry.Canonical.BipolarVariableCartanMaurerCartan
 open InfoGeometry.Canonical.BipolarVariableConnectionAnalyticExterior
 open InfoGeometry.OperatorAlgebra.ExteriorAlgebra
 
-abbrev Matrix2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Matrix2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Bundled exterior derivative of the variable connection at a base point. -/
 def variableExteriorDerivativeForm (s : ℂ) : Op2Form ℂ ℂ Matrix2C where

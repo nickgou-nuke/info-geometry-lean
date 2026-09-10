@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SolovievProjectedParameterBridge
 import InfoGeometry.Physics.SolovievSecularRoots
 
@@ -13,7 +14,7 @@ open InfoGeometry.Physics.SolovievProjectedParameterBridge
 open InfoGeometry.Physics.SolovievSecularRoots
 open InfoGeometry.Physics.SolovievTransitionStrength
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def annihilation : M2R := !![0, 1; 0, 0]
 

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordChiralProjection
 import InfoGeometry.Canonical.ModularLorentzBoost
 import InfoGeometry.Canonical.ModularSL2R
@@ -23,7 +24,7 @@ open InfoGeometry.Canonical.ModularLorentzBoost
 open InfoGeometry.Canonical.ModularSL2R
 open InfoGeometry.Canonical.DrazinAnomalousProjector
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Exact projector formula for `exp(tK)`. -/
 noncomputable def expKExact (t : ℝ) : M2R :=

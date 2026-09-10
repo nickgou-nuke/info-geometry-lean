@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometryCore.Basic
 
 open InfoGeometryCore
@@ -19,7 +20,7 @@ open scoped BigOperators
 
 namespace InfoGeometry.GrandUnification.FibonacciCliffordBridge
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 abbrev M4R := Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℝ
 
 /-- The golden ratio. -/

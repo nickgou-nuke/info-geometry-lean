@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Thesis Master Synthesis
@@ -23,8 +24,8 @@ namespace ThesisMaster
 
 open Matrix
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 
 /-! ## Chapter 1: biquaternionic bulk -/
 

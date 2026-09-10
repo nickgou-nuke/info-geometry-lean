@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.TwinLightconeWeylOperatorZorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.AssociativeOperatorZornCartanPeirce
 import InfoGeometry.Canonical.HestenesSpinAction
 
@@ -12,7 +13,7 @@ open InfoGeometry.Canonical.HestenesSpinAction
 open InfoGeometry.OperatorAlgebra.AssociativeOperatorZornCartanPeirce
 
 abbrev SL2C := Matrix.SpecialLinearGroup (Fin 2) ℂ
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev TwinWeylBlock := ZornBlock Mat2C
 abbrev ChiralLorentzPair := SL2C × SL2C
 

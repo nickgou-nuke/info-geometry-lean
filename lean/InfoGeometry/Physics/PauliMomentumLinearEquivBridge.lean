@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
 
@@ -19,7 +20,7 @@ open Matrix
 open InfoGeometry.Physics.ChiralPoincareSouriauBridge
 open InfoGeometry.Physics.LorentzChiralCuntzBridge
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 noncomputable def fourMomentumCoordEquiv : FourMomentum ≃ (Fin 4 → ℂ) where
   toFun P := ![P.E, P.px, P.py, P.pz]

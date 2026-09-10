@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite coordinate--momentum commutators and direct-colimit Weyl phase space
@@ -23,7 +24,7 @@ open Matrix
 open ChiralPoincareSouriauBridge
 open HestenesCuntzSpacetimeAlgebra
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Associative commutator. -/
 def commM (A B : M2C) : M2C := A * B - B * A

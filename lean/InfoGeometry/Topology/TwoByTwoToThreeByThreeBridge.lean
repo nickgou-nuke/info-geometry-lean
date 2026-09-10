@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.CognitiveTopology.ExceptionalPoints
 import InfoGeometry.Topology.AharonovBohmVortices
 
@@ -26,7 +27,7 @@ open InfoGeometry.CognitiveTopology.ExceptionalPoints
 open InfoGeometry.Topology.Parafermion
 
 /-- Concrete `3 × 3` complex matrix carrier. -/
-abbrev Mat3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev Mat3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 
 /-- Linear block inclusion `A ↦ diag(A,0)`, preserving square-zero nilpotents. -/
 def linearEmbed2to3 (A : Mat2C) : Mat3C :=

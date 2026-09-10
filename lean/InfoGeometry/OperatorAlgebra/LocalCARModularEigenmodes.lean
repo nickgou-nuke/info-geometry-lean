@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ThreeModeChiralFockSplitOctonionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite CAR modular eigenmodes
@@ -18,7 +19,7 @@ open Matrix
 open InfoGeometry.Canonical.CantorLocalCl11HopParity
 open InfoGeometry.Canonical.SplitCliffordCantorFock
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def thermalHamiltonian (ε : ℝ) : M2R := ε • localNumberOperator
 

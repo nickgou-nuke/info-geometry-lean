@@ -1,4 +1,5 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 import Mathlib.LinearAlgebra.BilinearForm.Basic
 import Mathlib.Data.Real.Basic
@@ -85,10 +86,12 @@ theorem omega_self_zero (u : V) :
 
 /-! ### 2. Peirce Chiral Projectors -/
 
-/-- Positive parity Peirce projector $P_+ = rac{1}{2}(I + J)$. -/
+/-- Positive parity Peirce projector $P_+ = 
+rac{1}{2}(I + J)$. -/
 def peircePlus (v : V) : V := (1 / 2 : ℝ) • (v + pk.J v)
 
-/-- Negative parity Peirce projector $P_- = rac{1}{2}(I - J)$. -/
+/-- Negative parity Peirce projector $P_- = 
+rac{1}{2}(I - J)$. -/
 def peirceMinus (v : V) : V := (1 / 2 : ℝ) • (v - pk.J v)
 
 /-- **Theorem**: Completeness of Peirce decomposition: $P_+ v + P_- v = v$. -/

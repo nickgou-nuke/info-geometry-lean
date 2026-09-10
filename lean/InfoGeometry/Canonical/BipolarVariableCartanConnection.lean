@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarLogDifferential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
 import InfoGeometry.Canonical.BipolarHalfLogLiftAnalyticPureGauge
 import Mathlib.Analysis.Calculus.Deriv.Inv
@@ -44,7 +45,7 @@ open InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
 open InfoGeometry.OperatorAlgebra.ExteriorAlgebra
 open InfoGeometry.Physics.ChiralCausalCone
 
-abbrev Matrix2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Matrix2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Complex derivative of the rational logarithmic coefficient. -/
 def dlog01Deriv (s : ℂ) : ℂ :=

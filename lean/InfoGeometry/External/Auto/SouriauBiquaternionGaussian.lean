@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Souriau biquaternion thermodynamics and Gaussian closure
@@ -15,7 +16,7 @@ namespace SouriauBiquaternionGaussian
 
 open Matrix
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Pauli boost direction. -/
 def σ1 : M2C := !![0, 1; 1, 0]

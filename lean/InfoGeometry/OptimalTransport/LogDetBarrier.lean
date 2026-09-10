@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.KanDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Jordan.BurgStein
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
@@ -32,7 +33,7 @@ open Matrix
 open InfoGeometry.Dynamics.KanDecomposition
 
 /-- The `2 × 2` complex matrix carrier used by the KAN/parabolic bridge. -/
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /--
 Determinant-only logarithmic barrier on complex `2 × 2` matrices, using the

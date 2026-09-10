@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Fourier intertwining for the three-family Weyl carrier
@@ -14,7 +15,7 @@ namespace InfoGeometry.Canonical.ThreeFamilyWeylMixing
 
 open InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 
-abbrev Mat3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev Mat3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 
 def fourier3 (ω : ℂ) : Mat3C :=
   !![(1 : ℂ), 1, 1;

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Canonical.SplitCliffordChiralProjection
 import InfoGeometry.Canonical.DrazinAnomalousProjector
@@ -26,7 +27,7 @@ open InfoGeometry.Canonical.SplitCliffordChiralProjection
 open InfoGeometry.Canonical.DrazinAnomalousProjector
 open InfoGeometry.Canonical.ModularSL2R
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Haar scaling operator (`φ`). -/
 noncomputable def HaarPhi : M2R := N_left + N_right

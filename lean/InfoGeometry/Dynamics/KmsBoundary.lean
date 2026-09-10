@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.RindlerWedge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
@@ -23,7 +24,7 @@ namespace InfoGeometry.Dynamics.KmsBoundary
 open Matrix
 
 /-- The `2 × 2` complex matrix carrier used for the finite modular model. -/
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Diagonal boost Hamiltonian in the finite Rindler model. -/
 def modularHamiltonian : Mat2C :=

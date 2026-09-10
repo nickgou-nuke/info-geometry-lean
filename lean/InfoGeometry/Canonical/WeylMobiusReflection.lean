@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Canonical.ModularLorentzBoost
 
@@ -22,7 +23,7 @@ open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
 open InfoGeometry.Canonical.ModularLorentzBoost
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Reflection operator chosen compatibly with existing basis (`W = E = K`). -/
 noncomputable def W : M2R := K

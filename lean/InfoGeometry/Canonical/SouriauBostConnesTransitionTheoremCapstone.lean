@@ -1,4 +1,5 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Matrix.Basic
@@ -20,12 +21,14 @@ import InfoGeometry.Quantum.CantorCrystalSupergradedSuperalgebraCapstone
 This capstone module formalizes the exact statement:
 
 **Souriau–Bost–Connes Transition Theorem**:
-Let (eta) = \prod_{p \in P} rac{1}{1 - p^{-eta}}$ be the primon gas partition at cutoff $
+Let (eta) = \prod_{p \in P} 
+rac{1}{1 - p^{-eta}}$ be the primon gas partition at cutoff $
 with inverse temperature $eta$. Under the Souriau metriplectic flow on the coadjoint orbit of the
 Boolean Weyl group, as $eta 	o \infty$ the flow compactifies via the Cayley map to the Cantor boundary,
 where the ground state algebra is isomorphic to the Fibonacci fusion category $\mathcal{N}$ with hBcmatrix
 satisfying  \cdot B \cdot F = R$ ( = F R F$), ^2 = I_2$, and order parameter given by the quantum
-dimension $\phi = rac{1 + \sqrt{5}}{2}$ satisfying $\phi^2 = \phi + 1$.
+dimension $\phi = 
+rac{1 + \sqrt{5}}{2}$ satisfying $\phi^2 = \phi + 1$.
 -/
 
 noncomputable section
@@ -41,11 +44,13 @@ open InfoGeometry.Canonical.SouriauDiracHodgePrimon
 open InfoGeometry.Quantum.CantorCrystal
 
 /-- Primon gas partition function at finite prime cutoff $ with inverse temperature $eta > 0$:
-3433828Z_P(eta) = \prod_{p \in P} rac{1}{1 - p^{-eta}}3433828 -/
+3433828Z_P(eta) = \prod_{p \in P} 
+rac{1}{1 - p^{-eta}}3433828 -/
 def primonPartition (P : Finset ℕ) (beta : ℝ) : ℝ :=
   ∏ p ∈ P, (1 - (p : ℝ) ^ (-beta))⁻¹
 
-/-- The Order Parameter: Golden Ratio Quantum Dimension $\phi = rac{1 + \sqrt{5}}{2}$. -/
+/-- The Order Parameter: Golden Ratio Quantum Dimension $\phi = 
+rac{1 + \sqrt{5}}{2}$. -/
 def quantumDimensionPhi : ℝ :=
   goldenRatio
 

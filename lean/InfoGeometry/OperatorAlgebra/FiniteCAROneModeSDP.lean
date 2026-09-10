@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.PosDef
 import InfoGeometry.Algebra.FiniteSUSYBlocks
 import InfoGeometry.Physics.SplitCliffordAlgebras
@@ -35,8 +36,8 @@ open Matrix
 open InfoGeometry.Algebra.FiniteSpin
 open InfoGeometry.Algebra.FiniteSUSY
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
-abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
+abbrev Mat2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- The annihilation operator inherited from the finite SUSY owner. -/
 def annihilation : Mat2C :=

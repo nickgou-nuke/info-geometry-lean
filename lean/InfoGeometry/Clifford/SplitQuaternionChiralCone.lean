@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQuaternionMatrixModel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Chiral/Witt coordinates for the split-quaternion matrix model
@@ -13,7 +14,7 @@ namespace InfoGeometry.Clifford.SplitQuaternionChiralCone
 open InfoGeometry.Clifford.SplitQuaternionMatrixModel
 open scoped Matrix
 
-abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 noncomputable def sPlus : Mat2R := (1 / 2 : ℝ) • (hyperbolic - elliptic)
 

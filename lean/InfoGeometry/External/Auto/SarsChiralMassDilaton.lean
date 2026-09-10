@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 
@@ -6,7 +7,7 @@ namespace SarsChiralMassDilaton
 
 open Real
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def PR : M2R := !![1, 0; 0, 0]
 def PL : M2R := !![0, 0; 0, 1]

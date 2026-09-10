@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.JordanWignerBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TensorTower
 import InfoGeometry.Canonical.CelikKocakCl11ConcretePacket
 import InfoGeometry.Canonical.CelikKocakPaperFormalism
@@ -32,7 +33,7 @@ open InfoGeometry.Canonical.CelikKocakPaperFormalism.FunctionSpace
 
 namespace JW
 
-abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 abbrev createBase : Mat2R :=
   InfoGeometry.Clifford.JordanWignerBridge.a_dagger_base

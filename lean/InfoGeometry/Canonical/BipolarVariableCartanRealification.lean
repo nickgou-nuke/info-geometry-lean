@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarVariableCartanMaurerCartan
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
 
 /-!
@@ -25,7 +26,7 @@ open InfoGeometry.Canonical.BipolarVariableCartanMaurerCartan
 open InfoGeometry.OperatorAlgebra.ExteriorAlgebra
 open InfoGeometry.Physics.ChiralCausalCone
 
-abbrev Matrix2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Matrix2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- The same point-dependent connection, restricted to real scalar
 multiplication on the tangent complex plane. -/

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 100000
@@ -11,8 +12,8 @@ namespace MajoranaPfaffianNaturalClosure
 open Matrix
 open scoped BigOperators
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-!
 # 1. The concrete split-Clifford representation

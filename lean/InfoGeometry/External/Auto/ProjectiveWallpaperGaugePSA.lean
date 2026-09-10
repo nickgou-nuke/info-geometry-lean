@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Projective wallpaper symmetry algebras with gauge structures
@@ -155,7 +156,7 @@ theorem piFlux_sigma_minus (G : WallpaperGroup) :
 
 open Matrix Complex
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Magnetic translation representative `L_a`. -/
 def La : M2C := !![1, 0; 0, -1]

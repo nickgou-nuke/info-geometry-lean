@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Souriau beta Gaussian finite matrix
@@ -13,7 +14,7 @@ namespace SouriauGaussian
 
 open Matrix
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Symmetric beta-vector matrix for one boost direction. -/
 def betaMatrix (b0 bx : ℂ) : Mat2C := !![b0, bx; bx, b0]

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.MajoranaBraidGroup
 
 open Matrix Complex
@@ -17,7 +18,7 @@ noncomputable section
 
 namespace InfoGeometry.Topology.BraidNegativeIdentityMonodromy
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Real form of `iσ₂`, used as a spinor half-twist gate. -/
 def spinorHalfTwist : M2C := !![0, 1; -1, 0]

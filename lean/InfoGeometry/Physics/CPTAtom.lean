@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The `Cl(1,1)` CPT atom and the signum map
@@ -20,7 +21,7 @@ namespace InfoGeometry.Physics.CPTAtom
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Scale signum generator. -/
 def eps : M2R := !![0, 1; 1, 0]

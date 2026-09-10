@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikCantorCl2UniversalHom
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The standard rank-one Witt/Fock basis
@@ -16,7 +17,7 @@ namespace InfoGeometry.Canonical.CelikCantorWittBasis
 open InfoGeometry.Canonical.CelikCantorClifford
 open InfoGeometry.Canonical.CelikCantorCl2UniversalHom
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 noncomputable def annihilator : Mat2C :=
   (1 / 2 : ℂ) • (V - Complex.I • J)

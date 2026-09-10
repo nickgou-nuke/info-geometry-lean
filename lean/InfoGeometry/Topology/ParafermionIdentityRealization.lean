@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.GellMannParafermionSolder
 
 /-!
@@ -15,7 +16,7 @@ namespace InfoGeometry.Topology.ParafermionIdentityRealization
 
 open InfoGeometry.Physics.GellMannParafermionSolder
 
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 abbrev ParafermionStage4 := Fin 4 → ℂ
 
 /-- Basis vector in the four-component carrier. -/

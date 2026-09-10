@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 import Mathlib.Tactic
@@ -17,7 +18,7 @@ namespace InfoGeometry.Physics.LogCFTJordanShear
 
 noncomputable section
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def nilpotentN : Mat2C := !![0, 1; 0, 0]
 

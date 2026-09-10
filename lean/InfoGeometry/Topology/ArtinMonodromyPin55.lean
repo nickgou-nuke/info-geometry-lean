@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.BraidNegativeIdentityMonodromy
 import InfoGeometry.Clifford.Clifford55AnomalyOSP
 
@@ -20,7 +21,7 @@ noncomputable section
 
 namespace InfoGeometry.Topology.ArtinMonodromyPin55
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- The modeled centralizer of the TKK closure symmetry: only `I` and `-I`. -/
 inductive CentralizerAtom where

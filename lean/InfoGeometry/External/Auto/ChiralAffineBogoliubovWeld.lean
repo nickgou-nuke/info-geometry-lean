@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.SupergradedCuntzBdG
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ChiralCausalCone
 import InfoGeometry.Physics.BogoliubovWeylChemicalPotential
 /-!
@@ -27,7 +28,7 @@ open InfoGeometry.Physics.SupergradedCuntzBdG
 open InfoGeometry.Physics.ChiralCausalCone
 open InfoGeometry.Physics.BogoliubovWeylChemicalPotential
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-! ## Affine superbracket in the chiral basis -/
 

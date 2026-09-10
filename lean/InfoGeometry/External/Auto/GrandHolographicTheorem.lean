@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The Grand Holographic Theorem
@@ -20,8 +21,8 @@ namespace GrandHolographicTheorem
 
 open Matrix
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-! ## Fivefold/golden kernel -/
 

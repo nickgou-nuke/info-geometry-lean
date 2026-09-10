@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesSpinAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!
@@ -22,7 +23,7 @@ open Matrix
 open InfoGeometry.Canonical.HestenesSpinAction
 
 abbrev SL2C := Matrix.SpecialLinearGroup (Fin 2) ℂ
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev WeylSpinor := Fin 2 → ℂ
 abbrev WeylPair := WeylSpinor × WeylSpinor
 

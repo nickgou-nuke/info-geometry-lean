@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordSourceWickBase
 
 /-!
@@ -70,7 +71,7 @@ open Matrix
 open SplitCliffordSourceWickBase
 
 /-- Local concrete matrix carrier for the finite seed. -/
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- The local nilpotent modular perturbation `Δ = 1 + N` in `M₂(ℝ)`. -/
 def DeltaM2 : M2R :=

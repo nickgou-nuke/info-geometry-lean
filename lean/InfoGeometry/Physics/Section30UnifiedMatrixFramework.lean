@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometryCore.Basic
 
 open InfoGeometryCore
@@ -28,7 +29,7 @@ namespace InfoGeometry.Physics.Section30UnifiedMatrixFramework
 open Matrix Complex
 
 /-- Complex `2 × 2` matrices. -/
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- First Pauli matrix. -/
 abbrev sigma1 := sigma1C

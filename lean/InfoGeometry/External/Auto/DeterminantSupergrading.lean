@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix
 
@@ -15,7 +16,7 @@ This file formalizes:
 
 noncomputable section
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Chiral grading on the doubled sheet basis: `ε = diag(1,-1)`. -/
 def chiralParity : M2R := !![1, 0; 0, -1]

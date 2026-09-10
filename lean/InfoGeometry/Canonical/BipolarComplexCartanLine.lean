@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarLogarithmicDerivationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
 
@@ -24,7 +25,7 @@ open InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
 open InfoGeometry.Canonical.BipolarLogarithmicDerivationBridge
 open InfoGeometry.Physics.ChiralCausalCone
 
-abbrev Matrix2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Matrix2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Trace-zero `2 × 2` complex matrices, the finite carrier underlying
 `sl₂(ℂ)` in this development. -/

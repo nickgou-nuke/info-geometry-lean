@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorPauliLubanskiMassiveWigner
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.OperatorPauliLubanskiWignerCapstone
@@ -19,7 +20,7 @@ open InfoGeometry.Canonical.OperatorPauliLubanskiMassiveWigner
 open InfoGeometry.Canonical.OperatorZornSpinCasimirLift
 open InfoGeometry.Optics.CircularPolarizationSuperconnectionBridge
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Massive finite Wigner branch: `W⁰ = 0`, `Wᵢ = mSᵢ`, `su(2)` closure,
 and the spin-half second Casimir. -/

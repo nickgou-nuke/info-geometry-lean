@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
 
 /-!
@@ -15,7 +16,7 @@ noncomputable section
 namespace InfoGeometry.Physics.GellMannParafermionSolder
 
 /-- Complex `3 × 3` matrices used as color-action coefficients. -/
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 
 /-- A color spinor with three color components and one singlet component. -/
 abbrev ColorSpinor4 (V : Type*) :=

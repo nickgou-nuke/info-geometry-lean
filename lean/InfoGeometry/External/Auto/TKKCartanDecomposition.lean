@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.TensorProduct.Basic
@@ -12,7 +13,7 @@ namespace TKKCartanDecomposition
 
 open scoped TensorProduct
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev M21C := Matrix (Fin 2) (Fin 1) ℂ
 
 /-! ## 1. 5-Graded TKK Closure Algebra -/

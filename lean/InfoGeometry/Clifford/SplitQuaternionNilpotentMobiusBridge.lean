@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitQuaternionNilpotentFlow
 
 namespace InfoGeometry.Clifford.SplitQuaternionNilpotentMobiusBridge
@@ -6,8 +7,8 @@ namespace InfoGeometry.Clifford.SplitQuaternionNilpotentMobiusBridge
 open InfoGeometry.Clifford
 open InfoGeometry.Clifford.SplitQuaternionNilpotentFlow
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def lowerParabolicMatrix (T : ℝ) : M2R :=
   !![(1 : ℝ), 0; -2 * T, 1]

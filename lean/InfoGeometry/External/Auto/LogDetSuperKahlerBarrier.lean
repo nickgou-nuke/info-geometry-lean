@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Log-det barrier and Super-Kähler information geometry
@@ -18,8 +19,8 @@ namespace LogDetSuperKahlerBarrier
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Diagonal positive chart for the Hermitian/biquaternion cone. -/
 def diagState (x y : ℝ) : M2R := !![x, 0; 0, y]

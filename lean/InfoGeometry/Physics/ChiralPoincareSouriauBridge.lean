@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Chiral supercharges, Poincaré momentum, and Souriau beta vector
@@ -26,7 +27,7 @@ namespace InfoGeometry.Physics.ChiralPoincareSouriauBridge
 open Matrix
 open scoped BigOperators
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Pauli σ₁. -/
 def σ1 : M2C := !![0, 1; 1, 0]

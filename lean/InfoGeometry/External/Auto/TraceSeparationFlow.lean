@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.KanCayley
 
 noncomputable section
@@ -8,7 +9,7 @@ open InfoGeometry.Canonical.Cayley
 
 namespace InfoGeometry.GrandUnification.TraceSeparation
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Traceful (scalar) sector in Pauli decomposition:
 `g ↦ (tr g / 2) · I`. -/

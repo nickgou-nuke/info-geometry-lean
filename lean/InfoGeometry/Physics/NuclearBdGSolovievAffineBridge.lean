@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearBdGTwoLevelExact
 import InfoGeometry.Physics.NuclearFiveGradeSolovievCommonCompression
 import InfoGeometry.Physics.SolovievQuasiparticlePhononEigenproblem
@@ -26,7 +27,7 @@ open InfoGeometry.Physics.NuclearBdGTwoLevelExact
 open InfoGeometry.Physics.NuclearFiveGradeSolovievCommonCompression
 open InfoGeometry.Physics.SolovievQPNMEigenproblem
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Scalar center of the two Soloviev channels. -/
 def solovievCenter (Eqp omega : ℝ) : ℝ :=

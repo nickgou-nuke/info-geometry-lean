@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometryCore.Basic
 
 open InfoGeometryCore
@@ -24,7 +25,7 @@ set_option linter.unnecessarySeqFocus false
 
 namespace InfoGeometry.Canonical.PauliBraidB3
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 @[simp] lemma I_sq : Complex.I ^ 2 = (-1 : ℂ) := by
   simp

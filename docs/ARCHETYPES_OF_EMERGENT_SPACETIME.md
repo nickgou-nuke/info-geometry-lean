@@ -519,6 +519,20 @@ Formalizing the bulk Adler-Bell-Jackiw (ABJ) chiral anomaly and its topological 
 * **Topological Integer Quantization:** The bulk Dirac index is unconditionally integer-quantized ($\operatorname{Index}(D) \in \mathbb{Z}$) via the boundary topological invariant.
   In Lean 4: [`AbjChiralCuntzHallBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/AbjChiralCuntzHallBridge.lean) and [`AbjChiralCuntzHallAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/AbjChiralCuntzHallAudit.lean) (`abj_hall_anomaly_inflow`, `dirac_index_is_integer`, `makeCertifiedAbjHallInflowSynthesis`).
 
+### 5.28 Chern-Simons Cuntz Boundary Pairing & Hodge-Laplacian Drazin Resolution
+Formalizing the canonical synthesis between the 3D boundary Chern-Simons symplectic potential and the fractal Cuntz-Cantor horizon under Hodge-Green Drazin gauge parameter resolution:
+* **Stokes Boundary Pairing with Chern-Simons 3-Form:** The boundary flux of the Chern-Simons 3-form $\theta_{\mathrm{CS}}$ matches the bulk instanton density $\operatorname{Tr}(F \wedge F)$:
+  $$\int_{\partial M} i^* \theta_{\mathrm{CS}} = \int_M d_3 \theta_{\mathrm{CS}} = \int_M \operatorname{Tr}(F \wedge F)$$
+* **Gauge Shift Invariance:** The boundary flux is invariant under arbitrary exact 2-form gauge shifts $\theta_{\mathrm{CS}} \mapsto \theta_{\mathrm{CS}} + d_2 \alpha$:
+  $$\int_{\partial M} i^*(\theta_{\mathrm{CS}} + d_2 \alpha) = \int_{\partial M} i^* \theta_{\mathrm{CS}}$$
+* **Cuntz Boundary State & Branch Decomposition:** On the fractal Cuntz horizon $\mathcal{O}_2$ with range projections $P_1 = S_1 S_1^*$ and $P_2 = S_2 S_2^*$ ($P_1 + P_2 = 1$), the boundary Chern-Simons observable decomposes into branch observables:
+  $$S_{\mathrm{CS}} = S_{\mathrm{CS}} P_1 + S_{\mathrm{CS}} P_2, \quad \tau(S_{\mathrm{CS}} P_1) + \tau(S_{\mathrm{CS}} P_2) = k \int_M \operatorname{Tr}(F \wedge F)$$
+* **Hodge-Green Operator Drazin Resolution:** For kinetic operator $L$ and Green operator $G$ on gauge parameters $\Omega^2$:
+  - Gauge ghost modes $\alpha \in \ker(L^k)$ are unconditionally annihilated: $G \alpha = 0$.
+  - On propagating physical modes (index 1), the Green operator inverts the Laplacian: $L(G(L \beta)) = L \beta$.
+  - Every gauge parameter splits uniquely into propagating and harmonic components via the Fitting decomposition: $\alpha = \alpha_{\mathrm{im}} + \alpha_{\mathrm{ker}}$.
+  In Lean 4: [`ChernSimonsCuntzBoundaryBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ChernSimonsCuntzBoundaryBridge.lean) and [`ChernSimonsCuntzBoundaryAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ChernSimonsCuntzBoundaryAudit.lean) (`chern_simons_stokes_pairing`, `chern_simons_gauge_shift_invariant`, `cs_branch_state_sum`, `hodge_green_annihilates_ghost`, `hodge_green_inverts_index_one`, `gauge_fitting_unique`, `makeCertifiedChernSimonsCuntzSynthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -563,6 +577,7 @@ Formalizing the bulk Adler-Bell-Jackiw (ABJ) chiral anomaly and its topological 
 | **Palatini Boundary Stokes Bridge** | Stokes Differential Complex / Boundary Flux / Cauchy Splitting | `palatini_stokes_pairing`, `on_shell_flux_conservation`, `certified_palatini_stokes_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Drazin Spectral Fitting & Ghost Isolator** | General Ring $R$ / Module $M$ / Drazin Projection / BRST Ghost | `drazin_pow_reduction`, `drazin_fitting_trivial_intersection`, `makeCertifiedDrazinFittingSynthesis` | **Kernel-Checked (0 gaps)** |
 | **ABJ Chiral & Boundary Hall Inflow** | Bulk Chiral Current / Boundary Hall $c_1 \in \mathbb{Z}$ | `abj_hall_anomaly_inflow`, `dirac_index_is_integer` | **Kernel-Checked (0 gaps)** |
+| **Chern-Simons Cuntz Boundary & Drazin** | Stokes Boundary Pairing / Cuntz $\mathcal{O}_2$ / Drazin $G$ | `chern_simons_stokes_pairing`, `cs_branch_state_sum`, `hodge_green_inverts_index_one` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

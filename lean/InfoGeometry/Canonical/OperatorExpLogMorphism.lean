@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularTensorInduction
 
 /-!
@@ -15,7 +16,7 @@ namespace InfoGeometry.Canonical.OperatorExpLogMorphism
 open Matrix
 open InfoGeometry.Canonical.ModularTensorInduction
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Left spectral log-coordinate on the `expKExact` image. -/
 noncomputable def opLogLeft (A : M2R) : ℝ := Real.log (A 0 0)

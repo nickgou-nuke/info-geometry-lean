@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Krein.TomitaMatrixAtom
@@ -42,7 +43,7 @@ namespace InfoGeometry.Krein.TomitaMatrixAtom
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Tomita/Krein reflection: swaps the two real components. -/
 def J : M2R :=

@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.OpticalAndreevSpinor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.ProjectiveKappaKleinMobius
 
 /-!
@@ -19,7 +20,7 @@ namespace VacuumJonesKleinBirefringence
 open Matrix Complex
 open InfoGeometry.GrandUnification.OpticalAndreevSpinor
 open ProjectiveKappaKleinMobius
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Jones-form vacuum dielectric tensor:
 diagonal anisotropy plus antisymmetric optical-activity entry. -/

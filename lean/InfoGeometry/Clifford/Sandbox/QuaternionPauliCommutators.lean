@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Standard Quaternion Pauli Commutators and Comparison with Split-Quaternions
@@ -25,7 +26,7 @@ namespace InfoGeometry.Clifford.Sandbox.QuaternionPauliCommutators
 
 noncomputable section
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Standard quaternion basis unit `I = -i σ_x`. -/
 def qI : Mat2C :=

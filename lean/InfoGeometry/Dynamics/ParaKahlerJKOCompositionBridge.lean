@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.ParaKahlerJKORicciFlowBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Dynamics.WassersteinProximalBridge
 
 noncomputable section
@@ -9,7 +10,7 @@ open Matrix
 open InfoGeometry.Dynamics.ParaKahlerJKORicciFlow
 open InfoGeometry.Dynamics.WassersteinProximalBridge
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-! A coefficientwise lift from the real finite shear carrier to the complex one. -/
 def complexify (A : M2R) : M2C := fun i j => (A i j : ℂ)

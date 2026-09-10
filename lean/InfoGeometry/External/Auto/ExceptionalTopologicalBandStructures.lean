@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exceptional topological band structures
@@ -21,7 +22,7 @@ namespace ExceptionalTopologicalBandStructures
 
 open Matrix
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-! ## Jordan exceptional point -/
 

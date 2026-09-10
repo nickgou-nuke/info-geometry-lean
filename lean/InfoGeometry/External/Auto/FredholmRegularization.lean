@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Fredholm regularization of the modular flow
@@ -19,7 +20,7 @@ namespace FredholmRegularization
 
 open Matrix
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Scalar Fredholm/Cayley regularization. -/
 def fredholmScalar (Δ : ℂ) : ℂ := (Δ - 1) / (Δ + 1)

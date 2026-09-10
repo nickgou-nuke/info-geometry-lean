@@ -28,6 +28,9 @@ import InfoGeometry.Analysis.BipolarLogLiftDerivativeBridge
 import InfoGeometry.Analysis.BipolarNativeExpCoveringBridge
 import InfoGeometry.Analysis.BipolarSignedLogConventionBridge
 import InfoGeometry.Analysis.BipolarSimplePoleResidues
+import InfoGeometry.Analysis.SimplePoleReflection
+import InfoGeometry.Analysis.PairedHeatTrace
+import InfoGeometry.Analysis.CoerciveBarrierControl
 import InfoGeometry.Analysis.BipolarMetricCompletion
 import InfoGeometry.Analysis.BipolarQuasiconformalDilatation
 import InfoGeometry.Analysis.CliffordWaveletNativeL2

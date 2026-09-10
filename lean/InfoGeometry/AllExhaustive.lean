@@ -2532,6 +2532,8 @@ import InfoGeometry.Canonical.ChiralDolbeaultHodgeBridge
 import InfoGeometry.Canonical.ChiralDolbeaultHodgeAudit
 import InfoGeometry.Canonical.TwoBoundaryChiralCurrentBridge
 import InfoGeometry.Canonical.TwoBoundaryChiralCurrentAudit
+import InfoGeometry.Canonical.ChiralBoundarySymplecticBridge
+import InfoGeometry.Canonical.ChiralBoundarySymplecticAudit
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyCalibration

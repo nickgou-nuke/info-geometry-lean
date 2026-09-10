@@ -14,6 +14,8 @@ fiber sectors, and transport/monodromy data.
 
 noncomputable section
 
+namespace ChiralTwistedFibration
+
 abbrev R2 := ℝ × ℝ
 
 def T (p : R2) : R2 := (p.1, p.2 + 1)
@@ -360,3 +362,5 @@ theorem two_sheeted_complex_emergence :
     emergentComplex * emergentComplex = -(1 : Matrix (Fin 2) (Fin 2) ℝ) := by
   exact ⟨sheetSwap_sq, sheetGrading_sq, sheetSwap_grading_anticomm,
     emergentComplex_eq_eMinus, emergentComplex_sq⟩
+
+end ChiralTwistedFibration

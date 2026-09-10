@@ -4,6 +4,8 @@ open Real
 
 noncomputable section
 
+namespace FibAnyonThm2
+
 /-! Theorem 2: F-Matrix -/
 
 def φ : ℝ := (1 + Real.sqrt 5) / 2
@@ -54,5 +56,7 @@ theorem F_det : F.det = -1 := by
   field_simp [φ_ne_zero, sqrt_φ_ne_zero]
   simp [sqrt_φ_sq]
   nlinarith [golden]
+
+end FibAnyonThm2
 
 end

@@ -6,6 +6,7 @@ on:
     paths:
       - 'lean/InfoGeometry/Krein/TransitionWeakValue*.lean'
       - 'lean/InfoGeometry/Canonical/WeakValuePoleBounds.lean'
+      - 'tools/quality/check_weak_value_reconstruction.py'
       - '.github/workflows/weak-value-reconstruction-narrow.yml'
   workflow_dispatch:
 
@@ -23,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          submodules: true
+          submodules: false
           persist-credentials: false
       - name: Install elan without changing the pinned toolchain
         shell: bash
@@ -31,49 +32,30 @@ jobs:
           set -euo pipefail
           curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Record compiler and check exclusive workspace
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            ~/.cache/mathlib
+          key: ${{ runner.os }}-weak-readout-pinned-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+      - name: Record pinned compiler
         shell: bash
         run: |
           set -euo pipefail
           cat lean-toolchain
           lean --version
-          if pgrep -x lean || pgrep -x lake; then
-            echo 'Unexpected active compiler in this runner workspace.'
-            exit 1
-          fi
-      - uses: actions/cache@v4
-        with:
-          path: |
-            .lake/packages
-            .lake/build
-          key: ${{ runner.os }}-weak-readout-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.lean') }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-weak-readout-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.lean') }}-
-      - name: Fetch the existing Mathlib cache (no lake update)
+      - name: Compile byte-identical owner closure and audit axioms
         shell: bash
         run: |
           set -euo pipefail
-          lake exe cache get
-          git diff --exit-code -- lean-toolchain lake-manifest.json lakefile.lean
-      - name: Build only the focused owner closure under the repository lock
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Krein.TransitionWeakValueAudit
-      - name: Print and inspect axiom dependencies
-        shell: bash
-        run: |
-          set -euo pipefail
-          lake env lean lean/InfoGeometry/Krein/TransitionWeakValueAudit.lean 2>&1 | tee weak-value-axioms.log
-          if grep -q 'sorryAx' weak-value-axioms.log; then
-            echo 'Unresolved proof found in the focused axiom closure.'
-            exit 1
-          fi
-          git diff --exit-code -- lean-toolchain lake-manifest.json lakefile.lean
-      - name: Preserve the axiom check output
+          python3 tools/quality/check_weak_value_reconstruction.py 2>&1 | tee weak-value-build.log
+      - name: Preserve compiler and source evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: weak-value-reconstruction-axioms
-          path: weak-value-axioms.log
+          name: weak-value-reconstruction-evidence
+          path: |
+            weak-value-build.log
+            weak-value-axioms.log
+            weak-value-source-hashes.json
           if-no-files-found: ignore

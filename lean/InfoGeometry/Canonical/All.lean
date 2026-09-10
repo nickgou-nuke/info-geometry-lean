@@ -739,6 +739,7 @@ import InfoGeometry.Canonical.CuntzKriegerMarkovBridge
 import InfoGeometry.Canonical.MajoranaBraidingCliffordBridge
 import InfoGeometry.Canonical.ChiralCuntzSuperchargeBridge
 import InfoGeometry.Canonical.ChiralCuntzFockSpaceBridge
+import InfoGeometry.Canonical.ChiralCuntzAnomalyPartitionBridge
 import InfoGeometry.Canonical.TemperleyLiebJonesBridge
 import InfoGeometry.Canonical.KitaevQuantumDoubleGSDBridge
 import InfoGeometry.Canonical.QuantumHallSkyrmionBridge

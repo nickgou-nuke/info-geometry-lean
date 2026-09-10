@@ -5,6 +5,7 @@ noncomputable section
 
 open Matrix Complex
 open InfoGeometry.GrandUnification.KANTraceSectorization
+open InfoGeometry.Canonical.Cayley
 
 namespace InfoGeometry.GrandUnification.BogoliubovFrameTransport
 

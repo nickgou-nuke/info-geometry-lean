@@ -6,6 +6,7 @@ import InfoGeometry.External.Auto.KreinDeterminantAnalyticity
 noncomputable section
 
 open Matrix
+open InfoGeometry.Canonical.Cayley
 
 namespace InfoGeometry.Canonical.KANLogDetUnification
 

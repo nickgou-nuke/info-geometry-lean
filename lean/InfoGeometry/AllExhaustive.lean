@@ -2522,6 +2522,8 @@ import InfoGeometry.Canonical.PoincareDualityBridge
 import InfoGeometry.Canonical.PoincareDualityAudit
 import InfoGeometry.Canonical.LefschetzSL2TriadBridge
 import InfoGeometry.Canonical.LefschetzSL2TriadAudit
+import InfoGeometry.Canonical.LefschetzPrimitiveDecompBridge
+import InfoGeometry.Canonical.LefschetzPrimitiveDecompAudit
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyCalibration

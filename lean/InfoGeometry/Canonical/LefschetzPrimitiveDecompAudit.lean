@@ -1,0 +1,22 @@
+import InfoGeometry.Canonical.LefschetzPrimitiveDecompBridge
+
+/-!
+# Axiomatic Audit of LefschetzPrimitiveDecompBridge
+
+This audit checks the foundational axioms of LefschetzPrimitiveDecompBridge.
+Expected axioms: [propext, Classical.choice, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.LefschetzPrimitiveDecomp.certified_lefschetz_primitive_decomp_synthesis
+#print axioms InfoGeometry.Canonical.LefschetzPrimitiveDecomp.LefschetzPrimitiveProjector.decomp_sum
+#print axioms InfoGeometry.Canonical.LefschetzPrimitiveDecomp.LefschetzPrimitiveProjector.P_prim_is_primitive
+#print axioms InfoGeometry.Canonical.LefschetzPrimitiveDecomp.LefschetzPrimitiveProjector.P_prim_on_primitive
+#print axioms InfoGeometry.Canonical.LefschetzPrimitiveDecomp.LefschetzPrimitiveProjector.P_prim_idempotent
+#print axioms InfoGeometry.Canonical.LefschetzPrimitiveDecomp.LefschetzPrimitiveProjector.P_prim_orthogonal_L
+#print axioms InfoGeometry.Canonical.LefschetzPrimitiveDecomp.LefschetzPrimitiveProjector.decomp_orthogonal
+#print axioms InfoGeometry.Canonical.LefschetzPrimitiveDecomp.LefschetzPrimitiveProjector.pythagorean_energy
+#print axioms InfoGeometry.Canonical.LefschetzPrimitiveDecomp.LefschetzPrimitiveProjector.primitive_energy_le
+#print axioms InfoGeometry.Canonical.LefschetzPrimitiveDecomp.LefschetzPrimitiveProjector.comm_laplacian_P_L
+#print axioms InfoGeometry.Canonical.LefschetzPrimitiveDecomp.LefschetzPrimitiveProjector.comm_laplacian_P_prim
+#print axioms InfoGeometry.Canonical.LefschetzPrimitiveDecomp.LefschetzPrimitiveProjector.P_prim_preserves_harmonic
+#print axioms InfoGeometry.Canonical.LefschetzPrimitiveDecomp.LefschetzPrimitiveProjector.P_L_preserves_harmonic

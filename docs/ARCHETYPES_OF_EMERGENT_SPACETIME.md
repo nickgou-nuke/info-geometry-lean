@@ -440,6 +440,18 @@ Formalizing the Penrose twistor correspondence, incidence geometry, and the emer
 * **Positive-Definite Diagonal Pairing:** The canonical twistor pairing is symmetric and positive semi-definite on the diagonal ($\langle Z, Z \rangle \ge 0$).
   In Lean 4: [`TwistorRealSliceBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/TwistorRealSliceBridge.lean) (`incident_neutral_form_real`, `twistor_null_separation`, `twistor_chiral_split`, `twistor_holographic_transfer`, `twistorPairing_self_nonneg`, `twistorPairing_symm`, `certified_twistor_real_slice_synthesis`).
 
+### 5.21 The Chiral Dolbeault-Hodge Splitting & Laplacian
+Formalizing the chiral Dolbeault-Hodge complex, the holomorphic derivative $\partial_\tau$, the adjoint antiholomorphic codifferential $\bar{\partial}_\tau^*$, and the chiral Hodge-Laplacian $\Delta_\tau = \partial_\tau \bar{\partial}_\tau^* + \bar{\partial}_\tau^* \partial_\tau$:
+* **Chiral Adjointness & Nilpotency:** The holomorphic differential and antiholomorphic codifferential satisfy mutual adjointness $\langle \partial_\tau u, v \rangle = \langle u, \bar{\partial}_\tau^* v \rangle$ and square to zero $\partial_\tau^2 = 0, (\bar{\partial}_\tau^*)^2 = 0$.
+* **Three-Way Orthogonal Splitting:** Exact holomorphic vectors ($\operatorname{im} \partial_\tau$), coexact antiholomorphic vectors ($\operatorname{im} \bar{\partial}_\tau^*$), and harmonic vectors ($\ker \partial_\tau \cap \ker \bar{\partial}_\tau^*$) are mutually pairwise orthogonal in $L^2$:
+  $$\langle \partial_\tau \alpha, \bar{\partial}_\tau^* \beta \rangle = 0, \quad \langle \partial_\tau \alpha, h \rangle = 0, \quad \langle \bar{\partial}_\tau^* \beta, h \rangle = 0$$
+* **Self-Adjointness & Positive Semi-Definiteness:** The chiral Hodge-Laplacian is formally self-adjoint $\langle \Delta_\tau x, y \rangle = \langle x, \Delta_\tau y \rangle$ and positive semi-definite:
+  $$\langle x, \Delta_\tau x \rangle = \|\bar{\partial}_\tau^* x\|^2 + \|\partial_\tau x\|^2 \ge 0$$
+* **Harmonic Null Energy Equivalence:** A vector $x$ has zero Laplacian energy $\langle x, \Delta_\tau x \rangle = 0$ if and only if $x$ is harmonic ($x \in \ker \partial_\tau \cap \ker \bar{\partial}_\tau^*$), and $\Delta_\tau h = 0$ for all harmonic $h$.
+* **Chiral Hodge Pythagorean Energy Conservation:** Any vector decomposed into its chiral components $\omega = \omega_{\mathrm{exact}} + \omega_{\mathrm{coexact}} + \gamma_h$ satisfies exact Pythagorean $L^2$ energy conservation:
+  $$\|\omega\|^2 = \|\omega_{\mathrm{exact}}\|^2 + \|\omega_{\mathrm{coexact}}\|^2 + \|\gamma_h\|^2$$
+  In Lean 4: [`ChiralDolbeaultHodgeBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ChiralDolbeaultHodgeBridge.lean) (`adjoint_d_bar`, `exact_orthogonal_coexact`, `exact_orthogonal_harmonic`, `coexact_orthogonal_harmonic`, `laplacian_self_adjoint`, `laplacian_positive_semidefinite`, `harmonic_iff_laplacian_inner_zero`, `laplacian_annihilates_harmonic`, `chiral_hodge_energy_conservation`, `certified_chiral_dolbeault_hodge_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -477,6 +489,7 @@ Formalizing the Penrose twistor correspondence, incidence geometry, and the emer
 | **Lefschetz Primitive Projector & Foliation** | Primitive Projector $P_{\mathrm{prim}}$ / Orthogonal Foliation | `decomp_sum`, `pythagorean_energy`, `decomp_orthogonal` | **Kernel-Checked (0 gaps)** |
 | **Hodge-Riemann Bilinear & Polarization** | Polarized Forms $Q_{\mathrm{prim}}, Q_L$ / HR I & II Positivity | `bilinear_decomp`, `HR_one_primitive`, `HR_two_positivity` | **Kernel-Checked (0 gaps)** |
 | **Penrose Twistor Real Slice** | Twistor Incidence / Real Slice / Null Separation | `incident_neutral_form_real`, `twistor_null_separation` | **Kernel-Checked (0 gaps)** |
+| **Chiral Dolbeault-Hodge & Laplacian** | Chiral Complex $(E, \partial_\tau, \bar{\partial}_\tau^*)$ / $\Delta_\tau$ | `laplacian_self_adjoint`, `chiral_hodge_energy_conservation` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

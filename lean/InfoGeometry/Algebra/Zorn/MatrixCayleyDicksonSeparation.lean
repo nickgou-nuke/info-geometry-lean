@@ -1,5 +1,6 @@
 import InfoGeometry.Algebra.ZornMatrix
 import InfoGeometry.Algebra.ZornMatrixRealModule
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 import Mathlib.LinearAlgebra.Dimension.Constructions
@@ -27,7 +28,7 @@ namespace InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation
 open InfoGeometry.Algebra
 
 abbrev RealCore := Matrix (Fin 2) (Fin 2) ℝ
-abbrev ComplexMatrix := Matrix (Fin 2) (Fin 2) ℂ
+abbrev ComplexMatrix := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev SplitCarrier := ZornMatrix ℝ
 
 /-- The fixed-axis copy of `M₂(ℝ)` in the native Zorn algebra. -/

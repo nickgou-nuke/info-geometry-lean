@@ -2,6 +2,7 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.MD001MatrixQuantumGeometry
 import InfoGeometry.Physics.Section34StrengthenedFormalism
 
@@ -31,7 +32,7 @@ open InfoGeometry.Physics.MD001MatrixQuantumGeometry
 open InfoGeometry.Physics.Section34StrengthenedFormalism
 open InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Hermitian Pauli readout of a spacetime point. -/
 def hermitianSpacetimePoint (t x y z : ℂ) : Mat2 :=

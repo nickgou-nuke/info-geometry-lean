@@ -1,4 +1,9 @@
 import InfoGeometry.AQFT.Pin55Pullback
+import InfoGeometry.Analysis.SimplePoleReflection
+import InfoGeometry.Analysis.PairedHeatTrace
+import InfoGeometry.Analysis.CoerciveBarrierControl
+import InfoGeometry.OperatorAlgebra.PartnerEigenspaces
+import InfoGeometry.OperatorAlgebra.KreinCouplingControl
 import InfoGeometry.Probability.FiniteLogTransport
 import InfoGeometry.Volume.MajoranaPfaffianFour
 import InfoGeometry.Streaming.All

@@ -1,4 +1,5 @@
 import Mathlib.Data.Fintype.Basic
+import InfoGeometry.Canonical.SplitOctonionKleinFourTriality
 import Mathlib.GroupTheory.Perm.Sign
 import InfoGeometry.Geometry.KleinFourTag
 
@@ -15,7 +16,6 @@ action on the grading sector.
 -/
 
 -- The Klein‑four group used throughout the file
-abbrev KleinFour := InfoGeometry.Geometry.KleinFourTag.Tag
 
 /-- The three non‑zero grades of `KleinFour`. -/
 inductive NonZeroGrade

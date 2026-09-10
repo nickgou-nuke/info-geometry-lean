@@ -182,7 +182,7 @@ theorem gradeToFin_some_iff {g : KleinFour} {i : Fin 3} : gradeToFin g = some i 
 
 /-- Convert an additive equivalence permutation of `KleinFour` into a permutation on the three nonzero grades. -/
 
-def gradeAutomorphismPerm (σ : KleinFour ≃+ KleinFour) : Equiv.Perm (Fin 3) where
+def pauliGradeAutomorphismPerm (σ : KleinFour ≃+ KleinFour) : Equiv.Perm (Fin 3) where
   toFun := fun i =>
     match gradeToFin (σ (finToGrade i)) with
     | some j => j

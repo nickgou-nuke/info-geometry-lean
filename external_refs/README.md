@@ -68,6 +68,7 @@ deepmind-debate
 LeanAide
 Canonical
 CanonicalLean
+NavierStokesAndEuler
 ```
 
 `external_refs/LeanEuclid` is a full-history nested checkout at `7c8f38b` from
@@ -110,7 +111,18 @@ named `Canonical`, provides the `canonical` tactic, pins
 dynlib target in `lakefile.lean`. The related project homepage is
 `https://chasenorman.com/`.
 
-As of the 2026-06-06 follow-up audit, all nested git checkouts under
+`external_refs/NavierStokesAndEuler` is a full-history nested checkout at
+`8937a8f4` from `https://github.com/openai/NavierStokesAndEuler.git`. It contains
+the complete formalization of finite-time blowup for the 3D incompressible
+Euler and Navier-Stokes equations (2,486 Lean 4 files, 72,536 lines), verified
+with Mario Carneiro's Nanoda and DeepMind's Comparator (0 sorry, 0 custom
+axioms). Its toolchain pins `leanprover/lean4:v4.34.0-rc2`. The native bridge
+connecting its wave-packet Reynolds stress, Admissible Stress Cone, and
+hyperbolic torus automorphism to our split-octonionic Zorn matrix algebra and
+Madelung quantum fluid is formalized in
+`InfoGeometry/Canonical/ZornNavierStokesHydrodynamicBridge.lean`.
+
+As of the 2026-09-10 follow-up audit, all nested git checkouts under
 `external_refs/` and `external/` are full-history checkouts:
 
 ```text

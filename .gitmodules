@@ -84,3 +84,8 @@
 	path = QuantumLib
 	url = https://github.com/inQWIRE/QuantumLib.git
 	ignore = dirty
+
+[submodule "external_refs/NavierStokesAndEuler"]
+	path = external_refs/NavierStokesAndEuler
+	url = https://github.com/openai/NavierStokesAndEuler.git
+	ignore = dirty

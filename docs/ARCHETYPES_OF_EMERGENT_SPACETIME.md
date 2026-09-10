@@ -452,6 +452,17 @@ Formalizing the chiral Dolbeault-Hodge complex, the holomorphic derivative $\par
   $$\|\omega\|^2 = \|\omega_{\mathrm{exact}}\|^2 + \|\omega_{\mathrm{coexact}}\|^2 + \|\gamma_h\|^2$$
   In Lean 4: [`ChiralDolbeaultHodgeBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ChiralDolbeaultHodgeBridge.lean) (`adjoint_d_bar`, `exact_orthogonal_coexact`, `exact_orthogonal_harmonic`, `coexact_orthogonal_harmonic`, `laplacian_self_adjoint`, `laplacian_positive_semidefinite`, `harmonic_iff_laplacian_inner_zero`, `laplacian_annihilates_harmonic`, `chiral_hodge_energy_conservation`, `certified_chiral_dolbeault_hodge_synthesis`).
 
+### 5.22 The Two-Boundary Weak Value & Chiral Current Pairing
+Formalizing the Aharonov-Albert-Vaidman two-boundary quantum state architecture, oblique transition projectors, and chiral current weak value observables:
+* **Two-Boundary State Pair:** A pair $(\psi_i, \psi_f) \in E \times E$ with non-orthogonal overlap $\langle \psi_f, \psi_i \rangle \ne 0$ defines a pre- and post-selected boundary condition.
+* **Oblique Transition Projector:** The rank-one transition operator $T(x) = \frac{\langle \psi_f, x \rangle}{\langle \psi_f, \psi_i \rangle} \psi_i$ is an idempotent linear projector ($T^2 = T$) fixing the initial state $T(\psi_i) = \psi_i$.
+* **Weak Value as Compression Eigenvalue:** For any linear operator $A : E \to E$, the weak value $W(A) = \frac{\langle \psi_f, A \psi_i \rangle}{\langle \psi_f, \psi_i \rangle}$ is the compression eigenvalue of $A$ under $T$:
+  $$T(A \psi_i) = W(A) \cdot \psi_i$$
+* **Spectral and Normalization Properties:** $W(\mathrm{id}) = 1$, $W(A + B) = W(A) + W(B)$, $W(c A) = c W(A)$, and if $\psi_i$ is an eigenvector $A \psi_i = c \psi_i$, then $W(A) = c$.
+* **Chiral Current Decomposition & Boundary Selection:** For a chiral current splitting $J = J_{\mathrm{hol}} + J_{\mathrm{antihol}}$, the weak value satisfies additivity $W(J) = W(J_{\mathrm{hol}}) + W(J_{\mathrm{antihol}})$. If the past boundary is purely holomorphic ($J_{\mathrm{antihol}} \psi_i = 0$), then $W(J) = W(J_{\mathrm{hol}})$; dually, if the future boundary is orthogonal to $J_{\mathrm{hol}} \psi_i$, then $W(J) = W(J_{\mathrm{antihol}})$.
+* **Cauchy-Schwarz & Anomalous Amplification Bounds:** The weak value numerator obeys $|W(A)| \cdot |\langle \psi_f, \psi_i \rangle| \le \|\psi_f\| \cdot \|A \psi_i\|$, and when the overlap is small ($|\langle \psi_f, \psi_i \rangle| \le \epsilon$), the weak value magnitude is bounded below by $\frac{|\langle \psi_f, A \psi_i \rangle|}{\epsilon}$.
+  In Lean 4: [`TwoBoundaryChiralCurrentBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/TwoBoundaryChiralCurrentBridge.lean) (`transitionProjector_fixes_initial`, `transitionProjector_idempotent`, `transitionProjector_weak_eigenvalue`, `weakValue_id`, `weakValue_add`, `weakValue_smul`, `weakValue_eigenvalue`, `weakValue_totalCurrent`, `weakValue_holomorphic_boundary`, `weakValue_antiholomorphic_boundary`, `weakValue_cauchy_schwarz`, `weakValue_amplification`, `certified_two_boundary_chiral_current_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -490,6 +501,7 @@ Formalizing the chiral Dolbeault-Hodge complex, the holomorphic derivative $\par
 | **Hodge-Riemann Bilinear & Polarization** | Polarized Forms $Q_{\mathrm{prim}}, Q_L$ / HR I & II Positivity | `bilinear_decomp`, `HR_one_primitive`, `HR_two_positivity` | **Kernel-Checked (0 gaps)** |
 | **Penrose Twistor Real Slice** | Twistor Incidence / Real Slice / Null Separation | `incident_neutral_form_real`, `twistor_null_separation` | **Kernel-Checked (0 gaps)** |
 | **Chiral Dolbeault-Hodge & Laplacian** | Chiral Complex $(E, \partial_\tau, \bar{\partial}_\tau^*)$ / $\Delta_\tau$ | `laplacian_self_adjoint`, `chiral_hodge_energy_conservation` | **Kernel-Checked (0 gaps)** |
+| **Two-Boundary Chiral Current** | Two-Boundary Pair $(\psi_i, \psi_f)$ / Projector $T$ / Chiral $J$ | `transitionProjector_weak_eigenvalue`, `weakValue_totalCurrent` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

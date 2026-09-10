@@ -2,12 +2,13 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 
 namespace InfoGeometry.Canonical.TwoSheetOperatorCoordinates
 
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 abbrev M6C := Matrix (Fin 2 × Fin 3) (Fin 2 × Fin 3) ℂ
 
 abbrev OperatorBlocks := M3C × M3C × M3C × M3C

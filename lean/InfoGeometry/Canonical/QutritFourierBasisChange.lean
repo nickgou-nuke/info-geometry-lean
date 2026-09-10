@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Canonical.SixStateSpectralBridge
 import InfoGeometry.Topology.AharonovBohmConcreteVortex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Qutrit Fourier basis change
@@ -21,7 +22,7 @@ open InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 open InfoGeometry.Canonical.SixStateSpectralBridge
 open InfoGeometry.Topology.Parafermion
 
-abbrev QutritMatrix := Matrix (Fin 3) (Fin 3) ℂ
+abbrev QutritMatrix := InfoGeometry.Algebra.FiniteSpin.QutritMatrix
 
 /-- The unnormalized qutrit Fourier matrix, with spectral columns indexed by `b`. -/
 def qutritFourierRaw : QutritMatrix :=

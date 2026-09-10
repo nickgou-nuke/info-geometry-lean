@@ -2536,6 +2536,8 @@ import InfoGeometry.Canonical.ChiralBoundarySymplecticBridge
 import InfoGeometry.Canonical.ChiralBoundarySymplecticAudit
 import InfoGeometry.Canonical.PalatiniBoundaryStokesBridge
 import InfoGeometry.Canonical.PalatiniBoundaryStokesAudit
+import InfoGeometry.Canonical.DrazinSpectralFittingBridge
+import InfoGeometry.Canonical.DrazinSpectralFittingAudit
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyCalibration

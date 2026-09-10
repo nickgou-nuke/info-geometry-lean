@@ -1,5 +1,6 @@
 import InfoGeometry.Algebraic.JordanCliffordLieSplit
 import InfoGeometry.Canonical.QutritGellMannOperatorBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Qutrit Lie--Jordan coordinate layer
@@ -17,7 +18,7 @@ namespace InfoGeometry.Canonical.QutritLieJordanCoordinateLayer
 open Matrix
 open InfoGeometry.Canonical.QutritGellMannOperatorBasis
 
-abbrev QutritMatrix := Matrix (Fin 3) (Fin 3) ℂ
+abbrev QutritMatrix := InfoGeometry.Algebra.FiniteSpin.QutritMatrix
 
 theorem qutrit_mul_jordan_lie_split (A B : QutritMatrix) :
     A * B =

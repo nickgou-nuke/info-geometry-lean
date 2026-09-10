@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Electrostatic band shifts are not lapse rescalings or BdG charge shifts
@@ -15,7 +16,7 @@ noncomputable section
 
 open scoped ComplexConjugate
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def hamiltonian (b m : ℝ) (d : ℂ) : Mat2 :=
   !![((b + m : ℝ) : ℂ), d; conj d, ((b - m : ℝ) : ℂ)]

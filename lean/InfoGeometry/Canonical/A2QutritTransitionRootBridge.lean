@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Canonical.A2InsideD5RootSubsystem
 import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The `A₂` transition-root realization on the qutrit carrier
@@ -17,7 +18,7 @@ namespace InfoGeometry.Canonical.A2QutritTransitionRootBridge
 open Matrix
 open InfoGeometry.Canonical.A2InsideD5RootSubsystem
 
-abbrev QutritMatrix := Matrix (Fin 3) (Fin 3) ℂ
+abbrev QutritMatrix := InfoGeometry.Algebra.FiniteSpin.QutritMatrix
 
 /-- The qutrit transition matrix attached to an ordered pair of distinct levels. -/
 def transitionMatrix (r : A2Root) : QutritMatrix :=

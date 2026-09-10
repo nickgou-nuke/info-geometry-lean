@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.QutritGellMannOperatorBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The qutrit quadratic Gell--Mann Casimir
@@ -19,7 +20,7 @@ open Matrix
 open InfoGeometry.Physics.GellMannSU3
 open InfoGeometry.Canonical.QutritGellMannOperatorBasis
 
-abbrev QutritMatrix := Matrix (Fin 3) (Fin 3) ℂ
+abbrev QutritMatrix := InfoGeometry.Algebra.FiniteSpin.QutritMatrix
 
 def gellMannTracelessFamily : Fin 8 → QutritMatrix :=
   ![gl1, gl2, gl3, gl4, gl5, gl6, gl7, gl8]

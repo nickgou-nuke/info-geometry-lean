@@ -1,5 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Permutation
 import InfoGeometry.Canonical.A2QutritTransitionRootBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Weyl transport of the qutrit `A₂` transition roots
@@ -17,7 +18,7 @@ open Matrix
 open InfoGeometry.Canonical.A2InsideD5RootSubsystem
 open InfoGeometry.Canonical.A2QutritTransitionRootBridge
 
-abbrev QutritMatrix := Matrix (Fin 3) (Fin 3) ℂ
+abbrev QutritMatrix := InfoGeometry.Algebra.FiniteSpin.QutritMatrix
 
 abbrev weylMatrix (σ : Equiv.Perm (Fin 3)) : QutritMatrix :=
   σ⁻¹.permMatrix ℂ

@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.QutritGellMannCasimir
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Explicit qutrit Gell--Mann Fierz completeness
@@ -18,7 +19,7 @@ open Matrix
 open InfoGeometry.Physics.GellMannSU3
 open InfoGeometry.Canonical.QutritGellMannCasimir
 
-abbrev QutritMatrix := Matrix (Fin 3) (Fin 3) ℂ
+abbrev QutritMatrix := InfoGeometry.Algebra.FiniteSpin.QutritMatrix
 
 theorem standard_gellMann_fierz (i j k l : Fin 3) :
     ∑ a : Fin 8,

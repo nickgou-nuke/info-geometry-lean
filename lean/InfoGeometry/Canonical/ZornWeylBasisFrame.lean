@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.PauliQuaternionSplitComparison
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The two finite Weyl frames behind the Zorn--Weyl construction
@@ -21,7 +22,7 @@ open Matrix
 open scoped Matrix
 open InfoGeometry.Algebra.PauliQuaternionSplitComparison
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- The three ordinary Pauli matrices. -/
 def pauli : Fin 3 → M2C

@@ -1,5 +1,6 @@
 import InfoGeometry.Physics.ThreeColorSL3MatrixConjugation
 import InfoGeometry.Physics.GellMannSU3
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Three-color Gell-Mann / `SL₃` bridge
@@ -18,7 +19,7 @@ open Matrix
 open InfoGeometry.Physics.GellMannSU3
 open InfoGeometry.Physics.ThreeColorSL3MatrixConjugation
 
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 abbrev SL3C := Matrix.SpecialLinearGroup (Fin 3) ℂ
 
 theorem sl3ConjAct_gl1_gl2_commutator (g : SL3C) :

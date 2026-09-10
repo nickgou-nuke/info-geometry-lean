@@ -4,6 +4,7 @@ import InfoGeometry.External.Auto.KanCayley
 noncomputable section
 
 open Matrix Complex
+open InfoGeometry.Canonical.Cayley
 
 namespace InfoGeometry.GrandUnification.TraceSeparation
 

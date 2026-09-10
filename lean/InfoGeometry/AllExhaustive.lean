@@ -2500,6 +2500,7 @@ import InfoGeometry.Canonical.ChiralCuntzApollonianCapstone
 import InfoGeometry.Canonical.ChiralCuntzDiracCrystalBridge
 import InfoGeometry.Canonical.ChiralCuntzFockSpaceBridge
 import InfoGeometry.Canonical.ChiralCuntzSuperchargeBridge
+import InfoGeometry.Canonical.ChiralCuntzAnomalyPartitionBridge
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyCalibration

@@ -1,0 +1,23 @@
+import InfoGeometry.Canonical.ChiralCuntzAnomalyPartitionBridge
+
+open InfoGeometry.Canonical.ChiralCuntzAnomalyPartitionBridge
+
+#print axioms chirality
+#print axioms Q_plus_mul_Q_minus
+#print axioms Q_minus_mul_Q_plus
+#print axioms chirality_eq_commutator
+#print axioms chirality_sq
+#print axioms chirality_anticomm_Q_plus
+#print axioms chirality_anticomm_Q_minus
+#print axioms kugo_ojima_exactness
+#print axioms kugo_ojima_exactness_right
+#print axioms supertrace
+#print axioms supertrace_exact_annihilation
+#print axioms quantumAnomaly
+#print axioms quantumAnomaly_vanishes_of_comm
+#print axioms quantumAnomaly_vanishes_exact
+#print axioms gradedPartition
+#print axioms gradedPartition_susy_cancel
+#print axioms wittenIndex_topological_invariance
+#print axioms conformal_symmetric_chirality_weight_cancel
+#print axioms certified_chiral_cuntz_anomaly_partition_bridge

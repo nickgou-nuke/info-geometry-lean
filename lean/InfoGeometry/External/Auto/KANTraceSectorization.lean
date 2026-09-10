@@ -5,6 +5,7 @@ import InfoGeometry.External.Auto.TraceSeparationFlow
 noncomputable section
 
 open Matrix Complex
+open InfoGeometry.Canonical.Cayley
 
 namespace InfoGeometry.GrandUnification.KANTraceSectorization
 

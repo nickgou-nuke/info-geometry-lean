@@ -21,6 +21,8 @@ compact–dilation KAN core and grade boundary at zero determinant for the nilpo
 
 noncomputable section
 
+namespace InfoGeometry.Canonical.Cayley
+
 /-- Compact phase (rotation) block: `K(θ)`. -/
 def KPart (θ : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
   !![Complex.exp ((θ : ℂ) * Complex.I), 0; 0, Complex.exp (-((θ : ℂ) * Complex.I))]
@@ -160,10 +162,8 @@ theorem kan_cayley_dictionary (θ β : ℝ) (z : ℂ) :
   · exact nilpotentShear_sq z
   · exact det_nilpotentShear z
 
-namespace InfoGeometry.Canonical.Cayley
-
 /-- Thermal-ray Cayley compactification on the real axis. -/
-noncomputable def thermalCayley (β : ℝ) : ℝ :=
+noncomputable def kanThermalCayley (β : ℝ) : ℝ :=
   (β - 1) / (β + 1)
 
 /--
@@ -172,8 +172,8 @@ zero temperature (`β → +∞`).
 
 This is the mirror-package owner theorem used by GT's extracted seed file.
 -/
-theorem thermalCayley_tendsto_atTop_one :
-    Filter.Tendsto thermalCayley Filter.atTop (nhds (1 : ℝ)) := by
+theorem kanThermalCayley_tendsto_atTop_one :
+    Filter.Tendsto kanThermalCayley Filter.atTop (nhds (1 : ℝ)) := by
   have hden :
       Filter.Tendsto (fun β : ℝ => β + 1) Filter.atTop Filter.atTop := by
     rw [Filter.tendsto_atTop_atTop]
@@ -189,11 +189,11 @@ theorem thermalCayley_tendsto_atTop_one :
         Filter.atTop (nhds (1 - 0 : ℝ)) :=
     tendsto_const_nhds.sub hzero
   have heq :
-      thermalCayley =ᶠ[Filter.atTop]
+      kanThermalCayley =ᶠ[Filter.atTop]
         fun β : ℝ => 1 - (2 : ℝ) / (β + 1) := by
     filter_upwards [Filter.eventually_gt_atTop (-1 : ℝ)] with β hβ
     have hβ' : β + 1 ≠ 0 := by linarith
-    unfold thermalCayley
+    unfold kanThermalCayley
     field_simp [hβ']
     ring
   simpa using hmain.congr' heq.symm

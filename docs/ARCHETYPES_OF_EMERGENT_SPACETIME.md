@@ -164,7 +164,21 @@ On the 2D Apollonian cylinder $M = \mathbb{R} \times S^1$:
 * **de Rham Nilpotency:** $d^2 = 0$, $\delta^2 = 0$, where the codifferential $\delta = -\star d \star$.
 * **Harmonic Laplacian & Reynolds Mixing:** $\Delta = d\delta + \delta d$. Combining the codifferential with ergodic spatial averaging over the compact 2-torus $\mathbb{T}^2$ yields the exact $1/2$ Reynolds stress tensor pre-factor:
   $$\frac{1}{2\pi} \int_0^{2\pi} \cos^2(j \theta + \phi) \, d\theta = \frac{1}{2}$$
-  In Lean 4: [`CylinderHodgeDualityFreudenthalBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/CylinderHodgeDualityFreudenthalBridge.lean) and [`NavierStokesTorusErgodicBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/NavierStokesTorusErgodicBridge.lean).
+   In Lean 4: [`CylinderHodgeDualityFreudenthalBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/CylinderHodgeDualityFreudenthalBridge.lean) and [`NavierStokesTorusErgodicBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/NavierStokesTorusErgodicBridge.lean).
+
+### 5.4 Para-Hyperkähler Hodge Decomposition, Krein Lagrangian Polarities, & Zorn-BdG Mass Condensation
+In neutral signature $(2n, 2n)$ on the Apollonian continuum:
+* **6-Fold Polarized Hodge Decomposition:** Differential forms partition into exact, coexact, and harmonic sectors, each split by the chiral Peirce involution $\Gamma = \pm 1$:
+  $$\Omega^\bullet = (\operatorname{im}(d)_+ \oplus \operatorname{im}(d)_-) \oplus (\operatorname{im}(\delta)_+ \oplus \operatorname{im}(\delta)_-) \oplus (\mathcal{H}_+ \oplus \mathcal{H}_-)$$
+  In Lean 4: `sixfold_polarized_decomposition`.
+* **Dirac-Kähler Transmutation & Anticommutation:** The Dirac-Kähler operator $\mathcal{D} = d - \delta$ satisfies $\mathcal{D}^2 = -\Delta$, $\{\mathcal{D}, \Gamma\} = 0$, $\mathcal{D}\gamma_h = 0$, transmuting exact forms into coexact forms and coexact forms into exact forms.
+  In Lean 4: `dirac_kaehler_sq_eq_neg_laplacian`, `dirac_kaehler_anticommutes_chirality`, `diracKaehler_maps_exact_to_coexact`, `diracKaehler_maps_coexact_to_exact`.
+* **Indefinite Krein Pairing & Lagrangian Polarities:** The neutral signature metric induces total isotropy of exact and coexact subspaces ($\langle d\alpha_1, d\alpha_2 \rangle_{\mathcal{K}} = 0$, $\langle \delta\beta_1, \delta\beta_2 \rangle_{\mathcal{K}} = 0$), forming a canonical hyperbolic Lagrangian polar pair with non-degenerate pairing. Furthermore, $\mathcal{D}$ acts as an infinitesimal isometry ($\langle \mathcal{D}\omega, \eta \rangle_{\mathcal{K}} + \langle \omega, \mathcal{D}\eta \rangle_{\mathcal{K}} = 0$).
+  In Lean 4: `exact_subspace_is_isotropic`, `coexact_subspace_is_isotropic`, `exact_coexact_hyperbolic_pairing`, `krein_dirac_kaehler_skew_adjoint`.
+* **Zorn-BdG Bi-Wave Operator & Mass Condensation:** The Bogoliubov-de Gennes / Dirac bi-wave operator $\hat{Z}_{\mathrm{BdG}}(m)$ decouples at $m=0$ and satisfies relativistic Klein-Gordon dispersion:
+  $$\hat{Z}_{\mathrm{BdG}}(m)^2 = -\Delta + m^2 \cdot \mathbb{I}$$
+  condensing the exact gradient into the coexact curl across the doublet.
+  In Lean 4: [`ParaHyperkahlerHodgeDecompositionBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaHyperkahlerHodgeDecompositionBridge.lean) (`bdgZorn_massless_decoupling`, `bdgZorn_sq_eq_klein_gordon`, `bdgZorn_mass_condensation`).
 
 ---
 
@@ -186,6 +200,7 @@ On the 2D Apollonian cylinder $M = \mathbb{R} \times S^1$:
 | **Freudenthal Area Law** | Degree-4 Invariant $\mathcal{Q}_4$ | `bekensteinHawking_homothety_scaling56` | **Kernel-Checked (0 gaps)** |
 | **Cylinder Hodge Duality** | Graded Differential Forms $\Omega^\bullet$ | `hodgeStar_sq_eq_chirality`, `codifferential_sq_zero` | **Kernel-Checked (0 gaps)** |
 | **Chiral Hodge-Dirac-Kähler** | Graded Operator / 6-Fold Polarized Hodge | `diracKahler_sq`, `diracKahler_anticomm_gamma`, `diracKahler_on_exact` | **Kernel-Checked (0 gaps)** |
+| **Para-Hyperkähler Hodge & Krein** | Polarized Hodge Form / Dirac-Kähler / Zorn-BdG | `dirac_sq_eq_neg_laplacian`, `krein_dirac_skew_adjoint`, `bdg_dispersion` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

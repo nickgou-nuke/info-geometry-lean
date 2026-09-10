@@ -1,0 +1,20 @@
+import InfoGeometry.Canonical.ParaComplexHolomorphicRealBridge
+
+/-!
+# Axiomatic Audit of ParaComplexHolomorphicRealBridge
+
+This audit checks the foundational axioms of ParaComplexHolomorphicRealBridge.
+Expected axioms: [propext, Classical.choice, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.certified_paracomplex_holomorphic_real_synthesis
+#print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.peirce_sum
+#print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.peircePlus_idem
+#print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.peirceMinus_idem
+#print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.peirce_ortho
+#print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.deRham_decomposition
+#print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.real_seam_condition
+#print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.zorn2_trace_zero
+#print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.zorn2_sq
+#print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.zorn2_det
+#print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.zorn2_mass_shell

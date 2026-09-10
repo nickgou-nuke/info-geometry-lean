@@ -1,0 +1,25 @@
+import InfoGeometry.Canonical.ParaHyperkahlerHodgeDecompositionBridge
+
+open InfoGeometry.Canonical.ParaHyperkahlerHodgeDecompositionBridge
+open PolarizedHodgeForm
+
+#print axioms sixfold_polarized_decomposition
+#print axioms chirality_involutive
+#print axioms dirac_kaehler_anticommutes_chirality
+#print axioms dirac_kaehler_on_harmonic
+#print axioms dirac_kaehler_sq_eq_neg_laplacian
+#print axioms diracKaehler_maps_exact_to_coexact
+#print axioms diracKaehler_maps_coexact_to_exact
+#print axioms krein_symm
+#print axioms krein_add_left
+#print axioms krein_smul_left
+#print axioms krein_dirac_kaehler_skew_adjoint
+#print axioms exact_subspace_is_isotropic
+#print axioms coexact_subspace_is_isotropic
+#print axioms exact_harmonic_orthogonal
+#print axioms coexact_harmonic_orthogonal
+#print axioms exact_coexact_hyperbolic_pairing
+#print axioms bdgZorn_massless_decoupling
+#print axioms bdgZorn_sq_eq_klein_gordon
+#print axioms bdgZorn_mass_condensation
+#print axioms parahyperkahler_hodge_synthesis

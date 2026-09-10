@@ -16,21 +16,22 @@ open InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
 
 noncomputable section
 
-abbrev Candidate := SplitOctonionAutCandidate ℝ
+abbrev SplitAutCandidate := SplitOctonionAutCandidate ℝ
 
-def candidateCartesianLinearEquiv (f : Candidate) :
+
+def candidateCartesianLinearEquiv (f : SplitAutCandidate) :
     CartesianCoordinates ≃ₗ[ℝ] CartesianCoordinates :=
   cartesianZornLinearEquiv.trans (f.trans cartesianZornLinearEquiv.symm)
 
 @[simp] theorem candidateCartesianLinearEquiv_apply
-    (f : Candidate) (q : CartesianCoordinates) :
+    (f : SplitAutCandidate) (q : CartesianCoordinates) :
     candidateCartesianLinearEquiv f q =
       cartesianZornLinearEquiv.symm
         (f (cartesianZornLinearEquiv q)) :=
   rfl
 
 theorem candidateCartesianLinearEquiv_one :
-    candidateCartesianLinearEquiv (1 : Candidate) =
+    candidateCartesianLinearEquiv (1 : SplitAutCandidate) =
       LinearEquiv.refl ℝ CartesianCoordinates := by
   apply LinearEquiv.ext
   intro q
@@ -38,7 +39,7 @@ theorem candidateCartesianLinearEquiv_one :
       (cartesianZornLinearEquiv q) = q
   exact cartesianZornLinearEquiv.symm_apply_apply q
 
-theorem candidateCartesianLinearEquiv_mul (f g : Candidate) :
+theorem candidateCartesianLinearEquiv_mul (f g : SplitAutCandidate) :
     candidateCartesianLinearEquiv (f * g) =
       candidateCartesianLinearEquiv f * candidateCartesianLinearEquiv g := by
   apply LinearEquiv.ext
@@ -50,12 +51,12 @@ theorem candidateCartesianLinearEquiv_mul (f g : Candidate) :
         (cartesianZornLinearEquiv.symm (g (cartesianZornLinearEquiv q)))))
   simp only [LinearEquiv.mul_apply, LinearEquiv.apply_symm_apply]
 
-noncomputable def candidateCartesianContinuousLinearEquiv (f : Candidate) :
+noncomputable def candidateCartesianContinuousLinearEquiv (f : SplitAutCandidate) :
     CartesianCoordinates ≃L[ℝ] CartesianCoordinates :=
   (candidateCartesianLinearEquiv f).toContinuousLinearEquiv
 
 @[simp] theorem candidateCartesianContinuousLinearEquiv_apply
-    (f : Candidate) (q : CartesianCoordinates) :
+    (f : SplitAutCandidate) (q : CartesianCoordinates) :
     candidateCartesianContinuousLinearEquiv f q =
       candidateCartesianLinearEquiv f q :=
   rfl

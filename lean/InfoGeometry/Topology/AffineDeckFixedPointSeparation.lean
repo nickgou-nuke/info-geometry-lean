@@ -8,6 +8,8 @@ noncomputable section
 prevents confusing it with the already-owned free Klein glide. -/
 namespace InfoGeometry.Topology.AffineDeckFixedPointSeparation
 
+open InfoGeometry.External.Auto.KleinBottle
+
 abbrev FiveSpace := Fin 5 → ℝ
 
 def affineInversion (c x : FiveSpace) : FiveSpace := c - x

@@ -94,6 +94,7 @@ import InfoGeometry.Algebra.H3ZornJordanIdentity
 import InfoGeometry.Algebra.H3ZornJordanInstance
 import InfoGeometry.TKK.TKKFramework
 import InfoGeometry.Canonical.H3ZornJordanTripleBridge
+import InfoGeometry.Canonical.ZornNavierStokesHydrodynamicBridge
 import InfoGeometry.Canonical.H3ZornF4PeirceTrialitySplit
 import InfoGeometry.Canonical.H3ZornTKKCore
 import InfoGeometry.Canonical.H3ZornTKKNative

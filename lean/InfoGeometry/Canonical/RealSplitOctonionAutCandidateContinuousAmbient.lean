@@ -17,15 +17,15 @@ open InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
 noncomputable section
 
 theorem candidateCartesianContinuousLinearEquiv_one :
-    candidateCartesianContinuousLinearEquiv (1 : Candidate) =
+    candidateCartesianContinuousLinearEquiv (1 : SplitAutCandidate) =
       ContinuousLinearEquiv.refl ℝ CartesianCoordinates := by
   apply ContinuousLinearEquiv.ext
   funext q
-  change candidateCartesianLinearEquiv (1 : Candidate) q = q
+  change candidateCartesianLinearEquiv (1 : SplitAutCandidate) q = q
   rw [candidateCartesianLinearEquiv_one]
   rfl
 
-theorem candidateCartesianContinuousLinearEquiv_mul (f g : Candidate) :
+theorem candidateCartesianContinuousLinearEquiv_mul (f g : SplitAutCandidate) :
     candidateCartesianContinuousLinearEquiv (f * g) =
       candidateCartesianContinuousLinearEquiv f *
         candidateCartesianContinuousLinearEquiv g := by
@@ -37,7 +37,7 @@ theorem candidateCartesianContinuousLinearEquiv_mul (f g : Candidate) :
   rw [candidateCartesianLinearEquiv_mul]
 
 noncomputable def candidateCartesianContinuousHom :
-    Candidate →* (CartesianCoordinates ≃L[ℝ] CartesianCoordinates) where
+    SplitAutCandidate →* (CartesianCoordinates ≃L[ℝ] CartesianCoordinates) where
   toFun := candidateCartesianContinuousLinearEquiv
   map_one' := candidateCartesianContinuousLinearEquiv_one
   map_mul' := candidateCartesianContinuousLinearEquiv_mul

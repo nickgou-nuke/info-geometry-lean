@@ -1,2 +1,2 @@
 import InfoGeometry.External.Auto.KleinBottle
-#check klein_bottle_relation
+#check InfoGeometry.External.Auto.KleinBottle.klein_bottle_relation

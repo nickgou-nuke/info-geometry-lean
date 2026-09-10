@@ -18,11 +18,11 @@ open InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
 noncomputable section
 
 theorem continuous_candidate_apply (X : CZ) :
-    Continuous (fun f : Candidate => f X) := by
+    Continuous (fun f : SplitAutCandidate => f X) := by
   apply continuous_induced_rng.mpr
-  change Continuous (fun f : Candidate =>
+  change Continuous (fun f : SplitAutCandidate =>
     cartesianZornLinearEquiv.symm (f X))
-  have hf : Continuous (fun f : Candidate =>
+  have hf : Continuous (fun f : SplitAutCandidate =>
       candidateCartesianContinuousLinearEquiv f) :=
     continuous_induced_dom
   have hu : Continuous (fun f : CartesianCoordinates ≃L[ℝ] CartesianCoordinates =>
@@ -32,7 +32,7 @@ theorem continuous_candidate_apply (X : CZ) :
       (continuousLinearEquivToUnitHom f :
         CartesianCoordinates →L[ℝ] CartesianCoordinates)) :=
     Units.continuous_val.comp hu
-  have he : Continuous (fun f : Candidate =>
+  have he : Continuous (fun f : SplitAutCandidate =>
       candidateCartesianContinuousLinearEquiv f
         (cartesianZornLinearEquiv.symm X)) :=
     (ContinuousLinearMap.apply ℝ CartesianCoordinates

@@ -17,9 +17,9 @@ noncomputable section
 
 theorem isClosed_splitOctonionAutSet :
     IsClosed (SplitOctonionAutSet (R := ℝ)) := by
-  have hunit : IsClosed {f : Candidate | f (1 : CZ) = 1} := by
-    rw [show {f : Candidate | f (1 : CZ) = 1} =
-        {f : Candidate | f (1 : CZ) - (1 : CZ) = 0} by
+  have hunit : IsClosed {f : SplitAutCandidate | f (1 : CZ) = 1} := by
+    rw [show {f : SplitAutCandidate | f (1 : CZ) = 1} =
+        {f : SplitAutCandidate | f (1 : CZ) - (1 : CZ) = 0} by
       ext f
       constructor
       · intro h
@@ -28,11 +28,11 @@ theorem isClosed_splitOctonionAutSet :
         exact sub_eq_zero.mp h
       ]
     exact isClosed_candidate_unit_constraint
-  have hmul : IsClosed {f : Candidate |
+  have hmul : IsClosed {f : SplitAutCandidate |
       ∀ X Y : CZ, f (zMul X Y) - zMul (f X) (f Y) = 0} := by
-    rw [show {f : Candidate |
+    rw [show {f : SplitAutCandidate |
         ∀ X Y : CZ, f (zMul X Y) - zMul (f X) (f Y) = 0} =
-      ⋂ X : CZ, ⋂ Y : CZ, {f : Candidate |
+      ⋂ X : CZ, ⋂ Y : CZ, {f : SplitAutCandidate |
         f (zMul X Y) - zMul (f X) (f Y) = 0} by
       ext f
       simp]
@@ -41,8 +41,8 @@ theorem isClosed_splitOctonionAutSet :
     apply isClosed_iInter
     intro Y
     exact isClosed_candidate_multiplicativity_constraint X Y
-  have hinter : IsClosed ({f : Candidate | f (1 : CZ) = 1} ∩
-      {f : Candidate | ∀ X Y : CZ,
+  have hinter : IsClosed ({f : SplitAutCandidate | f (1 : CZ) = 1} ∩
+      {f : SplitAutCandidate | ∀ X Y : CZ,
         f (zMul X Y) - zMul (f X) (f Y) = 0}) :=
     hunit.inter hmul
   convert hinter using 1

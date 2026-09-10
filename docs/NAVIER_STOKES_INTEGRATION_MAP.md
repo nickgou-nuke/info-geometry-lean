@@ -4,7 +4,10 @@
 > **Upstream Repository:** `external_refs/NavierStokesAndEuler`  
 > **Upstream URL:** `https://github.com/openai/NavierStokesAndEuler`  
 > **Upstream Commit:** `8937a8f4cbc7abaab5e9e97d1cc7f5d2319d9538`  
-> **Native Bridge Module:** `InfoGeometry/Canonical/ZornNavierStokesHydrodynamicBridge.lean`  
+> **Native Bridge Modules:**  
+> - `InfoGeometry/Canonical/ZornNavierStokesHydrodynamicBridge.lean`  
+> - `InfoGeometry/Canonical/NavierStokesConePiolaBridge.lean`  
+> - `InfoGeometry/Canonical/NavierStokesConePiolaAudit.lean`  
 > **Kernel Status:** 100% Kernel Checked, 0 `sorry`, 0 custom axioms  
 
 ---
@@ -146,18 +149,60 @@ abla f\|^2$:
 - At the quantum horizon seam $ho(x) 	o 0$, both the Bohm potential $Q = -rac{\hbar^2}{2m} rac{
 abla^2 \sqrt{ho}}{\sqrt{ho}}$ and the Fisher information density explode to infinity. The classical finite-time blowup constructed in OpenAI's paper is the zero-viscosity classical shadow of this horizon seam.
 
+### 4.6. Piola Curl Adjugate Transformation & Admissible Stress Cone Equivalence
+
+In `InfoGeometry/Canonical/NavierStokesConePiolaBridge.lean`, we backported the core algebraic engines:
+
+1. **Piola Curl Congruence Identity**:
+   ```lean
+   theorem matrixAntisym_congruence (F A : Mat3 ℝ) :
+       matrixAntisym (F.transpose * A * F) = F.adjugate.mulVec (matrixAntisym A)
+   ```
+   This universally governs how 3D vorticity / curl transforms under nonlinear coordinate transformations with Jacobian $F$. When $\det F = 1$:
+   ```lean
+   theorem adjugate_mul_eq_one_of_det_one (F : Mat3 ℝ) (hdet : F.det = 1) : F.adjugate * F = 1
+   ```
+   which identifies the adjugate with $F^{-1}$.
+
+2. **Full Stress Cone Equivalence (Lemma 3.5)**:
+   The square-root criterion $v < \operatorname{coneBound}(P, J)$ is strictly equivalent to the Jordan Peirce quadratic form:
+   ```lean
+   theorem true_cone_iff {P J v : ℝ} (hv : 2 < v) :
+       (2 < P ∧ v < coneBound P J) ↔
+         (v < P ∧ (v - 2) * J ^ 2 < 2 * (P - v) ^ 2)
+   ```
+   and is equivalently characterized by the positive determinant of the Jordan stress matrix:
+   ```lean
+   theorem true_cone_iff_jordan_stress_pos {P J v : ℝ} (hv : 2 < v) :
+       (2 < P ∧ v < coneBound P J) ↔
+         (v < P ∧ 0 < (jordanStressMatrix P J v).det)
+   ```
+
+3. **Asymptotic Reynolds Stress Limiting Sufficiency (Equation 11)**:
+   ```lean
+   theorem equation_eleven_sufficient {a b w : ℝ} (ha : 0 < a)
+       (hfirst : 0 < a - b * w)
+       (hsecond : 2 * b * w + b ^ 2 / a + (a - 2) * w ^ 2 < 2) :
+       ∃ p₀ : ℝ, ∀ p : ℝ, p₀ < p →
+         2 < p * (1 - b * w / a) ∧ a * (1 + (b / a) ^ 2) <
+           coneBound (p * (1 - b * w / a)) (p * (w + b / a))
+   ```
+
 ---
 
 ## 5. Synthesis Certification
 
-The complete bridge is witnessed by:
-```lean
-theorem certified_zorn_navier_stokes_synthesis :
-    ZornNavierStokesSynthesis (E := E)
-```
-Axiom check:
+The complete bridge suite is certified by two kernel-checked witness structures:
+
+1. `certified_zorn_navier_stokes_synthesis` in `ZornNavierStokesHydrodynamicBridge.lean`
+2. `certified_navier_stokes_cone_piola_bridge` in `NavierStokesConePiolaBridge.lean`
+
+Axiom verification:
 ```text
 'InfoGeometry.Canonical.ZornNavierStokesHydrodynamic.certified_zorn_navier_stokes_synthesis' depends on axioms:
   [propext, Classical.choice, Quot.sound]
+
+'InfoGeometry.Canonical.NavierStokesConePiola.certified_navier_stokes_cone_piola_bridge' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
 ```
-Zero custom axioms, zero sorry, 100% verified.
+Zero custom axioms, zero `sorry`, 100% verified.

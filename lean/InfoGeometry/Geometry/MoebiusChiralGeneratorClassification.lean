@@ -1,9 +1,10 @@
 import Mathlib.LinearAlgebra.Matrix.Notation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 namespace InfoGeometry.Geometry.MoebiusChiralGeneratorClassification
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def H : Mat2 := !![(1 : ℝ), 0; 0, -1]
 

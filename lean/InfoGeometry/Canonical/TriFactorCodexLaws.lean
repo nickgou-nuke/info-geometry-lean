@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.Matrix.Basic
@@ -74,7 +75,7 @@ theorem cayley_jacobian_quadratic_bound (s : ℝ) (hs : 1 ≤ s) :
 /-! ### 2. The Cantor Boundary CAR Clifford Algebra -/
 
 /-- $2 \times 2$ Matrix Algebra over $\mathbb{R}$. -/
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Nilpotent tilt operator $\epsilon_+ = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$. -/
 def tiltOp : Mat2 := !![0, 1; 0, 0]

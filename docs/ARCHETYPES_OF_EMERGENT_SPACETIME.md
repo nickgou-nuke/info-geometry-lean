@@ -496,6 +496,18 @@ Formalizing the boundary-bulk Stokes pairing and on-shell Cauchy flux conservati
   With non-zero bulk source, the net Cauchy transfer precisely equals the bulk action: $\int_{\Sigma_+} i^* \theta - \int_{\Sigma_-} i^* \theta = \mathrm{Action}_M(L)$.
   In Lean 4: [`PalatiniBoundaryStokesBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/PalatiniBoundaryStokesBridge.lean) and [`PalatiniBoundaryStokesAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/PalatiniBoundaryStokesAudit.lean) (`palatini_stokes_pairing`, `boundary_gauge_shift_invariant`, `on_shell_flux_conservation`, `flux_transfer_with_bulk_source`, `certified_palatini_stokes_synthesis`).
 
+### 5.26 The Drazin Spectral Splitting & Nilpotent Ghost Isolator
+Formalizing the algebraic Fitting lemma and spectral decomposition for Drazin inverses in arbitrary rings and modules:
+* **Power Reduction Identity:** Pure algebraic induction proving $b = b^{m+1} a^m$ and reverse $b = a^m b^{m+1}$ for all $m \in \mathbb{N}$ (0 sorry).
+* **Nilpotent Sector Annihilation:** Any state in the nilpotent gauge ghost sector $\ker(a^k)$ is strictly annihilated by the Drazin inverse:
+  $$a^k v = 0 \implies b v = 0$$
+* **Master Fitting Lemma (Trivial Intersection):** The regular image and nilpotent kernel intersect trivially without metric or finite-dimensionality assumptions:
+  $$\operatorname{im}(a^k) \cap \ker(a^k) = \{0\}$$
+* **Direct Sum Decomposition & Uniqueness:** Every vector splits uniquely into $v = v_{\mathrm{im}} + v_{\mathrm{ker}}$ where $v_{\mathrm{im}} = (a b) v \in \operatorname{im}(a^k)$ and $v_{\mathrm{ker}} = (1 - a b) v \in \ker(a^k)$.
+* **BRST & Faddeev-Popov Ghost Filtration:** For a nilpotent BRST charge $Q^2 = 0$ commuting with the kinetic operator $a$ and Drazin inverse $b$, the Faddeev-Popov propagator $P_{\mathrm{FP}} = b$ unconditionally annihilates all non-physical gauge ghosts in $\ker(a^k)$.
+* **Moore-Penrose Index-1 Coincidence:** Any commuting Moore-Penrose pseudo-inverse ($a a^+ = a^+ a$) is unconditionally a Drazin inverse of index 1 (group inverse), unifying self-adjoint Hodge-Laplacian Green operator dynamics with algebraic Drazin ghost isolation.
+  In Lean 4: [`DrazinSpectralFittingBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/DrazinSpectralFittingBridge.lean) and [`DrazinSpectralFittingAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/DrazinSpectralFittingAudit.lean) (`drazin_pow_reduction`, `drazin_annihilates_nilpotent`, `drazin_fitting_trivial_intersection`, `fitting_decomposition_unique`, `propagator_annihilates_ghosts`, `moore_penrose_is_drazin_index_one`, `makeCertifiedDrazinFittingSynthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -538,6 +550,7 @@ Formalizing the boundary-bulk Stokes pairing and on-shell Cauchy flux conservati
 | **Chiral Boundary Symplectic Form** | Doubled Space $E \times E$ / Symplectic $\Omega$ / Kähler $(g, \Omega, J)$ | `symplectic_nondegenerate`, `metric_eq_symplectic_J` | **Kernel-Checked (0 gaps)** |
 | **Iwasawa-Cuntz-Klein Weak Horizon** | $KAN$ Kinematics / Cuntz $\mathcal{O}_2$ / Klein Quadric / AAV Weak | `weak_horizon_amplification`, `certified_iwasawa_cuntz_klein_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Palatini Boundary Stokes Bridge** | Stokes Differential Complex / Boundary Flux / Cauchy Splitting | `palatini_stokes_pairing`, `on_shell_flux_conservation`, `certified_palatini_stokes_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Drazin Spectral Fitting & Ghost Isolator** | General Ring $R$ / Module $M$ / Drazin Projection / BRST Ghost | `drazin_pow_reduction`, `drazin_fitting_trivial_intersection`, `makeCertifiedDrazinFittingSynthesis` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

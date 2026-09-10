@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11Matrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Swap
 
 open scoped Matrix
@@ -7,7 +8,7 @@ namespace InfoGeometry.Clifford.SignedPermutation
 
 open InfoGeometry.Clifford.Cl11Matrix
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- The `Cl(1,1)` Pauli generators as concrete `2 × 2` real matrices. -/
 abbrev e1 : Mat2 := Eplus

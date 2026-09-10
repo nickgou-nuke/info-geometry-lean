@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.GibbsRayGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exact frame and readout corrections for the supplied attention brainstorm
@@ -111,7 +112,7 @@ theorem ratioCharacter_cocycle {ι : Type*} (q : Ray ι) (ν : ℝ) (i j k : ι)
       dilationCharacter ν (ratio q i k) := by
   rw [← dilationCharacter_mul ν _ _ (ratio_pos q i j) (ratio_pos q j k), ratio_cocycle]
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def key : Fin 3 → Fin 2 → ℝ
   | 0 => ![1,0]

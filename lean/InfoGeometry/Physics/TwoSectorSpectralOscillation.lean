@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
@@ -11,7 +12,7 @@ open Matrix
 
 namespace InfoGeometry.Physics.TwoSector
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 abbrev Vec2 := Fin 2 → ℝ
 
 /-!

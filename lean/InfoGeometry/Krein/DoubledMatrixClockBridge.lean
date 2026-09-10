@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Physics.ParabolicClock
@@ -30,7 +31,7 @@ variable [NormedAddCommGroup E]
 variable [InnerProductSpace ℝ E]
 
 abbrev H₂ (E : Type*) := DoubledSpace E
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 abbrev End₂ (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] :=
   Module.End ℝ (DoubledSpace E)
 

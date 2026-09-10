@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Trace
 import InfoGeometry.Canonical.SplitQuaternionConcrete
@@ -31,7 +32,7 @@ namespace InfoGeometry.Canonical.ParaHyperkahlerPresymplecticBridge
 open Matrix
 
 abbrev R2 := Fin 2 → ℝ
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-! ## 1. Canonical Symplectic Form on ℝ² -/
 

@@ -1,10 +1,11 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Routing.PlanarRotation
 
 noncomputable section
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def rotation (φ : ℝ) : Mat2 :=
   !![Real.cos φ, -Real.sin φ; Real.sin φ, Real.cos φ]

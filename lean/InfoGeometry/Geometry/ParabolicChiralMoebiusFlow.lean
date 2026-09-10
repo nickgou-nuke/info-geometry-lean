@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.MoebiusChiralGeneratorClassification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.RealMoebiusAction
 
 namespace InfoGeometry.Geometry.ParabolicChiralMoebiusFlow
@@ -6,7 +7,7 @@ namespace InfoGeometry.Geometry.ParabolicChiralMoebiusFlow
 open InfoGeometry.Geometry.MoebiusChiralGeneratorClassification
 open InfoGeometry.Geometry.RealUpperHalfPlane
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def sheetReflection : Mat2 := !![(0 : ℝ), 1; 1, 0]
 

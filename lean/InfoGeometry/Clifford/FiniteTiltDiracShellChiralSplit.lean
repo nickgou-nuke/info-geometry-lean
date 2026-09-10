@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.FiniteTiltDiracShell
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
 import InfoGeometry.OperatorAlgebra.SymmetryInvariants
 import InfoGeometry.Meta.Architecture
@@ -20,7 +21,7 @@ open InfoGeometry.Clifford.Cl11Matrix
 open InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
 open InfoGeometry.OperatorAlgebra
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- The left chiral projector of the finite tilt shell. -/
 @[rep_depth operator]

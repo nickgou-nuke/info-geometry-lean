@@ -1,4 +1,5 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
+import InfoGeometry.Quantum.BerryKeatingCCR
 
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Algebra.Algebra.Basic
@@ -54,7 +55,7 @@ set_option linter.unusedSimpArgs false
 
 noncomputable section
 
-namespace InfoGeometry.Quantum.BerryKeatingCCR
+namespace InfoGeometry.Quantum.BerryKeatingCCRCapstone
 
 /-! ### 1. MÃ¶bius Midpoint & Apollonius Foliation -/
 
@@ -162,4 +163,4 @@ theorem berry_keating_dilation_p (x p : A) (h_ccr : commutator x p = Complex.I â
     rw [mul_sub]
   rw [h_factor, h_ccr, Algebra.mul_smul_comm, mul_one]
 
-end InfoGeometry.Quantum.BerryKeatingCCR
+end InfoGeometry.Quantum.BerryKeatingCCRCapstone

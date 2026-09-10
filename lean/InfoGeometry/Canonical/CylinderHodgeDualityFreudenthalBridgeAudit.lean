@@ -1,0 +1,17 @@
+import InfoGeometry.Canonical.CylinderHodgeDualityFreudenthalBridge
+
+open InfoGeometry.Canonical.CylinderHodgeDualityFreudenthalBridge
+
+#print axioms GradedForms.chirality_involutive
+#print axioms GradedForms.hodgeStar_sq_eq_chirality
+#print axioms GradedForms.hodgeStar_pow4_id
+#print axioms GradedForms.hodgeStar_one_forms_sq_neg
+#print axioms GradedForms.hodgeStar_swaps_degrees_0_2
+#print axioms GradedForms.hodgeStar_isometry
+#print axioms CylinderDerivData.exteriorD_sq_zero
+#print axioms CylinderDerivData.codifferential_sq_zero
+#print axioms CylinderDerivData.laplacian_omega0
+#print axioms bekensteinHawking_chiral_invariant
+#print axioms bekensteinHawking_homothety_scaling
+#print axioms bekensteinHawking_null_boundary_zero
+#print axioms cylinder_hodge_freudenthal_synthesis

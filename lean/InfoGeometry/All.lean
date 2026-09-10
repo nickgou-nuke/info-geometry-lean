@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.QuantumSpinNavierStokes
 import InfoGeometry.AQFT.Pin55Pullback
 import InfoGeometry.Probability.FiniteLogTransport
 import InfoGeometry.Volume.MajoranaPfaffianFour

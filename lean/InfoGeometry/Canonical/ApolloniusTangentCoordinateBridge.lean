@@ -2,7 +2,7 @@
 
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Tactic
-import InfoGeometry.Canonical.ApolloniusHomogeneousCoordinatesBridge
+import InfoGeometry.Canonical.ApolloniusTauDifferential
 import InfoGeometry.ParaKahler.ApolloniusCylinder
 
 /-! Tangent-coordinate bridge for the native Apollonius homogeneous carrier. -/
@@ -14,8 +14,6 @@ namespace InfoGeometry.Arithmetic.CompletedXiHestenesHomogeneousCoordinates
 open Complex Real
 open InfoGeometry.Projective.ApolloniusNatural
 open InfoGeometry.ParaKahler.ApolloniusCylinder
-
-def apolloniusParameter (ξ θ : ℝ) : Fin 2 → ℝ := ![ξ, θ]
 
 @[simp] theorem apolloniusParameter_zero (ξ θ : ℝ) :
     apolloniusParameter ξ θ 0 = ξ := rfl

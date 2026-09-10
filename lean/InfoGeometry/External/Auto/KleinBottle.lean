@@ -2,6 +2,8 @@ import Mathlib.Tactic
 
 open Complex
 
+namespace InfoGeometry.External.Auto.KleinBottle
+
 /-!
 # The Klein Bottle Geometry and Möbius Symmetry
 
@@ -121,3 +123,5 @@ theorem non_orientable_orbifold_theorem :
   exact ⟨klein_bottle_relation, glide_reflection_sq, mirror_involution,
     half_turn_involution, by simp [M], cone_point_origin,
     mirror_orientation_reversing, glide_orientation_reversing⟩
+
+end InfoGeometry.External.Auto.KleinBottle

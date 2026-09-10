@@ -14,10 +14,10 @@ namespace InfoGeometry.Canonical
 
 noncomputable section
 
-noncomputable instance instTopologicalSpaceCandidate : TopologicalSpace Candidate :=
+noncomputable instance instTopologicalSpaceCandidate : TopologicalSpace SplitAutCandidate :=
   TopologicalSpace.induced candidateCartesianContinuousHom inferInstance
 
-noncomputable instance instIsTopologicalGroupCandidate : IsTopologicalGroup Candidate :=
+noncomputable instance instIsTopologicalGroupCandidate : IsTopologicalGroup SplitAutCandidate :=
   topologicalGroup_induced candidateCartesianContinuousHom
 
 end

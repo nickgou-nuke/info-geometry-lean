@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.A2QutritTransitionRootBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The finite `A₂` root-space decomposition of the qutrit matrix algebra
@@ -17,7 +18,7 @@ open Matrix
 open InfoGeometry.Canonical.A2InsideD5RootSubsystem
 open InfoGeometry.Canonical.A2QutritTransitionRootBridge
 
-abbrev QutritMatrix := Matrix (Fin 3) (Fin 3) ℂ
+abbrev QutritMatrix := InfoGeometry.Algebra.FiniteSpin.QutritMatrix
 
 /-- Remove the diagonal Cartan component of a qutrit matrix. -/
 def offDiagonalPart (M : QutritMatrix) : QutritMatrix :=

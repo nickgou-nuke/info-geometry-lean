@@ -1,5 +1,6 @@
 import InfoGeometry.Volume.MajoranaPfaffianFour
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Quantum.MajoranaVacuumWickFour
 
@@ -8,7 +9,7 @@ noncomputable section
 open InfoGeometry.Volume.MajoranaPfaffianFour
 open InfoGeometry.Volume.OrientedPfaffian
 
-abbrev Mat4C := Matrix (Fin 4) (Fin 4) ℂ
+abbrev Mat4C := InfoGeometry.Algebra.FiniteSpin.Mat4C
 
 def gamma (i : Fin 4) : Mat4C :=
   match i with

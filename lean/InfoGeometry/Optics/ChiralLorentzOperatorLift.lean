@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Optics.OperatorLiftCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite chiral operator lift
@@ -19,7 +20,7 @@ set_option linter.unusedSimpArgs false
 
 noncomputable section
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
 
 open InfoGeometry.Clifford.Cl11Matrix

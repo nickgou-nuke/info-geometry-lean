@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.SplitCliffordJordanWigner
 import InfoGeometry.Canonical.SplitCliffordSourceWickBase
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordTwoModeCAR
@@ -22,7 +23,7 @@ open Matrix
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
 open InfoGeometry.Canonical.SplitCliffordJordanWigner
 
-abbrev M4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev M4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /-- Mode 1 annihilation operator: `a₁ = a ⊗ 𝕀`. -/
 def a1 : M4R :=

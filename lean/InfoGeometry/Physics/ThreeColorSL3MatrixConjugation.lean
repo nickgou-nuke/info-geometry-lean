@@ -2,6 +2,7 @@ import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 import Mathlib.Topology.Algebra.Group.Basic
 import Mathlib.Topology.Instances.Matrix
 import InfoGeometry.Physics.GellMannSU3
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuous `SL₃` conjugation on the three-color `3×3` matrix carrier
@@ -21,7 +22,7 @@ noncomputable section
 open Matrix
 open InfoGeometry.Physics.GellMannSU3
 
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 abbrev SL3C := Matrix.SpecialLinearGroup (Fin 3) ℂ
 
 /-- Conjugation by an `SL₃` matrix on the `3×3` carrier. -/

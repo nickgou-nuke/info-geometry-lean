@@ -1,5 +1,6 @@
 import InfoGeometry.Clifford.Soldering
 import InfoGeometry.OperatorAlgebra.SpinBogoliubovStinespring
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bogoliubov/Pauli Soldered Frame
@@ -39,7 +40,7 @@ open InfoGeometry.OperatorAlgebra.SpinBogoliubovStinespring
 
 abbrev Vec22 := InfoGeometry.Clifford.Soldering.Vec22
 
-abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- The Pauli/tetrad soldering map used as the frame selector. -/
 abbrev pauliTetradSoldering : Vec22 →ₗ[ℝ] Mat2R :=

@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.SplitCliffordTwoModeCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordFiniteCAR
@@ -14,7 +15,7 @@ open Matrix
 open Filter
 open InfoGeometry.Canonical.SplitCliffordTwoModeCAR
 
-abbrev M4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev M4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 abbrev Mode := Fin 2
 
 /-- Associative commutator on `M4R`. -/

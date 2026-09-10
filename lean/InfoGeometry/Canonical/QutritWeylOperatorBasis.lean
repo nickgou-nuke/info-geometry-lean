@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 import InfoGeometry.Topology.AharonovBohmConcreteVortex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The canonical nine-word qutrit Weyl family
@@ -18,7 +19,7 @@ open Matrix
 open InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 open InfoGeometry.Topology.Parafermion
 
-abbrev QutritMatrix := Matrix (Fin 3) (Fin 3) ℂ
+abbrev QutritMatrix := InfoGeometry.Algebra.FiniteSpin.QutritMatrix
 
 def weylWord (a b : Fin 3) : QutritMatrix :=
   colorShift ^ (a : ℕ) * colorClock omega ^ (b : ℕ)

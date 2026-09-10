@@ -1,6 +1,7 @@
 import InfoGeometry.Quantum.MajoranaPfaffianNaturalClosure
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native finite Majorana Pfaffian bridge
@@ -15,7 +16,7 @@ namespace InfoGeometry.Quantum.MajoranaPfaffianBridge
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- The skewness predicate used by the finite Pfaffian surface. -/
 def IsSkew (A : M2R) : Prop := A.transpose = -A

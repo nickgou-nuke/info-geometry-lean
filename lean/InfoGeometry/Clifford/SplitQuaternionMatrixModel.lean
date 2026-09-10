@@ -1,5 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The real `M₂(ℝ)` model of split quaternions
@@ -16,7 +17,7 @@ namespace InfoGeometry.Clifford.SplitQuaternionMatrixModel
 
 open scoped Matrix
 
-abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def one : Mat2R := !![(1 : ℝ), 0; 0, 1]
 

@@ -220,6 +220,30 @@ Bridging the Souriau-Klein phase space bifurcation with the de Rham-Hodge triad:
   This establishes the topological and cohomological stability of the vacuum state against all smooth dynamical flows and perturbations.
   In Lean 4: [`SouriauHodgeTriadBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/SouriauHodgeTriadBridge.lean) (`harmonic_variation_is_purely_exact`, `harmonic_cartan_harmonic_zero`).
 
+### 5.7 The Complete Chiral Hodge–Dirac–Kähler & Zorn Architecture
+Bridging the 6-fold chiral Hodge decomposition with the real Zorn vector matrix algebra $\mathrm{ZornCoord} = \mathbb{R} \times \mathbb{R} \times \mathrm{Vec3} \times \mathrm{Vec3}$:
+* **The 6-Fold Zorn Realization:**
+  - Exact irrotational sector $\operatorname{im}(d)_\pm \cong$ diagonal scalar subspace $(a, b, 0, 0)$.
+  - Traceless Weyl dilaton mode: $\mathrm{weylDilaton}(a) = (a, -a, 0, 0)$ with $\operatorname{tr} = 0$ and hyperbolic norm $\mathcal{N} = -a^2$.
+  - Coexact rotational sector $\operatorname{im}(\delta)_\pm \cong$ off-diagonal vector blocks $(0, 0, u, v)$ with $\operatorname{tr} = 0$ and indefinite norm $\mathcal{N} = -u \cdot v$.
+  In Lean 4: `exact_decomposition`, `coexact_decomposition`, `fullZorn_decomposition`, `weylDilaton_trace_zero`, `weylDilaton_norm`, `coexactMode_trace_zero`, `coexactMode_norm`.
+* **Krein Geometry & Maximal Lagrangian Isotropy:**
+  The chiral coexact subspaces $C_+(u) = (0, 0, u, 0)$ and $C_-(v) = (0, 0, 0, v)$ are totally isotropic in the Krein metric ($\mathcal{N}(C_+(u)) = 0$, $\mathcal{N}(C_-(v)) = 0$), forming a dual Lagrangian polar pair with cross-pairing $\mathcal{N}(C_+(u) + C_-(v)) = -u \cdot v$.
+  In Lean 4: `coexactUpper_is_null`, `coexactLower_is_null`, `coexact_krein_pairing`.
+* **On-Shell Factorization & Chiral CAR Algebra:**
+  On the Klein quadric boundary, the chiral generators are nilpotent ($C_+(u)^2 = 0$, $C_-(v)^2 = 0$).
+  They satisfy the Clifford/CAR anticommutation relation $\{C_+(u), C_-(v)\} = (u \cdot v) \cdot \mathbb{I}$, while their commutator generates the irrotational Weyl dilaton:
+  $$[C_+(u), C_-(v)] = \mathrm{weylDilaton}(u \cdot v)$$
+  proving that transverse chiral matter currents directly source the irrotational exact gauge mode.
+  In Lean 4: `coexactUpper_sq_zero`, `coexactLower_sq_zero`, `coexact_anticommutator`, `coexact_commutator`.
+* **Vorticity Generation & Chiral Charge Grading:**
+  Same-sheet products generate transverse rotational curls: $C_+(u) C_+(v) = C_-(u \times v)$.
+  The commutator with the Weyl dilaton $[\mathrm{weylDilaton}(a), C(u, v)] = (0, 0, 2a \cdot u, -2a \cdot v)$ explicitly grades the coexact currents by their chiral charges $\pm 2a$.
+  In Lean 4: `coexactUpper_mul_coexactUpper`, `coexactLower_mul_coexactLower`, `weylDilaton_comm_coexact`.
+* **Mass Condensation & Horizon Seam:**
+  The symmetric matter doublet $\Psi(u) = (0, 0, u, u)$ satisfies $\Psi(u)^2 = (u \cdot u) \cdot \mathbb{I}$ (the vorticity cross product $u \times u = 0$ vanishes), condensing into a timelike massive state ($\mathcal{N}(\Psi(u)) = -u \cdot u \le 0$). At the horizon seam, the topological persistence of the harmonic vacuum mediates the Aharonov weak value amplification ($\epsilon \cdot \Omega_w = \mathrm{num}$).
+  In Lean 4: [`ChiralHodgeZornArchitectureBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ChiralHodgeZornArchitectureBridge.lean) (`matterDoublet_square`, `matterDoublet_norm`, `horizon_weak_scaling`, `certified_chiral_hodge_zorn_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -243,6 +267,7 @@ Bridging the Souriau-Klein phase space bifurcation with the de Rham-Hodge triad:
 | **Para-Hyperkähler Hodge & Krein** | Polarized Hodge Form / Dirac-Kähler / Zorn-BdG | `dirac_sq_eq_neg_laplacian`, `krein_dirac_skew_adjoint`, `bdg_dispersion` | **Kernel-Checked (0 gaps)** |
 | **Harmonic Weak Horizon** | Polarized Harmonic Doublets / Aharonov Weak Value | `dirac_on_harmonic`, `kinetic_mass_anticomm`, `bdg_harmonic_doublet`, `mass_transfer_wva` | **Kernel-Checked (0 gaps)** |
 | **Souriau-Hodge Triad** | Polarized Hodge Triad / Lie Derivative / Krein Isometry | `dilaton_commutes_dirac`, `dirac_is_krein_isometry`, `cartan_harmonic_zero` | **Kernel-Checked (0 gaps)** |
+| **Chiral Hodge-Zorn Architecture**| 6-Fold Chiral Hodge / Zorn Vector Matrices / Klein Quadric | `coexact_anticomm`, `coexact_commutator_weyl`, `matterDoublet_square` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

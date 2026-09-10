@@ -17,6 +17,8 @@ of a Primon gas whose underlying field is ℚ(√5).
 
 noncomputable section
 
+namespace PenroseArithmetic
+
 /-- The Golden Ratio φ, the fundamental scaling constant of the Penrose universe. -/
 def goldenRatio : ℝ := (1 + Real.sqrt 5) / 2
 
@@ -218,5 +220,7 @@ theorem arithmetic_quantum_gravity_unification :
     goldenPrimeClass_split_19, goldenPrimeClass_inert_3, goldenPrimeClass_inert_13,
     goldenMul_phi_phi, goldenConj_involutive, goldenNorm_conj, goldenNorm_mul,
     goldenEval_mul⟩
+
+end PenroseArithmetic
 
 end noncomputable section

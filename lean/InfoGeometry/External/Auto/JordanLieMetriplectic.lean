@@ -1,5 +1,7 @@
 import Mathlib.Tactic
 
+namespace JordanLieMetriplectic
+
 section Metriplectic
 
 variable {A : Type*} [Ring A]
@@ -20,3 +22,5 @@ theorem assoc_split (a b : A) : a * b + a * b = jordan_prod a b + lie_bracket a 
   abel
 
 end Metriplectic
+
+end JordanLieMetriplectic

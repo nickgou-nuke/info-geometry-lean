@@ -3,6 +3,8 @@ open Complex
 open Real
 open Matrix
 
+namespace JDualityChain
+
 /-!
 # J-duality chain: J → V₄ → Möbius → Legendre–Fenchel
 
@@ -258,3 +260,7 @@ theorem J_Γ_anticomm' : J_mod * Γ = -(ΓJ) := by
 #check JDualityChain_holds
 #check fenchel_J_closure
 #check J_Γ_anticomm'
+
+end
+
+end JDualityChain

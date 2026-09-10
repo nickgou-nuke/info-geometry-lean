@@ -19,6 +19,8 @@ half-plane to the elliptic unit disk.
 
 noncomputable section
 
+namespace TransformsAndScale
+
 /-- The Cayley Transform: W = (z - i) / (z + i)
     This is the fundamental Möbius transformation that maps the Hyperbolic upper half-plane 
     to the Elliptic unit disk, bridging the two geometric sectors. -/
@@ -123,5 +125,7 @@ theorem cayley_real_unit_circle (x : ℝ) :
   rw [Complex.normSq_div]
   simp [Complex.normSq]
   nlinarith [sq_nonneg x]
+
+end TransformsAndScale
 
 end noncomputable section

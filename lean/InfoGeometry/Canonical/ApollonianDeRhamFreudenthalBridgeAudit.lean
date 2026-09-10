@@ -1,0 +1,18 @@
+import InfoGeometry.Canonical.ApollonianDeRhamFreudenthalBridge
+
+open InfoGeometry.Canonical.ApollonianDeRhamFreudenthalBridge
+open InfoGeometry.Canonical.ApollonianDeRhamFreudenthalBridge.CylinderForms
+
+#print axioms chiralityOp_involutive
+#print axioms chiralityOp_smul
+#print axioms Q_plus_sq_zero
+#print axioms Q_minus_sq_zero
+#print axioms chirality_anticomm_Q_plus
+#print axioms chirality_anticomm_Q_minus
+#print axioms laplacian_eq_anticommutator
+#print axioms cylinder_witten_index_zero
+#print axioms cylinder_witten_index_cancel
+#print axioms freudenthal_quartic_chiral_invariant
+#print axioms freudenthal_quartic_homothety
+#print axioms freudenthal_null_boundary_conformal
+#print axioms apollonian_derham_freudenthal_synthesis

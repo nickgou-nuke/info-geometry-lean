@@ -17,6 +17,8 @@ parameter.
 
 noncomputable section
 
+namespace ModularMonodromy
+
 set_option linter.unnecessarySeqFocus false
 set_option linter.unnecessarySimpa false
 
@@ -140,3 +142,5 @@ theorem modular_monodromy_theorem :
   exact ⟨sheetTime_add, modularFactor_splits, kms_one_winding,
     parabolic_ticks_add, parabolic_tick_inverse, parity_flips_boost,
     det_bogoliubovBoost, quadratic_legendre_value⟩
+
+end ModularMonodromy

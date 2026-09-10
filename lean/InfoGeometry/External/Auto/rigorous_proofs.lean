@@ -17,6 +17,8 @@ open Set
 
 noncomputable section
 
+namespace RigorousProofs
+
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 set_option linter.unnecessarySimpa false

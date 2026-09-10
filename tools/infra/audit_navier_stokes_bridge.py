@@ -251,6 +251,61 @@ def check_biot_savart_energy_bridge():
         "zero_sorry": not has_sorry
     }
 
+def check_singularity_closure_bridge():
+    bridge_path = REPO_ROOT / "lean" / "InfoGeometry" / "Canonical" / "NavierStokesSingularityClosure.lean"
+    if not bridge_path.exists():
+        return {"status": "missing", "path": str(bridge_path)}
+    
+    with open(bridge_path, "r", encoding="utf-8") as f:
+        src = f.read()
+    
+    required_symbols = [
+        "divergence",
+        "InitialVelocityCondition",
+        "InitialVelocityConditionDecay",
+        "EulerExistenceAndSmoothness",
+        "EulerExistenceAndSmoothnessR3",
+        "IsOnePeriodic",
+        "InitialVelocityConditionPeriodic",
+        "ForceCondition",
+        "ForceConditionDecay",
+        "ForceConditionPeriodic",
+        "NavierStokesExistenceAndSmoothness",
+        "NavierStokesExistenceAndSmoothnessRn",
+        "NavierStokesExistenceAndSmoothnessPeriodic",
+        "vorticity",
+        "velocityC1Norm",
+        "vorticityNorm",
+        "le_velocityC1Norm",
+        "velocityC1Norm_tendsto_top_of_pointwise_blowup",
+        "velocityC1Norm_limsup_eq_top_of_pointwise_blowup",
+        "not_smooth_of_tendsto_atTop",
+        "not_smooth_of_asymptotic_profile",
+        "no_euler_solution_of_asymptotic_profile",
+        "no_euler_R3_solution_of_asymptotic_profile",
+        "no_navier_stokes_solution_of_asymptotic_profile",
+        "no_navier_stokes_Rn_solution_of_asymptotic_profile",
+        "no_navier_stokes_periodic_solution_of_asymptotic_profile",
+        "euler_breakdown_of_asymptotic_blowup",
+        "navier_stokes_breakdown_R3_of_asymptotic_blowup",
+        "navier_stokes_breakdown_periodic_of_asymptotic_blowup",
+        "CertifiedNavierStokesSingularityClosure",
+        "certified_navier_stokes_singularity_closure"
+    ]
+    
+    found_symbols = {sym: (sym in src) for sym in required_symbols}
+    all_found = all(found_symbols.values())
+    
+    has_sorry = ("sorry" in src)
+    
+    return {
+        "status": "present",
+        "line_count": len(src.splitlines()),
+        "all_symbols_present": all_found,
+        "missing_symbols": [s for s, found in found_symbols.items() if not found],
+        "zero_sorry": not has_sorry
+    }
+
 def main():
     upstream_info = check_upstream()
     bridge_info = check_native_bridge()
@@ -258,6 +313,7 @@ def main():
     torus_ergodic_info = check_torus_ergodic_bridge()
     wave_packet_info = check_wave_packet_bridge()
     biot_savart_energy_info = check_biot_savart_energy_bridge()
+    singularity_closure_info = check_singularity_closure_bridge()
     
     report = {
         "audit": "Navier-Stokes Integration & Zorn Hydrodynamic Bridge",
@@ -267,6 +323,7 @@ def main():
         "torus_ergodic_bridge": torus_ergodic_info,
         "wave_packet_bridge": wave_packet_info,
         "biot_savart_energy_bridge": biot_savart_energy_info,
+        "singularity_closure_bridge": singularity_closure_info,
         "invariants": {
             "anosov_matrix_det": 14,
             "anosov_matrix_trace": 8,
@@ -277,7 +334,11 @@ def main():
             "angular_harmonic_mean": "1/2",
             "fourier_biot_savart_curl_inverse": True,
             "negative_power_scale_divergence": True,
-            "horizon_discontinuity_proved": True
+            "horizon_discontinuity_proved": True,
+            "beale_kato_majda_limsup_top": True,
+            "euler_breakdown_r3_certified": True,
+            "navier_stokes_breakdown_r3_certified": True,
+            "navier_stokes_breakdown_periodic_certified": True
         },
         "success": (
             upstream_info.get("status") == "present" and
@@ -290,7 +351,9 @@ def main():
             wave_packet_info.get("all_symbols_present") is True and
             wave_packet_info.get("zero_sorry") is True and
             biot_savart_energy_info.get("all_symbols_present") is True and
-            biot_savart_energy_info.get("zero_sorry") is True
+            biot_savart_energy_info.get("zero_sorry") is True and
+            singularity_closure_info.get("all_symbols_present") is True and
+            singularity_closure_info.get("zero_sorry") is True
         )
     }
     

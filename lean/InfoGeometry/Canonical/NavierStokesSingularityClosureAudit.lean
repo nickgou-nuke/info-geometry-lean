@@ -1,0 +1,24 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Authors
+-/
+import InfoGeometry.Canonical.NavierStokesSingularityClosure
+
+open InfoGeometry.Canonical.NavierStokesSingularity
+
+#print axioms divergence
+#print axioms le_velocityC1Norm
+#print axioms velocityC1Norm_tendsto_top_of_pointwise_blowup
+#print axioms velocityC1Norm_limsup_eq_top_of_pointwise_blowup
+#print axioms not_smooth_of_tendsto_atTop
+#print axioms not_smooth_of_asymptotic_profile
+#print axioms no_euler_solution_of_asymptotic_profile
+#print axioms no_euler_R3_solution_of_asymptotic_profile
+#print axioms no_navier_stokes_solution_of_asymptotic_profile
+#print axioms no_navier_stokes_Rn_solution_of_asymptotic_profile
+#print axioms no_navier_stokes_periodic_solution_of_asymptotic_profile
+#print axioms euler_breakdown_of_asymptotic_blowup
+#print axioms navier_stokes_breakdown_R3_of_asymptotic_blowup
+#print axioms navier_stokes_breakdown_periodic_of_asymptotic_blowup
+#print axioms certified_navier_stokes_singularity_closure

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitQuaternionMatrices
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Pauli quaternion versus split-quaternion matrix packets
@@ -25,7 +26,7 @@ open scoped Matrix
 open InfoGeometryCore
 
 /-- Complex `2 × 2` matrices. -/
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Matrix commutator. -/
 def commC (A B : M2C) : M2C := A * B - B * A

@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.PauliHestenesSpinMomentum
 import InfoGeometry.Canonical.BiQuaternionKahlerFinite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Quaternionic Pauli--Dirac soldering
@@ -19,7 +20,7 @@ open Matrix
 open scoped Matrix
 open InfoGeometry.Canonical.PauliHestenesSpinMomentum
 
-abbrev PauliBlock := Matrix (Fin 2) (Fin 2) ℂ
+abbrev PauliBlock := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev WeylSpinor := Fin 2 → ℂ
 abbrev DiracSpinor := WeylSpinor × WeylSpinor
 

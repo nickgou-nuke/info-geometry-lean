@@ -463,6 +463,17 @@ Formalizing the Aharonov-Albert-Vaidman two-boundary quantum state architecture,
 * **Cauchy-Schwarz & Anomalous Amplification Bounds:** The weak value numerator obeys $|W(A)| \cdot |\langle \psi_f, \psi_i \rangle| \le \|\psi_f\| \cdot \|A \psi_i\|$, and when the overlap is small ($|\langle \psi_f, \psi_i \rangle| \le \epsilon$), the weak value magnitude is bounded below by $\frac{|\langle \psi_f, A \psi_i \rangle|}{\epsilon}$.
   In Lean 4: [`TwoBoundaryChiralCurrentBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/TwoBoundaryChiralCurrentBridge.lean) (`transitionProjector_fixes_initial`, `transitionProjector_idempotent`, `transitionProjector_weak_eigenvalue`, `weakValue_id`, `weakValue_add`, `weakValue_smul`, `weakValue_eigenvalue`, `weakValue_totalCurrent`, `weakValue_holomorphic_boundary`, `weakValue_antiholomorphic_boundary`, `weakValue_cauchy_schwarz`, `weakValue_amplification`, `certified_two_boundary_chiral_current_synthesis`).
 
+### 5.23 The Chiral Boundary Symplectic Form & Lagrangian Splitting
+Formalizing the doubled chiral phase space $V = E \times E$, its canonical symplectic 2-form $\Omega$, Lagrangian isotropic splitting, almost complex structure $J$, and induced Kähler metric:
+* **Canonical Chiral Symplectic Form:** On the doubled space $E \times E$, the 2-form $\Omega((u_1, u_2), (v_1, v_2)) = \langle u_1, v_2 \rangle - \langle v_1, u_2 \rangle$ is alternating ($\Omega(u, u) = 0$), skew-symmetric ($\Omega(u, v) = -\Omega(v, u)$), and bilinear.
+* **Lagrangian Isotropic Polarization:** The holomorphic subspace $L_{\mathrm{hol}} = E \times \{0\}$ and the antiholomorphic subspace $L_{\mathrm{antihol}} = \{0\} \times E$ are maximally isotropic (Lagrangian branes):
+  $$\Omega((u_1, 0), (v_1, 0)) = 0, \quad \Omega((0, u_2), (0, v_2)) = 0$$
+* **Cross-Sector Inner Product Recovery:** The symplectic form pairs holomorphic and antiholomorphic components to recover the underlying real inner product:
+  $$\Omega((u_1, 0), (0, v_2)) = \langle u_1, v_2 \rangle$$
+* **Canonical Complex Structure & Kähler Metric:** The operator $J(u_1, u_2) = (-u_2, u_1)$ satisfies $J^2 = -\mathrm{id}_V$. The symplectic form is strictly compatible with $J$, satisfying $\Omega(u, J u) = \|u_1\|^2 + \|u_2\|^2 \ge 0$, and induces the standard product Riemannian metric $g(u, v) = \Omega(u, J v) = \langle u_1, v_1 \rangle + \langle u_2, v_2 \rangle$.
+* **Non-Degeneracy & Invariance:** The symplectic form is non-degenerate ($(\forall v, \Omega(u, v) = 0) \implies u = 0$), and $J$ acts as an isometry for both the metric ($g(J u, J v) = g(u, v)$) and the symplectic form ($\Omega(J u, J v) = \Omega(u, v)$).
+  In Lean 4: [`ChiralBoundarySymplecticBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ChiralBoundarySymplecticBridge.lean) (`symplecticForm_skew`, `symplecticForm_self_zero`, `symplecticForm_add_left`, `symplecticForm_add_right`, `symplecticForm_smul_left`, `symplecticForm_smul_right`, `holomorphic_isotropic`, `antiholomorphic_isotropic`, `cross_pairing_recovery`, `J_sq`, `symplectic_J_positive`, `metric_eq_symplectic_J`, `symplectic_nondegenerate`, `metric_J_invariant`, `symplectic_J_invariant`, `certified_chiral_boundary_symplectic_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -502,6 +513,7 @@ Formalizing the Aharonov-Albert-Vaidman two-boundary quantum state architecture,
 | **Penrose Twistor Real Slice** | Twistor Incidence / Real Slice / Null Separation | `incident_neutral_form_real`, `twistor_null_separation` | **Kernel-Checked (0 gaps)** |
 | **Chiral Dolbeault-Hodge & Laplacian** | Chiral Complex $(E, \partial_\tau, \bar{\partial}_\tau^*)$ / $\Delta_\tau$ | `laplacian_self_adjoint`, `chiral_hodge_energy_conservation` | **Kernel-Checked (0 gaps)** |
 | **Two-Boundary Chiral Current** | Two-Boundary Pair $(\psi_i, \psi_f)$ / Projector $T$ / Chiral $J$ | `transitionProjector_weak_eigenvalue`, `weakValue_totalCurrent` | **Kernel-Checked (0 gaps)** |
+| **Chiral Boundary Symplectic Form** | Doubled Space $E \times E$ / Symplectic $\Omega$ / Kähler $(g, \Omega, J)$ | `symplectic_nondegenerate`, `metric_eq_symplectic_J` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

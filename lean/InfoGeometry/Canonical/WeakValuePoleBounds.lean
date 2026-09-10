@@ -1,5 +1,5 @@
 import Mathlib.Analysis.Complex.Norm
-import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Inv
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
 
@@ -30,7 +30,7 @@ theorem quotient_difference {𝕜 : Type*} [Field 𝕜]
     n₁ / d₁ - n₀ / d₀ =
       (d₀ * (n₁ - n₀) - n₀ * (d₁ - d₀)) / (d₁ * d₀) := by
   field_simp [h₀, h₁]
-  <;> ring
+  ring
 
 /-- Complex amplification under an explicit noncancellation inequality. -/
 theorem norm_quotient_gt (n d : ℂ) (hd : d ≠ 0) (R : ℝ)
@@ -98,8 +98,8 @@ theorem quotient_derivative_abs_le (n d n' d' : ℝ) :
       (|n'| * |d| + |n| * |d'|) / d ^ 2 := by
   rw [abs_div, abs_of_nonneg (sq_nonneg d)]
   apply div_le_div_of_nonneg_right _ (sq_nonneg d)
-  simpa only [sub_eq_add_neg, abs_mul, abs_neg] using
-    (abs_add (n' * d) (-(n * d')))
+  simpa only [Real.norm_eq_abs, abs_mul] using
+    (norm_sub_le (n' * d) (n * d'))
 
 /-- Constant ratios have exactly zero derivative numerator, even near small overlaps. -/
 theorem proportional_derivative_numerator (a d d' : ℝ) :

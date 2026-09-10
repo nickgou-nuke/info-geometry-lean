@@ -38,6 +38,7 @@ import InfoGeometry.OperatorAlgebra.CliffordInfinityCAR
 import InfoGeometry.OperatorAlgebra.CliffordInfinityCommutation
 import InfoGeometry.OperatorAlgebra.CasimirInvariance
 import InfoGeometry.OperatorAlgebra.ColeFuryIdeals
+import InfoGeometry.OperatorAlgebra.WeakBdGColorConfinementBridge
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 import InfoGeometry.OperatorAlgebra.ConformalCrossover
 import InfoGeometry.OperatorAlgebra.ConformalCyclicCosmology

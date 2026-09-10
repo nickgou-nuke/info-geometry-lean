@@ -159,9 +159,8 @@ for known declarations. The search
 record distinguishes source inspection from kernel verification; no claim is
 made that every proof body in the repository was audited.
 
-The sixteen new owner modules compile without warnings using native Lean
-4.28.0 and the pinned Mathlib sources/cache. The source dependency closure,
-including the axiom diagnostic, contains 89 modules. All 126 new theorem axiom
+The twenty-one new owner modules compile without warnings using native Lean
+4.28.0 and the pinned Mathlib sources/cache. All 190 new theorem axiom
 reports contain only `propext`, `Classical.choice`, and `Quot.sound`; none
 contains `sorryAx`. The repository's staged proof-proxy gate and exact SymPy
 witness pass. This is a narrow check, not a repository-wide build or a check
@@ -176,4 +175,9 @@ are implemented in the follow-up modules documented in
 [WEAK_VALUE_RECONSTRUCTION.md](WEAK_VALUE_RECONSTRUCTION.md). They add the
 actual spatial spinor readout, complex-overlap geometry, sufficient real-pole
 conditions, postselection-barrier divergence and fixed-metric Krein
-conservation. These results do not replace the outstanding fluid adapter.
+conservation. The subsequent extension
+[NAVIER_STOKES_RECONSTRUCTION_ENSTROPHY.md](NAVIER_STOKES_RECONSTRUCTION_ENSTROPHY.md)
+adds an exact two-state spatial momentum reconstruction, pointwise forced
+Navier–Stokes shear, and divergent cube enstrophy. Its explicit forcing is
+singular at the terminal time. An adapter to the external globally smooth
+forcing and finite-energy solution predicates remains a separate obligation.

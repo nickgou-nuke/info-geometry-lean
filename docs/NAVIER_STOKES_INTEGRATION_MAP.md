@@ -10,6 +10,8 @@
 > - `InfoGeometry/Canonical/NavierStokesConePiolaAudit.lean`  
 > - `InfoGeometry/Canonical/NavierStokesTorusErgodicBridge.lean` (Tier 2: Torus Dynamics, Haar Invariance, Ergodic Reynolds Mixing)  
 > - `InfoGeometry/Canonical/NavierStokesTorusErgodicAudit.lean`  
+> - `InfoGeometry/Canonical/NavierStokesWavePacketBridge.lean` (Tier 3: Transverse Wave Packets, Biot–Savart Fourier Inversion, Reynolds Dyadic Stress)  
+> - `InfoGeometry/Canonical/NavierStokesWavePacketAudit.lean`  
 > **Kernel Status:** 100% Kernel Checked, 0 `sorry`, 0 custom axioms  
 
 ---
@@ -221,15 +223,46 @@ In `InfoGeometry/Canonical/NavierStokesTorusErgodicBridge.lean`, we formalized T
    ```
    This exact $1/2$ factor converts the high-frequency angular momentum fluctuations into the macroscopic Reynolds stress.
 
+### 4.8. Transverse Wave Packets, Biot–Savart Fourier Inversion & Reynolds Dyadic Stress
+
+In `InfoGeometry/Canonical/NavierStokesWavePacketBridge.lean`, we formalized Tier 3:
+
+1. **BAC-CAB Vector Triple Product & Transverse Wave Simplification**:
+   ```lean
+   theorem cross_cross_eq_sub (k w : Vec3) :
+       crossProd k (crossProd k w) = (dotProd k w) • k - (normSq k) • w
+   
+   theorem transverse_double_cross {k w : Vec3} (htrans : dotProd k w = 0) :
+       crossProd k (crossProd k w) = (- (normSq k)) • w
+   ```
+2. **Exact Fourier Biot–Savart Inversion**:
+   For any nonzero frequency $\vec{k} \neq 0$ and transverse amplitude $\vec{w}$ ($\vec{k} \cdot \vec{w} = 0$), the potential multiplier $\vec{A} = -\|\vec{k}\|^{-2} (\vec{k} \times \vec{w})$ inverts the curl in wave space:
+   ```lean
+   theorem fourier_biot_savart_inversion {k w : Vec3} (hk : normSq k ≠ 0) (htrans : dotProd k w = 0) :
+       crossProd k (- (normSq k)⁻¹ • crossProd k w) = w
+   ```
+3. **Reynolds Dyadic Stress & Trace Energy Identity**:
+   ```lean
+   theorem dyadicStress_trace (u : Vec3) :
+       Matrix.trace (dyadicStress u u) = normSq u
+   
+   theorem harmonic_reynolds_stress (w : Vec3) (j : ℤ) (hj : j ≠ 0) (phase : ℝ) :
+       (fun i j_idx => angularMean
+         (fun θ => dyadicStress (fun m => w m * Real.cos ((j : ℝ) * θ + phase))
+                                (fun m => w m * Real.cos ((j : ℝ) * θ + phase)) i j_idx)) =
+         (1 / 2 : ℝ) • dyadicStress w w
+   ```
+
 ---
 
 ## 5. Synthesis Certification
 
-The complete bridge suite is certified by three kernel-checked witness structures:
+The complete bridge suite is certified by four kernel-checked witness structures:
 
 1. `certified_zorn_navier_stokes_synthesis` in `ZornNavierStokesHydrodynamicBridge.lean`
 2. `certified_navier_stokes_cone_piola_bridge` in `NavierStokesConePiolaBridge.lean`
 3. `certified_navier_stokes_torus_ergodic_bridge` in `NavierStokesTorusErgodicBridge.lean`
+4. `certified_navier_stokes_wave_packet_bridge` in `NavierStokesWavePacketBridge.lean`
 
 Axiom verification:
 ```text
@@ -240,6 +273,9 @@ Axiom verification:
   [propext, Classical.choice, Quot.sound]
 
 'InfoGeometry.Canonical.NavierStokesTorusErgodic.certified_navier_stokes_torus_ergodic_bridge' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
+
+'InfoGeometry.Canonical.NavierStokesWavePacket.certified_navier_stokes_wave_packet_bridge' depends on axioms:
   [propext, Classical.choice, Quot.sound]
 ```
 Zero custom axioms, zero `sorry`, 100% verified.

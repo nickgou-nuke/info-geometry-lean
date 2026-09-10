@@ -180,6 +180,23 @@ In neutral signature $(2n, 2n)$ on the Apollonian continuum:
   condensing the exact gradient into the coexact curl across the doublet.
   In Lean 4: [`ParaHyperkahlerHodgeDecompositionBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaHyperkahlerHodgeDecompositionBridge.lean) (`bdgZorn_massless_decoupling`, `bdgZorn_sq_eq_klein_gordon`, `bdgZorn_mass_condensation`).
 
+### 5.5 Harmonic Weak Horizon & Chiral Charge Transfer
+At the modular horizon seam ($t=0$ cross-cap of the Klein bottle):
+* **Kinetic Flow Freezing:** On the harmonic forms $\mathcal{H}_\Delta$, the Dirac-Kähler kinetic operator $\mathcal{D} = d - \delta$ and the Hodge Laplacian $\Delta = -(d\delta + \delta d)$ vanish identically:
+  $$\mathcal{D}\gamma_h = 0, \quad \Delta \gamma_h = 0, \quad \hat{Z}_{\mathrm{kin}}(\gamma_1, \gamma_2) = (0, 0)$$
+  In Lean 4: `diracKaehler_on_harmonic`, `hodgeLaplacian_on_harmonic`, `bdgKinetic_harmonic_vanishes`.
+* **Kinetic-Mass Anticommutation:** The bi-wave operator decomposes as $\hat{Z}_{\mathrm{BdG}}(m) = \hat{Z}_{\mathrm{kin}} + \hat{Z}_{\mathrm{mass}}(m)$, where the kinetic and mass operators strictly anticommute:
+  $$\{\hat{Z}_{\mathrm{kin}}, \hat{Z}_{\mathrm{mass}}(m)\} = 0$$
+  guaranteeing exact cross-term cancellation in relativistic Klein-Gordon dispersion.
+  In Lean 4: `kinetic_mass_anticommutation`.
+* **Pure Mass Condensation & Twin-Swap Reflection:** On harmonic doublets, the bi-wave dynamics reduces purely to the mass condensate swapping the forward and backward waves across the throat:
+  $$\hat{Z}_{\mathrm{BdG}}(m)(\gamma_1, \gamma_2) = (m \cdot \gamma_2, \; m \cdot \gamma_1) = m \cdot \mathrm{twinSwap}(\gamma_1, \gamma_2)$$
+  In Lean 4: `bdgZorn_on_harmonic_eq_mass`, `bdgZorn_on_harmonic_doublet`, `bdgZorn_harmonic_sq`.
+* **Aharonov Weak Horizon Amplification:** Transition amplitudes across the modular seam evaluate as:
+  $$\langle \Phi, \hat{Z}_{\mathrm{BdG}}(m) \Psi \rangle_{\mathcal{K}, 2} = m \cdot (\langle \phi_1, \psi_2 \rangle_{\mathcal{K}} + \langle \phi_2, \psi_1 \rangle_{\mathcal{K}})$$
+  When the horizon overlap contracts to $\epsilon \ll 1$, the Aharonov weak value $\Omega_w = \mathrm{Num}/\epsilon$ amplifies the mass coupling $m$, driving the condensation of massless lightcone rays into massive matter without violating de Rham cohomology.
+  In Lean 4: [`HarmonicWeakHorizonBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/HarmonicWeakHorizonBridge.lean) (`krein_harmonic_matrix_element`, `krein_harmonic_twin_swap_matrix_element`, `horizon_weak_value_scaling`, `horizon_mass_transfer_weak_value`, `chiralCharge_on_harmonic`, `harmonic_cohomological_stability`).
+
 ---
 
 ## Master Verification Matrix
@@ -201,6 +218,7 @@ In neutral signature $(2n, 2n)$ on the Apollonian continuum:
 | **Cylinder Hodge Duality** | Graded Differential Forms $\Omega^\bullet$ | `hodgeStar_sq_eq_chirality`, `codifferential_sq_zero` | **Kernel-Checked (0 gaps)** |
 | **Chiral Hodge-Dirac-Kähler** | Graded Operator / 6-Fold Polarized Hodge | `diracKahler_sq`, `diracKahler_anticomm_gamma`, `diracKahler_on_exact` | **Kernel-Checked (0 gaps)** |
 | **Para-Hyperkähler Hodge & Krein** | Polarized Hodge Form / Dirac-Kähler / Zorn-BdG | `dirac_sq_eq_neg_laplacian`, `krein_dirac_skew_adjoint`, `bdg_dispersion` | **Kernel-Checked (0 gaps)** |
+| **Harmonic Weak Horizon** | Polarized Harmonic Doublets / Aharonov Weak Value | `dirac_on_harmonic`, `kinetic_mass_anticomm`, `bdg_harmonic_doublet`, `mass_transfer_wva` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

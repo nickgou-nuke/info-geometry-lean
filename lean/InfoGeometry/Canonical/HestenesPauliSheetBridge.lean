@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases
@@ -11,7 +12,7 @@ namespace InfoGeometry.Canonical.HestenesPauliSheetBridge
 
 open InfoGeometry.Canonical.ChiralStokesPauliBasis
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-!
 This owner is the finite matrix Hestenes dictionary.  It records the real

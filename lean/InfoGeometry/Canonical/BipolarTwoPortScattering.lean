@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarCriticalWindowsVortex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.SplitBoost
 import Mathlib
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -26,7 +27,7 @@ namespace InfoGeometry.Canonical.BipolarTwoPortScattering
 open InfoGeometry.Analysis.BipolarCriticalWindowsVortex
 open Matrix Complex
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Canonical two-port unitary-form scattering block. -/
 def scatteringBlock (r t : ℂ) : M2C :=

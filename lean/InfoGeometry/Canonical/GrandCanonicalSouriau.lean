@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Canonical.CantorHaarDiracSea
 import InfoGeometry.Canonical.ModularSL2R
@@ -25,7 +26,7 @@ open InfoGeometry.Algebra.HypercomplexTriad
 open InfoGeometry.Canonical.CantorHaarDiracSea
 open InfoGeometry.Canonical.ModularSL2R
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Souriau/Jaynes finite thermodynamic state on the `M₂(ℝ)` seed. -/
 noncomputable def SouriauState (beta mu : ℝ) : M2R :=

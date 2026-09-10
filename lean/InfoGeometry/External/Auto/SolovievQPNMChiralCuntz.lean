@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Soloviev QPNM as a Chiral Cuntz Matrix-Unit Shadow
@@ -32,7 +33,7 @@ open Complex
 
 namespace SolovievQPNMChiralCuntz
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Right/even projector. -/
 def Nplus : M2C := !![(1 : ℂ), 0; 0, 0]

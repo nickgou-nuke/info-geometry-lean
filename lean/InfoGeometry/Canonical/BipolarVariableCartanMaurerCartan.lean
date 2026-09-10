@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarLogDifferential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarLocalConformalCoordinate
 import InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra
@@ -43,7 +44,7 @@ open InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
 open InfoGeometry.OperatorAlgebra.ExteriorAlgebra
 open InfoGeometry.Physics.ChiralCausalCone
 
-abbrev Matrix2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Matrix2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Meromorphic coefficient of `dq/q` in the standard complex coordinate. -/
 def omegaCoeff (s : ℂ) : ℂ :=

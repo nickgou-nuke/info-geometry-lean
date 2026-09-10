@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 
@@ -6,7 +7,7 @@ namespace JordanBlock2
 
 open Matrix
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev V2C := Fin 2 → ℂ
 
 /-- Matrix-vector action. -/

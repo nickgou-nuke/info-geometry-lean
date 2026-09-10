@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.DeterminantSupergrading
 import InfoGeometry.External.Auto.TrifactorGeometry
 import InfoGeometry.External.Auto.LieFlowCompilerBridge
@@ -16,8 +17,8 @@ open InfoGeometry.Canonical.LieFlowCompiler
 variable {G X V : Type*} [Group G] [MulAction G X]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Step-7 trajectory operators reused as concrete Pauli-like braid generators. -/
 def pauliX : M2R := modular_j

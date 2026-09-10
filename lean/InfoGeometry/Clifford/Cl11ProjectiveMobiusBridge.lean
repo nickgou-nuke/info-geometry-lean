@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
 
@@ -17,7 +18,7 @@ namespace InfoGeometry.Clifford.Cl11ProjectiveMobiusBridge
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def e0 : M2R := !![0, 1; 1, 0]
 

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Superconducting gap structures in wallpaper fermion systems
@@ -107,7 +108,7 @@ theorem z2Invariant_periodic (Nocc : ℤ) : z2Invariant (Nocc + 2) = z2Invariant
 
 /-! ## BdG/Majorana toy algebra -/
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Simple real BdG block `[[ξ,Δ],[Δ,-ξ]]`. -/
 def BdG2 (ξ Δ : ℂ) : M2C := !![ξ, Δ; Δ, -ξ]

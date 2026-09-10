@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -31,7 +32,7 @@ namespace InfoGeometry.Topology.KatzSarnakRandomMatrixBridge
 
 open Matrix
 
-abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Planar rotation matrix R(a, b) parameterized by coordinates with a² + b² = 1 -/
 def rotationMatrix (a b : ℝ) : Mat2R :=

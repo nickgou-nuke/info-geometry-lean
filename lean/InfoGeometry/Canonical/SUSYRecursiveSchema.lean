@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SuperAlgebraEquilibrium
 
 /-!
@@ -13,7 +14,7 @@ namespace InfoGeometry.Canonical.SUSYRecursiveSchema
 open Matrix
 open SuperAlgebraEquilibrium
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Matrix commutator. -/
 def comm (A X : M2R) : M2R := A * X - X * A

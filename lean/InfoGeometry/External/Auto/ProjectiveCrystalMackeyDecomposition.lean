@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Projective crystal symmetry and Mackey kappa decomposition
@@ -23,7 +24,7 @@ namespace ProjectiveCrystalMackeyDecomposition
 
 open Matrix
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev KPoint := ℚ × ℚ
 abbrev Z2Pair := Bool × Bool
 

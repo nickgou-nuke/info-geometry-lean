@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.EmergentKillingField
@@ -10,7 +11,7 @@ namespace InfoGeometry.Canonical.EmergentKillingField
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Trace on `2×2` real matrices. -/
 def tr (A : M2R) : ℝ := A 0 0 + A 1 1

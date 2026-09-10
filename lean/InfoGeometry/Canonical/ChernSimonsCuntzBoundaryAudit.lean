@@ -1,0 +1,16 @@
+import InfoGeometry.Canonical.ChernSimonsCuntzBoundaryBridge
+
+/-!
+# Axiomatic Audit of ChernSimonsCuntzBoundaryBridge
+
+This audit checks the foundational axioms of ChernSimonsCuntzBoundaryBridge.
+Expected axioms: [propext, Classical.choice, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.ChernSimonsCuntzBoundaryBridge.makeCertifiedChernSimonsCuntzSynthesis
+#print axioms InfoGeometry.Canonical.ChernSimonsCuntzBoundaryBridge.chern_simons_stokes_pairing
+#print axioms InfoGeometry.Canonical.ChernSimonsCuntzBoundaryBridge.cs_branch_state_sum
+#print axioms InfoGeometry.Canonical.ChernSimonsCuntzBoundaryBridge.hodge_green_annihilates_ghost
+#print axioms InfoGeometry.Canonical.ChernSimonsCuntzBoundaryBridge.hodge_green_inverts_index_one
+#print axioms InfoGeometry.Canonical.ChernSimonsCuntzBoundaryBridge.drazin_resolved_boundary_gauge_invariance
+#print axioms InfoGeometry.Canonical.ChernSimonsCuntzBoundaryBridge.certified_chern_simons_cuntz_synthesis

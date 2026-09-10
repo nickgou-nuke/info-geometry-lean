@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite biquaternion dual-root regularizer
@@ -27,7 +28,7 @@ open Matrix
 open scoped Matrix
 
 /-- Native `2 × 2` complex matrix carrier for the finite biquaternion shadow. -/
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- The `2 × 2` identity matrix. -/
 def I2 : Mat2C := 1

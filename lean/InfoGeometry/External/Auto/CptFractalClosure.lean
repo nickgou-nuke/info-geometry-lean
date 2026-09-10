@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # CPT light-cone nilpotent atoms
@@ -11,7 +12,7 @@ namespace CptFractalClosure
 
 open Matrix Complex
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Forward light-cone nilpotent. -/
 def n_plus : M2C := !![0, 1; 0, 0]

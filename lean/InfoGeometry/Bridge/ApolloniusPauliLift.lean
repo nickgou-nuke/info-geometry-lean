@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Coordinate.ApolloniusLogCoordinates
 import InfoGeometry.Canonical.PauliHestenesSpinMomentum
 
@@ -21,7 +22,7 @@ namespace InfoGeometry.PauliLift
 open scoped Matrix
 open InfoGeometry.Apollonius
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Complex Cartan coordinate `η + iθ`. -/
 def cartanCoordinate (s : PuncturedPlane) : ℂ :=

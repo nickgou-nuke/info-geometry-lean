@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.SupergradedCuntzBdG
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SuperPoincareOperatorCharges
 import InfoGeometry.Physics.LorentzBoostMinkowski
 import InfoGeometry.Physics.ChiralPoincareSouriauBridge
@@ -28,7 +29,7 @@ namespace InfoGeometry.Physics.CuntzDeformedSuperPoincare
 open Matrix
 open scoped BigOperators
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-! ## Cuntz-deformed superbracket endpoints -/
 

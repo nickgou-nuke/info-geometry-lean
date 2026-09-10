@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases
@@ -33,7 +34,7 @@ open scoped BigOperators
 abbrev Quat := Section8.Quat
 abbrev ConnectionCoeff := Fin 4 → Fin 4 → Fin 4 → ℂ
 abbrev FrameCoeff := Fin 4 → Fin 4 → ℂ
-abbrev SpinMat := Matrix (Fin 2) (Fin 2) ℂ
+abbrev SpinMat := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev Spinor := Matrix (Fin 2) (Fin 1) ℂ
 
 /-! ## 12.1 Vector torsion coefficients -/

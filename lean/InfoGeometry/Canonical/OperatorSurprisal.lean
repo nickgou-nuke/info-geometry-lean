@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Canonical.ModularLorentzBoost
 import InfoGeometry.Canonical.SplitCliffordChiralProjection
@@ -18,7 +19,7 @@ open InfoGeometry.Canonical.ModularLorentzBoost
 open InfoGeometry.Canonical.SplitCliffordChiralProjection
 open InfoGeometry.Canonical.EmergentKillingField
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Operator surprisal: `β • K`. -/
 noncomputable def surprisal (β : ℝ) : M2R := β • K

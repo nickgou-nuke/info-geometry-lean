@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordCantorFock
@@ -10,7 +11,7 @@ namespace InfoGeometry.Canonical.SplitCliffordCantorFock
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 abbrev V2R := Matrix (Fin 2) (Fin 1) ℝ
 
 /-- `false` (empty) local basis state `|0⟩`. -/

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.EulerLimitCommute
@@ -10,7 +11,7 @@ namespace InfoGeometry.Canonical.EulerLimitCommute
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- One finite Euler step: `I + cX`. -/
 def eulerStep (c : ℝ) (X : M2R) : M2R :=

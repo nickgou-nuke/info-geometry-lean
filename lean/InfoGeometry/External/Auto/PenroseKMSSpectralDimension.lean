@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Penrose KMS spectral dimension and scale dictionary
@@ -52,7 +53,7 @@ theorem binaryCantorDimension_log_identity {ρ : ℝ} (hlog : Real.log ρ ≠ 0)
 
 /-! ## 3. Tripotent algebraic scale poles -/
 
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 
 /-- Tripotent scale operator with sectors `+1,-1,0`. -/
 def Trip : M3C := !![1, 0, 0; 0, -1, 0; 0, 0, 0]

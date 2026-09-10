@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
 
@@ -8,7 +9,7 @@ open Matrix
 
 namespace InfoGeometry.Nuclear.ChiralPRM
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-!
 # Frauendorf Triaxial Particle-Rotor Model (PRM) & Nuclear Chirality Bridge

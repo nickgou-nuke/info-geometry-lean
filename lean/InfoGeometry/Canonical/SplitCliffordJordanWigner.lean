@@ -23,7 +23,7 @@ open Matrix
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
 
 /-- Local concrete carrier used by this owner file. -/
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /--
 Local fermionic parity/grading operator:

@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.ModularKreinReflectionColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.tomita_kms_v4
 import InfoGeometry.External.Auto.ModularGlideCPT
 
@@ -25,8 +26,8 @@ namespace CPTKreinTowerBridge
 open Matrix
 open ModularKreinReflectionColimit
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- The real modular reflection from the Tomita model. -/
 def realMirror : M2R →ₗ[ℝ] M2R :=

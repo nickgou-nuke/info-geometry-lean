@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Amari--Chentsov cubic coefficient and 2x2 skew matrix
@@ -17,7 +18,7 @@ namespace AmariChentsovFierzTorsion
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- A finite two-coefficient jet through cubic order.
 `dikinMetric` is the quadratic coefficient and `amariCubic` is the cubic

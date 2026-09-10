@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Notation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!
@@ -18,7 +19,7 @@ namespace InfoGeometry.Clifford.QuaternionPauliRealForm
 
 open scoped Matrix
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def sigma1 : Mat2C := !![(0 : ℂ), 1; 1, 0]
 

@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -89,7 +90,7 @@ theorem master_frobenius_schur_equation
 /-! ### Pillar 3: Emergent Spacetime & Soldering Determinant -/
 
 abbrev FourVector := Fin 4 → ℝ
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Pauli matrix basis σ₀, σ₁, σ₂, σ₃ -/
 def sigma0 : Mat2C := !![1, 0; 0, 1]

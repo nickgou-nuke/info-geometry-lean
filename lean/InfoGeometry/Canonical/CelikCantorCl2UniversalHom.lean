@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikCantorPauliMatrixSpan
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Equivs
 
 /-!
@@ -18,7 +19,7 @@ open InfoGeometry.Canonical.CelikCantorClifford
 open InfoGeometry.Canonical.CelikCantorPauliMatrixSpan
 
 abbrev Vec2C := ℂ × ℂ
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 noncomputable def q2 : QuadraticForm ℂ Vec2C :=
   CliffordAlgebraQuaternion.Q (1 : ℂ) (1 : ℂ)

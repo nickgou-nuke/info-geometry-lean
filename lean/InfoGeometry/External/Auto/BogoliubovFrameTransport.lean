@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.KANTraceSectorization
 
 noncomputable section
@@ -9,7 +10,7 @@ open InfoGeometry.Canonical.Cayley
 
 namespace InfoGeometry.GrandUnification.BogoliubovFrameTransport
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Pauli basis used as internal soldering frame (`σ_x,σ_y,σ_z`). -/
 def pauliBasis : Fin 3 → M2C

@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.WeylLogScaleBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.LogCftMonodromy
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
@@ -16,7 +17,7 @@ namespace InfoGeometry.Projective.LogDetWeylHadjiivanovBridge
 open InfoGeometry.Projective.WeylLogScaleBridge
 open InfoGeometry.Clifford.LogCftMonodromy
 
-abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- The two-dimensional scalar Weyl dilation. -/
 def scalarDilation2 (Ω : ℝ) : Mat2R :=

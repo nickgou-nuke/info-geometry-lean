@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarPauliZornPristineChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge
 import Mathlib.Tactic
 
@@ -49,7 +50,7 @@ open InfoGeometry.Lie.SplitOctonionCircularWittForm
 open InfoGeometry.Physics.ChiralCausalCone
 open scoped Matrix
 
-abbrev Matrix2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Matrix2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev Matrix4R := Matrix (Fin 4) (Fin 4) ℝ
 
 /-- Realification of the noncompact Cartan generator. -/

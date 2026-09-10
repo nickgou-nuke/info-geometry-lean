@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Algebra.Module.Basic
@@ -13,7 +14,7 @@ coupling for particle-hole (neutrino) inversion.
 We use the explicit 2×2 real matrix representation `Matrix (Fin 2) (Fin 2) ℝ`.
 -/
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Timelike generator γ₀ = σ₃ (The Mass/Energy Grading) -/
 def gamma_0 : M2R := !![1, 0; 0, -1]

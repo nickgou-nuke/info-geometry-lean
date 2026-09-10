@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Canonical.ModularTensorInduction
 import InfoGeometry.Canonical.ModularSL2R
@@ -24,7 +25,7 @@ open InfoGeometry.Canonical.ModularTensorInduction
 open InfoGeometry.Canonical.ModularSL2R
 open InfoGeometry.Canonical.DrazinAnomalousProjector
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Weyl-rescaled finite modular step. -/
 noncomputable def BayesianConformalUpdate (t : ℝ) : M2R :=

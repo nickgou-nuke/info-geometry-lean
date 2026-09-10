@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.Matrix2KANPauliChain
 
 /-!
@@ -22,7 +23,7 @@ open Matrix Real
 
 namespace InfoGeometry.GrandUnification.TransferMatrixScattering
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Local KAN transfer matrix `K(k) A(α) N(γ)`. -/
 def transferM (k α γ : ℝ) : M2R :=

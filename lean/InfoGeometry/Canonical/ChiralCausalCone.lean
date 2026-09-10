@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import proofs.CPTAtom
 import proofs.SolderingSpinConnectionBogoliubov
 import proofs.SplitCliffordAlgebras
@@ -28,7 +29,7 @@ namespace ChiralCausalCone
 
 open Matrix
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-! ## Chiral basis: σ⁺ and σ⁻
 

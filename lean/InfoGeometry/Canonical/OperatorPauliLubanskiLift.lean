@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorZornSpinCasimirLift
 import InfoGeometry.Physics.PauliLubanskiFiniteBridge
 
@@ -38,7 +39,7 @@ open InfoGeometry.Optics.CircularPolarizationSuperconnectionBridge
 open InfoGeometry.Physics
 open InfoGeometry.Physics.OperatorZornMatrix
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev OperatorZornC := OperatorZornMatrix ℂ
 
 /-- Complexified finite momentum coordinates. -/

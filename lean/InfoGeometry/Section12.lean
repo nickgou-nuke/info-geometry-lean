@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases
@@ -61,7 +62,7 @@ abbrev SpacetimeIdx := Fin 4
 abbrev ConnectionCoeff := LorentzIdx → LorentzIdx → SpacetimeIdx → ℂ
 abbrev TorsionCoeff := LorentzIdx → SpacetimeIdx → SpacetimeIdx → ℂ
 abbrev FrameCoeff := LorentzIdx → SpacetimeIdx → ℂ
-abbrev SpinMat := Matrix (Fin 2) (Fin 2) ℂ
+abbrev SpinMat := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev SpinConnection := Fin 4 → SpinMat
 abbrev QuaternionOneForm := SpacetimeIdx → Quat
 abbrev QuaternionTwoFormCoeff := SpacetimeIdx → SpacetimeIdx → Quat

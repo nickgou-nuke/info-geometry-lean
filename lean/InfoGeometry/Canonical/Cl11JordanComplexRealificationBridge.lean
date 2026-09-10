@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl3ComplexMatrixProduct
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.RealKCategory
 import InfoGeometry.Quantum.MobiusSL2CRealification
 import Mathlib.Tactic
@@ -17,8 +18,8 @@ open InfoGeometry.Clifford.Cl3ComplexMatrixProduct
 open InfoGeometry.Quantum.RealKCategory
 open InfoGeometry.Quantum.MobiusSL2CRealification
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
-abbrev Mat4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
+abbrev Mat4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 abbrev Block4R := Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℝ
 
 noncomputable def pairBlockComplexRealEquiv :

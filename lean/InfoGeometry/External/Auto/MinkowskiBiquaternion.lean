@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Relativistic Minkowski spacetime in biquaternions
@@ -11,7 +12,7 @@ namespace MinkowskiBiquaternion
 
 open Matrix Complex
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- The spacetime four-vector matrix `X = t I + x σ₁ + y σ₂ + z σ₃`. -/
 def spacetimeMatrix (t x y z : ℂ) : M2C :=

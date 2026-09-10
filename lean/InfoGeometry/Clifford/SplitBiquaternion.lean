@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQuaternion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option autoImplicit false
 set_option linter.dupNamespace false
@@ -69,7 +70,7 @@ def splitConj (q : SplitBiquaternion) : SplitBiquaternion :=
 def norm (q : SplitBiquaternion) : ℂ :=
   q.a * q.a + q.b * q.b - q.c * q.c - q.d * q.d
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Matrix packet `a + b i + c j + d k ↦ [[a+d, b+c],[-b+c,a-d]]`. -/
 def toMatrix (q : SplitBiquaternion) : Mat2C :=

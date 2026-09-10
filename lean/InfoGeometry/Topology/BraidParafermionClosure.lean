@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.AharonovBohmVortices
 import InfoGeometry.Topology.ParafermionBraiding
 
@@ -37,10 +38,10 @@ open Matrix
 open InfoGeometry.Topology.Parafermion
 
 /-- `M_{2\times2}\hookrightarrow M_{3\times3}`. -/
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- `M_{3\times3}`. -/
-abbrev Mat3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev Mat3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 
 /-- `M_{2\times2}\to M_{3\times3}`. -/
 def blockEmbed2x2 (A : Mat2C) : Mat3C :=

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.tomita_kms_v4
 
 /-!
@@ -23,7 +24,7 @@ namespace HestenesKreinColimitBridge
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- The bivector rotor / real `i` replacement. -/
 def rotorUnit : M2R := J_cpx

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Non-orientable exceptional points in a Klein Brillouin zone
@@ -25,7 +26,7 @@ open Matrix Complex
 namespace InfoGeometry.Topology.NonorientableExceptionalKleinGlide
 
 /-- Complex `2 × 2` matrices for the finite two-band model. -/
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Coefficient `d_x(k) = cos k_x + i α` from Eq. (3). -/
 def dx (α kx : ℝ) : ℂ :=

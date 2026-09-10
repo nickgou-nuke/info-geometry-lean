@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Dirac-Hodge operator in the Fourier--Mellin domain
@@ -11,7 +12,7 @@ namespace DiracFourierMellin
 
 open Matrix Complex
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- The transformed Dirac symbol in Mellin/Fourier variables. -/
 def D_FM (s kx ky : ℂ) : M2C :=

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Atomic Clifford KAN/Witten Calculation
@@ -15,7 +16,7 @@ open scoped BigOperators
 
 namespace InfoGeometry.GrandUnification.AtomicCliffordKAN
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Chiral grading / parity operator; this is the `e₁` generator of the atom. -/
 def sigma3 : M2R := !![1, 0; 0, -1]

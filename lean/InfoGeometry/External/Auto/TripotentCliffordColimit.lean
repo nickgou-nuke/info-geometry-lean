@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Tripotent trifactor geometry and a finite diagonal scale model
@@ -74,7 +75,7 @@ theorem nullVector_nonzero : nullVector.x0 ≠ 0 := by
 
 /-! ## Tripotent trifactor operator -/
 
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 abbrev M6C := Matrix (Fin 6) (Fin 6) ℂ
 
 /-- The basic tripotent scale operator with sectors `+1,-1,0`. -/

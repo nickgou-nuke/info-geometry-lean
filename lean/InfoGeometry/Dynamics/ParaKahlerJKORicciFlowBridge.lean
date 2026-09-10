@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Real.Basic
@@ -14,7 +15,7 @@ open scoped BigOperators
 
 namespace InfoGeometry.Dynamics.ParaKahlerJKORicciFlow
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-!
 # Para-Kähler Ricci Flow & Nilpotent JKO Optimal Transport Bridge

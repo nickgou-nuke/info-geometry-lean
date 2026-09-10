@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.BogoliubovSU3ParafermionWeld
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bogoliubov--SU(3)--parafermion proof chain
@@ -25,7 +26,7 @@ open SupergradedCuntzBdG
 open GellMannSU3
 open InfoGeometry.Topology.AlgebraicCuntzQuotient
 
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 abbrev ParafermionStage4 := CuntzAlg ℂ (Fin 4)
 
 /-- A four-component color/BdG spinor: three color components plus one color

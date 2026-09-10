@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Canonical.SplitCliffordChiralProjection
 import InfoGeometry.Canonical.ModularSL2R
@@ -23,7 +24,7 @@ open InfoGeometry.Algebra.HypercomplexTriad
 open InfoGeometry.Canonical.SplitCliffordChiralProjection
 open InfoGeometry.Canonical.ModularSL2R
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Completeness of chiral Moore-Penrose projectors. -/
 theorem mp_projector_completeness :

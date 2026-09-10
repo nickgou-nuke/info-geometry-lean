@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometryCore.Basic
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Canonical.ModularLorentzBoost
@@ -23,7 +24,7 @@ open InfoGeometry.Canonical.TomitaBregmanDuality
 
 open InfoGeometryCore
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Inner derivation (Lie bracket): `ad_X(Y) = [X,Y]`. -/
 def innerDerivation (X Y : M2R) : M2R :=

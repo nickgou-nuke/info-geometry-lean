@@ -38,7 +38,8 @@ namespace InfoGeometry.Canonical.TriFactorCodexLaws
 def cayleyTransform (s : ℝ) : ℝ :=
   (s - 1 / 2) / (s + 1 / 2)
 
-/-- Algebraic derivative / Jacobian factor of the Cayley transform: $W'(s) = rac{1}{(s + 1/2)^2}$. -/
+/-- Algebraic derivative / Jacobian factor of the Cayley transform: $W'(s) = 
+rac{1}{(s + 1/2)^2}$. -/
 def cayleyJacobian (s : ℝ) : ℝ :=
   1 / (s + 1 / 2) ^ 2
 

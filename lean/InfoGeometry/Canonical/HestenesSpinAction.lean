@@ -1,13 +1,16 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.Hermitian
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
+
+noncomputable section
 
 namespace InfoGeometry.Canonical.HestenesSpinAction
 
 open Matrix
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev SL2C := Matrix.SpecialLinearGroup (Fin 2) ℂ
 
 /-- The action of SL(2,C) on a 2x2 complex matrix (Minkowski vector representative). -/

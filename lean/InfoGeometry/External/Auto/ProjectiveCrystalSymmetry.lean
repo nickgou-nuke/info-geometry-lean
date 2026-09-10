@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Projective crystal symmetry and momentum-space nonsymmorphicity
@@ -42,7 +43,7 @@ def coboundaryTwist (ν : G → G → ℂ) (χ : G → ℂ) (g h : G) : ℂ :=
 
 /-! ## The `Pm -> Pg` projective algebra -/
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Projective mirror operator. -/
 def Mx : M2C := !![0, 1; 1, 0]

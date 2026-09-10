@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarAngularOneFormConnection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarComplexCartanLine
 import InfoGeometry.Canonical.BipolarContourSpinHolonomy
 import InfoGeometry.Canonical.BipolarHalfLogLiftAnalyticPureGauge
@@ -63,7 +64,7 @@ open InfoGeometry.Information.ModularSurprisalDerivationBridge
 open InfoGeometry.OperatorAlgebra.ExteriorAlgebra
 open InfoGeometry.Physics.ChiralCausalCone
 
-abbrev Matrix2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Matrix2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- The twice-punctured complex plane as a subtype. -/
 abbrev ApolloniusPoint := {s : ℂ // s ∈ punctured01}

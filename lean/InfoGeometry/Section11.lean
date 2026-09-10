@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import InfoGeometry.Section9
@@ -24,7 +25,7 @@ namespace Section11
 
 open Matrix
 
-abbrev SpinMat := Matrix (Fin 2) (Fin 2) ℂ
+abbrev SpinMat := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev RiemannCoeff := Fin 4 → Fin 4 → ℂ
 abbrev VectorField4 := Fin 4 → ℂ
 

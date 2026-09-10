@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Katz--Sarnak Finite Symmetry Bridge
@@ -32,7 +33,7 @@ namespace InfoGeometry.Canonical.KatzSarnakFiniteSymmetryBridge
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- The standard real `2 × 2` rotation atom. -/
 def rotation2 (a b : ℝ) : M2R :=

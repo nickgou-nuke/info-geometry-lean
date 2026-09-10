@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.BogoliubovWeylChemicalPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.GellMannSU3
 import InfoGeometry.Physics.ColorCARStandardModel
 
@@ -27,7 +28,7 @@ open GellMannSU3
 open ColorCARStandardModel
 open InfoGeometry.Topology.AlgebraicCuntzQuotient
 
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 abbrev ParafermionStage4 := CuntzAlg ℂ (Fin 4)
 
 /-- Four-component BdG/Majorana `+` spinor lane. -/

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.FinCases
 
 namespace InfoGeometry.Canonical.SL2CZhukovsky
@@ -6,7 +7,7 @@ namespace InfoGeometry.Canonical.SL2CZhukovsky
 open Matrix
 open Complex
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def det2x2 (M : Mat2C) : ℂ :=
   M 0 0 * M 1 1 - M 0 1 * M 1 0

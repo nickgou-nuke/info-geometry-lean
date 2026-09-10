@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
@@ -33,7 +34,7 @@ namespace Section16
 open Matrix
 
 abbrev EvenCoord := Fin 4 → ℂ
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def evenToMatrix (x : EvenCoord) : Mat2C :=
   !![x 0 - Complex.I * x 2, Complex.I * x 1 - x 3;

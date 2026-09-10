@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.DeterminantSupergrading
 import InfoGeometry.External.Auto.IwasawaKUnification
 import InfoGeometry.External.Auto.KleinBottleSymmetry
@@ -10,7 +11,7 @@ namespace InfoGeometry.Canonical.KleinBottleKANCoordinates
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- The `J`-axis: modular sheet swap. -/
 def JAxis : M2R := modular_j

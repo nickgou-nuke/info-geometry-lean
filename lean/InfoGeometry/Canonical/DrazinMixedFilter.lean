@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Canonical.SplitCliffordChiralProjection
 
@@ -25,7 +26,7 @@ open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
 open InfoGeometry.Canonical.SplitCliffordChiralProjection
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Invertible bulk core witness. -/
 def H : M2R := (1 : M2R)

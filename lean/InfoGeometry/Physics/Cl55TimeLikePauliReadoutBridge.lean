@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Clifford.Cl55MasterOperatorEnvelopeBridge
 import InfoGeometry.Physics.ChiralPoincareSouriauBridge
@@ -20,7 +21,7 @@ open Matrix
 open InfoGeometry.Clifford.Cl55MasterOperatorEnvelopeBridge
 open InfoGeometry.Physics.ChiralPoincareSouriauBridge
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- The finite scalar readout of a real `32 × 32` operator as a complex
 multiple of the 2-by-2 identity. -/

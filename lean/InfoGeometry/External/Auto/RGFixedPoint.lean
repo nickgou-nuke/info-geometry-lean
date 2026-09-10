@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.ModularHolographicMetric
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite RG fixed-point metric identities
@@ -14,7 +15,7 @@ namespace RGFixedPoint
 
 open Matrix
 
-abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Real Pauli boost generator. -/
 def K_boost (v : ℝ) : Mat2R := !![0, v; v, 0]

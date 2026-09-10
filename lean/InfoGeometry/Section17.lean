@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
@@ -40,7 +41,7 @@ set_option linter.unreachableTactic false
 set_option linter.unnecessarySeqFocus false
 
 abbrev BiquatCoord := Fin 4 → ℂ
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def biquatToMatrix (q : BiquatCoord) : Mat2C :=
   !![q 0 + Complex.I * q 1, q 2 + Complex.I * q 3;

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -13,7 +14,7 @@ open scoped BigOperators
 
 namespace InfoGeometry.Physics.SolovievQPNMEigenproblem
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-!
 # Soloviev Quasiparticle-Phonon Nuclear Model (QPNM) Secular Eigenproblem

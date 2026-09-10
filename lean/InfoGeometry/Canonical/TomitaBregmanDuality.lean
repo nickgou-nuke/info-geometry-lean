@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.ExponentialBounds
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Canonical.FenchelExpLogScalar
@@ -29,7 +30,7 @@ open InfoGeometry.Canonical.FenchelExpLogScalar
 open InfoGeometry.Canonical.ModularTensorInduction
 open InfoGeometry.Canonical.ModularSL2R
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Finite lifted Tomita-Bregman operator: `Δ - 1 - logΔ`. -/
 noncomputable def TomitaBregmanOp : M2R :=

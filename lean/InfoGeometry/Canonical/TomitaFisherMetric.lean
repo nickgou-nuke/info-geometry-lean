@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Canonical.TomitaBregmanDuality
 import InfoGeometry.Canonical.ModularSL2R
@@ -23,7 +24,7 @@ open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
 open InfoGeometry.Canonical.ModularSL2R
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 abbrev V2R := Matrix (Fin 2) (Fin 1) ℝ
 
 /-- Channel Hessian values for `ψ(x)=exp x` at `x=-1,1`. -/

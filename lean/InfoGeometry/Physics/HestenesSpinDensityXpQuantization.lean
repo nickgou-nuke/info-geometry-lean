@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
 import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.Analysis.Matrix.Order
@@ -27,7 +28,7 @@ open InfoGeometry.Physics.ChiralPoincareSouriauBridge
 open InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
 open scoped ComplexOrder MatrixOrder
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-! ## Rapidity and Pauli soldering -/
 

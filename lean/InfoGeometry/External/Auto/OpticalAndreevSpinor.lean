@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Optical Andreev Spinor Boundary
@@ -21,7 +22,7 @@ open Matrix Complex
 
 namespace InfoGeometry.GrandUnification.OpticalAndreevSpinor
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev C2 := Matrix (Fin 2) (Fin 1) ℂ
 abbrev M4C := Matrix (Fin 4) (Fin 4) ℂ
 abbrev C4 := Matrix (Fin 4) (Fin 1) ℂ

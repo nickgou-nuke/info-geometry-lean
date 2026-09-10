@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Klein geometry as a determinant supergrading
@@ -13,7 +14,7 @@ namespace KleinGeometrySupergraded
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Orientation parity is determinant. -/
 def parity (A : M2R) : ℝ := A.det

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQuaternionNilpotentFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorLocalCl11HopParity
 
 import Mathlib.Tactic
@@ -25,7 +26,7 @@ open InfoGeometry.Clifford.SplitQuaternionNilpotentFlow
 open InfoGeometry.Canonical.SplitCliffordCantorFock
 open InfoGeometry.Canonical.CantorLocalCl11HopParity
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-! ## The two null directions in the canonical matrix convention -/
 

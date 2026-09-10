@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Exact finite two-level BdG block.  This is the algebraic core of the
 upstream nuclear lane, kept separate from any microscopic or topological claim.
@@ -8,8 +9,8 @@ namespace InfoGeometry.Physics.NuclearBdGTwoLevelExact
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev V2C := Fin 2 → ℂ
 
 def bdgBlock (ξ Δ : ℝ) : M2R := !![ξ, Δ; Δ, -ξ]

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Modular Itakura--Saito divergence in the biquaternion algebra
@@ -22,7 +23,7 @@ namespace ModularItakuraBiquaternion
 
 open Matrix Complex
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Pauli σ₁. -/
 def σ₁ : M2C := !![0, 1; 1, 0]

@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.MinkowskiBiquaternion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.TripotentPenroseHolography
 
 /-!
@@ -14,9 +15,9 @@ namespace HolographicErlangenCompletion
 
 open Matrix Complex
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 
 def sigma_0 : M2C := !![1, 0; 0, 1]
 def sigma_1 : M2C := !![0, 1; 1, 0]

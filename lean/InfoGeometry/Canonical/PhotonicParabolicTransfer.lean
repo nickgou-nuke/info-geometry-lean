@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Ring
 
@@ -13,7 +14,7 @@ namespace InfoGeometry.Canonical.PhotonicParabolicTransfer
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Parabolic transfer matrix for shear parameter `χ`. -/
 def T (χ : ℝ) : M2R := !![1, χ; 0, 1]

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Biquaternions, `SL(2,C)`, KAN boosts, and special relativity
@@ -22,7 +23,7 @@ namespace RelativisticBiquaternionKAN
 
 open Matrix Complex
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Pauli matrices. -/
 def σ1 : M2C := !![0, 1; 1, 0]

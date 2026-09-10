@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Equivs
 import Mathlib.Algebra.QuaternionBasis
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -47,7 +48,7 @@ noncomputable def minkiQ : QuadraticForm ℝ Vec13 :=
 In STA (Space-Time Algebra), Cl(1,3) is represented by M₂(ℍ).
 Here we use M₂(ℂ) for the vector soldering (Weyl representation).
 -/
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Real Pauli Matrices (used for the (1,1) slice or split-signature soldering). -/
 def sigma0 : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, 1]

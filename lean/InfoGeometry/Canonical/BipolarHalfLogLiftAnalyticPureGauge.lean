@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarVariableCartanMaurerCartan
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
 
 /-!
@@ -24,7 +25,7 @@ open InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
 open InfoGeometry.Canonical.BipolarVariableCartanMaurerCartan
 open InfoGeometry.Physics.ChiralCausalCone
 
-abbrev Matrix2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Matrix2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Analytic derivative matrix of the half-log lift in the unit complex
 coordinate direction. -/

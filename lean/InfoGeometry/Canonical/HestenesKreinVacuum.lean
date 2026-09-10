@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Canonical.ModularLorentzBoost
 import InfoGeometry.Canonical.SplitCliffordSourceWickBase
@@ -20,7 +21,7 @@ open InfoGeometry.Canonical.SplitCliffordSourceWickBase (a aDag)
 open InfoGeometry.Canonical.SplitCliffordJordanWigner (P P_eq_diag)
 open InfoGeometry.Canonical.WeylMobiusReflection
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Krein adjoint for metric operator `K`: `A⋆ = K * Aᵀ * K`. -/
 noncomputable def kreinAdjoint (A : M2R) : M2R :=

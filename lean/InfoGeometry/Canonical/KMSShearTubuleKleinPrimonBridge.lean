@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
@@ -122,7 +123,7 @@ theorem cayley_critical_normSq (t : ℝ) :
 
 /-! ## 5. The CPT Clifford Atom & C₂ᵥ Symmetry -/
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Scale signum / parity involution generator: ε = !![0, 1; 1, 0]. -/
 def atomEps : M2R := !![0, 1; 1, 0]

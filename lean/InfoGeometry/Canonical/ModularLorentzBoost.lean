@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
 
 /-!
@@ -14,7 +15,7 @@ namespace InfoGeometry.Canonical.ModularLorentzBoost
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Modular boost generator in the current triad basis. -/
 noncomputable def K : M2R := E

@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Permutation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.GellMannSU3
 import InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
 import InfoGeometry.Physics.SplitOctonionBraidSU3
@@ -26,7 +27,7 @@ open InfoGeometry.Physics.GellMannSU3
 open InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
 open InfoGeometry.Physics.SplitOctonionBraidSU3
 
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 
 /-! ## General lemma: conjugation is a Lie automorphism -/
 

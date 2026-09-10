@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorPauliLubanskiLift
 
 /-!
@@ -32,7 +33,7 @@ open scoped BigOperators
 open InfoGeometry.Canonical.OperatorZornSpinCasimirLift
 open InfoGeometry.Canonical.OperatorPauliLubanskiLift
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Massive rest-frame momentum `(m,0,0,0)`. -/
 def massiveRestMomentum (m : ℂ) : PauliMomentum :=

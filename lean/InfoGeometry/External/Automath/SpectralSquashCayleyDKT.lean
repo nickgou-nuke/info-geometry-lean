@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.HasLimits
 import InfoGeometry.Canonical.TomitaTakesakiWickRotation
 import InfoGeometry.OperatorAlgebra.RenormalizedTrace
@@ -21,7 +22,7 @@ open CategoryTheory.Limits
 open Matrix
 open scoped BigOperators
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- A finite diagonal stage with growing real spectral parameter. -/
 def stageOperator (lam : ℝ) : M2C := !![(lam : ℂ), 0; 0, (2 * lam : ℂ)]

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KMSSubstateKMSCondition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
 
@@ -19,7 +20,7 @@ namespace InfoGeometry.Physics.SplitAtomThermalBoundary
 
 open InfoGeometry.Canonical
 
-abbrev CMat2 := Matrix (Fin 2) (Fin 2) ℂ
+abbrev CMat2 := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def partition (eta : ℝ) : ℝ := Real.exp eta + Real.exp (-eta)
 

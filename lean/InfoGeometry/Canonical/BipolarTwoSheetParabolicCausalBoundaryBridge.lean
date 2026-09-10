@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarTwoSheetCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarTwoSheetCausalBulkBridge
 import InfoGeometry.Canonical.ChiralParabolicNilpotentWeld
 import InfoGeometry.Physics.ChiralCausalCone
@@ -44,7 +45,7 @@ open InfoGeometry.Physics.ChiralCausalCone
 open InfoGeometry.Physics.SolderingSpinConnectionBogoliubov
 open InfoGeometry.Algebra.RealPauliCausalCone
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Parabolic nilpotent generator carried by each sheet. -/
 def sheetParabolicGenerator : ChiralSheet → M2C

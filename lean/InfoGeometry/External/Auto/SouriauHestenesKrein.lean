@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Notation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
 
@@ -26,7 +27,7 @@ namespace SouriauHestenesKrein
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def ellipticUnit : M2R :=
   !![0, -1; 1, 0]

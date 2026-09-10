@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Brillouin Klein fixed-line parafermion attractor
@@ -20,7 +21,7 @@ namespace BrillouinKleinNilpotentAttractor
 open Matrix
 
 abbrev Vec3 := Fin 3 → ℂ
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-! ## Glide fixed-line filter -/
 

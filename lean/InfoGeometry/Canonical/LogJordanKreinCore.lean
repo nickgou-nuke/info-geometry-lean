@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.LogCftMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 import Mathlib.LinearAlgebra.Matrix.Trace
 
@@ -9,7 +10,7 @@ namespace InfoGeometry.Canonical.LogJordanKreinCore
 open Matrix
 open Matrix.Norms.Frobenius
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 abbrev N : M2R :=
   InfoGeometry.Clifford.LogCftMonodromy.jordanNilpotent

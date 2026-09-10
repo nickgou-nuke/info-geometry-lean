@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Klein paradox and graphene Klein tunneling
@@ -46,7 +47,7 @@ theorem TstepInf_nonzero (E p : ℝ) (hp : p ≠ 0) (hden : E + p ≠ 0) :
 
 /-! ## Graphene massless Dirac cone -/
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def σx : M2C := !![0, 1; 1, 0]
 def σy : M2C := !![0, -Complex.I; Complex.I, 0]

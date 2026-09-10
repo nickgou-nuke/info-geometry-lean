@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Data.Complex.Basic
 
@@ -130,7 +131,7 @@ theorem PTScalarCondition_on_real_axis
 
 /-! ## Supersymmetric block-Hamiltonian bookkeeping -/
 
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Block Hamiltonian `diag(E₋,E₊)` for the two SUSY partner sectors. -/
 def susyHamiltonianBlock (Eminus Eplus : ℂ) : Mat2C :=

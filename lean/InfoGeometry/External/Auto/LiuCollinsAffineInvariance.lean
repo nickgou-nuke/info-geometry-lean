@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Liu--Collins affine invariance finite matrix facts
@@ -13,7 +14,7 @@ namespace LiuCollins
 
 open Matrix
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- The `C₂` half-turn matrix. -/
 def C2 : M2R := !![-1, 0; 0, -1]

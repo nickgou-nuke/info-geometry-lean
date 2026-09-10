@@ -159,9 +159,9 @@ for known declarations. The search
 record distinguishes source inspection from kernel verification; no claim is
 made that every proof body in the repository was audited.
 
-The seven new owner modules compile without warnings using native Lean
+The sixteen new owner modules compile without warnings using native Lean
 4.28.0 and the pinned Mathlib sources/cache. The source dependency closure,
-including the axiom diagnostic, contains 63 modules. All 60 new theorem axiom
+including the axiom diagnostic, contains 89 modules. All 126 new theorem axiom
 reports contain only `propext`, `Classical.choice`, and `Quot.sound`; none
 contains `sorryAx`. The repository's staged proof-proxy gate and exact SymPy
 witness pass. This is a narrow check, not a repository-wide build or a check
@@ -170,3 +170,10 @@ cache's v4.28.0 olean headers. The accompanying draft pull request records the
 check procedure and the pending declared-toolchain gate. `proofs/PolarizedShearSpinAudit.lean` checks axiom dependencies of
 the new theorem surface. Its `.sp` companion is an exact symbolic witness,
 not a substitute for Lean elaboration and kernel checking.
+
+The supplied reconstruction specification and subsequent weak-value proposal
+are implemented in the follow-up modules documented in
+[WEAK_VALUE_RECONSTRUCTION.md](WEAK_VALUE_RECONSTRUCTION.md). They add the
+actual spatial spinor readout, complex-overlap geometry, sufficient real-pole
+conditions, postselection-barrier divergence and fixed-metric Krein
+conservation. These results do not replace the outstanding fluid adapter.

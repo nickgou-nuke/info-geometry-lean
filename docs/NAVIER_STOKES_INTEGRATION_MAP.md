@@ -12,6 +12,8 @@
 > - `InfoGeometry/Canonical/NavierStokesTorusErgodicAudit.lean`  
 > - `InfoGeometry/Canonical/NavierStokesWavePacketBridge.lean` (Tier 3: Transverse Wave Packets, Biot–Savart Fourier Inversion, Reynolds Dyadic Stress)  
 > - `InfoGeometry/Canonical/NavierStokesWavePacketAudit.lean`  
+> - `InfoGeometry/Canonical/NavierStokesBiotSavartEnergyBridge.lean` (Tier 4: Biot–Savart Energy Bounds, Profile Divergence & Singularity Asymptotics)  
+> - `InfoGeometry/Canonical/NavierStokesBiotSavartEnergyAudit.lean`  
 > **Kernel Status:** 100% Kernel Checked, 0 `sorry`, 0 custom axioms  
 
 ---
@@ -253,16 +255,71 @@ In `InfoGeometry/Canonical/NavierStokesWavePacketBridge.lean`, we formalized Tie
          (1 / 2 : ℝ) • dyadicStress w w
    ```
 
+### 4.9. Biot–Savart Energy Bounds, Profile Divergence & Singularity Asymptotics
+
+In `InfoGeometry/Canonical/NavierStokesBiotSavartEnergyBridge.lean`, we formalized Tier 4:
+
+1. **Self-Similar Scaling & Divergent Negative Power**:
+   As the self-similar scale $q(t) \to 0^+$ approaches the horizon, any negative power diverges:
+   ```lean
+   theorem negative_power_tendsto_atTop {ι : Type*} {l : Filter ι}
+       {q : ι → ℝ} {A : ℝ} (hA : 0 < A) (hq : Tendsto q l (𝓝[>] (0 : ℝ))) :
+       Tendsto (fun t => q t ^ (-A)) l atTop
+   ```
+2. **Asymptotic Profile Lower Bound & Norm Blowup**:
+   Given leading profile $E > 0$ and perturbation $\operatorname{error}(t) \to 0$:
+   ```lean
+   theorem norm_tendsto_atTop_of_profile_lower_bound {ι V : Type*}
+       [NormedAddCommGroup V] {l : Filter ι} {q error : ι → ℝ}
+       {v : ι → V} {A E : ℝ} (hA : 0 < A) (hE : 0 < E)
+       (hq : Tendsto q l (𝓝[>] (0 : ℝ))) (herror : Tendsto error l (𝓝 0))
+       (hlower : ∀ᶠ t in l, q t ^ (-A) * (E + error t) ≤ ‖v t‖) :
+       Tendsto (fun t => ‖v t‖) l atTop
+   ```
+3. **Obstruction to Finite Extension & Continuous Extension**:
+   ```lean
+   theorem no_eventual_bound_of_profile {ι V : Type*}
+       [NormedAddCommGroup V] {l : Filter ι} [NeBot l]
+       {q error : ι → ℝ} {v : ι → V} {A E : ℝ}
+       (hA : 0 < A) (hE : 0 < E)
+       (hq : Tendsto q l (𝓝[>] (0 : ℝ))) (herror : Tendsto error l (𝓝 0))
+       (hlower : ∀ᶠ t in l, q t ^ (-A) * (E + error t) ≤ ‖v t‖) :
+       ¬ ∃ M : ℝ, ∀ᶠ t in l, ‖v t‖ ≤ M
+
+   theorem no_continuous_extension_of_profile {ι X V : Type*}
+       [TopologicalSpace X] [NormedAddCommGroup V]
+       {l : Filter ι} [NeBot l] {q error : ι → ℝ} {v : ι → V}
+       {path : ι → X} {endpoint : X} {A E : ℝ}
+       (hA : 0 < A) (hE : 0 < E) (hq : Tendsto q l (𝓝[>] (0 : ℝ))) (herror : Tendsto error l (𝓝 0))
+       (hlower : ∀ᶠ t in l, q t ^ (-A) * (E + error t) ≤ ‖v t‖)
+       (hpath : Tendsto path l (𝓝 endpoint)) :
+       ¬ ∃ extension : X → V, ContinuousAt extension endpoint ∧
+         ∀ᶠ t in l, extension (path t) = v t
+   ```
+4. **Discontinuity at the Singular Spacetime Point Along Concentrating Curve**:
+   Along the self-similar parabolic trajectory $(t, \sqrt{2X(T-t)})$:
+   ```lean
+   theorem not_continuousAt_concentrating_profile {V : Type*}
+       [NormedAddCommGroup V] {T X A E : ℝ} {error : ℝ → ℝ}
+       {field : ℝ × ℝ → V} (hA : 0 < A) (hE : 0 < E)
+       (herror : Tendsto error (𝓝[<] T) (𝓝 0))
+       (hlower : ∀ᶠ t in 𝓝[<] T,
+         (T - t) ^ (-A) * (E + error t) ≤
+           ‖field (t, Real.sqrt (2 * X * (T - t)))‖) :
+       ¬ ContinuousAt field (T, (0 : ℝ))
+   ```
+
 ---
 
 ## 5. Synthesis Certification
 
-The complete bridge suite is certified by four kernel-checked witness structures:
+The complete bridge suite is certified by five kernel-checked witness structures:
 
 1. `certified_zorn_navier_stokes_synthesis` in `ZornNavierStokesHydrodynamicBridge.lean`
 2. `certified_navier_stokes_cone_piola_bridge` in `NavierStokesConePiolaBridge.lean`
 3. `certified_navier_stokes_torus_ergodic_bridge` in `NavierStokesTorusErgodicBridge.lean`
 4. `certified_navier_stokes_wave_packet_bridge` in `NavierStokesWavePacketBridge.lean`
+5. `certified_navier_stokes_biot_savart_energy_bridge` in `NavierStokesBiotSavartEnergyBridge.lean`
 
 Axiom verification:
 ```text
@@ -277,5 +334,9 @@ Axiom verification:
 
 'InfoGeometry.Canonical.NavierStokesWavePacket.certified_navier_stokes_wave_packet_bridge' depends on axioms:
   [propext, Classical.choice, Quot.sound]
+
+'InfoGeometry.Canonical.NavierStokesBiotSavartEnergy.certified_navier_stokes_biot_savart_energy_bridge' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
 ```
 Zero custom axioms, zero `sorry`, 100% verified.
+

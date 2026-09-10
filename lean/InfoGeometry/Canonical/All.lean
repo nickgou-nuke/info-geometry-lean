@@ -2199,6 +2199,8 @@ import InfoGeometry.Canonical.ChiralHeckeAdelicKleinReductionBridge
 import InfoGeometry.Canonical.FibonacciAnionBraidBridge
 import InfoGeometry.Canonical.IwasawaCuntzKleinWeakBridge
 import InfoGeometry.Canonical.IwasawaCuntzKleinWeakAudit
+import InfoGeometry.Canonical.PalatiniBoundaryStokesBridge
+import InfoGeometry.Canonical.PalatiniBoundaryStokesAudit
 import InfoGeometry.Canonical.AlbertPeirceModularMixingBridge
 
 namespace InfoGeometry

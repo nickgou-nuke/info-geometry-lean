@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordSourceWickBase
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordJordanWigner
@@ -118,7 +119,7 @@ namespace TwoMode
 open Matrix
 
 /-- Concrete `4 × 4` real matrices for two fermionic modes. -/
-abbrev M4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev M4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /--
 First-mode annihilation operator:

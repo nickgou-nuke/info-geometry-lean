@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.SplitCliffordTwoModeCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordTwoModeWick
@@ -21,7 +22,7 @@ namespace InfoGeometry.Canonical.SplitCliffordTwoModeWick
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordTwoModeCAR
 
-abbrev M4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev M4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /--
 The `4 × 4` Vacuum Expectation Value functional: `⟨0| M |0⟩`.

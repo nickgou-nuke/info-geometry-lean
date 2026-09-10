@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.QutritGellMannOperatorBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The scalar/traceless decomposition of the qutrit operator space
@@ -17,7 +18,7 @@ namespace InfoGeometry.Canonical.QutritSU3AdjointDecomposition
 open Matrix
 open InfoGeometry.Canonical.QutritGellMannOperatorBasis
 
-abbrev QutritMatrix := Matrix (Fin 3) (Fin 3) ℂ
+abbrev QutritMatrix := InfoGeometry.Algebra.FiniteSpin.QutritMatrix
 
 /-! ## The two canonical subspaces -/
 

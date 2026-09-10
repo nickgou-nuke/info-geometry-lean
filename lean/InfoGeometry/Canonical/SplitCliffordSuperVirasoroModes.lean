@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.SplitCliffordJordanWignerTwoMode
 import InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordSuperVirasoroModes
@@ -15,7 +16,7 @@ namespace InfoGeometry.Canonical.SplitCliffordSuperVirasoroModes
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordJordanWignerTwoMode
 
-abbrev M4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev M4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /-- Stress zero-mode block. -/
 def L0 : M4R :=

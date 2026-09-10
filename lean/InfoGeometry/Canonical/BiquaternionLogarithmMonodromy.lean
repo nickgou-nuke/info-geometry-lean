@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BiquaternionNegativeRootsLog
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Biquaternion logarithm monodromy
@@ -12,7 +13,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.BiquaternionLogarithmMonodromy
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def σ₁ : M2C := BiquaternionNegativeRootsLog.σ₁
 def σ₂ : M2C := BiquaternionNegativeRootsLog.σ₂

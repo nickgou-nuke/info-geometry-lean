@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Biquaternion KAN nilpotent atom
@@ -13,7 +14,7 @@ namespace BiquaternionKANnilpotent
 
 open Matrix Complex
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- The nilpotent `N` atom in an upper-triangular KAN chart. -/
 def K_N : M2C := !![0, 1; 0, 0]

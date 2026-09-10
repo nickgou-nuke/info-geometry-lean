@@ -1,5 +1,6 @@
 import InfoGeometry.Physics.ParabolicClock
 import InfoGeometry.Physics.ChiralCausalCone
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native chiral/parabolic nilpotent weld
@@ -15,7 +16,7 @@ namespace InfoGeometry.Canonical.ChiralParabolicNilpotentWeld
 open InfoGeometry.Physics
 open InfoGeometry.Physics.ChiralCausalCone
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 @[simp] theorem parabolicClock_K_eq_sigmaPlus :
     InfoGeometry.Physics.K (R := ℂ) = σPlus := by

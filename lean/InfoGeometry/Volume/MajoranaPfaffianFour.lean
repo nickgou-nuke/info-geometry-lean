@@ -1,4 +1,5 @@
 import InfoGeometry.Volume.OrientedPfaffian
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Volume.MajoranaPfaffianFour
 
@@ -14,7 +15,7 @@ kept at the finite algebraic level: it does not identify a Pfaffian with a
 quantum expectation value without a separate Wick/Gaussian-state carrier.
 -/
 
-abbrev Mat4 := Matrix (Fin 4) (Fin 4) ℝ
+abbrev Mat4 := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 def skewFourByFour (a₀₁ a₀₂ a₀₃ a₁₂ a₁₃ a₂₃ : ℝ) : Mat4 :=
   !![0, a₀₁, a₀₂, a₀₃;

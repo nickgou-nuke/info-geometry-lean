@@ -1,5 +1,6 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The finite complex `sl₂` Riccati bridge
@@ -15,7 +16,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.ComplexRiccatiSL2
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def riccatiMatrix (α β γ : ℂ) : M2C := !![α, β; γ, -α]
 

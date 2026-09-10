@@ -2,6 +2,7 @@ import InfoGeometry.Analysis.BipolarWindingPeriodLattice
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Spinorial holonomy of the bipolar winding lattice
@@ -27,7 +28,7 @@ namespace InfoGeometry.Canonical.BipolarSpinHolonomy
 
 open InfoGeometry.Analysis.BipolarWindingPeriodLattice
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Half-Cartan holonomy associated with an algebraic winding pair. -/
 def spinHolonomy (w : WindingPair) : M2C :=

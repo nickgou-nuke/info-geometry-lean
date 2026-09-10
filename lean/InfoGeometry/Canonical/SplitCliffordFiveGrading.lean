@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.SplitCliffordJordanWignerTwoMode
 import InfoGeometry.Canonical.SplitCliffordTwoModeCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordFiveGrading
@@ -14,7 +15,7 @@ namespace InfoGeometry.Canonical.SplitCliffordFiveGrading
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordTwoModeCAR
 
-abbrev M4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev M4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /-- Level `0` core (diagonal Cartan-like operator). -/
 def g0Core : M4R :=

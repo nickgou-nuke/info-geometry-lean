@@ -1,0 +1,20 @@
+import InfoGeometry.Canonical.GreenSchwarzAnomalyInflowBridge
+
+/-!
+# Axiomatic Audit of GreenSchwarzAnomalyInflowBridge
+
+This audit checks the foundational axioms of the GreenSchwarzAnomalyInflowBridge module.
+Expected axioms: [propext, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.GreenSchwarzAnomalyInflow.certified_green_schwarz_inflow_synthesis
+#print axioms InfoGeometry.Canonical.GreenSchwarzAnomalyInflow.green_schwarz_inflow_cancellation
+#print axioms InfoGeometry.Canonical.GreenSchwarzAnomalyInflow.green_schwarz_invariant_bulk_vanishes
+#print axioms InfoGeometry.Canonical.GreenSchwarzAnomalyInflow.green_schwarz_invariant_boundary_vanishes
+#print axioms InfoGeometry.Canonical.GreenSchwarzAnomalyInflow.green_schwarz_exact_bulk_vanishes
+#print axioms InfoGeometry.Canonical.GreenSchwarzAnomalyInflow.green_schwarz_exact_boundary_vanishes
+#print axioms InfoGeometry.Canonical.GreenSchwarzAnomalyInflow.green_schwarz_H_gauge_invariant
+#print axioms InfoGeometry.Canonical.GreenSchwarzAnomalyInflow.anomaly_polynomial_factorization
+#print axioms InfoGeometry.Canonical.GreenSchwarzAnomalyInflow.branchChirality_sq
+#print axioms InfoGeometry.Canonical.GreenSchwarzAnomalyInflow.normalizedTrace_branchChirality
+#print axioms InfoGeometry.Canonical.GreenSchwarzAnomalyInflow.colimit_trace_preservation

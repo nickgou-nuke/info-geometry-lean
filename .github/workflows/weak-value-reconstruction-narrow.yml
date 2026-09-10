@@ -58,4 +58,6 @@ jobs:
             weak-value-build.log
             weak-value-axioms.log
             weak-value-source-hashes.json
+            weak-value-verification.json
+            weak-value-pinned-probe.log
           if-no-files-found: ignore

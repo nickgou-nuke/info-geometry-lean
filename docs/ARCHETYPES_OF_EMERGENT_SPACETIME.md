@@ -390,6 +390,21 @@ Formalizing the $\mathfrak{sl}_2(\mathbb{R})$ Lie algebra representation on diff
 * **Kähler-Hodge Commutation:** The Hodge-Laplacian commutes with all three generators ($[\Delta, L] = 0, [\Delta, \Lambda] = 0 \implies [\Delta, H] = 0$), strictly preserving the harmonic subspace $\mathcal{H}$.
   In Lean 4: [`LefschetzSL2TriadBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/LefschetzSL2TriadBridge.lean) (`weight_raising`, `weight_lowering`, `primitive_lowering_one`, `primitive_hodge_riemann_energy`, `primitive_hodge_riemann_pos`, `primitive_L_injective`, `casimir_on_primitive`, `comm_laplacian_H`, `L_preserves_harmonic`, `certified_lefschetz_sl2_synthesis`).
 
+### 5.18 The Lefschetz Primitive Projector & Orthogonal Foliation
+Formalizing the canonical Lefschetz primitive projector $P_{\mathrm{prim}}$ and orthogonal decomposition on inner product spaces carrying an $\mathfrak{sl}_2(\mathbb{R})$ representation:
+* **Canonical Projector Operators:**
+  $$P_L = \frac{1}{m} L \Lambda, \quad P_{\mathrm{prim}} = I - \frac{1}{m} L \Lambda$$
+* **Exact Decomposition Sum:** Differential forms decompose into primitive and Lefschetz-raised components:
+  $$x = P_{\mathrm{prim}} x + P_L x$$
+* **Primitiveness & Invariance:** $P_{\mathrm{prim}}$ projects into the primitive kernel ($\Lambda(P_{\mathrm{prim}} x) = 0$), fixes primitive vectors ($P_{\mathrm{prim}} x = x$ for $x \in \ker \Lambda$), and is an idempotent projector ($P_{\mathrm{prim}}^2 = P_{\mathrm{prim}}$).
+* **Mutual $L^2$ Orthogonality:** Primitive vectors are orthogonal to all raised forms ($\langle P_{\mathrm{prim}} x, L y \rangle = 0$), yielding an exact orthogonal foliation:
+  $$\langle P_{\mathrm{prim}} x, P_L x \rangle = 0$$
+* **Pythagorean Energy Conservation:** The total $L^2$ norm satisfies exact energy conservation:
+  $$\|x\|^2 = \|P_{\mathrm{prim}} x\|^2 + \frac{1}{m} \|\Lambda x\|^2$$
+  bounding the primitive energy $\|P_{\mathrm{prim}} x\|^2 \le \|x\|^2$.
+* **Hodge-Laplacian Commutation & Harmonic Preservation:** $P_{\mathrm{prim}}$ and $P_L$ commute with the Hodge-Laplacian $[\Delta, P_{\mathrm{prim}}] = 0$, $[\Delta, P_L] = 0$, preserving the harmonic subspace $\Delta(P_{\mathrm{prim}} x) = 0$ and $\Delta(P_L x) = 0$.
+  In Lean 4: [`LefschetzPrimitiveDecompBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/LefschetzPrimitiveDecompBridge.lean) (`decomp_sum`, `P_prim_is_primitive`, `P_prim_idempotent`, `P_prim_orthogonal_L`, `decomp_orthogonal`, `pythagorean_energy`, `primitive_energy_le`, `comm_laplacian_P_prim`, `P_prim_preserves_harmonic`, `certified_lefschetz_primitive_decomp_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -424,6 +439,7 @@ Formalizing the $\mathfrak{sl}_2(\mathbb{R})$ Lie algebra representation on diff
 | **Hodge-Green Operator & Resolution** | Green Operator $G$ / Projector $P_{\mathcal{H}}$ / Moore-Penrose | `constructDecomposition`, `laplacian_G_commutes`, `G_laplacian_G` | **Kernel-Checked (0 gaps)** |
 | **Poincaré Duality Pairing & Hodge Star** | Isometric Hodge Star / Poincaré Pairing / Hodge-Riemann | `harmonicEquiv_isometric`, `poincare_left_determines_class`, `poincare_hodge_riemann_positivity` | **Kernel-Checked (0 gaps)** |
 | **Lefschetz $\mathfrak{sl}_2(\mathbb{R})$ Triad & Kähler-Hodge** | $\mathfrak{sl}_2$ Lie Algebra / Casimir / Primitive Hodge | `primitive_hodge_riemann_energy`, `primitive_L_injective`, `casimir_on_primitive` | **Kernel-Checked (0 gaps)** |
+| **Lefschetz Primitive Projector & Foliation** | Primitive Projector $P_{\mathrm{prim}}$ / Orthogonal Foliation | `decomp_sum`, `pythagorean_energy`, `decomp_orthogonal` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

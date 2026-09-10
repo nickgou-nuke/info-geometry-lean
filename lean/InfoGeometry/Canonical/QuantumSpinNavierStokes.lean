@@ -84,7 +84,11 @@ theorem twoSheetSpinFrame_reconstruct (u : VelocityField E) :
 /-- Reconstruction is independent of whether the two sheets are read first or second. -/
 theorem twoSheetSpinFrame_reconstruct_spin_first (u : VelocityField E) :
     (twoSheetSpinFrame u).spin + (twoSheetSpinFrame u).strain = u := by
-  simpa [add_comm] using twoSheetSpinFrame_reconstruct (E := E) u
+  calc
+    (twoSheetSpinFrame u).spin + (twoSheetSpinFrame u).strain =
+        (twoSheetSpinFrame u).strain + (twoSheetSpinFrame u).spin :=
+      add_comm _ _
+    _ = u := twoSheetSpinFrame_reconstruct (E := E) u
 
 /-- The canonical spin channel is trace-free in finite dimension. -/
 theorem spinVelocity_isDivergenceFree
@@ -119,7 +123,8 @@ theorem spinVelocity_eq_zero_of_strainPolarized
 theorem spinClosureResidual_eq_zero_of_spinPolarized
     {u : VelocityField E} (h : IsSpinPolarized u) :
     vorticityClosureResidual u = 0 := by
-  exact vorticityClosureResidual_eq_zero_of_skew (E := E) h
+  simpa [IsSpinPolarized] using
+    (vorticityClosureResidual_eq_zero_of_skew (E := E) (u := u) h)
 
 /-- The two-sheet frame has a skew spin sheet. -/
 theorem twoSheetSpinFrame_spin_is_skew

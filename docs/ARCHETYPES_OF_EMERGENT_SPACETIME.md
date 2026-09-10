@@ -288,6 +288,19 @@ Formalizing the geometric heartbeat of the $(2n, 2n)$ para-hyperkähler manifold
   - Massive locking ($\Delta = m$): off-diagonal bridge locks the chiral modes into the relativistic mass-shell dispersion $\hat{Z}^2 = E^2 \mathbb{I} \iff a^2 + \Delta^2 = E^2$.
   In Lean 4: [`ParaComplexHolomorphicRealBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaComplexHolomorphicRealBridge.lean) (`peirce_sum`, `peircePlus_idem`, `peirce_ortho`, `deRham_decomposition`, `real_seam_condition`, `zorn2_trace_zero`, `zorn2_sq`, `zorn2_det`, `zorn2_mass_shell`, `certified_paracomplex_holomorphic_real_synthesis`).
 
+### 5.11 Non-Commutative RG Flows & Weyl Dilatation Diffusion
+Formalizing continuous scale homothety, irreversible energy scaling, and Hodge star flux diffusion:
+* **Scale Homothety Group:** The continuous scaling flow $\sigma_s(v) = e^s v$ satisfies the one-parameter group law $\sigma_{s_1 + s_2} = \sigma_{s_1} \circ \sigma_{s_2}$ with identity $\sigma_0 = \mathrm{id}$, commuting with all linear operators:
+  $$L(\sigma_s v) = \sigma_s(L v)$$
+* **Energy Monotonicity (Callan-Symanzik / C-Theorem):** The effective energy functional $\mathcal{E}(s) = \mathcal{E}_0 e^{-2s}$ is strictly anti-monotone along the RG trajectory for $\mathcal{E}_0 \ge 0$:
+  $$s_1 \le s_2 \implies \mathcal{E}(s_2) \le \mathcal{E}(s_1)$$
+  governing the continuous irreversible flow of phase-space expansion.
+* **Hodge Star Flux Diffusion Isomorphism:** The linear Hodge star $* : \Omega^0 \leftrightarrow \Omega^n$ intertwines scalar density diffusion and macroscopic volume form flux diffusion:
+  $$* (\Delta_S f) = \Delta_{\mathrm{Vol}} (* f) \implies * (f - \Delta t \cdot \Delta_S f) = * f - \Delta t \cdot \Delta_{\mathrm{Vol}} (* f)$$
+  providing the continuous differential machinery to calculate physical flux across orientable manifolds.
+* **Harmonic RG Fixed Points & Subspace Stability:** Harmonic modes ($\Delta \gamma_h = 0$) are stationary fixed points under diffusion ($\mathrm{diff}(\gamma_h) = \gamma_h$), while any invariant subspace $L(p) \subseteq p$ (such as exact or coexact forms) is preserved under the flow.
+  In Lean 4: [`RGFlowWeylDiffusionBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/RGFlowWeylDiffusionBridge.lean) (`scaleHomothety_comp`, `energyScale_anti_mono`, `diffusion_intertwining`, `harmonic_scalar_stationary`, `diffusion_preserves_subspace`, `certified_rg_flow_weyl_diffusion_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -315,6 +328,7 @@ Formalizing the geometric heartbeat of the $(2n, 2n)$ para-hyperkähler manifold
 | **Green-Schwarz Inflow on Cantor Boundary** | Cuntz Carrier / 3-Form $H$ / Cantor Colimit | `green_schwarz_inflow_cancellation`, `normalizedTrace_branchChirality` | **Kernel-Checked (0 gaps)** |
 | **High-Entropy Semantic Compilation** | Poset Homomorphism / Causal Cone Transitivity | `causal_cone_frontier_closure`, `noise_annihilation` | **Kernel-Checked (0 gaps)** |
 | **Holomorphic-Antiholomorphic-Real Triad** | Para-Complex Peirce / Klein Seam / Zorn Mass Shell | `peirce_sum`, `real_seam_condition`, `zorn2_mass_shell` | **Kernel-Checked (0 gaps)** |
+| **Non-Commutative RG Flow & Weyl Diffusion** | Homothety Group / Hodge Duality / Heat Semigroup | `scaleHomothety_comp`, `energyScale_anti_mono`, `diffusion_intertwining` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

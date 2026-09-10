@@ -1,0 +1,30 @@
+import InfoGeometry.Canonical.RGFlowResolventSemigroupBridge
+
+/-!
+# Axiomatic Audit of RGFlowResolventSemigroupBridge
+
+This audit checks the foundational axioms of RGFlowResolventSemigroupBridge.
+Expected axioms: [propext, Classical.choice, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.certified_resolvent_semigroup_trotter_synthesis
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.inner_add_smul_self
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.inner_resolvent_step_ge
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.norm_le_of_inner_self_le
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.resolvent_unconditional_contractivity
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.resolvent_harmonic_fixed_point
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.iterated_contractivity
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.yosida_hille_discrete_contractivity
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.iterated_harmonic_fixed_point
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.iterated_eigenmode_scaling
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.resolvent_eigenmode_step
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.iterated_resolvent_eigenmode
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.yosida_scalar_identity
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.yosida_approximant_eigenmode
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.yosida_approximant_harmonic
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.hodge_step_comp_eq
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.hodge_step_comp_comm
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.hodge_trotter_resolvent_exact
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.iterated_split_contractivity
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.hodge_split_harmonic_fixed_point
+#print axioms InfoGeometry.Canonical.RGFlowResolventSemigroup.split_resolvent_exact_eigenmode

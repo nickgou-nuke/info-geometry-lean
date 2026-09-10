@@ -780,6 +780,8 @@ import InfoGeometry.Canonical.LefschetzSL2TriadBridge
 import InfoGeometry.Canonical.LefschetzSL2TriadAudit
 import InfoGeometry.Canonical.LefschetzPrimitiveDecompBridge
 import InfoGeometry.Canonical.LefschetzPrimitiveDecompAudit
+import InfoGeometry.Canonical.HodgeRiemannBilinearBridge
+import InfoGeometry.Canonical.HodgeRiemannBilinearAudit
 import InfoGeometry.Canonical.TemperleyLiebJonesBridge
 import InfoGeometry.Canonical.KitaevQuantumDoubleGSDBridge
 import InfoGeometry.Canonical.QuantumHallSkyrmionBridge

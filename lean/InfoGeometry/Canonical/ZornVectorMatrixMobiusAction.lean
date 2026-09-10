@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.ZornVectorMatrix
 
 namespace InfoGeometry.Canonical
 
@@ -18,6 +19,10 @@ noncomputable def infinityBoundaryPoint : RealProjectiveBoundary :=
     intro h
     have h0 := congrArg (fun v : Fin 2 → ℝ => v 0) h
     simp at h0)
+
+noncomputable def localSL2ProjectiveAction (g : SL2R) :
+    RealProjectiveBoundary → RealProjectiveBoundary :=
+  Projectivization.map (g.toLin'.toLinearMap) g.toLin'.injective
 
 noncomputable def modularBoostSL2 (s : ℝ) : SL2R :=
   ⟨![![Real.exp s, 0], ![0, Real.exp (-s)]], by

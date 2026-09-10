@@ -244,6 +244,26 @@ Bridging the 6-fold chiral Hodge decomposition with the real Zorn vector matrix 
   The symmetric matter doublet $\Psi(u) = (0, 0, u, u)$ satisfies $\Psi(u)^2 = (u \cdot u) \cdot \mathbb{I}$ (the vorticity cross product $u \times u = 0$ vanishes), condensing into a timelike massive state ($\mathcal{N}(\Psi(u)) = -u \cdot u \le 0$). At the horizon seam, the topological persistence of the harmonic vacuum mediates the Aharonov weak value amplification ($\epsilon \cdot \Omega_w = \mathrm{num}$).
   In Lean 4: [`ChiralHodgeZornArchitectureBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ChiralHodgeZornArchitectureBridge.lean) (`matterDoublet_square`, `matterDoublet_norm`, `horizon_weak_scaling`, `certified_chiral_hodge_zorn_synthesis`).
 
+### 5.8 Green-Schwarz Anomaly Inflow on the Cantor Boundary
+Bridging the bulk Chern-Simons inflow, Cuntz boundary chiral supertrace anomaly, and the Cantor direct inductive colimit:
+* **Bulk-Boundary Inflow Cancellation:**
+  The bulk Chern-Simons gauge variation $\delta S_{\mathrm{bulk}}(D, X) = -\operatorname{Tr}(\rho \cdot [D, X])$ and the boundary chiral supertrace anomaly $\mathcal{A}_{\mathrm{boundary}}(D, X) = \operatorname{Tr}(\rho \cdot [D, X])$ satisfy the exact cancellation identity:
+  $$\delta S_{\mathrm{bulk}}(D, X) + \mathcal{A}_{\mathrm{boundary}}(D, X) = 0$$
+  For $D$-invariant observables ($[D, X] = 0$) and supercharge-exact observables ($X = \{Q_+, Y\}$ with $[D, Q_+] = 0$), both the bulk variation and boundary anomaly vanish separately.
+  In Lean 4: `green_schwarz_inflow_cancellation`, `green_schwarz_invariant_bulk_vanishes`, `green_schwarz_invariant_boundary_vanishes`, `green_schwarz_exact_bulk_vanishes`, `green_schwarz_exact_boundary_vanishes`.
+* **Gauge Invariance of Modified 3-Form Field Strength:**
+  Under the Green-Schwarz 2-form transformation $\delta(dB) = \delta \Omega_{\mathrm{CS}}$, the modified 3-form field strength $H = dB - \Omega_{\mathrm{CS}}$ is strictly gauge invariant:
+  $$(dB + \delta(dB)) - (\Omega_{\mathrm{CS}} + \delta\Omega_{\mathrm{CS}}) = dB - \Omega_{\mathrm{CS}}$$
+  Furthermore, the 4-form anomaly polynomial difference factorizes as $X^2 - Y^2 = (X - Y)(X + Y)$, vanishing identically under the inflow matching condition $X = Y$.
+  In Lean 4: `green_schwarz_H_gauge_invariant`, `anomaly_polynomial_factorization`.
+* **Cantor Branch Chirality & Colimit Inductive Trace:**
+  At each stage $n+1$, the binary branch chirality observable $\Gamma_{n+1} \in \mathrm{DiagAlg}(n+1)$ is $+1$ on the extended true branch and $-1$ on the extended false branch. It satisfies:
+  - Involution: $\Gamma_{n+1}^2 = 1$
+  - Unbroken chiral symmetry / zero normalized trace: $\tau_{n+1}(\Gamma_{n+1}) = 0$
+  - Inductive colimit trace preservation along the Cantor filtration:
+    $$\tau_{n+1}(\operatorname{diagEmbedSucc}(f)) = \tau_n(f)$$
+  In Lean 4: [`GreenSchwarzAnomalyInflowBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/GreenSchwarzAnomalyInflowBridge.lean) (`branchChirality_sq`, `normalizedTrace_branchChirality`, `colimit_trace_preservation`, `certified_green_schwarz_inflow_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -268,6 +288,7 @@ Bridging the 6-fold chiral Hodge decomposition with the real Zorn vector matrix 
 | **Harmonic Weak Horizon** | Polarized Harmonic Doublets / Aharonov Weak Value | `dirac_on_harmonic`, `kinetic_mass_anticomm`, `bdg_harmonic_doublet`, `mass_transfer_wva` | **Kernel-Checked (0 gaps)** |
 | **Souriau-Hodge Triad** | Polarized Hodge Triad / Lie Derivative / Krein Isometry | `dilaton_commutes_dirac`, `dirac_is_krein_isometry`, `cartan_harmonic_zero` | **Kernel-Checked (0 gaps)** |
 | **Chiral Hodge-Zorn Architecture**| 6-Fold Chiral Hodge / Zorn Vector Matrices / Klein Quadric | `coexact_anticomm`, `coexact_commutator_weyl`, `matterDoublet_square` | **Kernel-Checked (0 gaps)** |
+| **Green-Schwarz Inflow on Cantor Boundary** | Cuntz Carrier / 3-Form $H$ / Cantor Colimit | `green_schwarz_inflow_cancellation`, `normalizedTrace_branchChirality` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

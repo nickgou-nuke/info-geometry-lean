@@ -7,6 +7,8 @@ set_option linter.unusedSimpArgs false
 
 noncomputable section
 
+namespace FibAnyonThm4
+
 /-!
 # Fibonacci F-matrix and R-matrix — Exact Symbolic Formalization
 -/
@@ -259,5 +261,7 @@ theorem braid_relation : σ1 * σ2 * σ1 = σ2 * σ1 * σ2 := by
       rw [← h_calc]
       ring_nf
   exact sub_eq_zero.mp h
+
+end FibAnyonThm4
 
 end

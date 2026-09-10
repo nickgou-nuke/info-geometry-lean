@@ -12,6 +12,8 @@ We additionally construct the unitary Braid Twist, proving its symmetries.
 set_option linter.unusedSimpArgs false
 set_option linter.unusedSectionVars false
 
+namespace CuntzEndomorphism
+
 section CuntzEndomorphism
 
 variable {A : Type*} [Ring A] [StarRing A]
@@ -147,5 +149,7 @@ theorem BraidTwist_unitary : BraidTwist S₁ S₂ * BraidTwist S₁ S₂ = 1 := 
   rw [step1, t1, t2, t3, t4]
   simp only [zero_add, add_zero]
   exact hsum
+
+end CuntzEndomorphism
 
 end CuntzEndomorphism

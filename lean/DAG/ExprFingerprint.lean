@@ -69,29 +69,53 @@ def computeFingerprint (e : Expr) : ExprFingerprint := Id.run do
         else
           let extra := Array.replicate (n - hist.size + 1) 0
           hist := (hist ++ extra).modify n (· + 1)
-    | .fvar .. => h := mixHash h (hash (1 : Nat))
-    | .mvar .. => h := mixHash h (hash (2 : Nat)); mc := mc + 1
-    | .sort .. => h := mixHash h (hash (3 : Nat))
-    | .const .. => h := mixHash h (hash (4 : Nat)); cc := cc + 1
+    | .fvar id =>
+        h := mixHash h (hash (1 : Nat))
+        h := mixHash h (hash id)
+    | .mvar id =>
+        h := mixHash h (hash (2 : Nat))
+        h := mixHash h (hash id)
+        mc := mc + 1
+    | .sort level =>
+        h := mixHash h (hash (3 : Nat))
+        h := mixHash h (hash level)
+    | .const name levels =>
+        h := mixHash h (hash (4 : Nat))
+        h := mixHash h (hash name)
+        for level in levels do
+          h := mixHash h (hash level)
+        cc := cc + 1
     | .app f a =>
         h := mixHash h (hash (5 : Nat))
         ac := ac + 1
         if f.isLambda then rc := rc + 1
         stack := f :: a :: stack
-    | .lam _ ty body _ =>
+    | .lam _ ty body binderInfo =>
         h := mixHash h (hash (6 : Nat))
+        h := mixHash h (hash binderInfo)
         lc := lc + 1
         stack := ty :: body :: stack
-    | .forallE _ ty body _ =>
+    | .forallE _ ty body binderInfo =>
         h := mixHash h (hash (7 : Nat))
+        h := mixHash h (hash binderInfo)
         fc := fc + 1
         stack := ty :: body :: stack
-    | .letE _ ty val body _ =>
+    | .letE _ ty val body binderInfo =>
         h := mixHash h (hash (8 : Nat))
+        h := mixHash h (hash binderInfo)
         stack := ty :: val :: body :: stack
-    | .lit .. => h := mixHash h (hash (9 : Nat))
-    | .mdata _ body => h := mixHash h (hash (10 : Nat)); stack := body :: stack
-    | .proj .. => h := mixHash h (hash (11 : Nat))
+    | .lit literal =>
+        h := mixHash h (hash (9 : Nat))
+        h := mixHash h (hash literal)
+    | .mdata data body =>
+        h := mixHash h (hash (10 : Nat))
+        h := mixHash h (hash (toString data))
+        stack := body :: stack
+    | .proj structureName index body =>
+        h := mixHash h (hash (11 : Nat))
+        h := mixHash h (hash structureName)
+        h := mixHash h (hash index)
+        stack := body :: stack
 
   return {
     shapeHash      := h

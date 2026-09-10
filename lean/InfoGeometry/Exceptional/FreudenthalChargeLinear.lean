@@ -1,5 +1,7 @@
 import InfoGeometry.Exceptional.Freudenthal
-import Mathlib
+import Mathlib.Algebra.Module.TransferInstance
+import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.Tactic
 
 /-!
 # Linear structure on the Freudenthal charge carrier

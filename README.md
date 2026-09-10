@@ -27,6 +27,9 @@ This repository is not a sanitized textbook. It is the raw, authentic record of 
 * **Scattering & Amplitudes:** Connections between discrete quantum models and continuous field theory
 * **Spacetime & Geometry:** Mathematical framework for discrete and continuous spacetime structures
 
+> [!IMPORTANT]
+> **The Colimit Continuum Invariant:** Continuous boundaries, horizons, and physical limits in this repository are not derived via naive measure theory or analytical continuation. They are strictly constructed via **Categorical Direct Inductive Colimits**, pushing finite algebraic structures through the UHF $2^\infty$ boundary without analytical hallucination.
+
 ---
 
 ### How to Navigate

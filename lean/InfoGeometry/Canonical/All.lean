@@ -2201,6 +2201,8 @@ import InfoGeometry.Canonical.IwasawaCuntzKleinWeakBridge
 import InfoGeometry.Canonical.IwasawaCuntzKleinWeakAudit
 import InfoGeometry.Canonical.PalatiniBoundaryStokesBridge
 import InfoGeometry.Canonical.PalatiniBoundaryStokesAudit
+import InfoGeometry.Canonical.DrazinSpectralFittingBridge
+import InfoGeometry.Canonical.DrazinSpectralFittingAudit
 import InfoGeometry.Canonical.AlbertPeirceModularMixingBridge
 
 namespace InfoGeometry

@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Physics.GellMannSU3
 import InfoGeometry.Canonical.A2QutritTransitionRootBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Gell--Mann coordinates for the `A₂` root directions
@@ -22,7 +23,7 @@ open Matrix
 open InfoGeometry.Physics.GellMannSU3
 open InfoGeometry.Canonical.A2QutritTransitionRootBridge
 
-abbrev QutritMatrix := Matrix (Fin 3) (Fin 3) ℂ
+abbrev QutritMatrix := InfoGeometry.Algebra.FiniteSpin.QutritMatrix
 
 private def e (i j : Fin 3) : QutritMatrix := Matrix.single i j 1
 

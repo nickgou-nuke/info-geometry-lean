@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.SplitCliffordTwoModeCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Concrete nuclear five-grading in the two-mode CAR matrix algebra
@@ -27,7 +28,7 @@ namespace InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordTwoModeCAR
 
-abbrev M4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev M4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /-- Associative matrix commutator. -/
 def comm (X Y : M4R) : M4R :=

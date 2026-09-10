@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix Complex
 
@@ -16,7 +17,7 @@ No global axioms are introduced.
 
 namespace InfoGeometry.Canonical.CyclicCocycleTwistedSectors
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-! ## Matrix commutators and cyclic cochains -/
 

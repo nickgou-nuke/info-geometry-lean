@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearTwoModeCARFiveGrade
 
 /-!
@@ -21,7 +22,7 @@ open InfoGeometry.Physics.NuclearTwoModeCARFiveGrade
 
 abbrev EvenSector := Fin 2 → ℂ
 abbrev EvenEnd := Module.End ℂ EvenSector
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Inclusion of the empty/paired sector. -/
 def evenEmbed : EvenSector →ₗ[ℂ] Fock4 where

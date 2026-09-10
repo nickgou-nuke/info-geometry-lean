@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.QutritWeylOperatorBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The four commuting Weyl lines of the qutrit Pauli plane
@@ -15,7 +16,7 @@ namespace InfoGeometry.Canonical.QutritWeylCommutingLines
 
 open InfoGeometry.Canonical.QutritWeylOperatorBasis
 
-abbrev QutritMatrix := Matrix (Fin 3) (Fin 3) ℂ
+abbrev QutritMatrix := InfoGeometry.Algebra.FiniteSpin.QutritMatrix
 
 def commutingWeylGenerator : Fin 4 → QutritMatrix := ![
   weylWord 1 0,

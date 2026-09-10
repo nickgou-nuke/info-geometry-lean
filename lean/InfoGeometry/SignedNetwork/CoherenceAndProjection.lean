@@ -1,8 +1,9 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 namespace InfoGeometry.SignedNetwork.CoherenceAndProjection
 noncomputable section
 open scoped Matrix
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2C
 def conjugate (U P : Mat2) := U * P * Uᴴ
 theorem conjugate_idempotent (U P : Mat2) (hU : Uᴴ * U = 1)
     (hU' : U * Uᴴ = 1) (hP : P*P=P) :

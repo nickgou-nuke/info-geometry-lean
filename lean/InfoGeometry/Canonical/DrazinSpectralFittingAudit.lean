@@ -1,0 +1,16 @@
+import InfoGeometry.Canonical.DrazinSpectralFittingBridge
+
+/-!
+# Axiomatic Audit of DrazinSpectralFittingBridge
+
+This audit verifies that the foundational axioms of DrazinSpectralFittingBridge
+are strictly the standard foundations [propext, Classical.choice, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.DrazinSpectralFittingBridge.makeCertifiedDrazinFittingSynthesis
+#print axioms InfoGeometry.Canonical.DrazinSpectralFittingBridge.drazin_pow_reduction
+#print axioms InfoGeometry.Canonical.DrazinSpectralFittingBridge.drazin_annihilates_nilpotent
+#print axioms InfoGeometry.Canonical.DrazinSpectralFittingBridge.drazin_fitting_trivial_intersection
+#print axioms InfoGeometry.Canonical.DrazinSpectralFittingBridge.fitting_decomposition_unique
+#print axioms InfoGeometry.Canonical.DrazinSpectralFittingBridge.propagator_annihilates_ghosts
+#print axioms InfoGeometry.Canonical.DrazinSpectralFittingBridge.moore_penrose_is_drazin_index_one

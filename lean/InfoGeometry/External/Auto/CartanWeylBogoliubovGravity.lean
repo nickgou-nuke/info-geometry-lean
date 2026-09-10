@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cartan-Weyl / Bogoliubov finite algebra
@@ -23,7 +24,7 @@ open Matrix
 
 abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
 abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
-abbrev M4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev M4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /-! ## Pauli soldering and Minkowski metric -/
 

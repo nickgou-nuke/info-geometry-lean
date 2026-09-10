@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.PauliSoldering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.Concrete
 
 noncomputable section
@@ -8,7 +9,7 @@ namespace InfoGeometry.Quantum.CircularPauliCausalCone
 open Matrix
 open InfoGeometry.Quantum.PauliSoldering
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 structure Rail where
   scalar : ℂ

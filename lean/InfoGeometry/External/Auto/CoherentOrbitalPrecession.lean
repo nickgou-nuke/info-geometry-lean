@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Coherent orbital precession
@@ -74,7 +75,7 @@ theorem asymmetryParameter_unit_invariant
 
 /-! ## 2. Coherence tensor skeleton -/
 
-abbrev M4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev M4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /-- Coherence tensor skeleton:
 `C_μν = λ(∇_μ∇_ν Φ - g_μν □Φ)`. -/

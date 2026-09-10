@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Kasparov--Krein BdG doubling
@@ -13,7 +14,7 @@ namespace KasparovKrein
 
 open Matrix
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- BdG matrix with diagonal mass `h` and pairing `Δ`. -/
 def BdG_Matrix (h Δ : ℂ) : Mat2 := !![h, Δ; Δ, -h]

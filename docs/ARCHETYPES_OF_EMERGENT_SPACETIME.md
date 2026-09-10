@@ -301,6 +301,17 @@ Formalizing continuous scale homothety, irreversible energy scaling, and Hodge s
 * **Harmonic RG Fixed Points & Subspace Stability:** Harmonic modes ($\Delta \gamma_h = 0$) are stationary fixed points under diffusion ($\mathrm{diff}(\gamma_h) = \gamma_h$), while any invariant subspace $L(p) \subseteq p$ (such as exact or coexact forms) is preserved under the flow.
   In Lean 4: [`RGFlowWeylDiffusionBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/RGFlowWeylDiffusionBridge.lean) (`scaleHomothety_comp`, `energyScale_anti_mono`, `diffusion_intertwining`, `harmonic_scalar_stationary`, `diffusion_preserves_subspace`, `certified_rg_flow_weyl_diffusion_synthesis`).
 
+### 5.12 Para-Complex Connections & Chiral Noether Currents
+Formalizing linear connections compatible with a para-complex structure $\tau$ ($\tau^2 = \mathrm{id}$) and the chiral decomposition of Noether currents:
+* **Connection Preservation of Para-Complex Structure:** A linear connection $\nabla$ is para-complex if $\nabla_X (\tau Y) = \tau (\nabla_X Y)$, which implies exact commutation with split Peirce projectors:
+  $$\nabla_X (P_\pm Y) = P_\pm (\nabla_X Y)$$
+* **Sub-Bundle Invariance:** Parallel transport along any vector field preserves the holomorphic $T^{1,0}M$ and antiholomorphic $T^{0,1}M$ sub-bundles independently.
+* **Curvature Commutation:** The curvature operator $R(X, Y) Z = [\nabla_X, \nabla_Y] Z - \nabla_{[X, Y]} Z$ commutes with $\tau$ and with both projectors $P_\pm$, preserving the chiral sub-bundles.
+* **Para-Hermitian Totally Isotropic Sub-Bundles:** Under a para-Hermitian metric $g(\tau X, Y) + g(X, \tau Y) = 0$, both $T^{1,0}M$ and $T^{0,1}M$ are totally isotropic (Lagrangian) subspaces:
+  $$g(X, Y) = 0 \quad (\forall X, Y \in T^{1,0}M \text{ or } T^{0,1}M)$$
+* **Chiral Noether Current & Charge Splitting:** Every Noether current functional $J$ decomposes into orthogonal chiral currents $J = J^+ + J^-$ where $J^+(P_- v) = 0$ and $J^-(P_+ v) = 0$, yielding conserved chiral charges $Q = Q^+ + Q^-$.
+  In Lean 4: [`ParaComplexConnectionBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaComplexConnectionBridge.lean) (`conn_comm_peircePlus`, `conn_preserves_holomorphic`, `curvature_comm_tau`, `holomorphic_isotropic`, `chiral_current_sum`, `certified_paracomplex_connection_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -329,6 +340,7 @@ Formalizing continuous scale homothety, irreversible energy scaling, and Hodge s
 | **High-Entropy Semantic Compilation** | Poset Homomorphism / Causal Cone Transitivity | `causal_cone_frontier_closure`, `noise_annihilation` | **Kernel-Checked (0 gaps)** |
 | **Holomorphic-Antiholomorphic-Real Triad** | Para-Complex Peirce / Klein Seam / Zorn Mass Shell | `peirce_sum`, `real_seam_condition`, `zorn2_mass_shell` | **Kernel-Checked (0 gaps)** |
 | **Non-Commutative RG Flow & Weyl Diffusion** | Homothety Group / Hodge Duality / Heat Semigroup | `scaleHomothety_comp`, `energyScale_anti_mono`, `diffusion_intertwining` | **Kernel-Checked (0 gaps)** |
+| **Para-Complex Connections & Chiral Currents** | Para-Complex Connection / Split Peirce / Isotropic Sub-bundles | `conn_comm_peircePlus`, `holomorphic_isotropic`, `chiral_current_sum` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

@@ -766,6 +766,8 @@ import InfoGeometry.Canonical.ParaComplexHolomorphicRealBridge
 import InfoGeometry.Canonical.ParaComplexHolomorphicRealAudit
 import InfoGeometry.Canonical.RGFlowWeylDiffusionBridge
 import InfoGeometry.Canonical.RGFlowWeylDiffusionAudit
+import InfoGeometry.Canonical.ParaComplexConnectionBridge
+import InfoGeometry.Canonical.ParaComplexConnectionAudit
 import InfoGeometry.Canonical.TemperleyLiebJonesBridge
 import InfoGeometry.Canonical.KitaevQuantumDoubleGSDBridge
 import InfoGeometry.Canonical.QuantumHallSkyrmionBridge

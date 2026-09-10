@@ -372,6 +372,24 @@ Formalizing the topological Poincaré duality pairing on de Rham cohomology real
   $$\langle c_k, c_{n-k} \rangle_{\mathrm{PD}, G} = \langle \star P_{\mathcal{H}} \gamma_k, P_{\mathcal{H}} \gamma_{n-k} \rangle_{L^2}$$
   In Lean 4: [`PoincareDualityBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/PoincareDualityBridge.lean) (`harmonicEquiv`, `harmonicEquiv_isometric`, `poincare_left_determines_class`, `poincare_right_determines_class`, `poincare_hodge_riemann_positivity`, `poincare_hodge_riemann_nonneg`, `poincare_left_determines_class_green`, `poincare_right_determines_class_green`, `certified_poincare_duality_synthesis`).
 
+### 5.17 The Lefschetz $\mathfrak{sl}_2(\mathbb{R})$ Triad & Kähler-Hodge Commutation
+Formalizing the $\mathfrak{sl}_2(\mathbb{R})$ Lie algebra representation on differential forms and cohomology with commuting Hodge-Laplacian $\Delta$:
+* **Lie Algebra Brackets:** Raising operator $L$, lowering dual operator $\Lambda$, and Cartan grading generator $H = [L, \Lambda]$ satisfy:
+  $$[H, L] = 2 L, \quad [H, \Lambda] = -2 \Lambda, \quad [L, \Lambda] = H$$
+  with formal adjointness $\langle L x, y \rangle = \langle x, \Lambda y \rangle$.
+* **Weight Raising & Lowering:** Strict shifts of $H$-eigenvalues by $\pm 2$:
+  $$H(L x) = (\lambda + 2) L x, \quad H(\Lambda x) = (\lambda - 2) \Lambda x$$
+* **Primitive Lowering Identity:** On primitive weight vectors $x \in \ker \Lambda$ with $H x = -m x$:
+  $$\Lambda(L x) = m x$$
+* **Hodge-Riemann Energy Positivity:** The $L^2$ energy on primitive weight vectors evaluates to:
+  $$\|L x\|^2 = m \|x\|^2$$
+  guaranteeing strict positivity $\|L x\|^2 > 0$ for all non-zero primitives with $m > 0$.
+* **Hard Lefschetz Primitive Injectivity:** If $m > 0$, $L$ is strictly injective on primitive vectors ($L x = 0 \implies x = 0$).
+* **Quadratic Casimir Spectrum:** The $\mathfrak{sl}_2(\mathbb{R})$ Casimir $C = 2 L \Lambda + \frac{1}{2} H^2 - H$ acts diagonally on primitive vectors:
+  $$C x = \left(\frac{1}{2} m^2 + m\right) x$$
+* **Kähler-Hodge Commutation:** The Hodge-Laplacian commutes with all three generators ($[\Delta, L] = 0, [\Delta, \Lambda] = 0 \implies [\Delta, H] = 0$), strictly preserving the harmonic subspace $\mathcal{H}$.
+  In Lean 4: [`LefschetzSL2TriadBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/LefschetzSL2TriadBridge.lean) (`weight_raising`, `weight_lowering`, `primitive_lowering_one`, `primitive_hodge_riemann_energy`, `primitive_hodge_riemann_pos`, `primitive_L_injective`, `casimir_on_primitive`, `comm_laplacian_H`, `L_preserves_harmonic`, `certified_lefschetz_sl2_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -405,6 +423,7 @@ Formalizing the topological Poincaré duality pairing on de Rham cohomology real
 | **de Rham-Hodge Isomorphism & Hodge Splitting** | Hilbert Cochain Complex / Hodge-Laplacian / Cohomology | `hodge_decomposition_unique`, `deRhamHodgeEquiv`, `exists_unique_harmonic_representative` | **Kernel-Checked (0 gaps)** |
 | **Hodge-Green Operator & Resolution** | Green Operator $G$ / Projector $P_{\mathcal{H}}$ / Moore-Penrose | `constructDecomposition`, `laplacian_G_commutes`, `G_laplacian_G` | **Kernel-Checked (0 gaps)** |
 | **Poincaré Duality Pairing & Hodge Star** | Isometric Hodge Star / Poincaré Pairing / Hodge-Riemann | `harmonicEquiv_isometric`, `poincare_left_determines_class`, `poincare_hodge_riemann_positivity` | **Kernel-Checked (0 gaps)** |
+| **Lefschetz $\mathfrak{sl}_2(\mathbb{R})$ Triad & Kähler-Hodge** | $\mathfrak{sl}_2$ Lie Algebra / Casimir / Primitive Hodge | `primitive_hodge_riemann_energy`, `primitive_L_injective`, `casimir_on_primitive` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

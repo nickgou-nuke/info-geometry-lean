@@ -339,6 +339,21 @@ Formalizing the degree-$k$ Hilbert cochain complex, three-way pairwise $L^2$ ort
 * **Harmonic Rigidity & de Rham-Hodge Isomorphism:** Harmonic forms in the same affine gauge orbit are identical ($h_1 - h_2 \in \operatorname{im} d \implies h_1 = h_2$). The canonical projection $\mathcal{H}^k \to H^k_{\mathrm{dR}} = \ker d / \operatorname{im} d$ is an injective and surjective equivalence $\mathcal{H}^k \cong H^k_{\mathrm{dR}}$, yielding a unique harmonic representative in each gauge orbit.
   In Lean 4: [`DeRhamHodgeIsomorphismBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/DeRhamHodgeIsomorphismBridge.lean) (`exact_orthogonal_coexact`, `hodge_decomposition_unique`, `hodge_energy_conservation`, `laplacian_positive_semidefinite`, `closed_hodge_coexact_zero`, `harmonic_diff_exact_eq_zero`, `deRhamHodgeEquiv`, `exists_unique_harmonic_representative`, `certified_derham_hodge_isomorphism_synthesis`).
 
+### 5.15 Hodge-Green Operator & Projector Resolution
+Formalizing the Green operator $G$ and harmonic orthogonal projector $P_{\mathcal{H}}$ for the degree-$k$ Hodge-Laplacian $\Delta = d\delta + \delta d$:
+* **Resolution Identities:** Right and left resolutions satisfy:
+  $$\Delta(G \omega) + P_{\mathcal{H}} \omega = \omega, \quad G(\Delta \omega) + P_{\mathcal{H}} \omega = \omega$$
+* **Constructive Hodge Decomposition:** Every form $\omega$ admits an explicit, constructive decomposition:
+  $$\omega = d(\delta G \omega) + \delta(d G \omega) + P_{\mathcal{H}} \omega$$
+  with $\omega_d = d(\delta G \omega)$ exact, $\omega_\delta = \delta(d G \omega)$ coexact, and $\gamma_h = P_{\mathcal{H}} \omega$ harmonic.
+* **Global Decomposition Nonemptiness:** Constructively witnesses `∀ ω, Nonempty (K.HodgeDecomposition ω)`, discharging the hypothesis required for de Rham-Hodge equivalence.
+* **Harmonic Projector Idempotence & Annihilation:** $P_{\mathcal{H}}^2 = P_{\mathcal{H}}$, $G(P_{\mathcal{H}} \omega) = 0$, and $\Delta(P_{\mathcal{H}} \omega) = 0$.
+* **Operator Commutation:** The Laplacian and the Green operator commute on all forms: $\Delta(G \omega) = G(\Delta \omega) = \omega - P_{\mathcal{H}} \omega$.
+* **Moore-Penrose Pseudo-Inverse Identities:** $G \Delta G = G$ and $\Delta G \Delta = \Delta$.
+* **Regular Inversion on Orthogonal Subspaces:** On any form in $(\ker \Delta)^\perp$ ($P_{\mathcal{H}} \omega = 0$), $\Delta(G \omega) = \omega$.
+* **Integration with Cohomology:** Unconditionally witnesses the canonical de Rham-Hodge equivalence $\mathcal{H}^k \cong H^k_{\mathrm{dR}}$ and unique harmonic gauge representative.
+  In Lean 4: [`HodgeGreenOperatorBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/HodgeGreenOperatorBridge.lean) (`constructDecomposition`, `global_hodge_decomposition`, `P_H_idempotent`, `laplacian_G_commutes`, `G_laplacian_G`, `laplacian_G_laplacian`, `exact_regular_inversion`, `deRhamHodgeEquivFromGreen`, `certified_hodge_green_operator_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -370,6 +385,7 @@ Formalizing the degree-$k$ Hilbert cochain complex, three-way pairwise $L^2$ ort
 | **Para-Complex Connections & Chiral Currents** | Para-Complex Connection / Split Peirce / Isotropic Sub-bundles | `conn_comm_peircePlus`, `holomorphic_isotropic`, `chiral_current_sum` | **Kernel-Checked (0 gaps)** |
 | **Resolvent Semigroups & Lie-Trotter Splitting** | Positive Semi-Definite Resolvent / Hodge Splitting | `resolvent_unconditional_contractivity`, `hodge_trotter_resolvent_exact`, `iterated_split_contractivity` | **Kernel-Checked (0 gaps)** |
 | **de Rham-Hodge Isomorphism & Hodge Splitting** | Hilbert Cochain Complex / Hodge-Laplacian / Cohomology | `hodge_decomposition_unique`, `deRhamHodgeEquiv`, `exists_unique_harmonic_representative` | **Kernel-Checked (0 gaps)** |
+| **Hodge-Green Operator & Resolution** | Green Operator $G$ / Projector $P_{\mathcal{H}}$ / Moore-Penrose | `constructDecomposition`, `laplacian_G_commutes`, `G_laplacian_G` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

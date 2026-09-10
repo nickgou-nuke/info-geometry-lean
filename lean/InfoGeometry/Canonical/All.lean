@@ -1,3 +1,9 @@
+import InfoGeometry.Canonical.KreinSeamEvolution
+import InfoGeometry.Canonical.WeakValueCylinderTransport
+import InfoGeometry.Canonical.WeakValueEnstrophy
+import InfoGeometry.Canonical.WeakValueForcedShear
+import InfoGeometry.Canonical.WeakValueReconstructionChecks
+import InfoGeometry.Canonical.WeakValueSpatialReconstruction
 import InfoGeometry.Canonical.AharonovKreinWeakValueBridge
 import InfoGeometry.Canonical.QuantumSpinNavierStokes
 import InfoGeometry.Canonical.ZornNativeBdGCompatibility

@@ -1,5 +1,7 @@
 import Mathlib.Topology.Category.TopCat.Basic
 import Mathlib.Topology.Instances.Rat
+import InfoGeometry.Canonical
+import InfoGeometry.Algebra.ZornDualLattice
 import InfoGeometry.Canonical.ZornVectorMatrixRationalTopCatReadout
 
 /-!
@@ -18,6 +20,27 @@ namespace InfoGeometry.Canonical
 open CategoryTheory
 open InfoGeometry.Algebra
 open InfoGeometry.Algebra.ZornVectorMatrix
+
+theorem continuous_zornVectorMatrix_rational_polar :
+    Continuous (fun p : ZornVectorMatrix ℚ × ZornVectorMatrix ℚ => polar p.1 p.2) := by
+  unfold polar
+  have hfst : Continuous (fun p : ZornVectorMatrix ℚ × ZornVectorMatrix ℚ => p.1) := continuous_fst
+  have hsnd : Continuous (fun p : ZornVectorMatrix ℚ × ZornVectorMatrix ℚ => p.2) := continuous_snd
+  have ha₁ := continuous_zornVectorMatrix_rational_a.comp hfst
+  have hb₁ := continuous_zornVectorMatrix_rational_b.comp hfst
+  have ha₂ := continuous_zornVectorMatrix_rational_a.comp hsnd
+  have hb₂ := continuous_zornVectorMatrix_rational_b.comp hsnd
+  have hv₁ (i : Fin 3) := (continuous_zornVectorMatrix_rational_v i).comp hfst
+  have hw₁ (i : Fin 3) := (continuous_zornVectorMatrix_rational_w i).comp hfst
+  have hv₂ (i : Fin 3) := (continuous_zornVectorMatrix_rational_v i).comp hsnd
+  have hw₂ (i : Fin 3) := (continuous_zornVectorMatrix_rational_w i).comp hsnd
+  have hleft : Continuous (fun p : ZornVectorMatrix ℚ × ZornVectorMatrix ℚ =>
+      p.1.a * p.2.b + p.2.a * p.1.b) := (ha₁.mul hb₂).add (ha₂.mul hb₁)
+  have hright : Continuous (fun p : ZornVectorMatrix ℚ × ZornVectorMatrix ℚ =>
+      p.1.v 0 * p.2.w 0 + p.1.v 1 * p.2.w 1 + p.1.v 2 * p.2.w 2 +
+        p.2.v 0 * p.1.w 0 + p.2.v 1 * p.1.w 1 + p.2.v 2 * p.1.w 2) := by
+    fun_prop (disch := aesop)
+  exact hleft.sub hright
 
 abbrev ZornDualLatticePoint (L : AddSubgroup (ZornVectorMatrix ℚ)) :=
   {X : ZornVectorMatrix ℚ // X ∈ dualLattice L}
@@ -62,6 +85,9 @@ theorem zornDualLatticePolarTopCat_is_integer
 
 abbrev ZornIntegralLatticePoint :=
   {X : ZornVectorMatrix ℚ // X ∈ integralLattice}
+
+instance zornIntegralLatticePointTopologicalSpace : TopologicalSpace ZornIntegralLatticePoint :=
+  TopologicalSpace.induced Subtype.val inferInstance
 
 def zornIntegralLatticeInclusionTopCat :
     TopCat.of ZornIntegralLatticePoint ⟶

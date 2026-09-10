@@ -11338,6 +11338,8 @@ import InfoGeometry.Topology.BenderZetaHamiltonian
 import InfoGeometry.Topology.BenoisTrivialZeros
 import InfoGeometry.Topology.BinaryBarrierTwistedGluing
 import InfoGeometry.Topology.BinaryBarrierTwistedGluingAudit
+import InfoGeometry.Topology.ChiralCuntzApollonianBridge
+import InfoGeometry.Topology.ChiralCuntzApollonianBridgeAudit
 import InfoGeometry.Topology.BinaryCantorCuntzSuperchargeBridge
 import InfoGeometry.Topology.BostConnesDirichletTopological
 import InfoGeometry.Topology.BostConnesGaloisTopological

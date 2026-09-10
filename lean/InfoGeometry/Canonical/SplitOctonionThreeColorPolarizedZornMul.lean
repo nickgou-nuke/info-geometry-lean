@@ -53,12 +53,12 @@ def polarizedMulCoeff (a b c : PolarizedBasisIdx) : ℚ :=
   | _, _, _ => 0
 
 /-- Compute the product of two polarized basis elements in the polarized basis -/
-def polarizedMul (c : SplitOctonionColour) (a b : PolarizedBasisIdx) : StandardRationalSplitOctonion :=
+def threeColorPolarizedMul (c : SplitOctonionColour) (a b : PolarizedBasisIdx) : StandardRationalSplitOctonion :=
   ∑ k : PolarizedBasisIdx, (polarizedMulCoeff a b k : ℚ) • polarizedBasis c k
 
 /-- Verify that polarizedMul agrees with the actual split-octonion multiplication -/
-theorem polarizedMul_correct (c : SplitOctonionColour) (a b : PolarizedBasisIdx) :
-    polarizedMul c a b = splitOctonionMulQ (polarizedBasis c a) (polarizedBasis c b) := by
+theorem threeColorPolarizedMul_correct (c : SplitOctonionColour) (a b : PolarizedBasisIdx) :
+    threeColorPolarizedMul c a b = splitOctonionMulQ (polarizedBasis c a) (polarizedBasis c b) := by
   fin_cases a <;> fin_cases b <;> fin_cases c <;> native_decide
 
 /-- The 4×4 matrix of multiplication coefficients for a fixed colour -/
@@ -71,10 +71,10 @@ theorem polarizedBasis_isMatrixUnits (c : SplitOctonionColour) :
     splitOctonionMulQ (polarizedBasis c a) (polarizedBasis c b) =
       ∑ k : PolarizedBasisIdx, (polarizedMulCoeff a b k : ℚ) • polarizedBasis c k := by
   intro a b
-  have h := polarizedMul_correct c a b
-  simp [polarizedMul] at h ⊢
+  have h := threeColorPolarizedMul_correct c a b
+  simp [threeColorPolarizedMul] at h ⊢
   <;> rw [h]
-  <;> simp [polarizedMul]
+  <;> simp [threeColorPolarizedMul]
 
 end
 end InfoGeometry.Canonical

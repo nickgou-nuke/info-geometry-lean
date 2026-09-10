@@ -262,7 +262,31 @@ Bridging the bulk Chern-Simons inflow, Cuntz boundary chiral supertrace anomaly,
   - Unbroken chiral symmetry / zero normalized trace: $\tau_{n+1}(\Gamma_{n+1}) = 0$
   - Inductive colimit trace preservation along the Cantor filtration:
     $$\tau_{n+1}(\operatorname{diagEmbedSucc}(f)) = \tau_n(f)$$
-  In Lean 4: [`GreenSchwarzAnomalyInflowBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/GreenSchwarzAnomalyInflowBridge.lean) (`branchChirality_sq`, `normalizedTrace_branchChirality`, `colimit_trace_preservation`, `certified_green_schwarz_inflow_synthesis`).
+### 5.9 High-Entropy Semantic Compilation Architecture
+Formalizing the meta-theoretical design pattern for distilling hazy physical brainstorms into pristine, kernel-verified Mathlib structures:
+* **Poset Homomorphism:** The compiler is a monotone homomorphism $C : \alpha \to \beta$ between the partially ordered space of physical metaphors (`HazySpace`) and the verified ITP kernel (`PristineSpace`):
+  $$x \le y \implies C(x) \le C(y)$$
+* **Topological Void Resolution:** Transitivity of the order relation in Mathlib guarantees the closure of any causal cone frontier:
+  $$x \le y \le z \implies C(x) \le C(z)$$
+  eliminating the need for unproven assumptions or empty placeholder structures.
+* **Denoising Fixed-Point Annihilation:** The nonlinear noise filter maps positive entropy $e > 0$ strictly to zero at the pristine kernel fixed point:
+  $$\mathrm{noiseFilter}(e) = 0 \quad (\forall e > 0)$$
+  In Lean 4: [`SemanticHighEntropyCompilationBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/SemanticHighEntropyCompilationBridge.lean) (`causal_cone_frontier_closure`, `noise_annihilation`, `certified_semantic_compilation_synthesis`).
+
+### 5.10 The Triad of The Holomorphic, The Antiholomorphic, and The Real
+Formalizing the geometric heartbeat of the $(2n, 2n)$ para-hyperkähler manifold where holomorphic and antiholomorphic modes are themselves completely real, independent geometric polarizations:
+* **Split Peirce Projectors:** On any para-complex structure $\tau$ ($\tau^2 = 1$), the projectors $P_\pm = (1 \pm \tau)/2$ satisfy:
+  $$P_+ + P_- = 1, \quad P_\pm^2 = P_\pm, \quad P_+ P_- = P_- P_+ = 0, \quad \tau P_\pm = \pm P_\pm, \quad P_+ - P_- = \tau$$
+  decomposing the real tangent bundle $TM = T^{1,0}M \oplus T^{0,1}M$ into totally real Lagrangian sub-bundles without invoking $\sqrt{-1}$.
+* **Chiral Differential Splitting:** The exterior derivative decomposes as $d = \partial_\tau + \bar{\partial}_\tau$ with $\partial_\tau = P_+ d$ and $\bar{\partial}_\tau = P_- d$.
+* **The Klein Bottle Seam as The Real Fixed Locus:** On split coordinates $z = x + \tau t$ and $\bar{z} = x - \tau t$, the seam condition $z = \bar{z}$ is equivalent to $2 \tau t = 0$. The seam $t = 0$ is the purely real line where the forward wave (holomorphic) and backward wave (antiholomorphic) interfere with equal amplitude.
+* **Zorn 4-Vector Mass Condensation:** In the real $2 \times 2$ Zorn matrix representation $\hat{Z}(a, \Delta) = \begin{pmatrix} a & \Delta \\ \Delta & -a \end{pmatrix}$:
+  - $\operatorname{tr}(\hat{Z}) = 0$ (Weyl dilaton condition)
+  - $\hat{Z}^2 = (a^2 + \Delta^2) \mathbb{I}$
+  - $\det(\hat{Z}) = -(a^2 + \Delta^2)$
+  - Massless limit ($\Delta = 0$): $\hat{Z}^2 = a^2 \mathbb{I}$ (decoupled chiral null rays traveling at $\pm c$)
+  - Massive locking ($\Delta = m$): off-diagonal bridge locks the chiral modes into the relativistic mass-shell dispersion $\hat{Z}^2 = E^2 \mathbb{I} \iff a^2 + \Delta^2 = E^2$.
+  In Lean 4: [`ParaComplexHolomorphicRealBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaComplexHolomorphicRealBridge.lean) (`peirce_sum`, `peircePlus_idem`, `peirce_ortho`, `deRham_decomposition`, `real_seam_condition`, `zorn2_trace_zero`, `zorn2_sq`, `zorn2_det`, `zorn2_mass_shell`, `certified_paracomplex_holomorphic_real_synthesis`).
 
 ---
 
@@ -289,6 +313,8 @@ Bridging the bulk Chern-Simons inflow, Cuntz boundary chiral supertrace anomaly,
 | **Souriau-Hodge Triad** | Polarized Hodge Triad / Lie Derivative / Krein Isometry | `dilaton_commutes_dirac`, `dirac_is_krein_isometry`, `cartan_harmonic_zero` | **Kernel-Checked (0 gaps)** |
 | **Chiral Hodge-Zorn Architecture**| 6-Fold Chiral Hodge / Zorn Vector Matrices / Klein Quadric | `coexact_anticomm`, `coexact_commutator_weyl`, `matterDoublet_square` | **Kernel-Checked (0 gaps)** |
 | **Green-Schwarz Inflow on Cantor Boundary** | Cuntz Carrier / 3-Form $H$ / Cantor Colimit | `green_schwarz_inflow_cancellation`, `normalizedTrace_branchChirality` | **Kernel-Checked (0 gaps)** |
+| **High-Entropy Semantic Compilation** | Poset Homomorphism / Causal Cone Transitivity | `causal_cone_frontier_closure`, `noise_annihilation` | **Kernel-Checked (0 gaps)** |
+| **Holomorphic-Antiholomorphic-Real Triad** | Para-Complex Peirce / Klein Seam / Zorn Mass Shell | `peirce_sum`, `real_seam_condition`, `zorn2_mass_shell` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

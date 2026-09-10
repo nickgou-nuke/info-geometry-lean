@@ -20,6 +20,16 @@ open Matrix
 /-- Complex `2 × 2` matrices. -/
 abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
 
+abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
+
+abbrev Mat3C := Matrix (Fin 3) (Fin 3) ℂ
+
+abbrev QutritMatrix := Mat3C
+
+abbrev Mat4R := Matrix (Fin 4) (Fin 4) ℝ
+
+abbrev Mat4C := Matrix (Fin 4) (Fin 4) ℂ
+
 /-- Matrix commutator. -/
 def comm (A B : Mat2C) : Mat2C :=
   A * B - B * A

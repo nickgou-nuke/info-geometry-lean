@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix
 
@@ -6,7 +7,7 @@ noncomputable section
 
 namespace InfoGeometry.Quantum.LogJordanKreinCore
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Nilpotent Jordan Block N = (0 1; 0 0) -/
 def N : M2R := !![0, 1; 0, 0]

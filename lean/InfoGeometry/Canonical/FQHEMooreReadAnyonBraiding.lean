@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix
 
@@ -20,7 +21,7 @@ Proved Theorems:
 -/
 
 abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
-abbrev Mat4C := Matrix (Fin 4) (Fin 4) ℂ
+abbrev Mat4C := InfoGeometry.Algebra.FiniteSpin.Mat4C
 
 /-- Skew-symmetric 4×4 Moore-Read Pfaffian matrix M_{ij} = 1/(z_i - z_j). -/
 def mooreReadPfaffianMatrix (z1 z2 z3 z4 : ℂ) : Mat4C :=

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native standard representation of `SO(4)`
@@ -16,7 +17,7 @@ namespace InfoGeometry.Canonical.SO4StandardRepresentationBridge
 
 abbrev SO4 := Matrix.specialOrthogonalGroup (Fin 4) ℝ
 abbrev Euclidean4 := EuclideanSpace ℝ (Fin 4)
-abbrev Mat4 := Matrix (Fin 4) (Fin 4) ℝ
+abbrev Mat4 := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /-- The standard representation of SO(4) on ℝ^4 represented as (Fin 4 → ℝ). -/
 def so4VecAction (g : SO4) (x : Fin 4 → ℝ) : Fin 4 → ℝ :=

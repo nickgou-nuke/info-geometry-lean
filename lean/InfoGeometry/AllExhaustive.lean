@@ -4139,6 +4139,7 @@ import InfoGeometry.Canonical.IsometricCliffordTower
 import InfoGeometry.Canonical.ItFromBit
 import InfoGeometry.Canonical.ItakuraSaitoCuntzBridge
 import InfoGeometry.Canonical.IwasawaCuntzKleinWeakBridge
+import InfoGeometry.Canonical.IwasawaCuntzKleinWeakAudit
 import InfoGeometry.Canonical.IwasawaMaurerCartanBdGBridge
 import InfoGeometry.Canonical.JTGravitySchwarzianPrimonCapstone
 import InfoGeometry.Canonical.JackiwTeitelboimDilatonBridge

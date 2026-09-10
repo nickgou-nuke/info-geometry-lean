@@ -1,0 +1,20 @@
+import InfoGeometry.Canonical.IwasawaCuntzKleinWeakBridge
+
+/-!
+# Axiomatic Audit of IwasawaCuntzKleinWeakBridge
+
+This audit checks the foundational axioms of IwasawaCuntzKleinWeakBridge.
+Expected axioms: [propext, Classical.choice, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.IwasawaCuntzKleinWeak.certified_iwasawa_cuntz_klein_synthesis
+#print axioms InfoGeometry.Canonical.IwasawaCuntzKleinWeak.weak_horizon_amplification
+#print axioms InfoGeometry.Canonical.IwasawaCuntzKleinWeak.iwasawa_scale_cuntz_branching
+#print axioms InfoGeometry.Canonical.IwasawaCuntzKleinWeak.cl11EquivMat_cl11_N_plus
+#print axioms InfoGeometry.Canonical.IwasawaCuntzKleinWeak.cl11_N_plus_sq
+#print axioms InfoGeometry.Canonical.IwasawaCuntzKleinWeak.cl11_N_anticomm
+#print axioms InfoGeometry.Canonical.IwasawaCuntzKleinWeak.horocycle_plane_on_klein_quadric
+#print axioms InfoGeometry.Canonical.IwasawaCuntzKleinWeak.kreinAdj_swaps_horocycle_branches
+#print axioms InfoGeometry.Canonical.IwasawaCuntzKleinWeak.krein_pairing_eq_temporal_distance
+#print axioms InfoGeometry.Canonical.IwasawaCuntzKleinWeak.seam_implies_krein_orthogonality
+#print axioms InfoGeometry.Canonical.IwasawaCuntzKleinWeak.weakBdGHamiltonian_sq

@@ -1,6 +1,7 @@
 import Mathlib
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 import InfoGeometry.Physics.SplitOctonionBraidSU3
+import InfoGeometry.Physics.QCDNativeZornColorRepresentation
 
 /-!
 # Conditional `SL₃` covariance of the three-colour Zorn carrier
@@ -18,7 +19,7 @@ noncomputable section
 
 open InfoGeometry.Physics.SplitOctonionBraidSU3
 
-abbrev ColourVector := Fin 3 → ℂ
+abbrev ColourVector := InfoGeometry.Physics.QCDNativeZornColorRepresentation.ColorLane
 abbrev Zorn := SplitOctonionBraidSU3.Zorn
 
 def colourFundamentalAction

@@ -3,6 +3,7 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 import InfoGeometry.Canonical.CyclotomicCliffordPauliQutrit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The special unitary three-colour group
@@ -21,7 +22,7 @@ namespace InfoGeometry.Physics.ThreeColorSU3
 
 open Matrix
 
-abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
 abbrev U3C := unitary M3C
 
 def SU3 : Subgroup U3C where

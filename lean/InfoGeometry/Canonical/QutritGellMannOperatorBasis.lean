@@ -2,6 +2,7 @@ import Mathlib
 import InfoGeometry.Physics.GellMannSU3
 import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 import InfoGeometry.Canonical.QutritWeylOperatorBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The nine continuous Gell–Mann colour channels
@@ -27,7 +28,7 @@ namespace InfoGeometry.Canonical.QutritGellMannOperatorBasis
 open Matrix
 open InfoGeometry.Physics.GellMannSU3
 
-abbrev QutritMatrix := Matrix (Fin 3) (Fin 3) ℂ
+abbrev QutritMatrix := InfoGeometry.Algebra.FiniteSpin.QutritMatrix
 
 /-- The nine continuous colour channels: the identity together with the eight
 Gell–Mann matrices. -/

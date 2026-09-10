@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix
 
@@ -22,7 +23,7 @@ Proved Theorems:
 5. Right Boundary Majorana Zero Mode: $H_{\text{sweet}} \gamma_4 = 0$.
 -/
 
-abbrev Mat4C := Matrix (Fin 4) (Fin 4) ℂ
+abbrev Mat4C := InfoGeometry.Algebra.FiniteSpin.Mat4C
 abbrev Vec4C := Fin 4 → ℂ
 
 /-- Particle-hole charge conjugation operator C = τ_x ⊗ I₂ in 4×4 Nambu space. -/

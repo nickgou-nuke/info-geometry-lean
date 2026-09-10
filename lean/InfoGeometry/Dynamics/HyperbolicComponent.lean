@@ -1,5 +1,6 @@
 import InfoGeometry.OptimalTransport.LogDetBarrier
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 
@@ -23,7 +24,7 @@ namespace InfoGeometry.Dynamics.HyperbolicComponent
 open Matrix
 
 /-- Real `2 × 2` matrix carrier for the hyperbolic lane. -/
-abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Traceless diagonal infinitesimal boost generator `diag(1, -1)`. -/
 def hyperbolicGenerator : Mat2R :=

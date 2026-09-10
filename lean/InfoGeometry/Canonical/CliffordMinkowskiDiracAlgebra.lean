@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix
 
@@ -22,7 +23,7 @@ Proved Theorems:
 6. Charge Conjugation Matrix Square: $\mathcal{C}^2 = -I_4$.
 -/
 
-abbrev Mat4C := Matrix (Fin 4) (Fin 4) ℂ
+abbrev Mat4C := InfoGeometry.Algebra.FiniteSpin.Mat4C
 
 /-- Gamma_0 matrix in Dirac-Pauli representation: diag(1, 1, -1, -1). -/
 def gamma0 : Mat4C :=

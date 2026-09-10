@@ -483,6 +483,19 @@ Formalizing the four-way holographic junction between non-compact Iwasawa kinema
   $$|\langle \psi_f, \psi_i \rangle| \le \epsilon \implies |W(A)| \ge \frac{|\langle \psi_f, A \psi_i \rangle|}{\epsilon}$$
   In Lean 4: [`IwasawaCuntzKleinWeakBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/IwasawaCuntzKleinWeakBridge.lean) and [`IwasawaCuntzKleinWeakAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/IwasawaCuntzKleinWeakAudit.lean) (`iwasawa_scale_cuntz_branching`, `weak_horizon_amplification`, `certified_iwasawa_cuntz_klein_synthesis`).
 
+### 5.25 The Palatini Boundary Stokes Bridge & Cauchy Flux Conservation
+Formalizing the boundary-bulk Stokes pairing and on-shell Cauchy flux conservation for Palatini gravity:
+* **Stokes Boundary Complex:** A differential complex $(Ω², Ω³, Ω⁴, Ω³(∂M))$ with exterior derivatives $d_2, d_3$ satisfying $d_3 \circ d_2 = 0$, pullback $i^* : Ω³(M) \to Ω³(∂M)$, and Stokes boundary pairing:
+  $$\int_{\partial M} i^* \theta = \int_M d_3 \theta$$
+* **Exact Vanishing & Gauge Invariance:** The boundary pairing of exact 2-form differentials vanishes ($\int_{\partial M} i^* d_2 \alpha = 0$), ensuring complete gauge shift invariance of the boundary flux under $\theta \mapsto \theta + d_2 \alpha$:
+  $$\int_{\partial M} i^*(\theta + d_2 \alpha) = \int_{\partial M} i^* \theta$$
+* **Palatini Boundary-Bulk Action Pairing:** For Palatini data $(L, \theta)$ with field equation $d_3 \theta = L$ (where $L = \mathrm{Tr}(e \wedge e \wedge R)$), the boundary flux of the symplectic potential matches the bulk action:
+  $$\mathrm{Flux}_{\partial M}(\theta) = \mathrm{Action}_M(L)$$
+* **Cauchy Boundary Splitting & On-Shell Flux Conservation:** Decomposing the boundary as $\partial M = \Sigma_+ \cup (-\Sigma_-)$, in vacuum ($L = 0$) the future and past Cauchy fluxes are strictly identical:
+  $$\int_{\Sigma_+} i^* \theta = \int_{\Sigma_-} i^* \theta$$
+  With non-zero bulk source, the net Cauchy transfer precisely equals the bulk action: $\int_{\Sigma_+} i^* \theta - \int_{\Sigma_-} i^* \theta = \mathrm{Action}_M(L)$.
+  In Lean 4: [`PalatiniBoundaryStokesBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/PalatiniBoundaryStokesBridge.lean) and [`PalatiniBoundaryStokesAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/PalatiniBoundaryStokesAudit.lean) (`palatini_stokes_pairing`, `boundary_gauge_shift_invariant`, `on_shell_flux_conservation`, `flux_transfer_with_bulk_source`, `certified_palatini_stokes_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -524,6 +537,7 @@ Formalizing the four-way holographic junction between non-compact Iwasawa kinema
 | **Two-Boundary Chiral Current** | Two-Boundary Pair $(\psi_i, \psi_f)$ / Projector $T$ / Chiral $J$ | `transitionProjector_weak_eigenvalue`, `weakValue_totalCurrent` | **Kernel-Checked (0 gaps)** |
 | **Chiral Boundary Symplectic Form** | Doubled Space $E \times E$ / Symplectic $\Omega$ / Kähler $(g, \Omega, J)$ | `symplectic_nondegenerate`, `metric_eq_symplectic_J` | **Kernel-Checked (0 gaps)** |
 | **Iwasawa-Cuntz-Klein Weak Horizon** | $KAN$ Kinematics / Cuntz $\mathcal{O}_2$ / Klein Quadric / AAV Weak | `weak_horizon_amplification`, `certified_iwasawa_cuntz_klein_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Palatini Boundary Stokes Bridge** | Stokes Differential Complex / Boundary Flux / Cauchy Splitting | `palatini_stokes_pairing`, `on_shell_flux_conservation`, `certified_palatini_stokes_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

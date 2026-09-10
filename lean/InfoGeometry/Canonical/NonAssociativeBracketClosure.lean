@@ -7,7 +7,7 @@ import Mathlib.Tactic
 This owner isolates the algebraic fact used by split-octonion element closure.
 It does not assume associativity.  The only extra property is that the
 scalar `2` is invertible, so multiplication can be recovered from its
-commutator and anticommutator parts.
+nonAssocCommutator and antinonAssocCommutator parts.
 -/
 
 namespace InfoGeometry.Canonical
@@ -15,12 +15,12 @@ namespace InfoGeometry.Canonical
 variable {R A : Type*} [Field R] [NeZero (2 : R)]
   [NonUnitalNonAssocRing A] [Module R A]
 
-def commutator (x y : A) : A := x * y - y * x
+def nonAssocCommutator (x y : A) : A := x * y - y * x
 
-def anticommutator (x y : A) : A := x * y + y * x
+def antinonAssocCommutator (x y : A) : A := x * y + y * x
 
-theorem mul_eq_half_add_commutator (x y : A) :
-    (2 : R)⁻¹ • (anticommutator x y + commutator x y) = x * y := by
+theorem mul_eq_half_add_nonAssocCommutator (x y : A) :
+    (2 : R)⁻¹ • (antinonAssocCommutator x y + nonAssocCommutator x y) = x * y := by
   change (2 : R)⁻¹ • ((x * y + y * x) + (x * y - y * x)) = x * y
   rw [smul_add, smul_add, smul_sub]
   calc
@@ -34,25 +34,25 @@ theorem mul_eq_half_add_commutator (x y : A) :
 
 theorem submodule_mul_mem_of_bracket_mem
     (U : Submodule R A)
-    (hcomm : ∀ {x y : A}, x ∈ U → y ∈ U → commutator x y ∈ U)
-    (hanti : ∀ {x y : A}, x ∈ U → y ∈ U → anticommutator x y ∈ U)
+    (hcomm : ∀ {x y : A}, x ∈ U → y ∈ U → nonAssocCommutator x y ∈ U)
+    (hanti : ∀ {x y : A}, x ∈ U → y ∈ U → antinonAssocCommutator x y ∈ U)
     {x y : A} (hx : x ∈ U) (hy : y ∈ U) :
     x * y ∈ U := by
-  rw [← mul_eq_half_add_commutator (R := R) x y]
-  show (2 : R)⁻¹ • (anticommutator x y + commutator x y) ∈ U
-  have hsum : anticommutator x y + commutator x y ∈ U :=
+  rw [← mul_eq_half_add_nonAssocCommutator (R := R) x y]
+  show (2 : R)⁻¹ • (antinonAssocCommutator x y + nonAssocCommutator x y) ∈ U
+  have hsum : antinonAssocCommutator x y + nonAssocCommutator x y ∈ U :=
     U.add_mem (hanti (x := x) (y := y) hx hy) (hcomm (x := x) (y := y) hx hy)
   exact Submodule.smul_mem U (2 : R)⁻¹ hsum
 
 theorem bracket_closure_eq_mul_closure
     (U : Submodule R A)
-    (hcomm : ∀ {x y : A}, x ∈ U → y ∈ U → commutator x y ∈ U)
-    (hanti : ∀ {x y : A}, x ∈ U → y ∈ U → anticommutator x y ∈ U) :
+    (hcomm : ∀ {x y : A}, x ∈ U → y ∈ U → nonAssocCommutator x y ∈ U)
+    (hanti : ∀ {x y : A}, x ∈ U → y ∈ U → antinonAssocCommutator x y ∈ U) :
     (∀ {x y : A}, x ∈ U → y ∈ U → x * y ∈ U) := by
   intro x y hx hy
-  rw [← mul_eq_half_add_commutator (R := R) x y]
-  show (2 : R)⁻¹ • (anticommutator x y + commutator x y) ∈ U
-  have hsum : anticommutator x y + commutator x y ∈ U :=
+  rw [← mul_eq_half_add_nonAssocCommutator (R := R) x y]
+  show (2 : R)⁻¹ • (antinonAssocCommutator x y + nonAssocCommutator x y) ∈ U
+  have hsum : antinonAssocCommutator x y + nonAssocCommutator x y ∈ U :=
     U.add_mem (hanti (x := x) (y := y) hx hy) (hcomm (x := x) (y := y) hx hy)
   exact Submodule.smul_mem U (2 : R)⁻¹ hsum
 
@@ -60,7 +60,7 @@ theorem mul_closure_implies_bracket_closure
     (U : Submodule R A)
     (hmul : ∀ {x y : A}, x ∈ U → y ∈ U → x * y ∈ U)
     {x y : A} (hx : x ∈ U) (hy : y ∈ U) :
-    commutator x y ∈ U ∧ anticommutator x y ∈ U := by
+    nonAssocCommutator x y ∈ U ∧ antinonAssocCommutator x y ∈ U := by
   constructor
   · exact U.sub_mem (hmul hx hy) (hmul hy hx)
   · exact U.add_mem (hmul hx hy) (hmul hy hx)
@@ -68,8 +68,8 @@ theorem mul_closure_implies_bracket_closure
 theorem submodule_bracket_closure_iff_mul_closure
     (U : Submodule R A) :
     (∀ {x y : A}, x ∈ U → y ∈ U → x * y ∈ U) ↔
-      ((∀ {x y : A}, x ∈ U → y ∈ U → commutator x y ∈ U) ∧
-       (∀ {x y : A}, x ∈ U → y ∈ U → anticommutator x y ∈ U)) := by
+      ((∀ {x y : A}, x ∈ U → y ∈ U → nonAssocCommutator x y ∈ U) ∧
+       (∀ {x y : A}, x ∈ U → y ∈ U → antinonAssocCommutator x y ∈ U)) := by
   constructor
   · intro hmul
     refine ⟨?_, ?_⟩

@@ -5,9 +5,11 @@
 > **Upstream URL:** `https://github.com/openai/NavierStokesAndEuler`  
 > **Upstream Commit:** `8937a8f4cbc7abaab5e9e97d1cc7f5d2319d9538`  
 > **Native Bridge Modules:**  
-> - `InfoGeometry/Canonical/ZornNavierStokesHydrodynamicBridge.lean`  
-> - `InfoGeometry/Canonical/NavierStokesConePiolaBridge.lean`  
+> - `InfoGeometry/Canonical/ZornNavierStokesHydrodynamicBridge.lean` (Tier 1: Zorn Solenoidal Flow, J_g Matrix, Madelung Torque)  
+> - `InfoGeometry/Canonical/NavierStokesConePiolaBridge.lean` (Tier 1: Piola Curl Law, Lemma 3.5 & Eq 11 Cone)  
 > - `InfoGeometry/Canonical/NavierStokesConePiolaAudit.lean`  
+> - `InfoGeometry/Canonical/NavierStokesTorusErgodicBridge.lean` (Tier 2: Torus Dynamics, Haar Invariance, Ergodic Reynolds Mixing)  
+> - `InfoGeometry/Canonical/NavierStokesTorusErgodicAudit.lean`  
 > **Kernel Status:** 100% Kernel Checked, 0 `sorry`, 0 custom axioms  
 
 ---
@@ -188,14 +190,46 @@ In `InfoGeometry/Canonical/NavierStokesConePiolaBridge.lean`, we backported the 
            coneBound (p * (1 - b * w / a)) (p * (w + b / a))
    ```
 
+### 4.7. Torus Covering Dynamics, Haar Measure Invariance & Ergodic Phase Averaging
+
+In `InfoGeometry/Canonical/NavierStokesTorusErgodicBridge.lean`, we formalized Tier 2:
+
+1. **2-Torus Endomorphism from $J_g$**:
+   ```lean
+   theorem covering_eq_J_g_mulVec (z : Plane) :
+       let v : Fin 2 → ℝ := ![z.1, z.2]
+       covering z = ((J_g.mulVec v) 0, (J_g.mulVec v) 1)
+   ```
+   Commutes with the quotient projection to $\mathbb{T}^2 = \operatorname{UnitAddCircle}^2$:
+   ```lean
+   theorem quotient_covering (z : Plane) :
+       quotientPoint (covering z) = torusCovering (quotientPoint z)
+   ```
+2. **Haar Probability Measure Preservation & Ergodic Invariance**:
+   ```lean
+   theorem torusCovering_measurePreserving :
+       MeasurePreserving torusCovering torusMeasure torusMeasure
+   
+   theorem integral_torusCovering_iterate {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+       (f : Torus → V) (hf : Continuous f) (n : ℕ) :
+       (∫ z, f (torusCovering^[n] z) ∂torusMeasure) = ∫ z, f z ∂torusMeasure
+   ```
+3. **Harmonic Angular Averaging (Reynolds Pre-factor $1/2$)**:
+   ```lean
+   theorem angularMean_cos_sq_harmonic (j : ℤ) (hj : j ≠ 0) (phase : ℝ) :
+       angularMean (fun θ => Real.cos ((j : ℝ) * θ + phase) ^ 2) = 1 / 2
+   ```
+   This exact $1/2$ factor converts the high-frequency angular momentum fluctuations into the macroscopic Reynolds stress.
+
 ---
 
 ## 5. Synthesis Certification
 
-The complete bridge suite is certified by two kernel-checked witness structures:
+The complete bridge suite is certified by three kernel-checked witness structures:
 
 1. `certified_zorn_navier_stokes_synthesis` in `ZornNavierStokesHydrodynamicBridge.lean`
 2. `certified_navier_stokes_cone_piola_bridge` in `NavierStokesConePiolaBridge.lean`
+3. `certified_navier_stokes_torus_ergodic_bridge` in `NavierStokesTorusErgodicBridge.lean`
 
 Axiom verification:
 ```text
@@ -203,6 +237,9 @@ Axiom verification:
   [propext, Classical.choice, Quot.sound]
 
 'InfoGeometry.Canonical.NavierStokesConePiola.certified_navier_stokes_cone_piola_bridge' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
+
+'InfoGeometry.Canonical.NavierStokesTorusErgodic.certified_navier_stokes_torus_ergodic_bridge' depends on axioms:
   [propext, Classical.choice, Quot.sound]
 ```
 Zero custom axioms, zero `sorry`, 100% verified.

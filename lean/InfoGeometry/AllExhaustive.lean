@@ -2503,6 +2503,7 @@ import InfoGeometry.Canonical.SouriauKleinFreudenthalBridge
 import InfoGeometry.Canonical.ApollonianDeRhamFreudenthalBridge
 import InfoGeometry.Canonical.ParaHyperkahlerPresymplecticBridge
 import InfoGeometry.Canonical.CylinderHodgeDualityFreudenthalBridge
+import InfoGeometry.Canonical.Sp4ParaHyperkahlerPresymplecticBridge
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyCalibration
@@ -12327,3 +12328,6 @@ import InfoGeometry.Topology.All
 import InfoGeometry.Twistor.All
 import InfoGeometry.Volume.All
 import InfoGeometry.Wavelet.All
+
+import InfoGeometry.Canonical.CylinderHodgeDualityFreudenthalBridgeAudit
+import InfoGeometry.Canonical.Sp4ParaHyperkahlerPresymplecticBridgeAudit

@@ -1,0 +1,18 @@
+import InfoGeometry.Canonical.ChiralDolbeaultHodgeBridge
+
+/-!
+# Axiomatic Audit of ChiralDolbeaultHodgeBridge
+
+This audit checks the foundational axioms of ChiralDolbeaultHodgeBridge.
+Expected axioms: [propext, Classical.choice, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.ChiralDolbeaultHodge.certified_chiral_dolbeault_hodge_synthesis
+#print axioms InfoGeometry.Canonical.ChiralDolbeaultHodge.ChiralDolbeaultHodge.adjoint_d_bar
+#print axioms InfoGeometry.Canonical.ChiralDolbeaultHodge.ChiralDolbeaultHodge.exact_orthogonal_coexact
+#print axioms InfoGeometry.Canonical.ChiralDolbeaultHodge.ChiralDolbeaultHodge.exact_orthogonal_harmonic
+#print axioms InfoGeometry.Canonical.ChiralDolbeaultHodge.ChiralDolbeaultHodge.coexact_orthogonal_harmonic
+#print axioms InfoGeometry.Canonical.ChiralDolbeaultHodge.ChiralDolbeaultHodge.laplacian_self_adjoint
+#print axioms InfoGeometry.Canonical.ChiralDolbeaultHodge.ChiralDolbeaultHodge.laplacian_positive_semidefinite
+#print axioms InfoGeometry.Canonical.ChiralDolbeaultHodge.ChiralDolbeaultHodge.harmonic_iff_laplacian_inner_zero
+#print axioms InfoGeometry.Canonical.ChiralDolbeaultHodge.ChiralDolbeaultHodge.chiral_hodge_energy_conservation

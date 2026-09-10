@@ -23,6 +23,8 @@ The Cayley expression appears as the same scalar ratio.  With
 
 noncomputable section
 
+namespace SuperPartitionBerezinian
+
 def bosonicLocalFactor (x : ℝ) : ℝ :=
   (1 - x)⁻¹
 
@@ -91,5 +93,7 @@ theorem super_partition_berezinian_synthesis :
   exact ⟨superPartitionRatio_eq_cayley, superPartitionRatio_eq_berezinian,
     fun x hx => local_super_product hx, exponentialCayleyPartition_eq_berezinian,
     exponential_chart_zero⟩
+
+end SuperPartitionBerezinian
 
 end noncomputable section

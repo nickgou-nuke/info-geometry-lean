@@ -15,6 +15,8 @@ Proved using the universal property of the Clifford algebra.
 
 noncomputable section
 
+namespace CliffordSeed
+
 /-- Signature (1,1) quadratic form on ℝ²: Q(x,y) = x² - y² -/
 def Q : QuadraticForm ℝ (ℝ × ℝ) :=
   (QuadraticMap.sq.comp (LinearMap.fst ℝ ℝ ℝ : (ℝ × ℝ) →ₗ[ℝ] ℝ)) -

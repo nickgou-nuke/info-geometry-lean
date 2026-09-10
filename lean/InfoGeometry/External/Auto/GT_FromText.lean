@@ -12,6 +12,8 @@ import InfoGeometry.External.Auto.uhf_cantor_boundary
   original placeholder carrier zoo or the false target stubs.
 -/
 
+open UHFCantorBoundary
+
 namespace GT.Extracted
 
 /-- Codebase-backed version of `theorem exponential_reconstruction_surjective`. -/

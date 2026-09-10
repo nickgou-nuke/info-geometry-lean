@@ -17,6 +17,8 @@ The RH-strength claim itself is a `Prop` parameter, not a theorem.
 
 noncomputable section
 
+namespace RiemannHypothesis
+
 /-- Complex inverse temperature `s = σ + i t`. -/
 def rhComplexTemperature (σ t : ℝ) : ℂ :=
   (σ : ℂ) + (t : ℂ) * Complex.I
@@ -261,5 +263,7 @@ theorem rh_graded_supertrace_zero_at_zero (Z : ℂ → ℂ) {s : ℂ} (hzero : r
 theorem rh_zeta_zero_implies_graded_index_pole (Z : ℂ → ℂ) (s : ℂ) (hzero : rhDenominatorZero Z s) :
     rhGradedIndexSingularity Z s :=
   rh_graded_supertrace_zero_at_zero Z hzero
+
+end RiemannHypothesis
 
 end noncomputable section

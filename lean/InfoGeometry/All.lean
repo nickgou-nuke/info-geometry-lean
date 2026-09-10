@@ -4710,3 +4710,4 @@ import InfoGeometry.Canonical.IwasawaCuntzKleinWeakBridge
 import InfoGeometry.Canonical.AlbertPeirceModularMixingBridge
 import InfoGeometry.Canonical.ChiralCuntzAnomalyPartitionBridge
 import InfoGeometry.Canonical.SouriauKleinFreudenthalBridge
+import InfoGeometry.Canonical.ApollonianDeRhamFreudenthalBridge

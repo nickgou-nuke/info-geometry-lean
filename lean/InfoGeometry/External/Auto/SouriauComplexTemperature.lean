@@ -14,6 +14,8 @@ i tau`; the point at infinity is represented separately by `none`.
 
 noncomputable section
 
+namespace SouriauComplexTemperature
+
 open Complex
 
 /-- Real two-vector carrying inverse temperature and modular phase. -/

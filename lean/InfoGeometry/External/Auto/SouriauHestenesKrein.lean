@@ -22,6 +22,8 @@ denominator vanishes.
 
 noncomputable section
 
+namespace SouriauHestenesKrein
+
 open Matrix
 
 abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
@@ -149,5 +151,7 @@ theorem souriau_hestenes_krein_synthesis :
     fun q hq => sectorTripotentOperator_cube hq,
     sectorTripotent_positive, sectorTripotent_zero, sectorTripotent_negative,
     gradedSupertracePole_iff_denominator_zero⟩
+
+end SouriauHestenesKrein
 
 end noncomputable section

@@ -1,6 +1,7 @@
 import InfoGeometry.External.Auto.PrimonFockTraceBridge
 import InfoGeometry.External.Auto.PrimonSuperThermodynamics
 import InfoGeometry.External.Auto.RiemannHypothesis
+open RiemannHypothesis
 
 /-!
 # Primon Hamiltonian vs Hilbert--Pólya operator: theorem-honest separation
@@ -99,7 +100,7 @@ theorem primon_hilbert_polya_separation_synthesis
   exact ⟨primon_heat_trace_is_zeta_partial β N,
     primeCrystalPotentialCoeff_eq_primeEnergy,
     hilbert_polya_datum_implies_RH H,
-    reciprocal_ghost_singularity_iff_zero,
+    reciprocal_ghost_singularity_iff_zero (Z := Z) (s := s),
     zeta_zero_gives_reciprocal_ghost_singularity Z s hzero⟩
 
 end PrimonHilbertPolyaSeparation

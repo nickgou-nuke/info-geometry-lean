@@ -7,6 +7,8 @@ import Mathlib.CategoryTheory.Limits.Types.Filtered
 open CategoryTheory
 open CategoryTheory.Limits
 
+namespace UHFCantorBoundary
+
 /-!
   UHF bulk (finite diagonal stages) → Cantor boundary, with MASA correction.
   The point is: the boundary is from the diagonal MASA, not from the full UHF spectrum.
@@ -86,3 +88,5 @@ theorem zorn_refinement_exists
 A preorder is a thin category (`SmallCategory`) in which homs encode ≤. -/
 def diagonal_prefix_category (C : Type*) [Preorder C] : SmallCategory C :=
   (inferInstance : SmallCategory C)
+
+end UHFCantorBoundary

@@ -2517,6 +2517,7 @@ import InfoGeometry.Canonical.RGFlowWeylDiffusionBridge
 import InfoGeometry.Canonical.ParaComplexConnectionBridge
 import InfoGeometry.Canonical.RGFlowResolventSemigroupBridge
 import InfoGeometry.Canonical.DeRhamHodgeIsomorphismBridge
+import InfoGeometry.Canonical.HodgeGreenOperatorBridge
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyCalibration
@@ -12357,3 +12358,4 @@ import InfoGeometry.Canonical.RGFlowWeylDiffusionAudit
 import InfoGeometry.Canonical.ParaComplexConnectionAudit
 import InfoGeometry.Canonical.RGFlowResolventSemigroupAudit
 import InfoGeometry.Canonical.DeRhamHodgeIsomorphismAudit
+import InfoGeometry.Canonical.HodgeGreenOperatorAudit

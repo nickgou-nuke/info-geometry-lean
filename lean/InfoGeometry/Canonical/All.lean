@@ -772,6 +772,8 @@ import InfoGeometry.Canonical.RGFlowResolventSemigroupBridge
 import InfoGeometry.Canonical.RGFlowResolventSemigroupAudit
 import InfoGeometry.Canonical.DeRhamHodgeIsomorphismBridge
 import InfoGeometry.Canonical.DeRhamHodgeIsomorphismAudit
+import InfoGeometry.Canonical.HodgeGreenOperatorBridge
+import InfoGeometry.Canonical.HodgeGreenOperatorAudit
 import InfoGeometry.Canonical.TemperleyLiebJonesBridge
 import InfoGeometry.Canonical.KitaevQuantumDoubleGSDBridge
 import InfoGeometry.Canonical.QuantumHallSkyrmionBridge

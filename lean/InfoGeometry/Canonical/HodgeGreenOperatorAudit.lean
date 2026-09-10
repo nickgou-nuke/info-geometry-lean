@@ -1,0 +1,27 @@
+import InfoGeometry.Canonical.HodgeGreenOperatorBridge
+
+/-!
+# Axiomatic Audit of HodgeGreenOperatorBridge
+
+This audit checks the foundational axioms of HodgeGreenOperatorBridge.
+Expected axioms: [propext, Classical.choice, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.certified_hodge_green_operator_synthesis
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.constructDecomposition
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.has_hodge_decomposition
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.global_hodge_decomposition
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.P_H_idempotent
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.G_P_H_zero
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.laplacian_P_H_zero
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.laplacian_G_eq_sub_P_H
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.G_laplacian_eq_sub_P_H
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.laplacian_G_commutes
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.G_laplacian_G
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.laplacian_G_laplacian
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.exact_regular_inversion
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.coexact_regular_inversion
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.closed_form_coexact_zero
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.closed_form_exact_add_harmonic
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.deRhamHodgeEquivFromGreen
+#print axioms InfoGeometry.Canonical.HodgeGreenOperator.HodgeGreenOperator.unique_harmonic_representative_from_green

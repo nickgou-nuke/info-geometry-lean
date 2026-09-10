@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.QuantumSpinNavierStokes
 import InfoGeometry.Canonical.ZornNativeBdGCompatibility
 import InfoGeometry.Canonical.ConformalFiveGradeBracketCapstone
 import InfoGeometry.Canonical.LanglandsFunctorialityNuclearCapstone

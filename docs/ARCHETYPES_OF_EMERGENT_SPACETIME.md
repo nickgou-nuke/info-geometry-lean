@@ -405,6 +405,27 @@ Formalizing the canonical Lefschetz primitive projector $P_{\mathrm{prim}}$ and 
 * **Hodge-Laplacian Commutation & Harmonic Preservation:** $P_{\mathrm{prim}}$ and $P_L$ commute with the Hodge-Laplacian $[\Delta, P_{\mathrm{prim}}] = 0$, $[\Delta, P_L] = 0$, preserving the harmonic subspace $\Delta(P_{\mathrm{prim}} x) = 0$ and $\Delta(P_L x) = 0$.
   In Lean 4: [`LefschetzPrimitiveDecompBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/LefschetzPrimitiveDecompBridge.lean) (`decomp_sum`, `P_prim_is_primitive`, `P_prim_idempotent`, `P_prim_orthogonal_L`, `decomp_orthogonal`, `pythagorean_energy`, `primitive_energy_le`, `comm_laplacian_P_prim`, `P_prim_preserves_harmonic`, `certified_lefschetz_primitive_decomp_synthesis`).
 
+### 5.19 The Hodge-Riemann Bilinear Relations & Polarization
+Formalizing the canonical Hodge-Riemann bilinear forms and polarization on inner product spaces carrying an $\mathfrak{sl}_2(\mathbb{R})$ representation:
+* **Canonical Polarized Forms:**
+  $$Q_{\mathrm{prim}}(x, y) = \langle P_{\mathrm{prim}} x, P_{\mathrm{prim}} y \rangle, \quad Q_L(x, y) = \langle P_L x, P_L y \rangle$$
+* **Bilinear Splitting of the Metric:** The $L^2$ inner product decomposes into primitive and Lefschetz polarized forms:
+  $$\langle x, y \rangle = Q_{\mathrm{prim}}(x, y) + Q_L(x, y)$$
+* **Bilinear Symmetries & Non-Negativity:** Both forms are symmetric ($Q_{\mathrm{prim}}(x, y) = Q_{\mathrm{prim}}(y, x)$, $Q_L(x, y) = Q_L(y, x)$) and positive semi-definite ($Q_{\mathrm{prim}}(x, x) \ge 0$, $Q_L(x, x) \ge 0$).
+* **Hodge-Riemann First Relation (HR I):** The primitive form strictly vanishes on Lefschetz-raised primitive forms:
+  $$Q_{\mathrm{prim}}(L y, z) = 0, \quad Q_{\mathrm{prim}}(L y, L y) = 0$$
+  while the Lefschetz form vanishes on primitive vectors ($Q_L(x, x) = 0$).
+* **Hodge-Riemann Second Relation (HR II - Positivity):** On primitive vectors, $Q_{\mathrm{prim}}(x, x) = \|x\|^2$, guaranteeing strict positivity for all non-zero primitives:
+  $$Q_{\mathrm{prim}}(x, x) > 0 \quad (\forall x \in \ker \Lambda, x \ne 0)$$
+* **Non-Degeneracy on Primitive Subspaces:** If a primitive vector $x$ satisfies $Q_{\mathrm{prim}}(x, y) = 0$ for all primitive $y$, then $x = 0$.
+* **Energy Proportionality:** The raised vector energy connects to the polarized primitive form by:
+  $$\|L x\|^2 = m \cdot Q_{\mathrm{prim}}(x, x)$$
+* **Cauchy-Schwarz Energy Bounds:** Polarized forms satisfy exact Cauchy-Schwarz bounds:
+  $$(Q_{\mathrm{prim}}(x, y))^2 \le Q_{\mathrm{prim}}(x, x) \cdot Q_{\mathrm{prim}}(y, y)$$
+* **Self-Adjoint Laplacian Invariance:** When the Hodge-Laplacian $\Delta$ is self-adjoint and commutes with $L, \Lambda$, it is symmetric with respect to both polarized forms:
+  $$Q_{\mathrm{prim}}(\Delta x, y) = Q_{\mathrm{prim}}(x, \Delta y), \quad Q_L(\Delta x, y) = Q_L(x, \Delta y)$$
+  In Lean 4: [`HodgeRiemannBilinearBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/HodgeRiemannBilinearBridge.lean) (`bilinear_decomp`, `Q_prim_symm`, `Q_L_symm`, `HR_one_primitive`, `HR_one_energy`, `Q_L_on_primitive`, `HR_two_positivity`, `Q_prim_nondegenerate`, `HR_energy_link`, `Q_prim_cauchy_schwarz`, `Q_prim_laplacian_symm`, `certified_hodge_riemann_bilinear_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -440,6 +461,7 @@ Formalizing the canonical Lefschetz primitive projector $P_{\mathrm{prim}}$ and 
 | **Poincaré Duality Pairing & Hodge Star** | Isometric Hodge Star / Poincaré Pairing / Hodge-Riemann | `harmonicEquiv_isometric`, `poincare_left_determines_class`, `poincare_hodge_riemann_positivity` | **Kernel-Checked (0 gaps)** |
 | **Lefschetz $\mathfrak{sl}_2(\mathbb{R})$ Triad & Kähler-Hodge** | $\mathfrak{sl}_2$ Lie Algebra / Casimir / Primitive Hodge | `primitive_hodge_riemann_energy`, `primitive_L_injective`, `casimir_on_primitive` | **Kernel-Checked (0 gaps)** |
 | **Lefschetz Primitive Projector & Foliation** | Primitive Projector $P_{\mathrm{prim}}$ / Orthogonal Foliation | `decomp_sum`, `pythagorean_energy`, `decomp_orthogonal` | **Kernel-Checked (0 gaps)** |
+| **Hodge-Riemann Bilinear & Polarization** | Polarized Forms $Q_{\mathrm{prim}}, Q_L$ / HR I & II Positivity | `bilinear_decomp`, `HR_one_primitive`, `HR_two_positivity` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

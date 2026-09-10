@@ -354,6 +354,24 @@ Formalizing the Green operator $G$ and harmonic orthogonal projector $P_{\mathca
 * **Integration with Cohomology:** Unconditionally witnesses the canonical de Rham-Hodge equivalence $\mathcal{H}^k \cong H^k_{\mathrm{dR}}$ and unique harmonic gauge representative.
   In Lean 4: [`HodgeGreenOperatorBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/HodgeGreenOperatorBridge.lean) (`constructDecomposition`, `global_hodge_decomposition`, `P_H_idempotent`, `laplacian_G_commutes`, `G_laplacian_G`, `laplacian_G_laplacian`, `exact_regular_inversion`, `deRhamHodgeEquivFromGreen`, `certified_hodge_green_operator_synthesis`).
 
+### 5.16 Poincaré Duality Pairing via the Isometric Hodge Star
+Formalizing the topological Poincaré duality pairing on de Rham cohomology realized through the harmonic representation theorem and the Hodge star operator on complementary degrees $k$ and $n-k$:
+* **Isometric Hodge Star:** An invertible linear isometry $\star : \Omega^k \xrightarrow{\sim} \Omega^{n-k}$ preserving the $L^2$ inner product:
+  $$\langle \star x, \star y \rangle_{L^2} = \langle x, y \rangle_{L^2}$$
+  and mapping harmonic forms $\mathcal{H}^k$ to harmonic forms $\mathcal{H}^{n-k}$.
+* **Harmonic Restriction Isomorphism:** The Hodge star restricts to a canonical bijective isometry on harmonic spaces:
+  $$\star : \mathcal{H}^k \xrightarrow{\sim} \mathcal{H}^{n-k}, \quad \langle \star h_1, \star h_2 \rangle_{L^2} = \langle h_1, h_2 \rangle_{L^2}$$
+* **Topological Poincaré Pairing:** Given cohomology classes $c_k \in H^k_{\mathrm{dR}}$ and $c_{n-k} \in H^{n-k}_{\mathrm{dR}}$ with unique harmonic representatives $\gamma_k, \gamma_{n-k}$, the pairing is defined by:
+  $$\langle [c_k], [c_{n-k}] \rangle_{\mathrm{PD}} = \langle \star \gamma_k, \gamma_{n-k} \rangle_{L^2}$$
+* **Left & Right Non-Degeneracy:**
+  - If $\langle c_1, \eta \rangle_{\mathrm{PD}} = \langle c_2, \eta \rangle_{\mathrm{PD}}$ for all $\eta \in H^{n-k}_{\mathrm{dR}}$, then $c_1 = c_2$.
+  - If $\langle \omega, c_1 \rangle_{\mathrm{PD}} = \langle \omega, c_2 \rangle_{\mathrm{PD}}$ for all $\omega \in H^k_{\mathrm{dR}}$, then $c_1 = c_2$.
+* **Hodge-Riemann Positivity:** The diagonal pairing of any cohomology class against its star-dual class evaluates to its exact $L^2$ harmonic energy:
+  $$\langle [c_k], \star [c_k] \rangle_{\mathrm{PD}} = \|\gamma_k\|^2_{L^2} \ge 0$$
+* **Constructive Hodge-Green Integration:** Eliminates all non-empty Hodge decomposition existence hypotheses by directly pairing through the Hodge-Green operator $G$ and projector $P_{\mathcal{H}}$:
+  $$\langle c_k, c_{n-k} \rangle_{\mathrm{PD}, G} = \langle \star P_{\mathcal{H}} \gamma_k, P_{\mathcal{H}} \gamma_{n-k} \rangle_{L^2}$$
+  In Lean 4: [`PoincareDualityBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/PoincareDualityBridge.lean) (`harmonicEquiv`, `harmonicEquiv_isometric`, `poincare_left_determines_class`, `poincare_right_determines_class`, `poincare_hodge_riemann_positivity`, `poincare_hodge_riemann_nonneg`, `poincare_left_determines_class_green`, `poincare_right_determines_class_green`, `certified_poincare_duality_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -386,6 +404,7 @@ Formalizing the Green operator $G$ and harmonic orthogonal projector $P_{\mathca
 | **Resolvent Semigroups & Lie-Trotter Splitting** | Positive Semi-Definite Resolvent / Hodge Splitting | `resolvent_unconditional_contractivity`, `hodge_trotter_resolvent_exact`, `iterated_split_contractivity` | **Kernel-Checked (0 gaps)** |
 | **de Rham-Hodge Isomorphism & Hodge Splitting** | Hilbert Cochain Complex / Hodge-Laplacian / Cohomology | `hodge_decomposition_unique`, `deRhamHodgeEquiv`, `exists_unique_harmonic_representative` | **Kernel-Checked (0 gaps)** |
 | **Hodge-Green Operator & Resolution** | Green Operator $G$ / Projector $P_{\mathcal{H}}$ / Moore-Penrose | `constructDecomposition`, `laplacian_G_commutes`, `G_laplacian_G` | **Kernel-Checked (0 gaps)** |
+| **Poincaré Duality Pairing & Hodge Star** | Isometric Hodge Star / Poincaré Pairing / Hodge-Riemann | `harmonicEquiv_isometric`, `poincare_left_determines_class`, `poincare_hodge_riemann_positivity` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

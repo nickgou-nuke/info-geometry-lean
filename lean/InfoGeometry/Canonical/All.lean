@@ -774,6 +774,8 @@ import InfoGeometry.Canonical.DeRhamHodgeIsomorphismBridge
 import InfoGeometry.Canonical.DeRhamHodgeIsomorphismAudit
 import InfoGeometry.Canonical.HodgeGreenOperatorBridge
 import InfoGeometry.Canonical.HodgeGreenOperatorAudit
+import InfoGeometry.Canonical.PoincareDualityBridge
+import InfoGeometry.Canonical.PoincareDualityAudit
 import InfoGeometry.Canonical.TemperleyLiebJonesBridge
 import InfoGeometry.Canonical.KitaevQuantumDoubleGSDBridge
 import InfoGeometry.Canonical.QuantumHallSkyrmionBridge

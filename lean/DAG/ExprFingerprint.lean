@@ -11,6 +11,8 @@ namespace DAG
     alpha-equivalence clustering and incidence graph analysis.
 -/
 structure ExprFingerprint where
+  /-- Version of the content-preserving canonical fingerprint algorithm. -/
+  algorithmVersion : String := "lean-expr-canonical-v2"
   /-- Histogram of De Bruijn depths encountered in the expression. -/
   depthHistogram : Array Nat
   /-- Total count of unique sub-expressions (DAG size). -/
@@ -118,6 +120,7 @@ def computeFingerprint (e : Expr) : ExprFingerprint := Id.run do
         stack := body :: stack
 
   return {
+    algorithmVersion := "lean-expr-canonical-v2"
     shapeHash      := h
     depthHistogram := hist
     nodeCount      := nc

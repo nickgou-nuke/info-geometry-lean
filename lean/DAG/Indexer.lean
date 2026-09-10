@@ -37,7 +37,8 @@ def mapToShape (e : Expr) : Expr :=
   | .proj s i b => Expr.proj s i (mapToShape b)
 
 def shapeFingerprint (e : Expr) : ExprFingerprint :=
-  DAG.computeFingerprint (mapToShape e)
+  { (DAG.computeFingerprint (mapToShape e)) with
+    algorithmVersion := "lean-expr-shape-v1" }
 
 /- Data Structures for Category-Theoretic Shards -/
 
@@ -53,6 +54,12 @@ structure DeclNode where
   typeFingerprint  : ExprFingerprint
   valueFingerprint : Option ExprFingerprint
   shapeHash        : ExprFingerprint
+  /-- Explicit content-preserving hash of the elaborated declaration type. -/
+  canonicalTypeHash : UInt64
+  /-- Explicit content-preserving hash of the elaborated declaration value. -/
+  canonicalValueHash : Option UInt64
+  /-- Explicitly coarse template hash; never an identity key. -/
+  dagShapeHash : UInt64
 deriving ToJson
 
 structure StreamDecl where
@@ -67,6 +74,9 @@ structure StreamDecl where
   typeFingerprint  : ExprFingerprint
   valueFingerprint : Option ExprFingerprint
   shapeHash        : ExprFingerprint
+  canonicalTypeHash : UInt64
+  canonicalValueHash : Option UInt64
+  dagShapeHash : UInt64
 deriving ToJson
 
 structure StreamEdge where
@@ -301,6 +311,9 @@ def processConstant (env : Environment) (sp : SearchPath) (name : Name) (nameStr
         typeFingerprint := typeFingerprint
         valueFingerprint := valueFingerprint
         shapeHash := shapeFingerprint
+        canonicalTypeHash := typeFingerprint.shapeHash
+        canonicalValueHash := valueFingerprint.map ExprFingerprint.shapeHash
+        dagShapeHash := shapeFingerprint.shapeHash
       }
     }
 
@@ -673,6 +686,9 @@ def processConstantStreaming (env : Environment) (sp : SearchPath) (name : Name)
     typeFingerprint := typeFingerprint
     valueFingerprint := valueFingerprint
     shapeHash := shapeFingerprint
+    canonicalTypeHash := typeFingerprint.shapeHash
+    canonicalValueHash := valueFingerprint.map ExprFingerprint.shapeHash
+    dagShapeHash := shapeFingerprint.shapeHash
   }
 
 -- Also stream edges for each constant

@@ -1,0 +1,20 @@
+import InfoGeometry.Canonical.PoincareDualityBridge
+
+/-!
+# Axiomatic Audit of PoincareDualityBridge
+
+This audit checks the foundational axioms of PoincareDualityBridge.
+Expected axioms: [propext, Classical.choice, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.PoincareDuality.certified_poincare_duality_synthesis
+#print axioms InfoGeometry.Canonical.PoincareDuality.HodgeStarDuality.harmonicEquiv
+#print axioms InfoGeometry.Canonical.PoincareDuality.HodgeStarDuality.harmonicEquiv_isometric
+#print axioms InfoGeometry.Canonical.PoincareDuality.HodgeStarDuality.poincare_left_determines_class
+#print axioms InfoGeometry.Canonical.PoincareDuality.HodgeStarDuality.poincare_right_determines_class
+#print axioms InfoGeometry.Canonical.PoincareDuality.HodgeStarDuality.poincare_hodge_riemann_positivity
+#print axioms InfoGeometry.Canonical.PoincareDuality.HodgeStarDuality.poincare_hodge_riemann_nonneg
+#print axioms InfoGeometry.Canonical.PoincareDuality.HodgeStarDuality.poincare_left_determines_class_green
+#print axioms InfoGeometry.Canonical.PoincareDuality.HodgeStarDuality.poincare_right_determines_class_green
+#print axioms InfoGeometry.Canonical.PoincareDuality.HodgeStarDuality.poincare_hodge_riemann_positivity_green
+#print axioms InfoGeometry.Canonical.PoincareDuality.HodgeStarDuality.poincare_hodge_riemann_nonneg_green

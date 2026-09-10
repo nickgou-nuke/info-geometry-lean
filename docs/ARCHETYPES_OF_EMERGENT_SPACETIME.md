@@ -197,6 +197,29 @@ At the modular horizon seam ($t=0$ cross-cap of the Klein bottle):
   When the horizon overlap contracts to $\epsilon \ll 1$, the Aharonov weak value $\Omega_w = \mathrm{Num}/\epsilon$ amplifies the mass coupling $m$, driving the condensation of massless lightcone rays into massive matter without violating de Rham cohomology.
   In Lean 4: [`HarmonicWeakHorizonBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/HarmonicWeakHorizonBridge.lean) (`krein_harmonic_matrix_element`, `krein_harmonic_twin_swap_matrix_element`, `horizon_weak_value_scaling`, `horizon_mass_transfer_weak_value`, `chiralCharge_on_harmonic`, `harmonic_cohomological_stability`).
 
+### 5.6 Souriau-Hodge Triad Dynamics & Cohomological Protection
+Bridging the Souriau-Klein phase space bifurcation with the de Rham-Hodge triad:
+* **Irrotational Dynamics (Dilatations):** Pure homotheties $X_{\mathrm{dil}}(c) = c \cdot \mathbb{I}$ act as conformal scale transformations, preserving the exact, coexact, and harmonic subspaces identically:
+  $$\operatorname{projExact}(X_{\mathrm{dil}}(c) \gamma) = X_{\mathrm{dil}}(c)(\operatorname{projExact} \gamma), \quad \dots$$
+  The trace functional on the exact sector is linear and non-vanishing ($\operatorname{tr}_{\mathrm{ex}}(X_{\mathrm{dil}}(c)) = 2c$), governing conformal volume changes.
+  In Lean 4: `dilaton_preserves_exact`, `dilaton_preserves_coexact`, `dilaton_preserves_harmonic`, `exactTrace_homothety`, `exactTrace_add`.
+* **Kinetic Commutation:** Homotheties commute with the Dirac-Kähler kinetic operator $\mathcal{D}$, Hodge Laplacian $\Delta$, kinetic flow $\hat{Z}_{\mathrm{kin}}$, and BdG mass condensate $\hat{Z}_{\mathrm{mass}}(m)$:
+  $$[\mathcal{D}, X_{\mathrm{dil}}(c)] = 0, \quad [\Delta, X_{\mathrm{dil}}(c)] = 0, \quad [\hat{Z}_{\mathrm{kin}}, X_{\mathrm{dil}}(c)] = 0, \quad [\hat{Z}_{\mathrm{mass}}(m), X_{\mathrm{dil}}(c)] = 0$$
+  In Lean 4: `dilaton_commutes_dirac`, `dilaton_commutes_laplacian`, `dilaton_commutes_bdgKinetic`, `dilaton_commutes_bdgMass`.
+* **Rotational Dynamics & Krein Isometry:** Rotational flows act as infinitesimal isometries of the Krein inner product $\langle \cdot, \cdot \rangle_{\mathcal{K}}$. The Dirac-Kähler kinetic operator $\mathcal{D}$ generates infinitesimal Krein-skew-adjoint flows:
+  $$\langle \mathcal{D} \Phi, \Psi \rangle_{\mathcal{K}} + \langle \Phi, \mathcal{D} \Psi \rangle_{\mathcal{K}} = 0$$
+  In Lean 4: `IsKreinInfinitesimalIsometry`, `diracKaehler_is_krein_isometry`.
+* **Kinetic Transmutation:** The Dirac-Kähler operator $\mathcal{D} = d - \delta$ transmuting irrotational gradient forms into rotational curls and vice-versa:
+  $$\mathcal{D}(\operatorname{projExact}\gamma) = -\delta(\operatorname{projExact}\gamma) \in \mathrm{im}(\delta) \quad (\text{coexact}),$$
+  $$\mathcal{D}(\operatorname{projCoexact}\gamma) = d(\operatorname{projCoexact}\gamma) \in \mathrm{im}(d) \quad (\text{exact}).$$
+  In Lean 4: `dirac_transmutes_irrotational_to_rotational`, `dirac_transmutes_rotational_to_irrotational`.
+* **Cartan Cohomological Protection:** By Cartan's magic formula $\mathcal{L}_X \gamma = d(\iota_X \gamma) + \iota_X(d\gamma)$, any dynamical Lie variation along a vector field $X$ on a harmonic form $\gamma_h \in \mathcal{H}_\Delta$ evaluates to a purely exact form:
+  $$\mathcal{L}_X \gamma_h = d(\iota_X \gamma_h) \in \mathrm{im}(d)$$
+  Consequently, its harmonic projection vanishes identically:
+  $$\operatorname{projHarmonic}(\mathcal{L}_X \gamma_h) = 0$$
+  This establishes the topological and cohomological stability of the vacuum state against all smooth dynamical flows and perturbations.
+  In Lean 4: [`SouriauHodgeTriadBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/SouriauHodgeTriadBridge.lean) (`harmonic_variation_is_purely_exact`, `harmonic_cartan_harmonic_zero`).
+
 ---
 
 ## Master Verification Matrix
@@ -219,6 +242,7 @@ At the modular horizon seam ($t=0$ cross-cap of the Klein bottle):
 | **Chiral Hodge-Dirac-Kähler** | Graded Operator / 6-Fold Polarized Hodge | `diracKahler_sq`, `diracKahler_anticomm_gamma`, `diracKahler_on_exact` | **Kernel-Checked (0 gaps)** |
 | **Para-Hyperkähler Hodge & Krein** | Polarized Hodge Form / Dirac-Kähler / Zorn-BdG | `dirac_sq_eq_neg_laplacian`, `krein_dirac_skew_adjoint`, `bdg_dispersion` | **Kernel-Checked (0 gaps)** |
 | **Harmonic Weak Horizon** | Polarized Harmonic Doublets / Aharonov Weak Value | `dirac_on_harmonic`, `kinetic_mass_anticomm`, `bdg_harmonic_doublet`, `mass_transfer_wva` | **Kernel-Checked (0 gaps)** |
+| **Souriau-Hodge Triad** | Polarized Hodge Triad / Lie Derivative / Krein Isometry | `dilaton_commutes_dirac`, `dirac_is_krein_isometry`, `cartan_harmonic_zero` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

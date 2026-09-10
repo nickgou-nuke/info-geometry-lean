@@ -1,6 +1,8 @@
 import InfoGeometry.Canonical.ZornNavierStokesHydrodynamicBridge
 import InfoGeometry.Canonical.NavierStokesConePiolaBridge
 import InfoGeometry.Canonical.NavierStokesConePiolaAudit
+import InfoGeometry.Canonical.NavierStokesTorusErgodicBridge
+import InfoGeometry.Canonical.NavierStokesTorusErgodicAudit
 import InfoGeometry.Canonical.ZornNativeBdGCompatibility
 import InfoGeometry.Canonical.ConformalFiveGradeBracketCapstone
 import InfoGeometry.Canonical.LanglandsFunctorialityNuclearCapstone

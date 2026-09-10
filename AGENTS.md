@@ -143,11 +143,20 @@ The AI agent has its own persistent "Hive Memory" ArangoDB container running on 
 **CRITICAL**: Do not dispatch subagents blindly into massive structural vacuums (e.g., files full of `False := sorry` claims).
 - **Action**: Before attempting any proofs in the Canonical or Topological subsystems, the parent Orchestrator MUST extract the pure algebraic math problem via Socratic discussion and formulate explicit, narrowly-typed `sorry` propositions based on existing finite algebraic structures.
 
-## Structural Dependency Lockdown Mandate
-**CRITICAL**: Behavioral rules ("do not edit dirty submodules") are insufficient. The environment MUST be structurally locked.
-- **Action**: All agents are structurally forbidden from editing or traversing the `.lake/packages/` directory. The entire directory must remain read-only (`chmod -R a-w .lake/packages`).
-- **Policy**: Any dependency updates to `lakefile.lean` or `lake-manifest.json` require explicit human approval. Agents shall NOT blindly run `lake update` or touch vendored dependency toolchains.
-- **Enforcement**: This is the difference between "should not happen" and "cannot happen." If an agent encounters a broken import, they must work within the currently pinned `v4.28.1` Mathlib cache instead of attempting to blindly pull or shift the toolchain manifest.
+## Structural Dependency Protection Mandate
+**CRITICAL**: Protect the pinned dependency graph without making the build cache
+immutable. Normal Lake builds and native dependency repairs must be able to write
+their generated artifacts, lock files, and intermediate outputs.
+- **Action**: Agents must not modify dependency source or metadata deliberately;
+  however, `.lake/packages/` remains writable so Lake can complete reproducible
+  builds and repair incomplete native targets such as LeanCopilot/OpenBLAS.
+- **Policy**: Any dependency updates to `lakefile.lean` or `lake-manifest.json`
+  require explicit human approval. Agents shall NOT blindly run `lake update` or
+  change pinned dependency revisions. This does not prohibit ordinary build writes.
+- **Enforcement**: Never make `.lake/packages/` read-only as a repository-wide
+  safeguard. If a dependency build is broken, work within the pinned `v4.28.1`
+  environment and repair only the affected target without changing the manifest or
+  toolchain.
 
 ## Sequential Build and Test Mandate
 **CRITICAL**: To prevent compilation race conditions, lock file contention, and resource saturation:
@@ -156,4 +165,3 @@ The AI agent has its own persistent "Hive Memory" ArangoDB container running on 
 
 ## Strict Build Cache Protection Mandate
 **CRITICAL**: You MUST never execute cache-destructive commands (e.g., `lake clean`, `rm -rf .lake/build`, `rm -rf .lake/packages`, `rm -rf .lake`) under any circumstances. Nuking the build cache deletes precompiled dependency oleans and breaks the environment, forcing long and unnecessary compilation loops. If you need to clean up build warnings, use targeted compiler commands or rebuild specific files. Never use global clean commands.
-

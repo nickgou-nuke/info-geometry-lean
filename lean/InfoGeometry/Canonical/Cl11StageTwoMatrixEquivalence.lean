@@ -1,5 +1,6 @@
 import InfoGeometry.Clifford.Cl11TensorTower
 import InfoGeometry.Canonical.Cl11ChiralCommutant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The native stage-two `M₄(ℝ)` readout
@@ -16,7 +17,7 @@ open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Canonical.Cl11ChiralCommutant
 
 abbrev StageTwo := MatStage 2
-abbrev M4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev M4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 noncomputable def stageTwoToM4R : StageTwo ≃ₐ[ℝ] M4R :=
   TowerMatrix.matEquivFinPowTwo 2

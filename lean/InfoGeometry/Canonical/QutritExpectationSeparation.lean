@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.QutritSU3AdjointDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Expectation separation for the qutrit operator space
@@ -17,7 +18,7 @@ open Matrix
 open InfoGeometry.Canonical.QutritGellMannOperatorBasis
 open InfoGeometry.Canonical.QutritSU3AdjointDecomposition
 
-abbrev QutritMatrix := Matrix (Fin 3) (Fin 3) ℂ
+abbrev QutritMatrix := InfoGeometry.Algebra.FiniteSpin.QutritMatrix
 
 /-! ## The complete bilinear expectation readout -/
 

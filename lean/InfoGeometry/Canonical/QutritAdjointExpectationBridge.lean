@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.QutritExpectationSeparation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Adjoint equivariance of the qutrit expectation readout
@@ -18,7 +19,7 @@ open InfoGeometry.Canonical.QutritGellMannOperatorBasis
 open InfoGeometry.Canonical.QutritSU3AdjointDecomposition
 open InfoGeometry.Canonical.QutritExpectationSeparation
 
-abbrev QutritMatrix := Matrix (Fin 3) (Fin 3) ℂ
+abbrev QutritMatrix := InfoGeometry.Algebra.FiniteSpin.QutritMatrix
 
 /-- The dual adjoint action on the test matrix of an expectation channel. -/
 def dualAdjointTest (g : SU3) (r : Fin 9) : QutritMatrix :=

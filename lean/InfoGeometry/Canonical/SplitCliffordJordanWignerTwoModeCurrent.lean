@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent
@@ -18,7 +19,7 @@ namespace InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent
 open Matrix
 open Filter
 
-abbrev M4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev M4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /-- First annihilation mode: `a₁ = a ⊗ I`. -/
 def a1 : M4R :=

@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.TwoSheetResiduePairing
 import InfoGeometry.Canonical.ZornNativeBdGCompatibility
 import InfoGeometry.Canonical.ConformalFiveGradeBracketCapstone
 import InfoGeometry.Canonical.LanglandsFunctorialityNuclearCapstone

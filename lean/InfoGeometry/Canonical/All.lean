@@ -2203,6 +2203,8 @@ import InfoGeometry.Canonical.PalatiniBoundaryStokesBridge
 import InfoGeometry.Canonical.PalatiniBoundaryStokesAudit
 import InfoGeometry.Canonical.DrazinSpectralFittingBridge
 import InfoGeometry.Canonical.DrazinSpectralFittingAudit
+import InfoGeometry.Canonical.AbjChiralCuntzHallBridge
+import InfoGeometry.Canonical.AbjChiralCuntzHallAudit
 import InfoGeometry.Canonical.AlbertPeirceModularMixingBridge
 
 namespace InfoGeometry

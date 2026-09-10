@@ -508,6 +508,17 @@ Formalizing the algebraic Fitting lemma and spectral decomposition for Drazin in
 * **Moore-Penrose Index-1 Coincidence:** Any commuting Moore-Penrose pseudo-inverse ($a a^+ = a^+ a$) is unconditionally a Drazin inverse of index 1 (group inverse), unifying self-adjoint Hodge-Laplacian Green operator dynamics with algebraic Drazin ghost isolation.
   In Lean 4: [`DrazinSpectralFittingBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/DrazinSpectralFittingBridge.lean) and [`DrazinSpectralFittingAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/DrazinSpectralFittingAudit.lean) (`drazin_pow_reduction`, `drazin_annihilates_nilpotent`, `drazin_fitting_trivial_intersection`, `fitting_decomposition_unique`, `propagator_annihilates_ghosts`, `moore_penrose_is_drazin_index_one`, `makeCertifiedDrazinFittingSynthesis`).
 
+### 5.27 ABJ Chiral Defect & Cuntz-Cantor Boundary Hall Inflow
+Formalizing the bulk Adler-Bell-Jackiw (ABJ) chiral anomaly and its topological compensation via the Quantum Hall Effect anomaly inflow on the fractal Cuntz-Cantor boundary:
+* **Bulk ABJ Chiral Divergence:** The 4D bulk chiral current divergence is broken by the topological Dirac-Kähler index:
+  $$\operatorname{div}(J_5) = 2 \cdot \operatorname{Index}(D)$$
+* **Boundary Hall Inflow Quantization:** The spatial Cuntz-Cantor boundary Quantum Hall effect exhibits a transverse inflow current strictly quantized by the first Chern number $c_1 \in \mathbb{Z}$:
+  $$J_{\mathrm{Hall}} = c_1 \in \mathbb{Z}$$
+* **Hodge-Chern Anomaly Inflow Matching:** Under bulk-boundary anomaly inflow matching ($\operatorname{div}(J_5) = 2 J_{\mathrm{Hall}}$), the bulk chiral defect is strictly balanced by the boundary topological charge:
+  $$2 \operatorname{Index}(D) = 2 c_1 \implies \operatorname{Index}(D) = c_1$$
+* **Topological Integer Quantization:** The bulk Dirac index is unconditionally integer-quantized ($\operatorname{Index}(D) \in \mathbb{Z}$) via the boundary topological invariant.
+  In Lean 4: [`AbjChiralCuntzHallBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/AbjChiralCuntzHallBridge.lean) and [`AbjChiralCuntzHallAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/AbjChiralCuntzHallAudit.lean) (`abj_hall_anomaly_inflow`, `dirac_index_is_integer`, `makeCertifiedAbjHallInflowSynthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -551,6 +562,7 @@ Formalizing the algebraic Fitting lemma and spectral decomposition for Drazin in
 | **Iwasawa-Cuntz-Klein Weak Horizon** | $KAN$ Kinematics / Cuntz $\mathcal{O}_2$ / Klein Quadric / AAV Weak | `weak_horizon_amplification`, `certified_iwasawa_cuntz_klein_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Palatini Boundary Stokes Bridge** | Stokes Differential Complex / Boundary Flux / Cauchy Splitting | `palatini_stokes_pairing`, `on_shell_flux_conservation`, `certified_palatini_stokes_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Drazin Spectral Fitting & Ghost Isolator** | General Ring $R$ / Module $M$ / Drazin Projection / BRST Ghost | `drazin_pow_reduction`, `drazin_fitting_trivial_intersection`, `makeCertifiedDrazinFittingSynthesis` | **Kernel-Checked (0 gaps)** |
+| **ABJ Chiral & Boundary Hall Inflow** | Bulk Chiral Current / Boundary Hall $c_1 \in \mathbb{Z}$ | `abj_hall_anomaly_inflow`, `dirac_index_is_integer` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

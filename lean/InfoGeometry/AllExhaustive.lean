@@ -2518,6 +2518,8 @@ import InfoGeometry.Canonical.ParaComplexConnectionBridge
 import InfoGeometry.Canonical.RGFlowResolventSemigroupBridge
 import InfoGeometry.Canonical.DeRhamHodgeIsomorphismBridge
 import InfoGeometry.Canonical.HodgeGreenOperatorBridge
+import InfoGeometry.Canonical.PoincareDualityBridge
+import InfoGeometry.Canonical.PoincareDualityAudit
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyCalibration

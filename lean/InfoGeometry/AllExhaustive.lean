@@ -2503,6 +2503,7 @@ import InfoGeometry.Canonical.ChiralCuntzSuperchargeBridge
 import InfoGeometry.Canonical.ChiralCuntzAnomalyPartitionBridge
 import InfoGeometry.Canonical.SouriauKleinFreudenthalBridge
 import InfoGeometry.Canonical.ApollonianDeRhamFreudenthalBridge
+import InfoGeometry.Canonical.ParaHyperkahlerPresymplecticBridge
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyCalibration
@@ -8052,7 +8053,7 @@ import InfoGeometry.External.Auto.clifford_seed
 import InfoGeometry.External.Auto.determinant_weyl_gauge
 import InfoGeometry.External.Auto.discrete_maxflow_mincut
 import InfoGeometry.External.Auto.formal
-import InfoGeometry.External.Auto.formal-theory
+import InfoGeometry.External.Auto.formal_theory
 import InfoGeometry.External.Auto.goutev_principle
 import InfoGeometry.External.Auto.iR
 import InfoGeometry.External.Auto.inductive_colimit_uhf_group

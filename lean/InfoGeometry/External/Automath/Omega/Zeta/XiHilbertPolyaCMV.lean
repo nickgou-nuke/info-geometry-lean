@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 
-namespace Omega.Zeta
+namespace InfoGeometry.External.Automath.Omega.Zeta
 
 open scoped BigOperators
 
@@ -55,4 +55,4 @@ theorem paper_xi_hilbert_polya_cmv (data : xi_hilbert_polya_cmv_data) :
 
 end
 
-end Omega.Zeta
+end InfoGeometry.External.Automath.Omega.Zeta

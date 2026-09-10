@@ -38,6 +38,8 @@ open Real
 
 noncomputable section
 
+namespace KreinSouriauFull
+
 /-══════════════════════════════════════════════════════════════════════
    BLOCK 1: MODULAR/KREIN OPERATOR ALGEBRA
    ═════════════════════════════════════════════════════════════════════-/
@@ -209,3 +211,5 @@ structure NonequilibriumQuantumThermodynamics where
 #check energy_conservation
 #check entropy_production
 #check NonequilibriumQuantumThermodynamics
+
+end KreinSouriauFull

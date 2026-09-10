@@ -15,6 +15,8 @@ open Matrix
 
 universe u
 
+namespace FormalTheory
+
 /- 1. VIRASORO 2-COCYCLE (the central node) -/
 
 -- The 2-cocycle condition: δψ(n,m,k) = 0
@@ -105,3 +107,5 @@ theorem zorn_pattern (S : Set (Set ℕ)) (h : ∀ c ⊆ S, IsChain (· ⊆ ·) c
   exact ⟨M, hM.prop, by
     intro X hXS hMX
     exact (hM.eq_of_subset hXS hMX).symm⟩
+
+end FormalTheory

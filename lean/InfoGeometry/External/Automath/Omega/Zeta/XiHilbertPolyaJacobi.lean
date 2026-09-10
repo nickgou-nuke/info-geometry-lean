@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 
-namespace Omega.Zeta
+namespace InfoGeometry.External.Automath.Omega.Zeta.Jacobi
 
 /-- Concrete Jacobi data for the Sturm--Jacobi normalization of a monic polynomial model. -/
 structure xi_hilbert_polya_jacobi_data where
@@ -53,4 +53,4 @@ theorem paper_xi_hilbert_polya_jacobi (D : xi_hilbert_polya_jacobi_data) :
   exact
     ⟨D.xi_hilbert_polya_jacobi_diagonal, D.xi_hilbert_polya_jacobi_offDiagonal, rfl, rfl⟩
 
-end Omega.Zeta
+end InfoGeometry.External.Automath.Omega.Zeta.Jacobi

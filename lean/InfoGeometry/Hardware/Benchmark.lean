@@ -16,7 +16,7 @@ def generateTestArray (size : Nat) : FloatArray := Id.run do
     arr := arr.push p
   return arr
 
-def main : IO Unit := do
+def benchmarkMain : IO Unit := do
   let N : Nat := 1000000
   IO.println s!"\n[*] Generating {N} pixels for Tensor Core benchmark in Lean 4..."
   let testArray := generateTestArray N

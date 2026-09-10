@@ -1,0 +1,22 @@
+import InfoGeometry.Canonical.TwoBoundaryChiralCurrentBridge
+
+/-!
+# Axiomatic Audit of TwoBoundaryChiralCurrentBridge
+
+This audit checks the foundational axioms of TwoBoundaryChiralCurrentBridge.
+Expected axioms: [propext, Classical.choice, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.TwoBoundaryChiralCurrent.certified_two_boundary_chiral_current_synthesis
+#print axioms InfoGeometry.Canonical.TwoBoundaryChiralCurrent.TwoBoundaryPair.transitionProjector_fixes_initial
+#print axioms InfoGeometry.Canonical.TwoBoundaryChiralCurrent.TwoBoundaryPair.transitionProjector_idempotent
+#print axioms InfoGeometry.Canonical.TwoBoundaryChiralCurrent.TwoBoundaryPair.transitionProjector_weak_eigenvalue
+#print axioms InfoGeometry.Canonical.TwoBoundaryChiralCurrent.TwoBoundaryPair.weakValue_id
+#print axioms InfoGeometry.Canonical.TwoBoundaryChiralCurrent.TwoBoundaryPair.weakValue_add
+#print axioms InfoGeometry.Canonical.TwoBoundaryChiralCurrent.TwoBoundaryPair.weakValue_smul
+#print axioms InfoGeometry.Canonical.TwoBoundaryChiralCurrent.TwoBoundaryPair.weakValue_eigenvalue
+#print axioms InfoGeometry.Canonical.TwoBoundaryChiralCurrent.TwoBoundaryPair.weakValue_totalCurrent
+#print axioms InfoGeometry.Canonical.TwoBoundaryChiralCurrent.TwoBoundaryPair.weakValue_holomorphic_boundary
+#print axioms InfoGeometry.Canonical.TwoBoundaryChiralCurrent.TwoBoundaryPair.weakValue_antiholomorphic_boundary
+#print axioms InfoGeometry.Canonical.TwoBoundaryChiralCurrent.TwoBoundaryPair.weakValue_cauchy_schwarz
+#print axioms InfoGeometry.Canonical.TwoBoundaryChiralCurrent.TwoBoundaryPair.weakValue_amplification

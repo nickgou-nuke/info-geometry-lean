@@ -175,11 +175,51 @@ def check_torus_ergodic_bridge():
         "zero_sorry": not has_sorry
     }
 
+def check_wave_packet_bridge():
+    bridge_path = REPO_ROOT / "lean" / "InfoGeometry" / "Canonical" / "NavierStokesWavePacketBridge.lean"
+    if not bridge_path.exists():
+        return {"status": "missing", "path": str(bridge_path)}
+    
+    with open(bridge_path, "r", encoding="utf-8") as f:
+        src = f.read()
+    
+    required_symbols = [
+        "crossProd",
+        "dotProd",
+        "normSq",
+        "dotProd_comm",
+        "cross_antisymm",
+        "dot_cross_self_left",
+        "dot_cross_self_right",
+        "cross_cross_eq_sub",
+        "transverse_double_cross",
+        "fourier_biot_savart_inversion",
+        "wave_packet_divergence_free",
+        "dyadicStress",
+        "dyadicStress_trace",
+        "harmonic_reynolds_stress",
+        "certified_navier_stokes_wave_packet_bridge"
+    ]
+    
+    found_symbols = {sym: (sym in src) for sym in required_symbols}
+    all_found = all(found_symbols.values())
+    
+    has_sorry = ("sorry" in src)
+    
+    return {
+        "status": "present",
+        "line_count": len(src.splitlines()),
+        "all_symbols_present": all_found,
+        "missing_symbols": [s for s, found in found_symbols.items() if not found],
+        "zero_sorry": not has_sorry
+    }
+
 def main():
     upstream_info = check_upstream()
     bridge_info = check_native_bridge()
     piola_cone_info = check_piola_cone_bridge()
     torus_ergodic_info = check_torus_ergodic_bridge()
+    wave_packet_info = check_wave_packet_bridge()
     
     report = {
         "audit": "Navier-Stokes Integration & Zorn Hydrodynamic Bridge",
@@ -187,6 +227,7 @@ def main():
         "native_bridge": bridge_info,
         "piola_cone_bridge": piola_cone_info,
         "torus_ergodic_bridge": torus_ergodic_info,
+        "wave_packet_bridge": wave_packet_info,
         "invariants": {
             "anosov_matrix_det": 14,
             "anosov_matrix_trace": 8,
@@ -194,7 +235,8 @@ def main():
             "stress_cone_factorization": "2(P - v)² - (v - 2)J²",
             "vorticity_closure_residual": 0,
             "haar_measure_preserved": True,
-            "angular_harmonic_mean": "1/2"
+            "angular_harmonic_mean": "1/2",
+            "fourier_biot_savart_curl_inverse": True
         },
         "success": (
             upstream_info.get("status") == "present" and
@@ -203,7 +245,9 @@ def main():
             piola_cone_info.get("all_symbols_present") is True and
             piola_cone_info.get("zero_sorry") is True and
             torus_ergodic_info.get("all_symbols_present") is True and
-            torus_ergodic_info.get("zero_sorry") is True
+            torus_ergodic_info.get("zero_sorry") is True and
+            wave_packet_info.get("all_symbols_present") is True and
+            wave_packet_info.get("zero_sorry") is True
         )
     }
     

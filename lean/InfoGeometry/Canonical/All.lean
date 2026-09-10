@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.AharonovKreinWeakValueBridge
 import InfoGeometry.Canonical.QuantumSpinNavierStokes
 import InfoGeometry.Canonical.ZornNativeBdGCompatibility
 import InfoGeometry.Canonical.ConformalFiveGradeBracketCapstone

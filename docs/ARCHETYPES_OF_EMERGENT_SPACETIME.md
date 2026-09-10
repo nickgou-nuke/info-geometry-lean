@@ -474,6 +474,15 @@ Formalizing the doubled chiral phase space $V = E \times E$, its canonical sympl
 * **Non-Degeneracy & Invariance:** The symplectic form is non-degenerate ($(\forall v, \Omega(u, v) = 0) \implies u = 0$), and $J$ acts as an isometry for both the metric ($g(J u, J v) = g(u, v)$) and the symplectic form ($\Omega(J u, J v) = \Omega(u, v)$).
   In Lean 4: [`ChiralBoundarySymplecticBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ChiralBoundarySymplecticBridge.lean) (`symplecticForm_skew`, `symplecticForm_self_zero`, `symplecticForm_add_left`, `symplecticForm_add_right`, `symplecticForm_smul_left`, `symplecticForm_smul_right`, `holomorphic_isotropic`, `antiholomorphic_isotropic`, `cross_pairing_recovery`, `J_sq`, `symplectic_J_positive`, `metric_eq_symplectic_J`, `symplectic_nondegenerate`, `metric_J_invariant`, `symplectic_J_invariant`, `certified_chiral_boundary_symplectic_synthesis`).
 
+### 5.24 The Iwasawa-Cuntz-Klein Weak Horizon Bridge
+Formalizing the four-way holographic junction between non-compact Iwasawa kinematics ($KAN$), boundary Cuntz isometries ($\mathcal{O}_2$), Klein quadric projective bivector geometry, and Aharonov weak horizon amplification:
+* **Iwasawa $KAN$ Kinematics:** Group decomposition into maximal compact rotation $K$, abelian dilation $A$, and horocyclic parabolic shear $N$. The generator $A$ satisfies homothety dilation $A(\lambda x) = \lambda A(x)$ and scales the horizon energy scale.
+* **Holographic Boundary Cuntz Algebra:** The $\mathcal{O}_2$ boundary generators $S_1, S_2$ satisfy isometry relations $S_i^* S_j = \delta_{ij} I$ and sum projection $\sum_{i=1}^2 S_i S_i^* = I$. The branching dynamics intertwine with Iwasawa scaling: $A(S_i x) = \sigma_i A(x)$.
+* **Klein Quadric Seam Geometry:** The Plücker bivector quadric $Q(X) = X \wedge X = 0$ in $\Lambda^2 \mathbb{R}^4$ (signature $(3,3)$) provides the null boundary seam where holomorphic and antiholomorphic sectors meet.
+* **Aharonov Weak Horizon Amplification:** The operator-level weak value $W(A) = \frac{\langle \psi_f, A \psi_i \rangle}{\langle \psi_f, \psi_i \rangle}$ experiences anomalous horizon amplification as the boundary state overlap vanishes:
+  $$|\langle \psi_f, \psi_i \rangle| \le \epsilon \implies |W(A)| \ge \frac{|\langle \psi_f, A \psi_i \rangle|}{\epsilon}$$
+  In Lean 4: [`IwasawaCuntzKleinWeakBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/IwasawaCuntzKleinWeakBridge.lean) and [`IwasawaCuntzKleinWeakAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/IwasawaCuntzKleinWeakAudit.lean) (`iwasawa_scale_cuntz_branching`, `weak_horizon_amplification`, `certified_iwasawa_cuntz_klein_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -514,6 +523,7 @@ Formalizing the doubled chiral phase space $V = E \times E$, its canonical sympl
 | **Chiral Dolbeault-Hodge & Laplacian** | Chiral Complex $(E, \partial_\tau, \bar{\partial}_\tau^*)$ / $\Delta_\tau$ | `laplacian_self_adjoint`, `chiral_hodge_energy_conservation` | **Kernel-Checked (0 gaps)** |
 | **Two-Boundary Chiral Current** | Two-Boundary Pair $(\psi_i, \psi_f)$ / Projector $T$ / Chiral $J$ | `transitionProjector_weak_eigenvalue`, `weakValue_totalCurrent` | **Kernel-Checked (0 gaps)** |
 | **Chiral Boundary Symplectic Form** | Doubled Space $E \times E$ / Symplectic $\Omega$ / Kähler $(g, \Omega, J)$ | `symplectic_nondegenerate`, `metric_eq_symplectic_J` | **Kernel-Checked (0 gaps)** |
+| **Iwasawa-Cuntz-Klein Weak Horizon** | $KAN$ Kinematics / Cuntz $\mathcal{O}_2$ / Klein Quadric / AAV Weak | `weak_horizon_amplification`, `certified_iwasawa_cuntz_klein_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

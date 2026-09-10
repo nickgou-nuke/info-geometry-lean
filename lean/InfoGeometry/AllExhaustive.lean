@@ -2530,6 +2530,8 @@ import InfoGeometry.Canonical.TwistorRealSliceBridge
 import InfoGeometry.Canonical.TwistorRealSliceAudit
 import InfoGeometry.Canonical.ChiralDolbeaultHodgeBridge
 import InfoGeometry.Canonical.ChiralDolbeaultHodgeAudit
+import InfoGeometry.Canonical.TwoBoundaryChiralCurrentBridge
+import InfoGeometry.Canonical.TwoBoundaryChiralCurrentAudit
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyCalibration

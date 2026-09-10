@@ -1,0 +1,31 @@
+import InfoGeometry.Canonical.ParaComplexConnectionBridge
+
+/-!
+# Axiomatic Audit of ParaComplexConnectionBridge
+
+This audit checks the foundational axioms of ParaComplexConnectionBridge.
+Expected axioms: [propext, Classical.choice, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.certified_paracomplex_connection_synthesis
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.peirce_sum_id
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.peircePlus_idem
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.peirceMinus_idem
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.peircePlus_peirceMinus
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.peirceMinus_peircePlus
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.conn_comm_peircePlus
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.conn_comm_peirceMinus
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.conn_preserves_holomorphic
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.conn_preserves_antiholomorphic
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.curvature_comm_tau
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.curvature_comm_peircePlus
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.curvature_comm_peirceMinus
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.curvature_preserves_holomorphic
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.curvature_preserves_antiholomorphic
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.holomorphic_isotropic
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.antiholomorphic_isotropic
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.chiral_current_sum
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.chiralCurrentPlus_annihilates_minus
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.chiralCurrentMinus_annihilates_plus
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.chiral_charge_sum
+#print axioms InfoGeometry.Canonical.ParaComplexConnection.chiral_charge_conservation

@@ -2513,6 +2513,7 @@ import InfoGeometry.Canonical.ChiralHodgeZornArchitectureBridge
 import InfoGeometry.Canonical.GreenSchwarzAnomalyInflowBridge
 import InfoGeometry.Canonical.SemanticHighEntropyCompilationBridge
 import InfoGeometry.Canonical.ParaComplexHolomorphicRealBridge
+import InfoGeometry.Canonical.RGFlowWeylDiffusionBridge
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyBridge
 import InfoGeometry.Canonical.ChiralDiracHomologyCalibration
@@ -12349,3 +12350,4 @@ import InfoGeometry.Canonical.ChiralHodgeZornArchitectureAudit
 import InfoGeometry.Canonical.GreenSchwarzAnomalyInflowAudit
 import InfoGeometry.Canonical.SemanticHighEntropyCompilationAudit
 import InfoGeometry.Canonical.ParaComplexHolomorphicRealAudit
+import InfoGeometry.Canonical.RGFlowWeylDiffusionAudit

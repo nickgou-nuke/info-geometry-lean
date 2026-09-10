@@ -1,4 +1,11 @@
 import InfoGeometry.AQFT.Pin55Pullback
+import InfoGeometry.Geometry.QuadraticPotentialCalculus
+import InfoGeometry.Geometry.FlatSplitQuaternionPotential
+import InfoGeometry.Geometry.FlatSplitQuaternionFamily
+import InfoGeometry.Analysis.LogHomogeneousPotential
+import InfoGeometry.Analysis.IntervalBarrierPotential
+import InfoGeometry.Modular.KreinPotentialTrace
+import InfoGeometry.Exceptional.FreudenthalLogPotential
 import InfoGeometry.Probability.FiniteLogTransport
 import InfoGeometry.Volume.MajoranaPfaffianFour
 import InfoGeometry.Streaming.All

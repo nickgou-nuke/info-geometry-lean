@@ -185,6 +185,7 @@ On the 2D Apollonian cylinder $M = \mathbb{R} \times S^1$:
 | **56D Sp(56, ℝ) DSZ Lattice** | $\mathfrak{sp}(56, \mathbb{R})$ Block Endomorphisms | `lieDeriv_sp56_zero`, `sp56_traceless` | **Kernel-Checked (0 gaps)** |
 | **Freudenthal Area Law** | Degree-4 Invariant $\mathcal{Q}_4$ | `bekensteinHawking_homothety_scaling56` | **Kernel-Checked (0 gaps)** |
 | **Cylinder Hodge Duality** | Graded Differential Forms $\Omega^\bullet$ | `hodgeStar_sq_eq_chirality`, `codifferential_sq_zero` | **Kernel-Checked (0 gaps)** |
+| **Chiral Hodge-Dirac-Kähler** | Graded Operator / 6-Fold Polarized Hodge | `diracKahler_sq`, `diracKahler_anticomm_gamma`, `diracKahler_on_exact` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
@@ -217,5 +218,21 @@ All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:/
   volume  = {16},
   pages   = {218--230},
   year    = {1954}
+}
+
+@book{Hodge1941,
+  author    = {Hodge, William Vallance Douglas},
+  title     = {The Theory and Applications of Harmonic Integrals},
+  publisher = {Cambridge University Press},
+  year      = {1941}
+}
+
+@article{Kahler1960,
+  author  = {K{\"a}hler, Erich},
+  title   = {Die Dirac-Gleichungen},
+  journal = {Abhandlungen aus dem Mathematischen Seminar der Universit{\"a}t Hamburg},
+  volume  = {24},
+  pages   = {112--187},
+  year    = {1960}
 }
 ```

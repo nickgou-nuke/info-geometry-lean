@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.CircularSplitOctonionFreudenthalIntertwiner
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalTwoLevelGapBridge
 import InfoGeometry.Physics.SolovievProjectedParameterBridge
 import InfoGeometry.Physics.TwoSectorSpectralOscillation
@@ -23,7 +24,7 @@ variable {J : Type*} [AddCommGroup J] [Module ℝ J]
 variable (D : CubicJordanDatum J)
 variable (rootMapPlus rootMapMinus : Fin 3 → J)
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-!
 # Soloviev Quasiparticle-Phonon Nuclear Model from Circular Split-Octonions

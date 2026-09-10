@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Block
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic
@@ -18,7 +19,7 @@ open InfoGeometry.Lie.SplitOctonionWittEndomorphismBlockBridge
 
 abbrev Mat4 := Matrix (Fin 4) (Fin 4) ℝ
 abbrev Mat8 := Matrix (Fin 8) (Fin 8) ℝ
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 abbrev Mat10Sum := Matrix (Fin 8 ⊕ Fin 2) (Fin 8 ⊕ Fin 2) ℝ
 
 def fin8Equiv : Fin 8 ≃ Fin 4 ⊕ Fin 4 where

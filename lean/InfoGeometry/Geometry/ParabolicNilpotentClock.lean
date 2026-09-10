@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Clifford.NilpotentBinomial
 
@@ -11,7 +12,7 @@ flow.  It is independent of any Wasserstein minimization or continuum limit.
 
 namespace InfoGeometry.Geometry.ParabolicNilpotentClock
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 structure Clock where
   generator : Mat2

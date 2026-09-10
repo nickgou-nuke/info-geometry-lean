@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FiveGradedLieClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The elementary `sl₂` endpoint relation
@@ -12,7 +13,7 @@ namespace InfoGeometry.Algebra.Sl2EndpointCompensation
 
 open Matrix
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def bracket (A B : Mat2) : Mat2 := A * B - B * A
 

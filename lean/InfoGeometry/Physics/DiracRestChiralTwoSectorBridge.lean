@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.TwoSectorSpectralOscillation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Ring
 
@@ -8,7 +9,7 @@ open InfoGeometry.Physics.TwoSector
 
 namespace InfoGeometry.Physics.DiracRest
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-!
 # Dirac Rest Frame Weyl Chiral Mixing to Two-Sector Oscillation Bridge

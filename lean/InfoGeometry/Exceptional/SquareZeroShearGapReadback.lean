@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.SquareZeroShearFlow
 
 /-!
@@ -13,7 +14,7 @@ namespace InfoGeometry.Exceptional.SquareZeroShear
 
 open Matrix
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def gapShearGenerator : Mat2 := !![0, 1; 0, 0]
 

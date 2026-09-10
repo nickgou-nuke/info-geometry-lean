@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.TwoSectorSpectralOscillation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Nuclear.NuclearChiralPRMBridge
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Ring
@@ -9,7 +10,7 @@ open InfoGeometry.Physics.TwoSector InfoGeometry.Nuclear.ChiralPRM
 
 namespace InfoGeometry.Nuclear.ChiralDoublet
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-!
 # Frauendorf Triaxial PRM Chiral Doublet to Two-Sector Oscillation Bridge

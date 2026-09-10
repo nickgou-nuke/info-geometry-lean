@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpaceMatrixClockBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.QutritMobiusTripotentOrientationBridge
 import InfoGeometry.Physics.LogCFT
 
@@ -24,7 +25,7 @@ variable [NormedAddCommGroup E]
 variable [InnerProductSpace ℝ E]
 variable [CompleteSpace E]
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 theorem qutritMobiusOperator_zero_eq_matrixClockAxis :
     qutritMobiusOperator 0 = matrixClockAxis := by

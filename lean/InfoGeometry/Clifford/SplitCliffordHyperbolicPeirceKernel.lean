@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11WittBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MatrixExponentialTraceDet
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 import Mathlib.Tactic
@@ -18,7 +19,7 @@ namespace InfoGeometry.Clifford.SplitCliffordHyperbolicPeirceKernel
 open InfoGeometry.Clifford
 open scoped Matrix
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def peircePlus : Mat2 := (1 / 2 : ℝ) • (I_mat + Gamma_mat)
 

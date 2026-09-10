@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Twistor.PenroseIncidence
 import InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
@@ -20,7 +21,7 @@ open InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
 open InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 
 abbrev Real8 := Fin 8 → ℝ
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 abbrev Mat2Pair := Mat2 × Mat2
 abbrev Exterior3 := InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge.Exterior3
 abbrev CanonicalZorn := InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge.CanonicalSplitOctonion

@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
@@ -33,7 +34,7 @@ namespace AubertPlymen
 
 open scoped Matrix
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- The Aubert--Plymen involution generator. -/
 def s : Mat2 := !![(0 : ℝ), 1; 1, (0 : ℝ)]

@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
@@ -18,7 +19,7 @@ theorem complexTemperature_parts (θ : SouriauTemperature) :
       (complexTemperature θ).im = θ.time := by
   exact ⟨rfl, rfl⟩
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def complexStructure : Mat2 := !![0, -1; 1, 0]
 

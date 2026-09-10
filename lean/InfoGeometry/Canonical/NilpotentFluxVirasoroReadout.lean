@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
 
 /-!
@@ -18,7 +19,7 @@ namespace InfoGeometry.Canonical.NilpotentFluxVirasoroReadout
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Local `2×2` trace. -/
 def tr2 (A : Mat2) : ℝ := A 0 0 + A 1 1

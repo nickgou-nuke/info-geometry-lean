@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornMatrix
 import InfoGeometry.Clifford.Cl11Matrix
 
@@ -20,7 +21,7 @@ open InfoGeometry.Algebra.ZornMatrix
 open InfoGeometry.Clifford.Cl11Matrix
 
 abbrev Native := ZornMatrix ℝ
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-! The matrix-unit readout for one selected colour. -/
 def fixedColorReadout (i : Fin 3) (A : Mat2) : Native :=

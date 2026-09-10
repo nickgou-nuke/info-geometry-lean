@@ -101,6 +101,9 @@ import InfoGeometry.Canonical.NavierStokesTorusErgodicBridge
 import InfoGeometry.Canonical.NavierStokesTorusErgodicAudit
 import InfoGeometry.Canonical.NavierStokesWavePacketBridge
 import InfoGeometry.Canonical.NavierStokesWavePacketAudit
+import InfoGeometry.Canonical.NavierStokesBiotSavartEnergyBridge
+import InfoGeometry.Canonical.NavierStokesBiotSavartEnergyAudit
+import InfoGeometry.Canonical.ChiralCausalConeSoldering
 import InfoGeometry.Canonical.H3ZornF4PeirceTrialitySplit
 import InfoGeometry.Canonical.H3ZornTKKCore
 import InfoGeometry.Canonical.H3ZornTKKNative

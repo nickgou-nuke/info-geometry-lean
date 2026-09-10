@@ -1,0 +1,21 @@
+import InfoGeometry.Canonical.HarmonicWeakHorizonBridge
+
+/-!
+# Axiomatic Audit of HarmonicWeakHorizonBridge
+
+This audit checks the foundational axioms of the HarmonicWeakHorizonBridge module.
+Expected axioms: [propext, Classical.choice, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.HarmonicWeakHorizon.harmonic_weak_horizon_synthesis
+#print axioms InfoGeometry.Canonical.HarmonicWeakHorizon.diracKaehler_on_harmonic
+#print axioms InfoGeometry.Canonical.HarmonicWeakHorizon.hodgeLaplacian_on_harmonic
+#print axioms InfoGeometry.Canonical.HarmonicWeakHorizon.kinetic_mass_anticommutation
+#print axioms InfoGeometry.Canonical.HarmonicWeakHorizon.bdgZorn_on_harmonic_doublet
+#print axioms InfoGeometry.Canonical.HarmonicWeakHorizon.bdgZorn_harmonic_sq
+#print axioms InfoGeometry.Canonical.HarmonicWeakHorizon.krein_harmonic_matrix_element
+#print axioms InfoGeometry.Canonical.HarmonicWeakHorizon.krein_harmonic_twin_swap_matrix_element
+#print axioms InfoGeometry.Canonical.HarmonicWeakHorizon.horizon_weak_value_scaling
+#print axioms InfoGeometry.Canonical.HarmonicWeakHorizon.horizon_mass_transfer_weak_value
+#print axioms InfoGeometry.Canonical.HarmonicWeakHorizon.chiralCharge_on_harmonic
+#print axioms InfoGeometry.Canonical.HarmonicWeakHorizon.harmonic_cohomological_stability

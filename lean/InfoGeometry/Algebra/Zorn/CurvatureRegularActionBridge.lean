@@ -315,7 +315,7 @@ theorem regular_action_zero_iff_associator_zero
     (x y z : A) :
     leftRightCommutator (R := ℝ) (A := A) x y z = 0 ↔
       _root_.associator x y z = 0 := by
-  rw [leftRightCommutator_apply_of_alternative (A := A)
+  rw [leftRightCommutator_apply_of_right_alternative (A := A)
     (fun x y => hright y x)]
 
 theorem transported_first_bianchi_associator
@@ -329,13 +329,13 @@ theorem transported_first_bianchi_associator
     _root_.associator (B.parameterMap X) (B.parameterMap Y) (B.carrierMap Z) +
       _root_.associator (B.parameterMap Y) (B.parameterMap Z) (B.carrierMap X) +
       _root_.associator (B.parameterMap Z) (B.parameterMap X) (B.carrierMap Y) = 0 := by
-  have h1 := leftRightCommutator_apply_of_alternative
+  have h1 := leftRightCommutator_apply_of_right_alternative
     (R := ℝ) (A := A) hright (B.parameterMap X) (B.parameterMap Y)
       (B.carrierMap Z)
-  have h2 := leftRightCommutator_apply_of_alternative
+  have h2 := leftRightCommutator_apply_of_right_alternative
     (R := ℝ) (A := A) hright (B.parameterMap Y) (B.parameterMap Z)
       (B.carrierMap X)
-  have h3 := leftRightCommutator_apply_of_alternative
+  have h3 := leftRightCommutator_apply_of_right_alternative
     (R := ℝ) (A := A) hright (B.parameterMap Z) (B.parameterMap X)
       (B.carrierMap Y)
   rw [← h1, ← h2, ← h3]
@@ -382,7 +382,7 @@ theorem transported_first_bianchi_forces_associator_zero_of_same_map
 theorem zorn_leftRightCommutator_apply_eq_associator
     (x y z : ZornVectorMatrix ℝ) :
     leftRightCommutator (R := ℝ) x y z = _root_.associator x y z := by
-  exact leftRightCommutator_apply_of_alternative
+  exact leftRightCommutator_apply_of_right_alternative
     (A := ZornVectorMatrix ℝ)
     zorn_right_alternative x y z
 

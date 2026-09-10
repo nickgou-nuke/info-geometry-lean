@@ -426,6 +426,20 @@ Formalizing the canonical Hodge-Riemann bilinear forms and polarization on inner
   $$Q_{\mathrm{prim}}(\Delta x, y) = Q_{\mathrm{prim}}(x, \Delta y), \quad Q_L(\Delta x, y) = Q_L(x, \Delta y)$$
   In Lean 4: [`HodgeRiemannBilinearBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/HodgeRiemannBilinearBridge.lean) (`bilinear_decomp`, `Q_prim_symm`, `Q_L_symm`, `HR_one_primitive`, `HR_one_energy`, `Q_L_on_primitive`, `HR_two_positivity`, `Q_prim_nondegenerate`, `HR_energy_link`, `Q_prim_cauchy_schwarz`, `Q_prim_laplacian_symm`, `certified_hodge_riemann_bilinear_synthesis`).
 
+### 5.20 The Penrose Twistor Real Slice & Chiral Holographic Bridge
+Formalizing the Penrose twistor correspondence, incidence geometry, and the emergence of the real spacetime continuum from the chiral split holomorphic/antiholomorphic twistor space:
+* **Chiral Twistor Decomposition:** Every twistor $Z = (\omega, \pi) \in \mathbb{R}^2 \times \mathbb{R}^2$ decomposes canonically into its holomorphic position spinor $Z_{\mathrm{hol}} = (\omega, 0)$ and its conjugate antiholomorphic momentum spinor $Z_{\mathrm{antihol}} = (0, \pi)$:
+  $$Z = Z_{\mathrm{hol}} + Z_{\mathrm{antihol}}$$
+* **Spacetime as Holographic Transfer Operator:** Under the Penrose incidence relation $\omega = X \cdot \pi$, a spacetime point $X \in \operatorname{Mat}_2(\mathbb{R})$ acts as the transfer operator mapping the antiholomorphic spinor to the holomorphic spinor:
+  $$(Z_{\mathrm{hol}})_1 = X \cdot (Z_{\mathrm{antihol}})_2$$
+* **The Real Slice & Neutral Quadratic Form:** When $X$ belongs to the real slice ($X^T = X$), the neutral-signature twistor form $Q_{\mathrm{twistor}}(Z) = \omega \cdot \pi$ evaluates to the symmetric quadratic form of $X$ on $\pi$:
+  $$Q_{\mathrm{twistor}}(X \pi, \pi) = X_{00} \pi_1^2 + 2 X_{01} \pi_1 \pi_2 + X_{11} \pi_2^2$$
+* **Twistor Line Intersection & Minkowski Null Separation:** Two spacetime points $X, Y$ have intersecting twistor lines with non-zero primary spinor $\pi \ne 0$ if and only if their difference is light-like:
+  $$(X - Y) \pi = 0 \implies \det(X - Y) = 0 \iff (X - Y)^2 = 0$$
+  proving that twistor line intersection is identical to Minkowski null separation.
+* **Positive-Definite Diagonal Pairing:** The canonical twistor pairing is symmetric and positive semi-definite on the diagonal ($\langle Z, Z \rangle \ge 0$).
+  In Lean 4: [`TwistorRealSliceBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/TwistorRealSliceBridge.lean) (`incident_neutral_form_real`, `twistor_null_separation`, `twistor_chiral_split`, `twistor_holographic_transfer`, `twistorPairing_self_nonneg`, `twistorPairing_symm`, `certified_twistor_real_slice_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -462,6 +476,7 @@ Formalizing the canonical Hodge-Riemann bilinear forms and polarization on inner
 | **Lefschetz $\mathfrak{sl}_2(\mathbb{R})$ Triad & Kähler-Hodge** | $\mathfrak{sl}_2$ Lie Algebra / Casimir / Primitive Hodge | `primitive_hodge_riemann_energy`, `primitive_L_injective`, `casimir_on_primitive` | **Kernel-Checked (0 gaps)** |
 | **Lefschetz Primitive Projector & Foliation** | Primitive Projector $P_{\mathrm{prim}}$ / Orthogonal Foliation | `decomp_sum`, `pythagorean_energy`, `decomp_orthogonal` | **Kernel-Checked (0 gaps)** |
 | **Hodge-Riemann Bilinear & Polarization** | Polarized Forms $Q_{\mathrm{prim}}, Q_L$ / HR I & II Positivity | `bilinear_decomp`, `HR_one_primitive`, `HR_two_positivity` | **Kernel-Checked (0 gaps)** |
+| **Penrose Twistor Real Slice** | Twistor Incidence / Real Slice / Null Separation | `incident_neutral_form_real`, `twistor_null_separation` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

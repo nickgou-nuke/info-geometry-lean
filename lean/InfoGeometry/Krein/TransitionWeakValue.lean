@@ -36,9 +36,11 @@ def numerator (A : E →L[ℝ] E) (v : DoubledSpace E) : ℝ :=
 def readout (A : E →L[ℝ] E) (v : DoubledSpace E) : ℝ :=
   numerator A v / overlap v
 
+omit [CompleteSpace E] in
 @[simp] theorem overlap_to_doubled (x y : E) :
     overlap (to_doubled x y) = inner ℝ y x := rfl
 
+omit [CompleteSpace E] in
 @[simp] theorem numerator_to_doubled (A : E →L[ℝ] E) (x y : E) :
     numerator A (to_doubled x y) = inner ℝ y (A x) := rfl
 
@@ -89,11 +91,13 @@ theorem hadamard_null_iff_overlap_zero (x y : E) :
   rw [hadamard_krein_self, overlap_to_doubled]
   constructor <;> intro h <;> linarith
 
+omit [CompleteSpace E] in
 /-- Numerator cancellation: every admissible identity readout is exactly one. -/
 theorem readout_id (v : DoubledSpace E) (hv : overlap v ≠ 0) :
     readout (ContinuousLinearMap.id ℝ E) v = 1 := by
   simpa [readout, numerator, overlap] using div_self hv
 
+omit [CompleteSpace E] in
 /-- A preselected eigenvector has a constant weak readout on its admissible chart. -/
 theorem readout_of_eigenvector (A : E →L[ℝ] E) (x y : E) (a : ℝ)
     (hx : A x = a • x) (hxy : inner ℝ y x ≠ 0) :

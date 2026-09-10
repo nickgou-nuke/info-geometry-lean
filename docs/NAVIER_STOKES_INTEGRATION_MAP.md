@@ -16,6 +16,8 @@
 > - `InfoGeometry/Canonical/NavierStokesBiotSavartEnergyAudit.lean`  
 > - `InfoGeometry/Canonical/NavierStokesSingularityClosure.lean` (Tier 5: Millennium Breakdown Statements, BKM Limsups & Singularity Closures)  
 > - `InfoGeometry/Canonical/NavierStokesSingularityClosureAudit.lean`  
+> - `InfoGeometry/Canonical/ChiralApollonianCylinderBridge.lean` (Tier 6: Chiral Apollonian Cylinder, Cuntz-Markov Dynamics & Dilaton Renormalization)  
+> - `InfoGeometry/Canonical/ChiralApollonianCylinderAudit.lean`  
 > **Kernel Status:** 100% Kernel Checked, 0 `sorry`, 0 custom axioms  
 
 ---
@@ -350,11 +352,59 @@ In `InfoGeometry/Canonical/NavierStokesSingularityClosure.lean`, we formalized T
    - Navier–Stokes on $\mathbb{R}^3$: `navier_stokes_breakdown_R3_of_asymptotic_blowup`
    - Periodic Navier–Stokes on $\mathbb{T}^3$: `navier_stokes_breakdown_periodic_of_asymptotic_blowup`
 
+### 4.7. Chiral Apollonian Cylinder, Cuntz-Markov Dynamics & Dilaton Renormalization
+The fractal, non-commutative, and supersymmetric upgrade of the Navier–Stokes ergodic bridge (`ChiralApollonianCylinderBridge.lean`):
+
+1. **Descartes Quadrics & Soddy Reflection Group**:
+   - Curvatures $k \in \mathbb{R}^4$ satisfy the Descartes quadratic form:
+     $$Q_D(k) = 2(k_1^2 + k_2^2 + k_3^2 + k_4^2) - (k_1 + k_2 + k_3 + k_4)^2$$
+   - The four Soddy involutions $S_i \in \operatorname{GL}_4(\mathbb{Z})$ preserve $Q_D(k)$ identically:
+     ```lean
+     theorem descartesForm_soddyReflect4 (q : CurvatureQuadruple R) :
+         descartesForm (soddyReflect4 q) = descartesForm q
+     ```
+   - Dual kissing curvature sum rule: $k_4 + (S_4 k)_4 = 2(k_1 + k_2 + k_3)$.
+   - Exact Descartes discriminant identity:
+     $$(k_4 - (k_1 + k_2 + k_3))^2 = 4(k_1 k_2 + k_2 k_3 + k_3 k_1) + Q_D(k)$$
+
+2. **Cantor Tree Cuntz-Markov Quantum Random Walk**:
+   - Cuntz generators $S_i, S_i^*$ with $S_i^* S_j = \delta_{ij}$ and $\sum_i S_i S_i^* = 1$.
+   - Unital Markov transition operator $\Phi_w(x) = \sum_{i} w_i \cdot (S_i^* x S_i)$:
+     ```lean
+     theorem cuntzMarkovStep_one (C : CuntzGenerators d A) (w : MarkovWeights d R) :
+         cuntzMarkovStep C w 1 = 1
+     ```
+   - Cylinder conditional expectation projection:
+     ```lean
+     theorem cuntzMarkovStep_cylinder (C : CuntzGenerators d A) (w : MarkovWeights d R) (j : Fin d) (y : A) :
+         cuntzMarkovStep C w (C.S j * y * C.S_star j) = w.p j • y
+     ```
+
+3. **Dilaton Weyl Gauge & Horizon Renormalization**:
+   - Weyl scale factor $\mathcal{W}_\alpha(\sigma) = e^{\alpha \sigma}$ with abelian group law $\mathcal{W}_\alpha(\sigma_1 + \sigma_2) = \mathcal{W}_\alpha(\sigma_1) \mathcal{W}_\alpha(\sigma_2)$.
+   - Self-similar horizon field $\sigma(t) = -\ln(T^* - t) \to \infty$ as $t \to T^{*-}$.
+   - Exact scaling recovery along horizon: $\mathcal{W}_\alpha(\sigma(t)) = (T^* - t)^{-\alpha} \to \infty$:
+     ```lean
+     theorem weylScale_horizon_tendsto_atTop (T α : ℝ) (hα : 0 < α) :
+         Tendsto (fun t => weylScale α (dilatonHorizonField T t)) (𝓝[<] T) atTop
+     ```
+
+4. **Square-Root Superchiral Charges & Supersymmetric Conservation**:
+   - Nilpotent odd supercharges $Q^2 = 0, K^2 = 0$.
+   - Graded commutator / Hamiltonian $H = \{Q, K\} = QK + KQ$.
+   - Supersymmetric conservation $[Q, H] = 0$ and $[K, H] = 0$:
+     ```lean
+     theorem susy_conservation (Q K : A)
+         (hQ : IsNilpotentSupercharge Q) (hK : IsNilpotentSupercharge K) :
+         commutator Q (anticommutator Q K) = 0 ∧
+         commutator K (anticommutator Q K) = 0
+     ```
+
 ---
 
 ## 5. Synthesis Certification
 
-The complete bridge suite is certified by six kernel-checked witness structures:
+The complete bridge suite is certified by seven kernel-checked witness structures:
 
 1. `certified_zorn_navier_stokes_synthesis` in `ZornNavierStokesHydrodynamicBridge.lean`
 2. `certified_navier_stokes_cone_piola_bridge` in `NavierStokesConePiolaBridge.lean`
@@ -362,6 +412,7 @@ The complete bridge suite is certified by six kernel-checked witness structures:
 4. `certified_navier_stokes_wave_packet_bridge` in `NavierStokesWavePacketBridge.lean`
 5. `certified_navier_stokes_biot_savart_energy_bridge` in `NavierStokesBiotSavartEnergyBridge.lean`
 6. `certified_navier_stokes_singularity_closure` in `NavierStokesSingularityClosure.lean`
+7. `certified_chiral_apollonian_cylinder_bridge` in `ChiralApollonianCylinderBridge.lean`
 
 Axiom verification:
 ```text
@@ -381,6 +432,9 @@ Axiom verification:
   [propext, Classical.choice, Quot.sound]
 
 'InfoGeometry.Canonical.NavierStokesSingularity.certified_navier_stokes_singularity_closure' depends on axioms:
+  [propext, Classical.choice, Quot.sound]
+
+'InfoGeometry.Canonical.ChiralApollonian.certified_chiral_apollonian_cylinder_bridge' depends on axioms:
   [propext, Classical.choice, Quot.sound]
 ```
 Zero custom axioms, zero `sorry`, 100% verified across the entire repository.

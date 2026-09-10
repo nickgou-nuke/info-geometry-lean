@@ -96,6 +96,35 @@ theorem sigmaThree_alg_solder :
   fin_cases i <;> fin_cases j <;>
     rfl
 
+theorem carrierSolderAlg_car_packet :
+    carrierSolderAlg
+        (InfoGeometry.Physics.ChiralCausalCone.σPlus *
+          InfoGeometry.Physics.ChiralCausalCone.σPlus) = 0 ∧
+    carrierSolderAlg
+        (InfoGeometry.Physics.ChiralCausalCone.σMinus *
+          InfoGeometry.Physics.ChiralCausalCone.σMinus) = 0 ∧
+    carrierSolderAlg
+        (InfoGeometry.Physics.ChiralCausalCone.σPlus *
+            InfoGeometry.Physics.ChiralCausalCone.σMinus -
+          InfoGeometry.Physics.ChiralCausalCone.σMinus *
+            InfoGeometry.Physics.ChiralCausalCone.σPlus) =
+      ChiralCausalCone.σ3c ∧
+    carrierSolderAlg
+        (InfoGeometry.Physics.ChiralCausalCone.σPlus *
+            InfoGeometry.Physics.ChiralCausalCone.σMinus +
+          InfoGeometry.Physics.ChiralCausalCone.σMinus *
+            InfoGeometry.Physics.ChiralCausalCone.σPlus) = 1 ∧
+    carrierSolderAlg
+        (InfoGeometry.Physics.ChiralCausalCone.σ3c *
+          InfoGeometry.Physics.ChiralCausalCone.σ3c) = 1 := by
+  rw [← sigmaThree_alg_solder]
+  rw [InfoGeometry.Physics.ChiralCausalCone.σPlus_sq,
+    InfoGeometry.Physics.ChiralCausalCone.σMinus_sq,
+    InfoGeometry.Physics.ChiralCausalCone.comm_σPlus_σMinus,
+    InfoGeometry.Physics.ChiralCausalCone.anti_σPlus_σMinus,
+    InfoGeometry.Physics.ChiralCausalCone.σ3c_sq]
+  simp [carrierSolderAlg_apply, sigmaThree_alg_solder]
+
 theorem solder_preserves_causal_determinant (t x y z : ℂ) :
     Matrix.det (carrierSolder
       (InfoGeometry.Physics.SolderingSpinConnectionBogoliubov.solder t x y z)) =

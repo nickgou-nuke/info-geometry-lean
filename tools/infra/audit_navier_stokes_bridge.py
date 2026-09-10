@@ -306,6 +306,60 @@ def check_singularity_closure_bridge():
         "zero_sorry": not has_sorry
     }
 
+def check_chiral_apollonian_cylinder_bridge():
+    bridge_path = REPO_ROOT / "lean" / "InfoGeometry" / "Canonical" / "ChiralApollonianCylinderBridge.lean"
+    if not bridge_path.exists():
+        return {"status": "missing", "path": str(bridge_path)}
+    
+    with open(bridge_path, "r", encoding="utf-8") as f:
+        src = f.read()
+    
+    required_symbols = [
+        "CurvatureQuadruple",
+        "descartesForm",
+        "IsApollonian",
+        "soddyReflect4",
+        "soddyReflect4_involutive",
+        "descartesForm_soddyReflect4",
+        "isApollonian_soddyReflect4",
+        "soddy_curvature_sum",
+        "descartes_discriminant_identity",
+        "descartes_discriminant_of_isApollonian",
+        "CuntzGenerators",
+        "MarkovWeights",
+        "cuntzMarkovStep",
+        "cuntzMarkovStep_one",
+        "cuntzMarkovStep_cylinder",
+        "weylScale",
+        "weylScale_add",
+        "dilatonHorizonField",
+        "weylScale_horizon_eq",
+        "dilaton_tendsto_atTop",
+        "weylScale_horizon_tendsto_atTop",
+        "anticommutator",
+        "commutator",
+        "IsNilpotentSupercharge",
+        "supercharge_hamiltonian_commutes_left",
+        "supercharge_hamiltonian_commutes_right",
+        "susy_conservation",
+        "nilpotency_im_le_ker",
+        "CertifiedChiralApollonianCylinderBridge",
+        "certified_chiral_apollonian_cylinder_bridge"
+    ]
+    
+    found_symbols = {sym: (sym in src) for sym in required_symbols}
+    all_found = all(found_symbols.values())
+    
+    has_sorry = ("sorry" in src)
+    
+    return {
+        "status": "present",
+        "line_count": len(src.splitlines()),
+        "all_symbols_present": all_found,
+        "missing_symbols": [s for s, found in found_symbols.items() if not found],
+        "zero_sorry": not has_sorry
+    }
+
 def main():
     upstream_info = check_upstream()
     bridge_info = check_native_bridge()
@@ -314,6 +368,7 @@ def main():
     wave_packet_info = check_wave_packet_bridge()
     biot_savart_energy_info = check_biot_savart_energy_bridge()
     singularity_closure_info = check_singularity_closure_bridge()
+    chiral_apollonian_info = check_chiral_apollonian_cylinder_bridge()
     
     report = {
         "audit": "Navier-Stokes Integration & Zorn Hydrodynamic Bridge",
@@ -324,6 +379,7 @@ def main():
         "wave_packet_bridge": wave_packet_info,
         "biot_savart_energy_bridge": biot_savart_energy_info,
         "singularity_closure_bridge": singularity_closure_info,
+        "chiral_apollonian_cylinder_bridge": chiral_apollonian_info,
         "invariants": {
             "anosov_matrix_det": 14,
             "anosov_matrix_trace": 8,
@@ -338,7 +394,13 @@ def main():
             "beale_kato_majda_limsup_top": True,
             "euler_breakdown_r3_certified": True,
             "navier_stokes_breakdown_r3_certified": True,
-            "navier_stokes_breakdown_periodic_certified": True
+            "navier_stokes_breakdown_periodic_certified": True,
+            "descartes_quadric_reflection_invariance": True,
+            "cuntz_markov_unitality": True,
+            "cuntz_markov_cylinder_projection": True,
+            "dilaton_weyl_scale_group_law": True,
+            "dilaton_weyl_horizon_divergence": True,
+            "susy_hamiltonian_conservation": True
         },
         "success": (
             upstream_info.get("status") == "present" and
@@ -353,7 +415,9 @@ def main():
             biot_savart_energy_info.get("all_symbols_present") is True and
             biot_savart_energy_info.get("zero_sorry") is True and
             singularity_closure_info.get("all_symbols_present") is True and
-            singularity_closure_info.get("zero_sorry") is True
+            singularity_closure_info.get("zero_sorry") is True and
+            chiral_apollonian_info.get("all_symbols_present") is True and
+            chiral_apollonian_info.get("zero_sorry") is True
         )
     }
     

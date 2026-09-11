@@ -786,6 +786,24 @@ Formalizing the Dirac-Schwinger-Zwanziger (DSZ) charge lattice $\Gamma_{\text{DS
 * **SL(2, ℤ) Modular Braid Relation on DSZ Lattice:** The discrete S-duality and axion shift transformations generate the modular group $\mathrm{SL}(2, \mathbb{Z})$ on the 56D lattice, satisfying the cubic braid relation $(S \circ T)^3 = \mathbb{I}_{56}$ and $S^4 = \mathbb{I}_{56}$ identically for every lattice charge state (`modular_relation_st_cubed`, `certified_sp56_dsz_nonlocal_twist_synthesis`).
   In Lean 4: [`Sp56DSZNonlocalTwistBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/Sp56DSZNonlocalTwistBridge.lean) and [`Sp56DSZNonlocalTwistBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/Sp56DSZNonlocalTwistBridgeAudit.lean).
 
+### 5.48 Krein BRST Ghost Confinement and Physical Decoupling
+Formalizing indefinite Krein spaces $(V, J)$ with fundamental symmetry $J^2 = \mathbb{I}, J^\dagger = J$, nilpotent BRST supercharge $Q^2 = 0$, and proving ghost confinement and physical decoupling:
+* **Nilpotent Supercharge Annihilation:** BRST operator satisfies $Q(Q v) = 0$ identically (`BRSTCharge`, `brst_squared_annihilation`).
+* **BRST Cohomology Exact-Closed Inclusion:** Every gauge-trivial exact state $v = Q w$ is automatically physical/closed $Q v = 0$, establishing $\mathrm{range}(Q) \subseteq \ker(Q)$ (`IsBRSTClosed`, `IsBRSTExact`, `brst_exact_is_closed`).
+* **Ghost Krein Charge Collapse:** Under Krein-BRST compatibility $\langle J(Q x), y \rangle = \pm \langle J x, Q y \rangle$, every exact ghost state $v = Q w$ has identically vanishing Krein charge $[v, v]_J = \langle J v, v \rangle = 0$ (`kreinCharge`, `brst_ghost_charge_collapse_skew`, `brst_ghost_charge_collapse_self_adjoint`).
+* **Physical State Decoupling Orthogonality:** Every physical closed state $\psi \in \ker(Q)$ is strictly Krein-orthogonal to every exact ghost state $v = Q w$: $[v, \psi]_J = \langle J v, \psi \rangle = 0$ (`kreinInner`, `brst_physical_ghost_decoupling_skew`, `brst_physical_ghost_decoupling_self_adjoint`).
+* **Master Ghost Confinement Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_krein_brst_ghost_confinement_synthesis`).
+  In Lean 4: [`KreinBRSTGhostConfinement.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/KreinBRSTGhostConfinement.lean) and [`KreinBRSTGhostConfinementAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/KreinBRSTGhostConfinementAudit.lean).
+
+### 5.49 Selberg Trace Hyperbolic Weight and Aharonov-Bohm Unitarity
+Formalizing the geodesic spectral contribution in the Selberg trace formula twisted by topological holonomies and magnetic fluxes:
+* **Strict Positivity of Selberg Geodesic Weights:** For every closed prime geodesic orbit of length $\ell > 0$, the hyperbolic spectral weight $w(\ell) = \frac{\ell}{2 \sinh(\ell/2)}$ is strictly positive ($w(\ell) > 0$), guaranteeing that geometric orbits contribute non-dissipatively to the quantum spectral trace (`selbergHyperbolicWeight`, `PrimeGeodesic`, `weight_is_pos`).
+* **Aharonov-Bohm Unitarity & Amplitude Invariance:** The complex phase factor $\mathrm{phase}(\phi) = \exp(i \phi) \in \mathbb{C}$ associated with modular or magnetic flux $\phi \in \mathbb{R}$ has unit norm $\|\mathrm{phase}(\phi)\| = 1$, ensuring that the twisted spectral contribution $\mathrm{twisted}(\gamma) = w(\ell) e^{i \phi}$ preserves the bare amplitude identically: $\|\mathrm{twisted}(\gamma)\| = \mathrm{bare}(\gamma)$ (`aharonovBohmPhase`, `aharonov_bohm_phase_norm`, `aharonov_bohm_amplitude_invariant`).
+* **Flux Homomorphism & Integer Quantization:** Phase twisting satisfies the group homomorphism $\mathrm{phase}(\phi_1 + \phi_2) = \mathrm{phase}(\phi_1) \cdot \mathrm{phase}(\phi_2)$ with identity $\mathrm{phase}(0) = 1$, and vanishes to identity on integer flux quanta $\mathrm{phase}(2\pi k) = 1$ for all $k \in \mathbb{Z}$ (`aharonov_bohm_phase_add`, `aharonov_bohm_phase_zero`, `twisted_contribution_zero_flux`, `aharonov_bohm_phase_two_pi_int`).
+* **Euler Factor Positivity:** The prime hyperbolic factor $1 - e^{-\ell}$ is strictly positive for all $\ell > 0$ (`selberg_euler_factor_pos`).
+* **Master Selberg Aharonov-Bohm Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_selberg_aharonov_bohm_synthesis`).
+  In Lean 4: [`SelbergTraceAharonovBohm.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/SelbergTraceAharonovBohm.lean) and [`SelbergTraceAharonovBohmAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/SelbergTraceAharonovBohmAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -853,6 +871,8 @@ Formalizing the Dirac-Schwinger-Zwanziger (DSZ) charge lattice $\Gamma_{\text{DS
 | **Dilaton Weyl Anomaly Inflow & Selberg Bridge** | Dilaton Field $\Phi = \ln x$ / Callan-Harvey Inflow / Selberg Hyperbolic Weight $w(\ell) > 0$ | `certified_dilaton_weyl_anomaly_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Berry-Keating Dilation Critical Spectrum** | Mellin Multiplier $M(s) = i(s - 1/2)$ / Critical Line $\operatorname{Re}(s) = 1/2$ / Schwarz Reflection | `certified_berry_keating_dilation_spectrum_synthesis` | **Kernel-Checked (0 gaps)** |
 | **56D Sp(56, ℝ) DSZ Lattice & SL(2, ℤ) Twists** | DSZ Lattice $\mathbb{Z}^{28} \times \mathbb{Z}^{28}$ / $\mathrm{SO}(2)$ Duality / $\mathrm{SL}(2, \mathbb{Z})$ Braid $(ST)^3 = \mathbb{I}$ | `certified_sp56_dsz_nonlocal_twist_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Krein BRST Ghost Confinement** | Krein Space $(V, J)$ / Nilpotent $Q^2 = 0$ / Physical Decoupling | `certified_krein_brst_ghost_confinement_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Selberg Trace & Aharonov-Bohm** | Prime Geodesic $(\ell, \phi)$ / Hyperbolic Weight $w(\ell)$ / Unitarity | `certified_selberg_aharonov_bohm_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

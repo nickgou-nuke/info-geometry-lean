@@ -748,6 +748,34 @@ Formalizing the split-octonions $\mathbb{O}'$, their determinant norm, neutral s
 * **Master Derivation and Automorphism Synthesis:** Unifies the complete structural conjunction into kernel-certified closures (`split_octonion_zorn_synthesis`, `split_octonion_derivation_automorphism_synthesis`).
   In Lean 4: [`SplitOctonionZornAlgebra.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/SplitOctonionZornAlgebra.lean), [`SplitOctonionZornAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/SplitOctonionZornAudit.lean), [`SplitOctonionDerivationAutomorphism.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/SplitOctonionDerivationAutomorphism.lean), and [`SplitOctonionDerivationAutomorphismAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/SplitOctonionDerivationAutomorphismAudit.lean).
 
+### 5.44 Lorentz Boost Generator and Spontaneously Broken $\mathcal{PT}$-Symmetry Confinement
+Formalizing the relativistic Lorentz boost generator and the spontaneous $\mathcal{PT}$-symmetry breaking criterion on real Krein spaces:
+* **Lorentz Boost Generator:** Relativistic differential boost operator $H = x \frac{d}{dx} + \frac{1}{2}$ over an inner product space, where $+1/2$ is the half-sum of Iwasawa positive roots ensuring formal self-adjointness (`lorentzBoostGenerator`).
+* **Krein Space Parity Symmetry:** Complete inner product space equipped with a fundamental symmetry $J$ ($J^2 = \mathbb{I}$, $J^\dagger = J$) defining the indefinite Krein inner product $[u, v]_J = \langle J u, v \rangle$ (`KreinSpace`, `kreinCharge`).
+* **Krein Self-Adjointness:** Linear operator satisfying $\langle J(Ax), y \rangle = \langle Jx, Ay \rangle$ (`IsKreinSelfAdjoint`).
+* **Spontaneously Broken $\mathcal{PT}$-Symmetry Criterion:** When a $J$-self-adjoint operator develops non-degenerate eigenvalues ($\lambda_1 \neq \lambda_2$) for conjugate states, the Krein charge of the state collapses strictly to zero ($[v, v]_J = 0$), proving that states off the unitary axis are confined to the null cone (`broken_pt_symmetry_pair`, `krein_null_charge_of_broken_pt`).
+* **Unbroken $\mathcal{PT}$-Symmetry Protection:** Non-zero Krein charge $[v, v]_J \neq 0$ forces degenerate real eigenvalues ($\lambda_1 = \lambda_2$), protecting spectral stability on the unitary boundary (`unbroken_pt_of_nonzero_charge`, `lorentz_boost_krein_confinement_synthesis`).
+  In Lean 4: [`LorentzBoostKreinConfinement.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/LorentzBoostKreinConfinement.lean) and [`LorentzBoostKreinConfinementAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/LorentzBoostKreinConfinementAudit.lean).
+
+### 5.45 Dilaton Weyl Field, Callan-Harvey Anomaly Inflow, and Selberg Trace Bridge
+Formalizing the holographic junction between the dilaton Weyl field, Callan-Harvey boundary anomaly cancellation, and the Selberg trace formula:
+* **Dilaton Field & Additive Dilation Flow:** The scalar dilaton field $\Phi(x) = \ln x$ provides the logarithmic conformal chart where the scaling flow $\sigma_t(x) = e^t x$ acts as pure additive translation $\Phi(\sigma_t(x)) = \Phi(x) + t$ (`dilatonField`, `dilationFlow`, `dilaton_flow_additive`).
+* **Conformal Weyl Metric Rescaling:** Under dilaton shifts $\Phi \mapsto \Phi + t$, the metric $g_\Phi(u, v) = e^{2\Phi} \langle u, v \rangle$ rescales homothety-wise by $e^{2t}$ (`weylDilatonMetric`, `weylDilatonMetric_shift`).
+* **Callan-Harvey Bulk-Seam Anomaly Cancellation:** Bulk topological Chern-Simons current $J_{\text{bulk}}$ compensates exactly for the boundary chiral anomaly $\mathcal{A}_{\text{seam}}$ on the Klein bottle seam: $J_{\text{bulk}} = \mathcal{A}_{\text{seam}}$ (`CallanHarveyInflow`, `anomaly_inflow_conservation`).
+* **Krein Charge & Anomaly Inflow Decoupling:** The integrated boundary charge matches the Krein charge $Q_{\text{seam}} = [v, v]_J$. When $\mathcal{PT}$-symmetry breaks, $Q_{\text{seam}} = 0$, decoupling the boundary anomaly current and topologically confining physical excitations (`seamNoetherCharge`, `broken_pt_charge_collapse`).
+* **Selberg Hyperbolic Weight from Dilaton Period:** For a closed hyperbolic orbit with dilaton winding period $\ell > 0$, the Selberg trace weight $w(\ell) = \frac{\ell}{2 \sinh(\ell/2)}$ is strictly positive and non-vanishing (`selbergHyperbolicWeight`, `selberg_hyperbolic_weight_pos`, `certified_dilaton_weyl_anomaly_synthesis`).
+  In Lean 4: [`DilatonWeylAnomalyInflowBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/DilatonWeylAnomalyInflowBridge.lean) and [`DilatonWeylAnomalyInflowBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/DilatonWeylAnomalyInflowBridgeAudit.lean).
+
+### 5.46 Berry-Keating Dilation Operator and Critical-Line Spectrum
+Formalizing the exact spectral and boundary-flux structure of the Berry-Keating dilation Hamiltonian $H = -i (x \frac{d}{dx} + \frac{1}{2})$:
+* **Mellin Multiplier Action:** On generalized power modes $\psi_s(x) = x^{-s}$, the differential dilation operator acts as multiplication by $M(s) = i (s - 1/2)$ (`mellinMultiplier`, `mellinMultiplier_re`, `mellinMultiplier_im`).
+* **Critical-Line Spectral Characterization:** The eigenvalue $E = M(s)$ is strictly real ($\operatorname{Im}(M(s)) = 0$) if and only if $\operatorname{Re}(s) = 1/2$, proving that the self-adjoint continuous spectrum lives on the Riemann critical line (`mellinMultiplier_is_real_iff`).
+* **Self-Conjugate Eigenvalue Equivalence:** $M(s) = \overline{M(s)} \iff \operatorname{Re}(s) = 1/2$ (`mellinMultiplier_eq_conj_iff`).
+* **Schwarz Reflection & Functional Symmetry:** $M(1 - \bar{s}) = \overline{M(s)}$, embodying the arithmetic reflection $s \leftrightarrow 1 - s$ (`mellinMultiplier_reflection`).
+* **Critical Line Energy:** On $s = 1/2 + i t$, the eigenvalue is strictly real $E = -t$ (`mellinMultiplier_critical_line`).
+* **Unique Boundary Flux Cancellation:** The formal self-adjointness condition $1 - c = \bar{c}$ under integration by parts uniquely determines $\operatorname{Re}(c) = 1/2$. For real shifts $c \in \mathbb{R}$, $c = 1/2$ is unique (`DilationShift`, `dilation_shift_unique_half`, `real_dilation_shift_unique`, `certified_berry_keating_dilation_spectrum_synthesis`).
+  In Lean 4: [`BerryKeatingDilationSpectrum.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/BerryKeatingDilationSpectrum.lean) and [`BerryKeatingDilationSpectrumAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/BerryKeatingDilationSpectrumAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -810,6 +838,10 @@ Formalizing the split-octonions $\mathbb{O}'$, their determinant norm, neutral s
 | **Para-Complex Chiral Triad** | Peirce $P_\pm$ / Real Seam $\tau = 0$ / Zorn Shell | `para_complex_triad_real_emergence_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Split-Octonions via Zorn Algebra** | $2 \times 2$ Vector-Matrix / Det Norm $(4, 4)$ | `split_octonion_zorn_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Derivations $\mathfrak{g}_2'$ & Automorphisms $G_2'$** | Derivations / $[D_1, D_2]$ / Grading $14 = 8+3+3$ | `split_octonion_derivation_automorphism_synthesis` | **Kernel-Checked (0 gaps)** |
+| **BKM Dikin Weyl Reflection Invariance** | Concrete Weyl Reflection $L = -I$ on $\mathrm{SelfAdjoint}(n)$ / BKM Dikin Metric | `weyl_dikin_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Lorentz Boost & Krein Confinement** | Relativistic Boost $H = x \frac{d}{dx} + \frac{1}{2}$ / Krein Space $(H, J)$ / Null Charge Collapse | `lorentz_boost_krein_confinement_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Dilaton Weyl Anomaly Inflow & Selberg Bridge** | Dilaton Field $\Phi = \ln x$ / Callan-Harvey Inflow / Selberg Hyperbolic Weight $w(\ell) > 0$ | `certified_dilaton_weyl_anomaly_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Berry-Keating Dilation Critical Spectrum** | Mellin Multiplier $M(s) = i(s - 1/2)$ / Critical Line $\operatorname{Re}(s) = 1/2$ / Schwarz Reflection | `certified_berry_keating_dilation_spectrum_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

@@ -41,7 +41,7 @@ theorem normalizedTrace_invariance (d : K) (hd : d ≠ 0) (h2 : (2 : K) ≠ 0)
     _ = (1 / (2 * d) * 2) * trace M := by ring
     _ = (1 / d) * trace M := by
       congr 1
-      rw [one_div, mul_inv_rev, mul_assoc, inv_mul_cancel₀ h2, mul_one, ← one_div]
+      field_simp [hd, h2]
 
 /-- 3. Level-Indexed Normalized Trace τ_n(M) = (1 / dim_n) * Tr(M) -/
 def tau_level (dim_n : K) (M : Matrix t t K) : K :=

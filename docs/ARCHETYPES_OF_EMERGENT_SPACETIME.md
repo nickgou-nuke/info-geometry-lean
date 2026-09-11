@@ -1125,6 +1125,25 @@ Formalizing the coadjoint representation on the volume-preserving diffeomorphism
 * **Master Synthesis:** Certified master conjunction in Mathlib 4 (`certified_sdiff_coadjoint_helicity_synthesis`).
   In Lean 4: [`SDiffCoadjointHelicityCasimir.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/SDiffCoadjointHelicityCasimir.lean) and [`SDiffCoadjointHelicityCasimirAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/SDiffCoadjointHelicityCasimirAudit.lean).
 
+### 5.83 Glauber Correlator Tensor Factorization & Copula Detector Invariance
+Formalizing the Fubini reduction and scale/asymmetric channel invariance of detector volume integrals:
+* **Fubini Product Integration:** The 2-point volume integral factors into the product of two 1-point integrals: $Q = \frac{\kappa}{A_0} L_1 L_2$ (`Q_fubini_factorization`).
+* **Copula Detector Annihilation:** In the cross-ratio $\mathcal{R} = \frac{L_1 L_2}{Q}$, all spatial volume integrals over $V$, detector efficiencies $\eta_i(\mathbf{x})$, and distance dilution factors cancel identically: $\frac{L_1 L_2}{Q} = \frac{A_0}{\kappa}$ (`copula_cross_ratio_invariant`).
+* **Absolute Activity Recovery:** True nuclear source activity is reconstructed without geometric dependencies: $A_0 = \kappa \cdot \mathcal{R}$ (`recovered_activity_exact`).
+* **Scale and Asymmetric Channel Invariance:** The cross-ratio is strictly invariant under global geometric rescalings ($V \mapsto \alpha V$, $(d+d_0)^{-2} \mapsto \alpha (d+d_0)^{-2}$) (`cross_ratio_scale_invariance`) as well as independent asymmetric channel calibrations ($\alpha_1 \neq \alpha_2$) (`asymmetric_scale_invariance`).
+* **Master Synthesis:** Certified master conjunction in Mathlib 4 (`certified_glauber_tensor_copula_synthesis`).
+  In Lean 4: [`GlauberTensorCopulaInvariance.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/GlauberTensorCopulaInvariance.lean) and [`GlauberTensorCopulaInvarianceAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/GlauberTensorCopulaInvarianceAudit.lean).
+
+### 5.84 Quantum Fisher Information Metric (QFIM), SLD, and Bures Distance on the Null Cone
+Formalizing the Symmetric Logarithmic Derivative (SLD) bundle, the QFIM Riemannian structure, and the asymptotic Cramér-Rao reciprocity on the backward null cone:
+* **Derivative-SLD Pairing:** The QFIM metric components satisfy $g_{\mu\nu} = \operatorname{Tr}(\partial_\mu \hat{\rho} \mathcal{L}_\nu)$ (`qfim_eq_tr_drho_mul_L`).
+* **Metric Symmetry & Diagonal Positivity:** $g_{\mu\nu} = g_{\nu\mu}$ (`qfim_symmetric`) and $0 \le g_{\mu\mu} = \operatorname{Tr}(\hat{\rho} \mathcal{L}_\mu^2)$ (`qfim_diag_eq`, `qfim_diag_nonneg`).
+* **Bures Distance Quadratic Expansion:** $ds_B^2 = \frac{1}{4} (g_{00} (u^0)^2 + 2 g_{01} u^0 u^1 + g_{11} (u^1)^2)$ (`bures_expansion`).
+* **Quantum Cramér-Rao Reciprocity:** Along the backward null cone under Sachs optical dilution, the QFI $F_Q = (\eta V \Delta t)/(A_0 (d+d_0)^2)$ and Cramér-Rao lower bound $\mathrm{CRB} = (A_0 (d+d_0)^2)/(\eta V \Delta t)$ satisfy exact reciprocity: $F_Q \cdot \mathrm{CRB} = 1$ (`qfi_mul_crb_eq_one`).
+* **Holographic Volume Variance Collapse:** Scaling the detector volume by $k > 0$ compresses the retrodiction variance bound by $1/k$: $\mathrm{CRB}(k V) = \frac{1}{k} \mathrm{CRB}(V)$ (`crb_volume_scaling`).
+* **Master Synthesis:** Certified master conjunction in Mathlib 4 (`certified_quantum_fisher_null_cone_synthesis`).
+  In Lean 4: [`QuantumFisherNullConeRetrodiction.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/QuantumFisherNullConeRetrodiction.lean) and [`QuantumFisherNullConeRetrodictionAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/QuantumFisherNullConeRetrodictionAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -1228,6 +1247,8 @@ Formalizing the coadjoint representation on the volume-preserving diffeomorphism
 | **Acoustic Trapped Surfaces & Horizon Decoupling** | Background Flow $\mathbf{v}_0$ / Transonic Window $c_- < v < c_+$ / Slow Trapped $g_{00}^{(-)} > 0$ / Fast Untrapped $g_{00}^{(+)} < 0$ / Upstream Escape | `certified_acoustic_trapped_surface_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Arnold Navier-Stokes Vorticity Depletion** | Beltrami $\boldsymbol{\omega} = \lambda \mathbf{u} \implies \mathbf{L} = 0$ / Laplacian $\Delta \mathbf{u} = -\lambda^2 \mathbf{u}$ / Scale Barrier $2\nu/r^2 \to \infty$ / Blow-Up Strain $\sigma > 2\nu\lambda^2$ | `certified_navier_stokes_vorticity_depletion_synthesis` | **Kernel-Checked (0 gaps)** |
 | **SDiff Coadjoint Helicity & Arnold Casimir** | Lie Group $\operatorname{SDiff}(M)$ / Coadjoint Pushforward / Isometry Invariance / Generalized Casimir $\mathcal{H}(\operatorname{Ad}_\varphi^* u) = \mathcal{H}(u)$ | `certified_sdiff_coadjoint_helicity_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Glauber Tensor Copula Invariance** | Product Integration $\mathcal{I}_2$ / Fubini Factorization / Copula Cross-Ratio | `certified_glauber_tensor_copula_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Quantum Fisher Null Cone Retrodiction** | Associative Quantum Algebra / SLD Bundle / QFIM Metric / Sachs Optical Scaling | `certified_quantum_fisher_null_cone_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

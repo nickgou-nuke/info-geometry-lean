@@ -150,6 +150,19 @@ theorem fisherRaoDistance_nonneg (P Q : PositiveDist D) :
   unfold fisherRaoDistance
   exact mul_nonneg (by norm_num) (Real.arccos_nonneg _)
 
+theorem fisherRaoDistance_le_two_pi (P Q : PositiveDist D) :
+    fisherRaoDistance P Q ≤ 2 * Real.pi := by
+  unfold fisherRaoDistance
+  have h := Real.arccos_le_pi (bhattacharyyaOverlap P Q)
+  nlinarith
+
+theorem fisherRaoDistance_lt_two_pi (P Q : PositiveDist D) (hD : 0 < D) :
+    fisherRaoDistance P Q < 2 * Real.pi := by
+  unfold fisherRaoDistance
+  have h : Real.arccos (bhattacharyyaOverlap P Q) < Real.pi :=
+    Real.arccos_lt_pi.mpr (by linarith [bhattacharyyaOverlap_pos P Q hD])
+  nlinarith
+
 theorem fisherRaoDistance_eq_zero_iff_overlap_eq_one
     (P Q : PositiveDist D) :
     fisherRaoDistance P Q = 0 ↔ bhattacharyyaOverlap P Q = 1 := by

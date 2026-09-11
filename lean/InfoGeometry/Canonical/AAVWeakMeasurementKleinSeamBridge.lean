@@ -211,35 +211,27 @@ theorem subluminal_group_velocity (p mass : ℝ) (h_p : p ≠ 0) (h_mass : mass 
 -/
 
 /-- Master synthesis packet certifying the AAV weak measurement Klein bottle seam bridge. -/
-structure AAVWeakKleinSeamPacket where
-  factorization : ∀ (psi_overlap chi omega_num : ℝ), psi_overlap ≠ 0 →
-    psi_overlap * (1 - chi * aharonovWeakValue omega_num psi_overlap) = psi_overlap - chi * omega_num
-  shift_scale : ∀ (chi num den : ℝ), den ≠ 0 → den * coordinateShift chi num den = chi * num
-  glide_time_sq : ∀ (Lx : ℝ) (p : SpacetimePoint),
-    (spacetimeGlideReflection Lx (spacetimeGlideReflection Lx p)).t = p.t
-  glide_det : linearGlideMatrix.det = -1
-  seam_iff_zero : ∀ (p : SpacetimePoint), isKleinSeam p ↔ p.t = 0
-  horizon_is_seam : ∀ (p : SpacetimePoint), isModularHorizon p → isKleinSeam p
-  amplification : ∀ (num eps M : ℝ), eps > 0 → M > 0 → eps < num / M →
-    aharonovWeakValue num eps > M
-  mass_gap : ∀ (p mass : ℝ), mass ≠ 0 → bdgEnergySq p mass > p * p
-  subluminal : ∀ (p mass : ℝ), p ≠ 0 → mass ≠ 0 → groupVelocitySq p mass < 1
-
-/-- Constructor for the verified AAV weak measurement Klein seam packet. -/
-def makeAAVWeakKleinSeamPacket : AAVWeakKleinSeamPacket where
-  factorization := weak_factorization
-  shift_scale := coordinateShift_scaling
-  glide_time_sq := spacetimeGlideReflection_time_sq
-  glide_det := linearGlideMatrix_det
-  seam_iff_zero := klein_seam_iff_t_zero
-  horizon_is_seam := modular_horizon_on_klein_seam
-  amplification := weak_amplification_bound
-  mass_gap := bdg_mass_gap_positive
-  subluminal := subluminal_group_velocity
+theorem aav_weak_klein_seam_synthesis :
+    (∀ (psi_overlap chi omega_num : ℝ), psi_overlap ≠ 0 →
+      psi_overlap * (1 - chi * aharonovWeakValue omega_num psi_overlap) = psi_overlap - chi * omega_num) ∧
+    (∀ (chi num den : ℝ), den ≠ 0 → den * coordinateShift chi num den = chi * num) ∧
+    (∀ (Lx : ℝ) (p : SpacetimePoint),
+      (spacetimeGlideReflection Lx (spacetimeGlideReflection Lx p)).t = p.t) ∧
+    linearGlideMatrix.det = -1 ∧
+    (∀ (p : SpacetimePoint), isKleinSeam p ↔ p.t = 0) ∧
+    (∀ (p : SpacetimePoint), isModularHorizon p → isKleinSeam p) ∧
+    (∀ (num eps M : ℝ), eps > 0 → M > 0 → eps < num / M → aharonovWeakValue num eps > M) ∧
+    (∀ (p mass : ℝ), mass ≠ 0 → bdgEnergySq p mass > p * p) ∧
+    (∀ (p mass : ℝ), p ≠ 0 → mass ≠ 0 → groupVelocitySq p mass < 1) := by
+  exact ⟨weak_factorization, coordinateShift_scaling,
+    spacetimeGlideReflection_time_sq, linearGlideMatrix_det,
+    klein_seam_iff_t_zero, modular_horizon_on_klein_seam,
+    weak_amplification_bound, bdg_mass_gap_positive,
+    subluminal_group_velocity⟩
 
 /-- Grand certificate: The AAV weak measurement Klein bottle modular seam packet is fully certified. -/
 theorem aav_weak_klein_seam_certified :
-    (makeAAVWeakKleinSeamPacket).glide_det = linearGlideMatrix_det := rfl
+    linearGlideMatrix.det = -1 := linearGlideMatrix_det
 
 end
 

@@ -6,10 +6,22 @@ import Mathlib.Tactic
 /-!
 # Rank-two quadratic response and activity closure
 
-The raw multiline response `Rᵢⱼ = Cᵢ Xⱼ - Kᵢ Xⱼ²` factors through the
-two-dimensional latent design `(X, X²)`.  The statements here formalize the
-exact algebraic structure; numerical SVD and nonlinear fitting remain
-computational diagnostics.
+Floating-point SVD is used only to diagnose the numerical data matrix.
+The measured response is tested against an algebraic two-dimensional model of
+coincidence-summed detector response:
+  `Rᵢⱼ = Cᵢ Xⱼ - Kᵢ Xⱼ²`,  `Zⱼ = (Xⱼ, Xⱼ²)ᵀ`.
+
+Consequently, every 3×3 minor of an exact model matrix vanishes, the
+representation is invariant under `Z ↦ M Z`, `B ↦ B M⁻¹` for `M ∈ GL₂(ℝ)`,
+and the closure slope
+  `H = C₁ C₂ / κ`
+is invariant under the dilation gauge
+  `X ↦ λ X`, `Cᵢ ↦ Cᵢ / λ`, `Kᵢ, κ ↦ Kᵢ / λ²`.
+
+These are exact algebraic properties of the proposed response model. The
+experimental data support the model through residuals, scale comparisons, and
+activity validation; they do not become exact merely because the algebraic
+model has exact invariants.
 -/
 namespace InfoGeometry.Probability.DetectorRankTwoResponse
 

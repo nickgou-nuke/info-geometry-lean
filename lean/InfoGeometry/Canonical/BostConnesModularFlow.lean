@@ -98,6 +98,15 @@ theorem phaseFactor_ne_zero (t : ℝ) (n : ℕ+) :
     Complex.exp (Complex.I * (t : ℂ) * (Real.log (n.val : ℝ) : ℂ)) ≠ 0 := by
   exact Complex.exp_ne_zero _
 
+theorem scaled_generator_mul (C : CuntzMultiplicativeIndexing Op)
+    (t : ℝ) (m n : ℕ+) :
+    (Complex.exp (Complex.I * (t : ℂ) * (Real.log ((m * n).val : ℝ) : ℂ))) •
+        C.generator (m * n) =
+      ((Complex.exp (Complex.I * (t : ℂ) * (Real.log (m.val : ℝ) : ℂ))) • C.generator m) *
+        ((Complex.exp (Complex.I * (t : ℂ) * (Real.log (n.val : ℝ) : ℂ))) • C.generator n) := by
+  rw [phaseFactor_mul_index, C.generator_mul]
+  simp [smul_smul, mul_comm]
+
 /-!
 ## 2. Formal Flow Intertwining (Liouville Grading)
 

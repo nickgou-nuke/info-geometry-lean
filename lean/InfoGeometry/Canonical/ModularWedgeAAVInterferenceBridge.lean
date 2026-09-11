@@ -251,43 +251,29 @@ theorem temporal_seam_coincidence (p : Spacetime2D) :
 
 /-- Master synthesis packet binding Bisognano–Wichmann wedge reflection, modular time reversal,
     super-weak amplification, anomalous momentum kick, and Klein seam coincidence. -/
-structure ModularWedgeAAVPacket where
-  bw_involutive : ∀ p : Spacetime2D, bwReflection (bwReflection p) = p
-  bw_right_to_left : ∀ p : Spacetime2D, inRightWedge p → inLeftWedge (bwReflection p)
-  bw_left_to_right : ∀ p : Spacetime2D, inLeftWedge p → inRightWedge (bwReflection p)
-  bw_fixed_iff_horizon : ∀ p : Spacetime2D, bwReflection p = p ↔ isBifurcationHorizon p
-  flow_time_reversal : ∀ s lambda : ℝ, modularPhase s (-lambda) = - modularPhase s lambda
-  divergence_bound : ∀ num_re eps M : ℝ, eps > 0 → M > 0 → eps < num_re / M →
-    (aavWeakValue num_re 0 eps).re > M
-  anomalous_kick_zero_q : ∀ chi sigma gamma den : ℝ,
-    (computePointerShift chi sigma (aavWeakValue 0 gamma den)).delta_q = 0
-  anomalous_kick_formula_p : ∀ chi sigma gamma den : ℝ,
+theorem modular_wedge_aav_relations :
+  (∀ p : Spacetime2D, bwReflection (bwReflection p) = p) ∧
+  (∀ p : Spacetime2D, inRightWedge p → inLeftWedge (bwReflection p)) ∧
+  (∀ p : Spacetime2D, inLeftWedge p → inRightWedge (bwReflection p)) ∧
+  (∀ p : Spacetime2D, bwReflection p = p ↔ isBifurcationHorizon p) ∧
+  (∀ s lambda : ℝ, modularPhase s (-lambda) = - modularPhase s lambda) ∧
+  (∀ num_re eps M : ℝ, eps > 0 → M > 0 → eps < num_re / M →
+    (aavWeakValue num_re 0 eps).re > M) ∧
+  (∀ chi sigma gamma den : ℝ,
+    (computePointerShift chi sigma (aavWeakValue 0 gamma den)).delta_q = 0) ∧
+  (∀ chi sigma gamma den : ℝ,
     (computePointerShift chi sigma (aavWeakValue 0 gamma den)).delta_p =
-      (2 * chi / (sigma * sigma)) * (gamma / den)
-  entropy_nonneg : ∀ delta_p sigma : ℝ, sigma ≠ 0 → entropyProductionRate delta_p sigma ≥ 0
-  composition_time : ∀ L : ℝ, ∀ p : Spacetime2D, (kleinGlide L (bwReflection p)).t = p.t
-  seam_coincidence : ∀ p : Spacetime2D, (bwReflection p).t = p.t ↔ p.t = 0
-
-/-- Constructor for the verified modular wedge AAV interference packet. -/
-def makeModularWedgeAAVPacket : ModularWedgeAAVPacket where
-  bw_involutive := bwReflection_involutive
-  bw_right_to_left := bwReflection_maps_right_to_left
-  bw_left_to_right := bwReflection_maps_left_to_right
-  bw_fixed_iff_horizon := bwReflection_fixed_iff_horizon
-  flow_time_reversal := modularPhase_time_reversal
-  divergence_bound := weak_value_divergence
-  anomalous_kick_zero_q := fun chi sigma gamma den =>
-    (anomalous_momentum_kick chi sigma gamma den).1
-  anomalous_kick_formula_p := fun chi sigma gamma den =>
-    (anomalous_momentum_kick chi sigma gamma den).2
-  entropy_nonneg := entropy_production_nonneg
-  composition_time := klein_bw_composition_time
-  seam_coincidence := temporal_seam_coincidence
-
-/-- Definitional kernel certification of the modular wedge AAV interference packet. -/
-theorem modular_wedge_aav_certified :
-    (makeModularWedgeAAVPacket).flow_time_reversal = modularPhase_time_reversal := rfl
+      (2 * chi / (sigma * sigma)) * (gamma / den)) ∧
+  (∀ delta_p sigma : ℝ, sigma ≠ 0 → entropyProductionRate delta_p sigma ≥ 0) ∧
+  (∀ L : ℝ, ∀ p : Spacetime2D, (kleinGlide L (bwReflection p)).t = p.t) ∧
+  (∀ p : Spacetime2D, (bwReflection p).t = p.t ↔ p.t = 0) := by
+  exact ⟨bwReflection_involutive, bwReflection_maps_right_to_left,
+    bwReflection_maps_left_to_right, bwReflection_fixed_iff_horizon,
+    modularPhase_time_reversal, weak_value_divergence,
+    fun chi sigma gamma den => (anomalous_momentum_kick chi sigma gamma den).1,
+    fun chi sigma gamma den => (anomalous_momentum_kick chi sigma gamma den).2,
+    entropy_production_nonneg, klein_bw_composition_time,
+    temporal_seam_coincidence⟩
 
 end
-
 end InfoGeometry.Canonical.ModularWedgeAAVInterference

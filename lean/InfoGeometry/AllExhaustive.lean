@@ -10103,6 +10103,8 @@ import InfoGeometry.Physics.KreinBRSTGhostConfinement
 import InfoGeometry.Physics.KreinBRSTGhostConfinementAudit
 import InfoGeometry.Physics.SelbergTraceAharonovBohm
 import InfoGeometry.Physics.SelbergTraceAharonovBohmAudit
+import InfoGeometry.Physics.RiemannKleinBottleThroatBridge
+import InfoGeometry.Physics.RiemannKleinBottleThroatBridgeAudit
 import InfoGeometry.Physics.LorentzChiralCuntzBridge
 import InfoGeometry.Physics.MD000FoundationalMatrixFramework
 import InfoGeometry.Physics.MD001MatrixQuantumGeometry

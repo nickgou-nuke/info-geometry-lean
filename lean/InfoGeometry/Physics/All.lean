@@ -120,6 +120,8 @@ import InfoGeometry.Physics.KreinBRSTGhostConfinement
 import InfoGeometry.Physics.KreinBRSTGhostConfinementAudit
 import InfoGeometry.Physics.SelbergTraceAharonovBohm
 import InfoGeometry.Physics.SelbergTraceAharonovBohmAudit
+import InfoGeometry.Physics.RiemannKleinBottleThroatBridge
+import InfoGeometry.Physics.RiemannKleinBottleThroatBridgeAudit
 
 /-!
 # Physics Umbrella

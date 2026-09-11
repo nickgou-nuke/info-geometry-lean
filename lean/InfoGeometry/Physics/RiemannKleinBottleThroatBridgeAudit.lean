@@ -1,0 +1,24 @@
+import InfoGeometry.Physics.RiemannKleinBottleThroatBridge
+
+open InfoGeometry.Physics.RiemannKleinBottleThroatBridge
+
+#print axioms involution_involutive
+#print axioms involution_preserves_strip
+#print axioms glideAction_involutive
+#print axioms spatial_reflection_fixed_iff
+#print axioms critical_line_functional_involution
+#print axioms critical_line_re_invariant
+#print axioms laplaceBeltrami_involution_invariant
+#print axioms laplaceBeltrami_on_critical_line
+#print axioms laplaceBeltrami_im_formula
+#print axioms laplaceBeltrami_is_real_iff
+#print axioms laplaceBeltrami_critical_ge_quarter
+#print axioms laplaceBeltrami_ground_state
+#print axioms star_critical_line
+#print axioms functional_involution_eq_star_on_critical_line
+#print axioms scattering_matrix_unitary
+#print axioms self_dual_critical_real
+#print axioms self_dual_modulus_eq
+#print axioms destructive_interference_equal_modulus
+#print axioms destructive_overlap_annihilation
+#print axioms certified_riemann_klein_bottle_throat_synthesis

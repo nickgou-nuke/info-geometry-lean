@@ -226,40 +226,21 @@ theorem d4Cartan_triality_cycle_invariant (i j : Fin 4) :
 
 /-! ## 6. Grand Synthesis Packet -/
 
-structure PinModularPeircePrimonPacket where
-  i_sq : i_coq * i_coq = (-1 : ℝ) • (1 : M2R)
-  j_sq : j_coq * j_coq = 1
-  k_sq : k_coq * k_coq = 1
-  coq_jk : j_coq * k_coq = i_coq
-  coq_kj : k_coq * j_coq = (-1 : ℝ) • i_coq
-  eps_J_anticommutator : atomEps * atomJ + atomJ * atomEps = 0
-  peirce_comp : peircePlus + peirceMinus = 1
-  peirce_orth : peircePlus * peirceMinus = 0
-  peirce_idemp : peircePlus * peircePlus = peircePlus
-  mod_dual_plus : atomJ * peircePlus = peirceMinus * atomJ
-  mod_dual_minus : atomJ * peirceMinus = peircePlus * atomJ
-  primon_gap : ∀ p n : ℝ, 0 < p → 0 < n → primonEnergy (p * n) - primonEnergy n = Real.log p
-  glide_double : ∀ L : ℝ, ∀ p : ℝ × ℝ, glideReflection L (glideReflection L p) = (p.1, p.2 + L)
-  d4_triality_inv : ∀ i j : Fin 4, d4Cartan (trialityCycle i) (trialityCycle j) = d4Cartan i j
-
-def makePinModularPeircePrimonPacket : PinModularPeircePrimonPacket where
-  i_sq := i_coq_sq
-  j_sq := j_coq_sq
-  k_sq := k_coq_sq
-  coq_jk := j_mul_k
-  coq_kj := k_mul_j
-  eps_J_anticommutator := eps_J_anticomm
-  peirce_comp := peirce_completeness
-  peirce_orth := peirce_orthog
-  peirce_idemp := peirce_plus_idempotent
-  mod_dual_plus := peirce_modular_duality_plus
-  mod_dual_minus := peirce_modular_duality_minus
-  primon_gap := primon_energy_step
-  glide_double := glide_double_is_torus_translation
-  d4_triality_inv := d4Cartan_triality_cycle_invariant
-
-theorem pin_modular_peirce_primon_certified :
-    (peircePlus : M2R) * peirceMinus = 0 :=
-  makePinModularPeircePrimonPacket.peirce_orth
+theorem pin_modular_peirce_primon_relations :
+  i_coq * i_coq = (-1 : ℝ) • (1 : M2R) ∧
+  j_coq * j_coq = 1 ∧ k_coq * k_coq = 1 ∧
+  j_coq * k_coq = i_coq ∧ k_coq * j_coq = (-1 : ℝ) • i_coq ∧
+  atomEps * atomJ + atomJ * atomEps = 0 ∧
+  peircePlus + peirceMinus = 1 ∧ peircePlus * peirceMinus = 0 ∧
+  peircePlus * peircePlus = peircePlus ∧
+  atomJ * peircePlus = peirceMinus * atomJ ∧
+  atomJ * peirceMinus = peircePlus * atomJ ∧
+  (∀ p n : ℝ, 0 < p → 0 < n → primonEnergy (p * n) - primonEnergy n = Real.log p) ∧
+  (∀ L : ℝ, ∀ p : ℝ × ℝ, glideReflection L (glideReflection L p) = (p.1, p.2 + L)) ∧
+  (∀ i j : Fin 4, d4Cartan (trialityCycle i) (trialityCycle j) = d4Cartan i j) := by
+  exact ⟨i_coq_sq, j_coq_sq, k_coq_sq, j_mul_k, k_mul_j, eps_J_anticomm,
+    peirce_completeness, peirce_orthog, peirce_plus_idempotent,
+    peirce_modular_duality_plus, peirce_modular_duality_minus, primon_energy_step,
+    glide_double_is_torus_translation, d4Cartan_triality_cycle_invariant⟩
 
 end InfoGeometry.Canonical.PinModularPeirceBostConnes

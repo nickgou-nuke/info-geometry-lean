@@ -10092,6 +10092,10 @@ import InfoGeometry.Physics.LogCFT
 import InfoGeometry.Physics.LogCFTFiniteJordanBridge
 import InfoGeometry.Physics.LogCFTJordanShear
 import InfoGeometry.Physics.LorentzBoostMinkowski
+import InfoGeometry.Physics.LorentzBoostKreinConfinement
+import InfoGeometry.Physics.LorentzBoostKreinConfinementAudit
+import InfoGeometry.Physics.DilatonWeylAnomalyInflowBridge
+import InfoGeometry.Physics.DilatonWeylAnomalyInflowBridgeAudit
 import InfoGeometry.Physics.LorentzChiralCuntzBridge
 import InfoGeometry.Physics.MD000FoundationalMatrixFramework
 import InfoGeometry.Physics.MD001MatrixQuantumGeometry

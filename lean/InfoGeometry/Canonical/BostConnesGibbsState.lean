@@ -82,6 +82,17 @@ theorem bostConnesExpectation_ge_term (β : ℝ) (hβ : 1 < β)
   exact hf_sum.le_tsum n (fun m _ => mul_nonneg
     (le_of_lt (normalizedBostConnesWeight_pos β hβ m)) (hf_nonneg m))
 
+/- A nonnegative observable positive at one mode has positive expectation. -/
+theorem bostConnesExpectation_pos_of_pos_at
+    (β : ℝ) (hβ : 1 < β) {f : ℕ+ → ℝ}
+    (hf_nonneg : ∀ n, 0 ≤ f n)
+    (hf_sum : Summable fun n : ℕ+ => normalizedBostConnesWeight β n * f n)
+    (n : ℕ+) (hn : 0 < f n) :
+    0 < bostConnesExpectation β hβ f := by
+  exact lt_of_lt_of_le
+    (mul_pos (normalizedBostConnesWeight_pos β hβ n) hn)
+    (bostConnesExpectation_ge_term β hβ hf_nonneg hf_sum n)
+
 /-- Additivity of Gibbs expectation under the corresponding summability hypotheses. -/
 theorem bostConnesExpectation_add (β : ℝ) (hβ : 1 < β)
     {f g : ℕ+ → ℝ}

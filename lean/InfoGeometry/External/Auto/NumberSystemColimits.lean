@@ -11,7 +11,7 @@ inductive NumSys
   | Naturals
   | Rationals
   | Reals
-  | Complex
+  | ComplexField
 
 open NumSys
 
@@ -20,7 +20,7 @@ def rank : NumSys → ℕ
   | Naturals => 1
   | Rationals => 2
   | Reals => 3
-  | Complex => 4
+  | ComplexField => 4
 
 def le (A B : NumSys) : Prop :=
   rank A ≤ rank B
@@ -33,14 +33,14 @@ inductive Hom : NumSys → NumSys → Type
   | step_P_N : Hom Primes Naturals
   | step_N_Q : Hom Naturals Rationals
   | step_Q_R : Hom Rationals Reals
-  | step_R_C : Hom Reals Complex
+  | step_R_C : Hom Reals ComplexField
   -- composites
   | comp_P_Q : Hom Primes Rationals
   | comp_P_R : Hom Primes Reals
-  | comp_P_C : Hom Primes Complex
+  | comp_P_C : Hom Primes ComplexField
   | comp_N_R : Hom Naturals Reals
-  | comp_N_C : Hom Naturals Complex
-  | comp_Q_C : Hom Rationals Complex
+  | comp_N_C : Hom Naturals ComplexField
+  | comp_Q_C : Hom Rationals ComplexField
 
 def comp : {A B C : NumSys} → Hom A B → Hom B C → Hom A C
   | _, _, _, Hom.id _, g => g
@@ -65,10 +65,10 @@ instance : Category NumSys where
   assoc f g h := by cases f <;> cases g <;> cases h <;> rfl
 
 def SpectralConstraint (S : NumSys) : Prop :=
-  S = Primes ∨ S = Complex
+  S = Primes ∨ S = ComplexField
 
-theorem riemann_zeroes_structurally_bound {base : Hom Primes Complex} :
-    SpectralConstraint Primes → SpectralConstraint Complex := by
+theorem riemann_zeroes_structurally_bound {base : Hom Primes ComplexField} :
+    SpectralConstraint Primes → SpectralConstraint ComplexField := by
   intro _h
   exact Or.inr rfl
 

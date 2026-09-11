@@ -283,31 +283,23 @@ theorem true_cone_iff_jordan_stress_pos {P J v : ℝ} (hv : 2 < v) :
 3. Lemma 3.5 admissible stress cone equivalence.
 4. Jordan determinant identification $\det(M_{\text{stress}}) = \mathcal{Q}(P, J, v)$.
 5. Equation (11) asymptotic cone sufficiency. -/
-structure CertifiedNavierStokesConePiolaBridge where
-  /-- Piola curl adjugate transformation law holds for all matrices. -/
-  piola_curl_congruence : ∀ (F A : Mat3 ℝ),
-    matrixAntisym (F.transpose * A * F) = F.adjugate.mulVec (matrixAntisym A)
-  /-- Volume-preserving coordinate deformation yields exact inverse. -/
-  det_one_inverse : ∀ (F : Mat3 ℝ), F.det = 1 → F.adjugate * F = 1
-  /-- Cone bound characterization is equivalent to the quadratic stress condition. -/
-  cone_characterization : ∀ {P J v : ℝ}, 2 < v →
-    ((2 < P ∧ v < coneBound P J) ↔ (v < P ∧ (v - 2) * J ^ 2 < 2 * (P - v) ^ 2))
-  /-- Admissible stress cone condition is equivalent to positivity of the Jordan Peirce determinant. -/
-  jordan_det_pos_iff : ∀ {P J v : ℝ}, 2 < v →
-    ((2 < P ∧ v < coneBound P J) ↔ (v < P ∧ 0 < (jordanStressMatrix P J v).det))
-  /-- Equation (11) sufficient asymptotic amplitude criterion. -/
-  equation_eleven_sufficient : ∀ {a b w : ℝ}, 0 < a → 0 < a - b * w →
+theorem navier_stokes_cone_piola_relations :
+  (∀ (F A : Mat3 ℝ),
+    matrixAntisym (F.transpose * A * F) = F.adjugate.mulVec (matrixAntisym A)) ∧
+  (∀ (F : Mat3 ℝ), F.det = 1 → F.adjugate * F = 1) ∧
+  (∀ {P J v : ℝ}, 2 < v →
+    ((2 < P ∧ v < coneBound P J) ↔
+      (v < P ∧ (v - 2) * J ^ 2 < 2 * (P - v) ^ 2))) ∧
+  (∀ {P J v : ℝ}, 2 < v →
+    ((2 < P ∧ v < coneBound P J) ↔
+      (v < P ∧ 0 < (jordanStressMatrix P J v).det))) ∧
+  (∀ {a b w : ℝ}, 0 < a → 0 < a - b * w →
     2 * b * w + b ^ 2 / a + (a - 2) * w ^ 2 < 2 →
     ∃ p₀ : ℝ, ∀ p : ℝ, p₀ < p →
       2 < p * (1 - b * w / a) ∧ a * (1 + (b / a) ^ 2) <
-        coneBound (p * (1 - b * w / a)) (p * (w + b / a))
-
-/-- Certified instance of the Navier-Stokes Cone and Piola Bridge. -/
-def certified_navier_stokes_cone_piola_bridge : CertifiedNavierStokesConePiolaBridge where
-  piola_curl_congruence := matrixAntisym_congruence
-  det_one_inverse := adjugate_mul_eq_one_of_det_one
-  cone_characterization := fun hv => true_cone_iff hv
-  jordan_det_pos_iff := fun hv => true_cone_iff_jordan_stress_pos hv
-  equation_eleven_sufficient := equation_eleven_sufficient
+        coneBound (p * (1 - b * w / a)) (p * (w + b / a))) := by
+  exact ⟨matrixAntisym_congruence, adjugate_mul_eq_one_of_det_one,
+    fun hv => true_cone_iff hv, fun hv => true_cone_iff_jordan_stress_pos hv,
+    equation_eleven_sufficient⟩
 
 end InfoGeometry.Canonical.NavierStokesConePiola

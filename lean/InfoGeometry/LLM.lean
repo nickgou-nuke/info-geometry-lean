@@ -33,6 +33,8 @@ import InfoGeometry.LLM.ChiralQuantumTransformerCapstone
 import InfoGeometry.LLM.ChiralQuantumTransformerAudit
 import InfoGeometry.LLM.QuantumTransformerFoundations
 import InfoGeometry.LLM.QuantumTransformerFoundationsAudit
+import InfoGeometry.LLM.QuantumTransformerColimitBridge
+import InfoGeometry.LLM.QuantumTransformerColimitAudit
 import InfoGeometry.LLM.FiniteVectorSpinKernel
 import InfoGeometry.LLM.SpinTransformerMeanField
 import InfoGeometry.LLM.SpinTransformerPathEntropy

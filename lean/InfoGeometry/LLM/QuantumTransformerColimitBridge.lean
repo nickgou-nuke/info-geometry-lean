@@ -83,6 +83,15 @@ theorem attentionStageEmbedding_nonneg (n : ℕ) (P : AttentionStage n) (h_nonne
   · exact h_nonneg _ _
   · exact le_refl 0
 
+theorem attentionStageEmbedding_injective (n : ℕ) :
+    Function.Injective (attentionStageEmbedding n) := by
+  intro P Q h
+  ext i j
+  have hentry := congrFun (congrFun h
+    (⟨2 * i.val, by omega⟩ : Fin (2^(n + 1))))
+    (⟨2 * j.val, by omega⟩ : Fin (2^(n + 1)))
+  simpa [attentionStageEmbedding] using hentry
+
 /-- Linear map version of normalized trace. -/
 def attentionStageTraceLinear (n : ℕ) : AttentionStage n →ₗ[ℝ] ℝ where
   toFun := attentionStageTrace n

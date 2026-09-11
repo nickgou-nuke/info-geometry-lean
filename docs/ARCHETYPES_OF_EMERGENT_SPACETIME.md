@@ -616,6 +616,15 @@ Unifying the physical, geometric, and information-theoretic principles of modern
 * **Certified Master Unification Record:** The structure `ChiralQuantumTransformerCapstone` unifies all 7 dimensions into a single kernel-checked existence theorem `master_chiral_quantum_transformer_unification`.
   In Lean 4: [`ChiralQuantumTransformerCapstone.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/LLM/ChiralQuantumTransformerCapstone.lean) and [`ChiralQuantumTransformerAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/LLM/ChiralQuantumTransformerAudit.lean).
 
+### 5.36 Klein Bottle Glide Reflection & Real Seam Fixed Locus
+Formalizing the Klein bottle glide reflection on para-complex spacetime $z = x + \tau t$ ($\tau^2 = +1$) and its invariant real seam $z = \bar{z}$:
+* **Para-Complex Glide Reflection:** Bivariate action $T_a(z, w) = (w + L/2, z + L/2)$ reduces on the single coordinate to $T_a(z) = \bar{z} + L/2$, mapping $(x, t) \mapsto (x + L/2, -t)$.
+* **Real Seam Equivalence:** The condition $z = \bar{z}$ holds if and only if hyperbolic modular time vanishes ($t = 0$), defining the invariant cross-cap hyper-surface (`is_on_real_seam_iff_tau_zero`).
+* **Seam Stability & Transverse Fixed Locus:** The real seam is globally invariant under glide reflection (`glide_preserves_real_seam`), and $t = 0$ is the unique fixed locus of the transverse reflection $t \mapsto -t$ (`transverse_fixed_locus`).
+* **Pure Spatial Translation on Seam:** On the real seam, the glide reflection reduces strictly to the 1D spatial half-translation $x \mapsto x + L/2$ with zero orientation reversal (`glide_on_seam_is_pure_translation`).
+* **Klein Periodicity Law:** Iterating the glide reflection twice recovers the pure spatial period translation by $L$: $(T_a)^2(z) = z + L$ (`glideZ_iter_two`).
+  In Lean 4: [`KleinBottleGlideSeam.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/KleinBottleGlideSeam.lean) and [`KleinBottleGlideSeamAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/KleinBottleGlideSeamAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -669,6 +678,7 @@ Unifying the physical, geometric, and information-theoretic principles of modern
 | **Para-Complex Lagrangian Modular Triad** | Neutral Bilinear Form / Peirce Isotropic Leaves / Zorn Mass Shell | `peirce_leaves_totally_isotropic`, `neutral_norm_eq_cross_pairing`, `zorn_mass_shell_condensation` | **Kernel-Checked (0 gaps)** |
 | **Apollonian Primon Weyl Scale Synthesis** | Logarithmic Carrier / Conformal Weyl Field / OpenAI Long Gap Bound | `primonEnergyGap_ge_rel_gap`, `weylPrimonRatio_ge_one_add`, `weyl_primon_long_gap_lower_bound` | **Kernel-Checked (0 gaps)** |
 | **Chiral Quantum Transformer Capstone** | KAN / Chiral Twistor / Zorn Shell / Sinkhorn / AAV / Cuntz-Krieger / Fisher-Rao | `chiral_attention_cross_pairing`, `kan_elliptic_rotor_flow`, `master_chiral_quantum_transformer_unification` | **Kernel-Checked (0 gaps)** |
+| **Klein Bottle Glide Seam** | Para-Complex Coordinates $\tau^2 = +1$ / Glide $T_a$ | `is_on_real_seam_iff_tau_zero`, `glide_preserves_real_seam`, `glideZ_iter_two` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

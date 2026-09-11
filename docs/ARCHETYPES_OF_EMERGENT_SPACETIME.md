@@ -1251,6 +1251,16 @@ Formalizing Sobolev $H^1$ coercivity, nonlinear Lamb vector annihilation, and vi
 * **Master Synthesis:** Certified master conjunction in Mathlib 4 (`beltrami_sobolev_stability_synthesis`).
   In Lean 4: [`BeltramiSobolevStability.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/BeltramiSobolevStability.lean) and [`BeltramiSobolevStabilityAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/BeltramiSobolevStabilityAudit.lean).
 
+### 5.87 Amari Information Geometry, Surprisal & Iwasawa KAN Synthesis
+Formalizing the grand geometric bridge between surprisal, Aitchison compositional space, the Fisher-Rao sphere, and the Iwasawa $KAN$ decomposition on $\mathrm{SL}(D, \mathbb{R})$:
+* **Surprisal and Aitchison $A$-Sector:** Shannon entropy as expected surprisal $H(\mathbf{p}) = \sum p_i s_i$ (`shannon_entropy_eq_neg_sum_p_log`), clr as centered surprisal $-s_i + \bar{s}$ projecting onto traceless Cartan space $\mathfrak{a} \subset \mathfrak{sl}(D, \mathbb{R})$ (`sum_clr_zero`), and natural parameters as surprisal contrasts $\theta^i = s_{\mathrm{ref}} - s_i$ (`natural_param_eq_log_ratio`).
+* **Bhattacharyya-Wootters $K$-Sector:** Square-root amplitude map $\xi_i = \sqrt{p_i}$ embedding $\Delta^{D-1} \hookrightarrow S^{D-1}$ (`sum_amplitude_sq_eq_one`), spinorial Born rule reconstruction $\xi_i^2 = p_i$ (`amplitude_sq_eq_prob`), and Wootters self-overlap $\sum \sqrt{p_i p_i} = 1$ (`wootters_self_overlap_one`).
+* **Inönü-Wigner Curvature Contraction:** Amari sectional curvature $K(\alpha) = \frac{1-\alpha^2}{4}$ achieving constant positive round curvature $K(0) = 1/4$ on the sphere and vanishing identically $K(\pm 1) = 0$ in the flat exponential and mixture limits (`amari_curvature_round_sphere`, `amari_curvature_flat_limits`).
+* **Symplectic Cotangent Completion:** Complex amplitudes $z_k = \sqrt{p_k} e^{i\phi_k}$ on $T^* S^{D-1} \cong \mathcal{Q}^{D-1}$ with $\|z_k\| = \sqrt{p_k}$ and quadric norm $\sum \|z_k\|^2 = 1$ (`complex_amplitude_modulus`, `complex_quadric_sum`).
+* **Iwasawa Unimodular SL(D, ℝ) Product:** Unit determinant factorization $\det(K) \cdot \det(A) \cdot \det(N) = 1$ (`unimodular_product`).
+* **Master Synthesis:** Certified master conjunction in Mathlib 4 (`amari_surprisal_iwasawa_synthesis`).
+  In Lean 4: [`AmariSurprisalIwasawaSynthesis.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AmariSurprisalIwasawaSynthesis.lean) and [`AmariSurprisalIwasawaSynthesisAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AmariSurprisalIwasawaSynthesisAudit.lean).
+
 
 ---
 
@@ -1369,6 +1379,7 @@ Formalizing Sobolev $H^1$ coercivity, nonlinear Lamb vector annihilation, and vi
 | **Tao Fluid Quantum Logic & Beltrami Soliton Gates** | Orthogonal Qubit Basis $\{|0\rangle, |1\rangle\}$ / Beltrami Waveguide $\mathbf{L}=0$ / Unitary Phase Gate $R_\phi$ / Braiding CNOT Involution $\mathrm{CNOT}^2 = \mathbb{I}$ / Quantum Computation | `basis_orthogonality`, `lamb_annihilation`, `phase_gate_unitary`, `cnot_gate_unitary`, `cnot_involution`, `tao_fluid_computer_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Fluid Chern-Simons & Anyon Braiding** | Moffatt Linking / Călugăreanu-White-Fuchs / CS 3-Form / Witten Framing / Anyon Monodromy | `moffatt_linking_symmetry`, `calugareanu_white_fuchs_helicity`, `chern_simons_gauge_invariance_closed`, `wilson_loop_modulus_invariance`, `anyon_braid_unitarity`, `anyon_double_exchange_sq`, `fluid_chern_simons_knot_anyon_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Beltrami Sobolev Stability & Euler Limit** | Solenoidal Beltrami / Sobolev $H^1$ Coercivity / Lamb Annihilation / Viscous Dissipation / Euler Limit | `enstrophy_eq_lambda_sq_mul_energy`, `sobolev_h1_coercivity`, `lamb_vector_annihilation`, `energy_le_initial_at_time`, `euler_inviscid_conservation`, `decay_rate_linear`, `beltrami_sobolev_stability_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Amari Surprisal & Iwasawa KAN** | Surprisal $s=-\ln p$ / Cartan $\mathfrak{a}$ / Wootters Sphere $S^{D-1}$ / Born Rule / Inönü-Wigner Contraction / $T^* S^{D-1}$ / $\mathrm{SL}(D, \mathbb{R})$ Unimodular | `shannon_entropy_eq_neg_sum_p_log`, `sum_clr_zero`, `sum_amplitude_sq_eq_one`, `amplitude_sq_eq_prob`, `wootters_self_overlap_one`, `amari_curvature_round_sphere`, `amari_curvature_flat_limits`, `complex_quadric_sum`, `unimodular_product`, `amari_surprisal_iwasawa_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 
@@ -1447,3 +1458,6 @@ The owner `InfoGeometry/Physics/FluidChernSimonsKnotAnyon.lean` formalizes Moffa
 
 ### 5.86 Beltrami Sobolev Stability & Inviscid Euler Limit
 The owner `InfoGeometry/Physics/BeltramiSobolevStability.lean` formalizes Poincaré-Sobolev enstrophy-energy equivalence for Beltrami eigenfields, Sobolev $H^1$ coercivity, convective Lamb vector annihilation, uniform monotonic viscous energy dissipation bounds, exact energy conservation in the inviscid Euler limit, and linear scaling of the dissipation rate.
+
+### 5.87 Amari Information Geometry, Surprisal & Iwasawa KAN Synthesis
+The owner `InfoGeometry/Physics/AmariSurprisalIwasawaSynthesis.lean` formalizes the Lie-algebraic synthesis of surprisal as the Cartan coordinate on the simplex, the Bhattacharyya-Wootters square-root embedding into the unit sphere $S^{D-1}$, the Inönü-Wigner curvature contraction $K(\alpha) = (1-\alpha^2)/4$ interpolating between the round sphere and flat affine geometries, the Kähler cotangent completion $T^* S^{D-1}$, and the unimodular Iwasawa $KAN$ group decomposition on $\mathrm{SL}(D, \mathbb{R})$.

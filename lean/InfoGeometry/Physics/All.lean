@@ -122,6 +122,8 @@ import InfoGeometry.Physics.SelbergTraceAharonovBohm
 import InfoGeometry.Physics.SelbergTraceAharonovBohmAudit
 import InfoGeometry.Physics.RiemannKleinBottleThroatBridge
 import InfoGeometry.Physics.RiemannKleinBottleThroatBridgeAudit
+import InfoGeometry.Physics.MoorePenroseHodgeDrazinGhostBridge
+import InfoGeometry.Physics.MoorePenroseHodgeDrazinGhostBridgeAudit
 
 /-!
 # Physics Umbrella

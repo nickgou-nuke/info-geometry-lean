@@ -813,6 +813,15 @@ Formalizing the critical strip $\mathcal{S} = \{0 \le \operatorname{Re}(s) \le 1
 * **Master Throat Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_riemann_klein_bottle_throat_synthesis`).
   In Lean 4: [`RiemannKleinBottleThroatBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/RiemannKleinBottleThroatBridge.lean) and [`RiemannKleinBottleThroatBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/RiemannKleinBottleThroatBridgeAudit.lean).
 
+### 5.51 Moore-Penrose Hodge Diffusion & Drazin-BRST Ghost Filtration
+Formalizing the fundamental duality between real Hodge-Green diffusion in the regular sector and Drazin-BRST nilpotent ghost filtration in the gauge sector:
+* **Moore-Penrose Regular Resolution:** For a self-adjoint positive semidefinite Hodge-Laplacian $\Delta \ge 0$, the commuting Moore-Penrose pseudo-inverse $G = \Delta^+$ satisfies $\Delta G \Delta = \Delta$, $G \Delta G = G$, and $\Delta G = G \Delta$. The harmonic projector $P_{\mathcal{H}} = \mathbb{I} - \Delta G$ and regular projector $P_{\mathrm{reg}} = \Delta G$ are idempotent, sum to identity, and satisfy $\Delta (P_{\mathcal{H}} x) = 0$ alongside exact inversion $\Delta (G (P_{\mathrm{reg}} y)) = P_{\mathrm{reg}} y$ (`MoorePenroseHodge`, `harmonicProjector`, `regularProjector`, `regular_add_harmonic_id`, `regular_projector_idempotent`, `harmonic_projector_idempotent`, `harmonic_projector_in_kernel`, `regular_sector_exact_inversion`).
+* **Real Hodge Diffusion Energy Dissipation:** The heat flow strictly dissipates energy: $\langle -\Delta x, x \rangle \le 0$ for all states $x \in V$, terminating unconditionally on harmonic forms (`hodge_diffusion_dissipation`).
+* **Drazin Inversion of Regular Hodge:** Any commuting Moore-Penrose pseudo-inverse $G$ is unconditionally a Drazin inverse of index 1 (group inverse): $(\Delta^2) G = \Delta$, $(G \Delta) G = G$, and $\Delta G = G \Delta$ (`DrazinIndexOne`, `moore_penrose_is_drazin_index_one`).
+* **Gauge Ghost Filtration & Krein Confinement:** The Drazin propagator annihilates all null modes $T v = 0 \implies T_D v = 0$. In the Krein space $(V, J)$, exact BRST states $v = Q w$ (Faddeev-Popov ghosts) have identically zero Krein charge $[v, v]_J = 0$ and decouple orthogonally from all physical states $\psi \in \ker(Q)$: $[v, \psi]_J = 0$, transforming unphysical gauge zeros into trivial ghosts (`drazin_annihilates_null`, `brst_squared_annihilation`, `brst_exact_is_closed`, `brst_ghost_charge_collapse`, `brst_physical_ghost_decoupling`).
+* **Master Regular-Gauge Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_mp_hodge_drazin_ghost_synthesis`).
+  In Lean 4: [`MoorePenroseHodgeDrazinGhostBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/MoorePenroseHodgeDrazinGhostBridge.lean) and [`MoorePenroseHodgeDrazinGhostBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/MoorePenroseHodgeDrazinGhostBridgeAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -883,6 +892,7 @@ Formalizing the critical strip $\mathcal{S} = \{0 \le \operatorname{Re}(s) \le 1
 | **Krein BRST Ghost Confinement** | Krein Space $(V, J)$ / Nilpotent $Q^2 = 0$ / Physical Decoupling | `certified_krein_brst_ghost_confinement_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Selberg Trace & Aharonov-Bohm** | Prime Geodesic $(\ell, \phi)$ / Hyperbolic Weight $w(\ell)$ / Unitarity | `certified_selberg_aharonov_bohm_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Riemann Klein Bottle Throat** | Functional Involution $\mathcal{I}(s) = 1-s$ / Iwasawa Root $\rho = 1/2$ / Bi-Wave Horizon | `certified_riemann_klein_bottle_throat_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Moore-Penrose Hodge & Drazin Ghost** | MP Pseudo-Inverse $G = \Delta^+$ / Real Diffusion / Drazin Ghost Filter | `certified_mp_hodge_drazin_ghost_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

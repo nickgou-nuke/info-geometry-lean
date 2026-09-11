@@ -1,0 +1,17 @@
+import InfoGeometry.Physics.MoorePenroseHodgeDrazinGhostBridge
+
+open InfoGeometry.Physics.MoorePenroseHodgeDrazinGhostBridge
+
+#print axioms regular_add_harmonic_id
+#print axioms regular_projector_idempotent
+#print axioms harmonic_projector_idempotent
+#print axioms harmonic_projector_in_kernel
+#print axioms regular_sector_exact_inversion
+#print axioms hodge_diffusion_dissipation
+#print axioms brst_squared_annihilation
+#print axioms brst_exact_is_closed
+#print axioms brst_ghost_charge_collapse
+#print axioms brst_physical_ghost_decoupling
+#print axioms moore_penrose_is_drazin_index_one
+#print axioms drazin_annihilates_null
+#print axioms certified_mp_hodge_drazin_ghost_synthesis

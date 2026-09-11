@@ -18,4 +18,4 @@ open InfoGeometry.Topology.ChiralCuntzApollonian
 #print axioms wordMeasure_sum_children
 #print axioms conformal_measure_preservation_cons
 #print axioms conformal_measure_preservation_nil
-#print axioms certified_chiral_cuntz_apollonian_bridge
+#print axioms chiral_cuntz_apollonian_relations

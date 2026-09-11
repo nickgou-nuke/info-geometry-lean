@@ -194,6 +194,11 @@ theorem zorn_massive_determinant_ne_zero (p : ℝ) (m : ℝ) (hm : 0 < m) :
   have hpos : 0 < p ^ 2 + m ^ 2 := zorn_avoided_crossing_spectral_gap p m hm
   linarith
 
+theorem zorn_mass_shell_determinant (p : ℝ) (Δ E_energy : ℝ)
+    (h_mass_shell : p ^ 2 + Δ ^ 2 = E_energy ^ 2) :
+    (zornMatrix p Δ).det = -E_energy ^ 2 := by
+  rw [zorn_determinant, h_mass_shell]
+
 /-! ### 5. Penrose Twistor Spacetime Reality Adjacency -/
 
 /-- Theorem: Two spacetime points $X, Y$ sharing a common nonzero twistor are null-separated:

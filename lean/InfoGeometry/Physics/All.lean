@@ -130,6 +130,8 @@ import InfoGeometry.Physics.AitchisonJaynesRapidityBridge
 import InfoGeometry.Physics.AitchisonJaynesRapidityBridgeAudit
 import InfoGeometry.Physics.ApolloniusCayleyScatteringBridge
 import InfoGeometry.Physics.ApolloniusCayleyScatteringBridgeAudit
+import InfoGeometry.Physics.BiWaveRamanujanBridge
+import InfoGeometry.Physics.BiWaveRamanujanBridgeAudit
 
 /-!
 # Physics Umbrella

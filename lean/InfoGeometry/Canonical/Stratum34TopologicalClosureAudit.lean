@@ -10,5 +10,5 @@ set_option linter.unusedVariables false
 #print axioms stratum34_vector_anomaly_closure
 #print axioms lieEmbedding_preserves_traceless
 #print axioms matrix_stage_commutator_traceless
-#print axioms central_extension_obstruction_vanishes
+#print axioms InfoGeometry.Canonical.Stratum34.traceless_scalar_matrix_eq_zero
 #print axioms stratum34_fluid_colimit_incompressibility_comm

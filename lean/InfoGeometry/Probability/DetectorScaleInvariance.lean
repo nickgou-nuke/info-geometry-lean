@@ -1,4 +1,6 @@
 import Mathlib.Data.Real.Basic
+import Mathlib.Data.Real.Sqrt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!
@@ -387,5 +389,341 @@ theorem separable_transport_residuals_zero
   rw [hlog1, hlog2]
   constructor <;> ring
 
+/-! ### Part A: Latent Scale Quadratic Response & Dilation Gauge Invariance -/
+
+/-- Latent zero-intercept quadratic singles rate: R(C, K, z) = C * z - K * z^2. -/
+def latentParabola (C K z : ℝ) : ℝ := C * z - K * z ^ 2
+
+/-- Restored unsummed linear singles rate: L(C, z) = C * z. -/
+def latentLinear (C z : ℝ) : ℝ := C * z
+
+/-- Coincidence summing loss defect: D(K, z) = K * z^2. -/
+def latentLoss (K z : ℝ) : ℝ := K * z ^ 2
+
+/-- **Theorem (Cleaving Archetype)**:
+    The observed singles rate decomposes into a linear gain and quadratic loss:
+    R(C, K, z) = L(C, z) - D(K, z). -/
+theorem latent_cleaving (C K z : ℝ) :
+    latentParabola C K z = latentLinear C z - latentLoss K z := by
+  dsimp [latentParabola, latentLinear, latentLoss]
+
+/-- **Theorem (Restoration Archetype)**:
+    Adding back the quadratic coincidence loss restores the linear channel:
+    R(C, K, z) + D(K, z) = L(C, z). -/
+theorem latent_restoration (C K z : ℝ) :
+    latentParabola C K z + latentLoss K z = latentLinear C z := by
+  dsimp [latentParabola, latentLinear, latentLoss]
+  ring
+
+/-- Dilation gauge transformation on the latent geometry scale: z ↦ lam * z. -/
+def gaugeScale (lam z : ℝ) : ℝ := lam * z
+
+/-- Gauge transformation on the linear transmission coefficient: C ↦ C / lam. -/
+def gaugeLinearCoeff (lam C : ℝ) : ℝ := C / lam
+
+/-- Gauge transformation on the quadratic loss coefficient: K ↦ K / lam^2. -/
+def gaugeLossCoeff (lam K : ℝ) : ℝ := K / lam ^ 2
+
+/-- **Theorem (Dilation Gauge Invariance of Physical Response)**:
+    The physical singles count rate is strictly invariant under simultaneous
+    dilation of the latent geometry scale and rescaling of line coefficients:
+    R(C/lam, K/lam², lam*z) = R(C, K, z). -/
+theorem latentParabola_gauge_invariant (C K z lam : ℝ) (hlam : lam ≠ 0) :
+    latentParabola (gaugeLinearCoeff lam C) (gaugeLossCoeff lam K) (gaugeScale lam z) =
+      latentParabola C K z := by
+  dsimp [latentParabola, gaugeLinearCoeff, gaugeLossCoeff, gaugeScale]
+  have _hlam2 : lam ^ 2 ≠ 0 := pow_ne_zero 2 hlam
+  field_simp
+
+/-- **Theorem (Gauge Invariance of Restored Linear Rate)**:
+    The restored linear rate L(C, z) = C * z is strictly gauge invariant:
+    L(C/lam, lam*z) = L(C, z). -/
+theorem latentLinear_gauge_invariant (C z lam : ℝ) (hlam : lam ≠ 0) :
+    latentLinear (gaugeLinearCoeff lam C) (gaugeScale lam z) = latentLinear C z := by
+  dsimp [latentLinear, gaugeLinearCoeff, gaugeScale]
+  calc
+    (C / lam) * (lam * z) = ((C / lam) * lam) * z := by ring
+    _ = C * z := by rw [div_mul_cancel₀ C hlam]
+
+/-- **Theorem (Gauge Invariance of Coincidence Loss)**:
+    The coincidence loss D(K, z) = K * z^2 is strictly gauge invariant:
+    D(K/lam², lam*z) = D(K, z). -/
+theorem latentLoss_gauge_invariant (K z lam : ℝ) (hlam : lam ≠ 0) :
+    latentLoss (gaugeLossCoeff lam K) (gaugeScale lam z) = latentLoss K z := by
+  dsimp [latentLoss, gaugeLossCoeff, gaugeScale]
+  have hlam2 : lam ^ 2 ≠ 0 := pow_ne_zero 2 hlam
+  calc
+    (K / lam ^ 2) * (lam * z) ^ 2 = (K / lam ^ 2) * (lam ^ 2 * z ^ 2) := by ring
+    _ = ((K / lam ^ 2) * lam ^ 2) * z ^ 2 := by ring
+    _ = K * z ^ 2 := by rw [div_mul_cancel₀ K hlam2]
+
+/-- **Theorem (Gauge Fixing Uniqueness)**:
+    Fixing the reference distance scale to unity (z_ref = 1) eliminates the
+    dilation gauge freedom: there is a unique gauge parameter lam > 0 that
+    normalizes an arbitrary positive reference scale z₀ to 1. -/
+theorem gauge_fixing_unique (z0 : ℝ) (hz0 : 0 < z0) :
+    ∃! lam : ℝ, 0 < lam ∧ gaugeScale lam z0 = 1 := by
+  use 1 / z0
+  dsimp [gaugeScale]
+  have hz0_ne : z0 ≠ 0 := ne_of_gt hz0
+  have hpos : 0 < 1 / z0 := one_div_pos.mpr hz0
+  have heq : (1 / z0) * z0 = 1 := one_div_mul_cancel hz0_ne
+  refine ⟨⟨hpos, heq⟩, ?_⟩
+  intro y ⟨_hy_pos, hy_eq⟩
+  calc
+    y = y * (z0 * (1 / z0)) := by rw [mul_one_div_cancel hz0_ne, mul_one]
+    _ = (y * z0) * (1 / z0) := by ring
+    _ = 1 * (1 / z0) := by rw [hy_eq]
+    _ = 1 / z0 := by ring
+
+/-- **Theorem (Gauge Invariance of Relative Scales)**:
+    The relative scale ratio between any two acquisitions j and k is
+    strictly gauge invariant: (lam * z_j) / (lam * z_k) = z_j / z_k. -/
+theorem relative_scale_gauge_invariant (z_j z_k lam : ℝ) (hlam : lam ≠ 0) :
+    gaugeScale lam z_j / gaugeScale lam z_k = z_j / z_k := by
+  dsimp [gaugeScale]
+  exact mul_div_mul_left z_j z_k hlam
+
+/-- **Theorem (Collapse Archetype: Multi-Line Scale Concordance)**:
+    Across any spectral line i with C_i ≠ 0, the ratio of restored singles rates
+    at two geometries j and k identically collapses to the common latent scale ratio:
+    L_i(z_j) / L_i(z_k) = z_j / z_k. -/
+theorem multi_line_scale_collapse (C_i z_j z_k : ℝ) (hCi : C_i ≠ 0) :
+    latentLinear C_i z_j / latentLinear C_i z_k = z_j / z_k := by
+  dsimp [latentLinear]
+  exact mul_div_mul_left z_j z_k hCi
+
+/-! ### Part B: Horizon Turnover Scale and Vertex Invariants -/
+
+/-- Horizon turnover scale where the response derivative vanishes:
+    z_turn = C / (2 * K). -/
+def turnoverScale (C K : ℝ) : ℝ := C / (2 * K)
+
+/-- Maximum observable singles rate at the turnover horizon:
+    R^* = C^2 / (4 * K). -/
+def peakVertexRate (C K : ℝ) : ℝ := C ^ 2 / (4 * K)
+
+/-- **Theorem (Horizon Turnover Peak Value)**:
+    At the turnover scale z_turn = C / (2 * K), the linear gain and quadratic loss
+    balance, placing the response at its apex:
+    R(z_turn) = C^2 / (4 * K). -/
+theorem turnover_vertex_value (C K : ℝ) (hK : K ≠ 0) :
+    latentParabola C K (turnoverScale C K) = peakVertexRate C K := by
+  dsimp [latentParabola, turnoverScale, peakVertexRate]
+  field_simp
+  ring
+
+/-- **Theorem (Gauge Equivariance of Turnover Scale)**:
+    The turnover scale transforms equivariantly with the geometry scale:
+    z'_turn = lam * z_turn. -/
+theorem turnoverScale_gauge_equivariant (C K lam : ℝ) (hlam : lam ≠ 0) (hK : K ≠ 0) :
+    turnoverScale (gaugeLinearCoeff lam C) (gaugeLossCoeff lam K) =
+      gaugeScale lam (turnoverScale C K) := by
+  dsimp [turnoverScale, gaugeLinearCoeff, gaugeLossCoeff, gaugeScale]
+  have _hlam2 : lam ^ 2 ≠ 0 := pow_ne_zero 2 hlam
+  field_simp
+
+/-- **Theorem (Gauge Invariance of Peak Vertex Rate)**:
+    The maximum observable rate R^* = C^2 / (4 * K) is strictly gauge invariant. -/
+theorem peakVertexRate_gauge_invariant (C K lam : ℝ) (hlam : lam ≠ 0) (hK : K ≠ 0) :
+    peakVertexRate (gaugeLinearCoeff lam C) (gaugeLossCoeff lam K) = peakVertexRate C K := by
+  dsimp [peakVertexRate, gaugeLinearCoeff, gaugeLossCoeff]
+  have _hlam2 : lam ^ 2 ≠ 0 := pow_ne_zero 2 hlam
+  field_simp
+
+/-! ### Part C: Far-Field Bayes Independence Limit vs Near-Field Coincidence Defect -/
+
+/-- Fractional coincidence summing loss: δ(z) = D(K, z) / L(C, z) = (K / C) * z. -/
+def fractionalLoss (C K z : ℝ) : ℝ := (K / C) * z
+
+/-- Observed-to-restored singles transmission factor: η(z) = 1 - (K / C) * z. -/
+def transmissionFactor (C K z : ℝ) : ℝ := 1 - (K / C) * z
+
+/-- **Theorem (Singles Transmission Representation)**:
+    The observed rate equals the restored rate attenuated by the transmission factor:
+    R(C, K, z) = L(C, z) * (1 - (K / C) * z). -/
+theorem observed_eq_restored_mul_transmission (C K z : ℝ) (hC : C ≠ 0) :
+    latentParabola C K z = latentLinear C z * transmissionFactor C K z := by
+  dsimp [latentParabola, latentLinear, transmissionFactor]
+  field_simp
+
+/-- **Theorem (Far-Field Bayes Independence Limit)**:
+    In the far field (infinite distance, z → 0), the transmission factor
+    approaches unity, and the joint product of observed singles rates
+    asymptotically equals the product of unsummed singles rates:
+    lim_{z → 0} [ (R1 * R2) / (L1 * L2) ] = 1.
+    Evaluated at the far-field boundary z = 0, the coincidence defect vanishes identically. -/
+theorem far_field_bayes_independence_boundary (C1 K1 C2 K2 : ℝ) :
+    transmissionFactor C1 K1 0 * transmissionFactor C2 K2 0 = 1 := by
+  dsimp [transmissionFactor]
+  ring
+
+/-- **Theorem (Coincidence Distortion Product Factorization)**:
+    For any geometry z > 0, the ratio of the observed singles product to the
+    unsummed product factors into the two line transmission factors:
+    (R1 * R2) / (L1 * L2) = (1 - (K1/C1)*z) * (1 - (K2/C2)*z). -/
+theorem singles_product_distortion_factorization
+    (C1 K1 C2 K2 z : ℝ) (hC1 : C1 ≠ 0) (hC2 : C2 ≠ 0) (hz : z ≠ 0) :
+    (latentParabola C1 K1 z * latentParabola C2 K2 z) /
+      (latentLinear C1 z * latentLinear C2 z) =
+      transmissionFactor C1 K1 z * transmissionFactor C2 K2 z := by
+  dsimp [latentParabola, latentLinear, transmissionFactor]
+  have _hz2 : z ^ 2 ≠ 0 := pow_ne_zero 2 hz
+  field_simp
+
+/-- **Theorem (Near-Field Coincidence Defect)**:
+    The deviation from statistical independence 1 - (R1*R2)/(L1*L2)
+    is linear in z to leading order: z * (K1/C1 + K2/C2) - z^2 * (K1*K2)/(C1*C2). -/
+theorem near_field_coincidence_defect
+    (C1 K1 C2 K2 z : ℝ) :
+    1 - transmissionFactor C1 K1 z * transmissionFactor C2 K2 z =
+      z * (K1 / C1 + K2 / C2) - z ^ 2 * (K1 * K2 / (C1 * C2)) := by
+  dsimp [transmissionFactor]
+  ring
+
+/-! ### Part D: Ruler, Root, Invariant, Closure, and Calibration -/
+
+/-- True coincidence sum-peak rate: Q(K12, z) = K12 * z^2. -/
+def sumPeakQuadraticRate (K12 z : ℝ) : ℝ := K12 * z ^ 2
+
+/-- **Theorem (Ruler and Root Archetypes)**:
+    The sum peak count rate Q scales quadratically with geometry z^2,
+    so that its square root (normalized by √K12) acts as the physical ruler:
+    √(Q / K12) = z for all z ≥ 0. -/
+theorem sumPeak_root_recovers_scale (K12 z : ℝ) (hK12 : 0 < K12) (hz : 0 ≤ z) :
+    Real.sqrt (sumPeakQuadraticRate K12 z / K12) = z := by
+  dsimp [sumPeakQuadraticRate]
+  have hK_ne : K12 ≠ 0 := ne_of_gt hK12
+  rw [mul_div_cancel_left₀ (z ^ 2) hK_ne]
+  exact Real.sqrt_sq hz
+
+/-- **Theorem (Universal Coincidence Invariant Archetype)**:
+    The product of restored singles rates divided by the sum-peak rate
+    is strictly independent of geometry z:
+    (L1(z) * L2(z)) / Q(z) = (C1 * C2) / K12 for all z ≠ 0. -/
+theorem universal_coincidence_invariant (C1 C2 K12 z : ℝ) (hz : z ≠ 0) (hK12 : K12 ≠ 0) :
+    (latentLinear C1 z * latentLinear C2 z) / sumPeakQuadraticRate K12 z =
+      (C1 * C2) / K12 := by
+  dsimp [latentLinear, sumPeakQuadraticRate]
+  have _hz2 : z ^ 2 ≠ 0 := pow_ne_zero 2 hz
+  field_simp
+
+/-- **Theorem (Closure Archetype: Efficiency Cancellation)**:
+    Under microscopic nuclear calibration where singles rates follow
+    C1 = A * P1 * ε1, C2 = A * P2 * ε2 and sum peak follows
+    K12 = A * P12 * W0 * ε1 * ε2,
+    the invariant closure ratio (C1 * C2) / K12 identically eliminates
+    the detector efficiencies ε1, ε2:
+    (C1 * C2) / K12 = A * (P1 * P2) / (P12 * W0). -/
+theorem closure_efficiency_cancellation
+    (A P1 P2 P12 W0 ε1 ε2 : ℝ)
+    (hP12 : P12 ≠ 0) (hW0 : W0 ≠ 0) (hε1 : ε1 ≠ 0) (hε2 : ε2 ≠ 0) (hA : A ≠ 0) :
+    let C1 := A * P1 * ε1
+    let C2 := A * P2 * ε2
+    let K12 := A * P12 * W0 * ε1 * ε2
+    (C1 * C2) / K12 = A * (P1 * P2) / (P12 * W0) := by
+  intro C1 C2 K12
+  dsimp [C1, C2, K12]
+  field_simp
+
+/-- **Theorem (Calibration Archetype: Absolute Activity Extraction)**:
+    The true physical source activity A is extracted from the invariant closure ratio
+    by multiplying by nuclear branching and angular correlation factors:
+    A = ((C1 * C2) / K12) * (P12 * W0) / (P1 * P2). -/
+theorem calibration_activity_recovery
+    (A P1 P2 P12 W0 ε1 ε2 : ℝ)
+    (hP1 : P1 ≠ 0) (hP2 : P2 ≠ 0) (hP12 : P12 ≠ 0) (hW0 : W0 ≠ 0)
+    (hε1 : ε1 ≠ 0) (hε2 : ε2 ≠ 0) (hA : A ≠ 0) :
+    let C1 := A * P1 * ε1
+    let C2 := A * P2 * ε2
+    let K12 := A * P12 * W0 * ε1 * ε2
+    let H := (C1 * C2) / K12
+    H * (P12 * W0) / (P1 * P2) = A := by
+  intro C1 C2 K12 H
+  dsimp [H, C1, C2, K12]
+  field_simp
+
+/-! ### Part E: Virtual Scattering Cross-Section and Equivalent Crystal Diameter -/
+
+/-- Virtual coincidence loss area: S_v = (4 * π * K) / (C * a^2). -/
+def virtualLossCrossSection (C K a : ℝ) : ℝ :=
+  (4 * Real.pi * K) / (C * a ^ 2)
+
+/-- Equivalent HPGe crystal diameter: D_equiv = (4 / a) * √(K / C). -/
+def equivalentCrystalDiameter (C K a : ℝ) : ℝ :=
+  (4 / a) * Real.sqrt (K / C)
+
+/-- **Theorem (Cross-Section Duality: Equivalent Disk Area)**:
+    The geometric cross-sectional area of a disk with diameter D_equiv
+    identically equals the virtual coincidence loss area S_v:
+    π * (D_equiv / 2)^2 = S_v. -/
+theorem equivalent_diameter_area_eq_virtualLoss
+    (C K a : ℝ) (hC : 0 < C) (hK : 0 ≤ K) (ha : 0 < a) :
+    Real.pi * (equivalentCrystalDiameter C K a / 2) ^ 2 =
+      virtualLossCrossSection C K a := by
+  dsimp [equivalentCrystalDiameter, virtualLossCrossSection]
+  have _ha_ne : a ≠ 0 := ne_of_gt ha
+  have _hC_ne : C ≠ 0 := ne_of_gt hC
+  have hKC_nonneg : 0 ≤ K / C := div_nonneg hK (le_of_lt hC)
+  have h_half : (4 / a * Real.sqrt (K / C)) / 2 = (2 / a) * Real.sqrt (K / C) := by ring
+  rw [h_half]
+  have h_sq : ((2 / a) * Real.sqrt (K / C)) ^ 2 = (4 / a ^ 2) * (K / C) := by
+    calc
+      ((2 / a) * Real.sqrt (K / C)) ^ 2 = (2 / a) ^ 2 * (Real.sqrt (K / C)) ^ 2 := by ring
+      _ = (4 / a ^ 2) * (K / C) := by rw [div_pow, Real.sq_sqrt hKC_nonneg]; norm_num
+  rw [h_sq]
+  have _hpi : Real.pi ≠ 0 := Real.pi_ne_zero
+  field_simp
+
+/-! ### Part F: Master Archetypal Chain of Nuclear Metrology -/
+
+/-- **Master Theorem (The Ten-Step Archetypal Chain of Nuclear Metrology)**:
+    Synthesizes the complete chain of measurement and restoration:
+    1. Shadow: Coincidence summing loss depletes singles rates.
+    2. Ruler: The sum-peak rate Q scales quadratically with geometry z^2.
+    3. Root: √(Q / K12) recovers the physical latent geometry scale z.
+    4. Cleaving: R(z) decomposes into linear gain L(z) and quadratic loss D(z).
+    5. Restoration: R(z) + D(z) reconstructs the loss-free singles rate L(z).
+    6. Horizon: Turnover occurs at z_turn = C / (2K) with invariant peak rate R^*.
+    7. Collapse: Multi-line rate ratios L_i(z_j) / L_i(z_k) collapse to z_j / z_k.
+    8. Invariant: The closure quotient (L1 * L2) / Q is strictly independent of z.
+    9. Closure: Efficiency factors ε1, ε2 cancel identically in the closure quotient.
+    10. Calibration: Physical activity A is recovered without detector calibration. -/
+theorem archetypal_chain_of_nuclear_metrology
+    (A P1 P2 P12 W0 ε1 ε2 z : ℝ)
+    (hA : 0 < A) (hP1 : 0 < P1) (hP2 : 0 < P2) (hP12 : 0 < P12) (hW0 : 0 < W0)
+    (hε1 : 0 < ε1) (hε2 : 0 < ε2) (hz : 0 < z) :
+    let C1 := A * P1 * ε1
+    let C2 := A * P2 * ε2
+    let K12 := A * P12 * W0 * ε1 * ε2
+    let L1 := latentLinear C1 z
+    let L2 := latentLinear C2 z
+    let Q := sumPeakQuadraticRate K12 z
+    let H := (L1 * L2) / Q
+    Real.sqrt (Q / K12) = z ∧
+    H = (C1 * C2) / K12 ∧
+    H = A * (P1 * P2) / (P12 * W0) ∧
+    H * (P12 * W0) / (P1 * P2) = A := by
+  intro C1 C2 K12 L1 L2 Q H
+  have hK12_pos : 0 < K12 := by
+    dsimp [K12]
+    positivity
+  have _hP1_ne : P1 ≠ 0 := ne_of_gt hP1
+  have _hP2_ne : P2 ≠ 0 := ne_of_gt hP2
+  have _hP12_ne : P12 ≠ 0 := ne_of_gt hP12
+  have _hW0_ne : W0 ≠ 0 := ne_of_gt hW0
+  have _hε1_ne : ε1 ≠ 0 := ne_of_gt hε1
+  have _hε2_ne : ε2 ≠ 0 := ne_of_gt hε2
+  have _hA_ne : A ≠ 0 := ne_of_gt hA
+  have hz_ne : z ≠ 0 := ne_of_gt hz
+  have hK12_ne : K12 ≠ 0 := ne_of_gt hK12_pos
+  refine ⟨sumPeak_root_recovers_scale K12 z hK12_pos (le_of_lt hz),
+          universal_coincidence_invariant C1 C2 K12 z hz_ne hK12_ne, ?_, ?_⟩
+  · dsimp [H, L1, L2, Q, latentLinear, sumPeakQuadraticRate, C1, C2, K12]
+    field_simp
+  · dsimp [H, L1, L2, Q, latentLinear, sumPeakQuadraticRate, C1, C2, K12]
+    field_simp
+
 end
 end InfoGeometry.Probability.DetectorScaleInvariance
+

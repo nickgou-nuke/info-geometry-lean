@@ -75,6 +75,18 @@ structure ParaKahlerDatum (R V : Type*) [CommRing R] [AddCommGroup V] [Module R 
   metric_symm : ∀ u v, metric u v = metric v u
   metric_anti_compat : ∀ u v, metric (para.K u) (para.K v) = - metric u v
 
+/-- Canonical real para-complex structure underlying a para-Kähler datum. -/
+def ParaKahlerDatum.toCanonicalParaComplex
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (D : ParaKahlerDatum ℝ V) :
+    InfoGeometry.Canonical.ParaComplexConnection.ParaComplexStructure V :=
+  D.para.toCanonical
+
+@[simp] theorem ParaKahlerDatum.toCanonicalParaComplex_tau
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (D : ParaKahlerDatum ℝ V) (v : V) :
+    D.toCanonicalParaComplex.tau v = D.para.K v := rfl
+
 namespace ParaKahlerDatum
 
 variable (D : ParaKahlerDatum R V)

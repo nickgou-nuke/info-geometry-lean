@@ -3,6 +3,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
+import InfoGeometry.Canonical.ParaComplexConnectionBridge
 import InfoGeometry.GrandCanonical.Core
 
 /-!
@@ -19,6 +20,7 @@ namespace InfoGeometry.Krein.DiracKreinFisherBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
+open InfoGeometry.Canonical.ParaComplexConnection
 
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -71,6 +73,16 @@ noncomputable def diracParaComplexStructure :
     apply LinearMap.ext
     intro u
     apply DoubledSpace.ext <;> simp [modular_j]
+
+/-- The Dirac--Krein involution transported to the canonical para-complex owner. -/
+noncomputable def diracCanonicalParaComplexStructure :
+    InfoGeometry.Canonical.ParaComplexConnection.ParaComplexStructure
+      (DoubledSpace E) :=
+  InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT.ParaComplexStructure.toCanonical
+    diracParaComplexStructure
+
+@[simp] theorem diracCanonicalParaComplexStructure_tau (u : DoubledSpace E) :
+    diracCanonicalParaComplexStructure (E := E).tau u = modular_j u := rfl
 
 theorem diracKreinBilin_modular_j_anti (G : LinearMap.BilinForm ℝ E)
     (u v : DoubledSpace E) :

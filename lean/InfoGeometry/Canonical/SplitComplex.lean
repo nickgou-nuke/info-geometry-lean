@@ -206,6 +206,16 @@ theorem toProduct_mul (x y : Carrier R) :
       (toProduct x).2 * (toProduct y).2) := by
   ext <;> simp [toProduct, mul_re, mul_im] <;> ring
 
+theorem toProduct_pPlus : toProduct (pPlus (R := R)) = (1, 0) := by
+  ext <;> simp [toProduct, pPlus]
+  · rw [← mul_invOf_self (2 : R)]
+  · ring
+
+theorem toProduct_pMinus : toProduct (pMinus (R := R)) = (0, 1) := by
+  ext <;> simp [toProduct, pMinus]
+  · rw [← mul_invOf_self (2 : R)]
+  · rw [← mul_invOf_self (2 : R)]
+
 end ProductDecomposition
 
 end Carrier

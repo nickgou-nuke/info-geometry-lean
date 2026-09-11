@@ -170,37 +170,18 @@ theorem spacetime_fabric_seamless (u v : Vec3) (h_ortho : vecDot u v = 0) :
 
 /-! ### Master Synthesis Packet -/
 
-structure ZornModularAAVPacket where
-  j_involutive : ∀ X : Zorn, modularJ (modularJ X) = X
-  j_swaps_rays : ∀ u : Vec3, modularJ (ePlus u) = eMinus u
-  biwave_vanishes : ∀ u v : Vec3, vecDot u v = 0 → kreinPairing (ePlus u) (eMinus v) = 0
-  wva_scaling : ∀ num den eps : ℝ, den = eps → eps ≠ 0 → eps * aharonovWeakValue num den = num
-  seam_zero : ∀ u v : Vec3, vecDot u v = 0 → kreinPairing (ePlus u) (modularJ (ePlus v)) = 0
-  pk_quantized : ∀ t : ℝ, poincareKreinIndex t = 1 ∨ poincareKreinIndex t = -1 ∨ poincareKreinIndex t = 0
-  beenakker_lock : ∀ u v : Vec3, vecDot u v = 0 → screwMonodromyOverlap u v (4 * Real.pi) = 4 * Real.pi
-
-def makeZornModularAAVPacket : ZornModularAAVPacket where
-  j_involutive := modularJ_involutive
-  j_swaps_rays := modularJ_ePlus
-  biwave_vanishes := biwave_denominator_vanishes
-  wva_scaling := weak_value_amplification_scaling
-  seam_zero := seam_cross_overlap_zero
-  pk_quantized := poincare_krein_quantized
-  beenakker_lock := beenakker_four_pi_lock
-
 theorem zorn_modular_aav_unified :
-    let P := makeZornModularAAVPacket
-    (P.j_involutive = modularJ_involutive) ∧
-    (P.j_swaps_rays = modularJ_ePlus) ∧
-    (P.biwave_vanishes = biwave_denominator_vanishes) ∧
-    (P.wva_scaling = weak_value_amplification_scaling) ∧
-    (P.seam_zero = seam_cross_overlap_zero) ∧
-    (P.pk_quantized = poincare_krein_quantized) ∧
-    (P.beenakker_lock = beenakker_four_pi_lock) := by
-  dsimp
-  refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
+    (∀ X : Zorn, modularJ (modularJ X) = X) ∧
+    (∀ u : Vec3, modularJ (ePlus u) = eMinus u) ∧
+    (∀ u v : Vec3, vecDot u v = 0 → kreinPairing (ePlus u) (eMinus v) = 0) ∧
+    (∀ num den eps : ℝ, den = eps → eps ≠ 0 → eps * aharonovWeakValue num den = num) ∧
+    (∀ u v : Vec3, vecDot u v = 0 → kreinPairing (ePlus u) (modularJ (ePlus v)) = 0) ∧
+    (∀ t : ℝ, poincareKreinIndex t = 1 ∨ poincareKreinIndex t = -1 ∨ poincareKreinIndex t = 0) ∧
+    (∀ u v : Vec3, vecDot u v = 0 → screwMonodromyOverlap u v (4 * Real.pi) = 4 * Real.pi) := by
+  exact ⟨modularJ_involutive, modularJ_ePlus, biwave_denominator_vanishes,
+    weak_value_amplification_scaling, seam_cross_overlap_zero,
+    poincare_krein_quantized, beenakker_four_pi_lock⟩
 
 end
 
 end InfoGeometry.Canonical.ZornModularAAV
-

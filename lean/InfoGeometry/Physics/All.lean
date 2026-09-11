@@ -142,6 +142,8 @@ import InfoGeometry.Physics.FisherRaoAitchisonKanBridge
 import InfoGeometry.Physics.FisherRaoAitchisonKanBridgeAudit
 import InfoGeometry.Physics.RiemannSiegelHardyZThroatBridge
 import InfoGeometry.Physics.RiemannSiegelHardyZThroatBridgeAudit
+import InfoGeometry.Physics.AitchisonTraceDeterminantBridge
+import InfoGeometry.Physics.AitchisonTraceDeterminantBridgeAudit
 
 /-!
 # Physics Umbrella

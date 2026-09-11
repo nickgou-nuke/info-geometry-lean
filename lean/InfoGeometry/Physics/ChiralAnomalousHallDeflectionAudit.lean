@@ -1,0 +1,20 @@
+import InfoGeometry.Physics.ChiralAnomalousHallDeflection
+
+open ChiralVector3
+open Matrix2x2
+open NonAbelianBerryCurvature
+open ChiralAcousticRaySystem
+
+#print axioms ChiralVector3.dot_cross_self_left
+#print axioms ChiralVector3.dot_cross_self_right
+#print axioms ChiralVector3.cross_neg_right
+#print axioms Matrix2x2.trace_commutator_zero
+#print axioms NonAbelianBerryCurvature.fieldStrength_trace_zero
+#print axioms NonAbelianBerryCurvature.chiral_branch_opposite
+#print axioms ChiralAcousticRaySystem.work_done_zero_plus
+#print axioms ChiralAcousticRaySystem.work_done_zero_minus
+#print axioms ChiralAcousticRaySystem.berry_transverse_plus
+#print axioms ChiralAcousticRaySystem.anomalous_hall_opposite
+#print axioms ChiralAcousticRaySystem.chiral_transverse_splitting
+#print axioms ChiralAcousticRaySystem.hall_deflection_2D_planar
+#print axioms ChiralAcousticRaySystem.certified_chiral_anomalous_hall_synthesis

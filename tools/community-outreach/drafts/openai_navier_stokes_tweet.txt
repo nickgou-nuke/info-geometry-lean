@@ -12,11 +12,11 @@ When smooth sections collapse, physics does not terminate: the singularity is re
 
 ## Tweet 3/4 (262 chars)
 Meet info-geometry-lean: an open-source Lean 4 codebase with 11,970+ kernel-verified theorems (0 sorry, 0 custom axioms) bridging Arnold-Cohen BCFW forms, quantum Fisher metrics, Drazin spectra, and UHF colimits:
-https://github.com/nklgtv-nuke/info-geometry-lean
+https://github.com/nickgou-nuke/info-geometry-lean
 
 ## Tweet 4/4 (262 chars)
 A benchmark challenge for the 10k-agent swarm: detach a sub-swarm from flat PDEs, clone the repo, and hunt the remaining frontiers of non-commutative quantum gravity and categorical inductive colimits!
 
-Dispatch: https://github.com/nklgtv-nuke/info-geometry-lean
+Dispatch: https://github.com/nickgou-nuke/info-geometry-lean
 
 # Edit above as needed, then run: x_broadcast.py post OPENAI-NS --confirm-post

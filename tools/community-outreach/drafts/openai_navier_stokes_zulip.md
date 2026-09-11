@@ -12,7 +12,7 @@ In incompressible fluid dynamics, Vladimir Arnold (1966) showed that Euler and N
 In non-commutative geometry and quantum physics, the breakdown of smooth manifolds is typically regularized by passing to direct inductive colimits of $C^*$-algebras (Cuntz $\mathcal{O}_n$, Bost-Connes KMS states at $\beta = 1$) rather than classical PDE continuation.
 
 We have been developing an open-source Lean 4 formalization of this framework:
-👉 **[https://github.com/nklgtv-nuke/info-geometry-lean](https://github.com/nklgtv-nuke/info-geometry-lean)**
+👉 **[https://github.com/nickgou-nuke/info-geometry-lean](https://github.com/nickgou-nuke/info-geometry-lean)**
 
 Key characteristics:
 - **11,970+ kernel-checked theorems** in Lean 4.28.1 / Mathlib v4.28.1.

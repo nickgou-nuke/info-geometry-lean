@@ -23,7 +23,7 @@ Key Results Proven:
 5. `attentionStageTrace_preserving`: Normalized trace functional τ_{n+1}(ι_n(P)) = τ_n(P).
 6. `attentionStageTraceLinear_comp_embedding`: Linear map commutation τ_{n+1} ∘ ι_n = τ_n.
 7. `transformer_colimit_trace_comm`: Universal inductive colimit trace commutativity.
-8. `TransformerColimitKMSCocone`: Continuous KMS thermal cocone over the colimit continuum.
+8. `TransformerColimitTraceCocone`: Continuous KMS thermal cocone over the colimit continuum.
 -/
 
 noncomputable section
@@ -229,12 +229,12 @@ theorem transformer_colimit_trace_comm
 /-- Continuous KMS Thermal State Equilibrium on the Direct Colimit:
     The canonical normalized trace state descends to the inductive colimit cocone,
     preserving the thermodynamic partition sum at inverse temperature β across all scales. -/
-structure TransformerColimitKMSCocone (X : Type*) [AddCommGroup X] [Module ℝ X] where
+structure TransformerColimitTraceCocone (X : Type*) [AddCommGroup X] [Module ℝ X] where
   cocone_map : ∀ n, AttentionStage n →ₗ[ℝ] X
   cocone_comm : ∀ n, (cocone_map (n + 1)).comp (attentionStageEmbeddingLinear n) = cocone_map n
 
 /-- The canonical normalized trace cocone for the infinite-context Transformer limit. -/
-def canonicalTransformerTraceCocone : TransformerColimitKMSCocone ℝ where
+def canonicalTransformerTraceCocone : TransformerColimitTraceCocone ℝ where
   cocone_map := attentionStageTraceLinear
   cocone_comm := attentionStageTraceLinear_comp_embedding
 

@@ -334,36 +334,24 @@ theorem conformal_symmetric_chirality_weight_cancel :
 /-! ## 5. Certified Synthesis Bundle -/
 
 /-- Certified structural synthesis bundle for the Chiral Cuntz Anomaly and Partition Bridge. -/
-structure CertifiedChiralCuntzAnomalyPartitionBridge where
-  chirality_sq_eq : ∀ {R : Type*} [Ring R] [StarRing R] (sys : Cuntz2System R),
-    chirality sys * chirality sys = 1
-  chirality_anticomm_plus_eq : ∀ {R : Type*} [Ring R] [StarRing R] (sys : Cuntz2System R),
-    chirality sys * Q_plus sys + Q_plus sys * chirality sys = 0
-  chirality_anticomm_minus_eq : ∀ {R : Type*} [Ring R] [StarRing R] (sys : Cuntz2System R),
-    chirality sys * Q_minus sys + Q_minus sys * chirality sys = 0
-  kugo_ojima_exact_eq : ∀ {R : Type*} [Ring R] [StarRing R] (sys : Cuntz2System R) (x : R),
-    Q_plus sys * x = 0 → x = Q_plus sys * (Q_minus sys * x)
-  supertrace_exact_zero : ∀ {R : Type*} [Ring R] [StarRing R] {M : Type*} [AddCommGroup M]
+theorem chiral_cuntz_anomaly_partition_relations :
+  (∀ {R : Type*} [Ring R] [StarRing R] (sys : Cuntz2System R), chirality sys * chirality sys = 1) ∧
+  (∀ {R : Type*} [Ring R] [StarRing R] (sys : Cuntz2System R), chirality sys * Q_plus sys + Q_plus sys * chirality sys = 0) ∧
+  (∀ {R : Type*} [Ring R] [StarRing R] (sys : Cuntz2System R), chirality sys * Q_minus sys + Q_minus sys * chirality sys = 0) ∧
+  (∀ {R : Type*} [Ring R] [StarRing R] (sys : Cuntz2System R) (x : R), Q_plus sys * x = 0 → x = Q_plus sys * (Q_minus sys * x)) ∧
+  (∀ {R : Type*} [Ring R] [StarRing R] {M : Type*} [AddCommGroup M]
     (sys : Cuntz2System R) (tr : CyclicTrace R M) (y : R),
-    supertrace sys tr (Q_plus sys * y + y * Q_plus sys) = 0
-  quantum_anomaly_exact_zero : ∀ {R : Type*} [Ring R] [StarRing R] {M : Type*} [AddCommGroup M]
+    supertrace sys tr (Q_plus sys * y + y * Q_plus sys) = 0) ∧
+  (∀ {R : Type*} [Ring R] [StarRing R] {M : Type*} [AddCommGroup M]
     (sys : Cuntz2System R) (tr : CyclicTrace R M) (D y : R),
     D * Q_plus sys = Q_plus sys * D →
-    quantumAnomaly sys tr D (Q_plus sys * y + y * Q_plus sys) = 0
-  graded_partition_cancel : ∀ (w : ℝ),
-    gradedPartition w w = 0
-  witten_index_invariant : ∀ (n0 k : ℤ) (w_k : ℝ),
-    ((n0 : ℝ) + (k : ℝ) * w_k) - (0 + (k : ℝ) * w_k) = (n0 : ℝ)
-
-/-- Canonical inhabitant of the certified synthesis bundle. -/
-def certified_chiral_cuntz_anomaly_partition_bridge : CertifiedChiralCuntzAnomalyPartitionBridge where
-  chirality_sq_eq := @chirality_sq
-  chirality_anticomm_plus_eq := @chirality_anticomm_Q_plus
-  chirality_anticomm_minus_eq := @chirality_anticomm_Q_minus
-  kugo_ojima_exact_eq := @kugo_ojima_exactness
-  supertrace_exact_zero := @supertrace_exact_annihilation
-  quantum_anomaly_exact_zero := @quantumAnomaly_vanishes_exact
-  graded_partition_cancel := gradedPartition_susy_cancel
-  witten_index_invariant := wittenIndex_topological_invariance
+    quantumAnomaly sys tr D (Q_plus sys * y + y * Q_plus sys) = 0) ∧
+  (∀ w : ℝ, gradedPartition w w = 0) ∧
+  (∀ (n0 k : ℤ) (w_k : ℝ),
+    ((n0 : ℝ) + (k : ℝ) * w_k) - (0 + (k : ℝ) * w_k) = (n0 : ℝ)) := by
+  exact ⟨@chirality_sq, @chirality_anticomm_Q_plus, @chirality_anticomm_Q_minus,
+    @kugo_ojima_exactness, @supertrace_exact_annihilation,
+    @quantumAnomaly_vanishes_exact, gradedPartition_susy_cancel,
+    wittenIndex_topological_invariance⟩
 
 end InfoGeometry.Canonical.ChiralCuntzAnomalyPartitionBridge

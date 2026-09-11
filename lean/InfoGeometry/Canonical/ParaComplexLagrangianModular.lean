@@ -199,42 +199,6 @@ theorem twistor_spacetime_null_adjacency (Z : Twistor4) (X Y : ComplexSpacetime)
     Matrix.det (X - Y) = 0 :=
   det_sub_eq_zero_of_shared_nonzero_twistor Z X Y hπ hX hY
 
-/-! ### 6. Certified Synthesis Record -/
-
-/-- Certified structural record for the Para-Complex Neutral Lagrangian Modular Triad. -/
-structure CertifiedParaComplexLagrangianModular (V : Type*) [AddCommGroup V] [Module ℝ V] where
-  peirce_sum : ∀ (PCS : ParaComplexStructure V) (v : V),
-    peircePlus PCS v + peirceMinus PCS v = v
-  peirce_ortho : ∀ (PCS : ParaComplexStructure V) (v : V),
-    peircePlus PCS (peirceMinus PCS v) = 0
-  isotropic_leaves : ∀ (PCS : ParaComplexStructure V) (B : LinearMap.BilinForm ℝ V),
-    AntiCompatible PCS B → ∀ (x y : V),
-    B (peircePlus PCS x) (peircePlus PCS y) = 0 ∧
-    B (peirceMinus PCS x) (peirceMinus PCS y) = 0
-  cross_norm : ∀ (PCS : ParaComplexStructure V) (B : LinearMap.BilinForm ℝ V),
-    AntiCompatible PCS B → (∀ x y, B x y = B y x) → ∀ (Z : V),
-    B Z Z = 2 * B (peircePlus PCS Z) (peirceMinus PCS Z)
-  seam_real : ∀ (PCS : ParaComplexStructure V) (v : V),
-    PCS.tau v = - PCS.tau v → PCS.tau v = 0
-  modular_self_polar : ∀ (T : TomitaModularReflection V) (ξ : V),
-    IsInSelfPolarCone T ξ → T.J (T.J ξ) = ξ
-  zorn_traceless_eval : ∀ (p Δ : ℝ),
-    (zornMatrix p Δ).trace = 0
-  zorn_mass_shell_eval : ∀ (p Δ E_energy : ℝ),
-    p ^ 2 + Δ ^ 2 = E_energy ^ 2 →
-    (zornMatrix p Δ) * (zornMatrix p Δ) = (E_energy ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ)
-
-/-- Certified instance of the Para-Complex Neutral Lagrangian Modular Triad. -/
-def certifiedParaComplexLagrangianModular (V : Type*) [AddCommGroup V] [Module ℝ V] :
-    CertifiedParaComplexLagrangianModular V where
-  peirce_sum := peirce_sum_id
-  peirce_ortho := peircePlus_peirceMinus
-  isotropic_leaves := peirce_leaves_totally_isotropic
-  cross_norm := neutral_norm_eq_cross_pairing
-  seam_real := klein_seam_real_locus
-  modular_self_polar := self_polar_cone_invariant
-  zorn_traceless_eval := zorn_traceless
-  zorn_mass_shell_eval := zorn_mass_shell_condensation
 
 end
 

@@ -3141,6 +3141,7 @@ import InfoGeometry.Canonical.DikinApolloniusTrapCapstone
 import InfoGeometry.Canonical.DikinBlahutOrbitsCapstone
 import InfoGeometry.Canonical.DikinDrazinBridge
 import InfoGeometry.Canonical.DikinFiniteOrbitColimit
+import InfoGeometry.Canonical.DikinFiniteOrbitColimitAudit
 import InfoGeometry.Canonical.DikinLambdaBraidHestenesKreinClosure
 import InfoGeometry.Canonical.DikinMetriplecticCapstone
 import InfoGeometry.Canonical.DikinPoincareMetricBridgeCapstone

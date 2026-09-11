@@ -261,6 +261,105 @@ theorem bkmDikinEllipsoid_map_mono_radius
     inBkmDikinEllipsoid_mono_radius D h A hrs hA
   exact (bkmDikinEllipsoid_preimage D h L hL A s).mpr hAs
 
+/-! ## Concrete Weyl operators preserving BKM Dikin constraints -/
+
+/-- The identity Weyl operator on self-adjoint operators: L(A) = A. -/
+def weylIdentity (n : ℕ) : SelfAdjointOperator n →ₗ[ℝ] SelfAdjointOperator n :=
+  LinearMap.id
+
+/-- The central Weyl reflection operator on self-adjoint operators:
+    L(A) = -A, corresponding to the longest element w₀ = -1 of the A₁ Weyl group. -/
+def weylReflection (n : ℕ) : SelfAdjointOperator n →ₗ[ℝ] SelfAdjointOperator n :=
+  - LinearMap.id
+
+@[simp] theorem weylIdentity_apply (A : SelfAdjointOperator n) :
+    weylIdentity n A = A := rfl
+
+@[simp] theorem weylReflection_apply (A : SelfAdjointOperator n) :
+    weylReflection n A = -A := rfl
+
+theorem weylReflection_val (A : SelfAdjointOperator n) :
+    (weylReflection n A).1 = - A.1 := rfl
+
+/-- Involutive property of the Weyl reflection operator: L² = I. -/
+theorem weylReflection_involutive (A : SelfAdjointOperator n) :
+    weylReflection n (weylReflection n A) = A := by
+  simp only [weylReflection_apply, neg_neg]
+
+theorem weylReflection_comp_self :
+    (weylReflection n).comp (weylReflection n) = LinearMap.id := by
+  apply LinearMap.ext
+  intro A
+  exact weylReflection_involutive A
+
+/-- Invariance of the BKM Dikin quadratic form under the central Weyl reflection w₀ = -1. -/
+theorem bkmDikinQuadratic_weylReflection
+    (D : FaithfulDensityOperator n) (h : Continuous D.rpow)
+    (A : SelfAdjointOperator n) :
+    bkmDikinQuadratic D h (weylReflection n A) = bkmDikinQuadratic D h A := by
+  unfold bkmDikinQuadratic
+  change (D.bkmRealBilinForm h (- A.1)) (- A.1) = (D.bkmRealBilinForm h A.1) A.1
+  have h1 : D.bkmRealBilinForm h (- A.1) = - D.bkmRealBilinForm h A.1 :=
+    LinearMap.map_neg (D.bkmRealBilinForm h) A.1
+  rw [h1]
+  simp only [LinearMap.neg_apply, map_neg, neg_neg]
+
+/-- Invariance of the BKM Dikin quadratic form under the identity Weyl operator. -/
+theorem bkmDikinQuadratic_weylIdentity
+    (D : FaithfulDensityOperator n) (h : Continuous D.rpow)
+    (A : SelfAdjointOperator n) :
+    bkmDikinQuadratic D h (weylIdentity n A) = bkmDikinQuadratic D h A :=
+  rfl
+
+/-- The Weyl reflection operator preserves Dikin ellipsoids under radius enlargement,
+    discharging the hypothesis of `bkmDikinEllipsoid_map_mono_radius`. -/
+theorem bkmDikinEllipsoid_map_mono_radius_weylReflection
+    (D : FaithfulDensityOperator n) (h : Continuous D.rpow)
+    (A : SelfAdjointOperator n) {r s : ℝ}
+    (hrs : r ^ 2 ≤ s ^ 2)
+    (hA : InBkmDikinEllipsoid D h A r) :
+    InBkmDikinEllipsoid D h (weylReflection n A) s :=
+  bkmDikinEllipsoid_map_mono_radius D h (weylReflection n)
+    (bkmDikinQuadratic_weylReflection D h) A hrs hA
+
+/-- The Weyl reflection operator preserves Dikin ellipsoid membership at the same radius. -/
+theorem inBkmDikinEllipsoid_weylReflection_iff
+    (D : FaithfulDensityOperator n) (h : Continuous D.rpow)
+    (A : SelfAdjointOperator n) (r : ℝ) :
+    InBkmDikinEllipsoid D h (weylReflection n A) r ↔
+      InBkmDikinEllipsoid D h A r :=
+  bkmDikinEllipsoid_preimage D h (weylReflection n)
+    (bkmDikinQuadratic_weylReflection D h) A r
+
+/-- Centered Dikin ellipsoid invariance under the Weyl reflection operator:
+    distance from center is preserved. -/
+theorem inBkmDikinEllipsoidAt_weylReflection_iff
+    (D : FaithfulDensityOperator n) (h : Continuous D.rpow)
+    (C A : SelfAdjointOperator n) (r : ℝ) :
+    InBkmDikinEllipsoidAt D h (weylReflection n C) (weylReflection n A) r ↔
+      InBkmDikinEllipsoidAt D h C A r := by
+  unfold InBkmDikinEllipsoidAt
+  have h_sub : weylReflection n C - weylReflection n A = weylReflection n (C - A) := by
+    simp only [weylReflection_apply]
+    abel
+  rw [h_sub, bkmDikinQuadratic_weylReflection]
+
+/-- Master synthesis theorem connecting the Weyl reflection operator L = -I
+    with the Dikin ellipsoid confinement and radius monotonicity theorems. -/
+theorem weyl_dikin_synthesis
+    (D : FaithfulDensityOperator n) (h : Continuous D.rpow)
+    (A : SelfAdjointOperator n) {r s : ℝ}
+    (hrs : r ^ 2 ≤ s ^ 2)
+    (hA : InBkmDikinEllipsoid D h A r) :
+    bkmDikinQuadratic D h (weylReflection n A) = bkmDikinQuadratic D h A ∧
+    (weylReflection n (weylReflection n A) = A) ∧
+    (InBkmDikinEllipsoid D h (weylReflection n A) r ↔ InBkmDikinEllipsoid D h A r) ∧
+    InBkmDikinEllipsoid D h (weylReflection n A) s :=
+  ⟨bkmDikinQuadratic_weylReflection D h A,
+   weylReflection_involutive A,
+   inBkmDikinEllipsoid_weylReflection_iff D h A r,
+   bkmDikinEllipsoid_map_mono_radius_weylReflection D h A hrs hA⟩
+
 end
 
 end InfoGeometry.Canonical.DikinFiniteOrbitColimit

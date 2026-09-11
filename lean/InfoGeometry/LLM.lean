@@ -29,6 +29,8 @@ import InfoGeometry.LLM.PromptDefectRegularization
 import InfoGeometry.LLM.TrialityMoE
 import InfoGeometry.LLM.SinkhornDefectFlow
 import InfoGeometry.LLM.AttentionEntropyProductionFlow
+import InfoGeometry.LLM.ChiralQuantumTransformerCapstone
+import InfoGeometry.LLM.ChiralQuantumTransformerAudit
 import InfoGeometry.LLM.FiniteVectorSpinKernel
 import InfoGeometry.LLM.SpinTransformerMeanField
 import InfoGeometry.LLM.SpinTransformerPathEntropy

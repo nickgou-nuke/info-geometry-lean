@@ -1,0 +1,14 @@
+import InfoGeometry.Physics.ChiralAcousticBimetricConeSeparation
+
+open ChiralBimetricData
+
+#print axioms ChiralBimetricData.c_plus_pos
+#print axioms ChiralBimetricData.c_sq_diff_pos
+#print axioms ChiralBimetricData.bimetric_gap
+#print axioms ChiralBimetricData.slow_causal_strictly_fast_timelike
+#print axioms ChiralBimetricData.null_cones_disjoint_outside_origin
+#print axioms ChiralBimetricData.dispersion_gap
+#print axioms ChiralBimetricData.slow_on_shell_strictly_fast_evanescent
+#print axioms ChiralBimetricData.birefringent_window_opposite_signature
+#print axioms ChiralBimetricData.ChiralAcousticHorizon.dual_horizon_decoupling
+#print axioms ChiralBimetricData.certified_chiral_acoustic_bimetric_synthesis

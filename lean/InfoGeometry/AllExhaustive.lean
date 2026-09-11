@@ -9922,6 +9922,8 @@ import InfoGeometry.Physics.AmplituhedronPenroseTransform
 import InfoGeometry.Physics.AmplituhedronPositiveGrassmannianMap
 import InfoGeometry.Physics.AmplituhedronVolume
 import InfoGeometry.Physics.AmplituhedronZetaSum
+import InfoGeometry.Physics.ArnoldHydrodynamicsBeltrami
+import InfoGeometry.Physics.ArnoldHydrodynamicsBeltramiAudit
 import InfoGeometry.Physics.BostConnesAmplituhedronCriticalityBridge
 import InfoGeometry.Physics.BostConnesAmplituhedronCriticalityAudit
 import InfoGeometry.Physics.B3PresentedGroup
@@ -9953,6 +9955,10 @@ import InfoGeometry.Physics.CartanSouriauNativeAmariBridge
 import InfoGeometry.Physics.CayleyDeformedChiralSUSY
 import InfoGeometry.Physics.CayleyPoincareTransform
 import InfoGeometry.Physics.CentralizerInvariance
+import InfoGeometry.Physics.ChiralAcousticBimetricConeSeparation
+import InfoGeometry.Physics.ChiralAcousticBimetricConeSeparationAudit
+import InfoGeometry.Physics.ChiralAnomalousHallDeflection
+import InfoGeometry.Physics.ChiralAnomalousHallDeflectionAudit
 import InfoGeometry.Physics.ChiralCausalCone
 import InfoGeometry.Physics.ChiralFixedSectionPoincareTranslationBridge
 import InfoGeometry.Physics.ChiralFourVectorOperatorSynthesis
@@ -12346,6 +12352,8 @@ import InfoGeometry.Twistor.ThreeTwistorNullTriangle
 import InfoGeometry.Twistor.TwistorBoundaryParavectorIncidence
 import InfoGeometry.Twistor.TwistorFrameCovariance
 import InfoGeometry.Twistor.TwistorZornDerivationTransport
+import InfoGeometry.Twistor.TwistorPenroseTransform
+import InfoGeometry.Twistor.TwistorPenroseTransformAudit
 import InfoGeometry.Twistor.TwoTwistorIncidenceIsotropy
 import InfoGeometry.Twistor.TwoTwistorPlucker
 import InfoGeometry.Twistor.TwoTwistorPluckerKlein

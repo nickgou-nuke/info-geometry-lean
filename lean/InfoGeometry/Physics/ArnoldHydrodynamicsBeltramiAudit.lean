@@ -1,0 +1,18 @@
+import InfoGeometry.Physics.ArnoldHydrodynamicsBeltrami
+
+open ChiralVector3
+open ArnoldBeltrami
+open ArnoldBeltrami.ABCFlowParameters
+
+#print axioms ArnoldBeltrami.cross_self
+#print axioms ArnoldBeltrami.cross_smul_left
+#print axioms ArnoldBeltrami.cross_smul_self
+#print axioms ArnoldBeltrami.lamb_orthogonal_velocity
+#print axioms ArnoldBeltrami.lamb_orthogonal_vorticity
+#print axioms ArnoldBeltrami.beltrami_lamb_vanishes
+#print axioms ArnoldBeltrami.beltrami_bernoulli_balance
+#print axioms ArnoldBeltrami.beltrami_helicity_density
+#print axioms ArnoldBeltrami.viscous_helicity_decay_rate
+#print axioms ArnoldBeltrami.ABCFlowParameters.abc_flow_is_beltrami_eigenfield
+#print axioms ArnoldBeltrami.ABCFlowParameters.abc_flow_incompressible
+#print axioms ArnoldBeltrami.certified_arnold_hydrodynamics_beltrami_synthesis

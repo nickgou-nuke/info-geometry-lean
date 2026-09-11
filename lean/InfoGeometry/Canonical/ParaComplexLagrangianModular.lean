@@ -188,6 +188,12 @@ theorem zorn_avoided_crossing_spectral_gap (p : ℝ) (m : ℝ) (hm : 0 < m) :
   have hp2 : 0 ≤ p ^ 2 := sq_nonneg p
   linarith
 
+theorem zorn_massive_determinant_ne_zero (p : ℝ) (m : ℝ) (hm : 0 < m) :
+    (zornMatrix p m).det ≠ 0 := by
+  rw [zorn_determinant]
+  have hpos : 0 < p ^ 2 + m ^ 2 := zorn_avoided_crossing_spectral_gap p m hm
+  linarith
+
 /-! ### 5. Penrose Twistor Spacetime Reality Adjacency -/
 
 /-- Theorem: Two spacetime points $X, Y$ sharing a common nonzero twistor are null-separated:

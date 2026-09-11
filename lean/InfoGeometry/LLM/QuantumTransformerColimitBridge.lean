@@ -111,6 +111,13 @@ theorem attentionStageEmbedding_one (n : ℕ) :
       simp [hdiv', Matrix.one_apply, hij]
     · simp [Matrix.one_apply, hij]
 
+theorem attentionStageEmbedding_transpose (n : ℕ) (P : AttentionStage n) :
+    (attentionStageEmbedding n P)ᵀ = attentionStageEmbedding n Pᵀ := by
+  ext i j
+  simp only [transpose_apply]
+  dsimp [attentionStageEmbedding]
+  simp [eq_comm]
+
 /-- Linear map version of normalized trace. -/
 def attentionStageTraceLinear (n : ℕ) : AttentionStage n →ₗ[ℝ] ℝ where
   toFun := attentionStageTrace n

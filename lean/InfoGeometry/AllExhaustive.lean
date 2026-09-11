@@ -10276,6 +10276,8 @@ import InfoGeometry.Physics.PellisFineStructure
 import InfoGeometry.Physics.PellisfineStructure
 import InfoGeometry.Physics.PenroseQuantizedTwistorSplitOctonion
 import InfoGeometry.Physics.PenroseRealDoubledPeirceSoldering
+import InfoGeometry.Physics.PenroseEikonalTwistorRay
+import InfoGeometry.Physics.PenroseEikonalTwistorRayAudit
 import InfoGeometry.Physics.PenroseRayInformationGeometry
 import InfoGeometry.Physics.PenroseRayInformationGeometryAudit
 import InfoGeometry.Physics.Pin55Explicit
@@ -10472,6 +10474,8 @@ import InfoGeometry.Probability.DetectorAnscombeMadelungRegistration
 import InfoGeometry.Probability.DetectorAnscombeMadelungRegistrationAudit
 import InfoGeometry.Probability.DetectorAnscombeMadelung
 import InfoGeometry.Probability.DetectorAnscombeMadelungAudit
+import InfoGeometry.Probability.DetectorPenroseEikonalRay
+import InfoGeometry.Probability.DetectorPenroseEikonalRayAudit
 
 import InfoGeometry.Probability.DetectorEnsembleTransport
 import InfoGeometry.Probability.DetectorOperatorSplitting

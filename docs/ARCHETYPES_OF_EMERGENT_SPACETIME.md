@@ -1015,6 +1015,16 @@ Formalizing the geometricization of the gamma electromagnetic field via Penrose 
 * **Master Synthesis:** Full conjunction certified in Mathlib 4 (`certified_penrose_ray_information_geometry_synthesis`).
   In Lean 4: [`PenroseRayInformationGeometry.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/PenroseRayInformationGeometry.lean) and [`PenroseRayInformationGeometryAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/PenroseRayInformationGeometryAudit.lean).
 
+### 5.72 Penrose Eikonal Twistor Ray and Information Geometry
+Formalizing the ontological chain uniting the eikonal limit, Weyl spinor rank-1 factorization, Penrose twistor incidence, Sachs ray focusing, and conserved information flux:
+* **Pauli Determinant Identity & Null Vector Soldering:** $\det(K(k)) = \eta(k,k)$ (`det_pauliSoldering_eq_minkowskiNorm`), proving that $k$ is Minkowski-null if and only if $\det(K(k)) = 0$ (`null_iff_det_pauliSoldering_zero`).
+* **Weyl Spinor Factorization:** Rank-1 dyad $K_\pi = \pi \pi^\dagger$ has $\det(K_\pi) = 0$ identically (`det_weylDyad_zero`), and every 2-component Weyl spinor generates an exact future-directed null 4-momentum $k(\pi)$ with $k_0 \ge 0$ (`spinor_generates_null_vector`, `spinor_energy_nonneg`).
+* **Penrose Twistor Inversion & Incidence Nullity:** Spacetime points as intersection loci of primary projective null rays: the twistor incidence relation $\omega = i X \pi$ guarantees that the signature $(2,2)$ twistor norm vanishes identically $\Sigma(Z) = 0$ for all real spacetime points (`incident_twistor_is_null`).
+* **Sachs Optical Equations & Eikonal Ray Focusing:** The expansion trace satisfies $\operatorname{tr}(S) = 2 \theta$ (`sachs_trace_expansion`); for eikonal wavefronts $k = dS$, vorticity vanishes identically $\omega = 0$ (`eikonal_vorticity_annihilation`), making the Sachs screen matrix symmetric; and under the Null Energy Condition $R_{kk} \ge 0$, the beam expansion derivative satisfies $d\theta/d\lambda \le -\frac{1}{2}\theta^2 \le 0$ (`sachs_ray_focusing`).
+* **Conserved Information Current & Conformal Gauge Invariance:** The total information flux $\Phi = \rho A$ satisfies $d(\rho A)/d\lambda = 0$ strictly along the ray (`information_flux_conservation`), and the null condition is preserved under local conformal rescalings $\tilde{g} = \Omega^2 g$ (`conformal_null_invariance`).
+* **Master Synthesis:** Full conjunction certified in Mathlib 4 (`certified_penrose_eikonal_twistor_synthesis`).
+  In Lean 4: [`PenroseEikonalTwistorRay.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/PenroseEikonalTwistorRay.lean) and [`PenroseEikonalTwistorRayAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/PenroseEikonalTwistorRayAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -1106,6 +1116,7 @@ Formalizing the geometricization of the gamma electromagnetic field via Penrose 
 | **Detector Holistic Regression Observer**| Spatial Integral Annihilation / Zero Intercept $L_1 L_2 = H Q$ / Gauss-Markov $\sum Q_j^2$ Weighting / Minor Vanishing | `certified_holistic_detector_observer_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Anscombe-Madelung & Registration** | Anscombe Delta Stabilization / Madelung Amplitude $\sqrt{\rho}$ / Spacer Cancellation $d_0(E_1)-d_0(E_2)$ | `certified_anscombe_madelung_registration_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Penrose Ray Information Geometry** | Penrose Minkowski Krein Space / Null Ray $\langle J v, v \rangle = 0$ / Conformal Field Confinement | `certified_penrose_ray_information_geometry_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Penrose Eikonal Twistor Ray** | Eikonal Null Congruence / Weyl Spinor Dyad / Twistor Incidence $\omega = i X \pi$ / Sachs Focusing | `certified_penrose_eikonal_twistor_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

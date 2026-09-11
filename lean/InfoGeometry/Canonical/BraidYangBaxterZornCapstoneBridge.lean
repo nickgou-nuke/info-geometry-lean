@@ -5,6 +5,7 @@ import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
 
 import InfoGeometry.Canonical.UnimodularZornE6ChiralAnomalyBridge
+import InfoGeometry.Canonical.Stratum34TopologicalClosureBridge
 import InfoGeometry.Canonical.GravitationalSolderingTracelessBridge
 import InfoGeometry.Canonical.AssociatorGellMannOctetBridge
 import InfoGeometry.Canonical.KantorFiveGradedTDualityBridge

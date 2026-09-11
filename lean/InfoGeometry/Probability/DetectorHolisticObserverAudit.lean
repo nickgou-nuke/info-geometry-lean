@@ -1,0 +1,15 @@
+import InfoGeometry.Probability.DetectorHolisticObserver
+
+open InfoGeometry.Probability.DetectorHolisticObserver
+
+#print axioms spatial_integral_annihilation
+#print axioms monte_carlo_geometry_redundancy
+#print axioms restored_product_linear_law
+#print axioms far_field_zero_intercept
+#print axioms global_slope_identifies_cascade
+#print axioms activity_recovered_from_slope
+#print axioms profileResidualRSS_nonneg
+#print axioms regression_profile_residual_zero
+#print axioms normal_equation_stationarity
+#print axioms holistic_rank_one_minor_vanishing
+#print axioms certified_holistic_detector_observer_synthesis

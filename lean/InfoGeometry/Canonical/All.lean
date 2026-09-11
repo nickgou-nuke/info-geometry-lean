@@ -2240,3 +2240,10 @@ modules in `lean/InfoGeometry/Canonical/`.
 end InfoGeometry
 
 import InfoGeometry.Canonical.ParaComplexNeutralForm
+import InfoGeometry.Canonical.ParaComplexNeutralFormAudit
+import InfoGeometry.Canonical.ParaComplexLagrangianModular
+import InfoGeometry.Canonical.ParaComplexLagrangianModularAudit
+import InfoGeometry.Canonical.ApollonianPrimonWeylBridge
+import InfoGeometry.Canonical.ApollonianPrimonWeylAudit
+import InfoGeometry.Canonical.OpenAIFrontierUnificationBridge
+import InfoGeometry.Canonical.OpenAIFrontierUnificationAudit

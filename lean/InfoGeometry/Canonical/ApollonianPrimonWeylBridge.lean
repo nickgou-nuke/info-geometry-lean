@@ -53,12 +53,12 @@ open InfoGeometry.Canonical.ChiralApollonian
 /-- The logarithmic coordinate $\xi(x) = \log x$ on $\mathbb{R}^+$. -/
 def logCoord (x : ℝ) : ℝ := Real.log x
 
-/-- Theorem: Multiplicative dilation $x \mapsto \lambda \cdot x$ translates the logarithmic
-    coordinate by $\log \lambda$: $\xi(\lambda x) = \xi(x) + \log \lambda$. -/
-theorem logCoord_mul (x : ℝ) (hx : 0 < x) (λ : ℝ) (hλ : 0 < λ) :
-    logCoord (λ * x) = logCoord x + Real.log λ := by
+/-- Theorem: Multiplicative dilation $x \mapsto \text{scale} \cdot x$ translates the logarithmic
+    coordinate by $\log \text{scale}$: $\xi(\text{scale} \cdot x) = \xi(x) + \log \text{scale}$. -/
+theorem logCoord_mul (x : ℝ) (hx : 0 < x) (scale : ℝ) (hscale : 0 < scale) :
+    logCoord (scale * x) = logCoord x + Real.log scale := by
   dsimp [logCoord]
-  rw [Real.log_mul hλ.ne' hx.ne', add_comm]
+  rw [Real.log_mul hscale.ne' hx.ne', add_comm]
 
 /-- The single-particle energy gap equals the logarithmic coordinate shift:
     $\Delta E(p, q) = \xi(q) - \xi(p)$. -/
@@ -74,7 +74,7 @@ theorem primonEnergyGap_ge_rel_gap (p q : ℕ) (hp : 0 < p) (hpq : p < q) :
   have ha : (0 : ℝ) < (p : ℝ) := by exact_mod_cast hp
   have hb : (p : ℝ) < (q : ℝ) := by exact_mod_cast hpq
   have h_bound := log_sub_log_ge_div (p : ℝ) (q : ℝ) ha hb
-  have h_cast : ((q - p : ℕ) : ℝ) = (q : ℝ) - (p : ℝ) := by push_cast; rfl
+  have h_cast : ((q - p : ℕ) : ℝ) = (q : ℝ) - (p : ℝ) := Nat.cast_sub hpq.le
   rw [h_cast]
   exact h_bound
 
@@ -113,7 +113,7 @@ theorem weylPrimonRatio_ge_one_add (α : ℝ) (p q : ℕ)
     1 + α * (((q - p : ℕ) : ℝ) / (q : ℝ)) ≤ weylPrimonRatio α p q := by
   rw [weylPrimonRatio_eq_exp]
   have h_exp_ge : 1 + α * primonEnergyGap p q ≤ Real.exp (α * primonEnergyGap p q) := by
-    exact add_one_le_exp (α * primonEnergyGap p q)
+    linarith [add_one_le_exp (α * primonEnergyGap p q)]
   have h_gap := primonEnergyGap_ge_rel_gap p q hp hpq
   have h_mul : α * (((q - p : ℕ) : ℝ) / (q : ℝ)) ≤ α * primonEnergyGap p q := by
     nlinarith
@@ -145,8 +145,8 @@ theorem weyl_primon_long_gap_lower_bound
     5. Linearized lower bound for non-negative conformal weight.
     6. OpenAI long prime gap induced Weyl scale lower bound. -/
 structure CertifiedApollonianPrimonWeylSynthesis where
-  log_coord_trans : ∀ (x : ℝ) (hx : 0 < x) (λ : ℝ) (hλ : 0 < λ),
-    logCoord (λ * x) = logCoord x + Real.log λ
+  log_coord_trans : ∀ (x : ℝ) (_hx : 0 < x) (scale : ℝ) (_hscale : 0 < scale),
+    logCoord (scale * x) = logCoord x + Real.log scale
   primon_gap_rel : ∀ (p q : ℕ), 0 < p → p < q →
     ((q - p : ℕ) : ℝ) / (q : ℝ) ≤ primonEnergyGap p q
   weyl_metric_rpow : ∀ (α x : ℝ), 0 < x →

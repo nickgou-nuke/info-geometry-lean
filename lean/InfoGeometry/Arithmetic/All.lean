@@ -21,6 +21,8 @@ import InfoGeometry.Arithmetic.ApolloniusInformationChargeBridge
 import InfoGeometry.Arithmetic.RiemannZetaDivisorLogGeometry
 import InfoGeometry.Arithmetic.IntegerModularPosition
 import InfoGeometry.Arithmetic.RiemannApolloniusVectorFields
+import InfoGeometry.Arithmetic.LongPrimeGapsPrimonEnergyBridge
+import InfoGeometry.Arithmetic.LongPrimeGapsPrimonEnergyAudit
 
 namespace InfoGeometry.Arithmetic.All
 

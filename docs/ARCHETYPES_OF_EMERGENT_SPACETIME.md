@@ -574,6 +574,31 @@ Fusing the ten formal proofs from OpenAI (`openai/ten-proofs`) and `LongGapsBetw
 * **Fermionic Pfaffian vs Bosonic Permanent Complexity:** The super-polynomial formula lower bound for the permanent (`Permanent.lean`) contrasts with the polynomial Pfaffian evaluation $\mathrm{Pf}(A)^2 = \det(A)$ (`Pfaffian.lean`), certifying the tractability of chiral fermionic boundaries versus interacting bosonic quantum gravity networks.
   In Lean 4: [`OpenAIFrontierUnificationBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/OpenAIFrontierUnificationBridge.lean) and [`OpenAIFrontierUnificationAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/OpenAIFrontierUnificationAudit.lean).
 
+### 5.33 Para-Complex Neutral Lagrangian Modular Triad & Zorn Mass Shell Condensation
+Formalizing the holomorphic and antiholomorphic sectors as real Lagrangian polarizations over neutral bilinear forms ($B(\tau x, y) + B(x, \tau y) = 0$), eliminating positive-definite Hilbert space collapse:
+* **Totally Isotropic Chiral Leaves:** The Peirce projectors $P_\pm = \frac{1}{2}(\operatorname{id} \pm \tau)$ project onto maximal totally isotropic Lagrangian subspaces:
+  $$B(P_+ x, P_+ y) = 0, \quad B(P_- x, P_- y) = 0$$
+* **Cross-Chiral Real Norm Decomposition:** Every real norm decomposes into pure chiral interference across the two polarizations:
+  $$B(Z, Z) = 2 B(P_+ Z, P_- Z)$$
+* **Klein Fixed Seam Real Locus:** On the horizon $t = 0$ where chiral coordinates coincide, the chiral temporal defect vanishes identically ($\tau v = -\tau v \implies \tau v = 0$).
+* **Tomita Modular Reflection Invariance:** The chiral modular reflection $J^2 = \operatorname{id}$ leaves states in the physical self-polar cone invariant ($J(J\xi) = \xi$).
+* **Real $2 \times 2$ Zorn Mass-Shell Condensation:** The traceless Zorn matrix $\hat{Z}(p, \Delta) = \begin{pmatrix} p & \Delta \\ \Delta & -p \end{pmatrix}$ squares to the relativistic mass-shell:
+  $$\hat{Z}(p, \Delta)^2 = (p^2 + \Delta^2)\mathbb{I}_2 = E^2 \mathbb{I}_2$$
+  where the off-diagonal mass bridge $\Delta = m > 0$ generates a strictly positive avoided crossing spectral gap $p^2 + m^2 > 0$.
+* **Penrose Twistor Reality Null Adjacency:** Two complex spacetime points sharing a common non-zero twistor satisfy $\det(X - Y) = 0$.
+  In Lean 4: [`ParaComplexLagrangianModular.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaComplexLagrangianModular.lean) and [`ParaComplexLagrangianModularAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaComplexLagrangianModularAudit.lean).
+
+### 5.34 Apollonian Cantor Fractal Cylinder, Weyl Gauge Scale & Primon Gap Synthesis
+Synthesizing non-commutative arithmetic geometry (Bost–Connes, Julia, Lapidus–van Frankenhuysen) and information-geometric conformal gauge theory:
+* **Logarithmic Carrier Coordinate:** Scale dilation $x \mapsto \lambda x$ on $\mathbb{R}^+$ maps to flat translation $\xi(\lambda x) = \xi(x) + \log \lambda$ under $\xi = \log x$.
+* **Primon Energy Gap Bound:** Consecutive primes $p < q$ satisfy the relative energy step bound $\Delta E(p, q) = \log q - \log p \ge \frac{q - p}{q}$.
+* **Conformal Weyl Gauge Field:** The scalar gauge field $\phi(x) = \alpha \log x$ scales the metric as $e^{2\phi(x)} = x^{2\alpha}$, yielding the dilation jump:
+  $$\frac{\mathcal{W}_\alpha(E(q))}{\mathcal{W}_\alpha(E(p))} = \exp(\alpha \Delta E(p, q)) \ge 1 + \alpha \frac{q - p}{q} \quad (\text{for } \alpha \ge 0)$$
+* **OpenAI Long Prime Gap Coupling:** Under $q - p \ge c \cdot \operatorname{gapScale}(X)$, the Weyl dilation ratio across the prime void satisfies:
+  $$\frac{\mathcal{W}_\alpha(E(q))}{\mathcal{W}_\alpha(E(p))} \ge \exp\left(\alpha \cdot c \cdot \frac{\operatorname{gapScale}(X)}{X}\right)$$
+  governing the discrete hierarchical branching geometry of the Apollonian Cantor fractal cylinder.
+  In Lean 4: [`ApollonianPrimonWeylBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ApollonianPrimonWeylBridge.lean) and [`ApollonianPrimonWeylAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ApollonianPrimonWeylAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -624,6 +649,8 @@ Fusing the ten formal proofs from OpenAI (`openai/ten-proofs`) and `LongGapsBetw
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 | **Primon Gas Spectral Gap & Long Prime Gaps**| Bost-Connes Primon Gas / Single-Particle Hamiltonian / OpenAI Gap | `primonEnergyGap_ge_of_gap`, `primonBoltzmannRatio_le_of_gap`, `primon_spectral_vacuum` | **Kernel-Checked (0 gaps)** |
 | **OpenAI Frontier Unification & Cross-Lane** | Non-Sofic Colimit / Connes Non-Rigidity / Quantum Parallel Repetition | `tensorFidelity_le_exp_decay`, `pfaffian_fermionic_tractability`, `master_unification_theorem` | **Kernel-Checked (0 gaps)** |
+| **Para-Complex Lagrangian Modular Triad** | Neutral Bilinear Form / Peirce Isotropic Leaves / Zorn Mass Shell | `peirce_leaves_totally_isotropic`, `neutral_norm_eq_cross_pairing`, `zorn_mass_shell_condensation` | **Kernel-Checked (0 gaps)** |
+| **Apollonian Primon Weyl Scale Synthesis** | Logarithmic Carrier / Conformal Weyl Field / OpenAI Long Gap Bound | `primonEnergyGap_ge_rel_gap`, `weylPrimonRatio_ge_one_add`, `weyl_primon_long_gap_lower_bound` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

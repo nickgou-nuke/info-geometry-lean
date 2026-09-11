@@ -221,48 +221,27 @@ theorem boomeron_energy_conservation (b S : Vec3 R) :
 -/
 
 /-- Level 3 packet bundling all certified invariants of the Manakov Zorn Soliton. -/
-structure ManakovZornSolitonPacket (R : Type*) [CommRing R] where
-  self_phase_vanishes : ∀ (u v : Vec3 R),
-    zornAssociator (ZornMatrix.quark u) (ZornMatrix.antiquark v) (ZornMatrix.quark u) = ZornMatrix.zero
-  antiquark_self_phase_vanishes : ∀ (u v : Vec3 R),
-    zornAssociator (ZornMatrix.antiquark u) (ZornMatrix.quark v) (ZornMatrix.antiquark u) = ZornMatrix.zero
-  transverse_mode_vanishes : ∀ (u v : Vec3 R), isTransverse u →
-    zornAssociator (ZornMatrix.quark u) (ZornMatrix.antiquark v) (ZornMatrix.quark u) = ZornMatrix.zero
-  transverse_longitudinal_zero : ∀ (u v w : Vec3 R),
-    isTransverse u → isTransverse w →
-    ((zornAssociator (ZornMatrix.quark u) (ZornMatrix.antiquark v) (ZornMatrix.quark w)).u 2) = 0
-  cross_phase_superposition : ∀ (u w : Vec3 R),
-    dot3 u w = 0 →
-    zornAssociator (ZornMatrix.quark u) (ZornMatrix.antiquark (fun i => u i + w i)) (ZornMatrix.quark w) =
-      ZornMatrix.quark (crossPhaseVector u w)
-  chi3_energy_split : ∀ (I1 I2 : R),
-    manakovKerrEnergy I1 I2 = I1 * I1 + 2 * (I1 * I2) + I2 * I2
-  chi3_isotropic_sum : (1 : R) * 1 + 2 * (1 * 1) + 1 * 1 = 4
-  chi3_degenerate : manakovKerrEnergy (1 : R) 1 = 4
-  lax_trace_zero : ∀ (M L : Matrix (Fin 3) (Fin 3) R), Matrix.trace (M * L - L * M) = 0
-  lax_quadratic_trace_zero : ∀ (M L : Matrix (Fin 3) (Fin 3) R), Matrix.trace (M * (L * L) - (L * L) * M) = 0
-  lax_cubic_trace_zero : ∀ (M L : Matrix (Fin 3) (Fin 3) R), Matrix.trace (M * (L * L * L) - (L * L * L) * M) = 0
-  boomeron_orthogonality : ∀ (b S : Vec3 R), dot3 S (cross3 b S) = 0
-  boomeron_conservation : ∀ (b S : Vec3 R), (2 : R) * dot3 S (cross3 b S) = 0
-
-/-- Constructor for the verified Level 3 Manakov Zorn Soliton packet. -/
-def makeManakovZornSolitonPacket (R : Type*) [CommRing R] : ManakovZornSolitonPacket R where
-  self_phase_vanishes := zornAssociator_self_phase_vanishes
-  antiquark_self_phase_vanishes := zornAssociator_antiquark_self_phase_vanishes
-  transverse_mode_vanishes := zornAssociator_transverse_mode_vanishes
-  transverse_longitudinal_zero := zornAssociator_transverse_longitudinal_zero
-  cross_phase_superposition := zornAssociator_cross_phase_superposition
-  chi3_energy_split := manakov_kerr_energy_split
-  chi3_isotropic_sum := manakov_chi3_isotropic_sum
-  chi3_degenerate := manakov_chi3_degenerate
-  lax_trace_zero := lax_commutator_trace_zero
-  lax_quadratic_trace_zero := lax_quadratic_trace_zero
-  lax_cubic_trace_zero := lax_cubic_trace_zero
-  boomeron_orthogonality := boomeron_stokes_orthogonality
-  boomeron_conservation := boomeron_energy_conservation
-
-/-- Grand verification certificate: the Manakov Zorn Soliton packet is kernel-checked and gap-free. -/
-theorem manakov_zorn_soliton_certified :
-    (makeManakovZornSolitonPacket R).chi3_degenerate = manakov_chi3_degenerate := rfl
+theorem manakov_zorn_soliton_relations (R : Type*) [CommRing R] :
+  (∀ (u v : Vec3 R), zornAssociator (ZornMatrix.quark u) (ZornMatrix.antiquark v) (ZornMatrix.quark u) = ZornMatrix.zero) ∧
+  (∀ (u v : Vec3 R), zornAssociator (ZornMatrix.antiquark u) (ZornMatrix.quark v) (ZornMatrix.antiquark u) = ZornMatrix.zero) ∧
+  (∀ (u v : Vec3 R), isTransverse u → zornAssociator (ZornMatrix.quark u) (ZornMatrix.antiquark v) (ZornMatrix.quark u) = ZornMatrix.zero) ∧
+  (∀ (u v w : Vec3 R), isTransverse u → isTransverse w →
+    (zornAssociator (ZornMatrix.quark u) (ZornMatrix.antiquark v) (ZornMatrix.quark w)).u 2 = 0) ∧
+  (∀ (u w : Vec3 R), dot3 u w = 0 →
+    zornAssociator (ZornMatrix.quark u) (ZornMatrix.antiquark (fun i => u i + w i)) (ZornMatrix.quark w) = ZornMatrix.quark (crossPhaseVector u w)) ∧
+  (∀ (I1 I2 : R), manakovKerrEnergy I1 I2 = I1 * I1 + 2 * (I1 * I2) + I2 * I2) ∧
+  ((1 : R) * 1 + 2 * (1 * 1) + 1 * 1 = 4) ∧
+  (manakovKerrEnergy (1 : R) 1 = 4) ∧
+  (∀ (M L : Matrix (Fin 3) (Fin 3) R), Matrix.trace (M * L - L * M) = 0) ∧
+  (∀ (M L : Matrix (Fin 3) (Fin 3) R), Matrix.trace (M * (L * L) - (L * L) * M) = 0) ∧
+  (∀ (M L : Matrix (Fin 3) (Fin 3) R), Matrix.trace (M * (L * L * L) - (L * L * L) * M) = 0) ∧
+  (∀ (b S : Vec3 R), dot3 S (cross3 b S) = 0) ∧
+  (∀ (b S : Vec3 R), (2 : R) * dot3 S (cross3 b S) = 0) := by
+  exact ⟨zornAssociator_self_phase_vanishes, zornAssociator_antiquark_self_phase_vanishes,
+    zornAssociator_transverse_mode_vanishes, zornAssociator_transverse_longitudinal_zero,
+    zornAssociator_cross_phase_superposition, manakov_kerr_energy_split,
+    manakov_chi3_isotropic_sum, manakov_chi3_degenerate, lax_commutator_trace_zero,
+    lax_quadratic_trace_zero, lax_cubic_trace_zero, boomeron_stokes_orthogonality,
+    boomeron_energy_conservation⟩
 
 end InfoGeometry.Canonical.ManakovZornSolitonLax

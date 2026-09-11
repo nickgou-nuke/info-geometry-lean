@@ -172,6 +172,10 @@ import InfoGeometry.Physics.AmariSurprisalSphereIwasawaBridge
 import InfoGeometry.Physics.AmariSurprisalSphereIwasawaBridgeAudit
 import InfoGeometry.Physics.QuantumVortexCutoffBlowupProtection
 import InfoGeometry.Physics.QuantumVortexCutoffBlowupProtectionAudit
+import InfoGeometry.Physics.SLnInformationBundleIwasawaTriad
+import InfoGeometry.Physics.SLnInformationBundleIwasawaTriadAudit
+import InfoGeometry.Physics.SimplexPrincipalBundleIwasawa
+import InfoGeometry.Physics.SimplexPrincipalBundleIwasawaAudit
 
 /-!
 # Physics Umbrella

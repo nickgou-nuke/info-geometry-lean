@@ -10454,6 +10454,8 @@ import InfoGeometry.Probability.BinaryAitchisonMoments
 import InfoGeometry.Probability.DerivationBridge
 import InfoGeometry.Probability.DetectorAngularHomotopy
 import InfoGeometry.Probability.DetectorAngularHomotopyAudit
+import InfoGeometry.Probability.DetectorCopulaDecoupling
+import InfoGeometry.Probability.DetectorCopulaDecouplingAudit
 import InfoGeometry.Probability.DetectorCrossSectionDuality
 import InfoGeometry.Probability.DetectorCrossSectionDualityAudit
 import InfoGeometry.Probability.DetectorEnsembleTransport
@@ -10461,6 +10463,8 @@ import InfoGeometry.Probability.DetectorOperatorSplitting
 import InfoGeometry.Probability.DetectorOperatorSplittingAudit
 import InfoGeometry.Probability.ApertureEntanglementFlux
 import InfoGeometry.Probability.ApertureEntanglementFluxAudit
+import InfoGeometry.Probability.CopulaIndependenceBridge
+import InfoGeometry.Probability.CopulaIndependenceBridgeAudit
 import InfoGeometry.Probability.DetectorRankOneScale
 import InfoGeometry.Probability.DetectorRankTwoResponse
 import InfoGeometry.Probability.DetectorRankTwoResponseAudit

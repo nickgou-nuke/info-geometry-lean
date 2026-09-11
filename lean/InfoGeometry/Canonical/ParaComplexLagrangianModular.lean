@@ -230,6 +230,16 @@ theorem zorn_square_eq_energy_smul_iff
   · intro h
     exact zorn_mass_shell_condensation p Δ E_energy h
 
+theorem zorn_massless_determinant_eq_zero_iff (p : ℝ) :
+    (zornMatrix p 0).det = 0 ↔ p = 0 := by
+  rw [zorn_determinant]
+  constructor
+  · intro h
+    nlinarith
+  · intro h
+    rw [h]
+    norm_num
+
 /-! ### 5. Penrose Twistor Spacetime Reality Adjacency -/
 
 /-- Theorem: Two spacetime points $X, Y$ sharing a common nonzero twistor are null-separated:

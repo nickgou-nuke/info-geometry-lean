@@ -83,6 +83,17 @@ theorem phaseFactor_neg (t : ℝ) (n : ℕ+) :
     ring
   rw [hneg, Complex.exp_neg]
 
+theorem phaseFactor_mul_index (t : ℝ) (m n : ℕ+) :
+    Complex.exp (Complex.I * (t : ℂ) * (Real.log ((m * n).val : ℝ) : ℂ)) =
+      Complex.exp (Complex.I * (t : ℂ) * (Real.log (m.val : ℝ) : ℂ)) *
+        Complex.exp (Complex.I * (t : ℂ) * (Real.log (n.val : ℝ) : ℂ)) := by
+  rw [show ((m * n).val : ℝ) = (m.val : ℝ) * (n.val : ℝ) by norm_num,
+    Real.log_mul (by positivity) (by positivity)]
+  rw [← Complex.exp_add]
+  congr 1
+  push_cast
+  ring
+
 /-!
 ## 2. Formal Flow Intertwining (Liouville Grading)
 

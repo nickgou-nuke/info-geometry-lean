@@ -3,6 +3,7 @@ import Mathlib.Tactic
 import InfoGeometry.Physics.AmariSurprisalIwasawaSynthesis
 import InfoGeometry.Physics.PositiveDistSphereInjectionBridge
 import InfoGeometry.Algebra.BhattacharyyaFisherRaoBridge
+import Mathlib.LinearAlgebra.Matrix.DotProduct
 
 open scoped BigOperators
 
@@ -15,6 +16,20 @@ variable {D : ℕ}
 /-- Bhattacharyya overlap of two strictly positive finite distributions. -/
 def bhattacharyyaOverlap (P Q : PositiveDist D) : ℝ :=
   ∑ i, Real.sqrt (P.p i * Q.p i)
+
+theorem bhattacharyyaOverlap_eq_dotProduct (P Q : PositiveDist D) :
+    bhattacharyyaOverlap P Q =
+      dotProduct (fun i => Real.sqrt (P.p i)) (fun i => Real.sqrt (Q.p i)) := by
+  unfold bhattacharyyaOverlap dotProduct
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [Real.sqrt_mul (le_of_lt (P.h_pos i))]
+
+theorem amplitude_dotProduct_self (P : PositiveDist D) :
+    dotProduct (fun i => Real.sqrt (P.p i)) (fun i => Real.sqrt (P.p i)) = 1 := by
+  unfold dotProduct
+  simpa [pow_two, Real.sq_sqrt (fun i => le_of_lt (P.h_pos i))] using
+    P.sum_amplitude_sq_eq_one
 
 theorem bhattacharyyaOverlap_eq_canonicalCoeff
     (P Q : PositiveDist D) :
@@ -145,30 +160,6 @@ theorem fisherRaoDistance_eq_zero_iff_overlap_eq_one
     rw [h, Real.arccos_one]
     ring
 
-theorem bhattacharyyaOverlap_eq_one_imp_prob_eq
-    (P Q : PositiveDist D) (h : bhattacharyyaOverlap P Q = 1) : P.p = Q.p := by
-  have hsum : ∑ i, (Real.sqrt (P.p i) - Real.sqrt (Q.p i)) ^ 2 = 0 := by
-    have hmul : ∀ i : Fin D, Real.sqrt (P.p i * Q.p i) =
-        Real.sqrt (P.p i) * Real.sqrt (Q.p i) := fun i =>
-      Real.sqrt_mul (le_of_lt (P.h_pos i)) (Q.p i)
-    have hsqP : ∀ i : Fin D, (Real.sqrt (P.p i)) ^ 2 = P.p i := fun i =>
-      Real.sq_sqrt (le_of_lt (P.h_pos i))
-    have hsqQ : ∀ i : Fin D, (Real.sqrt (Q.p i)) ^ 2 = Q.p i := fun i =>
-      Real.sq_sqrt (le_of_lt (Q.h_pos i))
-    unfold bhattacharyyaOverlap at h
-    rw [← h]
-    simp_rw [sub_sq, hsqP, hsqQ, hmul]
-    rw [Finset.sum_sub_distrib, Finset.sum_add_distrib,
-      Finset.sum_add_distrib, P.h_sum, Q.h_sum]
-    ring
-  have hz (i : Fin D) : (Real.sqrt (P.p i) - Real.sqrt (Q.p i)) ^ 2 = 0 :=
-    (Finset.sum_eq_zero_iff_of_nonneg (fun j _ => sq_nonneg _)).mp hsum i
-      (Finset.mem_univ i)
-  funext i
-  have hs : Real.sqrt (P.p i) = Real.sqrt (Q.p i) := by nlinarith [hz i]
-  have hs2 := congrArg (fun x : ℝ => x ^ 2) hs
-  simpa [Real.sq_sqrt (le_of_lt (P.h_pos i)),
-    Real.sq_sqrt (le_of_lt (Q.h_pos i))] using hs2
 
 theorem fisherRaoDistance_eq_zero_of_amplitude_eq
     (P Q : PositiveDist D)

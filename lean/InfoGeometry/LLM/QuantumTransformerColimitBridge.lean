@@ -92,6 +92,25 @@ theorem attentionStageEmbedding_injective (n : ℕ) :
     (⟨2 * j.val, by omega⟩ : Fin (2^(n + 1)))
   simpa [attentionStageEmbedding] using hentry
 
+theorem attentionStageEmbedding_one (n : ℕ) :
+    attentionStageEmbedding n (1 : AttentionStage n) = (1 : AttentionStage (n + 1)) := by
+  ext i j
+  by_cases hij : i = j
+  · subst hij
+    simp [attentionStageEmbedding]
+  · have hdiv : (i.val / 2 : ℕ) ≠ j.val / 2 ∨ i.val % 2 ≠ j.val % 2 := by
+      by_contra h
+      push_neg at h
+      apply hij
+      apply Fin.ext
+      omega
+    dsimp [attentionStageEmbedding]
+    split_ifs with hmod
+    · have hmod' : ¬ i.val % 2 ≠ j.val % 2 := fun h => h hmod
+      have hdiv' : (i.val / 2 : ℕ) ≠ j.val / 2 := Or.resolve_right hdiv hmod'
+      simp [hdiv', Matrix.one_apply, hij]
+    · simp [Matrix.one_apply, hij]
+
 /-- Linear map version of normalized trace. -/
 def attentionStageTraceLinear (n : ℕ) : AttentionStage n →ₗ[ℝ] ℝ where
   toFun := attentionStageTrace n

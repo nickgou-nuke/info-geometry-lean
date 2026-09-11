@@ -185,6 +185,8 @@ import InfoGeometry.Physics.AitchisonRapidityApollonian
 import InfoGeometry.Physics.AitchisonRapidityApollonianAudit
 import InfoGeometry.Physics.AtiyahBottEquivariantLocalizationIndex
 import InfoGeometry.Physics.AtiyahBottEquivariantLocalizationIndexAudit
+import InfoGeometry.Physics.UnitSphereDistanceTriangle
+import InfoGeometry.Physics.UnitSphereDistanceTriangleAudit
 
 /-!
 # Physics Umbrella

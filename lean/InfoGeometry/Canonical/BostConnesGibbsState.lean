@@ -61,6 +61,17 @@ theorem bostConnesExpectation_nonneg (β : ℝ) (hβ : 1 < β)
   exact tsum_nonneg fun n => mul_nonneg
     (le_of_lt (normalizedBostConnesWeight_pos β hβ n)) (hf n)
 
+/- Pointwise order is preserved by the diagonal Gibbs expectation. -/
+theorem bostConnesExpectation_mono (β : ℝ) (hβ : 1 < β)
+    {f g : ℕ+ → ℝ}
+    (hfg : ∀ n, f n ≤ g n)
+    (hf : Summable fun n : ℕ+ => normalizedBostConnesWeight β n * f n)
+    (hg : Summable fun n : ℕ+ => normalizedBostConnesWeight β n * g n) :
+    bostConnesExpectation β hβ f ≤ bostConnesExpectation β hβ g := by
+  rw [bostConnesExpectation, bostConnesExpectation]
+  exact hf.tsum_le_tsum (fun n => mul_le_mul_of_nonneg_left (hfg n)
+    (le_of_lt (normalizedBostConnesWeight_pos β hβ n))) hg
+
 /-- Additivity of Gibbs expectation under the corresponding summability hypotheses. -/
 theorem bostConnesExpectation_add (β : ℝ) (hβ : 1 < β)
     {f g : ℕ+ → ℝ}

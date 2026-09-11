@@ -40,10 +40,18 @@ variable [InnerProductSpace ℝ E]
   ∀ {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] (x y : UnitSphere E),
     unitSphereAngularAngle x y = Real.arccos (inner ℝ (x : E) (y : E)))
 
+#check (@unitSphereAngularAngle_triangle :
+  ∀ {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (x y z : UnitSphere E),
+    unitSphereAngularAngle x z ≤
+      unitSphereAngularAngle x y + unitSphereAngularAngle y z)
+
 #print axioms unitSphereDistance_triangle
 #print axioms unitSphereDistance_self
 #print axioms unitSphereDistance_comm
 #print axioms unitSphere_norm
 #print axioms unitSphereAngularAngle_eq_arccos_inner
+#print axioms unitSphereAngularAngle_triangle
+#print axioms angular_distance_triangle_of_metric_realization
 
 end InfoGeometry.Physics.UnitSphereDistanceTriangleAudit

@@ -3,7 +3,12 @@
 
 Features:
   1. Validates all draft artifacts (academic letter, X thread, Zulip post).
-  2. Generates pre-filled mailto URLs for 1-click email transmission to DeepMind project leads.
+  2. Generates pre-filled mailto URLs for 1-click email transmission to DeepMind project leads:
+     - Dr. Thomas Hubert (AlphaProof Lead)
+     - Dr. Julian Schrittwieser (AlphaProof / AlphaZero Co-Creator)
+     - Dr. Pushmeet Kohli (VP of Research, AI for Science)
+     - Prof. Swarat Chaudhuri (AlphaProof Nexus Lead)
+     - Dr. George Tsoukalas (AlphaProof Nexus Research Lead)
   3. Integrates with outreach_approval.py ledger for strict human-in-the-loop tracking.
   4. Checks git push status to ensure repository is fully synchronized on upstream.
   5. Formats X broadcast command with safety checks.
@@ -33,13 +38,19 @@ except ImportError:
     list_approvals = None
 
 DRAFTS_DIR = REPO_ROOT / "tools/community-outreach/drafts"
-DISPATCH_MD = DRAFTS_DIR / "deepmind_alphaproof_dispatch.md"
+DISPATCH_MD = DRAFTS_DIR / "google_deepmind_gemini_alphaproof_dispatch.md"
 TWEET_TXT = DRAFTS_DIR / "deepmind_alphaproof_tweet.txt"
 ZULIP_MD = DRAFTS_DIR / "deepmind_alphaproof_zulip.md"
 
-TARGET_ID = "DEEPMIND-ALPHAPROOF"
-RECIPIENTS = ["thomas.hubert@google.com", "pushmeet@google.com"]
-EMAIL_SUBJECT = "Non-Commutative Inductive Colimits & Neutral Hodge Geometry: A Research-Grade Lean 4 Benchmark for AlphaProof"
+TARGET_ID = "GOOGLE-DEEPMIND-ALPHAPROOF"
+RECIPIENTS = [
+    "thomas.hubert@google.com",
+    "schrittwieser@google.com",
+    "pushmeet@google.com",
+    "swarat@google.com",
+    "tsoukalas@google.com",
+]
+EMAIL_SUBJECT = "Synthesized with Gemini & Antigravity: An 11,970-Theorem Non-Textbook Lean 4 Web for AlphaProof's Swarm"
 
 
 def check_git_status() -> dict:
@@ -58,7 +69,7 @@ def validate_drafts() -> bool:
     """Validate existence and constraints of all outreach drafts."""
     all_ok = True
     for path, name in [
-        (DISPATCH_MD, "DeepMind academic dispatch"),
+        (DISPATCH_MD, "Google DeepMind academic dispatch"),
         (TWEET_TXT, "X / Twitter thread draft"),
         (ZULIP_MD, "Zulip post draft"),
     ]:
@@ -74,7 +85,6 @@ def validate_drafts() -> bool:
 def generate_mailto_url() -> str:
     """Generate pre-filled mailto URL for direct email dispatch."""
     body_text = DISPATCH_MD.read_text(encoding="utf-8")
-    # Strip markdown header
     if "---" in body_text:
         parts = body_text.split("---", 1)
         body_text = parts[1].strip()
@@ -88,7 +98,7 @@ def generate_mailto_url() -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Google DeepMind AlphaProof Outreach Runner")
+    parser = argparse.ArgumentParser(description="Google DeepMind AlphaProof / Gemini Outreach Runner")
     parser.add_argument("--preview", action="store_true", help="Preview all draft texts")
     parser.add_argument("--validate", action="store_true", help="Validate draft constraints")
     parser.add_argument("--generate-links", action="store_true", help="Generate mailto and submission links")
@@ -103,7 +113,11 @@ def main() -> int:
         choices=["send_email", "post_issue", "post_x", "post_forum"],
         help="Outreach action to record approval for",
     )
-    parser.add_argument("--note", default="Approved dispatch for Google DeepMind AlphaProof team", help="Approval note")
+    parser.add_argument(
+        "--note",
+        default="Direct dispatch from Antigravity & Nikolay Goutev to Google DeepMind AlphaProof / Gemini team",
+        help="Approval note",
+    )
 
     args = parser.parse_args()
 
@@ -131,7 +145,7 @@ def main() -> int:
         print("=" * 80)
         print(f"Recipients: {', '.join(RECIPIENTS)}")
         print(f"Subject: {EMAIL_SUBJECT}")
-        print(f"\nPre-filled mailto URL (clickable):\n{mailto[:300]}... [truncated]")
+        print(f"\nPre-filled mailto URL:\n{mailto[:350]}... [truncated]")
         print("\n" + "=" * 80)
         print("TRANSMISSION VECTOR 2: X (Twitter) Broadcast via x_broadcast.py")
         print("=" * 80)

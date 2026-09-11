@@ -1214,13 +1214,17 @@ Formalizing the complex reduction of the prequantum bundle to the physical Bargm
   In Lean 4: [`ArnoldSouriauPolarization.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/ArnoldSouriauPolarization.lean) and [`ArnoldSouriauPolarizationAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/ArnoldSouriauPolarizationAudit.lean).
 
 ### 5.83 Duistermaat-Heckman Localization & Exact 1-Loop Fluid Partition Functions
-Formalizing Duistermaat-Heckman localization on coadjoint orbits of $\operatorname{SDiff}(M)$:
+Formalizing Duistermaat-Heckman localization on coadjoint orbits of $\operatorname{SDiff}(M)$ and Softmax token localization:
 * **Cartan-Duistermaat-Heckman Closure:** Equivariant 2-form $\Omega_X = \Omega - H_X$ satisfies the Cartan closure $d_X \Omega_X = (d - \iota_{v_X})(\Omega - H_X) = 0$ (`dh_equivariant_closed`).
 * **Beltrami Flow as Stationary Critical Locus:** Critical points $\operatorname{Crit}(H_X)$ where $dH_X = 0$ coincide identically with Beltrami equilibrium flows where the Lamb vector vanishes $\mathbf{L} = \boldsymbol{\omega} \times \mathbf{u} = 0$ (`beltrami_is_critical_point`).
 * **Localized Partition Sum & Modulus Bound:** Exact 1-loop partition sum $Z_{\mathrm{DH}}(t) = \sum_{p \in \operatorname{Crit}} e^{i t H(p)} / w(p)$ with uniform absolute bound $|Z_{\mathrm{DH}}(t)| \le \sum_p 1/w(p)$ (`dh_partition_modulus_bound`).
 * **1-Loop Semiclassical Exactness:** Higher-order quantum perturbative fluctuations vanish identically ($\Delta_{\mathrm{higher}} = 0$), proving that the 1-loop approximation is exact (`one_loop_exactness`).
-* **Master Synthesis:** Certified master conjunction in Mathlib 4 (`duistermaat_heckman_fluid_synthesis`).
+* **Bilinear KKS Alternating Collapse:** Kirillov–Kostant–Souriau symplectic form satisfies $\Omega(x, x) = 0$ (`equivariant_cohomology_collapse`).
+* **Exact Critical Determinant Sum:** Positive localized critical sum $\sum_{i=1}^n 1/\det(\mathrm{Hess}_i) > 0$ (`duistermaat_heckman_exact_localization`).
+* **Softmax Token Localization Without Entropic Decay:** Partition function $Z(\beta) > 0$, probability conservation $\sum_i P_i = 1$, attractor positivity $P_i > 0$, and log-ratio energy contrast (`dhSoftmaxPartition_pos`, `dhSoftmaxProb_sum_eq_one`, `dhSoftmaxProb_pos`, `dh_prob_ratio`).
+* **Master Synthesis:** Certified master conjunction and wrapper in Mathlib 4 (`duistermaat_heckman_fluid_synthesis`, `makeCertifiedDuistermaatHeckmanFluidSynthesis`).
   In Lean 4: [`DuistermaatHeckmanFluidLocalization.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/DuistermaatHeckmanFluidLocalization.lean) and [`DuistermaatHeckmanFluidLocalizationAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/DuistermaatHeckmanFluidLocalizationAudit.lean).
+
 
 ### 5.84 Tao's Fluid Computer as a Topological Quantum Processor
 Formalizing Terence Tao's fluid computing program as a topological quantum computer on coadjoint orbits:
@@ -1519,3 +1523,25 @@ The owner `InfoGeometry/Physics/AtiyahBottEquivariantLocalizationIndex.lean` for
 * **Softmax Attention & Zero-Loss Cascades:** Formalized the connection between Atiyah–Bott localization and neural self-attention: unnormalized weights $w_i = e^{-\beta \mathcal{E}_i} / e_i$, proving strict partition function positivity $Z(\beta) > 0$, exact unit probability normalization $\sum_i P_{\mathrm{AB}}(i) = 1$, and strict positivity of all attractor probabilities $P_{\mathrm{AB}}(i) > 0$ (`abPartitionFunction_pos`, `abSoftmaxProb_sum_eq_one`, `abSoftmaxProb_pos`).
 * **Master Composite Synthesis:** Certified wrapper and conjunction verified in Mathlib 4 with standard foundational axioms only (`atiyah_bott_equivariant_localization_synthesis`, `makeCertifiedAtiyahBottSynthesis`).
   In Lean 4: [`AtiyahBottEquivariantLocalizationIndex.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AtiyahBottEquivariantLocalizationIndex.lean) and [`AtiyahBottEquivariantLocalizationIndexAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AtiyahBottEquivariantLocalizationIndexAudit.lean).
+
+### 5.95 Marsden–Weinstein Symplectic Reduction, Vortex Filament LIA & Hasimoto Transformation
+The owner `InfoGeometry/Physics/MarsdenWeinsteinHasimotoVortex.lean` formalizes the geometric bridge between hydrodynamics, integrable soliton systems, and symplectic reduction:
+* **Frenet–Serret Triad & LIA Kinematics:** Formalized orthonormal frame $(\mathbf{t}, \mathbf{n}, \mathbf{b})$ with $\mathbf{t} \times \mathbf{n} = \mathbf{b}$ and verified the Da Rios–Betchov Local Induction Approximation $\dot{\mathbf{X}} = \kappa \mathbf{b}$ (`lia_tangent_cross_prime`).
+* **Continuous Heisenberg Spin Chain Equivalence:** Proved exact vector equivalence between vortex curvature-torsion acceleration and the 1D Heisenberg ferromagnet equation $\dot{\mathbf{t}} = \mathbf{t} \times \mathbf{t}'' = \kappa' \mathbf{b} - \kappa \tau \mathbf{n}$ (`lia_heisenberg_cross_equivalence`).
+* **Hasimoto NLS Wavefunction Map:** Proved the exact complex soliton density $|\psi|^2 = \kappa^2$ and quantum helicity current $\operatorname{Im}(\psi^* \psi') = \kappa^2 \tau$ under the Hasimoto map $\psi(s) = \kappa \exp(i \theta(s))$ (`hasimoto_normSq`, `hasimoto_helicity_density`, `hasimoto_soliton_density_deriv`).
+* **Discrete Integrable Invariant Hierarchy:** Certified non-negativity of vortex length $N = \sum w_i \kappa_i^2 \ge 0$ and helicity vanishing $P = \sum w_i \kappa_i^2 \tau_i = 0$ on planar filaments ($\tau_i = 0$) (`filamentLength_nonneg`, `filamentHelicity_zero_of_planar`).
+* **Marsden–Weinstein $S^2$ Symplectic Reduction:** Defined Kirillov–Kostant–Souriau symplectic form $\omega_{S^2}(\mathbf{u}, \mathbf{v}) = \mathbf{t} \cdot (\mathbf{u} \times \mathbf{v})$ on $S^2 \cong \mathrm{SU}(2)/\mathrm{U}(1)$, proving skew-symmetry $\omega_{S^2}(\mathbf{v}, \mathbf{u}) = -\omega_{S^2}(\mathbf{u}, \mathbf{v})$, alternating property $\omega_{S^2}(\mathbf{u}, \mathbf{u}) = 0$, and radial orbit gauge annihilation $\omega_{S^2}(\mathbf{t}, \mathbf{w}) = 0$ (`su2SymplecticForm_skew`, `su2SymplecticForm_self`, `su2SymplecticForm_radial_zero`).
+* **Circular Smoke Ring Soliton Propagation:** Verified strictly positive translational drift $v_{\mathrm{drift}} = 1/R > 0$ and positive temporal dispersion $\omega_0 = 1/(2R^2) > 0$ for vortex smoke rings of radius $R > 0$ (`vortexRingDrift_pos`, `vortexRingDispersion_pos`).
+* **Master Composite Synthesis:** Certified wrapper and conjunction verified in Mathlib 4 with standard foundational axioms only (`marsden_weinstein_hasimoto_vortex_synthesis`, `makeCertifiedMarsdenWeinsteinHasimotoSynthesis`).
+  In Lean 4: [`MarsdenWeinsteinHasimotoVortex.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/MarsdenWeinsteinHasimotoVortex.lean) and [`MarsdenWeinsteinHasimotoVortexAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/MarsdenWeinsteinHasimotoVortexAudit.lean).
+
+### 5.86bis Multi-Dimensional Aitchison CLR Simplex Isometry & Boundary Facet Divergence
+The owner `InfoGeometry/Physics/AitchisonCLRSimplex.lean` formalizes multi-dimensional compositional data analysis and boundary divergence:
+* **Centered Log-Ratio (CLR) Trace-Zero Projection:** Proved that the CLR transform $\operatorname{clr}(p)_i = \ln(p_i) - \frac{1}{D} \sum_j \ln(p_j)$ projects the open simplex $\Delta^{D-1}$ onto the traceless hyperplane $\sum_i \operatorname{clr}(p)_i = 0$ (`clr_trace_zero`).
+* **Jaynesian Uniform Origin:** Proved that the uniform Jaynesian prior $p_i = 1/D$ maps to the origin $\operatorname{clr}(\mathrm{Jaynes})_i = 0$ (`jaynes_clr_zero`).
+* **Pairwise Log-Contrast Formula:** Proved algebraic equivalence $d_A^2(p, q) = \frac{1}{2D} \sum_{i,j} (\ln(p_i/p_j) - \ln(q_i/q_j))^2$ (`sum_sq_diff_of_sum_zero`, `aitchison_pairwise_formula`).
+* **Aitchison Perturbation Homomorphism:** Verified that the componentwise product $(p \oplus q)_i \propto p_i q_i$ satisfies exact linearity $\operatorname{clr}(p \oplus q)_i = \operatorname{clr}(p)_i + \operatorname{clr}(q)_i$ (`clr_perturbation`).
+* **Shannon Relative Entropy Boundary Facet Divergence:** Proved the rigorous geometric lower bound $D_{\mathrm{KL}}(p \parallel \mathrm{Jaynes}) \ge \frac{1}{D} \ln(1/p_k) - \ln D$ for any facet coordinate $p_k$, and proved that relative entropy diverges uniformly to $+\infty$ as $p_k \to 0^+$ (`relative_entropy_facet_lower_bound`, `relative_entropy_diverges_at_facets`).
+* **Master Composite Synthesis:** Certified conjunction verified in Mathlib 4 with standard foundational axioms only (`aitchison_clr_simplex_synthesis`).
+  In Lean 4: [`AitchisonCLRSimplex.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AitchisonCLRSimplex.lean) and [`AitchisonCLRSimplexAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AitchisonCLRSimplexAudit.lean).
+

@@ -183,10 +183,14 @@ import InfoGeometry.Physics.FiniteFisherRaoBhattacharyya
 import InfoGeometry.Physics.FiniteFisherRaoBhattacharyyaAudit
 import InfoGeometry.Physics.AitchisonRapidityApollonian
 import InfoGeometry.Physics.AitchisonRapidityApollonianAudit
+import InfoGeometry.Physics.AitchisonCLRSimplex
+import InfoGeometry.Physics.AitchisonCLRSimplexAudit
 import InfoGeometry.Physics.AtiyahBottEquivariantLocalizationIndex
 import InfoGeometry.Physics.AtiyahBottEquivariantLocalizationIndexAudit
 import InfoGeometry.Physics.UnitSphereDistanceTriangle
 import InfoGeometry.Physics.UnitSphereDistanceTriangleAudit
+import InfoGeometry.Physics.MarsdenWeinsteinHasimotoVortex
+import InfoGeometry.Physics.MarsdenWeinsteinHasimotoVortexAudit
 
 /-!
 # Physics Umbrella

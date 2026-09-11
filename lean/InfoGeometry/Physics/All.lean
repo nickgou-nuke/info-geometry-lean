@@ -176,6 +176,12 @@ import InfoGeometry.Physics.SLnInformationBundleIwasawaTriad
 import InfoGeometry.Physics.SLnInformationBundleIwasawaTriadAudit
 import InfoGeometry.Physics.SimplexPrincipalBundleIwasawa
 import InfoGeometry.Physics.SimplexPrincipalBundleIwasawaAudit
+import InfoGeometry.Physics.ConformalScaleAnomalyDimensionalTransmutation
+import InfoGeometry.Physics.ConformalScaleAnomalyDimensionalTransmutationAudit
+import InfoGeometry.Physics.PositiveDistSphereInjectionBridge
+import InfoGeometry.Physics.FiniteFisherRaoBhattacharyya
+import InfoGeometry.Physics.AitchisonRapidityApollonian
+import InfoGeometry.Physics.AitchisonRapidityApollonianAudit
 
 /-!
 # Physics Umbrella

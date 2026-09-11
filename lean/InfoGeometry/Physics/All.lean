@@ -138,6 +138,8 @@ import InfoGeometry.Physics.PlancherelWeylBridge
 import InfoGeometry.Physics.PlancherelWeylBridgeAudit
 import InfoGeometry.Physics.WignerSmithKreinBridge
 import InfoGeometry.Physics.WignerSmithKreinBridgeAudit
+import InfoGeometry.Physics.FisherRaoAitchisonKanBridge
+import InfoGeometry.Physics.FisherRaoAitchisonKanBridgeAudit
 
 /-!
 # Physics Umbrella

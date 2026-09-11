@@ -1607,6 +1607,14 @@ import InfoGeometry.Bridge.QuaternionicTwistorSphere
 import InfoGeometry.Bridge.RealModularBerryBridge
 import InfoGeometry.Bridge.VirasoroCrossFluxCocycleBridge
 import InfoGeometry.Bridge.ZornConformalSixConeBridge
+import InfoGeometry.CFT.CardyFormulaDerivation
+import InfoGeometry.CFT.CardyFormulaDerivationAudit
+import InfoGeometry.CFT.ChiralCFTModularSTransform
+import InfoGeometry.CFT.ChiralCFTModularSTransformAudit
+import InfoGeometry.CFT.CardyFormulaDerivation
+import InfoGeometry.CFT.CardyFormulaDerivationAudit
+import InfoGeometry.CFT.ChiralCFTModularSTransform
+import InfoGeometry.CFT.ChiralCFTModularSTransformAudit
 import InfoGeometry.CFT.KZBConformalBlocks
 import InfoGeometry.CFT.ModularInvariance
 import InfoGeometry.CFT.NarainTDuality
@@ -10324,6 +10332,8 @@ import InfoGeometry.Physics.QCDTwelveFoldStructuralLogosMap
 import InfoGeometry.Physics.QCDZornChargeConjugationBridge
 import InfoGeometry.Physics.QCDZornCl55FureyBridge
 import InfoGeometry.Physics.QCDZornColorSlotBridge
+import InfoGeometry.Physics.QuantumRetrodictionInformationGeometry
+import InfoGeometry.Physics.QuantumRetrodictionInformationGeometryAudit
 import InfoGeometry.Physics.RealChiralLorentzRepresentation
 import InfoGeometry.Physics.RealSpinorLorentzRepresentation
 import InfoGeometry.Physics.RegularBimoduleCommutant
@@ -10482,7 +10492,8 @@ import InfoGeometry.Probability.DetectorAnscombeMadelung
 import InfoGeometry.Probability.DetectorAnscombeMadelungAudit
 import InfoGeometry.Probability.DetectorPenroseEikonalRay
 import InfoGeometry.Probability.DetectorPenroseEikonalRayAudit
-
+import InfoGeometry.Probability.DetectorGlauberCorrelatorInversion
+import InfoGeometry.Probability.DetectorGlauberCorrelatorInversionAudit
 import InfoGeometry.Probability.DetectorEnsembleTransport
 import InfoGeometry.Probability.DetectorOperatorSplitting
 import InfoGeometry.Probability.DetectorOperatorSplittingAudit

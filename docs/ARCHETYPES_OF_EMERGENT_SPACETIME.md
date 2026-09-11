@@ -864,6 +864,16 @@ Formalizing the canonical mathematical connection between doubled Krein space bi
 * **Master Bi-Wave Ramanujan Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_biwave_ramanujan_synthesis`).
   In Lean 4: [`BiWaveRamanujanBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/BiWaveRamanujanBridge.lean) and [`BiWaveRamanujanBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/BiWaveRamanujanBridgeAudit.lean).
 
+### 5.56 Harish-Chandra Casimir Eigenvalue & SL(2, ℝ) Unitary Principal Series Bridge
+Formalizing the Lie algebraic and representation-theoretic carrier for harmonic analysis on the hyperbolic plane $\mathbb{H}^2 \cong \mathrm{SL}(2, \mathbb{R}) / \mathrm{SO}(2)$ and its connection to the critical line $\operatorname{Re}(s) = 1/2$:
+* **The $\mathfrak{sl}(2, \mathbb{R})$ Lie Algebra & Tracelessness:** The standard generators $(H, X, Y)$ are traceless and satisfy the fundamental commutation relations $[H, X] = 2X$, $[H, Y] = -2Y$, and $[X, Y] = H$ (`sl2_traceless`, `bracket_H_X`, `bracket_H_Y`, `bracket_X_Y`).
+* **Casimir Functional Reflection Symmetry:** The quadratic Casimir eigenvalue functional $\lambda(s) = s(1 - s)$ satisfies exact invariance under the functional equation reflection: $\lambda(1 - s) = \lambda(s)$ (`casimirEigenvalue_reflection`).
+* **Principal Unitary Series Evaluation:** On the critical line $s = 1/2 + it$, the Casimir eigenvalue evaluates to the strictly real quadratic expression $\lambda(1/2 + it) = 1/4 + t^2$ (`casimirEigenvalue_critical_line`).
+* **Strict Spectral Gap & Positivity:** For all real spectral frequencies $t \in \mathbb{R}$, $\lambda(1/2 + it) \ge 1/4 > 0$, bounding the continuous spectrum from below by the spectral gap $\lambda_0 = 1/4$ at the throat ground state $t = 0$ (`casimir_spectral_gap`, `casimir_strictly_positive`).
+* **Knapp-Stein / Harish-Chandra Unitary Intertwiner:** The 1-body boundary intertwiner $S(t) = (1/2 + it) / (1/2 - it)$ is unitary ($\|S(t)\| = 1$) and satisfies inversion $S(t) \cdot S(-t) = 1$ (`boundaryIntertwiner_unitary`, `boundaryIntertwiner_inversion`).
+* **Master Harish-Chandra Casimir Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_harish_chandra_casimir_synthesis`).
+  In Lean 4: [`HarishChandraCasimirBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/HarishChandraCasimirBridge.lean) and [`HarishChandraCasimirBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/HarishChandraCasimirBridgeAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -939,6 +949,7 @@ Formalizing the canonical mathematical connection between doubled Krein space bi
 | **Aitchison-Jaynes Rapidity Bridge** | Binary Simplex $\Delta^1$ / Jaynesian State $p=1/2$ / $\operatorname{logit}(p) = 2\theta$ | `certified_aitchison_jaynes_rapidity_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Apollonius-Cayley Boundary Scattering** | Cayley Transform $\rho(s) = s/(1-s)$ / $S(t) = (1/2+it)/(1/2-it)$ / Critical Line | `certified_apollonius_cayley_scattering_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Aharonov Bi-Wave & Ramanujan Bridge** | Krein Swap $J$ / Weak Values / $S(t)$ Intertwiner / Ramanujan $c_q(n)$ | `certified_biwave_ramanujan_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Harish-Chandra Casimir & SL(2, ℝ)** | $\mathfrak{sl}(2, \mathbb{R})$ Triad / $\lambda(s) = s(1-s) = 1/4+t^2 \ge 1/4$ | `certified_harish_chandra_casimir_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

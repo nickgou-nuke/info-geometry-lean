@@ -10115,6 +10115,8 @@ import InfoGeometry.Physics.ApolloniusCayleyScatteringBridge
 import InfoGeometry.Physics.ApolloniusCayleyScatteringBridgeAudit
 import InfoGeometry.Physics.BiWaveRamanujanBridge
 import InfoGeometry.Physics.BiWaveRamanujanBridgeAudit
+import InfoGeometry.Physics.HarishChandraCasimirBridge
+import InfoGeometry.Physics.HarishChandraCasimirBridgeAudit
 import InfoGeometry.Physics.LorentzChiralCuntzBridge
 import InfoGeometry.Physics.MD000FoundationalMatrixFramework
 import InfoGeometry.Physics.MD001MatrixQuantumGeometry

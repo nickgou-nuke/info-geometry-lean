@@ -922,6 +922,16 @@ Formalizing the $D$-dimensional compositional simplex geometry and the trace-fre
 * **Master Aitchison Trace-Determinant Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_aitchison_trace_determinant_synthesis`).
   In Lean 4: [`AitchisonTraceDeterminantBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AitchisonTraceDeterminantBridge.lean) and [`AitchisonTraceDeterminantBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AitchisonTraceDeterminantBridgeAudit.lean).
 
+### 5.62 Hilbert-Apollonian Projective Metric & Cross-Ratio Bridge
+Formalizing the projective cone geometry, the cross-ratio metric, and relativistic rapidity duality:
+* **Hilbert Projective Ray Invariance:** On the positive cone $\mathbb{R}_{>0}^2$, the Hilbert projective metric $d_H(\mathbf{x}, \mathbf{y}) = \ln \left( \frac{\max(x_1/y_1, x_2/y_2)}{\min(x_1/y_1, x_2/y_2)} \right)$ is invariant under arbitrary positive scalings $d_H(c_1 \mathbf{x}, c_2 \mathbf{y}) = d_H(\mathbf{x}, \mathbf{y})$ (`hilbert_scale_invariant`).
+* **Cross-Ratio Logarithm on $\Delta^1$:** For normalized states, the Hilbert metric reduces to the Apollonian cross-ratio metric $d_{\mathrm{Apol}}(p, q) = |\operatorname{logit}(p) - \operatorname{logit}(q)|$ (`hilbert_dist_eq_apollonian_of_ge`), where $\ln \left( \frac{p(1-q)}{q(1-p)} \right) = \operatorname{logit}(p) - \operatorname{logit}(q)$ (`log_cross_ratio`).
+* **Relativistic Rapidity Duality:** With rapidity $\theta(p) = \frac{1}{2}\operatorname{logit}(p)$, $d_{\mathrm{Apol}}(p, q) = 2 |\theta(p) - \theta(q)|$ (`apollonian_eq_two_mul_rapidity_diff`), invariant under Lorentz boosts (`apollonian_boost_invariance`).
+* **Jaynesian Throat & Parity Symmetry:** The Jaynesian prior $p = 1/2$ has $\operatorname{logit}(1/2) = 0$ and $\theta(1/2) = 0$ (`logit_half`, `rapidity_half`). Under glide reflection $p \mapsto 1 - p$, $d_{\mathrm{Apol}}(1 - p, 1/2) = d_{\mathrm{Apol}}(p, 1/2)$ (`apollonian_throat_reflection`).
+* **Asymptotic Lightcone Horizon:** For any target distance $M > 0$, deterministic certainty is unreachable at finite distance ($d_{\mathrm{Apol}}(p, 1/2) > M$, `apollonian_boundary_divergence`), proving that the boundary of the simplex is an asymptotic lightcone horizon.
+* **Master Hilbert-Apollonian Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_hilbert_apollonian_projective_synthesis`).
+  In Lean 4: [`HilbertApollonianProjectiveBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/HilbertApollonianProjectiveBridge.lean) and [`HilbertApollonianProjectiveBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/HilbertApollonianProjectiveBridgeAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -1003,6 +1013,7 @@ Formalizing the $D$-dimensional compositional simplex geometry and the trace-fre
 | **Fisher-Rao & Aitchison KAN Duality** | Fisher-Rao $g_{\mathrm{FR}} \ge 4$ / Aitchison $g_A \ge 8$ / Triad $b''=2g_A-2g_{\mathrm{FR}}$ / Throat $\tau(0)=4$ | `certified_fisher_rao_aitchison_kan_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Riemann-Siegel & Hardy Z Throat** | Phase $\|e^{i\theta}\|=1$ / Real $Z \in \mathbb{R}$ / Zero Equiv $Z=0 \iff \zeta=0$ / Even $Z(-t)=Z(t)$ | `certified_hardy_z_throat_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Aitchison Trace-Determinant Simplex** | Traceless $\sum \mathrm{clr} = 0$ / Jaynesian $\mathbf{0}$ / Double-Sum $\frac{1}{2D}\sum(u_i-u_j)^2 = \sum u_i^2$ | `certified_aitchison_trace_determinant_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Hilbert-Apollonian Projective Metric** | Scale Invariance / Cross-Ratio $\ln \mathrm{cr} = \Delta \mathrm{logit}$ / Rapidity $d_{\mathrm{Apol}} = 2|\Delta\theta|$ / Lightcone | `certified_hilbert_apollonian_projective_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

@@ -1,0 +1,22 @@
+import InfoGeometry.Physics.HilbertApollonianProjectiveBridge
+
+/-!
+# Audit for Hilbert-Apollonian Projective Metric & Cross-Ratio Bridge
+-/
+
+#print axioms InfoGeometry.Physics.HilbertApollonianProjectiveBridge.hilbert_scale_invariant
+#print axioms InfoGeometry.Physics.HilbertApollonianProjectiveBridge.log_cross_ratio
+#print axioms InfoGeometry.Physics.HilbertApollonianProjectiveBridge.hilbert_dist_eq_apollonian_of_ge
+#print axioms InfoGeometry.Physics.HilbertApollonianProjectiveBridge.apollonian_nonneg
+#print axioms InfoGeometry.Physics.HilbertApollonianProjectiveBridge.apollonian_self
+#print axioms InfoGeometry.Physics.HilbertApollonianProjectiveBridge.apollonian_symm
+#print axioms InfoGeometry.Physics.HilbertApollonianProjectiveBridge.apollonian_triangle
+#print axioms InfoGeometry.Physics.HilbertApollonianProjectiveBridge.apollonian_eq_zero_iff
+#print axioms InfoGeometry.Physics.HilbertApollonianProjectiveBridge.apollonian_eq_two_mul_rapidity_diff
+#print axioms InfoGeometry.Physics.HilbertApollonianProjectiveBridge.apollonian_boost_invariance
+#print axioms InfoGeometry.Physics.HilbertApollonianProjectiveBridge.logit_half
+#print axioms InfoGeometry.Physics.HilbertApollonianProjectiveBridge.rapidity_half
+#print axioms InfoGeometry.Physics.HilbertApollonianProjectiveBridge.apollonian_dist_to_jaynesian
+#print axioms InfoGeometry.Physics.HilbertApollonianProjectiveBridge.apollonian_throat_reflection
+#print axioms InfoGeometry.Physics.HilbertApollonianProjectiveBridge.apollonian_boundary_divergence
+#print axioms InfoGeometry.Physics.HilbertApollonianProjectiveBridge.hilbert_apollonian_projective_synthesis

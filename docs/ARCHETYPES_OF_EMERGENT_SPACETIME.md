@@ -776,6 +776,16 @@ Formalizing the exact spectral and boundary-flux structure of the Berry-Keating 
 * **Unique Boundary Flux Cancellation:** The formal self-adjointness condition $1 - c = \bar{c}$ under integration by parts uniquely determines $\operatorname{Re}(c) = 1/2$. For real shifts $c \in \mathbb{R}$, $c = 1/2$ is unique (`DilationShift`, `dilation_shift_unique_half`, `real_dilation_shift_unique`, `certified_berry_keating_dilation_spectrum_synthesis`).
   In Lean 4: [`BerryKeatingDilationSpectrum.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/BerryKeatingDilationSpectrum.lean) and [`BerryKeatingDilationSpectrumAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/BerryKeatingDilationSpectrumAudit.lean).
 
+### 5.47 56D Sp(56, ℝ) DSZ Lattice Quantization and Non-Local Monodromy Twists
+Formalizing the Dirac-Schwinger-Zwanziger (DSZ) charge lattice $\Gamma_{\text{DSZ}} \cong \mathbb{Z}^{28} \times \mathbb{Z}^{28}$ and its non-local monodromy group $\mathrm{SL}(2, \mathbb{Z}) \subset \mathrm{Sp}(56, \mathbb{Z})$:
+* **Discrete DSZ Symplectic Pairing:** The topological charge pairing $\langle Q_1, Q_2 \rangle_{\text{DSZ}} = p_1 \cdot q_2 - q_1 \cdot p_2 \in \mathbb{Z}$ is skew-symmetric and vanishes identically on identical charges (`dszPairing`, `dszPairing_skew`, `dszPairing_self_zero`).
+* **Continuous Compatibility:** The canonical embedding $\iota : \Gamma_{\text{DSZ}} \hookrightarrow \mathbb{R}^{56}$ matches the continuous 56D symplectic form $\Omega_{56}(\iota(Q_1), \iota(Q_2)) = \langle Q_1, Q_2 \rangle_{\text{DSZ}}$ (`toRealCharge56`, `omega56_eq_dszPairing`).
+* **Continuous Duality Rotations:** The non-local $\mathrm{SO}(2)$ electromagnetic duality twist $T_\theta$ preserves $\Omega_{56}$ identically for all continuous angles $\theta \in \mathbb{R}$ and forms a 1-parameter group $T_{\theta_1 + \theta_2} = T_{\theta_1} \circ T_{\theta_2}$ with $T_0 = \mathbb{I}$ (`dualityTwist`, `dualityTwist_preserves_omega56`, `dualityTwist_zero`, `dualityTwist_add`).
+* **Discrete Electric-Magnetic Exchange:** The quarter-turn twist $S = T_{\pi/2}$ acts as $S(p, q) = (q, -p)$, preserving the integer lattice $\Gamma_{\text{DSZ}}$ and the integer pairing, satisfying $S^2 = -\mathbb{I}_{56}$ (charge conjugation) and $S^4 = \mathbb{I}_{56}$ (`emExchangeTwist`, `emExchangeTwist_sq`, `emExchangeTwist_pow_four`, `latticeEMExchange`, `dszPairing_latticeEMExchange`, `latticeEMExchange_sq`, `latticeEMExchange_pow_four`, `toRealCharge56_latticeEMExchange`).
+* **Parabolic Axion Monodromy Shifts:** Encircling moduli space singularities induces integer axion shifts $T_k(p, q) = (p + k q, q)$ for $k \in \mathbb{Z}$, preserving $\Gamma_{\text{DSZ}}$ and the DSZ pairing (`latticeAxionTwist`, `dszPairing_latticeAxionTwist`, `latticeAxionTwist_add`, `latticeAxionTwist_zero`, `omega56_axionTwist`).
+* **SL(2, ℤ) Modular Braid Relation on DSZ Lattice:** The discrete S-duality and axion shift transformations generate the modular group $\mathrm{SL}(2, \mathbb{Z})$ on the 56D lattice, satisfying the cubic braid relation $(S \circ T)^3 = \mathbb{I}_{56}$ and $S^4 = \mathbb{I}_{56}$ identically for every lattice charge state (`modular_relation_st_cubed`, `certified_sp56_dsz_nonlocal_twist_synthesis`).
+  In Lean 4: [`Sp56DSZNonlocalTwistBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/Sp56DSZNonlocalTwistBridge.lean) and [`Sp56DSZNonlocalTwistBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/Sp56DSZNonlocalTwistBridgeAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -842,6 +852,7 @@ Formalizing the exact spectral and boundary-flux structure of the Berry-Keating 
 | **Lorentz Boost & Krein Confinement** | Relativistic Boost $H = x \frac{d}{dx} + \frac{1}{2}$ / Krein Space $(H, J)$ / Null Charge Collapse | `lorentz_boost_krein_confinement_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Dilaton Weyl Anomaly Inflow & Selberg Bridge** | Dilaton Field $\Phi = \ln x$ / Callan-Harvey Inflow / Selberg Hyperbolic Weight $w(\ell) > 0$ | `certified_dilaton_weyl_anomaly_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Berry-Keating Dilation Critical Spectrum** | Mellin Multiplier $M(s) = i(s - 1/2)$ / Critical Line $\operatorname{Re}(s) = 1/2$ / Schwarz Reflection | `certified_berry_keating_dilation_spectrum_synthesis` | **Kernel-Checked (0 gaps)** |
+| **56D Sp(56, ℝ) DSZ Lattice & SL(2, ℤ) Twists** | DSZ Lattice $\mathbb{Z}^{28} \times \mathbb{Z}^{28}$ / $\mathrm{SO}(2)$ Duality / $\mathrm{SL}(2, \mathbb{Z})$ Braid $(ST)^3 = \mathbb{I}$ | `certified_sp56_dsz_nonlocal_twist_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

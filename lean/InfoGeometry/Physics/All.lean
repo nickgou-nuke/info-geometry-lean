@@ -183,6 +183,8 @@ import InfoGeometry.Physics.FiniteFisherRaoBhattacharyya
 import InfoGeometry.Physics.FiniteFisherRaoBhattacharyyaAudit
 import InfoGeometry.Physics.AitchisonRapidityApollonian
 import InfoGeometry.Physics.AitchisonRapidityApollonianAudit
+import InfoGeometry.Physics.AtiyahBottEquivariantLocalizationIndex
+import InfoGeometry.Physics.AtiyahBottEquivariantLocalizationIndexAudit
 
 /-!
 # Physics Umbrella

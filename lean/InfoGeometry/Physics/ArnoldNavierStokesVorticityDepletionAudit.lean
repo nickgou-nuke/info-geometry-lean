@@ -1,0 +1,13 @@
+import InfoGeometry.Physics.ArnoldNavierStokesVorticityDepletion
+
+open InfoGeometry.Physics.NavierStokesDepletion
+
+#print axioms beltrami_helicity_energy_proportionality
+#print axioms beltrami_lamb_annihilation
+#print axioms viscous_dissipation_rate_pos
+#print axioms energy_strictly_dissipates
+#print axioms scale_barrier_equivalence
+#print axioms scale_barrier_divergence
+#print axioms strain_must_exceed_viscous_threshold
+#print axioms beltrami_blowup_immunity
+#print axioms certified_navier_stokes_vorticity_depletion_synthesis

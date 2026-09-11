@@ -1096,6 +1096,35 @@ Formalizing the quantum electrodynamic field retrodiction from volume-integrated
 * **Master Synthesis:** Certified master conjunction in Mathlib 4 (`certified_glauber_correlator_inversion_synthesis`).
   In Lean 4: [`DetectorGlauberCorrelatorInversion.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorGlauberCorrelatorInversion.lean) and [`DetectorGlauberCorrelatorInversionAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorGlauberCorrelatorInversionAudit.lean).
 
+### 5.80 Acoustic Trapped Surfaces and Dual Horizon Decoupling on Background Flow
+Formalizing acoustic apparent horizons, trapped surfaces, and birefringent horizon decoupling on background fluid flow $\mathbf{v}_0(\mathbf{x})$:
+* **Mach Number Ordering on Chiral Branches:** For dual sound speeds $0 < c_- < c_+$ and nonzero background speed $v > 0$, the fast Mach number is strictly smaller than the slow Mach number: $M_+ < M_-$ (`mach_ordering`).
+* **Background Flow Invariance of Bimetric Gap:** The lab-frame metric difference $g_{00}^{(+)} - g_{00}^{(-)} = -(c_+^2 - c_-^2) < 0$ is strictly independent of background velocity $v$ (`bimetric_gap_background_invariance`, `bimetric_gap_strictly_negative`), preserving the interval difference $ds_+^2 - ds_-^2 = -(c_+^2 - c_-^2)dt^2 \le 0$ (`acoustic_interval_bimetric_gap`).
+* **Birefringent Transonic Window & Trapped Surface:** When $c_- < v < c_+$, the slow branch is strictly supersonic ($M_- > 1$, $g_{00}^{(-)} > 0$), creating an acoustic trapped region/event horizon (`slow_supersonic_in_window`, `slow_trapped_in_window`), while the fast branch remains strictly subsonic ($M_+ < 1$, $g_{00}^{(+)} < 0$), completely untrapped (`fast_subsonic_in_window`, `fast_untrapped_in_window`).
+* **Horizon Decoupling & Upstream Escape:** In the transonic window, slow phonons cannot propagate upstream ($c_- - v < 0$) (`slow_no_upstream_escape`), whereas fast phonons escape upstream freely ($c_+ - v > 0$) (`fast_upstream_escape`). At the slow event horizon $v = c_-$, the fast metric is regular and timelike ($g_{00}^{(+)} = c_-^2 - c_+^2 < 0$), proving that the slow acoustic horizon is completely transparent to fast modes (`slow_horizon_transparent_to_fast`).
+* **Master Synthesis:** Certified master conjunction in Mathlib 4 (`certified_acoustic_trapped_surface_synthesis`).
+  In Lean 4: [`AcousticTrappedSurfaceHorizonDecoupling.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AcousticTrappedSurfaceHorizonDecoupling.lean) and [`AcousticTrappedSurfaceHorizonDecouplingAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AcousticTrappedSurfaceHorizonDecouplingAudit.lean).
+
+### 5.81 Arnold Navier-Stokes Vorticity Depletion, Scale Barrier & Blow-Up Mechanics
+Formalizing the algebraic and geometric structure of the 3D Navier-Stokes nonlinearity depletion, the viscous scale barrier, and finite-time blow-up criteria:
+* **Beltrami Helicity-Energy Proportionality:** When $\boldsymbol{\omega} = \lambda \mathbf{u}$, the kinetic helicity density satisfies $h(\mathbf{u}, \lambda \mathbf{u}) = 2 \lambda E(\mathbf{u})$ (`beltrami_helicity_energy_proportionality`).
+* **Lamb Vector Annihilation:** Collinear vorticity annihilates the Lamb vector identically: $\mathbf{L} = \boldsymbol{\omega} \times \mathbf{u} = 0$ (`beltrami_lamb_annihilation`), reducing advection to pure potential gradient $(\mathbf{u} \cdot \nabla)\mathbf{u} = \nabla(\frac{1}{2}\|\mathbf{u}\|^2)$ and neutralizing nonlinear vortex stretching.
+* **Vector Laplacian on Beltrami Fields:** For an incompressible Beltrami field, $\Delta \mathbf{u} = -\lambda^2 \mathbf{u}$ (`laplacianEigenvalue`), yielding exact viscous dissipation rates for energy and helicity: $\frac{dE}{dt} = -2\nu\lambda^2 E$ and $\frac{dH}{dt} = -2\nu\lambda^2 H$ (`energy_strictly_dissipates`).
+* **The Viscous Scale Barrier:** As spatial scale $r = 1/\lambda \to 0$, the viscous dissipation rate $\Gamma = 2\nu/r^2$ diverges quadratically (`scale_barrier_equivalence`), exceeding any threshold $M > 0$ below a critical scale $r_{\mathrm{crit}}$ (`scale_barrier_divergence`).
+* **Vortex Stretching vs. Blow-Up Criterion:** Net vortex amplification $\frac{dH}{dt} > 0$ strictly requires localized stretching strain to overcome the viscous barrier: $\sigma > 2\nu\lambda^2$ (`strain_must_exceed_viscous_threshold`).
+* **Beltrami Blow-Up Immunity:** Beltrami eigenfields have depleted stretching ($\sigma \le 0$), ensuring $\frac{dH}{dt} < 0$ and absolute immunity to self-amplifying blow-up (`beltrami_blowup_immunity`). Singularity formation requires detuning ($\mathbf{u} \not\parallel \boldsymbol{\omega}$) to activate non-vanishing Lamb forces.
+* **Master Synthesis:** Certified master conjunction in Mathlib 4 (`certified_navier_stokes_vorticity_depletion_synthesis`).
+  In Lean 4: [`ArnoldNavierStokesVorticityDepletion.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/ArnoldNavierStokesVorticityDepletion.lean) and [`ArnoldNavierStokesVorticityDepletionAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/ArnoldNavierStokesVorticityDepletionAudit.lean).
+
+### 5.82 SDiff Coadjoint Orbits, Kinetic Helicity, and Arnold Casimir Invariance
+Formalizing the coadjoint representation on the volume-preserving diffeomorphism group $\operatorname{SDiff}(M)$:
+* **Local Isometry Invariance:** Orthogonal transformations representing $D\varphi \in \mathrm{SO}(3)$ preserve the dot product (`dot_invariant`), the norm squared (`normSq_invariant`), and the kinetic energy density (`kinetic_energy_invariant`).
+* **Helicity Invariance on Coadjoint Orbits:** Coadjoint pushforward preserves local kinetic helicity density: $h(R\mathbf{u}, R\boldsymbol{\omega}) = h(\mathbf{u}, \boldsymbol{\omega})$ (`helicity_density_invariant`).
+* **Generalized Casimir Invariant:** The total kinetic helicity functional satisfies `IsGeneralizedCasimir` along all coadjoint flow orbits on $\operatorname{SDiff}(M)^*$ (`helicity_is_generalized_casimir`).
+* **Beltrami Helicity Invariance:** Linear orthogonal coadjoint action preserves Beltrami helicity eigenvalues identically (`beltrami_helicity_coadjoint_invariant`).
+* **Master Synthesis:** Certified master conjunction in Mathlib 4 (`certified_sdiff_coadjoint_helicity_synthesis`).
+  In Lean 4: [`SDiffCoadjointHelicityCasimir.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/SDiffCoadjointHelicityCasimir.lean) and [`SDiffCoadjointHelicityCasimirAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/SDiffCoadjointHelicityCasimirAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -1196,6 +1225,9 @@ Formalizing the quantum electrodynamic field retrodiction from volume-integrated
 | **Chiral CFT Modular S-Duality & Heat Current** | Modular S-Involution $S^2 = \operatorname{id}$ / Casimir $E_0 = -\frac{c \hbar v}{24 R} < 0$ / Universal Heat Current $J_Q = \frac{c \pi^2 k_B^2 T^2}{6 h}$ / Thermal Conductance $\kappa = \frac{c \pi^2 k_B^2 T}{3 h}$ | `certified_chiral_cft_modular_s_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Cardy Formula & Conformal Microcanonical Entropy** | Modular Torus Duality / Saddle Point $\beta_* = S_{\mathrm{Cardy}} / (2\Delta)$ / Equipartition / Asymptotic Density $\rho \sim e^{2\pi\sqrt{c\Delta/6}}$ / Stability $\partial_\beta^2 S_{\mathrm{eff}} > 0$ | `certified_cardy_formula_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Glauber Field Correlators & Light-Cone Retrodiction** | Volume-Integrated Glauber 1- & 2-Correlators / Null Cone Transport $c(-\Delta t) = d+d_0$ / Invariant Cross-Ratio $\frac{L_1 L_2}{Q} = \frac{A_0}{\kappa}$ / Sqrt Amplitude $X = \sqrt{Q}$ / Aitchison Shift | `certified_glauber_correlator_inversion_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Acoustic Trapped Surfaces & Horizon Decoupling** | Background Flow $\mathbf{v}_0$ / Transonic Window $c_- < v < c_+$ / Slow Trapped $g_{00}^{(-)} > 0$ / Fast Untrapped $g_{00}^{(+)} < 0$ / Upstream Escape | `certified_acoustic_trapped_surface_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Arnold Navier-Stokes Vorticity Depletion** | Beltrami $\boldsymbol{\omega} = \lambda \mathbf{u} \implies \mathbf{L} = 0$ / Laplacian $\Delta \mathbf{u} = -\lambda^2 \mathbf{u}$ / Scale Barrier $2\nu/r^2 \to \infty$ / Blow-Up Strain $\sigma > 2\nu\lambda^2$ | `certified_navier_stokes_vorticity_depletion_synthesis` | **Kernel-Checked (0 gaps)** |
+| **SDiff Coadjoint Helicity & Arnold Casimir** | Lie Group $\operatorname{SDiff}(M)$ / Coadjoint Pushforward / Isometry Invariance / Generalized Casimir $\mathcal{H}(\operatorname{Ad}_\varphi^* u) = \mathcal{H}(u)$ | `certified_sdiff_coadjoint_helicity_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

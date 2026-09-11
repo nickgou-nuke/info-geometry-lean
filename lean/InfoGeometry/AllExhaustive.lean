@@ -9894,6 +9894,8 @@ import InfoGeometry.Physics.A31Mirror
 import InfoGeometry.Physics.A39Mirror
 import InfoGeometry.Physics.A73Mirror
 import InfoGeometry.Physics.A75Mirror
+import InfoGeometry.Physics.AcousticTrappedSurfaceHorizonDecoupling
+import InfoGeometry.Physics.AcousticTrappedSurfaceHorizonDecouplingAudit
 import InfoGeometry.Physics.Algebra.ArtinSchreierF2
 import InfoGeometry.Physics.Algebra.CuntzKGroupStructure
 import InfoGeometry.Physics.Algebra.CuntzToeplitzBraidRepresentation
@@ -9932,6 +9934,8 @@ import InfoGeometry.Physics.AmplituhedronVolume
 import InfoGeometry.Physics.AmplituhedronZetaSum
 import InfoGeometry.Physics.ArnoldHydrodynamicsBeltrami
 import InfoGeometry.Physics.ArnoldHydrodynamicsBeltramiAudit
+import InfoGeometry.Physics.ArnoldNavierStokesVorticityDepletion
+import InfoGeometry.Physics.ArnoldNavierStokesVorticityDepletionAudit
 import InfoGeometry.Physics.BostConnesAmplituhedronCriticalityBridge
 import InfoGeometry.Physics.BostConnesAmplituhedronCriticalityAudit
 import InfoGeometry.Physics.B3PresentedGroup
@@ -10338,6 +10342,8 @@ import InfoGeometry.Physics.RealChiralLorentzRepresentation
 import InfoGeometry.Physics.RealSpinorLorentzRepresentation
 import InfoGeometry.Physics.RegularBimoduleCommutant
 import InfoGeometry.Physics.RegularizedSurprisalKernel
+import InfoGeometry.Physics.SDiffCoadjointHelicityCasimir
+import InfoGeometry.Physics.SDiffCoadjointHelicityCasimirAudit
 import InfoGeometry.Physics.Section00MatrixBasisFramework
 import InfoGeometry.Physics.Section01MatrixBasisIntroduction
 import InfoGeometry.Physics.Section02FundamentalStructures

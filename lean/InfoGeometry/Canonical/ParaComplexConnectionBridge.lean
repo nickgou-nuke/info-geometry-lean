@@ -48,6 +48,88 @@ def peircePlus (PCS : ParaComplexStructure V) : V →ₗ[ℝ] V :=
 def peirceMinus (PCS : ParaComplexStructure V) : V →ₗ[ℝ] V :=
   (1 / 2 : ℝ) • (LinearMap.id - PCS.tau)
 
+def plusEigenspace (PCS : ParaComplexStructure V) : Submodule ℝ V :=
+  LinearMap.ker (PCS.tau - LinearMap.id)
+
+def minusEigenspace (PCS : ParaComplexStructure V) : Submodule ℝ V :=
+  LinearMap.ker (PCS.tau + LinearMap.id)
+
+theorem mem_plusEigenspace_iff (PCS : ParaComplexStructure V) (v : V) :
+    v ∈ plusEigenspace PCS ↔ PCS.tau v = v := by
+  change (((PCS.tau - (LinearMap.id : V →ₗ[ℝ] V)) v = 0)) ↔ _
+  simp [sub_eq_zero]
+
+theorem mem_minusEigenspace_iff (PCS : ParaComplexStructure V) (v : V) :
+    v ∈ minusEigenspace PCS ↔ PCS.tau v = -v := by
+  change (((PCS.tau + (LinearMap.id : V →ₗ[ℝ] V)) v = 0)) ↔ _
+  simp [eq_neg_iff_add_eq_zero]
+
+theorem range_peircePlus_eq_plusEigenspace (PCS : ParaComplexStructure V) :
+    (peircePlus PCS).range = plusEigenspace PCS := by
+  ext v
+  constructor
+  · rintro ⟨w, rfl⟩
+    apply (mem_plusEigenspace_iff PCS _).2
+    simp [peircePlus, LinearMap.add_apply, PCS.tau_sq, add_comm]
+  · intro hv
+    refine ⟨v, ?_⟩
+    rw [mem_plusEigenspace_iff PCS v] at hv
+    change (1 / 2 : ℝ) • (v + PCS.tau v) = v
+    rw [hv]
+    module
+
+theorem range_peirceMinus_eq_minusEigenspace (PCS : ParaComplexStructure V) :
+    (peirceMinus PCS).range = minusEigenspace PCS := by
+  ext v
+  constructor
+  · rintro ⟨w, rfl⟩
+    apply (mem_minusEigenspace_iff PCS _).2
+    simp [peirceMinus, LinearMap.sub_apply, PCS.tau_sq, sub_eq_add_neg,
+      add_comm, add_left_comm, add_assoc]
+  · intro hv
+    refine ⟨v, ?_⟩
+    rw [mem_minusEigenspace_iff PCS v] at hv
+    change (1 / 2 : ℝ) • (v - PCS.tau v) = v
+    rw [hv]
+    module
+
+theorem peircePlus_mem_plusEigenspace (PCS : ParaComplexStructure V) (v : V) :
+    peircePlus PCS v ∈ plusEigenspace PCS := by
+  rw [← range_peircePlus_eq_plusEigenspace PCS]
+  exact ⟨v, rfl⟩
+
+theorem peirceMinus_mem_minusEigenspace (PCS : ParaComplexStructure V) (v : V) :
+    peirceMinus PCS v ∈ minusEigenspace PCS := by
+  rw [← range_peirceMinus_eq_minusEigenspace PCS]
+  exact ⟨v, rfl⟩
+
+noncomputable def peirceDecomposition (PCS : ParaComplexStructure V) :
+    V ≃ₗ[ℝ] plusEigenspace PCS × minusEigenspace PCS where
+  toFun v := ⟨⟨peircePlus PCS v, peircePlus_mem_plusEigenspace PCS v⟩,
+    ⟨peirceMinus PCS v, peirceMinus_mem_minusEigenspace PCS v⟩⟩
+  invFun p := p.1 + p.2
+  left_inv v := by
+    rw [← peirce_sum_id PCS v]
+    rfl
+  right_inv p := by
+    apply Prod.ext
+    · apply Subtype.ext
+      change peircePlus PCS (p.1 + p.2) = p.1
+      rw [map_add, peircePlus_idem]
+      have h : peircePlus PCS p.2 = 0 := by
+        exact peircePlus_peirceMinus PCS p.2
+      rw [h, add_zero]
+    · apply Subtype.ext
+      change peirceMinus PCS (p.1 + p.2) = p.2
+      rw [map_add, peirceMinus_idem]
+      have h : peirceMinus PCS p.1 = 0 := by
+        exact peirceMinus_peircePlus PCS p.1
+      rw [h, zero_add]
+  map_add' x y := by
+    apply Prod.ext <;> apply Subtype.ext <;> simp [map_add]
+  map_smul' c x := by
+    apply Prod.ext <;> apply Subtype.ext <;> simp [map_smul]
+
 /-- The split Peirce projectors sum to the identity: P_+ + P_- = id. -/
 theorem peirce_sum_id (PCS : ParaComplexStructure V) (v : V) :
     peircePlus PCS v + peirceMinus PCS v = v := by
@@ -106,9 +188,8 @@ theorem tau_peirceMinus (PCS : ParaComplexStructure V) (v : V) :
     PCS.tau (peirceMinus PCS v) = - peirceMinus PCS v := by
   change PCS.tau ((1 / 2 : ℝ) • (v - PCS.tau v)) = -((1 / 2 : ℝ) • (v - PCS.tau v))
   rw [map_smul, map_sub, PCS.tau_sq]
-  rw [smul_sub, neg_smul]
-  congr 1
-  abel
+  have hneg : PCS.tau v - v = - (v - PCS.tau v) := by abel
+  rw [hneg, smul_neg]
 
 /-- Linear connection representation as a family of directional covariant derivatives. -/
 structure LinearConnection (V : Type*) [AddCommGroup V] [Module ℝ V] where

@@ -299,7 +299,7 @@ def realDensityOfCoordinates (x : Fin 16 → ℝ) : RealDiracBispinorDensity :=
     diracBilinearLabelToFin_right_inverse]
 
 /-- Matrix assigned to each of the sixteen bilinear labels. -/
-def diracBilinearMatrix : DiracBilinearLabel → DiracMatrix
+noncomputable def diracBilinearMatrix : DiracBilinearLabel → DiracMatrix
   | DiracBilinearLabel.scalar => 1
   | DiracBilinearLabel.pseudoscalar => gamma5
   | DiracBilinearLabel.vector mu => gamma mu
@@ -307,13 +307,13 @@ def diracBilinearMatrix : DiracBilinearLabel → DiracMatrix
   | DiracBilinearLabel.bivector b => gamma (bivectorLeft b) * gamma (bivectorRight b)
 
 /-- Explicit bispinor density component `ψbar Γ_l ψ`. -/
-def bispinorDensityComponent
+noncomputable def bispinorDensityComponent
     (psiBar psi : DiracSpinor) (l : DiracBilinearLabel) : ℂ :=
   ∑ a : Fin 4, ∑ b : Fin 4,
     psiBar a * diracBilinearMatrix l a b * psi b
 
 /-- The full sixteen-component complex bispinor density. -/
-def bispinorDensity (psiBar psi : DiracSpinor) : ComplexDiracBispinorDensity :=
+noncomputable def bispinorDensity (psiBar psi : DiracSpinor) : ComplexDiracBispinorDensity :=
   fun l => bispinorDensityComponent psiBar psi l
 
 @[simp] theorem bispinorDensity_apply

@@ -1,0 +1,16 @@
+import InfoGeometry.Physics.QuantumRetrodictionInformationGeometry
+
+open InfoGeometry.Physics.QuantumRetrodiction
+
+#print axioms anticommutator_symm
+#print axioms qfimEntry_symm
+#print axioms qfimEntry_diag
+#print axioms qfimEntry_diag_nonneg
+#print axioms directionalSLD_transpose
+#print axioms directional_qcrb
+#print axioms buresMetricForm_zero
+#print axioms accumulated_fisher_scaling
+#print axioms variance_bound_contraction
+#print axioms variance_bound_arbitrary_precision
+#print axioms nuclear_multipole_area_scaling
+#print axioms certified_quantum_retrodiction_synthesis

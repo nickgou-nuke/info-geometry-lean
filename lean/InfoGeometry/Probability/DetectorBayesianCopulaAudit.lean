@@ -1,0 +1,16 @@
+import InfoGeometry.Probability.DetectorBayesianCopula
+
+/-!
+# Audit for Detector Bayesian Copula & Geometric Factorization
+-/
+
+#print axioms InfoGeometry.Probability.DetectorBayesianCopula.singlesRate_zero
+#print axioms InfoGeometry.Probability.DetectorBayesianCopula.jointRate_zero
+#print axioms InfoGeometry.Probability.DetectorBayesianCopula.quadratic_restoration
+#print axioms InfoGeometry.Probability.DetectorBayesianCopula.copula_product_eq
+#print axioms InfoGeometry.Probability.DetectorBayesianCopula.copulaProduct_comm
+#print axioms InfoGeometry.Probability.DetectorBayesianCopula.bayesian_scale_invariance
+#print axioms InfoGeometry.Probability.DetectorBayesianCopula.bayesian_dilation_invariance
+#print axioms InfoGeometry.Probability.DetectorBayesianCopula.bayes_correlation_removal
+#print axioms InfoGeometry.Probability.DetectorBayesianCopula.physMarginal_product_factorization
+#print axioms InfoGeometry.Probability.DetectorBayesianCopula.certified_detector_bayesian_copula_synthesis

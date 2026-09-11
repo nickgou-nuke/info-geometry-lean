@@ -947,6 +947,15 @@ Formalizing the 2D copula state space, Bayesian independence restoration, and th
 * **Master Copula Decoupling Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_detector_copula_decoupling_synthesis`).
   In Lean 4: [`DetectorCopulaDecoupling.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorCopulaDecoupling.lean) and [`DetectorCopulaDecouplingAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorCopulaDecouplingAudit.lean).
 
+### 5.65 Detector Bayesian Copula & Geometric Factorization
+Formalizing the resolution of "why the zero-intercept parabola is at all possible" via Bayesian copula factorization:
+* **Topological Zero-Intercept Boundary Condition:** Under the natural optical coordinate $X = 1/(d+d_0)^2 \propto \sqrt{Q}$, the far-field boundary condition $d \to \infty \iff X \to 0$ mandates zero count rate: $R_i(0) = 0$ (`singlesRate_zero`) and $Q(0) = 0$ (`jointRate_zero`), physically enforcing the absence of a constant offset.
+* **Bayesian Copula Reference State:** Adding quadratic loss restores the linear marginal response $L_i(X) = C_i X$ (`quadratic_restoration`). The copula product of marginals $Y(X) = L_1(X) L_2(X) = (C_1 C_2) X^2$ (`copula_product_eq`, `copulaProduct_comm`) constructs the independent reference state.
+* **Scale Invariance & Dilation Gauge Invariance:** The Bayesian factorization quotient $Y(X)/Q(X) = (C_1 C_2)/\kappa$ is strictly invariant under the free scale $X$ (`bayesian_scale_invariance`) and continuous dilation scaling (`bayesian_dilation_invariance`).
+* **Self-Annihilation of Macroscopic Efficiencies:** Applying the quotient to physical sub-components ($C_i = A P_i \varepsilon_i$, $\kappa = A P_{12} W \varepsilon_1 \varepsilon_2$) causes the macroscopic efficiencies and solid angle to self-annihilate identically, recovering absolute activity $A \cdot (P_1 P_2)/(P_{12} W)$ (`bayes_correlation_removal`).
+* **Master Bayesian Copula Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_detector_bayesian_copula_synthesis`).
+  In Lean 4: [`DetectorBayesianCopula.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorBayesianCopula.lean) and [`DetectorBayesianCopulaAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorBayesianCopulaAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -1031,6 +1040,7 @@ Formalizing the 2D copula state space, Bayesian independence restoration, and th
 | **Hilbert-Apollonian Projective Metric** | Scale Invariance / Cross-Ratio $\ln \mathrm{cr} = \Delta \mathrm{logit}$ / Rapidity $d_{\mathrm{Apol}} = 2|\Delta\theta|$ / Lightcone | `certified_hilbert_apollonian_projective_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Aperture Entanglement Flux** | Legendre Factorization $J_k = J_0 Q_k$ / Rose $Q_k$ Limits / Étendue $\mathcal{E} = S\Omega$ / Isotropic Smearing | `certified_aperture_entanglement_flux_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Detector Copula Decoupling** | Product Copula $\Pi = uv$ / Bayes Decoupling / Linear Marginal / Scale Invariant Quotient | `certified_detector_copula_decoupling_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Detector Bayesian Copula** | Zero Intercept $R(0)=0$ / Copula Product $Y=(C_1 C_2)X^2$ / Dilation Invariance / Efficiency Cancellation | `certified_detector_bayesian_copula_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

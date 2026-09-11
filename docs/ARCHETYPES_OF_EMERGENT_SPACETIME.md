@@ -922,6 +922,16 @@ Formalizing the $D$-dimensional compositional simplex geometry and the trace-fre
 * **Master Aitchison Trace-Determinant Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_aitchison_trace_determinant_synthesis`).
   In Lean 4: [`AitchisonTraceDeterminantBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AitchisonTraceDeterminantBridge.lean) and [`AitchisonTraceDeterminantBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AitchisonTraceDeterminantBridgeAudit.lean).
 
+### 5.61.1 Aitchison-Cartan Dually Flat Information Geometry & Legendre-Bregman Synthesis
+Formalizing the Amari dually flat Hessian manifold on the probability simplex via the Cartan projection of the Lie algebra $\mathfrak{sl}(n, \mathbb{R})$:
+* **Cartan Subalgebra Idempotence:** The projection $\pi_{\mathfrak{a}}(x)_i = x_i - \frac{1}{n}\sum_k x_k$ is an idempotent linear operator ($\pi_{\mathfrak{a}}^2 = \pi_{\mathfrak{a}}$) onto the traceless Cartan space $\mathfrak{a}$ (`sum_cartanProj_zero`, `cartanProj_idempotent`).
+* **Centered Log-Ratio as Cartan Projection:** $\mathrm{clr}(P) = \pi_{\mathfrak{a}}(\ln P)$ (`clr_eq_cartanProj_log`), with exact softmax inversion on traceless coordinates $\mathrm{clr}(\operatorname{softmax}(u)) = u$ (`clr_softmax_inversion`).
+* **Legendre-Fenchel Duality:** Primal log-sum-exp potential $\psi(u)$ and dual negative Shannon entropy $\phi(p)$ satisfy exact equality: $\psi(u) + \phi(p) = \langle u, p \rangle$ (`legendre_fenchel_equality`).
+* **Bregman Divergence as KL Divergence:** Primal and dual Bregman divergences coincide identically with the Kullback-Leibler divergence (`dualBregman_eq_kl`, `primalBregman_eq_kl`).
+* **Information-Geometric Pythagorean Theorem:** Orthogonality $\sum_i (P_i - Q_i)(\ln R_i - \ln Q_i) = 0$ strictly implies $D_{\mathrm{KL}}(P \parallel R) = D_{\mathrm{KL}}(P \parallel Q) + D_{\mathrm{KL}}(Q \parallel R)$ (`kl_pythagorean_orthogonal`).
+* **Master Synthesis:** Certified master conjunction in Mathlib 4 (`certified_aitchison_cartan_dually_flat_synthesis`).
+  In Lean 4: [`AitchisonCartanDuallyFlatBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AitchisonCartanDuallyFlatBridge.lean) and [`AitchisonCartanDuallyFlatBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AitchisonCartanDuallyFlatBridgeAudit.lean).
+
 ### 5.62 Hilbert-Apollonian Projective Metric & Cross-Ratio Bridge
 Formalizing the projective cone geometry, the cross-ratio metric, and relativistic rapidity duality:
 * **Hilbert Projective Ray Invariance:** On the positive cone $\mathbb{R}_{>0}^2$, the Hilbert projective metric $d_H(\mathbf{x}, \mathbf{y}) = \ln \left( \frac{\max(x_1/y_1, x_2/y_2)}{\min(x_1/y_1, x_2/y_2)} \right)$ is invariant under arbitrary positive scalings $d_H(c_1 \mathbf{x}, c_2 \mathbf{y}) = d_H(\mathbf{x}, \mathbf{y})$ (`hilbert_scale_invariant`).
@@ -1221,6 +1231,26 @@ Formalizing Terence Tao's fluid computing program as a topological quantum compu
 * **Master Synthesis:** Certified master conjunction in Mathlib 4 (`tao_fluid_computer_synthesis`).
   In Lean 4: [`TaoFluidQuantumLogic.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/TaoFluidQuantumLogic.lean) and [`TaoFluidQuantumLogicAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/TaoFluidQuantumLogicAudit.lean).
 
+### 5.85 Fluid Chern-Simons Action, Moffatt Helicity & Anyon Braiding
+Formalizing the topological hydrodynamics of knotted vortex tubes and their Chern-Simons gauge correspondence:
+* **Moffatt's Helicity Formula:** Kinetic helicity of linked vortex filaments equals the Gauss linking number $\mathcal{H}_{\mathrm{mut}} = 2 \Gamma_1 \Gamma_2 \operatorname{Lk}(\gamma_1, \gamma_2)$ with symmetry under component permutation (`moffatt_linking_symmetry`).
+* **Călugăreanu-White-Fuchs Helicity Decomposition:** Self-helicity decomposes into writhe and twist $\mathcal{H}_{\mathrm{self}} = \Gamma^2 (\operatorname{Wr} + \operatorname{Tw})$ (`calugareanu_white_fuchs_helicity`).
+* **Chern-Simons Gauge Invariance on Closed Manifolds:** Total derivative shift $d(\chi \wedge dA)$ integrates to zero when boundary flux vanishes (`chern_simons_gauge_invariance_closed`).
+* **Wilson Loop Observables & Witten's Framing Anomaly:** Modulus invariance $\|W(K, n)\| = \|V_K(q)\|$ and phase shift under framing twist $W(K, n+1) = e^{i\theta} W(K, n)$ (`wilson_loop_modulus_invariance`, `framing_shift_relation`).
+* **Anyonic Braiding Statistics:** Exchange operator $R = e^{i\theta_{\mathrm{stat}}}$ and double-exchange monodromy $M = R^2 = e^{2i\theta_{\mathrm{stat}}}$ with exact unitarity $\|R\|=1, \|M\|=1$ (`anyon_braid_unitarity`, `anyon_double_exchange_sq`).
+* **Master Synthesis:** Certified master conjunction in Mathlib 4 (`fluid_chern_simons_knot_anyon_synthesis`).
+  In Lean 4: [`FluidChernSimonsKnotAnyon.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/FluidChernSimonsKnotAnyon.lean) and [`FluidChernSimonsKnotAnyonAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/FluidChernSimonsKnotAnyonAudit.lean).
+
+### 5.86 Beltrami Sobolev Stability & Inviscid Euler Limit
+Formalizing Sobolev $H^1$ coercivity, nonlinear Lamb vector annihilation, and viscous enstrophy dissipation for Beltrami eigenfields:
+* **Poincaré-Sobolev Enstrophy-Energy Equivalence:** Enstrophy strictly proportional to kinetic energy $\Omega = \lambda^2 E$ (`enstrophy_eq_lambda_sq_mul_energy`).
+* **Sobolev $H^1$ Norm Coercivity:** $\|\mathbf{u}\|_{H^1}^2 = 2 E + 2 \Omega = 2(1 + \lambda^2) E$ (`sobolev_h1_coercivity`).
+* **Nonlinear Lamb Vector Annihilation:** Convective advection nonlinearity collapses identically ($\mathbf{L} = \boldsymbol{\omega} \times \mathbf{u} = 0$), eliminating vortex stretching (`lamb_vector_annihilation`).
+* **Viscous Energy Dissipation Bound:** Exponential decay $E(t) = E_0 e^{-2\nu\lambda^2 t}$ bounded uniformly by initial energy $0 \le E(t) \le E_0$ for $\nu \ge 0, t \ge 0$ (`energy_le_initial_at_time`, `energy_nonneg_at_time`).
+* **Inviscid Euler Limit Energy Conservation:** Exact conservation $E(t) = E_0$ at $\nu = 0$ (`euler_inviscid_conservation`) and decay rate linearity in viscosity (`decay_rate_linear`).
+* **Master Synthesis:** Certified master conjunction in Mathlib 4 (`beltrami_sobolev_stability_synthesis`).
+  In Lean 4: [`BeltramiSobolevStability.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/BeltramiSobolevStability.lean) and [`BeltramiSobolevStabilityAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/BeltramiSobolevStabilityAudit.lean).
+
 
 ---
 
@@ -1304,6 +1334,7 @@ Formalizing Terence Tao's fluid computing program as a topological quantum compu
 | **Fisher-Rao & Aitchison KAN Duality** | Fisher-Rao $g_{\mathrm{FR}} \ge 4$ / Aitchison $g_A \ge 8$ / Triad $b''=2g_A-2g_{\mathrm{FR}}$ / Throat $\tau(0)=4$ | `certified_fisher_rao_aitchison_kan_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Riemann-Siegel & Hardy Z Throat** | Phase $\|e^{i\theta}\|=1$ / Real $Z \in \mathbb{R}$ / Zero Equiv $Z=0 \iff \zeta=0$ / Even $Z(-t)=Z(t)$ | `certified_hardy_z_throat_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Aitchison Trace-Determinant Simplex** | Traceless $\sum \mathrm{clr} = 0$ / Jaynesian $\mathbf{0}$ / Double-Sum $\frac{1}{2D}\sum(u_i-u_j)^2 = \sum u_i^2$ | `certified_aitchison_trace_determinant_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Aitchison-Cartan Dually Flat Geometry** | Cartan Projector $\pi_{\mathfrak{a}}^2 = \pi_{\mathfrak{a}}$ / Softmax Inversion / Legendre-Fenchel / Bregman-KL / Pythagorean Orthogonality | `sum_cartanProj_zero`, `cartanProj_idempotent`, `clr_softmax_inversion`, `legendre_fenchel_equality`, `dualBregman_eq_kl`, `kl_pythagorean_orthogonal`, `certified_aitchison_cartan_dually_flat_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Hilbert-Apollonian Projective Metric** | Scale Invariance / Cross-Ratio $\ln \mathrm{cr} = \Delta \mathrm{logit}$ / Rapidity $d_{\mathrm{Apol}} = 2|\Delta\theta|$ / Lightcone | `certified_hilbert_apollonian_projective_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Aperture Entanglement Flux** | Legendre Factorization $J_k = J_0 Q_k$ / Rose $Q_k$ Limits / Étendue $\mathcal{E} = S\Omega$ / Isotropic Smearing | `certified_aperture_entanglement_flux_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Detector Copula Decoupling** | Product Copula $\Pi = uv$ / Bayes Decoupling / Linear Marginal / Scale Invariant Quotient | `certified_detector_copula_decoupling_synthesis` | **Kernel-Checked (0 gaps)** |
@@ -1336,6 +1367,8 @@ Formalizing Terence Tao's fluid computing program as a topological quantum compu
 | **Kostant-Souriau Kähler Polarization & Vortex Fock Space** | Invariant $J^2=-\mathrm{id}$ / Metric Symmetry $g(x, y) = g(y, x)$ / Cauchy-Riemann $\nabla_{Jx}\Psi = I_S(\nabla_x \Psi)$ / Closed Submodule / Roton Vacuum $E_0 = \frac{1}{2}\hbar\omega_0$ | `metric_symm`, `fockBargmannSubmodule`, `double_J_polarized_consistency`, `zeroPointEnergy_pos`, `energyLevel_step`, `arnold_souriau_polarization_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Duistermaat-Heckman Localization & Fluid Path Integrals** | Cartan Closure $d_X \Omega_X = 0$ / Beltrami Critical Locus $\mathbf{L} = 0 \leftrightarrow dH = 0$ / Localized Partition Sum / 1-Loop Exactness $\Delta_{\mathrm{higher}} = 0$ / Bounded Modulus | `dh_equivariant_closed`, `beltrami_is_critical_point`, `criticalSummand_modulus`, `dh_partition_modulus_bound`, `one_loop_exactness`, `duistermaat_heckman_fluid_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Tao Fluid Quantum Logic & Beltrami Soliton Gates** | Orthogonal Qubit Basis $\{|0\rangle, |1\rangle\}$ / Beltrami Waveguide $\mathbf{L}=0$ / Unitary Phase Gate $R_\phi$ / Braiding CNOT Involution $\mathrm{CNOT}^2 = \mathbb{I}$ / Quantum Computation | `basis_orthogonality`, `lamb_annihilation`, `phase_gate_unitary`, `cnot_gate_unitary`, `cnot_involution`, `tao_fluid_computer_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Fluid Chern-Simons & Anyon Braiding** | Moffatt Linking / Călugăreanu-White-Fuchs / CS 3-Form / Witten Framing / Anyon Monodromy | `moffatt_linking_symmetry`, `calugareanu_white_fuchs_helicity`, `chern_simons_gauge_invariance_closed`, `wilson_loop_modulus_invariance`, `anyon_braid_unitarity`, `anyon_double_exchange_sq`, `fluid_chern_simons_knot_anyon_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Beltrami Sobolev Stability & Euler Limit** | Solenoidal Beltrami / Sobolev $H^1$ Coercivity / Lamb Annihilation / Viscous Dissipation / Euler Limit | `enstrophy_eq_lambda_sq_mul_energy`, `sobolev_h1_coercivity`, `lamb_vector_annihilation`, `energy_le_initial_at_time`, `euler_inviscid_conservation`, `decay_rate_linear`, `beltrami_sobolev_stability_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 
@@ -1408,3 +1441,9 @@ The owner `InfoGeometry/Physics/DuistermaatHeckmanFluidLocalization.lean` formal
 
 ### 5.84 Tao's Fluid Computer as a Topological Quantum Processor
 The owner `InfoGeometry/Physics/TaoFluidQuantumLogic.lean` formalizes discrete vortex qubit states $\{|0\rangle, |1\rangle\}$, Lamb vector annihilation in Beltrami waveguides, unitary symplectic phase rotations, and topological vortex filament braiding realizing an exact unitary entangling CNOT gate with $\mathrm{CNOT}^2 = \mathbb{I}$.
+
+### 5.85 Fluid Chern-Simons Action, Moffatt Helicity & Anyon Braiding
+The owner `InfoGeometry/Physics/FluidChernSimonsKnotAnyon.lean` formalizes Moffatt's mutual helicity formula as the Gauss linking number, Călugăreanu-White-Fuchs self-linking decomposition, Chern-Simons 3-form gauge invariance on closed boundaries, Witten's framing anomaly modulus preservation and twist shift law, and anyonic braiding unitarity and square-monodromy relation.
+
+### 5.86 Beltrami Sobolev Stability & Inviscid Euler Limit
+The owner `InfoGeometry/Physics/BeltramiSobolevStability.lean` formalizes Poincaré-Sobolev enstrophy-energy equivalence for Beltrami eigenfields, Sobolev $H^1$ coercivity, convective Lamb vector annihilation, uniform monotonic viscous energy dissipation bounds, exact energy conservation in the inviscid Euler limit, and linear scaling of the dissipation rate.

@@ -146,6 +146,8 @@ import InfoGeometry.Physics.AitchisonTraceDeterminantBridge
 import InfoGeometry.Physics.AitchisonTraceDeterminantBridgeAudit
 import InfoGeometry.Physics.HilbertApollonianProjectiveBridge
 import InfoGeometry.Physics.HilbertApollonianProjectiveBridgeAudit
+import InfoGeometry.Physics.AitchisonCartanDuallyFlatBridge
+import InfoGeometry.Physics.AitchisonCartanDuallyFlatBridgeAudit
 
 /-!
 # Physics Umbrella

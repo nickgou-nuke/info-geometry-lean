@@ -938,6 +938,15 @@ Formalizing the differential geometry of the nuclear angular correlation 2-form 
 * **Master Aperture Entanglement Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_aperture_entanglement_flux_synthesis`).
   In Lean 4: [`ApertureEntanglementFlux.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/ApertureEntanglementFlux.lean) and [`ApertureEntanglementFluxAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/ApertureEntanglementFluxAudit.lean).
 
+### 5.64 Detector Copula Decoupling, Product Reference & Free-Scale Invariance
+Formalizing the 2D copula state space, Bayesian independence restoration, and the self-adjusting free-scale invariance of the Campion-Goutev quotient:
+* **Product Copula & Bayesian Decoupling:** On the 2D probability space, the product copula $\Pi(u, v) = u \cdot v$ satisfies boundary conditions $\Pi(u, 1) = u$ (`productCopula_one_right`) and $\Pi(u, 0) = 0$ (`productCopula_zero_right`). Under $\Pi$, conditional probability collapses to the marginal $P(B \mid A) = P(B)$ (`bayes_independence`), achieving exact statistical independence $P(A \cap B) = P(A) \cdot P(B)$ (`bayes_factorization`).
+* **Spherical Harmonic Marginalization:** Full-sphere integration projects away directional Legendre harmonics ($\langle P_k \rangle = 0$), yielding marginal expectation $\overline{W} = 1$ (`marginal_correlation_invariant`) and collapsing the entangled cascade copula into the independent product reference (`marginal_angularCopula_eq_product`).
+* **Linear Marginal Restoration:** Adding the quadratic coincidence loss $K_i X^2$ restores the linear marginal response $L_i(X) = C_i X$ (`quadratic_marginal_restoration`, `coincidence_loss_restoration`). The restored product factorizes into $L_1(X) L_2(X) = \Pi(C_1 X, C_2 X) = (C_1 C_2) X^2$ (`restoredProduct_factorization`, `restoredProduct_eq_productCopula_explicit`).
+* **Self-Adjusting Free-Scale Invariance:** In the Campion-Goutev copula quotient $F(X) = (L_1 L_2) / Q = (C_1 C_2 X^2) / (\kappa X^2)$, the free scale $X = \sqrt{Q}$ cancels out completely: $F(X) = (C_1 C_2) / \kappa$ (`copulaQuotient_scale_invariant`), exhibiting strict continuous dilation gauge invariance (`copulaQuotient_dilation_invariant`) and recovering absolute activity $A \cdot (P_1 P_2) / (P_{12} W)$ with zero dependence on individual detector efficiencies (`copula_activity_recovery`).
+* **Master Copula Decoupling Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_detector_copula_decoupling_synthesis`).
+  In Lean 4: [`DetectorCopulaDecoupling.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorCopulaDecoupling.lean) and [`DetectorCopulaDecouplingAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorCopulaDecouplingAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -1021,6 +1030,7 @@ Formalizing the differential geometry of the nuclear angular correlation 2-form 
 | **Aitchison Trace-Determinant Simplex** | Traceless $\sum \mathrm{clr} = 0$ / Jaynesian $\mathbf{0}$ / Double-Sum $\frac{1}{2D}\sum(u_i-u_j)^2 = \sum u_i^2$ | `certified_aitchison_trace_determinant_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Hilbert-Apollonian Projective Metric** | Scale Invariance / Cross-Ratio $\ln \mathrm{cr} = \Delta \mathrm{logit}$ / Rapidity $d_{\mathrm{Apol}} = 2|\Delta\theta|$ / Lightcone | `certified_hilbert_apollonian_projective_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Aperture Entanglement Flux** | Legendre Factorization $J_k = J_0 Q_k$ / Rose $Q_k$ Limits / Étendue $\mathcal{E} = S\Omega$ / Isotropic Smearing | `certified_aperture_entanglement_flux_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Detector Copula Decoupling** | Product Copula $\Pi = uv$ / Bayes Decoupling / Linear Marginal / Scale Invariant Quotient | `certified_detector_copula_decoupling_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

@@ -62,23 +62,8 @@ theorem amari_moebius_unified_congruence (E : F) :
   dsimp [total_action, amariPrimalPotential, amariDualPotential]
   ring
 
-structure AmariMoebiusPacket (F : Type*) [Field F] [NeZero (2 : F)] where
-  fix_zero : ∀ (scale : F), (weylDilation scale ⟨0⟩).val = 0
-  scale_one : ∀ (scale : F), (weylDilation scale ⟨1⟩).val = scale
-  legendre_dual : ∀ (E P : F), P = E → amariPrimalPotential E + amariDualPotential P = E * P
-  unified_congruence : ∀ (E : F),
-    let P := E
-    let total_action := amariPrimalPotential E + amariDualPotential P
-    total_action - (amariPrimalPotential E) = E^2 / 2
-
-def makeAmariMoebiusPacket (F : Type*) [Field F] [NeZero (2 : F)] : AmariMoebiusPacket F where
-  fix_zero := moebius_fixpoint_zero
-  scale_one := moebius_scale_one
-  legendre_dual := amari_legendre_duality
-  unified_congruence := amari_moebius_unified_congruence
-
 theorem amari_moebius_certified :
     amariPrimalPotential (1 : ℝ) + amariDualPotential 1 = 1 * 1 :=
-  (makeAmariMoebiusPacket ℝ).legendre_dual 1 1 rfl
+  amari_legendre_duality 1 1 rfl
 
 end InfoGeometry.Canonical.ZornAmariMoebius

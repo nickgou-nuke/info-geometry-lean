@@ -625,6 +625,21 @@ Formalizing the Klein bottle glide reflection on para-complex spacetime $z = x +
 * **Klein Periodicity Law:** Iterating the glide reflection twice recovers the pure spatial period translation by $L$: $(T_a)^2(z) = z + L$ (`glideZ_iter_two`).
   In Lean 4: [`KleinBottleGlideSeam.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/KleinBottleGlideSeam.lean) and [`KleinBottleGlideSeamAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/KleinBottleGlideSeamAudit.lean).
 
+### 5.37 Rank-Two Detector Response & Absolute Nuclear Activity Calibration
+Formalizing the algebraic reconstruction of detector response matrices subject to deadtime and pulse pileup loss, resolving the continuous rank-2 latent design and $GL(2)$ coordinate rotation into absolute calibration invariants:
+* **Rank-Two Response Factorization:** The nonlinear detector response across $m$ spectral lines and $n$ counting geometries $R_{ij} = C_i X_j - K_i X_j^2$ factors constructively through a 2D latent design matrix $Z = (X, X^2)^T$ and loading matrix $B = (C, -K)$:
+  $$R_{ij} = \sum_{a \in \{0, 1\}} B_{ia} Z_{aj}$$
+* **$GL(2)$ Basis Rotation Invariance:** The observable response matrix $R = B Z$ is invariant under any simultaneous transformation $Z' = M Z$ and $B' = B M^{-1}$ for $M \in \mathrm{GL}(2, \mathbb{R})$ (`rank_two_basis_rotation`), proving that individual uncalibrated SVD eigenvectors are coordinate artifacts.
+* **Product Closure & Slope Gauge Invariance:** The true linear product $(C_1 X_j)(C_2 X_j)$ equals the quadratic coincidence rate $Q_j = \kappa X_j^2$ scaled by the invariant slope $H = C_1 C_2 / \kappa$ (`product_closure`), where $H$ is strictly invariant under arbitrary gauge rescalings $C \mapsto C/l, K \mapsto K/l^2, X \mapsto l X$ (`closureSlope_gauge_invariant`).
+* **Absolute Activity Recovery:** Microscopic cascade calibration $C_1 = A P_1 \epsilon_1, C_2 = A P_2 \epsilon_2, \kappa = A P_{12} W \epsilon_1 \epsilon_2$ guarantees that the reconstructed activity functional:
+  $$\mathrm{activity}(H) = \frac{H \cdot (P_{12} W)}{P_1 P_2}$$
+  identically cancels detector efficiencies $\epsilon_1, \epsilon_2$, proving $\mathrm{activity}(H) = A$ (`activity_recovers_activity`).
+* **Internal Conversion Renormalization:** Secondary de-excitation branching through an internal conversion coefficient $\alpha$ scales the cascade probability $P_{12} \mapsto P_1 b_{\mathrm{feed}} / (1 + \alpha)$, preserving exact activity recovery (`activity_with_conversion`).
+* **Linear Dependence & Minor Annihilation:** Any three spectral lines (`three_line_linear_dependence`) and any three geometry columns (`three_geometry_linear_dependence`) are constructively linearly dependent, forcing the exact vanishing of every $3 \times 3$ minor:
+  $$\det(M_{3 \times 3}) = 0$$
+  which algebraically replaces floating-point SVD rank diagnostics (`det_matrix3x3_zero`).
+  In Lean 4: [`DetectorRankTwoResponse.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorRankTwoResponse.lean) and [`DetectorRankTwoResponseAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorRankTwoResponseAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -679,6 +694,7 @@ Formalizing the Klein bottle glide reflection on para-complex spacetime $z = x +
 | **Apollonian Primon Weyl Scale Synthesis** | Logarithmic Carrier / Conformal Weyl Field / OpenAI Long Gap Bound | `primonEnergyGap_ge_rel_gap`, `weylPrimonRatio_ge_one_add`, `weyl_primon_long_gap_lower_bound` | **Kernel-Checked (0 gaps)** |
 | **Chiral Quantum Transformer Capstone** | KAN / Chiral Twistor / Zorn Shell / Sinkhorn / AAV / Cuntz-Krieger / Fisher-Rao | `chiral_attention_cross_pairing`, `kan_elliptic_rotor_flow`, `master_chiral_quantum_transformer_unification` | **Kernel-Checked (0 gaps)** |
 | **Klein Bottle Glide Seam** | Para-Complex Coordinates $\tau^2 = +1$ / Glide $T_a$ | `is_on_real_seam_iff_tau_zero`, `glide_preserves_real_seam`, `glideZ_iter_two` | **Kernel-Checked (0 gaps)** |
+| **Rank-2 Detector Response** | Latent Design $(X, X^2)$ / $GL(2)$ | `det_matrix3x3_zero`, `activity_recovers_activity` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

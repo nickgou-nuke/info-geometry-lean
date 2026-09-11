@@ -1,0 +1,2 @@
+{"target_id": "OPENAI-NS", "action": "post_issue", "artifact": "tools/community-outreach/drafts/openai_navier_stokes_github_issue.md", "note": "Initial dispatch to OpenAI Navier-Stokes team", "approved_at": "2026-09-11T05:40:37Z", "approval_id": "ac26296b8476"}
+{"target_id": "OPENAI-NS", "action": "post_x", "artifact": "tools/community-outreach/drafts/openai_navier_stokes_github_issue.md", "note": "Twitter broadcast to OpenAI and Lean community", "approved_at": "2026-09-11T05:40:41Z", "approval_id": "ecbae5366356"}

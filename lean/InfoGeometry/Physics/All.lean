@@ -110,6 +110,16 @@ import InfoGeometry.Physics.TwoStrandJonesCasimir
 import InfoGeometry.Physics.TwoStrandJonesWeakReadout
 import InfoGeometry.Physics.ThreeStrandJonesRecoupling
 import InfoGeometry.Physics.FiniteCARBoundaryReadout
+import InfoGeometry.Physics.LorentzBoostKreinConfinement
+import InfoGeometry.Physics.LorentzBoostKreinConfinementAudit
+import InfoGeometry.Physics.DilatonWeylAnomalyInflowBridge
+import InfoGeometry.Physics.DilatonWeylAnomalyInflowBridgeAudit
+import InfoGeometry.Physics.BerryKeatingDilationSpectrum
+import InfoGeometry.Physics.BerryKeatingDilationSpectrumAudit
+import InfoGeometry.Physics.KreinBRSTGhostConfinement
+import InfoGeometry.Physics.KreinBRSTGhostConfinementAudit
+import InfoGeometry.Physics.SelbergTraceAharonovBohm
+import InfoGeometry.Physics.SelbergTraceAharonovBohmAudit
 
 /-!
 # Physics Umbrella

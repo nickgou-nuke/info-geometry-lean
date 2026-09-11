@@ -218,6 +218,18 @@ theorem zorn_mass_shell_determinant_eq_zero_iff
     rw [h]
     norm_num
 
+theorem zorn_square_eq_energy_smul_iff
+    (p Δ E_energy : ℝ) :
+    (zornMatrix p Δ) * (zornMatrix p Δ) =
+        (E_energy ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) ↔
+      p ^ 2 + Δ ^ 2 = E_energy ^ 2 := by
+  constructor
+  · intro h
+    have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h
+    simpa [zornMatrix, Matrix.mul_apply, Fin.sum_univ_two, pow_two] using h00
+  · intro h
+    exact zorn_mass_shell_condensation p Δ E_energy h
+
 /-! ### 5. Penrose Twistor Spacetime Reality Adjacency -/
 
 /-- Theorem: Two spacetime points $X, Y$ sharing a common nonzero twistor are null-separated:

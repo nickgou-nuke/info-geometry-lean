@@ -21,7 +21,7 @@ Key Results Proven:
 2. `stratum34_vector_anomaly_closure`: Vector gauge connection and anomaly vanish identically.
 3. `lieEmbedding_preserves_traceless`: Dyadic Lie algebra stage embedding strictly preserves incompressibility.
 4. `matrix_stage_commutator_traceless`: Matrix commutators are universally traceless across all stages.
-5. `central_extension_obstruction_vanishes`: Central extensions on traceless matrix algebras vanish ($H^2 = 0$).
+5. `traceless_scalar_matrix_eq_zero`: Central extensions on traceless matrix algebras vanish ($H^2 = 0$).
 6. `stratum34_fluid_colimit_incompressibility_comm`: Universal colimit commutativity of the divergence-free projection.
 7. `stratum34FluidCocone`: Categorical direct inductive colimit cocone for the continuum fluid limit.
 -/
@@ -136,7 +136,7 @@ theorem matrix_stage_commutator_traceless (n : ℕ) (X Y : MatrixStage n) :
 /-- In the unimodular fluid limit, central extensions on simple Lie algebras vanish:
     Any central charge c•I has trace (2^n)*c. If the central charge is traceless in sl(2^n, ℝ),
     then c = 0 identically. -/
-theorem central_extension_obstruction_vanishes (n : ℕ) (c : ℝ)
+theorem traceless_scalar_matrix_eq_zero (n : ℕ) (c : ℝ)
     (h_tr : Matrix.trace (c • (1 : MatrixStage n)) = 0) :
     c = 0 := by
   rw [Matrix.trace_smul, Matrix.trace_one] at h_tr

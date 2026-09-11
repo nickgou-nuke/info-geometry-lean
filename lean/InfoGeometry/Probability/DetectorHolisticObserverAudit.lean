@@ -12,4 +12,8 @@ open InfoGeometry.Probability.DetectorHolisticObserver
 #print axioms regression_profile_residual_zero
 #print axioms normal_equation_stationarity
 #print axioms holistic_rank_one_minor_vanishing
+#print axioms registered_linearizer_reduction
+#print axioms offset_split_unidentifiable
+#print axioms energy_offset_difference_invariant
 #print axioms certified_holistic_detector_observer_synthesis
+

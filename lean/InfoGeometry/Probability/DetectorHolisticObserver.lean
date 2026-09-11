@@ -262,7 +262,49 @@ theorem holistic_rank_one_minor_vanishing (u v : Fin 2 → ℝ) :
   dsimp [jointDetectionMatrix]
   ring
 
-/-! ### 5. Master Synthesis Certificate -/
+/-! ### 5. Geometric Registration & Effective Offset Invariance -/
+
+/-- Coordinate transformation between recorded experimental distance $d_{\mathrm{exp}}$
+    and EFFTRAN internal reference distance: $d_{\mathrm{EFF}} = d_{\mathrm{exp}} + \Delta d$. -/
+def efftranDistance (d_exp Δd : ℝ) : ℝ := d_exp + Δd
+
+/-- Effective combined virtual interaction depth: $d_{0,\mathrm{eff}} = \Delta d + d_0$. -/
+def effectiveOffset (Δd d₀ : ℝ) : ℝ := Δd + d₀
+
+/-- Fourth-root diagnostic linearizer under geometric registration:
+    $\Lambda(d_{\mathrm{exp}}) = a \cdot (d_{\mathrm{EFF}} + d_0) = a \cdot (d_{\mathrm{exp}} + \Delta d + d_0)$. -/
+def registeredLinearizer (a d₀ Δd d_exp : ℝ) : ℝ :=
+  a * (efftranDistance d_exp Δd + d₀)
+
+/-- 🏆 THEOREM 11: Registered Linearizer Reduction.
+    The registered linearizer reduces identically to an affine function of $d_{\mathrm{exp}}$
+    governed by the effective offset $d_{0,\mathrm{eff}} = \Delta d + d_0$:
+    $\Lambda(d_{\mathrm{exp}}) = a \cdot d_{\mathrm{exp}} + a \cdot d_{0,\mathrm{eff}}$. -/
+theorem registered_linearizer_reduction (a d₀ Δd d_exp : ℝ) :
+    registeredLinearizer a d₀ Δd d_exp = a * d_exp + a * (effectiveOffset Δd d₀) := by
+  dsimp [registeredLinearizer, efftranDistance, effectiveOffset]
+  ring
+
+/-- 🏆 THEOREM 12: Unidentifiability of Individual Offset Split.
+    Any two decompositions $(\Delta d_1, d_{0,1})$ and $(\Delta d_2, d_{0,2})$ sharing the same
+    effective offset $\Delta d_1 + d_{0,1} = \Delta d_2 + d_{0,2}$ produce identical linearizer values:
+    only the combined effective offset $d_{0,\mathrm{eff}}$ is identifiable from external distance scans. -/
+theorem offset_split_unidentifiable (a Δd₁ d₀₁ Δd₂ d₀₂ d_exp : ℝ)
+    (h_same_eff : effectiveOffset Δd₁ d₀₁ = effectiveOffset Δd₂ d₀₂) :
+    registeredLinearizer a d₀₁ Δd₁ d_exp = registeredLinearizer a d₀₂ Δd₂ d_exp := by
+  rw [registered_linearizer_reduction, registered_linearizer_reduction, h_same_eff]
+
+/-- 🏆 THEOREM 13: Energy-Independence of Mechanical Spacer Invariance.
+    Because the mechanical spacer stack $\Delta d$ is a rigid translation of the detector housing,
+    it is strictly energy-independent: the difference in effective offsets between two transitions
+    $E_1$ and $E_2$ is identically equal to the difference in intrinsic interaction depths:
+    $d_{0,\mathrm{eff}}(E_1) - d_{0,\mathrm{eff}}(E_2) = d_0(E_1) - d_0(E_2)$. -/
+theorem energy_offset_difference_invariant (Δd d₀_E₁ d₀_E₂ : ℝ) :
+    effectiveOffset Δd d₀_E₁ - effectiveOffset Δd d₀_E₂ = d₀_E₁ - d₀_E₂ := by
+  dsimp [effectiveOffset]
+  ring
+
+/-! ### 6. Master Synthesis Certificate -/
 
 /-- 🏆 MASTER SYNTHESIS THEOREM: Complete Certificate of Holistic Detector Observability.
     Bundles all core mathematical certifications into a single pristine proposition:

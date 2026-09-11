@@ -36,6 +36,10 @@ import InfoGeometry.Algebra.BostConnesGalois
 import InfoGeometry.Algebra.BostConnesKMSPhaseTransition
 import InfoGeometry.Algebra.BostConnesGeneratorsBridge
 import InfoGeometry.Algebra.BostConnesGeneratorsAudit
+import InfoGeometry.Algebra.BostConnesModularAutomorphismBridge
+import InfoGeometry.Algebra.BostConnesModularAutomorphismAudit
+import InfoGeometry.Algebra.BostConnesClassFieldTheoryBridge
+import InfoGeometry.Algebra.BostConnesClassFieldTheoryAudit
 import InfoGeometry.Algebra.CARFockBridge
 import InfoGeometry.Algebra.CARFockBridge_withproofs
 import InfoGeometry.Algebra.CPTComplexStructure

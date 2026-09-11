@@ -75,7 +75,7 @@ structure SplitCl44GenerationRotationPacket where
       labelAction (σ.trans τ) = (labelAction τ).comp (labelAction σ)
 
 /-- Canonical label-level generation-rotation packet. -/
-def canonicalGenerationRotationPacket : SplitCl44GenerationRotationPacket where
+noncomputable def canonicalGenerationRotationPacket : SplitCl44GenerationRotationPacket where
   hierarchy := canonicalDiagnostic
   labelAction := rotateGenerationLabel
   labelAction_id := by ext i; rfl

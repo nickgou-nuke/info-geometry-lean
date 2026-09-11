@@ -10407,7 +10407,6 @@ import InfoGeometry.Probability.DetectorCrossSectionDualityAudit
 import InfoGeometry.Probability.DetectorEnsembleTransport
 import InfoGeometry.Probability.DetectorRankOneScale
 import InfoGeometry.Probability.DetectorRankTwoResponse
-import InfoGeometry.Probability.DetectorRankTwoResponse
 import InfoGeometry.Probability.DetectorScaleInvariance
 import InfoGeometry.Probability.ExpLogRNDerivation
 import InfoGeometry.Probability.FiniteChannelDataProcessing

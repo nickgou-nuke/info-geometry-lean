@@ -893,6 +893,16 @@ Formalizing the scattering time delay matrix $Q(t) = -i S(t)^{-1} \frac{d}{dt} S
 * **Master Wigner-Smith Krein Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_wigner_smith_krein_synthesis`).
   In Lean 4: [`WignerSmithKreinBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/WignerSmithKreinBridge.lean) and [`WignerSmithKreinBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/WignerSmithKreinBridgeAudit.lean).
 
+### 5.59 Fisher-Rao Spherical Embedding, Aitchison CLR & Iwasawa KAN Duality Bridge
+Formalizing the statistical-information realization of the split Iwasawa $G = KAN$ decomposition, linking the compact spherical Fisher-Rao geometry ($K$-sector) and the non-compact hyperbolic Aitchison geometry ($A$-sector) with the Klein bottle throat:
+* **Spherical Fisher-Rao Embedding ($K$-Sector):** Under the square-root map $\xi_i = \sqrt{p_i}$, the probability simplex embeds into the unit sphere $S^{D-1}$. On the binary simplex $\Delta^1$, $g_{\mathrm{FR}}(p) = \frac{1}{p(1-p)}$ (`fisherRaoMetric`), which is strictly positive everywhere (`fisherRao_pos`), invariant under reflection $p \mapsto 1-p$ (`fisherRao_symm`), and achieves its global minimum $g_{\mathrm{FR}}(1/2) = 4$ at the Jaynesian prior (`fisherRao_half`, `fisherRao_ge_four`).
+* **Hyperbolic Aitchison Metric ($A$-Sector):** Under the centered log-ratio map, the simplex projects onto the traceless Cartan space $\mathfrak{a} \subset \mathfrak{sl}(2, \mathbb{R})$. On $\Delta^1$, $g_A(p) = \frac{1}{2 p^2 (1-p)^2}$ (`aitchisonMetric`), which is strictly positive (`aitchison_pos`), symmetric under reflection (`aitchison_symm`), and achieves its global minimum $g_A(1/2) = 8$ at the Jaynesian prior (`aitchison_half`, `aitchison_ge_eight`).
+* **Triad Metric Decomposition:** The Dikin log-barrier Hessian $b''(p) = \frac{1}{p^2} + \frac{1}{(1-p)^2}$ decomposes exactly into the Aitchison and Fisher-Rao metrics: $b''(p) = 2 g_A(p) - 2 g_{\mathrm{FR}}(p)$ (`triad_metric_decomposition`), with $b''(1/2) = 8$ (`dikin_half`).
+* **Throat Ground State & Wigner-Smith Delay Resonance:** At the Klein bottle throat ground state $t = 0$, the Fisher-Rao metric matches the Wigner-Smith scattering time delay: $g_{\mathrm{FR}}(1/2) = \tau(0) = 4$ (`fisherRao_half_eq_timeDelay_zero`), and $g_A(1/2) = 2\tau(0) = 8$ (`aitchison_half_eq_two_timeDelay_zero`), with reciprocal Harish-Chandra Casimir coupling $g_{\mathrm{FR}}(1/2) \cdot \lambda(0) = 1$ (`fisherRao_half_mul_casimir_zero`).
+* **Quantum Fidelity & Wootters Pure-State Distance:** The classical Bhattacharyya fidelity $B(p, q) = \sqrt{pq} + \sqrt{(1-p)(1-q)}$ is normalized ($B(p, p) = 1$, `bhattacharyya_self`) and strictly positive (`bhattacharyya_pos`), giving vanishing Wootters pure-state distance $d_W(p, p) = \arccos(1) = 0$ (`wootters_self`, `wootters_half_half`).
+* **Master Fisher-Rao Aitchison KAN Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_fisher_rao_aitchison_kan_synthesis`).
+  In Lean 4: [`FisherRaoAitchisonKanBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/FisherRaoAitchisonKanBridge.lean) and [`FisherRaoAitchisonKanBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/FisherRaoAitchisonKanBridgeAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -971,6 +981,7 @@ Formalizing the scattering time delay matrix $Q(t) = -i S(t)^{-1} \frac{d}{dt} S
 | **Harish-Chandra Casimir & SL(2, ℝ)** | $\mathfrak{sl}(2, \mathbb{R})$ Triad / $\lambda(s) = s(1-s) = 1/4+t^2 \ge 1/4$ | `certified_harish_chandra_casimir_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Harish-Chandra Plancherel & Weyl** | Plancherel $\rho(t) = t \tanh(\pi t)$ / Weyl Bound $\rho < t$ / Casimir Coupling | `certified_plancherel_weyl_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Wigner-Smith Time Delay & Krein Shift** | Time Delay $\tau(t) = 1/(1/4+t^2)$ / Reciprocal Casimir $\tau\lambda=1$ / $\tau \le 4$ | `certified_wigner_smith_krein_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Fisher-Rao & Aitchison KAN Duality** | Fisher-Rao $g_{\mathrm{FR}} \ge 4$ / Aitchison $g_A \ge 8$ / Triad $b''=2g_A-2g_{\mathrm{FR}}$ / Throat $\tau(0)=4$ | `certified_fisher_rao_aitchison_kan_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

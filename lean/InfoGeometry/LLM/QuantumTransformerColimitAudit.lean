@@ -7,6 +7,7 @@ open InfoGeometry.LLM.Colimit
 set_option linter.unusedVariables false
 
 #print axioms attentionStageEmbedding_doubly_stochastic
+#print axioms attentionStageEmbedding_injective
 #print axioms attentionStageTrace_preserving
 #print axioms transformer_colimit_trace_comm
 #print axioms canonicalTransformerTraceCocone

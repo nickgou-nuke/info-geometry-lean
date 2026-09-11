@@ -167,7 +167,7 @@ end Projectors
 
 section ProductDecomposition
 
-variable [CommRing R] [Invertible (2 : R)]
+variable [Field R] [CharZero R]
 
 /-- The canonical product coordinates for a split-complex number. -/
 def toProduct (z : Carrier R) : R × R := (z.re + z.im, z.re - z.im)
@@ -207,14 +207,10 @@ theorem toProduct_mul (x y : Carrier R) :
   ext <;> simp [toProduct, mul_re, mul_im] <;> ring
 
 theorem toProduct_pPlus : toProduct (pPlus (R := R)) = (1, 0) := by
-  ext <;> simp [toProduct, pPlus]
-  · rw [← mul_invOf_self (2 : R)]
-  · ring
+  ext <;> simp [toProduct, pPlus, invOf_eq_inv] <;> ring
 
 theorem toProduct_pMinus : toProduct (pMinus (R := R)) = (0, 1) := by
-  ext <;> simp [toProduct, pMinus]
-  · rw [← mul_invOf_self (2 : R)]
-  · rw [← mul_invOf_self (2 : R)]
+  ext <;> simp [toProduct, pMinus, invOf_eq_inv] <;> ring
 
 end ProductDecomposition
 

@@ -12385,3 +12385,5 @@ import InfoGeometry.Canonical.DeRhamHodgeIsomorphismAudit
 import InfoGeometry.Canonical.HodgeGreenOperatorAudit
 import InfoGeometry.Canonical.ChernSimonsCuntzBoundaryBridge
 import InfoGeometry.Canonical.ChernSimonsCuntzBoundaryAudit
+
+import InfoGeometry.Canonical.ParaComplexNeutralForm

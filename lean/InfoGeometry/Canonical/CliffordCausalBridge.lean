@@ -32,7 +32,7 @@ abbrev DiscreteSpacetime := CausalSpacetime ℕ
   The arrows `m ≤ n` are exactly the causal light rays bonding the sequence
   of Clifford algebras `Cl(n,n)`.
 -/
-def cliffordCausalFunctor : CausalFunctor ℕ :=
+noncomputable def cliffordCausalFunctor : CausalFunctor ℕ :=
   Cl_functor
 
 /--

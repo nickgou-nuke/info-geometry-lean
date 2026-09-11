@@ -255,6 +255,29 @@ theorem a_nilpotent_pow_succ_k_smul (h : IsDrazinInverse a b k) (v : M) :
 /-! ## Certified Synthesis Structure -/
 
 /-- Certified Jordan-Chevalley Drazin Synthesis structure. -/
+theorem makeCertifiedDrazinJordanChevalleySynthesis
+    {R : Type*} [Ring R] {M : Type*} [AddCommGroup M] [Module R M] :
+    (∀ (a b : R), a_semisimple a b + a_nilpotent a b = a) ∧
+    (∀ (a b : R) (k : ℕ), IsDrazinInverse a b k → a_semisimple a b * a_nilpotent a b = 0) ∧
+    (∀ (a b : R) (k : ℕ), IsDrazinInverse a b k → a_nilpotent a b * a_semisimple a b = 0) ∧
+    (∀ (a b : R) (k : ℕ), IsDrazinInverse a b k → Commute (a_semisimple a b) (a_nilpotent a b)) ∧
+    (∀ (a b : R) (k : ℕ), IsDrazinInverse a b k → 1 ≤ k → (a_nilpotent a b)^k = 0) ∧
+    (∀ (a b : R) (k : ℕ), IsDrazinInverse a b k → (a_nilpotent a b)^(k + 1) = 0) ∧
+    (∀ (a b : R) (k : ℕ), IsDrazinInverse a b k → a_semisimple a b * b = projection a b) ∧
+    (∀ (a b : R) (v : M), a_semisimple a b • v + a_nilpotent a b • v = a • v) ∧
+    (∀ (a b : R) (k : ℕ) (v : M), IsDrazinInverse a b k → (a^k) • v = 0 → a_semisimple a b • v = 0) ∧
+    (∀ (a b : R) (k : ℕ) (v u : M), IsDrazinInverse a b k → v = (a^k) • u → a_nilpotent a b • v = 0) := by
+  exact ⟨fun a b => jordan_chevalley_sum a b,
+    fun _ _ _ h => a_semisimple_mul_a_nilpotent h,
+    fun _ _ _ h => a_nilpotent_mul_a_semisimple h,
+    fun _ _ _ h => jordan_chevalley_comm h,
+    fun _ _ _ h hk => a_nilpotent_pow_k h hk,
+    fun _ _ _ h => a_nilpotent_pow_succ_k h,
+    fun _ _ _ h => a_semisimple_mul_drazin h,
+    fun _ _ v => jordan_chevalley_smul_sum v,
+    fun _ _ _ v h h_gh => a_semisimple_annihilates_nilpotent_state h v h_gh,
+    fun _ _ _ v u h h_im => a_nilpotent_annihilates_regular_state h v u h_im⟩
+/-
 structure CertifiedDrazinJordanChevalleySynthesis (R : Type*) [Ring R] (M : Type*) [AddCommGroup M] [Module R M] where
   sum_identity : ∀ (a b : R), a_semisimple a b + a_nilpotent a b = a
   left_annihilation : ∀ (a b : R) (k : ℕ), IsDrazinInverse a b k → a_semisimple a b * a_nilpotent a b = 0
@@ -268,7 +291,7 @@ structure CertifiedDrazinJordanChevalleySynthesis (R : Type*) [Ring R] (M : Type
   regular_annihilated : ∀ (a b : R) (k : ℕ) (v u : M), IsDrazinInverse a b k → v = (a^k) • u → a_nilpotent a b • v = 0
 
 /-- Master constructor for Certified Jordan-Chevalley Drazin Synthesis. -/
-def makeCertifiedDrazinJordanChevalleySynthesis :
+def makeCertifiedDrazinJordanChevalleySynthesisLegacy :
     CertifiedDrazinJordanChevalleySynthesis R M := {
   sum_identity := fun a b => jordan_chevalley_sum a b
   left_annihilation := fun _ _ _ h => a_semisimple_mul_a_nilpotent h
@@ -280,7 +303,7 @@ def makeCertifiedDrazinJordanChevalleySynthesis :
   state_sum := fun _ _ v => jordan_chevalley_smul_sum v
   ghost_annihilated := fun _ _ _ v h h_gh => a_semisimple_annihilates_nilpotent_state h v h_gh
   regular_annihilated := fun _ _ _ v u h h_im => a_nilpotent_annihilates_regular_state h v u h_im
-}
+ -/
 
 /-- Master theorem synthesizing the complete Jordan-Chevalley decomposition from the Drazin inverse. -/
 theorem master_drazin_jordan_chevalley_synthesis

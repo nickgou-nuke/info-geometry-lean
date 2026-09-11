@@ -2238,3 +2238,5 @@ modules in `lean/InfoGeometry/Canonical/`.
 -/
 
 end InfoGeometry
+
+import InfoGeometry.Canonical.ParaComplexNeutralForm

@@ -5,6 +5,8 @@ import Mathlib.Data.Fin.Basic
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Ring
 
+set_option maxHeartbeats 1000000
+
 /-!
 # Normal Word Collection Algorithm for Polycyclic U₆ ⊂ G₂(2)
 

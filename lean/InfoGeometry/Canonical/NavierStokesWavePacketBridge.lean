@@ -149,6 +149,22 @@ theorem harmonic_reynolds_stress (w : Vec3) (j : ℤ) (hj : j ≠ 0) (phase : �
 4. Divergence-free solenoidal character of wave packets.
 5. Dyadic stress trace equal to kinetic energy density.
 6. Angular harmonic averaging recovering the Reynolds $1/2$ stress tensor. -/
+theorem certified_navier_stokes_wave_packet_bridge :
+  (∀ (k w : Vec3), crossProd k (crossProd k w) = (dotProd k w) • k - (normSq k) • w) ∧
+  (∀ {k w : Vec3}, dotProd k w = 0 → crossProd k (crossProd k w) = (- (normSq k)) • w) ∧
+  (∀ {k w : Vec3}, normSq k ≠ 0 → dotProd k w = 0 →
+    crossProd k (- (normSq k)⁻¹ • crossProd k w) = w) ∧
+  (∀ (k w : Vec3), dotProd k (crossProd k w) = 0) ∧
+  (∀ (u : Vec3), Matrix.trace (dyadicStress u u) = normSq u) ∧
+  (∀ (w : Vec3) (j : ℤ), j ≠ 0 → ∀ (phase : ℝ),
+    (fun i j_idx => angularMean
+      (fun θ => dyadicStress (fun m => w m * Real.cos ((j : ℝ) * θ + phase))
+                             (fun m => w m * Real.cos ((j : ℝ) * θ + phase)) i j_idx)) =
+      (1 / 2 : ℝ) • dyadicStress w w) := by
+  exact ⟨cross_cross_eq_sub, transverse_double_cross,
+    fourier_biot_savart_inversion, wave_packet_divergence_free,
+    dyadicStress_trace, harmonic_reynolds_stress⟩
+/-
 structure CertifiedNavierStokesWavePacketBridge where
   bac_cab_identity : ∀ (k w : Vec3),
     crossProd k (crossProd k w) = (dotProd k w) • k - (normSq k) • w
@@ -167,12 +183,13 @@ structure CertifiedNavierStokesWavePacketBridge where
       (1 / 2 : ℝ) • dyadicStress w w
 
 /-- Certified instance of the Navier-Stokes Wave Packet Bridge. -/
-def certified_navier_stokes_wave_packet_bridge : CertifiedNavierStokesWavePacketBridge where
+def certified_navier_stokes_wave_packet_bridge_legacy : CertifiedNavierStokesWavePacketBridge where
   bac_cab_identity := cross_cross_eq_sub
   transverse_double_cross := transverse_double_cross
   biot_savart_inversion := fourier_biot_savart_inversion
   divergence_free := wave_packet_divergence_free
   stress_trace_energy := dyadicStress_trace
   reynolds_harmonic_average := harmonic_reynolds_stress
+-/
 
 end InfoGeometry.Canonical.NavierStokesWavePacket

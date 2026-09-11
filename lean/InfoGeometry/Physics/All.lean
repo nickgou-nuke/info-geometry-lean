@@ -126,6 +126,8 @@ import InfoGeometry.Physics.MoorePenroseHodgeDrazinGhostBridge
 import InfoGeometry.Physics.MoorePenroseHodgeDrazinGhostBridgeAudit
 import InfoGeometry.Physics.SelbergGutzwillerZetaBridge
 import InfoGeometry.Physics.SelbergGutzwillerZetaBridgeAudit
+import InfoGeometry.Physics.AitchisonJaynesRapidityBridge
+import InfoGeometry.Physics.AitchisonJaynesRapidityBridgeAudit
 
 /-!
 # Physics Umbrella

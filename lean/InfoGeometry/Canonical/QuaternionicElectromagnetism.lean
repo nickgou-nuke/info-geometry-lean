@@ -32,6 +32,8 @@ or utilize an odd-graded chiral coupling.
 
 namespace InfoGeometry.Canonical.QuaternionicElectromagnetism
 
+noncomputable section
+
 open Matrix
 open InfoGeometry.Clifford.DiracPauliGamma
 
@@ -87,5 +89,7 @@ theorem f_mu_nu_identically_zero (q0 q1 q2 q3 : ℂ) :
   dsimp [F01, Q, Q_star, quaternionCondensate, quaternionConjugate, embedI, embedJ, embedK]
   simp [trace, diag, gamma0, gamma1, gamma2, gamma3, gamma5, Matrix.mul_apply, Fin.sum_univ_succ, smul_apply, add_apply, sub_apply, one_apply]
   try ring
+
+end
 
 end InfoGeometry.Canonical.QuaternionicElectromagnetism

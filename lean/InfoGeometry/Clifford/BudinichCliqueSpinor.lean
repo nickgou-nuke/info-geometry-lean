@@ -217,7 +217,7 @@ The directed Witt pairing.  This is the coordinate pairing for which
 `p_i` paired with `q_j` is `δᵢⱼ`; it is the explicit matrix entry readout
 used below for `z_i` against `z_j`.
 -/
-def wittPairing {n : ℕ} (x y : WittGraphSpace n) : ℂ :=
+noncomputable def wittPairing {n : ℕ} (x y : WittGraphSpace n) : ℂ :=
   ∑ i : Fin n, x.1 i * y.2 i
 
 @[simp] theorem wittPairing_p_p {n : ℕ} (i j : Fin n) :

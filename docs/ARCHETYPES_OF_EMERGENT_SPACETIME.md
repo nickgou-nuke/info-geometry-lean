@@ -903,6 +903,16 @@ Formalizing the statistical-information realization of the split Iwasawa $G = KA
 * **Master Fisher-Rao Aitchison KAN Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_fisher_rao_aitchison_kan_synthesis`).
   In Lean 4: [`FisherRaoAitchisonKanBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/FisherRaoAitchisonKanBridge.lean) and [`FisherRaoAitchisonKanBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/FisherRaoAitchisonKanBridgeAudit.lean).
 
+### 5.60 Riemann-Siegel Phase, Hardy Z-Function & Throat Bi-Wave Interference Bridge
+Formalizing the analytic-geometric mechanism of the Riemann-Siegel phase and the Hardy $Z$-function along the Klein bottle throat $\operatorname{Re}(s) = 1/2$:
+* **Unitary Riemann-Siegel Phase Rotation:** The phase rotation $U(\theta) = e^{i\theta}$ is unitary: $\|U(\theta)\| = 1$ (`phaseRotation_norm`), and the boundary scattering matrix $\mathcal{S}(\theta) = e^{2i\theta}$ preserves probability: $\|\mathcal{S}(\theta)\| = 1$, with ground-state identity $\mathcal{S}(0) = 1$ (`sMatrix_norm`, `sMatrix_zero`).
+* **Hardy $Z$-Function as Real Slice Projection:** On the critical line $s = 1/2 + it$, the complex Riemann zeta value $\zeta(1/2 + it)$ is rotated by the Riemann-Siegel phase into a strictly real-valued field: $Z(t) = e^{i\theta(t)} \zeta(1/2 + it)$, satisfying $\operatorname{Im}(Z(t)) = 0$ (`Z_im_zero`) and norm preservation $\|Z(t)\| = \|\zeta(1/2 + it)\|$ (`norm_Z_eq_norm_zeta`).
+* **Exact Zero Equivalence:** The non-trivial zeros of $\zeta$ on the critical line are in exact 1-to-1 correspondence with the real roots of the Hardy $Z$-function: $Z(t) = 0 \iff \zeta(1/2 + it) = 0$ (`Z_zero_iff_zeta_zero`).
+* **Even Parity under Glide Reflection:** Under an odd Riemann-Siegel phase $\theta(-t) = -\theta(t)$ and Schwarz reflection $\zeta(1/2 - it) = \overline{\zeta(1/2 + it)}$, the Hardy $Z$-function is strictly even: $Z(-t) = Z(t)$ (`hardy_Z_even`).
+* **Destructive Bi-Wave Interference:** Complete destructive interference between forward and backward waves ($\psi + \phi = 0$) collapses the Aharonov overlap denominator to $\langle \phi \mid \psi \rangle = -\|\psi\|^2$ (`biwave_destructive_overlap`), vanishing identically at a zero (`biwave_zero_overlap`), formalizing the weak value amplification singularity $\Omega_w \to \infty$.
+* **Master Riemann-Siegel Hardy $Z$ Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_hardy_z_throat_synthesis`).
+  In Lean 4: [`RiemannSiegelHardyZThroatBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/RiemannSiegelHardyZThroatBridge.lean) and [`RiemannSiegelHardyZThroatBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/RiemannSiegelHardyZThroatBridgeAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -982,6 +992,7 @@ Formalizing the statistical-information realization of the split Iwasawa $G = KA
 | **Harish-Chandra Plancherel & Weyl** | Plancherel $\rho(t) = t \tanh(\pi t)$ / Weyl Bound $\rho < t$ / Casimir Coupling | `certified_plancherel_weyl_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Wigner-Smith Time Delay & Krein Shift** | Time Delay $\tau(t) = 1/(1/4+t^2)$ / Reciprocal Casimir $\tau\lambda=1$ / $\tau \le 4$ | `certified_wigner_smith_krein_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Fisher-Rao & Aitchison KAN Duality** | Fisher-Rao $g_{\mathrm{FR}} \ge 4$ / Aitchison $g_A \ge 8$ / Triad $b''=2g_A-2g_{\mathrm{FR}}$ / Throat $\tau(0)=4$ | `certified_fisher_rao_aitchison_kan_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Riemann-Siegel & Hardy Z Throat** | Phase $\|e^{i\theta}\|=1$ / Real $Z \in \mathbb{R}$ / Zero Equiv $Z=0 \iff \zeta=0$ / Even $Z(-t)=Z(t)$ | `certified_hardy_z_throat_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

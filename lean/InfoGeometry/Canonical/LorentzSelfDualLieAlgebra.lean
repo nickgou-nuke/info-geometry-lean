@@ -15,6 +15,8 @@ import InfoGeometry.Canonical.HestenesBivectorSelfDuality
 
 namespace InfoGeometry.Canonical.LorentzSelfDualLieSplit
 
+noncomputable section
+
 open CliffordAlgebra TensorProduct
 open InfoGeometry.Canonical.HestenesBivectorCarrier
 
@@ -48,5 +50,7 @@ def complexBivectorInclusion : ComplexBivector Q →ₗ[ℂ] ComplexClifford Q :
 
 def complexBivectorLieSubalgebra : LieSubalgebra ℂ (ComplexClifford Q) :=
   LieSubalgebra.lieSpan ℂ (ComplexClifford Q) (LinearMap.range (complexBivectorInclusion Q))
+
+end
 
 end InfoGeometry.Canonical.LorentzSelfDualLieSplit

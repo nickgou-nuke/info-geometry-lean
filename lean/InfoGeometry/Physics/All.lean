@@ -170,6 +170,8 @@ import InfoGeometry.Physics.AmariSurprisalIwasawaSynthesis
 import InfoGeometry.Physics.AmariSurprisalIwasawaSynthesisAudit
 import InfoGeometry.Physics.AmariSurprisalSphereIwasawaBridge
 import InfoGeometry.Physics.AmariSurprisalSphereIwasawaBridgeAudit
+import InfoGeometry.Physics.QuantumVortexCutoffBlowupProtection
+import InfoGeometry.Physics.QuantumVortexCutoffBlowupProtectionAudit
 
 /-!
 # Physics Umbrella

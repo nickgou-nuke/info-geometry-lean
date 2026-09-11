@@ -4,6 +4,7 @@ import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Canonical.BerryConnection
 import InfoGeometry.Canonical.MaurerCartanFactorization
 import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
+import InfoGeometry.Canonical.ParaComplexConnectionBridge
 
 noncomputable section
 
@@ -53,6 +54,16 @@ variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 structure ParaComplexStructure (R V : Type*) [CommRing R] [AddCommGroup V] [Module R V] where
   K : V →ₗ[R] V
   K_sq : K.comp K = LinearMap.id
+
+/- Convert the real para-complex datum to the canonical connection owner. -/
+def ParaComplexStructure.toCanonical
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (K : ParaComplexStructure ℝ V) :
+    InfoGeometry.Canonical.ParaComplexConnection.ParaComplexStructure V where
+  tau := K.K
+  tau_sq := by
+    intro v
+    exact LinearMap.congr_fun K.K_sq v
 
 /-- A Para-Kähler datum $(V, g, K)$ consists of:
     1. A symmetric bilinear metric $g$;

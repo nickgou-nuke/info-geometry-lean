@@ -165,6 +165,49 @@ theorem pMinus_mul_pPlus : pMinus (R := R) * pPlus (R := R) = 0 := by
 
 end Projectors
 
+section ProductDecomposition
+
+variable [CommRing R] [Invertible (2 : R)]
+
+/-- The canonical product coordinates for a split-complex number. -/
+def toProduct (z : Carrier R) : R × R := (z.re + z.im, z.re - z.im)
+
+/-- Reconstruction from the two product coordinates. -/
+def ofProduct (p : R × R) : Carrier R :=
+  ⟨(p.1 + p.2) * ⅟ (2 : R), (p.1 - p.2) * ⅟ (2 : R)⟩
+
+theorem ofProduct_toProduct (z : Carrier R) : ofProduct (toProduct z) = z := by
+  ext <;> dsimp [ofProduct, toProduct] <;> ring_nf
+  all_goals
+    calc
+      _ = _ * (⅟ (2 : R) * (2 : R)) := by ring
+      _ = _ := by rw [invOf_mul_self, mul_one]
+
+theorem toProduct_ofProduct (p : R × R) : toProduct (ofProduct p) = p := by
+  rcases p with ⟨a, b⟩
+  ext <;> dsimp [ofProduct, toProduct] <;> ring_nf
+  all_goals
+    calc
+      _ = _ * (⅟ (2 : R) * (2 : R)) := by ring
+      _ = _ := by rw [invOf_mul_self, mul_one]
+
+/-- Split-complex coordinates are canonically equivalent to two copies of the base ring. -/
+def productEquiv : Carrier R ≃ R × R where
+  toFun := toProduct
+  invFun := ofProduct
+  left_inv := ofProduct_toProduct
+  right_inv := toProduct_ofProduct
+
+/-- The product coordinates turn split-complex multiplication into componentwise
+multiplication.  This is the concrete algebra form of the quotient
+`R[τ]/(τ² - 1) ≃ R × R`. -/
+theorem toProduct_mul (x y : Carrier R) :
+    toProduct (x * y) = ((toProduct x).1 * (toProduct y).1,
+      (toProduct x).2 * (toProduct y).2) := by
+  ext <;> simp [toProduct, mul_re, mul_im] <;> ring
+
+end ProductDecomposition
+
 end Carrier
 
 end InfoGeometry.Canonical.SplitComplex

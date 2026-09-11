@@ -64,22 +64,10 @@ theorem temperature_at_apex :
 
 /-! ### 4. Master Packet -/
 
-structure FisherCoolingPacket where
-  expansion : ∀ (N : ℕ) (g1 : ℝ), fisherMetricN (N + 1) g1 = fisherMetricN N g1 + fisherMetricOne g1
-  cooling : ∀ (N : ℕ), 1 ≤ N → effQuantumTemperature (N + 1) < effQuantumTemperature N
-  apex : effQuantumTemperature 1 = 1
-
-def makeFisherCoolingPacket : FisherCoolingPacket where
-  expansion := fisher_information_expansion
-  cooling := fisher_cooling_monotone
-  apex := temperature_at_apex
-
 theorem fisher_cooling_unified :
-    let P := makeFisherCoolingPacket
-    (P.expansion = fisher_information_expansion) ∧
-    (P.cooling = fisher_cooling_monotone) ∧
-    (P.apex = temperature_at_apex) := by
-  dsimp
-  refine ⟨rfl, rfl, rfl⟩
+    (∀ (N : ℕ) (g1 : ℝ), fisherMetricN (N + 1) g1 = fisherMetricN N g1 + fisherMetricOne g1) ∧
+    (∀ (N : ℕ), 1 ≤ N → effQuantumTemperature (N + 1) < effQuantumTemperature N) ∧
+    effQuantumTemperature 1 = 1 := by
+  exact ⟨fisher_information_expansion, fisher_cooling_monotone, temperature_at_apex⟩
 
 end InfoGeometry.Canonical.CanonicalZornFisherCooling

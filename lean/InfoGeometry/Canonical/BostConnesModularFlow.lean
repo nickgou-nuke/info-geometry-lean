@@ -94,6 +94,10 @@ theorem phaseFactor_mul_index (t : ℝ) (m n : ℕ+) :
   push_cast
   ring
 
+theorem phaseFactor_ne_zero (t : ℝ) (n : ℕ+) :
+    Complex.exp (Complex.I * (t : ℂ) * (Real.log (n.val : ℝ) : ℂ)) ≠ 0 := by
+  exact Complex.exp_ne_zero _
+
 /-!
 ## 2. Formal Flow Intertwining (Liouville Grading)
 

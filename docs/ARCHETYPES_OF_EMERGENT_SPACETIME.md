@@ -930,7 +930,13 @@ Formalizing the projective cone geometry, the cross-ratio metric, and relativist
 * **Jaynesian Throat & Parity Symmetry:** The Jaynesian prior $p = 1/2$ has $\operatorname{logit}(1/2) = 0$ and $\theta(1/2) = 0$ (`logit_half`, `rapidity_half`). Under glide reflection $p \mapsto 1 - p$, $d_{\mathrm{Apol}}(1 - p, 1/2) = d_{\mathrm{Apol}}(p, 1/2)$ (`apollonian_throat_reflection`).
 * **Asymptotic Lightcone Horizon:** For any target distance $M > 0$, deterministic certainty is unreachable at finite distance ($d_{\mathrm{Apol}}(p, 1/2) > M$, `apollonian_boundary_divergence`), proving that the boundary of the simplex is an asymptotic lightcone horizon.
 * **Master Hilbert-Apollonian Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_hilbert_apollonian_projective_synthesis`).
-  In Lean 4: [`HilbertApollonianProjectiveBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/HilbertApollonianProjectiveBridge.lean) and [`HilbertApollonianProjectiveBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/HilbertApollonianProjectiveBridgeAudit.lean).
+### 5.63 Aperture Entanglement Flux, Optical Étendue & Rose Attenuation
+Formalizing the differential geometry of the nuclear angular correlation 2-form across an optical/detector aperture:
+* **Legendre Moment Factorization:** The integrated moments over a spherical cap $u = \cos\alpha \in [0, 1]$ factorize exactly into normalized solid angle $J_0(u) = 1 - u$ and Rose attenuation factors: $J_2(u) = J_0(u) Q_2(u)$ (`J2_eq_J0_mul_Q2`) and $J_4(u) = J_0(u) Q_4(u)$ (`J4_eq_J0_mul_Q4`), where $Q_2(u) = \frac{1}{2}u(1+u)$ and $Q_4(u) = \frac{1}{8}u(1+u)(7u^2-3)$.
+* **Boundary Limit Certification:** Far-field limit ($u = 1$) gives $Q_2(1) = 1, Q_4(1) = 1$ (`Q2_one`, `Q4_one`), recovering $W_{\mathrm{eff}}(1) = 1 + A_{22} + A_{44} = W(0)$ (`Weff_one`, e.g. $10/9$ for ⁶⁰Co, $155/132$ for ²⁰⁸Tl). Contact hemisphere ($u = 0$) gives $Q_2(0) = 0, Q_4(0) = 0$ (`Q2_zero`, `Q4_zero`), proving complete isotropic smearing $W_{\mathrm{eff}}(0) = 1$ (`Weff_zero`, `co60_Weff_contact`).
+* **Optical Étendue Conservation:** The phase-space throughput $\mathcal{E} = S_{\mathrm{eff}} \cdot \Omega$ is invariant across ideal optical/detector transfers (`etendue_conservation`), and boundary rim flux vanishes on-axis (`boundaryFlux_zero`).
+* **Master Aperture Entanglement Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_aperture_entanglement_flux_synthesis`).
+  In Lean 4: [`ApertureEntanglementFlux.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/ApertureEntanglementFlux.lean) and [`ApertureEntanglementFluxAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/ApertureEntanglementFluxAudit.lean).
 
 ---
 
@@ -1014,6 +1020,7 @@ Formalizing the projective cone geometry, the cross-ratio metric, and relativist
 | **Riemann-Siegel & Hardy Z Throat** | Phase $\|e^{i\theta}\|=1$ / Real $Z \in \mathbb{R}$ / Zero Equiv $Z=0 \iff \zeta=0$ / Even $Z(-t)=Z(t)$ | `certified_hardy_z_throat_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Aitchison Trace-Determinant Simplex** | Traceless $\sum \mathrm{clr} = 0$ / Jaynesian $\mathbf{0}$ / Double-Sum $\frac{1}{2D}\sum(u_i-u_j)^2 = \sum u_i^2$ | `certified_aitchison_trace_determinant_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Hilbert-Apollonian Projective Metric** | Scale Invariance / Cross-Ratio $\ln \mathrm{cr} = \Delta \mathrm{logit}$ / Rapidity $d_{\mathrm{Apol}} = 2|\Delta\theta|$ / Lightcone | `certified_hilbert_apollonian_projective_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Aperture Entanglement Flux** | Legendre Factorization $J_k = J_0 Q_k$ / Rose $Q_k$ Limits / Étendue $\mathcal{E} = S\Omega$ / Isotropic Smearing | `certified_aperture_entanglement_flux_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

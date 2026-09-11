@@ -147,27 +147,35 @@ theorem antiSelfDualPartLinear_eq_self_iff (F : TwoFormC) :
 
 theorem selfDualPartLinear_add_antiSelfDualPartLinear_map :
     selfDualPartLinear + antiSelfDualPartLinear = LinearMap.id := by
-  ext F i
+  apply LinearMap.ext
+  intro F
+  ext i
   simpa [LinearMap.add_apply, LinearMap.id_apply] using
     congrFun (selfDualPartLinear_add_antiSelfDualPartLinear F) i
 
 theorem hodgeStarLinear_comp_selfDualPartLinear :
     hodgeStarLinear.comp selfDualPartLinear =
       Complex.I • selfDualPartLinear := by
-  ext F i
+  apply LinearMap.ext
+  intro F
+  ext i
   have h := hodgeStarLinear_selfDualPartLinear F
   simpa [LinearMap.comp_apply, Pi.smul_apply] using congrFun h i
 
 theorem hodgeStarLinear_comp_antiSelfDualPartLinear :
     hodgeStarLinear.comp antiSelfDualPartLinear =
       (-Complex.I) • antiSelfDualPartLinear := by
-  ext F i
+  apply LinearMap.ext
+  intro F
+  ext i
   have h := hodgeStarLinear_antiSelfDualPartLinear F
   simpa [LinearMap.comp_apply, Pi.smul_apply] using congrFun h i
 
 theorem hodgeStarLinear_square :
     hodgeStarLinear.comp hodgeStarLinear = -LinearMap.id := by
-  ext F i
+  apply LinearMap.ext
+  intro F
+  ext i
   fin_cases i <;> simp [hodgeStarLinear, hodgeStar]
 
 theorem hodgeStarLinear_square_apply (F : TwoFormC) :

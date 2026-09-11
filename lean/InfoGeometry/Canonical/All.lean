@@ -18,6 +18,14 @@ import InfoGeometry.Canonical.ZornNativeBdGCompatibility
 import InfoGeometry.Canonical.ConformalFiveGradeBracketCapstone
 import InfoGeometry.Canonical.LanglandsFunctorialityNuclearCapstone
 import InfoGeometry.Canonical.NuclearGammaSpectroscopyCapstone
+import InfoGeometry.Canonical.ParaComplexNeutralForm
+import InfoGeometry.Canonical.ParaComplexNeutralFormAudit
+import InfoGeometry.Canonical.ParaComplexLagrangianModular
+import InfoGeometry.Canonical.ParaComplexLagrangianModularAudit
+import InfoGeometry.Canonical.ApollonianPrimonWeylBridge
+import InfoGeometry.Canonical.ApollonianPrimonWeylAudit
+import InfoGeometry.Canonical.OpenAIFrontierUnificationBridge
+import InfoGeometry.Canonical.OpenAIFrontierUnificationAudit
 import InfoGeometry.Canonical.PfaffianPathBridgeCapstone
 import InfoGeometry.Canonical.GlobalNonAbelianLanglandsCapstone
 import InfoGeometry.Canonical.HestenesKreinDiracAnomalyCapstone
@@ -2238,12 +2246,3 @@ modules in `lean/InfoGeometry/Canonical/`.
 -/
 
 end InfoGeometry
-
-import InfoGeometry.Canonical.ParaComplexNeutralForm
-import InfoGeometry.Canonical.ParaComplexNeutralFormAudit
-import InfoGeometry.Canonical.ParaComplexLagrangianModular
-import InfoGeometry.Canonical.ParaComplexLagrangianModularAudit
-import InfoGeometry.Canonical.ApollonianPrimonWeylBridge
-import InfoGeometry.Canonical.ApollonianPrimonWeylAudit
-import InfoGeometry.Canonical.OpenAIFrontierUnificationBridge
-import InfoGeometry.Canonical.OpenAIFrontierUnificationAudit

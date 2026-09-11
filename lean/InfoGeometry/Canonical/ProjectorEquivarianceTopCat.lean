@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.ProjectorEquivariance
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Basic
+import Mathlib.Analysis.NormedSpace.OperatorNorm.Basic
 
 /-!
 # TopCat readout of the projector/phase-flip packet
@@ -13,6 +14,7 @@ the doubled carrier and transports the identities pointwise.
 noncomputable section
 
 set_option linter.unusedSectionVars false
+set_option synthInstance.maxHeartbeats 400000
 
 namespace InfoGeometry.Canonical.ProjectorEquivarianceTopCat
 

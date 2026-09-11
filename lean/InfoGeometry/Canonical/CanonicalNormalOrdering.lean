@@ -233,7 +233,8 @@ theorem modeDual_modeVec (a b : ℤ) :
   by_cases h : a = b
   · subst b
     simp [modeVec, modeDual, Module.Basis.coord_apply]
-  · simp [modeVec, modeDual, Module.Basis.coord_apply, h]
+  · have hne : b ≠ a := Ne.symm h
+    simp [modeVec, modeDual, Module.Basis.coord_apply, h, hne]
 
 /--
 Sea-polarized plus modes.

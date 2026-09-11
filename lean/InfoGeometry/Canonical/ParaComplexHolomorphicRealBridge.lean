@@ -179,27 +179,23 @@ theorem paracomplex_norm (x t tau : R) (htau : tau * tau = 1) :
     (x + tau * t) * (x - tau * t) = x ^ 2 - (tau * t) ^ 2 := by ring
     _ = x ^ 2 - t ^ 2 := by rw [mul_pow, htau']; ring
 
-theorem peircePlus_lightcone_factor (x t tau half : R)
+theorem peircePlus_lightcone_factor (x t tau half : ℝ)
     (htau : tau * tau = 1) :
     peircePlus tau half * (x + tau * t) = (x + t) * peircePlus tau half := by
   unfold peircePlus
-  calc
-    half * (1 + tau) * (x + tau * t) = half * (x + t) * (1 + tau) := by
-      calc
-        half * (1 + tau) * (x + tau * t) = half * (x + t + (tau ^ 2 - 1) * t) * (1 + tau) := by ring
-        _ = half * (x + t) * (1 + tau) := by rw [htau']; ring
-    _ = (x + t) * (half * (1 + tau)) := by ring
+  ring_nf
+  have hpow : tau ^ 2 = 1 := by simpa [pow_two] using htau
+  rw [hpow]
+  ring
 
-theorem peirceMinus_lightcone_factor (x t tau half : R)
+theorem peirceMinus_lightcone_factor (x t tau half : ℝ)
     (htau : tau * tau = 1) :
     peirceMinus tau half * (x + tau * t) = (x - t) * peirceMinus tau half := by
   unfold peirceMinus
-  calc
-    half * (1 - tau) * (x + tau * t) = half * (x - t) * (1 - tau) := by
-      calc
-        half * (1 - tau) * (x + tau * t) = half * (x - t + (1 - tau ^ 2) * t) * (1 - tau) := by ring
-        _ = half * (x - t) * (1 - tau) := by rw [htau']; ring
-    _ = (x - t) * (half * (1 - tau)) := by ring
+  ring_nf
+  have hpow : tau ^ 2 = 1 := by simpa [pow_two] using htau
+  rw [hpow]
+  ring
 
 theorem peirce_chiral_null_annihilation (u v tau half : R)
     (htau : tau * tau = 1) :
@@ -307,6 +303,15 @@ structure ParaComplexHolomorphicRealSynthesis where
   seam_characterization :
     ∀ {R : Type*} [CommRing R] (x t tau : R),
       (x + tau * t = x - tau * t) ↔ (2 * tau * t = 0)
+  seam_characterization_of_isUnit :
+    ∀ {R : Type*} [CommRing R] (x t tau : R),
+      IsUnit (2 * tau) → ((x + tau * t = x - tau * t) ↔ t = 0)
+  paracomplex_norm_formula :
+    ∀ {R : Type*} [CommRing R] (x t tau : R),
+      tau * tau = 1 → (x + tau * t) * (x - tau * t) = x ^ 2 - t ^ 2
+  chiral_null_annihilation :
+    ∀ {R : Type*} [CommRing R] (u v tau half : R),
+      tau * tau = 1 → (u * peircePlus tau half) * (v * peirceMinus tau half) = 0
   zorn_traceless :
     ∀ (a delta : ℝ), (zorn2 a delta).trace = 0
   zorn_square :
@@ -328,6 +333,9 @@ theorem certified_paracomplex_holomorphic_real_synthesis : ParaComplexHolomorphi
   antiholomorphic_eigenvalue := by intros; apply tau_mul_peirceMinus; assumption
   derham_split := by intros; apply deRham_decomposition; assumption
   seam_characterization := by intros; apply real_seam_condition
+  seam_characterization_of_isUnit := by intros; apply real_seam_condition_of_isUnit; assumption
+  paracomplex_norm_formula := by intros; apply paracomplex_norm; assumption
+  chiral_null_annihilation := by intros; apply peirce_chiral_null_annihilation; assumption
   zorn_traceless := zorn2_trace_zero
   zorn_square := zorn2_sq
   zorn_determinant := zorn2_det

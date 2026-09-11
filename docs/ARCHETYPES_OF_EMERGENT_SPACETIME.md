@@ -533,6 +533,28 @@ Formalizing the canonical synthesis between the 3D boundary Chern-Simons symplec
   - Every gauge parameter splits uniquely into propagating and harmonic components via the Fitting decomposition: $\alpha = \alpha_{\mathrm{im}} + \alpha_{\mathrm{ker}}$.
   In Lean 4: [`ChernSimonsCuntzBoundaryBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ChernSimonsCuntzBoundaryBridge.lean) and [`ChernSimonsCuntzBoundaryAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ChernSimonsCuntzBoundaryAudit.lean) (`chern_simons_stokes_pairing`, `chern_simons_gauge_shift_invariant`, `cs_branch_state_sum`, `hodge_green_annihilates_ghost`, `hodge_green_inverts_index_one`, `gauge_fitting_unique`, `makeCertifiedChernSimonsCuntzSynthesis`).
 
+### 5.29 Jordan-Chevalley Spectral Splitting via Drazin Inverse
+Universal algebraic Jordan-Chevalley / Fitting decomposition derived unconditionally from the Drazin generalized inverse across arbitrary rings and modules:
+* **Canonical Sum and Commutation:** Any element $a$ with Drazin inverse $b$ of index $k$ admits the unique splitting $a = a_s + a_n$ where $a_s = a P = P a$ and $a_n = a(1 - P) = (1 - P) a$ with spectral projector $P = a b = b a$. Both components commute with each other $[a_s, a_n] = 0$ and with the base element $[a, a_s] = 0$, $[a, a_n] = 0$.
+* **Mutual Annihilation:** The semisimple and nilpotent sectors annihilate each other on both sides:
+  $$a_s \cdot a_n = 0, \quad a_n \cdot a_s = 0$$
+* **Universal Nilpotency:** The nilpotent component satisfies the power formula $(a_n)^m = a^m(1 - P)$ for all $m \ge 1$, ensuring exact nilpotency $(a_n)^k = 0$ for index $k \ge 1$ and universal nilpotency $(a_n)^{k+1} = 0$ for all $k \in \mathbb{N}$.
+* **Regular Invertibility:** The semisimple part is invertible by the Drazin inverse on the regular sector: $a_s b = P$, $b a_s = P$.
+* **Module State Splitting & Sector Annihilation:** On any state $v \in M$, $a \cdot v = a_s \cdot v + a_n \cdot v$. If $v$ lies in the nilpotent gauge ghost sector $\ker(a^k)$, then $a_s \cdot v = 0$; if $v$ lies in the regular image sector $\operatorname{im}(a^k)$, then $a_n \cdot v = 0$.
+  In Lean 4: [`DrazinJordanChevalleyBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/DrazinJordanChevalleyBridge.lean) and [`DrazinJordanChevalleyAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/DrazinJordanChevalleyAudit.lean) (`jordan_chevalley_sum`, `a_semisimple_mul_a_nilpotent`, `a_nilpotent_mul_a_semisimple`, `jordan_chevalley_comm`, `a_nilpotent_pow_k`, `a_nilpotent_pow_succ_k`, `a_semisimple_mul_drazin`, `jordan_chevalley_smul_sum`, `a_semisimple_annihilates_nilpotent_state`, `a_nilpotent_annihilates_regular_state`, `master_drazin_jordan_chevalley_synthesis`).
+
+### 5.30 Paracomplex Minkowski Lightcone & Real Seam Holomorphic Architecture
+Unifying the split-complex algebra ($\tau^2 = 1$), Peirce chiral projectors $P_\pm = \frac{1 \pm \tau}{2}$, and the $(1+1)$-dimensional relativistic lightcone:
+* **The Algebraic Minkowski Spacetime Interval:** The paracomplex algebraic norm of $z = x + \tau t$ is precisely the Minkowski spacetime interval:
+  $$(x + \tau t)(x - \tau t) = x^2 - \tau^2 t^2 = x^2 - t^2$$
+* **Peirce Chiral Null Projections:** The split Peirce projectors extract the exact forward and backward lightcone null coordinates:
+  $$P_+ (x + \tau t) = (x + t) P_+, \quad P_- (x + \tau t) = (x - t) P_-$$
+* **Mutual Chiral Null Annihilation:** Chiral null rays are mutually orthogonal in the split algebra:
+  $$\big(P_+ (x + \tau t)\big) \cdot \big(P_- (x + \tau t)\big) = (x + t)(x - t) (P_+ P_-) = 0$$
+* **Real Seam Characterization:** When $2\tau$ is a unit in the base ring, the real seam condition $z = \bar{z}$ holds if and only if $t = 0$:
+  $$x + \tau t = x - \tau t \iff t = 0$$
+  In Lean 4: [`ParaComplexHolomorphicRealBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaComplexHolomorphicRealBridge.lean) and [`ParaComplexHolomorphicRealAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaComplexHolomorphicRealAudit.lean) (`paracomplex_norm`, `peircePlus_lightcone_factor`, `peirceMinus_lightcone_factor`, `peirce_chiral_null_annihilation`, `real_seam_condition_of_isUnit`, `certified_paracomplex_holomorphic_real_synthesis`).
+
 ---
 
 ## Master Verification Matrix
@@ -578,6 +600,8 @@ Formalizing the canonical synthesis between the 3D boundary Chern-Simons symplec
 | **Drazin Spectral Fitting & Ghost Isolator** | General Ring $R$ / Module $M$ / Drazin Projection / BRST Ghost | `drazin_pow_reduction`, `drazin_fitting_trivial_intersection`, `makeCertifiedDrazinFittingSynthesis` | **Kernel-Checked (0 gaps)** |
 | **ABJ Chiral & Boundary Hall Inflow** | Bulk Chiral Current / Boundary Hall $c_1 \in \mathbb{Z}$ | `abj_hall_anomaly_inflow`, `dirac_index_is_integer` | **Kernel-Checked (0 gaps)** |
 | **Chern-Simons Cuntz Boundary & Drazin** | Stokes Boundary Pairing / Cuntz $\mathcal{O}_2$ / Drazin $G$ | `chern_simons_stokes_pairing`, `cs_branch_state_sum`, `hodge_green_inverts_index_one` | **Kernel-Checked (0 gaps)** |
+| **Drazin Jordan-Chevalley Spectral Splitting** | General Ring $R$ / Module $M$ / $A = A_s + A_n$ / Fitting Drazin | `jordan_chevalley_sum`, `a_semisimple_mul_a_nilpotent`, `master_drazin_jordan_chevalley_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Paracomplex Minkowski Lightcone & Real Seam**| Split-Complex $\tau^2 = 1$ / Lightcone Coordinates / Peirce Chiral | `paracomplex_norm`, `peirce_chiral_null_annihilation`, `real_seam_condition_of_isUnit` | **Kernel-Checked (0 gaps)** |
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).

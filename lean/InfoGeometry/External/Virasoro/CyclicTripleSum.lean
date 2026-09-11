@@ -64,7 +64,7 @@ variable [AddCommMonoid W]
 lemma cyclicTripleSum_cyclic (β : V → V → V) (φ : V → V → W) (x y z : V) :
     cyclicTripleSum β φ x y z = cyclicTripleSum β φ y z x := by
   simp only [cyclicTripleSum]
-  ac_rfl
+  abel
 
 lemma cyclicTripleSum_cyclic' (β : V → V → V) (φ : V → V → W) (x y z : V) :
     cyclicTripleSum β φ x y z = cyclicTripleSum β φ z x y := by
@@ -109,7 +109,7 @@ lemma cyclicTripleSum_map_add_of_bilin (β : V →+ V →+ V) (φ : V →+ V →
       = cyclicTripleSum (fun a ↦ ⇑(β a)) (fun a ↦ ⇑(φ a)) x y z₁
         + cyclicTripleSum (fun a ↦ ⇑(β a)) (fun a ↦ ⇑(φ a)) x y z₂ := by
   simp only [cyclicTripleSum, map_add, AddMonoidHom.add_apply]
-  ac_rfl
+  abel
 
 lemma cyclicTripleSum_map_add_snd_of_bilin (β : V →+ V →+ V) (φ : V →+ V →+ W) (x y₁ y₂ z : V) :
     cyclicTripleSum (fun a ↦ ⇑(β a)) (fun a ↦ ⇑(φ a)) x (y₁ + y₂) z

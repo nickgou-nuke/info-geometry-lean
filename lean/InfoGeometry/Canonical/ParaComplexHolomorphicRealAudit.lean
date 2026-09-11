@@ -15,6 +15,9 @@ Expected axioms: [propext, Classical.choice, Quot.sound].
 #print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.peirce_ortho
 #print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.deRham_decomposition
 #print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.real_seam_condition
+#print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.real_seam_condition_of_isUnit
+#print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.paracomplex_norm
+#print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.peirce_chiral_null_annihilation
 #print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.zorn2_trace_zero
 #print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.zorn2_sq
 #print axioms InfoGeometry.Canonical.ParaComplexHolomorphicReal.zorn2_det

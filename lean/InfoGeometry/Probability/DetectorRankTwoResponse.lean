@@ -104,15 +104,5 @@ theorem quadratic_coordinate_identification {n : ℕ} (κ : ℝ) (X : Fin n → 
   simp [coincidence]
   field_simp [hκ]
 
-#print axioms response_factorization
-#print axioms response_gauge_invariant
-#print axioms restored_response
-#print axioms product_closure
-#print axioms contact_gauge_unique
-#print axioms closureSlope_gauge_invariant
-#print axioms activity_gauge_invariant
-#print axioms rank_two_basis_rotation
-#print axioms quadratic_coordinate_identification
-
 end
 end InfoGeometry.Probability.DetectorRankTwoResponse

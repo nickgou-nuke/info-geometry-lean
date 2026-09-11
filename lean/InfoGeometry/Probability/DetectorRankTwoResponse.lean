@@ -11,7 +11,7 @@ The measured response is tested against an algebraic two-dimensional model of
 coincidence-summed detector response:
   `Rᵢⱼ = Cᵢ Xⱼ - Kᵢ Xⱼ²`,  `Zⱼ = (Xⱼ, Xⱼ²)ᵀ`.
 
-Consequently, every 3×3 minor of an exact model matrix vanishes, the
+Consequently, every 3×3 minor of an exact model matrix vanishes. These identities characterize the proposed model; they do not by themselves establish that an experimental matrix is exactly rank two. The
 representation is invariant under `Z ↦ M Z`, `B ↦ B M⁻¹` for `M ∈ GL₂(ℝ)`,
 and the closure slope
   `H = C₁ C₂ / κ`

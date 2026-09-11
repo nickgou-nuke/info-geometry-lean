@@ -34,6 +34,8 @@ import InfoGeometry.Algebra.BostConnesAnalytic
 import InfoGeometry.Algebra.BostConnesArithmeticBridge
 import InfoGeometry.Algebra.BostConnesGalois
 import InfoGeometry.Algebra.BostConnesKMSPhaseTransition
+import InfoGeometry.Algebra.BostConnesGeneratorsBridge
+import InfoGeometry.Algebra.BostConnesGeneratorsAudit
 import InfoGeometry.Algebra.CARFockBridge
 import InfoGeometry.Algebra.CARFockBridge_withproofs
 import InfoGeometry.Algebra.CPTComplexStructure

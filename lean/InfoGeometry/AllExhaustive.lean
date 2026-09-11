@@ -10276,6 +10276,8 @@ import InfoGeometry.Physics.PellisFineStructure
 import InfoGeometry.Physics.PellisfineStructure
 import InfoGeometry.Physics.PenroseQuantizedTwistorSplitOctonion
 import InfoGeometry.Physics.PenroseRealDoubledPeirceSoldering
+import InfoGeometry.Physics.PenroseRayInformationGeometry
+import InfoGeometry.Physics.PenroseRayInformationGeometryAudit
 import InfoGeometry.Physics.Pin55Explicit
 import InfoGeometry.Physics.Pin55Formal
 import InfoGeometry.Physics.Pin55Glide

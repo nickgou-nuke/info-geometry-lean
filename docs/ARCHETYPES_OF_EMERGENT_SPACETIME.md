@@ -1006,6 +1006,15 @@ Formalizing the dual quantum-statistical origin of the square-root coordinate $X
 * **Master Synthesis:** Full conjunction certified in Mathlib 4 (`certified_anscombe_madelung_registration_synthesis`).
   In Lean 4: [`DetectorAnscombeMadelungRegistration.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorAnscombeMadelungRegistration.lean) and [`DetectorAnscombeMadelungRegistrationAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorAnscombeMadelungRegistrationAudit.lean).
 
+### 5.71 Penrose Projective Lightrays and Gamma Field Information Geometry
+Formalizing the geometricization of the gamma electromagnetic field via Penrose null rays and Krein space conformal invariance:
+* **Penrose Minkowski Krein Space:** Inner product space equipped with fundamental symmetry $J$ ($J^2 = \mathbb{I}$, $J^\dagger = J$) defining the Krein metric $\langle J x, y \rangle$ governing the conformal geometry of spacetime (`PenroseMinkowski`, `penrose_minkowski_symmetry`, `penrose_minkowski_involutive`).
+* **Penrose Projective Null Ray:** Projective vector subspace on the null cone characterized by identically vanishing Krein norm $\langle J v, v \rangle = 0$ (`IsPenroseNullRay`, `penrose_null_ray_krein_zero`).
+* **Conformal Gamma Field Tensor:** Operator carrier representing the energy-momentum information tensor satisfying conformal orthogonality along the Krein cone $\langle J (F(x)), x \rangle = 0$ (`GammaFieldTensor`, `gamma_field_pure_projection`).
+* **Information Confinement to Penrose Rays:** Proves that the action of the conformal gamma field operator generates states lying strictly on the projective Penrose null rays if and only if their Krein charge vanishes (`field_confinement_to_penrose_rays`).
+* **Master Synthesis:** Full conjunction certified in Mathlib 4 (`certified_penrose_ray_information_geometry_synthesis`).
+  In Lean 4: [`PenroseRayInformationGeometry.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/PenroseRayInformationGeometry.lean) and [`PenroseRayInformationGeometryAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/PenroseRayInformationGeometryAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -1096,6 +1105,7 @@ Formalizing the dual quantum-statistical origin of the square-root coordinate $X
 | **Detector Holistic Quantum Observer** | Holographic Collapse $\mathcal{G}^2/\mathcal{G}^2=1$ / Sqrt Inversion $\sqrt{Q}=X$ / Efficiency Annihilation / Dilation Invariance | `certified_holistic_quantum_observer_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Detector Holistic Regression Observer**| Spatial Integral Annihilation / Zero Intercept $L_1 L_2 = H Q$ / Gauss-Markov $\sum Q_j^2$ Weighting / Minor Vanishing | `certified_holistic_detector_observer_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Anscombe-Madelung & Registration** | Anscombe Delta Stabilization / Madelung Amplitude $\sqrt{\rho}$ / Spacer Cancellation $d_0(E_1)-d_0(E_2)$ | `certified_anscombe_madelung_registration_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Penrose Ray Information Geometry** | Penrose Minkowski Krein Space / Null Ray $\langle J v, v \rangle = 0$ / Conformal Field Confinement | `certified_penrose_ray_information_geometry_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

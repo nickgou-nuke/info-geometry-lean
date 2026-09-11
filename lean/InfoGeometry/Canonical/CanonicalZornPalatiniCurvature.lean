@@ -171,38 +171,19 @@ theorem causal_cone_arrow_of_time
 
 /-! ### 5. Master Synthesis Packet -/
 
-structure CanonicalZornPalatiniPacket where
-  stitch_on_quadric : ∀ (u v : Vec4 ℝ), kleinQ (stitch u v) = 0
-  density_on_quadric : ∀ (ρ : ℝ) (P : Plucker6 ℝ), kleinQ P = 0 → kleinQ (stitchDensity ρ P) = 0
-  palatini_scale : ∀ (ρ : ℝ) (P R_curv : Plucker6 ℝ), palatiniStitchCoupling (stitchDensity ρ P) R_curv = ρ * palatiniStitchCoupling P R_curv
-  newton_scale : ∀ (G0 ρ : ℝ), effectiveNewtonConstant G0 ρ = (1 / ρ) * G0
-  newton_planck_inv : ∀ (G0 M0_sq ρ : ℝ), ρ ≠ 0 → effectiveNewtonConstant G0 ρ * effectivePlanckMassSq M0_sq ρ = G0 * M0_sq
-  confinement : ∀ (G0 ρ1 ρ2 : ℝ), 0 < G0 → 0 < ρ1 → ρ1 < ρ2 → effectiveNewtonConstant G0 ρ2 < effectiveNewtonConstant G0 ρ1
-  cooling : ∀ (T0 : ℝ) (N1 N2 : ℕ), 0 < T0 → 1 ≤ N1 → N1 < N2 → effectiveTemperature T0 N2 < effectiveTemperature T0 N1
-  expansion : ∀ (g1 : ℝ) (N1 N2 : ℕ), 0 < g1 → N1 < N2 → fisherPrecision g1 N1 < fisherPrecision g1 N2
-
-def makeCanonicalZornPalatiniPacket : CanonicalZornPalatiniPacket where
-  stitch_on_quadric := stitch_on_klein_quadric
-  density_on_quadric := stitchDensity_on_klein_quadric
-  palatini_scale := palatiniStitchCoupling_scale
-  newton_scale := newton_coupling_scaling
-  newton_planck_inv := newton_planck_invariant
-  confinement := effectiveNewtonConstant_strictly_anti_mono
-  cooling := temperature_strictly_cools
-  expansion := fisher_precision_strictly_expands
-
 theorem canonical_zorn_palatini_unified :
-    let P := makeCanonicalZornPalatiniPacket
-    (P.stitch_on_quadric = stitch_on_klein_quadric) ∧
-    (P.density_on_quadric = stitchDensity_on_klein_quadric) ∧
-    (P.palatini_scale = palatiniStitchCoupling_scale) ∧
-    (P.newton_scale = newton_coupling_scaling) ∧
-    (P.newton_planck_inv = newton_planck_invariant) ∧
-    (P.confinement = effectiveNewtonConstant_strictly_anti_mono) ∧
-    (P.cooling = temperature_strictly_cools) ∧
-    (P.expansion = fisher_precision_strictly_expands) := by
-  dsimp
-  refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
+    (∀ (u v : Vec4 ℝ), kleinQ (stitch u v) = 0) ∧
+    (∀ (ρ : ℝ) (P : Plucker6 ℝ), kleinQ P = 0 → kleinQ (stitchDensity ρ P) = 0) ∧
+    (∀ (ρ : ℝ) (P R_curv : Plucker6 ℝ), palatiniStitchCoupling (stitchDensity ρ P) R_curv = ρ * palatiniStitchCoupling P R_curv) ∧
+    (∀ (G0 ρ : ℝ), effectiveNewtonConstant G0 ρ = (1 / ρ) * G0) ∧
+    (∀ (G0 M0_sq ρ : ℝ), ρ ≠ 0 → effectiveNewtonConstant G0 ρ * effectivePlanckMassSq M0_sq ρ = G0 * M0_sq) ∧
+    (∀ (G0 ρ1 ρ2 : ℝ), 0 < G0 → 0 < ρ1 → ρ1 < ρ2 → effectiveNewtonConstant G0 ρ2 < effectiveNewtonConstant G0 ρ1) ∧
+    (∀ (T0 : ℝ) (N1 N2 : ℕ), 0 < T0 → 1 ≤ N1 → N1 < N2 → effectiveTemperature T0 N2 < effectiveTemperature T0 N1) ∧
+    (∀ (g1 : ℝ) (N1 N2 : ℕ), 0 < g1 → N1 < N2 → fisherPrecision g1 N1 < fisherPrecision g1 N2) := by
+  exact ⟨stitch_on_klein_quadric, stitchDensity_on_klein_quadric,
+    palatiniStitchCoupling_scale, newton_coupling_scaling,
+    newton_planck_invariant, effectiveNewtonConstant_strictly_anti_mono,
+    temperature_strictly_cools, fisher_precision_strictly_expands⟩
 
 end
 

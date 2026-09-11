@@ -108,37 +108,18 @@ theorem sample_deviance_scale (D1 c N : ℝ) :
 
 /-! ### Master Synthesis Packet -/
 
-/-- The Spectroscopy Poisson Cooling Packet bundling all certified mathematical laws. -/
-structure SpectroscopyPoissonCoolingPacket where
-  reciprocal_invariant : ∀ (T0 beta0 N : ℝ), T0 * beta0 = 1 → 0 < N →
-    effectiveTemperature T0 N * effectivePrecision beta0 N = 1
-  fisher_cov_duality : ∀ (g1 cov1 N : ℝ), 0 < N →
-    fisherMetricScaling g1 N * covarianceScaling cov1 N = g1 * cov1
-  monotonic_cooling : ∀ (T0 N1 N2 : ℝ), 0 < T0 → 0 < N1 → N1 < N2 →
-    effectiveTemperature T0 N2 < effectiveTemperature T0 N1
-  monotonic_uncertainty : ∀ (N1 N2 : ℝ), 0 < N1 → N1 < N2 →
-    relativePoissonUncertainty N2 < relativePoissonUncertainty N1
-  deviance_scaling : ∀ (D1 c N : ℝ),
-    sampleDeviance D1 (c * N) = c * sampleDeviance D1 N
-
-/-- Zero-debt constructor for the Spectroscopy Poisson Cooling Packet. -/
-def makeSpectroscopyPoissonCoolingPacket : SpectroscopyPoissonCoolingPacket where
-  reciprocal_invariant := effective_temperature_reciprocal
-  fisher_cov_duality := fisher_covariance_duality
-  monotonic_cooling := temperature_strictly_cools
-  monotonic_uncertainty := uncertainty_strictly_shrinks
-  deviance_scaling := sample_deviance_scale
-
-/-- Unified master theorem certifying that all cooling invariants hold simultaneously. -/
-theorem spectroscopy_poisson_cooling_unified :
-    let P := makeSpectroscopyPoissonCoolingPacket
-    (P.reciprocal_invariant = effective_temperature_reciprocal) ∧
-    (P.fisher_cov_duality = fisher_covariance_duality) ∧
-    (P.monotonic_cooling = temperature_strictly_cools) ∧
-    (P.monotonic_uncertainty = uncertainty_strictly_shrinks) ∧
-    (P.deviance_scaling = sample_deviance_scale) := by
-  dsimp
-  refine ⟨rfl, rfl, rfl, rfl, rfl⟩
+theorem spectroscopy_poisson_cooling_relations :
+  (∀ (T0 beta0 N : ℝ), T0 * beta0 = 1 → 0 < N →
+    effectiveTemperature T0 N * effectivePrecision beta0 N = 1) ∧
+  (∀ (g1 cov1 N : ℝ), 0 < N →
+    fisherMetricScaling g1 N * covarianceScaling cov1 N = g1 * cov1) ∧
+  (∀ (T0 N1 N2 : ℝ), 0 < T0 → 0 < N1 → N1 < N2 →
+    effectiveTemperature T0 N2 < effectiveTemperature T0 N1) ∧
+  (∀ (N1 N2 : ℝ), 0 < N1 → N1 < N2 →
+    relativePoissonUncertainty N2 < relativePoissonUncertainty N1) ∧
+  (∀ (D1 c N : ℝ), sampleDeviance D1 (c * N) = c * sampleDeviance D1 N) := by
+  exact ⟨effective_temperature_reciprocal, fisher_covariance_duality,
+    temperature_strictly_cools, uncertainty_strictly_shrinks, sample_deviance_scale⟩
 
 end
 

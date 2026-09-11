@@ -16,7 +16,7 @@ representation is invariant under `Z ↦ M Z`, `B ↦ B M⁻¹` for `M ∈ GL₂
 and the closure slope
   `H = C₁ C₂ / κ`
 is invariant under the dilation gauge
-  `X ↦ λ X`, `Cᵢ ↦ Cᵢ / λ`, `Kᵢ, κ ↦ Kᵢ / λ²`.
+  `X ↦ λ X`, `Cᵢ ↦ Cᵢ / λ`, `Kᵢ ↦ Kᵢ / λ²`, `κ ↦ κ / λ²`.
 
 These are exact algebraic properties of the proposed response model. The
 experimental data support the model through residuals, scale comparisons, and

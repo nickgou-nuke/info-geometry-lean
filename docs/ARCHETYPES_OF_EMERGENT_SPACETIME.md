@@ -654,6 +654,30 @@ Formalizing the thermodynamic phase transition connecting the Bost-Connes C*-alg
 * **Master Criticality Synthesis:** Unifies the 6-component theorem conjunction into an unbroken kernel-certified closure (`bost_connes_amplituhedron_criticality_synthesis`).
   In Lean 4: [`BostConnesAmplituhedronCriticalityBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/BostConnesAmplituhedronCriticalityBridge.lean) and [`BostConnesAmplituhedronCriticalityAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/BostConnesAmplituhedronCriticalityAudit.lean).
 
+### 5.39 Bost-Connes Generator Structure & Cuntz-Hecke Involutive Algebra
+Formalizing the algebraic generator structure, Hecke coprime relations, scale transformations, and Nica covariance of the Bost-Connes C*-algebraic dynamical system $\mathcal{C}_\mathbb{Q}$ over an abelian group $\Gamma$:
+* **Involutive Range Projections:** The range operators $P_n = \mu_n \mu_n^*$ are self-adjoint idempotent projections:
+  $$P_n^2 = P_n, \quad P_n^* = P_n, \quad P_1 = 1$$
+  (`P_idem`, `P_star`, `P_one`).
+* **Phase Unitarity & Group Invariants:** Group elements $e(\gamma)$ act as exact unitaries with involutive group inversion:
+  $$e(\gamma) e(\gamma)^* = 1, \quad e(-\gamma) = e(\gamma)^*, \quad e(\gamma_1 - \gamma_2) = e(\gamma_1) e(\gamma_2)^*$$
+  (`e_mul_star`, `star_mul_e`, `e_sub`).
+* **Adjoint Covariance & Phase Compression:** The isometries $\mu_n$ intertwine with phase unitaries via $n$-fold dilation:
+  $$\mu_n^* e(\gamma) \mu_n = e(n \cdot \gamma), \quad e(\gamma) \mu_n = \mu_n e(n \cdot \gamma), \quad P_n e(\gamma) = e(\gamma) P_n$$
+  (`adjoint_compression`, `covar_left`, `P_comm_e`).
+* **Scale Pullback & Pushforward:** Dilations and contractions act invariantly on the projection tower:
+  $$\mu_m^* P_{mn} \mu_m = P_n, \quad \mu_m P_n \mu_m^* = P_{mn}$$
+  (`scale_pullback`, `scale_pushforward`).
+* **Coprime Hecke Factorization & Commutation:** For coprime integers $\gcd(m, n) = 1$, range projections commute and factor multiplicatively:
+  $$P_m P_n = P_{mn}, \quad P_m P_n = P_n P_m$$
+  (`coprime_factorization`, `coprime_comm`).
+* **Divisibility Absorption Order:** Projections satisfy exact subprojection absorption:
+  $$P_m P_{mn} = P_{mn}, \quad P_{mn} P_m = P_{mn}, \quad P_m P_{mn} = P_{mn} P_m$$
+  (`P_mul_P_mul_right`, `P_mul_right_mul_P`, `P_div_comm`).
+* **Architecture Integration:** Establishes canonical projection to `CuntzMultiplicativeIndexing` and positive-natural coprime LCM evaluation (`toCuntzMultiplicativeIndexing`, `pnatLcm_of_coprime`).
+* **Master Generator Synthesis:** Unifies the 8-component structural conjunction into a single kernel-certified theorem (`bost_connes_generators_synthesis`).
+  In Lean 4: [`BostConnesGeneratorsBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/BostConnesGeneratorsBridge.lean) and [`BostConnesGeneratorsAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/BostConnesGeneratorsAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -710,6 +734,7 @@ Formalizing the thermodynamic phase transition connecting the Bost-Connes C*-alg
 | **Klein Bottle Glide Seam** | Para-Complex Coordinates $\tau^2 = +1$ / Glide $T_a$ | `is_on_real_seam_iff_tau_zero`, `glide_preserves_real_seam`, `glideZ_iter_two` | **Kernel-Checked (0 gaps)** |
 | **Rank-2 Detector Response** | Latent Design $(X, X^2)$ / $GL(2)$ | `det_matrix3x3_zero`, `activity_recovers_activity` | **Kernel-Checked (0 gaps)** |
 | **Bost-Connes Amplituhedron Criticality** | $\beta \to 1^+$ Phase Transition / $\zeta(\beta)$ | `bost_connes_amplituhedron_criticality_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Bost-Connes Generators & Cuntz-Hecke** | Involutive Star-Algebra / $\mu_n, e(\gamma)$ | `bost_connes_generators_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

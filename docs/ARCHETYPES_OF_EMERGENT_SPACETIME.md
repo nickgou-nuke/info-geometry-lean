@@ -640,6 +640,20 @@ Formalizing the algebraic reconstruction of detector response matrices subject t
   which algebraically replaces floating-point SVD rank diagnostics (`det_matrix3x3_zero`).
   In Lean 4: [`DetectorRankTwoResponse.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorRankTwoResponse.lean) and [`DetectorRankTwoResponseAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorRankTwoResponseAudit.lean).
 
+### 5.38 Bost-Connes KMS Criticality & Amplituhedron Partition Boundary
+Formalizing the thermodynamic phase transition connecting the Bost-Connes C*-algebraic quantum statistical dynamical system and the positive Grassmannian / Amplituhedron partition function across the critical Hagedorn inverse temperature $\beta = 1$:
+* **High-Temperature Summability ($\beta > 1$):** At any inverse temperature $\beta > 1$, the Bost-Connes diagonal eigenvalue model $\lambda_n(\beta) = n^{-\beta}$ is strictly summable (`bc_eigenvalues_summable_of_one_lt`).
+* **Exact Zeta Evaluation of Amplituhedron Partition Function:** In the high-temperature quantum phase $\beta > 1$, the Amplituhedron volume partition sum evaluates identically to the Riemann zeta function:
+  $$\mathcal{Z}_{\mathrm{amp}}(\beta) = \sum_{n=1}^\infty n^{-\beta} = \zeta(\beta)$$
+  (`amplituhedron_bost_connes_partition_eq`).
+* **Strict State Positivity:** Every diagonal KMS readout projection is strictly positive across the continuum: $\langle \pi_\beta(P_n) \rangle = (n+1)^{-\beta} > 0$ (`amplituhedron_kms_readout_pos`).
+* **Harmonic Identification at Critical Horizon ($\beta = 1$):** At the critical boundary $\beta = 1$, the KMS readout degenerates exactly to the harmonic reciprocal:
+  $$\langle \pi_1(P_n) \rangle = \frac{1}{n + 1}$$
+  (`amplituhedron_kms_readout_at_one`).
+* **Critical Boundary Non-Summability Divergence:** The Amplituhedron KMS state sequence at $\beta = 1$ is rigorously non-summable (`amplituhedron_kms_not_summable_at_one`), confirming that the Bost-Connes partition operator ceases to be trace-class at the Hagedorn boundary (`bc_critical_divergence`), geometrically realizing the boundary of the Amplituhedron.
+* **Master Criticality Synthesis:** Unifies the 6-component theorem conjunction into an unbroken kernel-certified closure (`bost_connes_amplituhedron_criticality_synthesis`).
+  In Lean 4: [`BostConnesAmplituhedronCriticalityBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/BostConnesAmplituhedronCriticalityBridge.lean) and [`BostConnesAmplituhedronCriticalityAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/BostConnesAmplituhedronCriticalityAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -695,6 +709,7 @@ Formalizing the algebraic reconstruction of detector response matrices subject t
 | **Chiral Quantum Transformer Capstone** | KAN / Chiral Twistor / Zorn Shell / Sinkhorn / AAV / Cuntz-Krieger / Fisher-Rao | `chiral_attention_cross_pairing`, `kan_elliptic_rotor_flow`, `master_chiral_quantum_transformer_unification` | **Kernel-Checked (0 gaps)** |
 | **Klein Bottle Glide Seam** | Para-Complex Coordinates $\tau^2 = +1$ / Glide $T_a$ | `is_on_real_seam_iff_tau_zero`, `glide_preserves_real_seam`, `glideZ_iter_two` | **Kernel-Checked (0 gaps)** |
 | **Rank-2 Detector Response** | Latent Design $(X, X^2)$ / $GL(2)$ | `det_matrix3x3_zero`, `activity_recovers_activity` | **Kernel-Checked (0 gaps)** |
+| **Bost-Connes Amplituhedron Criticality** | $\beta \to 1^+$ Phase Transition / $\zeta(\beta)$ | `bost_connes_amplituhedron_criticality_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

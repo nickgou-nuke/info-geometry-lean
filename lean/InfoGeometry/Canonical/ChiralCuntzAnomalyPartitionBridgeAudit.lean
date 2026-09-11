@@ -21,4 +21,4 @@ open InfoGeometry.Canonical.ChiralCuntzAnomalyPartitionBridge
 #print axioms gradedPartition_susy_cancel
 #print axioms wittenIndex_topological_invariance
 #print axioms conformal_symmetric_chirality_weight_cancel
-#print axioms certified_chiral_cuntz_anomaly_partition_bridge
+#print axioms chiral_cuntz_anomaly_partition_relations

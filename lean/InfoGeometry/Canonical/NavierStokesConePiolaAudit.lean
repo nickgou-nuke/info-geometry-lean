@@ -15,4 +15,4 @@ open InfoGeometry.Canonical.NavierStokesConePiola
 #print axioms sufficiently_large_amplitude_cone
 #print axioms equation_eleven_sufficient
 #print axioms true_cone_iff_jordan_stress_pos
-#print axioms certified_navier_stokes_cone_piola_bridge
+#print axioms navier_stokes_cone_piola_relations

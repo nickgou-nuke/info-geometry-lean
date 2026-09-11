@@ -10405,6 +10405,7 @@ import InfoGeometry.Probability.DerivationBridge
 import InfoGeometry.Probability.DetectorCrossSectionDuality
 import InfoGeometry.Probability.DetectorCrossSectionDualityAudit
 import InfoGeometry.Probability.DetectorEnsembleTransport
+import InfoGeometry.Probability.DetectorRankOneScale
 import InfoGeometry.Probability.DetectorScaleInvariance
 import InfoGeometry.Probability.ExpLogRNDerivation
 import InfoGeometry.Probability.FiniteChannelDataProcessing

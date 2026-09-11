@@ -822,6 +822,17 @@ Formalizing the fundamental duality between real Hodge-Green diffusion in the re
 * **Master Regular-Gauge Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_mp_hodge_drazin_ghost_synthesis`).
   In Lean 4: [`MoorePenroseHodgeDrazinGhostBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/MoorePenroseHodgeDrazinGhostBridge.lean) and [`MoorePenroseHodgeDrazinGhostBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/MoorePenroseHodgeDrazinGhostBridgeAudit.lean).
 
+### 5.52 Selberg-Gutzwiller Zeta Bridge: Semiclassical Orbit Duality & von Mangoldt Equivalence
+Formalizing the semiclassical Gutzwiller trace duality mapping classical periodic orbits to prime-power Dirichlet modes and certifying unitary amplitude dynamics on the critical line:
+* **Classical Periodic Orbits:** Characterized by prime $p$ and repetition index $k \ge 1$, possessing primitive period $T_p = \ln p > 0$ and total orbit period $T = k \cdot \ln p > 0$ (`GutzwillerOrbit`, `primitivePeriod`, `period`, `primitive_period_pos`, `k_pos`, `period_pos`).
+* **Semiclassical Gutzwiller Spectral Amplitude:** The contribution $G(\gamma, s) = (\ln p) \cdot \exp(-s \cdot T)$ at complex energy/spectral parameter $s \in \mathbb{C}$ (`gutzwillerAmplitude`).
+* **Von Mangoldt Duality:** Exact algebraic equivalence between the Gutzwiller orbit contribution and the von Mangoldt Dirichlet term: $G(\gamma, s) = \Lambda(p^k) \cdot (p^k)^{-s}$ (`gutzwiller_eq_vonMangoldt`).
+* **Critical Line Factorization & Phase Unitarity:** For $s = 1/2 + it$, the amplitude factors as $G(\gamma, 1/2 + it) = \ln p \cdot \exp(-T/2) \cdot \exp(-i t T)$, where the phase factor $\exp(-i t T)$ has strictly unit norm $\|\exp(-i t T)\| = 1$ (`criticalPhaseFactor`, `critical_phase_factor_norm`, `gutzwiller_critical_line_factorization`).
+* **Modulus and Prime Power Decay:** The spectral amplitude on the critical line is strictly positive and independent of $t$: $\|G(\gamma, 1/2 + it)\| = \ln p \cdot \exp(-T/2) = \ln p \cdot p^{-k/2} > 0$ (`gutzwiller_critical_line_norm`, `exp_neg_half_period_eq_rpow`, `gutzwiller_critical_line_norm_eq_rpow`, `gutzwiller_critical_line_norm_pos`).
+* **Semiclassical Trace Triangle Bound:** For any finite ensemble of periodic orbits, the trace satisfies $\|Z(1/2 + it)\| \le \sum_\gamma \ln p_\gamma \cdot \exp(-T_\gamma / 2)$ (`gutzwillerTrace`, `norm_list_sum_le`, `gutzwiller_trace_triangle_bound`).
+* **Master Semiclassical Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_selberg_gutzwiller_zeta_synthesis`).
+  In Lean 4: [`SelbergGutzwillerZetaBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/SelbergGutzwillerZetaBridge.lean) and [`SelbergGutzwillerZetaBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/SelbergGutzwillerZetaBridgeAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -893,6 +904,7 @@ Formalizing the fundamental duality between real Hodge-Green diffusion in the re
 | **Selberg Trace & Aharonov-Bohm** | Prime Geodesic $(\ell, \phi)$ / Hyperbolic Weight $w(\ell)$ / Unitarity | `certified_selberg_aharonov_bohm_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Riemann Klein Bottle Throat** | Functional Involution $\mathcal{I}(s) = 1-s$ / Iwasawa Root $\rho = 1/2$ / Bi-Wave Horizon | `certified_riemann_klein_bottle_throat_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Moore-Penrose Hodge & Drazin Ghost** | MP Pseudo-Inverse $G = \Delta^+$ / Real Diffusion / Drazin Ghost Filter | `certified_mp_hodge_drazin_ghost_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Selberg-Gutzwiller Zeta Bridge** | Periodic Orbit $(p, k)$ / von Mangoldt $\Lambda(p^k) (p^k)^{-s}$ / Unitarity | `certified_selberg_gutzwiller_zeta_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

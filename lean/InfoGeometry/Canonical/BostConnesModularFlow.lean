@@ -61,6 +61,14 @@ theorem phaseFactor_zero (n : ℕ+) :
     Complex.exp (Complex.I * (0 : ℂ) * (Real.log (n.val : ℝ) : ℂ)) = 1 := by
   simp
 
+theorem phaseFactor_norm (t : ℝ) (n : ℕ+) :
+    ‖Complex.exp (Complex.I * (t : ℂ) * (Real.log (n.val : ℝ) : ℂ))‖ = 1 := by
+  have harg : Complex.I * (t : ℂ) * (Real.log (n.val : ℝ) : ℂ) =
+      ((t * Real.log (n.val : ℝ) : ℝ) : ℂ) * Complex.I := by
+    push_cast
+    ring
+  rw [harg, Complex.norm_exp_ofReal_mul_I]
+
 /-!
 ## 2. Formal Flow Intertwining (Liouville Grading)
 

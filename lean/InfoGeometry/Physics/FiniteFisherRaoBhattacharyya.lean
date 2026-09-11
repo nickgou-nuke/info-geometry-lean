@@ -28,8 +28,12 @@ theorem bhattacharyyaOverlap_eq_dotProduct (P Q : PositiveDist D) :
 theorem amplitude_dotProduct_self (P : PositiveDist D) :
     dotProduct (fun i => Real.sqrt (P.p i)) (fun i => Real.sqrt (P.p i)) = 1 := by
   unfold dotProduct
-  simpa [pow_two, Real.sq_sqrt (fun i => le_of_lt (P.h_pos i))] using
-    P.sum_amplitude_sq_eq_one
+  have hsq : ∀ i : Fin D, (Real.sqrt (P.p i)) ^ 2 = P.p i := fun i =>
+    Real.sq_sqrt (le_of_lt (P.h_pos i))
+  simp_rw [show ∀ i : Fin D, Real.sqrt (P.p i) * Real.sqrt (P.p i) = P.p i by
+    intro i
+    nlinarith [hsq i]]
+  exact P.h_sum
 
 theorem bhattacharyyaOverlap_eq_canonicalCoeff
     (P Q : PositiveDist D) :

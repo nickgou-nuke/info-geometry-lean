@@ -10055,6 +10055,8 @@ import InfoGeometry.Physics.FiniteSpinDensityRelativeModularBridge
 import InfoGeometry.Physics.FiniteStationaryCurrent
 import InfoGeometry.Physics.FisherKreinLorentz
 import InfoGeometry.Physics.FiveFoldProgram
+import InfoGeometry.Physics.FluidSpinorialLatentSpace
+import InfoGeometry.Physics.FluidSpinorialLatentSpaceAudit
 import InfoGeometry.Physics.FourVectorDiracReadout
 import InfoGeometry.Physics.FourVectorInvariantSynthesis
 import InfoGeometry.Physics.FourVectorPauliCasimirBridge
@@ -10231,6 +10233,8 @@ import InfoGeometry.Physics.NuclearFiveGradeSolovievCommonCompression
 import InfoGeometry.Physics.NuclearFiveGradedPhysicalBridge
 import InfoGeometry.Physics.NuclearGradedBathCommutant
 import InfoGeometry.Physics.NuclearHeisenbergChannelDecomposition
+import InfoGeometry.Physics.NuclearInformationCorrelator
+import InfoGeometry.Physics.NuclearInformationCorrelatorAudit
 import InfoGeometry.Physics.NuclearInternalExternalParityFactorization
 import InfoGeometry.Physics.NuclearKleinParameterBundle
 import InfoGeometry.Physics.NuclearKleinPinWallpaperBridge

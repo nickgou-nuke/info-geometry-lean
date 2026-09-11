@@ -134,6 +134,8 @@ import InfoGeometry.Physics.BiWaveRamanujanBridge
 import InfoGeometry.Physics.BiWaveRamanujanBridgeAudit
 import InfoGeometry.Physics.HarishChandraCasimirBridge
 import InfoGeometry.Physics.HarishChandraCasimirBridgeAudit
+import InfoGeometry.Physics.PlancherelWeylBridge
+import InfoGeometry.Physics.PlancherelWeylBridgeAudit
 
 /-!
 # Physics Umbrella

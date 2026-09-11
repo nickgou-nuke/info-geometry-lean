@@ -874,6 +874,16 @@ Formalizing the Lie algebraic and representation-theoretic carrier for harmonic 
 * **Master Harish-Chandra Casimir Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_harish_chandra_casimir_synthesis`).
   In Lean 4: [`HarishChandraCasimirBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/HarishChandraCasimirBridge.lean) and [`HarishChandraCasimirBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/HarishChandraCasimirBridgeAudit.lean).
 
+### 5.57 Harish-Chandra Plancherel Density & Weyl Asymptotic Spectral Bridge
+Formalizing the spectral density of the continuous principal series on the hyperbolic plane $\mathbb{H}^2 \cong \mathrm{SL}(2, \mathbb{R}) / \mathrm{SO}(2)$ and its infrared/ultraviolet duality along the critical line $\operatorname{Re}(s) = 1/2$:
+* **Ground State Annihilation at the Throat:** The Harish-Chandra Plancherel spectral density functional $\rho_{\mathrm{Pl}}(t) = t \tanh(\pi t)$ vanishes identically at the Klein bottle throat ground state: $\rho_{\mathrm{Pl}}(0) = 0$, guaranteeing infrared safety and absence of unconfined zero modes (`plancherelDensity_zero`).
+* **$\mathcal{PT}$ / Parity Reflection Symmetry:** The Plancherel density is an exact even function under spectral inversion: $\rho_{\mathrm{Pl}}(-t) = \rho_{\mathrm{Pl}}(t)$ (`plancherelDensity_neg`).
+* **Strict Positivity for Non-Zero Frequencies:** For all non-zero spectral frequencies $t > 0$, $\rho_{\mathrm{Pl}}(t) > 0$ and $\rho_{\mathrm{Pl}}(t) \ge 0$ for all $t \in \mathbb{R}$ (`plancherelDensity_pos`, `plancherelDensity_nonneg`).
+* **Asymptotic Weyl Upper Bound:** The spectral density is strictly bounded above by the linear Weyl law: $\rho_{\mathrm{Pl}}(t) < t$ for all $t > 0$, saturating asymptotically as $\tanh(\pi t) \to 1$ (`plancherelDensity_lt_weyl`).
+* **Normalized Plancherel Measure & Casimir Coupling:** The geometric Plancherel measure $\mu_{\mathrm{Pl}}(t) = \pi t \tanh(\pi t) > 0$, and the Casimir-Plancherel product $\lambda(t) \cdot \rho_{\mathrm{Pl}}(t) = (1/4 + t^2) t \tanh(\pi t)$ is strictly positive for all $t > 0$ (`plancherelMeasure_pos`, `casimir_plancherel_product_pos`).
+* **Master Harish-Chandra Plancherel Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_plancherel_weyl_synthesis`).
+  In Lean 4: [`PlancherelWeylBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/PlancherelWeylBridge.lean) and [`PlancherelWeylBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/PlancherelWeylBridgeAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -950,6 +960,7 @@ Formalizing the Lie algebraic and representation-theoretic carrier for harmonic 
 | **Apollonius-Cayley Boundary Scattering** | Cayley Transform $\rho(s) = s/(1-s)$ / $S(t) = (1/2+it)/(1/2-it)$ / Critical Line | `certified_apollonius_cayley_scattering_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Aharonov Bi-Wave & Ramanujan Bridge** | Krein Swap $J$ / Weak Values / $S(t)$ Intertwiner / Ramanujan $c_q(n)$ | `certified_biwave_ramanujan_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Harish-Chandra Casimir & SL(2, ℝ)** | $\mathfrak{sl}(2, \mathbb{R})$ Triad / $\lambda(s) = s(1-s) = 1/4+t^2 \ge 1/4$ | `certified_harish_chandra_casimir_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Harish-Chandra Plancherel & Weyl** | Plancherel $\rho(t) = t \tanh(\pi t)$ / Weyl Bound $\rho < t$ / Casimir Coupling | `certified_plancherel_weyl_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

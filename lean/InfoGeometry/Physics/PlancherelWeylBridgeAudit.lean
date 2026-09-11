@@ -1,0 +1,5 @@
+import InfoGeometry.Physics.PlancherelWeylBridge
+
+open InfoGeometry.Physics.PlancherelWeyl
+
+#print axioms certified_plancherel_weyl_synthesis

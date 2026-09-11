@@ -1,0 +1,22 @@
+import InfoGeometry.Probability.DetectorTrueCoincidenceSumming
+
+/-!
+# Audit for True Coincidence Summing (TCS) Metrology
+-/
+
+#print axioms InfoGeometry.Probability.DetectorTrueCoincidenceSumming.peakToTotal_mul_gt
+#print axioms InfoGeometry.Probability.DetectorTrueCoincidenceSumming.gp_div_peakToTotal
+#print axioms InfoGeometry.Probability.DetectorTrueCoincidenceSumming.campion_quotient_universal_cancellation
+#print axioms InfoGeometry.Probability.DetectorTrueCoincidenceSumming.activity_recovery_from_campion
+#print axioms InfoGeometry.Probability.DetectorTrueCoincidenceSumming.peakToTotal_extraction_gamma2
+#print axioms InfoGeometry.Probability.DetectorTrueCoincidenceSumming.peakToTotal_extraction_gamma1
+#print axioms InfoGeometry.Probability.DetectorTrueCoincidenceSumming.kappa_eq_K1_mul_p2
+#print axioms InfoGeometry.Probability.DetectorTrueCoincidenceSumming.kappa_eq_K2_mul_p1
+#print axioms InfoGeometry.Probability.DetectorTrueCoincidenceSumming.sumPeak_le_loss1
+#print axioms InfoGeometry.Probability.DetectorTrueCoincidenceSumming.sumPeak_le_loss2
+#print axioms InfoGeometry.Probability.DetectorTrueCoincidenceSumming.dissipation_ratio_line1
+#print axioms InfoGeometry.Probability.DetectorTrueCoincidenceSumming.dissipation_ratio_line2
+#print axioms InfoGeometry.Probability.DetectorTrueCoincidenceSumming.gt2_isolation
+#print axioms InfoGeometry.Probability.DetectorTrueCoincidenceSumming.gt1_isolation
+#print axioms InfoGeometry.Probability.DetectorTrueCoincidenceSumming.campion_dilation_invariance
+#print axioms InfoGeometry.Probability.DetectorTrueCoincidenceSumming.certified_true_coincidence_summing_synthesis

@@ -206,6 +206,18 @@ theorem zorn_mass_shell_determinant_ne_zero_of_energy_ne_zero
   rw [zorn_mass_shell_determinant p Δ E_energy h_mass_shell]
   exact neg_ne_zero.mpr (pow_ne_zero 2 hE)
 
+theorem zorn_mass_shell_determinant_eq_zero_iff
+    (p Δ E_energy : ℝ) (h_mass_shell : p ^ 2 + Δ ^ 2 = E_energy ^ 2) :
+    (zornMatrix p Δ).det = 0 ↔ E_energy = 0 := by
+  rw [zorn_mass_shell_determinant p Δ E_energy h_mass_shell]
+  constructor
+  · intro h
+    have hsq : E_energy ^ 2 = 0 := by linarith
+    nlinarith
+  · intro h
+    rw [h]
+    norm_num
+
 /-! ### 5. Penrose Twistor Spacetime Reality Adjacency -/
 
 /-- Theorem: Two spacetime points $X, Y$ sharing a common nonzero twistor are null-separated:

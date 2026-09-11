@@ -1,0 +1,18 @@
+import InfoGeometry.Probability.DetectorFoundationalCopula
+
+/-!
+# Audit for Foundational 2D Copula Theory & Free-Scale Optimization
+-/
+
+#print axioms InfoGeometry.Probability.DetectorFoundationalCopula.rectangularVolume_product
+#print axioms InfoGeometry.Probability.DetectorFoundationalCopula.is2DCopula_product
+#print axioms InfoGeometry.Probability.DetectorFoundationalCopula.productCopula_nonneg
+#print axioms InfoGeometry.Probability.DetectorFoundationalCopula.physical_zero_intercept_forced
+#print axioms InfoGeometry.Probability.DetectorFoundationalCopula.coincidenceLossResidual_nonneg
+#print axioms InfoGeometry.Probability.DetectorFoundationalCopula.coincidenceLossResidual_zero_iff
+#print axioms InfoGeometry.Probability.DetectorFoundationalCopula.free_scale_uniquely_sqrt
+#print axioms InfoGeometry.Probability.DetectorFoundationalCopula.lossGradient_zero_iff
+#print axioms InfoGeometry.Probability.DetectorFoundationalCopula.lossGradient_zero_iff_sqrt
+#print axioms InfoGeometry.Probability.DetectorFoundationalCopula.profileRSS_nonneg
+#print axioms InfoGeometry.Probability.DetectorFoundationalCopula.profileRSS_zero_iff_all_sqrt
+#print axioms InfoGeometry.Probability.DetectorFoundationalCopula.certified_detector_foundational_copula_synthesis

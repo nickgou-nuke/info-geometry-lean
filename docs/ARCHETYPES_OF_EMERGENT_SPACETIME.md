@@ -913,6 +913,15 @@ Formalizing the analytic-geometric mechanism of the Riemann-Siegel phase and the
 * **Master Riemann-Siegel Hardy $Z$ Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_hardy_z_throat_synthesis`).
   In Lean 4: [`RiemannSiegelHardyZThroatBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/RiemannSiegelHardyZThroatBridge.lean) and [`RiemannSiegelHardyZThroatBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/RiemannSiegelHardyZThroatBridgeAudit.lean).
 
+### 5.61 Aitchison Simplex Geometry, Trace-Free Projection & Determinant Bridge
+Formalizing the $D$-dimensional compositional simplex geometry and the trace-free determinant homomorphism:
+* **Traceless $\mathfrak{sl}(D, \mathbb{R})$ Projection:** Under the centered log-ratio map $\mathrm{clr}(\mathbf{p})_i = \ln p_i - \frac{1}{D}\sum_k \ln p_k$, the sum vanishes identically: $\sum_{i=1}^D \mathrm{clr}(\mathbf{p})_i = 0$ (`sum_clr_zero`), projecting the simplex onto the traceless Cartan subalgebra.
+* **Jaynesian State as Origin:** The uniform maximum entropy prior $\mathbf{p}_{\mathrm{Jaynes}} = (1/D, \dots, 1/D)$ satisfies $\mathrm{clr}(\mathbf{p}_{\mathrm{Jaynes}})_i = 0$ for all $i$ (`jaynesian_clr_zero`), establishing the neutral origin of the Aitchison space.
+* **Fundamental Aitchison Sum Identity:** For any centered coordinates $\sum_i u_i = 0$, $\sum_{i,j} (u_i - u_j)^2 = 2D \sum_i u_i^2$ (`sum_sub_sq`), proving that the pairwise log-ratio double sum exactly reproduces the Euclidean norm: $\frac{1}{2D} \sum_{i,j} (u_i - u_j)^2 = \sum_i u_i^2$ (`aitchison_double_sum_eq_norm_sq`).
+* **Metric Invariance:** The Aitchison squared distance $d_A^2(P, Q) = \sum_i (\mathrm{clr}_i(P) - \mathrm{clr}_i(Q))^2$ is reflexive ($d_A^2(P, P) = 0$, `aitchisonDistSq_self`), symmetric ($d_A^2(P, Q) = d_A^2(Q, P)$, `aitchisonDistSq_symm`), and its distance from the Jaynesian prior recovers the clr norm squared (`aitchisonDistSq_from_jaynesian`).
+* **Master Aitchison Trace-Determinant Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_aitchison_trace_determinant_synthesis`).
+  In Lean 4: [`AitchisonTraceDeterminantBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AitchisonTraceDeterminantBridge.lean) and [`AitchisonTraceDeterminantBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AitchisonTraceDeterminantBridgeAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -993,6 +1002,7 @@ Formalizing the analytic-geometric mechanism of the Riemann-Siegel phase and the
 | **Wigner-Smith Time Delay & Krein Shift** | Time Delay $\tau(t) = 1/(1/4+t^2)$ / Reciprocal Casimir $\tau\lambda=1$ / $\tau \le 4$ | `certified_wigner_smith_krein_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Fisher-Rao & Aitchison KAN Duality** | Fisher-Rao $g_{\mathrm{FR}} \ge 4$ / Aitchison $g_A \ge 8$ / Triad $b''=2g_A-2g_{\mathrm{FR}}$ / Throat $\tau(0)=4$ | `certified_fisher_rao_aitchison_kan_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Riemann-Siegel & Hardy Z Throat** | Phase $\|e^{i\theta}\|=1$ / Real $Z \in \mathbb{R}$ / Zero Equiv $Z=0 \iff \zeta=0$ / Even $Z(-t)=Z(t)$ | `certified_hardy_z_throat_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Aitchison Trace-Determinant Simplex** | Traceless $\sum \mathrm{clr} = 0$ / Jaynesian $\mathbf{0}$ / Double-Sum $\frac{1}{2D}\sum(u_i-u_j)^2 = \sum u_i^2$ | `certified_aitchison_trace_determinant_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

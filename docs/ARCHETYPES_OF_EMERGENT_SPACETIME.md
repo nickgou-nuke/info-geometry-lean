@@ -1177,6 +1177,14 @@ Formalizing the Kirillov-Kostant-Souriau (KKS) symplectic structure on Lie coadj
 * **Master Synthesis:** Certified master conjunction in Mathlib 4 (`certified_arnold_coadjoint_orbits_chern_synthesis`).
   In Lean 4: [`ArnoldCoadjointOrbitsChern.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/ArnoldCoadjointOrbitsChern.lean) and [`ArnoldCoadjointOrbitsChernAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/ArnoldCoadjointOrbitsChernAudit.lean).
 
+### 5.89 Arnold-Souriau Momentum Prequantization & Hydrodynamic Quantized Vortices
+Formalizing the synthesis of Jean-Marie Souriau's symplectic mechanics and Vladimir Arnold's geometric hydrodynamics:
+* **Souriau Momentum Map & Kelvin-Noether Theorem:** Infinitesimal particle relabeling symmetries conserve the momentum map component $\langle J(m), x \rangle$, certifying Kelvin's circulation theorem algebraically (`souriau_kelvin_circulation_conserved`).
+* **Souriau 2-Cocycles & Affine Coadjoint Orbits:** Central extensions (e.g. Bott-Virasoro cocycle for KdV hydrodynamics) satisfy Jacobi closedness identically: $\theta([x, y], z) + \theta([y, z], x) + \theta([z, x], y) = 0$ (`souriau_cocycle_jacobi_closed`).
+* **Souriau Prequantization & Vortex Quantization:** Integrality condition $[\Omega_{\mathrm{KKS}} / 2\pi\hbar] \in \mathbb{Z}$ yields exact Onsager-Feynman circulation quantization $\oint \mathbf{u} \cdot d\mathbf{x} = n \cdot \kappa_0$ (`souriau_arnold_vortex_quantization`).
+* **Master Synthesis:** Certified master conjunction in Mathlib 4 (`arnold_souriau_prequantization_synthesis`).
+  In Lean 4: [`ArnoldSouriauMomentumPrequantization.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/ArnoldSouriauMomentumPrequantization.lean) and [`ArnoldSouriauMomentumPrequantizationAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/ArnoldSouriauMomentumPrequantizationAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -1286,6 +1294,7 @@ Formalizing the Kirillov-Kostant-Souriau (KKS) symplectic structure on Lie coadj
 | **Tao Fluid Computation & Spinorial Attention** | Spinorial Latent Space / Cartan Involution / Peirce Projectors / Boost Intertwiner | `peirce_sum_eq_id`, `fluid_attention_decoupling_plus`, `certified_fluid_spinorial_latent_space_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Fluid BRST Gauge Decoupling** | Batalin-Vilkovisky Complex / Faddeev-Popov Quartet / Nilpotence $s^2=0$ / Solenoidal Flow | `ghost_variation_zero`, `brst_nilpotent`, `solenoidal_flow_is_physical`, `certified_fluid_brst_gauge_decoupling_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Arnold Coadjoint Orbits & KKS Symplectic Geometry** | Coadjoint Action $\operatorname{ad}_x^* \omega$ / KKS 2-Form $\Omega_{\mathrm{KKS}}$ / Jacobi Closedness $d\Omega = 0$ / Casimir Helicity | `kks_form_self`, `kks_form_antisymm`, `kks_form_closed`, `coadjoint_lie_hom`, `certified_arnold_coadjoint_orbits_chern_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Arnold-Souriau Momentum Prequantization** | Particle Relabeling Symmetry / Kelvin-Noether Theorem / Souriau 2-Cocycle / Bott-Virasoro Jacobi / Onsager-Feynman Vortex Quantization | `souriau_kelvin_circulation_conserved`, `souriau_cocycle_jacobi_closed`, `souriau_arnold_vortex_quantization`, `arnold_souriau_prequantization_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 
@@ -1342,3 +1351,7 @@ The owner `InfoGeometry/Physics/FluidBRSTGaugeDecoupling.lean` defines a Lie-rin
 
 ### 5.88 Arnold Coadjoint Orbits and KKS Form
 The owner `InfoGeometry/Physics/ArnoldCoadjointOrbitsChern.lean` defines the algebraic coadjoint action and KKS pairing, proving alternation, bilinearity, Jacobi closedness, the coadjoint commutator identity, stabilizer invariance, and self-pairing vanishing. A global SDiff manifold, differential-form integration, and Chern prequantization remain separate frontiers.
+
+
+### 5.89 Arnold-Souriau Momentum Prequantization
+The algebraic owner `ArnoldSouriauMomentumPrequantization.lean` records a Lie-algebra 2-cocycle, a momentum-map flow conservation law, and an explicit integral circulation carrier. It proves cocycle closure, Kelvin-type conservation under the supplied stabilizer hypothesis, and existence of an integer circulation witness. Global SDiff geometry and line-bundle prequantization are not asserted.

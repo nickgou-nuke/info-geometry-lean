@@ -1,0 +1,15 @@
+# Draft tweet thread — DEEPMIND-ALPHAPROOF
+
+## Tweet 1/4
+Congratulations to @GoogleDeepMind, @ThomasHubert, and @pushmeet on the milestone achievements with AlphaProof in Lean 4! Moving automated theorem proving from contest math to research-grade structures is the true frontier of mathematical intelligence.
+
+## Tweet 2/4
+Current formal math benchmarks focus heavily on discrete combinatorics & elementary algebra. But research mathematical physics introduces totally different search-tree topologies: infinite inductive colimits, nilpotent Jordan splittings, and neutral-signature Lagrangian geometry.
+
+## Tweet 3/4
+We've open-sourced info-geometry-lean: 11,970+ kernel-checked Lean 4 declarations (0 sorry, 0 custom axioms) covering resolvent semigroups, Lie-Trotter-Kato Hodge splittings, Drazin projections, and para-complex twistor phase spaces:
+https://github.com/nickgou-nuke/info-geometry-lean
+
+## Tweet 4/4
+AlphaProof's pairing of Gemini autoformalization with AlphaZero RL search inside the Lean kernel is uniquely suited to explore non-standard algebraic search trees. We've outlined 3 open challenge frontiers for your reinforcement learning engines:
+https://github.com/nickgou-nuke/info-geometry-lean/blob/main/tools/community-outreach/drafts/deepmind_alphaproof_dispatch.md

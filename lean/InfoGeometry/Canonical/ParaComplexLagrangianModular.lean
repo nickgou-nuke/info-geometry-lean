@@ -1,4 +1,4 @@
-import Mathlib.LinearAlgebra.Basic
+import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.BilinearForm.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
@@ -37,11 +37,11 @@ with positive-definite Hilbert spaces:
    - Modular invariance: $J(J \xi) = \xi$.
 
 4. **Zorn 2x2 Real Algebraic Engine & Mass Condensation**:
-   - Traceless Zorn matrix $\hat{Z}(\partial_\tau, \Delta) = \begin{pmatrix} \partial_\tau & \Delta \\ \Delta & -\partial_\tau \end{pmatrix}$.
+   - Traceless Zorn matrix $\hat{Z}(p, \Delta) = \begin{pmatrix} p & \Delta \\ \Delta & -p \end{pmatrix}$.
    - Trace zero: $\operatorname{tr}(\hat{Z}) = 0$.
-   - Mass-shell condensation: $\hat{Z}^2 = (\partial_\tau^2 + \Delta^2) \mathbb{I}_2 = E^2 \mathbb{I}_2$.
-   - Massless limit $\Delta = 0$: decoupled null rays $\hat{Z}^2 = \partial_\tau^2 \mathbb{I}_2$.
-   - Massive condensation $\Delta = m > 0$: avoided crossing spectral gap $\partial_\tau^2 + m^2 > 0$.
+   - Mass-shell condensation: $\hat{Z}^2 = (p^2 + \Delta^2) \mathbb{I}_2 = E^2 \mathbb{I}_2$.
+   - Massless limit $\Delta = 0$: decoupled null rays $\hat{Z}^2 = p^2 \mathbb{I}_2$.
+   - Massive condensation $\Delta = m > 0$: avoided crossing spectral gap $p^2 + m^2 > 0$.
 
 5. **Penrose Twistor Integration**:
    - A single twistor on a chiral leaf is intrinsically null ($B(Z_+, Z_+) = 0$).
@@ -83,23 +83,30 @@ theorem neutral_norm_eq_cross_pairing (PCS : ParaComplexStructure V) (B : Linear
     have h := peirce_sum_id PCS Z
     exact h.symm
   conv_lhs => rw [h_dec]
-  rw [LinearMap.BilinMap.add_left, LinearMap.BilinMap.add_right, LinearMap.BilinMap.add_right]
+  have h_exp : B (peircePlus PCS Z + peirceMinus PCS Z) (peircePlus PCS Z + peirceMinus PCS Z) =
+      B (peircePlus PCS Z) (peircePlus PCS Z) +
+      B (peirceMinus PCS Z) (peirceMinus PCS Z) +
+      B (peircePlus PCS Z) (peirceMinus PCS Z) +
+      B (peirceMinus PCS Z) (peircePlus PCS Z) := by
+    simp only [map_add, LinearMap.add_apply]
+    ring
   have h_iso_plus := plus_projector_isotropic PCS B h_anti Z Z
   have h_iso_minus := minus_projector_isotropic PCS B h_anti Z Z
   have h_symm_pm := h_symm (peirceMinus PCS Z) (peircePlus PCS Z)
-  rw [h_iso_plus, h_iso_minus, h_symm_pm]
+  rw [h_exp, h_iso_plus, h_iso_minus, h_symm_pm]
   ring
 
 /-! ### 2. Klein Fixed Seam Real Locus -/
 
 /-- **Theorem (Klein Fixed Seam Real Locus)**:
     On the horizon $t = 0$ where chiral coordinates coincide ($z = \bar{z}$),
-    the chiral temporal defect vanishes identically: $2 \tau t = 0 \implies t = 0$
-    whenever $2\tau$ is non-degenerate. -/
+    the chiral temporal defect vanishes identically: $\tau v = - \tau v \implies \tau v = 0$. -/
 theorem klein_seam_real_locus (PCS : ParaComplexStructure V) (v : V)
     (h_seam : PCS.tau v = - PCS.tau v) : PCS.tau v = 0 := by
+  have h : PCS.tau v - (- PCS.tau v) = 0 := sub_eq_zero.mpr h_seam
+  rw [sub_neg_eq_add] at h
   have h2 : (2 : ℝ) • (PCS.tau v) = 0 := by
-    rw [two_smul, h_seam, add_neg_cancel]
+    rw [two_smul, h]
   exact (smul_eq_zero.mp h2).resolve_left (by norm_num)
 
 /-! ### 3. Tomita-Takesaki Modular Chiral Inversion -/
@@ -116,30 +123,30 @@ def IsInSelfPolarCone (T : TomitaModularReflection V) (ξ : V) : Prop :=
 /-- **Theorem (Stability of Physical State in Self-Polar Cone)**:
     Any state in the self-polar cone satisfies $J(J \xi) = \xi$. -/
 theorem self_polar_cone_invariant (T : TomitaModularReflection V) (ξ : V)
-    (h_cone : IsInSelfPolarCone T ξ) :
+    (_h_cone : IsInSelfPolarCone T ξ) :
     T.J (T.J ξ) = ξ := by
   have h_id := LinearMap.congr_fun T.J_sq ξ
   simpa using h_id
 
 /-! ### 4. Real 2x2 Zorn Matrix Algebra & Relativistic Mass Condensation -/
 
-/-- Real $2 \times 2$ Zorn matrix encoding the chiral connection $\partial_\tau$ and off-diagonal mass bridge $\Delta$. -/
-def zornMatrix (∂_τ : ℝ) (Δ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
-  !![∂_τ,  Δ;
-     Δ, -∂_τ]
+/-- Real $2 \times 2$ Zorn matrix encoding the chiral connection $p$ and off-diagonal mass bridge $\Delta$. -/
+def zornMatrix (p : ℝ) (Δ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  !![p,  Δ;
+     Δ, -p]
 
 /-- **Theorem (Tracelessness of the Zorn Operator)**:
     $\operatorname{tr}(\hat{Z}) = 0$ identically, corresponding to the Weyl dilaton gauge condition. -/
-theorem zorn_traceless (∂_τ : ℝ) (Δ : ℝ) :
-    (zornMatrix ∂_τ Δ).trace = 0 := by
+theorem zorn_traceless (p : ℝ) (Δ : ℝ) :
+    (zornMatrix p Δ).trace = 0 := by
   dsimp [zornMatrix]
   rw [Matrix.trace_fin_two]
   simp
 
 /-- **Theorem (Zorn Matrix Determinant)**:
-    $\det(\hat{Z}) = -(\partial_\tau^2 + \Delta^2)$. -/
-theorem zorn_determinant (∂_τ : ℝ) (Δ : ℝ) :
-    (zornMatrix ∂_τ Δ).det = - (∂_τ ^ 2 + Δ ^ 2) := by
+    $\det(\hat{Z}) = -(p^2 + \Delta^2)$. -/
+theorem zorn_determinant (p : ℝ) (Δ : ℝ) :
+    (zornMatrix p Δ).det = - (p ^ 2 + Δ ^ 2) := by
   dsimp [zornMatrix]
   rw [Matrix.det_fin_two]
   simp
@@ -149,32 +156,36 @@ theorem zorn_determinant (∂_τ : ℝ) (Δ : ℝ) :
     The square of the Zorn matrix equals the relativistic mass-shell $E^2 \mathbb{I}_2$.
     The off-diagonal element $\Delta = m$ bridges the holomorphic (left) and antiholomorphic (right)
     sectors, condensing the topological vacuum into the macroscopic mass shell $p^2 + m^2 = E^2$. -/
-theorem zorn_mass_shell_condensation (∂_τ : ℝ) (Δ : ℝ) (E_energy : ℝ)
-    (h_mass_shell : ∂_τ ^ 2 + Δ ^ 2 = E_energy ^ 2) :
-    (zornMatrix ∂_τ Δ) * (zornMatrix ∂_τ Δ) = (E_energy ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
+theorem zorn_mass_shell_condensation (p : ℝ) (Δ : ℝ) (E_energy : ℝ)
+    (h_mass_shell : p ^ 2 + Δ ^ 2 = E_energy ^ 2) :
+    (zornMatrix p Δ) * (zornMatrix p Δ) = (E_energy ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
   dsimp [zornMatrix]
   ext i j
-  fin_cases i <;> fin_cases j <;> {
-    simp only [Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply, Matrix.one_apply,
-               Fin.zero_eta, Fin.one_eta, ite_true, ite_false, smul_eq_mul, mul_one, mul_zero]
-    linarith
-  }
+  fin_cases i <;> fin_cases j
+  · simp [Matrix.mul_apply, Fin.sum_univ_two]
+    linear_combination h_mass_shell
+  · simp [Matrix.mul_apply, Fin.sum_univ_two]
+    ring
+  · simp [Matrix.mul_apply, Fin.sum_univ_two]
+    ring
+  · simp [Matrix.mul_apply, Fin.sum_univ_two]
+    linear_combination h_mass_shell
 
 /-- **Theorem (Massless Limit / Decoupled Chiral Null Rays)**:
-    When the mass bridge is absent ($\Delta = 0$), $\hat{Z}^2 = \partial_\tau^2 \mathbb{I}_2$,
+    When the mass bridge is absent ($\Delta = 0$), $\hat{Z}^2 = p^2 \mathbb{I}_2$,
     representing decoupled left- and right-moving massless rays. -/
-theorem zorn_massless_decoupling (∂_τ : ℝ) :
-    (zornMatrix ∂_τ 0) * (zornMatrix ∂_τ 0) = (∂_τ ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  have h := zorn_mass_shell_condensation ∂_τ 0 ∂_τ (by ring)
+theorem zorn_massless_decoupling (p : ℝ) :
+    (zornMatrix p 0) * (zornMatrix p 0) = (p ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
+  have h := zorn_mass_shell_condensation p 0 p (by ring)
   exact h
 
 /-- **Theorem (Avoided Crossing Spectral Gap)**:
     Whenever $\Delta = m > 0$, the spectral eigenvalue square is strictly positive,
     preventing level crossing between the two chiral leaves. -/
-theorem zorn_avoided_crossing_spectral_gap (∂_τ : ℝ) (m : ℝ) (hm : 0 < m) :
-    0 < ∂_τ ^ 2 + m ^ 2 := by
+theorem zorn_avoided_crossing_spectral_gap (p : ℝ) (m : ℝ) (hm : 0 < m) :
+    0 < p ^ 2 + m ^ 2 := by
   have hm2 : 0 < m ^ 2 := sq_pos_of_ne_zero hm.ne'
-  have hp2 : 0 ≤ ∂_τ ^ 2 := sq_nonneg ∂_τ
+  have hp2 : 0 ≤ p ^ 2 := sq_nonneg p
   linarith
 
 /-! ### 5. Penrose Twistor Spacetime Reality Adjacency -/
@@ -191,7 +202,7 @@ theorem twistor_spacetime_null_adjacency (Z : Twistor4) (X Y : ComplexSpacetime)
 /-! ### 6. Certified Synthesis Record -/
 
 /-- Certified structural record for the Para-Complex Neutral Lagrangian Modular Triad. -/
-structure CertifiedParaComplexLagrangianModular where
+structure CertifiedParaComplexLagrangianModular (V : Type*) [AddCommGroup V] [Module ℝ V] where
   peirce_sum : ∀ (PCS : ParaComplexStructure V) (v : V),
     peircePlus PCS v + peirceMinus PCS v = v
   peirce_ortho : ∀ (PCS : ParaComplexStructure V) (v : V),
@@ -207,22 +218,23 @@ structure CertifiedParaComplexLagrangianModular where
     PCS.tau v = - PCS.tau v → PCS.tau v = 0
   modular_self_polar : ∀ (T : TomitaModularReflection V) (ξ : V),
     IsInSelfPolarCone T ξ → T.J (T.J ξ) = ξ
-  zorn_traceless_cert : ∀ (∂_τ Δ : ℝ),
-    (zornMatrix ∂_τ Δ).trace = 0
-  zorn_mass_shell_cert : ∀ (∂_τ Δ E_energy : ℝ),
-    ∂_τ ^ 2 + Δ ^ 2 = E_energy ^ 2 →
-    (zornMatrix ∂_τ Δ) * (zornMatrix ∂_τ Δ) = (E_energy ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ)
+  zorn_traceless_eval : ∀ (p Δ : ℝ),
+    (zornMatrix p Δ).trace = 0
+  zorn_mass_shell_eval : ∀ (p Δ E_energy : ℝ),
+    p ^ 2 + Δ ^ 2 = E_energy ^ 2 →
+    (zornMatrix p Δ) * (zornMatrix p Δ) = (E_energy ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ)
 
 /-- Certified instance of the Para-Complex Neutral Lagrangian Modular Triad. -/
-def certifiedParaComplexLagrangianModular : CertifiedParaComplexLagrangianModular where
+def certifiedParaComplexLagrangianModular (V : Type*) [AddCommGroup V] [Module ℝ V] :
+    CertifiedParaComplexLagrangianModular V where
   peirce_sum := peirce_sum_id
   peirce_ortho := peircePlus_peirceMinus
   isotropic_leaves := peirce_leaves_totally_isotropic
   cross_norm := neutral_norm_eq_cross_pairing
   seam_real := klein_seam_real_locus
   modular_self_polar := self_polar_cone_invariant
-  zorn_traceless_cert := zorn_traceless
-  zorn_mass_shell_cert := zorn_mass_shell_condensation
+  zorn_traceless_eval := zorn_traceless
+  zorn_mass_shell_eval := zorn_mass_shell_condensation
 
 end
 

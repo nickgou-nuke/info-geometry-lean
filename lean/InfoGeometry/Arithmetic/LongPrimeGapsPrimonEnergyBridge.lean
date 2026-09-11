@@ -46,9 +46,8 @@ theorem log_sub_log_ge_div (a b : ℝ) (ha : 0 < a) (hb : a < b) :
     Real.log_div ha.ne' hb_pos.ne'
   rw [h_log_div] at h_log_le
   have h_sub : a / b - 1 = - ((b - a) / b) := by
-    calc
-      a / b - 1 = (a - b) / b := by ring
-      _ = - ((b - a) / b) := by ring
+    rw [← div_self hb_pos.ne', ← sub_div]
+    ring
   rw [h_sub] at h_log_le
   linarith
 
@@ -76,9 +75,7 @@ theorem primonEnergyGap_ge_of_gap
   have ha : (0 : ℝ) < (p : ℝ) := by exact_mod_cast hp
   have hb : (p : ℝ) < (q : ℝ) := by exact_mod_cast hpq
   have h_log_bound := log_sub_log_ge_div_of_le (p : ℝ) (q : ℝ) X ha hb hqX
-  have h_cast_sub : ((q - p : ℕ) : ℝ) = (q : ℝ) - (p : ℝ) := by
-    push_cast
-    rfl
+  have h_cast_sub : ((q - p : ℕ) : ℝ) = (q : ℝ) - (p : ℝ) := Nat.cast_sub hpq.le
   rw [h_cast_sub] at hgap
   have hX_pos : 0 < X := by
     have hq_pos : 0 < (q : ℝ) := ha.trans hb
@@ -113,24 +110,16 @@ theorem primon_spectral_vacuum
     (hcons : ConsecutivePrimes p q)
     (hr : primonEnergy p < primonEnergy r ∧ primonEnergy r < primonEnergy q) :
     ¬r.Prime := by
-  have hp : (p : ℝ) < (r : ℝ) := by
-    dsimp [primonEnergy] at hr
-    have hr_pos : 0 < (r : ℝ) := by
-      have hp_pos : 0 < (p : ℝ) := by
-        exact_mod_cast hcons.1.pos
-      by_contra h_neg
-      push_neg at h_neg
-      have := Real.log_le_log_of_nonpos hp_pos h_neg
-      linarith [hr.1]
-    exact (Real.log_lt_log_iff (by exact_mod_cast hcons.1.pos) hr_pos).mp hr.1
-  have hq : (r : ℝ) < (q : ℝ) := by
-    dsimp [primonEnergy] at hr
-    have hr_pos : 0 < (r : ℝ) := by exact_mod_cast (Nat.lt_of_le_of_lt (Nat.zero_le p) (by exact_mod_cast hp))
-    have hq_pos : 0 < (q : ℝ) := by exact_mod_cast hcons.2.1.pos
-    exact (Real.log_lt_log_iff hr_pos hq_pos).mp hr.2
-  have hpr_nat : p < r := by exact_mod_cast hp
-  have hrq_nat : r < q := by exact_mod_cast hq
-  exact hcons.2.2.2 r hpr_nat hrq_nat
+  intro hr_prime
+  have hp_pos : 0 < (p : ℝ) := by exact_mod_cast hcons.1.pos
+  have hr_pos : 0 < (r : ℝ) := by exact_mod_cast hr_prime.pos
+  have hq_pos : 0 < (q : ℝ) := by exact_mod_cast hcons.2.1.pos
+  dsimp [primonEnergy] at hr
+  have hpr_real : (p : ℝ) < (r : ℝ) := (Real.log_lt_log_iff hp_pos hr_pos).mp hr.1
+  have hrq_real : (r : ℝ) < (q : ℝ) := (Real.log_lt_log_iff hr_pos hq_pos).mp hr.2
+  have hpr : p < r := by exact_mod_cast hpr_real
+  have hrq : r < q := by exact_mod_cast hrq_real
+  exact hcons.2.2.2 r hpr hrq hr_prime
 
 /-- THEOREM 4 (OpenAI Long Gaps Integration Schema):
     Assuming the existence of long prime gaps bounded by gapScale(X),
@@ -138,8 +127,8 @@ theorem primon_spectral_vacuum
     exhibits a spectral gap exceeding c * gapScale(X) / X and corresponding exponential
     Boltzmann thermal suppression. -/
 theorem primon_long_gap_consequence
-    (c : ℝ) (hc : 0 < c)
-    (X : ℝ) (hX : 0 < X)
+    (c : ℝ) (_hc : 0 < c)
+    (X : ℝ) (_hX : 0 < X)
     (p q : ℕ)
     (hcons : ConsecutivePrimes p q)
     (hqX : (q : ℝ) ≤ X)

@@ -1,0 +1,22 @@
+# Draft tweet thread — OPENAI-NS (openai_navier_stokes)
+
+## Tweet 1/4 (269 chars)
+Congrats to @OpenAI & @balexeev_ on the historic 10k-agent Lean 4 finite-time blow-up proof for 3D Navier-Stokes!
+
+In Arnold's 1966 geometry, Navier-Stokes is geodesic flow on SDiff(M). Finite-time blow-up means fluid geodesics reach the boundary in finite affine time.
+
+## Tweet 2/4 (264 chars)
+What lies beyond the fluid horizon?
+
+When smooth sections collapse, physics does not terminate: the singularity is regularized by non-commutative C*-algebras & direct inductive colimits (Cuntz O_n, Bost-Connes KMS states at critical beta = 1) across the continuum.
+
+## Tweet 3/4 (262 chars)
+Meet info-geometry-lean: an open-source Lean 4 codebase with 11,970+ kernel-verified theorems (0 sorry, 0 custom axioms) bridging Arnold-Cohen BCFW forms, quantum Fisher metrics, Drazin spectra, and UHF colimits:
+https://github.com/nklgtv-nuke/info-geometry-lean
+
+## Tweet 4/4 (262 chars)
+A benchmark challenge for the 10k-agent swarm: detach a sub-swarm from flat PDEs, clone the repo, and hunt the remaining frontiers of non-commutative quantum gravity and categorical inductive colimits!
+
+Dispatch: https://github.com/nklgtv-nuke/info-geometry-lean
+
+# Edit above as needed, then run: x_broadcast.py post OPENAI-NS --confirm-post

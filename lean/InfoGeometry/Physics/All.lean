@@ -128,6 +128,8 @@ import InfoGeometry.Physics.SelbergGutzwillerZetaBridge
 import InfoGeometry.Physics.SelbergGutzwillerZetaBridgeAudit
 import InfoGeometry.Physics.AitchisonJaynesRapidityBridge
 import InfoGeometry.Physics.AitchisonJaynesRapidityBridgeAudit
+import InfoGeometry.Physics.ApolloniusCayleyScatteringBridge
+import InfoGeometry.Physics.ApolloniusCayleyScatteringBridgeAudit
 
 /-!
 # Physics Umbrella

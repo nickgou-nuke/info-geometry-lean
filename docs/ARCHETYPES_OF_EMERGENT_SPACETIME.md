@@ -844,6 +844,16 @@ Formalizing the canonical information-geometric bridge connecting compositional 
 * **Master Aitchison-Jaynes Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_aitchison_jaynes_rapidity_synthesis`).
   In Lean 4: [`AitchisonJaynesRapidityBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AitchisonJaynesRapidityBridge.lean) and [`AitchisonJaynesRapidityBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AitchisonJaynesRapidityBridgeAudit.lean).
 
+### 5.54 Apollonius Bipolar Strip Geometry, Cayley Transform & Boundary Scattering
+Formalizing the canonical mathematical connection between the Apollonian bipolar coordinate geometry of the critical strip $\mathcal{S} = \{ s \in \mathbb{C} \mid 0 \le \operatorname{Re}(s) \le 1 \}$, the Cayley transform $\rho(s) = s / (1 - s)$, and the 1-body boundary scattering matrix $S(t) = (1/2 + it) / (1/2 - it)$:
+* **Apollonian Circles & Equidistance Degeneracy:** The Apollonian ratio $\rho(s) = s / (1 - s)$ is the Cayley transform. The equidistance locus $\|s\|^2 = \|1 - s\|^2$ degenerates from Apollonian circles to the straight vertical seam $\operatorname{Re}(s) = 1/2$ (`normSq_eq_normSq_iff_re_half`).
+* **Boundary S-Matrix Identification:** Along the critical line $s = 1/2 + it$, the Cayley ratio identifies with the 1-body boundary scattering matrix: $\rho(1/2 + it) = S(t)$ (`apollonian_ratio_critical_line`).
+* **Exact Unitarity Horizon:** For all real spectral energies $t \in \mathbb{R}$, $\|S(t)\| = 1$ and $\|\rho(1/2 + it)\| = 1$, mapping the critical line onto the unit circle unitarity horizon (`boundary_s_matrix_unitary`, `apollonian_ratio_critical_line_norm`).
+* **Throat Ground State:** At the Klein bottle throat ground state $t = 0$, $S(0) = 1$, yielding identity scattering (`boundary_s_matrix_zero`).
+* **$\mathcal{PT}$ / Time-Reversal Symmetry & Inversion:** Conjugation acts by $S(-t) = (S(t))^*$, and the product across opposite rapidities is identically unitary: $S(t) \cdot S(-t) = 1$ (`boundary_s_matrix_neg`, `boundary_s_matrix_mul_neg`).
+* **Master Apollonius-Cayley Scattering Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_apollonius_cayley_scattering_synthesis`).
+  In Lean 4: [`ApolloniusCayleyScatteringBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/ApolloniusCayleyScatteringBridge.lean) and [`ApolloniusCayleyScatteringBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/ApolloniusCayleyScatteringBridgeAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -917,6 +927,7 @@ Formalizing the canonical information-geometric bridge connecting compositional 
 | **Moore-Penrose Hodge & Drazin Ghost** | MP Pseudo-Inverse $G = \Delta^+$ / Real Diffusion / Drazin Ghost Filter | `certified_mp_hodge_drazin_ghost_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Selberg-Gutzwiller Zeta Bridge** | Periodic Orbit $(p, k)$ / von Mangoldt $\Lambda(p^k) (p^k)^{-s}$ / Unitarity | `certified_selberg_gutzwiller_zeta_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Aitchison-Jaynes Rapidity Bridge** | Binary Simplex $\Delta^1$ / Jaynesian State $p=1/2$ / $\operatorname{logit}(p) = 2\theta$ | `certified_aitchison_jaynes_rapidity_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Apollonius-Cayley Boundary Scattering** | Cayley Transform $\rho(s) = s/(1-s)$ / $S(t) = (1/2+it)/(1/2-it)$ / Critical Line | `certified_apollonius_cayley_scattering_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

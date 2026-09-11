@@ -157,6 +157,13 @@ theorem xi_critical_line_boundary_quotient_eq_one
   rw [xi_critical_line_reflection Xi hXi t]
   exact div_self ht
 
+theorem xi_critical_line_boundary_quotient_norm_eq_one
+    (Xi : ℂ → ℂ) (hXi : XiFunctionDatum Xi) (t : ℝ)
+    (ht : Xi (1 / 2 + I * t) ≠ 0) :
+    ‖Xi (1 / 2 + I * t) / Xi (1 / 2 + I * (-t))‖ = 1 := by
+  rw [xi_critical_line_boundary_quotient_eq_one Xi hXi t ht]
+  norm_num
+
 theorem criticalLineRealReadout_even (Xi : ℂ → ℂ)
     (hXi : XiFunctionDatum Xi) (t : ℝ) :
     criticalLineRealReadout Xi (-t) = criticalLineRealReadout Xi t := by

@@ -403,6 +403,30 @@ theorem nilpotency_im_le_ker {M : Type*} [AddCommGroup M] [Module A M]
 4. Cuntz-Markov unital transition operator and cylinder conditional expectations.
 5. Dilaton Weyl gauge group law and self-similar horizon divergence.
 6. Supersymmetric Hamiltonian conservation under nilpotent superchiral charges. -/
+theorem certified_chiral_apollonian_cylinder_bridge :
+  (∀ q : CurvatureQuadruple ℝ, descartesForm (soddyReflect4 q) = descartesForm q) ∧
+  (∀ q : CurvatureQuadruple ℝ, soddyReflect4 (soddyReflect4 q) = q) ∧
+  (∀ q : CurvatureQuadruple ℝ, q.k4 + (soddyReflect4 q).k4 = 2 * (q.k1 + q.k2 + q.k3)) ∧
+  (∀ q : CurvatureQuadruple ℝ, (q.k4 - (q.k1 + q.k2 + q.k3)) ^ 2 =
+    4 * (q.k1 * q.k2 + q.k2 * q.k3 + q.k3 * q.k1) + descartesForm q) ∧
+  (∀ {A : Type*} [Ring A] {d : ℕ} (C : CuntzGenerators d A)
+    {R : Type*} [CommRing R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    (w : MarkovWeights d R), cuntzMarkovStep C w 1 = 1) ∧
+  (∀ {A : Type*} [Ring A] {d : ℕ} (C : CuntzGenerators d A)
+    {R : Type*} [CommRing R] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
+    (w : MarkovWeights d R) (j : Fin d) (y : A),
+    cuntzMarkovStep C w (C.S j * y * C.S_star j) = w.p j • y) ∧
+  (∀ (α σ₁ σ₂ : ℝ), weylScale α (σ₁ + σ₂) = weylScale α σ₁ * weylScale α σ₂) ∧
+  (∀ (T α : ℝ), 0 < α →
+    Tendsto (fun t => weylScale α (dilatonHorizonField T t)) (𝓝[<] T) atTop) ∧
+  (∀ {A : Type*} [Ring A] (Q K : A), IsNilpotentSupercharge Q → IsNilpotentSupercharge K →
+    commutator Q (anticommutator Q K) = 0 ∧ commutator K (anticommutator Q K) = 0) := by
+  exact ⟨descartesForm_soddyReflect4, soddyReflect4_involutive,
+    soddy_curvature_sum, descartes_discriminant_identity, cuntzMarkovStep_one,
+    cuntzMarkovStep_cylinder, weylScale_add, weylScale_horizon_tendsto_atTop,
+    fun Q K hQ hK => susy_conservation Q K hQ hK⟩
+
+/-
 structure CertifiedChiralApollonianCylinderBridge where
   descartes_preservation : ∀ (q : CurvatureQuadruple ℝ),
     descartesForm (soddyReflect4 q) = descartesForm q
@@ -431,7 +455,7 @@ structure CertifiedChiralApollonianCylinderBridge where
     commutator K (anticommutator Q K) = 0
 
 /-- Certified instance of the Chiral Apollonian Cylinder Bridge. -/
-def certified_chiral_apollonian_cylinder_bridge : CertifiedChiralApollonianCylinderBridge where
+def certified_chiral_apollonian_cylinder_bridge_legacy : CertifiedChiralApollonianCylinderBridge where
   descartes_preservation := descartesForm_soddyReflect4
   soddy_involution := soddyReflect4_involutive
   curvature_sum_rule := soddy_curvature_sum
@@ -441,5 +465,6 @@ def certified_chiral_apollonian_cylinder_bridge : CertifiedChiralApollonianCylin
   weyl_scale_add_eq := weylScale_add
   weyl_horizon_divergence := weylScale_horizon_tendsto_atTop
   susy_hamiltonian_conservation := fun Q K hQ hK => susy_conservation Q K hQ hK
+-/
 
 end InfoGeometry.Canonical.ChiralApollonian

@@ -1,4 +1,6 @@
 import Mathlib.Data.Real.Basic
+import Mathlib.Data.Matrix.Basic
+import Mathlib.LinearAlgebra.Determinant
 import Mathlib.Tactic
 
 /-!
@@ -103,6 +105,54 @@ theorem quadratic_coordinate_identification {n : ℕ} (κ : ℝ) (X : Fin n → 
     coincidence κ X j / κ = (X j) ^ 2 := by
   simp [coincidence]
   field_simp [hκ]
+
+/-- Recovery of the true physical source activity A under microscopic cascade calibration. -/
+theorem activity_recovers_activity (A P₁ P₂ P₁₂ W ε₁ ε₂ : ℝ)
+    (hA : A ≠ 0) (hP₁ : P₁ ≠ 0) (hP₂ : P₂ ≠ 0) (hP₁₂ : P₁₂ ≠ 0) (hW : W ≠ 0)
+    (hε₁ : ε₁ ≠ 0) (hε₂ : ε₂ ≠ 0) :
+    let C₁ := A * P₁ * ε₁
+    let C₂ := A * P₂ * ε₂
+    let κ := A * P₁₂ * W * ε₁ * ε₂
+    activity (closureSlope C₁ C₂ κ) P₁ P₂ P₁₂ W = A := by
+  intro C₁ C₂ κ
+  dsimp [activity, closureSlope, C₁, C₂, κ]
+  field_simp
+
+/-- Effective gamma branching factor under secondary internal conversion coefficient α. -/
+def photonBranchOfConversion (α : ℝ) : ℝ := 1 / (1 + α)
+
+/-- Absolute coincidence activity in the presence of secondary internal conversion. -/
+theorem activity_with_conversion (H W P₁ P₂ b_feed α : ℝ)
+    (hα : 1 + α ≠ 0) (hP₁ : P₁ ≠ 0) (hP₂ : P₂ ≠ 0) :
+    let P₁₂ := P₁ * b_feed * photonBranchOfConversion α
+    activity H P₁ P₂ P₁₂ W = H * (W * b_feed) / (P₂ * (1 + α)) := by
+  intro P₁₂
+  dsimp [activity, P₁₂, photonBranchOfConversion]
+  field_simp
+
+/-- Explicit constructive linear dependence of any three spectral lines in the rank-two response. -/
+theorem three_line_linear_dependence {n : ℕ} (C₁ C₂ C₃ K₁ K₂ K₃ : ℝ) (X : Fin n → ℝ) (j : Fin n) :
+    (C₂ * K₃ - C₃ * K₂) * (C₁ * X j - K₁ * (X j) ^ 2) +
+    (C₃ * K₁ - C₁ * K₃) * (C₂ * X j - K₂ * (X j) ^ 2) +
+    (C₁ * K₂ - C₂ * K₁) * (C₃ * X j - K₃ * (X j) ^ 2) = 0 := by
+  ring
+
+/-- Explicit constructive linear dependence of any three geometry columns in the rank-two response. -/
+theorem three_geometry_linear_dependence (C K X₁ X₂ X₃ : ℝ) :
+    (X₂ * X₃ ^ 2 - X₃ * X₂ ^ 2) * (C * X₁ - K * X₁ ^ 2) +
+    (X₃ * X₁ ^ 2 - X₁ * X₃ ^ 2) * (C * X₂ - K * X₂ ^ 2) +
+    (X₁ * X₂ ^ 2 - X₂ * X₁ ^ 2) * (C * X₃ - K * X₃ ^ 2) = 0 := by
+  ring
+
+/-- The 3-by-3 submatrix formed by any three lines and three geometries in the rank-two response. -/
+def matrix3x3 (C K : Fin 3 → ℝ) (X : Fin 3 → ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
+  fun i j => C i * X j - K i * (X j) ^ 2
+
+/-- Exact vanishing of every 3-by-3 minor of the multiline quadratic response matrix. -/
+theorem det_matrix3x3_zero (C K : Fin 3 → ℝ) (X : Fin 3 → ℝ) :
+    (matrix3x3 C K X).det = 0 := by
+  simp [Matrix.det_fin_three, matrix3x3]
+  ring
 
 end
 end InfoGeometry.Probability.DetectorRankTwoResponse

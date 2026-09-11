@@ -10123,6 +10123,8 @@ import InfoGeometry.Physics.WignerSmithKreinBridge
 import InfoGeometry.Physics.WignerSmithKreinBridgeAudit
 import InfoGeometry.Physics.FisherRaoAitchisonKanBridge
 import InfoGeometry.Physics.FisherRaoAitchisonKanBridgeAudit
+import InfoGeometry.Physics.RiemannSiegelHardyZThroatBridge
+import InfoGeometry.Physics.RiemannSiegelHardyZThroatBridgeAudit
 import InfoGeometry.Physics.LorentzChiralCuntzBridge
 import InfoGeometry.Physics.MD000FoundationalMatrixFramework
 import InfoGeometry.Physics.MD001MatrixQuantumGeometry

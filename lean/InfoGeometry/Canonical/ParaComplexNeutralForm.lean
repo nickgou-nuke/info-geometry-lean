@@ -191,3 +191,22 @@ theorem finrank_peirce_eq_of_cross_equiv [FiniteDimensional ℝ V]
 
 end
 end InfoGeometry.Canonical.ParaComplexNeutralForm
+
+namespace InfoGeometry.Canonical.ParaComplexNeutralForm
+noncomputable section
+open ParaComplexConnection
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
+variable (PCS : ParaComplexStructure V)
+
+/-- In finite dimension, a supplied cross equivalence identifies the total rank
+with twice the rank of either Peirce leaf. -/
+theorem finrank_v_eq_two_mul_plus_of_cross_equiv [FiniteDimensional ℝ V]
+    (D : NondegenerateDatum PCS)
+    (e : plusEigenspace PCS ≃ₗ[ℝ] minusEigenspace PCS) :
+    Module.finrank ℝ V = 2 * Module.finrank ℝ (plusEigenspace PCS) := by
+  rw [finrank_peirce_sum PCS]
+  rw [finrank_peirce_eq_of_cross_equiv PCS e]
+  ring
+
+end
+end InfoGeometry.Canonical.ParaComplexNeutralForm

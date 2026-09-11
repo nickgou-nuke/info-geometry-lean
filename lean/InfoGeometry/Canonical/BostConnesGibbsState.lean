@@ -117,6 +117,19 @@ theorem bostConnesExpectation_smul (β c : ℝ) (hβ : 1 < β)
   intro n
   ring
 
+/- Subtraction is preserved under the Gibbs expectation when both terms are summable. -/
+theorem bostConnesExpectation_sub (β : ℝ) (hβ : 1 < β)
+    {f g : ℕ+ → ℝ}
+    (hf : Summable fun n : ℕ+ => normalizedBostConnesWeight β n * f n)
+    (hg : Summable fun n : ℕ+ => normalizedBostConnesWeight β n * g n) :
+    bostConnesExpectation β hβ (fun n => f n - g n) =
+      bostConnesExpectation β hβ f - bostConnesExpectation β hβ g := by
+  rw [bostConnesExpectation, bostConnesExpectation, bostConnesExpectation]
+  rw [← hf.tsum_sub hg]
+  apply tsum_congr
+  intro n
+  ring
+
 /-- Gibbs readback on a singleton indicator observable. -/
 theorem expectation_singleton (β : ℝ) (hβ : 1 < β) (n : ℕ+) :
     bostConnesExpectation β hβ

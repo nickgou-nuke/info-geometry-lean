@@ -1,4 +1,5 @@
 import proofs.KleinVectorLiftObstruction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import proofs.KleinSixStateVectorBundleCore
 
 /-!
@@ -24,7 +25,7 @@ open KleinSixStateProjectiveMonodromy
 open ProjectiveUnitary6
 
 abbrev Base := KleinSixStateVectorBundleCore.Base
-abbrev State6 := Fin 6 → ℂ
+abbrev State6 := InfoGeometry.Algebra.FiniteSpin.Vec6C
 
 def unitaryAction (u : U6) : State6 →L[ℂ] State6 :=
   u.1.mulVecLin.toContinuousLinearMap

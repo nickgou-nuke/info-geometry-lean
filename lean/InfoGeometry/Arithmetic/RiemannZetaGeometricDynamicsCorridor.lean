@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.RiemannZetaEvidenceCorridor
 import InfoGeometry.Arithmetic.ActualRiemannZetaVonMangoldtBridge
 import InfoGeometry.Arithmetic.RiemannHypothesisKreinColimitSpectralBridge

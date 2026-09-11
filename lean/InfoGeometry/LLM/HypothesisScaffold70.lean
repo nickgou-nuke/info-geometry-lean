@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.TransformerPhysicsEngine
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LLM.RouterFreeEnergyBridge
 import InfoGeometry.LLM.KreinAttentionEnergy
 import InfoGeometry.LLM.KMSSoftmaxBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.PauliParavectorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.Cl55MinkowskiCelestialSlice
 import InfoGeometry.Twistor.PenroseIncidence
 

@@ -1,4 +1,5 @@
 import InfoGeometry.MaxEnt.Core
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MaxEnt.DualBridge
 import InfoGeometry.MaxEnt.Finite
 import InfoGeometry.MaxEnt.IProjection

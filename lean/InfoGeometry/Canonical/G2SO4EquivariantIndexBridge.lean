@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealSplitKreinHilbertizationBridge
 import InfoGeometry.Canonical.RealCl55NativeEquivariantChiralComplexBridge
 import InfoGeometry.Canonical.RealCl55NativeChiralHodgeIndexBridge

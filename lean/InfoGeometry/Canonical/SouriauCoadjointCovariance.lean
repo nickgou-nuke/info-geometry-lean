@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Module.Dual
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 noncomputable section

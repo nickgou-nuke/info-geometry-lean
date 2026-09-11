@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Concrete S_left / clockAxis commutation on DoubledSpace ℝ

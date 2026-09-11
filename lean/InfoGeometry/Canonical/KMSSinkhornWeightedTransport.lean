@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KMSSinkhornSeedState
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KMSSinkhornScalarPotential
 import InfoGeometry.Canonical.IBFrozenDescent
 import InfoGeometry.Canonical.IBTrajectory

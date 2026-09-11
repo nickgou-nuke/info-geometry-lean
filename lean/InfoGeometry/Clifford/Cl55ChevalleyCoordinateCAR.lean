@@ -1,10 +1,11 @@
 import InfoGeometry.Clifford.ChevalleySpinorBlueprint
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Clifford
 
 noncomputable section
 
-abbrev ChevalleyL5 := Fin 5 → ℝ
+abbrev ChevalleyL5 := InfoGeometry.Algebra.FiniteSpin.Vec5R
 abbrev ChevalleySpinor5 := SpinorSpace ChevalleyL5
 
 def chevalleyBasisVector (i : Fin 5) : ChevalleyL5 :=

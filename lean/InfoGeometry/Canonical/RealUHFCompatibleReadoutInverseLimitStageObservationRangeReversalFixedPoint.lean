@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeReversalHomeomorph
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Fixed-point restriction of reversal on finite-stage observation ranges

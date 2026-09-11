@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.IsospinMirrorDynamics
 import InfoGeometry.Physics.TKKIsospinEmbedding
 import InfoGeometry.Physics.TKKZorn

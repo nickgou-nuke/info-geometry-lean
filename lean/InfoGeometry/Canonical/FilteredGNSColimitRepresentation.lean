@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Universal representation of a filtered GNS colimit

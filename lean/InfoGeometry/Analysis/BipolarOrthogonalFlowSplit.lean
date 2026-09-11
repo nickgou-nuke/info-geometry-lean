@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarPlanarHodgePair
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.CStarCuntzTensorQuotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Basic
 
 /-!

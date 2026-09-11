@@ -7,6 +7,7 @@ CL(1,1)_L ⊗ CL(1,1)_R ≅ CL(2,2)
 -/
 
 import InfoGeometry.OperatorAlgebra.ChiralCompass
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quiver.BetheAnsatzXXZ
 import Mathlib.RingTheory.TensorProduct.Maps
 

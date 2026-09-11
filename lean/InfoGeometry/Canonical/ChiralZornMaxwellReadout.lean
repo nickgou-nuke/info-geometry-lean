@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZornVectorMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornFiniteVectorCalculus
 import InfoGeometry.Canonical.ZornMaxwellGaugeBridge
 import InfoGeometry.Canonical.ZornPotentialDifferentialReadout

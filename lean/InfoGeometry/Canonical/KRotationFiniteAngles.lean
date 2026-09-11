@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovClosedForms
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite angles of the native `KRotation` flow

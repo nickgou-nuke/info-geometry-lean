@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.KleinQuotientDeckInvariants
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Finite, theorem-safe affine shadow of the Klein glide.  The full deck-group
 normal form remains a separate integration frontier because the current

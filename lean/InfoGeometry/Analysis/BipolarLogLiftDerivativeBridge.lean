@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarLoopWindingPeriod
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Basic
 
 /-!

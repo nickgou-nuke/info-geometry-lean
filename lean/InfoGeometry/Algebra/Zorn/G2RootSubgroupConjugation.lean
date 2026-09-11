@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.Zorn.G2TwoRootSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Root subgroup conjugation and the Weyl-equivariant bridge

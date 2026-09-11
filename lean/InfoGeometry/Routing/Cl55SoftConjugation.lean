@@ -1,4 +1,5 @@
 import InfoGeometry.KK.G2IntegratedKasparovEquivarianceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Routing.FiniteMatrixMixture
 
 /-! A finite convex mixture of the existing `GL32` conjugation actions.

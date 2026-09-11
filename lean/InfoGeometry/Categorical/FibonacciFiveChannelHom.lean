@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciFiveChannelAssociator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.FibonacciPentagonPathCarrier
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Probability.SimplexPairingAmplitude
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.QuadraticResponseSimplex
 import InfoGeometry.Analysis.LogOddsSimplexGeometry
 import InfoGeometry.Probability.BinaryAitchisonMoments

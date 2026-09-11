@@ -1,4 +1,5 @@
 import Mathlib.Topology.MetricSpace.Isometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.ENNReal.Basic
 import InfoGeometry.Topology.OrderThreeHomeomorphOrbitQuotient
 

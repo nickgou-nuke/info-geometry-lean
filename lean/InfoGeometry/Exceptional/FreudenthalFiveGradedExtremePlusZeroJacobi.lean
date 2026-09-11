@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalFiveGradedJacobiClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Dual contact/zero-grade homogeneous Jacobi closure. -/
 

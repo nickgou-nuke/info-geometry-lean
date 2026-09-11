@@ -11,6 +11,7 @@ This file keeps the base symmetry / carrier / cocycle split explicit:
 -/
 
 import Mathlib.Algebra.Group.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Algebra.Module.LinearMap.End
 import Mathlib.Algebra.Group.End

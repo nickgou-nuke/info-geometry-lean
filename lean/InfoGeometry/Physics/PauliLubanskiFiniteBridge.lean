@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.FourVectorPauliCasimirBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Pauli--Lubanski bridge
@@ -15,7 +16,7 @@ namespace InfoGeometry.Physics.PauliLubanskiFiniteBridge
 open InfoGeometry.Physics.LorentzBoostMinkowski
 open InfoGeometry.Physics.ZornMatrixSU3
 
-abbrev SpatialVector := Fin 3 → ℝ
+abbrev SpatialVector := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 def spatialMomentum (P : FourVector) : SpatialVector :=
   ![P.x, P.y, P.z]

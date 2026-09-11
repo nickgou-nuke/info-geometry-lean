@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CayleyConjugationExteriorDualityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionWittHypercomplexPlaneBridge
 
 /-!

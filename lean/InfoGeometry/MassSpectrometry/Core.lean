@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Routing.PermutationPerfectMatching
 import InfoGeometry.MassSpectrometry.FragmentationDAG
 import InfoGeometry.MassSpectrometry.PeakSpectrum

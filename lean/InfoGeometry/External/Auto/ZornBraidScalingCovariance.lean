@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.YangBaxterZornBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.ZornScalingFlow
 
 /-!

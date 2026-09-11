@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SE2SouriauCoadjointOrbit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 import Mathlib.Topology.MetricSpace.Bounded
 import Mathlib.Topology.Algebra.Group.Basic

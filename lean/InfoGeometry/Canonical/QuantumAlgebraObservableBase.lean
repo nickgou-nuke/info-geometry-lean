@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeModularPotentialExactCocycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Observable coordinates over the projective quantum base

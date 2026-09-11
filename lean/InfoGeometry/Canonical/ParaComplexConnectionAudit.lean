@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ParaComplexConnectionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of ParaComplexConnectionBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Homology.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Suspension shifts (the algebraic core of the sphere calculation)

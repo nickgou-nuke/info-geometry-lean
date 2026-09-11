@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovProjectorFlux
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Meta.Architecture
 

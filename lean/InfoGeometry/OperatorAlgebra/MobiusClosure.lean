@@ -14,6 +14,7 @@ identifications require separate witness structures.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

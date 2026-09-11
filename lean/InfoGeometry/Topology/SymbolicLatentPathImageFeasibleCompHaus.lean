@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentPathImageFeasibleTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentFeasibleRegionCompHaus
 
 namespace InfoGeometry.Topology

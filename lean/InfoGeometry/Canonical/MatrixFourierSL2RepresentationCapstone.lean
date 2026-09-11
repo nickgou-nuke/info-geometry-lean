@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.MatrixFourierSL2Representation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.MatrixFourierSL2RepresentationCapstone
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.Modular
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Krein.DoubledSpaceMatrix
 import InfoGeometry.Canonical.RicciMongeAmpere

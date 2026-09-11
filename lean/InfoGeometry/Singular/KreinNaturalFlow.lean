@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Lp.ProdLp
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Algebra.Module.StrongTopology
 import InfoGeometry.Singular.MoorePenrose
 import InfoGeometry.Singular.Drazin

@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullConfigurationCovering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullConfigurationFiberEquiv
 import Mathlib.AlgebraicTopology.FundamentalGroupoid.FundamentalGroup
 

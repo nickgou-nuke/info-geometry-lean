@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GrandCanonicalHamiltonianFlowBridge
 import InfoGeometry.Canonical.LFunctionHamiltonianFlowBridge
 import InfoGeometry.Canonical.GrandCanonicalThermodynamicEngine

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FiveGradedLieAntisymmetry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Jacobi identity for a five-graded Lie carrier

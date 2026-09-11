@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.NonIsoConf3DeRhamCooperad
 import InfoGeometry.External.Auto.QuadraticConfiguration3
 

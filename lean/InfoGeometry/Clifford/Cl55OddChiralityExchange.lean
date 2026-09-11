@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55SpinorChirality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Thermodynamics.ChiralChemicalPotentialDeformation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.HorizonKMS
 
 namespace InfoGeometry.Physics.Thermodynamics

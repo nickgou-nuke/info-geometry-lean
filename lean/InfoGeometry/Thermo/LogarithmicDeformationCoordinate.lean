@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.Gibbs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Logarithmic deformation coordinates

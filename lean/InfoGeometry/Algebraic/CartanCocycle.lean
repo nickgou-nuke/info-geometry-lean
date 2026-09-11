@@ -6,6 +6,7 @@ split lanes.
 No complex imports.
 -/
 import Paperproof
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Action.Defs
 import Mathlib.Algebra.Group.Basic
 import Mathlib.Algebra.Group.Subgroup.Defs

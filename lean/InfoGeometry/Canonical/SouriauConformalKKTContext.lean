@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauDensityWeightContext
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PhaseSpaceConformalKKTBridge
 import InfoGeometry.Canonical.ChiralCartanCore
 import InfoGeometry.Canonical.OnsagerReciprocity

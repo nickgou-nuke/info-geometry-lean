@@ -9,6 +9,7 @@ algebra automorphisms using Mathlib's `CliffordAlgebra.equivOfIsometry`.
 -/
 
 import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebraic.SplitCliffordCarrier
 
 noncomputable section

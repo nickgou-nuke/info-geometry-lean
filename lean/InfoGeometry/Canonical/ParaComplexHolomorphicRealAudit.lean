@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ParaComplexHolomorphicRealBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of ParaComplexHolomorphicRealBridge

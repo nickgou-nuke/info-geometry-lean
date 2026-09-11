@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.KreinInnerDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Supergraded metric-Cuntz tangent layer

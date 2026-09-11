@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBernoulliFiniteMatrixGaugeBridge
 import InfoGeometry.OperatorAlgebra.CantorBernoulliGaugeStateBridge
 

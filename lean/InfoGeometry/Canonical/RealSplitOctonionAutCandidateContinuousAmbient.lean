@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Canonical.RealSplitOctonionAutCandidateAmbient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuous ambient action for all linear Zorn candidates

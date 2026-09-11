@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitMetricLieAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CanonicalZornMatrixMetric
 
 namespace CanonicalZornFiveGradedClosure

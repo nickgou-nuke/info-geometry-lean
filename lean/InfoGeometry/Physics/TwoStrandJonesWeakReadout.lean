@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.TwoStrandJonesCasimir
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional
 
 /-!

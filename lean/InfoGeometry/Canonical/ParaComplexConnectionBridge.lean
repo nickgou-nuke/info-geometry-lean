@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
 
@@ -93,6 +94,21 @@ theorem peirceMinus_peircePlus (PCS : ParaComplexStructure V) (v : V) :
   rw [map_smul, map_add, PCS.tau_sq]
   have h_comm : PCS.tau v + v = v + PCS.tau v := add_comm (PCS.tau v) v
   rw [h_comm, sub_self, smul_zero]
+
+theorem tau_peircePlus (PCS : ParaComplexStructure V) (v : V) :
+    PCS.tau (peircePlus PCS v) = peircePlus PCS v := by
+  change PCS.tau ((1 / 2 : ℝ) • (v + PCS.tau v)) = (1 / 2 : ℝ) • (v + PCS.tau v)
+  rw [map_smul, map_add, PCS.tau_sq]
+  congr 1
+  abel
+
+theorem tau_peirceMinus (PCS : ParaComplexStructure V) (v : V) :
+    PCS.tau (peirceMinus PCS v) = - peirceMinus PCS v := by
+  change PCS.tau ((1 / 2 : ℝ) • (v - PCS.tau v)) = -((1 / 2 : ℝ) • (v - PCS.tau v))
+  rw [map_smul, map_sub, PCS.tau_sq]
+  rw [smul_sub, neg_smul]
+  congr 1
+  abel
 
 /-- Linear connection representation as a family of directional covariant derivatives. -/
 structure LinearConnection (V : Type*) [AddCommGroup V] [Module ℝ V] where

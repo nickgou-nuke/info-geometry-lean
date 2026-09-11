@@ -1,4 +1,5 @@
 import InfoGeometry.Section17
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.MD013CliffordAlgebraicStructures
 import InfoGeometry.Physics.MD014TriSpinZ3Projectors
 import InfoGeometry.Physics.MD016ExperimentalPredictionsFinite

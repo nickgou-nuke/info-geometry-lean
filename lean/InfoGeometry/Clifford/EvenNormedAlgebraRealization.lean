@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Operator.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Algebra.Module.FiniteDimension
 import Mathlib.LinearAlgebra.CliffordAlgebra.Even
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KANModuliSinkhornContinuity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KANModuliCompact
 import InfoGeometry.Inference.PoissonGibbsTopological
 

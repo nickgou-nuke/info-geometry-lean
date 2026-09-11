@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55SourceReconstructionAll
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Execute this audit; merely containing these commands is not certification. -/
 

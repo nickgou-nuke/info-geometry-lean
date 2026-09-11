@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.ApolloniusNatural
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ApolloniusNaturalCapstone
 

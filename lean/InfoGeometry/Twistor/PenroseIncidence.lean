@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.ToLin
 import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
 import Mathlib.LinearAlgebra.Projectivization.Basic
@@ -16,7 +17,7 @@ open scoped LinearAlgebra.Projectivization
 
 namespace InfoGeometry.Twistor.PenroseIncidence
 
-abbrev Spinor2 := Fin 2 → ℂ
+abbrev Spinor2 := InfoGeometry.Algebra.FiniteSpin.Vec2C
 abbrev Twistor4 := Spinor2 × Spinor2
 abbrev ComplexSpacetime := Matrix (Fin 2) (Fin 2) ℂ
 abbrev ProjectiveSpinorLine := ℙ ℂ Spinor2

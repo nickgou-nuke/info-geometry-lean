@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import DAG.MatrixRepresentation
 import InfoGeometry.MassSpectrometry.PeakFragmentMatching
 import InfoGeometry.MassSpectrometry.CausalCrossGramian

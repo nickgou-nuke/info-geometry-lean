@@ -1,4 +1,5 @@
 import Mathlib.Data.Finsupp.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Finsupp.VectorSpace
 import Mathlib.LinearAlgebra.Finsupp.LSum
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic

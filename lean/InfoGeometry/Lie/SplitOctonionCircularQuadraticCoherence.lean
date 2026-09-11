@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularMinkowskiPauliBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllCircularQuadraticCoordinates
 
 /-!

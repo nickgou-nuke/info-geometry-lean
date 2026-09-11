@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Spin55ChiralCharacterBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.V4O55SouriauChernPartitionBridge
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.Real.Basic

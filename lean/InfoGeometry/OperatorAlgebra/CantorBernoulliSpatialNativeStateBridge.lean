@@ -1,4 +1,5 @@
 import Mathlib.Analysis.CStarAlgebra.GelfandNaimarkSegal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CantorBernoulliKMSStateBridge
 import InfoGeometry.Canonical.CStarAlgebraStateColimit
 import InfoGeometry.OperatorAlgebra.PositiveLinearMapGNSVacuum

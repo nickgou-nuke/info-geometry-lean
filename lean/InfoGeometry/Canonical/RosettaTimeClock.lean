@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HolographicEntanglementSymmetry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeParafermionGrandCanonicalClock
 import InfoGeometry.Canonical.PrimeParafermionGrandCanonicalClock
 

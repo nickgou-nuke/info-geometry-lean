@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.GeometricTensorSplitOctonionChiralFrame
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Polarized vielbein transport for the split-octonion frame

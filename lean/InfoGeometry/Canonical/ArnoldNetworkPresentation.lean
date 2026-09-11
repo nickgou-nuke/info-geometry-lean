@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ArnoldMajoranaNetwork
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ArnoldApproximationCore
 import InfoGeometry.Canonical.QuantumPresentation
 import InfoGeometry.Meta.Architecture

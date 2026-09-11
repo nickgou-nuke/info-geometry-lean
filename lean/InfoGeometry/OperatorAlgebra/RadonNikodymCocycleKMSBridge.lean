@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConnesTomitaModularAutomorphismBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 
 /-!

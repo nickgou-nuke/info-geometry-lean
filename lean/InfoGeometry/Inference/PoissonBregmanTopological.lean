@@ -1,4 +1,5 @@
 import InfoGeometry.Inference.PoissonBregman
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Positive-domain topology for the Poisson Bregman term

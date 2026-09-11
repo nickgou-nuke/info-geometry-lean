@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Groupoid
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.SingleObj
 import Mathlib.Tactic
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientRangeFixedPointGraphCompHausEmbedding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Quotient-range naturality of compact fixed-point graphs

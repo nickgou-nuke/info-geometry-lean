@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionPeirceExterior3CoordinateBridge
 import InfoGeometry.Canonical.ConcreteChiralHodgeDiracHestenesColimit
 import InfoGeometry.Canonical.RealCl55NativeConcretePhaseFlowBridge

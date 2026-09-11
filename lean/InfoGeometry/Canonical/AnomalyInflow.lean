@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TopologicalInvariants
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HeatKernel
 set_option linter.unusedVariables false
 

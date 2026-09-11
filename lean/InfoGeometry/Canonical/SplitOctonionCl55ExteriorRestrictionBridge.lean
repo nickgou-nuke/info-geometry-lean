@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
 import InfoGeometry.Clifford.Clifford55
@@ -24,7 +25,7 @@ namespace InfoGeometry.Canonical.SplitOctonionCl55ExteriorRestrictionBridge
 open InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
 open InfoGeometry.Clifford.Clifford55
 
-abbrev V5 := Fin 5 → ℝ
+abbrev V5 := InfoGeometry.Algebra.FiniteSpin.Vec5R
 abbrev Exterior5 := ExteriorAlgebra ℝ V55
 
 def embedV5 (v : V3) : V5 :=

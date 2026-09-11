@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.KingdonAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornVectorMatrixExplicit
 import InfoGeometry.Algebra.ZornVectorMatrix
 import InfoGeometry.Physics.ZornMatrixSU3.ZornMatrixCore
@@ -125,7 +126,7 @@ theorem zorn_right_alternative (X Y : ZornMatrix) : (Y * X) * X = Y * (X * X) :=
   exact zornVectorMatrix_eq_of_associator_eq_zero
     (InfoGeometry.Algebra.ZornVectorMatrix.associator_right_alternative (toZornVectorMatrix Y) (toZornVectorMatrix X))
 
-abbrev ThreeSpace := Fin 3 → ℝ
+abbrev ThreeSpace := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 /-- Twice the Euclidean dot form, matching the Kingdon anticommutator normalization. -/
 def formedBilin : LinearMap.BilinForm ℝ ThreeSpace :=

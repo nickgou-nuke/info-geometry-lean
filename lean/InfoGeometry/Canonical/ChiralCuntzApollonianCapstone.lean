@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ChiralCuntzApollonian
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ChiralCuntzApollonianCapstone
 

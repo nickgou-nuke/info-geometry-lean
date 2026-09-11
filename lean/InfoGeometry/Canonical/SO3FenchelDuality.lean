@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CrossProduct
 import InfoGeometry.Canonical.LieGeometricDuality
 
@@ -22,7 +23,7 @@ open InfoGeometry.Canonical.LieGeometricDuality
 
 open scoped Matrix
 
-abbrev V3 : Type := Fin 3 → ℝ
+abbrev V3 : Type := InfoGeometry.Algebra.FiniteSpin.Vec3R
 abbrev SO3 : Type := Matrix.specialOrthogonalGroup (Fin 3) ℝ
 
 local instance : LieRing V3 := Cross.lieRing

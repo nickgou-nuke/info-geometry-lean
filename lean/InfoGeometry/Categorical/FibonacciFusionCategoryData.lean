@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciBraiding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.FibonacciBraidedTowerCone
 import InfoGeometry.Fibonacci.FibAnyonThm1
 

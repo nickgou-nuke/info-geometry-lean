@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzKMSState
 import InfoGeometry.Algebra.CuntzGNSRepresentation
 import InfoGeometry.Algebra.CuntzTensorQuotient

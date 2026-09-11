@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.Cyclotomic.Gal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.ZMod.Units
 
 namespace InfoGeometry.Arithmetic

@@ -1,4 +1,5 @@
 import InfoGeometry.Core.Entropy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Potential.Thermo
 import InfoGeometry.Probability.GromovConcentration
 import SelfReference.RobustThermodynamicRegression

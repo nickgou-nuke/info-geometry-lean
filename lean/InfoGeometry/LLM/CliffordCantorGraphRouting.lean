@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MixtureOfExperts
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators

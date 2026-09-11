@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciCompositeChannelBlocks
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 import InfoGeometry.Categorical.FibonacciPentagonPathCarrier
 

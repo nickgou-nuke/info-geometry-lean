@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ClNN
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Prod
 
 open scoped TensorProduct

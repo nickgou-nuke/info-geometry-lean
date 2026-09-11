@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CayleyHestenesGradedIntertwinerBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionWittHypercomplexPlaneBridge
 
 /-!
@@ -17,7 +18,7 @@ namespace InfoGeometry.Canonical.CayleyHestenesWittGradedConcreteBridge
 open InfoGeometry.Canonical.CayleyHestenesGradedIntertwinerBridge
 open InfoGeometry.Lie.SplitOctonionWittHypercomplexPlaneBridge
 
-abbrev WittCarrier := Fin 8 → ℝ
+abbrev WittCarrier := InfoGeometry.Algebra.FiniteSpin.Vec8R
 abbrev WittEnd := Module.End ℝ WittCarrier
 
 def matrixEnd (A : Mat8) : WittEnd := Matrix.mulVecLin A

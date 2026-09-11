@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.CircularSplitOctonionContactLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Circular split-octonion mixed bracket into the contact zero grade

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KKTCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11LorentzAction
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.BogoliubovClosedForms

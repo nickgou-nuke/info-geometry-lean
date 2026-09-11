@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Pin55KramersKleinAll
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 #print axioms InfoGeometry.Quantum.ComplexKramersAntiunitary.timeReversal_sq
 #print axioms InfoGeometry.Quantum.ComplexKramersAntiunitary.timeReversal_antiunitary

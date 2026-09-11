@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PhysicsRiemannHypothesisFinite
 import InfoGeometry.Canonical.GrandCanonicalPrimeEnsembleFormulas
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences

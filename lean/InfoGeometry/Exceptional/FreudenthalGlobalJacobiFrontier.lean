@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalGenericJacobiClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalFiveGradedBracketScalarBilinearity
 import InfoGeometry.Exceptional.FreudenthalJacobiLaneFiniteReconstruction
 import InfoGeometry.Exceptional.FreudenthalFiveGradedExtremeJacobi

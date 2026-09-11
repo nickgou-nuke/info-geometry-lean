@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearTwoModeFiveGradeSubmodules
 import InfoGeometry.Physics.NuclearFiveGradeKantorComponentBridge
 import InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation

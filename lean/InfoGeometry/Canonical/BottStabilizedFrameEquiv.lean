@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovHomologyFrameEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovCartanEigenOperator
 import InfoGeometry.Meta.Architecture
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredIsometricInnerProductColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Inner product on a filtered isometric module direct limit

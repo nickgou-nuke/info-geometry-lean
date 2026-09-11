@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteFibonacciMonodromyInterface
 
 /-!

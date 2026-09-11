@@ -4,6 +4,7 @@
    steps along tangent cone, and retracts via Dykstra. -/
 
 import InfoGeometry.Optimization.PolarDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optimization.Dykstra
 import InfoGeometry.Optimization.BirkhoffPolytope
 

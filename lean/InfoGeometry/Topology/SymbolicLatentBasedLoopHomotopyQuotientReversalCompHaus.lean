@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentBasedLoopHomotopyQuotientCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentBasedLoopHomotopyQuotientReversalTopCatNaturality
 import InfoGeometry.Topology.SymbolicLatentPathHomotopyQuotientCompHaus
 import Mathlib.Topology.Category.CompHaus.Basic

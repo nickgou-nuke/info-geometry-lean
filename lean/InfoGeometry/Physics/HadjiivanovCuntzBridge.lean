@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Trace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

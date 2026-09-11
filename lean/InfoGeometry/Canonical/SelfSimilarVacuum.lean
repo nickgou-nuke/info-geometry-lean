@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RefinementGaloisConnection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CompletionPathway
 import Mathlib.Order.FixedPoints
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.CanonicalKantorOperators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllCrossChannel
 
 /-!

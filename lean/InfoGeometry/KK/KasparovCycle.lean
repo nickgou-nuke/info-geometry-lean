@@ -1,4 +1,5 @@
 import InfoGeometry.KK.DiracFredholmIndex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AnalyticalIndexCore
 import InfoGeometry.Meta.Architecture
 import Mathlib.Algebra.Lie.OfAssociative

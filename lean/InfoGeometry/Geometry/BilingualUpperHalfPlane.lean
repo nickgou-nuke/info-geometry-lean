@@ -19,6 +19,7 @@ A point in the upper half-plane is an operator `τ` on the doubled real carrier
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Quantum.HestenesKahler

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Canonical.SouriauOnsagerBKMIntegrability
 import InfoGeometry.OperatorAlgebra.NoncommutativePowerDerivative
@@ -41,7 +42,7 @@ open InfoGeometry.OperatorAlgebra
 open SouriauOnsagerBKM
 
 abbrev Operator (n : ℕ) := FiniteOperatorAlgebra n
-abbrev FourComplexParameters := Fin 4 → ℂ
+abbrev FourComplexParameters := InfoGeometry.Algebra.FiniteSpin.Vec4C
 
 /-! ## 1. Trace as a real continuous linear map -/
 

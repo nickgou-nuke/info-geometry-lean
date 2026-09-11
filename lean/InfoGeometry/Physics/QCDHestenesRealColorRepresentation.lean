@@ -33,7 +33,7 @@ namespace InfoGeometry.Physics.QCDHestenesRealColorRepresentation
 open InfoGeometry.Canonical.TwoSheetComplexPolarization
 open InfoGeometry.Physics.QCDNativeZornColorRepresentation
 
-abbrev ComplexColorLane := Fin 3 → ℂ
+abbrev ComplexColorLane := InfoGeometry.Algebra.FiniteSpin.Vec3C
 abbrev RealPair := ℝ × ℝ
 abbrev RealColorLane := Fin 3 → RealPair
 abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C

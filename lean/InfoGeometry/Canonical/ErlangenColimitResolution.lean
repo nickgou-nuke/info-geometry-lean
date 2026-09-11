@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ErlangenInductiveClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Erlangen Colimit Resolution & Causal Preorder Stabilization

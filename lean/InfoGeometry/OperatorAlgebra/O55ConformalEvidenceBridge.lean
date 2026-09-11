@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FullO55MatrixLaws
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws
 import InfoGeometry.OperatorAlgebra.PO55ConformalClosure
 import InfoGeometry.Clifford.ConformalProjectiveEmbedding55

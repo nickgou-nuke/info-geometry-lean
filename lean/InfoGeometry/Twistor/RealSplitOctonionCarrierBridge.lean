@@ -20,7 +20,7 @@ open InfoGeometry.Twistor.PenroseIncidence
 open InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
 open InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 
-abbrev Real8 := Fin 8 → ℝ
+abbrev Real8 := InfoGeometry.Algebra.FiniteSpin.Vec8R
 abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 abbrev Mat2Pair := Mat2 × Mat2
 abbrev Exterior3 := InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge.Exterior3

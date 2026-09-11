@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSTailStarRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cofinal GNS tails inside the global filtered Hilbert colimit

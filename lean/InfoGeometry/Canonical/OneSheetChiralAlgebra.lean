@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionJordanStructure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # One-sheet Jordan algebra readout

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # 2×2 Hermitian Matrices: Spacetime, GUE, and Chiral Coordinates

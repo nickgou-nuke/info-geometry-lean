@@ -1,4 +1,5 @@
 import InfoGeometry.Signal.ComplexRealification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Signal.SteeringBivectorDetector
 import InfoGeometry.Signal.QuaternionPhase
 

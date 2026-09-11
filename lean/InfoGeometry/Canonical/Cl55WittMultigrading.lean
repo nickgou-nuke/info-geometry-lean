@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55WittWeightReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.ZMod.Basic
 
 /-! The intrinsic `ℤ⁵` weight readout and its degree/parity coarsenings for the
@@ -16,7 +17,7 @@ open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Canonical.Cl55WittCAR
 open InfoGeometry.Canonical.Cl55WittLieRouting
 
-abbrev WittWeight := Fin 5 → ℤ
+abbrev WittWeight := InfoGeometry.Algebra.FiniteSpin.Vec5Z
 
 def cartanAdjoint (k : Fin 5) : MatStage 5 →ₗ[ℝ] MatStage 5 where
   toFun X := bracket (E k k) X

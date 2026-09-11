@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -161,6 +162,53 @@ theorem real_seam_condition (x t tau : R) :
       _ = (x - tau * t) + 0 := by rw [h]
       _ = x - tau * t := by ring
 
+theorem real_seam_condition_of_isUnit (x t tau : R) (hunit : IsUnit (2 * tau)) :
+    (x + tau * t = x - tau * t) ↔ t = 0 := by
+  rw [real_seam_condition]
+  constructor
+  · intro h
+    apply hunit.mul_left_cancel
+    simpa using h
+  · intro h
+    rw [h, mul_zero]
+
+theorem paracomplex_norm (x t tau : R) (htau : tau * tau = 1) :
+    (x + tau * t) * (x - tau * t) = x ^ 2 - t ^ 2 := by
+  have htau' : tau ^ 2 = 1 := by simpa [pow_two] using htau
+  calc
+    (x + tau * t) * (x - tau * t) = x ^ 2 - (tau * t) ^ 2 := by ring
+    _ = x ^ 2 - t ^ 2 := by rw [mul_pow, htau']; ring
+
+theorem peircePlus_lightcone_factor (x t tau half : R)
+    (htau : tau * tau = 1) :
+    peircePlus tau half * (x + tau * t) = (x + t) * peircePlus tau half := by
+  unfold peircePlus
+  calc
+    half * (1 + tau) * (x + tau * t) = half * (x + t) * (1 + tau) := by
+      calc
+        half * (1 + tau) * (x + tau * t) = half * (x + t + (tau ^ 2 - 1) * t) * (1 + tau) := by ring
+        _ = half * (x + t) * (1 + tau) := by rw [htau']; ring
+    _ = (x + t) * (half * (1 + tau)) := by ring
+
+theorem peirceMinus_lightcone_factor (x t tau half : R)
+    (htau : tau * tau = 1) :
+    peirceMinus tau half * (x + tau * t) = (x - t) * peirceMinus tau half := by
+  unfold peirceMinus
+  calc
+    half * (1 - tau) * (x + tau * t) = half * (x - t) * (1 - tau) := by
+      calc
+        half * (1 - tau) * (x + tau * t) = half * (x - t + (1 - tau ^ 2) * t) * (1 - tau) := by ring
+        _ = half * (x - t) * (1 - tau) := by rw [htau']; ring
+    _ = (x - t) * (half * (1 - tau)) := by ring
+
+theorem peirce_chiral_null_annihilation (u v tau half : R)
+    (htau : tau * tau = 1) :
+    (u * peircePlus tau half) * (v * peirceMinus tau half) = 0 := by
+  calc
+    (u * peircePlus tau half) * (v * peirceMinus tau half) =
+        (u * v) * (peircePlus tau half * peirceMinus tau half) := by ring
+    _ = 0 := by rw [peirce_ortho tau half htau, mul_zero]
+
 end ParaComplexAlgebra
 
 section ZornCarrier
@@ -189,6 +237,22 @@ theorem zorn2_det (a delta : ℝ) :
   rw [Matrix.det_fin_two]
   simp
   ring
+
+theorem zorn2_det_eq_zero_iff (a delta : ℝ) :
+    (zorn2 a delta).det = 0 ↔ a = 0 ∧ delta = 0 := by
+  rw [zorn2_det]
+  constructor
+  · intro h
+    have hsum : a ^ 2 + delta ^ 2 = 0 := by linarith
+    have ha : a ^ 2 = 0 := by
+      have hd : 0 ≤ delta ^ 2 := sq_nonneg delta
+      nlinarith
+    have hd : delta ^ 2 = 0 := by
+      have ha' : 0 ≤ a ^ 2 := sq_nonneg a
+      nlinarith
+    exact ⟨sq_eq_zero_iff.mp ha, sq_eq_zero_iff.mp hd⟩
+  · rintro ⟨rfl, rfl⟩
+    norm_num
 
 /-- Massless limit: when $\Delta = 0$, $\hat{Z}^2 = a^2 \mathbb{I}$ (pure chiral null rays). -/
 theorem zorn2_massless_sq (a : ℝ) :

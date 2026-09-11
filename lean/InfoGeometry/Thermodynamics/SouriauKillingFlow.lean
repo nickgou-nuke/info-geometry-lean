@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OnsagerCasimirJ
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelationalInformationDynamics
 import InfoGeometry.Meta.Architecture
 

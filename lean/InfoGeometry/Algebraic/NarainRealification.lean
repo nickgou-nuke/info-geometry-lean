@@ -9,6 +9,7 @@ It only records the normalization theorem for the explicit realification map.
 -/
 
 import InfoGeometry.Algebraic.SplitCliffordCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

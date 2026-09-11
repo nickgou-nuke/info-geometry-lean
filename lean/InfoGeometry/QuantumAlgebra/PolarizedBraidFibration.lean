@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciTwoSidedBraid
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionChiralPhaseSpace
 
 /-!

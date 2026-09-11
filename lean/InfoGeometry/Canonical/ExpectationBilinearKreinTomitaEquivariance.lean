@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteKreinTomitaSixState
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Algebra.KreinBilinearCommutant
 
 /-!

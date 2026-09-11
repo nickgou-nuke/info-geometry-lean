@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.BilinearForm.Properties
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.BilinearForm.Hom
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Canonical.KreinDoubledAtom

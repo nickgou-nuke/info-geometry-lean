@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauKKSForm
 
 /-!
@@ -156,7 +157,7 @@ end Prequantum
 section ConcreteWitness
 
 /-- The two-dimensional real phase-space carrier used for the concrete witness. -/
-abbrev SymplecticPlane := Fin 2 → ℝ
+abbrev SymplecticPlane := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 instance : Bracket SymplecticPlane SymplecticPlane :=
   ⟨fun _ _ => 0⟩

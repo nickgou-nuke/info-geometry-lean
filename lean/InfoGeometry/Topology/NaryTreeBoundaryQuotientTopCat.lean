@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.NaryTreeBoundaryInverseLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Explicit quotients of an n-ary tree boundary

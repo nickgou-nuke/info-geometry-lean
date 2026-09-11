@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Subgroup.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Logic.Equiv.Basic
 import InfoGeometry.Algebra.CuntzSupergradedSUSY
 import InfoGeometry.Algebra.LorentzBiquaternionEquivalence
@@ -103,7 +104,7 @@ end CuntzGradingDeformation
 /-! ## Concrete finite Poincare transform presentation -/
 
 /-- Finite real four-vectors used by the explicit Poincare presentation. -/
-abbrev FiniteFourVector := Fin 4 → ℝ
+abbrev FiniteFourVector := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
 /-- Minkowski pairing with signature `(+---)`. -/
 def minkowskiPair4 (x y : FiniteFourVector) : ℝ :=

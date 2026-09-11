@@ -10,6 +10,7 @@ corresponding reconstruction proof.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Equiv
 import InfoGeometry.Canonical.ModularZ2CubeGrading
 import InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR

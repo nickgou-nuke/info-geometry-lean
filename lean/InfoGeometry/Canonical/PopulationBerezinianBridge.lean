@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Artanh
 import Mathlib.Algebra.Module.Basic
 import Mathlib.Data.Matrix.Basic

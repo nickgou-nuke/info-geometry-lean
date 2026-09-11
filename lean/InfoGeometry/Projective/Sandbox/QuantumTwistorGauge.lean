@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.QuantumGrassmannian
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.QuantumTwistor
 import Mathlib.Algebra.FreeAlgebra
 import Mathlib.Algebra.RingQuot

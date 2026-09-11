@@ -1,4 +1,5 @@
 import Mathlib.Data.Fintype.Card
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HexagonalSixRootTiling
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionSixSectorFin3
 
 namespace InfoGeometry.Canonical

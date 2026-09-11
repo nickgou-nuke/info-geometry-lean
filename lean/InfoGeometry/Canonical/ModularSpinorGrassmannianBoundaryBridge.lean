@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModularSpinorGaugeTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitQuaternionGrassmannianSpinorBridge
 
 namespace InfoGeometry.Canonical

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitQuaternionGrassmannianSpinorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
 import Mathlib.CategoryTheory.Sites.Sheaf
 

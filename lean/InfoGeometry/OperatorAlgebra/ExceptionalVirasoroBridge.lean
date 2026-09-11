@@ -23,6 +23,7 @@ The physical statement is witness-gated:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.HorizonKMS
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 import InfoGeometry.Meta.OwnerTarget

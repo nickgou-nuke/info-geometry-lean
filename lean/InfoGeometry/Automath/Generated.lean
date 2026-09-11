@@ -1,4 +1,5 @@
 import InfoGeometry.Automath.Generated.cuntz_fibonacci_resolvent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Automath.Generated.cuntz_shift_commutativity
 import InfoGeometry.Automath.Generated.cuntz_yang_baxter
 import InfoGeometry.Automath.Generated.hyp_1_spectral_rigidity

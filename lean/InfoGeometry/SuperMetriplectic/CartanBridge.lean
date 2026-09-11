@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.Axioms
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InverseKernelCartanCore
 import InfoGeometry.Core.SymmetricLie
 import InfoGeometry.Core.UnifiedGeometry

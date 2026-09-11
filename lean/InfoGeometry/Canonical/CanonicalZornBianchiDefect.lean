@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NCZornAkivisIdentity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The purely algebraic right-nested Bianchi defect

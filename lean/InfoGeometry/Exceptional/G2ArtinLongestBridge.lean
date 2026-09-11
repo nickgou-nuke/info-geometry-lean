@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

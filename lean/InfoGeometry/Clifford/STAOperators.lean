@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.CrawfordDiracBispinorDensities
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite spacetime-algebra operator dictionary

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GromovWittenPrepotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite permutation gauge quotient for prepotential coefficient data

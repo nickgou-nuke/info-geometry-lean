@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11SheetDiracMatrices
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11WittBasis
 import InfoGeometry.Clifford.Cl11CircularBasis
 import Mathlib.Data.Complex.Basic

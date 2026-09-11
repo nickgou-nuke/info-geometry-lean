@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauRelativeEntropyPersistenceCutoff
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace SouriauRelativeEntropyPersistenceCutoffFunctor
 

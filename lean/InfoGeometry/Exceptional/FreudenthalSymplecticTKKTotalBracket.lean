@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticTKKSocket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Total 3-Graded TKK Bracket Candidate on the Symplectic Freudenthal Carrier

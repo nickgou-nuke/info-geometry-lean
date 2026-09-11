@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.Zorn.G2BruhatResidualCanonicalEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TopOrderedRootProduct
 import InfoGeometry.Algebra.Zorn.G2BruhatResidual
 

@@ -8,6 +8,7 @@ separately from the upper-half-plane compatibility layer.
 -/
 
 import Mathlib.NumberTheory.Modular
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Compatibility.MathlibUpperHalfPlaneShadow
 
 noncomputable section

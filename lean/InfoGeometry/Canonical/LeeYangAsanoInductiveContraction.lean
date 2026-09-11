@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.MultiaffinePolynomialSlices
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.LeeYangAsanoFullReduction
 
 /-!

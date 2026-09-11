@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PalatiniBoundaryStokesBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of PalatiniBoundaryStokesBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.OnsagerCasimirMoebiusBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 Compatibility endpoint for the historical metric-bridge path.

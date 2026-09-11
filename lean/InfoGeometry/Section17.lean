@@ -40,7 +40,7 @@ set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
 set_option linter.unnecessarySeqFocus false
 
-abbrev BiquatCoord := Fin 4 → ℂ
+abbrev BiquatCoord := InfoGeometry.Algebra.FiniteSpin.Vec4C
 abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def biquatToMatrix (q : BiquatCoord) : Mat2C :=

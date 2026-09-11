@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.BostConnesKMSPhaseTransition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BostConnesColimitKMSBridge
 import InfoGeometry.Canonical.PauliWorldClockSynchronicity
 

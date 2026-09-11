@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarCrossRatioLog
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Convex.SelfConcordantLogBarrier
 import Mathlib.Tactic
 

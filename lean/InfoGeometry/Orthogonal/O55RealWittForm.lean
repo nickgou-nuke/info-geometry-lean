@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55WittRootRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The real split form `so(5,5)` and its complexification

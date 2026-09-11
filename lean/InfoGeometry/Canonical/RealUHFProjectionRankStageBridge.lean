@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFProjectionRankSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealProjectionRankDyadicBridge
 
 /-!

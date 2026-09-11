@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11TensorTowerGlobalParity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option autoImplicit false
 

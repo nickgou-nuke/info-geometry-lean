@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Clifford55
 import InfoGeometry.Clifford.ConformalLieAlgebra55
 import InfoGeometry.Twistor.NullProjective
@@ -32,7 +33,7 @@ open InfoGeometry.Physics.B3PresentedGroup
 open InfoGeometry.Physics.YangBaxterQSwap
 open InfoGeometry.OperatorAlgebra.AndreevLedger
 
-abbrev NullCoefficient := Fin 5 → ℝ
+abbrev NullCoefficient := InfoGeometry.Algebra.FiniteSpin.Vec5R
 
 /-! ## The five-dimensional null annihilator fibre -/
 

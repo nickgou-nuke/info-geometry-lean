@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBoundaryFiniteReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Dyadic endpoints in the binary readout range

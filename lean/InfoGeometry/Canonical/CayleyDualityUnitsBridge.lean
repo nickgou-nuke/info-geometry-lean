@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.SpecificGroups.KleinFour
 import InfoGeometry.Canonical.CayleyPeirceKleinFourBridge
 

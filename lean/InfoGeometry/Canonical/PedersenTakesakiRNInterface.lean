@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TypeIIIContinuousCoreReal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RNDeterminantConnesChainBridge
 import InfoGeometry.Canonical.RelativeModularOperator
 import InfoGeometry.Meta.Architecture

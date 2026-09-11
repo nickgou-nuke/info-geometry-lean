@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DualSheetedKreinActionFiber
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BdGKreinZitterbewegungMassBridge
 import InfoGeometry.Canonical.CovariantBiWaveZornMassBridge
 import InfoGeometry.Canonical.NonAssociativePlanckFoamMetricBridge

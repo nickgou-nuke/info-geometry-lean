@@ -1,4 +1,5 @@
 import InfoGeometry.ErlangenLanglandsGeometryLane
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

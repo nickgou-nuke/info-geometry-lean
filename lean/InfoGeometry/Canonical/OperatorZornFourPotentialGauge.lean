@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorZornConnectionCurvatureBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NCZornProjectionNormalization
 
 /-!

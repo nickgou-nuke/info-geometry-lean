@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ColeFuryIdeals
 
 /-!

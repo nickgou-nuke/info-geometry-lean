@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OrthogonalGroup55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 namespace InfoGeometry.Canonical.O55Representation

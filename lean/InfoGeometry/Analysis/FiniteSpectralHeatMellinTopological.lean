@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.FiniteSpectralHeatMellin
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Analysis.FiniteSpectralHeatMellin
 

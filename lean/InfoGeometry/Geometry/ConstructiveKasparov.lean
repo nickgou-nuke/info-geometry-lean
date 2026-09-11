@@ -17,6 +17,7 @@ Core chain:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.BilingualAnalyticity
 import InfoGeometry.Geometry.SpectralDivisors
 

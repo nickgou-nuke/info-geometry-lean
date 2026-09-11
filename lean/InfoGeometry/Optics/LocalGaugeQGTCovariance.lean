@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.OperatorQGTConnectionCovariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Point-dependent gauge covariance of operator QGT connections

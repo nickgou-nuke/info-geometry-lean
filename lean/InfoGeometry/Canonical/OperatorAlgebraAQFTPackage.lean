@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorAlgebraReadiness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AQFTOperatorEndpoints
 import InfoGeometry.Canonical.QFTTDFTLaunchpad
 import InfoGeometry.Canonical.KMSSinkhornSeedState

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.PeircePositiveCellCoverImageTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology
 

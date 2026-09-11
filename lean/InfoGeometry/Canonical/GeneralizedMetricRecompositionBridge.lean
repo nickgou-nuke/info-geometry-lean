@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GeneralizedMetricPolarizedBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativeModularRecomposition
 import InfoGeometry.Meta.Architecture
 

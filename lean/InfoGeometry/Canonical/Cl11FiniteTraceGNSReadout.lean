@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11CompatibleRealAlgebraicStateNet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11FiniteNormalizedTraceState
 import InfoGeometry.Prequantum.GNSBridge
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KreinCarrierInstances
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 
 /-!

@@ -14,6 +14,7 @@ the Hestenes--Krein carrier and the Virasoro carrier is asserted.
 -/
 
 import InfoGeometry.Categorical.BraidHestenesKreinVirasoroBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.BraidVirasoroIntertwiner
 
 noncomputable section

@@ -1,4 +1,5 @@
 import InfoGeometry.Singular.KreinNaturalFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry
 

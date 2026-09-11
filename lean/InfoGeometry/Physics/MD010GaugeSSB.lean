@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.QuaternionCondensate
 import InfoGeometry.Physics.MD007QuantumEigenoperatorInterpretation
 import InfoGeometry.Physics.Section34StrengthenedFormalism

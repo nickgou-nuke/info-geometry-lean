@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CompleteUnifiedBundle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.CompleteUnifiedBundle

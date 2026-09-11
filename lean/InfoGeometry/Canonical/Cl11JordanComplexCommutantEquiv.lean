@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11JordanComplexRealificationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Subalgebra.Basic
 
 namespace InfoGeometry.Canonical.Cl11JordanComplexCommutantEquiv

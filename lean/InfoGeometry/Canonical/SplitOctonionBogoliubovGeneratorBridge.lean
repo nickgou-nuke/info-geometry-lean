@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionRegularProjectors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovVielbein
 import InfoGeometry.Physics.HestenesKreinOperatorCalculus
 

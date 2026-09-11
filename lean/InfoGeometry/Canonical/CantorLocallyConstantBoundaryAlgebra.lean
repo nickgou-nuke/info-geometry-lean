@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorCylinderFunctionStages
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Locally constant boundary functions

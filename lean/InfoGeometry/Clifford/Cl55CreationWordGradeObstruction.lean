@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55OperatorFiveGradeClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-! The native five-mode creation word has occupation grade five.

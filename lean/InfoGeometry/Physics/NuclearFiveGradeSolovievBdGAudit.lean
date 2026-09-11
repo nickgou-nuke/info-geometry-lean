@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearFiveGradeSolovievBdGAll
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transitive axiom inspection for the nuclear closure lane

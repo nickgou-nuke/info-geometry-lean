@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 open Real
 
 namespace InfoGeometry.Fibonacci.FibAnyonThm1

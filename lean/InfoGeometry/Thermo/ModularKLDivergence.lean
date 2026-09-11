@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBFrozenModularBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativeModularOperator
 import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
 import InfoGeometry.Projective.GaugeReduction

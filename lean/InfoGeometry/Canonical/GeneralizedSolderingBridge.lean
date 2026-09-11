@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.PhaseSpaceGeneralizedMetric
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.NeutralPhaseSpaceCore
 import InfoGeometry.Meta.Architecture
 

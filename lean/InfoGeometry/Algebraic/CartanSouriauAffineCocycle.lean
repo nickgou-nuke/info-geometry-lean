@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Hom.End
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Equiv.Basic
 import Mathlib.Algebra.Group.Equiv.Defs
 import Mathlib.Logic.Equiv.Defs

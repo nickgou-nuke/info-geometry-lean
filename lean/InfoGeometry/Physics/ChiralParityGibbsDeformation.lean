@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.SupergradedCuntzBdG
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Physics
 

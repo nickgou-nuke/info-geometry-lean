@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.LSeries.Dirichlet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The actual Riemann-zeta/Möbius `LSeries` bridge

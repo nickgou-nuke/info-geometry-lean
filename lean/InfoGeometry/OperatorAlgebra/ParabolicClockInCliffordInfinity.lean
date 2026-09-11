@@ -1,5 +1,6 @@
 -- InfoGeometry/OperatorAlgebra/ParabolicClockInCliffordInfinity.lean
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Category.AlgCat.Basic
 import Mathlib.Algebra.Category.Ring.Basic
 import Mathlib.Algebra.Category.Ring.FilteredColimits

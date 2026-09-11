@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CubicJordanOsExtensions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topological readouts for the native cubic Albert carrier

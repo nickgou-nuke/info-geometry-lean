@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ZetaSymmetryAdaptedDefinitions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Ramanujan Defect Tower Interface

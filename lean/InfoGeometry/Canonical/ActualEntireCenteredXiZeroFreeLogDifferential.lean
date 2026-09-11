@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ActualEntireRiemannXiZeroFreeLogDifferential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ActualEntireCenteredXiLogDerivativeBridge
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Block
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Lie.SplitOctonionWittPairingTransportBridge
 

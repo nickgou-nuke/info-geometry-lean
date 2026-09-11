@@ -31,7 +31,7 @@ namespace InfoGeometry.Canonical.ParaHyperkahlerPresymplecticBridge
 
 open Matrix
 
-abbrev R2 := Fin 2 → ℝ
+abbrev R2 := InfoGeometry.Algebra.FiniteSpin.Vec2R
 abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-! ## 1. Canonical Symplectic Form on ℝ² -/

@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.AllTopThermodynamicRouter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LLM.TransformerArchitecture
 import InfoGeometry.Meta.Architecture
 

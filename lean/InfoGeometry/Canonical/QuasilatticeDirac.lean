@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovVielbein
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Quasilattice Dirac Operator

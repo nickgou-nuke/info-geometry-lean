@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CliffordCARGeneratorTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GNSCARColimit
 
 /-!

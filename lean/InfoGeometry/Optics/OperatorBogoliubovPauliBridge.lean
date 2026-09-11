@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.OperatorCausalFramework
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.BogoliubovPauliSolderedFrame
 
 /-!

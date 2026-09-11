@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Grading
 import Mathlib.LinearAlgebra.CliffordAlgebra.Even
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
@@ -17,7 +18,7 @@ namespace HestenesCl14
 
 open BigOperators
 
-abbrev V14 := Fin 4 → ℝ
+abbrev V14 := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
  def coord4 (i : Fin 4) : V14 →ₗ[ℝ] ℝ where
   toFun x := x i

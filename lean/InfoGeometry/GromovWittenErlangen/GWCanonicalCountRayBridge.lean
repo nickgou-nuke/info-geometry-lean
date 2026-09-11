@@ -1,4 +1,5 @@
 import InfoGeometry.GromovWittenErlangen.GWProjectiveCountCalibration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativePotentialCountBridge
 import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
 import InfoGeometry.Meta.Architecture

@@ -1,4 +1,5 @@
 import InfoGeometry.Architecture.SymmetricSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Core Symmetric Spaces

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.N2ModeCentralExtension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Supergraded N=2 cocycle

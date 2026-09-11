@@ -1,4 +1,5 @@
 import InfoGeometry.QuantumAlgebra.RankTwoCyclotomicArtinBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.GradeActionInterface
 
 /-! Galois transport for the cyclotomic root-system layer.  The action is

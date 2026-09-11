@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ArnoldCohenPluckerBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Basic
 
 /-!

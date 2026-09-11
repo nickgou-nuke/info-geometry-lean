@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Scalar-type obstruction to identifying a fundamental symmetry with conjugation

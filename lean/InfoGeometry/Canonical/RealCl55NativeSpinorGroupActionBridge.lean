@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitClifford55NeutralFormBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealCl55FiniteModuleEndBridge
 import InfoGeometry.Canonical.RealCl55NativeMatrixFaithfulBridge
 

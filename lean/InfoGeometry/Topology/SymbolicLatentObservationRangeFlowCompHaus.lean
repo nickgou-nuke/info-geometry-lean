@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentObservationRangeCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentObservationQuotientFlowTopCat
 import Mathlib.Topology.Category.CompHaus.Basic
 

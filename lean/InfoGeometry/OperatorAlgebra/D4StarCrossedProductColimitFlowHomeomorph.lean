@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductColimitDynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.D4StarColimitFlowHomeomorph
 
 /-!

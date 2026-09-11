@@ -1,4 +1,5 @@
 import InfoGeometry.Routing.FiniteSoftmax
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Convex.Birkhoff
 
 noncomputable section

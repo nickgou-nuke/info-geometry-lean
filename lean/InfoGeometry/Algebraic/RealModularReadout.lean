@@ -13,6 +13,7 @@ This file stays on the real side of the quarantine:
 -/
 
 import Mathlib.LinearAlgebra.Matrix.Notation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 import Mathlib.Tactic
 import InfoGeometry.Geometry.RealUpperHalfPlane

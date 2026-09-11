@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinInfiniteCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Meta.Architecture
 

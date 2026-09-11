@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralNambuFrame
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hadamard rewrite between the two doubled Krein bases

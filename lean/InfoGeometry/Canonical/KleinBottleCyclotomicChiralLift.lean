@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KleinBottleA2RootMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cyclotomic chiral lift of the Klein-bottle colour monodromy

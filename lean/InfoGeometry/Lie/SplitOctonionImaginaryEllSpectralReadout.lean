@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionImaginaryEllSupport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Algebra.LinearTripotentTrifactor
 
 /-!

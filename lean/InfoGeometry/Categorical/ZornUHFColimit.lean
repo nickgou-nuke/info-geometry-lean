@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.YangBaxterZornBridge
 import Mathlib.Algebra.Category.ModuleCat.FilteredColimits
 import Mathlib.Algebra.Category.ModuleCat.Monoidal.Closed
@@ -16,7 +17,7 @@ open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Physics.SplitOctonionBraidSU3
 open InfoGeometry.Physics.YangBaxterZornBridge
 
-abbrev FinZorn := Fin 8 → ℂ
+abbrev FinZorn := InfoGeometry.Algebra.FiniteSpin.Vec8C
 abbrev ZornStage (n : ℕ) := BitWord n → FinZorn
 
 /-- Zorn multiplication transported to the standard eight-dimensional complex module. -/

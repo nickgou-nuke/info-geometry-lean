@@ -1,4 +1,5 @@
 import Mathlib.Data.ZMod.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
 

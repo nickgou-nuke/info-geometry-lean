@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarWindingPeriodLattice
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.CauchyResidueWindingBridge
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
 import Mathlib.MeasureTheory.Integral.CircleIntegral

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ToeplitzCuntzThreeTrialityBoundaryGroupoidColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Group-action laws for the ternary boundary

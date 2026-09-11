@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.FundamentalSymmetryProjectors
 import Mathlib.Analysis.InnerProductSpace.PiL2
 

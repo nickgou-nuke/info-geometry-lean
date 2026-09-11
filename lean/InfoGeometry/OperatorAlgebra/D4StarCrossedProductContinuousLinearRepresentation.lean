@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductLinearRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuous-linear packaging of the finite D₄ crossed-product action

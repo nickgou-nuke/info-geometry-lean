@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PauliHestenesSpinMomentum
 import InfoGeometry.Physics.MDPASJMSouriau
 import InfoGeometry.Meta.Architecture

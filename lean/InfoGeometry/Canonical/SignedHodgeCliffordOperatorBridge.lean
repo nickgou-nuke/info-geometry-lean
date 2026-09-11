@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HodgeStar4DFiniteLinearBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesBivectorCarrier
 import Mathlib.LinearAlgebra.Basis.Basic
 

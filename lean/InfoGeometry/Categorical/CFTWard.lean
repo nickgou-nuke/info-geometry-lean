@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 theorem ward_identity_2pt {Δ1 Δ2 z1 z2 C : ℝ} (h1 : C * (z1 - z2) * (Δ1 - Δ2) = 0) (h2 : z1 - z2 ≠ 0) (h3 : C ≠ 0) : Δ1 = Δ2 := by
   cases mul_eq_zero.mp h1 with

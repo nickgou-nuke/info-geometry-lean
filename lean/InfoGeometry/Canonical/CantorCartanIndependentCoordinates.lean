@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorCartanTorusLaplaceMellin
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

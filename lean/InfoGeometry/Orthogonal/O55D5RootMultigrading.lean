@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The `D₅` root multigrading and the split `O(5,5)` contact collapse

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzLeftRightCommutant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Left/right modular distinguishability on the native Cuntz quotient

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.MonoidAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite noncommutative plane-wave kernel

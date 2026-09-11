@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bi-frame operator pullback

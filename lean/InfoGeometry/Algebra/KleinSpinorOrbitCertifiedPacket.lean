@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.KleinSpinorOrbitSocketClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Klein-spinor orbit owner export

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11TensorTowerProjectionRank
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitQ11CausalCone
 
 set_option autoImplicit false

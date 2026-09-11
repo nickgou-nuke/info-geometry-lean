@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.DiscreteDiracHodge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Pairing bridge for the finite discrete Dirac--Hodge carrier

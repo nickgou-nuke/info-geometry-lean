@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.CantorDiracOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 import InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator
 import InfoGeometry.Algebra.FiniteInductiveSUSY

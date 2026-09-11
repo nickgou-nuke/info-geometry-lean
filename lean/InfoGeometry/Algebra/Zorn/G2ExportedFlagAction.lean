@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ExportedIncidenceGenerator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Boundary of the exported flag-action construction

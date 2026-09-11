@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.KreinSpace
 import InfoGeometry.Krein.HilbertBridge
 import InfoGeometry.Clifford.SplitQ11

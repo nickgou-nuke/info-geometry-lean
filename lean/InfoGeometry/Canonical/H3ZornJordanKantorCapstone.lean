@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.H3ZornKantorTripleSystemBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.H3ZornTKKNative
 
 /-!

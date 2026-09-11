@@ -1,4 +1,5 @@
 import Mathlib.RingTheory.Polynomial.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 namespace InfoGeometry.Combinatorics.BinaryGolayPolynomialConvolution

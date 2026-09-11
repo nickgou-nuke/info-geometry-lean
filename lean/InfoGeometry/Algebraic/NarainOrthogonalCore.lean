@@ -8,6 +8,7 @@ It does not introduce modular generators, Clifford lifts, or Berry phases.
 -/
 
 import InfoGeometry.Algebraic.SplitChargeLattice
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentPathImageTransportTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Homeomorphic transport of symbolic-latent path images

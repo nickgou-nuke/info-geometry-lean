@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealTomitaCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.YangMillsContinuum
 import InfoGeometry.Canonical.GlobalChiralDecomposition
 import InfoGeometry.Canonical.SingularDecompositionSurrogate

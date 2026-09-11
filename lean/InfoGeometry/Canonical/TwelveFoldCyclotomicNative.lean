@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.Exponent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.SpecificGroups.KleinFour
 import Mathlib.NumberTheory.NumberField.Cyclotomic.Galois
 import Mathlib.RingTheory.Polynomial.Cyclotomic.Roots

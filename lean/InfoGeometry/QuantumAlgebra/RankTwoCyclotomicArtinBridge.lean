@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.QuantumAlgebra.RankTwoCyclotomicArtinBridge
 

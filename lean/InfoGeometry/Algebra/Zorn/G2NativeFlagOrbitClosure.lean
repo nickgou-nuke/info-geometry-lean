@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeCandidateFiberAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Closure of the native full-flag orbit

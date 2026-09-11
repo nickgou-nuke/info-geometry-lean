@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GolayLeechStabilizerCode
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Quantum stabilizer readout of the extended binary Golay code

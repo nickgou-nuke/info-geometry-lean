@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.ArnoldRelations
 
 namespace InfoGeometry.Projective.BCFWShift

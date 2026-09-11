@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.AmplituhedronBostConnes
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace Automath.Generated
 

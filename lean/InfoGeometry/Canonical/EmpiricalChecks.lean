@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralAnomaly
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Thermo.FiniteDiagonal
 import InfoGeometry.Thermo.FiniteMatrix

@@ -1,4 +1,5 @@
 import InfoGeometry.Assumptions.Determinant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Assumptions.DualConnections
 import InfoGeometry.Assumptions.LLN
 import InfoGeometry.Assumptions.ManifoldDegree

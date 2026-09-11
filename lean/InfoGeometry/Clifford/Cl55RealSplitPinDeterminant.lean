@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Basis.Prod
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.StdBasis
 import InfoGeometry.Clifford.Cl55RealSplitPinKernelCenter
 import InfoGeometry.Clifford.Cl55WittPinAction

@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.NeutralKreinMajoranaFrame
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite semi-Riemannian Krein bridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeSuperalgebra
 import InfoGeometry.Arithmetic.KudinoorWittenIndexBridge
 import InfoGeometry.Canonical.WeylSupertraceOwner

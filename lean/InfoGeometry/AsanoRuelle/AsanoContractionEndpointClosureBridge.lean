@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.AsanoContractionNative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.AsanoRuelle.MobiusPoleEndpointClosure
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DyadicScalarActionLaws
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

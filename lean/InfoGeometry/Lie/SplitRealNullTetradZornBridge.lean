@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitRealNullTetrad
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllKleinFlow
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 

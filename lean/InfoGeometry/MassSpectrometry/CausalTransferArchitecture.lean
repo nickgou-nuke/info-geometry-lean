@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MassSpectrometry.CausalCrossGramian
 import InfoGeometry.MassSpectrometry.CausalRetraction
 import InfoGeometry.MassSpectrometry.ChiralDiscreteMajoranaBridge

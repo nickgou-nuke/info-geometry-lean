@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.GogberashviliPaperConvention
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Coordinate and norm layer for the split-octonionic Dirac paper

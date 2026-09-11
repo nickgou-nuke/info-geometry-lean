@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.JaynesFiniteState
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ContinuumLimit
 import InfoGeometry.OperatorAlgebra.LogExchangeMonodromy
 

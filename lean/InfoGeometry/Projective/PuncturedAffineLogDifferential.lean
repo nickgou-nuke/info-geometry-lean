@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Polynomial.Laurent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Isomorphisms
 import Mathlib.RingTheory.Derivation.Basic
 import Mathlib.Data.Complex.Basic

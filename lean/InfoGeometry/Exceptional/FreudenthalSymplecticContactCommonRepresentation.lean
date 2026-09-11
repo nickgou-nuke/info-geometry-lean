@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticContactCommonCARCCR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalSymplecticContactLieAlgebra
 
 noncomputable section

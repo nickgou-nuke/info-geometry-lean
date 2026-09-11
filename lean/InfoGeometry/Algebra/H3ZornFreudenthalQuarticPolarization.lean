@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.H3ZornFreudenthalScaling
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # H₃(Zorn) finite-difference quartic polarization

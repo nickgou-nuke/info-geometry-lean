@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Canonical.BerryConnection
 import InfoGeometry.Canonical.MaurerCartanFactorization

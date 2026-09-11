@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.Automorphisms
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.HilbertBridge
 import InfoGeometry.Krein.OrthogonalGroup
 import Mathlib.Algebra.Lie.OfAssociative

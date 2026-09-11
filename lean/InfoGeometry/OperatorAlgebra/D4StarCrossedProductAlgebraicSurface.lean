@@ -1,2 +1,3 @@
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductUnitLaws
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductComplexCommutator

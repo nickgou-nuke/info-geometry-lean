@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.YangMillsContinuum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.QuantumGeometry.DensityOperatorDLogHomomorphism
 
 noncomputable section

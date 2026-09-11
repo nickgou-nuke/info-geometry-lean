@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.NonIsoConf3RankIngestion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.AmplituhedronBoundaryRank32
 
 /-!

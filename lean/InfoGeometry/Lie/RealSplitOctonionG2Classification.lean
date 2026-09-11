@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.G2FromSplitOctonions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native real split-octonion derivation surface

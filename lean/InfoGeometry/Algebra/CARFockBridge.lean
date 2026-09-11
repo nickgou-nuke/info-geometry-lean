@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FiniteSingleModeCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorCuntzCliffordBridge
 import InfoGeometry.Algebra.CuntzFockRepresentation
 import InfoGeometry.Canonical.Cuntz2Isometries

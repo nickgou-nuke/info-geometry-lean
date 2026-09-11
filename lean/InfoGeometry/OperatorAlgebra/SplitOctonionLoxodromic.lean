@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SplitQuaternionSL2Isomorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SplitOctonionPseudoReal
 import InfoGeometry.Canonical.ZornCliffordRepresentation
 

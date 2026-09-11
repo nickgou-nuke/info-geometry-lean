@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoPCNormalForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCGenerators
 

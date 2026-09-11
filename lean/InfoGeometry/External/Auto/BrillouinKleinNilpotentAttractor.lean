@@ -20,7 +20,7 @@ namespace BrillouinKleinNilpotentAttractor
 
 open Matrix
 
-abbrev Vec3 := Fin 3 → ℂ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3C
 abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-! ## Glide fixed-line filter -/

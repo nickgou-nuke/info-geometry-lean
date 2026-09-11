@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2IntrinsicFlagAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2IntrinsicLineFiberTransport
 import InfoGeometry.Algebra.Zorn.G2IntrinsicBaseLineCensus
 import InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge

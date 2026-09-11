@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionCayleyHodgeLinearEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.PeirceExteriorHodgeTransport
 
 noncomputable section

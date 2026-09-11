@@ -1,4 +1,5 @@
 import InfoGeometry.ErlangenLanglandsLane
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped BigOperators
 

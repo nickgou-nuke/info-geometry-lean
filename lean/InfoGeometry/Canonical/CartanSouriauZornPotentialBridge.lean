@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ApolloniusZornPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2CartanSouriauMassieu
 
 /-! A finite bridge from the native Cartan--Souriau Massieu potential to the
@@ -13,7 +14,7 @@ open InfoGeometry.Canonical.ApolloniusZornPotential
 open InfoGeometry.Lie
 open InfoGeometry.Lie.CanonicalZornG2CartanSouriauCharacterBridge
 
-abbrev Parameter := Fin 2 → ℝ
+abbrev Parameter := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 variable {State : Type*} [Fintype State] [Nonempty State]
 

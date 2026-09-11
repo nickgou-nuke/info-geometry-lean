@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PeirceBCFWKinematicBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

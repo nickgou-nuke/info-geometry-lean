@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.BilingualUpperHalfPlane
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SemilinearPresentation
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.TopologicalCovariantFlowObservationQuotientFlowLaws
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Additive flows of compact-Hausdorff isomorphisms

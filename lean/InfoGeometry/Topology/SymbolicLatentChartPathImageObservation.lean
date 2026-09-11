@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentChartPathObservation
 import InfoGeometry.Topology.SymbolicLatentChartMorphismTopCat
 import InfoGeometry.Topology.SymbolicLatentPathImage

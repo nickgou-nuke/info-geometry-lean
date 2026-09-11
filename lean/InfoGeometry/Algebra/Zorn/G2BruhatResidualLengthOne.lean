@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2BruhatResidual
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GroupTheory.G2BruhatInversions
 
 namespace InfoGeometry.Algebra.Zorn.G2BruhatResidualLengthOne

@@ -32,6 +32,7 @@ this gives a proved finite heat readout:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.FiniteJonesStinespring
 
 noncomputable section

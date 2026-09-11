@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauThermodynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.SouriauMetriplecticContext

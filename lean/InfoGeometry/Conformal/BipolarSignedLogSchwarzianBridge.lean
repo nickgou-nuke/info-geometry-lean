@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarSignedLogConventionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Conformal.BipolarSchwarzianProjectiveConnection
 import Mathlib.Tactic
 

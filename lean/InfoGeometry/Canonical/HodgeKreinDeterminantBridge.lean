@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DeterminantCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import InfoGeometry.Canonical.ManifoldDegreeCore
 import InfoGeometry.Cocycle.MatrixDetExpTrace

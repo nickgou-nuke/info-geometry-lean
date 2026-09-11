@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.FiniteRelativeModularOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.HestenesSpinDensityXpQuantization
 
 noncomputable section

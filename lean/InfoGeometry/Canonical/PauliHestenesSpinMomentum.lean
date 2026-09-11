@@ -13,6 +13,7 @@ This module records the precise representation-theoretic data:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import InfoGeometry.Meta.Architecture

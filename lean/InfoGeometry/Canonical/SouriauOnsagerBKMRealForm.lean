@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauOnsagerBKMIntegrability
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.SusceptibilityOnsagerStress
 
 noncomputable section

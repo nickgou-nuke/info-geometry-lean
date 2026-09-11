@@ -6,6 +6,7 @@ No complex imports.
 -/
 
 import Mathlib.LinearAlgebra.Matrix.PosDef
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Symmetric
 import Mathlib.LinearAlgebra.SymplecticGroup
 

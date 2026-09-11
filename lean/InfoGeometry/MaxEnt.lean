@@ -1,4 +1,5 @@
 import InfoGeometry.MaxEnt.Core
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry
 

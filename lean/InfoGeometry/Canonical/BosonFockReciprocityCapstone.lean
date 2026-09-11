@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.BosonFockReciprocity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.BosonFockReciprocityCapstone
 

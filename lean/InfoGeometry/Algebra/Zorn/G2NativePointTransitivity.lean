@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2CASPointOrbit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transitivity of the native isotropic-point action

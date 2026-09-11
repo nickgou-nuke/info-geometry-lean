@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzMatrixTraceTopologicalGNSBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixTowerColimitBridge
 
 /-!

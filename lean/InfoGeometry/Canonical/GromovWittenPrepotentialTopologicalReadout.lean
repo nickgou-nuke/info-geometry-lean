@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GromovWittenPrepotentialGaugeQuotientTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

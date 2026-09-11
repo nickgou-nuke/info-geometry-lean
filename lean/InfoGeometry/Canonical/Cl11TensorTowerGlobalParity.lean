@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11TensorTowerLocalParity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.JordanWignerCAR
 
 set_option autoImplicit false

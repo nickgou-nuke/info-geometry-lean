@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorChirality
 import InfoGeometry.Canonical.BohmMadelungFisher
 import InfoGeometry.Canonical.CramerRaoUncertainty

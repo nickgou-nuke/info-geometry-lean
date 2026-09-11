@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.SuperchargeMultiplet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.Superphysics
 import InfoGeometry.Canonical.AnalyticalIndexCore
 import InfoGeometry.Meta.Vacuity

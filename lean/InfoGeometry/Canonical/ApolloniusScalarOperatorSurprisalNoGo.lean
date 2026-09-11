@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Trace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CanonicalZornNonUnitalNonAssocRing
 import InfoGeometry.Canonical.ApolloniusSurprisalCriticalLineBridge
 import InfoGeometry.OperatorAlgebra.CanonicalZornSurprisalCurrent

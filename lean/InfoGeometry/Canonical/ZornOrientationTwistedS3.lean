@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.Concrete
 
 /-!
@@ -19,7 +20,7 @@ set_option maxHeartbeats 1000000
 
 open InfoGeometry.Algebra.Zorn.Concrete
 
-abbrev Vec3 := Fin 3 → ℂ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3C
 
 def permutationSign (p : Equiv.Perm (Fin 3)) : ℂ :=
   (Equiv.Perm.sign p : ℤ)

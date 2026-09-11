@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GrandUnification.HodgeCartanTrifactor
 
 /-!

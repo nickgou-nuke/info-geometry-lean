@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.AsanoRuelle.MobiusPoleScaleAction
 import InfoGeometry.Canonical.AsanoRuelleTopologicalEndpoint
 import InfoGeometry.Canonical.LeeYangAsanoEndpointNative

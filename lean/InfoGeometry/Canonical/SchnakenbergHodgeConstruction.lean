@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.PiL2
 
 /-! Finite Euclidean gradient/cycle projection for the existing thermodynamic

@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.LocalGaugeFrameComposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Inverses of local operator gauge frames

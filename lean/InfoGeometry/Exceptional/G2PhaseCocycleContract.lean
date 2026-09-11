@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Exceptional.G2PermutationDiagonalConjugation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.G2PhaseTransport
 
 namespace InfoGeometry.Exceptional.G2PhaseCocycleContract

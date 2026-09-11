@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.YangMillsContinuum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricMonodromy
 import InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction
 

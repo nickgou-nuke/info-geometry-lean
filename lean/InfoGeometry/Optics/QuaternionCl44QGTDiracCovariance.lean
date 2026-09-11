@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.QuaternionCl44DiracImplementer
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.OperatorQGTBogoliubovNaturality
 
 set_option autoImplicit false

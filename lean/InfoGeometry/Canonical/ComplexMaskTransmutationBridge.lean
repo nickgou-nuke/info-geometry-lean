@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ProjectorEquivariance
 import InfoGeometry.Canonical.BogoliubovProjectorTransport
 import InfoGeometry.Canonical.ModularSuperchargeClosure

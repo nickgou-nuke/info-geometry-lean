@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.D4Triality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # D₄ triality audit import

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Quaternion
 import InfoGeometry.Clifford.DiracPauliGamma
 
@@ -37,7 +38,7 @@ require separate theorem-owned files.
 abbrev Biquaternion := Quaternion ℂ
 
 /-- Four-component complex spinor column used for the finite matrix shadow. -/
-abbrev Spinor4 := Fin 4 → ℂ
+abbrev Spinor4 := InfoGeometry.Algebra.FiniteSpin.Vec4C
 
 /--
 Finite matrix shadow of the standard two-component left-ideal projector.

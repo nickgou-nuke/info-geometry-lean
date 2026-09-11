@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The normalized axial grading in the circular Peirce basis

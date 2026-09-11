@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Category.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Functor.Basic
 import Mathlib.Algebra.Category.ModuleCat.Basic
 import Mathlib.Data.Real.Basic

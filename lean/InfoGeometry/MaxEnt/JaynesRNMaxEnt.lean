@@ -1,4 +1,5 @@
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.InformationTheory.KullbackLeibler.Basic
 
 open scoped BigOperators ENNReal

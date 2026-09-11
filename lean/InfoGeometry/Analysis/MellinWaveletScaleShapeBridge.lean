@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.CliffordWaveletTransform
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.LaplaceMellinScaleShapeTransform
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget

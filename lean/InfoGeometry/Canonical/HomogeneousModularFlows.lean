@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Subgroup.Basic
 import Mathlib.Algebra.Group.Units.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic

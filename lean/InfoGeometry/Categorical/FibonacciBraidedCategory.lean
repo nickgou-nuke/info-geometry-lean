@@ -1,4 +1,5 @@
 import Mathlib.Data.Finsupp.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Monoidal.Braided.Basic
 import InfoGeometry.Categorical.FibonacciFusionCategoryData
 import InfoGeometry.Categorical.MTC_PentagonTriangle

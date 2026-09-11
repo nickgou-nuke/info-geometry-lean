@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorKMSCylinderState
 
 /-!
@@ -97,7 +98,7 @@ theorem rightBranchAttentionWeight_eq_cylinderKMSWeight :
 /-! ## Finite attention operator and branch-anomaly cancellation -/
 
 /-- A two-branch real value vector. -/
-abbrev TwoBranchVector := Fin 2 → ℝ
+abbrev TwoBranchVector := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 /--
 The exact Mirror Phase attention operator: every query averages the two Cuntz

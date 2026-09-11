@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Notation
-import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Tactic
 
 /-!
 # The real `M₂(ℝ)` model of split quaternions

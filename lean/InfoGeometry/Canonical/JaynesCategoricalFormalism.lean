@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CategoricalRecursiveClosureBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AFRecursiveLimitBridge
 import InfoGeometry.Canonical.JaynesInductiveLimitBridge
 import InfoGeometry.Canonical.JaynesLDDSBridge

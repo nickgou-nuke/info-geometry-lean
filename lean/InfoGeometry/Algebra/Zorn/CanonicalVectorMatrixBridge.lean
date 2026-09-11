@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornSpinor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornVectorMatrix
 
 set_option maxHeartbeats 800000

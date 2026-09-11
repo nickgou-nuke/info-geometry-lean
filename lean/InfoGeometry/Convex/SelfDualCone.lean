@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Convex.Cone.Dual
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Convex.Cone.InnerDual
 import Mathlib.LinearAlgebra.Projectivization.Basic
 import Mathlib.Topology.Algebra.Module.PerfectPairing

@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.KleinQuadricLogDeRhamClass
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The multiplicative character carried by logarithmic winding

@@ -1,4 +1,5 @@
 import Mathlib.MeasureTheory.Measure.LogLikelihoodRatio
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 
 set_option autoImplicit false

@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.LiouvilleanDynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.InvolutiveSelfDualCarrier
 
 /-!

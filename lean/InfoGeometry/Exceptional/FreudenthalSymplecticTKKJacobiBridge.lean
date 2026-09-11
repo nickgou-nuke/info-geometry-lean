@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticTKKJacobiObstruction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalFiveGradedLieClosure
 
 /-!

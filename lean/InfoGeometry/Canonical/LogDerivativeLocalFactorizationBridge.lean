@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZetaLogDerivativeCirclePeriodBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Logarithmic derivatives from a local factorization

@@ -1,4 +1,5 @@
 import DAG.ChiralDiracAnticommutation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConcreteChiralHodgeDiracHestenesColimit
 
 noncomputable section

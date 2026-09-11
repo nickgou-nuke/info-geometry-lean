@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.H3ZornCubicOperators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # McCrimmon linearizations for the real split Albert algebra

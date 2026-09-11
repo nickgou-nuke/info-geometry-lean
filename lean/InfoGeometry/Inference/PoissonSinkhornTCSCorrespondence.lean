@@ -5,6 +5,7 @@ Bulgarian Academy of Sciences.
 -/
 
 import InfoGeometry.Inference.PoissonSinkhornTCSBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # End-to-end finite correspondence packet

@@ -28,6 +28,7 @@ The analytic Garding-Wightman splitting criterion remains witness-gated.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 
 noncomputable section

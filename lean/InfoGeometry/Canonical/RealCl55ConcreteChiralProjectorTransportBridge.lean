@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl55MasterCoordinateChiralBlockBridge
 import InfoGeometry.Canonical.RealCl55NativeConcreteEmbeddingBridge
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitClifford55SpinOrthogonalTransportBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittOrthogonalDeterminantSign
 import InfoGeometry.Canonical.SplitClifford55SpinOrthogonalImageQuotientBridge
 

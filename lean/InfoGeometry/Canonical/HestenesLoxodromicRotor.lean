@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesPhaseBoostRotors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealComplexRotor
 
 namespace InfoGeometry.Canonical

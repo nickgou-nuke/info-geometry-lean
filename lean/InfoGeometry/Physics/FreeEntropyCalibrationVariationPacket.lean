@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.FreeEntropySouriauBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Linarith
 
 /-!

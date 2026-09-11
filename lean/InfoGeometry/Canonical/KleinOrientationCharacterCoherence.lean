@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KleinOrientationCharacterBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KleinOrientationCharacter
 
 /-!

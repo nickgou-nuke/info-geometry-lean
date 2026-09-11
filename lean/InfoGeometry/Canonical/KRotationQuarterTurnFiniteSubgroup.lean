@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovClosedForms
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Quarter-turn consequences of the modular phase flow

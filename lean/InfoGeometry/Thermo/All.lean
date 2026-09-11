@@ -1,4 +1,5 @@
 import InfoGeometry.Thermal.FiniteMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.BuresWassersteinKMSCost
 import InfoGeometry.Thermo.OnsagerDifferentialFormsBridge
 import InfoGeometry.Thermo.OnsagerOperatorClosure

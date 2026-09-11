@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeWeylRootSpaceTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native pair witnesses for selected finite roots

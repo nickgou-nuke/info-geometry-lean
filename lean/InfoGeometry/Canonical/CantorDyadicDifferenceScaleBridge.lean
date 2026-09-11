@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorMomentumSpinIntertwinerBridge
 
 set_option linter.unusedSimpArgs false

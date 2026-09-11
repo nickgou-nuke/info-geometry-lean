@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCliffordAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 import InfoGeometry.Canonical.ZornSpinor
 import Mathlib.LinearAlgebra.Determinant

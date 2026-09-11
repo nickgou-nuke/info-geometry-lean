@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Cohomology.deRham
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Mayer-Vietoris Bridge for de Rham Cohomology

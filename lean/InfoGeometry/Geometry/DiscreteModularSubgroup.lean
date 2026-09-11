@@ -19,6 +19,7 @@ the metric, growth, cusp, and automorphy-factor APIs.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.BilingualPoincareMetric
 
 noncomputable section

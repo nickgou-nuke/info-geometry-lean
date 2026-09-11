@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.GenericH3ZornJordanSurface
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exact rational coordinates for the split Albert carrier

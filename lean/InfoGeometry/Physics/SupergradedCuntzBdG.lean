@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ComplexStarCuntzRedesign
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 
 /-!

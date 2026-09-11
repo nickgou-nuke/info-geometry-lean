@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KKTGeneralizedMetricBridge
 import InfoGeometry.Canonical.KKTGeneralizedInverseBridge
 import InfoGeometry.Canonical.ConformalProjectorCore

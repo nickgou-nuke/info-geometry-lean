@@ -18,6 +18,7 @@ temperature inversion anchor used by downstream routing/orchestration.
 -/
 
 import InfoGeometry.Thermodynamics.SouriauTemperatureProjective
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

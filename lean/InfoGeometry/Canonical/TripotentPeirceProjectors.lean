@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Algebra.TripotentPeirceProjectors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical re-export of the tripotent Peirce calculus

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwistorSplitOctonionCircularQuantizationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Transitive axiom audit for the finite twistor/circular bridge. -/
 

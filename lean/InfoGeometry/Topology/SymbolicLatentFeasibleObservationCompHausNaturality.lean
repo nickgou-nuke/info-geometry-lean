@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentFeasibleSubspaceCompHausFunctor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentFeasibleRegionObservationCompHaus
 
 /-!

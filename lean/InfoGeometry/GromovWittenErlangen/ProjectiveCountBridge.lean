@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimitiveProjectiveRays
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GromovWittenErlangen.LieOrbitCurve
 
 /-!

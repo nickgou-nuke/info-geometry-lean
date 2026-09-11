@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SpectralAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 
 open CategoryTheory Limits

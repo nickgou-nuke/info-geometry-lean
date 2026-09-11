@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.V4RootSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.WallpaperKleinBottlePresentation
 import InfoGeometry.Topology.WallpaperToWeylBridge
 import InfoGeometry.Categorical.ModularDoubledRealHopfTransport

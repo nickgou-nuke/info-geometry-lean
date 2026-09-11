@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AlgorithmicBoltzmannKolmogorovBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AlgorithmicThermodynamicsLandauerBekensteinBridge
 
 namespace InfoGeometry.Canonical.ChaitinOmegaAlgorithmicPhysicsSuite

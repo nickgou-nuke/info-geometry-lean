@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Octonion.ChiralZornAlgebra
 import InfoGeometry.Canonical.ZornTrialityTKKBridge
 import InfoGeometry.Canonical.TKKJordanPairData

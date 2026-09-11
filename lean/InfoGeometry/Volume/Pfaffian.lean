@@ -1,4 +1,5 @@
 import InfoGeometry.Volume.Base
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.KreinSpace
 import Mathlib.LinearAlgebra.Determinant
 

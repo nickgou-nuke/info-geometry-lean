@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.NativeStanDerivationBilinear
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionStandardDerivation
 import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 import InfoGeometry.Lie.CanonicalZornDerivation

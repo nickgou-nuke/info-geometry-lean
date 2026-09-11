@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Dynamics.SouriauBostConnesFlowExtensions
 import InfoGeometry.Dynamics.SouriauDiracHodge
 

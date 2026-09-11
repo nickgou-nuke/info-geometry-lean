@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.PenroseSpinTilingConfig
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Non-isotropic `Conf₃` Rank Ingestion

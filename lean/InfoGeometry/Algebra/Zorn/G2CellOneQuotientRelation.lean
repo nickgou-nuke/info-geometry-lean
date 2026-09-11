@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
 import InfoGeometry.Algebra.Zorn.G2ResidualPairCoordinateCellOne
 import InfoGeometry.Algebra.Zorn.G2GapResidualPairAssembly

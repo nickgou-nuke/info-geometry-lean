@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.WeylGaugeAsanoEndpointBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.AsanoRuelle.MobiusPoleScaleAction
 
 /-!

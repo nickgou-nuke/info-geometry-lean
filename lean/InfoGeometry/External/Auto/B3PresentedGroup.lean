@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.JonesBraidB3
 import Mathlib.GroupTheory.PresentedGroup
 

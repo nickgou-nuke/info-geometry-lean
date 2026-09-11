@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.OctonionParavectorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ChiralOperatorSymbolProjection
 
 /-!

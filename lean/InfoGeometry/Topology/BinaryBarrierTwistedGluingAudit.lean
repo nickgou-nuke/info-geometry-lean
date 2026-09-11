@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.BinaryBarrierTwistedGluing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 #print axioms InfoGeometry.Topology.BinaryBarrierTwistedGluing.flip_involutive
 #print axioms InfoGeometry.Topology.BinaryBarrierTwistedGluing.odds_flip

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.TripotentFiveGradeCoordinateOrbitClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology.TripotentFiveGradeCoordinateMirrorFixedSet
 

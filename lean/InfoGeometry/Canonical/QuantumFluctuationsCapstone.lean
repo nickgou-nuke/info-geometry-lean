@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.QuantumFluctuations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.QuantumFluctuationsCapstone
 

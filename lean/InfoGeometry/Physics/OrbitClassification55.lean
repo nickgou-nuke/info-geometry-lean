@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.JordanCayleyInversionOs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Pin55Formal
 import Mathlib.Tactic
 

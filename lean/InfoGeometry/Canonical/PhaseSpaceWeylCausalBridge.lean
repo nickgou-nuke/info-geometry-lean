@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PhaseSpaceConformalKKTBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PhaseSpaceCausalFlowBridge
 import InfoGeometry.Canonical.WeylTransportChiralBridge
 import InfoGeometry.Canonical.EinsteinAnomalyOperator

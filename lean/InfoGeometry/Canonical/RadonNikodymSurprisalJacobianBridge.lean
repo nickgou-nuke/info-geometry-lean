@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConnesRadonNikodymCocycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
 import InfoGeometry.OperatorAlgebra.SpatialDerivativeLogarithmicVariation
 

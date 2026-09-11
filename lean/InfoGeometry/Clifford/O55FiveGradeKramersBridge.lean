@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.O55FiveGradeClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.O55FiveGradeWeights
 import InfoGeometry.Quantum.FiveGradedKramersModule
 

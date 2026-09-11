@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittReflectionGeneratedSubgroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Clifford.Clifford55
 

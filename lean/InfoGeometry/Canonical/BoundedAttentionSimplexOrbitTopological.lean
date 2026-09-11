@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundedAttentionReadoutCompactTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Convex.StdSimplex
 
 namespace InfoGeometry.Canonical.KANModuli

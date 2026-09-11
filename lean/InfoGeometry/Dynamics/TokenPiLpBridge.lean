@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.PiL2
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.ODE.PicardLindelof
 import Mathlib.Topology.Algebra.Module.FiniteDimension

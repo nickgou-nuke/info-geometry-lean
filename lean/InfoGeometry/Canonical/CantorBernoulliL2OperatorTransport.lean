@@ -1,4 +1,5 @@
 import Mathlib.MeasureTheory.Function.LpSpace.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import InfoGeometry.Analysis.FractalMeasure.Basic

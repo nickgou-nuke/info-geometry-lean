@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.STUFreudenthalIdentity
 import InfoGeometry.Exceptional.STUFreudenthalQuarticScaling
 

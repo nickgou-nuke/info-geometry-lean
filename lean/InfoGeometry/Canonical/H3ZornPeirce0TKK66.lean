@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.H3ZornPeirce0SO55
 
 /-! The native null extension boundary for the Peirce-0 quadratic carrier.

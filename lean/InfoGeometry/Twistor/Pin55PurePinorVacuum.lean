@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitClifford55ExteriorSpinor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitClifford55ExteriorParity
 import InfoGeometry.Clifford.Cl55RealSplitPin
 import InfoGeometry.Clifford.Clifford55

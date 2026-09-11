@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55WittLieRouting
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.PauliParavectorBridge
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimonFinite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
 noncomputable section

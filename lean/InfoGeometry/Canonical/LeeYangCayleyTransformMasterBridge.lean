@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false

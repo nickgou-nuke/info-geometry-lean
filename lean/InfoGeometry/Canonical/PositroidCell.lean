@@ -1,4 +1,5 @@
 import Mathlib.Order.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Nat.Basic
 
 namespace InfoGeometry.Topology

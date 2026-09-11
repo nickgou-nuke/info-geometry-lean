@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ClNN
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BottPeriodicity
 import InfoGeometry.Meta.Architecture
 

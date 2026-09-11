@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HodgeDrazinEnvelope
 import InfoGeometry.Canonical.FierzReadout
 import InfoGeometry.Meta.Architecture

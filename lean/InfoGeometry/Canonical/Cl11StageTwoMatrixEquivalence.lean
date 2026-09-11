@@ -1,6 +1,6 @@
 import InfoGeometry.Clifford.Cl11TensorTower
-import InfoGeometry.Canonical.Cl11ChiralCommutant
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.Cl11ChiralCommutant
 
 /-!
 # The native stage-two `M₄(ℝ)` readout

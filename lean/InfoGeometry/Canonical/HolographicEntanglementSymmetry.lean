@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RyuTakayanagiEntanglementBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RyuTakayanagiThermalTimeBridge
 import InfoGeometry.Canonical.TrialitySpin8Permutations
 import InfoGeometry.Canonical.Spin44CharacterShadow

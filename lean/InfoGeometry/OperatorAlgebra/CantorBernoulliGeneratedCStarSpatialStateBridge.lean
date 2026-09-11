@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.CantorBernoulliSpatialNativeStateBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CantorBernoulliSpatialNonSeparatingBridge
 import InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzCStarRealization
 import InfoGeometry.OperatorAlgebra.CantorBernoulliKMSStateBridge

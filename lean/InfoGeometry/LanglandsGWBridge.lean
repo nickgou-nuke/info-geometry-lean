@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.LaplaceFourierComparison
 import InfoGeometry.Analysis.MellinZetaScaling
 import InfoGeometry.Analysis.SpectralTaylorMellinBridge

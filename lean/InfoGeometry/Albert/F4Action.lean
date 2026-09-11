@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CubicJordanOs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CubicJordanFreudenthal
 import Mathlib
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.Cl11SplitQuaternionQGTSoldering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornVectorMatrix
 
 set_option autoImplicit false

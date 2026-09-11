@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornFieldSpectralReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

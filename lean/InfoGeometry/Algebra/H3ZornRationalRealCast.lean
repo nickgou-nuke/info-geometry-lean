@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.H3ZornRationalCoordinates
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.H3ZornCoordinateReadback
 
 /-! The canonical coefficient embedding from the rational shadow into the real

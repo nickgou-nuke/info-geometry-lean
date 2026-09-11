@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SchnakenbergHodgeConstruction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PositiveRayCore
 
 /-!

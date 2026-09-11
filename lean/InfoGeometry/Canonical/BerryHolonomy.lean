@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BerryPhase
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Berry Holonomy

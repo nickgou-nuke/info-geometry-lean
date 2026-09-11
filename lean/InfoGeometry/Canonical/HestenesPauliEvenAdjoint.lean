@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesPauliEvenClifford
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.HestenesPauliEvenClifford
 

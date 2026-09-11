@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.EntropicInference
 
 open scoped BigOperators ENNReal

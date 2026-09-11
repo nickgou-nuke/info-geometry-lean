@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.BottPeriodicity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.OpSignatureBridge
 import InfoGeometry.Clifford.OctonionParavectorBridge
 import InfoGeometry.Clifford.FanoOctonionParavector

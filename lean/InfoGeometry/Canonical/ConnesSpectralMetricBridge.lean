@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConnesSpectralTripleBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Connes spectral metric export

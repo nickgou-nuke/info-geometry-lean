@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauMetriplecticContext
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauCasimirInvariant
 import InfoGeometry.Potential.Thermo
 import InfoGeometry.Meta.Architecture

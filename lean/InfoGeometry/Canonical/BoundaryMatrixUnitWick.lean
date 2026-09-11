@@ -1,4 +1,5 @@
 import Mathlib.Data.Int.Cast.Lemmas
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
 
 /-!

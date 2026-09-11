@@ -1,4 +1,5 @@
 import Mathlib.Topology.LocallyClosed
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Compactness.LocallyCompact
 import Mathlib.Topology.Instances.Matrix
 import InfoGeometry.Topology.PositiveGrassmannianAmplituhedronTopological

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.KreinVacuumPropagator
 import InfoGeometry.External.Auto.AnomalousKMSFlow
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzPrimitiveExactness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cuntz exactness bridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanSouriauCharacterBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analytic.LogSumExp
 import Mathlib.Analysis.Calculus.Deriv.Basic
 

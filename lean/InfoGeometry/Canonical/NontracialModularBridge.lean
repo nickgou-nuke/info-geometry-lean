@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeModularScaleShapeSplit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Abel
 
 open scoped InnerProductSpace

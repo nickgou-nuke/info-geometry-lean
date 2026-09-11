@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.OperatorSymbolCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Bridge.QuaternionicPauliDiracSoldering
 
 /-! Canonical readback of the concrete Pauli--Dirac bridge through the

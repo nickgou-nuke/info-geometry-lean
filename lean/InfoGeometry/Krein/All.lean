@@ -19,6 +19,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.FundamentalSymmetryProjectors
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Krein.DoubledRootLemmas

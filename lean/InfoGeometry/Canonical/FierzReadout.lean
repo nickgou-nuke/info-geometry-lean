@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.Fierz
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.QuantumPresentation
 import InfoGeometry.Meta.Architecture
 

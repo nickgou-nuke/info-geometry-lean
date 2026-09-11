@@ -1,4 +1,5 @@
 import InfoGeometry.Probability.SimplexQuadraticResponse
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 #print axioms InfoGeometry.Probability.SimplexQuadraticResponse.response_hasDerivAt
 #print axioms InfoGeometry.Probability.SimplexQuadraticResponse.dilation_defect

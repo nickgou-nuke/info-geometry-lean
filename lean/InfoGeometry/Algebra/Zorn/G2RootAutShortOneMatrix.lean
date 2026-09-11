@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2RootAutMatrixAlignment
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2RootAutPC4Conjugation
 import InfoGeometry.Algebra.Zorn.G2TwoRootSystem
 import InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier

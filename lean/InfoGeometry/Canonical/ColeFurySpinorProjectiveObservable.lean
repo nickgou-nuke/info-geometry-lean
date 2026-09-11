@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ColeFurySpinorProjectiveChartTransitions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ColeFurySpinorProjectiveObservable
 

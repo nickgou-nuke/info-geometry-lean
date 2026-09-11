@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Causal.ProofDAGRepresentation
 open Classical
 open InfoGeometry.Causal.ProofDAGRepresentation

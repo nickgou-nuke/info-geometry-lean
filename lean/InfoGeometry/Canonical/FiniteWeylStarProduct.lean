@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.StokesQutritChannelBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Weyl star product on the six-state symbol space

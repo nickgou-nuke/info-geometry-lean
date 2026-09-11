@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Pin55PurePinorVacuum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55Q55NativeSplitBridge
 import InfoGeometry.Clifford.Cl55PinPlusMinusNative
 

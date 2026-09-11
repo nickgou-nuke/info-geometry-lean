@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitOctonionChiralLeftIdeals
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Ideal transport for the existing chained chiral-action algebras

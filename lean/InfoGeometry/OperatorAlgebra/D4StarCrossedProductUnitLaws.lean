@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductDistributiveLaws
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Unit laws for the finite D₄ crossed-product convolution

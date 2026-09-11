@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornIntegralSpinTrialityClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The integral-lattice-preserving real spin subgroup

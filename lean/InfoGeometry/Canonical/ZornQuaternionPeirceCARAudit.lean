@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornQuaternionPeirceCARPristineChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornDerivationLieCARCCREnvelope
 
 /-!

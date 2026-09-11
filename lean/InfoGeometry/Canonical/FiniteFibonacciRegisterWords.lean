@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteFibonacciRegisterSubgroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.FiniteFibonacciRegisterWords

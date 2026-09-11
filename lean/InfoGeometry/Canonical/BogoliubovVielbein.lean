@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BerryConnection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Basic
 
 /-!

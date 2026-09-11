@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2LeanCarrierMatrixAlignment
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native alignment of the six CAS carrier generators

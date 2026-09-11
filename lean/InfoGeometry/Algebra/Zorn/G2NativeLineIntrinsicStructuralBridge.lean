@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeCandidateSymmetry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeLineSetIsotropicBridge
 import InfoGeometry.Algebra.Zorn.G2ParabolicLineAction
 import InfoGeometry.Algebra.Zorn.G2NativeLineIntrinsicFiberEquiv

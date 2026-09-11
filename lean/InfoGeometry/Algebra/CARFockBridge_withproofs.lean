@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FiniteSingleModeCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimonFockTraceFinite
 
 /-!

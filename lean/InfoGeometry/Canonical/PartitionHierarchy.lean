@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CoarseGraining
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GrandCanonical.Core
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 

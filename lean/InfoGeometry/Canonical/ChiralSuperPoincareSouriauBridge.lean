@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzSupergradedSUSY
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SouriauMassieuPlanckFunctional
 import InfoGeometry.Twistor.FiveGradedIncidence
 

@@ -1,4 +1,5 @@
 import InfoGeometry.MeasureProjective.GeneratorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MeasureProjective.Invariant
 
 namespace InfoGeometry

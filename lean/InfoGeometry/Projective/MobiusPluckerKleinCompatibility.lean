@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.MobiusSL2CRealification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.Quadrics.PluckerKlein
 
 /-!

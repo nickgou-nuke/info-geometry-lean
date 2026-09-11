@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.KleinQuadricIncidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricPlucker
 
 /-!

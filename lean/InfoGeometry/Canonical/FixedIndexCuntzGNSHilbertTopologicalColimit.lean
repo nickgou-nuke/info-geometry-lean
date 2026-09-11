@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FixedIndexCuntzStarTower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredGNSHilbertColimitTopology
 import InfoGeometry.Canonical.FilteredGNSHilbertTopologicalColimitDenseRange
 

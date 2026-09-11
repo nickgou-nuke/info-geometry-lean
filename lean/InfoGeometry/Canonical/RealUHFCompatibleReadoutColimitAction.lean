@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutStageAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Colimit action induced by the compatible finite-stage scalar flows

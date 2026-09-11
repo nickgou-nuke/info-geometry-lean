@@ -1,4 +1,5 @@
 import Mathlib.Data.Fin.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Finite.Defs
 import Mathlib.Data.Fintype.Card
 import Mathlib.GroupTheory.Perm.Basic

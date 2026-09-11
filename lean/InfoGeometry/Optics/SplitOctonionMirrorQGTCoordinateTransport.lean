@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionQuaternionParityOrientation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionQuaternionTwistedConjugation
 import InfoGeometry.Optics.QuaternionCl44QGTCurvatureCovariance
 

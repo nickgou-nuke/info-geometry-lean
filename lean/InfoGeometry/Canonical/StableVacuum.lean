@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.GramMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.External.Virasoro.FockSpace
 

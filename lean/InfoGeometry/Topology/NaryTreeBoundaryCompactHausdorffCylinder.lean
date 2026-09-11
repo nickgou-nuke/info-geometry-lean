@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.NaryTreeBoundaryInverseLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Prefix cylinders over compact Hausdorff alphabets

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornSpinor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
 import InfoGeometry.Lie.SplitOctonionPeirceExterior3CoordinateBridge
 import InfoGeometry.Lie.SplitOctonionPeirceNativeProjectors

@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Möbius Inversion as the Discrete Divisor Transform

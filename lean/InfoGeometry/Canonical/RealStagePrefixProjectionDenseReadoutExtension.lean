@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealStagePrefixProjectionReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Dense-readout uniqueness for the real prefix completion

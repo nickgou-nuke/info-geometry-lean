@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionGellMannCartan
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornRootSystemComparison
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
 import InfoGeometry.Lie.CanonicalZornCartanAdjointAction

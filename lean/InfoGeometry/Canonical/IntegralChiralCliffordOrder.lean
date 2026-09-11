@@ -1,4 +1,6 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+
 
 namespace InfoGeometry.Canonical
 
@@ -14,8 +16,8 @@ $A_{01} \equiv A_{10} \pmod 2$
 We also prove that its scalar extension to $\mathbb{Q}$ is the full matrix algebra $M_2(\mathbb{Q})$.
 -/
 
-abbrev M2Z := Matrix (Fin 2) (Fin 2) ℤ
-abbrev M2Q := Matrix (Fin 2) (Fin 2) ℚ
+abbrev M2Z := InfoGeometry.Algebra.FiniteSpin.Mat2Z
+abbrev M2Q := InfoGeometry.Algebra.FiniteSpin.Mat2Q
 
 def integralChiralParity (A : M2Z) : Prop :=
   Int.ModEq 2 (A 0 0) (A 1 1) ∧ Int.ModEq 2 (A 0 1) (A 1 0)

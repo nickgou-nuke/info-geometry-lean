@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Canonical.WindingOrbitClosure

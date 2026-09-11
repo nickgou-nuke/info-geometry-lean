@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentFlowQuotientTransportOrbitClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology
 

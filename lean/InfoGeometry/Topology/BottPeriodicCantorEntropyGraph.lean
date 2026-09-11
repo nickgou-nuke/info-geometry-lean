@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.FractalCantorFockWitness
 import InfoGeometry.Clifford.BottPeriodicity
 import InfoGeometry.Meta.Architecture

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GenuineMatrixStageMorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixTraceTower
 import InfoGeometry.Clifford.CliffordBitWordEquivalence
 

@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
 import InfoGeometry.Clifford.SplitQ11
 import InfoGeometry.Meta.Architecture

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FaithfulOperatorZornEnvelope
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.FiniteTwoTermDiracHodgeZorn
 import InfoGeometry.OperatorAlgebra.RealWeylAdjointSpinRepresentation
 import InfoGeometry.OperatorAlgebra.Cl55FreudenthalZornGradeIntertwiner

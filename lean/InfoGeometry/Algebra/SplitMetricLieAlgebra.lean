@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitMetricSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.LinearAlgebra.BilinearForm.Properties
 import Mathlib.Tactic

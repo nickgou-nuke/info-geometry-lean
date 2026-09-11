@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.H3ZornJordanTripleBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Compatibility owner for the upstream combined H₃/G₂ bridge name. -/
 

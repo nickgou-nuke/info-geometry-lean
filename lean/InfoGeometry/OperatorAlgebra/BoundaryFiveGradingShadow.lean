@@ -16,13 +16,15 @@ reconstruction, analytic continuation, or Fibonacci universality.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+
 
 namespace InfoGeometry.OperatorAlgebra.BoundaryFiveGradingShadow
 
 /-! ## 1. Chiral doubled two-sector shadow -/
 
-abbrev M2Z := Matrix (Fin 2) (Fin 2) ℤ
-abbrev M3Z := Matrix (Fin 3) (Fin 3) ℤ
+abbrev M2Z := InfoGeometry.Algebra.FiniteSpin.Mat2Z
+abbrev M3Z := InfoGeometry.Algebra.FiniteSpin.Mat3Z
 abbrev M5Z := Matrix (Fin 5) (Fin 5) ℤ
 
 def mUnit2 (i j : Fin 2) : M2Z :=

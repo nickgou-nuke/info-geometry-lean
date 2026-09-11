@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Critical-line / local Lee--Yang circle equivalence

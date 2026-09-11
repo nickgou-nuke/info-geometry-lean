@@ -14,6 +14,7 @@ as an explicit calibration witness.
 -/
 
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermodynamics.ProjectiveTemperature
 
 noncomputable section

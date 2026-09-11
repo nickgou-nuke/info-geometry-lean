@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralNullSpaceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SuperKMS_Equilibrium
 
 /-!

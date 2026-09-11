@@ -5,6 +5,7 @@ Unnormalized relative entropy and modular transport data.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.ENNReal.Basic
 
 noncomputable section

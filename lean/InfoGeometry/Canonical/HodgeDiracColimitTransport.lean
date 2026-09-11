@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HodgeDiracLaplacianBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.HodgeDiracColimitTransport
 

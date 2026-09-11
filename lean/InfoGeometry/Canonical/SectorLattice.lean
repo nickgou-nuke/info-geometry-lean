@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorCylinderLattice
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KreinProjectorLattice
 import InfoGeometry.Clifford.SplitQ11PhaseFlip
 import Mathlib.Order.BooleanAlgebra.Basic

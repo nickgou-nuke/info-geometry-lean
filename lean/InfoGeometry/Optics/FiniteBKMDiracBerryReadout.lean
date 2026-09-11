@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.FiniteBKMDiracMetricReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option autoImplicit false
 

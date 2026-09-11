@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Pin55ExteriorSpinorNativeAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.Pin55ProjectivePureSpinorGrassmannianEquivariance
 import InfoGeometry.Clifford.SplitClifford55ProjectivePureSpinor
 import InfoGeometry.Clifford.SplitClifford55PureSpinorGrassmannianBridge

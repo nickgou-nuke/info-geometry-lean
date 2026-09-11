@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CartanBerezinianCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Diagonal Schur-admissible doubled transports

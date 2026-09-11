@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55CARSpinAutomorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.OperatorLiftCarrier
 
 /-!

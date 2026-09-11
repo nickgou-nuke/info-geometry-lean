@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11CompatibleLocalStateNetTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimit
 import InfoGeometry.Prequantum.AlgebraicGNSState
 

@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.PoissonGibbsModel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Regularized Poisson-deviance Gibbs factors

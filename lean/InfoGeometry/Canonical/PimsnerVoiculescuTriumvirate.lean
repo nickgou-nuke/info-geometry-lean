@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PrimitiveCuntzIsometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PrimitiveCuntzCohomology
 import InfoGeometry.Canonical.UHFCohomologyColimit
 

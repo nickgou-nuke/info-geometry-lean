@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55ThreeColorChiralGenerators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittPinAction
 import InfoGeometry.Canonical.SplitOctonionThreeColorSplitQuaternionCores
 

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionStandardDerivation
 import InfoGeometry.Lie.CanonicalZornDerivation
 import InfoGeometry.Canonical.SplitAlbertTripotentPeirceBoundary

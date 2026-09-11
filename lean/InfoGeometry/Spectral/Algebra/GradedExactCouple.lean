@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.DerivedCouple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exact couples with explicit degree equivalences

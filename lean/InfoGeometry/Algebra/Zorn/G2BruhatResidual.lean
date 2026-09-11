@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoOppositeUnipotent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
 import InfoGeometry.GroupTheory.DoubleCosetOrbit
 import InfoGeometry.Algebra.Zorn.G2ReducedWords

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorZornCasimirNullIdentity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Coordinate symmetries of the existing noncommutative Zorn product

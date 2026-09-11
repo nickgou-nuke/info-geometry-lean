@@ -15,6 +15,7 @@ The file is intentionally conservative:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.SplitJordanPotential
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Canonical.TomitaTakesaki

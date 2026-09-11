@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.FiniteTiltDiracShell
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 /-!

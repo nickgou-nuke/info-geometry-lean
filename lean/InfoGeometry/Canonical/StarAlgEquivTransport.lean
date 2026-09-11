@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Star.StarAlgHom
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Structural transport of star-algebra representations

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PowerVarianceCumulants
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Pow
 import Mathlib.Analysis.Calculus.Deriv.Mul
 

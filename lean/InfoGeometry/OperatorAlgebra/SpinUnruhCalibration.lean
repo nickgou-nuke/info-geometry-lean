@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.Dynamics.UnruhKMS
 import InfoGeometry.Meta.Architecture

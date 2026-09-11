@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.PauliLubanskiFiniteBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Canonical readback of the finite Pauli--Lubanski owner.  The bridge keeps
 the existing `FourVector`/bivector carrier authoritative and adds no second
@@ -10,7 +11,7 @@ open InfoGeometry.Physics.PauliLubanskiFiniteBridge
 open InfoGeometry.Physics.LorentzBoostMinkowski
 open InfoGeometry.Physics.ZornMatrixSU3
 
-abbrev SpatialVector := Fin 3 → ℝ
+abbrev SpatialVector := InfoGeometry.Algebra.FiniteSpin.Vec3R
 abbrev Datum := LorentzBivectorDatum
 
 theorem orthogonal (D : Datum) :

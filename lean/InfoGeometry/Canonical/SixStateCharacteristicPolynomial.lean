@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Eigenspace.Zero
 import Mathlib.FieldTheory.Separable
 import InfoGeometry.Canonical.SixStateSpectralBridge

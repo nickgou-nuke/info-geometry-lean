@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Category.Grp.AB
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Grothendieck
 
 /-!

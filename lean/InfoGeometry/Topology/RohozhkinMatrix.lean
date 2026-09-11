@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 noncomputable section
 namespace InfoGeometry.Topology.RohozhkinMatrix
 end InfoGeometry.Topology.RohozhkinMatrix

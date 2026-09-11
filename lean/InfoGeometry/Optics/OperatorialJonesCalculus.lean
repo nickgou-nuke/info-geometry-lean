@@ -15,6 +15,7 @@ Rough reflection is modeled by channels, not a single Jones operator.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.KreinIsotropicCone
 import InfoGeometry.OperatorAlgebra.JUnitaryTopologicalCharge
 

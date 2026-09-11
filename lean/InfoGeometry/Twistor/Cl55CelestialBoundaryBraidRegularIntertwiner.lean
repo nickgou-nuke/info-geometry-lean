@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Cl55CelestialOrderedExchangeRegularBraidMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Common-source intertwiner for celestial and boundary braid actions

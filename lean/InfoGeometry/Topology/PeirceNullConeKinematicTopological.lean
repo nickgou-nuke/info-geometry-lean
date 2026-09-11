@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PeirceNullConeKinematicEmbedding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology
 

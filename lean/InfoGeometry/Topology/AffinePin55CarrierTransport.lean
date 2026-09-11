@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.Pin55CarrierHomeomorph
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.AffinePin55TopologicalGroup
 
 /-!

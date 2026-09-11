@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SupergradedBracket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

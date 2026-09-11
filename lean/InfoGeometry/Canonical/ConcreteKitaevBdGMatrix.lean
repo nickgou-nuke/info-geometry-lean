@@ -24,7 +24,7 @@ Proved Theorems:
 -/
 
 abbrev Mat4C := InfoGeometry.Algebra.FiniteSpin.Mat4C
-abbrev Vec4C := Fin 4 → ℂ
+abbrev Vec4C := InfoGeometry.Algebra.FiniteSpin.Vec4C
 
 /-- Particle-hole charge conjugation operator C = τ_x ⊗ I₂ in 4×4 Nambu space. -/
 def particleHole4 : Mat4C :=

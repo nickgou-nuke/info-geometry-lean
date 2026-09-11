@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesKreinBilingualFilteredColimitBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite-stage Hestenes/Krein sheet compatibility for filtered module diagrams

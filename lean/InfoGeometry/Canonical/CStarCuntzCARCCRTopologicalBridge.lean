@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.QCCRResidual
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CStarCuntzFamilyTopology
 import InfoGeometry.Canonical.CARCCRFockCuntzBridge
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix

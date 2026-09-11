@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ParitySupercharge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.RealMajoranaCategory
 import InfoGeometry.Meta.Architecture
 import Mathlib.Tactic.Abel

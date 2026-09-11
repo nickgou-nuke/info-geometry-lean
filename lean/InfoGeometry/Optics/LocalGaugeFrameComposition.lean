@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.LocalGaugeCovariantDerivative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Composition laws for local operator gauge frames

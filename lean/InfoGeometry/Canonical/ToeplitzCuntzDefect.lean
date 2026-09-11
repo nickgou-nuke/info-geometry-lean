@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionThreeColorMatrixRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The finite Toeplitz defect calculation

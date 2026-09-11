@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.HoradamIonMatrixMethods
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Horadam `2^k`-ion finite generating-function slice

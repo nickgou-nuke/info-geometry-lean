@@ -1,4 +1,5 @@
 import InfoGeometry.Jordan.SPD
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Matrix.Order
 import Mathlib.Tactic
 

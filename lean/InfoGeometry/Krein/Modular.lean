@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.KreinSpace
 import Mathlib.Analysis.Normed.Algebra.Exponential
 import Mathlib.Analysis.InnerProductSpace.Adjoint

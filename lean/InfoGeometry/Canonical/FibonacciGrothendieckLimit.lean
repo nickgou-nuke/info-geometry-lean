@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.FockSpaceSugawara
 import InfoGeometry.External.Virasoro.Sugawara
 import Mathlib.Algebra.Colimit.Module

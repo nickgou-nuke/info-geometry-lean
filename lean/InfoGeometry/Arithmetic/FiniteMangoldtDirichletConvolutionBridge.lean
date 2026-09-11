@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.FiniteMobiusOperatorInversionBridge
 
 /-!

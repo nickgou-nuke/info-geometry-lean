@@ -1,5 +1,6 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 import InfoGeometry.Canonical.CanonicalZornMultiplicationBilinear
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
 
 namespace InfoGeometry.Canonical

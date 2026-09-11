@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.HestenesKreinChiralProjectors
 import InfoGeometry.Canonical.SplitQuaternionMatrixModel
 import InfoGeometry.Canonical.SplitOctonionClassification

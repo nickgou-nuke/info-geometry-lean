@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.InductiveInvariantPacket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Meta.InductiveLimitClosureInterface

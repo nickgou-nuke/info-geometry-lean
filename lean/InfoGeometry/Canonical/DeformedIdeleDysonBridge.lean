@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.NonCommutativeIsometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DeformedIdeleAction
 import InfoGeometry.Canonical.PrimonCoulombGas
 import InfoGeometry.Canonical.VandermondeExclusionBridge

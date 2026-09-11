@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.RealHestenesONNCliffordCPT
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Checks for the real Hestenes / O(n,n) / Pin(n,n) CPT owner lane

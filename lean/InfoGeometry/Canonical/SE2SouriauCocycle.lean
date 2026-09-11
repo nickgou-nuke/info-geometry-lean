@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Barbaresco2020Souriau
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Algebra.Group.Basic
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 
@@ -377,7 +378,7 @@ theorem se2MatrixRepresentation_det_ne_zero (g : SE2RotationCarrier) :
   rw [se2MatrixRepresentation_det]
   norm_num
 
-abbrev HomogeneousPoint := Fin 3 → ℝ
+abbrev HomogeneousPoint := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 def se2MatrixAction (g : SE2RotationCarrier) (v : HomogeneousPoint) :
     HomogeneousPoint :=

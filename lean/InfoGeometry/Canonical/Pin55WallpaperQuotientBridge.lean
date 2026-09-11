@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Pin55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Pin55WeylWallpaper
 import InfoGeometry.Canonical.WallpaperKleinBottleCartan
 import InfoGeometry.Topology.WallpaperKleinBottlePresentation

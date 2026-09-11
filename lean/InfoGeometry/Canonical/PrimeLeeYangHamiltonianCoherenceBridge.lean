@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Prime-chain realization and Ising Hamiltonian coherence

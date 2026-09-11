@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RGFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.MeanValue
 
 namespace InfoGeometry.Canonical.CurvatureRGFlow

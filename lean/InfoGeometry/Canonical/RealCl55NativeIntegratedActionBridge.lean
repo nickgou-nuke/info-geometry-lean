@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealCl55FiniteModuleEndBridge
 import InfoGeometry.Canonical.G2IntegratedKasparovEquivarianceBridge
 

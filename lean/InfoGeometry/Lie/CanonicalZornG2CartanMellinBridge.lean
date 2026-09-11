@@ -1,4 +1,5 @@
 import Mathlib.Tactic.Ring
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornRootSystemComparison
 
 /-!

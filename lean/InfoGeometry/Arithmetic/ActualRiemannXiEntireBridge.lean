@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.LSeries.RiemannZeta
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences
 import InfoGeometry.Arithmetic.ActualRiemannXiSchwarzBridge

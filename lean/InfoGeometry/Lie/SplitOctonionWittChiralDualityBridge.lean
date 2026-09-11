@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionChiralWittSolderingDecomposition
 
 /-!
@@ -17,8 +18,8 @@ namespace InfoGeometry.Lie.SplitOctonionWittChiralDualityBridge
 open InfoGeometry.Lie.SplitOctonionChiralWittSolderingDecomposition
 open InfoGeometry.Lie.SplitOctonionChiralMinkowskiFixedSectionBridge
 
-abbrev Coord := Fin 8 → ℝ
-abbrev Four := Fin 4 → ℝ
+abbrev Coord := InfoGeometry.Algebra.FiniteSpin.Vec8R
+abbrev Four := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
 def plusSectionMap : Four →ₗ[ℝ] VPlus :=
   { toFun := fun ξ =>

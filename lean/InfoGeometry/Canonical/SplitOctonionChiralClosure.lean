@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionCircularChiralClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionMalcev
 import InfoGeometry.Canonical.SplitOctonionPolarizedJordanMalcev
 

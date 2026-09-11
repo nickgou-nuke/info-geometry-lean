@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ResidualCoordinateReadback
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
 
 namespace InfoGeometry.Algebra.Zorn.G2ResidualCoordinateCellOne

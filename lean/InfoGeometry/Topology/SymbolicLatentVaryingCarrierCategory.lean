@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentObservationQuotientRangeNaturalTransformation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentFeasibleSubspaceTopCat
 
 namespace InfoGeometry.Topology

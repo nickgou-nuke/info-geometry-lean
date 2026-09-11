@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.QuadraticJordanH3Zorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cubic norm structure identity for the split Albert carrier

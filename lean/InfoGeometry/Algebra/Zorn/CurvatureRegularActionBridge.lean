@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.RegularActionAssociator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.Associator
 import InfoGeometry.Algebra.ZornDerivationBridge
 

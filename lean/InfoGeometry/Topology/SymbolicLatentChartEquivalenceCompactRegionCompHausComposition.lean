@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentChartEquivalenceCompactRegionCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Composition of compact chart-equivalence transports

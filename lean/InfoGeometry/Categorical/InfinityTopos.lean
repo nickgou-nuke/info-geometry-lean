@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.InfinityTopos.Category
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.InfinityTopos.Axioms
 import InfoGeometry.Categorical.InfinityTopos.Topos
 import InfoGeometry.Categorical.InfinityTopos.Clifford

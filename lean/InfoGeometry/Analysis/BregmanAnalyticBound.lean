@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic

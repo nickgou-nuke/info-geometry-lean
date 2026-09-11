@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoRootSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
 import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 import InfoGeometry.Canonical.SplitOctonionAutomorphism

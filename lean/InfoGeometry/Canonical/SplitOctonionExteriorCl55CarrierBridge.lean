@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionExterior3OperatorTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCl55WittEmbeddingBridge
 
 /-!

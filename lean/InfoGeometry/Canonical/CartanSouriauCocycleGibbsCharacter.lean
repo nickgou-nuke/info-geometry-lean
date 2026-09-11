@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CartanSouriauAffineCocycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exp
 
 noncomputable section

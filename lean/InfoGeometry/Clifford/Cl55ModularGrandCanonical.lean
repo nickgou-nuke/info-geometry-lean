@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55ModularDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55ChiralGrandCanonical
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCrossTensor
 
 /-!

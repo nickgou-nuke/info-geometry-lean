@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE

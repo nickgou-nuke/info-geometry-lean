@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.HurwitzFenchel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.FenchelConjugation
 
 /-!

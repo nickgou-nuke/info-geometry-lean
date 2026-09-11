@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixAlgebraicStarColimit
 
 /-! Finite matrix units in the canonical complex UHF tower. -/

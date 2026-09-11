@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraAlgebraicToTopologicalColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cyclic trace transport through a filtered star-colimit

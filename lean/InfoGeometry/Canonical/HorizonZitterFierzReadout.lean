@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HorizonZitterModes
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 /-!

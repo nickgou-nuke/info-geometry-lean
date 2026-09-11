@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauOnsagerBKMRealForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Centered BKM covariance on the native faithful finite density carrier

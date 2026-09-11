@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BerryRotorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ModularBerryBridge
 

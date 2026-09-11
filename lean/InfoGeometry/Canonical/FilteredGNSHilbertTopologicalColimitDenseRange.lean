@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSHilbertColimitTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Dense range of the canonical GNS topological-colimit map

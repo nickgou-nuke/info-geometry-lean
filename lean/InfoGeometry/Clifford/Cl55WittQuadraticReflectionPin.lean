@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittQuadraticReflection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittPinAction
 
 namespace InfoGeometry.Clifford.Clifford55

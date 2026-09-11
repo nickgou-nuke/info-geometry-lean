@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SpinorOrbitStratum
 
 /-!

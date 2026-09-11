@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarLoopExpLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarLoopCrossRatioLift
 import InfoGeometry.Analysis.BipolarWindingPeriodLattice
 

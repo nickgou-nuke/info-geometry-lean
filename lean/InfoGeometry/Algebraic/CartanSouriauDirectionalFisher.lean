@@ -1,4 +1,5 @@
 import InfoGeometry.Algebraic.CartanSouriauMassieu
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Positivity of the finite directional Souriau--Fisher readout

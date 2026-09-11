@@ -1,4 +1,5 @@
 import InfoGeometry.Modular.TrifoldClassification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Modular.Classification

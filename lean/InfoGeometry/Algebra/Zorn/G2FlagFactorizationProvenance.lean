@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2CellFactorizationCertificate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2FlagFactorizationRows
 
 /-!

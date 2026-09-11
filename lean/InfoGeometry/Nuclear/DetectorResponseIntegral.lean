@@ -1,4 +1,5 @@
 import InfoGeometry.Nuclear.DetectorResponseCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Nuclear.ApollonianBipolarField
 
 /-!

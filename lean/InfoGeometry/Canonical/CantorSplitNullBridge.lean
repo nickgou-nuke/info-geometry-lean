@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitZornNullBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQuaternions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.SpinZornBridge
 import InfoGeometry.Canonical.BayesianMoebius
 import Mathlib.Data.Real.Basic

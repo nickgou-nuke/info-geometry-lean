@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.FiniteSpectralMellinTaylor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Analysis.FiniteSpectralHeatMellin

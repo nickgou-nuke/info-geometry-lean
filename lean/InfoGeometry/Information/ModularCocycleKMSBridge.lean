@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Units.Basic
 import Mathlib.Algebra.BigOperators.Group.List.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace

@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.TensorProduct.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.Coalgebra.Basic
 
 /-!

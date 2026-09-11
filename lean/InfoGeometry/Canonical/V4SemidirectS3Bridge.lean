@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl55V4SpinorFragmentation
 import InfoGeometry.Canonical.TrialitySpin8Permutations
 

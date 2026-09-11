@@ -11,6 +11,7 @@ it does not by itself decide whether the mirror preserves or flips chirality.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ModularSignCPT
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 import InfoGeometry.Meta.OwnerTarget

@@ -1,4 +1,5 @@
 import InfoGeometry.Thermodynamics.UnruhTemperature
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RindlerMobiusLogDeRhamBridge
 
 /-!

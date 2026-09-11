@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Attention
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.AttentionDiracBridge

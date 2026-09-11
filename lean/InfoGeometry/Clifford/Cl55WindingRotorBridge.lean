@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55DiscreteRoPERepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! A parameterized winding-to-rotor composition.
 

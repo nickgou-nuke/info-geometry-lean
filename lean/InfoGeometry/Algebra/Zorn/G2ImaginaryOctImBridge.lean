@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ImaginaryIsotropicPoints
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2ImaginaryPointAction
 import InfoGeometry.Algebra.Zorn.G2PeirceParabolicStabilizer
 

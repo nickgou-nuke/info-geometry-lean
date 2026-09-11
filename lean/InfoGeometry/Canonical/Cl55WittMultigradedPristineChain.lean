@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55WittMultigrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl55WittFullLieClosure
 import InfoGeometry.Canonical.Cl55WittOrthogonalHierarchy
 import InfoGeometry.Canonical.Cl55WittChiralityRefinement

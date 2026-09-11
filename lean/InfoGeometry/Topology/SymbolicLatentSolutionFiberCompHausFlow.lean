@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentSolutionFiberCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compact-Hausdorff flow on exact symbolic-latent solution fibers

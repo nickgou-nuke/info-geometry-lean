@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ConnesFiniteTraceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Weighted finite trace shadow

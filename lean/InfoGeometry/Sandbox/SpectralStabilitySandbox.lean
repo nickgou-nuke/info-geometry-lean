@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Polynomial.Roots
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.Data.Real.Basic
 

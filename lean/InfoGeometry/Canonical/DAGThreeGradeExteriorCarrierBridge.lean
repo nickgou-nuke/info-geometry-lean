@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ChiralExterior3HodgeDiracBlocks
 import InfoGeometry.Canonical.RealKreinChiralHodgeDiracBlocks
 

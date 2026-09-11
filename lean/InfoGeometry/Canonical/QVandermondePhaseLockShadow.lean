@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Group.Defs
 import Mathlib.Analysis.Complex.Norm
 import Mathlib.Data.Complex.Basic

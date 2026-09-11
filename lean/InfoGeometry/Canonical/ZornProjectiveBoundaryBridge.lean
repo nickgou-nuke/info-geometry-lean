@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornVectorMatrixMöbiusAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ProjectiveBoundarySL2Action
 
 namespace InfoGeometry.Canonical

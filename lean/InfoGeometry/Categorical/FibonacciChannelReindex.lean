@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciPentagonChannelCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical reindexing between parenthesized Fibonacci channel spaces

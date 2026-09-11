@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ChiralLorentzFockQuadratic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Grand-canonical geometry in the native noncommutative CAR operator algebra

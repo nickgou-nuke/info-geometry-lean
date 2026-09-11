@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.LinearAlgebra.TensorAlgebra.Basic
 import InfoGeometry.Algebra.Zorn.Concrete
@@ -21,7 +22,7 @@ open InfoGeometry.Quantum.PauliSoldering
 
 abbrev RailOperator := Matrix (Fin 2) (Fin 2) ℂ
 
-abbrev Vec3R := Fin 3 → ℝ
+abbrev Vec3R := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 /-! The real `Cl₃` coordinate decomposition
 `Λ⁰ ⊕ Λ¹ ⊕ Λ² ⊕ Λ³ = 1 + 3 + 3 + 1`. -/
@@ -290,7 +291,7 @@ def zornComplexCoordinateEquiv : ZornCell ℂ ≃ (Fin 8 → ℂ) :=
       funext i
       fin_cases i <;> rfl }
 
-abbrev Cl3Vector := Fin 3 → ℂ
+abbrev Cl3Vector := InfoGeometry.Algebra.FiniteSpin.Vec3C
 
 def cl3Dot (x y : Cl3Vector) : ℂ :=
   x 0 * y 0 + x 1 * y 1 + x 2 * y 2

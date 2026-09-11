@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.BetheAnsatz
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.BetheAnsatzCapstone
 

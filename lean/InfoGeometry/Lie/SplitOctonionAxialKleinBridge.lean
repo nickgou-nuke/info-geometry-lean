@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionAxialWittReduction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionAxialCartanSupport
 import InfoGeometry.Canonical.KleinBivectorLinear
 import InfoGeometry.Projective.ExteriorPowerPluckerBridge

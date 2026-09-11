@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionColorCycleMultiplicativity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitG2StructureOnImaginaryOctonions
 import Mathlib.LinearAlgebra.Alternating.Basic
 import Mathlib.LinearAlgebra.Dimension.Finrank

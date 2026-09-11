@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentFeasibleSubspaceCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compact-Hausdorff flow on a feasible symbolic-latent subtype

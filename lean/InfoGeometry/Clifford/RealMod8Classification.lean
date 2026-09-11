@@ -1,4 +1,5 @@
 import Mathlib.Data.List.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.BottPeriodicity
 import InfoGeometry.Meta.Architecture
 

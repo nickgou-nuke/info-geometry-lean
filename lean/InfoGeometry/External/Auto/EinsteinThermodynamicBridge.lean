@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.InformationGeometricCutoff
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Conditional scalar positivity from the Cramér–Rao cutoff

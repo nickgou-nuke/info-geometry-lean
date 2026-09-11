@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Algebra.Bilinear
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauKKSForm
 import InfoGeometry.Canonical.SouriauKKSContragredientBridge
 import InfoGeometry.Physics.SouriauLieThermodynamics

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornMathlibRootSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 theorem real_scalar_eq_one_or_neg_one_of_mul_self_eq_one
     (c : ℝ) (hc : c * c = 1) : c = 1 ∨ c = -1 := by

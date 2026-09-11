@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SpectroscopicGaugeKMSBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularSourceBridge
 import InfoGeometry.Canonical.OnsagerReciprocity
 import InfoGeometry.Canonical.CertifiedInverseKernel

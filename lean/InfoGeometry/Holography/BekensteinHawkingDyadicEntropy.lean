@@ -1,4 +1,5 @@
 import InfoGeometry.Holography.AdSCFTCuntzBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermodynamics.FiniteGibbsRelative
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 

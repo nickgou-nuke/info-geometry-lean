@@ -1,4 +1,5 @@
 import InfoGeometry.KK.KasparovCycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.KK.NonVacuousIndex
 

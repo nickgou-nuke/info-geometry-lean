@@ -1,4 +1,5 @@
 import InfoGeometry.Combinatorics.GolayConstructionA
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Real.Sqrt
 

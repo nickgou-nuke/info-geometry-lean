@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.OfAssociative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Algebra.DerivationLieLaneRepresentation
 import InfoGeometry.Lie.CanonicalZornDerivationLane

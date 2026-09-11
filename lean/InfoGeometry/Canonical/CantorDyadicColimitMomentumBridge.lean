@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Colimit.Module
 import InfoGeometry.Canonical.CantorDyadicDifferenceScaleBridge
 

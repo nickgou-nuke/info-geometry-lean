@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectorEquivariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealBdG
 import InfoGeometry.Canonical.CentralChargeKKTParityBridge
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitAlbertDerivationOperatorTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.H3ZornCarrierBasis
 
 /-! Compatibility bridge for the upstream universal split-Albert derivation

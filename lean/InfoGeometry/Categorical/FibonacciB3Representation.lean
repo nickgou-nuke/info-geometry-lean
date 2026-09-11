@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciFusionTreeCategoricalBraiding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.B3PresentedGroup
 
 /-!

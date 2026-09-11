@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitOctonions.OctonionicProjectiveLine
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Octonionic Projective Line Wrapper

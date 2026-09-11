@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ParabolicLineCoordinateReadback
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeLineSetQuotient
 
 /-!

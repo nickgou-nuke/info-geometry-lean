@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularHyperbolicFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCircularNormCone
 import InfoGeometry.Lie.SplitOctonionErlangenInvariant
 

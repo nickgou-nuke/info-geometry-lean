@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularCartanCantorSystem
 import InfoGeometry.Canonical.StandardFormNaturalConeBridge
 import InfoGeometry.GromovWittenErlangen.ProjectiveCountBridge

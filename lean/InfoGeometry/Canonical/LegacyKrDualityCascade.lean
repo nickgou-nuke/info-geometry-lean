@@ -1,1 +1,2 @@
 import InfoGeometry.Canonical.KrDualityCascade
+import InfoGeometry.Algebra.FiniteSpinAlgebra

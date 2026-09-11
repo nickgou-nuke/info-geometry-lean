@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.Conf3ArnoldNormalizationTopological
 import InfoGeometry.Topology.ArtinBraidS3Quotient
 

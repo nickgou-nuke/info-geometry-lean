@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Homotopy.Cofiber
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Spectral.Homology.Basic
 import InfoGeometry.Spectral.Cohomology.LongExact
 

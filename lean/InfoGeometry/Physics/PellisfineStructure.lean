@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.PellisFineStructure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.BostConnes.BostConnesParity
 
 namespace InfoGeometry.Physics.PellisfineStructure

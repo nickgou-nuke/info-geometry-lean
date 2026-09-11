@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Algebra.KreinSpectralDiracCommutator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Krein spectral Dirac bridge

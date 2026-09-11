@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.SpinGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.CliffordPinConjugation
 

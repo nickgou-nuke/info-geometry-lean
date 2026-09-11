@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBoundaryReadoutRefinement
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compact readout images of finite cylinders

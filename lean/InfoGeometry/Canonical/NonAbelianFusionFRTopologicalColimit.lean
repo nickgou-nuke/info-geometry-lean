@@ -1,4 +1,5 @@
 import Mathlib.Topology.Category.TopCat.Limits.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NonAbelianFusionFRTopologicalBridge
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
 

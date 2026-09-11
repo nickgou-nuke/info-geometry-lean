@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinCoreFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import Mathlib.Analysis.Normed.Algebra.Exponential
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornRealSpin44
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Triality covariance of the canonical Zorn Clifford and spin actions

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
 
 /-!

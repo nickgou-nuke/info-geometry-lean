@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.D4StarFiniteCrossedProductTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductTransitions
 
 /-!

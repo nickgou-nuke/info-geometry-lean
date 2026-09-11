@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ApolloniusSurprisalCriticalLineBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ApolloniusInformationChargeBridge
 import InfoGeometry.OperatorAlgebra.CanonicalZornSurprisalCurrent
 import InfoGeometry.OperatorAlgebra.CanonicalZornCircularCARProjectors

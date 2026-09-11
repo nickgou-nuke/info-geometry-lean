@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauOnsagerBKMIntegrability
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.BianchiOperatorLift
 import InfoGeometry.OperatorAlgebra.InnerConjugation
 import InfoGeometry.Optics.OperatorDerivationForms

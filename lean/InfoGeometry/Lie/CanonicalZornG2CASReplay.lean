@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2BasisAlignment
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Lie.CanonicalZornG2CASReplay
 

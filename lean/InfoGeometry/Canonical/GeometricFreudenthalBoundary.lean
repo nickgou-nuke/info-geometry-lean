@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GeometricCalculusFreudenthalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry/Canonical/GeometricFreudenthalBoundary.lean

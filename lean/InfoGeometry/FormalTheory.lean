@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.WittAlgebraCohomology
 import InfoGeometry.External.Virasoro.AffineKacMoody
 import InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative

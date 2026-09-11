@@ -1,4 +1,5 @@
 import InfoGeometry.Modular.ColimitGNS
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra
 
 /-!

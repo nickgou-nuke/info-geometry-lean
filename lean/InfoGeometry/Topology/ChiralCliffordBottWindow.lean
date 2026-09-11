@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ChiralDoubledRealBlock
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.CliffordBott
 
 /-!

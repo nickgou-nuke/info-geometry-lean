@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55ContactCARCCRRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Orthogonal.O55ContactHeisenberg
 import InfoGeometry.Orthogonal.O55ContactGradeDecomposition
 

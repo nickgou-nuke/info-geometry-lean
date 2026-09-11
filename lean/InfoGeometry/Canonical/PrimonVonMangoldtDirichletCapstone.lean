@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Quantum.PrimonSeriesVonMangoldt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.YangBaxterProof
 
 namespace InfoGeometry.Canonical.PrimonVonMangoldtDirichlet

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.CircularPauliCausalCone
 import InfoGeometry.Canonical.ZornOrientationTwistedS3
 
@@ -9,7 +10,7 @@ namespace InfoGeometry.Canonical.PauliSignedPermutationSupergradedBridge
 open _root_.InfoGeometry.Quantum.CircularPauliCausalCone
 open _root_.InfoGeometry.Canonical.ZornOrientationTwistedS3
 
-abbrev Vec3 := Fin 3 → ℂ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3C
 
 def signedPermVec (p : Equiv.Perm (Fin 3)) (x : Vec3) : Vec3 :=
   twistedVec p x

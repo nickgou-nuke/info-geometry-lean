@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordHeadProjectors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Module
 
 /-!

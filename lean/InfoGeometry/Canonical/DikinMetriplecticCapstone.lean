@@ -1,4 +1,5 @@
 import InfoGeometry.SymmetricDomains.DikinMetriplectic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.DikinMetriplecticCapstone
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HierarchicalGibbsDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 open scoped BigOperators

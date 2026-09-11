@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinSupercharge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinModularSingularityBridge
 import InfoGeometry.Canonical.BogoliubovClosedForms
 import InfoGeometry.Canonical.RealTomitaCore

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductLinearRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical finite-dimensional continuity for D₄ crossed-product operators

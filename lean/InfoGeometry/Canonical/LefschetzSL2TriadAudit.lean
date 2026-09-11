@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.LefschetzSL2TriadBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of LefschetzSL2TriadBridge

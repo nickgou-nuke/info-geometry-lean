@@ -1,4 +1,5 @@
 import InfoGeometry.Algebraic.ChiralOperatorCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 import InfoGeometry.Topology.V4RootSystem
 import InfoGeometryCore.Basic

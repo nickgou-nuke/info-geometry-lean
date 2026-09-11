@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalUnification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ChiralCartanCore
 import Mathlib.Tactic.NoncommRing
 

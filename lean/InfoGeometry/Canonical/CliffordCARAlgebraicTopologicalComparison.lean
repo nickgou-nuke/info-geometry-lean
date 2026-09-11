@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CliffordCARTopologicalColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 

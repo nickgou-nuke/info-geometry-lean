@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredCompatibleOperatorColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredGNSHilbertColimit
 
 /-!

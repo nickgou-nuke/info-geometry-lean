@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ConformalGeneratorLemmas55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ConformalLieAlgebra55Dilation
 import InfoGeometry.Clifford.SpinorRep
 import InfoGeometry.Canonical.Herm2x2OsO55RationalBridge

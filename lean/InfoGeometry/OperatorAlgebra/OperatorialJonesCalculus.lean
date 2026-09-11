@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus.PolarizationProjectors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus.ProjectiveTransport
 import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus.JonesLayers
 import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus.OpticalBranches

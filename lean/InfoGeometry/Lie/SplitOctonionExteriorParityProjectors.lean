@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionPeirceNativeProjectors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exterior-parity projectors on the Peirce carrier

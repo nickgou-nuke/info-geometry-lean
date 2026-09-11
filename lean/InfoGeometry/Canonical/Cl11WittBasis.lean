@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11SheetDiracMatrices
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped Quaternion
 namespace SplitOctonion

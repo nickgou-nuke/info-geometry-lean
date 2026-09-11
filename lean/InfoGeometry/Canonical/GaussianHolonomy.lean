@@ -1,4 +1,5 @@
 import InfoGeometry.ExponentialFamily.GaussianHolonomy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.GaussianHolonomy

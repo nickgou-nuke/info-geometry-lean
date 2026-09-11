@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.PalatiniBoundaryStokesBridge
 import InfoGeometry.Canonical.DrazinSpectralFittingBridge

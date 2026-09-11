@@ -1,3 +1,4 @@
 import InfoGeometry.External.Auto.goutev_principle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 open GoutevPrinciple
 #check bridge_registry

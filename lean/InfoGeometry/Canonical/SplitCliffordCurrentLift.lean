@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 open scoped TensorProduct

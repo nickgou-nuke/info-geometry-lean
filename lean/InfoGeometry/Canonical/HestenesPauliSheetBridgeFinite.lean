@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesClPlus14
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TwoSheetThreeColorWeylFinite
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.PhaseSpaceGeneralizedMetric
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.BilinearForm.Hom
 import InfoGeometry.Krein.Prelude
 import InfoGeometry.Meta.Architecture

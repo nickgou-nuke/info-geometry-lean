@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Matrix.Order
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.BilinearForm.Properties
 import InfoGeometry.Canonical.SouriauOnsagerBKMRealForm
 

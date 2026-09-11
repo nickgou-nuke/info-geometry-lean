@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 /-!
 # Applications of Euler Sums and Series Involving the Zeta Functions
 Formalizes the series representations from the 2023 Symmetry paper

@@ -1,4 +1,5 @@
 import Mathlib.Data.Int.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Ring
 
 set_option linter.unusedSectionVars false

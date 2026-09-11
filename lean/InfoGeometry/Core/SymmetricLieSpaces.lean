@@ -1,4 +1,5 @@
 import InfoGeometry.Core.SymmetricLieGeneric
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Core Symmetric Lie Spaces

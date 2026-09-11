@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.LorentzChiralCuntzBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hestenes-style spacetime algebra over the Cuntz-deformed operator layer

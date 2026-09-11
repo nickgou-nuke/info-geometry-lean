@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MoebiusDiscriminantBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Trigonometric
 import Mathlib.Analysis.Complex.Exponential
 

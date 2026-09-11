@@ -1,4 +1,5 @@
 import InfoGeometry.Inference.PoissonSinkhornLyapunov
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.Canonical.MoE
 

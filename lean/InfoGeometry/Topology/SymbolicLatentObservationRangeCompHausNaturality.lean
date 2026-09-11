@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentObservationRangeCompHausFunctor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentObservationQuotientCompHausFunctor
 
 /-!

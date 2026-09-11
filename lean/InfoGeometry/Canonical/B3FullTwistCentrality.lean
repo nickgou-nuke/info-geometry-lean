@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.PresentedGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.B3PresentedGroup
 
 /-!

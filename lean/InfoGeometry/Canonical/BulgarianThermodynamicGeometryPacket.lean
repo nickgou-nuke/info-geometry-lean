@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauTheoremTranslatorPacket
 import InfoGeometry.Canonical.SouriauThermodynamics
 

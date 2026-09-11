@@ -1,4 +1,5 @@
 import InfoGeometry.KK.ClNNFredholmBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.KK.CompactOperatorBridge
 import InfoGeometry.KK.DiracFredholmIndex
 import InfoGeometry.KK.DiracFredholmModule

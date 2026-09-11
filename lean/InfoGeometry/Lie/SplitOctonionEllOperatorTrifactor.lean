@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllCrossChannel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Algebra.TripotentPeirceProjectors
 
 /-!

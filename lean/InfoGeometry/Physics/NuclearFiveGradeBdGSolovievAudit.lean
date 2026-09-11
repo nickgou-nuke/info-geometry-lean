@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearFiveGradeBdGSolovievClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transitive axiom audit for the finite nuclear closure

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundedModularFlowCalibration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 
 open scoped InnerProductSpace

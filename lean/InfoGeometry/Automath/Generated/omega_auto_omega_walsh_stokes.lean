@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Omega.Core.WalshStokesSingleton
 
 namespace Automath.Generated

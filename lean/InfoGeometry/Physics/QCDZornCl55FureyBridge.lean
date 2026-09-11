@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
 import InfoGeometry.Canonical.SplitOctonionCl55ExteriorRestrictionBridge
 import InfoGeometry.Physics.ColorCARStandardModel

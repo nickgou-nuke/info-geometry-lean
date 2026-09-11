@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModularZ2CubeGrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Operator-valued grand-canonical chiral generators

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordSourceCurrent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordSourceWittFock
 import InfoGeometry.Canonical.SplitCliffordSourceHeisenberg
 

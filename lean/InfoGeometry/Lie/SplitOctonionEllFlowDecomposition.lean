@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllNativeTrifactor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllPolarization
 
 noncomputable section

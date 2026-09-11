@@ -19,6 +19,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Krein.Automorphisms
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.CartanDecomposition
 import InfoGeometry.Krein.Clifford
 import InfoGeometry.Krein.HilbertBridge

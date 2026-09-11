@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentNoncommutativeObservationCovariantQuotientFixedPointsCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Restricted covariant flows on fixed-point quotients

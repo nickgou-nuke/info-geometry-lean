@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ZetaCenteredCoordinateBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic

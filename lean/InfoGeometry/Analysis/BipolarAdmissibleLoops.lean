@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarCurveIntegral
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Admissible loops for the bipolar logarithmic differential

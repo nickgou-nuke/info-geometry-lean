@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DiscreteHodgeStarAndCoderivative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DiscreteDiracHodgeChiral
 
 namespace InfoGeometry.Canonical

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionThreeColorSplitQuaternionCores
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.MinimalAxioms
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.OperatorValuedJones
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Operator-valued chiral Clifford frames

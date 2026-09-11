@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ConformalLift55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ClNN
 import InfoGeometry.Clifford.ConformalProjectiveEmbedding55
 import Mathlib.Tactic.NoncommRing

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CurrentSugawaraMetricDatum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MetricSugawaraBridge
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Canonical.NilpotentFluxVirasoroReadout

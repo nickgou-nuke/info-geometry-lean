@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.AkivisIdentity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.OperatorValuedConnection
 
 /-!

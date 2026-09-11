@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSTomitaClosability
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Closed conjugate-linear Tomita operator

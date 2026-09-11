@@ -9,6 +9,7 @@ that can be proved at this layer.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.OwnerTarget
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.IteratedAssociatedGraded
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Spectral.Algebra.StablePage
 
 /-!

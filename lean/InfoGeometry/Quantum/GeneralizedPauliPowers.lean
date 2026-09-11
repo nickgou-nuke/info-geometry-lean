@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.GeneralizedPauli
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Power calculus for finite generalized Pauli pairs

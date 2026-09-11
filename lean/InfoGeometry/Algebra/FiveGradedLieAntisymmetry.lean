@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FiveGradedTKK
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Basic
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductTopologicalTransitions
 
 /-!

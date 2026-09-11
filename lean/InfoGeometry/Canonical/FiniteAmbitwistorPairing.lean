@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!
@@ -12,8 +13,8 @@ cohomology is made here.
 
 namespace InfoGeometry.Canonical.FiniteAmbitwistorPairing
 
-abbrev Twistor4 := Fin 4 → ℝ
-abbrev DualTwistor4 := Fin 4 → ℝ
+abbrev Twistor4 := InfoGeometry.Algebra.FiniteSpin.Vec4R
+abbrev DualTwistor4 := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
 def pairing (W : DualTwistor4) (Z : Twistor4) : ℝ := ∑ i, W i * Z i
 

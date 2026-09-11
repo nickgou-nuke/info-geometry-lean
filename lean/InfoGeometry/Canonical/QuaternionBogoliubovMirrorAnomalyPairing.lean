@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.QuaternionCoordinateBogoliubovEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.MirrorAnomalyPairing
 
 /-!

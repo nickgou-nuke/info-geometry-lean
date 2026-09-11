@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SingularDecompositionSurrogate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativeModularScaleShapeSplit
 import InfoGeometry.Canonical.OperatorialCramerRao
 import InfoGeometry.Canonical.ModularSpectralWedgeBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.InverseKernelAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

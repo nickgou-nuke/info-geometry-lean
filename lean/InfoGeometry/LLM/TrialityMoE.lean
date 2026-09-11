@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ObserverDefect
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularSourceBridge
 import InfoGeometry.Canonical.KKTClosureSymmetry
 import InfoGeometry.Canonical.RelativePotentialCore

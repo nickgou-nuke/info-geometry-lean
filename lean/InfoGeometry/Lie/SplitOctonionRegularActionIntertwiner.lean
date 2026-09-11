@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.OfAssociative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionAutomorphism
 import InfoGeometry.Canonical.SplitOctonionCARRightRegularBridge
 import InfoGeometry.Lie.SplitOctonionChiralOperatorSupergrading

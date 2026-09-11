@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11TensorTowerCrossSiteCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.JordanWignerCAR
 
 noncomputable section

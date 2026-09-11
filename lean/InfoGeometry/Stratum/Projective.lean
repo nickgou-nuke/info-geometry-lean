@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Projectivization.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Ray
 import Mathlib.Analysis.Convex.Basic
 import Mathlib.Data.Real.Basic

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GrandUnificationMetric
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.Drazin

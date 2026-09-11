@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.CasimirHessianFisherBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Noncommutative metriplectic Casimir/Fisher bridge

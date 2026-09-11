@@ -1,4 +1,5 @@
 import Mathlib.Topology.Algebra.InfiniteSum.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.ToMathlib.Topology.Order
 
 section

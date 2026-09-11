@@ -17,6 +17,7 @@ explicit calibration witness.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 import InfoGeometry.OperatorAlgebra.MobiusClosureFixedPoints
 

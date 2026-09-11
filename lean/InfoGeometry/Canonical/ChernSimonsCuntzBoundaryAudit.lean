@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChernSimonsCuntzBoundaryBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of ChernSimonsCuntzBoundaryBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.Twistor.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.PenroseTwistor
 import InfoGeometry.Projective.SplitOctonions
 

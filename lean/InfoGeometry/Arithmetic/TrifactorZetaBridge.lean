@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TrifactorDecomposition
 
 /-!

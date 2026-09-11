@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.OperatorQGTGaugeInvariants
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Operator QGT Bianchi and Chern--Weil bridge

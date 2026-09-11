@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ActualZetaRealPartitionDerivativeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SuperMetriplectic.Flow
 
 /-!

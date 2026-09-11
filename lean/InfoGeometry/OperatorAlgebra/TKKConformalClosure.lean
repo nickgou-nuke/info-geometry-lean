@@ -19,6 +19,7 @@ connection/curvature contraction API is supplied.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 

@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.ChiralCausalCone
-import Mathlib.LinearAlgebra.Matrix.Kronecker
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.LinearAlgebra.Matrix.Kronecker
 
 /-!
 # Two-sheet chiral factor times three-colour Weyl factor

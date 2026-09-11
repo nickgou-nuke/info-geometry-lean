@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2CorrectedTComplementCard
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The index-two PC partition of the unipotent carrier

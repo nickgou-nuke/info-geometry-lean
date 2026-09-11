@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.FourVectorDiracReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ChiralFourVectorOperatorSynthesis
 import InfoGeometry.Canonical.ChiralPatternParallelBridge
 

@@ -1,4 +1,5 @@
 import InfoGeometry.MeasureProjective
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Measure.DiscreteRN
 import InfoGeometry.Measure.Normalized
 import Mathlib.MeasureTheory.Measure.LogLikelihoodRatio

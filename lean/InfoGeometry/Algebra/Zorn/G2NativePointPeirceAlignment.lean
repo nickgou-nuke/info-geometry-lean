@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.Zorn.G2NativeOnePointStabilizer
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Concrete readback from the seven-coordinate imaginary carrier to the
 split-octonion Peirce carrier. -/

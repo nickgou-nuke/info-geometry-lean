@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.DiracPauliGamma
 import InfoGeometry.Canonical.QuaternionEmbedding
 
@@ -12,7 +13,7 @@ open InfoGeometry.Clifford.DiracPauliGamma
 
 noncomputable section
 
-abbrev ComplexFourVector := Fin 4 → ℂ
+abbrev ComplexFourVector := InfoGeometry.Algebra.FiniteSpin.Vec4C
 
 def minkowskiQuadratic (A : ComplexFourVector) : ℂ :=
   A 0 ^ 2 - A 1 ^ 2 - A 2 ^ 2 - A 3 ^ 2

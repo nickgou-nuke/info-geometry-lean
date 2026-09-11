@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricMonodromy
 import InfoGeometry.Clifford.UniversalCoverLog
 
@@ -26,7 +27,7 @@ open InfoGeometry.Projective.KleinQuadric
 open InfoGeometry.Clifford.UniversalCoverLog
 
 /-- 4-vectors used for the chiral causal-cone coordinate model. -/
-abbrev FourVectorC : Type := Fin 4 → ℂ
+abbrev FourVectorC : Type := InfoGeometry.Algebra.FiniteSpin.Vec4C
 
 /-- Split quadratic potential on a 4-vector: `v0^2 + v1^2 + v2^2 + v3^2`. -/
 noncomputable def splitPotential (v : FourVectorC) : ℂ :=

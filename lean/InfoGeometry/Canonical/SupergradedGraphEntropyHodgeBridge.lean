@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BostConnesSuperalgebraConstructive
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DAGHodgeOperatorOwnerMap
 import InfoGeometry.Canonical.GraphDiracPresentation
 import InfoGeometry.Canonical.HodgeDiracLaplacianBridge

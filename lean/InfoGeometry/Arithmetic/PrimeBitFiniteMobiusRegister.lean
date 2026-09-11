@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BooleanCubeDictionary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeBitMobiusParityBridge
 
 noncomputable section

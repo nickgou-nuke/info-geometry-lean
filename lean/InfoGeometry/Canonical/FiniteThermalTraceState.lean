@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzMatrixTraceRealGNSBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SpinUnruhCalibration
 import InfoGeometry.Prequantum.AlgebraicGNSState
 

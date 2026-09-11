@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.CircularChiralGrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Grading interface for a split-octonion Furey extension

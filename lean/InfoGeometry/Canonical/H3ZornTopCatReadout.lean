@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.H3ZornTopologicalReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Basic
 
 /-!

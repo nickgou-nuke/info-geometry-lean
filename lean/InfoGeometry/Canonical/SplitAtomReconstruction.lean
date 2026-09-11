@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitAtomInvolutions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.FlatSplitQuaternionGeometry
 import InfoGeometry.Geometry.AnharmonicPunctures
 import InfoGeometry.Physics.FiniteOnsagerGram

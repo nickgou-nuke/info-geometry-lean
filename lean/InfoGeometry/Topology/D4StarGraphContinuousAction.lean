@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.PauliJungD4StarTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology.PauliJungD4Star
 

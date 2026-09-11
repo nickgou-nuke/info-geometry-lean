@@ -1,4 +1,5 @@
 import Init
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-- Formalization of the Triality automorphism on Spin(8) representations.
     We abstract the three 8-dimensional representations as a type with 3 elements,

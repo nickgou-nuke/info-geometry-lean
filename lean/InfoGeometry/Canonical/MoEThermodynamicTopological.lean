@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MixtureOfExperts
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite topological readouts for thermodynamic MoE routing

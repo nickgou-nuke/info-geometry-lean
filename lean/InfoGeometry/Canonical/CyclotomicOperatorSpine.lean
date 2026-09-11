@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.KantorTripleFiveGrading
 import InfoGeometry.Lie.G2DoubleStarRootDecomposition
 import InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors

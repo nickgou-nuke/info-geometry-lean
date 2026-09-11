@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.Blocks
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Supergraded Metriplectic Flow Packets

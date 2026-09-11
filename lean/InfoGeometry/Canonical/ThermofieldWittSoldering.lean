@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Lie.SplitOctonionCircularWittForm
 
@@ -10,7 +11,7 @@ open InfoGeometry.Krein
 open InfoGeometry.Lie.SplitOctonionCircularWittForm
 
 abbrev V4 := EuclideanSpace ℝ (Fin 4)
-abbrev WittCoord := Fin 8 → ℝ
+abbrev WittCoord := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 /-- Minkowski bilinear pairing on the four-dimensional diagonal slice. -/
 def minkowskiPair (x y : V4) : ℝ :=

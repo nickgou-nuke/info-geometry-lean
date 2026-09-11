@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauKleinOperatorOrbitGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
 import InfoGeometry.Clifford.SplitClifford55PureSpinorGrassmannianBridge
 

@@ -1,4 +1,5 @@
 import InfoGeometry.MassSpectrometry.StochasticFragmentGrammar
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MassSpectrometry.FragmentationPath
 
 /-!

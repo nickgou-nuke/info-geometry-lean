@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBoundaryCuntzShiftTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryReadoutRefinement
 import Mathlib.Topology.Category.TopCat.Basic
 

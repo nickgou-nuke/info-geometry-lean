@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.WittenOddSquareEvenBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.BayesianTuringCantor
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 

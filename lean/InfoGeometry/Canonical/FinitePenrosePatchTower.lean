@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FinitePenrosePatchCategory
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Penrose patch towers

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.TensorAlgebraCanonical
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.InductiveSuperClosureLemmas
 import InfoGeometry.Algebra.InfiniteSuperClosureLemmas
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas

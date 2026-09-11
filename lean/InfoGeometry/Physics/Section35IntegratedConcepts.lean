@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Section34StrengthenedFormalism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Section 35 repaired: integrated finite concepts

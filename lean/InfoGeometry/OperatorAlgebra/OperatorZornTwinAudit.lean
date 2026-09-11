@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.OperatorZornTwinAll
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 #print axioms InfoGeometry.OperatorAlgebra.AssociativeOperatorZornCartanPeirce.grading_sq
 #print axioms InfoGeometry.OperatorAlgebra.AssociativeOperatorZornCartanPeirce.cartanInvolution_involutive

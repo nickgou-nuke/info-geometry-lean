@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.CelestialMellin
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.CelestialMellinCapstone
 

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Authors
 -/
 import InfoGeometry.Canonical.ChiralApollonianCylinderBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.Canonical.ChiralApollonian
 

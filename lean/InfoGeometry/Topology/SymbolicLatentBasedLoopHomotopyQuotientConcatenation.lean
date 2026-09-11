@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentBasedLoopConcatenationQuotient
 import InfoGeometry.Topology.SymbolicLatentBasedLoopHomotopyQuotient
 import InfoGeometry.Topology.SymbolicLatentPathHomotopyQuotient

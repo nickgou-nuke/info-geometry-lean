@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitObservables
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuous-time laws for the inverse-limit readout action

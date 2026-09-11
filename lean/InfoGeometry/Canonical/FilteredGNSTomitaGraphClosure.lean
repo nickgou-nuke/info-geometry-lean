@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSTomitaCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topological closure of filtered algebraic Tomita graphs

@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.Null
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Krein.Dilation
 

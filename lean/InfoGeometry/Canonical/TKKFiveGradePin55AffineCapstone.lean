@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FiveGradedTKK
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SL2FiveGradingExample
 import InfoGeometry.Canonical.ConformalFiveGradeInversion
 import InfoGeometry.Clifford.ConformalLieAlgebra55

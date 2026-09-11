@@ -1,4 +1,5 @@
 import InfoGeometry.Topological.CuspLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topological.CartanBoundaryLimit
 import InfoGeometry.Topological.RealCuspLimitT
 import InfoGeometry.Topological.OrbifoldCorner

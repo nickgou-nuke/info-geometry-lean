@@ -1,4 +1,5 @@
 import Mathlib.FieldTheory.Galois.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TwelveFoldCyclotomicNative
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MatrixExponentialTraceDet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Diagonal determinant/exponential trace cocycle

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitG2StructureOnImaginaryOctonions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 
 namespace InfoGeometry.Canonical

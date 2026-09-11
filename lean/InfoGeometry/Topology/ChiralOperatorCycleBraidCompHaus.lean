@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ChiralOperatorCycleCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ChiralOperatorQuotientBraidCompHaus
 
 /-!

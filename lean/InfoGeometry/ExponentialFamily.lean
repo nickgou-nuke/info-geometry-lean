@@ -1,4 +1,5 @@
 import InfoGeometry.ExponentialFamily.Class
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.ExponentialFamily.Finite
 
 namespace InfoGeometry

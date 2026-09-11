@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.KleinProjectiveMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.ProjectiveUnitary6
 import Mathlib.Analysis.InnerProductSpace.Basic
 

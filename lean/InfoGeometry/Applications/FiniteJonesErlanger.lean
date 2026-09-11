@@ -12,6 +12,7 @@ transported covariantly.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Applications.FiniteJonesModel
 
 noncomputable section

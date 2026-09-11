@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Category.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.Shapes.Terminal
 import Mathlib.Topology.Basic
 import Mathlib.Data.Real.Basic

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordHeadLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordHeadPhaseFlip
 import InfoGeometry.Meta.Architecture
 import Mathlib.Tactic.Module

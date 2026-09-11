@@ -28,6 +28,7 @@ proof-carrying closure laws needed by concrete models.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.O44PinMobiusProjective
 import InfoGeometry.OperatorAlgebra.KleinianTwist
 import InfoGeometry.Meta.OwnerTarget

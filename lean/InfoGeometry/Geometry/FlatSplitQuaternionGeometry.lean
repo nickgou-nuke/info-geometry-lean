@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitAtomInvolutions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.BilinearForm.Basic
 
 /-!

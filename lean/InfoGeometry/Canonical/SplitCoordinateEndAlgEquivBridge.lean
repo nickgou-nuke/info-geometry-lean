@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionPeirceExterior3CoordinateBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TensorTower
 import InfoGeometry.Clifford.TowerMatrix
 import InfoGeometry.Canonical.Cl11TensorTowerCrossSiteCAR

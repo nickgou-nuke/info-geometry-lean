@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.DrazinFierzBridge
 import InfoGeometry.Canonical.DrazinModularPersistence

@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.HestenesAffineO55ClosureBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
 
 open scoped InnerProductSpace BigOperators

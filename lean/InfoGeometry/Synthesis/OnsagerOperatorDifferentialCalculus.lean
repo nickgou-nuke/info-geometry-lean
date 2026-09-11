@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.BilinearForm.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra

@@ -10,6 +10,7 @@ This module contains only direct theorem readouts from that owner.
 -/
 
 import InfoGeometry.Application.STUOperatorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

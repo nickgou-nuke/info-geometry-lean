@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorGoldenMeanBitwordBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 /-!

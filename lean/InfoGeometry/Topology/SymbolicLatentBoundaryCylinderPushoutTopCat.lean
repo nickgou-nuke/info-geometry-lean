@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Limits.Shapes.Pullback.PullbackCone
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Basic
 
 /-!

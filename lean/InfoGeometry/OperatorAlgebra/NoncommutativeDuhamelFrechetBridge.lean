@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.NoncommutativeDuhamelFiniteDifference
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Slope
 import Mathlib.MeasureTheory.Integral.DominatedConvergence
 

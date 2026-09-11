@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11InfiniteCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.HestenesModularKMSBridge
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Dynamics.ModularThermalState

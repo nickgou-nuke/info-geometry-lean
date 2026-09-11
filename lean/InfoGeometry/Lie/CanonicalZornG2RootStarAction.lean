@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.ExceptionalAutomorphicZetaBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeRootIndexAlignment
 
 /-!

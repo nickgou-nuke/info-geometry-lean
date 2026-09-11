@@ -1,4 +1,5 @@
 import Mathlib.Data.Finset.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
 import InfoGeometry.Canonical.SplitCliffordDirectLimit

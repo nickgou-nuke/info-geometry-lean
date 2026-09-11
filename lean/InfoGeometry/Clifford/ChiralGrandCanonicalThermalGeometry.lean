@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermodynamics.UnruhTemperature
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan

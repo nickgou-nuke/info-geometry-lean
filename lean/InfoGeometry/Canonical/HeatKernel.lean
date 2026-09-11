@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RicciMongeAmpere
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exp
 
 namespace InfoGeometry.Canonical.HeatKernel

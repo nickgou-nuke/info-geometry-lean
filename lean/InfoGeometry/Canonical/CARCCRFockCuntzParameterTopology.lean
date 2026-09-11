@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CStarCuntzCARCCRParameterTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # CAR/CCR/Cuntz readouts of the owned q-parameter topology

@@ -9,6 +9,7 @@ invariant is conserved and every flat state has trivial obstruction.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

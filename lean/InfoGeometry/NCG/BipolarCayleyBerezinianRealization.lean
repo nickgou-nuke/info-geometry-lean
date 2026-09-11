@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarCrossRatioLog
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.NCG.BerezinianSuperdeterminant
 import Mathlib
 import Mathlib.Tactic

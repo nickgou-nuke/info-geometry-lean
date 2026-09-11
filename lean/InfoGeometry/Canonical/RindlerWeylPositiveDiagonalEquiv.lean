@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RindlerWeylDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Positive diagonal logarithmic coordinates

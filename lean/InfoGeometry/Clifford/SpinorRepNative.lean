@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SpinorRep
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native spinor representation owner

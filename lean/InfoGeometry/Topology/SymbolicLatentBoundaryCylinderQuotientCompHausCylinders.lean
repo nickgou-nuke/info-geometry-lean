@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentBoundaryCylinderQuotientCompHausIso
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentBoundaryCylinderColimitTopCat
 import InfoGeometry.Topology.SymbolicLatentBoundaryCylinderNeighborhoodTopCat
 

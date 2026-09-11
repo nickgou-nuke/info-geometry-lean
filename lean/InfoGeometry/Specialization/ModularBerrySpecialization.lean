@@ -12,6 +12,7 @@ Clifford rotor cocycle through the generic bulk-boundary bridge.
 -/
 
 import Mathlib.LinearAlgebra.Matrix.Notation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 import Mathlib.Order.Filter.AtTopBot.Basic
 import Mathlib.Order.Filter.Tendsto

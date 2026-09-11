@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.RingQuot
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 

@@ -1,4 +1,5 @@
 import Mathlib.Order.Filter.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Basic
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Canonical.SplitCliffordInfiniteCurrent

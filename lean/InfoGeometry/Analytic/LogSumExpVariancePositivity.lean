@@ -1,4 +1,5 @@
 import InfoGeometry.Analytic.LogSumExp
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 open scoped BigOperators

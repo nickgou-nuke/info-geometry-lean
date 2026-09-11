@@ -1,4 +1,5 @@
 import InfoGeometry.Inference.RegularizedPoissonDeviance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 Poisson deviance and its Gibbs factor are owned by

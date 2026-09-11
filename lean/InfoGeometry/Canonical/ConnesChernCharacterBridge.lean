@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConnesKMSIndexPairing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace ConnesChern
 

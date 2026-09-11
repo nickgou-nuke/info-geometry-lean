@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55SpinGroupChiralSectorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Restricted chiral representations of the native `Spin(5,5)` matrix action

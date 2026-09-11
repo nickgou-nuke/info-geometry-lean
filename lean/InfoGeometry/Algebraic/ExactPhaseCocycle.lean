@@ -11,6 +11,7 @@ This file is intentionally contract-first:
 -/
 
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction
 import Mathlib.Analysis.SpecialFunctions.Complex.Arg
 import Mathlib.Data.Complex.Basic

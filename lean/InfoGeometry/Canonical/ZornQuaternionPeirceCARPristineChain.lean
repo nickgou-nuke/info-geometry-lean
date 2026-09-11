@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornQuaternionPeirceCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Pristine Zorn quaternion/Peirce reconstruction chain

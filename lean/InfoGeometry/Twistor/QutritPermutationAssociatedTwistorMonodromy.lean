@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.QutritBraidIncidenceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.QutritMobiusTripotentOrientationBridge
 import InfoGeometry.Twistor.ProjectiveNullConfigurationAssociatedDeckMonodromy
 

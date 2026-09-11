@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.NaryTreeBoundaryQuotientTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Quotient transport of boundary homeomorphisms

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.CyclotomicCliffordPauliQutritTopological
 import InfoGeometry.Topology.ZornSixthRootCubicChargeTopological
 
@@ -19,7 +20,7 @@ open InfoGeometry.Topology.ZornSixthRootCubicChargeTopological
 
 noncomputable section
 
-abbrev WeylWord := Matrix (Fin 3) (Fin 3) ℂ
+abbrev WeylWord := InfoGeometry.Algebra.FiniteSpin.Mat3C
 
 /-- Joint cyclotomic parameter/Weyl-word observable. -/
 def cyclotomicLocalSystemReadout

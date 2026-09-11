@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55SpinorAlgebraEquiv
 import InfoGeometry.Clifford.Cl55NeutralHyperbolicIsometry
 

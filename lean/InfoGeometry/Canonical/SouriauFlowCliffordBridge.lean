@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThermodynamicGenerator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SuperJordanLie
 import InfoGeometry.Canonical.VortexAnomalyLink
 import InfoGeometry.Canonical.SuperUnified

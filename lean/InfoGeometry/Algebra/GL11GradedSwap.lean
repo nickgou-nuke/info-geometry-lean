@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Kronecker
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import InfoGeometry.Algebra.SupermatrixKoszul
 

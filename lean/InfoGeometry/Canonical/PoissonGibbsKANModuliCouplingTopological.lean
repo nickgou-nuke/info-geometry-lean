@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PoissonGibbsKANModuliProbabilityTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Independent coupling readout from the quotient probability vector

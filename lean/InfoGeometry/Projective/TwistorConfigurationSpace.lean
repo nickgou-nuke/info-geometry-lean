@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.ArnoldRelations
 
 noncomputable section
@@ -22,7 +23,7 @@ open scoped BigOperators
 namespace InfoGeometry.Projective.TwistorConfigurationSpace
 
 /-- 4-component complex vector carrier for the ambient space `\C^4`. -/
-abbrev C4 : Type := Fin 4 → ℂ
+abbrev C4 : Type := InfoGeometry.Algebra.FiniteSpin.Vec4C
 
 /-- Ordered triple of points in `\C^4`. -/
 abbrev TripleC4 : Type := Fin 3 → C4

@@ -1,6 +1,6 @@
 import InfoGeometry.Clifford.Soldering
-import InfoGeometry.OperatorAlgebra.SpinBogoliubovStinespring
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.OperatorAlgebra.SpinBogoliubovStinespring
 
 /-!
 # Bogoliubov/Pauli Soldered Frame

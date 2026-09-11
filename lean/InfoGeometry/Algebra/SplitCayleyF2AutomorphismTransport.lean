@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitCayleyF2AddMulAutomorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SplitCayleyF2CarrierAlignment
 import InfoGeometry.Algebra.SplitCayleyF2MultiplicationTransport
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem

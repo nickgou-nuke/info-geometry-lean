@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PeirceBCFWResidueFactorization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.AlbertPeirceChiralFrameTopological
 
 namespace InfoGeometry.Topology

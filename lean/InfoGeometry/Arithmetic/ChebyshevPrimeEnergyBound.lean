@@ -1,4 +1,5 @@
 import Mathlib.Data.Nat.Choose.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Nat.Choose.Sum
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Data.Real.Basic

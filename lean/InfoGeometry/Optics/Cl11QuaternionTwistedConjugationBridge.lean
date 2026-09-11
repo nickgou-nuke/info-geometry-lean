@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.Cl11SplitQuaternionConjugationSoldering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionQuaternionTwistedConjugation
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PrimePartitionPolynomials
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite positivity of the coarse prime-chain partition polynomial

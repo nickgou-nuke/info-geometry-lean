@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ExteriorContractionCARBridge
 import InfoGeometry.Canonical.DiracKahlerLaplacianOperatorBridge
 import InfoGeometry.Canonical.DeRhamCohomologyQuotientBridge

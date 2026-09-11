@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionQuaternionGrassmannian
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitG2MetricDerivedHodgeStar
 import InfoGeometry.Canonical.DiscreteSplitOctonionCauchyRiemann
 

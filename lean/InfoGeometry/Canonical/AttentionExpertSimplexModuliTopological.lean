@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AttentionExpertModuliTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Convex.StdSimplex
 import InfoGeometry.Inference.FiniteGibbsThermodynamicIdentity
 

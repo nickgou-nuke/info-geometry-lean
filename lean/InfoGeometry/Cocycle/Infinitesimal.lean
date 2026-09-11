@@ -1,4 +1,5 @@
 import Mathlib.RingTheory.Derivation.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

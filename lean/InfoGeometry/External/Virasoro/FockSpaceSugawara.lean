@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
 import InfoGeometry.External.Virasoro.FockSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.Sugawara
 import InfoGeometry.External.Virasoro.VirasoroVerma
 

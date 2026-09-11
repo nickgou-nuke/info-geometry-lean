@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FinitePerfectMatching
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CausalVortexCooperPairing
 import InfoGeometry.Analysis.BipolarLogDifferential
 import InfoGeometry.Projective.KleinQuadricMonodromy

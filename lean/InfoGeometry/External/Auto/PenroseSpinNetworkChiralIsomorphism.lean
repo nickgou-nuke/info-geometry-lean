@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Penrose Spin Networks and the Chiral Cone: The Explicit Isomorphism

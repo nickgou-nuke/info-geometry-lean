@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases
@@ -11,7 +12,7 @@ namespace InfoGeometry.Canonical.ChiralStokesPauliBasis
 open InfoGeometry.Canonical.TwoSheetOperatorCoordinates
 open InfoGeometry.Canonical.TwoSheetStokesCoordinates
 
-abbrev SheetMatrix := Matrix (Fin 2) (Fin 2) ℂ
+abbrev SheetMatrix := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def sheetIdentity : SheetMatrix := !![(1 : ℂ), 0; 0, 1]
 

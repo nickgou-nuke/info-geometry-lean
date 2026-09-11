@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.SpinGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
 import InfoGeometry.Canonical.CanonicalZornCompositionFiveGradeBridge
 import InfoGeometry.Canonical.CanonicalZornFiveGradedClosure

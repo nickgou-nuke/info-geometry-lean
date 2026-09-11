@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.BivectorPairConditionalClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55ConcreteBivectorSignature
 
 /-!

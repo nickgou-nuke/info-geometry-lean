@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSGlobalStageRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.StarAlgEquivTransport
 import Mathlib.Analysis.Normed.Operator.ContinuousAlgEquiv
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The circular Peirce basis on the canonical Zorn carrier

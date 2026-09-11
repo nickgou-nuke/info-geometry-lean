@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarLoopLiftHomotopyInvariant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Homotopy invariance of the bipolar deck-pair readout

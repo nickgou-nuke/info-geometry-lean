@@ -9,6 +9,7 @@ compatibility file.
 -/
 
 import Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Geometry.RealUpperHalfPlane
 import InfoGeometry.Geometry.RealMoebiusAction

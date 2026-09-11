@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Pin55Formal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.BottPeriodicityReconciliation
 
 /-!

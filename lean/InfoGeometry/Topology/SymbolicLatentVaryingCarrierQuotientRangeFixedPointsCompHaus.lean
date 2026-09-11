@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientCompHausLimitAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Fixed-point loci for varying-carrier inverse-limit actions

@@ -17,6 +17,7 @@ readouts, pairings, and projector decompositions.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 import InfoGeometry.OperatorAlgebra.ErlangenConformalInvariant

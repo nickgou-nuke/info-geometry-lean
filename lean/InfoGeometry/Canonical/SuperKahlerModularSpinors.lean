@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KMSSubstateKMSCondition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.G2HolonomyGaugeConnections
 import InfoGeometry.Canonical.SplitG2StructureOnImaginaryOctonions
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.LogCftMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55ComplexStructureRealification
 
 /-! Explicit phase/shear readouts for the existing upper-Jordan monodromy.

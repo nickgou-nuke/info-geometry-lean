@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.HestenesCuntzPhaseSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bogoliubov inertial frames, Weyl gauge, and chemical-potential log clock

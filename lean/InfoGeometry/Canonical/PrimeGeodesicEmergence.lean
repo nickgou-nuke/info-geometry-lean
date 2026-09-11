@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KleinBottleOrientifold
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PrimeGasMaxEnt
 import InfoGeometry.Clifford.HestenesDirac
 import InfoGeometry.Meta.Architecture

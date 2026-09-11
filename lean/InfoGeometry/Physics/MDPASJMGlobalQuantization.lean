@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.MDPASJMSouriauDigest
 
 /-!
@@ -33,8 +34,8 @@ namespace InfoGeometry.Physics.MDPASJMGlobalQuantization
 
 open InfoGeometry.Physics.MDPASJMSouriauDigest
 
-abbrev Vec3 := Fin 3 → ℚ
-abbrev Vec4 := Fin 4 → ℚ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3Q
+abbrev Vec4 := InfoGeometry.Algebra.FiniteSpin.Vec4Q
 
 /-! ## 1. Finite de Rham obstruction on a 3-cycle -/
 

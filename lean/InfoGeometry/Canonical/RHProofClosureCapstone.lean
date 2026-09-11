@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Quantum.RHProofClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Conditional spectral closure

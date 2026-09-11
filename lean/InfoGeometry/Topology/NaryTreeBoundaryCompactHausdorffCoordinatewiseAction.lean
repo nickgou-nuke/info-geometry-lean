@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.NaryTreeBoundaryCompactHausdorffCylinderSeparation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Coordinatewise homeomorphisms and compact prefix cylinders

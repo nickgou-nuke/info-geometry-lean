@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ParabolicIncidenceCertificate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The certified finite parabolic incidence geometry of `G₂(2)`

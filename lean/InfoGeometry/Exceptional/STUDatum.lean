@@ -5,6 +5,7 @@ Diagonal STU value construction.
 -/
 
 import Mathlib.LinearAlgebra.Matrix.Notation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Tactic.Ring
 import InfoGeometry.Exceptional.Freudenthal
@@ -16,7 +17,7 @@ namespace InfoGeometry.Exceptional.STUDatum
 open Freudenthal
 
 /-- The STU diagonal carrier space `ℝ ⊕ ℝ ⊕ ℝ`. -/
-abbrev STUCarrier := Fin 3 → ℝ
+abbrev STUCarrier := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 /-- Bilinear trace pairing: `⟨x,y⟩ = x₀y₀ + x₁y₁ + x₂y₂`. -/
 def stuTraceBilin : STUCarrier →ₗ[ℝ] STUCarrier →ₗ[ℝ] ℝ where

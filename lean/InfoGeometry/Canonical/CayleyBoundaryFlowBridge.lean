@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CayleyBoundaryIntertwiningOnDomain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CayleyBoundaryContinuity
 import InfoGeometry.Canonical.ModularBoundaryFlowIntertwiner
 

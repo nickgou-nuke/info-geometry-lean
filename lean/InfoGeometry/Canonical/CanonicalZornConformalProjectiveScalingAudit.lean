@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Scaling audit for the affine `(4,4) -> (5,5)` conformal chart

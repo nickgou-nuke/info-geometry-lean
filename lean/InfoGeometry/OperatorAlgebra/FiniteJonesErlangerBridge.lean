@@ -15,6 +15,7 @@ covariant rather than fixed.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.FiniteJonesOptics
 import InfoGeometry.Meta.OwnerTarget
 

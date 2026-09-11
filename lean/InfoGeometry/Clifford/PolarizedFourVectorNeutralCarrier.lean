@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.NeutralPhaseSpaceCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornPolarizationMetricBridge
 
 /-!
@@ -18,7 +19,7 @@ open InfoGeometry.Clifford.NeutralPhaseSpaceCore
 open InfoGeometry.Canonical.ZornVectorMatrixExplicit
 
 abbrev FourVectorLayout := (ℝ × (Fin 4 → ℝ)) × (ℝ × (Fin 4 → ℝ))
-abbrev FiveCoordinates := Fin 5 → ℝ
+abbrev FiveCoordinates := InfoGeometry.Algebra.FiniteSpin.Vec5R
 
 def sourceQuadratic (X : FourVectorLayout) : ℝ :=
   X.1.1 * X.2.1 - (X.1.2 0 * X.2.2 0 - X.1.2 1 * X.2.2 1 -

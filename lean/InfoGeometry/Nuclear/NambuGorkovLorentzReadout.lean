@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Nuclear.SplitOctonionNambuGorkovBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Recovered.SpacetimeLorentzTransformations
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.Logic.Nonempty
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical Gromov--Witten projective lane surface

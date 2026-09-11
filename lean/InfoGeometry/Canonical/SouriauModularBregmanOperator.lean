@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorDictionary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorModularTemperatureDuality
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget

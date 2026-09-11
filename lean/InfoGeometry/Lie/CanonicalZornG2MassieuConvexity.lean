@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanMassieuStable
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analytic.LogSumExpVariancePositivity
 
 noncomputable section

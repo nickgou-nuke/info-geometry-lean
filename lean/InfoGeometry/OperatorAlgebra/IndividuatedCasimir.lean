@@ -29,6 +29,7 @@ or Cl(4,4)-specific realizations.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

@@ -1,4 +1,5 @@
 import InfoGeometry.AsanoRuelle.TopologicalEndpoint
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AsanoRuelleTopologicalEndpoint
 
 /-!

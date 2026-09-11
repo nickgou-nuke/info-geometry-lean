@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalAnomalySource
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.IncompressibleBitBridge
 import InfoGeometry.Canonical.MongeAmpereCramerRao
 import InfoGeometry.Canonical.WeylKKTAnomalyIdentity

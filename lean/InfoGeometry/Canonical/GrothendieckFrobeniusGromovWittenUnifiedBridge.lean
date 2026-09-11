@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Fin.Basic
 import Mathlib.Tactic
 import InfoGeometry.Canonical.KANFrobeniusGromovWittenBridge

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! A small, real-valued character interface for additive rapidity and
 positive multiplicative scale.  This file does not assert a KMS, KAN, or

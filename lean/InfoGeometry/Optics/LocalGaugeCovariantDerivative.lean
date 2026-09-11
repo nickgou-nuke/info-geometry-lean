@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.LocalGaugeQGTCovariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.BianchiOperatorLift
 
 /-!

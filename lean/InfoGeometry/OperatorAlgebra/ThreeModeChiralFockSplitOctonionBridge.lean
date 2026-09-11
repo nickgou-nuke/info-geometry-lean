@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorLocalCl11HopParity
 import InfoGeometry.Canonical.CuntzTensorToeplitzThreeBridge
 import InfoGeometry.OperatorAlgebra.SplitOctonionChiralTriplet

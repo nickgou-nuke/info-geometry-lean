@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.OperatorGrandCanonicalChiralGenerator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR
 
 /-!

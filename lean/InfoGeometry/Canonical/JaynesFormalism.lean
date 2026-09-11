@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteJaynesFormalism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
 import InfoGeometry.Canonical.JaynesLDDSBridge
 import InfoGeometry.Canonical.JaynesInductiveLimitBridge

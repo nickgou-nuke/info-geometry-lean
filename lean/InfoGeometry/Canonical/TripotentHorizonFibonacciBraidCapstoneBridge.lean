@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Algebra.FibonacciHorizonBraidBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility import for the tripotent/Fibonacci horizon owner

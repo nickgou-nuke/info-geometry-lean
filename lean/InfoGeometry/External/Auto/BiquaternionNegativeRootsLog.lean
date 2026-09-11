@@ -1,1 +1,2 @@
 import InfoGeometry.Canonical.BiquaternionNegativeRootsLog
+import InfoGeometry.Algebra.FiniteSpinAlgebra

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauTheoremTranslatorPacket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace Automath.Generated
 

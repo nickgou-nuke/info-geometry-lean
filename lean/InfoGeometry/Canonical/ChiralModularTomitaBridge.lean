@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DiscreteDiracHodgeChiral
 import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
 import InfoGeometry.Topology.DiscreteHodgeDiracBridge

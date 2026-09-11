@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarNativeExpCoveringBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Homotopy.Lifting
 
 /-!

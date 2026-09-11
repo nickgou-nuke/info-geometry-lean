@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55MasterCoordinateVectorActionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HodgeFockEmbeddingBridge
 import InfoGeometry.Canonical.Cl55MasterParityOddnessBridge
 

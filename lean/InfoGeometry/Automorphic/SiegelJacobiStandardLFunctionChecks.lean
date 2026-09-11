@@ -1,4 +1,5 @@
 import InfoGeometry.Automorphic.SiegelJacobiStandardLFunction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Automorphic.SiegelJacobiStandardLFunctionChecks

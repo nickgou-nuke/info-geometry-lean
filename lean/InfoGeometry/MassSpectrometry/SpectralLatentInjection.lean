@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LLM.SpectralToken
 import InfoGeometry.LLM.TransformerArchitecture
 import InfoGeometry.MassSpectrometry.CausalTransferArchitecture

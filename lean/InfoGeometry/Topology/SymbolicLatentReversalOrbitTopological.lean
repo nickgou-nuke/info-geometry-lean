@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentInvolutionTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology
 

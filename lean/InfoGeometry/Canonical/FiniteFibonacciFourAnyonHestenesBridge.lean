@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteFibonacciFourAnyonPaperBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesPhaseSemilinear
 
 /-!

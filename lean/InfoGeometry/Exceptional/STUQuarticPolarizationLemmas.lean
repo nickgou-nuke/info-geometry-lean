@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.STUQuarticPolarization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalFiniteDifferencePolarization
 
 noncomputable section

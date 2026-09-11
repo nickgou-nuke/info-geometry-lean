@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GromovWittenErlangen.GWCanonicalCountRayBridge
 import InfoGeometry.Meta.Architecture
 

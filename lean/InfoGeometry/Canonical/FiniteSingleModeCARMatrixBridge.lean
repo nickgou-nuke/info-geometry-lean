@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteSingleModeCARHilbertTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix
 
 /-!

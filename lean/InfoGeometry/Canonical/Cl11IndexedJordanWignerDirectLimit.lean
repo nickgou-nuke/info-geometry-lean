@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11SequentialColimitSystemBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TensorTower
 import InfoGeometry.Canonical.Cl11TensorTowerCrossSiteCAR
 

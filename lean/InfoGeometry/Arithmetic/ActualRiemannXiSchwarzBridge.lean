@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.LSeries.RiemannZeta
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Pow.Complex
 import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
 import Mathlib.Tactic

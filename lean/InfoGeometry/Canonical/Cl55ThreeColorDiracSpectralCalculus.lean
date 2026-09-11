@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55ThreeColorChiralSums
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exact finite spectral calculus for the three-colour `Cl(5,5)` Dirac sum

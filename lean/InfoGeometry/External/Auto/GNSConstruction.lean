@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # GNS Construction: Gelfand-Naimark-Segal Setoid and Quotient

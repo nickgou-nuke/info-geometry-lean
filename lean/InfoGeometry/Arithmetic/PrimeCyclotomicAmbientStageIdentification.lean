@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.Cyclotomic.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.Cyclotomic.Gal
 import Mathlib.FieldTheory.IntermediateField.Basic
 import Mathlib.FieldTheory.Galois.Basic

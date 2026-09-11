@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.GroupAction.Quotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.Coset.Card
 import Mathlib.Data.Fintype.Card
 import InfoGeometry.Algebra.Zorn.G2StructuralFlagQuotient

@@ -1,8 +1,8 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.GellMannSU3
 import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 import InfoGeometry.Canonical.QutritWeylOperatorBasis
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The nine continuous Gell–Mann colour channels

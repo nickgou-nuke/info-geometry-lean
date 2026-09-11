@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionStandardDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Ternary bracket induced by the standard split-octonion derivation

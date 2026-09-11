@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.QuantumG2RMatrixBraidingDatum
 import InfoGeometry.Canonical.QuantumG2RMatrixRealizationBridge
 import InfoGeometry.Canonical.SpinCuntzTensorIntertwinerBridge

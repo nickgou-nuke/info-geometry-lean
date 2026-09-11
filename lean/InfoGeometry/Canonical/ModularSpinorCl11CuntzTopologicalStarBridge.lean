@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModularSpinorCl11MarkovJonesTopologicalCyclicBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11CuntzTopologicalStarReadout
 
 namespace InfoGeometry.Canonical

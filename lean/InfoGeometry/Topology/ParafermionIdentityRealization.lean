@@ -17,7 +17,7 @@ namespace InfoGeometry.Topology.ParafermionIdentityRealization
 open InfoGeometry.Physics.GellMannParafermionSolder
 
 abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
-abbrev ParafermionStage4 := Fin 4 → ℂ
+abbrev ParafermionStage4 := InfoGeometry.Algebra.FiniteSpin.Vec4C
 
 /-- Basis vector in the four-component carrier. -/
 def stageBasis (i : Fin 4) : ParafermionStage4 :=

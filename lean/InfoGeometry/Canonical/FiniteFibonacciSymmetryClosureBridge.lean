@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteFibonacciComputationalQubitPaperBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteFibonacciFourAnyonHestenesBridge
 import InfoGeometry.Canonical.HestenesAnalyticity
 import InfoGeometry.Canonical.SuperBracketHestenesKreinClosure

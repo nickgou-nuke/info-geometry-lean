@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.WeightGrading55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Cl11Fermions
 import Mathlib.Tactic
 

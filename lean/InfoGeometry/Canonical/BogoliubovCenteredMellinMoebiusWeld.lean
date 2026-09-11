@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MoebiusBogoliubovVirasoroBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Centered Mellin coordinate welded to the existing Möbius/Bogoliubov owner

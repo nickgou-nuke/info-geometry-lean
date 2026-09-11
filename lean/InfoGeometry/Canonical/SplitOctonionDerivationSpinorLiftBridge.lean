@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionDerivationWittOrthogonalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
 import InfoGeometry.Canonical.G2Cl55ChiralHodgeEquivarianceBridge
 import InfoGeometry.Clifford.Cl55SpinBivectorLieBridge

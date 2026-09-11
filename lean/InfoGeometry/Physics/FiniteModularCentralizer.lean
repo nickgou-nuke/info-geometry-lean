@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.FiniteRelativeModularLogBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 
 noncomputable section

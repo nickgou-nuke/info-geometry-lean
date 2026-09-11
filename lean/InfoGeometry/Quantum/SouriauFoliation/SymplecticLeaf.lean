@@ -3,6 +3,7 @@ InfoGeometry/Quantum/SouriauFoliation/SymplecticLeaf.lean
 -/
 
 import Mathlib.Data.Set.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 noncomputable section
 

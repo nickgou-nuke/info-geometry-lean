@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarCrossRatioLog
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
 import InfoGeometry.Analysis.BipolarCriticalPhase
 import InfoGeometry.Topology.TwistedCohomologyWeyl

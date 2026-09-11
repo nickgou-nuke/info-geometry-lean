@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SpectralTriple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 noncomputable section

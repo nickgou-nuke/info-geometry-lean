@@ -1,4 +1,5 @@
 import Mathlib.Analysis.CStarAlgebra.GelfandNaimarkSegal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.CStarCuntzTensorQuotient
 import InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzCStarRealization
 import InfoGeometry.Algebra.CuntzNativeGNSBridge

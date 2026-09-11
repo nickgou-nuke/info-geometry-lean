@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification

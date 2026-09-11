@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeCandidateSymmetry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeLineFiberTransport
 import InfoGeometry.Algebra.Zorn.G2NativeFullFlagAction
 import InfoGeometry.Algebra.Zorn.G2IntrinsicBaseFlag

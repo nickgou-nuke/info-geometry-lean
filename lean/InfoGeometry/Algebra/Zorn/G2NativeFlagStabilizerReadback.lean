@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2PCWordSubgroupEquiv
 import InfoGeometry.Algebra.Zorn.G2StructuralFlagQuotient
 

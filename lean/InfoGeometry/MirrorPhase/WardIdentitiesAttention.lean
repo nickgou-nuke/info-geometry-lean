@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.FDeriv.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.TwistedCohomologyWeyl
 
 namespace InfoGeometry.MirrorPhase.WardIdentities

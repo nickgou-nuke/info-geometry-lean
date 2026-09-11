@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionAxialCartanFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exact dimensions of the diagonal axial trifactor sectors

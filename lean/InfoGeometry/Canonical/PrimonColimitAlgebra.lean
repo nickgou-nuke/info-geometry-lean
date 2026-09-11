@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ColimitTraceFormula
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.FiniteCovarianceMajoranaBlock
 
 /-!

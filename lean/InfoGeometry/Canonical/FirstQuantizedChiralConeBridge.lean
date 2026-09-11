@@ -12,6 +12,7 @@ owner.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.PosDef
 import InfoGeometry.Canonical.PauliHestenesSpinMomentum
 import InfoGeometry.OperatorAlgebra.OperatorChiralLightcone

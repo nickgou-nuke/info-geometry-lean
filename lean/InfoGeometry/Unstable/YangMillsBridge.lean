@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralRGFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GaugeGroups
 import InfoGeometry.Canonical.KMSSinkhornSeedState
 import InfoGeometry.Canonical.KMSSinkhornScalarPotential

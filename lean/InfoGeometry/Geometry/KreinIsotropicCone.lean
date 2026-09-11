@@ -8,6 +8,7 @@ zero-divisors are related to it only through representation theorems.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

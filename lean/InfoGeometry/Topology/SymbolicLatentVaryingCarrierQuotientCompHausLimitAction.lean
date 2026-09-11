@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientCompHausLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Actions on indexed varying-carrier inverse limits

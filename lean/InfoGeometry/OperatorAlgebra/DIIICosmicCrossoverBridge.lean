@@ -15,6 +15,7 @@ anti-fixed without an additional reflection witness.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CosmicAndreevCrossover
 import InfoGeometry.OperatorAlgebra.DIIISuperfluidBranch
 

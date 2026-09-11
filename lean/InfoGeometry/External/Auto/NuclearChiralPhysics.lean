@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.External.Auto.NuclearChartSquareCalibration
 import InfoGeometry.External.Auto.Q8NuclearChirality
@@ -40,7 +41,7 @@ open NuclearChartSquareCalibration
 /-! ## Nuclear two-state Hilbert space -/
 
 /-- A nuclear state is a superposition of proton and neutron. -/
-abbrev NuclearState := Fin 2 → ℂ
+abbrev NuclearState := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 /-- The proton basis vector `|p⟩ = (1, 0)`. -/
 def proton : NuclearState := fun i => if i = 0 then (1 : ℂ) else 0

@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalChargeLinear
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

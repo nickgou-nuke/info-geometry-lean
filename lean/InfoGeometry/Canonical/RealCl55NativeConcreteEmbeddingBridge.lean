@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl55ConcreteHestenesCarrierEmbeddingBridge
 import InfoGeometry.Canonical.Cl55ConcreteHestenesPhaseEmbeddingBridge
 import InfoGeometry.Canonical.DoubledChiralHodgeBlocksBridge
@@ -35,7 +36,7 @@ open InfoGeometry.Clifford.TowerMatrix
 abbrev NativeSpinorCarrier :=
   RealCl55FiniteModuleEndBridge.NativeSpinorCarrier
 
-abbrev CoordinateMat32 := Matrix (Fin 32) (Fin 32) ℝ
+abbrev CoordinateMat32 := InfoGeometry.Algebra.FiniteSpin.Mat32R
 
 local instance nativeSpinorT2Space : T2Space NativeSpinorCarrier :=
   TopologicalSpace.t2Space_of_metrizableSpace

@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55FullFormalismAll
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 #print axioms InfoGeometry.Orthogonal.O55D5.d5_multigrading_packet
 #print axioms InfoGeometry.Orthogonal.O55Witt.wittAdjoint_mul

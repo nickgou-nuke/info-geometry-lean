@@ -1,4 +1,5 @@
 import InfoGeometry.Modular.ZetaRegularizedDeterminantBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.TraceFormula.ItakuraSaitoMongeAmpere
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 import Mathlib.Tactic

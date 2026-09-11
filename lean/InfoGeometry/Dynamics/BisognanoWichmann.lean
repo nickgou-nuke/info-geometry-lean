@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.TomitaTakesaki
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Dynamics.KanDecomposition
 import Mathlib.Tactic
 
@@ -28,7 +29,7 @@ open InfoGeometry.Dynamics.TomitaTakesaki
 open InfoGeometry.Dynamics.KanDecomposition
 
 /-- Two-component complex state vectors for the finite modular model. -/
-abbrev Vec2C := Fin 2 → ℂ
+abbrev Vec2C := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 /--
 Anti-linear modular conjugation on vectors: apply the Pauli-X matrix part and

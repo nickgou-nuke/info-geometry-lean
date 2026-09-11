@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GeneralizedOperatorChiral
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ParabolicContractionBridge
 
 /-!

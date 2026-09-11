@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarContourSpinHolonomy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarCurveIntegral
 
 /-!

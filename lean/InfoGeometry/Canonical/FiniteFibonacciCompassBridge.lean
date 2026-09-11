@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteCompassBraidedChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteFibonacciAnyonRegister
 
 /-!

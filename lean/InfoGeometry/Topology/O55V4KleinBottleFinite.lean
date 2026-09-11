@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite `O(5,5)` / V4 / Klein-bottle coordinate shadows
@@ -15,7 +16,7 @@ below are finite coordinate shadows only.
 namespace InfoGeometry.Topology.O55V4KleinBottleFinite
 
 /-- Rational coordinate carrier for the split hyperbolic `5+5` model. -/
-abbrev Vec55 := Fin 10 → ℚ
+abbrev Vec55 := InfoGeometry.Algebra.FiniteSpin.Vec10Q
 
 /-- Hyperbolic split pairing `Σ xᵢ yᵢ₊₅ + xᵢ₊₅ yᵢ`. -/
 def splitPair55 (x y : Vec55) : ℚ :=

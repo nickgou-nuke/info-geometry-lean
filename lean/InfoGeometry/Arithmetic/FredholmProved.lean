@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Colimit.DirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.FredholmClosure
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 import InfoGeometry.Canonical.HestenesKreinModularGeometry

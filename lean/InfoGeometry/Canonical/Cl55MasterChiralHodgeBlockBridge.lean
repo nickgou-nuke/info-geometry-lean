@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55MasterCoordinateReindexBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Chiral block calculus for the finite `Cl(5,5)` Hodge packet

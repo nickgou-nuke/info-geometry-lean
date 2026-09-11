@@ -16,6 +16,7 @@ an unconditional Sugawara/L-function theorem.
 -/
 
 import InfoGeometry.Automorphic.RoelckeSelbergSpectral
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Automorphic.LFunctionResonance
 import InfoGeometry.Automorphic.LanglandsSugawaraBridge
 import InfoGeometry.OperatorAlgebra.ExceptionalVirasoroBridge

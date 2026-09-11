@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CausalFunctor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.CantorCliffordFunctor
 import Mathlib.Algebra.Category.AlgCat.Basic
 

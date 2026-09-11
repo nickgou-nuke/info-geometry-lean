@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.StablePage
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Category.NatCoconeIso
 import Mathlib.Algebra.Category.ModuleCat.Basic
 import Mathlib.Algebra.Category.ModuleCat.Limits

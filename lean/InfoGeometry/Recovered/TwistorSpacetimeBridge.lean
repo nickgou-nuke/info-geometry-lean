@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Recovered.SplitQuaternionMatricesRecovered
 import InfoGeometry.Recovered.SpacetimeLorentzTransformations
 import InfoGeometry.Twistor.Incidence

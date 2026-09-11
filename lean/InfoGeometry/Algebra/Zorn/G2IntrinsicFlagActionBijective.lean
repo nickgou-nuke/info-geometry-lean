@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2IntrinsicFlagAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bijectivity of the intrinsic full-flag action

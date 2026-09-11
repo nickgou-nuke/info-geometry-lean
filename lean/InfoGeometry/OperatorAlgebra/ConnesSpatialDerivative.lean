@@ -22,6 +22,7 @@ No trace normalization is used.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import Mathlib.Data.ENNReal.Basic
 

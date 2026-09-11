@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.LogJordanBraidGroup3Representation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.LogNilpotentCheckedRAdapter
 import InfoGeometry.Categorical.LogNilpotentAmbientSymmetric
 

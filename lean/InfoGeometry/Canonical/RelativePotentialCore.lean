@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PositiveRayCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Meta.Architecture
 

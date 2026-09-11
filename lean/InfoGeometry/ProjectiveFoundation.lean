@@ -11,6 +11,7 @@ This is the core geometric layer:
 -/
 
 import Mathlib.Algebra.Group.Action.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Center
 import Mathlib.Data.Real.Basic
 import Mathlib.GroupTheory.QuotientGroup.Basic

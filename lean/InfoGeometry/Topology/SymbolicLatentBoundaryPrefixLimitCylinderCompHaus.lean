@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentBoundaryReadoutInverseLimitCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentBoundaryCylinderColimitTopCat
 import InfoGeometry.Topology.NaryTreeBoundaryCylinderTopology
 

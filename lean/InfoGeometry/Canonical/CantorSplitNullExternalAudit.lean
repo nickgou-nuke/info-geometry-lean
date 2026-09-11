@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorSplitNullBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Cantor/split-null external audit bridge

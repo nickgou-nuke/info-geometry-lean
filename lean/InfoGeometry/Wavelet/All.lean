@@ -1,1 +1,2 @@
 import InfoGeometry.Wavelet.PrimeWaveletMRA
+import InfoGeometry.Algebra.FiniteSpinAlgebra

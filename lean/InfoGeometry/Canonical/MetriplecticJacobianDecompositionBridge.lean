@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.LieFlowLogJacobianBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConnesRadonNikodymCocycle
 import InfoGeometry.SuperMetriplectic.CasimirHessianFisherBridge
 

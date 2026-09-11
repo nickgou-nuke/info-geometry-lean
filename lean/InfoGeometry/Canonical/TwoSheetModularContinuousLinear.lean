@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Module.FiniteDimension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TwoSheetModularTopological
 
 namespace InfoGeometry.Canonical.TwoSheetModularTopological

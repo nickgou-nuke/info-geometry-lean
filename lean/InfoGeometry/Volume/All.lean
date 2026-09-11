@@ -1,4 +1,5 @@
 import InfoGeometry.Volume.Base
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Volume.ConnesCocycle
 import InfoGeometry.Volume.CocycleFlowEquiv
 import InfoGeometry.Volume.ConnesInfinitesimal

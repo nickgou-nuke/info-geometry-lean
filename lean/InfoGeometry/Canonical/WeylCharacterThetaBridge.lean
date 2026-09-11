@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import InfoGeometry.Canonical.WeylA1Character
 import InfoGeometry.Arithmetic.CastroThetaScalingBridge

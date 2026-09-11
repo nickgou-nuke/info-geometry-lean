@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.InductivePosetColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ProofDAGRepresentationBridge
 import InfoGeometry.Canonical.CausalFunctor
 import InfoGeometry.Projective.Twistor.Incidence

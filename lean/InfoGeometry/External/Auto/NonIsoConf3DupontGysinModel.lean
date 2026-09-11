@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.DupontHypersurfaceOSModel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.PenroseSpinIncidenceTessellation
 
 

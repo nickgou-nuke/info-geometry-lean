@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

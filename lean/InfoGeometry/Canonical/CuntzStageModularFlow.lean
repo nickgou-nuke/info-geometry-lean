@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzStarInductiveSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Stagewise Cuntz modular-flow interface

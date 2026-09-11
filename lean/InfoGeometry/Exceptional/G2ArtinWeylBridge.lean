@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Exceptional.G2ArtinPresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 import InfoGeometry.Algebra.Zorn.G2WeylDihedralEquiv
 import InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge

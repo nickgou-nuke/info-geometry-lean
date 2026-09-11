@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CurrentSugawaraMetricDatum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

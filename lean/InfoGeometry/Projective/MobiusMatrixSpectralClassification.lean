@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.MobiusLoxodromicSpectralParameter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Trace/discriminant readout for the diagonal Möbius flow
@@ -13,7 +14,7 @@ namespace InfoGeometry.Projective.MobiusMatrixSpectralClassification
 
 open InfoGeometry.Projective.MobiusLoxodromicSpectralParameter
 
-abbrev Matrix2 := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Matrix2 := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 noncomputable section
 
@@ -80,7 +81,7 @@ theorem flow_det_one (κ : ℂ) :
 /-! The diagonal matrix is semisimple whenever its two spectral values are
 distinct; this is packaged through a square-free annihilating polynomial. -/
 
-abbrev FlowSpace := Fin 2 → ℂ
+abbrev FlowSpace := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 noncomputable def flowEnd (κ : ℂ) : Module.End ℂ FlowSpace :=
   Matrix.toLin (Pi.basisFun ℂ (Fin 2)) (Pi.basisFun ℂ (Fin 2)) (flow κ)

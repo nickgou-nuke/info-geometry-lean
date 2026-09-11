@@ -11,6 +11,7 @@ core or another semifinite backend, not placed directly on the type III base.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Meromorphic.Basic
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 

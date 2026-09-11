@@ -1,4 +1,5 @@
 import InfoGeometry.MaxEnt.Finite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.LagrangeMultipliers
 
 open scoped BigOperators

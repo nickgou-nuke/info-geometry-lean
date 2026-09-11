@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutDynamicsTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The scalar readout dynamics as a `TopCat` action

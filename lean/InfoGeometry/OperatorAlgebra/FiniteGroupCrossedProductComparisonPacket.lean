@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FiniteGroupCrossedProductDirectLimitConvolution
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bundled coefficientwise comparison for crossed-product descent

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllCircularAxialGrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllCrossChannel
 import InfoGeometry.Lie.CanonicalZornDerivation
 import InfoGeometry.Lie.SplitOctonionCircularHyperbolicZornFlow

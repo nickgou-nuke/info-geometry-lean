@@ -1,4 +1,5 @@
 import InfoGeometry.Probability.BinaryAitchisonLogOdds
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 #print axioms InfoGeometry.Probability.BinaryAitchisonLogOdds.clr_binary
 #print axioms InfoGeometry.Probability.BinaryAitchisonLogOdds.binary_inner

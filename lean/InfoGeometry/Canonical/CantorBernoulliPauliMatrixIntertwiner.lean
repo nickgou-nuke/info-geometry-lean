@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpinorCantorL2HilbertIntertwinerBridge
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixRepresentationBridge
 import InfoGeometry.Physics.ChiralPoincareSouriauBridge

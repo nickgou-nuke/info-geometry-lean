@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl55WittCAR
 import InfoGeometry.Physics.Cl55SpinorCartanFock
 

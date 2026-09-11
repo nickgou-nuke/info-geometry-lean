@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LLM.DiscreteRouterBayesStep
 import InfoGeometry.Core.MajoranaLiftPacket
 import InfoGeometry.Quantum.RealMajorana

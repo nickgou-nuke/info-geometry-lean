@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KANFrobeniusGromovWittenBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topological readout for finite WDVV residuals

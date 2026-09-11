@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Geometric Zeta: Layer-12 Lightcone Geometry of the Graded Index

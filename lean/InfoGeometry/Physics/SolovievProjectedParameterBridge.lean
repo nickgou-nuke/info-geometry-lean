@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SolovievFiniteSecularEigenproblem
 import InfoGeometry.Physics.SolovievQuasiparticlePhononEigenproblem
 import InfoGeometry.Physics.SolovievTransitionStrength
@@ -11,7 +12,7 @@ open InfoGeometry.Physics.SolovievFiniteSecularEigenproblem
 open InfoGeometry.Physics.SolovievQPNMEigenproblem
 open InfoGeometry.Physics.SolovievTransitionStrength
 
-abbrev Hamiltonian := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Hamiltonian := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-! A finite projection reads the three independent entries of a symmetric
 two-channel Hamiltonian.  No nuclear interpretation is built into this map. -/

@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.TransferMatrixIntegrability
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.TransferMatrixIntegrabilityCapstone
 

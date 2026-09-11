@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSTomitaClosedOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Filtered transport of closed Tomita operators

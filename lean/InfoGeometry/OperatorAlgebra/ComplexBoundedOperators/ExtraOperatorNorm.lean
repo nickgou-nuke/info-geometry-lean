@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Operator.Bilinear
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.Basic
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.CasimirHessianFisherBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ChiralPrimonGasFisherMatrixNativePSD
 
 /-!

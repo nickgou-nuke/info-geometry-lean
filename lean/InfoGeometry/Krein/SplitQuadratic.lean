@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.Representation
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import InfoGeometry.Meta.Architecture

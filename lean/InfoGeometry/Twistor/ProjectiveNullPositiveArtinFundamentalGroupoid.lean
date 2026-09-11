@@ -1,4 +1,5 @@
 import Mathlib.AlgebraicTopology.FundamentalGroupoid.FundamentalGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullPositiveArtinTopology
 
 /-!

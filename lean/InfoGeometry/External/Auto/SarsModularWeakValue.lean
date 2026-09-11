@@ -7,7 +7,7 @@ namespace SarsModularWeakValue
 
 open Complex
 
-abbrev State2 := Fin 2 → ℂ
+abbrev State2 := InfoGeometry.Algebra.FiniteSpin.Vec2C
 abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def cinner (u v : State2) : ℂ := star (u 0) * v 0 + star (u 1) * v 1

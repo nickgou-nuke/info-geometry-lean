@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.DiracResolventZeroModeTripotent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Dirac zero modes from the Fourier--Mellin resolvent

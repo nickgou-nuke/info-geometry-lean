@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Subalgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 

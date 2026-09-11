@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Tower
 import InfoGeometry.Topology.MobiusDeRhamMonodromy
 import InfoGeometry.Topology.BuscherTDuality

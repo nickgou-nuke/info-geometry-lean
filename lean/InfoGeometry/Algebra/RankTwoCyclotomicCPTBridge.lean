@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.RankTwoCyclotomicArtinBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.CPTGaloisBridge
 
 namespace InfoGeometry.Algebra.RankTwoCyclotomicCPTBridge

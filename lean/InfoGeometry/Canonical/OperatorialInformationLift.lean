@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.JaynesRNModularBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InformationPartitionCore
 import InfoGeometry.Canonical.KreinDiracWeightFunctionalLift
 

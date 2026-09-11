@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.LogCFT
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.LogCftMonodromy
 import InfoGeometry.Clifford.DiscreteMoebiusGroup
 import InfoGeometry.LogJordanKreinCore

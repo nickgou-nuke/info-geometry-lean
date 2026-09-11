@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentPathFamilyReparametrizationCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentPathFamilyImageEvaluationCompHaus
 
 /-!

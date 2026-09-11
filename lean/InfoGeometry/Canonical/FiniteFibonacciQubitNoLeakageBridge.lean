@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices
 import InfoGeometry.Canonical.FiniteFibonacciQubitNoLeakage
 

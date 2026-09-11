@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2FlagIncidenceAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2CASNativePointAction
 
 /-! The exported CAS point permutations are not silently promoted to flag

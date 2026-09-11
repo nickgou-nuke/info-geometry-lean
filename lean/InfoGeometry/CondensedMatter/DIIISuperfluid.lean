@@ -16,6 +16,7 @@ Dirac/Majorana models can instantiate the datum later.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.DIIISuperfluid
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 import InfoGeometry.OperatorAlgebra.CPTSymmetryBranch

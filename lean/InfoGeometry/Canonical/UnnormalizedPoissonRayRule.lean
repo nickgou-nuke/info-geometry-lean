@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PositiveRayCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PowerVarianceCumulants
 import InfoGeometry.External.Auto.PoissonGaussianGNSColimit
 import InfoGeometry.Inference.FisherPositivity

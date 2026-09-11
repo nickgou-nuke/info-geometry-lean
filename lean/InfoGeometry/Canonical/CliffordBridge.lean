@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQ11
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GaugeUnified
 
 namespace InfoGeometry.Canonical.CliffordBridge

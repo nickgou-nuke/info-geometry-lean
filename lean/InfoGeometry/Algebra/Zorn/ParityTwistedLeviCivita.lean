@@ -7,6 +7,7 @@ the quaternionic commutator is a later readout, not the definition.
 -/
 
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import Mathlib.Data.Finset.Image
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Finset.Max
 import Mathlib.Data.Real.Basic
 

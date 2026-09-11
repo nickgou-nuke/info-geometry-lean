@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ManifoldHomologyCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.ManifoldHomology

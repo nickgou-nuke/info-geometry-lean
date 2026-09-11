@@ -20,6 +20,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 
 import InfoGeometry.Twistor.NullProjective
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.Incidence
 import InfoGeometry.Canonical.TwistorOperatorialIncidence
 

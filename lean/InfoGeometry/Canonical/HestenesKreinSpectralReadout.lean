@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesPhaseSpectral
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.HestenesKreinSpectralReadout

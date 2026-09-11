@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DyadicDirectLimitTopologicalAdditive
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Algebra.Group.Basic
 
 namespace InfoGeometry.Canonical

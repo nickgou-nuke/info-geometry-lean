@@ -1,4 +1,5 @@
 import Mathlib.Data.Fintype.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Fintype.Perm
 import Mathlib.Data.Fintype.Pi
 import Mathlib.Data.Finset.Basic

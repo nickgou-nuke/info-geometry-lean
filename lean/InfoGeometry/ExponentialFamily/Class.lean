@@ -1,4 +1,5 @@
 import Mathlib.Algebra.BigOperators.Field
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 open scoped BigOperators

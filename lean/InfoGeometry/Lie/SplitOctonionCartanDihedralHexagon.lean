@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCartanSixWeights
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HexIndexSplitOctonionBridge
 import InfoGeometry.Canonical.D6SixModeAction
 

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FiniteGroupCrossedProductDirectLimitConvolution
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Equivariant transition laws for finite-stage crossed products

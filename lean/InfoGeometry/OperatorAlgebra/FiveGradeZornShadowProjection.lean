@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ChiralOperatorSymbolProjection
 import InfoGeometry.Algebra.ChiralSymbolProjectionMirror
 import InfoGeometry.Algebra.ZornMatrix

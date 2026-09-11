@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularHyperbolicFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Reciprocal exponential coordinates for the circular hyperbolic flow

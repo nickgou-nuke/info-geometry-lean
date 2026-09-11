@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TomitaTakesakiRealStandardForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.RealCommutantClosure
 
 /-!

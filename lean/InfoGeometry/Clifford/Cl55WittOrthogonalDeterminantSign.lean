@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittCartanDieudonneFull
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittReflectionDeterminant
 import InfoGeometry.Clifford.Cl55WittSpinOrthogonalAction
 

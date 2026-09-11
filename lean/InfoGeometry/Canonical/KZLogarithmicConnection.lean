@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Projective.Conf3ConcreteDLog
 import InfoGeometry.Canonical.ArnoldCohenBCFWBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.WeylGWVolumeBridge
 import InfoGeometry.Canonical.BKMDriftMetric
 import InfoGeometry.Canonical.WeylNormalizedCARCCRBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQ11PhaseFlip
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Module
 
 /-!

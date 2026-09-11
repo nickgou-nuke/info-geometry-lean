@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.V4SemidirectS3Bridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GrandCanonicalPrimeEnsembleFormulas
 import InfoGeometry.Physics.SouriauMassieuPlanckFunctional
 import InfoGeometry.Topology.O55V4KleinBottleFinite

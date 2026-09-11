@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PeirceBCFWShiftSpecialization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BCFWMeromorphicResidueRecursion
 
 open scoped BigOperators

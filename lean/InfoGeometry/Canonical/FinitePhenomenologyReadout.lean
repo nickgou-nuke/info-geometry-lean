@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TrifactorDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.EvansHarmonicTrap
 import InfoGeometry.Canonical.BostConnesSuperalgebraConstructive
 import InfoGeometry.Canonical.CreationAnnihilationTomitaBridge

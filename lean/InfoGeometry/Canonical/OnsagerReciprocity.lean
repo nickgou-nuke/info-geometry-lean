@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeModularPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelationalInformationDynamics
 import InfoGeometry.Canonical.MajoranaKreinCartanSplit
 import InfoGeometry.Canonical.BohmMadelungOperatorialBridge

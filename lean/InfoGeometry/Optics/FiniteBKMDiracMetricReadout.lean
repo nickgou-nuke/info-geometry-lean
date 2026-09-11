@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.FiniteBKMDiracTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauOnsagerBKMRealForm
 
 set_option autoImplicit false

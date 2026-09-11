@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikKocakPaperGeneratorClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Tilt/switch subalgebra contained in the paper-generated algebra

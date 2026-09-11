@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Pin55ReflectionGlide
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option autoImplicit false
 

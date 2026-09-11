@@ -1,4 +1,5 @@
 import InfoGeometry.Routing.BirkhoffVonNeumann
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Routing.Cl55SoftConjugation
 import InfoGeometry.Routing.CliffordRoPETorus
 import InfoGeometry.Routing.DiscreteRoPERepresentation

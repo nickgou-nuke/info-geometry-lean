@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KleinBottleWallpaper
 import InfoGeometry.Canonical.WallpaperKleinBottleCartan
 import InfoGeometry.Canonical.WallpaperAffineWeylD5Bridge

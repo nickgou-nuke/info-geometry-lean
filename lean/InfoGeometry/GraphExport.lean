@@ -1,4 +1,5 @@
 import Lean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Lean.Data.Json
 import DAG.Basic
 import DAG.JsonInstances

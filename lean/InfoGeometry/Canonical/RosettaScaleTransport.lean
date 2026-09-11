@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AnalyticalIndexCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AnalyticalIndexCoupled
 import InfoGeometry.Canonical.AnalyticalIndexCapstone
 import InfoGeometry.Canonical.JordanKKTData

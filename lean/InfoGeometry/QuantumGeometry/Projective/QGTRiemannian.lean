@@ -1,4 +1,5 @@
 import InfoGeometry.QuantumGeometry.Projective.QGT
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.QuantumGeometry.Projective
 import Mathlib.Tactic
 import Mathlib.Analysis.InnerProductSpace.Basic

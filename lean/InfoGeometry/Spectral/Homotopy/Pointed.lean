@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Homotopy.Suspension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Ordinary pointed homotopies

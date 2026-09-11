@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.CasimirIsospinHamiltonian
 import InfoGeometry.External.Auto.IsospinSymmetryBreaking
 import InfoGeometry.Physics.NuclearPhysicalDegreeZero

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionThreeColorCausalMatrixRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionThreeColorDiracMatrixReadout
 import InfoGeometry.Physics.BdGChiralBlockMatrix
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllTrifactor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionAxialDrazinDefect
 import InfoGeometry.Singular.Drazin
 

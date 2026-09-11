@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55FockChannelLinearMap
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

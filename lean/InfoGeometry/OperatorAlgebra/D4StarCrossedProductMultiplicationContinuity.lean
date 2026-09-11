@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductNonUnitalStarSurface
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Joint continuity of finite crossed-product convolution

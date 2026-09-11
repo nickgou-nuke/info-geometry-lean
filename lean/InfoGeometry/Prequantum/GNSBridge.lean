@@ -1,4 +1,5 @@
 import InfoGeometry.Prequantum.AlgebraicGNSState
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Prequantum.GNSBridge

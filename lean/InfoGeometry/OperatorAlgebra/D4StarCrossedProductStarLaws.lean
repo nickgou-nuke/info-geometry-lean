@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductAlgebraicSurface
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Star multiplicativity for the finite D₄ crossed-product convolution

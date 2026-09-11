@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 -- Primon System: Primes as Fundamental Measures on the Wallpaper Lattice
 -- log r = Σ k_i·log p_i - Σ l_j·log p_j  (primon Fock space)

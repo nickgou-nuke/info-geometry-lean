@@ -110,7 +110,7 @@ theorem canonicalConnection_coordinate_curvature_zero :
   rfl
 
 /-- Two-component complex spinor carrier. -/
-abbrev Spinor2 := Fin 2 → ℂ
+abbrev Spinor2 := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 /-- Matrix action on a two-component spinor. -/
 def spinorAction (M : Matrix2C) (ψ : Spinor2) : Spinor2 :=

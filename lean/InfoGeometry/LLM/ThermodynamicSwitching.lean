@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.TransformerArchitecture
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Canonical.ArnoldMajoranaNetwork

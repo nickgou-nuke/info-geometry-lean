@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductColimitObservable
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.D4StarQuotientSeparation
 
 /-!

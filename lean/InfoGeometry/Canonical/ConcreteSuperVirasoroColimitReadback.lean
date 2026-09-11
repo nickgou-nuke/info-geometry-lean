@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordSuperVirasoroColimitReadback
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordSourceSuperVirasoroFiniteWindow
 
 /-!

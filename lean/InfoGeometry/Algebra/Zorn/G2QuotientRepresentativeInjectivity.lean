@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2QuotientResidualInjectivity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2OneCellQuotientTransport
 import InfoGeometry.Algebra.Zorn.G2ConcreteBruhatOrbitCertificate
 import InfoGeometry.Algebra.Zorn.G2QuotientOrbitSeparation

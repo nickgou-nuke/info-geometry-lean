@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.GenericMetriplecticFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! A concrete three-coordinate GENERIC carrier.
 
@@ -12,7 +13,7 @@ namespace InfoGeometry.Thermo.BipolarThreeCoordinateGENERIC
 
 open InfoGeometry.Thermo.GenericMetriplecticFlow
 
-abbrev State := Fin 3 → ℝ
+abbrev State := InfoGeometry.Algebra.FiniteSpin.Vec3R
 abbrev Covector := GenericMetriplecticFlow.Covector State
 
 def basis (i : Fin 3) : State := Pi.single i 1

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Clifford-braiding central-core packet
@@ -19,7 +20,7 @@ closure.
 
 namespace InfoGeometry.Algebra.CliffordBraidingTheorem
 
-abbrev Mat2Z := Matrix (Fin 2) (Fin 2) ℤ
+abbrev Mat2Z := InfoGeometry.Algebra.FiniteSpin.Mat2Z
 
 /-- The discrete central signs tracked by the finite packet. -/
 inductive CentralCore : Type

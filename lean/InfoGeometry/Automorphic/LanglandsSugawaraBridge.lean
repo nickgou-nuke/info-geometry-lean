@@ -10,6 +10,7 @@ central-charge readout and a completed L-function readout.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Automorphic.ProjectedLFunction
 import InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge
 

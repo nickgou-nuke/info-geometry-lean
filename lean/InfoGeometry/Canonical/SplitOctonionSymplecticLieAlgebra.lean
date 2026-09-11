@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionChiralPhaseSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The infinitesimal symplectic endomorphism target

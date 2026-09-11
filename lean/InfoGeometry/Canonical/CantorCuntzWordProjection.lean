@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorCuntzRangeProjectionMurrayVonNeumann
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology
 

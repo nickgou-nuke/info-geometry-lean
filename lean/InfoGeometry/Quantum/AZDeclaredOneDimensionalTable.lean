@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.AltlandZirnbauerKTheoryBridge
 import InfoGeometry.Quantum.MajoranaPfaffianNaturalClosure
 

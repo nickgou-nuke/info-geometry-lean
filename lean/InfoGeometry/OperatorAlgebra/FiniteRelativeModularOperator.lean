@@ -1,1 +1,2 @@
 import InfoGeometry.Physics.FiniteRelativeModularOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra

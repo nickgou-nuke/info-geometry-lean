@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Singular
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinExistenceBridge
 import InfoGeometry.KK.KasparovCycle
 import InfoGeometry.Meta.Architecture

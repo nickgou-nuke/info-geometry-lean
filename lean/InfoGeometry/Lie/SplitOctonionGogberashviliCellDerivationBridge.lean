@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionGogberashviliCarrierBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionGogberashviliDerivationBridge
 
 /-!

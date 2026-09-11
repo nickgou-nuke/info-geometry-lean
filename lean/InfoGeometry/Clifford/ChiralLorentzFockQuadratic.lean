@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ChiralLorentzCARLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl44Witt
 import InfoGeometry.Clifford.JordanWignerCAR
 

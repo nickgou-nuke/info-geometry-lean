@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Action.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionChiralPhaseSpace
 
 /-!

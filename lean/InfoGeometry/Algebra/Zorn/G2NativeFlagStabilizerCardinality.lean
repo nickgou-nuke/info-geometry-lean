@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerReadback
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2IntrinsicFlagCardinality
 import InfoGeometry.Algebra.Zorn.G2NativeFlagIntrinsicEquiv
 

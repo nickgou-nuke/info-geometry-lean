@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BilingualRealHestenesDictionary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesComplexTranslation
 import InfoGeometry.Krein.PolarizedSector
 

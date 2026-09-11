@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.SelbergApollonianGeodesicTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

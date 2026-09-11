@@ -1,4 +1,5 @@
 import InfoGeometry.Conformal.BipolarSchwarzianProjectiveConnection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

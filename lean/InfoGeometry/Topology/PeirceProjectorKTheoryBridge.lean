@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PeirceProjectorGrothendieckClass
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Peirce projector additive readouts

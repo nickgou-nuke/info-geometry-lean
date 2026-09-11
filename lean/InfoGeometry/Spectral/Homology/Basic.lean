@@ -6,6 +6,7 @@
 -/
 
 import InfoGeometry.Spectral.Cohomology.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Spectral.Homology.Basic
 

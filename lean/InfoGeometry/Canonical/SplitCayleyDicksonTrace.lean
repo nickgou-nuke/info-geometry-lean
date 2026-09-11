@@ -1,4 +1,5 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Int.Basic
 import Mathlib.Data.Nat.Choose.Sum
 import Mathlib.Tactic.NormNum

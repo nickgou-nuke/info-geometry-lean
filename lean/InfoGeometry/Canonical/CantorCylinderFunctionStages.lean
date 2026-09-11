@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralBoundarySheetReflectionTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite cylinder functions on the chiral boundary

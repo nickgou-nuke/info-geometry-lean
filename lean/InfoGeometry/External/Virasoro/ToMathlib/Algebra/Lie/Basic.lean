@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 universe u
 variable (𝕜 : Type*) [CommRing 𝕜]

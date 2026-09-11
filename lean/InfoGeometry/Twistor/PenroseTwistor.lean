@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Module.LinearMap.Star
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.LinearAlgebra.Projectivization.Basic
@@ -32,7 +33,7 @@ open Module
 namespace InfoGeometry.Twistor.PenroseTwistor
 
 /-- The underlying complex 4-space of twistors. -/
-abbrev TwistorCarrier : Type := Fin 4 → ℂ
+abbrev TwistorCarrier : Type := InfoGeometry.Algebra.FiniteSpin.Vec4C
 
 instance : AddCommGroup TwistorCarrier := inferInstance
 instance : Module ℂ TwistorCarrier := inferInstance

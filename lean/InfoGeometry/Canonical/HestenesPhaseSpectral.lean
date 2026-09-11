@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Spectrum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.ConformalProjectorCore
 import InfoGeometry.Canonical.DrazinKreinCompatibility

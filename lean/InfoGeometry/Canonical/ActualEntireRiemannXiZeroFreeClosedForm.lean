@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ActualEntireRiemannXiDifferentialFormBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The actual zero-free closed one-form datum for `riemannXi`

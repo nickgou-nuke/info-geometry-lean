@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Analysis.InnerProductSpace.Adjoint
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Analysis.SpecialFunctions.Exp
 import InfoGeometry.Canonical.YangBaxterProof

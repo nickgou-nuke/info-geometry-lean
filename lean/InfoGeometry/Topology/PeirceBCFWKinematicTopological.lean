@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PeirceBCFWShiftSpecialization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.PeirceNullConeKinematicTopological
 import InfoGeometry.Topology.BCFWOnShellShiftTopological
 

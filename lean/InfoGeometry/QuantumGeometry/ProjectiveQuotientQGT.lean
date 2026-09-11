@@ -1,4 +1,5 @@
 import InfoGeometry.QuantumGeometry.Projective.Quotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Formal Projective Quotient Space P(H) = S(H)/U(1) Forwarding Module

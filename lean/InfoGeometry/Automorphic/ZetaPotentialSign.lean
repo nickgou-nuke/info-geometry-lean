@@ -17,6 +17,7 @@ A later bridge file can instantiate the arithmetic side using Mathlib's
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Automorphic.SiegelResonance
 
 noncomputable section

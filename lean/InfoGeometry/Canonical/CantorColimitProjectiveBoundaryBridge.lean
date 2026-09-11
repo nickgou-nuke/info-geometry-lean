@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorCylinderHomeomorph
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 
 set_option linter.unusedSectionVars false

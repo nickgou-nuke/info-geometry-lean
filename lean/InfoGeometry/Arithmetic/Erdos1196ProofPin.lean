@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Pinned external Lean proof source for Erdős Problem 1196

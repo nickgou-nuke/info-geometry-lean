@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.H3ZornCubicNormStructure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Structural operators for the split Albert cubic norm

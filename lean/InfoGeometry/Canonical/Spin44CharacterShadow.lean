@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Trigonometric
 import Mathlib.Data.Fintype.Basic
 
@@ -17,7 +18,7 @@ open scoped BigOperators
 
 /-- Four Cartan coordinates for the D4/`Spin(4,4)` character shadow. -/
 @[rep_depth thermo]
-abbrev Cartan4 := Fin 4 → ℝ
+abbrev Cartan4 := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
 /-- Boolean sign used to enumerate spinor weights. -/
 @[rep_depth thermo]

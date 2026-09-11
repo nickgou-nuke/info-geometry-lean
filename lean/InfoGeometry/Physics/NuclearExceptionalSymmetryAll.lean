@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearChargeSpinSymmetry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearExceptionalArtinGaloisBridge
 import InfoGeometry.Physics.NuclearExceptionalSymmetryLogosMap
 

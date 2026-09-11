@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FiveGradedTKKSpec
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Algebra
 

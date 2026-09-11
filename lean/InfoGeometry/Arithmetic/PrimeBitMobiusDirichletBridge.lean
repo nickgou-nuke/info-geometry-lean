@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeBitMobiusParityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimonWittenIndexZetaBridge
 
 noncomputable section

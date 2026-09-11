@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Physics.SplitOctonionBraidSU3
 import InfoGeometry.Canonical.TKKJordanPairData

@@ -9,6 +9,7 @@ are boundary or dissipative events, not ordinary isometries.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus
 
 noncomputable section

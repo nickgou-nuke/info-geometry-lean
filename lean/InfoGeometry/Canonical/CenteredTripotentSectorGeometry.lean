@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZetaStandardRealizations
 import InfoGeometry.Canonical.TomitaTakesakiTrifactor
 import InfoGeometry.Canonical.TwoSheetedComplexPolarization

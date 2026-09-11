@@ -2,6 +2,7 @@
 SPDX-License-Identifier: MIT -/
 
 import InfoGeometry.Algebra.Zorn.G2PCCommutators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # PC commutator boundary for the finite G2(2) carrier

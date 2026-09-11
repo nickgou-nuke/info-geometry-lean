@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.JaynesCategoricalInductionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteJaynesFormalism
 
 /-!

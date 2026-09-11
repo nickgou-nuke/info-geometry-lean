@@ -1,4 +1,5 @@
 import Mathlib.Data.ZMod.Units
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GaloisZornTrialityBridge
 
 namespace InfoGeometry.Canonical

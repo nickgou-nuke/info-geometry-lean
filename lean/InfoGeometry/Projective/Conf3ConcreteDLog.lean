@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.TwistorConfigurationSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricGrothendieckDeRham
 import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
 import Mathlib.Analysis.Calculus.Deriv.Basic

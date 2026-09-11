@@ -1,4 +1,5 @@
 import Lean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Admission
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.Vacuity

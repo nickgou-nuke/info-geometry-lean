@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55ThreeColorChiralSums
 import InfoGeometry.Physics.GellMannSU3
 import InfoGeometry.Algebra.GellMannBridge

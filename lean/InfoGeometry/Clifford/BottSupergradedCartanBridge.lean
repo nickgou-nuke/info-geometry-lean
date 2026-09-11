@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SupergradedBracket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.BottPeriodicity
 import InfoGeometry.Clifford.CartanInstance
 import InfoGeometry.Clifford.SplitQ11ChiralDecomposition

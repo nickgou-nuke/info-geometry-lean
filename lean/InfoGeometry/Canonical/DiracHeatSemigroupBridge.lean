@@ -1,4 +1,5 @@
 import InfoGeometry.Modular.SchrodingerFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Dirac square and bounded heat flow

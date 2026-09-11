@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Equiv.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import InfoGeometry.Lie.CanonicalZornG2CartanSouriauCharacterBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.TKKClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionJordanForm
 
 namespace InfoGeometry.Canonical.SplitOctonionSpinJordanTriple

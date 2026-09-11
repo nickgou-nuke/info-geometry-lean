@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionAnnihilatorDimension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55ThreeColorChiralGenerators
 import InfoGeometry.Canonical.CanonicalZornNullProjectiveBoundaryBridge
 

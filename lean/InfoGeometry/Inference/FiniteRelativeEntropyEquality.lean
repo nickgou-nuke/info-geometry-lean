@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.FiniteRelativeEntropy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Equality case for finite relative entropy

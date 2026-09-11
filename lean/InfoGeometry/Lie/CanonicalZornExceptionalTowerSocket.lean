@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.DerivationLieLane
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.FiveGradedTKKSpec
 import InfoGeometry.Canonical.CanonicalZornNonUnitalNonAssocRing
 import InfoGeometry.Lie.CanonicalZornDerivationLane

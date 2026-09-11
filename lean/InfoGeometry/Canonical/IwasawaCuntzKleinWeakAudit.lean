@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IwasawaCuntzKleinWeakBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of IwasawaCuntzKleinWeakBridge

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.H3ZornExplicitPeirceJordanSoldering
 import InfoGeometry.Canonical.H3ZornSolderingDerivationTransport
 import InfoGeometry.Lie.SplitOctonionDerivationWittOrthogonalBridge

@@ -15,6 +15,7 @@ would require extra hypotheses and is not asserted.
 -/
 
 import InfoGeometry.Categorical.BraidHestenesKreinVirasoroBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.End
 
 noncomputable section

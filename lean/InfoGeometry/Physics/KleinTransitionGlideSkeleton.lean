@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ZornTkkAnomalyCancellation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.KleinBottleCosmology
 import InfoGeometry.CondensedMatter.NonOrientableWeylSemimetal
 import InfoGeometry.Topology.TwistedCohomologyWeyl

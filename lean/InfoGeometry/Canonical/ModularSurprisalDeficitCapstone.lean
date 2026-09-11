@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ModularSurprisalDeficit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.YangBaxterProof
 
 namespace InfoGeometry.Canonical.ModularSurprisalDeficitCapstone

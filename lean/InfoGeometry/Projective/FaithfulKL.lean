@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.LogSumIneq
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.GaugeReduction
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic

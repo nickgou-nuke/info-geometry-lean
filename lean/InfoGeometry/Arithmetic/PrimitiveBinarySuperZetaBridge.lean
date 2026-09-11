@@ -1,4 +1,5 @@
 import Mathlib.Algebra.BigOperators.Associated
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimitiveSouriauZeta
 import InfoGeometry.Canonical.SuperSouriauFermionGasBridge
 

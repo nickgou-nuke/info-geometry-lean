@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Q₈ Pauli representation

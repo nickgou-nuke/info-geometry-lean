@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SouriauAffineCasimirInfinitesimal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Souriau Affine Coadjoint Infinitesimal Bridge

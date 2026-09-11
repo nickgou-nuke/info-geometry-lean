@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Global Schwarz conjugation for the entire completed xi representative

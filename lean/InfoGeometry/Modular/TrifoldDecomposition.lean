@@ -1,1 +1,2 @@
 import InfoGeometry.Modular.TrifoldRadonNikodymBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra

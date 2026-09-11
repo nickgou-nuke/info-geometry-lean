@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HorizonZeroModeFierz
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.CliffordTower
 
 noncomputable section

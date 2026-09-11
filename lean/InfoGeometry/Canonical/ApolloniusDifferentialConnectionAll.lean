@@ -1,4 +1,5 @@
 import InfoGeometry.Coordinate.ApolloniusLogCoordinates
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Bridge.ApolloniusPauliLift
 import InfoGeometry.Canonical.ApolloniusGradientCircularBridge
 import InfoGeometry.Canonical.ApolloniusMetriplecticOperator

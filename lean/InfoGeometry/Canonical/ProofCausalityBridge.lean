@@ -1,4 +1,5 @@
 import InfoGeometry.Causal.CausalAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import DAG.GraphHodgeBridge
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBPythagorean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.EntropicInference
 import InfoGeometry.Measure.Normalized
 import Mathlib.Probability.ProbabilityMassFunction.Integrals

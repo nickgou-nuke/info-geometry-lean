@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BostConnesLiouvilleModularComm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bost--Connes modular-flow intertwining

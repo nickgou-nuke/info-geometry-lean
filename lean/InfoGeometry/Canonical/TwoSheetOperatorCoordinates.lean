@@ -1,8 +1,8 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

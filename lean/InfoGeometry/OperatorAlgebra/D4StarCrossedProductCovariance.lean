@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.D4StarFiniteCrossedProduct
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Covariance property for the finite D₄ crossed-product carrier

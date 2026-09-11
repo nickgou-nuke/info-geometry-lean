@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DiscreteDiracHodgeChiral
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
   Finite Hodge-star conjugation for endomorphisms of a cochain carrier.

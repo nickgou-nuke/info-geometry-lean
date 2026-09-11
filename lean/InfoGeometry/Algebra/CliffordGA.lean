@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.QuadraticDiscriminant
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.Tactic.NoncommRing

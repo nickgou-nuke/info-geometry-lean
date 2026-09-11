@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwoSheetThreeColorWeylFinite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hestenes circular sheet/CAR basis

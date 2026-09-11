@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikKocakPaperFormalism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 import InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine

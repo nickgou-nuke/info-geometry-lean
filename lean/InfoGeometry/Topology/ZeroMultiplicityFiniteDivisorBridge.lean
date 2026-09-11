@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.EulerLaurentDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.AlgebraicPunctureDeRham
 import InfoGeometry.Topology.ZeroMultiplicityResidueBridge
 

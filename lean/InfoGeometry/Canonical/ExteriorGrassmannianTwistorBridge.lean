@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.KleinQuadricPlucker
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 
 /-!

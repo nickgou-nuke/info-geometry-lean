@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2AdmissibleBasisPrefix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Algebraic constraints on admissible-basis coordinates

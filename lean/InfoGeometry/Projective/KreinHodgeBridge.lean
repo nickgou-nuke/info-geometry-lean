@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import DAG.GraphHodge
 import InfoGeometry.Projective.KreinAttention
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RicciMongeAmpere
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology
 

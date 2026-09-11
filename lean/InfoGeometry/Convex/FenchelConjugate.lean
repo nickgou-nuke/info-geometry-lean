@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Module.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Convex
 

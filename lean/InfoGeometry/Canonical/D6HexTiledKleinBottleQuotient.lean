@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.D6ReciprocalLatticeBrillouinZone
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
 

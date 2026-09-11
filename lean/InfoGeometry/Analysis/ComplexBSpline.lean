@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.IndividuatedBoundedTransform
 /-!
 # Complex B-splines and Hurwitz Zeta Functions

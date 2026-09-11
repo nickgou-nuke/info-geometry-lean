@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55ZornCARComparison
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Selected three-mode Nambu--Zorn Peirce packet

@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Determinant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.ExteriorPower.Basic
 import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Physics.ZornMatrixSU3.Vector3
@@ -19,7 +20,7 @@ open InfoGeometry.Canonical
 open InfoGeometry.Physics.ZornMatrixSU3
 open InfoGeometry.Algebra.Zorn.ParityTwistedLeviCivita
 
-abbrev Vec3 := Fin 3 → ℝ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 /-! The determinant is the native Mathlib determinant of the matrix whose
 rows are the three vectors.  Keeping this definition local to the tensor

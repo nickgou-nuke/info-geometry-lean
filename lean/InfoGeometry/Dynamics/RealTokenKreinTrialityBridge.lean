@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.RealTokenPhaseChirality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.CompositionTriality
 
 /-!

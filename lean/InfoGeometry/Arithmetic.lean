@@ -1,1 +1,2 @@
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
+import InfoGeometry.Algebra.FiniteSpinAlgebra

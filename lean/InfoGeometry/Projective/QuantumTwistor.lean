@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.QuantumGrassmannian
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricPlucker
 
 /-!

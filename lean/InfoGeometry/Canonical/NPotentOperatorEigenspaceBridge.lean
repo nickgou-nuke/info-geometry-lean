@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.LinearAlgebra.Span.Basic

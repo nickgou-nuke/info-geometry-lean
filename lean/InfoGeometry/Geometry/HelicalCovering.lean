@@ -16,6 +16,7 @@ as calibration data.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 
 noncomputable section

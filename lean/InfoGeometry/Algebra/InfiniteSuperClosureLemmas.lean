@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.InductiveSuperClosureLemmas
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Infinite image superclosure lemmas

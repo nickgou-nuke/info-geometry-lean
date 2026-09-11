@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BayesianThermoMetricHodgeBridge
 import InfoGeometry.Canonical.BuresMetricStabilization
 import InfoGeometry.Canonical.InfinitesimalDictionaryBridge

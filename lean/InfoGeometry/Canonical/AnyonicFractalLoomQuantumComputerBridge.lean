@@ -1,4 +1,5 @@
 import Mathlib.Tactic.Ring
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Linarith
 import InfoGeometry.Categorical.FibonacciBraiding
 import InfoGeometry.Algebra.CliffordBraidingTheorem

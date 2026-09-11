@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11ComplexStageBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl55WittCAR
 import InfoGeometry.Canonical.Cl55WittLieRouting
 import InfoGeometry.Canonical.Cl55WittMultigrading

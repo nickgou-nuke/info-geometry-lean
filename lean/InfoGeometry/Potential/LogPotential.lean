@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.Bregman
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Log Potential

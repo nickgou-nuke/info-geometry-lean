@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PoissonGibbsKANModuliCouplingTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Positive transport property from the quotient Gibbs readout

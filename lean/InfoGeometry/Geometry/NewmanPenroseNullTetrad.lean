@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.Tactic
 
@@ -15,7 +16,7 @@ namespace InfoGeometry.Geometry.NewmanPenrose
 
 noncomputable section
 
-abbrev Carrier := Fin 4 → ℂ
+abbrev Carrier := InfoGeometry.Algebra.FiniteSpin.Vec4C
 
 def lorentzBilinear (x y : Carrier) : ℂ :=
   2 * (-(x 0) * (y 0) + (x 1) * (y 1) + (x 2) * (y 2) + (x 3) * (y 3))

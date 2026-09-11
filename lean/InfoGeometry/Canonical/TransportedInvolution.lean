@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Transport of an involutive linear operator through an existing linear
 equivalence.  This is the carrier-level core of a transported Hodge operator;

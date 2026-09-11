@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.IncidentNullFlagStress
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Explicit incident null-flag variational readouts

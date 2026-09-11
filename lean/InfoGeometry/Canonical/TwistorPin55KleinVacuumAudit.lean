@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwistorPin55KleinVacuumBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.TwistorPin55KleinVacuumBridge
 

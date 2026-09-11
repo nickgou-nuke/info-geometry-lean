@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.SuperPoincareWigner
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.SuperPoincareWignerCapstone
 

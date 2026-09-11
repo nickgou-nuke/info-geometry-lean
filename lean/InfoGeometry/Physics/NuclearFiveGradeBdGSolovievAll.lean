@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearTwoModeCARFiveGrade
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearFiveGradeGeneratorRepresentation
 import InfoGeometry.Physics.NuclearBdGSolovievCompression
 import InfoGeometry.Physics.NuclearCARPhononCommonCarrier

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarLogarithmicDerivationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

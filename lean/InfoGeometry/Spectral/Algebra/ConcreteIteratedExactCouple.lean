@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.IteratedDerivedCouple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Iterated pages of the concrete bidegree exact couple

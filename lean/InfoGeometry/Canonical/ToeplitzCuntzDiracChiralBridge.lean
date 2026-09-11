@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ToeplitzCuntzThreeCyclicSuperchargeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native chiral Dirac operators on the ternary Toeplitz--Cuntz algebra

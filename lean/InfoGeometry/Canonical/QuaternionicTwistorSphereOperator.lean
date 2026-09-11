@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.QuaternionicOperatorFrame
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 The pointwise quaternionic two-sphere of complex structures in the existing

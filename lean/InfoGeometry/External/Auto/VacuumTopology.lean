@@ -1,4 +1,5 @@
 import Mathlib.Topology.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Instances.Discrete
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Data.String.Basic

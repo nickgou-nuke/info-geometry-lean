@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesBivectorCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.HestenesMaxwell
 

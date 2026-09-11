@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.BaxterTQRelation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.BaxterTQRelationCapstone
 

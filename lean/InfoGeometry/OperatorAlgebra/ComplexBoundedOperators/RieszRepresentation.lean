@@ -1,4 +1,5 @@
 import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.ComplexDecomposition
 

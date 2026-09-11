@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionTKK55Blocks
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Independent component TKK bracket

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitHierarchy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.SplitTrialityKernel
 
 /-!

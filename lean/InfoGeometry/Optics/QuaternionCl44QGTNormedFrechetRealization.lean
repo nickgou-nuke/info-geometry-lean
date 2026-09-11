@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.QuaternionCl44QGTBianchiChernWeil
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.OperatorQGTFrechetChernCharacter
 
 set_option autoImplicit false

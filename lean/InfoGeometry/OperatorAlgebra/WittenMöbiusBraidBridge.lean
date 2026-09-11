@@ -1,4 +1,5 @@
 import Mathlib.Data.List.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Algebra.AnyonFiniteSpinBraid
 import InfoGeometry.OperatorAlgebra.TripotentFactorization

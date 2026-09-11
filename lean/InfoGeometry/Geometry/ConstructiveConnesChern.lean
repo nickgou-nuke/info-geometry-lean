@@ -3,6 +3,7 @@ InfoGeometry/Geometry/ConstructiveConnesChern.lean
 -/
 
 import InfoGeometry.Geometry.ConstructiveKasparov
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.BilingualAnalyticity
 import InfoGeometry.Geometry.SpectralDivisors
 

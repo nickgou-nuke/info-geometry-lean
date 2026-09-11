@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PerelmanWSpinorial
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GrandCanonicalExperts
 set_option linter.unnecessarySeqFocus false
 set_option linter.unnecessarySimpa false

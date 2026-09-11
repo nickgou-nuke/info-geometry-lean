@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.KreinModularCartanCompatibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.Thermal
 
 namespace InfoGeometry.Krein

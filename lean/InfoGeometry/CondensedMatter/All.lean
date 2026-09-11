@@ -1,4 +1,5 @@
 import InfoGeometry.CondensedMatter.DIIISuperfluid
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.CondensedMatter.CliffordAtomsZ2n
 import InfoGeometry.CondensedMatter.NonOrientableWeylSemimetal
 

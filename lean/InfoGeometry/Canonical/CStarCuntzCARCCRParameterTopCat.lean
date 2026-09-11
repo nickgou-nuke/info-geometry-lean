@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CStarCuntzCARCCRTopologicalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.QCCRResidual
 import Mathlib.Topology.Category.TopCat.Basic
 

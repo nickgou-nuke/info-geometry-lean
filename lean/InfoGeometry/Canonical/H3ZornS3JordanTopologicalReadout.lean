@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.F4S3JordanObstruction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.H3ZornJordanIdentity
 import InfoGeometry.Algebra.H3ZornJordanInstance
 import InfoGeometry.Algebra.H3ZornMcCrimmonTraceIdentities

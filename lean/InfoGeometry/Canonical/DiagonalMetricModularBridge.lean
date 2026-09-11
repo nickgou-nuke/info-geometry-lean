@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Convex.Euclidean
 import InfoGeometry.Math.Convexity

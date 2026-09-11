@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.LocalGaugeGroupAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native local gauge action on adjoint differential fields

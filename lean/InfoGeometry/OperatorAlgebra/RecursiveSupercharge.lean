@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
 import InfoGeometry.OperatorAlgebra.SupergradedClosure
 import InfoGeometry.Canonical.ErlangenInductiveClosure

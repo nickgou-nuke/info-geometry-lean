@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55RoPESplitTorusBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CliffordNilpotentInterference
 
 /-! Native specialization of the generic opposite-square nilpotence lemma. -/

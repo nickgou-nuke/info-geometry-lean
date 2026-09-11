@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55WittFullLieClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Classical
 
 /-!

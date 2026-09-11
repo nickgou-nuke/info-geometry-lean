@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ChevalleySpinorBlueprint
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Annihilator isotropy for split exterior spinors

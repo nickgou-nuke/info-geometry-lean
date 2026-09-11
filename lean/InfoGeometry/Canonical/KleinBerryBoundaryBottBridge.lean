@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KleinBerryPhase
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KleinBottleBoundaryAction
 import InfoGeometry.Clifford.CliffordBott
 import InfoGeometry.Meta.Architecture

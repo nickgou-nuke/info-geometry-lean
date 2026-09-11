@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectiveSplitQ11Realization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.Null
 
 open scoped LinearAlgebra.Projectivization

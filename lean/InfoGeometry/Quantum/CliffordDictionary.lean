@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.GeometricTensor
 import InfoGeometry.Canonical.TomitaTakesaki
 

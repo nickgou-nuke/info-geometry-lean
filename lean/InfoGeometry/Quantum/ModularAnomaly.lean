@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.RealMajoranaCategory
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Krein.ExponentialIsometry
 import Mathlib.Analysis.InnerProductSpace.PiL2

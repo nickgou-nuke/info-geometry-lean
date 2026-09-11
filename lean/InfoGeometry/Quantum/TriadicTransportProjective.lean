@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.TriadicTransportCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.Rays
 
 namespace InfoGeometry.Quantum.TriadicTransport

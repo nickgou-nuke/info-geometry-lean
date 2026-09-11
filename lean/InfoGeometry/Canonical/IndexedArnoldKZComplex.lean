@@ -12,6 +12,7 @@ are used.
 -/
 
 import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KZLogarithmicConnection
 
 noncomputable section

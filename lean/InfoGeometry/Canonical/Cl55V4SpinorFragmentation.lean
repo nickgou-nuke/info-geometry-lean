@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ConformalReflection55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ConformalProjectiveEmbedding55
 
 /-!

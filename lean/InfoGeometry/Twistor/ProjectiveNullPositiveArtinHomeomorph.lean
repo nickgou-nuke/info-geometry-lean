@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullPositiveArtinTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Homeomorphism readout of the positive Artin action

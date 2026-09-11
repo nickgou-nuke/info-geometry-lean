@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealStageProjectionDyadicCocone
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

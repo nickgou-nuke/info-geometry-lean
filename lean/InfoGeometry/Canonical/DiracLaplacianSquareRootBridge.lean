@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DiracMetricCompatibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

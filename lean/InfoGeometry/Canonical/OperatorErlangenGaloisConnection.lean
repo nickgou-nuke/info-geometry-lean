@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorErlangenFixedPoints
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Operator Erlangen Galois connection

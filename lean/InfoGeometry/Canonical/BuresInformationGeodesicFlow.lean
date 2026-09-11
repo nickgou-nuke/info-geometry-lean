@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.BuresInformationGeodesicFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BuresMetricClosedCartography
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.PenroseTwistor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Projective Twistor Space

@@ -15,6 +15,7 @@ It proves the first concrete optical laboratory facts:
 -/
 
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Fin.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Tactic.FinCases

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 import InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 import InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes
@@ -22,7 +23,7 @@ open InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 open InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes
 open InfoGeometry.Canonical.ZornMatrix
 
-abbrev Coord := Fin 8 → ℝ
+abbrev Coord := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 /-- The polar form associated to the transported circular quadratic form. -/
 def circularPeircePolar (x y : Coord) : ℝ :=

@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.ChebyshevBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ChebyshevBoundaryCapstone
 

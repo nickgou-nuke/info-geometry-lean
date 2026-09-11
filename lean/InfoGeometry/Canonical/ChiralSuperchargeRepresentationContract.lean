@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralCuntzSuperchargeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Krein.DoubledSpace
 import Mathlib.Tactic.NoncommRing

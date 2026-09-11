@@ -18,6 +18,7 @@ commutant. That routing is a proof-carrying Tomita/Stinespring witness.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 import InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
 import InfoGeometry.Meta.OwnerTarget

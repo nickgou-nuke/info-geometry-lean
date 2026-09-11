@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitSpinFactorHomothetySO55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Compatibility owner for the upstream homothety path. -/
 noncomputable section

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ConnesDiracOperatorFromBdG
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
 import Mathlib.Algebra.Ring.TransferInstance
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose

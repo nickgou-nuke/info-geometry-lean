@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraActionTopologicalCompatibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Stagewise compatibility for topological `StarAlgEquiv` actions

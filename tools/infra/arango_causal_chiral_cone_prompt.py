@@ -43,6 +43,22 @@ from tools.infra.arango_raw_infotree_ingest import ArangoTarget  # noqa: E402
 SCHEMA = "info_geometry.causal_chiral_cone_prompt.v2"
 
 
+def run_optional_overlay_aql(
+    target: ArangoTarget, query: str, bind_vars: dict[str, Any] | None = None
+) -> list[Any]:
+    """Query an optional overlay, treating an absent collection as empty.
+
+    The declaration/edge graph is authoritative; enrichment overlays are
+    deployment-dependent and must never make a cone query fail.
+    """
+    try:
+        return run_aql(target, query, bind_vars)
+    except RuntimeError as exc:
+        if "collection or view not found" in str(exc):
+            return []
+        raise
+
+
 def arango_target(repo_root: Path) -> ArangoTarget:
     load_repo_arango_env(repo_root)
     return ArangoTarget(
@@ -364,7 +380,7 @@ def overlay_rows(
 ) -> dict[str, Any]:
     out: dict[str, Any] = {}
     if include_chiral:
-        out["chiral"] = run_aql(
+        out["chiral"] = run_optional_overlay_aql(
             target,
             """
             FOR c IN arango_dag_chiral
@@ -375,7 +391,7 @@ def overlay_rows(
             {"keys": component_keys, "limit": limit},
         )
     if include_hodge:
-        out["hodge"] = run_aql(
+        out["hodge"] = run_optional_overlay_aql(
             target,
             """
             FOR h IN arango_dag_hodge
@@ -386,7 +402,7 @@ def overlay_rows(
             {"limit": limit},
         )
     if include_dirac:
-        out["dirac"] = run_aql(
+        out["dirac"] = run_optional_overlay_aql(
             target,
             """
             FOR d IN arango_dag_dirac
@@ -396,7 +412,7 @@ def overlay_rows(
             {"limit": limit},
         )
     if include_motifs:
-        out["motifs"] = run_aql(
+        out["motifs"] = run_optional_overlay_aql(
             target,
             """
             FOR m IN arango_dag_motifs
@@ -407,7 +423,7 @@ def overlay_rows(
             {"keys": component_keys, "limit": limit},
         )
     if include_process:
-        out["process_flows"] = run_aql(
+        out["process_flows"] = run_optional_overlay_aql(
             target,
             """
             FOR f IN arango_dag_process_flows
@@ -418,7 +434,7 @@ def overlay_rows(
             {"keys": component_keys, "limit": limit},
         )
     if include_dominators:
-        out["dominators"] = run_aql(
+        out["dominators"] = run_optional_overlay_aql(
             target,
             """
             FOR d IN arango_dag_dominators

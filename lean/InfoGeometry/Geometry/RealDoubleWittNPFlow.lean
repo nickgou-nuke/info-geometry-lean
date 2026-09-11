@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.RealDoubleWittNPReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Geometry.RealDoubleWittNP
 

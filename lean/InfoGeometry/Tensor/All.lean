@@ -1,4 +1,5 @@
 import InfoGeometry.Tensor.DeBruijn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Tensor.DeBruijnPayload
 import InfoGeometry.Tensor.DeBruijnLift
 import InfoGeometry.Tensor.DeBruijnPorts

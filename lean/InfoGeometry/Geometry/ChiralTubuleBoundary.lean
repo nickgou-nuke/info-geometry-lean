@@ -13,6 +13,7 @@ only through proof-carrying calibration data.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Operator.Banach
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 import InfoGeometry.Meta.OwnerTarget

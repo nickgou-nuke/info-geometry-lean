@@ -1,4 +1,5 @@
 import proofs.KleinOperatorAlgebraBundleCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import proofs.KleinSixStateVectorBundleCore
 
 /-!

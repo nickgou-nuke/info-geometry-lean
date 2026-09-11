@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.NewmanPenroseNullTetrad
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.RealDoubleWittNPReadout
 import InfoGeometry.Geometry.RealDoubleWittNPFlow
 

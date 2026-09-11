@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CausalFunctor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Dynamics.UnruhRindlerSuperpotential
 import Mathlib.CategoryTheory.NatIso
 import Mathlib.CategoryTheory.Limits.HasLimits

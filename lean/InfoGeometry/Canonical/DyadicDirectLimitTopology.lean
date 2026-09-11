@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DyadicRankFamilyTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

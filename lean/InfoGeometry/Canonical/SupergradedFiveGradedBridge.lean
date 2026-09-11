@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MobiusChiralClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.WittenParityIndex
 
 /-!

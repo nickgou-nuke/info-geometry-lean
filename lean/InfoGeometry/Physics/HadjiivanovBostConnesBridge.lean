@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.HadjiivanovCuntzBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.AmplituhedronBostConnes
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.NumberTheory.LSeries.RiemannZeta

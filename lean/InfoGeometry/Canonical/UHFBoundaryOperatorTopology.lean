@@ -1,4 +1,5 @@
 import Mathlib.Topology.Constructions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Instances.Complex
 import InfoGeometry.Canonical.UHFBoundaryExactSequence
 import InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology

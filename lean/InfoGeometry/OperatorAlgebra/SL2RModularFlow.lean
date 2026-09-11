@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModularSL2R
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Routing marker: canonical `sl(2, ℝ)` modular carrier

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionPeirceChiralFrame
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornDerivationExponentialAutomorphism
 import InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge
 import InfoGeometry.Lie.ContinuousDerivationExponential

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSCofinalTail
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Global stage representations transported from cofinal GNS tails

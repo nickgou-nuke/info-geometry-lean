@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Soldering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.Incidence
 import InfoGeometry.Projective.Twistor.Incidence
 import InfoGeometry.Projective.ArnoldRelations

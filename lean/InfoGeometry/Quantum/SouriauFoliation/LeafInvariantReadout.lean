@@ -2,6 +2,7 @@
 InfoGeometry/Quantum/SouriauFoliation/LeafInvariantReadout.lean
 -/
 import InfoGeometry.Quantum.SouriauFoliation.SymplecticLeaf
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.SouriauFoliation.OnLeafModularFlow
 
 noncomputable section

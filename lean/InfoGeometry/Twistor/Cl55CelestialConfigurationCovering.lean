@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Cl55CelestialUnorderedConfiguration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.Cl55MinkowskiCelestialSliceTopology
 import InfoGeometry.Twistor.ProjectiveNullConfigurationCovering
 

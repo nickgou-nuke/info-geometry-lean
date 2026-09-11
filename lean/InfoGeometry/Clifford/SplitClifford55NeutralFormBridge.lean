@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55NeutralHyperbolicIsometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55ChevalleySpinorActionBridge
 
 /-!
@@ -23,7 +24,7 @@ open InfoGeometry.Clifford.Cl55NeutralHyperbolicIsometry
 open InfoGeometry.Clifford.NeutralPhaseSpaceCore
 open CliffordAlgebra
 
-abbrev W5 := Fin 5 → ℝ
+abbrev W5 := InfoGeometry.Algebra.FiniteSpin.Vec5R
 abbrev Neutral55 := SplitV ℝ W5
 abbrev ChevalleyQ55 : QuadraticForm ℝ Neutral55 :=
   splitQ (R := ℝ) (W := W5)

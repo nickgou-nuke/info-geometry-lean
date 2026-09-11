@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornCartanRootSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bundled native root-weight functionals

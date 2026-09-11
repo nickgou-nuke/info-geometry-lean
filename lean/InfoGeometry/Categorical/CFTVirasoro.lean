@@ -1,4 +1,5 @@
 import Mathlib.Tactic.Ring
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 def virasoro_cocycle (m : ℤ) : ℤ := m * (m^2 - 1)
 

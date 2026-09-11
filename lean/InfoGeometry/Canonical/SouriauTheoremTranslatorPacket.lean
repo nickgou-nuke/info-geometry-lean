@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauLieThermoKKTBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
 import InfoGeometry.Canonical.SouriauDensityWeightContext
 import InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge

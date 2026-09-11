@@ -9,6 +9,7 @@ proof-carrying data, not placeholder assertions.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorFenchelRegularCone
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.OperatorAlgebra.PO55RicciFlux

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Checks for the Operator Erlangen--Legendre packet

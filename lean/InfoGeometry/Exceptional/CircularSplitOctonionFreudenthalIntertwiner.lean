@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.Freudenthal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalChargeLinear
 import InfoGeometry.Exceptional.FreudenthalSymplecticAction
 import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis

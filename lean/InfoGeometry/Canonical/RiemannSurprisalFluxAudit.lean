@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.RiemannHypothesisProjectiveFormulation
 import InfoGeometry.Canonical.SimplexSurprisalMetriplectic
 import InfoGeometry.Canonical.ThreeColorNativeBracketTable

@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.HestenesModularKMSBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.HestenesKreinVacuumBridge
 import InfoGeometry.Meta.Architecture
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionAxialFlowDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Closed flow of the diagonal split-octonion tripotent

@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Limits.Preorder
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Order.Zorn
 
 /-!

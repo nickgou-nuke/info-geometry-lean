@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.VertexAlgebraBraidingCocycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exact edge cochains on the two oriented three-vertex cycles

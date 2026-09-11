@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.PenroseOnsagerYangOccupationSpectrum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.PenroseOnsagerYangOrderParameter
 import InfoGeometry.Quantum.PenroseOnsagerYangTwoModeCoherence
 

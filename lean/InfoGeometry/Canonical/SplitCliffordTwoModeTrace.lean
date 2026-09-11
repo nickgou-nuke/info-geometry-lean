@@ -1,4 +1,5 @@
 import Mathlib.Tactic.FinCases
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NormNum
 import Mathlib.LinearAlgebra.Matrix.Notation
 import InfoGeometry.Canonical.SplitCliffordJordanWignerTwoMode

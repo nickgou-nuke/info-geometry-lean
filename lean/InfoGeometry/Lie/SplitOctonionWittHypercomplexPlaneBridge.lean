@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionExteriorAlgebraPeirceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hypercomplex structure on the four Witt planes

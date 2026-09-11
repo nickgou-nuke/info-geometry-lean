@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciFusionTreeLinearEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 import Mathlib.Algebra.Category.ModuleCat.Basic
 

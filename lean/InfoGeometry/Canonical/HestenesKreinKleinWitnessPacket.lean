@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Grading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HadjiivanovMonodromyProjection
 
 /-!

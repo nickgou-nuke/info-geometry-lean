@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.BipolarGENERICThreeCoordinateModel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.BipolarPoissonAlgebra
 import Mathlib
 

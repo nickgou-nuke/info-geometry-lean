@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearFiveGradeCommonCarrierLieHom
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearFiveGradeSolovievCommonCompression
 import InfoGeometry.Physics.NuclearBdGTwoLevelExact
 import InfoGeometry.Physics.NuclearBdGSolovievAffineBridge

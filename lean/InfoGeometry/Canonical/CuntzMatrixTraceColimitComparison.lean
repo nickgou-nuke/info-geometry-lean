@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzMatrixTraceTopologicalColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Stagewise comparison of algebraic and topological trace colimits

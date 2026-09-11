@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitRealNullTetradZornProjectiveBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Projective fixed sectors of the split `(2,2)` tetrad boost
@@ -18,7 +19,7 @@ open InfoGeometry.Clifford.SplitRealNullTetrad
 open InfoGeometry.Lie.SplitRealNullTetradZornBridge.Tetrad
 open InfoGeometry.Lie.SplitRealNullTetradZornProjectiveBridge
 
-abbrev Coeff2 := Fin 2 → ℝ
+abbrev Coeff2 := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 noncomputable def positiveWittEmbedding : Coeff2 →ₗ[ℝ] Carrier where
   toFun a := a 0 • causalMinus + a 1 • entropyMinus

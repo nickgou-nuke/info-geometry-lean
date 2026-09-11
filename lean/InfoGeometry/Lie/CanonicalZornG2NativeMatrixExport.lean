@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllClosedFlowCircularBasis
 import InfoGeometry.Canonical.ZornCellScalarExtensionBridge
 import Mathlib.Algebra.Module.ZLattice.Basic

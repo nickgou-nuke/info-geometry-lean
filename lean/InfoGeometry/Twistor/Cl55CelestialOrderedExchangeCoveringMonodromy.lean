@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Cl55CelestialOrderedExchangeMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.Cl55RealSplitPinNullConfigurationCovering
 import InfoGeometry.Twistor.ProjectiveNullConfigurationCoveringLocalSystem
 import InfoGeometry.Twistor.ProjectiveNullOrderedExchangeDeckMonodromy

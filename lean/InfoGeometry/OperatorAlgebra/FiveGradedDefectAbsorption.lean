@@ -18,6 +18,7 @@ Virasoro, black-hole unitarity, Page-curve, or holographic-recovery theorem.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
 import InfoGeometry.Meta.OwnerTarget

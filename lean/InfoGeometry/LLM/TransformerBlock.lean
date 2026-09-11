@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Attention
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Triality
 
 namespace InfoGeometry.LLM

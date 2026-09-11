@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DiscretePenroseSpinNet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Penrose patch category

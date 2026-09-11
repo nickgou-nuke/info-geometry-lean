@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PrimeMertensDefectBoundary
 import InfoGeometry.Meta.SocketTarget
 

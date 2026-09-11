@@ -1,0 +1,22 @@
+import InfoGeometry.Canonical.DrazinJordanChevalleyBridge
+
+/-!
+# Axiomatic Audit of DrazinJordanChevalleyBridge
+
+This audit verifies that the foundational axioms of DrazinJordanChevalleyBridge
+are strictly the standard foundations [propext, Classical.choice, Quot.sound].
+-/
+
+#print axioms InfoGeometry.Canonical.DrazinJordanChevalleyBridge.master_drazin_jordan_chevalley_synthesis
+#print axioms InfoGeometry.Canonical.DrazinJordanChevalleyBridge.makeCertifiedDrazinJordanChevalleySynthesis
+#print axioms InfoGeometry.Canonical.DrazinJordanChevalleyBridge.jordan_chevalley_sum
+#print axioms InfoGeometry.Canonical.DrazinJordanChevalleyBridge.a_semisimple_mul_a_nilpotent
+#print axioms InfoGeometry.Canonical.DrazinJordanChevalleyBridge.a_nilpotent_mul_a_semisimple
+#print axioms InfoGeometry.Canonical.DrazinJordanChevalleyBridge.jordan_chevalley_comm
+#print axioms InfoGeometry.Canonical.DrazinJordanChevalleyBridge.a_nilpotent_pow_k
+#print axioms InfoGeometry.Canonical.DrazinJordanChevalleyBridge.a_nilpotent_pow_succ_k
+#print axioms InfoGeometry.Canonical.DrazinJordanChevalleyBridge.a_semisimple_mul_drazin
+#print axioms InfoGeometry.Canonical.DrazinJordanChevalleyBridge.drazin_mul_a_semisimple
+#print axioms InfoGeometry.Canonical.DrazinJordanChevalleyBridge.jordan_chevalley_smul_sum
+#print axioms InfoGeometry.Canonical.DrazinJordanChevalleyBridge.a_semisimple_annihilates_nilpotent_state
+#print axioms InfoGeometry.Canonical.DrazinJordanChevalleyBridge.a_nilpotent_annihilates_regular_state

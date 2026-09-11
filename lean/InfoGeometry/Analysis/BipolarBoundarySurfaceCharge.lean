@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarBoundaryTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 import Mathlib.Tactic

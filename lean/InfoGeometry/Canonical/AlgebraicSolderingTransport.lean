@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Transport of a bilinear product and Leibniz operators across a linear
 equivalence.  This is the algebraic core used by the H3/Zorn soldering

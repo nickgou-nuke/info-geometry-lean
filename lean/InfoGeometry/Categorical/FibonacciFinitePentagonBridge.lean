@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.FibAnyonThm6_pentagon
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.FibonacciFiveChannelAssociator
 
 /-!

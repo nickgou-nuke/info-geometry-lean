@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FormalPrimeRootSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauThermalEvaluation
 import InfoGeometry.Canonical.ParityTraceWitness
 import InfoGeometry.Canonical.PrimeGasPartitions

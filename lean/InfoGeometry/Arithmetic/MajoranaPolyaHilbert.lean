@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.AnalyticFrontier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.BerryKeating
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.Bridge
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.HilbertPolya

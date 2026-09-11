@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Subalgebra
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic
@@ -25,6 +26,7 @@ are mechanically verified in Lean 4 with ZERO `sorry`s and ZERO custom axioms.
 
 noncomputable section
 
+
 namespace InfoGeometry.Lie.SO55MatrixSubalgebra
 
 open Matrix
@@ -32,7 +34,7 @@ open InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
 open InfoGeometry.Lie.SplitOctonionWittEndomorphismBlockBridge
 open InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge
 
-abbrev Mat10 := Matrix (Fin 10) (Fin 10) ℝ
+abbrev Mat10 := InfoGeometry.Algebra.FiniteSpin.Mat10R
 
 /-- The canonical (5,5) Levi metric on Fin 10. -/
 def eta55LeviMat10 : Mat10 :=

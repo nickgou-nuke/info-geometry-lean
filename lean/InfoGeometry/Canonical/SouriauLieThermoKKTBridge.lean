@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauConformalKKTContext
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
 import InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
 import InfoGeometry.Canonical.SouriauKreinMetriplecticContext

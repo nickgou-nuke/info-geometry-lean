@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.OrderOfElement
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.IntervalCases

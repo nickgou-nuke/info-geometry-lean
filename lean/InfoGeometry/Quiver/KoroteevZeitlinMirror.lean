@@ -1,4 +1,5 @@
 import InfoGeometry.Quiver.BetheAnsatzXXZ
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quiver.HbarOper
 import InfoGeometry.Physics.LogCFT
 /-

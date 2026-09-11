@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.BraidGroup3PresentationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.LogJordanBraidProject3Representation
 import InfoGeometry.Categorical.LogJordanCategoricalBraidGroup3Representation
 import InfoGeometry.Categorical.LogJordanTensorPowerStabilization

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.InductiveOperatorTaylorClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Convex.RadialLogBarrier
 
 /-!

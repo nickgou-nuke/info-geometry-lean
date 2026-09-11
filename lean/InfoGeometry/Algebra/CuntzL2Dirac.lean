@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.GenericDirac
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.HilbertBasisParseval
 

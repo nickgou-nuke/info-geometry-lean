@@ -1,4 +1,5 @@
 import InfoGeometry.Automorphic.GlobalNonAbelianLanglandsBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Ergodic.RuelleTransfer
 
 namespace InfoGeometry.Canonical.GlobalNonAbelianLanglandsCapstone

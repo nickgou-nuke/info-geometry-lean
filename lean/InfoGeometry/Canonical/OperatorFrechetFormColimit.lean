@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzStageModularFlowTopologicalColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NativeToeplitzCuntzThree
 import Mathlib.Topology.Category.TopCat.Basic
 

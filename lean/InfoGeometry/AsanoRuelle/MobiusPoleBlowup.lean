@@ -1,4 +1,5 @@
 import InfoGeometry.AsanoRuelle.TopologicalEndpoint
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Field.Lemmas
 import Mathlib.Topology.Bornology.BoundedOperation
 import InfoGeometry.Canonical.LeeYangAsanoNativeCore

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
 import InfoGeometry.Algebra.CubicJordanOs
 import InfoGeometry.Algebra.CubicJordanOsExtensions

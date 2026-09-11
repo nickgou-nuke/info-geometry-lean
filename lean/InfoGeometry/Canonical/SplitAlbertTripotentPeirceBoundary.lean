@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.H3ZornCarrierBasis
 import InfoGeometry.Algebra.BaezF4H3Zorn
 import InfoGeometry.Algebra.SplitAlbertF4BasisTrace

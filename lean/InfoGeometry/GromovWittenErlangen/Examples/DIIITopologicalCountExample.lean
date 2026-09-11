@@ -1,4 +1,5 @@
 import InfoGeometry.GromovWittenErlangen.CP1DrazinNilpotentDefectModel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.KitaevChain
 
 /-!

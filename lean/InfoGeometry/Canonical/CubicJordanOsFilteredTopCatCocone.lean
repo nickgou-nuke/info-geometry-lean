@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CubicJordanOsFilteredTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuous cocones and descent for filtered Albert stages

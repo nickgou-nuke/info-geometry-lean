@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.FiniteRelativeModularOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 noncomputable section

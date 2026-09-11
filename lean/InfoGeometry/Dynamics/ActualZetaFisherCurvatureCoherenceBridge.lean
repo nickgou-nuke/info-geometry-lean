@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.ActualZetaCurvatureMetriplecticBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Dynamics.ActualZetaRealFisherMetriplecticBridge
 
 /-!

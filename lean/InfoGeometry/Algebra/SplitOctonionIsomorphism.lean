@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitOctonionQ
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
 import InfoGeometry.Algebra.JordanCayleyInversionOsQ
 import InfoGeometry.Algebra.JordanCayleyInversionOs

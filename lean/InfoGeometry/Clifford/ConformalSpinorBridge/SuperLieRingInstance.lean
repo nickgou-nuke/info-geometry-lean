@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SuperLieRing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ConformalSpinorBridge
 
 /-!

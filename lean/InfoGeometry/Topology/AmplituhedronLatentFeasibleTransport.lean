@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.AmplituhedronTopCatStageDiagram
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transport of symbolic feasible regions across a stage inclusion

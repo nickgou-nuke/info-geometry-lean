@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Quantum.DikinBlahutOrbits
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.QuantumInformationGeometryColimitDualityCapstone
 import InfoGeometry.Canonical.SouriauOnsagerBKMRealForm
 import InfoGeometry.Canonical.SouriauOnsagerBKMPositivity

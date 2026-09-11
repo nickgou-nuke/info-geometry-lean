@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Projective/Affine Penrose PGA anchors
@@ -91,7 +92,7 @@ theorem mobius_projective_rescale {lam A B C D z : ℂ}
 
 /-! ## PGA-style homogeneous point/line incidence -/
 
-abbrev Vec3 := Fin 3 → ℝ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 def dot3 (u v : Vec3) : ℝ := ∑ i, u i * v i
 

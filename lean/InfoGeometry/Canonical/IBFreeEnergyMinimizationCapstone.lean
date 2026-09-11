@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBFreeEnergyMinimization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.YangBaxterProof
 
 namespace InfoGeometry.Canonical.IB

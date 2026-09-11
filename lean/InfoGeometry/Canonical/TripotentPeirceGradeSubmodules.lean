@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Range submodules for the five Peirce weights

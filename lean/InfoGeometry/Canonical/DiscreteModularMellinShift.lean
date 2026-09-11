@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TypeIIILambdaCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.MajoranaLiftPacket
 import InfoGeometry.Krein.Superphysics
 import InfoGeometry.Meta.Architecture

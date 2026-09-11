@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ColimitPartitionXiIdentificationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite primon partition refinement

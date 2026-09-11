@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzStageModularFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredStarAlgebraTopologicalColimit
 import InfoGeometry.Canonical.FilteredStarInductiveCoconeTopCat
 

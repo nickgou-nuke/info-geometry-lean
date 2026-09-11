@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11StageTwoTrifactorFlows
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11MoritaNeutralStabilization
 import InfoGeometry.Projective.ExteriorKleinTwoPlaneEquiv
 import InfoGeometry.Projective.ExteriorKleinTwoPlaneIncidence

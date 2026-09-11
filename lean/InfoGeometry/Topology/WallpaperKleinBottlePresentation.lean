@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.WallpaperSymmetry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Wallpaper `pg` Klein-bottle presentation witness

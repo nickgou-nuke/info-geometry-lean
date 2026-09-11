@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalUnification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Trace
 import Mathlib.Tactic.NoncommRing
 set_option linter.unusedSectionVars false

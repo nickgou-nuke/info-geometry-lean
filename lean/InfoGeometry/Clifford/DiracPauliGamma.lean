@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Ring
@@ -16,6 +17,8 @@ This is a finite matrix owner for the explicit Pauli embedding.  It is kept
 separate from `CrawfordDiracBispinorDensities`, whose gamma matrices are in a
 Weyl-basis finite kernel.
 -/
+
+noncomputable section
 
 namespace InfoGeometry.Clifford.DiracPauliGamma
 

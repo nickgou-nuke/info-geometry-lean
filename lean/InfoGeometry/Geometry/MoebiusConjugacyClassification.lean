@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.MobiusClassification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Geometry.MoebiusConjugacyClassification
 

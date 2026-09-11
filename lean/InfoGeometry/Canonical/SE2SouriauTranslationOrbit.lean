@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SE2SouriauNoncompact
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SE2SouriauAffineAction
 
 /-!

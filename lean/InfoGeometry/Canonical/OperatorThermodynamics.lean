@@ -9,6 +9,7 @@ operator-theoretic interface.
 -/
 
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebraic.SplitSuperGeometry
 import InfoGeometry.Canonical.ModularSurprisalThermoPacket
 import InfoGeometry.Canonical.OperatorThermoBridge

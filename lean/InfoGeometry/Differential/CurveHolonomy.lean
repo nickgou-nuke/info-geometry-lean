@@ -1,4 +1,5 @@
 import Mathlib.MeasureTheory.Integral.CurveIntegral.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 
 namespace InfoGeometry.Differential

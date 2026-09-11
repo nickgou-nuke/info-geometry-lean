@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.GogberashviliSplitOctonionBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The six-vertex chiral star in the native split-octonion carrier

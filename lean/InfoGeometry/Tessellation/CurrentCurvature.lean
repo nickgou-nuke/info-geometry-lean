@@ -1,4 +1,5 @@
 import InfoGeometry.Tessellation.WilsonLoop
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import Mathlib.Algebra.Algebra.Basic
 

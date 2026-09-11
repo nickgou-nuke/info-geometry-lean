@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BerryConnection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NoetherInference
 import InfoGeometry.Canonical.OnsagerSpineBridge
 import InfoGeometry.Canonical.ThermodynamicGenerator

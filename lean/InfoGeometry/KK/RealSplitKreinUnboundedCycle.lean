@@ -1,4 +1,5 @@
 import InfoGeometry.KK.RealSplitKreinResolvent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped InnerProductSpace
 

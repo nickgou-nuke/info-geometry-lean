@@ -1,4 +1,5 @@
 import Mathlib.Combinatorics.SimpleGraph.AdjMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Combinatorics.SimpleGraph.Clique
 import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Basic

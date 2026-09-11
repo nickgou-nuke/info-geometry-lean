@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.KreinModularSpinorBilinearBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Krein
 

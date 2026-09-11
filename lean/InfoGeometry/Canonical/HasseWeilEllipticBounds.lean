@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Rat.Lemmas
 import Mathlib.Tactic
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Operators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Potential.Thermo
 
 open scoped InnerProductSpace

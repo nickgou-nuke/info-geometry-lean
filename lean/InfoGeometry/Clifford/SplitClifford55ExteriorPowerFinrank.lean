@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.ExteriorPower.Basis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitClifford55ExteriorSpinor
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.Data.Nat.Fib.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace Omega.Generated
 

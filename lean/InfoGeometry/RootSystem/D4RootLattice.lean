@@ -1,4 +1,5 @@
 import Mathlib.Data.Int.ModEq
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
 

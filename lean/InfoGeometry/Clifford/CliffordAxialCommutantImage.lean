@@ -14,6 +14,7 @@ triple commutant, a Morita equivalence, or a differential spin connection.
 -/
 
 import InfoGeometry.Clifford.OperatorValuedChiralCliffordFrame
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.AlgebraicTomitaTakesakiBridge
 
 noncomputable section

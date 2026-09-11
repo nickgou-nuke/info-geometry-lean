@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.CrossRatioPGL2
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.YangBaxterProof
 
 namespace InfoGeometry.Canonical.CrossRatioPGL2Capstone

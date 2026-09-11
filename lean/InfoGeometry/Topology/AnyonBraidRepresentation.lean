@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ArtinBraidS3Quotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.Perm.Fin
 
 /-!

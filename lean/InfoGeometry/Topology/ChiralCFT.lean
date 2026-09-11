@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.TensorProduct.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.TensorProduct.Map
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Data.Complex.Basic

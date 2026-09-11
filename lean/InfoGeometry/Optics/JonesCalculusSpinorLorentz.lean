@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix Complex
 
@@ -7,7 +8,7 @@ noncomputable section
 namespace JonesCalculus
 
 /-- Jones vectors: polarization spinors in `ℂ²`. -/
-abbrev JonesVector := Fin 2 → ℂ
+abbrev JonesVector := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 /-- Jones matrices: `2 × 2` complex matrices acting on polarization spinors. -/
 abbrev JonesMatrix := Matrix (Fin 2) (Fin 2) ℂ

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittPinKernel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Spin55NativeOrthogonalKernelReduction
 
 namespace InfoGeometry.Clifford.Clifford55

@@ -19,6 +19,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import Mathlib.CategoryTheory.Limits.IsLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cone Uniqueness for Limits and Colimits

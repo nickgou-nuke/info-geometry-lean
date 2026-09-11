@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.BasisTable
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical finite Zorn basis table facade

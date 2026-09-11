@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BitWordGraphDifferential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CantorBernoulliBitWordStarInductiveSystemBridge
 import InfoGeometry.Canonical.BitWordSimplexFaceCancellation
 import InfoGeometry.Canonical.BitWordSimplexSignCancellation

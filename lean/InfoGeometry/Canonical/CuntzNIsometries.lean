@@ -1,4 +1,5 @@
 import Mathlib.Algebra.BigOperators.Intervals
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzN
 
 open BigOperators

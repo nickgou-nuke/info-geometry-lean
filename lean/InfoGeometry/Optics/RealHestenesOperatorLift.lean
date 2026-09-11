@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.OperatorLiftCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BilingualRealHestenesDictionary
 
 /-!

@@ -1,6 +1,6 @@
 import InfoGeometry.Algebraic.JordanCliffordLieSplit
-import InfoGeometry.Canonical.QutritGellMannOperatorBasis
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.QutritGellMannOperatorBasis
 
 /-!
 # Qutrit Lie--Jordan coordinate layer

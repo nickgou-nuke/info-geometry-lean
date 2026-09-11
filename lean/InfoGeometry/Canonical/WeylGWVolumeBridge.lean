@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.StandardFormProjectiveGWBridge
 import InfoGeometry.Canonical.DeterminantPhaseVolumeBridge
 import InfoGeometry.Canonical.WeylHomogeneousReadoutBridge

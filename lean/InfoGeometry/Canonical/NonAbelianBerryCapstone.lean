@@ -1,4 +1,5 @@
 import InfoGeometry.Topological.NonAbelianBerry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.NonAbelianBerryCapstone
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.RohozhkinDelaunayBraiding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Rohozhkin Delaunay Braiding Projective Bridge

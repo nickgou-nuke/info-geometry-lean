@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCircularWittForm
 import InfoGeometry.Quantum.PauliSoldering
 import InfoGeometry.Lie.SplitOctonionCircularMinkowskiPauliBridge
@@ -30,8 +31,8 @@ open InfoGeometry.Lie.SplitOctonionCircularMinkowskiPauliBridge
 
 namespace InfoGeometry.Lie.SplitOctonionChiralMinkowskiFixedSectionBridge
 
-abbrev Coord := Fin 8 → ℝ
-abbrev Minkowski4 := Fin 4 → ℝ
+abbrev Coord := InfoGeometry.Algebra.FiniteSpin.Vec8R
+abbrev Minkowski4 := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
 /-- Split-octonion Witt quadratic form $N(X) = u_+ u_- - (u_1 v_1 + u_2 v_2 + u_3 v_3)$. -/
 def wittNorm (x : Coord) : ℝ :=

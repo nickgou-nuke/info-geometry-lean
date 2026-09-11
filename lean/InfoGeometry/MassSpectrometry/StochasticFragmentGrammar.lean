@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MassSpectrometry.FragmentationDAG
 import InfoGeometry.Algebra.StochasticGrammarCuntzKriegerBridge
 

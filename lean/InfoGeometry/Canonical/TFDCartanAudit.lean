@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TFDNilpotentCartanAudit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # TFD Cartan audit

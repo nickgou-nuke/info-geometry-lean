@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearParityGradedHamiltonian
 import InfoGeometry.Physics.NuclearFiniteCARCartanSolovievBridge
 

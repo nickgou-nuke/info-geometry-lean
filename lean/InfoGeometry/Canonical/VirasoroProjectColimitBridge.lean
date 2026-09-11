@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordSourceSuperVirasoroFiniteWindow
 import InfoGeometry.Canonical.SplitCliffordSuperVirasoroInductiveColimit
 import InfoGeometry.Canonical.SplitCliffordSuperVirasoroColimitReadback

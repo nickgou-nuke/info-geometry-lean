@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzN
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility import for the generic Cuntz owner

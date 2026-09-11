@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BayesianHodgeCurrent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bayesian Hodge Stabilizer Bridge

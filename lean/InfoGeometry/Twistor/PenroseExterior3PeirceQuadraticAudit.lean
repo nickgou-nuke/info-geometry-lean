@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.PenroseExterior3PeirceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 
 /-!

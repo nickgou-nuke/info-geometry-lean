@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11CompatibleLocalStateNet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Basic
 import Mathlib.Topology.Algebra.Module.FiniteDimension
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Cl55CelestialUnorderedConfiguration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical permutation labels of a celestial configuration fiber

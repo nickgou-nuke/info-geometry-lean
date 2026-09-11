@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.ConcreteComposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 #check InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 #check InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.detZ

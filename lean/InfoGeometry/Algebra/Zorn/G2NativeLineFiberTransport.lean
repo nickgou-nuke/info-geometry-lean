@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeLineFiber
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativePointTransitivity
 
 namespace InfoGeometry.Algebra.Zorn.G2NativeLineFiberTransport

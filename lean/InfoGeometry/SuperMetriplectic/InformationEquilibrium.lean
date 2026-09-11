@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.SeeleyDeWitt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Information Equilibrium Theorem

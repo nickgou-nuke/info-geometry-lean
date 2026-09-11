@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.WeylGaugeOperatorLift

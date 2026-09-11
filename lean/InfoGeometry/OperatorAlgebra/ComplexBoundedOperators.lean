@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.l2Space
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.HilbertBasisParseval
 
 /-!

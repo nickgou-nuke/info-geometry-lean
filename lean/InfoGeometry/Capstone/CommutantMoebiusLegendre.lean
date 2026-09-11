@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CommutantMoebiusFenchelMirrorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Commutant--Möbius--Legendre Capstone

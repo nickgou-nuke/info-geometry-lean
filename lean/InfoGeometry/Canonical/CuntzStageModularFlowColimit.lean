@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzStageModularFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Categorical descent of the Cuntz stagewise modular flow

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Module.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AlbertAlgebraGenerationsBridge
 import InfoGeometry.Canonical.ExteriorGradedDerivationBridge
 

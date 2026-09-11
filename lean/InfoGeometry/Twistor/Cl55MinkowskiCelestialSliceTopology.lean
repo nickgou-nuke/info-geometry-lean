@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Cl55MinkowskiCelestialSlice
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.Cl55ProjectivizationTopology
 import InfoGeometry.Twistor.ProjectiveNullBoundaryTopology
 import Mathlib.Topology.MetricSpace.ProperSpace

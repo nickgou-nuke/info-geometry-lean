@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Subgroup.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Subgroup.Finite
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic

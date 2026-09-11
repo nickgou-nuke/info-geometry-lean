@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitOctonions.ProjectiveLine
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Voelkel OP1 Section Packet

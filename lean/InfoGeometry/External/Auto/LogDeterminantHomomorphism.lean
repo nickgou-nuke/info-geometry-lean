@@ -1,4 +1,5 @@
 import Init
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 class LogTensorProduct (α : Type) where
   tensor : α → α → α

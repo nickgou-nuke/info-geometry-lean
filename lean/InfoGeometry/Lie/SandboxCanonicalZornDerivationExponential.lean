@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornDerivationExponential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # SandboxCanonicalZornDerivationExponential (Forwarder)

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2FlagWordEvaluator
 
 /-! Generated candidate data from `verify_g2_true_bruhat_cover.g`.

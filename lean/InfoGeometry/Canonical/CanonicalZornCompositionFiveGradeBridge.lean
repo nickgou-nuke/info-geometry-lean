@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornCompositionTriality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CanonicalZornFiveGradedClosure
 import InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
 import InfoGeometry.Canonical.ZornCore

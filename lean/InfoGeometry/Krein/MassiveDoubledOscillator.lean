@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DiracHodgeDoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Massive doubled oscillator algebra

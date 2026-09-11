@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.H3ZornCoordinateBasisBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SplitAlbertF4Classification
 import Mathlib.LinearAlgebra.Dimension.Finrank
 import Mathlib.LinearAlgebra.Dimension.Constructions

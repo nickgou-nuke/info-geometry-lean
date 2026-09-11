@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.ArnoldRelations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.AmplituhedronBoundary
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.UnitaryGroup
 import Mathlib.Analysis.Complex.Trigonometric
 

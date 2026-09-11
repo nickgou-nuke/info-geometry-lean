@@ -18,6 +18,7 @@ No ethical interpretation is encoded.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ConformalCrossover
 import InfoGeometry.Meta.OwnerTarget
 

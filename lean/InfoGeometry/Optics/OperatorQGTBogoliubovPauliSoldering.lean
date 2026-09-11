@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.OperatorQGTSoldering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.OperatorBogoliubovPauliBridge
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TimeReversalKramers
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Meta.Architecture
 

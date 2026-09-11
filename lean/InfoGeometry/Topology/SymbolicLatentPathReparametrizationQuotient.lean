@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentPathReparametrization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentPathHomotopyQuotientFunctoriality
 
 namespace InfoGeometry.Topology

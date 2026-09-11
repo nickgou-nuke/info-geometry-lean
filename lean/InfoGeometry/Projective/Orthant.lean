@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SelfDualCone
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Analysis.Convex.Cone.Basic
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.RiemannZetaMathlibVicinityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # V₄ character decomposition of a completed zeta datum

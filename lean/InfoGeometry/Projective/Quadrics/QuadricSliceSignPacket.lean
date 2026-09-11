@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.Quadrics.AffineSlices
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.Quadrics.SignatureDeterminant
 
 /-!

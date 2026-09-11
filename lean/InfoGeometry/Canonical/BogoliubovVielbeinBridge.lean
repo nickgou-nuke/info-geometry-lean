@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovVielbein
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Quantum.Fock
 import InfoGeometry.Quantum.RealMajorana

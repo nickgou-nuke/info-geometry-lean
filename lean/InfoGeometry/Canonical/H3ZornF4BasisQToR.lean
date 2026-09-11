@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.F4ActionMatrixRationalCertificate
 import InfoGeometry.Canonical.F4ActionMatrixRankCertificateBridge
 import InfoGeometry.Algebra.BaezF4H3Zorn

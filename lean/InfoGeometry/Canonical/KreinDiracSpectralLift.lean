@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.InformationPartitionCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KreinDiracPolarizationBridge
 import InfoGeometry.Meta.Architecture
 

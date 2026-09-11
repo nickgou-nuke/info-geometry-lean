@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SelfDualConeColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.OperatorAlgebra.ProperCarrierSelfDualConeExtension

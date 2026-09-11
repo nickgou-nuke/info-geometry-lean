@@ -1,4 +1,5 @@
 import InfoGeometry.Prequantum.Bundle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledSpace
 import Mathlib.Tactic.Ring
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModularSpinorGrassmannianSheafBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
 
 namespace InfoGeometry.Canonical

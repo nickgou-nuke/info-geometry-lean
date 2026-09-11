@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutDynamicsTopCatAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # State-side coordinate naturality for the compatible-family action

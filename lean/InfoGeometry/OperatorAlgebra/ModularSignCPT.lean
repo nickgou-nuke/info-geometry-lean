@@ -19,6 +19,7 @@ support.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Meta.Architecture

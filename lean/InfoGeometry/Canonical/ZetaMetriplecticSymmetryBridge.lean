@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ZetaFlowKleinSemidirectBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CompletedZetaV4CharacterBridge
 import InfoGeometry.Canonical.ZetaSouriauMetriplecticFlowMasterBridge
 

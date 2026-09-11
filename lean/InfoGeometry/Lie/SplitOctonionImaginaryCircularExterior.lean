@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionImaginaryCircularForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exterior-power readout of the imaginary circular three-form

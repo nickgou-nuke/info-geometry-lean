@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentNoncommutativeTopologicalCovariantFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Morphisms of topological covariant flows on a fixed carrier

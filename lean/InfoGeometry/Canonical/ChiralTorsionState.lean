@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralTorsionGeneralizedKL
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DualConnectionsCore
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.InformationTorsion

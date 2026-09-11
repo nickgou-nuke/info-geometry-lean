@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.RiemannVonMangoldtStaircase
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.RiemannVonMangoldtStaircaseCapstone
 

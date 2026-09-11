@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NuclearBathCommutant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 
 noncomputable section

@@ -1,4 +1,5 @@
 import InfoGeometry.GromovWittenErlangen.GWCanonicalCountRayBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GromovWittenErlangen.DrazinLocalization
 import InfoGeometry.Meta.Architecture
 

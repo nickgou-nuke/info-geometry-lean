@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionErlangenInvariant
 
 /-!
@@ -20,7 +21,7 @@ open InfoGeometry.Lie.SplitOctonionErlangenInvariant
 abbrev CanonicalZorn :=
   InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalZorn
 
-abbrev Coordinate := Fin 8 → ℝ
+abbrev Coordinate := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 /-- The native determinant quadratic form in `Ell` circular coordinates. -/
 noncomputable def ellCircularQuadratic : QuadraticForm ℝ Coordinate :=

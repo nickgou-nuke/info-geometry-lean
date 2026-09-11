@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundedKMSConditionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.HestenesModularKMSBridge
 import InfoGeometry.Meta.Architecture
 

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.Modular
 import InfoGeometry.Algebraic.ExactPhaseCocycle
 import InfoGeometry.Canonical.Algebraic.ModularRotorCocycle

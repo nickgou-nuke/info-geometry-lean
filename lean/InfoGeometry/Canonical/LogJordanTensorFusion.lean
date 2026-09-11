@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.LogJordanVirasoroIntertwiner
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularCoproductFlux
 import Mathlib.LinearAlgebra.TensorProduct.Map
 

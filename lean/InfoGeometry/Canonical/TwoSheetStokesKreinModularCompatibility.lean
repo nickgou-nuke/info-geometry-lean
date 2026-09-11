@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwoSheetKreinModularCompatibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TwoSheetStokesModularComposition
 import InfoGeometry.Canonical.TwoSheetStokesKreinTopological
 

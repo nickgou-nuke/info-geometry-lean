@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionThreeColorChiralRelations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionPolarizedZornMultiplication
 import InfoGeometry.Canonical.ChiralBasisChangeMatrix
 import InfoGeometry.Canonical.SplitQuaternionAssociativeCoassociativeCalibrationBridge

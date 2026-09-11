@@ -9,6 +9,7 @@ noncommutative wedge-square and an explicitly antisymmetric derivative datum.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.BilingualAnalyticity
 
 noncomputable section

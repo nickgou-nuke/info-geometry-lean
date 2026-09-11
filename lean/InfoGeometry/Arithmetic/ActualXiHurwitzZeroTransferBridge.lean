@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PrimeCliffordWaveletActualXiBridge
 import InfoGeometry.Canonical.HurwitzAsanoColimitLimitBridge
 

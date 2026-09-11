@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.McbalFullNativeCorridor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 Transitive axiom audit for the repository-native mcbal corridor.

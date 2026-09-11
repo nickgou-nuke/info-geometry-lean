@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GreenSchwarzAnomalyInflowBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of GreenSchwarzAnomalyInflowBridge

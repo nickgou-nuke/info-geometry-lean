@@ -26,6 +26,7 @@ E8 lattice theorem, or a full Siegel modular-form construction.
 -/
 
 import InfoGeometry.Automorphic.SiegelResonance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ZetaTraceSpecialization
 
 noncomputable section

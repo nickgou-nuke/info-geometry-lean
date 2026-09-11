@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionGogberashviliNormBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Pullback multiplication on split-octonion signal coordinates

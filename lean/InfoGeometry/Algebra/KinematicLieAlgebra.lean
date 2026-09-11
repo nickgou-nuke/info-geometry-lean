@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.OfAssociative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Subalgebra
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.KinematicCliffordAlgebra

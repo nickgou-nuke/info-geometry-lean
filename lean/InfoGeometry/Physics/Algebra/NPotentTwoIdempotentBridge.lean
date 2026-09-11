@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Canonical.AffineConformalHullNPotencyBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The two-potent boundary is the idempotent boundary

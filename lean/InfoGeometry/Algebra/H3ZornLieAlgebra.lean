@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Subalgebra
 import InfoGeometry.Algebra.H3ZornJordanInstance
 import InfoGeometry.Algebra.BaezF4H3Zorn

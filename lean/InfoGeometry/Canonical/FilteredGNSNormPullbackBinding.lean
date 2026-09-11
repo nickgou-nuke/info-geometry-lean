@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSFaithfulCStarRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # GNS norm pullback binding via faithful range equivalence

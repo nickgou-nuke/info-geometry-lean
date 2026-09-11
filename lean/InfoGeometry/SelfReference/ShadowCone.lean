@@ -1,4 +1,5 @@
 import InfoGeometry.SelfReference.Shadow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Shadow Cone forwarding shim

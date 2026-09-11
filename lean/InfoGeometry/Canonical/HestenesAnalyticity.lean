@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesPhaseSemilinear
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.BilingualAnalyticity
 import InfoGeometry.External.Virasoro.VirasoroAlgebra
 import InfoGeometry.External.Virasoro.AffineKacMoody

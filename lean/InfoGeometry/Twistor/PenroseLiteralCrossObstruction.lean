@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.PenroseSignedCCRGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # An exact obstruction to the literal CCR cross-product proposal

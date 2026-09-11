@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitPauliMatrixRelations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topology of the finite chiral split-quaternion matrix readout

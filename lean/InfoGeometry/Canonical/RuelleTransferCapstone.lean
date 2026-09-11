@@ -1,4 +1,5 @@
 import InfoGeometry.Ergodic.RuelleTransfer
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

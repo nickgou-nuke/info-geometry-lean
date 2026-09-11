@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitClifford55ExteriorFiniteGraded
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55SpinorDimensionReadout
 
 noncomputable section

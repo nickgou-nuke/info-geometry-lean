@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.Concrete
 import InfoGeometry.Quantum.CircularPauliCausalCone
 
@@ -9,7 +10,7 @@ namespace InfoGeometry.Canonical.ZornLeftActionLinearization
 open InfoGeometry.Algebra.Zorn.Concrete
 open InfoGeometry.Quantum.CircularPauliCausalCone
 
-abbrev Coord8 := Fin 8 → ℂ
+abbrev Coord8 := InfoGeometry.Algebra.FiniteSpin.Vec8C
 abbrev Zorn8 := ZornCell ℂ
 
 def coordOfZorn (X : Zorn8) : Coord8 :=

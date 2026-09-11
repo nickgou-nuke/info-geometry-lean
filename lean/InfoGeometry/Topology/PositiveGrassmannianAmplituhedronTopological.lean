@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PositiveGrassmannianAmplituhedron
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topology of the finite positive Grassmannian matrix chart

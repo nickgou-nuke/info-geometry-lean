@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciFourAnyonCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Matrix-level adjacent Artin identities for the six-anyon templates

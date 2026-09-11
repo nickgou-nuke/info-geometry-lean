@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The central scalar line is killed by canonical Zorn derivations

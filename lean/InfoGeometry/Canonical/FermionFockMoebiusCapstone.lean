@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.FermionFockMoebius
 
 namespace InfoGeometry.Canonical.FermionFockMoebiusCapstone

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionImaginaryAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCliffordAction
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 import InfoGeometry.Canonical.ZornVectorMatrixExplicit

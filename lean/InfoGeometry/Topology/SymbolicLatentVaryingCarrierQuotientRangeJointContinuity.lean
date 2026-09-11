@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientRangeOrbitClosureCompHausNaturality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Joint-continuity transport between quotient and range limits

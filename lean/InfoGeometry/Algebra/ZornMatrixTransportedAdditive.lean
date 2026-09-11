@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionGogberashviliVectorMultiplicationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Algebra.ZornMatrixTransportedAdditive
 

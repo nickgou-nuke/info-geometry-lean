@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FibonacciToeplitzCuntzRepresentationBridge
 
 /-!

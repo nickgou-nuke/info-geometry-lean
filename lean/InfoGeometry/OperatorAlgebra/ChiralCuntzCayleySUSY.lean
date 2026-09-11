@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ChiralCuntzBraidedSuperchargeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ChiralZornBasisSoldering
 
 /-!

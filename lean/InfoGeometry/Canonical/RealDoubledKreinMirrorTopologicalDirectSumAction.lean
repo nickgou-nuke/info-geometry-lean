@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealDoubledKreinMirrorTopologicalDirectSumTopCatIso
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transported mirror action on the even/odd direct sum

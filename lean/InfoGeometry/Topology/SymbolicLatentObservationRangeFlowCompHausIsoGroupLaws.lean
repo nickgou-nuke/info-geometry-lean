@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentObservationRangeFlowCompHausGroupLaws
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Iso-level group laws for the observational range flow

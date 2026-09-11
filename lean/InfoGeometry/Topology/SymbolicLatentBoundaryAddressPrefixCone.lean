@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentBoundaryReadoutInverseLimitTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentCompatiblePrefixFamily
 
 /-!

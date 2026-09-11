@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Generic Symplectic Rank-Two Endomorphisms and Jacobiator Residual Identities

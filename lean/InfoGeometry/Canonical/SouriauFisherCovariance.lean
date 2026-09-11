@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanSouriauCoadjointBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2CartanFisherSouriauMetric
 import Mathlib.Analysis.SpecialFunctions.Exp
 

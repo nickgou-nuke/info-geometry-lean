@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Matrix.Normed
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!

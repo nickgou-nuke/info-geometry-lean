@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentModularOrbitClosureTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Orbit-closure transport under modular time reversal

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.BaezF4H3Zorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! The F4 constraint is a residual, not a second product. -/
 

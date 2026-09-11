@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Equivs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.QuaternionBasis
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases

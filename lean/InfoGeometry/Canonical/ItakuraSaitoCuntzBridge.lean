@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzFibonacciBraidInclusion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open CuntzFibonacciBraidInclusion
 

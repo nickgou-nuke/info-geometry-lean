@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeModularOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DeterminantCore
 import InfoGeometry.Canonical.TypeIIIContinuousCoreReal
 import InfoGeometry.Volume.RadonNikodym

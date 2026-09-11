@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.OperatorKLBKM
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 import InfoGeometry.Canonical.RelativeModularBerezinianBridge
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HypercomplexOneParameterFlows
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Dynamics.MoebiusTrifactorFlows
 
 /-!

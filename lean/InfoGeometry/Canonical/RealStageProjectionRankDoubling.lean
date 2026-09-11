@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealProjectionRankConjugation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealStageKroneckerAction
 
 namespace InfoGeometry.Canonical

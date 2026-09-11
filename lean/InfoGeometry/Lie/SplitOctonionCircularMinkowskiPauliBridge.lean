@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularWittForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.PauliSoldering
 import InfoGeometry.Geometry.PauliParavectorBridge
 
@@ -19,7 +20,7 @@ open InfoGeometry.Lie.SplitOctonionCircularWittForm
 open InfoGeometry.Quantum.PauliSoldering
 open InfoGeometry.Geometry.PauliParavectorBridge
 
-abbrev Momentum := Fin 4 → ℝ
+abbrev Momentum := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
 def minkowskiCoordinates (v : Minkowski4) : Momentum :=
   ![v.t, v.x, v.y, v.z]

@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.NeutralKreinMajoranaFrame
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A real doubled Krein realization of the rank-one split flow
@@ -18,7 +19,7 @@ open Matrix
 open InfoGeometry.Quantum.NeutralKreinMajoranaFrame
 
 abbrev Index := Carrier 2
-abbrev Mat4R := Matrix2 2
+abbrev Mat4R := InfoGeometry.Quantum.NeutralKreinMajoranaFrame.DoubledMat4R
 abbrev Vec4R := Index → ℝ
 
 /-- The `(1,1)` metric on either real half. -/

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentNoncommutativeObservationCovariantCompHausFlowIso
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Composition laws for covariant compact flow isomorphisms

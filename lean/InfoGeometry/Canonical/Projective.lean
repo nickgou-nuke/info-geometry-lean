@@ -20,6 +20,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 
 import InfoGeometry.Projective.Dynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.FaithfulKL
 import InfoGeometry.Projective.ConeKL
 import InfoGeometry.Projective.Bridge

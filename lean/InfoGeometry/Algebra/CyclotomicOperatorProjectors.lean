@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native Mathlib Formalization: Cyclotomics, Nilpotents, n-Potents, and Operator Projectors

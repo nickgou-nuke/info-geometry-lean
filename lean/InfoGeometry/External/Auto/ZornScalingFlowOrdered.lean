@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Zorn scaling flow in tuple order `(a,b,u,v)`
@@ -14,7 +15,7 @@ noncomputable section
 
 namespace ZornScalingFlowOrdered
 
-abbrev Vec3 := Fin 3 → ℂ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3C
 
 /-- Dot product on `ℂ³`. -/
 def dot3 (u v : Vec3) : ℂ := ∑ i : Fin 3, u i * v i

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSHilbertColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Nontriviality of normalized filtered GNS Hilbert colimits

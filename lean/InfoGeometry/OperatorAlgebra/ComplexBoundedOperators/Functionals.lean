@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Dual
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # CBO-002: inner-product functionals

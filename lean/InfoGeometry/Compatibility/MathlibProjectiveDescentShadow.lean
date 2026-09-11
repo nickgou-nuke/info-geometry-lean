@@ -7,6 +7,7 @@ This file is downstream-only. The real core does not import it.
 -/
 
 import InfoGeometry.Canonical.PSLDescent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

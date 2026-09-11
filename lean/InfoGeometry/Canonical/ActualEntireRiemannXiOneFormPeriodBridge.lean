@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ActualEntireRiemannXiDifferentialFormBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ActualEntireRiemannXiLocalZeroPeriod
 import InfoGeometry.Canonical.ActualEntireRiemannXiLogDerivativeCirclePeriodBridge
 

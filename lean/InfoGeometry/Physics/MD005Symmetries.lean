@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.MD004GeometricStructures
 
 /-!
@@ -133,7 +134,7 @@ theorem ICircleRotate_preserves_dot4 (a b : ℝ) (h : a * a + b * b = 1)
     ring
 
 /-- Finite coordinate vector used for translation shadows. -/
-abbrev Vec4 := Fin 4 → ℝ
+abbrev Vec4 := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
 /-- Translation of a finite four-coordinate vector. -/
 def translate (ξ x : Vec4) : Vec4 :=

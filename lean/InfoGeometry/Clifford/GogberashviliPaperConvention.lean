@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.GogberashviliSplitOctonionBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Equation (6) in the 2024 split-octonionic Dirac paper

@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarCircleEnclosurePeriods
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarU1PeriodHolonomy
 import InfoGeometry.Canonical.BipolarCartanFlatHolonomyBridge
 

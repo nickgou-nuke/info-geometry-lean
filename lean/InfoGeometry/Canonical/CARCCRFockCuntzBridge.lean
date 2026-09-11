@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.QCCRResidual
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzFockRepresentation
 import InfoGeometry.Quantum.NoncommutativeFockBridge
 import InfoGeometry.Canonical.FiniteSingleModeCARMatrixBridge

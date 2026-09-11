@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2InvariantIncidenceCandidates
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2CASNativePointEnumeration
 import InfoGeometry.Algebra.Zorn.G2ParabolicIncidenceCertificate
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornMultiplicationBilinear
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.ContDiff.Basic
 
 namespace InfoGeometry.Canonical

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSRepresentedCStarCompletion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Readback for the completed C*-colimit carrier

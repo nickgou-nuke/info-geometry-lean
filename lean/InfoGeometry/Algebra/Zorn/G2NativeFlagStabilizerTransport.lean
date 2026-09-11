@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerGenerators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2IntrinsicBaseLineCensus
 
 namespace InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerTransport

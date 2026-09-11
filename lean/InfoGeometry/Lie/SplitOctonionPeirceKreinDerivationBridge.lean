@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Split-Octonion Peirce Decomposition, Krein Invariance, and Derivation Bridge
@@ -30,8 +31,8 @@ noncomputable section
 
 namespace InfoGeometry.Lie.SplitOctonionPeirceKreinDerivationBridge
 
-abbrev Coord := Fin 8 → ℝ
-abbrev Chiral4 := Fin 4 → ℝ
+abbrev Coord := InfoGeometry.Algebra.FiniteSpin.Vec8R
+abbrev Chiral4 := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
 /-- Embedding of the chiral subspace $V_+$ into $\mathbb{R}^{4,4}$. -/
 def embedPlus (v : Chiral4) : Coord :=

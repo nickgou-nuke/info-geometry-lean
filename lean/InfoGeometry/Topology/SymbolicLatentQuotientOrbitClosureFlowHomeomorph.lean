@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentQuotientOrbitClosureTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentQuotientFlowHomeomorph
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.IndividuatedCasimir
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.ModularHamiltonianSignum
 import InfoGeometry.Meta.Architecture

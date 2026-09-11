@@ -1,4 +1,5 @@
 import Mathlib.Topology.ContinuousMap.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.BostConnesThermalTime
 
 /-!

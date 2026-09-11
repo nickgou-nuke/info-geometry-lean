@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundarySplitClifford
 import InfoGeometry.Canonical.CantorCl11Limit
 import InfoGeometry.Arithmetic.ZetaTraceSpecialization

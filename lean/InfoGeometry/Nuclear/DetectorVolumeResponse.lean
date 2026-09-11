@@ -1,4 +1,5 @@
 import InfoGeometry.Nuclear.DetectorTransportKernel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Detector response as an actual three-dimensional Bochner integral

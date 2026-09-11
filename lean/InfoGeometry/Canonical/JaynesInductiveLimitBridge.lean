@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AFRecursiveLimitBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MaxEnt.Finite
 
 /-!

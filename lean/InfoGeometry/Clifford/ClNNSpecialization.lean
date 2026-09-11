@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ClNN
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitQ11
 import InfoGeometry.Quantum.RealSplitClifford
 import InfoGeometry.Meta.Architecture

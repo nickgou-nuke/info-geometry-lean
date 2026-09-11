@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.F4ActionMatrixRationalMinor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Exact replay target for the rational F₄ action certificate.
 

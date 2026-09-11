@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.InformationalLichnerowicz
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Quantum.SuperchargeMultiplet
 import Mathlib.Analysis.Calculus.Deriv.Mul

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Ring
 import InfoGeometry.Algebra.NilpotentFiniteProductLimit

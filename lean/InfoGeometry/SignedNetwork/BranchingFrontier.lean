@@ -1,4 +1,5 @@
 import InfoGeometry.SignedNetwork.BranchingInitialization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SignedNetwork.BranchingEventLaw
 import InfoGeometry.SignedNetwork.BranchingEnsembleGenerator
 import InfoGeometry.SignedNetwork.BranchingQubitGenerator

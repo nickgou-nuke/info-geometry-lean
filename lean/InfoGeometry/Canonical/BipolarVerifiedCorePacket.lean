@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarFlatCoordinateGeodesics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarCartanFlatHolonomyBridge
 import InfoGeometry.Canonical.BipolarDeckMonodromy
 import Mathlib.Tactic

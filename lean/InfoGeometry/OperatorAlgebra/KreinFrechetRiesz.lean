@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Dual
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.KreinSpace
 
 open InfoGeometry.Krein

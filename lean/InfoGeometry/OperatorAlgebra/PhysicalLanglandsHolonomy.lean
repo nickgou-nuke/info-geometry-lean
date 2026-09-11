@@ -19,6 +19,7 @@ black-hole microstate theorem is asserted here.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section

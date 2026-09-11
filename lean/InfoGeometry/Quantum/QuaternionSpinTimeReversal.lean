@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.Q8V4SchurBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SpinAffineCasimirRigidity
 import Mathlib.Tactic
 
@@ -247,7 +248,7 @@ theorem central_sign_matrix : q8Matrix (a 2) = -(1 : SpinMatrix) := rfl
 ## 4. Time Reversal and Kramers Algebra
 -/
 
-abbrev TwoSpinor := Fin 2 → ℂ
+abbrev TwoSpinor := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 /-- Anti-linear time reversal; its real matrix factor is the existing M_j. -/
 def timeReverse (ψ : TwoSpinor) : TwoSpinor := ![star (ψ 1), -star (ψ 0)]

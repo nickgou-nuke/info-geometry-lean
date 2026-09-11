@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11TensorTower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11InfiniteCarrier
 import InfoGeometry.Canonical.Cl55MasterWittSpinorEnvelopeBridge
 

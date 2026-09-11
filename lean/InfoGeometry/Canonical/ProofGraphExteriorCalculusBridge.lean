@@ -1,4 +1,5 @@
 import InfoGeometry.Causal.ProofGraphExteriorCalculus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Causal.ProofDAGRepresentation
 
 /-!

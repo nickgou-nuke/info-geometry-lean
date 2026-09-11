@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionGogberashviliNormBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionSignalMultiplication
 import InfoGeometry.Algebra.ZornMatrixRealModule
 import InfoGeometry.Algebra.Zorn.CanonicalConjugation

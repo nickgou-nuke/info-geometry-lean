@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionAnnihilatorDimension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllCrossChannel
 import InfoGeometry.Algebra.Zorn.CanonicalKantorOperators
 import Mathlib.Tactic.FinCases

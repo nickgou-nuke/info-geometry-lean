@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NCG.NoncommutativeChiralZornAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Component normal forms for the operator-valued NC-Zorn carrier

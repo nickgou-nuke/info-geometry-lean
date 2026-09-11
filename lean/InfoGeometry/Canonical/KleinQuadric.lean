@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.KleinQuadric
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical Klein quadric entry point

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ComplexAnalyticBridge
 import InfoGeometry.Canonical.ZetaFunctionalSymmetryNativeBridge
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge

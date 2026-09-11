@@ -1,4 +1,5 @@
 import InfoGeometry.Signal.ComplexRealification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Steering-plane detector geometry

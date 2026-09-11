@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NeutralPhaseSpaceNormalizationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Source-side CAR for the scaled neutral normalization

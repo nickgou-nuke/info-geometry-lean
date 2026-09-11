@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.CFT
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 `CFT.lean` is the canonical owner of the primary-state and state-field

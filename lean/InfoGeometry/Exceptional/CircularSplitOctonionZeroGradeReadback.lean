@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.CircularSplitOctonionContactLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! The circular mixed contact bracket readback into the existing zero-grade
 operator and scale components. -/

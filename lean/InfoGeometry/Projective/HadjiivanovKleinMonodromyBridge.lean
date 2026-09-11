@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.KleinQuadricLogDeRhamClass
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricDeRhamComplex
 import InfoGeometry.Projective.KleinFiniteDifferentialForms
 import InfoGeometry.Clifford.LogCftMonodromy

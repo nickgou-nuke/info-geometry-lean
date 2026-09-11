@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.FanoOctonionParavector
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ProjectedCliffordAssociatorDefect
 
 /-!

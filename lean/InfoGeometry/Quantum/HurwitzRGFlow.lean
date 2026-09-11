@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.Hurwitz
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RGFlow
 
 namespace InfoGeometry.Quantum.HurwitzRGFlow

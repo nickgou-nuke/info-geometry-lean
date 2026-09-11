@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TwelveFoldArithmeticNative
 import InfoGeometry.Physics.NuclearOperatorSchurComplement
 import InfoGeometry.Physics.QCDExceptionalArtinBridge

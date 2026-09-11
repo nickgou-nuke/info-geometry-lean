@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeFlagMatrixCoordinateBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Coordinate consequences of fixing the native base line

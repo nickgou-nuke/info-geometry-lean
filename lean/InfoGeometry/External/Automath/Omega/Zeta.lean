@@ -1,4 +1,5 @@
 import Omega.Zeta.XiFoldbinRankUnrankOptimalAdvicePolytime
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Omega.Zeta.XiFoldZminusoneCancellationBinomialConvolution
 import Omega.Zeta.XiJensenDefectEntropyEnergyIdentity
 import Omega.Zeta.XiTimePart9zblFoldpiGoldenOperatorSplitting

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 variable {F : Type*} [Field F] (A : F)
 variable {A_alg : Type*} [Ring A_alg] [Algebra F A_alg]

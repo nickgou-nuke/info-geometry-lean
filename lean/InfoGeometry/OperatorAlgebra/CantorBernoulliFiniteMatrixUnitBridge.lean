@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorKMSState
 import InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzOperatorTreeBridge
 import InfoGeometry.OperatorAlgebra.CantorBernoulliCylinderMultiplicationBridge

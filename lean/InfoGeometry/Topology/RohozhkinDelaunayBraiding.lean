@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.RohozhkinPentagonMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.RohozhkinRepresentation
 
 /-!

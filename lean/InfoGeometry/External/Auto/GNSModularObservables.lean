@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.FierzIdentities
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ChiralCausalCone
 
 /-!

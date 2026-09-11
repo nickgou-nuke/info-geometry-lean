@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionImaginaryAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionErlangenInvariant
 import InfoGeometry.Lie.SplitOctonionAxialCartanDerivation
 import InfoGeometry.Algebra.ZornDerivationBridge

@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.SpinGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55ChevalleySpinorActionBridge
 
 /-!
@@ -22,7 +23,7 @@ namespace InfoGeometry.Clifford.SplitClifford55ChevalleySpinRepresentation
 open InfoGeometry.Lie.ChevalleySpinor
 open InfoGeometry.Clifford.Cl55ChevalleySpinorActionBridge
 
-abbrev W5 := Fin 5 → ℝ
+abbrev W5 := InfoGeometry.Algebra.FiniteSpin.Vec5R
 abbrev SplitCarrier55 := SplitV ℝ W5
 abbrev SpinorCarrier55 := SpinorSpace ℝ W5
 abbrev CliffordCarrier55 := CliffordAlgebra (splitQ (R := ℝ) (W := W5))

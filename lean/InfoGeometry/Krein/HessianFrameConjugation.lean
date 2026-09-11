@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.CartanDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hessian Frame Conjugation

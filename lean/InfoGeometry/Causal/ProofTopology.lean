@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Set Matrix
 
@@ -77,7 +78,7 @@ end CausalConesAntisymm
 
 /-! ## Bucket 1: Local 2×2 Chiral / Hodge Algebra -/
 
-abbrev CausalMat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev CausalMat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def cmul (A B : CausalMat2) : CausalMat2 :=
   A * B

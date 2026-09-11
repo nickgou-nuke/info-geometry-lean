@@ -1,4 +1,5 @@
 import Mathlib.Probability.ProbabilityMassFunction.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BostConnesKMS
 
 /-!

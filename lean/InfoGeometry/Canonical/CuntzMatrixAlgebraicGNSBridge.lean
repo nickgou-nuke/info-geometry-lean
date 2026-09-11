@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzMatrixAlgebraicTraceFunctional
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBernoulliFiniteMatrixGaugeBridge
 import InfoGeometry.Canonical.CuntzMatrixFiniteTraceFaithfulness
 import InfoGeometry.Prequantum.GNSBridge

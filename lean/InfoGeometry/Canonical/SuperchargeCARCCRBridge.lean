@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SuperchargeTransportBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.RealBdG
 import InfoGeometry.Meta.Architecture

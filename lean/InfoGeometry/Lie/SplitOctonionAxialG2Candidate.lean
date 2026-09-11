@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionAxialCartanErlangen
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
 import InfoGeometry.Lie.SplitOctonionImaginaryTensor
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge

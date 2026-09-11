@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HypercomplexTriadVirasoroBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.VirasoroCasimirCentralChargeReadback

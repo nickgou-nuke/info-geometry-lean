@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.ContinuousDerivationExponential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornDerivationExponential
 import Mathlib.Topology.Algebra.Algebra
 import Mathlib.Algebra.Lie.OfAssociative
@@ -207,7 +208,7 @@ section CanonicalZornCoordinateRepresentation
 
 open InfoGeometry.OperatorAlgebra.SplitOctonionPseudoReal
 
-abbrev V8 := Fin 8 → ℝ
+abbrev V8 := InfoGeometry.Algebra.FiniteSpin.Vec8R
 local notation "EndV8" => V8 →L[ℝ] V8
 
 variable {W : Type*}

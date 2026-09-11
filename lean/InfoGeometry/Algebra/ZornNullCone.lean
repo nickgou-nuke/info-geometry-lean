@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZornVectorMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Split Octonion Null Cone and Minkowski 4-Vectors

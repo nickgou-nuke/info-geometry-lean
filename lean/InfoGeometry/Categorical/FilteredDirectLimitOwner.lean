@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Limits.Filtered
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.HasLimits
 import Mathlib.Algebra.Category.ModuleCat.FilteredColimits
 import Mathlib.Algebra.Category.Ring.FilteredColimits

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.AlgebraicAtiyahSingerIndex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SupergradedDiracCrystal
 
 namespace InfoGeometry.Physics

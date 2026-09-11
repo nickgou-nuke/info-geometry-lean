@@ -20,6 +20,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 
 import InfoGeometry.ExponentialFamily.Class
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.ExponentialFamily.Finite
 import InfoGeometry.ExponentialFamily.Bernoulli
 import InfoGeometry.ExponentialFamily.Gaussian

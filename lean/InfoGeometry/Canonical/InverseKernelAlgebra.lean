@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CertifiedInverseKernel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
 
 namespace InfoGeometry.Canonical

@@ -1,4 +1,5 @@
 import InfoGeometry.Inference.PoissonSinkhornDualCertificate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped BigOperators
 

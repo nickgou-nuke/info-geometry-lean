@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordSourceSuperVirasoroFiniteWindow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 import InfoGeometry.Algebra.SupergradedBracket
 

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ColeFuryIdeals
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DiracKahlerLaplacianOperatorBridge
 
 /-!

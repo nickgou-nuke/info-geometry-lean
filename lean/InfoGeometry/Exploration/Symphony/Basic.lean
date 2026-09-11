@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DrazinKreinCompatibility
 import InfoGeometry.Meta.Architecture

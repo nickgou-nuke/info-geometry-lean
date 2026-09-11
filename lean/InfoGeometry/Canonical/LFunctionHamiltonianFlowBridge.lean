@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorCoadjointHamiltonianFlowBridge
 import InfoGeometry.Arithmetic.LFunctionRepresentationBridge
 import InfoGeometry.Canonical.WeylCharacterEquivalence

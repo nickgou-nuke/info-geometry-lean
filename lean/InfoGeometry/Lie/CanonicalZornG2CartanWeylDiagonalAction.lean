@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanWeylEquivariantEnsemble
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

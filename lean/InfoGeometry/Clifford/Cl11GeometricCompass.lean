@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11TensorTower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The native geometric compass for the `Cl(1,1)` tensor atom

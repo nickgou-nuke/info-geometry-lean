@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CyclotomicProjectorReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.PeirceDecomposition
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Riemannian.CartanMetric
 import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
 import InfoGeometry.Riemannian.ConeAction

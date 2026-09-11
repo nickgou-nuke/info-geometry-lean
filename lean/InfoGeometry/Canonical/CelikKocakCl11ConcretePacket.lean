@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikKocakCantorOperators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
 import InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge
 import InfoGeometry.Canonical.CelikKocakPaperFormalism

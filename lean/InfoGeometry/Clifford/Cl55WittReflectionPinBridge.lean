@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55RealSplitPinVectorReflection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittReflectionAlignment
 import InfoGeometry.Clifford.Cl55RealSplitPinReflectionImage
 

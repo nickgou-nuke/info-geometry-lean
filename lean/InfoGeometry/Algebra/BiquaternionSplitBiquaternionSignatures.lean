@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.PauliQuaternionSplitComparison
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Biquaternion and split-biquaternion sign checks

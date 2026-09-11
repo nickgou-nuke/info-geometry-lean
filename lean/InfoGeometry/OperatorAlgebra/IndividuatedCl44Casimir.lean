@@ -16,6 +16,7 @@ a separate calibration, not as the definition of the Casimir.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.VerifiedCasimir
 import InfoGeometry.Canonical.DiracSouriauOperator
 

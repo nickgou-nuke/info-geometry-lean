@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalFiveGradeClosurePacket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.WeylWeightBalance
 
 /-!

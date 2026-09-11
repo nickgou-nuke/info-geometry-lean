@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.SheetWittCircularBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Algebraic loxodromic modes for two commuting operator involutions

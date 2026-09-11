@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBContractionFixedPoint
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.YangBaxterProof
 
 open scoped BigOperators ENNReal NNReal Topology

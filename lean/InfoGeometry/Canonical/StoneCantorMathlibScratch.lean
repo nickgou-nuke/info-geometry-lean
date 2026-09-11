@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.StoneCantorMathlibPR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Stone/Cantor mathlib extraction scratch

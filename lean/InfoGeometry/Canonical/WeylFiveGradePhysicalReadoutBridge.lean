@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.WeylFiveGradeBalanceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.WeylGWVolumeBridge
 import InfoGeometry.Canonical.WeylBKMDriftMassBridge
 import InfoGeometry.Canonical.WeylNormalizedCARCCRBridge

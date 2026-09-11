@@ -1,4 +1,5 @@
 import InfoGeometry.Fibonacci.FibAnyonThm1
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The quadratic Fibonacci conjugation shadow

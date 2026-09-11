@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.PeirceBoundaryStrataDisjointnessTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology
 

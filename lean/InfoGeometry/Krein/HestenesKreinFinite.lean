@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesCircularSheetCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.TwoSheetKreinIdealBridge
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.AssociativityObstruction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionCircularChiralClosure
 
 noncomputable section

@@ -1,4 +1,5 @@
 import Mathlib.Data.Fintype.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionKleinFourTriality
 import Mathlib.GroupTheory.Perm.Sign
 import InfoGeometry.Geometry.KleinFourTag

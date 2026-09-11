@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.OperatorBregmanDivergence
 import InfoGeometry.Meta.Architecture
 

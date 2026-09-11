@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SE2SouriauCoadjointOrbit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SE2SouriauNoncompact
 import InfoGeometry.Canonical.SE2SouriauCompactOrbit
 import Mathlib.GroupTheory.QuotientGroup.Basic

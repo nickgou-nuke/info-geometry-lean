@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikKocakPaperFiniteMatrixReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Rank-one decomposition of the finite endpoint operator algebra

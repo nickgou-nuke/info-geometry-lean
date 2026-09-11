@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordWickCAR

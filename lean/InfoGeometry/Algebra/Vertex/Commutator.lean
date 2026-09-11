@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Vertex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Mode Commutator from the Borcherds Identity

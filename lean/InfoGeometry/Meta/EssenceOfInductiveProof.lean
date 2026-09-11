@@ -1,4 +1,5 @@
 import Std
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Meta.EssenceOfInductiveProof

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PeircePositiveCell
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

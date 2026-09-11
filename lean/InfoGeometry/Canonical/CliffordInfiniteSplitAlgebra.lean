@@ -11,6 +11,7 @@ spinors from the Cl(5,5) infinite tensor colimit boundary.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option linter.unusedVariables false
 

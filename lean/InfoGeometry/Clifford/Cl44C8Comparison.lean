@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitBottPeriodicityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped TensorProduct
 

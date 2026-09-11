@@ -1,4 +1,5 @@
 import InfoGeometry.Tessellation.Incidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Tessellation.NilpotentFlow
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 import InfoGeometry.Canonical.CantorBinaryTiltCARCCRBridge

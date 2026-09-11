@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.LegendreSymbol.AddCharacter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.RootsOfUnity.Complex
 import InfoGeometry.Canonical.TwelveFoldArithmeticNative
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FibonacciToeplitzCuntzRepresentationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Singular.MoorePenrose
 import InfoGeometry.Singular.DrazinGreen
 

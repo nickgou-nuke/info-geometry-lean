@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.Cl44QuaternionSplit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
 import Mathlib.Analysis.Normed.Algebra.QuaternionExponential
 

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportOperatorInner
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Kernel and faithfulness of the finite-support GNS representation

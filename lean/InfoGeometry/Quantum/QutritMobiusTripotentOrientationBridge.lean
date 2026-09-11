@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.QutritBraidIncidenceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.TopologicalStandardModelBridge
 import InfoGeometry.Clifford.OpSquareTriadBridge
 import InfoGeometry.Geometry.MobiusClassification
@@ -42,7 +43,7 @@ open InfoGeometry.Clifford.OpSquareTriadBridge
 open InfoGeometry.Canonical.MatrixDetExpTraceJacobi
 
 abbrev RealMat2 := Matrix (Fin 2) (Fin 2) ℝ
-abbrev ComplexMat2 := Matrix (Fin 2) (Fin 2) ℂ
+abbrev ComplexMat2 := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- The tripotent spectral labels index the three qutrit/Möbius sectors. -/
 def tripotentStateEquivQutritLabel : TripotentState ≃ Fin 3 where

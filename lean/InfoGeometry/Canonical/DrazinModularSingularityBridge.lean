@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinSupercharge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.Cl11LorentzAction
 import InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge

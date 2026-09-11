@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.KANWallpaperIsomorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.FiniteInductiveSUSY
 
 /-!

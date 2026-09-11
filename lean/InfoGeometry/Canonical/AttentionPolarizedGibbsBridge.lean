@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AttentionPolarizedSplit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GrandCanonical.Core
 import InfoGeometry.Meta.Architecture
 

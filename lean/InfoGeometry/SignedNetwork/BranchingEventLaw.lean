@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SignedNetwork.ExactCancellation
 
 /-! Finite marked-event laws.  The `none` mark is an absorbing outcome when

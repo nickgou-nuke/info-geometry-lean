@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarAdmissibleLoops
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarWindingPeriodLattice
 
 /-!

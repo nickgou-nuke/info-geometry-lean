@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.StandardIntegralSplitOctonionMultiplication
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

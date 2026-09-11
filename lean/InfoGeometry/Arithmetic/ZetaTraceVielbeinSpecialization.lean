@@ -16,6 +16,7 @@ No Clifford/Berezinian operator realization is asserted at this layer.
 -/
 
 import Mathlib.NumberTheory.EulerProduct.DirichletLSeries
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentBoundaryInverseLimitCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentBoundaryReadoutInverseLimitTopCat
 import Mathlib.Topology.Category.CompHaus.Basic
 

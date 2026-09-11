@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.ScaleTopologyShape
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Geometry.ScaleTopologyShape
 

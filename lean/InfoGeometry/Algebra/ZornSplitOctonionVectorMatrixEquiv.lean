@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.GenericZorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornVectorMatrix
 
 /-!

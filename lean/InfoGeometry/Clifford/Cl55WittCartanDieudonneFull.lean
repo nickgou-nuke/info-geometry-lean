@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittOrthogonalBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittReflectionConjugation
 import InfoGeometry.Clifford.Cl55WittCarrierFaithfulness
 

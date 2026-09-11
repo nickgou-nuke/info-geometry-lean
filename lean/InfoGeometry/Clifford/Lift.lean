@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.Clifford
 import InfoGeometry.Clifford.SplitQ11
 import InfoGeometry.Krein.Representation

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBoundaryCuntzShiftTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Clopen images of the symbolic Cuntz branches

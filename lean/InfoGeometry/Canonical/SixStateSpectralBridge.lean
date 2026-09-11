@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Vec
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 import InfoGeometry.Canonical.HexagonalSixRootTiling
 

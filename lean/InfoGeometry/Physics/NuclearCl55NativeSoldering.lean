@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearCl55CartanParityDictionary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Cl55SpinorCartanFock
 
 /-!

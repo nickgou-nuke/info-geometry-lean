@@ -8,6 +8,7 @@ the discrete orientation/parity/time-reversal bookkeeping of the event.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.OperatorialJonesConnection
 import InfoGeometry.Geometry.KleinFourTag
 import InfoGeometry.Optics.FiniteJonesModel

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitOctonionQ
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

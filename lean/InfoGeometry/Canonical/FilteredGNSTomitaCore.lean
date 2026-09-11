@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSColimitRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Algebraic Tomita cores in a filtered GNS system

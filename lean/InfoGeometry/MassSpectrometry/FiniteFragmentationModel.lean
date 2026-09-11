@@ -1,4 +1,5 @@
 import InfoGeometry.MassSpectrometry.FiniteModel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite fragmentation model compatibility surface

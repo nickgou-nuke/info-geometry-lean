@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KleinPresentedGroup
 import InfoGeometry.Canonical.ProjectiveUnitary6
 
@@ -7,7 +8,7 @@ namespace InfoGeometry.Canonical.KleinSixStateAssociatedBundle
 open InfoGeometry.Canonical.KleinPresentedGroup
 open InfoGeometry.Canonical.ProjectiveUnitary6
 
-abbrev Fiber := Fin 6 → ℂ
+abbrev Fiber := InfoGeometry.Algebra.FiniteSpin.Vec6C
 abbrev Base := ℝ × ℝ
 abbrev TotalSpace := Base × Fiber
 

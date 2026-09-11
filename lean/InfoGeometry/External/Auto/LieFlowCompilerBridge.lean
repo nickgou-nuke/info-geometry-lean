@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.LieFlowMatching
 import InfoGeometry.External.Auto.TrifactorGeometry
 import InfoGeometry.External.Auto.DeterminantSupergrading

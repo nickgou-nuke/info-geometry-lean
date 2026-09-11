@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzNativeGNSTopologicalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Noncommutative multiplication in the native GNS `TopCat` realization

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FinitePenrosePatchTower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InductiveColimitBridge
 
 /-!

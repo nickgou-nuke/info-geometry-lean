@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzCantorBoundaryShift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Cantor branching

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Hestenes
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
 import Mathlib.Tactic.NoncommRing
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Cl55CelestialUnorderedFundamentalGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullConfigurationLocalSystemMonodromy
 
 /-!

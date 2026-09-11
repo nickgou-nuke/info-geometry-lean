@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.MetricSpace.Basic
 import Mathlib.Tactic
 import InfoGeometry.Analysis.AsanoLeeYangCircleBridge

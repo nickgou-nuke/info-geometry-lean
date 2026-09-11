@@ -1,6 +1,6 @@
 import Mathlib.Data.Matrix.Basic
-import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Tactic
 
 /-!
 # The finite complex `sl₂` Riccati bridge

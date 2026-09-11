@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Category.ModuleCat.Limits
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 import InfoGeometry.Spectral.Colimit.NativeModuleColimit

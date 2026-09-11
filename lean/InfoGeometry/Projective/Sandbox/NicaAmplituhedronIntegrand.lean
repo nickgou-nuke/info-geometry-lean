@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.BostConnesKleinPluckerBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BostConnesKMS
 import InfoGeometry.Projective.BostConnesZeta
 

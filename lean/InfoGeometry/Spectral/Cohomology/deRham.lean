@@ -1,4 +1,5 @@
 import Mathlib.Topology.Algebra.Order.LiminfLimsup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Algebra.Homology.HomologySequence
 import Mathlib.Algebra.Module.End

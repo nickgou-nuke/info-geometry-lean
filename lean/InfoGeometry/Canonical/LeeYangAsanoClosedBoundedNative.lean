@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.LeeYangAsanoDigest
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AsanoRuelleSymmetricEndpoint
 import InfoGeometry.Analysis.AsanoContractionNative
 

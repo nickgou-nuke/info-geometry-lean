@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeModularHamiltonian
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativeModularCommutingLift
 import InfoGeometry.Canonical.RelativeModularSingularization
 import InfoGeometry.Meta.Architecture

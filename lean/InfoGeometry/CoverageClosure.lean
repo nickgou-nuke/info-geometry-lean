@@ -4,6 +4,7 @@ Imports modules present in the repository but not yet reachable from InfoGeometr
 -/
 
 import InfoGeometry.Algebra.AlbertCD
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.BerezinianPfaffianBott
 import InfoGeometry.Algebra.CliffordGA
 import InfoGeometry.Algebra.CyclicGroup

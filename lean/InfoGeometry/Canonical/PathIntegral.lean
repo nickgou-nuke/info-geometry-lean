@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SpectralInference
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.QuantumInference
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic

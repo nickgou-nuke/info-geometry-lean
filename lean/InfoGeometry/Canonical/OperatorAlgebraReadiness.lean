@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AQFTOperatorSignatures
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # OperatorAlgebraReadiness

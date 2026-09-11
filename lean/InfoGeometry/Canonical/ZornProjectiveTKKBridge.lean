@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornSpinor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornCliffordRepresentation
 import InfoGeometry.Canonical.ZornTrialityTKKBridge
 import InfoGeometry.Canonical.ProjectiveAffineConformalClosure55

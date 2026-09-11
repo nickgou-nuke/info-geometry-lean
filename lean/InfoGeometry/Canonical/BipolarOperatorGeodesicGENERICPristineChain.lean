@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarLogarithmicDerivationBridge
 import InfoGeometry.Canonical.BipolarCartanFlatHolonomyBridge
 import InfoGeometry.Canonical.BipolarVariableCartanConnection

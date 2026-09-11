@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Monoidal.Category
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.LogEndModulePentagon
 import InfoGeometry.Categorical.LogNilpotentMonoidalUnit
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.RindlerWedge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 

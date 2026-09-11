@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.PolarizedMinkowski55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Three source involutions and a genuine fundamental symmetry

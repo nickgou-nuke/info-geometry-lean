@@ -1,4 +1,5 @@
 import InfoGeometry.Jordan.LogDet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RedLine
 import InfoGeometry.Canonical.CayleyBregmanBridge
 import InfoGeometry.Canonical.Attention

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearWignerSupermultipletSymmetry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.AffineOperatorFrame
 import Mathlib.LinearAlgebra.Matrix.Trace
 

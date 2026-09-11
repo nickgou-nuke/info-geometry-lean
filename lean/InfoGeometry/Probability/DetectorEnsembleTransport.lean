@@ -1,4 +1,5 @@
 import InfoGeometry.Probability.FiniteLogTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Probability.DetectorScaleInvariance
 import InfoGeometry.Projective.WeylLogScaleBridge
 

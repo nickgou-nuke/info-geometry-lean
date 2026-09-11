@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.BrillouinKleinGaugeInvariant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteWDVVTopologicalReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.GaugeQuotient
 
 /-!

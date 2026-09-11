@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorCl11WittBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.OperatorValuedCliffordJones
 
 /-!

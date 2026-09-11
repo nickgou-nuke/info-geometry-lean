@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CoordinatelessSouriauKMSBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauThermodynamics
 import InfoGeometry.Meta.Architecture
 

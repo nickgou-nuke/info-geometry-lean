@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.PenroseIncidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Algebraic covariance of Penrose incidence under a spinor frame

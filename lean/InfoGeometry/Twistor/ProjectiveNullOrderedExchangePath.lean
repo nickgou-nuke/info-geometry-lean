@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullConfigurationExchangeLoop
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Ordered exchange paths descend to unordered based loops

@@ -6,6 +6,7 @@ No complex imports.
 -/
 
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.SpinGroup
 import InfoGeometry.Algebraic.CartanCocycle
 import InfoGeometry.Algebraic.SplitQuadraticForm

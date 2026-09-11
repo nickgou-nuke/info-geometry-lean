@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ChiralTwistorZornCoupling
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 
 /-!

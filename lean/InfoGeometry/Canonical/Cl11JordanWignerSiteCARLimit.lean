@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeMajoranaInfiniteCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.JordanWignerCAR
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
 

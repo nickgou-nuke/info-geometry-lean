@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Block
 import Mathlib.Tactic
 
@@ -33,7 +34,7 @@ namespace InfoGeometry.Lie.SplitOctonionWittEndomorphismBlockBridge
 
 open Matrix
 
-abbrev Mat4 := Matrix (Fin 4) (Fin 4) ℝ
+abbrev Mat4 := InfoGeometry.Algebra.FiniteSpin.Mat4R
 abbrev Mat8 := Matrix (Fin 4 ⊕ Fin 4) (Fin 4 ⊕ Fin 4) ℝ
 
 /-- The standard neutral Witt metric tensor $\eta_W = \begin{pmatrix} 0 & I_4 \\ I_4 & 0 \end{pmatrix}$. -/

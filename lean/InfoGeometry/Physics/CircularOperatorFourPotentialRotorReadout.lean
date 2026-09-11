@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.CircularOperatorPotentialNativeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Real split readout of the full circular `1+3+3+1` operator packet.
 The bivector rotor is kept as the real replacement for the complex phase

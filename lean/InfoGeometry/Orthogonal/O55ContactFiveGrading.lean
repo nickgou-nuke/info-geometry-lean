@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55WittRootRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Multiweight spaces and the `|2|` five-grading of split `O(5,5)`

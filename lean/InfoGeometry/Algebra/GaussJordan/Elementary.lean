@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.GaussJordan.Rank
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix
 

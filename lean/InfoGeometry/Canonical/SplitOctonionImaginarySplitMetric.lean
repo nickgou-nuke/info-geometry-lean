@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitMetricSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionImaginaryEllSupport
 
 /-!

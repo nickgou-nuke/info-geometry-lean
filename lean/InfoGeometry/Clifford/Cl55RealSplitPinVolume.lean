@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.KoszulFoundation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittOrthogonalBasis
 
 namespace InfoGeometry.Clifford.Clifford55

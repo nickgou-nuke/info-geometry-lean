@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativePotentialCountBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ThermodynamicGenerator
 import InfoGeometry.Canonical.MajoranaKreinCartanSplit
 import InfoGeometry.Canonical.KreinDiracWeightFunctionalLift

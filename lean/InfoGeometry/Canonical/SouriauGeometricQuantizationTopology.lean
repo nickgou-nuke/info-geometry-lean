@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauGeometricQuantizationCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Geometry.Manifold.Instances.Real
 
 /-!

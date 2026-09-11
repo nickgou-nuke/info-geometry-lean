@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SuperchargeTransportBridge
 
 /-!

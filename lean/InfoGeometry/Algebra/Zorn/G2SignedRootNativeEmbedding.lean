@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2SignedRootReflections
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeRootIndexAlignment
 
 namespace InfoGeometry.Algebra.Zorn.G2SignedRootNativeEmbedding

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AQFTOperatorSignatures
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AQFTHilbertCompression
 import InfoGeometry.Canonical.AQFTReadiness
 import InfoGeometry.Canonical.AQFTOperatorEndpoints

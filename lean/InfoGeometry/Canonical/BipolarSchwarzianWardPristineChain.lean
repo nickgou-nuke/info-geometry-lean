@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarSignedLogConventionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarWindingExactSequence
 import InfoGeometry.Analysis.BipolarElementaryContourPeriods
 import InfoGeometry.Analysis.BipolarNativeExpCoveringBridge

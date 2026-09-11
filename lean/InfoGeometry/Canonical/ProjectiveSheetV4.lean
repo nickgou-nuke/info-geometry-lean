@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.SpecificGroups.Dihedral
 import Mathlib.GroupTheory.QuotientGroup.Basic
 import Mathlib.GroupTheory.Index

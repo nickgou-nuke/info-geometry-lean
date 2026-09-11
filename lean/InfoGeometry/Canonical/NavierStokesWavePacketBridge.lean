@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Authors
 -/
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CrossProduct
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
@@ -45,7 +46,7 @@ open Matrix
 open InfoGeometry.Canonical.NavierStokesTorusErgodic
 
 /-- 3-dimensional Euclidean vector. -/
-abbrev Vec3 := Fin 3 → ℝ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 /-- 3D vector cross product $u \times v$. -/
 def crossProd (u v : Vec3) : Vec3 :=

@@ -1,4 +1,5 @@
 import InfoGeometry.Combinatorics.ExtendedBinaryGolay
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Combinatorics.GolayConstructionA
 import InfoGeometry.Combinatorics.LeechLattice
 

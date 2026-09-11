@@ -1,4 +1,5 @@
 import InfoGeometry.Nuclear.ApollonianBipolarField
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 #print axioms InfoGeometry.Nuclear.ApollonianBipolarField.inter_polar_dist_eq
 #print axioms InfoGeometry.Nuclear.ApollonianBipolarField.inter_polar_dist_pos

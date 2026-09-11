@@ -13,6 +13,7 @@ adjoined central charge is genuinely central by an explicit field.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.VirasoroAlgebra
 import InfoGeometry.External.Virasoro.VirasoroCocycle
 

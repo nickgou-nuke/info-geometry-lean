@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.DeficiencyIndices
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.DeficiencyIndicesCapstone
 

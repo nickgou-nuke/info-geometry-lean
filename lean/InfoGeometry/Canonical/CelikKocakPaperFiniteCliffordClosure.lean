@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikKocakPaperAllDepthClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Depth-two readout of the all-depth paper closure

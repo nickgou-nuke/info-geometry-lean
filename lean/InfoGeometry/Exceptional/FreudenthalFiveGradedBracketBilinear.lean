@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticMixedBracket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalFiveGradedLieClosure
 
 /-!

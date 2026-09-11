@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.Basic
 import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry

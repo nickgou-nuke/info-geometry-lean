@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SplitOctonionMirrorRailMappingTorus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.MirrorAnomalyPairing
 
 /-!

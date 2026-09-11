@@ -1,4 +1,5 @@
 import InfoGeometry.MassSpectrometry.PeakSpectrum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MassSpectrometry.BirkhoffAssignment
 import InfoGeometry.MassSpectrometry.FragmentationPath
 import InfoGeometry.MassSpectrometry.ValuedFragmentationDAG

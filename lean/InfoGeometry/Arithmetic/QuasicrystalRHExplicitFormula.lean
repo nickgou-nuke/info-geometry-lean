@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.SpectorPrimonGasBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.IsPrimePow
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 

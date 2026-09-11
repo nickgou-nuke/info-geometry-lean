@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.BoundaryProjector
 import InfoGeometry.Meta.Architecture

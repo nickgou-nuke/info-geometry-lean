@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.QCCRCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.QCCRSupergrading
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundaryLoopSuperClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.FiniteBoundaryLoopAlgebraicClosure

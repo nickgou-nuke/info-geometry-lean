@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentPathFamilyMap
 import InfoGeometry.Topology.SymbolicLatentPathFamilyTopCat
 

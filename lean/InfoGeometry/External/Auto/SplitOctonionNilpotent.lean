@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.OctonionMatrixEncodings
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Split-octonion nilpotent zero mode

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.MD001MatrixQuantumGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Repaired MD 002: foundational finite matrix conventions

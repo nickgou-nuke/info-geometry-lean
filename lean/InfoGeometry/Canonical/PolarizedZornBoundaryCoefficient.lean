@@ -1,4 +1,5 @@
 import InfoGeometry.Streaming.TwoBoundaryDyadCompression
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # What a product of boundary coefficients actually computes

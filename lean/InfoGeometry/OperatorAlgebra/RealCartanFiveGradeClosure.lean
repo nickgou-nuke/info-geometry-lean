@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Module.Submodule.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.Span.Basic
 import InfoGeometry.OperatorAlgebra.GradeActionInterface

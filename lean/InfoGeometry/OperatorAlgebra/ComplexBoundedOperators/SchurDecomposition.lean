@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.ExtraJordanNormalForm
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.RingHomMatrix
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CharPoly

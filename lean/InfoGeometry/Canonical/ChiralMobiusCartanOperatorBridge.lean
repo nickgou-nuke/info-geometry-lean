@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KKTLorentzOrbitBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.SplitChiralPolarizationBasis
 import Mathlib.Tactic
 

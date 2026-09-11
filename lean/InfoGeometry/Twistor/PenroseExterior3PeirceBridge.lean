@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.PenroseRealDoubledPeirceSoldering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
 import InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
 

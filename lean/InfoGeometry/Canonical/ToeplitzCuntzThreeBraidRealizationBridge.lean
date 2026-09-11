@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Algebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Canonical.ToeplitzCuntzThreeArtinBraidBridge

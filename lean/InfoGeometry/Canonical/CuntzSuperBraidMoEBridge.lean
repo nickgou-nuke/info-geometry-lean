@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzN
 import InfoGeometry.Algebra.CuntzQuotientDiracBridge
 import InfoGeometry.Canonical.FiniteMajoranaBraiding

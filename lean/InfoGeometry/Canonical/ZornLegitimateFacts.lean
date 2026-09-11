@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Dimension.Constructions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Canonical.ZornVectorMatrixExplicit
 import InfoGeometry.Canonical.SplitOctonionClassificationCore

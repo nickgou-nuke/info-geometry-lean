@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ChiralCantorRandomWalk
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ChiralCantorRandomWalkCapstone
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2ToMatrixBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2RootMetricGeometry
 import InfoGeometry.Lie.CanonicalZornG2CoxeterRelations
 import InfoGeometry.Lie.CanonicalZornG2CartanFisherSouriauMetric

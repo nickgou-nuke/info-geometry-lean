@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.FiniteAmbitwistorParaKahler
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Bridge.OperatorPauliLubanskiLift
 import InfoGeometry.Physics.FourVectorPauliCasimirBridge
 

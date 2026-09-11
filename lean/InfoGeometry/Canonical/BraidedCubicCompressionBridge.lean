@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Star.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Ring
 import InfoGeometry.Physics.B3PresentedGroup

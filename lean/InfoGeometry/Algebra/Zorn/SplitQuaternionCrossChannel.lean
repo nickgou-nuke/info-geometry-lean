@@ -7,6 +7,7 @@ three-dimensional vector product.
 -/
 
 import InfoGeometry.Algebra.Zorn.SplitQuaternionCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

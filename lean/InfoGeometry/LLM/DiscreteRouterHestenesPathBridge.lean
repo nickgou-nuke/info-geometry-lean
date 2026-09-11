@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.DiscreteRouterBayesStep
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesGibbsPathIntegral
 import InfoGeometry.Meta.Architecture
 

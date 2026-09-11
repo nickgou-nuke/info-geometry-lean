@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.TKKZorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 

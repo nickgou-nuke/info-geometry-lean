@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.Superphysics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry
 

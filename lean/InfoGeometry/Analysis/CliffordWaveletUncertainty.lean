@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.CliffordWaveletNativeL2
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Analysis.CliffordWaveletUncertainty

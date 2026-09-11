@@ -1,3 +1,4 @@
 import InfoGeometry.Canonical.LambdaCausalNetNegativeGrammarBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TomitaTakesakiWickRotation
 import InfoGeometry.Canonical.CausalConeProjectorBridge

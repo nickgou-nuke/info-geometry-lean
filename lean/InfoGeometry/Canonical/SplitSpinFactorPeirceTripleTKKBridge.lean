@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitSpinFactorTKKSO66
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.H3ZornPeirceZeroJordanTripleRestriction
 
 /-! Compatibility path for the Peirce/TKK bridge.  The active repository

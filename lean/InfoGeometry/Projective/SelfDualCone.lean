@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Convex.Cone.InnerDual
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Projectivization.Basic
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Topology.Algebra.Module.Basic

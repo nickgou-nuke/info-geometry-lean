@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerReadback
 import InfoGeometry.Algebra.Zorn.G2TwoPCRecoveryTransport
 import InfoGeometry.Algebra.Zorn.G2TwoPCRecovery

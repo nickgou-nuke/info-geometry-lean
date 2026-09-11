@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesLoxodromicCasimirs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

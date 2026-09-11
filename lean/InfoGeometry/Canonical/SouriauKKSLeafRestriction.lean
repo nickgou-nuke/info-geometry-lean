@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauKKSForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Subalgebra
 
 /-!

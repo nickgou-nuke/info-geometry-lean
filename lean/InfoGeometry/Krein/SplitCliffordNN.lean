@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ClNN
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ClNNSpecialization
 import InfoGeometry.Meta.Architecture
 

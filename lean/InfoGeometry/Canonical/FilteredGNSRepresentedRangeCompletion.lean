@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSFaithfulRangeQuotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Operator.Extend
 
 /-!

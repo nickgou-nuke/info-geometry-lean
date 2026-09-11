@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.AssociativeOperatorZornCartanPeirce
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! An algebraic carrier for two commuting representations and an involutive
 exchange.  This is only a ring-theoretic twin representation; it is not a

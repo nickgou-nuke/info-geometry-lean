@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SE2SouriauCocycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The native topological `SE(2)` action on homogeneous points

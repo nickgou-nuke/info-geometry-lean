@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ItakuraSaitoFradkinTseytlin
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Parafermionic/BEC phase compatibility import

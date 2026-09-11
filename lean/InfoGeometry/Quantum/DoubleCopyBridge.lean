@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ModularAnomaly
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.RealMajorana
 import InfoGeometry.Quantum.BulkBoundary
 import InfoGeometry.Canonical.ChiralAction

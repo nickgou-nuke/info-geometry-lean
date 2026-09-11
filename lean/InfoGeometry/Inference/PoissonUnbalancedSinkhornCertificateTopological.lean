@@ -1,4 +1,5 @@
 import InfoGeometry.Inference.PoissonUnbalancedSinkhornCouplingTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Inference.PoissonUnbalancedSinkhornTopological
 
 /-!

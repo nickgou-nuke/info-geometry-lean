@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwoSheetModularComposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TwoSheetKreinAdjoint
 
 namespace InfoGeometry.Canonical.TwoSheetModularTopological

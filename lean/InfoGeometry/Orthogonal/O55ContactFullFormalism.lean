@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55FullFormalismAll
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility entry point for the O(5,5) contact formalism

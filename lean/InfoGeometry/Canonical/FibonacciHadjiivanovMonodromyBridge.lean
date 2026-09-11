@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Colimit.Module
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 import InfoGeometry.Canonical.LogCftMonodromyBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ApolloniusFisherInformation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ApolloniusFisherInformationCapstone
 

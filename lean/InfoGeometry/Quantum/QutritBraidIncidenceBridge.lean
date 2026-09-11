@@ -1,9 +1,9 @@
 import InfoGeometry.Quantum.Qutrit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.MD014TriSpinZ3Projectors
 import InfoGeometry.Physics.HestenesCuntzPhaseSpace
 import InfoGeometry.Physics.GellMannSU3
 import InfoGeometry.Topology.ArtinBraidS3Quotient
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.RollingSpinorMobiusBridge
 import Mathlib.LinearAlgebra.Matrix.Permutation
 

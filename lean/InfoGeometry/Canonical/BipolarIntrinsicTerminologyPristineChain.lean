@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarMobiusPunctureEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Convex.BipolarLogitBarrierDuality
 import InfoGeometry.Canonical.BipolarSquareRootSpinorialDescent
 import InfoGeometry.Conformal.BipolarSchwarzianProjectiveConnection

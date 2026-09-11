@@ -1,4 +1,5 @@
 import Mathlib.Order.Zorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.MirrorPhase.AlchemicalFurnace
 

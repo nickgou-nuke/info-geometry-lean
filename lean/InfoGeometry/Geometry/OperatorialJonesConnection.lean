@@ -12,6 +12,7 @@ itself the Poincare metric or the KMS theorem.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

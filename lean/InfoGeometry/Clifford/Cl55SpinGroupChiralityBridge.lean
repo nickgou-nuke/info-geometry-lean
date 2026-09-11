@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55SpinBivectorChiralityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 
 /-!

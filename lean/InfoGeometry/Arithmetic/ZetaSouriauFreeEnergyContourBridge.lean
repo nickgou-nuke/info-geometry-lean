@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ZetaSouriauEntropyMetriplecticBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ZetaSouriauSymmetryThermodynamics
 import InfoGeometry.Arithmetic.ZetaSouriauHorizontalFlow
 

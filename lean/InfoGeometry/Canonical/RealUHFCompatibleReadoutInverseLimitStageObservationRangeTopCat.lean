@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native ranges of finite-stage inverse-limit observations

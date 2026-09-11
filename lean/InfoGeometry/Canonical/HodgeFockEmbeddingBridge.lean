@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
 
@@ -20,8 +21,8 @@ namespace InfoGeometry.Canonical.HodgeFockEmbeddingBridge
 
 open Matrix
 
-abbrev Spinor8 := Fin 8 → ℝ
-abbrev Spinor32 := Fin 32 → ℝ
+abbrev Spinor8 := InfoGeometry.Algebra.FiniteSpin.Vec8R
+abbrev Spinor32 := InfoGeometry.Algebra.FiniteSpin.Vec32R
 
 /-- Canonical tensor factor equivalence Fin 32 ≃ Fin 8 × Fin 4 -/
 def fin32Equiv : Fin 32 ≃ Fin 8 × Fin 4 where

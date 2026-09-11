@@ -1,5 +1,6 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 import InfoGeometry.Quantum.BerryKeatingCCR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Algebra.Algebra.Basic

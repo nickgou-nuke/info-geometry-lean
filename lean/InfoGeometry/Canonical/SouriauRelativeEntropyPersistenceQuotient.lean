@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauRelativeEntropyBandTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace SouriauRelativeEntropyPersistenceQuotient
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauModularBregmanOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauOperatorBregmanModular
 import InfoGeometry.Canonical.KANColimitBridge
 import InfoGeometry.Topology.ThermodynamicGauge

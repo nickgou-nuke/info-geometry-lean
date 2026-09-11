@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.CertifiedTemperatureSelection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Inference.TCSPoissonModel
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Meromorphic.Order
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.NumberTheory.LSeries.RiemannZeta

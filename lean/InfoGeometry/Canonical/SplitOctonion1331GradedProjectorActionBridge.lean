@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonion1331PureSpinorGradingBridge
 import InfoGeometry.Lie.PeirceExteriorHodgeTransport
 import InfoGeometry.Lie.PeirceExteriorHodgeLinearEquiv
@@ -23,7 +24,7 @@ open InfoGeometry.Algebra.Zorn.G2GaloisCorrespondence
 open InfoGeometry.OperatorAlgebra
 
 abbrev Exterior3 := SplitOctonionExterior3HodgeDiracBridge.Exterior3
-abbrev PeirceCarrier := Fin 8 → ℝ
+abbrev PeirceCarrier := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 theorem hodge_complementary_projector_packet :
     peirceHodgeStar * projectorPP =

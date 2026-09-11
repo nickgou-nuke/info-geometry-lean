@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 import InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 import InfoGeometry.Canonical.ZornSpinor

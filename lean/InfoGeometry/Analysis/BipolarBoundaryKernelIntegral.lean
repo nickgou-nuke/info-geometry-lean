@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarBoundarySurfaceCharge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.Tactic
 

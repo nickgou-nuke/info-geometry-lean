@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.HessianGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CurvatureRGFlow
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.SpectralInference

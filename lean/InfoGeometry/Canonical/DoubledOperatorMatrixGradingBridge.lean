@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.NCG.BerezinianSuperdeterminant

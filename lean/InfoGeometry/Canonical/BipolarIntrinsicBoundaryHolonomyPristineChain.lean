@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarBoundaryTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarBoundarySurfaceCharge
 import InfoGeometry.Analysis.BipolarBoundaryKernelIntegral
 import InfoGeometry.Analysis.BipolarMetricEndLengths

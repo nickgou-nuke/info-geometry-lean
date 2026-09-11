@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovProjectorTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.BogoliubovProjectorFlux
 

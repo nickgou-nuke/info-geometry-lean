@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarLoopWindingCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarLoopWindingPeriod
 import InfoGeometry.Analysis.BipolarLogLiftDerivativeBridge
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ConcreteBN2CorrectSecondConjugation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 import InfoGeometry.Algebra.Zorn.G2TwoPCConcreteCollector
 import InfoGeometry.Algebra.Zorn.G2TwoPCConcreteFacts

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ThermodynamicSL2MobiusFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.Topology.ThermodynamicSL2MobiusFlow
 

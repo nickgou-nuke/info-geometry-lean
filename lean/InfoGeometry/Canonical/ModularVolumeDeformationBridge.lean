@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KreinDoubledAtom
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativePotentialCountBridge
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
 

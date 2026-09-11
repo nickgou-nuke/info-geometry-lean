@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InverseKernelAlgebra
 import InfoGeometry.Canonical.RelativeModularBlockDiagonalCore
 import InfoGeometry.Meta.Architecture

@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.BinaryBarrierCoordinateHessian
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 #print axioms InfoGeometry.Convex.BinaryBarrierCoordinateHessian.interval_barrier_log_cosh
 

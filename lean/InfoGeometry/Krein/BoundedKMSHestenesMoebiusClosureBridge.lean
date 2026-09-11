@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.BoundedKMSHestenesConnesWilsonBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.HestenesMoebiusClosureBridge
 import InfoGeometry.Meta.Architecture
 

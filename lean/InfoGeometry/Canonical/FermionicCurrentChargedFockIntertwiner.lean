@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConstructiveCurrentHeisenbergColimitBridge
 import InfoGeometry.Canonical.CompletedCurrentRepresentationBridge
 import InfoGeometry.Canonical.EndomorphismCutoffCurrentAdapter

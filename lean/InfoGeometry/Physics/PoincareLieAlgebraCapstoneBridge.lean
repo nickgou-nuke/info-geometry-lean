@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBernoulliPauliSolderingIntertwinerBridge
 import InfoGeometry.Lie.SplitOctonionChiralMinkowskiFixedSectionBridge
 import InfoGeometry.Physics.ChiralPoincareSouriauBridge

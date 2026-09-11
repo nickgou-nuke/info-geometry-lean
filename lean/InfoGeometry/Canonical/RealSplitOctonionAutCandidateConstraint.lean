@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Canonical.RealSplitOctonionAutCandidateEvaluation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuous multiplicativity constraints for Zorn candidates

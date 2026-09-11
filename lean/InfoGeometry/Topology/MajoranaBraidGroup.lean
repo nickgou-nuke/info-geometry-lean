@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Majorana braid group finite computation
@@ -16,9 +17,10 @@ classification claim is made here.
 
 open Matrix
 
+
 namespace InfoGeometry.GrandUnification.MajoranaBraidGroup
 
-abbrev M8Z := Matrix (Fin 8) (Fin 8) ℤ
+abbrev M8Z := InfoGeometry.Algebra.FiniteSpin.Mat8Z
 
 def gamma1 : M8Z := !![0, 0, 0, 0, 1, 0, 0, 0;
   0, 0, 0, 0, 0, 1, 0, 0;

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FourthRootSpectralProjectors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cyclic grading covariance does not imply nilpotency
@@ -15,7 +16,7 @@ namespace InfoGeometry.Algebra.CyclicShiftNilpotencySeparation
 
 open InfoGeometry.Algebra.FourthRootSpectralProjectors
 
-abbrev FourState := Fin 4 → ℂ
+abbrev FourState := InfoGeometry.Algebra.FiniteSpin.Vec4C
 
 def coordinateClock : Module.End ℂ FourState where
   toFun x := fun i => root4 i * x i

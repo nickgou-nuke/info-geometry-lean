@@ -1,4 +1,5 @@
 import Mathlib.Tactic.NoncommRing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Abel
 import InfoGeometry.Canonical.BraidedCubicCompressionBridge
 import InfoGeometry.Canonical.ToeplitzCuntzThreeArtinBraidBridge

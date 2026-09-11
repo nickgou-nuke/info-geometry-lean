@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ActualRiemannXiRegularityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ActualRiemannXiSchwarzBridge
 import Mathlib.Analysis.Calculus.Deriv.Star
 import InfoGeometry.Topology.ZetaLogDerivativeDeRhamPeriodBridge

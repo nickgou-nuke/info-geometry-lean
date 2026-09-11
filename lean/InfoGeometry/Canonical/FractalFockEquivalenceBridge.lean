@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.FractalFockEquivalenceBridge

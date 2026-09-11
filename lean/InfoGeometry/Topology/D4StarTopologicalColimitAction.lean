@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ContinuousLeftActionTopCatColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.D4StarTopologicalGroupAction
 
 namespace InfoGeometry.Topology.PauliJungD4Star

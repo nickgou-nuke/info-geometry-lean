@@ -13,6 +13,7 @@ polarization live safely in the associative represented operator algebra.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.Meta.OwnerTarget
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Thermodynamics.ChiralChemicalPotentialDeformation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases

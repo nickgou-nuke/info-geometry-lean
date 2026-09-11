@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeModularPolarizedBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KKTGeneralizedMetricBridge
 import InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge
 import InfoGeometry.Canonical.GeneralizedMetricCore

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SO55MatrixLieSubalgebra
 import InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge
 import InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
@@ -37,7 +38,7 @@ open Matrix
 
 abbrev Derivation := InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.Derivation
 abbrev SpinBivector55 := InfoGeometry.Clifford.Cl55SpinBivectorImage.SpinBivector55
-abbrev Mat8 := Matrix (Fin 8) (Fin 8) ℝ
+abbrev Mat8 := InfoGeometry.Algebra.FiniteSpin.Mat8R
 abbrev Mat10 := InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.Mat10
 abbrev Mat10Sum := Matrix (Fin 8 ⊕ Fin 2) (Fin 8 ⊕ Fin 2) ℝ
 

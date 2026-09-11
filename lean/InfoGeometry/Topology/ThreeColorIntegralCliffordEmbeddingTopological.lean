@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThreeColorIntegralCliffordEmbedding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology
 

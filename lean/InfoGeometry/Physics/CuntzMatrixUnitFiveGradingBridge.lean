@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzMatrixUnits
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzMatrixUnitFiveGradingBridge
 import InfoGeometry.Canonical.KantorPeirceFiveGrading
 import Mathlib.Tactic

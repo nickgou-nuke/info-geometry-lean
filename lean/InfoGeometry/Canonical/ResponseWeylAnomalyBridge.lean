@@ -1,4 +1,5 @@
 import InfoGeometry.GrandCanonical.ResponseMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge
 import InfoGeometry.Meta.Architecture
 

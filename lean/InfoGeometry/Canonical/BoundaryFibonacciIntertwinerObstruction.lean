@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundaryBraidRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.YangBaxterProof
 import InfoGeometry.Physics.B3PresentedGroup
 import Mathlib.Tactic

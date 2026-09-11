@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.LightConeSugawaraCalibration
 import InfoGeometry.Meta.Architecture
 

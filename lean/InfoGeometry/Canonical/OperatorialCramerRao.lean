@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OnsagerReciprocity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped InnerProductSpace
 

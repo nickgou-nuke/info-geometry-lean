@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.H3ZornJordanIdentity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # H₃ Zorn product-law re-export

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Polynomial.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Canonical.CompletedXiHestenesHomogeneousCoordinates
 import InfoGeometry.Canonical.PrimeLeeYangConcreteN2

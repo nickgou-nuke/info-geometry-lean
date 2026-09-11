@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBFrozenDescent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
 
 /-!

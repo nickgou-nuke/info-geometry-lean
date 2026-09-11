@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.STAOperators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Section28EinsteinTorsionSpinor
 import InfoGeometry.Physics.Section34StrengthenedFormalism
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CertifiedInverseKernel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealBdG
 import InfoGeometry.Krein.DoubledSpace
 import Mathlib.Analysis.Normed.Algebra.Exponential

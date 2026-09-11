@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.DualFlatKreinGraph
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Real cotangent lift on the doubled primal/dual carrier

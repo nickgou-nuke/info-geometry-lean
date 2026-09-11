@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Complex.Module
 import Mathlib.LinearAlgebra.CliffordAlgebra.BaseChange
 import InfoGeometry.Clifford.BottPeriodicity

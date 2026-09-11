@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalFiveGradedBracketLinearMaps
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Exceptional.Freudenthal
 

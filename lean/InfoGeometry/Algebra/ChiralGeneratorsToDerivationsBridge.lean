@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CircularChiralCausalConeBasis
 import InfoGeometry.Algebra.CircularChiralDerivationsFourteen
 import InfoGeometry.Algebra.Zorn.NativeStanDerivationCoverage

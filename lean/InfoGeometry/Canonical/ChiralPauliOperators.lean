@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThreeColorChiralLieSuperalgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Internal chirality Pauli operators

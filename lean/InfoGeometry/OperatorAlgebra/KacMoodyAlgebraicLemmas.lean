@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 import InfoGeometry.Meta.Architecture

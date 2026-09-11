@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectiveUnitary6
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Projective unitary six-state compatibility surface

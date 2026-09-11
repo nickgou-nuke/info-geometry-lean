@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Singular.KreinNaturalFlow
 import InfoGeometry.Canonical.AnomalyGauge
 import InfoGeometry.Canonical.GrandUnification

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.RealDoubledCliffordFiniteSpineChecks

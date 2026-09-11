@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.InductiveClosurePacket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
 import InfoGeometry.OperatorAlgebra.SupergradedClosure
 

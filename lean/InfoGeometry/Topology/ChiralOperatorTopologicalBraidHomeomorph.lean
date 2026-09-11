@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ChiralOperatorTopologicalBraidAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ChiralOperatorQuotientBraidTransport
 import InfoGeometry.Topology.ChiralOperatorSageLatentTensorBraid
 

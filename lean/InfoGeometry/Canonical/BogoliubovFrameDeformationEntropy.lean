@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovVielbein
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SpatialDerivativeLogarithmicVariation
 import InfoGeometry.Topology.ThermodynamicGauge
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Clifford55DyadicMatrixClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Clifford.Cl55
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BerezinianTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite diagonal Berezinian readout of two Weyl channels

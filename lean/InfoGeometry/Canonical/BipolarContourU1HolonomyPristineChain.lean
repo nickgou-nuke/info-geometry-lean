@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarU1PeriodHolonomy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarContourSpinHolonomy
 
 /-! Compact capstone for the analytic contour-to-U(1) and spin readouts. -/

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutContinuousColimitAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Descent of the scalar readout through the topological colimit

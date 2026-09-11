@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.F4LeibnizConstraintSpaceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Native compatibility surface for the upstream F₄ Leibniz constraint path.
 

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import DAG.HodgeTheorems
 import DAG.GraphHodgeBridge
 import InfoGeometry.Topology.EckmannDiscreteHodge

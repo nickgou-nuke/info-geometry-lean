@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.GrothendieckRing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Data.Nat.Basic
 

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.QuantumG2FusionCoherenceDatum
 
 open InfoGeometry.Canonical.QuantumG2FusionCoherenceDatum

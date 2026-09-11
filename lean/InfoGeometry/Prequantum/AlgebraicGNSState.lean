@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Star
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Tactic.Ring

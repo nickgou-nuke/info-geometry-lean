@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentBoundaryCylinderColimitTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Conditional quotient-map property for the boundary-cylinder readout

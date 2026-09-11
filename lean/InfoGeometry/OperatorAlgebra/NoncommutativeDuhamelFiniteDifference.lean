@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.NoncommutativeDuhamelDerivative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 import Mathlib.Tactic
 

@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Prod
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Real.Basic
@@ -801,7 +802,7 @@ theorem radialJ_involutive {r : ℝ} (_hr : r ≠ 0) : radialJ (radialJ r) = r :
   simp [radialJ, inv_inv]
 
 /-- A minimal Bloch-ball state: a real three-vector. -/
-abbrev BlochVector := Fin 3 → ℝ
+abbrev BlochVector := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 /-- Squared Euclidean radius of a Bloch vector. -/
 def blochNormSq (v : BlochVector) : ℝ :=

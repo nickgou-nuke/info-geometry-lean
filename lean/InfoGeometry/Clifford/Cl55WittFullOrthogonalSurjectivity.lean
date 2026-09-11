@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittCartanDieudonneFull
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittReflectionPinBridge
 import InfoGeometry.Clifford.Cl55WittOrthogonalNative
 

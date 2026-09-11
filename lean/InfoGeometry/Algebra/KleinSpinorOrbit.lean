@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Arxiv160309063SplitAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 set_option linter.dupNamespace false

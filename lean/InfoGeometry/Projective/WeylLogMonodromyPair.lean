@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.WeylLogScaleBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.HadjiivanovKleinMonodromyBridge
 import InfoGeometry.Projective.KleinHadjiivanovPeriodMonodromyBridge
 

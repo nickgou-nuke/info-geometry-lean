@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ChiralPoincareSouriauBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Energy-coordinate shifts of Pauli-soldered momentum

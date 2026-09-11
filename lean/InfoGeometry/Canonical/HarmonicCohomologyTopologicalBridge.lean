@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Basic
 import InfoGeometry.Canonical.HarmonicRepresentativeCohomologyProjectionBridge
 import InfoGeometry.Canonical.DeRhamCohomologyQuotientTopologicalBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PeirceNullConeKinematicEmbedding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BCFWOnShellShift
 
 namespace InfoGeometry.Canonical
@@ -10,7 +11,7 @@ noncomputable section
 symmetric bilinear form whose diagonal is the channel quadratic.  This is the
 minimal typed interface needed to feed the existing BCFW on-shell shift. -/
 
-abbrev PeirceKinematicMomentum := Fin 4 → ℂ
+abbrev PeirceKinematicMomentum := InfoGeometry.Algebra.FiniteSpin.Vec4C
 
 noncomputable def peirceKinematicInner
     (p q : PeirceKinematicMomentum) : ℂ :=

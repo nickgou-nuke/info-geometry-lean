@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitClifford55SpinRepresentationCoherence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55SpinGroupRestrictedChiralRepresentation
 import InfoGeometry.Clifford.Cl55SpinGroupChiralLinearEquivRepresentation
 

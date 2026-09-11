@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteDimensionalTomitaStandardForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
 
 /-!

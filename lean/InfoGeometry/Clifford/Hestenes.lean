@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQ11
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Lift
 import Mathlib.Analysis.Complex.Trigonometric
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic

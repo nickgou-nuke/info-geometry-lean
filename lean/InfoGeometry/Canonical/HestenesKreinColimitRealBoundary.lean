@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredHestenesKreinColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredHestenesIteratedTransport
 import InfoGeometry.Dynamics.ModularThermalState
 

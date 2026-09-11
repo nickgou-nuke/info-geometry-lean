@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ActualZetaRealPartitionDerivativeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Conditional transport of the actual real Fisher asymptotic

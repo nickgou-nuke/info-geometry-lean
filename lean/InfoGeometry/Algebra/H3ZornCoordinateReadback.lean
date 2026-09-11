@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.QuadraticJordanH3Zorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.H3ZornJordanIdentity
 
 namespace InfoGeometry.Algebra.H3ZornCoordinateReadback

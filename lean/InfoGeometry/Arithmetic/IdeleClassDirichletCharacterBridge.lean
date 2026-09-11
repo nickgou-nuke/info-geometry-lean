@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.DirichletCharacter.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.IdeleClassZetaSymmetry
 
 /-!

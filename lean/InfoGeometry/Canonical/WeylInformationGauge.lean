@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.WeylPathHysteresis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.WeylAnomalySource
 
 namespace InfoGeometry

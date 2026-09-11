@@ -51,7 +51,7 @@ open InfoGeometry.Physics.ChiralCausalCone
 open scoped Matrix
 
 abbrev Matrix2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
-abbrev Matrix4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev Matrix4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /-- Realification of the noncompact Cartan generator. -/
 noncomputable def realifiedKboost : Matrix4R :=

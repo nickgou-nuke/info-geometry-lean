@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Category.ModuleCat.Monoidal.Closed
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.Preserves.Limits
 
 /-!

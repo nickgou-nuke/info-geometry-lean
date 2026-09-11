@@ -1,5 +1,6 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 import InfoGeometry.Algebra.Zorn.G2TwoRootSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Subgroup.Basic
 import Mathlib.Tactic
 

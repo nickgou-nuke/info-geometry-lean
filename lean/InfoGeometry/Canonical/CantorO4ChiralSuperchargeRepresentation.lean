@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.CantorBoundaryCuntzFamily
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzChiralSuperchargeRepresentation
 import InfoGeometry.Physics.SuperPoincareOperatorCharges
 

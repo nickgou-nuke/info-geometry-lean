@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Twistor.PenroseZornWittBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.CanonicalZornPhasePluckerProjection
 import InfoGeometry.Twistor.PhaseNativePluckerBridge
 import InfoGeometry.Projective.KleinQuadricPlucker

@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarDeckIntegerHomotopyClass
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Homotopy.Lifting
 
 /-!

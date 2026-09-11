@@ -1,4 +1,5 @@
 import InfoGeometry.Volume.PfaffianGeneral
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

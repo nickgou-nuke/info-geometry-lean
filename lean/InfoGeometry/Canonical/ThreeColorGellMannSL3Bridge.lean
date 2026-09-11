@@ -1,6 +1,6 @@
 import InfoGeometry.Physics.ThreeColorSL3MatrixConjugation
-import InfoGeometry.Physics.GellMannSU3
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Physics.GellMannSU3
 
 /-!
 # Three-color Gell-Mann / `SL₃` bridge

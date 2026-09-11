@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.SpecificGroups.Quaternion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.Q8MonodromySpinorCover
 import InfoGeometry.Topology.V4RootSystem
 

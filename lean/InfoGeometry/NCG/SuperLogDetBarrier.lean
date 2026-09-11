@@ -1,4 +1,5 @@
 import InfoGeometry.NCG.BerezinianSuperdeterminant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Jordan.LogDet
 
 set_option linter.unusedSectionVars false

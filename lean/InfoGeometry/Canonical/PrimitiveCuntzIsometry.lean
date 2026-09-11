@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzUHFAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 open InfoGeometry.GrandUnification.UHF

@@ -1,4 +1,5 @@
 import InfoGeometry.PositiveMeasure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Projective.Bridge
 import InfoGeometry.Projective.Normalize

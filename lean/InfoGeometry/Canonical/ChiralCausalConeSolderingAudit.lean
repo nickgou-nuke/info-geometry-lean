@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralCausalConeSoldering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 #print axioms InfoGeometry.Canonical.ChiralCausalConeSoldering.carrierSolderAlg
 #print axioms InfoGeometry.Canonical.ChiralCausalConeSoldering.carrierSolderAlg_commutator

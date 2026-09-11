@@ -1,4 +1,5 @@
 import InfoGeometry.Lint.Vacuity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearCartanProjectorParityBridge
 import InfoGeometry.Physics.NuclearFiniteCARCartanSolovievBridge
 import InfoGeometry.Physics.NuclearParityGradedHamiltonian

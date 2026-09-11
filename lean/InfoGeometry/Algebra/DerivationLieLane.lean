@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.NonAssocDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Derivation-level Lie lanes

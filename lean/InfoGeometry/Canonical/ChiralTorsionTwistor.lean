@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.ProjectiveRays
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.NullProjective
 
 namespace InfoGeometry.Canonical.ChiralTorsionBridge

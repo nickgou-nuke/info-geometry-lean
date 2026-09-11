@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.InformationEquilibrium
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Dark-Energy Mapping from the Drazin/Casimir Residual

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteHeisenbergCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The finite Heisenberg group structure

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearFiveGradeGeneratorRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearCARPhononCommonCarrier
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.IntegralZornII44Bridge
 import InfoGeometry.Canonical.IntegralZornCompositionAlgebra
 import InfoGeometry.Canonical.CanonicalZornCompositionTriality

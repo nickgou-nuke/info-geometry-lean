@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.FourierCharacterEncoding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.LLM
 

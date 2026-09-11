@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpinorCantorL2ConcreteIntertwiner
 import InfoGeometry.Canonical.SpinorCantorL2HilbertIntertwinerBridge
 import InfoGeometry.Canonical.CantorBernoulliPauliMatrixIntertwiner

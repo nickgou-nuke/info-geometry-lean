@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.IdempotentTwoSidedSpan
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite fullness criterion for an idempotent

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.TraceJordanLieDriverBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Physics
 

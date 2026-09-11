@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalUnification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MongeAmpereCramerRao
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Meta.Architecture

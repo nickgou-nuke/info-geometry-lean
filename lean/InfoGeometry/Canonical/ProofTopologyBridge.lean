@@ -1,4 +1,5 @@
 import InfoGeometry.Causal.Sensing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Causal.ProofTopology
 
 /-!

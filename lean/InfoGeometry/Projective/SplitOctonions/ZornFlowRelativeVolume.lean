@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitOctonions.ZornLogVolume
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Zorn determinant-similitude flow relative volume

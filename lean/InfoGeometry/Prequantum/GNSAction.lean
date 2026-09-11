@@ -1,4 +1,5 @@
 import InfoGeometry.Prequantum.GNSBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

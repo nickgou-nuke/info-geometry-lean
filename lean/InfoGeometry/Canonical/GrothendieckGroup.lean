@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Grothendieck
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.GrothendieckGroup

@@ -13,6 +13,7 @@ A resolvent kernel is a matrix `R` equipped with two-sided inverse proofs.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section

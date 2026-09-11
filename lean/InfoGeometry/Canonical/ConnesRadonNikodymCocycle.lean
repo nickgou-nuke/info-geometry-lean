@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Canonical.TomitaTakesakiRealification
 import InfoGeometry.Arithmetic.MoebiusSignature

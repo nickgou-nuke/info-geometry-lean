@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk1
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk2
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk3
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk4

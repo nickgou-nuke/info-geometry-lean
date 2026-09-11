@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.DeformationNormalizationGauge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Tactic
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionChiralZornMultiplication
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ThreeColorNativeBracketTable
 
 namespace InfoGeometry.Canonical

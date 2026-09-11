@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.NoncommutativeDuhamelDerivative
 
 /-!

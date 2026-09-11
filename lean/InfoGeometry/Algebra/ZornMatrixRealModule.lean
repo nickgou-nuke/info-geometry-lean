@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZornMatrixTransportedAdditive
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Algebra.ZornMatrixRealModule
 

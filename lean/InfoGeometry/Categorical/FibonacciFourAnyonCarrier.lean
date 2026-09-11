@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Category.ModuleCat.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 import InfoGeometry.Categorical.FibonacciFusionTreeBraiding

@@ -9,6 +9,7 @@ Extends `SuperBracket` with:
 - Super Jacobi identity by parity sectors
 -/
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SuperBracket
 
 set_option linter.dupNamespace false

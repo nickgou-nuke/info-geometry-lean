@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordFiniteCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordJordanWigner
 import InfoGeometry.Capstone.QuantumGroupFibonacci
 import InfoGeometry.Fenchel

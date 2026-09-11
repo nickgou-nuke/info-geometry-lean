@@ -1,4 +1,5 @@
 import Lean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Lean.Util.Sorry
 import InfoGeometry.Meta.CurvatureTelemetry
 import InfoGeometry.Meta.ProofShape

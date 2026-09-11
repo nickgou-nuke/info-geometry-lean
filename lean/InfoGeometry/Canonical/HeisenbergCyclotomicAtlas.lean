@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HeisenbergBoundaryAtlas
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornSixthRootCubicChargeBridge
 
 /-!

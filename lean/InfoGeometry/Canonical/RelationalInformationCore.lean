@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.StateDependentTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import Mathlib.Algebra.Lie.OfAssociative
 

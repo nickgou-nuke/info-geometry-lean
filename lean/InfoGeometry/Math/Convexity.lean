@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Convex.Jensen
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 

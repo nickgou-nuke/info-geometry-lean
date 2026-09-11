@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.LogJordanBraidGroupInfRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Pointwise finite/infinite Hadjiivanov braid compatibility

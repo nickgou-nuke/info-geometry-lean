@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.EuclideanMonotonicity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 #### BUCKET 1: CLOSED FINITE THEOREMS

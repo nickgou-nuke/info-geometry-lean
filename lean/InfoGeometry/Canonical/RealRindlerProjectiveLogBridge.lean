@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.RindlerWedge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RindlerWeylDecomposition
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic

@@ -7,6 +7,7 @@ projector laws are already owned by `InvolutiveSelfDualCarrier`.
 -/
 
 import InfoGeometry.ProjectiveFoundation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.InvolutiveSelfDualCarrier
 
 noncomputable section

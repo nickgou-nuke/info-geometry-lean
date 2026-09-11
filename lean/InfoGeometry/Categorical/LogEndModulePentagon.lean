@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.LogEndModuleCategory
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Categorical.LogEndModulePentagon

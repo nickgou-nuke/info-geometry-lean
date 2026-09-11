@@ -46,3 +46,4 @@ noncomputable def fockChannelMap : FockChannel →ₗ[ℝ] FockSpinorEnd where
   simp [fockChannelMap, Finset.sum_eq_single i]
 
 end InfoGeometry.Clifford.SplitClifford55FockChannelLinearMap
+import InfoGeometry.Algebra.FiniteSpinAlgebra

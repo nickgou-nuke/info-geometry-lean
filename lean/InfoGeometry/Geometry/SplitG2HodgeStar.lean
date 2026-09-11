@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.G2HolonomyDifferentialForms
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Geometry
 

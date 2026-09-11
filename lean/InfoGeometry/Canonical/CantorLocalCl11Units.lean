@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBinaryTiltCARCCRBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Units and coordinate action for the local split-Cl(1,1) packet

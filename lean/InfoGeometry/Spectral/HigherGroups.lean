@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.ExactCouple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Spectral.Algebra.SpectralSequence
 import InfoGeometry.Spectral.Cohomology.Basic
 import Mathlib.Topology.Homotopy.HomotopyGroup

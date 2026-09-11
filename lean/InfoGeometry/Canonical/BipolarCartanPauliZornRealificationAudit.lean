@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarCartanPauliZornRealificationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transitive axiom inspection for the Cartan--Pauli--Zorn realification bridge

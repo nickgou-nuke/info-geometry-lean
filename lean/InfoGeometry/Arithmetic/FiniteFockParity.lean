@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.FiniteFockNative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

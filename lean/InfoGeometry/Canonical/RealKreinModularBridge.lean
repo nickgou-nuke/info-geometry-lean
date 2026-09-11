@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.RealKreinModularSpectralTriple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Real Krein Modular Bridge

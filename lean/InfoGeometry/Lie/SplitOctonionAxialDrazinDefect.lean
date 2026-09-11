@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionAxialPeirceTrifactor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Singular.Drazin
 
 /-!

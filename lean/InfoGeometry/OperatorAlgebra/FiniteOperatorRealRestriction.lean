@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauOnsagerBKMIntegrability
 import InfoGeometry.Canonical.SouriauOnsagerBKMPositivity
 import InfoGeometry.OperatorAlgebra.NoncommutativeDuhamelDerivative

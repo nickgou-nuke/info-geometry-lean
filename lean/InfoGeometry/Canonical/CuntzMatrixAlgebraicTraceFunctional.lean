@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzMatrixAlgebraicStarColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixTraceRealGNSBridge
 import InfoGeometry.Canonical.CuntzMatrixFiniteTraceFaithfulness
 

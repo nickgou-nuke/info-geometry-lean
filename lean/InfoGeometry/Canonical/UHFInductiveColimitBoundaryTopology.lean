@@ -1,4 +1,5 @@
 import Mathlib.Topology.Constructions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Clopen
 import Mathlib.Topology.Algebra.Algebra
 import Mathlib.Topology.Algebra.StarSubalgebra

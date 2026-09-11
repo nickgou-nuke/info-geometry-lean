@@ -1,4 +1,5 @@
 import InfoGeometry.Measure.Normalized
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Measure.MutuallySingular
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 import Mathlib.MeasureTheory.Measure.Decomposition.Lebesgue

@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.KleinQuadricGrothendieckDeRham
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.QDeformedTwistorAmplituhedronBridge
 import InfoGeometry.Projective.TwistorAmplituhedronBridge
 import InfoGeometry.Topology.GrandUnificationLinker

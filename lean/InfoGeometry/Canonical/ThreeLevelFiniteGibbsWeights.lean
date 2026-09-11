@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThreeLevelFiniteGibbs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped BigOperators
 

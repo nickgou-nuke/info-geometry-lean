@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.TwistorZornEmbedding
 
 namespace InfoGeometry.Exceptional.CUDA

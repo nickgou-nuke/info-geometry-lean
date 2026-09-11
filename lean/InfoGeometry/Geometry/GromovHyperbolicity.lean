@@ -1,4 +1,5 @@
 import Mathlib.Topology.MetricSpace.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 

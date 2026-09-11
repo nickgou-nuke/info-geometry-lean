@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Operator.Mul
 import Mathlib.Data.ENNReal.Holder
 import Mathlib.MeasureTheory.Function.Holder

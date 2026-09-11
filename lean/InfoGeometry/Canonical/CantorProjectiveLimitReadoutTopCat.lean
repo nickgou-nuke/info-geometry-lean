@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorProjectiveLimitTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryReadoutTopCat
 
 /-!

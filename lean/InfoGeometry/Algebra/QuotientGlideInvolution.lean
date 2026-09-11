@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.QuotientGroup.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Involutions after quotienting translations

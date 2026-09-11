@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.PolarizedSector
 import InfoGeometry.Krein.OrthogonalGroup
 import InfoGeometry.Krein.Automorphisms

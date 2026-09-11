@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.InverseKernelAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import Mathlib.Algebra.Ring.Commute
 import Mathlib.Tactic.NoncommRing

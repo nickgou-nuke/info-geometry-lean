@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.JordanCayleyInversionCs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.JordanCayleyInversionHs
 import InfoGeometry.Algebra.JordanCayleyInversionOs
 

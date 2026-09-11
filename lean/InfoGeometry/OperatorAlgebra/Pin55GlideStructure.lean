@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Pin(5,5) spinor glide core
@@ -26,11 +27,12 @@ locks only the true two-generator glide core and does not encode the false
 `K² = -I` claim.
 -/
 
+
 namespace InfoGeometry.OperatorAlgebra.Pin55
 
 open Matrix
 
-abbrev Spin32Matrix := Matrix (Fin 32) (Fin 32) ℤ
+abbrev Spin32Matrix := InfoGeometry.Algebra.FiniteSpin.Mat32Z
 
 /-- Upper-right `16 × 16` identity block inside a `32 × 32` matrix. -/
 def upperRightId32 : Spin32Matrix :=

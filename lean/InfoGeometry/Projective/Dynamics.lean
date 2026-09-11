@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.ProjectiveMap
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Projective.Dynamics

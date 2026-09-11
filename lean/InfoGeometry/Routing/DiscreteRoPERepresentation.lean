@@ -1,4 +1,5 @@
 import InfoGeometry.Routing.PlanarRotation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! A discrete RoPE representation on the verified planar rotation carrier.
 

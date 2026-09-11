@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProofTwoCategoryHodgeColimitBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ProofTwoCategoryHodgeColimitCapstone
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.HestenesCl11QGTCurvatureBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.QuaternionCl44QGTNormedFrechetRealization
 
 set_option autoImplicit false

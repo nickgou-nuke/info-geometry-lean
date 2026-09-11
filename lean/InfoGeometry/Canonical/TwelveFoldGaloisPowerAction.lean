@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwelveFoldGaloisCharacterSets
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TwelveFoldExplicitOperators
 
 /-!

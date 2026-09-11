@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BulkBoundaryZeroModeOwner
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.RealTomitaCore
 import InfoGeometry.Canonical.StandardFormCore

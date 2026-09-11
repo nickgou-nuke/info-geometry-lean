@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Fourier.ZMod
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.LegendreSymbol.AddCharacter
 
 namespace InfoGeometry.LLM

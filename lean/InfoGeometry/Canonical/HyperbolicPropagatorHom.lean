@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionBogoliubovGeneratorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Multiplicative packaging of the represented hyperbolic flow

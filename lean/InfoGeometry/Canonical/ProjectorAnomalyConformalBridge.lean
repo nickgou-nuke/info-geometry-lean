@@ -1,4 +1,5 @@
 import InfoGeometry.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinInfiniteCore
 import InfoGeometry.Canonical.ConformalProjectorCore
 import InfoGeometry.Canonical.CertifiedInverseKernel

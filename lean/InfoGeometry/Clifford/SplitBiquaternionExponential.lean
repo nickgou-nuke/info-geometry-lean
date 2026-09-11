@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitBiquaternion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic.Ring
 

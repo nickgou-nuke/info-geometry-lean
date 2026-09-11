@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NoncommutativeGibbsTwoPointFrechetBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.NoncommutativeDuhamelDerivative
 import InfoGeometry.OperatorAlgebra.NoncommutativeDuhamelContinuityReduction
 import InfoGeometry.OperatorAlgebra.NoncommutativeDuhamelFrechetBridge

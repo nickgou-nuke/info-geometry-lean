@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionAxialCartanErlangen
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
 
 /-!

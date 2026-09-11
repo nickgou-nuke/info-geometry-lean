@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.FractalCantorFockWitness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FractalFockEquivalenceBridge
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget

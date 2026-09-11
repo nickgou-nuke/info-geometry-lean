@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.NaryToeplitzWeightedTripotent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! The Markov/transfer operator associated to a finite algebraic Cuntz family.
 It is kept separate from the weighted creation supercharge: the weights enter

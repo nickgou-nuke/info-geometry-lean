@@ -1,4 +1,5 @@
 import Mathlib.Topology.Category.CompHaus.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentInvolutionFixedPointsCompHaus
 
 namespace InfoGeometry.Topology

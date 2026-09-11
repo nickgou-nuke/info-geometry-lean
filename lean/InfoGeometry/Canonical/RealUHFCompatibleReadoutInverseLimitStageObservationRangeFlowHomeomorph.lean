@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Flow transport of finite-stage observation ranges

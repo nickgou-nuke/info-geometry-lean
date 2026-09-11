@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.CubicJordanQuadraticLaws
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.STUAdjointHomogeneity
 import InfoGeometry.Exceptional.STUFreudenthalIdentity
 

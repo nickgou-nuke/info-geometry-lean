@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.RapiditySpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Dynamics.RindlerWedge
 import InfoGeometry.Clifford.ConformalReflection55
 import InfoGeometry.Clifford.DiscreteMoebiusGroup

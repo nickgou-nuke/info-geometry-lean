@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55OperatorFiveGradeClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The three-colour chiral readout inside `Cl(5,5)`

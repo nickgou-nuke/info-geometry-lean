@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2WeylGroupEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Completed finite Weyl-group carrier for `G₂`

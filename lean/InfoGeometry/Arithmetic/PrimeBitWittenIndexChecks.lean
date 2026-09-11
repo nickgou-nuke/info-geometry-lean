@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Arithmetic.PrimeBitWittenIndexChecks

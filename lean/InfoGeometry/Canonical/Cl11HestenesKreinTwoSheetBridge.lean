@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesKreinFiniteStageCompatibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11MarkovJonesEngine
 import InfoGeometry.Clifford.JordanWignerCAR
 import InfoGeometry.Categorical.TwoSheetKreinFilteredColimit

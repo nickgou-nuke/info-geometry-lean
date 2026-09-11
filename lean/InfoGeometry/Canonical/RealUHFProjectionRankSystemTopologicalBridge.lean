@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFProjectionRankSystemTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimit
 
 /-!

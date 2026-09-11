@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.ProjectiveNullBoundaryBraidFrameEquivariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.LogCftMonodromy
 
 /-!

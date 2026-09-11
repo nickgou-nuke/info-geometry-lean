@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55IntegerRealMatrixBridge
 import InfoGeometry.Clifford.Cl55WittOrthogonalReflections
 
@@ -18,7 +19,7 @@ with Clifford elements; the native Pin identification remains in the
 `Cl55WittPin*` owners.
 -/
 
-abbrev V10R := Fin 10 → ℝ
+abbrev V10R := InfoGeometry.Algebra.FiniteSpin.Vec10R
 
 def finTenSumFiveEquiv : Fin 5 ⊕ Fin 5 ≃ Fin 10 :=
   finSumFinEquiv.trans (finCongr (by norm_num))

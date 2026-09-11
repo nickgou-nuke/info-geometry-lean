@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.MDPASJMSouriau
 import InfoGeometry.Physics.MDPASJMSouriauDigest
 
@@ -63,7 +64,7 @@ theorem sphereArea_not_exact : ¬ Exact2 sphereArea := by
 
 /-! ## 2. Genuine finite symplectic carrier -/
 
-abbrev V2 := Fin 2 → ℚ
+abbrev V2 := InfoGeometry.Algebra.FiniteSpin.Vec2Q
 
 def e0 : V2 := fun i => if i = 0 then 1 else 0
 def e1 : V2 := fun i => if i = 1 then 1 else 0
@@ -101,7 +102,7 @@ def finiteSymplecticPlane : FiniteSymplecticCarrier where
 
 /-! ## 3. Finite 5D Kaluza--Klein split -/
 
-abbrev Vec5 := Fin 5 → ℚ
+abbrev Vec5 := InfoGeometry.Algebra.FiniteSpin.Vec5Q
 
 def fourPart (x : Vec5) : Vec4 := fun i => x ⟨i.val, by omega⟩
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2FlagCellWitnessCertificate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2FlagCellQuotientWitness
 import InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 import InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier

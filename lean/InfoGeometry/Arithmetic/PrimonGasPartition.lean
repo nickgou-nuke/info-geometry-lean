@@ -1,4 +1,5 @@
 import Mathlib.Data.Nat.Factorization.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.PNat.Basic
 import InfoGeometry.Arithmetic.BostConnesSystem
 

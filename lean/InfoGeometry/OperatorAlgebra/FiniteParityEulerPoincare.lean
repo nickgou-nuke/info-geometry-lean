@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FiniteParityComplex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Dimension.Constructions
 
 noncomputable section

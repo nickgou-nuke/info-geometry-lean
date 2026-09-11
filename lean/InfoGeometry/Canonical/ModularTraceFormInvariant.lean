@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.EmergentKillingField
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite conjugation invariance of the concrete trace form

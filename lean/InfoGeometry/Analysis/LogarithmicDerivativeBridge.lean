@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.NoncommutativePowerDerivative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativeSurprisalRadonNikodymBridge
 import InfoGeometry.Canonical.RelativeSurprisalJacobianCocycleBridge
 

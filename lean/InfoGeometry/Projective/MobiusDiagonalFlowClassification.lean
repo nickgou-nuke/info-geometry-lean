@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.MobiusMatrixSpectralClassification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Classification of the determinant-one diagonal Möbius flow

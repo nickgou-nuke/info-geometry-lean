@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalAnomalySource
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Canonical.BoundaryLocalizationIndexEquiv
 import InfoGeometry.Canonical.SingularBoundaryCorrection

@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.GenericMetriplecticFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
 
 /-!
@@ -24,7 +25,7 @@ namespace InfoGeometry.Thermo.BipolarTwoDimensionalSkewObstruction
 open InfoGeometry.Thermo.GenericMetriplecticFlow
 
 /-- Two-coordinate state carrier `(eta,theta)`. -/
-abbrev State2 := Fin 2 → ℝ
+abbrev State2 := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 /-- Coordinate vector in the eta direction. -/
 def etaBasis2 : State2 := ![1, 0]

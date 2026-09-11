@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.D4StarQuotientFactorization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ContinuousModularFlowQuotientDescent
 
 namespace InfoGeometry.Topology.PauliJungD4Star

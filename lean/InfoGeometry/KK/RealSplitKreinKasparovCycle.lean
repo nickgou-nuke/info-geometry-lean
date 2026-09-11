@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.RealSplitClifford
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.Superalgebra
 import Mathlib.Analysis.Normed.Operator.Compact
 

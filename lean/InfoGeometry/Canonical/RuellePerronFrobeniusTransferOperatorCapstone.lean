@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.RuellePerronFrobeniusTransferOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.RuellePerronFrobeniusTransferOperatorCapstone
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55FourierGradeReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! The finite, proved predecessor of a Virasoro level-shift statement.
 Only the number-adjoint grade is used; no Virasoro bracket or central

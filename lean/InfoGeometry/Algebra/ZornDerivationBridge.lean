@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.AlternativeDerivations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornVectorMatrix
 
 /-!

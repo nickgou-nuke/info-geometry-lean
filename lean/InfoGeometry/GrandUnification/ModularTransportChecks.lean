@@ -1,4 +1,5 @@
 import InfoGeometry.GrandUnification.ModularTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GrandUnification.SpectralThermalNormalization
 
 /-!

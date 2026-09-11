@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Canonical.CoordinateFreeConnectionChannels
 import InfoGeometry.Canonical.TrifactorDecomposition

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorCuntzBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FibonacciParafermionAtoms
 import InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix

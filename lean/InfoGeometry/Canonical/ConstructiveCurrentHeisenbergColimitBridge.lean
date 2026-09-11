@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Canonical.HeisenbergColimitVirasoroGradedBridge
 import InfoGeometry.Canonical.SplitCliffordSourceCurrentWick

@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.OperatorQGTSoldering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Internal Bogoliubov naturality of operator QGT soldering

@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.HadjiivanovKleinMonodromyBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

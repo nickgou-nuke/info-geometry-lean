@@ -17,6 +17,7 @@ stabilizes into a divergence-free quantum fluid flow.
 -/
 
 import InfoGeometry.Capstone.NavierStokesLegendre
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Convex.Legendre
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv

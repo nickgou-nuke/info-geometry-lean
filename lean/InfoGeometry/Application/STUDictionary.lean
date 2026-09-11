@@ -1,4 +1,5 @@
 import InfoGeometry.Applications.STUBlackHoleQubit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Application.STUOperatorBridge
 
 /-!

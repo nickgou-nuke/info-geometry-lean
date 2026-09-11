@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealDoubledKreinMirrorTopologicalProjection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuous direct-sum maps for the real mirror splitting

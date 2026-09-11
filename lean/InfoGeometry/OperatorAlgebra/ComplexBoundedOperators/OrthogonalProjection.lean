@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # AFP CBO orthogonal-complement and projection adapters

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ParaHyperkahlerPresymplecticBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.Canonical.ParaHyperkahlerPresymplecticBridge
 

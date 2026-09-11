@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.UnifiedSuperchargeAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CentralChargeDiracMorphismBridge
 import InfoGeometry.Physics.SuperPoincareOperatorCharges
 

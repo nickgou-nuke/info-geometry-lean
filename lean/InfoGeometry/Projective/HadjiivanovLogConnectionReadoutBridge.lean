@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.HadjiivanovLogConnectionRankTwoBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.HadjiivanovLogConnectionSynthesisBridge
 
 /-!

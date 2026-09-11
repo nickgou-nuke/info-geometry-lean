@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GroupTheory.DoubleCosetOrbit
 
 namespace InfoGeometry.Algebra.Zorn.G2BruhatCellIntersectionCard

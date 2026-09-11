@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.SplitMajoranaPrimon
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Arithmetic.PrimeMajoranaPfaffian

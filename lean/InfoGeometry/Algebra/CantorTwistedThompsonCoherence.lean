@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ThompsonBraidedCoherenceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzConditionalExpectation
 import InfoGeometry.Algebra.G2TwistedBraiding
 

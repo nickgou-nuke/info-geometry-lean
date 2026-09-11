@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.MobiusCircleAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.Hermitian
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.FinTwo

@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Cl55ProjectivizationTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullConfigurationCovering
 import InfoGeometry.Twistor.ProjectiveNullConfigurationCoveringLocalSystem
 

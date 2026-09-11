@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Finsupp.VectorSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitClifford55ExteriorDegrees
 
 noncomputable section

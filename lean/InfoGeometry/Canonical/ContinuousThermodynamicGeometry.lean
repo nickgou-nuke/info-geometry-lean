@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.SouriauKoszulMetric
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 

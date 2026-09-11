@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
 import InfoGeometry.Clifford.Clifford55
 import InfoGeometry.Projective.Cl55NullBoundaryBridge

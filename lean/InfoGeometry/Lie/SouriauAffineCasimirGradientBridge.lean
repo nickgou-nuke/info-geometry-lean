@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SouriauAffineCoadjointInfinitesimalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Souriau Affine Casimir Gradient Bridge

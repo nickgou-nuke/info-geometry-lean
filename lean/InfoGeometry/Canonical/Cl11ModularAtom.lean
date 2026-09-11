@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11LorentzAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TransportLieDerivative
 import InfoGeometry.Meta.Architecture
 

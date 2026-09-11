@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.D4StarQuotientCompactOpen
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology.PauliJungD4Star
 

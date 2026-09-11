@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ActualRiemannXiLogDerivativeBridge
 import InfoGeometry.Canonical.ActualEntireRiemannXiLogDerivativeBridge
 import Mathlib.Analysis.Calculus.Deriv.Basic

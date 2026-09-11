@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalProjectorCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Arithmetic.PrimeMajoranaPfaffian
 

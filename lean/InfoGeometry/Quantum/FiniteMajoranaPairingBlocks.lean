@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.MajoranaPfaffianBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

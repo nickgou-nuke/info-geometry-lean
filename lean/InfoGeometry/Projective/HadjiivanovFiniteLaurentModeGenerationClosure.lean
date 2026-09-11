@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.HadjiivanovFiniteLaurentModeMonodromyColimitProjection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Generation closure for ambient finite-mode operators

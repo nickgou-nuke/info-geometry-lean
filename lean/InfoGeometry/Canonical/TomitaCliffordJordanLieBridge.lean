@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
 
 /-!

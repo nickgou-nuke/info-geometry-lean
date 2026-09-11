@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.Statistical.DualFlatCurvature
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornDerivation
 import InfoGeometry.Lie.CanonicalZornDerivationCentralKernel
 import InfoGeometry.Lie.SplitOctonionStandardDerivation

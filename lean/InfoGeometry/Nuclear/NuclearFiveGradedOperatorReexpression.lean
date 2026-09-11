@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalFiveGradedLieClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.TwoSectorSpectralOscillation
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Ring

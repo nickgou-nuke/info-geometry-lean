@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConnesSpectralDistanceTopCatBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConnesNoncommutativeGeometry
 
 /-!

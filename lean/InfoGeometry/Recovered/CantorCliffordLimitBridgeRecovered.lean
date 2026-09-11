@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.MatToCantorOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.RealCantorOpLimit
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CurvatureFromConnectionBianchiBridge
 
 noncomputable section

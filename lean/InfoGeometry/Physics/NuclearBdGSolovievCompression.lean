@@ -20,7 +20,7 @@ namespace InfoGeometry.Physics.NuclearBdGSolovievCompression
 
 open InfoGeometry.Physics.NuclearTwoModeCARFiveGrade
 
-abbrev EvenSector := Fin 2 → ℂ
+abbrev EvenSector := InfoGeometry.Algebra.FiniteSpin.Vec2C
 abbrev EvenEnd := Module.End ℂ EvenSector
 abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2C
 

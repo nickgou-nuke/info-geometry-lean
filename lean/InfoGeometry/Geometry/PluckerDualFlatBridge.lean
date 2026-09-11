@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Analysis.Calculus.FDeriv.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Data.Real.Basic
@@ -42,7 +43,7 @@ open InfoGeometry.Geometry
 
 /-- The standard 4D affine chart coordinates for the Klein quadric:
     `u = (p₀₂, p₀₃, p₁₂, p₁₃)` when `p₀₁ = 1`. -/
-abbrev PluckerAffineChart := Fin 4 → ℝ
+abbrev PluckerAffineChart := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
 /-- Reconstructed normalized Plücker vector `(p₀₁, p₀₂, p₀₃, p₁₂, p₁₃, p₂₃)` from affine chart coordinates. -/
 def reconstructPlucker (u : PluckerAffineChart) : Fin 6 → ℝ :=

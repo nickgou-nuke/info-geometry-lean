@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ZornMultiplicationOverBdG
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A concrete associative slice of the operator-valued Zorn carrier

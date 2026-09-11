@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2CorrectedTComplementPartition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2BruhatResidualSimpleCase
 import InfoGeometry.Algebra.Zorn.G2BNBruhatFramework
 import InfoGeometry.Algebra.Zorn.G2PCWeylReadoutSeparation

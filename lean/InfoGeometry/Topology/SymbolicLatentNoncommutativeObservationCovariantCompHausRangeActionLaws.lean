@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentNoncommutativeObservationCovariantCompHausRangeAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Flow laws for the compact operator-observation range action

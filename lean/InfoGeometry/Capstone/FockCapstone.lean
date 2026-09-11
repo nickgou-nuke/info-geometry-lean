@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordFiniteCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 import InfoGeometry.Topology.CuntzMap

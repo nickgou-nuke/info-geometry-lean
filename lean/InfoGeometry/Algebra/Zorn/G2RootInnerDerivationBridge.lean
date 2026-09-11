@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ZornDerivationRootRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.NativeStanDerivationCoverage
 import InfoGeometry.Algebra.Zorn.G2RootWeylAdjointCharacter
 import InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition

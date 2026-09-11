@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.PaperwallHolographicSUSY
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Paperwall Cuntz/glide SUSY construction

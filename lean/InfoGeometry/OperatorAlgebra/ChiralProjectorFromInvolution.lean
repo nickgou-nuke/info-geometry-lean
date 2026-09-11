@@ -16,6 +16,7 @@ The result can be exported both as a `CircularPolarization` and as the
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 import InfoGeometry.Meta.OwnerTarget

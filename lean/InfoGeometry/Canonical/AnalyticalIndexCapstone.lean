@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AnalyticalIndexCoupled
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KMSSinkhornSeedState
 import InfoGeometry.Canonical.KMSSinkhornScalarPotential
 import InfoGeometry.Canonical.KMSSinkhornWeightedTransport

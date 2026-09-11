@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitG2DiscreteHodgeCalibration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitG2DiscreteCoframePullback
 import InfoGeometry.Canonical.SplitG2DiscreteCurvature
 

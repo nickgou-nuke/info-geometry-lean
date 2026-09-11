@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.NativeGradedCochainTwist
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.QuadraticCayleyDomain
 import InfoGeometry.Canonical.BipolarDiagonalBerezinianCayley
 

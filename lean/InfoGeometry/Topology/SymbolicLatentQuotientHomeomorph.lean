@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentQuotientEmbedding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Observational quotient as its actual range

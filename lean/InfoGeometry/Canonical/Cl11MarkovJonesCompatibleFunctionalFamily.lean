@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TensorColimitExpectation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11MarkovJonesTopologicalBridge
 import InfoGeometry.Clifford.Cl11MarkovJonesEngine
 

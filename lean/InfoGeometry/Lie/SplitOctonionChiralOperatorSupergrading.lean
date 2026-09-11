@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.OfAssociative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornDerivation
 import InfoGeometry.Lie.SplitOctonionAxialCartanDerivation
 import InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis

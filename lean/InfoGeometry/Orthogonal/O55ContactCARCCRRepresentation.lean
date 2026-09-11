@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55PinContactBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Orthogonal.O55ContactGrading
 
 /-!

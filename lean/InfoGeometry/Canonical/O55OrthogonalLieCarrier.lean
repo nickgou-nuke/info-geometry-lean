@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.SkewAdjoint
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordO55TKKClosure
 
 /-!

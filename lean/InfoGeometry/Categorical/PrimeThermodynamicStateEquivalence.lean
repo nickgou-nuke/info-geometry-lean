@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeParafermionGrandCanonicalClock
 import InfoGeometry.Arithmetic.ChiralPrimonGas
 import InfoGeometry.Arithmetic.PrimeBosonFermionGas

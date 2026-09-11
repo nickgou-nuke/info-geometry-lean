@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import InfoGeometry.Topology.D4TrialityQ8Equivalence
 

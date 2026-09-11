@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionErlangenInvariant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionAxialCartanProjective
 import InfoGeometry.Lie.SplitOctonionAxialCartanDerivation
 

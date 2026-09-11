@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.External.Automath.Omega.Zeta
 

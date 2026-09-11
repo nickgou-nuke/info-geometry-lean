@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorValuedSouriauFamily
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.OperatorValuedSouriauFamilyChecks

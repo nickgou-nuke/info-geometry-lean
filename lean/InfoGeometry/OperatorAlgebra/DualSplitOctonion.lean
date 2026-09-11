@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionSymplecticFoundation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.G2TwoFixedPointIncidence
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 /-!
 # InfoGeometry.Analysis.DirichletForm
 This module records a finite, explicitly normalized sectorial-form model.  It
@@ -8,7 +9,7 @@ those analytic constructions require additional topological and measure data.
 namespace InfoGeometry.Analysis
 open Complex
 /-- A finite coordinate domain used by the algebraic model. -/
-abbrev DomainPoint := Fin 3 → ℝ
+abbrev DomainPoint := InfoGeometry.Algebra.FiniteSpin.Vec3R
 /-- The complex coefficient matrix function $\mu : \Omega \to \mathcal{L}(\mathbb{C}^d)$.
     It decomposes into real and imaginary parts: $\mu_R(x) + i \mu_I(x)$. -/
 abbrev ComplexCoefficientMatrix (d : ℕ) := DomainPoint → Matrix (Fin d) (Fin d) ℂ

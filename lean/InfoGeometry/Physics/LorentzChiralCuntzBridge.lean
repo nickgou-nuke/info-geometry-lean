@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ChiralCausalCone
 import InfoGeometry.Physics.ChiralPoincareSouriauBridge
 import InfoGeometry.Physics.CuntzDeformedSuperPoincare

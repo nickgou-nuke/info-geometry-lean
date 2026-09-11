@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Arithmetic.ZetaEulerProductBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZetaTraceBridge
 
 namespace InfoGeometry.Canonical.ZetaTrace

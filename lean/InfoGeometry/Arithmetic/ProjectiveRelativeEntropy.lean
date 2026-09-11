@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SelfDualNormalConeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Projective Relative Entropy Compatibility Module

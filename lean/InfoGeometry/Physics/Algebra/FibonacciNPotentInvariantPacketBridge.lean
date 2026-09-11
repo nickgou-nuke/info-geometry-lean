@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Algebra.FibonacciHorizonBraidBridge
 import InfoGeometry.Physics.Algebra.NPotentHorizonInvariantPacket
 

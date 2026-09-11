@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NonAbelianFusionTensorTopologicalColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixTraceTopologicalColimit
 
 /-!

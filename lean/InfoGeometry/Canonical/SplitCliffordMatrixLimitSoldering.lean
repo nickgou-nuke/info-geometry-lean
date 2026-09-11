@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SpinorRep
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
 import InfoGeometry.Algebra.PrimonColimitAlgebra

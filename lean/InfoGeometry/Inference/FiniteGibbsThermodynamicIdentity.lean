@@ -5,6 +5,7 @@ Bulgarian Academy of Sciences.
 -/
 
 import InfoGeometry.Inference.FiniteGibbsInference
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Inference.FiniteRelativeEntropy
 import InfoGeometry.Inference.FiniteRelativeEntropyEquality
 import InfoGeometry.Inference.GibbsVariational

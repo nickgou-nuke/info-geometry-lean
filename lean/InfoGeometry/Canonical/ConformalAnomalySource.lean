@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Trigonometric
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConformalProjectorCore
 import InfoGeometry.Canonical.ChiralEinsteinBridge
 import InfoGeometry.Canonical.GrandCanonicalExperts

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ZornMatrixSU3
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.Perm.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Data.Finset.Basic

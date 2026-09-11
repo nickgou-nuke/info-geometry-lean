@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ChiralOperatorBraidLatentFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ChiralOperatorLatentQuotientTransport
 import InfoGeometry.Topology.SymbolicLatentNoncommutativeObservationQuotientCompHaus
 import Mathlib.Topology.Category.CompHaus.Basic

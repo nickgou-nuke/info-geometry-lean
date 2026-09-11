@@ -1,4 +1,5 @@
 import Mathlib.Topology.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Instances.Rat
 import InfoGeometry.Topology.SpinorOrbitStratum
 import InfoGeometry.Topology.Pin55ReflectionGlide
@@ -9,7 +10,7 @@ open InfoGeometry.Physics.Pin55Formal
 open InfoGeometry.Topology.Pin55ReflectionGlide
 open InfoGeometry.Topology.SpinorOrbitStratum
 
-abbrev Vec55 := Fin 10 → ℚ
+abbrev Vec55 := InfoGeometry.Algebra.FiniteSpin.Vec10Q
 
 /-!
   Topological readouts for the concrete rational `(5,5)` quadratic form.

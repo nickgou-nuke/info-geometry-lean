@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQuaternionNilpotentFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring

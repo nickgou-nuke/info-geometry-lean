@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Singular.MoorePenrose
 import InfoGeometry.MassSpectrometry.PeakFragmentMatching

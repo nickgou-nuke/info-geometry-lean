@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MoorePenrose
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import Mathlib.Algebra.Star.Basic

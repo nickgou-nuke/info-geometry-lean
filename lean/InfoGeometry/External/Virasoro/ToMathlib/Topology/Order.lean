@@ -1,4 +1,5 @@
 import Mathlib.Topology.Order
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 section
 

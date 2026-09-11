@@ -1,4 +1,5 @@
 import InfoGeometry.Thermodynamics.FiniteGibbsRelative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Conditional Fisher / Killing bridge

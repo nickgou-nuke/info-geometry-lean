@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.EllipticYangBaxter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.EllipticYangBaxterCapstone
 

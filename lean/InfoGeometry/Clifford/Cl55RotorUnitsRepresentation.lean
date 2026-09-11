@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WindingMonodromyRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Unit-valued packaging of the already-proved discrete rotor laws. -/
 

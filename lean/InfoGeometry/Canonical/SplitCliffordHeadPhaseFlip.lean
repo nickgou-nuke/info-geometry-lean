@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordHeadLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitQ11PhaseFlip
 import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
 import Mathlib.LinearAlgebra.QuadraticForm.Prod

@@ -5,6 +5,7 @@ Bulgarian Academy of Sciences.
 -/
 
 import InfoGeometry.Inference.PoissonSinkhornDualCertificate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Poisson Sinkhorn potentials

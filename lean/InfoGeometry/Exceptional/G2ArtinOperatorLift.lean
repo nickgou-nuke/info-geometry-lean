@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.G2ArtinPresentation
 import InfoGeometry.Algebra.Clifford.HestenesBivectorSpinLift
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.FractalCantorFockWitness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.Superalgebra
 
 /-!

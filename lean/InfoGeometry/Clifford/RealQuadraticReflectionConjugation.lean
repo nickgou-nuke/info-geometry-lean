@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.RealQuadraticReflectionAlignment
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Clifford
 

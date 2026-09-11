@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSFaithfulRangeQuotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Star.Basic
 import Mathlib.RingTheory.Ideal.Quotient.Operations
 

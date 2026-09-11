@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitG2DiscreteCalibrationCohomology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

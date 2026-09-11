@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Real `(4,4)` carrier for the split-octonion Jordan layer
@@ -10,7 +11,7 @@ It does not assert a structure-algebra or TKK equivalence.
 
 namespace InfoGeometry.Canonical.SplitOctonionJordanForm
 
-abbrev MiddleCarrier := Fin 8 → ℝ
+abbrev MiddleCarrier := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 /-- The normalized diagonal `(4,4)` bilinear form. -/
 def beta44 (x y : MiddleCarrier) : ℝ :=

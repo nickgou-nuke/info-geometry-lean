@@ -1,4 +1,5 @@
 import Mathlib.Data.Nat.Choose.Sum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralConeSpinFrameBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topology of the real chiral-cone transport

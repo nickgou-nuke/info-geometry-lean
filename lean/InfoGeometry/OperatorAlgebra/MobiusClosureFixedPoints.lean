@@ -19,6 +19,7 @@ No claim is made that all of these are definitionally the same object.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

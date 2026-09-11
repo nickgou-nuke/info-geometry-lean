@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesLoxodromicRotorTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesMirrorLoxodromic
 import InfoGeometry.Canonical.HestenesRealMirrorTopological
 import InfoGeometry.Canonical.TwoSheetStokesCoordinates

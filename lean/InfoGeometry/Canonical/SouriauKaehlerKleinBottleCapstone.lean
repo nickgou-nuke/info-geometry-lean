@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauKaehlerKleinBottleBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.SouriauKaehlerKleinBottleCapstone
 

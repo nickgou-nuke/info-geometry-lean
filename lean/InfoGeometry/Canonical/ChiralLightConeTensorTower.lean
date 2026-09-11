@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11PolarizedBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ChiralOperatorConeClosure
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Canonical.SplitCliffordHeadSuperBracket

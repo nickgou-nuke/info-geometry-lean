@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Arithmetic.PrimeFermionSupertraceFinite

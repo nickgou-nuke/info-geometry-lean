@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealProjectionRank
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TensorTower
 
 /-!

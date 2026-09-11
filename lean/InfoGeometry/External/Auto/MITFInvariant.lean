@@ -1,4 +1,5 @@
 import Mathlib.Algebra.ContinuedFractions.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.ContinuedFractions.ContinuantsRecurrence
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Basic

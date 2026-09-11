@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CantorBernoulliSpatialNativeStateBridge
 import InfoGeometry.OperatorAlgebra.CantorBernoulliCylinderMultiplicationBridge
 import InfoGeometry.OperatorAlgebra.CantorBernoulliGaugeStateBridge

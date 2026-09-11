@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredDirectLimitOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 noncomputable section

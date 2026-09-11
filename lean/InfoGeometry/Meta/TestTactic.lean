@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.DvorakTactics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Meta
 

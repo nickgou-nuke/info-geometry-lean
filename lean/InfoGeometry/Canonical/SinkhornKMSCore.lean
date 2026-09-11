@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.Thermal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SinkhornFoundation
 import Mathlib.Analysis.InnerProductSpace.LinearMap
 

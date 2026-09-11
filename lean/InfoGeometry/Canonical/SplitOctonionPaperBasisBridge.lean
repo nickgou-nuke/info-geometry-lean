@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZornMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionGogberashviliNormBridge
 import Mathlib.Tactic
 

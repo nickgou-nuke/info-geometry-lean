@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitOctonionChiralMatrixProduct
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitQ44
 import InfoGeometry.Clifford.Cl44Spinors
 

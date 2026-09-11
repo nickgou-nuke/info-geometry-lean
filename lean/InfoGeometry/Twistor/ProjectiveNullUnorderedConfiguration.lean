@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullConfiguration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Unordered configurations on a projective null boundary

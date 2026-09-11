@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2FlagWordCertificateEval
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Base indices of the exported flag cells

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBernoulliCStarMatrixTraceState
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBernoulliFiniteMatrixGaugeTraceBridge
 import InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
 import InfoGeometry.Canonical.FilteredGNSHilbertColimit

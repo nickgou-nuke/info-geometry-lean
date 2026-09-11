@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.QuadraticJordanH3Zorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.H3ZornCubicOperators
 import InfoGeometry.Algebra.H3ZornQuadraticCommutation
 import InfoGeometry.Exceptional.Freudenthal

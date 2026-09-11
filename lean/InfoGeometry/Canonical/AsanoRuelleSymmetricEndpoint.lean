@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Instances.Complex
 import Mathlib.Analysis.Normed.Module.Basic
 import InfoGeometry.Canonical.AsanoRuelleTopologicalEndpoint

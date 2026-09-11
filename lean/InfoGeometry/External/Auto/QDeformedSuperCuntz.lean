@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # q-Deformed Supergraded Cuntz Superalgebra — The Final Unification

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BerryRotorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesRealStructures
 import InfoGeometry.Canonical.RealStokesGaussHomology
 import InfoGeometry.Meta.Architecture

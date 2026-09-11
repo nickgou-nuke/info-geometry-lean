@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornFiniteVectorCalculus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import Mathlib.Tactic

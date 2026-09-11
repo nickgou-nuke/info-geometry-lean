@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FiniteParityEulerPoincare
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

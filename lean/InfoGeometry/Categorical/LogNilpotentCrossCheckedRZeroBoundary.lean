@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.LogNilpotentCrossCheckedR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Zero-parameter boundary of the logarithmic checked `R`

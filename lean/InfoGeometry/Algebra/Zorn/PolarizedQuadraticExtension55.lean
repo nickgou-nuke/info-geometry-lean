@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.PolarizedMinkowski55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.Basic
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 

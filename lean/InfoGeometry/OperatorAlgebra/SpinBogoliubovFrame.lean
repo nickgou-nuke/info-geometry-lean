@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.OwnerTarget

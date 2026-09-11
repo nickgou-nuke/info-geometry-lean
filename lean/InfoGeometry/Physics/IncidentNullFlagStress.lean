@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Dual.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FierzKleinFoundation
 
 /-!

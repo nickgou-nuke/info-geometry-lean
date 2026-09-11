@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarVariableCartanMaurerCartan
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarU1PeriodHolonomy
 import Mathlib.Tactic
 

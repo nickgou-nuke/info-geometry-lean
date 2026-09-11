@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.ChainComplexMap
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Splice input data

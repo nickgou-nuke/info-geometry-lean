@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SpinorRep
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ClNNBilinear
 import InfoGeometry.Arithmetic.SplitCliffordRealization
 import InfoGeometry.Clifford.ConformalGeneratorLemmas55

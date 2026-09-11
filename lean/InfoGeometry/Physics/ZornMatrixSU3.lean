@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ZornMatrixSU3.Vector3
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ZornMatrixSU3.ZornMatrixCore
 import InfoGeometry.Physics.ZornMatrixSU3.ZornSU3Properties
 import InfoGeometry.Physics.ZornMatrixSU3.Stabilizer

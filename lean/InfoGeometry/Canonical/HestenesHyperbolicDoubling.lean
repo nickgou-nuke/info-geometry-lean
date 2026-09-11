@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Quaternion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AlbertCayleyDickson
 
 /-!

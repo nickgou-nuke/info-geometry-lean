@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.KK.RealSplitKKTBridge
 import InfoGeometry.Meta.Architecture
 import Mathlib.Data.ZMod.Basic

@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BregmanAnalyticBound
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BregmanMonodromyBridge
 import InfoGeometry.Quantum.Monodromy
 import InfoGeometry.Clifford.LogCftMonodromy

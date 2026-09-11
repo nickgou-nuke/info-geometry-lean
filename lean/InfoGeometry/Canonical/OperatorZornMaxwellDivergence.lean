@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorZornFourPotentialGauge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorZornRealModule
 
 namespace InfoGeometry.Canonical.OperatorZornFourPotentialGauge

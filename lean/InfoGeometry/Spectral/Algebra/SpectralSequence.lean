@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.ExactCouple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Spectral Sequence Pages

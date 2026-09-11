@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornCartanAdjointSpectrum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native fourteen-channel Cartan decomposition

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11MajoranaModularBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
 import Mathlib.Topology.Algebra.Module.FiniteDimension
 

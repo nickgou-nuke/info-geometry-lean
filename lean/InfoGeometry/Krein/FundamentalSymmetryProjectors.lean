@@ -19,6 +19,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Canonical.HodgeStarSelfDualAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Krein Fundamental-Symmetry Projectors

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitAlbertF4BasisTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SplitAlbertDerivationOperatorTrace
 
 /-!

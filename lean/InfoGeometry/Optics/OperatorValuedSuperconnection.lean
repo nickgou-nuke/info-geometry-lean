@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.OperatorValuedConnection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SupergradedCuntzBdG
 import InfoGeometry.Algebra.SupergradedJordanLieSplit
 

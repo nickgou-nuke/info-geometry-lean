@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11JordanWignerCARColimitBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11CuntzCantorChiralFramework
 
 noncomputable section

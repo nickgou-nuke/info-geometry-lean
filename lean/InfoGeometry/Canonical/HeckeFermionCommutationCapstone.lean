@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.HeckeFermionCommutation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.HeckeFermionCommutationCapstone
 

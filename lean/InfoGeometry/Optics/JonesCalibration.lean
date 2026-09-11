@@ -18,6 +18,7 @@ complex material response, and branch choices are supplied by later models.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.FiniteJonesModel
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 import InfoGeometry.Geometry.OperatorialJonesConnection

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2ParabolicMellinCharacterBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A theorem-honest parabolic-induction interface

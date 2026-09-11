@@ -1,4 +1,5 @@
 import InfoGeometry.Singular.MoorePenrose
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Singular.MoorePenroseAdjoint
 

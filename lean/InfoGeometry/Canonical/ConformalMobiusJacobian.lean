@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalInversionCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Geometry.Euclidean.Inversion.Calculus
 
 /-!

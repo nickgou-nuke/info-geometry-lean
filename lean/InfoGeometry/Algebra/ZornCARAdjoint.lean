@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZornLeftCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.BilinearForm.Properties
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.EquivariantProjectorRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SplitMetricSpace
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelationalInformationDynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativeModularPotential
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.EinsteinAnomalyOperator

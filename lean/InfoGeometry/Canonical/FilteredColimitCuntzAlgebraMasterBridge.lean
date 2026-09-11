@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cuntz2Isometries
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzDirectLimit
 
 /-!

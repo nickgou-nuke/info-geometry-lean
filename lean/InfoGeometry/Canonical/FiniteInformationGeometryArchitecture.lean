@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteScalarLogLaplace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteCartanLogLaplace
 import InfoGeometry.Canonical.FiniteFisherRaoSquareRoot
 import InfoGeometry.Canonical.ScalarLogBarrier

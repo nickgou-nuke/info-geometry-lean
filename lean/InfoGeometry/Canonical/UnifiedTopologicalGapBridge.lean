@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TopologicalGapShadow
 import InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge
 import Mathlib.Tactic

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauThermodynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 import InfoGeometry.Thermo.RelativeTemperatureFirstLaw
 import InfoGeometry.Meta.Architecture

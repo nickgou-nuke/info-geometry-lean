@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSTomitaClosedTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
 
 /-!

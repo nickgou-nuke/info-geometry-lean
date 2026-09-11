@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.GrandCanonical.Core
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Gibbs temperature susceptibility

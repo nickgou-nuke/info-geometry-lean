@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarLoopWindingCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Homotopy invariance of the native logarithmic lift readout

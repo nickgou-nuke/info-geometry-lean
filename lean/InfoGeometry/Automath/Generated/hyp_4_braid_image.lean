@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace Automath.Generated
 

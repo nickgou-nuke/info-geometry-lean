@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitClifford55NeutralFormBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transport of Mathlib's native Pin subgroup across the neutral-form equivalence

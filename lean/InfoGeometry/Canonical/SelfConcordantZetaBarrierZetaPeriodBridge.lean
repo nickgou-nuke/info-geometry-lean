@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Canonical.CantorDiracZetaBraneSocket
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentObservationRangeFlowCompHausComposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Group laws for the CompHaus observational range flow

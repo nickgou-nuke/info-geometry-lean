@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.IndexTheorem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Analysis.RotorCocycleBregmanBridge
 import InfoGeometry.Geometry.SpectralDivisors

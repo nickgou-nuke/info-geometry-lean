@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThermodynamicGenerator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Quantum.SuperchargeMultiplet
 

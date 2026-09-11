@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentModularOrbitClosureFlowCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open CategoryTheory
 

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Associator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.AlternativeDerivations
 import InfoGeometry.Algebra.ZornVectorMatrix
 import InfoGeometry.Algebra.ZornDerivationBridge

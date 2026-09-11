@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge
 import InfoGeometry.Canonical.ActualEntireRiemannXiZeroFreeLocus
 import Mathlib.NumberTheory.LSeries.RiemannZeta

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundaryBraidRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.Cl55CelestialOrderedExchangeRegularBraidMonodromy
 
 /-! The pure-braid restriction of the supplied celestial exchange monodromy.

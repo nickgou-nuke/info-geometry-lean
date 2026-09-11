@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.NonAssocDerivation
 import InfoGeometry.Algebra.ZornDerivationBridge
 import InfoGeometry.Canonical.ZornQuaternionPeirceCAR

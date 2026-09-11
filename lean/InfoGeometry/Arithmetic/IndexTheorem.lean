@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.BostConnesSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.SpectralDivisors
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 

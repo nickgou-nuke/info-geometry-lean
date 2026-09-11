@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.AsanoMobiusPole
 import InfoGeometry.Canonical.LeeYangAsanoScaleBlowupBridge
 

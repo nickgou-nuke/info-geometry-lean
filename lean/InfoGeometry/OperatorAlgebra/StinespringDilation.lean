@@ -17,6 +17,7 @@ a normal map on a von Neumann algebra, or a type III modular reduction.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

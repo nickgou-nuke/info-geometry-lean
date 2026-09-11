@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentModularFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.TomitaTakesakiModularFlow
 
 /-!

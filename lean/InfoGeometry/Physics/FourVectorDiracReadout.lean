@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.DiracPauliGamma
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.PauliParavectorBridge
 import InfoGeometry.Physics.LorentzBoostMinkowski
 import InfoGeometry.Optics.JonesPoincareSphere

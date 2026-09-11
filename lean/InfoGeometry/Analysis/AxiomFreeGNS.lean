@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.L2CantorCommutation
 
 open InfoGeometry.Analysis.L2CantorCommutation

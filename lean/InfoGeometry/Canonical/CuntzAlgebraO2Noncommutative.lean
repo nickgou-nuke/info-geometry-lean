@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cuntz2Isometries
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # O₂ compatibility route

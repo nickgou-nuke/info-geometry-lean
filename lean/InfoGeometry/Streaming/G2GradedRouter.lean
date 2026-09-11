@@ -1,4 +1,5 @@
 import InfoGeometry.Routing.FiniteSoftmax
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2CoordinateWeylAction
 
 noncomputable section

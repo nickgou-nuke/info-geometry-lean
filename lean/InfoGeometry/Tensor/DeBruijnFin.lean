@@ -1,4 +1,5 @@
 import InfoGeometry.Tensor.DeBruijnPorts
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry
 namespace Tensor

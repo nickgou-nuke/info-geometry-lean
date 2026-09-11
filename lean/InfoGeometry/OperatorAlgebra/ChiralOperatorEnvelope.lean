@@ -1,4 +1,5 @@
 import Mathlib.Algebra.FreeAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 namespace InfoGeometry.OperatorAlgebra

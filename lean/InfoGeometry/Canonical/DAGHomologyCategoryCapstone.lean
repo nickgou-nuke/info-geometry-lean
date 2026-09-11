@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.IsLimit
 import InfoGeometry.Causal.ProofDAGRepresentation
 import InfoGeometry.Canonical.RealBoundaryHomologyQuotient

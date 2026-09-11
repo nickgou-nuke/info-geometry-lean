@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BiQuaternionKahlerLagrangian
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.BiQuaternionKahlerKilling

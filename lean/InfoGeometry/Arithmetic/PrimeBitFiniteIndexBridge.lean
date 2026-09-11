@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeBitFiniteKernelIndexBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility names for the canonical finite prime-bit index owner

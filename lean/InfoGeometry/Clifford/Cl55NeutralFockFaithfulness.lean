@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55NeutralHyperbolicIsometry
 
 namespace InfoGeometry.Clifford.Cl55NeutralFockFaithfulness

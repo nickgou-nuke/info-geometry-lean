@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitCl44NullBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BoundaryBraidRepresentation
 
 /-!

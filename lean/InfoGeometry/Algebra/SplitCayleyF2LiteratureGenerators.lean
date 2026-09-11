@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitCayleyF2DeltaNativeRelations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Algebra.SplitCayleyF2
 

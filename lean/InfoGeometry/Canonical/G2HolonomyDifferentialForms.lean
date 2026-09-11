@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.G2HolonomyGaugeConnections
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitG2HodgeDualFourForm
 
 namespace InfoGeometry.Canonical

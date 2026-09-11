@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.H3ZornCubicOperators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Generic cubic Jordan surface for `H3Zorn`

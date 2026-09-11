@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Barbaresco SPIGL 2020: finite Souriau--Casimir certificate layer
@@ -17,11 +18,12 @@ and no differentiable Lie-group construction.  Those remain sockets for owner
 files with the needed hypotheses.
 -/
 
+
 namespace InfoGeometry
 namespace Canonical
 namespace BarbarescoSPILG2020
 
-abbrev M2Q := Matrix (Fin 2) (Fin 2) ℚ
+abbrev M2Q := InfoGeometry.Algebra.FiniteSpin.Mat2Q
 
 def commutator (A B : M2Q) : M2Q := A * B - B * A
 

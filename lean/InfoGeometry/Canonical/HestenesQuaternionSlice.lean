@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesQuaternionCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesHyperbolicDoubling
 import Mathlib.Algebra.Quaternion
 

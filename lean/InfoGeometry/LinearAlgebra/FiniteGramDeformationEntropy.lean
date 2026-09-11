@@ -1,4 +1,5 @@
 import InfoGeometry.LinearAlgebra.FiniteRelativeFrameEntropy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.LinearAlgebra.FiniteGramDeformationEntropy
 

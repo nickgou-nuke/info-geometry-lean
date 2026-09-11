@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarPeriodDescent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarLogarithmicRootCharacterRepresentation
 import InfoGeometry.Canonical.BipolarCartanFlatHolonomyBridge
 import Mathlib.Tactic

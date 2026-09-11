@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.BlackHoleUnitarityBridge
 import InfoGeometry.Algebra.CuntzSupergradedSUSY
 

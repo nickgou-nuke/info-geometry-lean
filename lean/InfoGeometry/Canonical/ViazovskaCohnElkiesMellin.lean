@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ViazovskaMagicFunctionBridge
 import InfoGeometry.Canonical.BostConnesPartitionFunction
 

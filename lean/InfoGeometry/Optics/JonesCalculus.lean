@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
 import InfoGeometry.Krein.DoubledSpace
 

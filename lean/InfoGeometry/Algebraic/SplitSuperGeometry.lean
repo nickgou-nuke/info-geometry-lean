@@ -10,6 +10,7 @@ No complex imports.
 -/
 
 import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Trace
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic.Positivity

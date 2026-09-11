@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import InfoGeometry.Physics.LogCFTJordanShear
 import InfoGeometry.Dynamics.WassersteinProximalBridge

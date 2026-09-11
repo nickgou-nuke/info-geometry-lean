@@ -1,4 +1,5 @@
 import Mathlib.Algebra.BigOperators.Finprod
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Defs
 import InfoGeometry.External.Virasoro.ToMathlib.Topology.Algebra.BigOperators.FinProd
 

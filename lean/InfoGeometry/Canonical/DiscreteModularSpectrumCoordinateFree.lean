@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CoordinateFree
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZetaTraceBridge
 import InfoGeometry.Canonical.BerryRotorBridge
 import InfoGeometry.Canonical.ZetaTrace

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionImaginaryTensor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllPolarization
 
 /-!

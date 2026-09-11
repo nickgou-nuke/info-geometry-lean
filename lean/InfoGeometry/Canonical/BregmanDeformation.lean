@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix Complex
 open scoped Matrix Norms.Operator

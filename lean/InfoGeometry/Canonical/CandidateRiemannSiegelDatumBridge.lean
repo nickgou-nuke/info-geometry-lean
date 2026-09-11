@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CandidateHardyZDatumBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RiemannSiegelThetaParityBridge
 
 /-!

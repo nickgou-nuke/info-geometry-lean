@@ -1,4 +1,5 @@
 import InfoGeometry.InformationGeometry.ItakuraSaitoBregmanBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
 
 /-! Finite centered log-ratio identities and an explicit positive relaxation.

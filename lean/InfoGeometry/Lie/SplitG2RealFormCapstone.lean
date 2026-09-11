@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2UnificationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge
 
 /-!

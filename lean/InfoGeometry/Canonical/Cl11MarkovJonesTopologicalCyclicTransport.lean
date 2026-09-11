@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11MarkovJonesTopologicalColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TopologicalColimitBraidAction
 
 /-!

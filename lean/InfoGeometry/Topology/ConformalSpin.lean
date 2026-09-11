@@ -1,4 +1,5 @@
 import Mathlib.Data.Rat.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 
 namespace InfoGeometry.Topology.CFT

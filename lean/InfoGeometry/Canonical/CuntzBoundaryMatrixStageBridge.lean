@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixRepresentationRefinementBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical interface for the concrete boundary matrix-stage morphism

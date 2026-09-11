@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11Matrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitQ11Projectors
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic.FinCases

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KleinBottleModularThroatBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.KleinBottleModularThroatCapstone
 

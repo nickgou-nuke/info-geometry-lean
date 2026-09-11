@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornChiralPeirceDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Element-level closure of the three-colour split-octonion basis

@@ -76,7 +76,7 @@ theorem nullVector_nonzero : nullVector.x0 ≠ 0 := by
 /-! ## Tripotent trifactor operator -/
 
 abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
-abbrev M6C := Matrix (Fin 6) (Fin 6) ℂ
+abbrev M6C := InfoGeometry.Algebra.FiniteSpin.Mat6C
 
 /-- The basic tripotent scale operator with sectors `+1,-1,0`. -/
 def Trip : M3C := !![1, 0, 0; 0, -1, 0; 0, 0, 0]

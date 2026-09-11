@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ChiralSUSYBlockFactorization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SuperPoincareOperatorCharges
 import InfoGeometry.Algebra.CuntzSupergradedSUSY
 import InfoGeometry.Physics.SupergradedCuntzBdG

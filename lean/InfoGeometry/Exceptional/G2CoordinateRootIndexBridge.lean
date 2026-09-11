@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2RootWeylAdjointCharacter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeRootIndexAlignment
 import InfoGeometry.Algebra.Zorn.G2NativeWeylRootSpaceTransport
 import InfoGeometry.Algebra.Zorn.G2NativeWeylFiniteNormalization

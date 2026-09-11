@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ActualXiConcreteParityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConcreteHardyZNormalizationBridge
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences
 import InfoGeometry.Topology.ActualXiHardyZRealizationBridge

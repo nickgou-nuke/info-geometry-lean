@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.NeutralKreinMajoranaFrame
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native causal--entropy axes on the real doubled carrier
@@ -14,7 +15,7 @@ namespace InfoGeometry.Projective.SplitQuaternionCausalEntropyAxes
 open Matrix
 open InfoGeometry.Quantum.NeutralKreinMajoranaFrame
 
-abbrev Mat4R := Matrix2 2
+abbrev Mat4R := InfoGeometry.Quantum.NeutralKreinMajoranaFrame.DoubledMat4R
 
 def causalAxis : Mat4R := grading 2
 

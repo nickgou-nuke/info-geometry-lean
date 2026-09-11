@@ -1,4 +1,5 @@
 import Mathlib.Topology.Category.TopCat.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Instances.Rat
 import InfoGeometry.Canonical
 import InfoGeometry.Algebra.ZornDualLattice

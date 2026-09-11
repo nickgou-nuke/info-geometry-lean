@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.AnomalyTubuleStability
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.AnomalousFlowStabilization
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 import InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.PhaseNativePluckerBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.Basic
 import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 

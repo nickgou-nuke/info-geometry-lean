@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RosettaSourceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Quantum.RosettaSynthesis
 

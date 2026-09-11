@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarLogDifferential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricMonodromy
 import Mathlib.Tactic
 

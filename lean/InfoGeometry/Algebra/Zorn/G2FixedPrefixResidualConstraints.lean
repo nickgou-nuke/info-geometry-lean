@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.Zorn.G2PeirceFibration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Explicit fixed-prefix residual constraints

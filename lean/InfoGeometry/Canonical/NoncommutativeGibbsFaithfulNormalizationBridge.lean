@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NoncommutativeGibbsDuhamelTwoPointBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NoncommutativeGibbsRpowNormalizationBridge
 import Mathlib.Tactic
 

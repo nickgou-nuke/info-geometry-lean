@@ -1,4 +1,5 @@
 import InfoGeometry.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
 import Mathlib.Topology.Basic
 import Mathlib.Analysis.InnerProductSpace.PiL2

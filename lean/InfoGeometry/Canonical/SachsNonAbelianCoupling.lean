@@ -1,9 +1,10 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 namespace InfoGeometry.Canonical.SachsNonAbelianCoupling
 
-abbrev ScreenVec := Fin 2 → ℝ
+abbrev ScreenVec := InfoGeometry.Algebra.FiniteSpin.Vec2R
 abbrev ScreenMat := Fin 2 → Fin 2 → ℝ
 
 def dot2 (x y : ScreenVec) : ℝ := x 0 * y 0 + x 1 * y 1

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.H3ZornQuadraticRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.H3ZornMcCrimmonDualIdentity
 
 /-!

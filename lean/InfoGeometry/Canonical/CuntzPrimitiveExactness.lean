@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PrimitiveExactness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KleinBottleA2RootMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The `A₂` root fibre inside the three-colour fibre

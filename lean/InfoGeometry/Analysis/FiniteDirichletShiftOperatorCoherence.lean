@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.FiniteDirichletShiftOperatorBridge
 import InfoGeometry.Arithmetic.FiniteDirichletShiftOperatorBridge
 import InfoGeometry.Arithmetic.FiniteMobiusOperatorInversionBridge

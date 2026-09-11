@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraTopologicalColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topological cocones from star-algebraic filtered cocones

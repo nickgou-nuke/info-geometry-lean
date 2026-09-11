@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11JordanWignerCARBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CliffordCARGeneratorTopological
 
 noncomputable section

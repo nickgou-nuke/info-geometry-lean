@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.WittenIndexSupertracePairing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.WittenIndexSupertracePairingCapstone
 

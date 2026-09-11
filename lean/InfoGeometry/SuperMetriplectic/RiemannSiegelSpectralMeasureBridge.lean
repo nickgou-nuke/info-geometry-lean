@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RiemannSiegelThetaParityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.NoncommutativeJacobiLiouvilleFlow
 
 /-!

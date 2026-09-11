@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.GeometricTensor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
 import InfoGeometry.Convex.ProjectiveRays
 import InfoGeometry.Quantum.RealMajorana

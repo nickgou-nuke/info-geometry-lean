@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.BilinearForm.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
 

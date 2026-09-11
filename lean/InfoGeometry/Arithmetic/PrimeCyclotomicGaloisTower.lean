@@ -1,4 +1,5 @@
 import Mathlib.Data.Nat.Prime.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Nat.Squarefree
 import Mathlib.Tactic.FinCases
 import Mathlib.NumberTheory.NumberField.Cyclotomic.Galois

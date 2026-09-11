@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CubicJordanOsTopologicalReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Closed coordinate channels for the native Peirce decomposition

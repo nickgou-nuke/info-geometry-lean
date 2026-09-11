@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornIntegralSpinSubgroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Integral spin representation on Zorn coordinates

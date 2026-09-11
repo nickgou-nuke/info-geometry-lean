@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FaithfulOperatorZornEnvelope
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SpinorRep
 import InfoGeometry.Clifford.ConformalLieAlgebra55
 import InfoGeometry.Canonical.ConformalFiveGradeInversion

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55SpinGroupChiralSectorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55ChiralSectorFlipContract
 
 noncomputable section

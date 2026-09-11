@@ -14,6 +14,7 @@ theorem packets.
 -/
 
 import InfoGeometry.OperatorAlgebra.MobiusClosureFixedPoints
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermodynamics.SouriauTemperatureProjective
 
 noncomputable section

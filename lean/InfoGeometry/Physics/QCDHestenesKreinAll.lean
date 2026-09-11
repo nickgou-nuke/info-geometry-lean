@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.QCDHestenesRealColorRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.QCDHestenesKreinFockPhaseBridge
 import InfoGeometry.Physics.QCDHestenesKreinInterfaces
 import InfoGeometry.Physics.QCDHestenesKreinSynthesis

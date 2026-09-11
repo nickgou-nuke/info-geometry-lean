@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FiniteInductiveSUSY
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.FractalKleinSUSYFramework
 
 /-!

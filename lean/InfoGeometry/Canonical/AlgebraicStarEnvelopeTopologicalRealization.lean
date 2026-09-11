@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AlgebraicStarEnvelopeNorm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Group.Completion
 import Mathlib.Topology.Algebra.UniformRing
 

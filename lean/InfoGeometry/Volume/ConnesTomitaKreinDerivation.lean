@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQ11Projectors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KreinProjectorLattice
 import InfoGeometry.Volume.ConnesInfinitesimal
 import Mathlib.Analysis.SpecialFunctions.Exp

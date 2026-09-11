@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.Q8ModularFlowBridge
 import InfoGeometry.Topology.Q8V4SchurBridge
 

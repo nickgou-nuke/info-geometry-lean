@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientRangeFixedPointGraph
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compact fixed-point graphs on bounded time intervals

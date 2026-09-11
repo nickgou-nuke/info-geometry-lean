@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.External.Virasoro.FockSpaceSugawara
 

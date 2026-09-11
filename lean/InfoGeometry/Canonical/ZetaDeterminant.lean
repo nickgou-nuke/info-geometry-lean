@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DeterminantCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Jordan.LogDet
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Thermo.FromLogDet

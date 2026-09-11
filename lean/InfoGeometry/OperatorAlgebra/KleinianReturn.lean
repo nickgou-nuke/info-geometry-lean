@@ -9,6 +9,7 @@ through the Tomita mirror.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 
 noncomputable section

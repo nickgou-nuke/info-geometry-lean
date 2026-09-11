@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentCompactHausdorffPrefixLimitCylinder
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.NaryTreeBoundaryCompactHausdorffCoordinatewiseAction
 
 /-!

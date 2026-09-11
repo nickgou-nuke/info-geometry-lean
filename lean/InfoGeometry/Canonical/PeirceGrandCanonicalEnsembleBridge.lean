@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PeirceV4GrandCanonicalCharacterBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CharacterDeterminantGrandPartitionBridge
 import InfoGeometry.Physics.SouriauMassieuPlanckFunctional
 

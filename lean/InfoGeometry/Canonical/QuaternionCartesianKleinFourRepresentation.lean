@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KleinFourTagRootNormalization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.QuaternionCoordinateBogoliubovEquiv
 import InfoGeometry.Lie.SplitOctonionQuaternionParityOrientation
 

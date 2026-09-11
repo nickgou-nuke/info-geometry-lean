@@ -1,4 +1,5 @@
 import InfoGeometry.SignedNetwork.RegularBimoduleSeparation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.AkivisLeftRegularBridge
 
 namespace InfoGeometry.SignedNetwork.RegularBimoduleZornBridge

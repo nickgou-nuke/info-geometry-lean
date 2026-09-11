@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwelveFoldAdditiveCharacter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AffineConformalHullNPotencyBridge
 import InfoGeometry.Physics.Algebra.NPotentCyclotomicSpinHullBridge
 

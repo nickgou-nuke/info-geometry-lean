@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.LogNilpotentTensorPowerBraid
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.LogJordanCheckedRBraidBridge
 import InfoGeometry.Categorical.LogJordanBraidGroup3CategoricalLift
 

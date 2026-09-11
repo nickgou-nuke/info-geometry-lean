@@ -1,4 +1,5 @@
 import Mathlib.Algebra.PresentedMonoid.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullConfigurationWordAction
 
 /-!

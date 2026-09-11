@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorKMSState
 import InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
 import InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure

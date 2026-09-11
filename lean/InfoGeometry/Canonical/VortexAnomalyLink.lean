@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SuperchargeTransportBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovProjectorFlux
 import InfoGeometry.Canonical.CentralChargeKKTParityBridge
 import InfoGeometry.Canonical.SpinorModularBridge

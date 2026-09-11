@@ -9,6 +9,7 @@ determinant API. Fredholm data are supplied as structure fields.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.BilingualUpperHalfPlane
 
 noncomputable section

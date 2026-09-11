@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.GenericMetriplecticFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! A concrete finite dissipative bipolar submodel.
 

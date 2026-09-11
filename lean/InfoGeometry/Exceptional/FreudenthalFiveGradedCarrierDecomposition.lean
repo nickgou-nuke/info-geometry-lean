@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalFiveGradedBracketBilinear
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

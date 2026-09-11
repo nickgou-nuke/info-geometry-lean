@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.PrimonColimitAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite left actions and their lift to the Primon colimit

@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ChoiCompletePositivity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Modular Choi compatibility owner

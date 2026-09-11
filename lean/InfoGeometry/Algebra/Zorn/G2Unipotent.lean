@@ -2,6 +2,7 @@
 -- SPDX-License-Identifier: MIT
 
 import InfoGeometry.Algebra.Zorn.G2UnipotentRootSubgroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Algebra.Zorn.G2Unipotent
 

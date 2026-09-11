@@ -9,6 +9,7 @@ propagator and its relation to the Dirac operator and RG flow.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorJKOStep
 import InfoGeometry.Canonical.RGFlow
 import InfoGeometry.Canonical.QuasilatticeDirac

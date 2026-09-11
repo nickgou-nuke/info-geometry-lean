@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.QuasilatticeDirac
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.KK.DiracFredholmIndex
 import InfoGeometry.Krein.ExponentialIsometry
 import InfoGeometry.Meta.Architecture

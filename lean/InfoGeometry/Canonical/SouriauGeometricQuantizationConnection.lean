@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauGeometricQuantizationTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Ring
 

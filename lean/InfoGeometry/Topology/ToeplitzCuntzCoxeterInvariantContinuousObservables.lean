@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.OrderThreeOrbitObservable
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ToeplitzCuntzThreeCoxeterBoundaryOrbitQuotient
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZornPinorReconstruction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornLeftCAR
 import InfoGeometry.Algebra.ZornCARAdjoint
 import InfoGeometry.Geometry.RindlerLapseCalculus

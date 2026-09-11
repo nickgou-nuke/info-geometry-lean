@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordFiniteCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The chiral-preserving commutant in the native finite `M₄(ℝ)` carrier

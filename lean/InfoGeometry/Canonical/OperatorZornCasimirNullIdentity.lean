@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThreeColorOperatorCrossCommutator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A theorem-safe operator-valued Zorn null identity

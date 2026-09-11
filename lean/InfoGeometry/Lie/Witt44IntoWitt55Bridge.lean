@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Block
 import Mathlib.Tactic
 import InfoGeometry.Lie.SplitOctonionWittEndomorphismBlockBridge
@@ -31,20 +32,21 @@ split-octonion Witt carrier into the 10-dimensional $\mathrm{Cl}(5,5)$ Witt carr
 
 noncomputable section
 
+
 namespace InfoGeometry.Lie.Witt44IntoWitt55Bridge
 
 open Matrix
 open InfoGeometry.Lie.SplitOctonionWittEndomorphismBlockBridge
 
-abbrev Mat4 := Matrix (Fin 4) (Fin 4) ℝ
-abbrev Mat5 := Matrix (Fin 5) (Fin 5) ℝ
+abbrev Mat4 := InfoGeometry.Algebra.FiniteSpin.Mat4R
+abbrev Mat5 := InfoGeometry.Algebra.FiniteSpin.Mat5R
 abbrev Mat8 := Matrix (Fin 4 ⊕ Fin 4) (Fin 4 ⊕ Fin 4) ℝ
 abbrev Mat10 := Matrix (Fin 5 ⊕ Fin 5) (Fin 5 ⊕ Fin 5) ℝ
 
-abbrev VPlus4 := Fin 4 → ℝ
-abbrev VMinus4 := Fin 4 → ℝ
-abbrev VPlus5 := Fin 5 → ℝ
-abbrev VMinus5 := Fin 5 → ℝ
+abbrev VPlus4 := InfoGeometry.Algebra.FiniteSpin.Vec4R
+abbrev VMinus4 := InfoGeometry.Algebra.FiniteSpin.Vec4R
+abbrev VPlus5 := InfoGeometry.Algebra.FiniteSpin.Vec5R
+abbrev VMinus5 := InfoGeometry.Algebra.FiniteSpin.Vec5R
 
 abbrev W44 := VPlus4 × VMinus4
 abbrev W55 := VPlus5 × VMinus5

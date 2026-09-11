@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.CauchyIntegral
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Conformal
 import Mathlib.Analysis.Complex.HasPrimitives
 import Mathlib.Analysis.Complex.Harmonic.Analytic

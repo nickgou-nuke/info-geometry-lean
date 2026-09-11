@@ -1,10 +1,10 @@
 /-
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 Copyright (c) 2026 Canonical InfoGeometry Contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Canonical InfoGeometry Contributors
 -/
 import Mathlib.Analysis.InnerProductSpace.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Canonical.LefschetzSL2TriadBridge
 

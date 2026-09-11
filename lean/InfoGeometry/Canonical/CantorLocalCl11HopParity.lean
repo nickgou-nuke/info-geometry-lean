@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordCantorFock
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Local `Cl(1,1)` hop and parity packet

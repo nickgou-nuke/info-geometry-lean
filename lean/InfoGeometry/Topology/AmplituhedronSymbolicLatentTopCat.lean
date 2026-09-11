@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.AmplituhedronSymbolicLatentBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # TopCat realization of the bounded amplituhedron latent readout

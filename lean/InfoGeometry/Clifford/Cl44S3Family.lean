@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl44Spinors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.LinearIndependent.Basic
 
 namespace InfoGeometry.Clifford.Cl44S3Family

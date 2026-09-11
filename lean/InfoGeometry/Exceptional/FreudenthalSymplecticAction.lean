@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticMixedBracket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Symplectic action on the Freudenthal mixed bracket

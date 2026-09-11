@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearBdGTwoLevelExact
 import InfoGeometry.Canonical.SplitCliffordTwoModeCAR
 
@@ -26,7 +27,7 @@ open Matrix
 open InfoGeometry.Physics.NuclearBdGTwoLevelExact
 open InfoGeometry.Canonical.SplitCliffordTwoModeCAR
 
-abbrev V2R := Fin 2 → ℝ
+abbrev V2R := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 /-- Squared norm of the explicit positive-energy eigenvector. -/
 def rawPositiveNormSq (ξ Δ : ℝ) : ℝ :=

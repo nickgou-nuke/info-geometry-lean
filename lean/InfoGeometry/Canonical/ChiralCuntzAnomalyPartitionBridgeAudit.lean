@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralCuntzAnomalyPartitionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.Canonical.ChiralCuntzAnomalyPartitionBridge
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DyadicDimensionGroupTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The concrete dyadic readout as a `TopCat` isomorphism

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PauliJungTrialityD4Synthesis
 import InfoGeometry.Canonical.SplitOctonionKleinFourTriality
 

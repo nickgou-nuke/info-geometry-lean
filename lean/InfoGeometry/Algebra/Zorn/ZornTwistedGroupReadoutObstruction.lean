@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.BasisTable
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native Zorn basis versus unit-valued twisted-group readouts

@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Category.AlgCat.Basic
 import Mathlib.CategoryTheory.Category.Preorder
 import InfoGeometry.Sandbox.CliffordFunctorSandbox.Tower

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredQCCRParameterTopologicalColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CARCCRParameterFiberSeparation
 
 /-!

@@ -11,7 +11,7 @@ open Matrix
 
 abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
-abbrev V2C := Fin 2 → ℂ
+abbrev V2C := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 def bdgBlock (ξ Δ : ℝ) : M2R := !![ξ, Δ; Δ, -ξ]
 def bdgEnergy (ξ Δ : ℝ) : ℝ := Real.sqrt (ξ ^ 2 + Δ ^ 2)

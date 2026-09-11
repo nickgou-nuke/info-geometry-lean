@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSRepresentedCStarCompletion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transporting modular/KMS automorphisms to the represented completion

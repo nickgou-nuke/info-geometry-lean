@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Supersymmetric Primon Gas and the McKean-Singer Formula

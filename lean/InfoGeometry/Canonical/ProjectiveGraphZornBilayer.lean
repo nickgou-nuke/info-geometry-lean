@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.GraphCycleEntropy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealPartnerProjectiveSeparation
 import InfoGeometry.Canonical.OperatorZornBilayerDefect
 

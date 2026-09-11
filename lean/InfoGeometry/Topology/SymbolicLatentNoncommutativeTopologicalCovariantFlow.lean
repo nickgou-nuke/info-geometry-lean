@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentNoncommutativeObservationCovariantCompHausRangeJointContinuity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topological packaging of a covariant noncommutative symbolic-latent flow

@@ -1,4 +1,5 @@
 import Mathlib.Topology.Instances.Real.Lemmas
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Instances.Matrix
 import InfoGeometry.Dynamics.RindlerWedge
 

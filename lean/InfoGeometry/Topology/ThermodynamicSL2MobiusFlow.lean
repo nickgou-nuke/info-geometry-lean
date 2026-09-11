@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.MobiusInfinitesimal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MatrixDetExpTraceJacobi
 import InfoGeometry.Clifford.DiscreteMoebiusGroup
 import InfoGeometry.Physics.SouriauEntropyFoliation

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.PrimonColimitAlgebra
 import InfoGeometry.Canonical.FiniteCantorCuntzBranches
 import InfoGeometry.Canonical.CuntzMatrixTraceTower

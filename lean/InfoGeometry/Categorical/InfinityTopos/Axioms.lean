@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.InfinityTopos.Category
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Categorical
 

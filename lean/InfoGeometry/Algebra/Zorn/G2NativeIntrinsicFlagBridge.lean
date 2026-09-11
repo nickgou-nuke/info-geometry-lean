@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeFlagCardinality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2InvariantIncidenceCandidates
 import InfoGeometry.Algebra.Zorn.G2IntrinsicLineFiberTransport
 import Mathlib.Data.Fintype.EquivFin

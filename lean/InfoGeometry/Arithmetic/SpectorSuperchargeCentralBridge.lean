@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimonSupergradedGasAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.ArithmeticSuperchargeHopfBridge
 

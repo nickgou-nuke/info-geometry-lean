@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzMatrixUnitFiveGradingBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Sl2EndpointCompensation
 
 noncomputable section

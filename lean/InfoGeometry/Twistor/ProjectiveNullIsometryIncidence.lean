@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullPolarIncidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciMonoidalStructBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Tensor-hom factorization for the Fibonacci Hom-space carrier

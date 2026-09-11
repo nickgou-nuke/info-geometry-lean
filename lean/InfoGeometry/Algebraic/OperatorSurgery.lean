@@ -8,6 +8,7 @@ singular operators using Drazin and Moore-Penrose projectors.
 -/
 
 import InfoGeometry.Singular.Drazin
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Singular.MoorePenrose
 
 namespace InfoGeometry.Algebraic

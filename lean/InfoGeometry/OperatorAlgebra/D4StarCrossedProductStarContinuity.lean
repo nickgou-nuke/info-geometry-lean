@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductFiniteDimensionalContinuity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topological continuity of the finite D₄ crossed-product involution

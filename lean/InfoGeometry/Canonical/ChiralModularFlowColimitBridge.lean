@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TensorTowerColimit
 import InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry
 import InfoGeometry.OperatorAlgebra.OperatorMobiusAction

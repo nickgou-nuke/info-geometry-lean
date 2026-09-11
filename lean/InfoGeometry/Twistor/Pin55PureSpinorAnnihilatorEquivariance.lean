@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitClifford55ExteriorSpinor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55NeutralHyperbolicIsometry
 import InfoGeometry.Canonical.Pin55NativeCover
 

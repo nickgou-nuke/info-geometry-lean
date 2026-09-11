@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OneSheetChiralAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionJordanPairTKKInput
 
 namespace InfoGeometry.Canonical.TwoSheetChiralTKKDerivations

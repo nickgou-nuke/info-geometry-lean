@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A coordinate `A₂` root subsystem inside `D₅`
@@ -15,7 +16,7 @@ eigenvectors.
 noncomputable section
 namespace InfoGeometry.Canonical.A2InsideD5RootSubsystem
 
-abbrev D5Space := Fin 5 → ℤ
+abbrev D5Space := InfoGeometry.Algebra.FiniteSpin.Vec5Z
 
 def coordinate (i : Fin 5) : D5Space := fun j => if j = i then 1 else 0
 

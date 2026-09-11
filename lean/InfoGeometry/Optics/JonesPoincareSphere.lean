@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.PauliParavectorBridge
 import InfoGeometry.Optics.FiniteJonesModel
 import InfoGeometry.Twistor.Incidence

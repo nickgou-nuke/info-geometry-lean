@@ -1,4 +1,5 @@
 import DAG.GradedBottInclusion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BulkBoundaryZeroModeOwner
 import InfoGeometry.Canonical.CelikErlangenBraidBridge
 import InfoGeometry.Canonical.SouriauDiracHodgeCoupling

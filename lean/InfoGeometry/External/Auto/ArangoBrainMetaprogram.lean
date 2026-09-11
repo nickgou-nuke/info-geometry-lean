@@ -1,4 +1,5 @@
 import Lean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Lean.Elab.Command
 import Lean.Elab.Term
 import Lean.Meta

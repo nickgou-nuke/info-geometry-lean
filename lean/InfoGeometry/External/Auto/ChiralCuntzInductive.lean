@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.AlgebraicCuntzToeplitzInductive
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Chiral Cuntz--Toeplitz induction

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealBdG
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.CategoryTheory.Functor.Basic
 

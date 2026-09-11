@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.PrimeA1RootSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermodynamics.SouriauTemperature
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Analysis.Complex.Basic

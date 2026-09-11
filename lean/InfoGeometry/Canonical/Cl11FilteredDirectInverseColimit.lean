@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11HestenesKreinTwoSheetBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredDirectInverseColimit
 
 /-!

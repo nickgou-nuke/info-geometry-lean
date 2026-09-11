@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.GrothendieckMathlibNatIso
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 #check InfoGeometry.Categorical.grothendieckCompletionFunctor
 #check InfoGeometry.Algebra.GrothendieckMathlibNatIso.mathlibGrothendieckFunctor
 #check InfoGeometry.Algebra.GrothendieckMathlibNatIso.grothendieckFunctorNatIso

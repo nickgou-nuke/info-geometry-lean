@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeBitFiniteKernelIndexBridge
 import InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge
 import InfoGeometry.Arithmetic.ChiralPrimonGas

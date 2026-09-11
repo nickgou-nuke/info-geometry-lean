@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Reflection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55RealSplitPinKernelBridge
 import InfoGeometry.Clifford.Cl55WittQuadraticReflection
 

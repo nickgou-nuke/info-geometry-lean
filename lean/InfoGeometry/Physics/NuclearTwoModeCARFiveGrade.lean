@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Two-mode CAR and an exact nuclear five-grading
@@ -17,7 +18,7 @@ noncomputable section
 
 namespace InfoGeometry.Physics.NuclearTwoModeCARFiveGrade
 
-abbrev Fock4 := Fin 4 → ℂ
+abbrev Fock4 := InfoGeometry.Algebra.FiniteSpin.Vec4C
 abbrev Op := Module.End ℂ Fock4
 
 /-- Annihilation in the first fermionic mode. -/

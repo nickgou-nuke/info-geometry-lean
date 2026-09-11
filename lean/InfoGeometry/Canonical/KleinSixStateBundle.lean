@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped Matrix
 

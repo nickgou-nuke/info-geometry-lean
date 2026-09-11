@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientCompHausLimitActionIso
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Orbits and orbit closures for varying-carrier quotient limits

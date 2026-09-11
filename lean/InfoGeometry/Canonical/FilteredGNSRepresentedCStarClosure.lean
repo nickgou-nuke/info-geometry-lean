@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSAlgebraicColimitRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredGNSHilbertNontrivial
 import Mathlib.Topology.Algebra.StarSubalgebra
 

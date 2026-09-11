@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DiscreteDiracKahlerOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

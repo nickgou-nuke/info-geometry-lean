@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SpinConnection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.SheetWittCircularBasis
 
 /-!

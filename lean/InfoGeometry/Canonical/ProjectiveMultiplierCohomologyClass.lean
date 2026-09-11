@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectiveMultiplierCocycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Rephasing classes of projective multipliers

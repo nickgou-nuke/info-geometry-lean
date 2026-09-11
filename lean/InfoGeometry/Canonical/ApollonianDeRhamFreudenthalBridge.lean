@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Trace
 import InfoGeometry.Canonical.Cuntz2Isometries
 import InfoGeometry.Canonical.ChiralCuntzSuperchargeBridge

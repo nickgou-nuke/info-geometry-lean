@@ -1,4 +1,5 @@
 import Mathlib.AlgebraicTopology.FundamentalGroupoid.FundamentalGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.AlgebraicTopology.FundamentalGroupoid.InducedMaps
 import InfoGeometry.Twistor.ProjectiveNullConfigurationFundamentalGroup
 import InfoGeometry.Twistor.ProjectiveNullConfigurationWordTopology

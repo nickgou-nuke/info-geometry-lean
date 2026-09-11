@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation
 import InfoGeometry.Physics.SolovievQuasiparticlePhononEigenproblem
 import InfoGeometry.Canonical.ZornCore
@@ -34,7 +35,7 @@ open InfoGeometry.Physics.SolovievQPNMEigenproblem
 -- Keep the finite CAR matrices distinct from the native Zorn matrix carrier.
 local notation "M4R" => InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel.M4R
 
-abbrev ModelVector := Fin 2 → ℝ
+abbrev ModelVector := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 /-- Scalar copy of the native Zorn unit. -/
 def scalarCoefficient (c : ℝ) : Coefficient where

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorProjectorMismatch
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Drazin/Penrose anomaly owner

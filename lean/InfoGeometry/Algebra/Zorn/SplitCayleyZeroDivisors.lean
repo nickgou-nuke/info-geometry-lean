@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.SplitCayleyStabilizer
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Split-Cayley idempotent and nilpotent packets over ℝ

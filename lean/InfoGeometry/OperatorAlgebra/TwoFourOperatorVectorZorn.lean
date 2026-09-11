@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.OperatorZornMatrixAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ThreeColorOperatorCrossCommutator
 
 /-! The `4+4` coordinate presentation of the existing associative Zorn shell. -/

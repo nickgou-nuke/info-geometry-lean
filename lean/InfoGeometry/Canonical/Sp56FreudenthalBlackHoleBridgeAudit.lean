@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Sp56FreudenthalBlackHoleBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.Canonical.Sp56FreudenthalBlackHoleBridge
 

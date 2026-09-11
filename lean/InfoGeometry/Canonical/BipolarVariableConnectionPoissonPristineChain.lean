@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarVariableCartanMaurerCartan
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarHalfLogLiftAnalyticPureGauge
 import InfoGeometry.Thermo.BipolarPoissonAlgebra
 import InfoGeometry.Thermo.BipolarTwoDimensionalSkewObstruction

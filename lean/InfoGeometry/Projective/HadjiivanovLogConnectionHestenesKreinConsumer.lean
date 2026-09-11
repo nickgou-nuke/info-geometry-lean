@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.HadjiivanovLogConnectionColimitBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredHestenesKreinColimit
 
 /-!

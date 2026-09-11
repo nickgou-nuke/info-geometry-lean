@@ -2,6 +2,7 @@
 InfoGeometry/Quantum/SouriauFoliation/ClosureInvariantLeaf.lean
 -/
 import InfoGeometry.OperatorAlgebra.MobiusClosureFixedPoints
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.SouriauFoliation.SymplecticLeaf
 
 noncomputable section

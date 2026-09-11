@@ -1,4 +1,5 @@
 import InfoGeometry.Streaming.TwoBoundaryWeakPristineChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transitive axiom inspection for finite two-boundary weak values

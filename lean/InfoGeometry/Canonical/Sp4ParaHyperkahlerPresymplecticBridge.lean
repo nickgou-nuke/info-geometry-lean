@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Trace
 
@@ -34,8 +35,8 @@ namespace InfoGeometry.Canonical.Sp4ParaHyperkahlerPresymplecticBridge
 
 open Matrix
 
-abbrev R4 := Fin 4 → ℝ
-abbrev Mat4 := Matrix (Fin 4) (Fin 4) ℝ
+abbrev R4 := InfoGeometry.Algebra.FiniteSpin.Vec4R
+abbrev Mat4 := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /-! ## 1. Canonical Symplectic Matrix and Form on ℝ⁴ -/
 

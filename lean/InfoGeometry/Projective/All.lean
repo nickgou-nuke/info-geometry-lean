@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.MobiusDual
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KuzminCuntzPath
 import InfoGeometry.Projective.KuzminInductiveLimitBridge
 import InfoGeometry.Projective.KuzminColimit

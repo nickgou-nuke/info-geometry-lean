@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 set_option autoImplicit false

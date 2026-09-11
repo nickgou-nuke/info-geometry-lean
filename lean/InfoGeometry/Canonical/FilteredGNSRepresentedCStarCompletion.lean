@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSRepresentedAlgebraCompletion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.StarAlgEquivPullback
 
 /-!

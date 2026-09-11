@@ -26,6 +26,7 @@ super-TKK socket over `TKKConformalClosure.TKKRicciFluxDatum`.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
 import InfoGeometry.Meta.OwnerTarget
 

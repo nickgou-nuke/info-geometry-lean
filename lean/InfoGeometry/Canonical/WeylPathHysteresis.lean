@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GrandCanonicalExperts
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InformationTorsion
 
 set_option linter.unusedSectionVars false

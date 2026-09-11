@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ParabolicLineCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Fintype.Card
 
 /-! Shared finite Peirce line carrier. -/

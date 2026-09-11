@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.LogJordanTensorFusion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.LogJordanTensorFusionDepth

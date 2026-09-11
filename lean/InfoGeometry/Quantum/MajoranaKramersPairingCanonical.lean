@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.KitaevPauliBraiding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Quantum.KitaevChain
 

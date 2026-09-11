@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinGreenHorizonEnvelope
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 /-!

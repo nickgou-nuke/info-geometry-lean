@@ -1,4 +1,5 @@
 import Mathlib.Tactic.NoncommRing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NativeToeplitzCuntzThree
 import InfoGeometry.Canonical.CuntzTensorToeplitzThreeBridge
 

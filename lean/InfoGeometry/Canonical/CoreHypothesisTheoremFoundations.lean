@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.Equiv
 import Mathlib.Algebra.Ring.Center
 import Mathlib.Data.Matrix.Basic

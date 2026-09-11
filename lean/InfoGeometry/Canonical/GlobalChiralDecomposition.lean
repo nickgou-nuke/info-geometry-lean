@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DPDWedgeCompatibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinPenroseDilationKKT
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Meta.Architecture

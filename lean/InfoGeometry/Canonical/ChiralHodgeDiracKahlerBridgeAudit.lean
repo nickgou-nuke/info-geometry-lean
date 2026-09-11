@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralHodgeDiracKahlerBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.Canonical.ChiralHodgeDiracKahlerBridge
 

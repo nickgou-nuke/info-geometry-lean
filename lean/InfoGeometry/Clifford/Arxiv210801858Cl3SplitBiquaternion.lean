@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl3ComplexMatrixProduct
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # arXiv:2108.01858v2 — finite `Cl(3)` split-biquaternion slice

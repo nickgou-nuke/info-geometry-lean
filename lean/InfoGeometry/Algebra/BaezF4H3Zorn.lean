@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.JordanInnerDerivations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Baez F₄ readouts for the verified `H3Zorn` Jordan surface

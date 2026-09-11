@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TrifactorDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Trifactor Decomposition

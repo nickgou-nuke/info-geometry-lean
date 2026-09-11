@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornRootPairing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Literature root-label readout for the native Cartan decomposition

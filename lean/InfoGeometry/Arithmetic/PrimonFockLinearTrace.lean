@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Trace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimonFockTraceFinite
 
 noncomputable section

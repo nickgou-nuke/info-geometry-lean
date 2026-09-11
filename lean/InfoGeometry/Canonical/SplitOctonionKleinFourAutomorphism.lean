@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionG2TypeGenerators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.KleinFourTag
 
 namespace InfoGeometry.Canonical.SplitOctonionKleinFourAutomorphism

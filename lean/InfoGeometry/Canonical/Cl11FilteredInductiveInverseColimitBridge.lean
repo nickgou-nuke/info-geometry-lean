@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredDirectInverseColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11MarkovJonesTopologicalColimit
 import InfoGeometry.Canonical.Cl11TensorInductiveLimit
 import InfoGeometry.Clifford.Cl11MarkovJonesEngine

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.H3ZornMcCrimmonLinearization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Quadratic representation of the real split Albert algebra

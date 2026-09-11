@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
 import InfoGeometry.Physics.Section00MatrixBasisFramework
 import InfoGeometry.Physics.Section30UnifiedMatrixFramework

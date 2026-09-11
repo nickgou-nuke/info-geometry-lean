@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ClNNBilinear
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NormNum
 
 /-!

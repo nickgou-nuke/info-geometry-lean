@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllKleinFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionAxialKleinProjective
 
 /-!

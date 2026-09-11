@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.ExteriorKleinTwoPlaneEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Incidence of real two-planes on the projective Klein locus

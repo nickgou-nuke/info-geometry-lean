@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BiQuaternionKahlerFinite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BiQuaternionKahlerLegendreFinite
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Linarith

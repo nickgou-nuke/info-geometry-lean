@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciBraidDirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.FibonacciBraidedTowerCone
 
 /-!

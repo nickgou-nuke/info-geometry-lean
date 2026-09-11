@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitRealNullTetradZornBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllKleinProjectiveFlow
 
 /-!

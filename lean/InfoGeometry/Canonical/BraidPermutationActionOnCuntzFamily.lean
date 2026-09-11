@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzWordMonomialKMSFunctional
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzGeneratorKMSLogThree
 import InfoGeometry.Algebra.CuntzTensorQuotient
 import InfoGeometry.Physics.B3PresentedGroup

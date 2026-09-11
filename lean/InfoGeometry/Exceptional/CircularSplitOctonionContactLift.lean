@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.CircularSplitOctonionFreudenthalIntertwiner
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalFiveGradedLieClosure
 
 /-! A small, honest contact-grade interface for the existing circular charge

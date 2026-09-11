@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.GenericDerivedCouple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Category.ModuleCat.Basic
 
 /-!

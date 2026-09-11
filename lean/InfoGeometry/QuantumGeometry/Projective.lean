@@ -1,4 +1,5 @@
 import InfoGeometry.QuantumGeometry.Projective.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.QuantumGeometry.Projective.QGT
 import InfoGeometry.QuantumGeometry.Projective.Quotient
 import InfoGeometry.QuantumGeometry.Projective.KreinSolderingBridge

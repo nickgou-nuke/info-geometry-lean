@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModularSpinorCuntzStageExchangeTopologicalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixTraceTower
 import InfoGeometry.Canonical.Cl11CuntzStageComplexificationTopologicalBridge
 import InfoGeometry.Clifford.Cl11TensorTower

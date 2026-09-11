@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.FermionicAndreevReflection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.BlackHoleUnitarityBridge
 
 /-!

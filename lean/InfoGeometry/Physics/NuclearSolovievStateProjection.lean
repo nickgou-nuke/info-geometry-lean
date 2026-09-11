@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TensorTower
 import InfoGeometry.Physics.Cl55SpinorCartanFock
 import InfoGeometry.Physics.SolovievQuasiparticlePhononEigenproblem

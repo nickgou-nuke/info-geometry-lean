@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeThermodynamicStage
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 open InfoGeometry.Arithmetic.PrimeThermodynamicStage

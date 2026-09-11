@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.Cl11OperatorConjugationNorm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option autoImplicit false
 

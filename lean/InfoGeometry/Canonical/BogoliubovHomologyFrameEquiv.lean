@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealHomologyCohomologyDictionary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesCohomology
 import InfoGeometry.Canonical.DrazinHodgeResidueBridge
 import InfoGeometry.Meta.Architecture

@@ -6,6 +6,7 @@ Phase 1: Native mathlib-compatible `su(n)` Lie algebra definition.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Subalgebra
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.LinearAlgebra.Matrix.Trace

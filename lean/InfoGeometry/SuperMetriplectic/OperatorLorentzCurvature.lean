@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.DiscreteMellinHamiltonian
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.WedgeBoostModularBridge
 
 /-!

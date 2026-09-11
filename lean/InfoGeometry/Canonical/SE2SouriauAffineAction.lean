@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SE2SouriauAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The affine `SE(2)` action on Euclidean points

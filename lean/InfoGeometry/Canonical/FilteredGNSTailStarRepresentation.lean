@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSTailRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Algebra representations on filtered GNS tails

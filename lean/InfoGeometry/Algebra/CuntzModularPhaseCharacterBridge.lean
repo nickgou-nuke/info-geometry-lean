@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzModularAutomorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Unit-valued character readout of the Cuntz modular phase

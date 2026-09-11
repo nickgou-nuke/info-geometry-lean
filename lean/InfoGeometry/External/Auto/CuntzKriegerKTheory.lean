@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Cuntz--Krieger boundary maps
@@ -15,7 +16,7 @@ namespace CuntzKriegerKTheory
 
 open Matrix
 
-abbrev M2Z := Matrix (Fin 2) (Fin 2) ℤ
+abbrev M2Z := InfoGeometry.Algebra.FiniteSpin.Mat2Z
 
 /-- The 2D Penrose rhomb substitution matrix. -/
 def PenroseM : M2Z := !![2, 1; 1, 1]

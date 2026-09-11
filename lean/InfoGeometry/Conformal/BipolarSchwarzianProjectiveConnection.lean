@@ -1,4 +1,5 @@
 import InfoGeometry.Conformal.ComplexSchwarzianJet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarLocalConformalCoordinate
 import Mathlib.Tactic
 

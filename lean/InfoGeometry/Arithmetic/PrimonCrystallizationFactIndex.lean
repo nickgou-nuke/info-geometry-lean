@@ -1,4 +1,5 @@
 import InfoGeometry.Probability.HomologicalProbability
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PrimonCoulombGas
 import InfoGeometry.Canonical.VandermondeExclusionBridge
 import InfoGeometry.Arithmetic.PrimeLatticeGasVariational

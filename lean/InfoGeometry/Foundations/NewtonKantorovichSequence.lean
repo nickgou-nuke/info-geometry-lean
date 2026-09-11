@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Sqrt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
 import InfoGeometry.Foundations.NewtonKantorovichBase

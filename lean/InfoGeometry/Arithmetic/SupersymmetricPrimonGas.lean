@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.MobiusPrimonParity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimonSupergradedGasAlgebra
 import InfoGeometry.Canonical.TrifactorDecomposition
 

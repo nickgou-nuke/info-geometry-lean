@@ -1,4 +1,5 @@
 import Mathlib.Geometry.Manifold.IsManifold.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Geometry.Manifold.ContMDiff.Atlas
 import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
 import Mathlib.Geometry.Manifold.MFDeriv.FDeriv

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BinaryCrystalWeylBlochBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LLM.MirrorPhaseCuntzAttention
 
 /-!

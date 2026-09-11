@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.KingdonSplitOctonion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ZornMatrixSU3.ZornSU3Properties
 
 /-!

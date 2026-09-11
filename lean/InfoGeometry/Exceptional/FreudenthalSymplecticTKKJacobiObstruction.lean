@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticTKKTotalBracket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The mixed Jacobi obstruction for the symplectic TKK bracket

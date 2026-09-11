@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.BogoliubovWeylChemicalPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.InformationGeometricCutoff
 
 /-!

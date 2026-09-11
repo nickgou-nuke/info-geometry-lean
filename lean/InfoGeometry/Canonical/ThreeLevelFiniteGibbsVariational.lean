@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThreeLevelFiniteGibbsWeights
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ThreeLevelFiniteGibbsFreeEnergy
 import InfoGeometry.Inference.GibbsVariationalDecomposition
 import InfoGeometry.Inference.FiniteRelativeEntropyEquality

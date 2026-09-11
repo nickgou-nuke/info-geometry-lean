@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeModularProjectiveBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.PolarizedSector
 import InfoGeometry.Meta.Architecture
 

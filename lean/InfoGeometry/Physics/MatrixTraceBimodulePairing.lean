@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.MatrixTraceBimodulePairingNative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 Import-stable routing for the native trace bimodule owner.

@@ -1,4 +1,5 @@
 import InfoGeometry.MaxEnt.Finite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.KL.Finite
 import InfoGeometry.PositiveMeasure
 

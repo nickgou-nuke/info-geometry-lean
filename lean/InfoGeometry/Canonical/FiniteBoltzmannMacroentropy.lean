@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CoarseGraining
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Operations
 
 open scoped BigOperators

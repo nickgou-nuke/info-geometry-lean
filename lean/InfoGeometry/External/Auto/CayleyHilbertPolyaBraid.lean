@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cayley-Hilbert-Pólya-Braid: The Arithmetic Topology of Spacetime

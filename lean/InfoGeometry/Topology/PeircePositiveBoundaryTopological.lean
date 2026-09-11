@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PeircePositiveBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.PeircePositiveCellImageTopological
 import InfoGeometry.Topology.PositiveGrassmannianBCFWCells
 

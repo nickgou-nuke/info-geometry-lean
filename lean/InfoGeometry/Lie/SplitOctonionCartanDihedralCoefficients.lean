@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCartanDihedralHexagon
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCircularMultiplicationTable
 
 /-!

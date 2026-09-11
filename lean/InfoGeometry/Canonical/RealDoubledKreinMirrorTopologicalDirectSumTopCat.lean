@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealDoubledKreinMirrorTopologicalDirectSum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # TopCat packaging of the continuous mirror direct sum

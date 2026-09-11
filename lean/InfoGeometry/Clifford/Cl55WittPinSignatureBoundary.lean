@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Clifford55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Clifford.Clifford55
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.GellMannSU3
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.WeylSU3ColorSymmetry
 import InfoGeometry.Physics.JonesBraidB3
 import InfoGeometry.Physics.SupergradedCuntzBdG

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CliffordCARTopologicalColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Instances.Matrix
 
 /-!

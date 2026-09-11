@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.CenteredXiTwinKernel
 import InfoGeometry.Canonical.FilteredHestenesKreinColimit
 import InfoGeometry.Canonical.HestenesKreinConnesAbsorptionColimit

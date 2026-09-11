@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.HadjiivanovLogConnectionReadoutCommutationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Laurent-mode tower for logarithmic connections

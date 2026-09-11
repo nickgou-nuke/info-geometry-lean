@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.SumPrimeReciprocals
 import InfoGeometry.Algebra.CuntzTensorQuotient
 

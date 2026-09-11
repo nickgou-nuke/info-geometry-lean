@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitG2DiscreteGaugeCochain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

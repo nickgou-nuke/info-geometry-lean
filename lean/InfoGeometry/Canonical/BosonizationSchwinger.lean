@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BosonizationBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.HeisenbergAlgebra
 
 open scoped InnerProductSpace

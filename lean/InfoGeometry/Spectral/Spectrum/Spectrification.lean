@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Spectrum.GPreSpectrum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The spectrification interface

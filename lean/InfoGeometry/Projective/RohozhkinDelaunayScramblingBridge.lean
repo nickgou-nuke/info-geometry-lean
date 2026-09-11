@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.RohozhkinRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.RohozhkinPentagonMatrix
 import InfoGeometry.Projective.HorizonInformationScrambling
 

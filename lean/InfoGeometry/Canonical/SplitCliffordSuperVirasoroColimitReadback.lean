@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordSuperVirasoroInductiveColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 
 noncomputable section

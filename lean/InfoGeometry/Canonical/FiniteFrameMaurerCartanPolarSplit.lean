@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 
@@ -13,6 +14,8 @@ here.  The inputs `dU` and `dP` are arbitrary tangent matrices, and the tangent
 of the product frame is represented by the Leibniz expression
 `dU * P + U * dP`.
 -/
+
+noncomputable section
 
 namespace InfoGeometry.Canonical.FiniteFrameMaurerCartanPolarSplit
 

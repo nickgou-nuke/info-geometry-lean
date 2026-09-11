@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.HadjiivanovLogConnectionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.ProjectiveNullBoundaryBraidFrameEquivariance
 
 /-!

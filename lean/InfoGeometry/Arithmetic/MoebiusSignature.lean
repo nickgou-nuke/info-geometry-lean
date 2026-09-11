@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.PrimeA1RootSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Data.Nat.Squarefree
 

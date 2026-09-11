@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.NaryTreeBoundaryInverseLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.PauliJungTrialityD4Topological
 
 /-!

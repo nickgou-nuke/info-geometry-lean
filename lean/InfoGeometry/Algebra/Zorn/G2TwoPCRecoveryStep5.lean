@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoPCRecovery
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoPCRecoveryStep4
 
 namespace InfoGeometry.Algebra.Zorn.G2TwoPCRecoveryStep5

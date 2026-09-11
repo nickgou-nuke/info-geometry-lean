@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.TwistorConfigurationSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Concrete three-point Arnold form packet

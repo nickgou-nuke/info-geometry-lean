@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorErlangenFierzKlein
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorObservationPrequantumBridge
 
 /-!

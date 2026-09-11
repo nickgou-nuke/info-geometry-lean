@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanFisherSouriauMetric
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Convex.Deriv
 import Mathlib.Analysis.Convex.Function
 import Mathlib.Analysis.Calculus.Deriv.Comp

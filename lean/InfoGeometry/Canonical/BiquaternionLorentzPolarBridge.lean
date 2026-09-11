@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Quaternion
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Canonical.SplitOctonionQuaternionChart

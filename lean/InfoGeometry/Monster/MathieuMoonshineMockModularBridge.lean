@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Monster.MoonshineGradedDimensions
 import InfoGeometry.Quantum.GolayLeechStabilizerCode
 

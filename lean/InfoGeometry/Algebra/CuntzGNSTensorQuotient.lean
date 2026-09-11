@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzTensorQuotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Algebraic GNS quotient over the native Cuntz tensor quotient

@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Colimit.SequentialModule
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Maps induced on sequential colimits

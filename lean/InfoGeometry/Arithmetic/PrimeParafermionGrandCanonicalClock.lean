@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Potential.Thermo
 import InfoGeometry.Information.DeRhamScore
 import InfoGeometry.Arithmetic.PrimeSuperalgebra

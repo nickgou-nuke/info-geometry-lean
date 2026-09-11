@@ -1,4 +1,5 @@
 import InfoGeometry.Streaming.StreamingBoundaryPristineChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transitive axiom inspection for the streaming reconstruction

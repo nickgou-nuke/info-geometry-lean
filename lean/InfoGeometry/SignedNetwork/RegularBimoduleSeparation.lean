@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 namespace InfoGeometry.SignedNetwork.RegularBimoduleSeparation
 variable {A : Type*} [Ring A]
 def leftAction (a : A) : A →+ A := { toFun := fun x => a*x, map_zero' := mul_zero a, map_add' := fun x y => mul_add a x y }

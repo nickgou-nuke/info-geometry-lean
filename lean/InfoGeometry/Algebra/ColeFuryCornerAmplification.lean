@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Kronecker
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Amplification of the associative quadrant

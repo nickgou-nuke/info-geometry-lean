@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ProjectiveCenterQuotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.PenroseKleinTiling
 import InfoGeometry.Twistor.SplitClifford55PureSpinorOrbitGeometry
 

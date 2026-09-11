@@ -12,6 +12,7 @@ packet, with any future representation/intertwining map left explicit.
 -/
 
 import InfoGeometry.Canonical.DikinLambdaBraidHestenesKreinClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PrimeVirasoroSugawara
 import InfoGeometry.Canonical.CliffordToVirasoro
 import InfoGeometry.Canonical.VirasoroSugawaraCentralChargeBridge

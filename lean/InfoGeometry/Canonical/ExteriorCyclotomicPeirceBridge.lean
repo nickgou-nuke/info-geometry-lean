@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ExteriorDegreePhaseFour
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitClifford55ExteriorParity
 import InfoGeometry.Canonical.HodgeStar4DFiniteLinearBridge
 

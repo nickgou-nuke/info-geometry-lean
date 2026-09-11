@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordHeadLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 open scoped TensorProduct

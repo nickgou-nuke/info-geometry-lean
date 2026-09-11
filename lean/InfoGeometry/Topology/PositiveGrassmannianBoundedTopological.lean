@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.PositiveGrassmannianAmplituhedronTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compact bounded matrix charts for the finite amplituhedron map

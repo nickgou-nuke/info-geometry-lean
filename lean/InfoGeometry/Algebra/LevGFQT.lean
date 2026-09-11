@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Matrix
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.ZMod.Basic

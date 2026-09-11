@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarWindingExactSequence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.CoveringMap
 import Mathlib.Tactic
 

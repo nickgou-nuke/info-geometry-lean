@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorCylinderTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Clopen finite-prefix cylinders

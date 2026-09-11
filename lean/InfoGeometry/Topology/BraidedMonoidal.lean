@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.PointedGroups
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Monoidal.Braided.Basic
 
 namespace InfoGeometry.Topology.BraidedMonoidal

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Order.Ring.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Monoidal.Braided.Basic
 import InfoGeometryCore.Basic
 import Mathlib.Analysis.Complex.Exponential

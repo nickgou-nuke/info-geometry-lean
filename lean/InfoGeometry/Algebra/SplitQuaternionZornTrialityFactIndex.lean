@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitQuaternionAutomorphismStructure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.IdempotentProjector
 import InfoGeometry.Algebra.CPTComplexStructure
 import InfoGeometry.Algebra.Zorn.NullCone

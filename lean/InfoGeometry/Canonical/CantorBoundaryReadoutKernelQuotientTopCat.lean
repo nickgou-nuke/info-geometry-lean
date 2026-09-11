@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBoundaryReadoutTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryReadoutIntervalApproximation
 import InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
 import InfoGeometry.Topology.NaryTreeBoundaryQuotientTopCat

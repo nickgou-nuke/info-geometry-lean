@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarMetricEndLengths
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.MetricSpace.Cauchy
 import Mathlib.Topology.MetricSpace.Basic
 import Mathlib.Topology.MetricSpace.Completion

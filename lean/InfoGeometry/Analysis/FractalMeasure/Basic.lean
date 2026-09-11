@@ -1,4 +1,5 @@
 import Mathlib.Probability.ProductMeasure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Probability.UniformOn
 
 namespace InfoGeometry.Analysis.FractalMeasure.Basic

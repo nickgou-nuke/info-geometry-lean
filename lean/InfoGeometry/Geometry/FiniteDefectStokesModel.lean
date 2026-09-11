@@ -6,6 +6,7 @@ Stokes lanes.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.BilingualAnalyticity
 import InfoGeometry.Geometry.ConstructiveKasparov
 import InfoGeometry.Geometry.SpectralDivisors

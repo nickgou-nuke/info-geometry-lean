@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.QutritGellMannOperatorBasis
 import InfoGeometry.Canonical.StokesQutritChannelBasis
 
@@ -20,7 +21,7 @@ open InfoGeometry.Canonical.ChiralStokesPauliBasis
 open InfoGeometry.Canonical.QutritGellMannOperatorBasis
 open InfoGeometry.Canonical.StokesQutritChannelBasis
 
-abbrev SheetOperator := Matrix (Fin 2) (Fin 2) ℂ
+abbrev SheetOperator := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev SixOperator := Matrix (Fin 2 × Fin 3) (Fin 2 × Fin 3) ℂ
 abbrev ChiralEightSlots := Fin 8 → SheetOperator
 

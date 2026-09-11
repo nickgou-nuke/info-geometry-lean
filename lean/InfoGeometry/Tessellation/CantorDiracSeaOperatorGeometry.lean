@@ -1,4 +1,5 @@
 import InfoGeometry.Tessellation.CantorDiracSeaWalk
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Tessellation.CantorDiracSeaCharge
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 import InfoGeometry.Canonical.CantorBinaryTiltCARCCRBridge

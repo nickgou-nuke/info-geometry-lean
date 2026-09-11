@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Riemann Hypothesis: Theorem-Honest Complex-Temperature Boundary

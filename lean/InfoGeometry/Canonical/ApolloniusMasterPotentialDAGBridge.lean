@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ApolloniusLambdaDAGClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ApolloniusMasterPotentialHelmholtz
 import InfoGeometry.Canonical.SelfConcordantLogGeneratingLyapunov
 

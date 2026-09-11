@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Diagonal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 noncomputable section

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZornVectorMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornAlternativeLaws
 import Mathlib.Tactic
 
@@ -10,7 +11,7 @@ namespace InfoGeometry.Canonical.ZornLeftRegularRepresentation
 open InfoGeometry.Algebra
 
 abbrev ZM := ZornVectorMatrix ℝ
-abbrev Coord := Fin 8 → ℝ
+abbrev Coord := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 def coordToZorn (x : Coord) : ZM :=
   ⟨x 0, ![x 1, x 2, x 3], ![x 4, x 5, x 6], x 7⟩

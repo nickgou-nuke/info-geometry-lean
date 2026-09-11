@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2BruhatResidual
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2BruhatResidualSimpleEquiv
 import InfoGeometry.Algebra.Zorn.G2BruhatResidualTopEquiv
 

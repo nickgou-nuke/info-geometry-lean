@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ActualRiemannXiSchwarzBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.RiemannXiCayleyZeroBridge
 import InfoGeometry.Canonical.NativeMathlibZetaConnectionBridge
 import InfoGeometry.Canonical.ActualXiSymmetryDatumBridge

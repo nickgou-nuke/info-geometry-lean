@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzDerivationTangent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzQuotientDiracBridge
 
 /-!

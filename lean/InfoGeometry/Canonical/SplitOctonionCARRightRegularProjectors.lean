@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionCARRightRegularBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CARProjectors
 
 /-!

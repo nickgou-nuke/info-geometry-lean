@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 Canonical import surface for the noncommutative modular operator owner.

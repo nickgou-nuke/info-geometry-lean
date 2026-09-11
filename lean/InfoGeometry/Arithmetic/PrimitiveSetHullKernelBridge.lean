@@ -1,4 +1,5 @@
 import Mathlib.Topology.Order.HullKernel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 import InfoGeometry.Meta.BridgeTarget
 

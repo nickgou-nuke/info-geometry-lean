@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OnsagerReciprocity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GeneratedFlow
 import InfoGeometry.Meta.Architecture
 

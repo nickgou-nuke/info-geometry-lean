@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Volume.ConnesTomitaKreinBridge
 
 /-!

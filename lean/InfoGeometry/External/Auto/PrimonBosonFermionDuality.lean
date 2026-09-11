@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.BosonicPrimonPartition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.FermionicPrimonPartition
 import InfoGeometry.External.Auto.MajoranaPrimonSpectralBridge
 

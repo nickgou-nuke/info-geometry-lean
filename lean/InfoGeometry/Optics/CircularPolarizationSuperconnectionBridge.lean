@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.ChiralLorentzOperatorLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.JonesPoincareSphere
 import InfoGeometry.Optics.OperatorValuedSuperconnection
 

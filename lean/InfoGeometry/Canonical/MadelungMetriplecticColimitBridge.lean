@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MadelungMetriplecticTomitaFrame
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.TraceFormula.DeterminantBondNative
 import InfoGeometry.TraceFormula.PrimonColimitGNSRepresentation
 import InfoGeometry.Clifford.CliffordBitWordEquivalence

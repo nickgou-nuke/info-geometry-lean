@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.CuntzPoincareLorentzSupercharge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Rest-frame Cuntz/primon Poincare-Lorentz packet

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraActionDirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Automorphism readout for the native noncommutative direct-limit action

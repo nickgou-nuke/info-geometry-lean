@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Linarith

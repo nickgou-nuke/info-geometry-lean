@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.CliffordBott
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Basic
 
 /-!

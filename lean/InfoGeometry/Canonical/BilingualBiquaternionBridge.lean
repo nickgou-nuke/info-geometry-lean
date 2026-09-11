@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BilingualRealHestenesDictionary
 import InfoGeometry.Clifford.Biquaternion
 import InfoGeometry.Krein.DoubledSpace

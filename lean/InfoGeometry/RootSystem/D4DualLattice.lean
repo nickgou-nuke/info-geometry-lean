@@ -1,4 +1,5 @@
 import InfoGeometry.RootSystem.D4RootLattice
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.QuotientGroup.Defs
 
 /-!
@@ -11,7 +12,7 @@ construction, not merely a list of four labels.
 
 namespace InfoGeometry.RootSystem.D4
 
-abbrev RationalAmbient := Fin 4 → ℚ
+abbrev RationalAmbient := InfoGeometry.Algebra.FiniteSpin.Vec4Q
 
 def integerEmbedding (x : Ambient) : RationalAmbient := fun i => x i
 

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.TypeTags.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Complex.Basic

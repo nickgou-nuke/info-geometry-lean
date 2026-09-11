@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PositionalDynamicsRegimeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LLM.FourierCharacterEncoding
 
 namespace InfoGeometry.Canonical.PositionalDynamicsRegimeBridge

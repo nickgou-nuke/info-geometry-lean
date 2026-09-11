@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PrimePartitionPolynomials
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PrimeLeeYangHamiltonianCoherenceBridge
 
 /-!

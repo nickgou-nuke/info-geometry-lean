@@ -1,4 +1,5 @@
 import InfoGeometry.MassSpectrometry.LogosMap
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Build-time audit of the mass-spectrometry language-to-Logos map

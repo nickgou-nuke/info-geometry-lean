@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.HessianGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.Metric
 
 namespace InfoGeometry.Canonical.SuperInference

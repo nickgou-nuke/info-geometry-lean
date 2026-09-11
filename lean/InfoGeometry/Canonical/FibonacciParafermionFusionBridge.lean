@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FibonacciParafermionAtoms
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 
 /-!

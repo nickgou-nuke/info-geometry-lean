@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Module.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Algebra.Module.LinearMap
 import InfoGeometry.Dynamics.EntropicTokenDynamics
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikKocakCl11ConcretePacket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.RealSplitClifford
 import InfoGeometry.Clifford.RealDoubledHestenesAnchor
 import InfoGeometry.Canonical.BilingualRealHestenesDictionary

@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ChiralTwistorSheets
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.RealSplitOctonionCarrierBridge
 import Mathlib.Tactic.FinCases
 

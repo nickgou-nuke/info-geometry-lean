@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoPCRecoveryStep2
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false

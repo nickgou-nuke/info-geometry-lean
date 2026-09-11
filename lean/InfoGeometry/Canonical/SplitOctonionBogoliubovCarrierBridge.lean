@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionDoubledLoxodromic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovVielbein
 import InfoGeometry.Projective.QuaternionicDoubledKrein
 import Mathlib.Analysis.Normed.Algebra.QuaternionExponential

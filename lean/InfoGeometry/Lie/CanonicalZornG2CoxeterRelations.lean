@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornCartanRootReflections
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2WeylDihedralEquiv
 import Mathlib.GroupTheory.Coxeter.Matrix
 import Mathlib.GroupTheory.SpecificGroups.Dihedral

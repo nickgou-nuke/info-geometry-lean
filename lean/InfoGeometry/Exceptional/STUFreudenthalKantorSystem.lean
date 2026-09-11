@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.STUJordanTripleSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.FreudenthalKantorTripleSystem
 
 /-!

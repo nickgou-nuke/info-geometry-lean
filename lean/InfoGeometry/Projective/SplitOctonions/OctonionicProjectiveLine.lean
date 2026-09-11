@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitOctonions.ZornMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Octonionic Projective Line: Local Associator Lemmas

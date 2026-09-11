@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductContinuousLinearRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Complex commutator bridge for the D₄ crossed-product operators

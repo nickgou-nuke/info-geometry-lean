@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.JaynesLDDPGNSColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 
 /-!

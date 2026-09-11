@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.RiemannZetaDivisorLogGeometry
 import InfoGeometry.Arithmetic.RiemannPoleZeroMonodromy
 import InfoGeometry.Geometry.HelicalCovering

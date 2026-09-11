@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornIntegralTrialityEquivariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Integral Zorn composition algebra

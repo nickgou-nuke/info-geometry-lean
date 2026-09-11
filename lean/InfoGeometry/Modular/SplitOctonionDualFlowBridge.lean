@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.G2FromSplitOctonions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Pointwise dual-flow commutator identities for the nonassociative
 split-octonion product.  This deliberately does not claim that the bare

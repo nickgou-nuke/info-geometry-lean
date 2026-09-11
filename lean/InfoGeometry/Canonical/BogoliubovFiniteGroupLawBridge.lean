@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovCovariantMellinKreinQuantizationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite inverse law for the phase-squeezing Bogoliubov matrix

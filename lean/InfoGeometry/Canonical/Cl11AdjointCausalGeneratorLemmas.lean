@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11KleinFourAdjointRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Mixed products in the finite `Cl(1,1)` adjoint representation

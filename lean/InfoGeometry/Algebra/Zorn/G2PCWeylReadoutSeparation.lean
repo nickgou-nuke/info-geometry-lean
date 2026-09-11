@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2BNBruhatFramework
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Algebra.Zorn.G2PCWeylReadoutSeparation
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PenroseOnsagerYangCondensationPristineChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transitive axiom inspection for the Penrose--Onsager--Yang core

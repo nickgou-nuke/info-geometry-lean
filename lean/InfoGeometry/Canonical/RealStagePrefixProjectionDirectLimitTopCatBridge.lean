@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealStagePrefixProjectionReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DyadicDimensionGroupTopCat
 
 /-!

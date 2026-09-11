@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionPeirceNativeCharacter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

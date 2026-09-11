@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55MasterParityOddnessBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HodgeFockEmbeddingBridge
 
 /-!
@@ -22,7 +23,7 @@ open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Clifford.TowerMatrix
 
 abbrev TowerMat32 := Mat32
-abbrev CoordinateMat32 := Matrix (Fin 32) (Fin 32) ℝ
+abbrev CoordinateMat32 := InfoGeometry.Algebra.FiniteSpin.Mat32R
 abbrev ProductMat32 := Matrix (Fin 8 × Fin 4) (Fin 8 × Fin 4) ℝ
 
 noncomputable def towerIndexEquivFin32 : Idx 5 ≃ Fin 32 :=

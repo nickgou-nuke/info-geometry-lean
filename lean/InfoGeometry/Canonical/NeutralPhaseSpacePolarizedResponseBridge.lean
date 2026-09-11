@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.NeutralPhaseSpaceCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Polarized response on the neutral phase-space carrier

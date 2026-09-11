@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.FreedAnomalyCancellation
 import InfoGeometry.External.Auto.ProjectiveCuntzToeplitzCARCCR
 

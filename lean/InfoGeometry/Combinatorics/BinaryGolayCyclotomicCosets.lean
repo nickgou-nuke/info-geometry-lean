@@ -1,4 +1,5 @@
 import Mathlib.Data.Finset.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.Finset.Interval
 import Mathlib.Order.Interval.Finset.Nat

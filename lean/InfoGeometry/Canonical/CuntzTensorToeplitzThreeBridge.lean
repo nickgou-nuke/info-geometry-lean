@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzTensorQuotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NativeToeplitzCuntzThree
 import InfoGeometry.Canonical.ToeplitzCuntzThreeVacuumBridge
 

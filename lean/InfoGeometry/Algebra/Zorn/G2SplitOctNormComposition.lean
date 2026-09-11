@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2SplitOctZModBoolReadback
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge
 import InfoGeometry.OperatorAlgebra.SplitOctonionNormComposition
 

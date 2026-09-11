@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitCanonicalPoint
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitDynamics
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitContinuousAction
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.InvolutiveSelfDualCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Carrier Transport

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ChiralPackingEnergy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.CantorGibbsModularBridge
 
 /-!

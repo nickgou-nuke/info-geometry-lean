@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitMetricSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CanonicalZornFiveGradedClosure
 import Mathlib.LinearAlgebra.BilinearForm.Properties
 import Mathlib.Data.Matrix.Basis

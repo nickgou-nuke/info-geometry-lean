@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ChiralSUSYBlockFactorization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SplitOctonionChiralTriplet
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullBoundaryTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Covering.Quotient
 
 /-!

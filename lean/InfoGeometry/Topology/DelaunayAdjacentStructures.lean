@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.DelaunayFlipMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LLM.KreinAttentionEnergy
 import InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws
 import InfoGeometry.Analysis.FiniteSpectralMellinTaylor

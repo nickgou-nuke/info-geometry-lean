@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.FreeEntropySouriauBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SouriauMassieuPlanckFunctional
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 

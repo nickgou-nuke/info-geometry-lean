@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.HestenesD4HurwitzBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesRealStructures
 import InfoGeometry.Meta.Architecture
 

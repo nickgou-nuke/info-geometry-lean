@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ChiralZornBasisSoldering
 
 /-!
@@ -24,7 +25,7 @@ open InfoGeometry.Algebra
 
 noncomputable section
 
-abbrev ChiralCoefficientSpace := Fin 8 → ℂ
+abbrev ChiralCoefficientSpace := InfoGeometry.Algebra.FiniteSpin.Vec8C
 
 def chiralToSoldered : ChiralCoefficientSpace ≃ₜ ChiralCoefficientSpace where
   toFun c := ![

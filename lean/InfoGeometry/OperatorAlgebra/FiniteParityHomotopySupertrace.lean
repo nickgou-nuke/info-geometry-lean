@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FiniteParityContractible
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Trace
 
 noncomputable section

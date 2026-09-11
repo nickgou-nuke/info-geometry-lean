@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
 
@@ -7,7 +8,7 @@ namespace InfoGeometry.Canonical.ZornModularAAV
 noncomputable section
 
 /-- 3D vector over ℝ -/
-abbrev Vec3 := Fin 3 → ℝ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 def vecDot (u v : Vec3) : ℝ :=
   u 0 * v 0 + u 1 * v 1 + u 2 * v 2

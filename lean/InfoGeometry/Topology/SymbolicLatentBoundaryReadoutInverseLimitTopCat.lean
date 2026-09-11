@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentBoundaryAddressTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentBoundaryCylinderQuotientTopCat
 
 /-!

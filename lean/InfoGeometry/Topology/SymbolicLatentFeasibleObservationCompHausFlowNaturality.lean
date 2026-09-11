@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentFeasibleObservationCompHausNaturality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentFeasibleSubspaceCompHausFlow
 
 /-!

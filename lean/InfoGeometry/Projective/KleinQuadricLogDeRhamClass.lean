@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.KleinQuadricGrothendieckDeRham
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TimeAsWindingMonodromy3D
 import InfoGeometry.Projective.KleinQuadricTime
 import InfoGeometry.Clifford.UniversalCoverLog

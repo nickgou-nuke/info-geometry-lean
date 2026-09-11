@@ -1,4 +1,5 @@
 import InfoGeometry.Topological.ChernSimonsCochain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ChernSimonsCochainCapstone
 

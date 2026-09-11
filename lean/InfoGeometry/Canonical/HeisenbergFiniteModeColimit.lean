@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HeisenbergFiniteModeStages
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Category.ModuleCat.FilteredColimits
 import Mathlib.CategoryTheory.Limits.ConcreteCategory.Basic
 

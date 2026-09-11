@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Category.Grp.AB
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Category.Grp.FilteredColimits
 import Mathlib.Algebra.Homology.ShortComplex.PreservesHomology
 import Mathlib.CategoryTheory.Limits.Preserves.Shapes.Kernels

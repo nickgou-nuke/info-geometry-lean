@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GradedRationalSubcomplex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

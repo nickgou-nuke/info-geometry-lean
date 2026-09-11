@@ -1,4 +1,5 @@
 import InfoGeometry.Thermal.VonNeumannEntropy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.VonNeumannEntropyCapstone
 

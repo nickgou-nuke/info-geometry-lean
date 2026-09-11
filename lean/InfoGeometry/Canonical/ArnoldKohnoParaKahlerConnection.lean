@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Algebra.Lie.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.TensorProduct.Basic
 import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
 import InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT

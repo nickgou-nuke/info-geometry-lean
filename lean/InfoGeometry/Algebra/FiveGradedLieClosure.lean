@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FiveGradedLieJacobi
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Closure data for a five-graded Lie carrier

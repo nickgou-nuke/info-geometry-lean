@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MetriplecticCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MetriplecticJacobianDecompositionBridge
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 import InfoGeometry.Topology.NativeMathlibZetaMetriplecticFlowBridge

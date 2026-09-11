@@ -1,4 +1,5 @@
 import InfoGeometry.GromovWittenErlangen.LieOrbitCurve
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GromovWittenErlangen.CP1DrazinNilpotentCountRayExample
 
 /-!

@@ -11,6 +11,7 @@ turn an audit verdict into a flow-regularity theorem.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 
 noncomputable section

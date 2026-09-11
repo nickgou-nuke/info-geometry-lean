@@ -1,1 +1,2 @@
 import InfoGeometry.Geometry.AmplituhedronZetaEquivalence
+import InfoGeometry.Algebra.FiniteSpinAlgebra

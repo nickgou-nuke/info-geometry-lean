@@ -5,6 +5,7 @@ Constructive Kasparov boundary and defect ledger.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.BilingualAnalyticity
 
 noncomputable section

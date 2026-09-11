@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55WittWeightReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.ZMod.Basic
 
 noncomputable section
@@ -12,7 +13,7 @@ This owner deliberately stops at the finite reflection action on weights.  It
 does not claim that these reflections have already been lifted to Pin
 operators on the 32-dimensional spinor carrier. -/
 
-abbrev Weight := Fin 5 → ℤ
+abbrev Weight := InfoGeometry.Algebra.FiniteSpin.Vec5Z
 
 def permuteWeight (σ : Equiv.Perm (Fin 5)) (w : Weight) : Weight :=
   fun k => w (σ.symm k)

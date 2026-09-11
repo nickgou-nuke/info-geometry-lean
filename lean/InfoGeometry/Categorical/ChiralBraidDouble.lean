@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Monoidal.Braided.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Two-sided crossings in a braided monoidal category

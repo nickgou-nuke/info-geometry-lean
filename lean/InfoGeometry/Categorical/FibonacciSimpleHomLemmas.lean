@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciHomSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Simple-object Hom-space consequences

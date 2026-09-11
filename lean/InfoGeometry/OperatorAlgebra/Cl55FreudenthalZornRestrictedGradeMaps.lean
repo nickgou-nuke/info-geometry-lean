@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.Cl55FreudenthalZornGradeIntertwiner
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConformalFiveGradeInversion
 import Mathlib.Tactic
 

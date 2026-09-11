@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.PositiveEnergyMellinKernelTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Logarithmic scale and finite Mellin/wavelet readouts

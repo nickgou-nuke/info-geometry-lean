@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.OperatorZornMatrixAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Soldering an eight-coordinate chiral packet to the associative shell

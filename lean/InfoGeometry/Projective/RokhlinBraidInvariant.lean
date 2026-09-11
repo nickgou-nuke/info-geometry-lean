@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitOctonions.ZornMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The Rokhlin Braid Invariant and Majorana Zero Modes

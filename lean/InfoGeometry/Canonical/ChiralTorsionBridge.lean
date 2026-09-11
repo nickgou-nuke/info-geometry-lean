@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralTorsionRelativeVolume
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ChiralTorsionGeneralizedKL
 import InfoGeometry.Canonical.ChiralTorsionTwistor
 import InfoGeometry.Canonical.ChiralTorsionState

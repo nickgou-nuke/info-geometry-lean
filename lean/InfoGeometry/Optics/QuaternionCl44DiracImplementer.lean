@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.QuaternionCl44TwistedConjugationLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option autoImplicit false
 

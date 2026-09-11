@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarTwoSheetParabolicCausalBoundaryBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarLogSL2
 import InfoGeometry.Analysis.BipolarPlanarHodgePair
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra

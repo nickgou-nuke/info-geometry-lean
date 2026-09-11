@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBoundaryComplexReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryReadoutBounds
 
 /-!

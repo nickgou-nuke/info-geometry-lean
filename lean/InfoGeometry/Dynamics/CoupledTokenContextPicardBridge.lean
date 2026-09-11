@@ -1,4 +1,5 @@
 import Mathlib.Analysis.ODE.PicardLindelof
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Algebra.Module.FiniteDimension
 import InfoGeometry.Dynamics.RealifiedContinuousContextBackreaction
 import InfoGeometry.Dynamics.TokenPiLpBridge

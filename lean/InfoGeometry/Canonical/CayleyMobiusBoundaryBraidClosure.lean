@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SuperBracketHestenesKreinClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteMajoranaBraiding
 
 /-!

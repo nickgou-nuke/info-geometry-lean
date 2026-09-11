@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitOctonions.PolarConcrete
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Projective.SplitOctonions.SplitOctonionsTraceIncidence

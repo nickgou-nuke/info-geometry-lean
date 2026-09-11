@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GNSState
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CantorBernoulliGaugeStateBridge
 
 /-!

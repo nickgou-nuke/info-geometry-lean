@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.RealSplitAlbert
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Algebra
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesSTA4DMaxwellDiracBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Thorium229NuclearIsomerSpinorBridge
 
 namespace InfoGeometry.Canonical.STAMaxwellThoriumCapstone

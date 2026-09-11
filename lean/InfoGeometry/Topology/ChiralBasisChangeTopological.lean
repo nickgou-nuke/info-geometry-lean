@@ -1,11 +1,12 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ChiralBasisChangeMatrix
 
 namespace InfoGeometry.Topology
 
 noncomputable section
 
-abbrev RealChiralBasisCoordinates := Fin 8 → ℝ
+abbrev RealChiralBasisCoordinates := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 /-!
 The scalar extension of the rational chiral/native soldering matrix.  The

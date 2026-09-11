@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ApolloniusFisherInformation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SuperMetriplectic.Flow
 import InfoGeometry.Krein.Metric
 

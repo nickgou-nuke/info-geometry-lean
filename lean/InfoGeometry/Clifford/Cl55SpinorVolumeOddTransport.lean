@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55SpinBivectorChiralityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transport of odd volume anticommutation to the spinor matrix model

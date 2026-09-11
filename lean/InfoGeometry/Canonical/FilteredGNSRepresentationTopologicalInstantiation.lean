@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraTopologicalRepresentationTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredGNSAlgebraicColimitRepresentation
 
 /-!

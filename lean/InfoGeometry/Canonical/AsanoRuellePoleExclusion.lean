@@ -1,4 +1,5 @@
 import Mathlib.Tactic.LinearCombination
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.Basic
 
 /-!

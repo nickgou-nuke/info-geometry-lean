@@ -1,4 +1,5 @@
 import InfoGeometry.Modular.CommutantSemidirectProduct
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Modular.SemidirectAutomorphismGroup
 import InfoGeometry.Modular.WeylPfaffianDeterminantTriple
 import InfoGeometry.Modular.DerivationLieIdeal

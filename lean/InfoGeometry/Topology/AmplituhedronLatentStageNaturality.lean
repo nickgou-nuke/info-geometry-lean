@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.AmplituhedronTopCatStageDiagram
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Naturality of the finite amplituhedron latent readout

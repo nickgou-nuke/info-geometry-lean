@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitAlbertPeirceZeroJordanTripleRestriction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Compatibility path for the upstream H3 Peirce-zero triple restriction.
 The theorem is delegated to the current Split-Albert owner. -/

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.YangMillsContinuum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import InfoGeometry.Meta.Architecture

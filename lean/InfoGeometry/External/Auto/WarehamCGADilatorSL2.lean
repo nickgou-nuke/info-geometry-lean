@@ -1,10 +1,12 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 
+
 namespace WarehamCGADilatorSL2
 
-abbrev M2Q := Matrix (Fin 2) (Fin 2) ℚ
+abbrev M2Q := InfoGeometry.Algebra.FiniteSpin.Mat2Q
 
 open scoped Matrix
 

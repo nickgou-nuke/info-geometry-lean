@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.FiniteBKMDiracCurvatureBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.QuaternionCl44QGTNormedFrechetRealization
 
 set_option autoImplicit false

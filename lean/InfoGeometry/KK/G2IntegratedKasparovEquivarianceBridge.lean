@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.KK.RealCl55KasparovCycleBridge
 import InfoGeometry.Canonical.Cl55MasterChiralHodgeBlockBridge
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornAssociativeSpectralAdapter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornChiralLightConeCoordinates
 import Mathlib.Tactic
 

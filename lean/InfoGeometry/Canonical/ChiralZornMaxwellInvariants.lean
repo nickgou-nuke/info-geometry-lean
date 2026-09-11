@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralZornMaxwellReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 
 /-!

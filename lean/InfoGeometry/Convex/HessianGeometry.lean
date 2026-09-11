@@ -1,4 +1,5 @@
 import InfoGeometry.Potential.LogPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Triality
 import InfoGeometry.Convex.Bregman
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic

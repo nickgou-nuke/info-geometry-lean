@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Limits.HasLimits
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Category.Ring.FilteredColimits
 import Mathlib.Algebra.Category.Ring.Constructions
 import InfoGeometry.Physics.HestenesKreinBilingualCarrier

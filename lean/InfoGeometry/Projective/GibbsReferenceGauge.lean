@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.GibbsRayGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Removing the reference-scale gauge from Gibbs potentials

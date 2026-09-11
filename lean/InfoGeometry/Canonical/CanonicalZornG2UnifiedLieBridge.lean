@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Submodule
 import Mathlib.Algebra.Lie.Classical
 import Mathlib.LinearAlgebra.FiniteDimensional.Defs

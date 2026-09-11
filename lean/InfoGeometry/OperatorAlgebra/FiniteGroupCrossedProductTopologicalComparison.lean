@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraDirectLimitTopologicalRealization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.FiniteGroupCrossedProductDirectLimitComparison
 import InfoGeometry.OperatorAlgebra.FiniteGroupCrossedProductDirectLimitConvolution
 

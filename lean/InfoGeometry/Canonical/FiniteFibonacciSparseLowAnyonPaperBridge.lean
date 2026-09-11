@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteFibonacciSparseLowAnyonMatrices
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.FiniteFibonacciSparseLowAnyonPaperBridge

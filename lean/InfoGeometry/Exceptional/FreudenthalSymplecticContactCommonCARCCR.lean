@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticContactGrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 namespace InfoGeometry.Exceptional.Freudenthal

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BostConnesModularFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PauliBostConnesModularFlow
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Gauge.NonAbelianSL2Extension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.NonAbelianSL2ExtensionCapstone
 

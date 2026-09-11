@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.PenroseBitwistorSplitOctonion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
 import InfoGeometry.Twistor.PenroseCanonicalZornSoldering
 import InfoGeometry.Twistor.PenroseZornWittBoundary

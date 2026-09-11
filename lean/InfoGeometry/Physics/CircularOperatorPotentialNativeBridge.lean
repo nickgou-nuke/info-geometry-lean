@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.CircularChiralFockOperatorZornBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.CircularChiralBivectorRotorBridge
 
 namespace InfoGeometry.Physics.CircularOperatorPotentialNativeBridge

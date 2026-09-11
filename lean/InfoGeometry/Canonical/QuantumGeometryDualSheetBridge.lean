@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped InnerProductSpace
 

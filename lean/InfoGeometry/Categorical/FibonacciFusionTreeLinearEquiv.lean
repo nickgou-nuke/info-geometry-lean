@@ -1,10 +1,11 @@
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Categorical.FibonacciFusionTreeLinearEquiv
 
 open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 
-abbrev FusionTree := Fin 2 → ℂ
+abbrev FusionTree := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 noncomputable def fLinearMap (τ s : ℂ) :
     FusionTree →ₗ[ℂ] FusionTree :=

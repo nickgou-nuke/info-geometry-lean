@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Dirac-Hodge Coupling on the Hestenes-Krein Doubled Space

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2MasterRootSynthesis
 import InfoGeometry.Canonical.CyclotomicOperatorSpine
 import InfoGeometry.Canonical.ViazovskaLeechGolayWeld

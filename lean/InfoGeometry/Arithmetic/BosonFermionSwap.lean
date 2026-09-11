@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.BostConnesSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.MasterIdentity
 import InfoGeometry.Arithmetic.MoebiusWeylEuler
 import InfoGeometry.Arithmetic.SpectralDistance

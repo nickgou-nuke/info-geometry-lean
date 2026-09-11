@@ -1,5 +1,6 @@
 
 import InfoGeometry.Core.Entropy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.GrandCanonical
 import InfoGeometry.Core.SymmetricLie
 import InfoGeometry.Core.SymmetricLieMetric

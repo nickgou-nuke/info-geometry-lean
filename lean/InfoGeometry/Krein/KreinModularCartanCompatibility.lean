@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.KreinModularBilinearReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Krein
 

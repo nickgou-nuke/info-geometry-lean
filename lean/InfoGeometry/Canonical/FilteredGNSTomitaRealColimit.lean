@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSTomitaDomainColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Real colimit descent of filtered closed Tomita operators

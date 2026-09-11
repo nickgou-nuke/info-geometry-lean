@@ -1,4 +1,5 @@
 import Mathlib.Algebra.TrivSqZeroExt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Quaternion
 
 /-!

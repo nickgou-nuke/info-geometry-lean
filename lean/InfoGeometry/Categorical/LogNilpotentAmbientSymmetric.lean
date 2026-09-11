@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Monoidal.Braided.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.LogNilpotentMonoidalCategory
 import InfoGeometry.Categorical.LogEndModuleHexagon
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.SplitMajoranaPrimeGas
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE
 
 /-!

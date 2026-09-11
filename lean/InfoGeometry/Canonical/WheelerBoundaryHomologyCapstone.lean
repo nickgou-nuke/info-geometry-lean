@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.WheelerBoundaryHomologyBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.WheelerBoundaryHomologyCapstone
 

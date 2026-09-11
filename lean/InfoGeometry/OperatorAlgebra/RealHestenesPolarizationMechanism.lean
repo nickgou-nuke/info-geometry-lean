@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.PolarizedSector
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.SplitCliffordNN
 import InfoGeometry.Quantum.RealMajorana
 import InfoGeometry.Canonical.BogoliubovPolarizationBridge

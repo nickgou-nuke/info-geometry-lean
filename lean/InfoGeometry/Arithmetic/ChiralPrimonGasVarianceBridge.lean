@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ChiralPrimonGas
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite fermionic variance positivity

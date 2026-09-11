@@ -1,4 +1,5 @@
 import Mathlib.Logic.Equiv.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.CelikZ3FibonacciBridge
 

@@ -22,6 +22,7 @@ Four Ontological Sieve Stages:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinDilationGap
 import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget

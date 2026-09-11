@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.BilingualUpperHalfPlane
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.FiniteJonesOptics
 import InfoGeometry.OperatorAlgebra.FiniteJonesErlangerBridge
 import InfoGeometry.OperatorAlgebra.VerifiedCasimir

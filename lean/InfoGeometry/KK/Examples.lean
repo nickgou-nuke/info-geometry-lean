@@ -1,4 +1,5 @@
 import InfoGeometry.KK.Product
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.KK.CompactOperatorBridge
 import Mathlib.Analysis.InnerProductSpace.PiL2
 

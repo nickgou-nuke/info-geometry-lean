@@ -14,6 +14,7 @@ fields of the matrix-unit datum.
 -/
 
 import InfoGeometry.Canonical.DrazinLightConeDictionary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import Mathlib.Tactic
 

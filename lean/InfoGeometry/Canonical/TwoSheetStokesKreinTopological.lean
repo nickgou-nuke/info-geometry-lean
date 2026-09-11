@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwoSheetStokesTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TwoSheetKreinTopological
 
 noncomputable section

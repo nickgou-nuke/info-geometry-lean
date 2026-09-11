@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutFamilyMorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Composition laws for compatible readout-family morphisms

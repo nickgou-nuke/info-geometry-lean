@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11Matrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The canonical Cl(1,1) Clifford-map bridge

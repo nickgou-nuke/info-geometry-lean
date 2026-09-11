@@ -1,4 +1,5 @@
 import InfoGeometry.Causal.CausalAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility Import for the Causal Algebra Owner

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularOperatorReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CanonicalChiralZornEquivariance
 import InfoGeometry.Lie.SplitOctonionPeirceExteriorBridge
 import InfoGeometry.Lie.SplitOctonionQuaternionTwistedConjugation
@@ -25,7 +26,7 @@ open InfoGeometry.Lie.SplitOctonionPeirceExteriorBridge
 open InfoGeometry.Lie.SplitOctonionQuaternionTwistedConjugation
 
 abbrev Carrier := CanonicalZorn
-abbrev Coord := Fin 8 → ℝ
+abbrev Coord := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 /-! The existing Peirce coordinate carrier is definitionally the circular
 coordinate carrier.  We expose its exchange operator here as the sector

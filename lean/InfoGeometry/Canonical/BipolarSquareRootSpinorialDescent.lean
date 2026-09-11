@@ -31,7 +31,7 @@ open InfoGeometry.Analysis.BipolarMobiusPunctureEquiv
 open InfoGeometry.Canonical.BipolarLogSL2
 
 abbrev Matrix2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
-abbrev Spinor2 := Fin 2 → ℂ
+abbrev Spinor2 := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 /-- A point of the pullback of the squaring map along `q`. -/
 structure SquareRootPoint where

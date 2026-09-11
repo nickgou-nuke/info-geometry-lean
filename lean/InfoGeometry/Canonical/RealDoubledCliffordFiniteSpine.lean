@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Clifford.ClNN
 import InfoGeometry.Clifford.BottPeriodicity

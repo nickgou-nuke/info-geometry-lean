@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorProjectorMismatch
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DilationKKTBridge
 import InfoGeometry.Canonical.ChiralKMSOwner
 import InfoGeometry.Canonical.WeylSupertraceOwner

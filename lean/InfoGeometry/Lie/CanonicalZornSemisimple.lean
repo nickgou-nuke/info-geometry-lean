@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornMathlibRootSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornIdealWeightDecomposition
 import InfoGeometry.Lie.CanonicalZornAbelianIdeal
 import InfoGeometry.Lie.CanonicalZornOppositeRootNondegeneracy

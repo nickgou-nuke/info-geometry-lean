@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.JordanCayleyInversionOsQ
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Coordinate stratification for the split-octonionic `J₂` packet

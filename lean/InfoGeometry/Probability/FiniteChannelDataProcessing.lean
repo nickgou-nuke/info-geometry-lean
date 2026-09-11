@@ -1,4 +1,5 @@
 import InfoGeometry.EntropicInference
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Star.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Thermo.SouriauOnsagerBKMOperatorForms
 import InfoGeometry.Optics.OperatorValuedConnection

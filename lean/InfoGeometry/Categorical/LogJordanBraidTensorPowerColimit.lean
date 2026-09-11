@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.LogJordanTensorPowerStabilization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Spectral.Colimit.SequentialModule
 import Mathlib.CategoryTheory.Functor.OfSequence
 

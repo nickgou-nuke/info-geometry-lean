@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundaryMatrixUnitWick
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
 import InfoGeometry.Thermodynamics.FiniteConnesCocycle
 import InfoGeometry.Thermodynamics.FiniteGibbsRelative

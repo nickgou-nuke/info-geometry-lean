@@ -1,4 +1,5 @@
 import InfoGeometry.Core.TitsExhaustion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2ConcreteGeneratorInfrastructure
 
 /-! Non-circular Bruhat exhaustion for the concrete generated subgroup. -/

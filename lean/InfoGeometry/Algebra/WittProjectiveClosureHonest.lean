@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.WittAlgebra
 import InfoGeometry.External.Virasoro.VirasoroCocycle
 

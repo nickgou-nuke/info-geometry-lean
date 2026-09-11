@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TopCatColimitCompatibleEndomorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transport of compatible TopCat actions through colimit maps

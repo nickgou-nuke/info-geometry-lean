@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MetriplecticCore
 import InfoGeometry.SuperMetriplectic.Flow
 import InfoGeometry.Canonical.CategoricalRiemannMasterSynthesisBridge

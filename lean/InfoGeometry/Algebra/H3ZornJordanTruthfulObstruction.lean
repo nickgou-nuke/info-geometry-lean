@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.H3ZornJordanObstruction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Certified status packet for the `H3Zorn ℝ` Jordan closure surface

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.NaryTreeBoundaryCompactHausdorffCylinder
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Separation by finite-prefix cylinders

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.Basic
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Canonical.SplitOctonionPeirceChiralFrame

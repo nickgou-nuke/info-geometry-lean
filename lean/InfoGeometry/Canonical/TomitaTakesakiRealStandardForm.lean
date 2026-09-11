@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.StandardFormCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.ProjectorEquivariance
 import InfoGeometry.Meta.Architecture

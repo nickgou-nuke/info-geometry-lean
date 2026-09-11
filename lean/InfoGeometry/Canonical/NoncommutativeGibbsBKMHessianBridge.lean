@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NoncommutativeGibbsCenteredFrechetBKMBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NoncommutativeGibbsSecondDerivativeCenteredBridge
 import InfoGeometry.Thermo.SouriauOnsagerBKMOperatorForms
 

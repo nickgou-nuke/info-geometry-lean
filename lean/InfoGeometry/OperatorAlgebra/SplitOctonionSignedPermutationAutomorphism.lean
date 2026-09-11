@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionG2TypeGenerators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Signed-permutation split-octonion automorphism witnesses

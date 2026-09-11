@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBoundaryReadoutIntervalTarget
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite binary stages and the interval readout

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionAxialCartanDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 /-!

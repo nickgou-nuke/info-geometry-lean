@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55OperatorFiveGradeClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Native five-grade readout using the repository's grade submodules. -/
 namespace InfoGeometry.Clifford.Clifford55

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitClifford55SpinActionTransportBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittSpinOrthogonalAction
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Jaynes Finite Empirical States

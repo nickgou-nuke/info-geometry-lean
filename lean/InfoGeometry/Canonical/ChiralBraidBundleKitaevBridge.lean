@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.LambdaBraidHestenesKreinBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.PolarizedBraidFibration
 import InfoGeometry.Canonical.KitaevChainMajoranaZeroModes
 

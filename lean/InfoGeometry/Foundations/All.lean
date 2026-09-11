@@ -1,4 +1,5 @@
 import InfoGeometry.Foundations.AxiomaticDependencyGraph
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Foundations.NewtonKantorovichBase
 import InfoGeometry.Foundations.NewtonKantorovichRoots
 import InfoGeometry.Foundations.NewtonKantorovichSequence

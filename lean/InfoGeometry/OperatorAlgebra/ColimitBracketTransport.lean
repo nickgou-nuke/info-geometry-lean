@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Limits.HasLimits
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Category.Ring.Colimits
 import InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity
 import InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR

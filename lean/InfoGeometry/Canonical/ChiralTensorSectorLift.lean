@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 
 /-!
@@ -13,7 +14,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.ChiralTensorSectorLift
 
-abbrev SheetOperator := Matrix (Fin 2) (Fin 2) ℂ
+abbrev SheetOperator := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev TensorOperator := Matrix (Fin 2 × Fin 3) (Fin 2 × Fin 3) ℂ
 
 def chiralTensorLift (U : Fin 3 → SheetOperator) : TensorOperator :=

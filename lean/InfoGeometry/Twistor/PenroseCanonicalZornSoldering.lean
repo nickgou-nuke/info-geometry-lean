@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Twistor.PenroseTwistor
 import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
@@ -19,7 +20,7 @@ namespace InfoGeometry.Twistor.PenroseCanonicalZornSoldering
 open InfoGeometry.Twistor.PenroseTwistor
 open InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 
-abbrev RealPeirceCarrier := Fin 8 → ℝ
+abbrev RealPeirceCarrier := InfoGeometry.Algebra.FiniteSpin.Vec8R
 abbrev CanonicalZorn := CZ
 
 noncomputable def penroseRealPeirceEquiv :

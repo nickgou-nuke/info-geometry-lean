@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.SouriauThermodynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Analysis.SouriauCocycle

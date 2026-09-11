@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CalabiYauBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CommutantMoebiusFenchelMirrorBridge
 import InfoGeometry.Clifford.SplitCartanHopWittBridge
 import InfoGeometry.Dynamics.SouriauDiracHodge

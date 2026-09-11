@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NativeToeplitzCuntzThreeArtinBraid
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ToeplitzCuntzThreeBraidTopologicalBridge
 
 /-!

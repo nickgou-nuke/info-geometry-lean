@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.ProjectiveNullBoundaryBraidFrameEquivariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Color-indexed logarithmic residues under the finite braid permutation

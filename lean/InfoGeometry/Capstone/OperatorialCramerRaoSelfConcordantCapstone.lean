@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorialCramerRao
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearSelfConcordantBarrierBridge
 
 /-!

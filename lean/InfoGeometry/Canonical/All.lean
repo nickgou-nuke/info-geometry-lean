@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornNavierStokesHydrodynamicBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NavierStokesConePiolaBridge
 import InfoGeometry.Canonical.NavierStokesConePiolaAudit
 import InfoGeometry.Canonical.NavierStokesTorusErgodicBridge
@@ -2207,6 +2208,8 @@ import InfoGeometry.Canonical.AbjChiralCuntzHallBridge
 import InfoGeometry.Canonical.AbjChiralCuntzHallAudit
 import InfoGeometry.Canonical.ChernSimonsCuntzBoundaryBridge
 import InfoGeometry.Canonical.ChernSimonsCuntzBoundaryAudit
+import InfoGeometry.Canonical.DrazinJordanChevalleyBridge
+import InfoGeometry.Canonical.DrazinJordanChevalleyAudit
 import InfoGeometry.Canonical.AlbertPeirceModularMixingBridge
 
 namespace InfoGeometry

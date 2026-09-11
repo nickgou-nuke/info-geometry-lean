@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BiquaternionKANnilpotent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Basic
 
 /-!

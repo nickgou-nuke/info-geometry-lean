@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornRealSpinTrialityClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Scalar extension from the real split Clifford algebra

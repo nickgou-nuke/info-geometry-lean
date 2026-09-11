@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.H3ZornCubicNormStructure
 import InfoGeometry.Algebra.H3ZornJordanIdentity
 import InfoGeometry.Algebra.H3ZornCoordinateReadback

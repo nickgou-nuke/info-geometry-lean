@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TitsRepresentativeInjectivity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The concrete Weyl representative carrier

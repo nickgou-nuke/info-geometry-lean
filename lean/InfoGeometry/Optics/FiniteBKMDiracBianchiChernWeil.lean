@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.FiniteBKMDiracFrechetBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.OperatorQGTChernWeil
 
 set_option autoImplicit false

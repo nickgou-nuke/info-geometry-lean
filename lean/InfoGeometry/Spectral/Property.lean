@@ -1,4 +1,5 @@
 import Mathlib.Data.Set.Lattice
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

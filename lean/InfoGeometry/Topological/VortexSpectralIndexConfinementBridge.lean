@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.AndreevLedger
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.VortexPunctureRepair
 
 /-!

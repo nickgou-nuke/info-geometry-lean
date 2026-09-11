@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentModularOrbitClosureCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentModularOrbitClosureFlowTopCat
 import Mathlib.Topology.Category.CompHaus.Basic
 

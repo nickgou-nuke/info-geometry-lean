@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionThreeColorDiracCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionLeftRegularAssociatorDefect
 
 namespace InfoGeometry.Canonical

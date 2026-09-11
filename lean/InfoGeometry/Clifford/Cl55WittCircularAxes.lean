@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55CAROperatorLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The noncommutative Witt/circular axes in `Cl(5,5)`

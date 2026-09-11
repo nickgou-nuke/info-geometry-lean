@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # O(5,5) Light-Cone Spectrum Bridge
@@ -30,11 +31,12 @@ derived cancellation of the intercept from first principles.
 
 noncomputable section
 
+
 namespace InfoGeometry.Canonical.O55LightConeSpectrumBridge
 
 open Matrix
 
-abbrev M10Z := Matrix (Fin 10) (Fin 10) ℤ
+abbrev M10Z := InfoGeometry.Algebra.FiniteSpin.Mat10Z
 
 /--
 The decidable integer core of the finite light-cone projection matrix.

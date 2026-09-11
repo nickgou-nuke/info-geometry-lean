@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.NaryTreeBoundaryCompactHausdorffCylinderSeparation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentBoundaryCompactTopCat
 
 /-!

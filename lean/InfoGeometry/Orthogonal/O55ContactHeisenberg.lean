@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55ContactGrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Finite Heisenberg-sector carrier for the `(5,5)` contact grading. -/
 
@@ -75,8 +76,8 @@ theorem splitRankTwo_bracket (u v w z : Vector55) :
     splitPairing_comm w u, splitPairing_comm w v]
   module
 
-abbrev Outer2 := Fin 2 → ℝ
-abbrev Middle6 := Fin 6 → ℝ
+abbrev Outer2 := InfoGeometry.Algebra.FiniteSpin.Vec2R
+abbrev Middle6 := InfoGeometry.Algebra.FiniteSpin.Vec6R
 
 def outerPairing (a b : Outer2) : ℝ := a 0 * b 0 + a 1 * b 1
 def outerArea (a b : Outer2) : ℝ := a 0 * b 1 - a 1 * b 0

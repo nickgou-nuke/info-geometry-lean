@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Jordan.SPD
 import InfoGeometry.Canonical.ThermofieldOnsagerDifference
 

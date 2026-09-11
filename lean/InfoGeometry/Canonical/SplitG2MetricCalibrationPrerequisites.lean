@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitG2MetricDerivedHodgeStar
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Bilinear
 import Mathlib.LinearAlgebra.Alternating.DomCoprod
 

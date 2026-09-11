@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases
@@ -34,8 +35,8 @@ namespace Section13
 
 open Matrix
 
-abbrev TwoQubitVec := Fin 4 → ℂ
-abbrev OneQubitVec := Fin 2 → ℂ
+abbrev TwoQubitVec := InfoGeometry.Algebra.FiniteSpin.Vec4C
+abbrev OneQubitVec := InfoGeometry.Algebra.FiniteSpin.Vec2C
 abbrev DiracMatrix := Section5.DiracMatrix
 
 /-! ## 13.1 The finite `S^7` shadow -/

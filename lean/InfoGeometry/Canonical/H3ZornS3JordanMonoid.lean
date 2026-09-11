@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.H3ZornS3JordanAutomorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Monoid representation by bundled continuous Jordan automorphisms

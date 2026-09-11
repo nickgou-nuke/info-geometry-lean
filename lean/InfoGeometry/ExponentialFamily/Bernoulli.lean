@@ -1,4 +1,5 @@
 import InfoGeometry.ExponentialFamily.Class
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Canonical.Triality
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv

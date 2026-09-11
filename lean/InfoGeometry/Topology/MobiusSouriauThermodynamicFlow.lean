@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.MobiusGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.Metriplectic
 import InfoGeometry.Thermo.Gibbs
 import InfoGeometry.Physics.SouriauEntropyFoliation

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CStarAlgebraStateColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Basic
 
 /-!

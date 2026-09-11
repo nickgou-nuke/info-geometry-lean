@@ -1,4 +1,5 @@
 import InfoGeometry.Singular.MoorePenrose.ClosedRange
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Singular.MoorePenrose
 
 /-! ## Moore-Penrose existence: basic compile-time check -/

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MultiplicativeToAdditiveBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpineAttributes
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 

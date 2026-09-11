@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeModularBerezinianBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BerezinianTrace
 
 /-!

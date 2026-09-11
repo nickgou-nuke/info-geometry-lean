@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.MellinBogoliubovMatrixReadoutBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite covariance packet for Mellin Bogoliubov modes

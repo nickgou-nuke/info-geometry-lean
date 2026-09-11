@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarLogDifferential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Integral.CurveIntegral.Basic
 
 /-!

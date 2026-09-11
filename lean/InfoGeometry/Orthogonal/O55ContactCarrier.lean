@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! A kernel-checked `(5,5)` contact carrier core.
 
@@ -11,7 +12,7 @@ noncomputable section
 
 namespace InfoGeometry.Orthogonal.O55Contact
 
-abbrev Vector55 := Fin 10 → ℝ
+abbrev Vector55 := InfoGeometry.Algebra.FiniteSpin.Vec10R
 
 def dualIndex : Fin 10 → Fin 10 :=
   ![(8 : Fin 10), 9, 2, 3, 4, 5, 6, 7, 0, 1]

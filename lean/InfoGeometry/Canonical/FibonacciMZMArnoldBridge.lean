@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.MTC_PentagonTriangle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.MajoranaLiftPacket
 import InfoGeometry.Topology.AmplituhedronBoundaryRank32
 

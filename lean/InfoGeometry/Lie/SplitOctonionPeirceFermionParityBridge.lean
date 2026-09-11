@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllCircularAxialGrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Peirce-defect fermion parity on the split-octonion carrier

@@ -1,6 +1,6 @@
 import Mathlib
-import InfoGeometry.Canonical.QutritGellMannOperatorBasis
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.QutritGellMannOperatorBasis
 
 /-!
 # The qutrit quadratic Gell--Mann Casimir

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Penrose--Braid--Clifford packet
@@ -55,7 +56,7 @@ theorem adjacent_transposition_braid_relation (i : Fin 3) :
     tau12 (tau23 (tau12 i)) = tau23 (tau12 (tau23 i)) := by
   fin_cases i <;> simp [tau12, tau23]
 
-abbrev Mat2Z := Matrix (Fin 2) (Fin 2) ℤ
+abbrev Mat2Z := InfoGeometry.Algebra.FiniteSpin.Mat2Z
 
 /-- Diagonal Hecke representative with eigenvalues `q` and `-1`. -/
 def heckeDiag (q : ℤ) : Mat2Z :=

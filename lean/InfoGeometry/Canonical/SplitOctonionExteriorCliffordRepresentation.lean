@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.ChevalleySpinorBlueprint
 import InfoGeometry.Canonical.SplitOctonionExterior3OperatorTransport
 

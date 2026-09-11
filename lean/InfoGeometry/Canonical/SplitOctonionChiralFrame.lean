@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionSixSectorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

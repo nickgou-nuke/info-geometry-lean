@@ -1,4 +1,5 @@
 import InfoGeometry.ExponentialFamily.Finite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Potential.LogPotential
 set_option linter.unusedSectionVars false
 

@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Quantum.PoincareDualBalls
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.AdSCFTPoincareRapidityPurity
 import InfoGeometry.Quantum.SelbergApollonianGeodesicTrace
 import InfoGeometry.Quantum.TomitaTakesakiBostConnesKMS

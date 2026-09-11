@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.IntegralChiralCliffordOrder
 
 /- Coordinate-only eight-slot carrier and three linear embeddings for the

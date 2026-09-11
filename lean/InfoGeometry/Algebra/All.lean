@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.PrimeA1RootSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.WeylDenominatorPrimeCutoff
 import InfoGeometry.Algebra.ZornVectorMatrix
 import InfoGeometry.Algebra.Zorn.PeirceCARContraction
@@ -60,7 +61,6 @@ import InfoGeometry.Algebra.IterativeExponentiation
 import InfoGeometry.Algebra.FormalSeriesCalculus
 import InfoGeometry.Algebra.NilpotentFiniteProductLimit
 import InfoGeometry.Algebra.FiniteInductiveSUSY
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.FiniteSUSYBlocks
 import InfoGeometry.Algebra.FiniteSingleModeCAR
 import InfoGeometry.Algebra.AnyonFiniteSpinBraid

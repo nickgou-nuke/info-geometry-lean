@@ -1,4 +1,5 @@
 import InfoGeometry.TraceFormula.FiniteISColimitInverseLimitSearch
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.InductiveColimitCrystal
 import InfoGeometry.Clifford.CliffordBitWordEquivalence
 import InfoGeometry.Canonical.OperatorialHessianBridge

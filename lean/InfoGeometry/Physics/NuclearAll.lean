@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearGradedBathCommutant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearHeisenbergChannelDecomposition
 import InfoGeometry.Physics.NuclearSpinIsospinTensorRepresentation
 import InfoGeometry.Physics.NuclearChargeExchangeBridge

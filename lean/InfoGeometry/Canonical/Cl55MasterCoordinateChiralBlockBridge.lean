@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55MasterChiralHodgeBlockBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Coordinate transport of the master chiral Hodge blocks
@@ -17,7 +18,7 @@ open Matrix
 open InfoGeometry.Canonical.Cl55MasterCoordinateReindexBridge
 open InfoGeometry.Canonical.Cl55MasterChiralHodgeBlockBridge
 
-abbrev CoordinateMat32 := Matrix (Fin 32) (Fin 32) ℝ
+abbrev CoordinateMat32 := InfoGeometry.Algebra.FiniteSpin.Mat32R
 
 noncomputable def masterChiralProjectorPlusFin32 : CoordinateMat32 :=
   towerMatrixReindex masterChiralProjectorPlus

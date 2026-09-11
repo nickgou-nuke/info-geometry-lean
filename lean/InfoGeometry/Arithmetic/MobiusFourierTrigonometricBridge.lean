@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.MobiusFourierPaperReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.TrigonometricPolynomialLocalMomentBound
 import InfoGeometry.Arithmetic.LocalMomentToPointValue
 

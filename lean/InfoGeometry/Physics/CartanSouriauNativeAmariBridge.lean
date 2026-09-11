@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanSouriauMassieu
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2CartanFisherSouriauMetric
 import InfoGeometry.Canonical.MassieuFisherClassical
 import InfoGeometry.Canonical.AmariSouriauThermodynamicGauge
@@ -29,7 +30,7 @@ open InfoGeometry.Canonical.AmariSouriauThermodynamicGauge
 variable {State : Type*} [Fintype State] [Nonempty State]
   (D : CartanSouriauDatum State)
 
-abbrev Parameter := Fin 2 → ℝ
+abbrev Parameter := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 def parameterDiff (β γ : Parameter) : Parameter := γ - β
 

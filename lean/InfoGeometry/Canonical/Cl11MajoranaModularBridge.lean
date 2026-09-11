@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.RealMajoranaCategory
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MajoranaPHSZeroMode
 
 /-!

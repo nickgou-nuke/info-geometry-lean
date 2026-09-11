@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KleinPresentedGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.ProjectiveUnitary6
 
 /-!

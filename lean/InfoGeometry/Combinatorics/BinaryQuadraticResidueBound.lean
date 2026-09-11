@@ -1,4 +1,5 @@
 import Mathlib.Tactic.IntervalCases
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NormNum
 import Mathlib.Data.Fintype.Card
 

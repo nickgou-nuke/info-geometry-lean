@@ -1,4 +1,5 @@
 import InfoGeometry.Algebraic.SplitQuadraticForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Symmetric split-signature registry

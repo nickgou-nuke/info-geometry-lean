@@ -8,6 +8,7 @@ Z-twisted (G,ℏ)-opers and quantum/classical
 (q-Langlands) correspondence
 -/
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse

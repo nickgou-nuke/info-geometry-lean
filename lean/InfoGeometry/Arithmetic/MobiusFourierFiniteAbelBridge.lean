@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.MobiusFiniteAbelSummation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.MobiusFourierPaperReadout
 
 /-!

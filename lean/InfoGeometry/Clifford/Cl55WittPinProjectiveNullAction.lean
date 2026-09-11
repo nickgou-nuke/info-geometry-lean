@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittPinOrthogonalAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl55ProjectiveBoundary
 import InfoGeometry.Canonical.ProjectiveFoundation
 

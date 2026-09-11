@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BCFWOnShellShift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology.BCFWOnShellShift
 

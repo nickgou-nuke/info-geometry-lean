@@ -27,7 +27,7 @@ open Matrix
 
 abbrev SpinMat := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev RiemannCoeff := Fin 4 → Fin 4 → ℂ
-abbrev VectorField4 := Fin 4 → ℂ
+abbrev VectorField4 := InfoGeometry.Algebra.FiniteSpin.Vec4C
 
 /-! ## 11.1 First Bianchi identity -/
 

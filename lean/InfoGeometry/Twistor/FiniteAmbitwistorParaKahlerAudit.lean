@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.FiniteAmbitwistorParaKahler
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Twistor.FiniteAmbitwistorParaKahler.Audit
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.ConcreteComposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native split-Cayley automorphism/stabilizer model

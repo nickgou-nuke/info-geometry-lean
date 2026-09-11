@@ -1,4 +1,5 @@
 import InfoGeometry.NCG.BlockSupermatrixGradedTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.LieExponentialTraceDeterminant
 
 noncomputable section

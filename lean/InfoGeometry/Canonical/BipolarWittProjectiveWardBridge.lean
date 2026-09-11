@@ -1,4 +1,5 @@
 import InfoGeometry.Conformal.BipolarVirasoroProjectiveConnection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.WittProjectiveClosure
 import Mathlib.Tactic
 

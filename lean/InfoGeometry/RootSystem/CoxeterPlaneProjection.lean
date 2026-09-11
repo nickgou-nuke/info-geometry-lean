@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A checked Coxeter-plane projection for the `D₄` root carrier
@@ -13,8 +14,8 @@ namespace InfoGeometry.RootSystem.D4
 
 noncomputable section
 
-abbrev Euclidean4 := Fin 4 → ℝ
-abbrev Euclidean2 := Fin 2 → ℝ
+abbrev Euclidean4 := InfoGeometry.Algebra.FiniteSpin.Vec4R
+abbrev Euclidean2 := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 def coxeterPlaneProjection : Matrix (Fin 2) (Fin 4) ℝ :=
   !![(Real.sqrt 2)⁻¹, (Real.sqrt 2)⁻¹, 0, 0;

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.QCCRCore
 import InfoGeometry.Topology.DelaunayFlipInterfaces
 import InfoGeometry.Topology.ThermodynamicGauge

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GrandSynthesisBott
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InformationalLichnerowicz
 import InfoGeometry.Canonical.AnalyticalIndexCore
 import InfoGeometry.Meta.Architecture

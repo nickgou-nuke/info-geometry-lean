@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.AssociativeOperatorZornCartanPeirce
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! A carrier-correct chiral action on the associative block algebra.  The
 left and right factors are arbitrary unit-valued group representations; no

@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullPositiveArtinTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullConfigurationFundamentalGroup
 
 /-!

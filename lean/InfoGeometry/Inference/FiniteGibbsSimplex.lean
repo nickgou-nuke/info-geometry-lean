@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.FiniteGibbsModelFamily
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Simplex geometry of finite Gibbs model assignments

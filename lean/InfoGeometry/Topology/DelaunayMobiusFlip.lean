@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.DelaunayFlipMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.RohozhkinProjectiveCrossRatio
 import InfoGeometry.Projective.MobiusGauge
 

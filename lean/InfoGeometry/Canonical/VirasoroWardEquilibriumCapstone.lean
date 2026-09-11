@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.VirasoroWardEquilibrium
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.VirasoroWardEquilibriumCapstone
 

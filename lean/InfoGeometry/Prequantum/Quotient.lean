@@ -1,4 +1,5 @@
 import InfoGeometry.Prequantum.Connection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Prequantum.Quotient

@@ -1,4 +1,5 @@
 import InfoGeometry.MassSpectrometry.Core
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MassSpectrometry.BirkhoffAssignment
 import InfoGeometry.MassSpectrometry.DirectedOperatorDoubling
 import InfoGeometry.MassSpectrometry.FiniteModel

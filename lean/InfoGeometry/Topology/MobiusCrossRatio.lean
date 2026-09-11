@@ -1,4 +1,5 @@
 import Mathlib.Topology.Compactification.OnePoint.ProjectiveLine
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Basic
 
 open Matrix OnePoint

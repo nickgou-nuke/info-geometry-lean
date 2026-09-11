@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectiveFoundation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PSLDescent
 import InfoGeometry.Topology.ProjectiveKleinCompactification
 

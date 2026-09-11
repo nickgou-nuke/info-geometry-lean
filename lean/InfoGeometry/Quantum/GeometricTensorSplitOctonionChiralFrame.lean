@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.GeometricTensorFrameTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.GogberashviliSplitOctonionBasis
 import InfoGeometry.Algebra.Zorn.SplitCayleyStabilizer
 import InfoGeometry.Canonical.SplitOctonionGogberashviliCarrierBridge

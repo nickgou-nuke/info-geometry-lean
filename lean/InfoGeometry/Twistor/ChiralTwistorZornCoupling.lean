@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ChiralTwistorPeirceSheets
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCircularMultiplicationTable
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorZornRealModule
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorZornFourPotentialGauge
 import InfoGeometry.Projective.PositiveOperatorExpectation
 

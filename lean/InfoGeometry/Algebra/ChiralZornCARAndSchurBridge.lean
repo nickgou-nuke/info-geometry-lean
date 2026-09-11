@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedSimpArgs false

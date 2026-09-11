@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.RindlerWedge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.MobiusGeometry
 import InfoGeometry.Projective.KleinQuadricMonodromy
 import Mathlib.Data.Complex.Basic

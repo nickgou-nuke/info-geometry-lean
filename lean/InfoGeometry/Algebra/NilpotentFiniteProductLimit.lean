@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Algebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Basic
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.FieldSimp

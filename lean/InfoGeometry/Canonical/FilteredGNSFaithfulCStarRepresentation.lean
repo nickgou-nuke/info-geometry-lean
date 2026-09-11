@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSFaithfulAlgebraicQuotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredGNSRepresentedCStarClosure
 import InfoGeometry.Canonical.AlgebraicStarEnvelopeNorm
 

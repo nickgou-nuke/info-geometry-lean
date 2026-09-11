@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornCartanAdjointAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Generic joint eigenspaces for the native Cartan adjoint action

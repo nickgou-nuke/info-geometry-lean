@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarCircleEnclosurePeriods
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Circle
 
 /-! The finite U(1) character induced by the installed bipolar winding lattice. -/

@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Canonical.RealSplitOctonionAutCandidateTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Evaluation of the full candidate carrier

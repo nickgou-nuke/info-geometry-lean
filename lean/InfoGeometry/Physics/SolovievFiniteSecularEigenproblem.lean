@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite quasiparticle--phonon secular equation
@@ -9,8 +10,8 @@ This is a two-channel algebraic truncation.  The two coordinates are labelled
 
 namespace InfoGeometry.Physics.SolovievFiniteSecularEigenproblem
 
-abbrev Carrier := Fin 2 → ℝ
-abbrev Hamiltonian := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Carrier := InfoGeometry.Algebra.FiniteSpin.Vec2R
+abbrev Hamiltonian := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Finite quasiparticle/phonon block Hamiltonian. -/
 def blockHamiltonian (eQ eP v : ℝ) : Hamiltonian :=

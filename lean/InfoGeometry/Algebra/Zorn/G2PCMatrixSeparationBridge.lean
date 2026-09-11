@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2QuotientOrbitSeparation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 import InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 

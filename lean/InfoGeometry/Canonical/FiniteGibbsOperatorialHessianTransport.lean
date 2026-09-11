@@ -13,6 +13,7 @@ is renamed as a Gibbs log-partition Hessian.
 -/
 
 import InfoGeometry.Canonical.OperatorialHessianBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NoncommutativeGibbsCenteredFrechetBKMBridge
 
 noncomputable section

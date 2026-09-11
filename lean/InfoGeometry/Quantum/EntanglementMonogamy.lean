@@ -20,6 +20,7 @@ and an ER-style identification can evade that contradiction only by proving
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.EntanglementGeometry
 import InfoGeometry.Meta.OwnerTarget
 

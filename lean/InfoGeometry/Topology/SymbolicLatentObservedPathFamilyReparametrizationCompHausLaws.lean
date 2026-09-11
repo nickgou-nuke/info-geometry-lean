@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentObservedPathFamilyReparametrizationCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Identity and composition laws for observed reparametrization in `CompHaus`

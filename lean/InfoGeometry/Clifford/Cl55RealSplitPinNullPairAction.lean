@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55RealSplitPinKernelBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittNativeIsometryGroup
 
 namespace InfoGeometry.Clifford.Clifford55

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzChiralSuperchargeRepresentation
 
 noncomputable section

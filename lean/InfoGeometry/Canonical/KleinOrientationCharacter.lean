@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KleinPresentedGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Orientation character of the algebraic Klein presentation

@@ -1,4 +1,5 @@
 import InfoGeometry.CFT.NarainTDuality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.NarainTDualityCapstone
 

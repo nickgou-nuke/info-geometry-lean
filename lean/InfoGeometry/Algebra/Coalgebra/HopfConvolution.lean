@@ -1,4 +1,5 @@
 import Mathlib.RingTheory.HopfAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.Coalgebra.Convolution
 
 /-!

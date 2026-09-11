@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AffinePin55Cover
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Reflection and conjugation in the affine split-Pin cover

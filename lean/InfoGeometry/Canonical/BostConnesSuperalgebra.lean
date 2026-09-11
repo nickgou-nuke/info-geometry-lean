@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BostConnesSuperalgebraConstructive
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bost--Connes Superalgebra: Finite Constructive API

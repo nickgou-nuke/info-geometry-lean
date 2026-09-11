@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Matrix.Order
 import InfoGeometry.Physics.ChiralCausalCone
 import InfoGeometry.Categorical.CuntzCliffordFibonacciBraid

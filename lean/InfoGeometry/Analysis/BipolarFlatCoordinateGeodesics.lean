@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarOrthogonalFlowSplit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.AffineMap
 import Mathlib.Tactic
 

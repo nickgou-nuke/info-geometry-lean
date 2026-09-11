@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitAlbertPeirceZeroQuadraticRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Compatibility owner for the upstream Peirce-quadratic path.  The
 implementation is delegated to the current native fixed-tripoten owner. -/

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzMatrixAlgebraicTraceFunctional
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteMatrixGibbsFunctional
 import Mathlib.Algebra.Colimit.Module
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorZornFourPotentialGauge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Chiral coordinate projections of the full operator-Zorn four-potential.
 

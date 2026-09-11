@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.BostConnesNativeZetaPartition
 import InfoGeometry.Arithmetic.ActualZetaRealPartitionDerivativeBridge
 import InfoGeometry.Canonical.SouriauMassieuHessianBridge

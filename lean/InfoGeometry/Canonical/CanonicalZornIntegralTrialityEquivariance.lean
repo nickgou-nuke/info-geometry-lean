@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornIntegralSpinRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CanonicalZornTrialitySpinEquivariance
 
 /-!

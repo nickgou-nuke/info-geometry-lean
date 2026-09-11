@@ -1,4 +1,5 @@
 import InfoGeometry.NCG.BlockSupermatrixGradedTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Canonical export surface for the universal associative superbracket laws.
 The finite block realization remains owned by the NCG module. -/

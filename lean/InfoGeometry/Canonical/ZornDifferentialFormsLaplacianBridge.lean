@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornDifferentialFormsCliffordBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DiracKahlerLaplacianOperatorBridge
 
 /-!

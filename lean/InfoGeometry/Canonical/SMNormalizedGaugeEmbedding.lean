@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! A finite, representation-theoretic normalization of the electroweak Cartan
 embedding.  This is intentionally a rational finite model, not an E₈ claim. -/

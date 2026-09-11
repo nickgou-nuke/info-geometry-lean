@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DiracSouriauOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ChiralOperatorConeClosure
 import InfoGeometry.Canonical.KKTClosureSymmetry
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzNativeGNSTopologicalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Density of the native GNS cyclic representation

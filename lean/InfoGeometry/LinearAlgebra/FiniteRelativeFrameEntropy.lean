@@ -1,4 +1,5 @@
 import InfoGeometry.LinearAlgebra.FiniteJacobianLogDet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Basic
 
 noncomputable section

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-
 #### BUCKET 1: CLOSED FINITE/STAGED THEOREMS

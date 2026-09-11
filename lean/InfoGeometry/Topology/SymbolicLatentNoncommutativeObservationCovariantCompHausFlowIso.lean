@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentNoncommutativeObservationCovariantCompHausFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Inverse-time homeomorphisms for covariant compact flows

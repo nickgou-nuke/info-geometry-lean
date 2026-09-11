@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GradedRationalSectorCohomology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
   Algebraic specialization of the sector cohomology quotient.

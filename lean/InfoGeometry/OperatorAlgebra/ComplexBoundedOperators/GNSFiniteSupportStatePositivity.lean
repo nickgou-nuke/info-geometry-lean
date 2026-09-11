@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.BigOperators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportOperatorKernel
 
 /-!

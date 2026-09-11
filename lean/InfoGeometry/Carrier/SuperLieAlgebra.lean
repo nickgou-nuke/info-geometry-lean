@@ -13,6 +13,7 @@ The typeclass hierarchy is:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SuperLieRing
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 

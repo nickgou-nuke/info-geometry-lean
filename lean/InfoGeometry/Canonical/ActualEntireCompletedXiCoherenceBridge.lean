@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ActualCompletedXiDatumBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ActualCenteredXiDataBridge
 import InfoGeometry.Canonical.ActualEntireCenteredXiBridge
 import InfoGeometry.Arithmetic.ActualRiemannXiEntireSchwarzBridge

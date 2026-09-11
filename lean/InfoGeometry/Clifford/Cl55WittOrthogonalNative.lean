@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittReflectionSubgroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.RealQuadraticReflection
 
 namespace InfoGeometry.Clifford.Clifford55

@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.GeometricTensor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.GeometricTensorTransport
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.BogoliubovProjectorTransport

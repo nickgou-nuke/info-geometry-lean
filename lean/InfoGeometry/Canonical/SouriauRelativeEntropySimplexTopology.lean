@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauRelativeEntropyFisherBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauWassersteinGradientFlow
 import InfoGeometry.Probability.FiniteGibbsVariational
 

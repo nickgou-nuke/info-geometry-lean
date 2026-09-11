@@ -1,4 +1,5 @@
 import Mathlib.RingTheory.GradedAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonion1331PureSpinorGradingBridge
 import InfoGeometry.OperatorAlgebra.GradeActionInterface
 
@@ -12,7 +13,7 @@ open scoped DirectSum
 open InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
 open InfoGeometry.OperatorAlgebra
 
-abbrev V3 := Fin 3 → ℝ
+abbrev V3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 abbrev Exterior3 := ExteriorAlgebra ℝ V3
 abbrev Exterior3End := Module.End ℝ Exterior3
 

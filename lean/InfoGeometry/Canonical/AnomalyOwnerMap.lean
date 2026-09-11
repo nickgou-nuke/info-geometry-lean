@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AnomalyGauge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.DrazinPenroseDilationKKT
 import InfoGeometry.Canonical.SuperKMS_Equilibrium

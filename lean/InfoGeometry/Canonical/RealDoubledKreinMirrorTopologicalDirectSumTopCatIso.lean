@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealDoubledKreinMirrorTopologicalDirectSumEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # TopCat isomorphism for the real mirror direct sum

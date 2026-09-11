@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ActualRiemannXiRegularityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZetaLogDerivativeDeRhamPeriodBridge
 import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
 

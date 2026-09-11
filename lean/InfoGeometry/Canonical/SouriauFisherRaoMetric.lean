@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.LegendreHessianInverse
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Souriau/Fisher geometry: canonical Hessian owner

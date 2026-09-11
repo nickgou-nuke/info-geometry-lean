@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitOctonionicDiracCoordinates
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Algebraic split-octonionic Dirac operator

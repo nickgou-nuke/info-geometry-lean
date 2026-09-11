@@ -1,1 +1,2 @@
 import InfoGeometry.Library
+import InfoGeometry.Algebra.FiniteSpinAlgebra

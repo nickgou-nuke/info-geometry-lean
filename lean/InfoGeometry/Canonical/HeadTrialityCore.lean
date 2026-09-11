@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Triality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HyperbolicRotor
 import InfoGeometry.Meta.Architecture
 

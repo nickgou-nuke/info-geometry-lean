@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealDoubledKreinMirrorTopologicalDirectSum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuous direct-sum equivalence for the real mirror splitting

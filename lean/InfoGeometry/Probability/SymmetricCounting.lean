@@ -1,4 +1,5 @@
 import Mathlib.Data.Finset.Card
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Finset.Image
 import Mathlib.Data.Finset.Prod
 import Mathlib.Logic.Equiv.Basic

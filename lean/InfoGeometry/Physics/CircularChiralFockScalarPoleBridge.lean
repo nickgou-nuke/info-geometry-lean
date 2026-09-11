@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.CircularChiralRightRegularCARFrame
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Cl55SpinorCartanFock
 import InfoGeometry.Clifford.Cl55ZornCARComparison
 

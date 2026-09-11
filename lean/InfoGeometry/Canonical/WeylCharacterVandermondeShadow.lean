@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Spin44CharacterShadow
 import InfoGeometry.Canonical.VandermondeExclusionBridge
 

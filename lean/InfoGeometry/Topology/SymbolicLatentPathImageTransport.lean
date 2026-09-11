@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentPathImage
 import InfoGeometry.Topology.SymbolicLatentPathFunctoriality
 

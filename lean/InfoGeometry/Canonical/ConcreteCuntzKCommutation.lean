@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Canonical.HestenesRealStructures
 import InfoGeometry.Canonical.OperatorDictionary

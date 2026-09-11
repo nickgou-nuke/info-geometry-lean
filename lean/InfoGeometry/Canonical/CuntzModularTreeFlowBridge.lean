@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzModularAutomorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzTensorTreeRealizationBridge
 import InfoGeometry.Algebra.CuntzConditionalExpectation
 import InfoGeometry.Algebra.CuntzModularTreeFlowBridge

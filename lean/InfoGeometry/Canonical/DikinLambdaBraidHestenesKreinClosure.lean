@@ -10,6 +10,7 @@ readouts already owned by the repository.
 -/
 
 import InfoGeometry.SymmetricDomains.DikinMetriplectic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredHestenesIteratedTransport
 import InfoGeometry.Convex.SelfConcordantLogBarrier
 import InfoGeometry.Canonical.BKMDriftMetric

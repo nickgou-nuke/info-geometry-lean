@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBProjective
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.IBBase
 import InfoGeometry.Canonical.IBFrozenJaynes
 import Mathlib.Topology.MetricSpace.Contracting

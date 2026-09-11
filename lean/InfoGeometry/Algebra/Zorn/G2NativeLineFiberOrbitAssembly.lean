@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeLineFiberIdentity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeLineFiberThirdWitness
 import InfoGeometry.Algebra.Zorn.G2NativePointStabilizerLineFiber
 import InfoGeometry.Algebra.Zorn.G2IntrinsicLineFiberTransport

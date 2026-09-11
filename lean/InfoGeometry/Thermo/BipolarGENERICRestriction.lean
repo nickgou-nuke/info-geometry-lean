@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.BipolarDissipativeGENERIC
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.BipolarThreeCoordinateGENERIC
 import InfoGeometry.Thermo.BipolarGENERICThreeCoordinateModel
 import InfoGeometry.Analysis.BipolarCrossRatioLog

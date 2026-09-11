@@ -1,4 +1,5 @@
 import InfoGeometry.External.Virasoro.CentralExtension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.HeisenbergAlgebra
 
 /-!

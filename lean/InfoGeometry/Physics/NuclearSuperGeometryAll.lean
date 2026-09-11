@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearOperatorSuperSoloviev
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearInternalExternalParityFactorization
 import InfoGeometry.Physics.NuclearZ2Superalgebra
 import InfoGeometry.Physics.NuclearSuperSolovievPeirceBridge

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 import InfoGeometry.Algebraic.ChiralOperatorCarrier
 import InfoGeometry.Topology.V4RootSystem

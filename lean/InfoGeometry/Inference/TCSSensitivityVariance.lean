@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.FisherVariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Inference.TCSSensitivity
 
 /-!

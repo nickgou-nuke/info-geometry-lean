@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.UpperTailQCCRCompatiblePointBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CARCompatiblePointColimit
 import InfoGeometry.Canonical.CCRCompatiblePointColimit
 

@@ -6,6 +6,7 @@ of the Cartan element `h`.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 
 set_option linter.dupNamespace false

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11WittBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CausalDiracMatrixBasisChange
 
 noncomputable section

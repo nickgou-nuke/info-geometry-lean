@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentPathFamilyTopCatColimitImageCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Universal property of the compact-Hausdorff target readout

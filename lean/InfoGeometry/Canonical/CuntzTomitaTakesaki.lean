@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.UHFCuntzGNSColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.UHFTomitaTakesakiColimitBridge
 
 /-!

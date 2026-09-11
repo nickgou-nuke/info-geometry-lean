@@ -1,4 +1,5 @@
 import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Measure.Decomposition.Lebesgue
 import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
 import Mathlib.MeasureTheory.Measure.FiniteMeasure

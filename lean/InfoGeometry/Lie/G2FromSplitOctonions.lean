@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
 import InfoGeometry.OperatorAlgebra.SplitOctonionDerivationWitness
 import InfoGeometry.Lie.SplitOctonionStandardDerivation

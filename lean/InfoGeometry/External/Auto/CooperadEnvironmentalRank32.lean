@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.NonIsoConf3DeRhamCohomologyFormula
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.QuadricConf3BraidingCooperadBridge
 
 /-!

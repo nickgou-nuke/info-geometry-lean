@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CliffordCARFockParity
 import InfoGeometry.OperatorAlgebra.CliffordSplitOctonionCAR
 import InfoGeometry.OperatorAlgebra.SplitCliffordRealForms

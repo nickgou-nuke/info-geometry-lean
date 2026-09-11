@@ -1,4 +1,5 @@
 import InfoGeometry.Cocycle.LogarithmicOrderParameter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

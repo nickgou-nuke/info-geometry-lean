@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MassSpectrometry.DirectedOperatorDoubling
 import InfoGeometry.MassSpectrometry.MellinMassEncoding
 import InfoGeometry.MassSpectrometry.ValuedFragmentationDAG

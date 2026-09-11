@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DiscreteModularSpectrum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ChiralOperatorConeClosure
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Canonical.TypeIIIContinuousCoreReal

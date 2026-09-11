@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarCartanLorentzBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DiscreteModularMellinShift
 import InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine
 import InfoGeometry.Core.MajoranaLiftPacket

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SpectralInference
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InformationTorsion
 import Mathlib.LinearAlgebra.Dimension.Finite
 

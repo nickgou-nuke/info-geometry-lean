@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SupergradedJordanLieSplit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Homogeneous super-adjoint transport

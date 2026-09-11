@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.UhlmannBuresHolonomy
 import InfoGeometry.Volume.ConnesCocycle
 import InfoGeometry.Meta.Architecture

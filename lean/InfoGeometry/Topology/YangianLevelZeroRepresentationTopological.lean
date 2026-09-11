@@ -1,4 +1,5 @@
 import Mathlib.Topology.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Separation.Basic
 import InfoGeometry.Canonical.YangianLevelZeroRepresentation
 import InfoGeometry.Topology.YangianCoproductTensorActionTopological

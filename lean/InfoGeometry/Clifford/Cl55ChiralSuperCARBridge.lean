@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55ThreeColorChiralGenerators
 import InfoGeometry.Physics.ChiralSUSYBlockFactorization
 

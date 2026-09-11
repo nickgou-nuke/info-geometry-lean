@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.SplitOctonionZorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.Basic
 
 namespace InfoGeometry.Quantum

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.DiracHodgeSpinZornAll
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 #print axioms InfoGeometry.OperatorAlgebra.FaithfulOperatorZornEnvelope.diagonal_injective
 #print axioms InfoGeometry.OperatorAlgebra.FaithfulOperatorZornEnvelope.leftRegularRepresentation_injective

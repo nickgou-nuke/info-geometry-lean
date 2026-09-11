@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2RootPCAlignment
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2CanonicalPCCollector
 import InfoGeometry.Algebra.Zorn.G2BruhatResidual
 import InfoGeometry.Algebra.Zorn.G2TwoPCRecovery

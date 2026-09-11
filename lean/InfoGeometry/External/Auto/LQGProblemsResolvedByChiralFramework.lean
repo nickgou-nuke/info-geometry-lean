@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Loop Quantum Gravity: Four Open Problems Resolved by the Chiral Framework

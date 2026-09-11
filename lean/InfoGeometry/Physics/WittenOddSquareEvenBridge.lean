@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.SupergradedDiracCrystal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Physics
 

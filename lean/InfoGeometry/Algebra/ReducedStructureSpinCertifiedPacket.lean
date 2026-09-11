@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitJordanSpinor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Reduced-structure/spin compatibility imports

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.PrimonColimitAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ComplexMatrixStage
 import InfoGeometry.Canonical.BoundaryBondSquare
 import InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology

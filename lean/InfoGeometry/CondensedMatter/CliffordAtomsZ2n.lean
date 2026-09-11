@@ -15,6 +15,7 @@ compatibility datum relating local Clifford addresses to a global index.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.CondensedMatter.DIIISuperfluid
 
 noncomputable section

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealTomitaCore
 
 open scoped InnerProductSpace

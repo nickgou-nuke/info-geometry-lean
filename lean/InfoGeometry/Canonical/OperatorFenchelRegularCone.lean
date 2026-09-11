@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteDiagonalSpectrumDischarge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelationalInformationDynamics
 import InfoGeometry.Canonical.OperatorialUncertainty
 import InfoGeometry.Geometry.LegendreDuality

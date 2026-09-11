@@ -19,6 +19,7 @@ calibration witness.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.OperatorAlgebra.SymmetryInvariants
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit

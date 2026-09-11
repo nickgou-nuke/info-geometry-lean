@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ProjectiveEntropy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

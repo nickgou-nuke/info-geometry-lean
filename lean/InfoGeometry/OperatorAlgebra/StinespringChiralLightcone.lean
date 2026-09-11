@@ -9,6 +9,7 @@ lightcone calibration are supplied.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 

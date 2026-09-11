@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Full finite O(5,5) matrix laws
@@ -24,12 +25,13 @@ This file does not prove Pin(5,5) lift data, spinor representation classificatio
 triality outer automorphisms, analytic continuation, or bulk reconstruction.
 -/
 
+
 namespace InfoGeometry.OperatorAlgebra.FullO55MatrixLaws
 
 open Matrix
 
-abbrev M10Z := Matrix (Fin 10) (Fin 10) ℤ
-abbrev V10Z := Fin 10 → ℤ
+abbrev M10Z := InfoGeometry.Algebra.FiniteSpin.Mat10Z
+abbrev V10Z := InfoGeometry.Algebra.FiniteSpin.Vec10Z
 
 /-- Positive coordinate inclusion `0..4 ↪ 0..9`. -/
 def posIndex (i : Fin 5) : Fin 10 := ⟨i.val, by omega⟩

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.BostConnes.BostConnesThermofield
 import InfoGeometry.Dynamics.ModularThermalState

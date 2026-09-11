@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.WeylCharacter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # `Cl(4,4)` / `Spin(4,4)` Weyl-D4 Skeleton

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.IdempotentTwoSidedSpan
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.HestenesKreinFinite
 
 /-!

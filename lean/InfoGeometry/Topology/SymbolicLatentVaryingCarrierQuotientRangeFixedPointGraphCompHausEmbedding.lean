@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientRangeFixedPointGraphCompHausProjections
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compact graph embeddings

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BottDirac
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.ChiralAnomaly
 import Mathlib.Algebra.Module.LinearMap.Basic

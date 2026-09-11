@@ -21,6 +21,7 @@ Key point:
 -/
 
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.Geometry.PhaseErlanger
 

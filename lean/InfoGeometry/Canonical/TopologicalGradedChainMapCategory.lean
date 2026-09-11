@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TopologicalGradedRationalDifferential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

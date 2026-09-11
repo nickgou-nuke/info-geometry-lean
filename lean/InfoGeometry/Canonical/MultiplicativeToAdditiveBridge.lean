@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Hom.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Commute.Basic
 
 namespace InfoGeometry.Canonical

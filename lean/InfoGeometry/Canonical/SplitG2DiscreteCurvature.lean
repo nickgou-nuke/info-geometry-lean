@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitG2DiscreteCalibration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.G2HolonomyGaugeConnections
 
 namespace InfoGeometry.Canonical

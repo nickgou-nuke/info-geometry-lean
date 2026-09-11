@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.JaynesRNMaxEnt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
 
 open MeasureTheory

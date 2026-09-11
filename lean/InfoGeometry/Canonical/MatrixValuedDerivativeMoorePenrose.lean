@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MoorePenrose
 
 /-!
@@ -23,7 +24,7 @@ open InfoGeometry.Canonical.MoorePenrose
 
 noncomputable section
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℚ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2Q
 
 /-- The generalized difference quotient `[(f(X+H)-f(X))]H⁺`. -/
 def generalizedDifferenceQuotient {R : Type*} [Ring R] (f : R → R)

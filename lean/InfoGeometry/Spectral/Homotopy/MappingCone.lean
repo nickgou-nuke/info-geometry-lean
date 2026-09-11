@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Homotopy.CategoricalCofiber
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Mapping-cone compatibility layer

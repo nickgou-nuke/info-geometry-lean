@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl3ComplexMatrixProduct
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped Matrix
 

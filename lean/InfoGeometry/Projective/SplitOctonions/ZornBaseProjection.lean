@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitOctonions.ZornFlowRelativeVolume
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Zorn determinant-only base projection

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Concrete, representation-neutral matrix witnesses for the low cyclotomic
  stages.  These witnesses are kept separate from the operator-valued spine:

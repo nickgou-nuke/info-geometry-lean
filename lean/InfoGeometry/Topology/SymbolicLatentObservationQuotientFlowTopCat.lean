@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentObservationQuotientFlow
 import InfoGeometry.Topology.SymbolicLatentQuotientFlowHomeomorph
 import InfoGeometry.Topology.SymbolicLatentQuotientOrbitClosure

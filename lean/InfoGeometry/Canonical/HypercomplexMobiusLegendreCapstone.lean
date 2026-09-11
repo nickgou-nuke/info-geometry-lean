@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.HypercomplexTriad
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularLorentzBoost
 import InfoGeometry.Canonical.ModularSL2R
 import InfoGeometry.Canonical.MobiusHyperbolicCompactification

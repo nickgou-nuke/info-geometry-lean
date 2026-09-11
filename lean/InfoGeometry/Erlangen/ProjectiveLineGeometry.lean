@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FierzKleinFoundation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Projective line geometry in Pluecker coordinates

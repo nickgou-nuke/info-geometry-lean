@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Projection.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledSpace
 
 namespace InfoGeometry.Canonical

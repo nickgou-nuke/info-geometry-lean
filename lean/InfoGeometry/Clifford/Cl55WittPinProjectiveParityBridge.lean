@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittPinProjectiveNullAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittPinParity
 
 namespace InfoGeometry.Clifford.Clifford55

@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.BilingualAnalyticity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Filtered inductive Hestenes analyticity

@@ -1,4 +1,5 @@
 import InfoGeometry.GromovWittenErlangen.GWProjectiveCountCalibration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GromovWittenErlangen.LocalizedDrazinFrobeniusBridge
 import InfoGeometry.Meta.Architecture
 

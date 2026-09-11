@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.G2ArtinPositiveMonoid
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite simple divisors for the positive `I₂(6)` Artin monoid

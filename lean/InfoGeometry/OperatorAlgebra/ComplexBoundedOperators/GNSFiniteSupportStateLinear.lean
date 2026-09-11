@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Star.BigOperators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportStatePositivity
 

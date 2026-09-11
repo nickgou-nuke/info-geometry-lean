@@ -1,4 +1,5 @@
 import InfoGeometry.MeasureProjective
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Probability.ProbabilityMassFunction.Basic
 import Mathlib.Probability.ProbabilityMassFunction.Constructions
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure

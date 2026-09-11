@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.BipolarGENERICThreeCoordinateModel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.Derivation.Basic
 import Mathlib.Tactic
 

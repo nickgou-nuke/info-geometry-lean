@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitOrbitClosureCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite-stage observations on inverse-limit symbolic-latent orbit closures

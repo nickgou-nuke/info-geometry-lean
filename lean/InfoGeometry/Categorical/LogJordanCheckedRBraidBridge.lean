@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.LogNilpotentCrossCheckedR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.LogJordanTensorFusionDepth
 import InfoGeometry.Clifford.LogCftMonodromy
 

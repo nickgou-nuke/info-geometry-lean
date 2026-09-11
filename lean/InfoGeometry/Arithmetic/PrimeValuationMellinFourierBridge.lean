@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeBitMobiusDirichletBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite prime-energy and Mellin characters

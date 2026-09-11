@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitQuaternionAssociativeCoassociativeCalibrationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionThreeColorSplitQuaternionCores
 
 namespace InfoGeometry.Canonical

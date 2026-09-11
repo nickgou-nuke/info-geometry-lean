@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CountSinkhornFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry
 

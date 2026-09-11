@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CertifiedModularReduction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import Mathlib.Analysis.Normed.Algebra.Spectrum
 import Mathlib.Algebra.Algebra.StrictPositivity

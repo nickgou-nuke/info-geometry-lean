@@ -1,5 +1,4 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-
 # Apollonius global Maurer--Cartan connection
@@ -15,6 +14,7 @@ integral at the second puncture without an additional orientation theorem.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Coordinate.ApolloniusLogCoordinates
 import InfoGeometry.Canonical.ApolloniusPauliConnectionBridge
 

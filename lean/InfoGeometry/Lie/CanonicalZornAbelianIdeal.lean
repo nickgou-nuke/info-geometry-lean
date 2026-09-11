@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornMathlibBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Abelian
 
 /-!

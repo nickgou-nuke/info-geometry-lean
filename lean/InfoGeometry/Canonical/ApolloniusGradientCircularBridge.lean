@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Coordinate.ApolloniusLogCoordinates
 import InfoGeometry.Krein.DoubledSpace

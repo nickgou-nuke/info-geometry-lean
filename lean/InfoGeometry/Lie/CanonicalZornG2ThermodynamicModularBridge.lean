@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2MasterRootSynthesis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2FiniteGibbsTomitaBridge
 import InfoGeometry.Lie.CanonicalZornG2CartanFisherSouriauMetric
 import InfoGeometry.Lie.CanonicalZornG2SouriauTomitaBridge

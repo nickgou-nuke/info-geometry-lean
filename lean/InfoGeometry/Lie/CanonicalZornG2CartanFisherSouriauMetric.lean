@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanSouriauMassieu
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

@@ -2,6 +2,7 @@
 InfoGeometry/Quantum/SouriauFoliation/PositiveTemperatureLeaf.lean
 -/
 import InfoGeometry.Thermodynamics.SouriauTemperatureProjective
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.SouriauFoliation.SymplecticLeaf
 
 noncomputable section

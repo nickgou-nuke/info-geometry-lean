@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.PeirceDifferentialForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology
 

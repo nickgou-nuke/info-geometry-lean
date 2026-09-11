@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.OSp12InductiveColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 import InfoGeometry.Algebra.SupergradedBracket
 

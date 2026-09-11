@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SL3DualActionF2
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SplitCayleyF2AutomorphismTransport
 
 namespace InfoGeometry.Algebra.SplitCayleyF2

@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Pin55PurePinorVacuum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledSpace
 
 /-!

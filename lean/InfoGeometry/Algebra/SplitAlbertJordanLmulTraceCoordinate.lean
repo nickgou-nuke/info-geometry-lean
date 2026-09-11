@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitAlbertDerivationOperatorTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.H3ZornCarrierBasis
 import Mathlib.LinearAlgebra.Trace
 

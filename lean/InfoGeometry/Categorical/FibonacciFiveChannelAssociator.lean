@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciFourAnyonCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.FibonacciBraidedCategory
 import InfoGeometry.Categorical.FibonacciFusionTreeAssociator
 

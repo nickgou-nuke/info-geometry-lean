@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MadelungHydrodynamicPressureBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MadelungTopologicalSpin
 
 noncomputable section

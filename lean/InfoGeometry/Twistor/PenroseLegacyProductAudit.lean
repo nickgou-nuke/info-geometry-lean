@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.PenroseQuantizedTwistorSplitOctonion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.PenroseLiteralCrossObstruction
 
 /-!

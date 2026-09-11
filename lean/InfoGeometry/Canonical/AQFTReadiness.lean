@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AQFTHilbertCompression
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovFockSuper
 
 /-!

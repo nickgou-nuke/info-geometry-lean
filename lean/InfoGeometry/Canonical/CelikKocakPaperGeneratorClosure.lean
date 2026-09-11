@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikKocakPaperCliffordLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Generator closure for the finite Çelik--Koçak paper family

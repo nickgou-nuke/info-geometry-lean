@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55ContactCommonCrosscap
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Degree-zero structure of the `so(5,5)` contact grading

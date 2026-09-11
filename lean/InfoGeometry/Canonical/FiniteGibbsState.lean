@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteThermalTraceState
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

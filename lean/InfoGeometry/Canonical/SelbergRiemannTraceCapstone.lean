@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.SelbergRiemannTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.SelbergRiemannTraceCapstone
 

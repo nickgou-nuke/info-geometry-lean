@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.OperatorValuedJonesProduct
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.OperatorValuedCliffordJones
 import InfoGeometry.Optics.OperatorLiftCarrier
 import InfoGeometry.Optics.OperatorValuedConnection

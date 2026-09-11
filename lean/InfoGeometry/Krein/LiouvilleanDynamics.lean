@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.Modular
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Krein Liouvillean dynamics

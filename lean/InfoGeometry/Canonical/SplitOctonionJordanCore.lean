@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionJordanForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Explicit spin-factor Jordan core over the verified `(4,4)` form

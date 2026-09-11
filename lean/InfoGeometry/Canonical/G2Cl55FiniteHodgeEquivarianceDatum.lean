@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionDerivationSpinorLiftBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.G2Cl55ChiralEquivarianceBridge
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.HestenesCl11Cl44OperatorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.QuaternionCl44QGTCurvatureCovariance
 
 set_option autoImplicit false

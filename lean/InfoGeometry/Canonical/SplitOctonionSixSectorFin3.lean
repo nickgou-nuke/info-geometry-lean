@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionChiralFrame
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

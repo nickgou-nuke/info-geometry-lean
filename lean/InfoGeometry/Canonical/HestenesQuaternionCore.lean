@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.FanoOctonionParavector
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A native quaternionic slice of the Fano paravector carrier

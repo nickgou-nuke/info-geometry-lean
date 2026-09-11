@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarApolloniusReflectionMetric
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 import Mathlib.Tactic

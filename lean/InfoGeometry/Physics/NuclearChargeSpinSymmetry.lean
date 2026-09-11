@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearQuantumNumberPacket
 import InfoGeometry.Canonical.BostConnesGalois
 

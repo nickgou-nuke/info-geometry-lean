@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.GogberashviliSplitOctonionBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitOctonionQuaternionEllBridge
 
 noncomputable section

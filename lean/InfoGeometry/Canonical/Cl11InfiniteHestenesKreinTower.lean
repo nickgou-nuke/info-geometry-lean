@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.InfiniteHestenesKrein
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl55MasterHestenesPhaseBridge
 import InfoGeometry.Clifford.Cl11InfiniteCarrier
 import InfoGeometry.Clifford.Cl11TensorTowerLimit

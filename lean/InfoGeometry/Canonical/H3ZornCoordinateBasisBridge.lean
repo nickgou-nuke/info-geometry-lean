@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitAlbertF4BasisTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Dimension.Finrank
 import Mathlib.LinearAlgebra.Basis.Basic
 import Mathlib.Tactic

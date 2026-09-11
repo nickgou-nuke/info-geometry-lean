@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.Statistical.SplitOctonionDualFlatDerivationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionStandardDerivation
 
 /-!

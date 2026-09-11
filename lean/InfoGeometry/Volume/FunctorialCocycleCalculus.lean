@@ -1,4 +1,5 @@
 import InfoGeometry.Cocycle.ActionCocycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Algebraic.ModularRotorCocycle
 import InfoGeometry.Canonical.ProjectiveFoundation
 import InfoGeometry.Volume.RadonNikodym

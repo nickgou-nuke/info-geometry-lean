@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MetricTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MetriplecticCore
 import InfoGeometry.Canonical.SouriauMetriplecticContext
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem

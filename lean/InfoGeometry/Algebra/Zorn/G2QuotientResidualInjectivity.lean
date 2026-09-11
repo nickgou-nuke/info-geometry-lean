@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2OneCellQuotientTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Algebra.Zorn.G2QuotientResidualInjectivity
 

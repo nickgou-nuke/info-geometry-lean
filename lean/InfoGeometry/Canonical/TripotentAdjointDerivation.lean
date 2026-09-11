@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.TripotentAdjointDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical wrapper for tripotent adjoint derivation calculus

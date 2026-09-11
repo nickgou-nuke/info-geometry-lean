@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PauliJungTrialityD4Synthesis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology.PauliJungD4Star
 

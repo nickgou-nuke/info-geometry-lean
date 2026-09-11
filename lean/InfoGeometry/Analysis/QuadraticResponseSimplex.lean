@@ -1,4 +1,5 @@
 import InfoGeometry.Probability.SimplexQuadraticResponse
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Quadratic response in an internal coordinate

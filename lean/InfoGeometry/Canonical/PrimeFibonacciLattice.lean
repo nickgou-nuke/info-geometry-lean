@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecificLimits.Fibonacci
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.NumberTheory.PrimeCounting
 import Mathlib.Analysis.SpecialFunctions.Log.Basic

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzMatrixTraceTower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Colimit.DirectLimit
 
 /-!

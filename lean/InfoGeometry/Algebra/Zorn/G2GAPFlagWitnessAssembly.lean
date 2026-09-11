@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2GAPFlagWitnessRows
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2GAPFlagWitnessData
 import InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 import InfoGeometry.Algebra.Zorn.G2FlagQuotientProvenance

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.AmplituhedronBoundaryRank32
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.TwistorConfigurationSpace
 
 /-!

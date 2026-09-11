@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55CARSpinAutomorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralRetainedWordFiveGradeClosure
 import InfoGeometry.OperatorAlgebra.FiveGradeActionPreservation
 import InfoGeometry.OperatorAlgebra.GradeActionInterface

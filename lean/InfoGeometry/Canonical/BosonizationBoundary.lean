@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModeExtensionBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.External.Virasoro.HeisenbergAlgebra
 

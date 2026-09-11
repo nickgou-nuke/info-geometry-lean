@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.MD20250430070955FinitePartition
 
 /-!
@@ -74,7 +75,7 @@ theorem finiteCovReal_zero_left_of_constant {ι : Type} [Fintype ι]
   simp [finiteCovReal, centeredReal_zero_of_constant (w := w) hwsum c]
 
 /-- Two real coordinates for the finite Gaussian/Fisher shadow. -/
-abbrev RVec2 := Fin 2 → ℝ
+abbrev RVec2 := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 /-- Euclidean dot product on two real coordinates. -/
 def rdot (x y : RVec2) : ℝ :=

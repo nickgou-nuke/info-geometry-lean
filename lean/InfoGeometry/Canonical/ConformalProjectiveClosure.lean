@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalInversionCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConformalMobiusJacobian
 import InfoGeometry.Canonical.ConformalFiveGradeInversion
 import InfoGeometry.Canonical.ConformalFiveGradeBracketAPI

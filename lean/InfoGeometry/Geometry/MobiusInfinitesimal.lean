@@ -1,11 +1,12 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
 
 namespace InfoGeometry.Geometry
 
-abbrev ComplexMat2 := Matrix (Fin 2) (Fin 2) ℂ
+abbrev ComplexMat2 := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 structure sl2C where
   a : ℂ

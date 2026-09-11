@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzTensorTreeRealizationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesLogScaleSamplingBridge
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Kronecker
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Reindex
 import Mathlib.Data.Fintype.EquivFin
 import Mathlib.LinearAlgebra.Matrix.Notation

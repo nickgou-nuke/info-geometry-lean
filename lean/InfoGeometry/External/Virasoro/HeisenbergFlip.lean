@@ -1,4 +1,5 @@
 import InfoGeometry.External.Virasoro.HeisenbergModeFlip
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Heisenberg flip compatibility layer

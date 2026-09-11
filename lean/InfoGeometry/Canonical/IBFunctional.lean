@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBFreeEnergy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Measure.GiryMonad
 
 open MeasureTheory

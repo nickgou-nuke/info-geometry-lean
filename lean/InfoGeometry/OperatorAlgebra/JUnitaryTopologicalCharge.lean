@@ -12,6 +12,7 @@ Berezinian, core-trace, or regularized determinant.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 import InfoGeometry.Meta.OwnerTarget

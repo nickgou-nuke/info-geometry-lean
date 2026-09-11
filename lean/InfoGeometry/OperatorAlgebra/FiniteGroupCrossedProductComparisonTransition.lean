@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FiniteGroupCrossedProductComparisonPacket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.FiniteGroupCrossedProductTransitionLaws
 
 /-!

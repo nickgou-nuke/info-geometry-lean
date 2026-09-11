@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Cl55BranchingSynthesis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Duality and five-grade channel squares

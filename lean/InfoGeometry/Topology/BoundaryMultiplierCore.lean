@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Complex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Typed boundary multipliers

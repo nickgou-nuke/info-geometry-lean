@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModularSpinorFilteredColimitBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzStageExchangeTopologicalColimit
 
 namespace InfoGeometry.Canonical

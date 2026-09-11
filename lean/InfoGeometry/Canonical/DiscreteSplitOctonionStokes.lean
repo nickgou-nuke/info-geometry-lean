@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DiscreteSplitOctonionAssociator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DiscreteRationalHodgeConjugation
 
 namespace InfoGeometry.Canonical

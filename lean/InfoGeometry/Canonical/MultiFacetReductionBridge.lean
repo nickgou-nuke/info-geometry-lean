@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.TriFacetSpectralPowers
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.MultiFacetReductionBridge
 

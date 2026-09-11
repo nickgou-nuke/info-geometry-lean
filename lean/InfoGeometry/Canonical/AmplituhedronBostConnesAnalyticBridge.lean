@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauBostConnesAnalytic
 import InfoGeometry.Canonical.BostConnesAmplituhedronBoundary
 import InfoGeometry.Canonical.AmplituhedronThermodynamicProjection

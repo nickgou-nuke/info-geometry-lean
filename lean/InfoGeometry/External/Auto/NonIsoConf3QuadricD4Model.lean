@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.NonIsoConf3OrlikSolomon
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 /-!
 # D=4 formal quadric-generator algebra for three non-isotropic points
 
@@ -52,7 +53,7 @@ inductive AlphaProduct where
 
 open AlphaProduct
 
-abbrev Rank2Vector := Fin 2 → ℤ
+abbrev Rank2Vector := InfoGeometry.Algebra.FiniteSpin.Vec2Z
 
 def vadd (u v : Rank2Vector) : Rank2Vector := fun i => u i + v i
 def vsub (u v : Rank2Vector) : Rank2Vector := fun i => u i - v i

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ManifoldHomologyCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.FDeriv.Basic
 import Mathlib.Data.Int.Basic
 import Mathlib.Data.Real.Basic

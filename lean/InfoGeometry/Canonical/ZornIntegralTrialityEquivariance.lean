@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornIntegralSpinTrialityClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Integral Zorn axis triality and Clifford equivariance

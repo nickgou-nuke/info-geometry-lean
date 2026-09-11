@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PenroseSpinNetGraphCategory
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FinitePenrosePatchColimit
 
 /-!

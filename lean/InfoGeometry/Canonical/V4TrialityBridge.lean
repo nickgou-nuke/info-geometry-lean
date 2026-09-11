@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.V4RootSystem
 import InfoGeometry.Topology.WallpaperKleinBottlePresentation
 import InfoGeometry.Topology.Pin55ReflectionGlide

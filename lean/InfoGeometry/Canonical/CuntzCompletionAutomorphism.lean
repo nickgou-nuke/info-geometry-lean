@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.CStarCuntzTensorQuotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Automorphisms of a supplied C⋆ Cuntz completion

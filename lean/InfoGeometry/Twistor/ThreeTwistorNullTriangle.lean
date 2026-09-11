@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.NullParavectorTwistorFlags
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.TwoTwistorPluckerKlein
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11CoordinateHestenesBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.QuaternionCl44TwistedConjugationLift
 
 set_option autoImplicit false

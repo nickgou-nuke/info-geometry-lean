@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55ContactFiveGrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Streaming.MultigradedTwoBoundarySelection
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.OrderOfElement
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.Exponent
 import Mathlib.GroupTheory.SpecificGroups.KleinFour
 import Mathlib.Tactic

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.CStarAlgebra.GelfandNaimarkSegal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzKMSState
 import InfoGeometry.Algebra.CuntzKMSCondition
 import InfoGeometry.OperatorAlgebra.PositiveLinearMapGNSVacuum

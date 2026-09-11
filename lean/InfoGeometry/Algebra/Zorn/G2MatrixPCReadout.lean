@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoPCMatrixCertificate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Algebra.Zorn.G2MatrixPCReadout
 

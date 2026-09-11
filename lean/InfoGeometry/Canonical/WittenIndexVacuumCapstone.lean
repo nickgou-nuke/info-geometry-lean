@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.WittenIndexVacuum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.WittenIndexVacuumCapstone
 

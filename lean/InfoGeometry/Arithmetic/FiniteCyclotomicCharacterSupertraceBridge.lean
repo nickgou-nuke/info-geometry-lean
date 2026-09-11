@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.FiniteMobiusFermionSupertraceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite cyclotomic character supertrace

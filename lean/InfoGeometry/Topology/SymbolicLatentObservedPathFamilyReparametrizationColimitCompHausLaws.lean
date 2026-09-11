@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentObservedPathFamilyReparametrizationColimitCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentObservedPathFamilyReparametrizationCompHausLaws
 
 /-!

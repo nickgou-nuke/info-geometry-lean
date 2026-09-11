@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornIntegralSpinSubgroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Integral Zorn, real spin, and triality closure

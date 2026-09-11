@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.External.Auto.NuclearChartSquareCalibration
 import InfoGeometry.External.Auto.Q8NuclearChirality

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebraic.CartanSouriauMassieu
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analytic.LogSumExp
 import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.Mul

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55SpinBivectorImage
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55RealSplitPinVolumeAnticommutation
 
 /-!

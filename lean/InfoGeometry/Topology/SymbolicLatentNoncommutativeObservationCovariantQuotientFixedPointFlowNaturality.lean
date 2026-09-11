@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentNoncommutativeObservationCovariantQuotientFixedPointFlowCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Naturality of fixed-point inclusions

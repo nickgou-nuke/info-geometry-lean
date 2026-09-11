@@ -1,4 +1,5 @@
 import InfoGeometry.Routing.PlanarRotation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! The one-plane elliptic Clifford/RoPE interface.
 

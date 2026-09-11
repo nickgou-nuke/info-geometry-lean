@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.CanonicalConjugation
 
 set_option autoImplicit false

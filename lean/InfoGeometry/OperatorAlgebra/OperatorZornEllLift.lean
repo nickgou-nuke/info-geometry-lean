@@ -8,6 +8,7 @@ identity.  No alternativity or global automorphism-group statement is added.
 -/
 
 import InfoGeometry.Canonical.ThreeColorOperatorCrossCommutator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.OperatorAlgebra.OperatorZornEllLift
 

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.D4StarGraphQuotient
 
 namespace InfoGeometry.OperatorAlgebra.D4StarFiniteCrossedProduct

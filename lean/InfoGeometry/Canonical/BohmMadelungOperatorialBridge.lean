@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PolarizedMadelungBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ThermodynamicGenerator
 import InfoGeometry.Canonical.SouriauPlanckVector
 

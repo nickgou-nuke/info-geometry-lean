@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.SouriauOnsagerBKMOperatorForms
 import Mathlib.Tactic
 

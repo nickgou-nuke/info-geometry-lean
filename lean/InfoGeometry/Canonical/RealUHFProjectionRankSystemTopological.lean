@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFProjectionRankSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealUHFFiniteMatrixNormedCarrier
 import InfoGeometry.Clifford.Cl11MarkovJonesEngine
 

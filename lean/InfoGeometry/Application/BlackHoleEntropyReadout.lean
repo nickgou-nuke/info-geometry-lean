@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebraic.ChiralOperatorAlgebra
 import InfoGeometry.Algebraic.NarainSupervolumeBridgeData
 import InfoGeometry.Algebraic.SplitSuperGeometry

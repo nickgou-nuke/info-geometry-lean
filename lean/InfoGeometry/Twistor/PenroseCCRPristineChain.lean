@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.PenroseWittCompositionCompletion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.PenroseLegacyProductAudit
 
 /-!

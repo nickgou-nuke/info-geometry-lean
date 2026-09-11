@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovProjectorFlux
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MongeAmpereCramerRao
 import InfoGeometry.Canonical.CalabiYauRNMongeAmpere
 import InfoGeometry.Krein.PolarizedSector

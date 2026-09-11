@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.BaezF4H3Zorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Trace
 
 /-!

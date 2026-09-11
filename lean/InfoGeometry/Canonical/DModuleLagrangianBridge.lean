@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DeRhamFenchelLegendre
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DeRhamSymplecticKKQuantizationLimit
 
 /-!

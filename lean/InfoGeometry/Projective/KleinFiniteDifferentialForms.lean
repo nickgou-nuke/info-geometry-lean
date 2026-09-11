@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.KleinQuadricDeRhamComplex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A finite logarithmic differential-form carrier

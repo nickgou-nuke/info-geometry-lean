@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.CliffordDictionary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.GeometricTensor
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.MaxEnt.Optimality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Nat.Choose.Multinomial
 set_option linter.unnecessarySimpa false
 

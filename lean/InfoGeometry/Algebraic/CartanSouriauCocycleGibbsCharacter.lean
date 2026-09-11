@@ -1,4 +1,5 @@
 import InfoGeometry.Algebraic.CartanSouriauAffineCocycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic.Linarith
 

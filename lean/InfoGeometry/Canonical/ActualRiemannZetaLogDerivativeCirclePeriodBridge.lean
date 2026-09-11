@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ActualRiemannZetaVonMangoldtBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.RiemannPoleZeroMonodromy
 import InfoGeometry.Canonical.LogDerivativeLocalFactorizationBridge
 import InfoGeometry.Canonical.ZetaLogarithmicPoleCirclePeriod

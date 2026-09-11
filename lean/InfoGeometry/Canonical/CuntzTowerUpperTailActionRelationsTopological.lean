@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzTowerUpperTailActionColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cuntz corner relations on the upper-tail TopCat colimit

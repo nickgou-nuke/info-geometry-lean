@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.AxiomFreeGNS
 
 namespace InfoGeometry.Analysis

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesKreinMatrixBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hestenes Hermitian adjoint and native Krein adjoint

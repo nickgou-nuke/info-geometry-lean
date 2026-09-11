@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.ParaHessianMixedPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllKleinFlow
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
@@ -31,7 +32,7 @@ open InfoGeometry.Lie.SplitOctonionEllClosedFlow
 open InfoGeometry.Lie.SplitOctonionEllKleinFlow
 open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
-abbrev V3 := Fin 3 → ℝ
+abbrev V3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 abbrev Active :=
   InfoGeometry.Lie.SplitOctonionAxialWittReduction.ActiveSector
 

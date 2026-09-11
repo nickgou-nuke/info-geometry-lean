@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.Gromov
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility Import for Finite Gromov Positive-Cone Atoms

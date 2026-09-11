@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornVectorMatrix
 import InfoGeometry.Canonical.StandardIntegralSplitOctonionMultiplication
 import InfoGeometry.Canonical.ZornVectorMatrixRationalEquiv

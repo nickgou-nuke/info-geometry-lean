@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MassieuOptimalTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Foundations.NewtonKantorovichCertificate
 import Mathlib.Data.Finset.Range
 

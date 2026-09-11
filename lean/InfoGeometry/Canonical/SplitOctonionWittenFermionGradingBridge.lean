@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionWittHypercomplexPlaneBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.FiniteParitySupertrace
 
 /-!

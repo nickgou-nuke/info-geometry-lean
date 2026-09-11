@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2HexagonIncidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Incidence-preserving permutations on the finite G₂ flag certificate

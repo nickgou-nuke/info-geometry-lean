@@ -1,4 +1,5 @@
 import InfoGeometry.GroupTheory.DoubleCoset
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Set.Basic
 
 namespace InfoGeometry.GroupTheory.G2BruhatLocalization

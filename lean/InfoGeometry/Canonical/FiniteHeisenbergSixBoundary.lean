@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteHeisenbergGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SixStateGeneralizedCliffordAlgebra
 
 /-!

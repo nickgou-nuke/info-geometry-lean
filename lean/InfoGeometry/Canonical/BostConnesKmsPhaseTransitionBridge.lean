@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.BostConnesKMSPhaseTransition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BostConnesKMS
 import InfoGeometry.Canonical.BostConnesKMS1ColimitBridge
 import InfoGeometry.Arithmetic.BostConnesNativeZetaPartition

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.BdGValuedZornCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Physics.Supergravity
 

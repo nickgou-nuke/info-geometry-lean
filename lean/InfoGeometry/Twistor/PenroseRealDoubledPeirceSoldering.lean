@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.PenroseTwistor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.SplitQuadraticSheets
 import InfoGeometry.Lie.SplitOctonionPeirceExterior3CoordinateBridge
 

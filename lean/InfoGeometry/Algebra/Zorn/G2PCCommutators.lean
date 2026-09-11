@@ -1,4 +1,5 @@
 import Mathlib.Data.ZMod.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Fin.Basic
 import Mathlib.Tactic.FinCases
 import InfoGeometry.Algebra.Zorn.G2PCCollection

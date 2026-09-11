@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SplitOctonionPoincareCasimirBridge
 
 set_option linter.unusedSimpArgs false
@@ -38,8 +39,8 @@ namespace InfoGeometry.Physics.PoincareCasimirCentralityBridge
 
 open InfoGeometry.Physics.SplitOctonionPoincareCasimirBridge
 
-abbrev FourVector := Fin 4 → ℝ
-abbrev FourCovector := Fin 4 → ℝ
+abbrev FourVector := InfoGeometry.Algebra.FiniteSpin.Vec4R
+abbrev FourCovector := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
 /-- Musical isomorphism $\eta^\flat : TM \to T^*M$ (lowering indices). -/
 def minkowskiLower (v : FourVector) : FourCovector :=

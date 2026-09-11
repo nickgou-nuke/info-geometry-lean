@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.StandardFormNaturalConeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ThermalCompactRecurrence
 import InfoGeometry.Meta.Architecture
 

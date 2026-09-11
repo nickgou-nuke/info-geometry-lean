@@ -1,4 +1,5 @@
 import InfoGeometry.AsanoRuelle.MobiusPoleBlowup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bundled multiplicative pole-scale action

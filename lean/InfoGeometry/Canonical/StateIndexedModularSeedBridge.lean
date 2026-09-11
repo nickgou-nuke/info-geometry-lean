@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModularSuperchargeClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpectroscopicGaugeKMSBridge
 import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Meta.Architecture

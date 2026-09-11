@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TransportedInvolution
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionCayleyHodgeLinearEquiv
 import InfoGeometry.Lie.SplitOctonionPeirceExterior3CoordinateBridge
 

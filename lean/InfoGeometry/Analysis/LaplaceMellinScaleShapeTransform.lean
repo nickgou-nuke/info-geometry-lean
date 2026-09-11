@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.LaplaceFourierComparison
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 /-!

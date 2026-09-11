@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.LSeries.RiemannZeta
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.EulerProduct.DirichletLSeries
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Arithmetic.MobiusDirichletInverseBridge

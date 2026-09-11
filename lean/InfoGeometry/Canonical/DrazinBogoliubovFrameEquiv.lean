@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovCartanEigenOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Krein.KreinSpace
 

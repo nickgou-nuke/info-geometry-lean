@@ -16,6 +16,7 @@ instantiate the witness structures defined here.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Automorphic.SiegelResonance
 import InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge
 import InfoGeometry.Meta.OwnerTarget

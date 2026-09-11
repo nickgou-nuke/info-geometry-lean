@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThreeColorOperatorSuperBracketClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The concrete sheet flip on the operator-valued Zorn carrier

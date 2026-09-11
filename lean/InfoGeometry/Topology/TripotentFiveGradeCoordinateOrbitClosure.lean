@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentModularReversalOrbitClosureTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentModularOrbitClosureFlowComposition
 import InfoGeometry.Topology.TripotentFiveGradeCoordinateModularFlow
 

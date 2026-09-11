@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.ArithmeticFunction.Zeta
 import InfoGeometry.Arithmetic.FiniteDirichletShiftOperator
 import InfoGeometry.Arithmetic.FiniteMobiusShiftOperator

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzStageModularFlowTopologicalColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredStarAlgebraTopologicalRepresentationFlow
 import InfoGeometry.Canonical.FilteredStarAlgebraDirectLimitTopologicalRealization
 

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CliffordFractalWaveletBridge
 import InfoGeometry.Canonical.PrimeCl11ModularAtomCore
 

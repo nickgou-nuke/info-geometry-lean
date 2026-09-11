@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSTomitaModularQuotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hilbert completion of the filtered Tomita modular quotient

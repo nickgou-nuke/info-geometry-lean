@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalProjectorCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! A theorem-facing bridge for Cartan involutions, certified projectors, and
 pseudoinverse-stabilized Schur reduction.  No physical emergence claim is

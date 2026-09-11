@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compact observational quotients

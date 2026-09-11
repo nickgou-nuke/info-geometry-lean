@@ -1,1 +1,2 @@
 import InfoGeometry.Canonical.BiquaternionLaplaceTripotent
+import InfoGeometry.Algebra.FiniteSpinAlgebra

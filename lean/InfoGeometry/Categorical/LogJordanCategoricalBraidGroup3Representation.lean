@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Endomorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.LogJordanBraidGroup3CategoricalLift
 
 /-!

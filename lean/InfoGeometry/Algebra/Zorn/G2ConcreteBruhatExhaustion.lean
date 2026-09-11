@@ -1,4 +1,5 @@
 import InfoGeometry.Core.Foundations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2ConcreteGeneratorInfrastructure
 
 /-!

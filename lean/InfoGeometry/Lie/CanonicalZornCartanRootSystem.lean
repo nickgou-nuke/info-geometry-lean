@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Weights.Cartan
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Weights.RootSystem
 import Mathlib.LinearAlgebra.RootSystem.Finite.G2
 import Mathlib.LinearAlgebra.RootSystem.CartanMatrix

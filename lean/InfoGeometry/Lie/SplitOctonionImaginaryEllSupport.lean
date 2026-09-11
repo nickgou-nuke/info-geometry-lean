@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionImaginaryEllPolarization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllOperatorTrifactor
 import InfoGeometry.Physics.Algebra.TripotentPeirceProjectors
 

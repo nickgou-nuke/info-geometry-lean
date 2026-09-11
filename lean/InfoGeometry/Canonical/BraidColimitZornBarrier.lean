@@ -4,6 +4,7 @@ Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
 Bulgarian Academy of Sciences.
 -/
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topological.FibonacciAnyons
 import InfoGeometry.Topological.FibonacciColimit
 import Mathlib.Order.Zorn

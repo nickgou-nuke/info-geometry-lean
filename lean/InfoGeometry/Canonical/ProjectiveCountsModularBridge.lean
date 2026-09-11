@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativePotentialCountBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace

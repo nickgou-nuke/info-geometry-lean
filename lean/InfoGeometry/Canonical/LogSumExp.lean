@@ -1,4 +1,5 @@
 import InfoGeometry.ExponentialFamily.Analytic.LogSumExp
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.LogSumExp

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.SplitQuaternionCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.SplitOctonionGlobalWittNorm
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.NormNum

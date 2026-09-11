@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.PrimonColimitAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledSpaceMatrixClockBridge
 import InfoGeometry.Krein.DoubledSpaceQutritMobiusBridge
 

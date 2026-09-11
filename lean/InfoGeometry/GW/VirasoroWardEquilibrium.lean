@@ -1,4 +1,5 @@
 import InfoGeometry.Cocycle.LogarithmicOrderParameter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Virasoro Ward Equilibrium for Logarithmic GW Potentials

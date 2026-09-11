@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionImaginaryAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Basis.Defs
 import Mathlib.LinearAlgebra.Basis.Basic
 import Mathlib.LinearAlgebra.Basis.VectorSpace
@@ -17,7 +18,7 @@ namespace InfoGeometry.Canonical.SplitOctonionImaginaryFanoBridge
 
 open InfoGeometry.Lie.SplitOctonionImaginaryAction
 
-abbrev SplitFanoCoordinates := Fin 7 → ℝ
+abbrev SplitFanoCoordinates := InfoGeometry.Algebra.FiniteSpin.Vec7R
 
 noncomputable instance : FiniteDimensional ℝ Imaginary :=
   FiniteDimensional.of_finrank_pos (by rw [finrank_imaginary]; norm_num)

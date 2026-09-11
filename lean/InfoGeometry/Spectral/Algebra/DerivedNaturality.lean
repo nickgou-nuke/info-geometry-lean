@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.GenericDerivedCouple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Naturality of derived exact-couple pages

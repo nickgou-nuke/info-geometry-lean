@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Convex.Gauge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.Quantum.Monodromy
 import InfoGeometry.Clifford.LogCftMonodromy

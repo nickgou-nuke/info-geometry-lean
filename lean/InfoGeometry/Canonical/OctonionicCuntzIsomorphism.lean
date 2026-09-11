@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralConeOctonionicBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Projector-level split-octonion/Cuntz comparison

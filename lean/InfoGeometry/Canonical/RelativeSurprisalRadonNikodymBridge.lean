@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite relative surprisal as an operator

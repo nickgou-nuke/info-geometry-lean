@@ -1,4 +1,5 @@
 import InfoGeometry.Tessellation.VolumeTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Tessellation corner sectors

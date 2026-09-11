@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.LogVolumeExactDifferential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 noncomputable section

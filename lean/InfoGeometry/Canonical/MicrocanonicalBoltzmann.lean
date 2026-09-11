@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MicrocanonicalBoltzmannOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
 /-!

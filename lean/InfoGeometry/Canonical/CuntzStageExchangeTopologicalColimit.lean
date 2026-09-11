@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzStageModularFlowTopologicalColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Stagewise exchange on the native Cuntz topological colimit

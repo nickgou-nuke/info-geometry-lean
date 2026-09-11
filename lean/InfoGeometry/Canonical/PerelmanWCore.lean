@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RicciMongeAmpere
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
 
 namespace InfoGeometry.Canonical.PerelmanW

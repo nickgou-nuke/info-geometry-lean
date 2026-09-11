@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Contributors.
 -/
 import InfoGeometry.Canonical.CausalVortexPauliWitness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Quadratic-form positivity for the finite Cooper-pair witness
@@ -19,7 +20,7 @@ namespace CausalVortex
 open Matrix
 open InfoGeometry.Physics.ChiralPoincareSouriauBridge
 
-abbrev PauliVector := Fin 2 → ℂ
+abbrev PauliVector := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 def QuadraticFormNonnegative (A : M2C) : Prop :=
   ∀ v : PauliVector,

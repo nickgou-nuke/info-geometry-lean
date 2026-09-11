@@ -1,8 +1,8 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.MD001MatrixQuantumGeometry
 import InfoGeometry.Physics.Section34StrengthenedFormalism
 

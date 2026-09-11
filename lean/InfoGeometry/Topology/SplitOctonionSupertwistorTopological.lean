@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionSupertwistorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topology of the finite Günaydin--Gürsey coordinate chart

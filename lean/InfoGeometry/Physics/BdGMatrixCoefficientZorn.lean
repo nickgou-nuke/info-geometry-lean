@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.BdGValuedZornCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ZornMultiplicationOverBdG
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.LegendreSymbol.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.FiniteDirichletCharacterSupertraceBridge
 
 /-!

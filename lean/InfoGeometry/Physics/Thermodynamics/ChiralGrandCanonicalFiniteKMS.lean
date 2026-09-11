@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Thermodynamics.ChiralSimilarityKMSBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.PosDef
 
 /-!

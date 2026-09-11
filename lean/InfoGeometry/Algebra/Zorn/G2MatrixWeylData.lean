@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoPCMatrixCertificate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate
 
 namespace InfoGeometry.Algebra.Zorn.G2MatrixWeylData

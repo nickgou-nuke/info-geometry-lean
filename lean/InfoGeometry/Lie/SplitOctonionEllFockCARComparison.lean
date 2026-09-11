@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllCrossChannel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55ThreeColorChiralGenerators
 import InfoGeometry.Physics.SplitCliffordAlgebras
 

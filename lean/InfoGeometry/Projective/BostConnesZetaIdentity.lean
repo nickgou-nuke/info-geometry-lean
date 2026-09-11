@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 import InfoGeometry.Canonical.BostConnesAmplituhedronBoundary
 import InfoGeometry.Projective.BostConnesZeta

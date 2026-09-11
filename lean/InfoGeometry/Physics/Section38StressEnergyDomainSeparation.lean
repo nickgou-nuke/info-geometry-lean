@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Section37ReviewerResponseFiniteAudit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Section 38 repaired: finite stress-energy domain separation

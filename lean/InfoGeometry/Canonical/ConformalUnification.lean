@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalProjectorCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConformalAnomalySource
 import InfoGeometry.Canonical.ConformalAnomalyOperator
 import InfoGeometry.Canonical.ConformalAnomalyReadout

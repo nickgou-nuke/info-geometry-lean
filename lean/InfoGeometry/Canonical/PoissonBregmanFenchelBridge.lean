@@ -5,6 +5,7 @@ Bulgarian Academy of Sciences.
 -/
 
 import InfoGeometry.Canonical.FenchelExpLogScalar
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Inference.PoissonBregman
 import InfoGeometry.Inference.RegularizedPoissonDeviance
 

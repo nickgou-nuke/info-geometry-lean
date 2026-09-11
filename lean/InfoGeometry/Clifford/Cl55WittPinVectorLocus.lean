@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittPinSignatureBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittNegativeVectorPin
 
 namespace InfoGeometry.Clifford.Clifford55

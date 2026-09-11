@@ -1,4 +1,5 @@
 import InfoGeometry.Cartan.Involution
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

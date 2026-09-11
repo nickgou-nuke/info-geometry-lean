@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorLightconeCoordinates
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularHamiltonianDoubledBridge
 import InfoGeometry.Canonical.RelativeModularOperator
 import InfoGeometry.Canonical.DiscreteModularSpectrum

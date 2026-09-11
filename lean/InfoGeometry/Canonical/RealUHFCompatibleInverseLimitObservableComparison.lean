@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleInverseLimitFlowComparison
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitObservables
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeTopCat
 

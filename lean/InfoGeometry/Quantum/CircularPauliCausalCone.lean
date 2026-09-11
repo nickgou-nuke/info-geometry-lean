@@ -125,7 +125,7 @@ theorem rail_circular_coordinates (r : Rail) :
 
 /-! ## Three-component Pauli operator sheets -/
 
-abbrev Vector3 := Fin 3 → ℂ
+abbrev Vector3 := InfoGeometry.Algebra.FiniteSpin.Vec3C
 
 def orderedDot (x y : Vector3) : ℂ :=
   x 0 * y 0 + x 1 * y 1 + x 2 * y 2

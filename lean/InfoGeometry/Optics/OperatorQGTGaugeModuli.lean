@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.LocalGaugeAdjointAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Gauge classes of operator-valued QGT connections

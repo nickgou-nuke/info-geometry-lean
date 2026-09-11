@@ -1,4 +1,5 @@
 import InfoGeometry.Algebraic.CartanSouriauMassieuDirectionalCalculus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebraic.CartanSouriauMeanPairing
 
 /-!

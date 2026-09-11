@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.NativeZornCyclotomicChargeTopological
 import InfoGeometry.Topology.NativeZornChiralExchangeTopological
 import InfoGeometry.Topology.KleinBottleCubicRootMonodromyTopological

@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.QuaternionSpinTimeReversal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.Topology.Q8MonodromySpinorCover
 open InfoGeometry.Quantum.QuaternionSpinTimeReversal

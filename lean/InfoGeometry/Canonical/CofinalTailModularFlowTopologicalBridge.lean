@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSCofinalTailTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cofinal-tail transport of a topological flow

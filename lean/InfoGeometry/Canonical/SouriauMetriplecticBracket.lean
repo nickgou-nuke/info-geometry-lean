@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Basic
 import Mathlib.Topology.Instances.Real.Lemmas
 import Mathlib.Topology.Constructions

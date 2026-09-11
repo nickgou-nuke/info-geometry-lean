@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitCl44CausalEnvelope
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Spacetime
 import InfoGeometry.Canonical.Spin44CharacterShadow
 

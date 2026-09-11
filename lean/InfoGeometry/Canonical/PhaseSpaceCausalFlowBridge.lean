@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PhaseSpaceConformalKKTBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PhaseSpaceRecompositionBridge
 import InfoGeometry.Canonical.ConformalProjectorCore
 import InfoGeometry.Canonical.ChiralCartanCore

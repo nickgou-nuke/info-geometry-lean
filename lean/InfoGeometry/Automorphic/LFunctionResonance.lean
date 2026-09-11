@@ -19,6 +19,7 @@ asserted here. Those are future witness layers.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Automorphic.SiegelResonance
 import InfoGeometry.Meta.OwnerTarget
 

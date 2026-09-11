@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.Cl11QuaternionTwistedConjugationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CanonicalZornRealSpin44
 import InfoGeometry.Clifford.QuadraticPolarAnticommutator
 

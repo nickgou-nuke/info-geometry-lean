@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55RoPESplitTorusBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Discrete-position laws for the native elliptic `Cl(5,5)` rotor.
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoPCMatrixCertificate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 import InfoGeometry.Algebra.Zorn.G2RootAutMatrixAlignment
 import InfoGeometry.Algebra.Zorn.G2TwoPCMatrixProductBridge

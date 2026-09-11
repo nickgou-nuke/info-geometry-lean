@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Canonical complex Kramers antiunitary on `ℂ²`.
 
@@ -10,7 +11,7 @@ namespace InfoGeometry.Quantum.ComplexKramersAntiunitary
 
 open scoped ComplexConjugate
 
-abbrev H2 := Fin 2 → ℂ
+abbrev H2 := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 def standardInner (u v : H2) : ℂ :=
   star (u 0) * v 0 + star (u 1) * v 1

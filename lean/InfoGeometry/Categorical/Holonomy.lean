@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Limits.FilteredColimitCommutesFiniteLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.Shapes.FiniteLimits
 import Mathlib.Algebra.Category.ModuleCat.Basic
 import Mathlib.Algebra.Category.ModuleCat.Limits

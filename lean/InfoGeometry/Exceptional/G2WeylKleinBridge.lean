@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KleinPresentedGroup
 import InfoGeometry.Canonical.KleinMonodromyRepresentationSpace
 

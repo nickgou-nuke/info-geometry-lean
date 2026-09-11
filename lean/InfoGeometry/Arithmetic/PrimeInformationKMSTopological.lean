@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeInformationKMS
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.ContinuousMap.Basic
 
 /-!

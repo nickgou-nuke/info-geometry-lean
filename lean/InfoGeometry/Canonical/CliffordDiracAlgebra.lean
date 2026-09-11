@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Cartan.Involution
 import InfoGeometry.Canonical.HodgeHelmholtzKreinDecomposition
 import InfoGeometry.Canonical.HodgeDiracLaplacianBridge

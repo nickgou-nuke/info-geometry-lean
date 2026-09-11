@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Section 4.4: Hyperkähler Symmetry — Lean 4 Formalization

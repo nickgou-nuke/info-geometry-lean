@@ -6,6 +6,7 @@ this repository.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Spectral.Homotopy
 import InfoGeometry.Spectral.Homotopy.Suspension
 import InfoGeometry.Spectral.Homotopy.Wedge

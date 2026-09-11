@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.KitaevChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RNDeterminantConnesChainBridge
 import InfoGeometry.Volume.ConnesCocycle
 import InfoGeometry.Meta.Architecture

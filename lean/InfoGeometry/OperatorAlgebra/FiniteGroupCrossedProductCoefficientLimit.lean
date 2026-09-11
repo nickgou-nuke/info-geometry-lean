@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FiniteGroupCrossedProductComparisonPacket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Coefficient-limit crossed-product carrier

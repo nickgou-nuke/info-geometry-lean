@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.Holonomy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.FilteredColimitExactness
 import InfoGeometry.Categorical.TensorColimit
 import InfoGeometry.Categorical.HadjiivanovRMatrixBraid

@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.JonesCalibration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.OperatorialJonesCalculus
 import InfoGeometry.Optics.FiniteJonesModel
 import InfoGeometry.Optics.JonesPoincareSphere

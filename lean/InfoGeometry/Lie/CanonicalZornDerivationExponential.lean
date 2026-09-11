@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.ContinuousDerivationExponential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornDerivation
 import InfoGeometry.OperatorAlgebra.SplitOctonionPseudoReal
 import InfoGeometry.Canonical.ZornSpinor
@@ -16,7 +17,7 @@ open InfoGeometry.Lie.CanonicalZornDerivation
 
 abbrev CZ := InfoGeometry.Lie.CanonicalZornDerivation.CZ
 abbrev EndCZ := InfoGeometry.Lie.CanonicalZornDerivation.EndCZ
-abbrev V8 := Fin 8 → ℝ
+abbrev V8 := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 variable {R : Type*} [CommRing R]
 

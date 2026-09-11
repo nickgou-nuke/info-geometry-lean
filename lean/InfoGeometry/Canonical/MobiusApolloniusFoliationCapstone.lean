@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.YangBaxterProof
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Complex.MobiusApolloniusFoliation
 
 open scoped BigOperators Real Complex Matrix

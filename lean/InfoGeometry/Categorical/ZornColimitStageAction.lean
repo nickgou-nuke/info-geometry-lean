@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.ZornUHFColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Concrete transport of stagewise endomorphisms to the Zorn colimit.
 

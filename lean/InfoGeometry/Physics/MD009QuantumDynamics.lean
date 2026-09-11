@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.MD003IsomorphicRepresentations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Repaired MD 009: finite quantum-dynamics algebra

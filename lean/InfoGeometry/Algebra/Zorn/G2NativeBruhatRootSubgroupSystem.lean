@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeRootSubgroupSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoExplicitGenerators
 
 namespace InfoGeometry.Algebra.Zorn.G2NativeBruhatRootSubgroupSystem

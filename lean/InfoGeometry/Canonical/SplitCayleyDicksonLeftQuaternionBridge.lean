@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitHypercomplexStructure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Left-hyperbolic notation for the split Cayley--Dickson basis

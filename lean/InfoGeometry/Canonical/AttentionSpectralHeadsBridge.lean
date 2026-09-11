@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.FourierSuperposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LLM.SpectralToken
 
 /-!

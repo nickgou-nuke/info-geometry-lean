@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BayesianMarkovChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.DiscreteDiracHodge
 import InfoGeometry.Topology.DiscreteHodgeStabilizer
 import InfoGeometry.Topology.MaximumCaliberPath

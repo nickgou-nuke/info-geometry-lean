@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.SarsModularWeakValue
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearWignerSupermultipletSymmetry
 
 /-!

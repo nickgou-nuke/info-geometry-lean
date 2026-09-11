@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledRootLemmas
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Hestenes
 import InfoGeometry.Clifford.GeometricRotor
 

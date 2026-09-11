@@ -17,8 +17,8 @@ open Matrix
 open InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
 open InfoGeometry.Lie.SplitOctonionWittEndomorphismBlockBridge
 
-abbrev Mat4 := Matrix (Fin 4) (Fin 4) ℝ
-abbrev Mat8 := Matrix (Fin 8) (Fin 8) ℝ
+abbrev Mat4 := InfoGeometry.Algebra.FiniteSpin.Mat4R
+abbrev Mat8 := InfoGeometry.Algebra.FiniteSpin.Mat8R
 abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 abbrev Mat10Sum := Matrix (Fin 8 ⊕ Fin 2) (Fin 8 ⊕ Fin 2) ℝ
 

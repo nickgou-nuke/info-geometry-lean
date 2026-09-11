@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionStandardModel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PhysicalGhostZeroCochainSectorBridge
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import Mathlib.Tactic.NoncommRing

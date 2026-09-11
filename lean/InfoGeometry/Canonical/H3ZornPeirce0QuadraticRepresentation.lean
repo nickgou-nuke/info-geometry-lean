@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.H3ZornJordanInstance
 import InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment
 import InfoGeometry.Exceptional.RealSplitAlbertFreudenthal
@@ -191,7 +192,7 @@ theorem U_preserves_peirce0E1
 /-! ## Explicit ten-dimensional carrier -/
 
 /-- Ten real coordinates for the lower-right Hermitian `H₂(𝕆_s)` block. -/
-abbrev Minkowski10 := Fin 10 → ℝ
+abbrev Minkowski10 := InfoGeometry.Algebra.FiniteSpin.Vec10R
 
 /-- Reconstruct the native split-octonion `b` block from eight coordinates. -/
 def zornOfMinkowski10 (v : Minkowski10) : ZornVectorMatrix ℝ :=

@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.SouriauTomitaBKM
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DiscreteMellinModularBridge
 import InfoGeometry.Canonical.DiscreteModularMellinShift
 import InfoGeometry.Canonical.CasimirWeylDrazinContext

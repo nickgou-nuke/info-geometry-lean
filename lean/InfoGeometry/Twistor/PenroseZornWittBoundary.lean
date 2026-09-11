@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ChiralTwistorSheets
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 import Mathlib.Tactic.FinCases
 

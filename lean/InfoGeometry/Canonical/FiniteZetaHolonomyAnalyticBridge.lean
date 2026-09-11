@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ComplexAnalyticBridge
 
 /-!

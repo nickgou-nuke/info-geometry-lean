@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.H3ZornJordanInstance
 import InfoGeometry.Algebra.ZornAlternativeLaws
 import InfoGeometry.Canonical.H3ZornAlgebraicSoldering

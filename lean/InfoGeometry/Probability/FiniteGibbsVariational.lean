@@ -1,4 +1,5 @@
 import InfoGeometry.Prequantum.JaynesKLPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Probability.FiniteGibbsDeformationReadout
 import InfoGeometry.PositiveMeasure
 

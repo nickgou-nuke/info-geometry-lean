@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CategoricalRecursiveClosureBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 
 /-!

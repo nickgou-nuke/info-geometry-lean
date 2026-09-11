@@ -1,4 +1,5 @@
 import InfoGeometry.External.Virasoro.HeisenbergModeFlip
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cyclotomic mode readout for the Heisenberg extension

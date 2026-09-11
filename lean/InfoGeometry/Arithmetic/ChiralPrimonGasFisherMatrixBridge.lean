@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ChiralPrimonGasVarianceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimonFockTraceFinite
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic

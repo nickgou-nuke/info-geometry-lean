@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: MIT -/
 
 import InfoGeometry.Algebra.Zorn.G2RootAutMatrixAlignment
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2RootAutPCAlignment
 import InfoGeometry.Algebra.Zorn.G2RootAutShortOneMatrix
 import InfoGeometry.Algebra.Zorn.G2RootAutPCConjugation

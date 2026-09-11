@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.Exactness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Short exact sequences of modules

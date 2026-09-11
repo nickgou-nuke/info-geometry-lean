@@ -1,4 +1,5 @@
 import InfoGeometry.External.Virasoro.Commutator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.SouriauModularLogIdentity

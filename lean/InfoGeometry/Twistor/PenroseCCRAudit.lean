@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.PenroseCCRPristineChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transitive axiom inspection of all public declarations in this extension

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Coordinate.ApolloniusLogCoordinates
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
 import Mathlib.Analysis.SpecialFunctions.Complex.Arg

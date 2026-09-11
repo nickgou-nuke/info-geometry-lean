@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Determinant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 
 /-!

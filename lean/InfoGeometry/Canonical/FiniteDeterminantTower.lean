@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteInvariantTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.FiniteDeterminantTower

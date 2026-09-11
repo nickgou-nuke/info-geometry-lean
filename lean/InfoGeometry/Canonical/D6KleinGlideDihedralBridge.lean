@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.D6GlideSectorBundle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # D6 symmetry on the finite Klein glide quotient

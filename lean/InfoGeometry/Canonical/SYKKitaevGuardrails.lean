@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FirstQuantizationProbability
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MajoranaKitaevSpinorBridge
 import InfoGeometry.Canonical.RNDeterminantConnesChainBridge
 import InfoGeometry.Meta.Architecture

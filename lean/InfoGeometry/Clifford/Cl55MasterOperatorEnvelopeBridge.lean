@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Canonical.Cl55WittCAR
 import InfoGeometry.Canonical.Cl11TensorTowerCrossSiteCAR

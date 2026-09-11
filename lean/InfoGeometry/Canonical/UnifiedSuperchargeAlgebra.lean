@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.SuperchargeMultiplet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SuperchargeTransportBridge
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Canonical.DrazinCentralChargeBridge

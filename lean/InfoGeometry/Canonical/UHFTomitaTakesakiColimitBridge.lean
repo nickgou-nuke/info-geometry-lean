@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzStarInductiveSystem
 import InfoGeometry.Canonical.CuntzGNSFilteredSystem
 import InfoGeometry.Canonical.CuntzGNSFilteredTomitaBridge

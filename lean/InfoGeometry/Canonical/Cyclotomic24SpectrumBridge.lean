@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cyclotomic24PolynomialBridge
 import InfoGeometry.Physics.Algebra.NPotentCyclotomicSpinHullBridge
 

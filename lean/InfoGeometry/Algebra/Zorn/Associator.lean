@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionClassificationCore
 
 /-!

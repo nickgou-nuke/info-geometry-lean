@@ -9,6 +9,7 @@ does not claim that Clifford kinematics alone prove a tubule phase.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

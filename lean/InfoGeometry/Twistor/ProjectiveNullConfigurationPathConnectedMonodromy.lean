@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullConfigurationPureMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Permutation monodromy for path-connected ordered null configurations

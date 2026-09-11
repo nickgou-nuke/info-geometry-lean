@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeEnergyNative
 import InfoGeometry.Canonical.MadelungLogScaleFramework
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain

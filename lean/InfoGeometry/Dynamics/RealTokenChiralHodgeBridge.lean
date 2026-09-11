@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.RealTokenKreinTrialityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hodge--Dirac bridge for the doubled real token carrier

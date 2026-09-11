@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.LightConeAffineCurrentBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift
 import InfoGeometry.OperatorAlgebra.WeylWeightBalance
 import InfoGeometry.Meta.Architecture

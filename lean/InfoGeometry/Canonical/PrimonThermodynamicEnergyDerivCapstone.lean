@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Canonical.PrimonThermodynamicObservablesCapstone
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Primon Thermodynamic Energy Deriv Capstone (Forwarding)

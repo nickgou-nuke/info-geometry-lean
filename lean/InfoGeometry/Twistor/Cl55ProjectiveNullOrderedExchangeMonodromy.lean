@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Cl55ProjectiveNullConfigurationMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullOrderedExchangeDeckMonodromy
 
 /-!

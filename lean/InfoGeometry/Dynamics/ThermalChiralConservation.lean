@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.UnruhKMS
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ManuscriptTheorems
 import InfoGeometry.Canonical.DrazinPenroseAnomalyOwner
 import InfoGeometry.Krein.DoubledSpace

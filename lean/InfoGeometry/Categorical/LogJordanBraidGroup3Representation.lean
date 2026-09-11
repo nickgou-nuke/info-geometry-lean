@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.LogNilpotentBraidGroup3Representation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.LogJordanCheckedRBraidBridge
 
 /-!

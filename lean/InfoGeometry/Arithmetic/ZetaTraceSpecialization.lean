@@ -13,6 +13,7 @@ The finite supervolume is the same denominator read as a volume factor.
 -/
 
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Canonical.SouriauThermalEvaluation
 import InfoGeometry.Canonical.PrimeGasPartitions

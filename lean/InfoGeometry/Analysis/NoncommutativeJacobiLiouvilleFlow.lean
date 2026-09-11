@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.FiniteMatrixJacobiDerivative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

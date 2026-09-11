@@ -1,4 +1,5 @@
 import InfoGeometry.Causal.ProofDAGRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.LogosPartiturePoset
 
 namespace InfoGeometry.Canonical

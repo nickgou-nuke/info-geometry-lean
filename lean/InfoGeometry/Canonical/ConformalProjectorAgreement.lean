@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorProjectorMismatch
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MetricTransport
 import Mathlib.Tactic
 
@@ -88,7 +89,7 @@ Tags in this section include `similarity-natural` and `metric-natural`.
 -/
 /-- ## 2×2 fixed Euclidean shear counterexample -/
 
-abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℚ
+abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2Q
 
 def shearA : Mat2 := !![1, 0; 0, 0]
 def shearG : Mat2 := !![1, 1; 0, 1]

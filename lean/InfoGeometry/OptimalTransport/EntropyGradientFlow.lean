@@ -1,4 +1,5 @@
 import InfoGeometry.Codes.MajoranaStabilizerThreshold
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Dynamics.WassersteinProximalBridge
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp

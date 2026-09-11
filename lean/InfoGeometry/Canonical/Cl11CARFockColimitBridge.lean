@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11JordanWignerCARBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GNSCARColimit
 import InfoGeometry.Topology.FractalCantorFock
 import InfoGeometry.Canonical.Cl11WittOccupationParityFactorization

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 namespace Test
 noncomputable section
 variable {R : Type*} [Ring R] [Algebra ℝ R]

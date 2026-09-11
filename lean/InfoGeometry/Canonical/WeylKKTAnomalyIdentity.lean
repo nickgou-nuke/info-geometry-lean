@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.WeylAnomalySource
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConformalAlgebra
 import InfoGeometry.Canonical.ConformalAnomalyReadout
 import InfoGeometry.Canonical.SouriauPlanckVector

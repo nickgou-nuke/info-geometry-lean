@@ -1,4 +1,5 @@
 import InfoGeometry.Inference.PoissonSinkhornPotentials
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped BigOperators
 

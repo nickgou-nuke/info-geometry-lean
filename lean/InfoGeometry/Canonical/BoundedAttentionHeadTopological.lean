@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundedAttentionLatentModuliTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.KANModuli
 

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadric
 import InfoGeometry.Canonical.ComplexAnalyticBridge
 import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.QuantumTwistorGauge
 import InfoGeometry.Canonical.BostConnesKTheory
 import InfoGeometry.Algebra.CuntzGNSRepresentation

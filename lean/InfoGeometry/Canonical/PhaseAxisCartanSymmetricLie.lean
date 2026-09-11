@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.CartanPhaseAxisForcing
 import InfoGeometry.Meta.Architecture
 

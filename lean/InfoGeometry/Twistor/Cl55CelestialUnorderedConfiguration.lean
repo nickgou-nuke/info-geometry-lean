@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Cl55CelestialOrderedConfigurationEmbedding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Unordered celestial configurations in the projective `Q55` null boundary

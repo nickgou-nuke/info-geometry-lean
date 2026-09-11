@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2FlagFactorizationRows
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2FlagWordCertificateEval
 import InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 

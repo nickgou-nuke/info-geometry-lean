@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 
 namespace InfoGeometry.Clifford

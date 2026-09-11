@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.ParavectorZornBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 /-!

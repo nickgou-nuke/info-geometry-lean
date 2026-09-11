@@ -3,6 +3,7 @@
    divergence (Matrix Itakura-Saito / Stein Loss). -/
 
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic

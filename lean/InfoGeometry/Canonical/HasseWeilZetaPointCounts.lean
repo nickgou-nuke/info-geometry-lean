@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KapranovZetaSeries
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Rat.Lemmas
 import Mathlib.Tactic

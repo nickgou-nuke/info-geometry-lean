@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.FiniteFockNative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.FiniteFockParity
 import InfoGeometry.Arithmetic.PrimeCutoffFiniteEuler
 import InfoGeometry.Arithmetic.PrimeCutoffNative

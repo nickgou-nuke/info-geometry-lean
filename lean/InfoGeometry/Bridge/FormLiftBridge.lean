@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
 import Mathlib.Data.Finsupp.Basic
 import Mathlib.Data.Matrix.Basic

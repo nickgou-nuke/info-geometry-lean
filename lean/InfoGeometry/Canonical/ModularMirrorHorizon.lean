@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinCentralizerErlangen
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Modular Mirror Horizon

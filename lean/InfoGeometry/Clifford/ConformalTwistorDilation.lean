@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ConformalTwistorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Clifford.Conformal
 

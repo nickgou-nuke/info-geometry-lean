@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.ExteriorPowerPluckerBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Projectivization.Basic
 
 /-!

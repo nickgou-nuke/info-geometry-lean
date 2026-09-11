@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.TripotentClSUSYBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Peirce projector consequences for the native Cl(1,1) tripotent

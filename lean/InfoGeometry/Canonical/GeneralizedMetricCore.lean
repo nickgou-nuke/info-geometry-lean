@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.PolarizedSector
 import InfoGeometry.Cartan.Involution
 import InfoGeometry.Meta.Architecture

@@ -1,4 +1,5 @@
 import InfoGeometry.Nuclear.NuclearGammaSpectroscopy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.NuclearGammaSpectroscopyCapstone
 

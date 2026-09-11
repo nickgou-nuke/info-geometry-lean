@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.LogNilpotentModuleCategory
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.HadjiivanovLogConnectionBraidBridge
 
 /-!

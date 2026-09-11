@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Int.Basic
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 import InfoGeometry.Clifford.CliffordBott

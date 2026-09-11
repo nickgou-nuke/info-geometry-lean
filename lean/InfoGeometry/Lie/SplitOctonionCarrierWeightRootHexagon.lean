@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCartanSixWeights
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
 
 /-!

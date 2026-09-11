@@ -1,5 +1,6 @@
 
 import InfoGeometry.PositiveMeasure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

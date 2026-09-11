@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauCoadjointCovariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2CartanSouriauCoadjointBridge
 
 /-!

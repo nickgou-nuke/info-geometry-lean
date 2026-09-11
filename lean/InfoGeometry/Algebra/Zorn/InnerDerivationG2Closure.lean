@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.NativeStanDerivationCoverage
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
 
 /-!

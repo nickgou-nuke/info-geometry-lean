@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCrossTensor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!
@@ -19,7 +20,7 @@ namespace InfoGeometry.Lie.SplitOctonionCrossExterior
 open InfoGeometry.Canonical
 open InfoGeometry.Lie.SplitOctonionCrossTensor
 
-abbrev Vec3 := Fin 3 → ℝ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 abbrev Bivector3 := ⋀[ℝ]^2 Vec3
 
 /-! The exterior map is owned by `SplitOctonionCrossTensor`. -/

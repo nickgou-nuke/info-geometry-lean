@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentQuotientHomeomorph
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transport of symbolic flows to the observational quotient and range

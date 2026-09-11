@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.PoincareBallInversion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.PoincareBallInversionCapstone
 

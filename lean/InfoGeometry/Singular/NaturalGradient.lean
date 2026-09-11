@@ -1,4 +1,5 @@
 import InfoGeometry.Singular.CartanWiring
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Singular.MoorePenrose
 import InfoGeometry.Convex.HessianGeometry
 import Mathlib.Tactic

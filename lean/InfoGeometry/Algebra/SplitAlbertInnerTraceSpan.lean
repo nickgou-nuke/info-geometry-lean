@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.JordanInnerDerivations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Trace-zero on the inner split-Albert derivation span

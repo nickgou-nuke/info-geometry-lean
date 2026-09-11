@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GeometricMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.JordanWignerCantorRepresentation
 
 /-!

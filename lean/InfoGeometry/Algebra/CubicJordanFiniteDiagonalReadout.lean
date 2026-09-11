@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CubicJordanPeirce
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite diagonal Jordan readout for the Albert carrier
@@ -13,7 +14,7 @@ namespace InfoGeometry.Algebra.CubicJordanFiniteDiagonalReadout
 open InfoGeometry.Algebra.CubicJordanOs
 open InfoGeometry.Algebra.CubicJordanOs.AlbertMatrix
 
-abbrev DiagonalJ3 := Fin 3 → ℝ
+abbrev DiagonalJ3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 def jordanProduct (x y : DiagonalJ3) : DiagonalJ3 := fun i => x i * y i
 

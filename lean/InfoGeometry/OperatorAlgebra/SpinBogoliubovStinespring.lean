@@ -17,6 +17,7 @@ readout.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.SpinConnection
 import InfoGeometry.OperatorAlgebra.StinespringDilation

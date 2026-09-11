@@ -1,4 +1,5 @@
 import InfoGeometry.Volume.LogPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Volume.ConnesCocycle
 import InfoGeometry.Volume.DeterminantBundle
 

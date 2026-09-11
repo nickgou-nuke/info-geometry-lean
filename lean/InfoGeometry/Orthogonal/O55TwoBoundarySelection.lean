@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55ContactGradeDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Native two-boundary matrix-coefficient readouts. -/
 

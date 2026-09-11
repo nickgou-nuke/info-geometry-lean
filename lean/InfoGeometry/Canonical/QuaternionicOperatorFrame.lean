@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.QuaternionPauliRealForm
 
 /-! Associative quaternionic frames and their native Pauli action. -/
@@ -33,7 +34,7 @@ theorem Frame.kj (Q : Frame A) : Q.k * Q.j = -Q.i := by
     _ = -Q.i := by simp
 
 abbrev PauliMatrix := InfoGeometry.Clifford.QuaternionPauliRealForm.Mat2C
-abbrev PauliSpinor := Fin 2 → ℂ
+abbrev PauliSpinor := InfoGeometry.Algebra.FiniteSpin.Vec2C
 abbrev PauliOperator := PauliSpinor →ₗ[ℂ] PauliSpinor
 
 noncomputable def action (A : PauliMatrix) : PauliOperator := Matrix.toLin' A

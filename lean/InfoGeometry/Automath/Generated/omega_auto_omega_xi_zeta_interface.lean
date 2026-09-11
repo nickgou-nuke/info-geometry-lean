@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZeckendorfBijection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace Automath.Generated
 

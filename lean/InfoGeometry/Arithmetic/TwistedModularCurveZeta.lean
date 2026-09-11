@@ -1,4 +1,5 @@
 import InfoGeometry.Automorphic.RoelckeSelbergSpectral
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Zeta Functions of Twisted Modular Curves

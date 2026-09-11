@@ -10,6 +10,7 @@ separate chart theorem.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Application.STUOperatorBridge
 

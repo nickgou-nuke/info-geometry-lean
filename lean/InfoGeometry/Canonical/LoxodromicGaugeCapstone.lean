@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.LoxodromicGauge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.LoxodromicGaugeCapstone
 

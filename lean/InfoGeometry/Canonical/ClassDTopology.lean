@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ClassDSuperconductorPfaffianInvariant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Volume.PfaffianGeneral
 
 /-!

@@ -25,6 +25,7 @@ It does not claim that horizon evaporation implies recovery.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

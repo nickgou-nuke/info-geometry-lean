@@ -1,4 +1,5 @@
 import InfoGeometry.Core.UnifiedGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Vacuity
 
 /-!

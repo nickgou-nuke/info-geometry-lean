@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.ConcreteCategory.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.RealKCategory
 import InfoGeometry.Quantum.RealMajoranaCategory
 set_option linter.unusedVariables false

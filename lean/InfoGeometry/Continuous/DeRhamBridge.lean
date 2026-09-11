@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.FDeriv.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus
 import InfoGeometry.Analysis.LogVolumePathIntegral

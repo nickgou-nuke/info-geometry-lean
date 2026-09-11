@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConnesCyclicCohomology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.Basic
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Mellin Colimit Trifactor: Smoothness as Continuum Colimit of Cantor Dust

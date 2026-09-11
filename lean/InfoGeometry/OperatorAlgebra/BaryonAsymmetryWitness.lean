@@ -8,6 +8,7 @@ an asymmetry readout is related to a condensate-transfer readout.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
 
 noncomputable section

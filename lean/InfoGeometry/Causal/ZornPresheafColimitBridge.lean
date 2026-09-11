@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Causal.Alexandrov
 import InfoGeometry.Causal.ZornPresheaf
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary

@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.PathCategory.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FinitePenrosePatchCategory
 import InfoGeometry.Causal.ProofGraphExteriorCalculus
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwelveFoldCyclotomicNative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
 
 /-!

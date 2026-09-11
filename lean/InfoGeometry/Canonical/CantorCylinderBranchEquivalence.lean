@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzCantorBoundaryShift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Binary branch decomposition of finite cylinder observables

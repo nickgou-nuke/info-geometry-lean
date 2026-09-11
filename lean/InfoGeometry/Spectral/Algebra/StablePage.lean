@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.ConvergenceCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Stable pages

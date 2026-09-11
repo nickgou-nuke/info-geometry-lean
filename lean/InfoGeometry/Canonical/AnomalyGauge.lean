@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Singular.MoorePenrose
 import InfoGeometry.Singular.Drazin
 import InfoGeometry.Singular.KreinNaturalFlow

@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SouriauSignatureBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.YangBaxterProof
 
 namespace InfoGeometry.Canonical.SouriauSignatureBridgeCapstone

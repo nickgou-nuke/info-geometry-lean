@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSCofinalTailTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredStarAlgebraTopologicalColimit
 
 /-!

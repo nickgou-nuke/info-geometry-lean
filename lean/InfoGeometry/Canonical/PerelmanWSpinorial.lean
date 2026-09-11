@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PerelmanWCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.PerelmanW
 

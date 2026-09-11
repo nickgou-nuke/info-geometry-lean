@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FierzKleinFoundation
 import InfoGeometry.Canonical.DrazinModularPersistence
 import InfoGeometry.Canonical.InformationalLichnerowicz

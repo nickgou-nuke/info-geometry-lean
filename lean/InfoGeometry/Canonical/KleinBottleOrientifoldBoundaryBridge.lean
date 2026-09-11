@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
 import InfoGeometry.Canonical.KleinBottleTopology
 import InfoGeometry.Canonical.CantorSimplicialHomotopy

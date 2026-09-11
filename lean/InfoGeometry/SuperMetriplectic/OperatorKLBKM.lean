@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.CriticalStiffness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.ModularKLDivergence
 import InfoGeometry.Jordan.LogDet
 

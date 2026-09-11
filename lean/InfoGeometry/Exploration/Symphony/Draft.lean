@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Quantum.RealMajoranaCategory

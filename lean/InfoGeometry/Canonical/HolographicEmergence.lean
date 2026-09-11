@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AnomalyInflow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.Canonical.WeylPathHysteresis
 import InfoGeometry.Canonical.WeylAnomalySource

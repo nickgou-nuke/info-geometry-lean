@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornSpinChirality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Vector action induced by canonical Zorn spin conjugation

@@ -2,6 +2,7 @@
 Ported from cmu-phil/Spectral/cohomology/gysin.hlean (Lean 2 HoTT) to Lean 4.28.0 / mathlib4. -/
 
 import InfoGeometry.Spectral.Cohomology.Serre
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Spectral.Cohomology.Basic
 
 open InfoGeometry.Spectral.Cohomology

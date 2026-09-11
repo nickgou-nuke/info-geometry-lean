@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.B3RepresentationBridge
 import InfoGeometry.Physics.YangBaxterQSwap
 import InfoGeometry.Physics.BraidIdealDescent

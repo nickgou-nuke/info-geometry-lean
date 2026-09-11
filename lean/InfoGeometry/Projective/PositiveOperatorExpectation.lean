@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.OperatorZornStateGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A constructed positive coefficient expectation with nonzero Zorn associator

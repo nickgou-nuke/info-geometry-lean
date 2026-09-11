@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
 
@@ -36,7 +37,7 @@ namespace InfoGeometry.Canonical.BiQuaternionKahlerSymplectic
 
 open Matrix
 
-abbrev R4 : Type := Fin 4 → ℝ
+abbrev R4 : Type := InfoGeometry.Algebra.FiniteSpin.Vec4R
 abbrev Mat4 : Type := Matrix (Fin 4) (Fin 4) ℝ
 
 /-- Euclidean finite dot product on `R^4`. -/

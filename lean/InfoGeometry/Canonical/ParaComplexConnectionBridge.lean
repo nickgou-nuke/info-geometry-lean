@@ -209,6 +209,66 @@ noncomputable def peirceDecomposition (PCS : ParaComplexStructure V) :
   map_smul' c x := by
     apply Prod.ext <;> apply Subtype.ext <;> simp [map_smul]
 
+@[simp] theorem peirceDecomposition_fst (PCS : ParaComplexStructure V) (v : V) :
+    (peirceDecomposition PCS v).1 = ⟨peircePlus PCS v,
+      peircePlus_mem_plusEigenspace PCS v⟩ := rfl
+
+@[simp] theorem peirceDecomposition_snd (PCS : ParaComplexStructure V) (v : V) :
+    (peirceDecomposition PCS v).2 = ⟨peirceMinus PCS v,
+      peirceMinus_mem_minusEigenspace PCS v⟩ := rfl
+
+@[simp] theorem peirceDecomposition_symm_apply
+    (PCS : ParaComplexStructure V)
+    (p : plusEigenspace PCS) (m : minusEigenspace PCS) :
+    (peirceDecomposition PCS).symm (p, m) = (p : V) + m := rfl
+
+theorem eigenspace_sum_unique (PCS : ParaComplexStructure V)
+    {p₁ p₂ : plusEigenspace PCS} {m₁ m₂ : minusEigenspace PCS}
+    (h : (p₁ : V) + m₁ = p₂ + m₂) : p₁ = p₂ ∧ m₁ = m₂ := by
+  have hp : peircePlus PCS (p₁ : V) = p₁ := by
+    have := (mem_plusEigenspace_iff PCS (p₁ : V)).1 p₁.property
+    change (1 / 2 : ℝ) • ((p₁ : V) + PCS.tau (p₁ : V)) = p₁
+    rw [this]
+    module
+  have hp' : peircePlus PCS (p₂ : V) = p₂ := by
+    have := (mem_plusEigenspace_iff PCS (p₂ : V)).1 p₂.property
+    change (1 / 2 : ℝ) • ((p₂ : V) + PCS.tau (p₂ : V)) = p₂
+    rw [this]
+    module
+  have hm : peircePlus PCS (m₁ : V) = 0 := by
+    have := (mem_minusEigenspace_iff PCS (m₁ : V)).1 m₁.property
+    change (1 / 2 : ℝ) • ((m₁ : V) + PCS.tau (m₁ : V)) = 0
+    rw [this]
+    simp
+  have hm' : peircePlus PCS (m₂ : V) = 0 := by
+    have := (mem_minusEigenspace_iff PCS (m₂ : V)).1 m₂.property
+    change (1 / 2 : ℝ) • ((m₂ : V) + PCS.tau (m₂ : V)) = 0
+    rw [this]
+    simp
+  have hp_eq : p₁ = p₂ := by
+    apply Subtype.ext
+    have := congrArg (peircePlus PCS) h
+    simpa [map_add, hp, hp', hm, hm'] using this
+  have hm_eq : m₁ = m₂ := by
+    apply Subtype.ext
+    have h' : (p₂ : V) + m₁ = p₂ + m₂ := by simpa [hp_eq] using h
+    exact add_left_cancel h'
+  exact ⟨hp_eq, hm_eq⟩
+
+theorem plusEigenspace_inf_minusEigenspace_bot (PCS : ParaComplexStructure V) :
+    plusEigenspace PCS ⊓ minusEigenspace PCS = ⊥ := by
+  apply le_antisymm
+  · intro v hv
+    let p : plusEigenspace PCS := ⟨v, hv.1⟩
+    let m : minusEigenspace PCS := ⟨v, hv.2⟩
+    have huniq := eigenspace_sum_unique PCS
+      (p₁ := p) (p₂ := 0) (m₁ := 0) (m₂ := m) (by simp [p, m])
+    have : v = 0 := by
+      change p.1 = 0
+      exact congrArg Subtype.val huniq.1
+    simpa [this]
+  · exact bot_le
+
 /-- Linear connection representation as a family of directional covariant derivatives. -/
 structure LinearConnection (V : Type*) [AddCommGroup V] [Module ℝ V] where
   nabla : V → (V →ₗ[ℝ] V)

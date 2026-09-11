@@ -5782,6 +5782,7 @@ import InfoGeometry.Canonical.SplitCliffordVacuumSugawaraBridge
 import InfoGeometry.Canonical.SplitCliffordWickCAR
 import InfoGeometry.Canonical.SplitCliffordWickDiracSea
 import InfoGeometry.Canonical.SplitComplex
+import InfoGeometry.Canonical.SplitComplexAdapters
 import InfoGeometry.Canonical.SplitCoordinateEndAlgEquivBridge
 import InfoGeometry.Canonical.SplitFreudenthalTitsE8Carrier
 import InfoGeometry.Canonical.SplitG2AlbertEntrywiseBridge

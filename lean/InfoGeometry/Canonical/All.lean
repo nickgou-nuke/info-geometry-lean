@@ -1113,6 +1113,7 @@ import InfoGeometry.Canonical.Cl44BridgeCandidate
 import InfoGeometry.Canonical.Cl44ConformalNormalization
 import InfoGeometry.Canonical.SplitCayleyDicksonTrace
 import InfoGeometry.Canonical.SplitComplex
+import InfoGeometry.Canonical.SplitComplexAdapters
 import InfoGeometry.Canonical.AlbertCayleyDickson
 import InfoGeometry.Canonical.E77GeneratorsFinite
 import InfoGeometry.Canonical.SplitHierarchy

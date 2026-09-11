@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GrothendieckErlangenProjectiveBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TessellationCocycleBridge
 import InfoGeometry.Canonical.ProofCausalityBridge
 
@@ -97,6 +98,23 @@ def knownArchetypes : Array ArchetypeTemplate :=
         `InfoGeometry.Canonical.K0Functor.K0_equiv_int]
       canonicalClaim :=
         "Finite additive classes recur as Grothendieck completion patterns."
+      status := "recognized" },
+    { name := "LatentScaleCoincidenceRestoration"
+      triggerTerms := #["Shadow", "Ruler", "Root", "Cleaving", "Restoration", "Horizon", "Collapse", "Invariant", "Closure", "Calibration"]
+      ownerSurfaces := #[
+        `InfoGeometry.Probability.DetectorScaleInvariance.latent_cleaving,
+        `InfoGeometry.Probability.DetectorScaleInvariance.latent_restoration,
+        `InfoGeometry.Probability.DetectorScaleInvariance.latentParabola_gauge_invariant,
+        `InfoGeometry.Probability.DetectorScaleInvariance.gauge_fixing_unique,
+        `InfoGeometry.Probability.DetectorScaleInvariance.multi_line_scale_collapse,
+        `InfoGeometry.Probability.DetectorScaleInvariance.sumPeak_root_recovers_scale,
+        `InfoGeometry.Probability.DetectorScaleInvariance.universal_coincidence_invariant,
+        `InfoGeometry.Probability.DetectorScaleInvariance.closure_efficiency_cancellation,
+        `InfoGeometry.Probability.DetectorScaleInvariance.calibration_activity_recovery,
+        `InfoGeometry.Probability.DetectorScaleInvariance.equivalent_diameter_area_eq_virtualLoss,
+        `InfoGeometry.Probability.DetectorScaleInvariance.archetypal_chain_of_nuclear_metrology]
+      canonicalClaim :=
+        "Coincidence summing cleaves the linear singles channel; joint latent scale optimization and dilation gauge fixing restore the loss-free response and recover physical activity without efficiency calibration."
       status := "recognized" }
   ]
 

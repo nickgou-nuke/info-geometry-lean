@@ -144,30 +144,21 @@ theorem weyl_primon_long_gap_lower_bound
     4. Weyl gauge dilation step exponential formula.
     5. Linearized lower bound for non-negative conformal weight.
     6. OpenAI long prime gap induced Weyl scale lower bound. -/
-structure CertifiedApollonianPrimonWeylSynthesis where
-  log_coord_trans : ∀ (x : ℝ) (_hx : 0 < x) (scale : ℝ) (_hscale : 0 < scale),
-    logCoord (scale * x) = logCoord x + Real.log scale
-  primon_gap_rel : ∀ (p q : ℕ), 0 < p → p < q →
-    ((q - p : ℕ) : ℝ) / (q : ℝ) ≤ primonEnergyGap p q
-  weyl_metric_rpow : ∀ (α x : ℝ), 0 < x →
-    weylMetricFactor α x = x ^ (2 * α)
-  weyl_ratio_exp : ∀ (α : ℝ) (p q : ℕ),
-    weylPrimonRatio α p q = Real.exp (α * primonEnergyGap p q)
-  weyl_ratio_linear_ge : ∀ (α : ℝ) (p q : ℕ),
-    0 ≤ α → 0 < p → p < q →
-    1 + α * (((q - p : ℕ) : ℝ) / (q : ℝ)) ≤ weylPrimonRatio α p q
-  weyl_long_gap_bound : ∀ (c X α : ℝ) (p q : ℕ),
-    0 ≤ α → 0 < p → p < q → (q : ℝ) ≤ X →
-    c * gapScale X ≤ ((q - p : ℕ) : ℝ) →
-    Real.exp (α * (c * gapScale X / X)) ≤ weylPrimonRatio α p q
-
-/-- Certified instance of the Apollonian Primon Weyl Synthesis. -/
-def certifiedApollonianPrimonWeylSynthesis : CertifiedApollonianPrimonWeylSynthesis where
-  log_coord_trans := logCoord_mul
-  primon_gap_rel := primonEnergyGap_ge_rel_gap
-  weyl_metric_rpow := weylMetricFactor_eq_rpow
-  weyl_ratio_exp := weylPrimonRatio_eq_exp
-  weyl_ratio_linear_ge := weylPrimonRatio_ge_one_add
-  weyl_long_gap_bound := weyl_primon_long_gap_lower_bound
+theorem certifiedApollonianPrimonWeylSynthesis :
+    (∀ (x : ℝ) (_hx : 0 < x) (scale : ℝ) (_hscale : 0 < scale),
+      logCoord (scale * x) = logCoord x + Real.log scale) ∧
+    (∀ (p q : ℕ), 0 < p → p < q →
+      ((q - p : ℕ) : ℝ) / (q : ℝ) ≤ primonEnergyGap p q) ∧
+    (∀ (α x : ℝ), 0 < x → weylMetricFactor α x = x ^ (2 * α)) ∧
+    (∀ (α : ℝ) (p q : ℕ),
+      weylPrimonRatio α p q = Real.exp (α * primonEnergyGap p q)) ∧
+    (∀ (α : ℝ) (p q : ℕ), 0 ≤ α → 0 < p → p < q →
+      1 + α * (((q - p : ℕ) : ℝ) / (q : ℝ)) ≤ weylPrimonRatio α p q) ∧
+    (∀ (c X α : ℝ) (p q : ℕ), 0 ≤ α → 0 < p → p < q → (q : ℝ) ≤ X →
+      c * gapScale X ≤ ((q - p : ℕ) : ℝ) →
+      Real.exp (α * (c * gapScale X / X)) ≤ weylPrimonRatio α p q) := by
+  exact ⟨logCoord_mul, primonEnergyGap_ge_rel_gap, weylMetricFactor_eq_rpow,
+    weylPrimonRatio_eq_exp, weylPrimonRatio_ge_one_add,
+    weyl_primon_long_gap_lower_bound⟩
 
 end InfoGeometry.Canonical.ApollonianPrimonWeyl

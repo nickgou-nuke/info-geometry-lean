@@ -86,22 +86,8 @@ theorem albert_cusp_lock_closed {F : Type*} [CommRing F]
     albertDet (albertSpiralFlow log_p M_cusp) = albertDet M_cusp :=
   albert_cusp_lock_diagonal log_p (1 : F) (0 : F) h_nilpotent
 
-structure AlbertE6Packet (F : Type*) [CommRing F] where
-  det_expansion : ∀ (log_p : F) (M : AlbertMatrix F), log_p^2 = 0 →
-    albertDet (albertSpiralFlow log_p M) =
-      albertDet M + log_p * (3 * M.X^2 * M.Y - 3 * M.Y^2 * M.X + 3 * M.Z * (M.X^2 - M.Y^2))
-  diagonal_defect_zero : ∀ (X Z : F), 3 * X^2 * X - 3 * X^2 * X + 3 * Z * (X^2 - X^2) = 0
-  cusp_lock : ∀ (log_p : F), log_p^2 = 0 →
-    let M_cusp := AlbertMatrix.mk (1 : F) (1 : F) (0 : F)
-    albertDet (albertSpiralFlow log_p M_cusp) = albertDet M_cusp
-
-def makeAlbertE6Packet (F : Type*) [CommRing F] : AlbertE6Packet F where
-  det_expansion := albert_det_flow_expansion
-  diagonal_defect_zero := albert_diagonal_defect_vanishes
-  cusp_lock := albert_cusp_lock_closed
-
 theorem albert_e6_packet_certified :
     3 * (1 : ℝ)^2 * 1 - 3 * (1 : ℝ)^2 * 1 + 3 * 0 * ((1 : ℝ)^2 - (1 : ℝ)^2) = 0 :=
-  (makeAlbertE6Packet ℝ).diagonal_defect_zero 1 0
+  albert_diagonal_defect_vanishes 1 0
 
 end InfoGeometry.Canonical.ZornAlbertE6

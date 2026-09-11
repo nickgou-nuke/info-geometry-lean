@@ -1,15 +1,13 @@
-module
-
 import InfoGeometry.Lie.MathlibBackportBasisLieEnd
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-public import Mathlib.LinearAlgebra.Lagrange
-public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
-public import Mathlib.RingTheory.Flat.Basic
-public import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
-public import Mathlib.LinearAlgebra.Eigenspace.Semisimple
+import Mathlib.LinearAlgebra.Lagrange
+import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+import Mathlib.RingTheory.Flat.Basic
+import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
+import Mathlib.LinearAlgebra.Eigenspace.Semisimple
 
 noncomputable section
-public section
+section
 
 namespace Polynomial
 

@@ -1185,6 +1185,16 @@ Formalizing the synthesis of Jean-Marie Souriau's symplectic mechanics and Vladi
 * **Master Synthesis:** Certified master conjunction in Mathlib 4 (`arnold_souriau_prequantization_synthesis`).
   In Lean 4: [`ArnoldSouriauMomentumPrequantization.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/ArnoldSouriauMomentumPrequantization.lean) and [`ArnoldSouriauMomentumPrequantizationAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/ArnoldSouriauMomentumPrequantizationAudit.lean).
 
+### 5.90 Kostant-Souriau Polarization, L²_pol Vortex States, and BKS Half-Forms
+Formalizing the second stage of the Souriau-Arnold geometric quantization program for vortex filaments on coadjoint orbits:
+* **Kostant-Souriau Polarization:** Involutive Lagrangian subbundle $\mathcal{P} \subset V$ with $\omega|_\mathcal{P} = 0$ and $[\mathcal{P}, \mathcal{P}] \subseteq \mathcal{P}$ (`Polarization.is_lagrangian`, `Polarization.is_involutive`).
+* **Curvature Obstruction Vanishing on Lagrangian Leaves:** The prequantum curvature obstruction $- \omega(x, y) \cdot \psi$ vanishes identically on the polarization leaf: $[\nabla_x, \nabla_y]\psi - \nabla_{[x,y]}\psi = 0$ (`polarization_curvature_annihilation`), proving Frobenius integrability of the quantum state condition.
+* **Closed Polarized State Submodule:** The space of physical quantum states $L^2_{\mathrm{pol}}(\mathcal{O}_\omega) = \ker \nabla_\mathcal{P}$ forms a closed linear `Submodule R S` (`polarizedSubmodule`).
+* **Blattner-Kostant-Sternberg (BKS) Half-Form Pairing:** Canonical pairing between transverse polarizations $\mathcal{P}_1, \mathcal{P}_2$ is horizontal (`bks_pairing_on_polarized_state`) and unitarily invertible under the metaplectic Maslov phase factor (`correctedPairing_inversion`), yielding the zero-point vacuum vortex ground-state energy $E_0 = \frac{1}{2}\hbar \omega$.
+* **Master Synthesis:** Certified master conjunction in Mathlib 4 (`certified_kostant_souriau_bks_vortex_synthesis`).
+  In Lean 4: [`KostantSouriauBKSPolarization.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/KostantSouriauBKSPolarization.lean) and [`KostantSouriauBKSPolarizationAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/KostantSouriauBKSPolarizationAudit.lean).
+
+
 ---
 
 ## Master Verification Matrix
@@ -1295,6 +1305,7 @@ Formalizing the synthesis of Jean-Marie Souriau's symplectic mechanics and Vladi
 | **Fluid BRST Gauge Decoupling** | Batalin-Vilkovisky Complex / Faddeev-Popov Quartet / Nilpotence $s^2=0$ / Solenoidal Flow | `ghost_variation_zero`, `brst_nilpotent`, `solenoidal_flow_is_physical`, `certified_fluid_brst_gauge_decoupling_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Arnold Coadjoint Orbits & KKS Symplectic Geometry** | Coadjoint Action $\operatorname{ad}_x^* \omega$ / KKS 2-Form $\Omega_{\mathrm{KKS}}$ / Jacobi Closedness $d\Omega = 0$ / Casimir Helicity | `kks_form_self`, `kks_form_antisymm`, `kks_form_closed`, `coadjoint_lie_hom`, `certified_arnold_coadjoint_orbits_chern_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Arnold-Souriau Momentum Prequantization** | Particle Relabeling Symmetry / Kelvin-Noether Theorem / Souriau 2-Cocycle / Bott-Virasoro Jacobi / Onsager-Feynman Vortex Quantization | `souriau_kelvin_circulation_conserved`, `souriau_cocycle_jacobi_closed`, `souriau_arnold_vortex_quantization`, `arnold_souriau_prequantization_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Kostant-Souriau Polarization & BKS Half-Forms** | Lagrangian Polarization / Curvature Annihilation / $L^2_{\mathrm{pol}}$ Submodule / BKS Metaplectic Pairing / Maslov Unitary Inversion | `polarization_curvature_annihilation`, `polarizedSubmodule`, `bks_pairing_on_polarized_state`, `correctedPairing_inversion`, `certified_kostant_souriau_bks_vortex_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 
@@ -1355,3 +1366,6 @@ The owner `InfoGeometry/Physics/ArnoldCoadjointOrbitsChern.lean` defines the alg
 
 ### 5.89 Arnold-Souriau Momentum Prequantization
 The algebraic owner `ArnoldSouriauMomentumPrequantization.lean` records a Lie-algebra 2-cocycle, a momentum-map flow conservation law, and an explicit integral circulation carrier. It proves cocycle closure, Kelvin-type conservation under the supplied stabilizer hypothesis, and existence of an integer circulation witness. Global SDiff geometry and line-bundle prequantization are not asserted.
+
+### 5.90 Kostant-Souriau Polarization and BKS Half-Forms
+The owner `InfoGeometry/Physics/KostantSouriauBKSPolarization.lean` formalizes involutive Lagrangian polarizations on symplectic modules, proving the vanishing of the prequantum curvature obstruction on Lagrangian leaves, the closed submodule structure of polarized sections, horizontal stability of the Blattner-Kostant-Sternberg pairing, and unitary invertibility of the metaplectic Maslov phase.

@@ -1,16 +1,14 @@
-module
-
 import Mathlib.Algebra.Field.Defs
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-public import Mathlib.Algebra.Lie.Killing
-public import Mathlib.LinearAlgebra.JordanChevalley
-public import Mathlib.LinearAlgebra.Semisimple
-public import Mathlib.RingTheory.Adjoin.Polynomial
-public import InfoGeometry.Lie.MathlibBackportJordanChevalley
+import Mathlib.Algebra.Lie.Killing
+import Mathlib.LinearAlgebra.JordanChevalley
+import Mathlib.LinearAlgebra.Semisimple
+import Mathlib.RingTheory.Adjoin.Polynomial
+import InfoGeometry.Lie.MathlibBackportJordanChevalley
 
 /-! Project-owned adjoint Jordan--Chevalley compatibility lemmas. -/
 
-public section
+section
 
 open Algebra
 open scoped Polynomial

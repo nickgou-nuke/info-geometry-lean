@@ -12514,3 +12514,8 @@ import InfoGeometry.Canonical.OpenAIFrontierUnificationBridge
 import InfoGeometry.Canonical.OpenAIFrontierUnificationAudit
 import InfoGeometry.Arithmetic.LongPrimeGapsPrimonEnergyBridge
 import InfoGeometry.Arithmetic.LongPrimeGapsPrimonEnergyAudit
+
+import InfoGeometry.Physics.FluidBRSTGaugeDecoupling
+import InfoGeometry.Physics.FluidBRSTGaugeDecouplingAudit
+import InfoGeometry.Physics.ArnoldCoadjointOrbitsChern
+import InfoGeometry.Physics.ArnoldCoadjointOrbitsChernAudit

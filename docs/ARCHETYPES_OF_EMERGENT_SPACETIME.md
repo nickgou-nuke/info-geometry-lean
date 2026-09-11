@@ -1160,6 +1160,23 @@ Formalizing the algebraic carrier for hydrodynamic computing ("Can a fluid compu
 * **Master Synthesis:** Certified master conjunction in Mathlib 4 (`certified_fluid_spinorial_latent_space_synthesis`).
   In Lean 4: [`FluidSpinorialLatentSpace.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/FluidSpinorialLatentSpace.lean) and [`FluidSpinorialLatentSpaceAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/FluidSpinorialLatentSpaceAudit.lean).
 
+### 5.87 BRST-Invariant Quantum Fluid Operator & Gauge Decoupling
+Formalizing the Batalin-Vilkovisky / BRST gauge decoupling of fluid incompressibility constraints:
+* **Quantum Fluid BRST Quartet:** Graded complex of velocity $u$, ghost $c$, anti-ghost $\bar{c}$, and Nakanishi-Lautrup multiplier $b$ (`FluidBRSTState`).
+* **Differential Nilpotence:** Strict operator nilpotency $s^2 = 0$ on all 4 sectors: $(s(s \psi)).c = 0$, $(s(s \psi)).\bar{c} = 0$, $(s(s \psi)).b = 0$, and $(s(s \psi)).u = 0$, achieving $s(s \psi) = 0$ (`ghost_variation_zero`, `brst_ghost_nilpotent`, `brst_antighost_nilpotent`, `brst_velocity_nilpotent`, `brst_nilpotent`).
+* **Physical Solenoidal Flow Preservation:** Exact states are automatically physical (`exact_is_physical`), and pure solenoidal background flows define closed physical states (`solenoidal_flow_is_physical`).
+* **Master Synthesis:** Certified master conjunction in Mathlib 4 (`certified_fluid_brst_gauge_decoupling_synthesis`).
+  In Lean 4: [`FluidBRSTGaugeDecoupling.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/FluidBRSTGaugeDecoupling.lean) and [`FluidBRSTGaugeDecouplingAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/FluidBRSTGaugeDecouplingAudit.lean).
+
+### 5.88 Arnold Coadjoint Orbits, KKS Symplectic Geometry & Chern Class
+Formalizing the Kirillov-Kostant-Souriau (KKS) symplectic structure on Lie coadjoint orbits:
+* **Coadjoint Action:** Canonical representation $\operatorname{ad}_x^* \omega$ on $\operatorname{Dual}(R, L)$ satisfying $\operatorname{ad}_{[x,y]}^* \omega = \operatorname{ad}_x^*(\operatorname{ad}_y^* \omega) - \operatorname{ad}_y^*(\operatorname{ad}_x^* \omega)$ (`coadjoint_act`, `coadjoint_lie_hom`).
+* **KKS Symplectic 2-Form:** Bilinear form $\Omega_{\mathrm{KKS}}(\omega)(x, y) = \omega([x, y])$ is alternating $\Omega(x, x) = 0$ and skew-symmetric $\Omega(x, y) = -\Omega(y, x)$ (`kks_form`, `kks_form_self`, `kks_form_antisymm`).
+* **Symplectic Closedness via Jacobi Identity:** Exact Cartan closedness $d\Omega = 0$: $\Omega(x, [y, z]) + \Omega(y, [z, x]) + \Omega(z, [x, y]) = 0$ (`kks_form_closed`).
+* **Casimir Stabilization & Arnold Self-Pairing:** Coadjoint stabilizer of central elements (`casimir_coadjoint_invariant`) and vanishing self-pairing $\langle \operatorname{ad}_x^* \omega, x \rangle = 0$ guaranteeing kinetic helicity conservation (`arnold_coadjoint_self_pairing`).
+* **Master Synthesis:** Certified master conjunction in Mathlib 4 (`certified_arnold_coadjoint_orbits_chern_synthesis`).
+  In Lean 4: [`ArnoldCoadjointOrbitsChern.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/ArnoldCoadjointOrbitsChern.lean) and [`ArnoldCoadjointOrbitsChernAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/ArnoldCoadjointOrbitsChernAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -1267,6 +1284,8 @@ Formalizing the algebraic carrier for hydrodynamic computing ("Can a fluid compu
 | **Quantum Fisher Null Cone Retrodiction** | Associative Quantum Algebra / SLD Bundle / QFIM Metric / Sachs Optical Scaling | `certified_quantum_fisher_null_cone_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Quantum Gamma Field & Lightcone Correlator** | Advanced Wave Retraction / Logarithmic Activity Invariant / Energy Non-Negativity | `time_space_lightcone_equivalence`, `nuclear_invariant_log_reconstruction`, `certified_nuclear_information_correlator_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Tao Fluid Computation & Spinorial Attention** | Spinorial Latent Space / Cartan Involution / Peirce Projectors / Boost Intertwiner | `peirce_sum_eq_id`, `fluid_attention_decoupling_plus`, `certified_fluid_spinorial_latent_space_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Fluid BRST Gauge Decoupling** | Batalin-Vilkovisky Complex / Faddeev-Popov Quartet / Nilpotence $s^2=0$ / Solenoidal Flow | `ghost_variation_zero`, `brst_nilpotent`, `solenoidal_flow_is_physical`, `certified_fluid_brst_gauge_decoupling_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Arnold Coadjoint Orbits & KKS Symplectic Geometry** | Coadjoint Action $\operatorname{ad}_x^* \omega$ / KKS 2-Form $\Omega_{\mathrm{KKS}}$ / Jacobi Closedness $d\Omega = 0$ / Casimir Helicity | `kks_form_self`, `kks_form_antisymm`, `kks_form_closed`, `coadjoint_lie_hom`, `certified_arnold_coadjoint_orbits_chern_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 
@@ -1316,3 +1335,10 @@ All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:/
   year    = {1960}
 }
 ```
+
+
+### 5.87 Fluid BRST Gauge Decoupling
+The owner `InfoGeometry/Physics/FluidBRSTGaugeDecoupling.lean` defines a Lie-ring-valued four-sector BRST state and proves componentwise and full nilpotence, exact-to-physical inclusion, and the stated solenoidal special case. These are algebraic results over the supplied Lie-algebra carrier; they do not assert an analytic Helmholtz decomposition or a physical S-matrix theorem.
+
+### 5.88 Arnold Coadjoint Orbits and KKS Form
+The owner `InfoGeometry/Physics/ArnoldCoadjointOrbitsChern.lean` defines the algebraic coadjoint action and KKS pairing, proving alternation, bilinearity, Jacobi closedness, the coadjoint commutator identity, stabilizer invariance, and self-pairing vanishing. A global SDiff manifold, differential-form integration, and Chern prequantization remain separate frontiers.

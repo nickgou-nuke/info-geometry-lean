@@ -80,19 +80,19 @@ theorem leftMul_square_eq_neg
 /-! ## Right multiplication replacements for scalar complex operators -/
 
 /-- STA spin-plane phase bivector corresponding to right multiplication by `iσ₃`. -/
-def staPhaseBivector : DiracMatrix :=
+noncomputable def staPhaseBivector : DiracMatrix :=
   gamma2 * gamma1
 
 /-- STA spatial spin axis `σ₃ = γ₃γ₀`, used as the right chirality operator. -/
-def staSigma3 : DiracMatrix :=
+noncomputable def staSigma3 : DiracMatrix :=
   gamma3 * gamma0
 
 /-- Right multiplication by the STA phase bivector. -/
-def rightPhase (ψ : DiracMatrix) : DiracMatrix :=
+noncomputable def rightPhase (ψ : DiracMatrix) : DiracMatrix :=
   ψ * staPhaseBivector
 
 /-- Right multiplication by the STA spin axis. -/
-def rightSigma3 (ψ : DiracMatrix) : DiracMatrix :=
+noncomputable def rightSigma3 (ψ : DiracMatrix) : DiracMatrix :=
   ψ * staSigma3
 
 /-- The fixed real spin-plane phase squares to `-1`. -/
@@ -124,11 +124,11 @@ theorem rightSigma3_rightSigma3 (ψ : DiracMatrix) :
 /-! ## Two-sided matrix shadows of the STA gamma action -/
 
 /-- STA-style two-sided action: `ψ ↦ γ_μ ψ γ₀`. -/
-def twoSidedGamma (mu : Fin 4) (ψ : DiracMatrix) : DiracMatrix :=
+noncomputable def twoSidedGamma (mu : Fin 4) (ψ : DiracMatrix) : DiracMatrix :=
   gamma mu * ψ * gamma0
 
 /-- Left action by a concrete Dirac gamma matrix. -/
-def leftGamma (mu : Fin 4) (ψ : DiracMatrix) : DiracMatrix :=
+noncomputable def leftGamma (mu : Fin 4) (ψ : DiracMatrix) : DiracMatrix :=
   leftMul (gamma mu) ψ
 
 /--

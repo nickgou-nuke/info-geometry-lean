@@ -1,5 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Geometry.Euclidean.Angle.Unoriented.Basic
+import Mathlib.Geometry.Euclidean.Angle.Unoriented.TriangleInequality
 
 /-!
 The metric triangle inequality on the unit sphere is inherited from the
@@ -47,6 +47,11 @@ theorem unitSphereAngularAngle_eq_arccos_inner (x y : UnitSphere E) :
     unitSphereAngularAngle x y = Real.arccos (inner ℝ (x : E) (y : E)) := by
   unfold unitSphereAngularAngle InnerProductGeometry.angle
   rw [unitSphere_norm x, unitSphere_norm y, mul_one, div_one]
+
+theorem unitSphereAngularAngle_triangle (x y z : UnitSphere E) :
+    unitSphereAngularAngle x z ≤
+      unitSphereAngularAngle x y + unitSphereAngularAngle y z := by
+  exact InnerProductGeometry.angle_le_angle_add_angle (x : E) (y : E) (z : E)
 
 theorem angular_distance_triangle_of_metric_realization
     (d : UnitSphere E → UnitSphere E → ℝ)

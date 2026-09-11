@@ -12519,3 +12519,5 @@ import InfoGeometry.Physics.FluidBRSTGaugeDecoupling
 import InfoGeometry.Physics.FluidBRSTGaugeDecouplingAudit
 import InfoGeometry.Physics.ArnoldCoadjointOrbitsChern
 import InfoGeometry.Physics.ArnoldCoadjointOrbitsChernAudit
+import InfoGeometry.Physics.ArnoldSouriauMomentumPrequantization
+import InfoGeometry.Physics.ArnoldSouriauMomentumPrequantizationAudit

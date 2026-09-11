@@ -9910,6 +9910,8 @@ import InfoGeometry.Physics.AmplituhedronPenroseTransform
 import InfoGeometry.Physics.AmplituhedronPositiveGrassmannianMap
 import InfoGeometry.Physics.AmplituhedronVolume
 import InfoGeometry.Physics.AmplituhedronZetaSum
+import InfoGeometry.Physics.BostConnesAmplituhedronCriticalityBridge
+import InfoGeometry.Physics.BostConnesAmplituhedronCriticalityAudit
 import InfoGeometry.Physics.B3PresentedGroup
 import InfoGeometry.Physics.BayesianTuringCantor
 import InfoGeometry.Physics.BdGChiralBlockMatrix

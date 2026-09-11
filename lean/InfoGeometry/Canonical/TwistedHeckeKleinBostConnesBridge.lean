@@ -142,23 +142,14 @@ theorem twisted_hecke_relations_hold (w z : ℂ) (hz : z ≠ 0) :
   rw [X_matrix_inv_eq z hz]
   exact s_X_relation z
 
-/-- Bundled certificate packet for the twisted Hecke Klein bottle representation. -/
-structure TwistedHeckeKleinPacket (w z : ℂ) (hz : z ≠ 0) where
-  s_sq : s_matrix * s_matrix = 1
-  s_X  : s_matrix * X_matrix z = (X_matrix z)⁻¹ * s_matrix
-  s_Y  : s_matrix * Y_matrix w = - (Y_matrix w * s_matrix)
-  XY   : X_matrix z * Y_matrix w = Y_matrix w * X_matrix z
-  tau_inv : tau_involution (tau_involution w z).1 (tau_involution w z).2 = (w, z)
-
-/-- Constructor for certified twisted Hecke Klein packets. -/
-def makeTwistedHeckeKleinPacket (w z : ℂ) (hz : z ≠ 0) : TwistedHeckeKleinPacket w z hz where
-  s_sq := s_squared_eq_one
-  s_X := by rw [X_matrix_inv_eq z hz]; exact s_X_relation z
-  s_Y := s_Y_anticommutes w
-  XY := X_Y_commutes w z
-  tau_inv := tau_involutive w z
-
-theorem twisted_hecke_klein_packet_certified (w z : ℂ) (hz : z ≠ 0) :
-    (makeTwistedHeckeKleinPacket w z hz).s_sq = s_squared_eq_one := rfl
+theorem twisted_hecke_klein_relations (w z : ℂ) (hz : z ≠ 0) :
+    s_matrix * s_matrix = 1 ∧
+    s_matrix * X_matrix z = (X_matrix z)⁻¹ * s_matrix ∧
+    s_matrix * Y_matrix w = - (Y_matrix w * s_matrix) ∧
+    X_matrix z * Y_matrix w = Y_matrix w * X_matrix z ∧
+    tau_involution (tau_involution w z).1 (tau_involution w z).2 = (w, z) := by
+  refine ⟨s_squared_eq_one, ?_, s_Y_anticommutes w, X_Y_commutes w z, tau_involutive w z⟩
+  rw [X_matrix_inv_eq z hz]
+  exact s_X_relation z
 
 end InfoGeometry.Canonical.TwistedHeckeKleinBostConnesBridge

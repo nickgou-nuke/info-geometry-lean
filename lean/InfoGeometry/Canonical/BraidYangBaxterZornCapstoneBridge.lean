@@ -6,6 +6,8 @@ import Mathlib.Tactic
 
 import InfoGeometry.Canonical.UnimodularZornE6ChiralAnomalyBridge
 import InfoGeometry.Canonical.Stratum34TopologicalClosureBridge
+import InfoGeometry.Canonical.GrandUnificationMasterCapstone
+import InfoGeometry.Canonical.GrandUnificationMasterCapstoneAudit
 import InfoGeometry.Canonical.GravitationalSolderingTracelessBridge
 import InfoGeometry.Canonical.AssociatorGellMannOctetBridge
 import InfoGeometry.Canonical.KantorFiveGradedTDualityBridge

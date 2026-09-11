@@ -1,0 +1,5 @@
+import InfoGeometry.Physics.WignerSmithKreinBridge
+
+open InfoGeometry.Physics.WignerSmithKrein
+
+#print axioms certified_wigner_smith_krein_synthesis

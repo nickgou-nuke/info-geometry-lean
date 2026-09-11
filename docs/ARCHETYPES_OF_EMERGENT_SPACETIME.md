@@ -884,6 +884,15 @@ Formalizing the spectral density of the continuous principal series on the hyper
 * **Master Harish-Chandra Plancherel Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_plancherel_weyl_synthesis`).
   In Lean 4: [`PlancherelWeylBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/PlancherelWeylBridge.lean) and [`PlancherelWeylBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/PlancherelWeylBridgeAudit.lean).
 
+### 5.58 Wigner-Smith Time Delay & Krein Spectral Shift Bridge
+Formalizing the scattering time delay matrix $Q(t) = -i S(t)^{-1} \frac{d}{dt} S(t)$, its exact algebraic reduction to the Eisenstein/Krein spectral shift density, and its duality with the Harish-Chandra Casimir eigenvalue:
+* **Wigner-Smith Time Delay Functional:** On the boundary scattering channel $S(t) = \frac{1/2 + it}{1/2 - it}$, the Wigner-Smith delay is $\tau(t) = \frac{1}{1/4 + t^2}$ (`timeDelay`), which is strictly positive everywhere: $\tau(t) > 0$ (`timeDelay_pos`).
+* **Casimir-Time Delay Reciprocity:** The Wigner-Smith delay is the exact algebraic reciprocal of the Harish-Chandra Casimir eigenvalue: $\tau(t) \cdot \lambda(t) = 1$ for all $t \in \mathbb{R}$ (`timeDelay_mul_casimir`).
+* **Throat Ground State Saturation:** At the Klein bottle throat ground state $t = 0$, the time delay achieves its maximum value $\tau(0) = 4$ (`timeDelay_zero`), and for all $t \in \mathbb{R}$, $\tau(t) \le 4$ (`timeDelay_le_four`).
+* **Strict Anti-Monotonicity (Decay of Resonance):** As spectral energy increases away from the throat ($0 \le t_1 < t_2$), the scattering time delay strictly decreases: $\tau(t_2) < \tau(t_1)$ (`timeDelay_strictAntiOn_nnreal`), verifying high-energy transmission without trapping.
+* **Master Wigner-Smith Krein Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_wigner_smith_krein_synthesis`).
+  In Lean 4: [`WignerSmithKreinBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/WignerSmithKreinBridge.lean) and [`WignerSmithKreinBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/WignerSmithKreinBridgeAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -961,6 +970,7 @@ Formalizing the spectral density of the continuous principal series on the hyper
 | **Aharonov Bi-Wave & Ramanujan Bridge** | Krein Swap $J$ / Weak Values / $S(t)$ Intertwiner / Ramanujan $c_q(n)$ | `certified_biwave_ramanujan_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Harish-Chandra Casimir & SL(2, ℝ)** | $\mathfrak{sl}(2, \mathbb{R})$ Triad / $\lambda(s) = s(1-s) = 1/4+t^2 \ge 1/4$ | `certified_harish_chandra_casimir_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Harish-Chandra Plancherel & Weyl** | Plancherel $\rho(t) = t \tanh(\pi t)$ / Weyl Bound $\rho < t$ / Casimir Coupling | `certified_plancherel_weyl_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Wigner-Smith Time Delay & Krein Shift** | Time Delay $\tau(t) = 1/(1/4+t^2)$ / Reciprocal Casimir $\tau\lambda=1$ / $\tau \le 4$ | `certified_wigner_smith_krein_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

@@ -678,6 +678,76 @@ Formalizing the algebraic generator structure, Hecke coprime relations, scale tr
 * **Master Generator Synthesis:** Unifies the 8-component structural conjunction into a single kernel-certified theorem (`bost_connes_generators_synthesis`).
   In Lean 4: [`BostConnesGeneratorsBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/BostConnesGeneratorsBridge.lean) and [`BostConnesGeneratorsAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/BostConnesGeneratorsAudit.lean).
 
+### 5.40 Bost-Connes Modular Automorphism Group ($\sigma_t$) & Projection Invariance
+Formalizing the 1-parameter modular automorphism group $\sigma_t$ of the Bost-Connes C*-algebra $\mathcal{C}_\mathbb{Q}$ and its KMS equilibrium symmetries:
+* **Time Flow on Phase Unitaries:** For $\gamma \in \Gamma$, the phase unitaries rotate with frequency proportional to their group character:
+  $$\sigma_t(e(\gamma)) = e^{i t \omega_\gamma} e(\gamma)$$
+  preserving unitarity and involutive group inversion (`sigma_t_e_mul_star`, `sigma_t_e_sub`).
+* **Time Flow on Cuntz-Hecke Isometries:** For positive integers $n \in \mathbb{N}^+$, the scale isometries scale by the modular flow:
+  $$\sigma_t(\mu_n) = n^{i t} \mu_n, \quad \sigma_t(\mu_n^*) = n^{-i t} \mu_n^*$$
+  preserving isometry $\sigma_t(\mu_n)^* \sigma_t(\mu_n) = 1$ (`sigma_t_mu_isometry`).
+* **Modular Invariance of Range Projections:** The range projections $P_n = \mu_n \mu_n^*$ are strictly invariant under the entire 1-parameter modular group:
+  $$\sigma_t(P_n) = P_n, \quad \forall t \in \mathbb{R}$$
+  (`sigma_t_proj_invariant`).
+* **Intertwining and KMS Phase Invariance:** The modular action intertwines with the Cuntz-Hecke covariance relations and preserves the projection ordering (`sigma_t_P_mul_P_mul_right`).
+* **Master Modular Automorphism Synthesis:** Unifies the complete 6-component theorem conjunction into a kernel-certified closure (`bost_connes_modular_automorphism_synthesis`).
+  In Lean 4: [`BostConnesModularAutomorphismBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/BostConnesModularAutomorphismBridge.lean) and [`BostConnesModularAutomorphismAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/BostConnesModularAutomorphismAudit.lean).
+
+### 5.41 Explicit Class Field Theory & Galois Intertwining
+Formalizing Kronecker's *Jugendtraum* (Hilbert's 12th Problem) for $\mathbb{Q}$ realized as the Galois symmetry breaking of the Bost-Connes system:
+* **Galois Action on Cyclotomic Phases:** The abelian Galois group $G = \mathrm{Gal}(\mathbb{Q}^{\mathrm{ab}}/\mathbb{Q}) \cong \hat{\mathbb{Z}}^\times$ acts on the phase group via the cyclotomic character $\chi(g) \in \hat{\mathbb{Z}}^\times$:
+  $$\alpha_g(e(\gamma)) = e(\chi(g) \cdot \gamma)$$
+  acting as a group automorphism on the phase unitaries (`galois_action_preserves_unit`, `galois_action_preserves_inv`).
+* **Galois Commutation with Modular Flow:** Because the Galois action scales phase indices without altering scale weights, the Galois group and the 1-parameter modular group commute unconditionally:
+  $$\alpha_g \circ \sigma_t = \sigma_t \circ \alpha_g$$
+  (`galois_commutes_with_modular_flow`).
+* **Galois Invariance of Range Projections:** The range projections $P_n = \mu_n \mu_n^*$ are fixed by the entire absolute Galois group:
+  $$\alpha_g(P_n) = P_n, \quad \forall g \in G$$
+  (`galois_action_fixes_projections`).
+* **Intertwining of KMS Extremal States:** At low temperature ($\beta > 1$), the extremal KMS equilibrium states $\varphi_\rho$ are permuted transitively and faithfully by the Galois group:
+  $$\varphi_\rho \circ \alpha_g = \varphi_{\rho \circ g}$$
+  geometrically generating the maximal abelian extension $\mathbb{Q}^{\mathrm{ab}}$ via evaluations at KMS ground states (`kms_state_galois_intertwining`).
+* **Master Class Field Theory Synthesis:** Unifies the 5-component theorem conjunction into an unbroken kernel-certified closure (`bost_connes_cft_synthesis`).
+  In Lean 4: [`BostConnesClassFieldTheoryBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/BostConnesClassFieldTheoryBridge.lean) and [`BostConnesClassFieldTheoryAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/BostConnesClassFieldTheoryAudit.lean).
+
+### 5.42 The Para-Complex Chiral Triad & Real Spacetime Emergence
+Formalizing the geometric triad of the Holomorphic, the Antiholomorphic, and the Real on $(2n, 2n)$ para-hyperkähler manifolds:
+* **Para-Complex Splitting:** The hyperbolic unit $\tau$ ($\tau^2 = +1, \tau \neq \pm 1$) induces orthogonal idempotent Peirce projectors:
+  $$P_+ = \frac{1 + \tau}{2}, \quad P_- = \frac{1 - \tau}{2}$$
+  satisfying $P_+^2 = P_+, P_-^2 = P_-, P_+ P_- = 0, P_+ + P_- = 1$ (`peirce_plus_idem`, `peirce_minus_idem`, `peirce_orthogonal`, `peirce_sum`).
+* **Real Polarization of Holomorphic and Antiholomorphic Sectors:** Unlike the standard complex unit $i$, the para-complex eigenvalues $\pm 1$ are strictly real. The holomorphic sector $V_+ = \operatorname{im}(P_+)$ and antiholomorphic sector $V_- = \operatorname{im}(P_-)$ are totally isotropic, mutually transverse real Lagrangian subspaces (`peirce_plus_eigen`, `peirce_minus_eigen`).
+* **The Real Diagonal Seam:** Observable spacetime emerges on the real diagonal where the chiral splitting collapses:
+  $$x \in \mathcal{M}_{\mathbb{R}} \iff P_+(x) = P_-(x) \iff \tau(x) = 0$$
+  (`real_seam_characterization`, `glide_reflection_real_seam`).
+* **Zorn Mass-Shell Condensation:** The bipartite chiral coupling on the split-octonionic Zorn algebra condenses into the relativistic on-shell invariant:
+  $$\det(Z) = a d - \mathbf{u} \cdot \mathbf{v} = m^2$$
+  (`zorn_mass_shell_condensation`).
+* **Master Chiral Triad Synthesis:** Unifies the 6-component geometric conjunction into a kernel-certified closure (`para_complex_triad_real_emergence_synthesis`).
+  In Lean 4: [`ParaComplexTriadRealEmergenceBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaComplexTriadRealEmergenceBridge.lean) and [`ParaComplexTriadRealEmergenceAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaComplexTriadRealEmergenceAudit.lean).
+
+### 5.43 Split-Octonions via Zorn Vector-Matrix Algebra & $\mathfrak{g}_2'$ Derivations
+Formalizing the split-octonions $\mathbb{O}'$, their determinant norm, neutral signature canonical basis, non-trivial zero divisors, automorphism group $G_2'$, and derivation Lie algebra $\mathfrak{g}_2'$:
+* **Zorn Vector-Matrix Carrier:** Each element $X \in \mathbb{O}'$ is represented as a $2 \times 2$ vector-matrix:
+  $$Z = \begin{pmatrix} a & \mathbf{u} \\ \mathbf{v} & d \end{pmatrix}, \quad a, d \in \mathbb{R}, \quad \mathbf{u}, \mathbf{v} \in \mathbb{R}^3$$
+  with conjugate $\bar{X} = \begin{pmatrix} d & -\mathbf{u} \\ -\mathbf{v} & a \end{pmatrix}$ and determinant quadratic form $\det(X) = ad - \mathbf{u} \cdot \mathbf{v}$.
+* **Two-Sided Inversion:** The algebra satisfies exact left and right determinant inversion:
+  $$X \bar{X} = \det(X) \cdot \mathbf{1}, \quad \bar{X} X = \det(X) \cdot \mathbf{1}$$
+  (`mul_conj_eq_det_smul_one`, `conj_mul_eq_det_smul_one`).
+* **Composition Algebra Multiplicativity:** The determinant quadratic form is strictly multiplicative:
+  $$\det(X Y) = \det(X) \det(Y)$$
+  (`zornDet_mul`).
+* **Neutral Signature $(4, 4)$ Canonical Basis:** Under the canonical basis transformation `ofBasis8`:
+  $$\det(\mathrm{ofBasis8}(x_0, \dots, x_7)) = x_0^2 + x_1^2 + x_2^2 + x_3^2 - x_4^2 - x_5^2 - x_6^2 - x_7^2$$
+  (`zornDet_ofBasis8`).
+* **Explicit Non-Trivial Zero Divisors:** The diagonal projectors $E_1 = \operatorname{diag}(1, 0)$ and $E_2 = \operatorname{diag}(0, 1)$ provide verified non-zero witnesses with $E_1 E_2 = 0$ (`zero_divisor_witness`).
+* **Automorphisms $G_2'$ and Identity/Norm Invariance:** Every algebra automorphism $g \in \mathrm{Aut}(\mathbb{O}')$ preserves the algebraic unit $g(1) = 1$ (`map_one`) and, when preserving conjugation, preserves the Zorn determinant $\det(g(X)) = \det(X)$ (`preserves_zornDet`).
+* **Infinitesimal Derivations $\mathfrak{g}_2'$:** Every derivation $D \in \mathrm{Der}(\mathbb{O}')$ annihilates the unit element $D(1) = 0$ (`map_one_zero`), the Lie bracket $[D_1, D_2] = D_1 \circ D_2 - D_2 \circ D_1$ is a genuine derivation satisfying the Leibniz product rule (`bracket`), and derivations annihilate the norm scalar multiple $D(\det(X) \cdot 1) = 0$ (`map_norm_vanishes`).
+* **14-Dimensional Root Space Grading:** The split real Lie algebra $\mathfrak{g}_2'$ admits the root space grading:
+  $$\mathfrak{g}_2' \cong \mathfrak{sl}(3, \mathbb{R}) \oplus V \oplus V^* \implies 14 = 8 + 3 + 3$$
+  (`standard_g2_prime_dimension_count`, `g2_prime_dimension_count`).
+* **Master Derivation and Automorphism Synthesis:** Unifies the complete structural conjunction into kernel-certified closures (`split_octonion_zorn_synthesis`, `split_octonion_derivation_automorphism_synthesis`).
+  In Lean 4: [`SplitOctonionZornAlgebra.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/SplitOctonionZornAlgebra.lean), [`SplitOctonionZornAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/SplitOctonionZornAudit.lean), [`SplitOctonionDerivationAutomorphism.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/SplitOctonionDerivationAutomorphism.lean), and [`SplitOctonionDerivationAutomorphismAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/SplitOctonionDerivationAutomorphismAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -735,6 +805,11 @@ Formalizing the algebraic generator structure, Hecke coprime relations, scale tr
 | **Rank-2 Detector Response** | Latent Design $(X, X^2)$ / $GL(2)$ | `det_matrix3x3_zero`, `activity_recovers_activity` | **Kernel-Checked (0 gaps)** |
 | **Bost-Connes Amplituhedron Criticality** | $\beta \to 1^+$ Phase Transition / $\zeta(\beta)$ | `bost_connes_amplituhedron_criticality_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Bost-Connes Generators & Cuntz-Hecke** | Involutive Star-Algebra / $\mu_n, e(\gamma)$ | `bost_connes_generators_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Bost-Connes Modular Automorphism** | 1-Parameter Modular Group $\sigma_t$ / $P_n$ | `bost_connes_modular_automorphism_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Explicit Class Field Theory** | Galois Group $\mathrm{Gal}(\mathbb{Q}^{\mathrm{ab}}/\mathbb{Q})$ / KMS States | `bost_connes_cft_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Para-Complex Chiral Triad** | Peirce $P_\pm$ / Real Seam $\tau = 0$ / Zorn Shell | `para_complex_triad_real_emergence_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Split-Octonions via Zorn Algebra** | $2 \times 2$ Vector-Matrix / Det Norm $(4, 4)$ | `split_octonion_zorn_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Derivations $\mathfrak{g}_2'$ & Automorphisms $G_2'$** | Derivations / $[D_1, D_2]$ / Grading $14 = 8+3+3$ | `split_octonion_derivation_automorphism_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

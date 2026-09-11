@@ -1,6 +1,4 @@
-module
-
-public import InfoGeometry.Lie.MathlibBackportCartanCriterionFull
+import InfoGeometry.Lie.MathlibBackportCartanCriterionFull
 
 /-!
 # Compatibility layer for Cartan's semisimplicity criterion
@@ -12,7 +10,7 @@ InfoGeometry-owned compatibility instance and its explicit hypothesis form.
 
 noncomputable section
 
-public section
+section
 
 namespace InfoGeometry.Lie.MathlibBackportCartanCriterion
 

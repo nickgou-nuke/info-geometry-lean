@@ -3,24 +3,22 @@ Copyright (c) 2026 Janos Wolosz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Janos Wolosz
 -/
-module
-
 import Mathlib.Algebra.Algebra.Rat
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-public import InfoGeometry.Lie.MathlibBackportAdjointAction
-public import InfoGeometry.Lie.MathlibBackportBasisLieEnd
-public import InfoGeometry.Lie.MathlibBackportCartanCriterionFoundations
+import InfoGeometry.Lie.MathlibBackportAdjointAction
+import InfoGeometry.Lie.MathlibBackportBasisLieEnd
+import InfoGeometry.Lie.MathlibBackportCartanCriterionFoundations
 import Mathlib.Algebra.Lie.Killing
 import Mathlib.Algebra.Lie.TraceForm
-public import InfoGeometry.Lie.MathlibBackportTraceFormBaseChange
-public import InfoGeometry.Lie.MathlibBackportAEval
+import InfoGeometry.Lie.MathlibBackportTraceFormBaseChange
+import InfoGeometry.Lie.MathlibBackportAEval
 import Mathlib.LinearAlgebra.Eigenspace.Matrix
 import Mathlib.LinearAlgebra.Eigenspace.Minpoly
 import Mathlib.LinearAlgebra.Eigenspace.Semisimple
 import Mathlib.LinearAlgebra.Lagrange
 import Mathlib.RingTheory.Flat.Localization
 
-public section
+section
 
 /-!
 # Cartan's criteria
@@ -193,7 +191,7 @@ theorem isNilpotent_derivedSeries_of_traceForm_eq_zero_aux {K : Type*}
   rw [hX_ns, add_mul, map_add, htr_n, htr_s, zero_add]
 
 /-- If the trace form of `M` is zero, then the `⁅L, L⁆`-module `M` is nilpotent. -/
-public theorem isNilpotent_derivedSeries_of_traceForm_eq_zero
+theorem isNilpotent_derivedSeries_of_traceForm_eq_zero
     [Module R M] [LieModule R L M] [IsNoetherian R M] [Module.Free R M]
     (h : traceForm R L M = 0) :
     IsNilpotent (derivedSeries R L 1) M := by
@@ -227,7 +225,7 @@ working with ideals.
 Over a principal ideal domain by `LieIdeal.killingForm_eq` this is just a specialisation of
 `LieAlgebra.isSolvable_of_killingForm_apply_lie_eq_zero` but since it does not require the PID
 assumption, it is a slightly stronger result. -/
-public theorem LieIdeal.isSolvable_of_killingForm_apply_lie_eq_zero (I : LieIdeal R L)
+theorem LieIdeal.isSolvable_of_killingForm_apply_lie_eq_zero (I : LieIdeal R L)
     (h : ∀ x ∈ I, ∀ y ∈ ⁅I, I⁆, killingForm R L x y = 0) :
     IsSolvable I := by
   set DI : LieIdeal R L := ⁅I, I⁆
@@ -245,9 +243,10 @@ public theorem LieIdeal.isSolvable_of_killingForm_apply_lie_eq_zero (I : LieIdea
     refine (LieModule.isNilpotent_iff_forall' (R := R)).mp module_nilp
       ⟨⟨x, LieSubmodule.lie_le_left DI DI hx⟩, ?_⟩
     rwa [derivedSeries_eq_derivedSeriesOfIdeal_comap, mem_comap]
-  obtain ⟨k, hk⟩ := IsSolvable.solvable R DDI
+  obtain ⟨k, hk⟩ := (LieAlgebra.isSolvable_iff (R := R) (L := DDI)).mp inferInstance
   rw [derivedSeries_eq_bot_iff] at hk
-  refine IsSolvable.mk (k := k + 2) ((derivedSeries_eq_bot_iff I (k + 2)).mpr ?_)
+  refine LieAlgebra.IsSolvable.mk (R := R) (L := I) (k := k + 2)
+    ((derivedSeries_eq_bot_iff I (k + 2)).mpr ?_)
   rwa [derivedSeriesOfIdeal_add, derivedSeriesOfIdeal_succ, derivedSeriesOfIdeal_succ,
     derivedSeriesOfIdeal_zero]
 
@@ -255,7 +254,7 @@ namespace LieAlgebra
 
 /-- **Cartan's criterion for solvability**: if the Killing form of `L` vanishes on `L × ⁅L, L⁆`,
 then `L` is solvable. -/
-public lemma isSolvable_of_killingForm_apply_lie_eq_zero
+lemma isSolvable_of_killingForm_apply_lie_eq_zero
     (h : ∀ x, ∀ y ∈ derivedSeries R L 1, killingForm R L x y = 0) :
     IsSolvable L := by
   suffices IsSolvable (⊤ : LieIdeal R L) by
@@ -266,7 +265,7 @@ public lemma isSolvable_of_killingForm_apply_lie_eq_zero
 variable (R L)
 
 /-- The Killing radical of a finite-dimensional Lie algebra is contained in the solvable radical. -/
-public lemma killingCompl_top_le_radical :
+lemma killingCompl_top_le_radical :
     LieIdeal.killingCompl R L ⊤ ≤ radical R L := by
   rw [← LieIdeal.solvable_iff_le_radical]
   refine LieIdeal.isSolvable_of_killingForm_apply_lie_eq_zero _ ?_
@@ -278,14 +277,14 @@ public lemma killingCompl_top_le_radical :
 solvable radical, then its Killing form is non-degenerate.
 
 See also `LieAlgebra.hasTrivialRadical_iff_isKilling`. -/
-public instance InfoGeometry.Lie.MathlibBackport.hasTrivialRadical_isKilling
+instance InfoGeometry.Lie.MathlibBackport.hasTrivialRadical_isKilling
     [HasTrivialRadical R L] : IsKilling R L where
   killingCompl_top_eq_bot := by simpa using killingCompl_top_le_radical R L
 
 /-- In the trivial-solvable-radical case, the Killing radical agrees with the
 solvable radical.  This is the reusable equality form of the preceding
 Cartan-criterion inclusion. -/
-public lemma killingCompl_top_eq_radical_of_hasTrivialRadical
+lemma killingCompl_top_eq_radical_of_hasTrivialRadical
     [HasTrivialRadical R L] :
     LieIdeal.killingCompl R L ⊤ = radical R L := by
   apply le_antisymm

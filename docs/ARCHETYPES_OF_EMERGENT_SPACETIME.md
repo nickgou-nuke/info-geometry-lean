@@ -854,6 +854,16 @@ Formalizing the canonical mathematical connection between the Apollonian bipolar
 * **Master Apollonius-Cayley Scattering Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_apollonius_cayley_scattering_synthesis`).
   In Lean 4: [`ApolloniusCayleyScatteringBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/ApolloniusCayleyScatteringBridge.lean) and [`ApolloniusCayleyScatteringBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/ApolloniusCayleyScatteringBridgeAudit.lean).
 
+### 5.55 Aharonov Bi-Wave Krein Intertwiner & Ramanujan Modular Projection Bridge
+Formalizing the canonical mathematical connection between doubled Krein space bi-wave quantum interference, Aharonov weak values of channel projection operators, the unitary boundary intertwining operator, and Ramanujan's trigonometrical sums along periodic orbits:
+* **The Krein Swap Involution:** On the doubled bi-wave state space $\mathcal{K} = \mathbb{C} \oplus \mathbb{C}$, the swap metric $J = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ is an exact involution ($J^2 = \mathbb{I}$) with determinant $-1$ (signature $(1, 1)$) and vanishing trace $\operatorname{tr}(J) = 0$ (`kreinSwapMatrix_sq`, `kreinSwapMatrix_det`, `kreinSwapMatrix_trace`).
+* **Aharonov Weak Values & Channel Partition of Unity:** In the two-state vector formalism, pre-selecting the forward channel and post-selecting the backward channel yields weak values $A_w(P_{\mathrm{fwd}}) = 1$ and $A_w(P_{\mathrm{bwd}}) = 0$, summing to unity: $A_w(P_{\mathrm{fwd}}) + A_w(P_{\mathrm{bwd}}) = 1$ (`weakValue_forward_projector`, `weakValue_backward_projector`, `weakValue_projector_sum`).
+* **Critical Seam Modular Balance:** The forward wave $\psi_{\mathrm{fwd}}(s) = s$ and backward wave $\psi_{\mathrm{bwd}}(s) = 1 - s$ have equal norm squares if and only if the complex frequency lies on the critical line: $\|\psi_{\mathrm{fwd}}(s)\|^2 = \|\psi_{\mathrm{bwd}}(s)\|^2 \iff \operatorname{Re}(s) = 1/2$ (`biwave_modular_balance`).
+* **Unitary Boundary Intertwiner & Inversion:** The 1-body intertwiner $S(t) = (1/2 + it) / (1/2 - it)$ is unitary ($\|S(t)\| = 1$), acts as identity at the throat ground state $S(0) = 1$, and satisfies exact time-reversal inversion: $S(t) \cdot S(-t) = 1$ (`boundaryIntertwiner_unitary`, `boundaryIntertwiner_zero`, `boundaryIntertwiner_inversion`).
+* **Ramanujan Periodic Orbit Sums:** Ramanujan's sum $c_q(n) = \sum_{a \in (\mathbb{Z}/q\mathbb{Z})^\times} \cos(2\pi a n / q)$ along a periodic orbit of period $q$ evaluates to Euler's totient at zero frequency $c_q(0) = \varphi(q)$ and exhibits exact $\mathcal{PT}$ / time-reversal symmetry: $c_q(-n) = c_q(n)$ (`card_coprimeResidues`, `ramanujanSum_zero`, `ramanujanSum_neg`).
+* **Master Bi-Wave Ramanujan Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_biwave_ramanujan_synthesis`).
+  In Lean 4: [`BiWaveRamanujanBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/BiWaveRamanujanBridge.lean) and [`BiWaveRamanujanBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/BiWaveRamanujanBridgeAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -928,6 +938,7 @@ Formalizing the canonical mathematical connection between the Apollonian bipolar
 | **Selberg-Gutzwiller Zeta Bridge** | Periodic Orbit $(p, k)$ / von Mangoldt $\Lambda(p^k) (p^k)^{-s}$ / Unitarity | `certified_selberg_gutzwiller_zeta_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Aitchison-Jaynes Rapidity Bridge** | Binary Simplex $\Delta^1$ / Jaynesian State $p=1/2$ / $\operatorname{logit}(p) = 2\theta$ | `certified_aitchison_jaynes_rapidity_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Apollonius-Cayley Boundary Scattering** | Cayley Transform $\rho(s) = s/(1-s)$ / $S(t) = (1/2+it)/(1/2-it)$ / Critical Line | `certified_apollonius_cayley_scattering_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Aharonov Bi-Wave & Ramanujan Bridge** | Krein Swap $J$ / Weak Values / $S(t)$ Intertwiner / Ramanujan $c_q(n)$ | `certified_biwave_ramanujan_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

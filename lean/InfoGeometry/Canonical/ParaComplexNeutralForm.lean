@@ -62,3 +62,132 @@ theorem eigenspaces_disjoint {u : V}
 
 end
 end InfoGeometry.Canonical.ParaComplexNeutralForm
+
+namespace InfoGeometry.Canonical.ParaComplexNeutralForm
+noncomputable section
+open ParaComplexConnection
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
+variable (PCS : ParaComplexStructure V)
+
+/-- A symmetric, nondegenerate neutral form with the cross-pairing hypotheses
+needed for the two Peirce leaves to be mutual annihilators. -/
+structure NondegenerateDatum (PCS : ParaComplexStructure V) where
+  form : LinearMap.BilinForm ℝ V
+  symmetric : ∀ x y, form x y = form y x
+  anti_compatible : AntiCompatible PCS form
+  nondegenerate : ∀ x, (∀ y, form x y = 0) → x = 0
+  plus_cross_nondegenerate : ∀ u ∈ minusEigenspace PCS,
+    (∀ v ∈ plusEigenspace PCS, form u v = 0) → u = 0
+  minus_cross_nondegenerate : ∀ u ∈ plusEigenspace PCS,
+    (∀ v ∈ minusEigenspace PCS, form u v = 0) → u = 0
+
+def annihilates (D : NondegenerateDatum PCS)
+    (S : Submodule ℝ V) (x : V) : Prop := ∀ y ∈ S, D.form x y = 0
+
+theorem plus_annihilator_eq (D : NondegenerateDatum PCS) :
+    {x | annihilates PCS D (plusEigenspace PCS) x} = (plusEigenspace PCS : Set V) := by
+  ext x
+  constructor
+  · intro hx
+    let xp : V := peircePlus PCS x
+    let xm : V := peirceMinus PCS x
+    have hxm : xm ∈ minusEigenspace PCS := peirceMinus_mem_minusEigenspace PCS x
+    have hcross : ∀ v ∈ plusEigenspace PCS, D.form xm v = 0 := by
+      intro v hv
+      have hzero := hx v hv
+      have hxp := plus_isotropic PCS D.form D.anti_compatible
+        (peircePlus_mem_plusEigenspace PCS x) hv
+      have hdecomp : x = xp + xm := by
+        dsimp [xp, xm]
+        exact (peirce_sum_id PCS x).symm
+      rw [hdecomp] at hzero
+      simp only [map_add, LinearMap.add_apply] at hzero
+      linarith
+    have hxm0 : xm = 0 := D.plus_cross_nondegenerate xm hxm hcross
+    have hxplus : x ∈ plusEigenspace PCS := by
+      rw [show x = xp + xm by exact (peirce_sum_id PCS x).symm, hxm0, add_zero]
+      exact peircePlus_mem_plusEigenspace PCS x
+    exact hxplus
+  · intro hx y hy
+    exact plus_isotropic PCS D.form D.anti_compatible hx hy
+
+theorem minus_annihilator_eq (D : NondegenerateDatum PCS) :
+    {x | annihilates PCS D (minusEigenspace PCS) x} = (minusEigenspace PCS : Set V) := by
+  ext x
+  constructor
+  · intro hx
+    let xp : V := peircePlus PCS x
+    let xm : V := peirceMinus PCS x
+    have hxp : xp ∈ plusEigenspace PCS := peircePlus_mem_plusEigenspace PCS x
+    have hcross : ∀ v ∈ minusEigenspace PCS, D.form xp v = 0 := by
+      intro v hv
+      have hzero := hx v hv
+      have hxm := minus_isotropic PCS D.form D.anti_compatible
+        (peirceMinus_mem_minusEigenspace PCS x) hv
+      have hdecomp : x = xp + xm := by
+        dsimp [xp, xm]
+        exact (peirce_sum_id PCS x).symm
+      rw [hdecomp] at hzero
+      simp only [map_add, LinearMap.add_apply] at hzero
+      linarith
+    have hxp0 : xp = 0 := D.minus_cross_nondegenerate xp hxp hcross
+    rw [show x = xp + xm by exact (peirce_sum_id PCS x).symm, hxp0, zero_add]
+    exact peirceMinus_mem_minusEigenspace PCS x
+  · intro hx y hy
+    exact minus_isotropic PCS D.form D.anti_compatible hx hy
+
+end
+end InfoGeometry.Canonical.ParaComplexNeutralForm
+
+namespace InfoGeometry.Canonical.ParaComplexNeutralForm
+noncomputable section
+open ParaComplexConnection
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
+variable (PCS : ParaComplexStructure V)
+
+/-- An isotropic extension of the positive Peirce leaf. -/
+def IsotropicPlusExtension (D : NondegenerateDatum PCS) (S : Submodule ℝ V) : Prop :=
+  plusEigenspace PCS ≤ S ∧ ∀ x ∈ S, ∀ y ∈ S, D.form x y = 0
+
+/-- An isotropic extension of the negative Peirce leaf. -/
+def IsotropicMinusExtension (D : NondegenerateDatum PCS) (S : Submodule ℝ V) : Prop :=
+  minusEigenspace PCS ≤ S ∧ ∀ x ∈ S, ∀ y ∈ S, D.form x y = 0
+
+theorem isotropic_plus_extension_eq (D : NondegenerateDatum PCS) (S : Submodule ℝ V)
+    (hS : IsotropicPlusExtension PCS D S) : S = plusEigenspace PCS := by
+  apply le_antisymm
+  · intro x hx
+    have hxann : annihilates PCS D (plusEigenspace PCS) x := by
+      intro y hy
+      exact hS.2 x hx y (hS.1 hy)
+    have hxset : x ∈ {x | annihilates PCS D (plusEigenspace PCS) x} := hxann
+    rw [plus_annihilator_eq PCS D] at hxset
+    exact hxset
+  · exact hS.1
+
+theorem isotropic_minus_extension_eq (D : NondegenerateDatum PCS) (S : Submodule ℝ V)
+    (hS : IsotropicMinusExtension PCS D S) : S = minusEigenspace PCS := by
+  apply le_antisymm
+  · intro x hx
+    have hxann : annihilates PCS D (minusEigenspace PCS) x := by
+      intro y hy
+      exact hS.2 x hx y (hS.1 hy)
+    have hxset : x ∈ {x | annihilates PCS D (minusEigenspace PCS) x} := hxann
+    rw [minus_annihilator_eq PCS D] at hxset
+    exact hxset
+  · exact hS.1
+
+/-- The finite-dimensional rank identity supplied by the canonical Peirce equivalence. -/
+theorem finrank_peirce_sum [FiniteDimensional ℝ V] :
+    Module.finrank ℝ V =
+      Module.finrank ℝ (plusEigenspace PCS) + Module.finrank ℝ (minusEigenspace PCS) := by
+  rw [LinearEquiv.finrank_eq (peirceDecomposition PCS), Module.finrank_prod]
+
+/-- Equal leaf dimensions follow from an explicitly supplied cross linear equivalence. -/
+theorem finrank_peirce_eq_of_cross_equiv [FiniteDimensional ℝ V]
+    (e : plusEigenspace PCS ≃ₗ[ℝ] minusEigenspace PCS) :
+    Module.finrank ℝ (plusEigenspace PCS) = Module.finrank ℝ (minusEigenspace PCS) :=
+  e.finrank_eq
+
+end
+end InfoGeometry.Canonical.ParaComplexNeutralForm

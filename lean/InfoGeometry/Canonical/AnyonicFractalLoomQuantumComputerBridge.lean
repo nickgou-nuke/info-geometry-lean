@@ -114,37 +114,18 @@ theorem clifford_braid_anticomm :
 
 /-! ### 4. Master Anyonic Quantum Computer Synthesis Packet -/
 
-structure AnyonicFractalLoomPacket where
-  rt_match : ∀ (n : ℕ) (ρ G_eff : ℝ), ρ = G_eff → EntanglementWeft n ρ = BulkMinimalArea n G_eff
-  tearing : ∀ (n : ℕ) (ρ δ G_eff : ℝ), ρ = G_eff → EntanglementWeft n (ρ - δ) = BulkMinimalArea n G_eff - (δ * (n : ℝ))
-  complete_tear : ∀ (n : ℕ), EntanglementWeft n 0 = 0
-  fusion_dim : fibonacciQuantumDim ^ 2 = 1 + fibonacciQuantumDim
-  total_dim_sq : (totalQuantumDimension) ^ 2 = 2 + goldenRatio
-  artin_braid : ∀ (w : CuntzWord3), braidSigma1Action (braidSigma2Action (braidSigma1Action w)) = braidSigma2Action (braidSigma1Action (braidSigma2Action w))
-  core_protection : ∀ (z : CentralCore), conjByJ (centralMatrix z) = centralMatrix z
-  clifford_anticomm : E * J + J * E = 0
-
-def makeAnyonicFractalLoomPacket : AnyonicFractalLoomPacket where
-  rt_match := ryu_takayanagi_loom_match
-  tearing := spacetime_tearing_theorem
-  complete_tear := spacetime_complete_tear
-  fusion_dim := anyonic_quantum_dimension_fusion
-  total_dim_sq := anyonic_total_quantum_dim_sq
-  artin_braid := anyonic_shuttle_braid_artin
-  core_protection := topological_qubit_noise_protection
-  clifford_anticomm := clifford_braid_anticomm
-
 theorem anyonic_fractal_loom_unified :
-    let P := makeAnyonicFractalLoomPacket
-    (P.rt_match = ryu_takayanagi_loom_match) ∧
-    (P.tearing = spacetime_tearing_theorem) ∧
-    (P.complete_tear = spacetime_complete_tear) ∧
-    (P.fusion_dim = anyonic_quantum_dimension_fusion) ∧
-    (P.total_dim_sq = anyonic_total_quantum_dim_sq) ∧
-    (P.artin_braid = anyonic_shuttle_braid_artin) ∧
-    (P.core_protection = topological_qubit_noise_protection) ∧
-    (P.clifford_anticomm = clifford_braid_anticomm) := by
-  dsimp
-  refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl⟩
+    (∀ (n : ℕ) (ρ G_eff : ℝ), ρ = G_eff → EntanglementWeft n ρ = BulkMinimalArea n G_eff) ∧
+    (∀ (n : ℕ) (ρ δ G_eff : ℝ), ρ = G_eff → EntanglementWeft n (ρ - δ) = BulkMinimalArea n G_eff - (δ * (n : ℝ))) ∧
+    (∀ (n : ℕ), EntanglementWeft n 0 = 0) ∧
+    fibonacciQuantumDim ^ 2 = 1 + fibonacciQuantumDim ∧
+    (totalQuantumDimension) ^ 2 = 2 + goldenRatio ∧
+    (∀ (w : CuntzWord3), braidSigma1Action (braidSigma2Action (braidSigma1Action w)) = braidSigma2Action (braidSigma1Action (braidSigma2Action w))) ∧
+    (∀ (z : CentralCore), conjByJ (centralMatrix z) = centralMatrix z) ∧
+    E * J + J * E = 0 := by
+  exact ⟨ryu_takayanagi_loom_match, spacetime_tearing_theorem,
+    spacetime_complete_tear, anyonic_quantum_dimension_fusion,
+    anyonic_total_quantum_dim_sq, anyonic_shuttle_braid_artin,
+    central_core_preserved_by_J_conj, E_anticomm_J⟩
 
 end InfoGeometry.Canonical.AnyonicFractalLoomQuantumComputerBridge

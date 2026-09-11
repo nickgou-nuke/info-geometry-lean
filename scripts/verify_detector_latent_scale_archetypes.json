@@ -1,0 +1,53 @@
+{
+  "object": "detector_latent_scale_archetypes",
+  "lean_owner": "InfoGeometry.Probability.DetectorScaleInvariance",
+  "carrier": "Real positive parameters C, K, z, lambda, A, P, eps, a",
+  "basis_order": [
+    "Shadow",
+    "Ruler",
+    "Root",
+    "Cleaving",
+    "Restoration",
+    "Horizon",
+    "Collapse",
+    "Invariant",
+    "Closure",
+    "Calibration"
+  ],
+  "multiplication_convention": "multiplicative dilation gauge group action; zero-intercept quadratic polynomials",
+  "anti_hom": false,
+  "lean_multiplication": "gaugeScale, gaugeLinearCoeff, gaugeLossCoeff, latentParabola",
+  "cas_source": "scripts/verify_detector_latent_scale_archetypes.py",
+  "round_trip_verified": true,
+  "round_trip_element": {
+    "input": {
+      "C": 100.0,
+      "K": 10.0,
+      "z": 2.0,
+      "lam": 3.0,
+      "a": 0.02
+    },
+    "R_eval": 160.0,
+    "R_gauge_eval": 160.0,
+    "z_turn": 5.0,
+    "D_equiv": 63.245553203367585
+  },
+  "checks": {
+    "cleaving": "0",
+    "restoration": "0",
+    "gauge_R_invariance": "0",
+    "gauge_L_invariance": "0",
+    "gauge_D_invariance": "0",
+    "turnover_apex": "0",
+    "turnover_gauge_equivariant": "0",
+    "peak_rate_gauge_invariant": "0",
+    "singles_product_distortion": "0",
+    "far_field_bayes_limit": "0",
+    "coincidence_defect_leading_order": "0",
+    "universal_invariant_z_cancels": "0",
+    "closure_efficiency_cancellation": "0",
+    "calibration_activity_recovery": "0",
+    "equivalent_disk_area_eq_virtual_loss": "0"
+  },
+  "sha256": "f48c0d2dca3ce2faca439128fd82f8f9888166232a17522aa382ca16a2b22d52"
+}

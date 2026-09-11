@@ -83,10 +83,12 @@ theorem kanCompositeUnitFlow_inv
     (J H N : Matrix (Fin 2) (Fin 2) ℂ)
     (hJ : J * J = -1) (hH : H * H = 1) (hN : N * N = 0)
     (t_K t_A t_N : ℝ) :
-    (kanCompositeUnitFlow J H N hJ hH hN t_K t_A t_N)⁻¹ =
+    ((kanCompositeUnitFlow J H N hJ hH hN t_K t_A t_N)⁻¹ :
+      Units (Matrix (Fin 2) (Fin 2) ℂ)) =
       (parabolicUnit N hN (-t_N)) * (hyperbolicUnit H hH (-t_A)) * (ellipticUnit J hJ (-t_K)) := by
   dsimp [kanCompositeUnitFlow]
-  simp only [mul_inv_rev]
+  rw [_root_.mul_inv_rev]
+  rw [_root_.mul_inv_rev]
   have hNinv : (parabolicUnit N hN t_N)⁻¹ = parabolicUnit N hN (-t_N) := by
     apply Units.ext; rfl
   have hAinv : (hyperbolicUnit H hH t_A)⁻¹ = hyperbolicUnit H hH (-t_A) := by

@@ -833,6 +833,17 @@ Formalizing the semiclassical Gutzwiller trace duality mapping classical periodi
 * **Master Semiclassical Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_selberg_gutzwiller_zeta_synthesis`).
   In Lean 4: [`SelbergGutzwillerZetaBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/SelbergGutzwillerZetaBridge.lean) and [`SelbergGutzwillerZetaBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/SelbergGutzwillerZetaBridgeAudit.lean).
 
+### 5.53 Aitchison Simplex Geometry, Jaynesian State & Relativistic Rapidity
+Formalizing the canonical information-geometric bridge connecting compositional simplex geometry, Jaynesian maximum entropy, and relativistic kinematics:
+* **The Aitchison CLR Projection:** Coordinates $\operatorname{clr}_1(p) = \frac{1}{2}\operatorname{logit}(p)$ and $\operatorname{clr}_2(p) = -\frac{1}{2}\operatorname{logit}(p)$ sum to zero identically ($\operatorname{clr}_1 + \operatorname{clr}_2 = 0$), projecting the 1-simplex $\Delta^1$ into the traceless Cartan subalgebra $\mathfrak{a} \subset \mathfrak{sl}(2, \mathbb{R})$ (`clr_sum_zero`).
+* **The Jaynesian Neutral Origin:** The uniform maximum entropy prior $p_{\mathrm{Jaynes}} = 1/2$ has identically zero logit and zero CLR coordinates ($\operatorname{logit}(1/2) = 0, \operatorname{clr}(1/2) = \mathbf{0}$), acting as the algebraic origin / additive identity in the Aitchison vector space and anchoring the Klein bottle throat $\operatorname{Re}(s) = 1/2$ (`jaynesianPrior`, `jaynesian_logit_zero`, `jaynesian_clr_zero`).
+* **Logit-Rapidity Duality:** Normalized velocity $v = 2p - 1 \in (-1, 1)$ satisfies $(1+v)/(1-v) = p/(1-p)$, proving that the logit coordinate is exactly twice the relativistic rapidity: $\operatorname{logit}(p) = 2\theta$, while the CLR coordinates are the rapidities themselves: $\operatorname{clr}_1 = \theta, \operatorname{clr}_2 = -\theta$ (`velocity_ratio_eq_odds`, `logit_eq_two_mul_rapidity`, `clr1_eq_rapidity`, `clr2_eq_neg_rapidity`).
+* **The Logistic Sigmoid as Relativistic Squashing Map:** The sigmoid $\sigma(x) = 1/(1+e^{-x})$ acts as the exponential map from the unbounded Lie algebra of rapidity back to the bounded probability simplex: $\sigma(2\theta) = p$ with $\sigma(0) = 1/2$ and $\sigma(x) \in (0, 1)$ (`sigmoid_two_rapidity_eq_p`, `sigmoid_zero`, `sigmoid_pos`, `sigmoid_lt_one`).
+* **Apollonian Cross-Ratio Metric & Boost Invariance:** The Apollonian distance $d_{\mathrm{Apol}}(p, q) = |\operatorname{logit}(p) - \operatorname{logit}(q)|$ is precisely twice the rapidity distance $2|\theta_p - \theta_q|$, satisfying metric axioms and strict invariance under Lorentz rapidity boosts $\theta \mapsto \theta + \Delta$ (`apollonian_distance_eq_two_mul_rapidity_diff`, `apollonian_self`, `apollonian_comm`, `apollonian_triangle`, `apollonian_boost_invariance`).
+* **Split Peirce Density Matrix:** Probability weights satisfy $p + (1-p) = 1$, with both weights equal to $1/2$ at the Jaynesian prior, producing the maximally mixed identity state $\hat{\rho} = \frac{1}{2}\mathbb{I}$ (`probability_weights_sum`, `jaynesian_weights_equal`).
+* **Master Aitchison-Jaynes Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_aitchison_jaynes_rapidity_synthesis`).
+  In Lean 4: [`AitchisonJaynesRapidityBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AitchisonJaynesRapidityBridge.lean) and [`AitchisonJaynesRapidityBridgeAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/AitchisonJaynesRapidityBridgeAudit.lean).
+
 ---
 
 ## Master Verification Matrix
@@ -905,6 +916,7 @@ Formalizing the semiclassical Gutzwiller trace duality mapping classical periodi
 | **Riemann Klein Bottle Throat** | Functional Involution $\mathcal{I}(s) = 1-s$ / Iwasawa Root $\rho = 1/2$ / Bi-Wave Horizon | `certified_riemann_klein_bottle_throat_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Moore-Penrose Hodge & Drazin Ghost** | MP Pseudo-Inverse $G = \Delta^+$ / Real Diffusion / Drazin Ghost Filter | `certified_mp_hodge_drazin_ghost_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Selberg-Gutzwiller Zeta Bridge** | Periodic Orbit $(p, k)$ / von Mangoldt $\Lambda(p^k) (p^k)^{-s}$ / Unitarity | `certified_selberg_gutzwiller_zeta_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Aitchison-Jaynes Rapidity Bridge** | Binary Simplex $\Delta^1$ / Jaynesian State $p=1/2$ / $\operatorname{logit}(p) = 2\theta$ | `certified_aitchison_jaynes_rapidity_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

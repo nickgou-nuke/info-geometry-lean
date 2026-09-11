@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.Legendre
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Convex.Duality
 import InfoGeometry.Thermo.Gibbs
 

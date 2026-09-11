@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllOperatorTrifactor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native trifactor projectors for the split-octonion axial operator

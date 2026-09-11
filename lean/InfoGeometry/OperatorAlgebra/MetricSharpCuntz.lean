@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.KreinAdjoint
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzSharpTangent
 
 /-!

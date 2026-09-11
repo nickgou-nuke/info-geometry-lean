@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundaryRepresentationKernel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BoundaryFibonacciHorizonIntertwiner
 
 /-!

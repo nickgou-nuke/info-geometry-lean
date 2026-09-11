@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Cl11Fermions
 import InfoGeometry.Algebra.GellMannBasis
 

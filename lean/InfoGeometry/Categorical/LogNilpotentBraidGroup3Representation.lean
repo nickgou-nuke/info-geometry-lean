@@ -1,4 +1,5 @@
 import Mathlib.RepresentationTheory.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.FibonacciBraidGroup3Representation
 import InfoGeometry.Categorical.LogNilpotentCrossCheckedR
 import InfoGeometry.Categorical.LogNilpotentCheckedRAdapter

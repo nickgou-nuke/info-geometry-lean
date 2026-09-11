@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite twisted de Rham core for Feynman-style exact relations

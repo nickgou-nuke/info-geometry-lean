@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauThermodynamics
 import InfoGeometry.Core.Entropy
 import InfoGeometry.Thermo.FromBregman

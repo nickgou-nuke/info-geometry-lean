@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LogJordanKreinCore
 import InfoGeometry.Canonical.SplitCARCurrentSourceAdapter
 import InfoGeometry.Canonical.LogJordanVirasoroIntertwiner

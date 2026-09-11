@@ -18,6 +18,7 @@ derived after complexification.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

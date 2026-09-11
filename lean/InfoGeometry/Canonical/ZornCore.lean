@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Zorn Triality: The Core Algebra
@@ -15,7 +16,7 @@ namespace ZornCore
 open Matrix
 
 /-- 3D Vector type for Zorn off-diagonals -/
-abbrev Vec3 := Fin 3 → ℝ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 /-- Dot product -/
 def dot (u v : Vec3) : ℝ := ∑ i, u i * v i

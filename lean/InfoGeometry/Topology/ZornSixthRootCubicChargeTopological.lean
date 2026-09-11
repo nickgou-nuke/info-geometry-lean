@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornSixthRootCubicChargeBridge
 import InfoGeometry.Topology.HeisenbergCyclotomicAtlasTopological
 import InfoGeometry.Topology.ThreeColorCyclotomicChargeTopological

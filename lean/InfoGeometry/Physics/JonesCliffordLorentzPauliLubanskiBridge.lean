@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.FiniteJonesModel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.DiracPauliGamma
 import InfoGeometry.Physics.PoincarePauliLubanskiAlgebraBridge
 import InfoGeometry.Physics.PauliLubanskiFiniteBridge

@@ -11,6 +11,7 @@ theorem, an Euler product, or the logarithmic-derivative theorem for `ζ`.
 -/
 
 import InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

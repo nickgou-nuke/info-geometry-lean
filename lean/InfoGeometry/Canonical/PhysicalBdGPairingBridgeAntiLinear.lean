@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PhysicalBdGPairingBridgeComplex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Algebra.Module.Star
 import Mathlib.Tactic
 

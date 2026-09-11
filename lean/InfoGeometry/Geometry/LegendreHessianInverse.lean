@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.DualFlat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.LegendreDuality
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.Vacuity

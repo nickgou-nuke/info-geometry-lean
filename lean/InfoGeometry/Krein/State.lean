@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Projectivization.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.KreinSpace
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith

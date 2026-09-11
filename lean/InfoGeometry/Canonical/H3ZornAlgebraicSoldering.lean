@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.G2H3ZornEntrywiseEmbedding
 
 noncomputable section

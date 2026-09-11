@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Operator-valued super-Poincare charges

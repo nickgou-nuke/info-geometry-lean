@@ -1,4 +1,5 @@
 import InfoGeometry.GromovWittenErlangen.DrazinLocalization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Localized Drazin-Frobenius Readout

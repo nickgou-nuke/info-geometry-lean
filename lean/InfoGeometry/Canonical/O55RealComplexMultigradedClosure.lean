@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55RealWittForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.O55MultigradedTwoBoundaryPristineChain
 
 /-!

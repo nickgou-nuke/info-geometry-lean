@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Algebra.Group.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.Complex.Basic

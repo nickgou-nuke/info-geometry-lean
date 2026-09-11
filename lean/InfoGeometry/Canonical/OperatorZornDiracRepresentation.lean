@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.OperatorZornMatrixAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Faithful matrix representation of the operator-Zorn block carrier

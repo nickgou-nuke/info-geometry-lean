@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.Zorn.G2ReducedWords
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical longest element for the existing finite `G₂` Weyl carrier

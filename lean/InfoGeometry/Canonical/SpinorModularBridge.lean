@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SingularBoundaryCorrection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BoundaryChiralIndexBridge
 import InfoGeometry.Canonical.BoundaryProjector
 import InfoGeometry.Canonical.NavierStokesBridge

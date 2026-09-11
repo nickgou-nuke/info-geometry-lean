@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductLeftRegularAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Linear left-regular operators for the finite D₄ crossed-product carrier

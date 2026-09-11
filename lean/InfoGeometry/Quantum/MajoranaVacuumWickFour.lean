@@ -1,6 +1,6 @@
 import InfoGeometry.Volume.MajoranaPfaffianFour
-import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Tactic
 
 namespace InfoGeometry.Quantum.MajoranaVacuumWickFour
 

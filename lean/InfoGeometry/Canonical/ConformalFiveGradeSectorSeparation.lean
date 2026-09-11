@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalFiveGradeCurrentPacket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.ConformalFiveGradeSectorSeparation

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.AlgebraicTomitaTakesakiBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Algebraic Hestenes--Krein bilingual carrier

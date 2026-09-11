@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentPathFamilyTopCatColimitImageCompHaus
 import InfoGeometry.Topology.SymbolicLatentObservedPathFamilyReparametrizationCompHaus
 import InfoGeometry.Topology.SymbolicLatentPathFamilyReparametrizationColimit

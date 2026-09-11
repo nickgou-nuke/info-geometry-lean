@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FibonacciGrothendieckRing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Nat.Fib.Zeckendorf
 import Mathlib.Tactic
 

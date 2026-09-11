@@ -3,6 +3,7 @@
    self-concordant barrier (Matrix Burg Potential / Log-Determinant). -/
 
 import InfoGeometry.Optimization.BregmanPotentials
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.Matrix.ToLin
 

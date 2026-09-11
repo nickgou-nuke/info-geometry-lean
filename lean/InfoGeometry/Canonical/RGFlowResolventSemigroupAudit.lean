@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RGFlowResolventSemigroupBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of RGFlowResolventSemigroupBridge

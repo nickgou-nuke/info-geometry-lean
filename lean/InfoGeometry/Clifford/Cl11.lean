@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Compatibility exports for the canonical doubled-space Clifford lane. -/
 

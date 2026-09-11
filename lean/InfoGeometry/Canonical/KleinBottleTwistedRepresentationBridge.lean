@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KleinPresentedGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KleinBottleTwistedCommutantBridge
 import InfoGeometry.Canonical.KleinMonodromyRepresentationSpace
 

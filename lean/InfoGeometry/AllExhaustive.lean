@@ -1,4 +1,5 @@
 import InfoGeometry.AQFT.Pin55Pullback
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Adelic.NarainTamagawa
 import InfoGeometry.Albert.AlbertCubicDatum
 import InfoGeometry.Albert.F4Action
@@ -178,7 +179,6 @@ import InfoGeometry.Algebra.FiniteInfiniteModeBridge
 import InfoGeometry.Algebra.FiniteN2Induction
 import InfoGeometry.Algebra.FiniteSUSYBlocks
 import InfoGeometry.Algebra.FiniteSingleModeCAR
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.FiniteSuperTensorKoszul
 import InfoGeometry.Algebra.FiniteTensorDeterminantStabilization
 import InfoGeometry.Algebra.FinsuppN2ModeInduction
@@ -12382,3 +12382,5 @@ import InfoGeometry.Canonical.ParaComplexConnectionAudit
 import InfoGeometry.Canonical.RGFlowResolventSemigroupAudit
 import InfoGeometry.Canonical.DeRhamHodgeIsomorphismAudit
 import InfoGeometry.Canonical.HodgeGreenOperatorAudit
+import InfoGeometry.Canonical.ChernSimonsCuntzBoundaryBridge
+import InfoGeometry.Canonical.ChernSimonsCuntzBoundaryAudit

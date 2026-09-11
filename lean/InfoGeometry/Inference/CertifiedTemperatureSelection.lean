@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.AdmissibleTemperatureSelection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Inference.GibbsTemperatureCertificate
 import InfoGeometry.Inference.GibbsTemperatureSusceptibility
 

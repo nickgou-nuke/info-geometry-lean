@@ -26,6 +26,7 @@ This is the PR-safe closure of the AQL-discovered Langlands/Siegel corridor.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Automorphic.SiegelResonance
 import InfoGeometry.Automorphic.LFunctionResonance
 import InfoGeometry.Meta.OwnerTarget

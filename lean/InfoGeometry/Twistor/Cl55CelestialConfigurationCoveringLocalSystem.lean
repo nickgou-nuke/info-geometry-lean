@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Cl55CelestialConfigurationCovering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullConfigurationCoveringLocalSystem
 
 /-!

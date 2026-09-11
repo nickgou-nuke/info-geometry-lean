@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.LeeYangAsanoEndpointNative

@@ -1,4 +1,5 @@
 import Mathlib.Topology.ContinuousMap.Star
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ToeplitzCuntzCoxeterInvariantContinuousObservables
 
 /-!

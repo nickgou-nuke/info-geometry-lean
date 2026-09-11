@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Dual-flat graphs in a neutral primal/dual carrier

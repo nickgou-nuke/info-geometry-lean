@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KMSConditionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 
 open scoped InnerProductSpace

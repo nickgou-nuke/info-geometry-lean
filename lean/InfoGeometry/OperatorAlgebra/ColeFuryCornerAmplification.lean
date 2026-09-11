@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ColeFuryEmbedding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 import Mathlib.LinearAlgebra.Matrix.Reindex
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBMeasure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MeasureProjective
 set_option linter.unnecessarySimpa false
 set_option linter.unusedSectionVars false

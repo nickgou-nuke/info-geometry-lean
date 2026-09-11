@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.WeakIsospinSU2
 import InfoGeometry.Physics.ChiralCausalCone
 

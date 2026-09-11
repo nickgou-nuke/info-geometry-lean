@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Canonical.OperatorZornOrderedChannels
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorZornFourfoldPeirce
 import InfoGeometry.Canonical.KreinConjugationTypeSeparation
 import InfoGeometry.Projective.TwinRankOneWeakRatio

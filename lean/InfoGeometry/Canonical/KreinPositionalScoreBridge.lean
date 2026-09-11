@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.VectorScoreBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.KreinSpace
 import InfoGeometry.Krein.HestenesModularKMSBridge
 import InfoGeometry.Canonical.RealCl55NativeIntegratedActionBridge

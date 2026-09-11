@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2RootAutShortOneMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2RootAutRotationBridge
 import InfoGeometry.Algebra.Zorn.G2TwoPCConcreteFacts
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms

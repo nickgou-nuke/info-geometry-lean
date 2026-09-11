@@ -1,4 +1,5 @@
 import InfoGeometry.GrandCanonical.Core
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
 import InfoGeometry.Meta.Architecture

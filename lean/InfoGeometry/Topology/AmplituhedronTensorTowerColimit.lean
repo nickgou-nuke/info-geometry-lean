@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Tietze
 import InfoGeometry.Canonical.PositiveGrassmannianAmplituhedron
 import InfoGeometry.Topology.PositiveGrassmannianAmplituhedronTopological

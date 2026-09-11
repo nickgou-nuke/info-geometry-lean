@@ -1,6 +1,6 @@
 import Mathlib
-import InfoGeometry.Canonical.SplitCliffordTwoModeCAR
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.SplitCliffordTwoModeCAR
 
 /-!
 # Concrete nuclear five-grading in the two-mode CAR matrix algebra

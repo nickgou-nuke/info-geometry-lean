@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.CramerRaoUncertainty
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.CramerRaoUncertaintyCapstone
 

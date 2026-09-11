@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Spectrum.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Maps and spectrum contracts for the finite spectral port

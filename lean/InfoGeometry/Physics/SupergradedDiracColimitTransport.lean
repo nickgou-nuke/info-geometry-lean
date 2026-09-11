@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.SupergradedDiracCrystalTopCatColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Transport of a compatible pair of stage operators through the existing
 two-stage `TopCat` colimit.  This is only categorical transport; it does not

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11Matrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.TowerMatrix
 import InfoGeometry.Algebra.TensorAlgebraCanonical
 import InfoGeometry.Algebra.FiniteTensorDeterminantStabilization

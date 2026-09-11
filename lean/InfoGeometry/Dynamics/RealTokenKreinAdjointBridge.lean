@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Krein adjoints for a total chiral generator

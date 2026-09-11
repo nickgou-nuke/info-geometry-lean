@@ -22,6 +22,7 @@ classical PDE.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NavierStokesBridge
 import InfoGeometry.Geometry.ChiralTubuleBoundary
 import InfoGeometry.OperatorAlgebra.TopologicalSnap

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IntegralZornBilinearComposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CanonicalZornIntegralSpinRepresentation
 
 /-!

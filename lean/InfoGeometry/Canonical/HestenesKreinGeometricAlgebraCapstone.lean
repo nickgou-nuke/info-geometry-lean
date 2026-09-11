@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesKreinGeometricAlgebraBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.HestenesKreinGeometricAlgebraCapstone
 

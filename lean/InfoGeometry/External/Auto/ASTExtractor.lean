@@ -1,4 +1,5 @@
 import Lean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.External.Auto.ExtractBraid
 

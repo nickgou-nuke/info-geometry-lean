@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SuperchargeGapHessianBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.PolarizedSector
 import InfoGeometry.Singular.Drazin
 import InfoGeometry.Meta.Architecture

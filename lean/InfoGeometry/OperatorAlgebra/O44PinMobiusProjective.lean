@@ -26,6 +26,7 @@ algebras; it keeps the reflection/projective/conformal dependency graph honest.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
 import InfoGeometry.OperatorAlgebra.SplitCliffordZ2Four
 import InfoGeometry.OperatorAlgebra.KreinIsotropicCone

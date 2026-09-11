@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalSymplecticContactRepresentation
 import InfoGeometry.Exceptional.FreudenthalFiveGradedJacobiClosure
 import InfoGeometry.Exceptional.FreudenthalSymplecticMixedTripleCounterexample

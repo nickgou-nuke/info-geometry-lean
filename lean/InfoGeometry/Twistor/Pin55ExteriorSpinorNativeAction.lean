@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Pin55PureSpinorAnnihilatorEquivariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55RealSplitPinAction
 import InfoGeometry.Clifford.Cl55WittPinParity
 

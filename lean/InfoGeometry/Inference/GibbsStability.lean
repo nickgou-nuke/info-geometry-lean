@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.GibbsFluctuation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Gibbs scalar stability

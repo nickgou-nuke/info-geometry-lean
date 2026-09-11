@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2IntrinsicBaseFlag
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Structural bound for the intrinsic base-line fibre

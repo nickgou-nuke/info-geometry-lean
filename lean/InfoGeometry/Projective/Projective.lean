@@ -1,4 +1,5 @@
 import InfoGeometry.PositiveMeasure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Stratum.Gauge
 import Mathlib.GroupTheory.GroupAction.Basic
 

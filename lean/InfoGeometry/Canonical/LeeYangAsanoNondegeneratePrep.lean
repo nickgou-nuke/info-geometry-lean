@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.FieldSimp
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.LeeYangAsanoNativeCore

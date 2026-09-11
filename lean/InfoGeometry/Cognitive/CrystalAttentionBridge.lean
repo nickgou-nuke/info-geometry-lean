@@ -1,4 +1,5 @@
 import InfoGeometry.Holography.TomitaTakesakiBulkReconstruction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 
 namespace InfoGeometry.Cognitive.CrystalAttention

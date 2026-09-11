@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ItakuraSaitoPrimes
 import InfoGeometry.Physics.FreeEntropyDiffusionFunctional
 import InfoGeometry.Physics.MD008RepresentationCharge

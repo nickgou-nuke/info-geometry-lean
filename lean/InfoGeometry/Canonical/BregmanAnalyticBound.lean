@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Real
 

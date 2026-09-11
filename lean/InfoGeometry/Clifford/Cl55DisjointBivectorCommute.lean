@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55OperatorZ2Grading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! The first concrete commuting bivector cell in the Cl(5,5) carrier.
 

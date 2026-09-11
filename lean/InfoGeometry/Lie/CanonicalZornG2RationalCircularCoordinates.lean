@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2NativeMatrixExport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
 
 /-!

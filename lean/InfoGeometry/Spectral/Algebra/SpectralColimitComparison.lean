@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.SpectralStabilizationColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Colimit comparison for a stabilized spectral tail

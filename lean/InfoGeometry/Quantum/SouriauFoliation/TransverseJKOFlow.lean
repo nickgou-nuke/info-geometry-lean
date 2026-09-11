@@ -2,6 +2,7 @@
 InfoGeometry/Quantum/SouriauFoliation/TransverseJKOFlow.lean
 -/
 import InfoGeometry.Quantum.SouriauFoliation.SymplecticLeaf
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

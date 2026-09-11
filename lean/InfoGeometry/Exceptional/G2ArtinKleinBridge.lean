@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.G2ArtinPresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KleinNativeSemidirectProductBridge
 import InfoGeometry.Algebra.Zorn.G2CoordinateCoxeterRelations
 import InfoGeometry.Canonical.KleinPresentedGroup

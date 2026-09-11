@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SE2SouriauCocycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 import Mathlib.Topology.Compactness.Compact
 import Mathlib.Topology.Maps.Basic

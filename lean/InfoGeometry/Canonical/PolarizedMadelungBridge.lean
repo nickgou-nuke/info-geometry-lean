@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.StateDependentTransport
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
 import InfoGeometry.Krein.SplitQuadraticSheets

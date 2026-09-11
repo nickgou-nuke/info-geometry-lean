@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Adjoint
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Analysis.SpecialFunctions.Exp
 import InfoGeometry.Krein.DoubledSpace

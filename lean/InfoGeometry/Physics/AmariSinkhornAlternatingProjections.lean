@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Sinkhorn scaling and Amari-style coordinate factors

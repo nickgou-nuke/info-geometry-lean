@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # N-Potent Zero-Mode Projector Bridge

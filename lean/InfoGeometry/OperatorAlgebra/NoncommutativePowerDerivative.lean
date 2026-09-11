@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.FDeriv.Pow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.SmoothSeries
 import Mathlib.Analysis.Normed.Algebra.Exponential
 

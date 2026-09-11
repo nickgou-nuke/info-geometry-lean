@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConcreteCuntzFrameTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Linear-isometric form of the concrete rectangular frame

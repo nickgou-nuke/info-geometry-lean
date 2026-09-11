@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.ModularThermalState
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.NoncommutativeRenyi
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.Meta.Architecture

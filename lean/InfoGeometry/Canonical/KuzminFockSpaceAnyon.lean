@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.QCCRResidual
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility import for Kuzmin's q-CCR/Fock path

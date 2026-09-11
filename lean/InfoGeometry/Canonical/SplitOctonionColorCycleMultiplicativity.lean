@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionColorS3Automorphisms
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

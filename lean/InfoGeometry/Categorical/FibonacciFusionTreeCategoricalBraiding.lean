@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciFusionTreeAssociator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.FibonacciFusionTreeBraiding
 
 /-!

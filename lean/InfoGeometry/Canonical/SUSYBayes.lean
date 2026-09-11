@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovFockSuper
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.Fierz
 import InfoGeometry.Canonical.Fock
 

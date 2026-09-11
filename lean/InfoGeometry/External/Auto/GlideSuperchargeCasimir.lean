@@ -20,7 +20,7 @@ namespace GlideSuperchargeCasimir
 open Matrix
 
 abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
-abbrev Vec3 := Fin 3 → ℂ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3C
 
 /-! ## Momentum glide square -/
 

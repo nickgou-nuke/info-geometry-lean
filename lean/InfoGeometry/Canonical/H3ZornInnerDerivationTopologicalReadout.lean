@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.JordanInnerDerivations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.H3ZornF4BasisTopologicalReadout
 import InfoGeometry.Canonical.H3ZornTopCatReadout
 import Mathlib.Topology.Category.TopCat.Basic

@@ -1,4 +1,5 @@
 import Mathlib.Topology.Algebra.Group.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Basic
 import InfoGeometry.Canonical.ToeplitzCuntzThreeBraidRealizationBridge
 

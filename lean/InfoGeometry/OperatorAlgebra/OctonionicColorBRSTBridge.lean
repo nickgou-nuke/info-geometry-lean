@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ColorConfinementBRSTBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SplitOctonionStandardModel
 import InfoGeometry.OperatorAlgebra.DiracKahlerSpinorBridge
 

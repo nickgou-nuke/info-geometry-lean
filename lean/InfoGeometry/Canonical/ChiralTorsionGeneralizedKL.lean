@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GeneralizedKL
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ChiralTorsionBridge
 

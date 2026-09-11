@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZornMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ZornPotentialEmbedding
 

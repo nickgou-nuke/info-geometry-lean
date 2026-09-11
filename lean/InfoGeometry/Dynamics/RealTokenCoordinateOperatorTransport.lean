@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.RealTokenCoordinateEquivalence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transport of the realified token generator to explicit coordinates

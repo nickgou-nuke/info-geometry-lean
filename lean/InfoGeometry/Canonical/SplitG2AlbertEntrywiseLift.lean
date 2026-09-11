@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitG2AlbertEntrywiseBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Native compatibility surface for the upstream entrywise-lift path.
 

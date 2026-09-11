@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55ExteriorSpinorCoordinateReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55NeutralFockFaithfulness
 
 /-!
@@ -21,7 +22,7 @@ open InfoGeometry.Clifford.Cl55NeutralFockFaithfulness
 
 abbrev A := CliffordAlgebra (canonicalNeutralFormUnscaled (E := V5))
 abbrev S := Spinor
-abbrev SCoord := Fin 32 → ℝ
+abbrev SCoord := InfoGeometry.Algebra.FiniteSpin.Vec32R
 
 /-- A generator-level equality of Clifford algebra homomorphisms extends to the
 whole Clifford algebra.  This is the reusable universal-property wrapper used

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RGFlowWeylDiffusionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of RGFlowWeylDiffusionBridge

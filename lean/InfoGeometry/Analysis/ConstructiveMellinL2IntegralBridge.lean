@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic

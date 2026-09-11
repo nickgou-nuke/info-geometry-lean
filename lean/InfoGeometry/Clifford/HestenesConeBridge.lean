@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Clifford.Hestenes
 

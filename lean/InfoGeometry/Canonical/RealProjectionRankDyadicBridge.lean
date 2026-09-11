@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DyadicRankFamilyAdditive
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealProjectionRankConjugation
 
 namespace InfoGeometry.Canonical

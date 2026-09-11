@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CayleyBregmanBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Canonical.HolographicEmergence
 import InfoGeometry.Canonical.TomitaTakesaki

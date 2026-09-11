@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 
@@ -6,8 +7,8 @@ namespace PenroseCuntzKriegerHolography
 
 open Matrix
 
-abbrev Z2 := Fin 2 → ℤ
-abbrev M2Z := Matrix (Fin 2) (Fin 2) ℤ
+abbrev Z2 := InfoGeometry.Algebra.FiniteSpin.Vec2Z
+abbrev M2Z := InfoGeometry.Algebra.FiniteSpin.Mat2Z
 
 def M : M2Z := !![2, 1; 1, 1]
 

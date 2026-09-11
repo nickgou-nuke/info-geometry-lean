@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Algebra.Lie.Subalgebra
 import InfoGeometry.Core.SymmetricLieSpaces

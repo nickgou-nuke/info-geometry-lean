@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionImaginaryEllSupportDimension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Dual.Lemmas
 
 /-!

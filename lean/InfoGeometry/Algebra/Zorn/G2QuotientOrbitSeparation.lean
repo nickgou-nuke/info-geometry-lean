@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2BNPair
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2BNBruhatFramework
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 import InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11Quaternion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesRealStructures
 import InfoGeometry.Meta.Architecture
 

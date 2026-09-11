@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikKocakPaperFormalism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native pair-term closure

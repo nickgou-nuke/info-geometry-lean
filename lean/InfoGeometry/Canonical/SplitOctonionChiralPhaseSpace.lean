@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornMatrix
 import InfoGeometry.Canonical.SplitOctonionCircularChiralClosure
 
@@ -18,7 +19,7 @@ open InfoGeometry.Algebra.ZornMatrix
 
 noncomputable section
 
-abbrev Vec := Fin 3 → ℝ
+abbrev Vec := InfoGeometry.Algebra.FiniteSpin.Vec3R
 abbrev Carrier := ZornMatrix ℝ
 abbrev Phase := Vec × Vec
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZornDerivationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 import InfoGeometry.Twistor.PenroseIncidence
 import InfoGeometry.Twistor.RealSplitOctonionCarrierBridge

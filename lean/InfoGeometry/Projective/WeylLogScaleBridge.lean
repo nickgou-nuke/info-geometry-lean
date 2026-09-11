@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Positive Weyl scales and logarithmic coordinates

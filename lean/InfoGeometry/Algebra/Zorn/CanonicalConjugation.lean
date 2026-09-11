@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical conjugation on the real Zorn carrier

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.MellinInversion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.MellinWaveletConformalMapping
 
 /-!

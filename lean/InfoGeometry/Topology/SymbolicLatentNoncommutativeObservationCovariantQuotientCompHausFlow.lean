@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentNoncommutativeObservationQuotientCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentNoncommutativeCovariantFlowTopCat
 import Mathlib.Topology.Category.CompHaus.Basic
 

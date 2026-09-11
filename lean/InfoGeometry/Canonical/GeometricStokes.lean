@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GeometricMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Geometric Stokes boundary readout, theorem-safe layer

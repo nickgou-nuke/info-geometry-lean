@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2CoordinateWeylAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2CartanSouriauCharacterBridge
 import InfoGeometry.Lie.CanonicalZornG2CartanWeylEquivariant
 

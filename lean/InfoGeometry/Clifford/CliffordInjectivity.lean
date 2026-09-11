@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Clifford injectivity bridge

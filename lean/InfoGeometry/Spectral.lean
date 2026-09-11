@@ -1,6 +1,7 @@
 /- Spectral sequences in Lean 4.28.0 / mathlib4 -/
 
 import InfoGeometry.Spectral.Algebra.ExactCouple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Spectral.Algebra.DerivedPage
 import InfoGeometry.Spectral.Algebra.DerivedCouple
 import InfoGeometry.Spectral.Algebra.GradedExactCouple

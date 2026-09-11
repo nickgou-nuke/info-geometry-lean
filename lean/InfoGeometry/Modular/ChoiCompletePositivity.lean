@@ -1,4 +1,5 @@
 import InfoGeometry.Modular.Choi
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Complete Positivity (CP) and the Choi–Jamiołkowski Isomorphism (Re-export)

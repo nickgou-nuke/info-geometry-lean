@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredQCCRParameterTopologicalColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatible q-CCR points and their filtered TopCat colimit map

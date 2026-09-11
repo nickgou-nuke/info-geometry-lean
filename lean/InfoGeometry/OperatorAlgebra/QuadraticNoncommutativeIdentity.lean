@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Quadratic commutator expansion in a noncommutative ring

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.MD002FoundationalConventions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Repaired MD 003: finite isomorphic representations and metrics

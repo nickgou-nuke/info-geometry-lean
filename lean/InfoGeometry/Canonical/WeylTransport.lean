@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.WeylGaugeField
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

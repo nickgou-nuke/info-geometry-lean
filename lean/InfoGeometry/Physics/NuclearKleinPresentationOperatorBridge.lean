@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearKleinParameterBundle
 import InfoGeometry.MassSpectrometry.DirectedOperatorDoubling
 import InfoGeometry.Topology.WallpaperKleinBottlePresentation

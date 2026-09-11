@@ -1,4 +1,5 @@
 import InfoGeometry.Causal.ProofDAGRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.ProofDAGRepresentationBridge

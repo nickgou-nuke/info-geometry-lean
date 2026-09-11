@@ -21,7 +21,7 @@ open Complex
 
 namespace FiniteMatrixElementDuality
 
-abbrev V2C := Fin 2 → ℂ
+abbrev V2C := InfoGeometry.Algebra.FiniteSpin.Vec2C
 abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def cstar (z : ℂ) : ℂ := starRingEnd ℂ z

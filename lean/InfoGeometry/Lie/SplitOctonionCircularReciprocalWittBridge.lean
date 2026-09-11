@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularReciprocalExponentialBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCircularWittForm
 import InfoGeometry.Lie.SplitOctonionEllCircularAxialGrading
 import InfoGeometry.Lie.SplitOctonionEllCircularQuadraticCoordinates
@@ -23,7 +24,7 @@ open InfoGeometry.Lie.SplitOctonionEllCircularQuadraticCoordinates
 open InfoGeometry.Lie.SplitOctonionCircularHyperbolicFlow
 open InfoGeometry.Lie.SplitOctonionCircularWittForm
 
-abbrev Coordinate := Fin 8 → ℝ
+abbrev Coordinate := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 theorem axialFlowCoordinate_eq_hyperbolicFlowCoordinate (t : ℝ) :
     axialFlowCoordinate t = hyperbolicFlowCoordinate t := by

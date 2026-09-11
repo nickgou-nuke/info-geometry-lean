@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Topology.Homeomorph.Lemmas
 import InfoGeometry.Analysis.LaplaceMellinScaleShapeTransform

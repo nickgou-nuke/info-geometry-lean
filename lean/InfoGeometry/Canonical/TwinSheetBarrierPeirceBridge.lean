@@ -1,4 +1,5 @@
 import InfoGeometry.Modular.SelfConcordantBarrierTriple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Modular.TrifactorTripotentUnification
 
 /-!

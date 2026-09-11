@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModularHamiltonianDoubledBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularSuperchargeClosure
 import InfoGeometry.Canonical.RelativeModularPotential
 import InfoGeometry.Canonical.OperatorDictionary

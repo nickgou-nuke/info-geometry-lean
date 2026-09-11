@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauThermodynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 
 noncomputable section

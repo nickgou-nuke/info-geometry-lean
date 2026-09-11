@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornSpinor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Algebra.TripotentPeirceProjectors
 
 /-!

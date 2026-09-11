@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentAtlasOverlapFeatureRegionTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.CompHaus.Basic
 
 /-!

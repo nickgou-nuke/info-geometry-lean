@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
 
 set_option linter.unusedSectionVars false

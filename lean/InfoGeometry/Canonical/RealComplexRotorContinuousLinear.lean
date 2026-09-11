@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Module.FiniteDimension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealComplexRotorHomeomorph
 
 namespace InfoGeometry.Canonical

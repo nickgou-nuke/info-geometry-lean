@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PhotonicParabolicChannel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GeneralizedOperatorChiral
 
 /-!

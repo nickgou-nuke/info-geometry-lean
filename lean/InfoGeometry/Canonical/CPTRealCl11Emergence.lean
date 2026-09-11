@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DiscreteCPTGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitQ11PhaseFlip
 import InfoGeometry.Clifford.SplitQ11Projectors
 import InfoGeometry.Clifford.SplitQ11Equivariance

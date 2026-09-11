@@ -11,6 +11,7 @@ as separate theorems, not proof-carrying structure fields.
 -/
 
 import InfoGeometry.Arithmetic.ProjectivePrimePartition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Thermodynamics.SouriauTemperatureProjective
 

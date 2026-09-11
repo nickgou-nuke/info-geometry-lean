@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonion1331ExteriorDiracSouriauBridge
 import InfoGeometry.Canonical.SplitOctonionExteriorGradePeirceParityBridge
 import InfoGeometry.Clifford.Cl55ZornCARComparison
@@ -21,7 +22,7 @@ open InfoGeometry.Clifford.SplitClifford55ProjectivePureSpinor
 open InfoGeometry.Clifford.SplitClifford55PureSpinorGrassmannianBridge
 
 abbrev Exterior3 := SplitOctonionExterior3HodgeDiracBridge.Exterior3
-abbrev Coord8 := Fin 8 → ℝ
+abbrev Coord8 := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 def degreeCoordinateProjector (k : ℕ) : Coord8 →ₗ[ℝ] Coord8 where
   toFun x i := if exteriorDegree1331 i = k then x i else 0

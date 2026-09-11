@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MicrostateBoltzmannEntropy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AlgorithmicBoltzmannKolmogorovBridge
 
 namespace InfoGeometry.Canonical.AlgorithmicThermodynamicsLandauerBekensteinBridge

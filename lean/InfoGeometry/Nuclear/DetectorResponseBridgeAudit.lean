@@ -1,4 +1,5 @@
 import InfoGeometry.Nuclear.DetectorResponseIntegral
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 -- Request transitive kernel dependency reports for every public theorem.
 #print axioms InfoGeometry.Nuclear.DetectorResponseIntegral.firstCollisionKernel_eq_existing_flux

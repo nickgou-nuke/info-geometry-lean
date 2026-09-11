@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55ContactZeroGrade
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Canonical publication bridge for the existing degree-zero `O(5,5)` contact
 generators.  The full contact/TKK identification is intentionally separate. -/

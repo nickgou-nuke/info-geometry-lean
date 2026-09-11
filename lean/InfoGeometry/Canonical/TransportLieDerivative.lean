@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SpinConnection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Exponential

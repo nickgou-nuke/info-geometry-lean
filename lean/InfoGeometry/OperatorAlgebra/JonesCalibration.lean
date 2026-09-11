@@ -17,6 +17,7 @@ orientation/PT bookkeeping.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 import InfoGeometry.Geometry.KleinFourTag
 import InfoGeometry.Optics.FiniteJonesModel

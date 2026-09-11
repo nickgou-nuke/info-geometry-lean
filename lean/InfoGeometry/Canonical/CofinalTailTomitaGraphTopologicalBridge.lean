@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSTomitaGraphTopologicalColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredGNSCofinalTailTopological
 
 /-!

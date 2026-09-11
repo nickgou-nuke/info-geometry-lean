@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.RHQuantumStabilityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.SocketTarget
 
 noncomputable section

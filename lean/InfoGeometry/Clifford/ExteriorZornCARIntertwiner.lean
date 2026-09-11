@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ExteriorNegativeCliffordReflection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.RegularCARVacuumSeparation
 import InfoGeometry.Algebra.KingdonSplitOctonion
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas

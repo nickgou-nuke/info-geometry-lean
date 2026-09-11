@@ -1,4 +1,5 @@
 import InfoGeometry.Cocycle.ActionCocycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Cocycle.LogCocycle
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic

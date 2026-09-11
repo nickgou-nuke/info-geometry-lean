@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.CanonicalConjugation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical polynomial operators for the Zorn carrier

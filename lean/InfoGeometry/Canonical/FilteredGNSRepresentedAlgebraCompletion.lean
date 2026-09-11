@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSRepresentedRangeCompletion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Algebra structure on the completed represented GNS range

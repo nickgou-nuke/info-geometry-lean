@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.RealKCategory
 
 /-!

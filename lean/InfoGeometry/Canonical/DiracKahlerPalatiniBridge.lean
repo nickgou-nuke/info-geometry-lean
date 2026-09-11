@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.EinsteinHilbertPalatiniActionBridge
 

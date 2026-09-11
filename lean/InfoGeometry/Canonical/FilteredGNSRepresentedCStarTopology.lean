@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSRepresentedCStarCompletion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topological API for the completed represented C-star equivalence

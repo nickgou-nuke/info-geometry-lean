@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Basic
 
 /-!
@@ -20,7 +21,7 @@ namespace InfoGeometry.Quantum.AntiunitaryKramers
 open Complex
 
 /-- The standard two-dimensional complex Hilbert space. -/
-abbrev H2 := Fin 2 → ℂ
+abbrev H2 := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 /-- Conjugate-semilinear time-reversal map on `H2`. -/
 def timeReversal (v : H2) : H2 :=

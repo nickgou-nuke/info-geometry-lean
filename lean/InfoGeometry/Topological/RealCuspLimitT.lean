@@ -9,6 +9,7 @@ The theorem is intentionally small:
 -/
 
 import Mathlib.Order.Filter.AtTopBot.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Order.Filter.Tendsto
 import Mathlib.Topology.Basic
 import InfoGeometry.Algebraic.RealModularReadout

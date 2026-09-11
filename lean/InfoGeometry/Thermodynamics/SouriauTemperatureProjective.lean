@@ -13,6 +13,7 @@ The projective/closure language is supplied by existing modules:
 -/
 
 import InfoGeometry.Thermodynamics.SouriauTemperature
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.RealMoebiusAction
 import InfoGeometry.OperatorAlgebra.MobiusClosureFixedPoints
 import InfoGeometry.ProjectiveFoundation

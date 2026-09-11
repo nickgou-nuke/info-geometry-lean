@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic.NormNum
 import InfoGeometry.BostConnes.BostConnesParity

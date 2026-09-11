@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesCircularSheetCARFinite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hestenes local Krein structure

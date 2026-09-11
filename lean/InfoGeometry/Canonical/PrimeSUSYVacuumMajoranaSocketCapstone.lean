@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.PrimeSUSYVacuumMajoranaSocket
 import InfoGeometry.Canonical.YangBaxterProof
 

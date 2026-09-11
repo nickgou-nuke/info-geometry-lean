@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.InformationSuperGas
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebraic.SplitSuperGeometry
 
 /-!

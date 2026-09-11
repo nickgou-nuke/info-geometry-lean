@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HeisenbergFiniteModeBoundaryBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HeisenbergFiniteModeColimit
 import Mathlib.Algebra.Category.ModuleCat.FilteredColimits
 

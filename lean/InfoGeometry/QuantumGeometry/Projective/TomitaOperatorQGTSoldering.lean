@@ -1,4 +1,5 @@
 import InfoGeometry.QuantumGeometry.Projective.QGT
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Tactic

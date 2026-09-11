@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ChiralCuntzSUSYNative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.CelikZ3FibonacciCuntzBoundaryBridge
 
 /-!

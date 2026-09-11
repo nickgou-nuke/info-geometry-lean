@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FiniteParityHomotopySupertrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LinearAlgebra.TraceKernelRangeTransport
 
 noncomputable section

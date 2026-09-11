@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hestenes B₂ Quaternion Comparison Bridge

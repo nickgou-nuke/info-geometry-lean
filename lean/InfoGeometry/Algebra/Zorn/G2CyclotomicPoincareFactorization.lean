@@ -1,4 +1,5 @@
 import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

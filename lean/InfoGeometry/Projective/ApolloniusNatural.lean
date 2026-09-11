@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
 import Mathlib.Data.Complex.Basic

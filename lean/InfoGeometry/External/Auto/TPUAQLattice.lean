@@ -1,4 +1,5 @@
 import Mathlib.Data.Fin.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace AutonomousHypothesisEngine
 

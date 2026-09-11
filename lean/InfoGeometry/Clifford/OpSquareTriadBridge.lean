@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Algebra.SupermatrixKoszul
 import InfoGeometry.Clifford.KoszulFoundation

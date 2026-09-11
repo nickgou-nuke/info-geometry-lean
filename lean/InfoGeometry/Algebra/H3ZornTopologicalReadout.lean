@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.F4Derivations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Coordinate topology for the native H₃(Zorn) carrier

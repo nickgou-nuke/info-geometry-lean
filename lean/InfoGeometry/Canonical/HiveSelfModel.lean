@@ -1,4 +1,5 @@
 import Lean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BlackBookIntegration
 import InfoGeometry.Canonical.GenerativeInferenceCore
 import InfoGeometry.Canonical.CognitiveArchetype

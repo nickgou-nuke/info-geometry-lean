@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarCrossRatioLog
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic

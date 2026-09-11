@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.KanDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.VerifiedTrace
 import Mathlib.Tactic
 import InfoGeometryCore.Basic

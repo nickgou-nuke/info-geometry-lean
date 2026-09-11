@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Algebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.GradedMulAction
 import Mathlib.Data.ZMod.Basic
 import InfoGeometry.Canonical.DiscretePowerGradeReadout

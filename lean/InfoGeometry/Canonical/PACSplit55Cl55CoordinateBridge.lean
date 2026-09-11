@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Clifford55
 import InfoGeometry.Canonical.Cl55ProjectiveBoundary
 import Mathlib.LinearAlgebra.Projectivization.Basic

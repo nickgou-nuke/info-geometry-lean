@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.FenchelConjugation
 import InfoGeometry.Geometry.LegendreDuality
 import InfoGeometry.Krein.InvolutiveSelfDualCarrier

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornPotentialDifferentialReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

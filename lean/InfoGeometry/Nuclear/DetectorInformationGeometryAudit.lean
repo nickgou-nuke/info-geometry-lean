@@ -1,4 +1,5 @@
 import InfoGeometry.Nuclear.DetectorInformationGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Probability.FiniteLogTransportAudit
 import InfoGeometry.Probability.SimplexExtensionAudit
 import InfoGeometry.Probability.DetectorCrossSectionDualityAudit

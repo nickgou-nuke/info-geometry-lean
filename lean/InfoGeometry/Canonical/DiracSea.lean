@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularNilpotentAutomorphism
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 import InfoGeometry.Canonical.CantorFockSpace

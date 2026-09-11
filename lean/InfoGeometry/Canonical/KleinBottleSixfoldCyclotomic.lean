@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TomitaTwoSheetThreeColorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Klein/glide and cyclotomic reconciliation

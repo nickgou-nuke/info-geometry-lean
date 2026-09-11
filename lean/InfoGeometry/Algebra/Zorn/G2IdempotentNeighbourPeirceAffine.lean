@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.Zorn.G2AdmissibleBasisCoordinateConstraints
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Affine Peirce residuals of idempotent neighbour fibres

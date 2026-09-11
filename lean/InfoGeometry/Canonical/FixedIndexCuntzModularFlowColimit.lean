@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FixedIndexCuntzStarTower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Modular-flow descent for fixed-index Cuntz towers

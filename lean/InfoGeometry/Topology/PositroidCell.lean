@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Category.Preorder
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Nat.Basic
 
 namespace InfoGeometry.Topology.Amplituhedron

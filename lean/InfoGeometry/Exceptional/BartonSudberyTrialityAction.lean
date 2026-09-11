@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.CompositionTriality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Triality actions on a tensor channel

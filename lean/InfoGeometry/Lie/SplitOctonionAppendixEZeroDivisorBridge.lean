@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
 open InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates

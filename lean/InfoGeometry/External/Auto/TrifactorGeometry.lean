@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Trifactor Geometry and Pauli/Zorn Synthesis

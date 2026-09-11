@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.NaryToeplitzWeightedTripotent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 Canonical routing for the weighted Cuntz tripotent owner.

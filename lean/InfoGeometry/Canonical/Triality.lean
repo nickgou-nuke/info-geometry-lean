@@ -1,4 +1,5 @@
 import Architect
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Clifford.Lift

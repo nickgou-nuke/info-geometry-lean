@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanFisherSouriauMetric
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2SouriauTomitaBridge
 import Mathlib.Tactic
 

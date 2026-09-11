@@ -1,4 +1,5 @@
 import InfoGeometry.Volume.Base
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!

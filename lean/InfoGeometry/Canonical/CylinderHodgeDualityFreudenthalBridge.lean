@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Real.Sqrt
 import InfoGeometry.Algebra.H3ZornFreudenthalQuartic

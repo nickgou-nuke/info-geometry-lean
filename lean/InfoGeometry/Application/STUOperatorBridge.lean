@@ -8,6 +8,7 @@ formulas may be added later only through chart theorems.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 noncomputable section

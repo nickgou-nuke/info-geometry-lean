@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitCl44CausalEnvelope
 import InfoGeometry.Projective.NullBoundary
 

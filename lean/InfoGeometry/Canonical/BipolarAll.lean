@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarCrossRatioLog
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarMobiusPunctureEquiv
 import InfoGeometry.Analysis.BipolarLogDifferential
 import InfoGeometry.Analysis.BipolarSimplePoleResidues

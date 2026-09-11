@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinSupercharge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.EPAndGroupInverse
 import InfoGeometry.Canonical.InverseKernelCartanCore
 import InfoGeometry.KK.RealSplitKreinKasparovCycle

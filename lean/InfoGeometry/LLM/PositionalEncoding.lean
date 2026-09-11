@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.MaskedTransformerBlock
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.LLM
 

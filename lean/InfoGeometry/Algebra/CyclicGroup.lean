@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Subgroup
 

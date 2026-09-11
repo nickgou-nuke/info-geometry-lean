@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.TwoFourOperatorVectorZorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 
 /-!

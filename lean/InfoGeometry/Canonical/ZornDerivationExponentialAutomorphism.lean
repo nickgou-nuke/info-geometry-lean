@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornDerivationExponential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornDerivationOneParameterGroup
 import InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge
 import Mathlib.Tactic

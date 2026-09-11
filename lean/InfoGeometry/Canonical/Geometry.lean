@@ -20,6 +20,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 
 import InfoGeometry.Convex.HessianGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.DualFlat
 import InfoGeometry.Geometry.KreinAsHessian
 import InfoGeometry.Geometry.LegendreDuality

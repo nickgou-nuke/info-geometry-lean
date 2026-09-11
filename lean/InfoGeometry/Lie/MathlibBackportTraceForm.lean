@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.TraceForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Trace-form scalar extension compatibility

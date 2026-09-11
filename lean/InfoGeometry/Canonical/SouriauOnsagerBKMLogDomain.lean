@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 import InfoGeometry.Canonical.SouriauOnsagerBKMSelfAdjoint
 import InfoGeometry.Canonical.SouriauOnsagerBKMResolvent

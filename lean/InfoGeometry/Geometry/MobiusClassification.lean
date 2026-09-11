@@ -1,4 +1,5 @@
 import Mathlib.Data.Rat.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Rat.Lemmas
 import Mathlib.Tactic
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.AmplituhedronPenroseTransform
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Physics.AmplituhedronPositiveGrassmannianMap
 

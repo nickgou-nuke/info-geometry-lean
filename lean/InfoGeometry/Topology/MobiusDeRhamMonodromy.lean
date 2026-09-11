@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.MobiusClassification
 import InfoGeometry.Projective.KleinQuadricMonodromy
 import InfoGeometry.Canonical.ThermalTimeMonodromyBridge

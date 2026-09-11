@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledCovarianceReflection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite coincidence purification

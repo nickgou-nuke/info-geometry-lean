@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import InfoGeometry.Canonical.SplitCliffordTwoModeCAR
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.SplitCliffordTwoModeCAR
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordTwoModeWick

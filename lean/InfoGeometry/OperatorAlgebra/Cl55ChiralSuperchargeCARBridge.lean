@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.Cl55ChiralSuperchargeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cross-mode CAR readout for the Cl(5,5) chiral block calculus

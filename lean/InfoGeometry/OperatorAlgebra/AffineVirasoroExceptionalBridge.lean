@@ -13,6 +13,7 @@ exceptional finite algebra is isomorphic to a Virasoro algebra.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 import InfoGeometry.OperatorAlgebra.SuperVirasoroExtension
 import InfoGeometry.Meta.OwnerTarget

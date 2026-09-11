@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ProperCarrierStageDetector
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ProperCarrierSelfDualConeExtension
 
 /-!

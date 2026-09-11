@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitCayleyF2IsotropyAlignment
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2InvariantIncidenceCandidates
 
 namespace InfoGeometry.Algebra.SplitCayleyF2

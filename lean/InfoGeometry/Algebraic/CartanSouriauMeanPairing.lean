@@ -1,4 +1,5 @@
 import InfoGeometry.Algebraic.CartanSouriauMassieu
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Mean-charge dual pairing

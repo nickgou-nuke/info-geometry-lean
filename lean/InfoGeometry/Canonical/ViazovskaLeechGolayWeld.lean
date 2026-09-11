@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.E8LeechBridge
 import InfoGeometry.Monster.MoonshineGradedDimensions
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Tessellation.CantorDiracSeaWalk
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.RealDoubledHestenesAnchor
 import InfoGeometry.Krein.DoubledSpace
 

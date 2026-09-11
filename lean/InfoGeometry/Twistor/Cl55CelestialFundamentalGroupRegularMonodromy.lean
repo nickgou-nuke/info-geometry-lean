@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Cl55CelestialOrderedExchangeMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.Cl55CelestialLocalSystemMonodromy
 import InfoGeometry.Twistor.ProjectiveNullFundamentalGroupRegularMonodromy
 import InfoGeometry.Twistor.ProjectiveNullFundamentalGroupRegularLocalSystem

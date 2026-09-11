@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeGrandCanonicalMassieuBridge
 import InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 import InfoGeometry.Arithmetic.PrimeSuperalgebra

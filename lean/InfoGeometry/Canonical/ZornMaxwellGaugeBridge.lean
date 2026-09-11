@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornMaxwellDifferentialBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornMaxwellSourceReadout
 
 /-!

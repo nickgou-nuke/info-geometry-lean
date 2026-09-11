@@ -1,4 +1,5 @@
 import Mathlib.Algebra.DirectSum.Module
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Direct sums for graded module families

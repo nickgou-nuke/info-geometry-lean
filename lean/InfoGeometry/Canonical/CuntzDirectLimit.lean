@@ -12,6 +12,7 @@ It defines:
 -/
 
 import Mathlib.Algebra.FreeAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Colimit.DirectLimit
 import InfoGeometry.Canonical.KashiwaraCuntzCohomology
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas

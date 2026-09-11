@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.MertensPartialTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.MertensPartialTraceCapstone
 

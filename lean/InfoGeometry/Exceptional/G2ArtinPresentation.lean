@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.GroupTheory.PresentedGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.QuotientGroup.Defs
 import InfoGeometry.Algebra.Zorn.G2CoordinateWordActionBridge
 import InfoGeometry.Algebra.Zorn.G2CoordinateWeylAction

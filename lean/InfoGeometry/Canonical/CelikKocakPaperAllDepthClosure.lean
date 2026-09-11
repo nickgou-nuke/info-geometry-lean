@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikKocakPairTermClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # All-depth paper-generator closure

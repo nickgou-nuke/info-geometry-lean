@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBIteration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.InformationTheory.KullbackLeibler.Basic
 import Mathlib.MeasureTheory.Measure.LogLikelihoodRatio
 import Mathlib.Probability.Kernel.Composition.Comp

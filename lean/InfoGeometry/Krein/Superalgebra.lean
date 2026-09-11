@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.Clifford
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic.Module
 

@@ -10,6 +10,7 @@ identified with cyclic global anomaly classes such as `Z16`.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

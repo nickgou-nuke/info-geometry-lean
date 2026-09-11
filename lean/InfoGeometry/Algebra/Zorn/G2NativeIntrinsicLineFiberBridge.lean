@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeLineFiberDistinctness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2IntrinsicBaseLineCensus
 import InfoGeometry.Algebra.Zorn.G2NativeOnePointStabilizer
 import Mathlib.Data.Fintype.EquivFin

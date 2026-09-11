@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorProjectiveBernoulliMeasureTopCat
 import InfoGeometry.Canonical.CantorBoundaryReadoutIntervalTarget
 

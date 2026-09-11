@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.PresentedGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! The three-strand Artin group, exposed through Mathlib's presented-group
 universal property.  This owner contains only the braid presentation and its

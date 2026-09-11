@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 /-!

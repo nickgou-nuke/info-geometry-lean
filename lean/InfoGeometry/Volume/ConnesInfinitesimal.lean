@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TransportLieDerivative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Volume.ConnesCocycle
 import InfoGeometry.Volume.RadonNikodym
 import Mathlib.Analysis.SpecialFunctions.Log.Basic

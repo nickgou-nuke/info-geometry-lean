@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.DikinPoincareMetricBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.DikinPoincareMetricBridgeCapstone
 

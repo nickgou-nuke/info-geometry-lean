@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.PoincareDualBalls
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.PoincareDualBallsCapstone
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Spectrum.Integer
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Products of integer-indexed spectra

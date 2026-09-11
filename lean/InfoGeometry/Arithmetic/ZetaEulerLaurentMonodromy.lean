@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.LogDeriv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.FDeriv.Analytic
 import Mathlib.Analysis.Meromorphic.Divisor
 import Mathlib.NumberTheory.LSeries.DirichletContinuation

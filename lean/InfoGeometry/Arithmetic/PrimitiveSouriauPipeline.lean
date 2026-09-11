@@ -19,6 +19,7 @@ global KL/Jensen theorem.
 -/
 
 import InfoGeometry.Arithmetic.ArithmeticKMS
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimitiveSouriauZeta
 import InfoGeometry.Arithmetic.ProjectivePrimePartition
 import InfoGeometry.Arithmetic.ProjectiveRelativeEntropy

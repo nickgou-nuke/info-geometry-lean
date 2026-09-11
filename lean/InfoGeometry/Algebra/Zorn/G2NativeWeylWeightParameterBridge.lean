@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeWeylStructuralBridges
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.TomitaMatrixAtom
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Haug-Mani Real Doubled Bridge, finite owner surface

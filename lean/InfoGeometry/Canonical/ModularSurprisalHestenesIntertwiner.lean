@@ -1,5 +1,6 @@
 
 import InfoGeometry.Canonical.LogScaleModularSurprisalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesModularRealizationBridge
 
 /-!

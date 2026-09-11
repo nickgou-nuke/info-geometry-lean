@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PrimeCl11ModularAtom
 import InfoGeometry.Canonical.Cl11LorentzAction
 import InfoGeometry.Convex.Legendre

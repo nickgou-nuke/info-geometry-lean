@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.O44PinMobiusProjective
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # O(4,4) / Pin(4,4) CPT Reflection Bridge

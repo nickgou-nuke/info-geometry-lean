@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.FreeModule.Finite.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Basis.VectorSpace
 import InfoGeometry.Lie.SplitOctonionAnnihilatorDimension
 import InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge

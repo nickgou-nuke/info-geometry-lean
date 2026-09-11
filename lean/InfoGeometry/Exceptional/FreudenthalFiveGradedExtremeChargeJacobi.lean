@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalFiveGradedJacobiClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Same-sign extreme/charge homogeneous Jacobi cells. -/
 

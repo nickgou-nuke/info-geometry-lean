@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.InverseAdjugate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Positive-norm polar normalization for concrete split Zorn cells

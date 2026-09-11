@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarElementaryContourPeriods
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Circle enclosure periods and the obstruction to a global primitive

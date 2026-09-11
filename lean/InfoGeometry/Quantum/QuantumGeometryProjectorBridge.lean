@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.EinsteinAnomalyOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.QuantumGeometryDualSheetBridge
 import InfoGeometry.Canonical.StateDependentTransport
 import InfoGeometry.Quantum.GeometricTensorOperatorLift

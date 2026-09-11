@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.LSeries.RiemannZeta
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.Ring.Basic

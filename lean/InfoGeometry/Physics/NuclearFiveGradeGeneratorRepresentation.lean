@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearTwoModeCARFiveGrade
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A concrete grade-preserving nuclear generator representation

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SuperKahlerModularSpinors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.QuantumKMSSymmetricSpace
 import InfoGeometry.Canonical.G2HolonomyGaugeConnections
 

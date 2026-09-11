@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundaryMatrixUnitWick
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Tessellation.CurrentCurvature
 
 /-!

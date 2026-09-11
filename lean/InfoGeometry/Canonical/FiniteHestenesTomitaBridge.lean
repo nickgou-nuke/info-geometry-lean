@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesCircularCARTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! # Finite standard-form Tomita bridge for the Hestenes algebra
 

@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Typed intertwiner frontier for the `Cl(5,5)` lane

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativePotentialCore
 import InfoGeometry.Volume.ConnesCocycle
 import InfoGeometry.Krein.PolarizedSector

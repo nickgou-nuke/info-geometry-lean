@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FixedIndexCuntzModularFlowColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredStarAlgebraTopologicalColimit
 
 /-!

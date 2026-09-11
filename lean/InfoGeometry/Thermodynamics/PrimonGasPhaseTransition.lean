@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
 /-!
 # Primon gas partition readout

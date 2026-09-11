@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.CyclotomicHeisenbergZornLocalSystemTopological
 import InfoGeometry.Topology.CyclotomicQutritWeylQuotientTopological
 import InfoGeometry.Topology.KleinBottleCubicRootMonodromyTopological
@@ -26,7 +27,7 @@ noncomputable section
 abbrev LatentQuotient :=
   CubicRootParameter × (Fin 3 × Fin 3)
 
-abbrev WeylWord := Matrix (Fin 3) (Fin 3) ℂ
+abbrev WeylWord := InfoGeometry.Algebra.FiniteSpin.Mat3C
 
 /-- Effective cube root as a point of the cubic-root parameter subtype. -/
 def effectiveCubeRootParameter (q : SixthRootParameter) : CubicRootParameter :=

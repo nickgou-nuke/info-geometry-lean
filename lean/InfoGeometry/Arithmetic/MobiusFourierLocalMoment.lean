@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 import InfoGeometry.Arithmetic.PrimeBitFiniteMobiusPolynomial

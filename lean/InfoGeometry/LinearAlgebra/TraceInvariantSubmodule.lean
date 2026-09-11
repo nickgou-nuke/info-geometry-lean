@@ -1,4 +1,5 @@
 import InfoGeometry.LinearAlgebra.TraceUpperTriangular
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Projection
 
 noncomputable section

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraDirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Algebraic replacement for a C⋆ completion

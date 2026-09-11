@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 
 -- Formalization of Wareham's Thesis (CGA) in Lean 4

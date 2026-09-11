@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Colimit.DirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.InductiveSuperClosureLemmas
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralZornFiniteSymmetry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NonAbelianDihedralSymmetry12
 import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Algebra.Zorn.Basic

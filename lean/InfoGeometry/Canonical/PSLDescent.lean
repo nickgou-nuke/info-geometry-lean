@@ -5,6 +5,7 @@ Native central-sign invariance for the modular upper-half-plane action.
 -/
 
 import Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.ProjectiveSpecialLinearGroup
 import Mathlib.NumberTheory.Modular
 import InfoGeometry.Canonical.ProjectiveFoundation

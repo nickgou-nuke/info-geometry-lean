@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeSuperalgebra
 import InfoGeometry.Arithmetic.MobiusPrimonParity
 import InfoGeometry.Arithmetic.PrimonSupergradedGasAlgebra

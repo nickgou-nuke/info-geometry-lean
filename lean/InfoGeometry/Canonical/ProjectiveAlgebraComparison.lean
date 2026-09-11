@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectiveSectorDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.ProjectiveAlgebraComparison

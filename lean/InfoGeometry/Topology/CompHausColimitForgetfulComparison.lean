@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientCompHausColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Forgetful comparison for compact-Hausdorff colimits

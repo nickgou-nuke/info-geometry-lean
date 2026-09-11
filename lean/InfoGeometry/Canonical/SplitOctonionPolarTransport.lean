@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionQuaternionPolar
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transport of split-octonion polar decompositions

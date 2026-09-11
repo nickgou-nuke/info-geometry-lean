@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Polynomial.Derivative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Canonical.PolynomialXPDilation
 import InfoGeometry.Physics.SymmetricAsymmetricXP

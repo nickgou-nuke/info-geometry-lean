@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.KleinBottle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Pin55ReflectionGlide
 import Mathlib.Tactic
 
@@ -10,7 +11,7 @@ namespace InfoGeometry.Topology.AffineDeckFixedPointSeparation
 
 open InfoGeometry.External.Auto.KleinBottle
 
-abbrev FiveSpace := Fin 5 → ℝ
+abbrev FiveSpace := InfoGeometry.Algebra.FiniteSpin.Vec5R
 
 def affineInversion (c x : FiveSpace) : FiveSpace := c - x
 

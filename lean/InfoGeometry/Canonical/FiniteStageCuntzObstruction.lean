@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TensorTower
 
 noncomputable section

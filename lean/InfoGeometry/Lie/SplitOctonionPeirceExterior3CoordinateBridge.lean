@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionPeirceDecompositionBridge
 
 /-!
@@ -16,7 +17,7 @@ open InfoGeometry.Lie.SplitOctonionPeirceDecompositionBridge
 
 abbrev Exterior3Coordinates := ℝ × (Fin 3 → ℝ) × (Fin 3 → ℝ) × ℝ
 
-abbrev PeirceCarrier := Fin 8 → ℝ
+abbrev PeirceCarrier := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 def toPeirce : Exterior3Coordinates →ₗ[ℝ] PeirceCarrier where
   toFun x := ![x.1, x.2.1 0, x.2.1 1, x.2.1 2,

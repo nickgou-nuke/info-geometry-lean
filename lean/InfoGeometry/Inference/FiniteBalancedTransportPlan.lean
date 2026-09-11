@@ -1,4 +1,5 @@
 import InfoGeometry.Inference.PoissonUnbalancedSinkhorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite balanced transport plans

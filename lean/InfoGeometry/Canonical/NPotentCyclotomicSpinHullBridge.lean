@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Exponential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Set.Lattice
 import Mathlib.Tactic
 import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic

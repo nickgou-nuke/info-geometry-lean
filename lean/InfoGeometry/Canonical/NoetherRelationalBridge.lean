@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NoetherInference
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelationalInformationDynamics
 import InfoGeometry.Meta.Architecture
 

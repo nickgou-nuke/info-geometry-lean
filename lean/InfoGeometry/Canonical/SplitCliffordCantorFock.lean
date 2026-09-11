@@ -12,7 +12,7 @@ namespace InfoGeometry.Canonical.SplitCliffordCantorFock
 open Matrix
 
 abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
-abbrev V2R := Matrix (Fin 2) (Fin 1) ℝ
+abbrev V2R := InfoGeometry.Algebra.FiniteSpin.Mat2x1R
 
 /-- `false` (empty) local basis state `|0⟩`. -/
 def state_false : V2R := !![1; 0]

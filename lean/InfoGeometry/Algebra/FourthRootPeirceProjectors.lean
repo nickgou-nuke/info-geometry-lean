@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.FinitePeirceMatrix
 import InfoGeometry.Canonical.CyclotomicProjectorReadout
 

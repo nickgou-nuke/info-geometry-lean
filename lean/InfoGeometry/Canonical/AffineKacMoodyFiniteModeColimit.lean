@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Category.ModuleCat.FilteredColimits
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.ConcreteCategory.Basic
 import InfoGeometry.External.Virasoro.AffineKacMoody
 

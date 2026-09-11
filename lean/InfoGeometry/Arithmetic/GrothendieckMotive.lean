@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.Grothendieck
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Grothendieck
 import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Analysis.RotorCocycleBregmanBridge

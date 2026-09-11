@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.WeylTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.IncompressibleBitBridge
 

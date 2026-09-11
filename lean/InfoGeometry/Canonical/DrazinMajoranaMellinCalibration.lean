@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinCentralizerErlangen
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
 import InfoGeometry.Arithmetic.RHQuantumStabilityBridge

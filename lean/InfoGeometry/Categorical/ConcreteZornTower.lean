@@ -18,6 +18,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import Mathlib.CategoryTheory.Limits.HasLimits
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.Filtered
 import Mathlib.Algebra.Category.ModuleCat.Basic
 import Mathlib.Algebra.Category.ModuleCat.Colimits

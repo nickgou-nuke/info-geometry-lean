@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SixStateCharacteristicPolynomial
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.D6CyclotomicCharpolyNative
 

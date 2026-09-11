@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentIndexedObservationRangeCompHausFunctor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Colimits of compact indexed observation ranges

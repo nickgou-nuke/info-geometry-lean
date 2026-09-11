@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AQFTOperatorSignatures
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import InfoGeometry.Krein.DoubledSpace

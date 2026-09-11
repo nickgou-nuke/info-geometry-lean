@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ChiralPoincareSouriauBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.CuntzDeformedSuperPoincare
 import InfoGeometry.Physics.LorentzChiralCuntzBridge
 import Mathlib.Tactic

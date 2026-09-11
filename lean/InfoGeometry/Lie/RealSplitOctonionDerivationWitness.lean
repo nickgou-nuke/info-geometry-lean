@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornSpinor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 import InfoGeometry.Lie.RealSplitOctonionG2Classification

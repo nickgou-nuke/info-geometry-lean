@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ActualXiSymmetryDatumBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ActualXiHardyZRealizationBridge
 
 /-!

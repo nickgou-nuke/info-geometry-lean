@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornDerivationExponential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.G2CartanSymmetricSpaceIdentification
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Weights.Cartan
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornCartanRootSystem
 
 /-!

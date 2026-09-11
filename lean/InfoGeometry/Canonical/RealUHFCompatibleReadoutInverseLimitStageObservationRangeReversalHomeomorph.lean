@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeFlowHomeomorph
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentModularReversalOrbitClosure
 
 /-!

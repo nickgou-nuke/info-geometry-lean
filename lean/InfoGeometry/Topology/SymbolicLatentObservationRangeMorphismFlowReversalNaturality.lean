@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentObservationRangeReversalMorphismBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentObservationRangeFlowMorphismBridge
 
 /-!

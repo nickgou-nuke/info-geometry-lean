@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Associator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.Basic
 import Mathlib.Data.Real.Basic
 

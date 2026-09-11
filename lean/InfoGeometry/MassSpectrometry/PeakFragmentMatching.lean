@@ -1,4 +1,5 @@
 import InfoGeometry.Routing.PermutationPerfectMatching
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hard peak-fragment matching

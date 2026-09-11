@@ -1,4 +1,5 @@
 import InfoGeometry.Potential.LogPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.Calculus.Deriv.Slope
 

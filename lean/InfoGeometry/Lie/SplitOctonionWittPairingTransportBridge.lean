@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionWittVectorCovectorBridge
 import InfoGeometry.Lie.SplitOctonionDerivationWittOrthogonalBridge
 
@@ -19,7 +20,7 @@ open InfoGeometry.Lie.SplitOctonionWittVectorCovectorBridge
 open InfoGeometry.Lie.SplitOctonionDerivationWittOrthogonalBridge
 
 abbrev WittCoord := VPlus × VMinus
-abbrev Coord8 := Fin 8 → ℝ
+abbrev Coord8 := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 def toCoord : WittCoord ≃ₗ[ℝ] Coord8 where
   toFun x i := if h : i.val < 4 then x.1 ⟨i.val, h⟩ else x.2 ⟨i.val - 4, by omega⟩

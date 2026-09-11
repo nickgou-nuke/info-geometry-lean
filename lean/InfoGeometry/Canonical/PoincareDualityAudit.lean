@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PoincareDualityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of PoincareDualityBridge

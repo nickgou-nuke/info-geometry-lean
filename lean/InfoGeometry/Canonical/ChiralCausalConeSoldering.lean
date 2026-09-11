@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralCausalCone
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ChiralCausalCone
 
 /-!

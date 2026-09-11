@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraTopologicalColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Generic continuous involution readout for a filtered star colimit

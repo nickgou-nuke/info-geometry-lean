@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11GradingSl2
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11CompassMoritaBridge
 import InfoGeometry.Clifford.Cl11TensorTower
 

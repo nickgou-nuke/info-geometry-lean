@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.KreinSpace

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.MatToCantorOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.JordanWignerCantorColimit
 import InfoGeometry.Canonical.JordanWignerCantorRepresentation
 import InfoGeometry.Clifford.Cl11JordanWignerCARBridge

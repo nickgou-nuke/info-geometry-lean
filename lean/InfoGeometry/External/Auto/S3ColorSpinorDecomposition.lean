@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.SU3LoopBraidDuality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite S₃ action on color-spinor lanes

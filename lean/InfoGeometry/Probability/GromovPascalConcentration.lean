@@ -1,4 +1,5 @@
 import InfoGeometry.GromovConcentration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility import for finite Pascal counting atoms

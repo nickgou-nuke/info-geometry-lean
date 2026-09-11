@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.SocketTarget
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

@@ -19,6 +19,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Canonical.HodgeKreinTriFacet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.Equiv.Basic
 
 /-!

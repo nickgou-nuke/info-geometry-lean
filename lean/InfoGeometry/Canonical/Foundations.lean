@@ -20,6 +20,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 
 import InfoGeometry.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core
 import InfoGeometry.Convex
 import InfoGeometry.Convex.Bregman

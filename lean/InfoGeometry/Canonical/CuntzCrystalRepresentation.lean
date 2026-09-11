@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KashiwaraCuntzCohomology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.KashiwaraCuntzCohomology
 

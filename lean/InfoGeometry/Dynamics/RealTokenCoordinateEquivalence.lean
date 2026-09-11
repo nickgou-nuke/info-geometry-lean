@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Complex.Module
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Dynamics.RealifiedTokenOperatorBridge
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.CartanSubalgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Weights.Cartan
 import Mathlib.Algebra.Lie.Weights.RootSystem
 import InfoGeometry.Lie.CanonicalZornCartanRootSystem

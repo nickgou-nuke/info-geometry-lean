@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option maxHeartbeats 800000
 

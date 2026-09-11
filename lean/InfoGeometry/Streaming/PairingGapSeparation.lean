@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearWignerSupermultipletSymmetry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Hermitian pairing blocks and the regularity of an Andreev energy formula

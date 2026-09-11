@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.HestenesCl11QGTNormedFrechetBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.QuaternionCl44QGTBianchiChernWeil
 
 set_option autoImplicit false

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzCliffordBottBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMapKreinBridge
 import InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket
 import InfoGeometry.Topology.FractalCantorFockWitness

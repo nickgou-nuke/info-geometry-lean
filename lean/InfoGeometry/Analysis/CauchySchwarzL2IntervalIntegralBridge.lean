@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Tactic
 

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Algebra.SplitMetricSpace
 import InfoGeometry.Canonical.TKKJordanPairData

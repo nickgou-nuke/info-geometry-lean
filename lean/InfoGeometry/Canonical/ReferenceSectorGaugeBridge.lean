@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalGaugeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped InnerProductSpace
 

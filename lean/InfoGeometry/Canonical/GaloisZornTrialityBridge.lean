@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BostConnesGalois
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornCore
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 

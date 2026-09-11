@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciFusionTreeAssociator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Scalar naturality on Fibonacci fusion Hom-spaces

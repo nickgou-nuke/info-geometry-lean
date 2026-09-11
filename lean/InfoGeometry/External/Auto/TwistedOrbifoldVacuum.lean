@@ -1,4 +1,5 @@
 import Lean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 -- Definitions
 def RiemannZero : Prop := (0 : Nat) = 0

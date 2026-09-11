@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionBogoliubovCarrierBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionQuaternionParityOrientation
 import InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
 import InfoGeometry.Canonical.LinearInvolutionFrameTransport

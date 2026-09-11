@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovClosedForms
 import InfoGeometry.Canonical.TomitaTakesaki
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredInductiveHestenesAnalyticity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesAnalyticity
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KleinBottleTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Klein Bottle Boundary Action

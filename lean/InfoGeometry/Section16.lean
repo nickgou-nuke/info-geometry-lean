@@ -33,7 +33,7 @@ namespace Section16
 
 open Matrix
 
-abbrev EvenCoord := Fin 4 → ℂ
+abbrev EvenCoord := InfoGeometry.Algebra.FiniteSpin.Vec4C
 abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def evenToMatrix (x : EvenCoord) : Mat2C :=

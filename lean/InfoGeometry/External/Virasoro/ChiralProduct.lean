@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Codex
 -/
 import InfoGeometry.External.Virasoro.VirasoroAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.DirectSum
 
 set_option linter.unusedSectionVars false

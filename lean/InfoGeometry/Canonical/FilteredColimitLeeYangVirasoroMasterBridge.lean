@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModuleCatDirectLimitKernelSurvivalBridge
 import InfoGeometry.Canonical.SpinChainLogCFTLeeYangMasterBridge
 import InfoGeometry.Canonical.InfiniteVirasoroVOAFusionBridge

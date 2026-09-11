@@ -1,4 +1,5 @@
 import Mathlib.Topology.Algebra.Module.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealComplexRotor
 
 namespace InfoGeometry.Canonical

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CliffordDirectColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpinStructureJacobiTheta
 import InfoGeometry.Canonical.ConnesKMSIndexPairing
 import InfoGeometry.Canonical.TomitaTakesakiWickRotation

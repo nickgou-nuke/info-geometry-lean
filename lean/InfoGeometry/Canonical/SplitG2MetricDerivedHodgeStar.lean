@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitG2HodgeDualFourForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionCanonicalThreeForm
 import InfoGeometry.Canonical.SplitG2StructureOnImaginaryOctonions
 import InfoGeometry.Canonical.SplitG2HodgeTransportBridge

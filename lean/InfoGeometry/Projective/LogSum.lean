@@ -1,4 +1,5 @@
 import Mathlib.Analysis.MeanInequalities
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Log-sum inequality and analytic primitives

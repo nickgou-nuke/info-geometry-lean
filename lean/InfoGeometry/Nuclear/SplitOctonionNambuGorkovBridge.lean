@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Analysis.SpecialFunctions.Sqrt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Algebra.ZornMatrix
 

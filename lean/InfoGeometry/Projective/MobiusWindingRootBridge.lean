@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQuaternion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.UniversalCoverLog
 import InfoGeometry.Projective.KleinFiniteLogFormCarrier
 import Mathlib.Tactic

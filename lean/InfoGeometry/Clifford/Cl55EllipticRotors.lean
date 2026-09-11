@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55HyperbolicWeights
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittCircularAxes
 
 /-!

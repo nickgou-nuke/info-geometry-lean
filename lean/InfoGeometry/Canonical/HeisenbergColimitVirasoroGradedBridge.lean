@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HeisenbergFiniteModeColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Canonical.SugawaraFiveGradingObstruction
 import InfoGeometry.OperatorAlgebra.ModeShiftInterface

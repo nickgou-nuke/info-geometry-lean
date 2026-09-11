@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import DAG.GraphHodgeBridge
 import InfoGeometry.Canonical.CantorCuntzBasis
 import InfoGeometry.Krein.DoubledSpace

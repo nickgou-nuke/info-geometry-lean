@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.InverseKernelAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinLightConeDictionary
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
 import InfoGeometry.Meta.Architecture

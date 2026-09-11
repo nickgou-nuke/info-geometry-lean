@@ -1,4 +1,5 @@
 import InfoGeometry.Holography.RyuTakayanagiEmergence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Holography.HolographicEntanglementSymmetry
 import InfoGeometry.Holography.AdSCFTCuntzBridge
 import InfoGeometry.Holography.BekensteinHawkingDyadicEntropy

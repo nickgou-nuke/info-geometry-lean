@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.StandardFormCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Krein.Prelude

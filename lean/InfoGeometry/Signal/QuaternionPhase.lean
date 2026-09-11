@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Quaternion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.LogJordanBraidInfiniteGeneratorColimit
 import proofs.BraidProject.BraidGroup
 

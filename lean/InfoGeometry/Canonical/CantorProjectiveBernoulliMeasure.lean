@@ -1,4 +1,5 @@
 import Mathlib.MeasureTheory.Measure.Map
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.FractalMeasure.Basic
 import InfoGeometry.Canonical.RindlerMobiusCantorFiniteBridge
 

@@ -3,6 +3,7 @@
    (doubly stochastic matrices with row/column sums = 1 and non-negative entries). -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix
 open scoped Matrix BigOperators

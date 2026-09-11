@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Grading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 
 namespace InfoGeometry.Clifford.Hestenes

@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.NumberTheory.ArithmeticFunction.Zeta
 import Mathlib.Algebra.Ring.Basic

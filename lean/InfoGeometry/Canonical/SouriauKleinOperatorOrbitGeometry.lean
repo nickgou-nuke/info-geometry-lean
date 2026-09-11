@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Algebra.Equiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SouriauLieThermodynamics
 import InfoGeometry.Canonical.SouriauKKSContragredientBridge
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger

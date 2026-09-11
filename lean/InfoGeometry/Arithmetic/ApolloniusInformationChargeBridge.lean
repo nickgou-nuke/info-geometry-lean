@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.RiemannApolloniusVectorFields
 import InfoGeometry.Thermodynamics.SouriauApolloniusEntropyFoliation
 import InfoGeometry.Volume.ModularSurprisalDerivationBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBFunctional
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Measure.GiryMonad
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.Probability.Kernel.Basic

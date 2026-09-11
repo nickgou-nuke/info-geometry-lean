@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanMellinWeylInvariant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2CartanSouriauCharacterBridge
 
 noncomputable section

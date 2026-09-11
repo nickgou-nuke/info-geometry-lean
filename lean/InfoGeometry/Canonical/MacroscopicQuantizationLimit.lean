@@ -1,5 +1,6 @@
 -- lean/InfoGeometry/Canonical/MacroscopicQuantizationLimit.lean
 import InfoGeometry.OperatorAlgebra.CliffordInfinityCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GeometricQuantization
 import Mathlib.CategoryTheory.Limits.HasLimits
 import Mathlib.Algebra.Category.Ring.Basic

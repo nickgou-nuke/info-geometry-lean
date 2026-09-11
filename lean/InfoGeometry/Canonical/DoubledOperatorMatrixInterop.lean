@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 import InfoGeometry.NCG.BerezinianSuperdeterminant
 import InfoGeometry.OperatorAlgebra.NoncommutativeRenyi

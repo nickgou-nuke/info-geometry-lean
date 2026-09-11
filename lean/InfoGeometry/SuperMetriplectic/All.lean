@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.Axioms
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SuperMetriplectic.ChiralBridge
 import InfoGeometry.SuperMetriplectic.UnifiedOwnerClosureBridge
 import InfoGeometry.SuperMetriplectic.UnifiedOwnerTriadBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Section38StressEnergyDomainSeparation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Repaired MD 20250430071017: finite matrix-valued statistics

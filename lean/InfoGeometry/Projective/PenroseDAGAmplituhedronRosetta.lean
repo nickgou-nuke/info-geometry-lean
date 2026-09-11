@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProofCausalityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.PenroseKleinTiling
 import InfoGeometry.Projective.SplitQuaternionMatrix
 import InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge

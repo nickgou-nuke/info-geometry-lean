@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModularFlowGeneratorDerivative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
 
 /-!

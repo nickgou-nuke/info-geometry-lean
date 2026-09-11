@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Set.Basic
 
 /-- A simplified abstract model of Spacetime and its coordinate patches.

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11TensorTowerIteration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteDeterminantTower
 import InfoGeometry.Canonical.NormalizedLogDetTower
 

@@ -1,4 +1,5 @@
 import InfoGeometry.ProofTelemetry.Kernel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 Small executable smoke checks for the Lean-native proof telemetry kernel.

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DyadicStageTopCatColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.DyadicStageDirectLimitTopCatCocone
 

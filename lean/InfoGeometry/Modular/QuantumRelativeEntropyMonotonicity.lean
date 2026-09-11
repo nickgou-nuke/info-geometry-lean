@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Real.Basic

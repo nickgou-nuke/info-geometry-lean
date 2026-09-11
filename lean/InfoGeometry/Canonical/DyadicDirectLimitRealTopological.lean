@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFProjectionRankRationalIntervalDensity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DyadicDirectLimitTopology
 
 /-!

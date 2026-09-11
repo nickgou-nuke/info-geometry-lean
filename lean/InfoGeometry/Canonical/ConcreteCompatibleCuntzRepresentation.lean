@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11CuntzCantorChiralFramework
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge
 import InfoGeometry.Canonical.ComplexMatrixStage
 import InfoGeometry.Canonical.GenuineMatrixStageMorphism

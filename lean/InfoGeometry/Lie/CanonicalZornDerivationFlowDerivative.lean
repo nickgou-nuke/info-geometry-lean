@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornDerivationExponential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornDerivationLane
 import InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge
 import Mathlib.Topology.Algebra.Module.FiniteDimension
@@ -24,7 +25,7 @@ open InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge
 
 abbrev CZ := InfoGeometry.Lie.CanonicalZornDerivation.CZ
 abbrev EndCZ := InfoGeometry.Lie.CanonicalZornDerivation.EndCZ
-abbrev V8 := Fin 8 → ℝ
+abbrev V8 := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 section
 

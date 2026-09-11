@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.Holonomy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # State-space colimit compatibility import

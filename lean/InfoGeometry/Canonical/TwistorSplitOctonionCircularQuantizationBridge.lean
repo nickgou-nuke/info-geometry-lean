@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.SplitClifford55PureSpinorOrbitGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonion1331PureSpinorGradingBridge
 import InfoGeometry.Lie.SplitOctonionCircularOperatorReadout
 import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
@@ -29,7 +30,7 @@ open InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
 open InfoGeometry.Twistor.SplitClifford55PureSpinorOrbitGeometry
 
 abbrev CZ := CanonicalZorn
-abbrev Coord := Fin 8 → ℝ
+abbrev Coord := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 /-- The positive circular root elements, read in the native Zorn carrier. -/
 def circularCreationElement (i : Fin 3) : CZ :=

@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.CrossRatio
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Probability.DetectorCrossSectionDuality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 #print axioms InfoGeometry.Probability.DetectorCrossSectionDuality.linearizer_root
 #print axioms InfoGeometry.Probability.DetectorCrossSectionDuality.linearizer_extract_d0

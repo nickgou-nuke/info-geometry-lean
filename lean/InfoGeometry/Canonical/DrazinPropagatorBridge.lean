@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealHestenesKreinHomology
 
 namespace InfoGeometry.Canonical

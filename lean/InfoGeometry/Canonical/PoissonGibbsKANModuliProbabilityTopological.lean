@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PoissonGibbsKANModuliTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Quotient-level Poisson Gibbs probability readout

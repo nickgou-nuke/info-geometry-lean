@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitOctonionsDualProduct
 import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
 import InfoGeometry.Quantum.KitaevMajorana

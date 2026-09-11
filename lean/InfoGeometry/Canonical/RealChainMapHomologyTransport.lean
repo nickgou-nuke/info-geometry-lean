@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealBoundaryHomologyQuotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.RealHomologyCohomologyDictionary
 

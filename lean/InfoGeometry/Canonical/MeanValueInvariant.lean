@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.MeanValue
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Zero derivative and global invariance

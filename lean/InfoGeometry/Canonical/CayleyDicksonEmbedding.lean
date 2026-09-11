@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AlbertCayleyDickson
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.AlbertCayleyDickson
 

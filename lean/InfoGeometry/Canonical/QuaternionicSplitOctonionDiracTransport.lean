@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionBogoliubovCarrierBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.QuasilatticeDirac
 
 /-!

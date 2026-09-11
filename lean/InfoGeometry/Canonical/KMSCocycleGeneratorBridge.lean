@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BekensteinBound
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SinkhornKMSCore
 
 /-!

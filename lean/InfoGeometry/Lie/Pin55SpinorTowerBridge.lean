@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.Pin55KreinConformalBridge
 import InfoGeometry.Lie.SplitOctonionNonmultiplicativity
 import InfoGeometry.Clifford.SpinorRep

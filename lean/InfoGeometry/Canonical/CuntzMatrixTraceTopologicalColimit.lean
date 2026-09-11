@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzMatrixTraceTower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
 import Mathlib.Analysis.Normed.Module.FiniteDimension
 

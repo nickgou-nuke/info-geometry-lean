@@ -1,4 +1,5 @@
 import InfoGeometry.Section8
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Section12
 import InfoGeometry.Canonical.EmergentGravity
 import InfoGeometry.Canonical.BiquaternionSU2

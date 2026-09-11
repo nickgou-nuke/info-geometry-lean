@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.ExteriorKleinProjective
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Nondegenerate exterior frames cover the projective Klein locus

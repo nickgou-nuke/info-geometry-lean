@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 import InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE

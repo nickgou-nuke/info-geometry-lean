@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitOctonions.ProjectiveLine
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KuzminCuntzPath
 
 /-!

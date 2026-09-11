@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.ShortExact
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The short five lemma for modules

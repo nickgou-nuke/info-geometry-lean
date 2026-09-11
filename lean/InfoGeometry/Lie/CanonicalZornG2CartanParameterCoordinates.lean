@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanWeylEquivariant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Coordinate bridge for the G₂ Cartan/parameter reflections
@@ -15,7 +16,7 @@ namespace InfoGeometry.Lie.CanonicalZornG2CartanParameterCoordinates
 
 open InfoGeometry.Lie.CanonicalZornG2CartanWeylEquivariant
 
-abbrev Parameter := Fin 2 → ℝ
+abbrev Parameter := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 def changeLinear : Parameter →ₗ[ℝ] Parameter where
   toFun s := ![3 * s 0 + 3 * s 1, s 0 + 2 * s 1]

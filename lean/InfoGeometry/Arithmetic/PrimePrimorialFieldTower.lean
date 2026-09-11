@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeCyclotomicGaloisTower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeCyclotomicFieldMaps
 import InfoGeometry.Arithmetic.PrimeCyclotomicGaloisEmbeddings
 

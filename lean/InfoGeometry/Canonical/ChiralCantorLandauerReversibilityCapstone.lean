@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ChiralCantorLandauerReversibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

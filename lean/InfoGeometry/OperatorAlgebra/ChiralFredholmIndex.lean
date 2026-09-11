@@ -13,6 +13,7 @@ later as a refinement, not as the primitive definition of the index.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Operator.Compact
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 

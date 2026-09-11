@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraDirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite-group actions on the native filtered star-algebra direct limit

@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.TriadicBogoliubovBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 import InfoGeometry.Canonical.WeylGaugeOperatorLift
 import InfoGeometry.Canonical.DrazinInfiniteCore

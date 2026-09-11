@@ -1,4 +1,5 @@
 import Mathlib.Data.Finset.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Finset.Prod
 import Mathlib.Data.Nat.Factorial.Basic
 import Mathlib.Data.Rat.Lemmas

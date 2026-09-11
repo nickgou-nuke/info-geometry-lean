@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Block
 import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.Analysis.Matrix.Order

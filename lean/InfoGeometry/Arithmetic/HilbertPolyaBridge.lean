@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.BostConnesSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.MasterIdentity
 import InfoGeometry.Arithmetic.SpectralDistance
 import InfoGeometry.Arithmetic.RiemannHypothesis

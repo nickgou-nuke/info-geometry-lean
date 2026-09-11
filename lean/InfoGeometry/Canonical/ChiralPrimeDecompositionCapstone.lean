@@ -1,4 +1,5 @@
 import InfoGeometry.LightCone.ChiralPrimeDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ChiralPrimeDecompositionCapstone
 

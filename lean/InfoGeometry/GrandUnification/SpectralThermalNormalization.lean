@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Spectral thermal normalization: owner exports

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionAutomorphism
 import InfoGeometry.Lie.RealSplitOctonionG2Classification
 import InfoGeometry.Lie.BaezG2SplitOctonion

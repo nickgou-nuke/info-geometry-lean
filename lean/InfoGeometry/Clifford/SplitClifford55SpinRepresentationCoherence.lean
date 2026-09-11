@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitClifford55NeutralFormBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55SpinGroupChiralityBridge
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.SouriauFoliation.ClosureInvariantLeaf
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.SouriauFoliation.LeafInvariantReadout
 import InfoGeometry.Quantum.SouriauFoliation.OnLeafModularFlow
 import InfoGeometry.Quantum.SouriauFoliation.PositiveTemperatureLeaf

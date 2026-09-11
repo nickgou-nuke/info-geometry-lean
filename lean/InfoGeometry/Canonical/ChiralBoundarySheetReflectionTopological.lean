@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorCliffordFunctionModelTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Chiral sheet reflection on the symbolic boundary

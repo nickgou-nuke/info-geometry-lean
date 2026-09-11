@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Basis.Basic
 import InfoGeometry.Canonical.SplitOctonionJordanForm
 

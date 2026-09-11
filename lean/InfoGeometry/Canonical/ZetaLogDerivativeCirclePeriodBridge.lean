@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZetaLogDerivativeDeRhamPeriodBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZetaLogarithmicPoleCirclePeriod
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences
 

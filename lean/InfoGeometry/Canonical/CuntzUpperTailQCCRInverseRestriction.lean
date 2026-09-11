@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzUpperTailQCCRLimitReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
 
 /-!

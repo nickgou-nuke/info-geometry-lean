@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix
 
@@ -27,7 +28,7 @@ BUCKET 3: OPEN CLOSURE DEBT:
     graph spectral completeness, or LeanTrail proposal soundness.
 -/
 
-abbrev CausalMat2 := Matrix (Fin 2) (Fin 2) ℝ
+abbrev CausalMat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 def mul (A B : CausalMat2) : CausalMat2 :=
   A * B

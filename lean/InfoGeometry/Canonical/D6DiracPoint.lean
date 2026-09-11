@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.D6DiracSpectralBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.D6ReciprocalLatticeBrillouinZone
 import Mathlib.Tactic
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NoncommutativeGibbsNormalizedBKMTwoPointBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NoncommutativeGibbsCenteredBKMCovariance
 import InfoGeometry.Canonical.SouriauOnsagerBKMPositivity
 

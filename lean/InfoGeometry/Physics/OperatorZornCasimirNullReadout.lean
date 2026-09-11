@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.OperatorZornMatrixAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Operator Zorn quadratic null readout

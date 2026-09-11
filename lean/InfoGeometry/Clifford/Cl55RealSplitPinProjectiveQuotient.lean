@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittFullOrthogonalSurjectivity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55RealSplitPinKernelExact
 
 namespace InfoGeometry.Clifford.Clifford55

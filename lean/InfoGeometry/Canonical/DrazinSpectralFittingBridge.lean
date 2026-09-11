@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Drazin Spectral Fitting Bridge & Nilpotent Ghost Isolator

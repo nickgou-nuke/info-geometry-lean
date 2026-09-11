@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.QutritMeasurement
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Pure qutrit density matrices

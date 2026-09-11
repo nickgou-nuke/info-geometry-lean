@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Adjoint
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Algebra.Module.Star
 import Mathlib.Tactic
 

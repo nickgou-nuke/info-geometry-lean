@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.ContinuousDerivationExponential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Operator.Bilinear
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic

@@ -1,4 +1,5 @@
 import InfoGeometry.Cantor.CantorRandomWalk
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.L2CantorCommutation
 
 /-!

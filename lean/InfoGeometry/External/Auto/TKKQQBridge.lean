@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.Localization.Basic
 -- import GrandUnifiedTKK
 

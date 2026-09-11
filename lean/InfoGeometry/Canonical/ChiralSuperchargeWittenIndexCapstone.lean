@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ChiralSuperchargeWittenIndex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.PosDef
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Symmetric Positive Definite Matrices

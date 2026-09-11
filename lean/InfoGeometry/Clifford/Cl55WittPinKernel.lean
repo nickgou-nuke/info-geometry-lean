@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittPinCoverBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittPinNativeTwistedAction
 
 namespace InfoGeometry.Clifford.Clifford55

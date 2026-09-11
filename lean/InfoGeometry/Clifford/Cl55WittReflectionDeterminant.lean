@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Transvection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittQuadraticReflection
 import InfoGeometry.Clifford.Cl55WittReflectionGeneratedSubgroup
 

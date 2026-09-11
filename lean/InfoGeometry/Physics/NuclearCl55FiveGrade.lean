@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearCl55NativeSoldering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A finite five-grade label carrier for the native `Cl(5,5)` CAR

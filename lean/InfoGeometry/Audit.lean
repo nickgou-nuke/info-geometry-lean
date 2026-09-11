@@ -1,4 +1,5 @@
 import InfoGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Lean
 
 open Lean

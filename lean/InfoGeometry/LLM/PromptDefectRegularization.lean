@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.Llama4SpinSpec
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSGlobalRepresentationCompatibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Colimit.DirectLimit
 
 /-!

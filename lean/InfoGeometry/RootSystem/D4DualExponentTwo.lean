@@ -1,4 +1,5 @@
 import InfoGeometry.RootSystem.D4DualLattice
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exponent-two law for the `D₄` discriminant carrier

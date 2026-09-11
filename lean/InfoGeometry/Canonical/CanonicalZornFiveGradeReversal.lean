@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornFiveGradedClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.SymmetricLie
 
 /-!

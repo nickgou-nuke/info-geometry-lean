@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittSpinOrthogonalAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittOrthogonalNative
 import InfoGeometry.Clifford.Cl55WittPinNativeTwistedAction
 

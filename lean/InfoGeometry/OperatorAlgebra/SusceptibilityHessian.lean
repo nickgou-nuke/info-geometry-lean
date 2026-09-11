@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SusceptibilityHessian.FresnelJones
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SusceptibilityHessian.HessianResponse
 import InfoGeometry.OperatorAlgebra.SusceptibilityHessian.MaterialBridge
 import InfoGeometry.OperatorAlgebra.SusceptibilityHessian.MaterialSusceptibility

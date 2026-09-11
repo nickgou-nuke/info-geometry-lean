@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.OrbitStratification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.OrbitClassification
 import InfoGeometry.Algebra.JordanCayleyOrbitStratification
 import InfoGeometry.Physics.Pin55Formal

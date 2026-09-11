@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.EckmannDiscreteHodge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Discrete Hodge Stabilizer Code Surface

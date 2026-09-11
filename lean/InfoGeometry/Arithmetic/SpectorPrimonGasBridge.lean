@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.MobiusPrimonParity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeBosonFermionGas
 import InfoGeometry.Arithmetic.PrimonGasSupertrace

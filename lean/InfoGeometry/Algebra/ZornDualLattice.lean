@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.MaximalSplitOrder
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornDerivationBridge
 
 namespace InfoGeometry.Algebra.ZornVectorMatrix

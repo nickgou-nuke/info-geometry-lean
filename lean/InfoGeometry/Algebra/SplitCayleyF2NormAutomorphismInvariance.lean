@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitCayleyF2DeltaNativeRelations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SplitCayleyF2NormCarrierAlignment
 import InfoGeometry.Algebra.SplitCayleyF2NormStructural
 import InfoGeometry.Algebra.SplitCayleyF2DeltaStructural

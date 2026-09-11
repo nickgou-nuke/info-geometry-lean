@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredIsometricInnerProductDirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hilbert completion of a filtered isometric direct system

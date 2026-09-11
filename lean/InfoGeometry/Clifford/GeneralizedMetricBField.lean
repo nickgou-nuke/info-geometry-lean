@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ClNN
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Cartan.Involution
 import InfoGeometry.Meta.Architecture
 import Mathlib.Tactic.NoncommRing

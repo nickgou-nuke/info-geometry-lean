@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwelveFoldExplicitOperators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 
 open scoped Matrix

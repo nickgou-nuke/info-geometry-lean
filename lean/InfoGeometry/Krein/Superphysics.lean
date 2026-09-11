@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Grading
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55OddChiralityExchange
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55SpinorDimensionReadout
 
 namespace InfoGeometry.Clifford.Cl55SpinorChirality

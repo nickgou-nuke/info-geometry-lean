@@ -1,4 +1,5 @@
 import Mathlib.Tactic.NoncommRing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TensorTowerIteration
 import InfoGeometry.Clifford.Cl11MarkovJonesEngine
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2IntrinsicLineFiberTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Intrinsic line-fibre transport for the point stabilizer

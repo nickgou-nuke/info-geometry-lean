@@ -59,7 +59,7 @@ We define a neutrino state as a 2-component vector (particle and hole).
 We map this state across the 3 Aeon colimit using the `delta_bdg` oscillation bridge.
 -/
 
-abbrev NeutrinoState := Fin 2 → ℝ
+abbrev NeutrinoState := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 /-- A purely Left-Handed unmixed neutrino state -/
 def nu_L : NeutrinoState := ![1, 0]

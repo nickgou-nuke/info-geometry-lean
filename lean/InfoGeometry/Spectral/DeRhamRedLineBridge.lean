@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.MobiusDeRhamMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RedLineCausalConeMonodromy
 import InfoGeometry.Canonical.TimeAsWindingMonodromy3D
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential

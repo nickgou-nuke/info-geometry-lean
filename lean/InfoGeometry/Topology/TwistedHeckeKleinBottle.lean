@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A Twisted Hecke Algebra and a Klein Bottle of Tempered Representations

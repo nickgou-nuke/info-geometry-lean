@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FaithfulOperatorZornEnvelope
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DiscreteDiracHodgeChiral
 import Mathlib.Tactic
 

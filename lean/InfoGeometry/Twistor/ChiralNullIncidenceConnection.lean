@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.TwoTwistorSpacetimeNode
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Discrete transport on a null-incidence network

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Convex.StdSimplex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Probability.FisherRaoMadelungIsometry
 import InfoGeometry.Krein.FiniteCovarianceMajoranaBlock
 

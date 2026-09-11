@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.UniformSpace.LocallyUniformConvergence
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet

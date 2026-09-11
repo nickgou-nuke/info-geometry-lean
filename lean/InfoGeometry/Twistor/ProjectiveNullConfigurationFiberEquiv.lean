@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullConfigurationCovering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Ordered fiber of the finite configuration quotient

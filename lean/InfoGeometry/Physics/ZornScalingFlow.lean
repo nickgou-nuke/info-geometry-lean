@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-!
@@ -21,7 +22,7 @@ noncomputable section
 
 namespace InfoGeometry.Physics.ZornScalingFlow
 
-abbrev Vec3 := Fin 3 → ℂ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3C
 
 /-- Canonical Zorn coordinates from the split-octonion kernel. -/
 abbrev Zorn := SplitOctonionBraidSU3.Zorn

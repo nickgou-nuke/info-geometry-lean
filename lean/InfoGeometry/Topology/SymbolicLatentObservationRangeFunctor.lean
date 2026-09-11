@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentObservationQuotientNaturality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology
 

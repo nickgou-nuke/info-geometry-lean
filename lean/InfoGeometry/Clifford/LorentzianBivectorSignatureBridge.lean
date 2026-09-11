@@ -1,4 +1,5 @@
 import Mathlib.Tactic.NoncommRing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Lorentzian bivector signature bridge

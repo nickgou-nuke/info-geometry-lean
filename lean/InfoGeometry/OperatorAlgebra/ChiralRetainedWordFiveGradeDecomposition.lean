@@ -1,4 +1,5 @@
 import Mathlib.Algebra.DirectSum.Internal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralRetainedWordFiveGradeClosure
 
 /-!

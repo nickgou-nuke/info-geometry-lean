@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.RealPauliCausalCone
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SplitQuaternionAutomorphismStructure
 
 /-!

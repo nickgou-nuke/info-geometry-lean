@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealDoubledKreinMirrorTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuous even/odd mirror projections

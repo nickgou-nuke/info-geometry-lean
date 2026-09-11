@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.WeylGaugeOperatorLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GromovWittenErlangen.GWProjectiveCountCalibration
 import InfoGeometry.Volume.DeterminantBundle
 

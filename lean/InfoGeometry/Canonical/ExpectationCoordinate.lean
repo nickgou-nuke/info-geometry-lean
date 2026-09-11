@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PositiveRayCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.Bridge
 import InfoGeometry.Continuous.PositiveOrthant
 import Mathlib.Tactic

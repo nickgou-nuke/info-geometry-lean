@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutDynamicsTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutDynamicsTopCatAction
 import InfoGeometry.Topology.SymbolicLatentModularFlow
 

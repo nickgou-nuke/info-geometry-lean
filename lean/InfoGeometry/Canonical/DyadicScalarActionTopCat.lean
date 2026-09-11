@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DyadicScalarActionLaws
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # TopCat packaging of the dyadic scalar action

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSOperatorSeminormKernel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Faithful represented range of the filtered GNS star-colimit

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalProjectiveClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NormalOrderedCurrent
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Canonical.BosonizationTheorem

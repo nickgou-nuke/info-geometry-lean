@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.SplitOctonionZornReal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornVectorMatrix
 
 namespace InfoGeometry.Exceptional.RealZorn

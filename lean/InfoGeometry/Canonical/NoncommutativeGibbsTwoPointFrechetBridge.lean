@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NoncommutativeGibbsExpectationCyclicDerivative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Two-point Fréchet numerator for the noncommutative Gibbs Hessian

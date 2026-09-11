@@ -1,4 +1,5 @@
 import Mathlib.Topology.Category.TopCat.Limits.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The n-ary tree boundary as a native topological inverse limit

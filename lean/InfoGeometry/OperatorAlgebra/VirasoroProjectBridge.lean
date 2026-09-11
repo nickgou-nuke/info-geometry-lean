@@ -11,6 +11,7 @@ This file is honest about its scope:
 -/
 
 import InfoGeometry.External.Virasoro.VirasoroAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealStagePrefixProjection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealUHFProjectionRankTailTopological
 
 namespace InfoGeometry.Canonical

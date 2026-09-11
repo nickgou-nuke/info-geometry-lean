@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic

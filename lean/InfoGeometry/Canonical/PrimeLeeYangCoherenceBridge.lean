@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PrimeLeeYangBooleanIsingCoherenceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Prime Lee--Yang coherence interface

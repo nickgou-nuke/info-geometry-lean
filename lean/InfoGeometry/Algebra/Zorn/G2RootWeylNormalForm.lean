@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.Zorn.G2CoordinateWeylAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The root-side transport of the existing dihedral normal-form index

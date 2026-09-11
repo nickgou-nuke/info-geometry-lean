@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionPseudoReal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # SplitOctonionPseudoReal (Canonical forwarder)

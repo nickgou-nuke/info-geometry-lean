@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.LieExponentialTraceDeterminant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

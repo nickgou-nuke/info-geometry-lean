@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Canonical.TwelveFoldGeneralizedCliffordExtension
 

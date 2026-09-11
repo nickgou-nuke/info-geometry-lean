@@ -9,6 +9,7 @@ without duplicating either concept.
 -/
 
 import InfoGeometry.Geometry.BilingualAnalyticity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.SusceptibilityOnsagerStress
 import InfoGeometry.OperatorAlgebra.NoncommutativePowerDerivative
 import InfoGeometry.Optics.OperatorValuedConnection

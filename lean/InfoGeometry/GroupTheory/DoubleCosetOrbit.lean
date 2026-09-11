@@ -1,4 +1,5 @@
 import InfoGeometry.GroupTheory.DoubleCoset
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Subgroup.Lattice
 import Mathlib.Data.Fintype.Card
 import Mathlib.GroupTheory.GroupAction.Basic

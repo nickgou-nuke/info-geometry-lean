@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SinkhornFoundation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Volume.ConnesCocycle
 

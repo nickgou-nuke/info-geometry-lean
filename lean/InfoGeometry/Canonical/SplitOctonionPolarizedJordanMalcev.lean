@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornMatrix
 
 /-!
@@ -18,7 +19,7 @@ open InfoGeometry.Algebra.ZornMatrix
 noncomputable section
 
 abbrev Carrier := ZornMatrix ℂ
-abbrev Vec := Fin 3 → ℂ
+abbrev Vec := InfoGeometry.Algebra.FiniteSpin.Vec3C
 abbrev PPlus := ℂ × Vec
 abbrev PMinus := ℂ × Vec
 

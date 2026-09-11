@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CausalFunctor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CliffordInfinityCAR
 import InfoGeometry.Algebraic.SplitQuadraticForm
 import Mathlib.CategoryTheory.Category.Preorder

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConcreteHardyZNormalizationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HardyZRealizationBridge
 
 /-!

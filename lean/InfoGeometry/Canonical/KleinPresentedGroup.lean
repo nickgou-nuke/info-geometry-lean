@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectiveUnitary6
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The algebraic presented Klein group and its projective `PU(6)` representation

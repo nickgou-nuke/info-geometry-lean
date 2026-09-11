@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.RealSplitOctZornAlignment
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Stable `RealSplitOct`/Zorn transport API

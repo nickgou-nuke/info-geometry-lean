@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PartitionHierarchy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.V4GroupFourierTransform
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AssociativeSuperBracket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ConformalGeneratorLemmas55
 
 /-!

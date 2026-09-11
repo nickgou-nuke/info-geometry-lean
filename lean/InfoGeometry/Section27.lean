@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BiQuaternionKahlerFinite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BiQuaternionKahlerLegendreFinite
 import InfoGeometry.Canonical.BiQuaternionKahlerSymplecticNoetherBridge
 import InfoGeometry.Canonical.HodgeStar4DFinite

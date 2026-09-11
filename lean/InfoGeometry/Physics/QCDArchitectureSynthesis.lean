@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.QCDColorCARAnyonBridge
 import InfoGeometry.Physics.QCDExteriorFureyBridge
 import InfoGeometry.Physics.QCDSU3ColorSpinorBridge

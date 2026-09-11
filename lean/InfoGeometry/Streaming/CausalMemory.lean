@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 namespace InfoGeometry.Streaming.CausalMemory

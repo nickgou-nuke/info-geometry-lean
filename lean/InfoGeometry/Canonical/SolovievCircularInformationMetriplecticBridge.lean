@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SolovievCircularChiralProjectionBridge
 import InfoGeometry.Algebra.ChiralGeneratorsToDerivationsBridge
 import InfoGeometry.Optics.OperatorQGTSoldering
@@ -51,7 +52,7 @@ open InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
 open InfoGeometry.Physics
 open SouriauOnsagerBKM
 
-abbrev FourParameters := Fin 4 → ℝ
+abbrev FourParameters := InfoGeometry.Algebra.FiniteSpin.Vec4R
 abbrev VZ := InfoGeometry.Algebra.ZornVectorMatrix ℝ
 abbrev VDer := InfoGeometry.Algebra.ZornVectorMatrix.Derivation (R := ℝ)
 abbrev VZEnd := Module.End ℝ VZ

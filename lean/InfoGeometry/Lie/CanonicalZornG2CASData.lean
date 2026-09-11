@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 namespace InfoGeometry.Lie.CanonicalZornG2CASData
 /-- CAS basis matrices reordered to native `(a,v0,v1,v2,b,w0,w1,w2)` coordinates. -/
 def casBasisMatrix : Fin 14 → Matrix (Fin 8) (Fin 8) ℚ

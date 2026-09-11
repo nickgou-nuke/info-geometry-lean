@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ChiralBasisChangeTopological
 import InfoGeometry.Topology.SymbolicLatentSpace
 
@@ -16,7 +17,7 @@ namespace InfoGeometry.Topology
 
 noncomputable section
 
-abbrev RealNativeBasisCoordinates := Fin 8 → ℝ
+abbrev RealNativeBasisCoordinates := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 def realNativeCoefficientSystem :
     FiniteSymbolicLatentSystem RealNativeBasisCoordinates (Fin 8) :=

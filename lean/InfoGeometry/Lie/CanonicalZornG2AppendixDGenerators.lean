@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionGogberashviliDerivationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCircularMultiplicationTable
 
 /-!

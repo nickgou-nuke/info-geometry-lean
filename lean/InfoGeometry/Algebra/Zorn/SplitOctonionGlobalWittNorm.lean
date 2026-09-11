@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Global split-Witt norm coordinates

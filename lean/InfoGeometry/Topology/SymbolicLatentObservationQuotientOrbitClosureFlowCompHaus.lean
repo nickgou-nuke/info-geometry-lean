@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentObservationQuotientOrbitClosureFlowBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentObservationQuotientCompHaus
 import InfoGeometry.Topology.SymbolicLatentQuotientOrbitClosureFlowCompHaus
 

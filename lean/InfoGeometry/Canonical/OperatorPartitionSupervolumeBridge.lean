@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauConformalKKTContext
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CartanBerezinianCore
 
 /-!

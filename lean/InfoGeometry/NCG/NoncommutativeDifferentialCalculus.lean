@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Units.Defs
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Tactic

@@ -1,4 +1,5 @@
 import InfoGeometry.CondensedMatter.DIIISuperfluid
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.PeirceDoubledComplexStructure
 
 /-!

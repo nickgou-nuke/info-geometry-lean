@@ -15,6 +15,7 @@ modular/CPT mirror.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 

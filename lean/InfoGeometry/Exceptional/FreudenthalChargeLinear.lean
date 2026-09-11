@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.Freudenthal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
 
 /-!

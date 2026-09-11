@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeEnergyNative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimonPhaseLift
 import InfoGeometry.Physics.LogCFT
 import InfoGeometry.Physics.LogCFTFiniteJordanBridge

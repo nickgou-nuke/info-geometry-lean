@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.RankOneTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ThreeColorOperatorCrossCommutator
 
 /-!

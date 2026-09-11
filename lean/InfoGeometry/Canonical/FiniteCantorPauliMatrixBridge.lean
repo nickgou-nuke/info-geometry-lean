@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11Matrix
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.DensityMatrixPurity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.DensityMatrixPurityCapstone
 

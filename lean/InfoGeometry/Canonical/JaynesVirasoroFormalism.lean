@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.JaynesFormalism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.JaynesRNModularBridge
 import InfoGeometry.Canonical.VirasoroWardEquilibrium
 import InfoGeometry.Canonical.CurrentSugawaraBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TomitaTakesakiRealification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.TomitaTakesakiRealification
 

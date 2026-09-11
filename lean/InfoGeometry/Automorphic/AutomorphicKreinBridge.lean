@@ -10,6 +10,7 @@ is not asserted by this bridge.
 -/
 
 import InfoGeometry.Automorphic.SiegelResonance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.HestenesKahler
 import InfoGeometry.Krein.DoubledSpace
 

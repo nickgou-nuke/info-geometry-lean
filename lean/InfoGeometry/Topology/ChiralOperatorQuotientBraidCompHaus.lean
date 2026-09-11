@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ChiralOperatorTopologicalBraidCategory
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentNoncommutativeObservationQuotientCompHaus
 
 /-!

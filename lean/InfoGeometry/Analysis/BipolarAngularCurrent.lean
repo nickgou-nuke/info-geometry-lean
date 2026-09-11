@@ -1,4 +1,5 @@
 import InfoGeometry.Connection.ApolloniusOperatorConnection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The finite test-function current attached to the bipolar angular period

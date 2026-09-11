@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredColimitLeeYangVirasoroMasterBridge
 
 set_option linter.unusedSectionVars false

@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.SpecificGroups.Dihedral
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ChiralZornFiniteSymmetry
 
 /-!

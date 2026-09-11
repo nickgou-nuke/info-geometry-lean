@@ -1,4 +1,5 @@
 import InfoGeometry.Algebraic.ExactPhaseCocycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebraic.CartanCocycle
 import InfoGeometry.Tessellation.Incidence
 import InfoGeometry.Tessellation.VolumeTransport

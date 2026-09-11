@@ -1,4 +1,5 @@
 import InfoGeometry.Tessellation.Incidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic

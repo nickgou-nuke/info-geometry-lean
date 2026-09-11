@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Clifford55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55SpinBivectorImage
 import InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
 import Mathlib.Tactic

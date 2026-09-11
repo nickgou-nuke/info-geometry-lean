@@ -1,4 +1,5 @@
 import InfoGeometry.Core.Derivatives
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Core Derivatives Smoke

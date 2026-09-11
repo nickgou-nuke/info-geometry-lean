@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.YangMillsFiniteQFT
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.YangMillsFiniteBridge
 
 namespace InfoGeometry

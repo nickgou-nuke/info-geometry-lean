@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Projectivization.Action
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.LocalSL2ProjectivizationAction
 
 namespace InfoGeometry.Canonical

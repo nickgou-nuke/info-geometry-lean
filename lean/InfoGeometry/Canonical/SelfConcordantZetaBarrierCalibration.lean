@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SelfConcordantZetaBarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZetaLogDerivativeDeRhamPeriodBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # V₄ action laws on finite isolated-zero data

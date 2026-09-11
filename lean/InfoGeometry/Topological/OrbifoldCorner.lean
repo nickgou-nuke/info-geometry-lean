@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.Modular
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction
 import Mathlib.Algebra.Group.Basic

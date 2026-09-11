@@ -10,6 +10,7 @@ global `Z16` interacting classification.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BostConnesPhaseTransition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PauliWorldClockSynchronicity
 
 /-!

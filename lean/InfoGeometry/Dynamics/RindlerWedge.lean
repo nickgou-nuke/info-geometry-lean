@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.RapiditySpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 noncomputable section

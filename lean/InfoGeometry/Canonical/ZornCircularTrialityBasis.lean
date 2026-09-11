@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 namespace InfoGeometry.Canonical.ZornCircularTrialityBasis
@@ -10,7 +11,7 @@ open InfoGeometry.Physics.SplitOctonionBraidSU3
 attribute [local simp] Matrix.vecHead Matrix.vecTail Matrix.cons_val_zero
   Matrix.cons_val_one Matrix.cons_val_two Matrix.cons_val_succ
 
-abbrev Vec3C := Fin 3 → ℂ
+abbrev Vec3C := InfoGeometry.Algebra.FiniteSpin.Vec3C
 
 def rotate3C (u : Vec3C) : Vec3C := ![u 1, u 2, u 0]
 

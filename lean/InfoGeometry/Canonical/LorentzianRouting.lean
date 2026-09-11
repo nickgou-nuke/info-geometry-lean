@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AttentionSplit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Linarith
 import Mathlib.Algebra.Order.Field.Basic
 

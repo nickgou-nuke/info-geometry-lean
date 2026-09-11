@@ -1,4 +1,5 @@
 import InfoGeometry.Automorphic.ProjectedLFunction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Automorphic.HeckePurification
 import InfoGeometry.Automorphic.LanglandsSugawaraBridge
 

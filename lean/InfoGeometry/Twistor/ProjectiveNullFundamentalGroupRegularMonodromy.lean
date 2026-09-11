@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullConfigurationFundamentalGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Finsupp.LSum
 
 /-!

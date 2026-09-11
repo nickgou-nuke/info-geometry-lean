@@ -12,6 +12,7 @@ if the contraction `A + D z` vanishes, then the zero lies in `-K₁K₂`.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.AsanoRuelle.TopologicalEndpoint
 
 noncomputable section

@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitOctonions.Polar
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

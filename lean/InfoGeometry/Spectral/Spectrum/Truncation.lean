@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Spectrum.Integer
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Truncation contracts for integer-indexed spectra

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11InfiniteCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option autoImplicit false
 

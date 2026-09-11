@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.FinCases
 import Mathlib.Algebra.BigOperators.Fin
 

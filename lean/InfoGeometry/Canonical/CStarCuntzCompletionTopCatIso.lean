@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CStarCuntzCompletionTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CStarCuntzFamilyTopology
 
 /-!

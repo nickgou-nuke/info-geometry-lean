@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Matrix-like encodings of octonions
@@ -41,7 +42,7 @@ theorem no_faithful_assoc_rep_of_nonassoc
 
 /-! ## Zorn vector matrices -/
 
-abbrev Vec3 := Fin 3 → ℤ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3Z
 
 /-- Dot product on `ℤ³`. -/
 def dot3 (u v : Vec3) : ℤ := ∑ i : Fin 3, u i * v i

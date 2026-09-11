@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SingleParticleFockStateBridge
 import InfoGeometry.Physics.NuclearFiniteNilpotentSoul
 

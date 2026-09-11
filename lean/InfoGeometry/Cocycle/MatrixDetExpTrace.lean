@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MatrixDetExpTraceJacobi
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MatrixExponentialTraceDet
 import InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
 import InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonalizable

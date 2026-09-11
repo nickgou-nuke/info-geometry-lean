@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarCartanCl3PhaseBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transitive axiom inspection for the finite Cartan--`Cl(3)` phase bridge

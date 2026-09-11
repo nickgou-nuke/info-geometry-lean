@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundaryFibonacciIntertwinerObstruction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The zero `B₃` intertwiner carrier

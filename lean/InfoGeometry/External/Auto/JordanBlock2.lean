@@ -8,7 +8,7 @@ namespace JordanBlock2
 open Matrix
 
 abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
-abbrev V2C := Fin 2 → ℂ
+abbrev V2C := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 /-- Matrix-vector action. -/
 def matVec (A : M2C) (v : V2C) : V2C :=

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSTomitaModularFormColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Complex structure and sesquilinear Tomita form on the filtered colimit

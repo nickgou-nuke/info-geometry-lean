@@ -1,4 +1,5 @@
 import InfoGeometry.KK.RealSplitKreinKasparovCycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.KK
 

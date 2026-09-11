@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralBoundarySymplecticBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of ChiralBoundarySymplecticBridge

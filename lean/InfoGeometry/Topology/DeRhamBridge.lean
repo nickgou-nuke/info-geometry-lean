@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ThermodynamicGauge
 import InfoGeometry.Canonical.NilpotentItakuraSaito
 import Omega.CircleDimension.StokesHomologyExactSplitting

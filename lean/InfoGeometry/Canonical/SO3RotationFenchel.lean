@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.LieFenchelQuadratic
 
 /-!
@@ -20,8 +21,8 @@ open Matrix
 
 noncomputable section
 
-abbrev V3 := Fin 3 → ℝ
-abbrev M3 := Matrix (Fin 3) (Fin 3) ℝ
+abbrev V3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
+abbrev M3 := InfoGeometry.Algebra.FiniteSpin.Mat3R
 
 /-- Rotation around the z-axis by angle `θ`. -/
 noncomputable def Rz (θ : ℝ) : M3 :=

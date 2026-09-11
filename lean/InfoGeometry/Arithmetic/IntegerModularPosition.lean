@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The integral translation action on the upper half-plane

@@ -10,6 +10,7 @@ is the fundamental constructive witness for this geometry.
 -/
 
 import Mathlib.Algebra.Ring.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Defs
 import Mathlib.Algebra.Ring.Subring.Basic
 import InfoGeometry.OperatorAlgebra.SymmetryInvariants

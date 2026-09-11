@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DualQuaternionF4WeylBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Dual Quaternionic Realization of $W(F_4)$

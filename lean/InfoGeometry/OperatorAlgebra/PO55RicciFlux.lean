@@ -24,6 +24,7 @@ the contraction/readout theorem.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.TKKClosure
 import InfoGeometry.OperatorAlgebra.PO55ConformalClosure
 import InfoGeometry.OperatorAlgebra.AnomalousFlowStabilization

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarTwoSheetCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.RealPauliCausalCone
 import Mathlib.Tactic
 

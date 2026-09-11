@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55FockMatrixIntertwiner
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralRetainedWordFiveGradeClosure
 import InfoGeometry.OperatorAlgebra.FiveGradeActionPreservation
 import InfoGeometry.Canonical.Cl55WittLieRouting

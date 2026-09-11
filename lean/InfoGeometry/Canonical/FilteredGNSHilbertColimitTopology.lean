@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSHilbertColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
 
 /-!

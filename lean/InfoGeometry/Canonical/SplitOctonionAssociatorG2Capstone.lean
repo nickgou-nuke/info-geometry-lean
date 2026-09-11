@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionStandardDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.RealSplitOctonionG2Classification
 
 noncomputable section

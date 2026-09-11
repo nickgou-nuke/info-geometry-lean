@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SinkhornKMSCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.CStarAlgebra.Basic
 
 /-!

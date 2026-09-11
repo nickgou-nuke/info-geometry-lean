@@ -1,4 +1,5 @@
 import InfoGeometry.Nuclear.ConformalDetectorIntegral
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Nuclear.FocalSechODE
 
 /-! Narrow integration and axiom-inspection entrypoint. -/

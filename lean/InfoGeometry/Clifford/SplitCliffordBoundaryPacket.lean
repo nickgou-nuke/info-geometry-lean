@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.BottPeriodicity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AlbertCayleyDickson
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Clifford.SplitCl44CausalEnvelope

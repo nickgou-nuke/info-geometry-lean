@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KleinOrientationCharacterBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Centrality readback for the presented Klein group

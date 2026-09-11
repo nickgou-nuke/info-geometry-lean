@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.HessianGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpectralInference
 import Mathlib.Analysis.SpecialFunctions.Exp
 

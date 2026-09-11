@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TwelveFoldAdditiveCharacter
 import InfoGeometry.Canonical.TwelveFoldCyclotomicNative
 

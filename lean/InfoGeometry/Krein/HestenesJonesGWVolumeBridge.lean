@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.HestenesJonesFiltrationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.WeylGWVolumeBridge
 import InfoGeometry.Meta.Architecture
 

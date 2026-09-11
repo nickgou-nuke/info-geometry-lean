@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Exponential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.RingTheory.RootsOfUnity.Complex

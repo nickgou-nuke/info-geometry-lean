@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.BostConnesCriticality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.SpectralGap
 import InfoGeometry.Arithmetic.MasterIdentity
 import InfoGeometry.Clifford.LogCftMonodromy

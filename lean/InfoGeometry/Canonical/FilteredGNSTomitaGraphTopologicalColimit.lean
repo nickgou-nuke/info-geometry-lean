@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSTomitaGraphClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredGNSHilbertColimitTopology
 import InfoGeometry.Canonical.FilteredGNSTomitaDomainTopologicalColimit
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit

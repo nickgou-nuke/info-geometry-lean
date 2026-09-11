@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimonChiralSouriauThermodynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences
 import InfoGeometry.Canonical.BilingualRealHestenesDictionary
 import InfoGeometry.Canonical.AlgebraicKMSStateColimit

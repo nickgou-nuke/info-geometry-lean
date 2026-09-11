@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Cochain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Alternating.Basic
 import Mathlib.LinearAlgebra.Multilinear.Curry
 import Mathlib.Tactic

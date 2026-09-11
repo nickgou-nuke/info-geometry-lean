@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Module.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Meta.Architecture
 

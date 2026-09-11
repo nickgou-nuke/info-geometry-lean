@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllClosedFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionErlangenInvariant
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.NoncommutativeJacobiLiouvilleFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorialHessianBridge
 import InfoGeometry.Canonical.RelativeSurprisalJacobianCocycleBridge
 

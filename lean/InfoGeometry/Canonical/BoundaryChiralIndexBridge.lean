@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BulkBoundaryRegularizationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Meta.Architecture
 

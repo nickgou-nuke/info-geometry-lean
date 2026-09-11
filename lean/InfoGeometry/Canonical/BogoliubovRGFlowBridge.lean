@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovOptimalTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauKreinMetriplecticContext
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 import InfoGeometry.SuperMetriplectic.Flow

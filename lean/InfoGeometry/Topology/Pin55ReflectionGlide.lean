@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Pin(5,5)-style reflection and glide socket
@@ -21,7 +22,7 @@ construction of the Clifford algebra `Cl(5,5)`, the topological group
 namespace InfoGeometry.Topology.Pin55ReflectionGlide
 
 /-- Rational coordinate carrier for a finite split-signature `(5,5)` model. -/
-abbrev Vec55 := Fin 10 → ℚ
+abbrev Vec55 := InfoGeometry.Algebra.FiniteSpin.Vec10Q
 
 /-- The split `(5,5)` quadratic form in coordinates. -/
 def splitNorm55 (x : Vec55) : ℚ :=

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentBoundaryCylinderReadoutTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cylinder covers transported through the symbolic-latent colimit readout

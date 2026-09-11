@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ZetaFlowKleinSemidirectBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PeirceV4GrandCanonicalEnsembleBridge
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.Real.Basic

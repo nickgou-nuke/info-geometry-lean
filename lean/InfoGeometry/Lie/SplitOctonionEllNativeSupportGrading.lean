@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllNativeClosedFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllNativeDrazinDefect
 import InfoGeometry.Physics.Algebra.LinearTripotentTrifactor
 

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.Deriv.Star
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge
 import InfoGeometry.Arithmetic.ActualRiemannXiEntireSchwarzBridge
 import InfoGeometry.Canonical.ActualEntireRiemannXiLogDerivativeBridge

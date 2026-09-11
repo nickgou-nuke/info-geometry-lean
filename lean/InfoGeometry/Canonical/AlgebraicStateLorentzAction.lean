@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AlgebraicStateFunctionalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11LorentzAction
 import InfoGeometry.Meta.Architecture
 import Mathlib.Analysis.SpecialFunctions.Exponential

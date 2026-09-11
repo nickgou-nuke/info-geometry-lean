@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikKocakPaperAllDepthClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite matrix readout of the Çelik--Koçak paper generators

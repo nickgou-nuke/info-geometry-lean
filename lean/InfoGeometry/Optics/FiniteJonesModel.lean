@@ -9,6 +9,7 @@ projector and Brewster rank-collapse facts directly.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

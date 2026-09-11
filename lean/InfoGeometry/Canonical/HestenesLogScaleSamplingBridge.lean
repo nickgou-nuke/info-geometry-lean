@@ -1,5 +1,6 @@
 
 import InfoGeometry.Canonical.HestenesModularRealizationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.FiniteDirichletShiftOperatorBridge
 
 /-!

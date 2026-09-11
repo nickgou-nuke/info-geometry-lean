@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanWeylEquivariant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bilinear Fisher covariance for the concrete G₂ reflection consumers

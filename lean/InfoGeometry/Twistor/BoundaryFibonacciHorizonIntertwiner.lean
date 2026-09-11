@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundaryBraidRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Algebra.FibonacciHorizonBraidBridge
 
 /-!

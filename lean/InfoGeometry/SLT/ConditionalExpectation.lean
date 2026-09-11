@@ -1,4 +1,5 @@
 import Mathlib.Probability.CondVar
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Conditional Expectation Except One Coordinate

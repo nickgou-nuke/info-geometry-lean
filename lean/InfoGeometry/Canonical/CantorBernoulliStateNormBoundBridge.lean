@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.LinearAlgebra.Matrix.Trace
 import InfoGeometry.Canonical.CuntzMatrixTowerInstantiation

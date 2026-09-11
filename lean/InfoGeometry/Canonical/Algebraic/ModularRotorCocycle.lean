@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.GroupAction.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Basic
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup

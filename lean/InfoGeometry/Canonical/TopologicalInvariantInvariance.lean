@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQ11PhaseFlip
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CentralChargeKKTParityBridge
 import InfoGeometry.Canonical.OperatorialCentralCharge
 import InfoGeometry.Canonical.ProjectorEquivariance

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinAdjoint
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Real structures on the doubled chiral Krein carrier

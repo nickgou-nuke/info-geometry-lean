@@ -1,4 +1,5 @@
 import InfoGeometry.Core.JordanPeirceDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

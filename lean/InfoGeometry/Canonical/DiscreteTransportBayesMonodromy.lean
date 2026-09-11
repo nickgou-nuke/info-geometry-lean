@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorJKOStep
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MajoranaJKOErgoBridge
 import InfoGeometry.Dynamics.JkoWeylGromov
 import InfoGeometry.OptimalTransport.EntropyGradientFlow

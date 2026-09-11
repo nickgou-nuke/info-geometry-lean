@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.DerivationLieLaneRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionRegularActionIntertwiner
 import InfoGeometry.Lie.CanonicalZornOperatorDerivationLane
 import InfoGeometry.OperatorAlgebra.DerivationDifferentialForms

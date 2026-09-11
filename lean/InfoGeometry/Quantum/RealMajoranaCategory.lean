@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Category.ModuleCat.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.ConcreteCategory.Basic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Clifford.Grading

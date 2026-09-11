@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeBitLattice
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Inference.FiniteGibbsInference
 import InfoGeometry.Inference.GrandCanonicalGibbsFluctuationBridge
 import InfoGeometry.GrandCanonical.Core

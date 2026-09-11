@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HypercomplexOneParameterFlows
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MeanValueInvariant
 import InfoGeometry.Clifford.Cl55RotorMonodromyBridge
 import InfoGeometry.External.Auto.JordanBlock2

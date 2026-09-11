@@ -1,4 +1,5 @@
 import Mathlib.MeasureTheory.Measure.Regular
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Measure.RegularityCompacts
 import Mathlib.MeasureTheory.Measure.Tight
 import Mathlib.MeasureTheory.Measure.Typeclasses.Finite

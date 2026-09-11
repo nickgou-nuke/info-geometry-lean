@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Real.Basic
 
@@ -12,7 +13,7 @@ being assumed.
 
 namespace InfoGeometry.Clifford.NilpotentBinomial
 
-abbrev SpinorMatrix32 := Matrix (Fin 32) (Fin 32) ℝ
+abbrev SpinorMatrix32 := InfoGeometry.Algebra.FiniteSpin.Mat32R
 
 theorem nsmul_mul_self {R : Type*} [NonUnitalNonAssocSemiring R] (x : R) (hx : x * x = 0) (n : ℕ) :
     (n • x) * x = 0 := by

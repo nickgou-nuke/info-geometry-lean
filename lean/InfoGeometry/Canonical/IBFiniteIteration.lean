@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBTrajectory
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.IBFrozenDescent
 
 /-!

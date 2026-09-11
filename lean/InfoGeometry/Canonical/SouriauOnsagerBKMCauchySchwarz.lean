@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauOnsagerBKMRealForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cauchy--Schwarz for the finite noncommutative BKM response

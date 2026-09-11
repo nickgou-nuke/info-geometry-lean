@@ -243,7 +243,7 @@ theorem realify_range_subset_complexStructureCommutant :
   rintro T ⟨A, rfl⟩
   exact realify_commutes_complexStructure A
 
-abbrev RealVec4 := Fin 4 → ℝ
+abbrev RealVec4 := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
 noncomputable def complexVectorRealEquiv4 : (Fin 2 → ℂ) ≃ₗ[ℝ] RealVec4 :=
   complexVectorRealEquiv.trans

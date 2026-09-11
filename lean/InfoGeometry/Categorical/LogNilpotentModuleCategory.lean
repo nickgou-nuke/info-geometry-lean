@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.LogEndModuleNilpotentClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Categorical.LogNilpotentModuleCategory

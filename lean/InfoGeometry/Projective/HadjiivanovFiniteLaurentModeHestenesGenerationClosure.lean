@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.HadjiivanovFiniteLaurentModeGenerationClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.HadjiivanovFiniteLaurentModeHestenesMonodromyConsumer
 
 /-!

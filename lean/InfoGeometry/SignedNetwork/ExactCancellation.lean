@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Exact cancellation for finitely labelled signed counts.  The sign is an
 additive coefficient; it is not identified with an orientation or a second

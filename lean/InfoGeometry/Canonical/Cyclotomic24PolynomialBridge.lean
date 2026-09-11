@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CyclotomicOperatorSpine
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
   A small canonical bridge for the upstream 24-fold polynomial vocabulary.

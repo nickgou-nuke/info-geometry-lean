@@ -1,4 +1,5 @@
 import InfoGeometry.Topological.VerlindeDefectFusion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.VerlindeDefectFusionCapstone
 

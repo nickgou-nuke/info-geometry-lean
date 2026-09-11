@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Category.ModuleCat.FilteredColimits
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Functor.OfSequence
 import Mathlib.CategoryTheory.Limits.Filtered
 import Mathlib.Tactic

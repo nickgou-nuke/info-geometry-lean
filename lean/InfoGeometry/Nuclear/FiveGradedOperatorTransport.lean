@@ -1,4 +1,5 @@
 import InfoGeometry.Nuclear.GradedBathCommutant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralRetainedWordFiveGradeClosure
 import InfoGeometry.OperatorAlgebra.GradeActionInterface
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 /-!

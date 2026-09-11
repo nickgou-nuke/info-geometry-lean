@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.MoebiusTrifactorFlows
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hypercomplex one-parameter flows

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinModularPersistence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 /-!

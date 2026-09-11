@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BostConnesHeckeCuntzCapstone
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauDiracHodgeCoupling
 import InfoGeometry.Capstone.QuantumGroupFibonacci
 import InfoGeometry.Dynamics.TomitaTakesaki

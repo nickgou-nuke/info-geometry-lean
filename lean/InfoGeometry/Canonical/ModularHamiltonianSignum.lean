@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectorEquivariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovProjectorTransport
 import InfoGeometry.Dynamics.UnruhKMS
 import InfoGeometry.Meta.Architecture

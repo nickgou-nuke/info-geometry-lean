@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PrimePartitionPolynomials
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Analysis.HurwitzAsanoColimitLimitBridge

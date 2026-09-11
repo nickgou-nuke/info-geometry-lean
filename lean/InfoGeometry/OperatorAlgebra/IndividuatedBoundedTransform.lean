@@ -20,6 +20,7 @@ scalar bound transfers to the chosen operator model.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section

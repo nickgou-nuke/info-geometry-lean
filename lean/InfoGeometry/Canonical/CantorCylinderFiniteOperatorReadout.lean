@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixStageTransportBridge
 import InfoGeometry.Thermo.SouriauOnsagerBKMProbe
 import InfoGeometry.Canonical.CuntzMatrixTraceTower

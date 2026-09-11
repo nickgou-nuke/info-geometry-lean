@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.OperatorZornNambuGorkovBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Physics.NCG
 

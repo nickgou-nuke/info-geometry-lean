@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornPotentialGradientAlgebraicBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

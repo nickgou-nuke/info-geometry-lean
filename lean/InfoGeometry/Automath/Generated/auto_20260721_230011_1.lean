@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace Automath.Generated
 

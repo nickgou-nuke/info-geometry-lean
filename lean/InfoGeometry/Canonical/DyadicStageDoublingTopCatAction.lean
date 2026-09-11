@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DyadicStageColimitCompatibleMap
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DyadicStageDirectLimitTopCatCocone
 import InfoGeometry.Canonical.DyadicScalarAction
 import InfoGeometry.Canonical.DyadicScalarActionLaws

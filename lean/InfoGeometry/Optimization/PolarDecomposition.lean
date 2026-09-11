@@ -3,6 +3,7 @@
    G = P * U without requiring a full SVD. Uses only matrix addition, transposition, and inversion. -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix
 open scoped Matrix

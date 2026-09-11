@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.RegularBimoduleCommutant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.AlgebraicTomitaTakesakiBridge
 import InfoGeometry.Krein.TwoSheetKreinIdealBridge
 

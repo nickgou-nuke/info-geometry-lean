@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 
 /-!
@@ -80,7 +81,7 @@ theorem aperture_partition (C : CuntzO2Carrier Op) :
 
 /-! ## Finite exact-rational shard algebra -/
 
-abbrev Mat2Q := Matrix (Fin 2) (Fin 2) ℚ
+abbrev Mat2Q := InfoGeometry.Algebra.FiniteSpin.Mat2Q
 
 /-- A finite rational shard embedding the second coordinate into the first aperture. -/
 def finiteShard : Mat2Q :=

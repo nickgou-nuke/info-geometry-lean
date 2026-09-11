@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionAxialDrazinDefect
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornDerivation
 
 /-!

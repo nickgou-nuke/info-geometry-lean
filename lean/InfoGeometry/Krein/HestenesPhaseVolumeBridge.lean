@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.HestenesKreinVacuumBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace

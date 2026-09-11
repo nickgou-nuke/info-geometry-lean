@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.Divisors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.ArithmeticFunction.Misc
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Analysis.SpecialFunctions.Log.Basic

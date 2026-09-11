@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.KmsBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Dynamics.TomitaTakesaki
 
 noncomputable section

@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.HestenesMoebiusClosureBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinLightConeDictionary
 import InfoGeometry.External.Virasoro.VirasoroAlgebra
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topological inverse limits of dual-functional stages

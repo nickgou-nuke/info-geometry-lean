@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility import for the Kawamura CAR owner

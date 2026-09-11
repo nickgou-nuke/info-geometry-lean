@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoPCConcreteFacts
 import InfoGeometry.Algebra.Zorn.G2TwoPCGroup
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms

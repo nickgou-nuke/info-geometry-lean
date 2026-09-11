@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModularOrientationContract
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.StandardFormCore
 import InfoGeometry.Meta.Architecture

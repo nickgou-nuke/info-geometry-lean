@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordSourceWickBase
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordSourceWickVacuum
 
 /-!

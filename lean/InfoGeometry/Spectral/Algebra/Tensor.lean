@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.TensorProduct.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Tensor products for the spectral algebra port

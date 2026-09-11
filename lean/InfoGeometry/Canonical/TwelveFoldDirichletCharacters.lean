@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.DirichletCharacter.Basic
 import Mathlib.NumberTheory.LegendreSymbol.ZModChar
 import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic

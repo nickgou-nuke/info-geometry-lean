@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Notation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The rational matrix-unit atom

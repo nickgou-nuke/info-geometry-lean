@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Eigenspace.Zero
 import InfoGeometry.JordanDecomposition.CyclicNilpotent
 

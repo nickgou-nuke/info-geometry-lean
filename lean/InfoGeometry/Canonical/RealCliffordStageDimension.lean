@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11TensorTower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Dimension of the real `Cl(1,1)` matrix stages

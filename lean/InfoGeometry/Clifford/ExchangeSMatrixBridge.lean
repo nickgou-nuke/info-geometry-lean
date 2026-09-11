@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.LogCftMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 noncomputable section

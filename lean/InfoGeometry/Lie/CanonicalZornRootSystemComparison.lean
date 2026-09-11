@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornMathlibBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2LiteratureBridge
 import InfoGeometry.Lie.CanonicalZornIsKilling
 import Mathlib.LinearAlgebra.RootSystem.Finite.G2

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.D6CartanReciprocalTorus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

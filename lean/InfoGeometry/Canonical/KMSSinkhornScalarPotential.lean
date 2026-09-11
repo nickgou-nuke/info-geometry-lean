@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SinkhornKMSCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
 
 set_option linter.unnecessarySeqFocus false

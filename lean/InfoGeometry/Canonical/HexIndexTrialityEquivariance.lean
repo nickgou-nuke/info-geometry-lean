@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HexIndexSplitOctonionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionColorS3Automorphisms
 
 namespace InfoGeometry.Canonical

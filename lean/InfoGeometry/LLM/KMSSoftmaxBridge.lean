@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.RouterFreeEnergyBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace

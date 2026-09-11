@@ -1,4 +1,5 @@
 import InfoGeometry.Topological.FibonacciAnyons
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Topological.FibonacciCasimir

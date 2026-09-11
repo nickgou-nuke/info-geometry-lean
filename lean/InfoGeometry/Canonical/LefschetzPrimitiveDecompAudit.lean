@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.LefschetzPrimitiveDecompBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of LefschetzPrimitiveDecompBridge

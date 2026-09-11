@@ -1,4 +1,5 @@
 import Mathlib.Topology.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SpinorOrbitStratumTopological
 
 /-!
@@ -17,7 +18,7 @@ open InfoGeometry.Topology.Pin55ReflectionGlide
 open InfoGeometry.Topology.SpinorOrbitStratum
 open InfoGeometry.Topology.SpinorOrbitStratumTopological
 
-abbrev Vec55 := Fin 10 → ℚ
+abbrev Vec55 := InfoGeometry.Algebra.FiniteSpin.Vec10Q
 
 theorem splitNorm55_eq_q55 (x : Vec55) :
     splitNorm55 x = q55 x := by

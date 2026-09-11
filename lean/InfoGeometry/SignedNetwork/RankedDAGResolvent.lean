@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 namespace InfoGeometry.SignedNetwork.RankedDAGResolvent
 noncomputable section
 variable {R : Type*} [Ring R]

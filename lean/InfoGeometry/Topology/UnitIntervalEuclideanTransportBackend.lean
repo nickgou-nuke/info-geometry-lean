@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.BuresWassersteinTransportTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A concrete metric backend on the readout interval

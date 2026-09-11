@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeLineFiberTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Readback for native line-fibre transport

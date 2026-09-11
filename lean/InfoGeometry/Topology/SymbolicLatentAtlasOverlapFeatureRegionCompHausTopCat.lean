@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentAtlasOverlapFeatureRegionCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Feature-region observation squares in `CompHaus`

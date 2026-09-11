@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.IteratedDerivedCouple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Spectral.Algebra.PageStabilization
 
 /-!

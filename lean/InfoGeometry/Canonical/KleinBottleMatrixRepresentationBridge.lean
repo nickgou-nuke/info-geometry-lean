@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KleinBottleTwistedRepresentationBridge
 
 /-!
@@ -28,7 +29,7 @@ def translationMatrix : Matrix (Fin 2) (Fin 2) ℤ := !![1, 1; 0, 1]
 
 def translationInverseMatrix : Matrix (Fin 2) (Fin 2) ℤ := !![1, -1; 0, 1]
 
-abbrev Carrier2Z := Fin 2 → ℤ
+abbrev Carrier2Z := InfoGeometry.Algebra.FiniteSpin.Vec2Z
 
 def glideOperator : Carrier2Z →ₗ[ℤ] Carrier2Z :=
   Matrix.mulVecLin glideMatrix

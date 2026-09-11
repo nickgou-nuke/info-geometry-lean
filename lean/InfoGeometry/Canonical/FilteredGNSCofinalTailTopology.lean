@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSCofinalTail
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topological API for cofinal GNS tail equivalences

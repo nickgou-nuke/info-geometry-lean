@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Dual.Basis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitClifford55ExteriorSpinor
 import InfoGeometry.Clifford.Cl55Q55NativeSplitBridge
 import InfoGeometry.Clifford.Cl55SpinorAlgebraEquiv

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Authors
 -/
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Module.Basic
 import Mathlib.Topology.Order.LeftRightNhds
 import Mathlib.Tactic.Linarith

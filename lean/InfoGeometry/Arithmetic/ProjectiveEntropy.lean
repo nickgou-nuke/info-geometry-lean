@@ -12,6 +12,7 @@ the order consequence of an explicitly supplied density calibration.
 -/
 
 import InfoGeometry.Thermodynamics.ProjectiveTemperature
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature
 import InfoGeometry.Projective.ConeKL
 

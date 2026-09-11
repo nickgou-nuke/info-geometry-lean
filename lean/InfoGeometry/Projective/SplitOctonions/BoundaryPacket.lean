@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AlbertCayleyDickson
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitAlbert
 import InfoGeometry.Projective.SplitOctonions.Albert
 import InfoGeometry.Projective.SplitOctonions.Polar

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBinaryTiltCARCCRBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11Matrix
 
 noncomputable section

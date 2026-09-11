@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DeformedIdeleAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Deformed idele action owner surface

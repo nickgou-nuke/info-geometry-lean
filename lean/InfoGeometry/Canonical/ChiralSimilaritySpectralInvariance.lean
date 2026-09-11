@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Thermodynamics.ChiralChemicalPotentialDeformation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Spectral-invariant consequences of the chiral similarity deformation

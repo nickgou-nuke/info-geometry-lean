@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ProjectiveBoundarySL2Flow
 
 namespace InfoGeometry.Topology

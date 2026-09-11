@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciPentagonPathCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Channel-function carriers for the Fibonacci pentagon

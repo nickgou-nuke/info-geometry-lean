@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.Twistor.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.Twistor.SplitCl44NullBridge
 
 namespace InfoGeometry

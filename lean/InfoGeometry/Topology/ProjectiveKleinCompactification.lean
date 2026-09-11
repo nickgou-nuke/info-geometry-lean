@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Projective Klein Compactification
@@ -24,9 +25,10 @@ classification of Klein-bottle homogeneous spaces, or a diffeomorphism theorem.
 
 noncomputable section
 
+
 namespace InfoGeometry.Topology.ProjectiveKleinCompactification
 
-abbrev M2Q := Matrix (Fin 2) (Fin 2) ℚ
+abbrev M2Q := InfoGeometry.Algebra.FiniteSpin.Mat2Q
 
 /-- Projective equality modulo the central sign `{I, -I}`. -/
 def ProjectivelyEqual (A B : M2Q) : Prop :=

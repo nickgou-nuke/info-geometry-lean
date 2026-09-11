@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentFlowQuotientTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentObservationRangeFlowMorphismBridge
 
 /-!

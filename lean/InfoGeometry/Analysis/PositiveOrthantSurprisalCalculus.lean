@@ -1,4 +1,5 @@
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 import InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus

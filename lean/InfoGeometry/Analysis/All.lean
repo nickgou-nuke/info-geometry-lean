@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.CliffordWaveletTransform
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarCrossRatioLog
 import InfoGeometry.Analysis.BipolarCriticalPhase
 import InfoGeometry.Analysis.BipolarBoundaryTrace

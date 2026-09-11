@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikCantorCliffordUniversal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CelikKocakPaperAllDepthClosure
 
 /-!

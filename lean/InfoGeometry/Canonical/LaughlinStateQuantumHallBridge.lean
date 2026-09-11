@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Tactic.Ring

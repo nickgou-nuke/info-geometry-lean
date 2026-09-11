@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThreeColorOperatorCrossCommutator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The native `ZMod 3` grading of the operator-valued Zorn carrier

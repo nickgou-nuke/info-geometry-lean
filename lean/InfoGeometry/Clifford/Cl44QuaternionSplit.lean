@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Quaternion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.Matrix.Defs
 import Mathlib.LinearAlgebra.Matrix.Notation

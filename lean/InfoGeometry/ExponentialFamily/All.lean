@@ -1,4 +1,5 @@
 import InfoGeometry.ExponentialFamily.Analytic.LogSumExp
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.ExponentialFamily.Analytic.Softmax
 import InfoGeometry.ExponentialFamily.Bernoulli
 import InfoGeometry.ExponentialFamily.Class

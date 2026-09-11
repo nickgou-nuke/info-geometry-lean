@@ -26,6 +26,7 @@ The module proves this equality and then reads it three ways:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.ConstructiveKasparov
 import InfoGeometry.Optics.FiniteJonesBregman
 import InfoGeometry.Optics.FiniteJonesStinespringConstructive

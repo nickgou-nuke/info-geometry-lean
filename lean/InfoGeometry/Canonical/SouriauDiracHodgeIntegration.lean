@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BostConnesKMS
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BostConnesGalois
 import InfoGeometry.Canonical.CyclicCocycleCantor
 import InfoGeometry.Canonical.DrazinHodgeResidueBridge

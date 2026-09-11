@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Z3GrassmannDifferentialCalculus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CelikErlangenBraidBridge
 import InfoGeometry.Categorical.FibonacciFusionCategoryData
 import InfoGeometry.Canonical.CantorBoundaryCuntzShift

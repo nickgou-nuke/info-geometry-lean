@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TransportLieDerivative
 import Mathlib.Analysis.Normed.Algebra.Exponential
 import Mathlib.Tactic.Abel

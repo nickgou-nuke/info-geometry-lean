@@ -1,4 +1,5 @@
 import InfoGeometry.KK.DiracFredholmIndex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.KK.QuasilatticeIndexInvariance
 import InfoGeometry.Meta.Architecture
 

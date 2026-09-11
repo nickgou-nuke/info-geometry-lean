@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovFockSuper
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConformalAlgebra
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.WeylAnomalySource

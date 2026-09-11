@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.Conf3ConcreteDLog
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricGrothendieckDeRham
 import InfoGeometry.Dynamics.DuallyFlatOperatorFamily
 import InfoGeometry.Geometry.ProjectiveHessianMetriplecticBridge

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.HasPrimitives
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZeroHolonomyAnalyticity
 
 /-!

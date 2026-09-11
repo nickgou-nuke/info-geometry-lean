@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ThermodynamicGenerator
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 import InfoGeometry.Thermo.FromBregman

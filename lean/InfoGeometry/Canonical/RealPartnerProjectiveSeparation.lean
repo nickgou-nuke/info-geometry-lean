@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesRealStructures
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! A square-minus-one real phase partner cannot lie on the same nonzero
 real projective line.  This is separate from conjugate-linear Kramers data. -/

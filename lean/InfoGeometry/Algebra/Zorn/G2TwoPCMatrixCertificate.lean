@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCGenerators
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FibonacciHexagonEquationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 import InfoGeometry.Categorical.FibonacciBraidedCategory
 import InfoGeometry.Categorical.FibonacciHexagon

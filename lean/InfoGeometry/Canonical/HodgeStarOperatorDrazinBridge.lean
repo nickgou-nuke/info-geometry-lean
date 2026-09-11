@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.HodgeStarOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinHodgeChiralBridge
 
 /-!

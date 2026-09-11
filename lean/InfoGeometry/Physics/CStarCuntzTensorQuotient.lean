@@ -1,4 +1,5 @@
 import Mathlib.Analysis.CStarAlgebra.Classes
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Star.Subalgebra
 import Mathlib.Topology.Algebra.StarSubalgebra
 import InfoGeometry.Topology.AlgebraicCuntzQuotient

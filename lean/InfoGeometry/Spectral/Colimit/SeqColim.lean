@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Colimit.NativeModuleColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Sequential colimits

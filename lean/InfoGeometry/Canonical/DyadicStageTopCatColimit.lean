@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DyadicStageReadoutTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.DyadicStageTopCatColimit
 

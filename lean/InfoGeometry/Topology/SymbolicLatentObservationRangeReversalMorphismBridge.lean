@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentObservationRangeCompHausNaturality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentObservationRangeReversalCompHaus
 
 /-!

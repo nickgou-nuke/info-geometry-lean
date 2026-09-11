@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Cl55SpinorCartanFock
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl55WittOrthogonalHierarchy
 
 /-!

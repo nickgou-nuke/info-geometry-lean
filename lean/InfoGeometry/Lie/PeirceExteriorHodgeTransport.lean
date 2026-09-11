@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionCayleyHodgeDualityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionPeirceExteriorBridge
 import InfoGeometry.Lie.SplitOctonionPeirceNativeProjectors
 

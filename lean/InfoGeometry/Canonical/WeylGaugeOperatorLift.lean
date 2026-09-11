@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RestrictedVolumeCharacter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.BogoliubovClosedForms
 import Mathlib.Analysis.SpecialFunctions.Log.Basic

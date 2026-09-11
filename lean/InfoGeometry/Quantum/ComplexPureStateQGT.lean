@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Complex quantum geometric tensor for pure states

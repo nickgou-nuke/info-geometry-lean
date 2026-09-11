@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ConformalLieAlgebra55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 open InfoGeometry.Clifford.ConformalLieAlgebra55

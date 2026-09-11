@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.GeometricTensorPolarizedPullback
 import InfoGeometry.Canonical.BogoliubovFrameKreinMetricBridge
 

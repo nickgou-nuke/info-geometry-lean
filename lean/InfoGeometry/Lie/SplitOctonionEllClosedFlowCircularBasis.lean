@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllClosedFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
 import InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
 import Mathlib.LinearAlgebra.Matrix.Trace

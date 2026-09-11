@@ -37,6 +37,7 @@ separately.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.FiniteJonesModel
 import InfoGeometry.Optics.FiniteJonesStinespring
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThreeLevelFiniteGibbsVariational
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Inference.FisherVariance
 import InfoGeometry.Inference.FisherInverse
 

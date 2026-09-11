@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealHomologyCohomologyDictionary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.RealHomologyCohomologyDictionary
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteGibbsQGTRealization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 Compatibility import for the finite Gibbs/QGT realization.

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.HypercomplexTriad
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SupermatrixKoszul
 import InfoGeometry.Clifford.OpSignatureBridge
 import InfoGeometry.Quantum.Monodromy

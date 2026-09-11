@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Real.Basic
@@ -8,7 +9,7 @@ namespace CPTCausalCone
 
 open Matrix
 
-abbrev M2Z := Matrix (Fin 2) (Fin 2) ℤ
+abbrev M2Z := InfoGeometry.Algebra.FiniteSpin.Mat2Z
 
 /-- Scale signum generator ε (ε² = +1) -/
 def eps : M2Z := ![![0, 1], ![1, 0]]

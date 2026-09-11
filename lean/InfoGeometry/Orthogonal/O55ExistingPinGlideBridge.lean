@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55NativePinGradeReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Orthogonal.O55TwoBoundaryMultigradedReadout
 import InfoGeometry.Orthogonal.O55WittCoordinateEquiv
 import InfoGeometry.Clifford.Cl55RealSplitPinNullPairProjective

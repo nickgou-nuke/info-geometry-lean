@@ -10,6 +10,7 @@ below.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 import InfoGeometry.OperatorAlgebra.ChiralResidueAudit
 

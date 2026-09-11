@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.ConcreteComposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Split Zorn null boundary spine

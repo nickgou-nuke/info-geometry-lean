@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Arithmetic.MobiusDirichletInverseBridgeChecks

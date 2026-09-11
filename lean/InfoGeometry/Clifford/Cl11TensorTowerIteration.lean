@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.IterativeExponentiation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SupergradedBracket
 import InfoGeometry.Clifford.Cl11MarkovJonesEngine
 import InfoGeometry.Clifford.Cl11TensorTowerLimit

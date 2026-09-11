@@ -1,4 +1,5 @@
 import InfoGeometry.Prequantum.AlgebraicGNSState
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Prequantum.GNSBridge
 import InfoGeometry.Algebra.CuntzGNSRepresentation
 import InfoGeometry.Algebra.CuntzKMSState

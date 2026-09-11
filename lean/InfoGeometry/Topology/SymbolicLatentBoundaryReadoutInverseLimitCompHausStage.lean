@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentBoundaryReadoutInverseLimitCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Stage projections of the compact boundary readout

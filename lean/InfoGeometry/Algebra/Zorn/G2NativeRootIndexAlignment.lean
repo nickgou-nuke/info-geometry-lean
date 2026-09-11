@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2RootWeylAdjointCharacter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2RootInnerDerivationBridge
 import InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
 

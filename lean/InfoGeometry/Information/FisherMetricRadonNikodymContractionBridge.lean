@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeSurprisalRadonNikodymBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorialHessianBridge
 import InfoGeometry.Canonical.BogoliubovTransport
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.G2ArtinPresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Inner conjugation on the native `G₂` Artin carrier

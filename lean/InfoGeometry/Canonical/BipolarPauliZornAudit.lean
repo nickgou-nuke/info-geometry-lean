@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarPauliZornPristineChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transitive axiom inspection for the Pauli--Zorn bridge

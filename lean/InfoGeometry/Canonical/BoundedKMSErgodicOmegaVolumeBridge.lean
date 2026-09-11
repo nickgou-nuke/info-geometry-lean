@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundedKMSErgodicFixedPointBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
 import InfoGeometry.Meta.Architecture
 

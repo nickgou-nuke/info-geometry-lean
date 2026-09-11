@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Block
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The associative quadrant corner

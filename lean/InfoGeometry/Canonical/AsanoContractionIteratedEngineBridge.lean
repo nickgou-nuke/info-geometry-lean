@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.LeeYangAsanoDigest
 import InfoGeometry.Canonical.MvPolynomialMultiaffineBridge
 import InfoGeometry.Canonical.FilteredColimitLeeYangVirasoroMasterBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitClifford55ProjectivePureSpinor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.ExteriorKleinTwoPlaneQuotient
 import Mathlib.LinearAlgebra.Basis.VectorSpace
 

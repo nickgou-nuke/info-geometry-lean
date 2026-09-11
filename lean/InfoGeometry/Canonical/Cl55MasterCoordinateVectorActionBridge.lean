@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55MasterCoordinateChiralBlockBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Vector-action transport for the reindexed `Cl(5,5)` master carrier
@@ -19,7 +20,7 @@ open InfoGeometry.Canonical.Cl55MasterParityOddnessBridge
 open InfoGeometry.Canonical.Cl55MasterCoordinateReindexBridge
 
 abbrev TowerSpinor32 := Idx 5 → ℝ
-abbrev CoordinateSpinor32 := Fin 32 → ℝ
+abbrev CoordinateSpinor32 := InfoGeometry.Algebra.FiniteSpin.Vec32R
 
 noncomputable def towerToCoordinateVector :
     TowerSpinor32 ≃ₗ[ℝ] CoordinateSpinor32 :=

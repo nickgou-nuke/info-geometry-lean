@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FiniteN2Induction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.N2ModeCentralExtension
 import InfoGeometry.Algebra.SupergradedCocycle
 import InfoGeometry.External.Virasoro.AffineKacMoody

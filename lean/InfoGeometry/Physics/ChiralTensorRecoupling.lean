@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ChiralCausalCone
 import Mathlib.LinearAlgebra.TensorProduct.Basic
 import Mathlib.RingTheory.TensorProduct.Basic

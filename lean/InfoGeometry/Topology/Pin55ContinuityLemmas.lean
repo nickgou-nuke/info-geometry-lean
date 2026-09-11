@@ -1,4 +1,5 @@
 import Mathlib.Topology.Algebra.Module.FiniteDimension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.Pin55TopologicalGroups
 import InfoGeometry.Clifford.Cl55RealSplitPinAction
 

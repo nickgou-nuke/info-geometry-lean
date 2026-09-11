@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralCuntzFockSpaceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FockVacuumAnnihilationBridge
 import InfoGeometry.Canonical.ExteriorContractionOperatorBridge
 import InfoGeometry.Canonical.SpinorMixedCARBridge

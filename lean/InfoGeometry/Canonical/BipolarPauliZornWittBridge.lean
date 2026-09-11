@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarPauliHestenesSolderingBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornMatrix
 import InfoGeometry.Lie.SplitOctonionCircularMinkowskiPauliBridge
 import Mathlib.Tactic

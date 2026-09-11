@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.TwoTwistorSpacetimeRealityAdjacency
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Hermitian
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 

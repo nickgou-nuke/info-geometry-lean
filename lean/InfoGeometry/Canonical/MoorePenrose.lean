@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Star.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Star.SelfAdjoint
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Analysis.Normed.Ring.Basic

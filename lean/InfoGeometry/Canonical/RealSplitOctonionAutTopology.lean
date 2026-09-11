@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealSplitOctonionAutAmbient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 import Mathlib.Topology.Algebra.Group.ClosedSubgroup
 

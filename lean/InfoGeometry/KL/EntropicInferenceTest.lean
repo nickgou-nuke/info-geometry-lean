@@ -1,4 +1,5 @@
 import InfoGeometry.EntropicInference
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 set_option linter.unusedSectionVars false
 
 namespace InfoGeometry.KL.EntropicInferenceTest

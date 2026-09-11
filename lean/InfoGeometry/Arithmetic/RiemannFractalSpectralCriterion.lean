@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.HerichiLapidusSpectralBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Riemann fractal spectral criterion — retired compatibility module

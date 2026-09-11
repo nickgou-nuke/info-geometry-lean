@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredDirectInverseColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauOnsagerBKMBridge
 
 noncomputable section

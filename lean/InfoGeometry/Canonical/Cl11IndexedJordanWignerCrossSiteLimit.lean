@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11TensorTowerCrossSiteCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11IndexedJordanWignerDirectLimit
 
 set_option autoImplicit false

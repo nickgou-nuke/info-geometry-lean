@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.LieEquivEigenvectorTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transport of eigen-root spaces

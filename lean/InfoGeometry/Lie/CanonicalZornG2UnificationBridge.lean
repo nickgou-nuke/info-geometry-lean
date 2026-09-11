@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.RealSplitOctonionG2Classification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornCartanRootSystem
 import InfoGeometry.Lie.CanonicalZornRootSystemComparison
 import InfoGeometry.Lie.CanonicalZornMathlibBridge

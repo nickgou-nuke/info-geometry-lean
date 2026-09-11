@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Canonical.RealSplitOctonionAutCandidateContinuousAmbient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Induced topology on the full linear candidate carrier

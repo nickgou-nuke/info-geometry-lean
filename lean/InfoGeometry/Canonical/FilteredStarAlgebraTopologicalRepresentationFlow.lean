@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraTopologicalRepresentationTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Flow/representation intertwining on a filtered `TopCat` colimit

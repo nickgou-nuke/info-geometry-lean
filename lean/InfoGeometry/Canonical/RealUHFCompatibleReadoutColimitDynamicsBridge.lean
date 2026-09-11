@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutDynamicsTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11TensorInductiveLimitTopologicalTrace
 
 /-!

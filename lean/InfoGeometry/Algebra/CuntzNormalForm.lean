@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzContractionLemmas
 import InfoGeometry.Algebra.CuntzMatrixUnits
 

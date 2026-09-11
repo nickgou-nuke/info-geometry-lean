@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSTomitaRealColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Filtered closed Tomita modular forms

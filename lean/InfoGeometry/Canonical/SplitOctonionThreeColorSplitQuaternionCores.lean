@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionThreeColorChiralRelations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitQuaternionAssociativeCoassociativeCalibrationBridge
 import Mathlib.LinearAlgebra.Basis.Basic
 import Mathlib.Tactic

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.InformationTorsion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.BeliefAlgebra
 

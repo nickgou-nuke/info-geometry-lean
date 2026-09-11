@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SplitQuaternionMatrices
 import InfoGeometry.Canonical.SplitOctonionFixedColorCl11Bridge
 import InfoGeometry.Optics.OperatorQGTBogoliubovPauliSoldering

@@ -1,4 +1,5 @@
 import Mathlib.RingTheory.Coalgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Comodules over a mathlib coalgebra

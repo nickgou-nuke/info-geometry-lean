@@ -157,7 +157,7 @@ theorem twisted_square_eq_sign
 
 /-! ### 5. Emergent Spacetime Soldering Determinant -/
 
-abbrev FourVector := Fin 4 → ℝ
+abbrev FourVector := InfoGeometry.Algebra.FiniteSpin.Vec4R
 abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- Pauli matrix basis σ₀, σ₁, σ₂, σ₃ -/

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11TensorTower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite algebraic actions for the dyadic Clifford stages

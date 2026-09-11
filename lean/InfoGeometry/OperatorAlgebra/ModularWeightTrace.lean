@@ -15,6 +15,7 @@ In particular, this file does not put a bare trace field on a type III algebra.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

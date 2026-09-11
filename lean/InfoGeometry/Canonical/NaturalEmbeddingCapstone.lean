@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.NaturalEmbedding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.NaturalEmbeddingCapstone
 

@@ -12,6 +12,7 @@ primitive source of the Poincare metric or the KMS theorem.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.JUnitaryTopologicalCharge
 
 noncomputable section

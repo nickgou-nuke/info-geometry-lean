@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Matrix.Basic

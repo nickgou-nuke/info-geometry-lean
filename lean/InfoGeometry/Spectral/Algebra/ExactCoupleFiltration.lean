@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.GenericDerivedCouple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The image filtration of a graded exact couple

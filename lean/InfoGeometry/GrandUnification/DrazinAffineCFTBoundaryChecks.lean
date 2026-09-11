@@ -1,4 +1,5 @@
 import InfoGeometry.GrandUnification.DrazinAffineCFTBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 Smoke checks for the theorem-safe Drazin--Affine CFT boundary packet.

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.NoncommutativeRenyi
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Unit-valued conjugation for operator surprisal

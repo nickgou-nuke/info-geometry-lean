@@ -1,1 +1,2 @@
 import InfoGeometry.Algebra.Zorn.G2GroupOrderReduction
+import InfoGeometry.Algebra.FiniteSpinAlgebra

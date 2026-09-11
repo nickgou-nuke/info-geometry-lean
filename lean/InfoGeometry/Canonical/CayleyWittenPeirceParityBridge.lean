@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CayleyConjugationExteriorDualityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cayley middle grading versus Peirce and exterior parity

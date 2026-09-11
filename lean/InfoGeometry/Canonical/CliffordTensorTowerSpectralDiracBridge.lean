@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CliffordDirectColimit
 import InfoGeometry.Canonical.FilteredColimitDiracIndexBridge
 

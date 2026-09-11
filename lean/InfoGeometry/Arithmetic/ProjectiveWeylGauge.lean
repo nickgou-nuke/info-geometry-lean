@@ -13,6 +13,7 @@ as explicit witness data.
 -/
 
 import InfoGeometry.Arithmetic.PrimitiveProjectiveRays
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ProjectiveRelativeEntropy
 import InfoGeometry.Thermodynamics.ProjectiveTemperature
 

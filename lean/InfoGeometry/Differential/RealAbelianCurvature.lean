@@ -6,6 +6,7 @@ No complex imports.
 -/
 
 import Mathlib.MeasureTheory.Integral.Bochner.Set
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 import Mathlib.Analysis.Normed.Module.Basic
 import InfoGeometry.Geometry.RealUpperHalfPlane

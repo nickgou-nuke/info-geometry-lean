@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.WittProjectiveClosureHonest
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Honest Witt / projective closure surface

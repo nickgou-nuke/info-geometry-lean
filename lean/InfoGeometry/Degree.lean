@@ -1,4 +1,5 @@
 import InfoGeometry.Axioms
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Degree Interface (Assumption-backed)

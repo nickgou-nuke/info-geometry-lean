@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.HestenesOddSector
 import InfoGeometry.Clifford.HestenesParavectorPair
 import InfoGeometry.Riemannian.CartanMetric

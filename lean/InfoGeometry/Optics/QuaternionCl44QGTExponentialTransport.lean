@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.QuaternionCl44QGTNormedFrechetRealization
 import InfoGeometry.Optics.QuaternionCl44QGTDiracCovariance
 import InfoGeometry.OperatorAlgebra.NoncommutativeDuhamelDerivative

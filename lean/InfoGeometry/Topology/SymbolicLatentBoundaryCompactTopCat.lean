@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentBoundaryReadoutInverseLimitTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compact/Hausdorff transport for the symbolic-latent boundary limit

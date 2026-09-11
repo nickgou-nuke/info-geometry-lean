@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCliffordAction
 import InfoGeometry.Lie.SplitOctonionAnnihilatorDimension
 import Mathlib.LinearAlgebra.Eigenspace.Basic

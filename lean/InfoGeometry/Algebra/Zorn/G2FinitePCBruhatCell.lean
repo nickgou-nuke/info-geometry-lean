@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2PCWordSubgroupEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2ConcreteCarrierDecidableEq
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
 

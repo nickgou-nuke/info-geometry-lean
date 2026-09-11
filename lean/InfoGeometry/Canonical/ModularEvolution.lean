@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CausalFunctor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Category.Preorder
 import Mathlib.CategoryTheory.Limits.HasLimits
 import Mathlib.Algebra.Category.Ring.Basic

@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.Zorn.G2CanonicalWeylWords
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Boolean residual fibers over canonical `G₂` inversion sets

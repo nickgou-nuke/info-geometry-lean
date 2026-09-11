@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.Pin55KreinConformalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.GenuineBounds
 import InfoGeometry.Lie.SpinorEquiv
 import Omega.Zeta.XiChainInteriorIncidenceAlgebraMobiusInversion

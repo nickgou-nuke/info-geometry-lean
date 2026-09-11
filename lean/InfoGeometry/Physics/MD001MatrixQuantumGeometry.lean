@@ -1,4 +1,5 @@
 import InfoGeometry.UnifiedMatrixBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.MD20250430071017MatrixStatistics
 
 /-!

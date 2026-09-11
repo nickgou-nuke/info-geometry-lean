@@ -7,6 +7,7 @@ TKK 5-Graded Algebra, SO(8) Casimirs, and K-Theoretic Mass
 -/
 
 import Mathlib.Algebra.Lie.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.UniversalEnveloping
 import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.Order.Ring.Defs

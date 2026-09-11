@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesKreinMatrixBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesCircularSheetCARFinite
 
 /-! # Circular CAR transported into native `Cl⁺(1,3)` -/

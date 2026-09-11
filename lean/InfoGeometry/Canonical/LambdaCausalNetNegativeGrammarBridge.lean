@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Category.Preorder
 import InfoGeometry.Canonical.CausalConeProjectorBridge
 import InfoGeometry.Canonical.BoltzmannModularHamiltonianEquivalence

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.Conf3ArnoldNormalizationTopological
 import InfoGeometry.External.Auto.NonIsoConf3DeRhamCooperad
 import InfoGeometry.External.Auto.NonIsoConf3DeRhamCohomologyFormula

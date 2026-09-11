@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionQuaternionPolar
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Quaternion
 
 open scoped Quaternion

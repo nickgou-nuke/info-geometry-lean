@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredHestenesKreinColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A concrete finite Hestenes--Krein filtered cone

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.TopologicalCovariantFlowObservationRangeFunctor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Quotient observation functor and its range comparison

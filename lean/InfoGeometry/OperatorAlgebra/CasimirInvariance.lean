@@ -18,6 +18,7 @@ the algebraic center/Casimir anchor first.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.IndividuatedCl44Casimir
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.OperatorAlgebra.VerifiedCasimir

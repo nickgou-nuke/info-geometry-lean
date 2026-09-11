@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ArtinBraidBostConnes
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ArtinBraidBostConnesCapstone
 

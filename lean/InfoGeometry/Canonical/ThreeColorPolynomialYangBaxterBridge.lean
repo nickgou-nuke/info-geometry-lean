@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Permutation
 import InfoGeometry.Canonical.SplitOctonionThreeColorModularCl11
 

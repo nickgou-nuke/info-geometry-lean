@@ -1,4 +1,5 @@
 import InfoGeometry.GromovWittenErlangen.DrazinLocalization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Coalgebra.FrobeniusPairing
 
 /-!

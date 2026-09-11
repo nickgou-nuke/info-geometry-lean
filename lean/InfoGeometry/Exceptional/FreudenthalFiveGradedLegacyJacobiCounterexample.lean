@@ -1,1 +1,2 @@
 import InfoGeometry.Exceptional.FreudenthalLegacyFiveGradedJacobiCounterexample
+import InfoGeometry.Algebra.FiniteSpinAlgebra

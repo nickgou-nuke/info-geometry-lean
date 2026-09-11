@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AffineProjectiveAnomalyCancellationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.AffineProjectiveAnomalyCancellationCapstone
 

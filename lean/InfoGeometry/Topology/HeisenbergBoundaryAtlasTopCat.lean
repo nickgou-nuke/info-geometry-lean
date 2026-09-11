@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.HeisenbergBoundaryAtlasTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # TopCat packaging for the Heisenberg boundary atlas

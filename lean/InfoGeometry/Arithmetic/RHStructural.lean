@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.MoebiusWeylEuler
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.UResRepresentations
 import InfoGeometry.Analysis.BregmanAnalyticBound
 import InfoGeometry.Analysis.BregmanMonodromyBridge

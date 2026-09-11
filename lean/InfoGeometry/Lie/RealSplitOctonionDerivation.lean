@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.RealSplitOctonionDerivationWitness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Typed real split-Cayley derivation surface

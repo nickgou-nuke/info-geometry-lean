@@ -1,4 +1,5 @@
 import InfoGeometry.Holography.ChernSimonsToLiouville
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ChernSimonsToLiouvilleCapstone
 

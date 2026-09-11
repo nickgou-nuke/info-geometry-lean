@@ -1,7 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic

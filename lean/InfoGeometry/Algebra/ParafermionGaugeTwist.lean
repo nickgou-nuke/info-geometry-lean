@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Topology.CuntzCantorSpectralTriple

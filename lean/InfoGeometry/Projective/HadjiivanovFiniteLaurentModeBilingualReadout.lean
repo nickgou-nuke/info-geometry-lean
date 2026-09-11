@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.HadjiivanovFiniteLaurentModeHestenesKreinConsumer
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BilingualRealHestenesDictionary
 
 /-!

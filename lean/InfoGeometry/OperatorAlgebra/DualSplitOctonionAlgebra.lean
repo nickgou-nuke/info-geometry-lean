@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionSymplecticFoundation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SupergradedBracket
 import InfoGeometry.Topology.BrillouinKleinGaugeInvariant
 import InfoGeometry.Topology.BrillouinKleinExceptionalTopology

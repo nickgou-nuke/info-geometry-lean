@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.Clifford
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Lift
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Norm and null-cone readback for canonical Zorn derivation flows

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermodynamics.TomitaModularDeviance
 import InfoGeometry.Canonical.VonMangoldtPrimonExplicitBridge
 import InfoGeometry.Arithmetic.PrimonSupergradedGasAlgebra

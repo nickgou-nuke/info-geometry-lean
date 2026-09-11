@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CubicJordanOsFilteredTopCatCocone
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cubic-norm readout through a native Albert topological colimit

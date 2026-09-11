@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikCantorClifford
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.FibonacciBraiding
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 import InfoGeometry.Canonical.FibonacciParafermionAtoms

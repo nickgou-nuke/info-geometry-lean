@@ -1,4 +1,5 @@
 import InfoGeometry.Cocycle.MatrixDetExpTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

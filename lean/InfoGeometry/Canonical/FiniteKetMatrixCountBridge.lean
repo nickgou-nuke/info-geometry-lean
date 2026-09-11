@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CountProbabilityState
 import InfoGeometry.Canonical.PositiveRayCore
 import InfoGeometry.Meta.Architecture

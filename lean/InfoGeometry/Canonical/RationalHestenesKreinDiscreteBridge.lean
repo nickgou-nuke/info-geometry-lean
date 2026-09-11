@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Algebra.Group.Basic
 import Mathlib.Tactic
@@ -66,7 +67,7 @@ theorem rational_dirac_square_eq_hodge
 /-! ### 3. Real Doubled Hestenes-Krein Algebra -/
 
 /-- $2 \times 2$ Matrix Algebra over $\mathbb{Q}$. -/
-abbrev Mat2Q := Matrix (Fin 2) (Fin 2) ℚ
+abbrev Mat2Q := InfoGeometry.Algebra.FiniteSpin.Mat2Q
 
 /-- Modular swap involution $J = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$. -/
 def modularJ : Mat2Q := !![0, 1; 1, 0]

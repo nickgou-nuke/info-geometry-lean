@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarCayleyKleinPristineChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native transitive axiom inspection

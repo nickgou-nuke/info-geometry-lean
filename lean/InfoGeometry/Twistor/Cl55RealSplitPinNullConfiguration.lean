@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Cl55RealSplitPinNullIncidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullUnorderedConfiguration
 
 /-!

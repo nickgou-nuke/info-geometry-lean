@@ -5,6 +5,7 @@ Bridge from residue winding to TopologicalSnap obstruction flows.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.SpectralDivisors
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 

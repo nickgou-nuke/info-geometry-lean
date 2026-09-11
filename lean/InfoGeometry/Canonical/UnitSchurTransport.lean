@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CartanBerezinianCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealDoubledBlockOperator
 
 /-! Unit lower-right block packaging for the native Schur transport owner. -/

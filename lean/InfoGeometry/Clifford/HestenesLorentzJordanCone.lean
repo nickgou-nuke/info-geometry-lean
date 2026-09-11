@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.HestenesParavectorPair
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
 
 namespace InfoGeometry.Clifford.Hestenes

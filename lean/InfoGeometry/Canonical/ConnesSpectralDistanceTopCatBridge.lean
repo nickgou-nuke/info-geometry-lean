@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConnesNoncommutativeGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConnesNCSpectralDistanceTopCat
 
 /-!

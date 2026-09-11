@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.HeisenbergTime
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.HeisenbergTimeCapstone
 

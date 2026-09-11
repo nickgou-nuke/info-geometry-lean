@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ChiralGrandCanonicalHestenesRotor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ChiralGrandCanonicalLoxodromicRotor
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.QuaternionCondensate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.DiracPauliGamma
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Matrix.Basic

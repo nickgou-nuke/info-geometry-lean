@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BraidPermutationActionOnCuntzFamily
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzGeneratorKMSLogThree
 import InfoGeometry.Canonical.CuntzWordMonomialKMSFunctional
 import InfoGeometry.Algebra.CuntzTensorQuotient

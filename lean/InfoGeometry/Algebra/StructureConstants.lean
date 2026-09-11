@@ -6,6 +6,7 @@ Phase 3: Structure Constants f_{abc} and d_{abc} for su(3)
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Classical
 import Mathlib.LinearAlgebra.Matrix.Basis
 import Mathlib.Analysis.Complex.Basic

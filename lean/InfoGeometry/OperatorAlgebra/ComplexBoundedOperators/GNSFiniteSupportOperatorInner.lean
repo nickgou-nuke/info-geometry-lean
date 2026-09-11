@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Inner-product laws for the finite-support GNS bounded representation

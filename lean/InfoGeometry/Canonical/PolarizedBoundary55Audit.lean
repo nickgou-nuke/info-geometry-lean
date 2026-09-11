@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PolarizedBoundary55PristineChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native transitive axiom inspection

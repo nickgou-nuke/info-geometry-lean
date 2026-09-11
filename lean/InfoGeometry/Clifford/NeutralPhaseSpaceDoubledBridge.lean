@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.NeutralPhaseSpaceCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Cartan.Involution
 import InfoGeometry.Krein.Metric

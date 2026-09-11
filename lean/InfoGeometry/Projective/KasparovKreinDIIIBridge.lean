@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealBdGDIIIAtom
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KleinBottleTopology
 import InfoGeometry.KK.Product
 import InfoGeometry.KK.RealSplitKKTBridge

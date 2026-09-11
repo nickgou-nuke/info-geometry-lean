@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Algebra.Category.ModuleCat.FilteredColimits
 import Mathlib.CategoryTheory.Limits.Filtered

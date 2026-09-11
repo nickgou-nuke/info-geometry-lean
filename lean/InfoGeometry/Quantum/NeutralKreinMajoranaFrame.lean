@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Block
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!
@@ -17,6 +18,7 @@ open Matrix
 
 abbrev Carrier (n : ℕ) := Fin n ⊕ Fin n
 abbrev Matrix2 (n : ℕ) := Matrix (Carrier n) (Carrier n) ℝ
+abbrev DoubledMat4R := Matrix2 2
 
 def kreinMetric (n : ℕ) : Matrix2 n :=
   Matrix.fromBlocks 0 1 1 0

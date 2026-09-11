@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ArnoldMajoranaNetwork
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Inference.RegularizedPoissonDeviance
 import InfoGeometry.Inference.PoissonUnbalancedSinkhornTopological
 import InfoGeometry.Inference.PoissonUnbalancedSinkhornCouplingTopological

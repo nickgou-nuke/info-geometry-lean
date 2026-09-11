@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullConfigurationPermutationMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Finsupp.LSum
 
 /-!

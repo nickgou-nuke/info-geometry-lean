@@ -312,7 +312,7 @@ theorem unruh_temperature_with_constants_sheet_nonneg
 /-! ## Statistical moment matrices -/
 
 abbrev Mat2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
-abbrev Tangent2 := Fin 2 → ℝ
+abbrev Tangent2 := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 /-- Over `ℝ`, a nonzero determinant has a genuine sign dichotomy. -/
 theorem realDeterminant_sign_dichotomy

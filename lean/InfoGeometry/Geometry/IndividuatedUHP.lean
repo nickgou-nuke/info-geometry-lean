@@ -28,6 +28,7 @@ an explicit `IsUnit` witness.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.BilingualUpperHalfPlane
 import InfoGeometry.Geometry.VerifiedCauchyKernel
 import InfoGeometry.Quantum.HestenesKahler

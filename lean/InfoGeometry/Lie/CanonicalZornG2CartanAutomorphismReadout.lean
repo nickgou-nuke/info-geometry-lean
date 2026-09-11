@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2GellMannRootComparison
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
 
 /-!

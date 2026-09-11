@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CARCCRFockCuntzParameterTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredQCCRParameterTopologicalColimit
 import InfoGeometry.Canonical.CuntzStarInductiveSystem
 import Mathlib.Topology.Category.TopCat.Basic

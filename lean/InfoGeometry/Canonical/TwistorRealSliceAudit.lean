@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwistorRealSliceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of TwistorRealSliceBridge

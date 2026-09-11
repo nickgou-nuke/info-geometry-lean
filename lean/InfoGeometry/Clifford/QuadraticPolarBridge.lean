@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.QuadraticPolarAnticommutator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Clifford.QuadraticPolarBridge

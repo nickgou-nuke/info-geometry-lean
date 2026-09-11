@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Physics.B3PresentedGroup
 import InfoGeometry.Canonical.SplitOctonionChiralPhaseSpace

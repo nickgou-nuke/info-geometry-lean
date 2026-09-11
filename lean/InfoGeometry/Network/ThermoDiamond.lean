@@ -1,4 +1,5 @@
 import InfoGeometry.Thermodynamics.FiniteConnesCocycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Connes transport for network edges

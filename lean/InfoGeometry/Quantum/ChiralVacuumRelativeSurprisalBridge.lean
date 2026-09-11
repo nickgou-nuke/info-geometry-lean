@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.GeometricTensorSplitOctonionChiralFrame
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Relative and mixed readouts for two chiral frames

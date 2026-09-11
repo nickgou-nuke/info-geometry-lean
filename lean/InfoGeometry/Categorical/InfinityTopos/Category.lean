@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Category.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Categorical
 

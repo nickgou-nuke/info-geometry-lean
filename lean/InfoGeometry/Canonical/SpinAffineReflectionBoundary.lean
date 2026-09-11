@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.SpinAffineCasimirRigidity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ExteriorNegativeCliffordReflection
 
 /-!

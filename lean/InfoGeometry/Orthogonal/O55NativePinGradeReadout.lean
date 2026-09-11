@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55WittNullFrame
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55RealSplitPinNullPairProjective
 
 /-!

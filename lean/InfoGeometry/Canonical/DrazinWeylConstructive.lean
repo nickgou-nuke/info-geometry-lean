@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.TriadicWeylBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option linter.unusedSectionVars false
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KMSSinkhornWeightedTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KMSCocycleGeneratorBridge
 import InfoGeometry.Canonical.BekensteinBound
 import InfoGeometry.Canonical.ModularWeldBridge

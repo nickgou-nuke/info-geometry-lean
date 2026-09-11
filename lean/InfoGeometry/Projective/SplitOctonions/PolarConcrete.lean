@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitOctonions.PolarIncidenceConcrete
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility Import for Concrete Zorn Polar Forms

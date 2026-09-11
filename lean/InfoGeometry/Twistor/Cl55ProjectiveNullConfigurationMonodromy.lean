@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Cl55RealSplitPinNullConfigurationCovering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullConfigurationPermutationMonodromy
 
 /-!

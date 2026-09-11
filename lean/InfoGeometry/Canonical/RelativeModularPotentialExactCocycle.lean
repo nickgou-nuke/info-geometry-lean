@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeModularOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exact cocycle consequences of the finite relative modular potential

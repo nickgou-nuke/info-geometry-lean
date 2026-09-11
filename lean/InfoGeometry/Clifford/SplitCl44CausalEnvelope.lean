@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.BottPeriodicity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ClNNBilinear
 import InfoGeometry.Canonical.Cl44ConformalNormalization
 import InfoGeometry.Projective.NullBoundary

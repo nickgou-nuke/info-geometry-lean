@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RicciMongeAmpere
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SolderingSpinConnectionBogoliubov
 
 /-!

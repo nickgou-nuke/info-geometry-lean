@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorZornMatrixPeirce
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CyclotomicProjectorReadout
 
 /-!

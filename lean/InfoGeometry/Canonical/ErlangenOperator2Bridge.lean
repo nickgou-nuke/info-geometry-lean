@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ErlangenOperator2
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
 
 /-!

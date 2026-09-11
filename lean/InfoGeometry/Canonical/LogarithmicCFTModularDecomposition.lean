@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Block
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import InfoGeometry.Canonical.Drazin
 

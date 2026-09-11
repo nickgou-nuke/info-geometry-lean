@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ThermodynamicSL2MobiusFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Real Jacobian and log-Jacobian surprisal for the finite Mobius flow

@@ -1,4 +1,5 @@
 import InfoGeometry.Cocycle.ActionCocycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Cocycle.AlternativeAssociator
 import InfoGeometry.Cocycle.GroupoidCocycle
 import InfoGeometry.Cocycle.LogCocycle

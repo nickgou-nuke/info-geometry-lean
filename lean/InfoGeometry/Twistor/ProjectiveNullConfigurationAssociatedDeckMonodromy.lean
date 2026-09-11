@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullOrderedExchangeDeckMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Linear monodromy associated to the configuration deck group

@@ -1,5 +1,6 @@
 /- Generated from the GAP ExtRep audit; propositions are intentionally not asserted here. -/
 import Mathlib.Data.Fin.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.ZMod.Basic

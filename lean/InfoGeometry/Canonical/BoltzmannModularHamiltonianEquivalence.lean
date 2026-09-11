@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModularSurprisalThermoPacket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

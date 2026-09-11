@@ -51,7 +51,7 @@ open InfoGeometry.Clifford.GullDoranPseudoscalarBridge
 open InfoGeometry.Physics.ChiralCausalCone
 
 abbrev Matrix2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
-abbrev Matrix4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev Matrix4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /-- Permutation from block-real coordinates to interleaved complex coordinates. -/
 def realificationOrderSwap : Matrix4R :=

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
 import InfoGeometry.Clifford.SplitQ44
 import InfoGeometry.Clifford.Cl44Witt

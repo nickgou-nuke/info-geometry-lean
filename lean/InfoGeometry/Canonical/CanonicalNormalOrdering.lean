@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import Mathlib.LinearAlgebra.Basis.Basic
 import Mathlib.LinearAlgebra.Finsupp.VectorSpace

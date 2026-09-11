@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionAxialKleinBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Polar-form isometry of the axial Zorn and Klein `(3,3)` models

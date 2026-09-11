@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.F4Derivations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Algebra
 

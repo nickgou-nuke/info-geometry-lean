@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullConfigurationFundamentalGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Based loop classes on unordered projective-null configurations

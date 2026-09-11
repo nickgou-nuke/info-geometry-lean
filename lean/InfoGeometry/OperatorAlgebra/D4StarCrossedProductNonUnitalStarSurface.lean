@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductStarLaws
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductAlgebraicSurface
 
 namespace InfoGeometry.OperatorAlgebra.D4StarCrossedProductNonUnitalStarSurface

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CPTTensorColimitIdentification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Prequantum.AlgebraicGNSState
 
 /-!

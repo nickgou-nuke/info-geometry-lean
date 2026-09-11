@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import InfoGeometry.Canonical.NavierStokesBridge
 import InfoGeometry.Canonical.MadelungHydrodynamicPressureBridge

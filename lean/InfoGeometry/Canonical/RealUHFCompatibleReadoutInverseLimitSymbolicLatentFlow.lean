@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitContinuousAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentModularFlow
 import InfoGeometry.Topology.SymbolicLatentModularOrbitTopCat
 import InfoGeometry.Topology.SymbolicLatentModularOrbitClosureTopCat

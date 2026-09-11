@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HeisenbergFiniteModeColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Boundary readout for the finite-mode Heisenberg colimit

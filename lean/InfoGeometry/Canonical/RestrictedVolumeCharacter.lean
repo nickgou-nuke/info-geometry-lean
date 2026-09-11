@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Volume.DeterminantBundle
 import Mathlib.Tactic
 

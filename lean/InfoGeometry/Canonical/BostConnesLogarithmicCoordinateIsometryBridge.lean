@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BostConnesKMS
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BostConnesKMS1ColimitBridge
 import InfoGeometry.Canonical.SouriauMassieuHessianBridge
 import InfoGeometry.Thermodynamics.FiniteGibbsRelative

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
 
 set_option autoImplicit false

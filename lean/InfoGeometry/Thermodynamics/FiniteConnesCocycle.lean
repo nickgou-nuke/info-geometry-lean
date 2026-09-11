@@ -1,4 +1,5 @@
 import InfoGeometry.Thermodynamics.FiniteGibbsRelative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Tactic

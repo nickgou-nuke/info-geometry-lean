@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.HeisenbergBoundaryAtlasTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ZornSixthRootCubicChargeTopological
 
 /-!

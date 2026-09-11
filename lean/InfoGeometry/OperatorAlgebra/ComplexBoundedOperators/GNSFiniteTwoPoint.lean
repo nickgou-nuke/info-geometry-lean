@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Star.Basic
 
 /-!
@@ -24,7 +25,7 @@ noncomputable section
 namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteTwoPoint
 
 /-- The two-point finite commutative algebra `ℂ²`. -/
-abbrev Two := Fin 2 → ℂ
+abbrev Two := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 /-- Cyclic vector `(1,1)`. -/
 def omegaVec : Two := fun _ => 1

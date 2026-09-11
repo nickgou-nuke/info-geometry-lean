@@ -1,4 +1,5 @@
 import Mathlib.Topology.Algebra.Module.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Constructions
 import Mathlib.Topology.Category.TopCat.Basic
 import InfoGeometry.Canonical.GradedRationalCohomologyShadow

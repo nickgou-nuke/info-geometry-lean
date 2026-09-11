@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.OctonionParavectorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Ring
@@ -18,7 +19,7 @@ namespace InfoGeometry.Clifford.FanoOctonionParavector
 open OctonionParavectorBridge
 
 /-- Coordinate model for the imaginary part of the real octonions. -/
-abbrev R7 := Fin 7 → ℝ
+abbrev R7 := InfoGeometry.Algebra.FiniteSpin.Vec7R
 
 /-- Standard coordinate basis vector. -/
 def basisVector (i : Fin 7) : R7 :=

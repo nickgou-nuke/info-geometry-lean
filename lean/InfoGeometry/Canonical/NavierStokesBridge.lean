@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Singular
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinInfiniteCore
 import InfoGeometry.Canonical.FluidCore
 import InfoGeometry.Canonical.GrandCanonicalExperts

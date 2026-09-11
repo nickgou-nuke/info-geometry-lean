@@ -153,7 +153,7 @@ theorem susyHamiltonianBlock_zero_of_energy_zero {E : ℂ} (hE : E = 0) :
 
 /-! ## Spin-half `su(2)` matrix relations -/
 
-abbrev Mat2Q := Matrix (Fin 2) (Fin 2) ℚ
+abbrev Mat2Q := InfoGeometry.Algebra.FiniteSpin.Mat2Q
 
 /-- Spin-half raising matrix. -/
 def Jplus : Mat2Q :=

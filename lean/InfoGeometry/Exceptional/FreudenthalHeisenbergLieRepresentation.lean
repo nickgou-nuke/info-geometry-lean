@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalHeisenbergZeroGradeAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The zero-grade Heisenberg representation

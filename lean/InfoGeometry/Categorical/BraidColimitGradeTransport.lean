@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.BraidColimitVirasoroAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.GradeActionInterface
 
 noncomputable section

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.BaseChange
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.SerreConstruction
 import Mathlib.Algebra.Lie.Semisimple.Basic
 import Mathlib.LinearAlgebra.Dimension.Constructions

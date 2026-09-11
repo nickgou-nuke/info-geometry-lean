@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Projectivization.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Projective.GaugeQuotient

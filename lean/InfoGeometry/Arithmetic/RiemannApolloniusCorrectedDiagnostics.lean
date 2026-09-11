@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.RiemannApolloniusRiccatiBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.RiemannApolloniusVectorFields
 import InfoGeometry.Arithmetic.RiemannApolloniusCorrectedCapstone
 

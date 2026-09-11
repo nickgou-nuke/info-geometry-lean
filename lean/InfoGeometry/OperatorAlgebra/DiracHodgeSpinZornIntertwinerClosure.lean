@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FiniteTwoTermDiracHodgeZorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.RealWeylAdjointSpinRepresentation
 import InfoGeometry.OperatorAlgebra.Cl55FreudenthalZornGradeIntertwiner
 import InfoGeometry.Canonical.ConformalFiveGradeInversion

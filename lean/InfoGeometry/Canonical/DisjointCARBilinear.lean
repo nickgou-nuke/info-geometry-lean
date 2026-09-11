@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11TensorTowerCrossSiteCAR
 import InfoGeometry.Canonical.Cl11CommonFockCarrier
 

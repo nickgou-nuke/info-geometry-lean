@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentBasedLoopHomotopyQuotient
 import InfoGeometry.Topology.SymbolicLatentBasedLoopHomotopyQuotientFunctoriality
 import InfoGeometry.Topology.SymbolicLatentPathHomotopyQuotientTopCat

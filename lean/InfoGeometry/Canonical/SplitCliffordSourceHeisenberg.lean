@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordInfiniteCurrent
 import InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
 

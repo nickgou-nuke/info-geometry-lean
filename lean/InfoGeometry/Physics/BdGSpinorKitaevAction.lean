@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.BdGChiralBlockMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.ToLin
 
 noncomputable section

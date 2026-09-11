@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.SplitOctonionBraidSU3
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ZornScalingFlow
 
 /-!

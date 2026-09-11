@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.H3ZornMcCrimmonLinearization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # McCrimmon trace identities for the real split Albert algebra

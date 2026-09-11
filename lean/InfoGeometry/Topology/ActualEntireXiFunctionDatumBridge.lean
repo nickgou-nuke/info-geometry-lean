@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.RiemannZetaMathlibVicinityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge
 import InfoGeometry.Arithmetic.ActualRiemannXiEntireSchwarzBridge
 

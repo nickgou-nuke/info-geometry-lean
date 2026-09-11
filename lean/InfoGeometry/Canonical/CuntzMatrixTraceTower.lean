@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Star.StarAlgHom
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 import Mathlib.LinearAlgebra.Matrix.Reindex

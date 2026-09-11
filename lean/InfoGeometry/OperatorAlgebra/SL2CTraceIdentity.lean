@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Adjugate
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.Matrix.Notation

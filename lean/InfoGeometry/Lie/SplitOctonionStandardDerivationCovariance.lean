@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.AlternativeDerivations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Covariance of the standard alternative-algebra derivation

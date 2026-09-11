@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2FlagCellQuotientWitness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
 import InfoGeometry.Algebra.Zorn.G2QuotientRepresentativeCoverage
 

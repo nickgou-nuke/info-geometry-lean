@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitOctonions.ZornInstance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic

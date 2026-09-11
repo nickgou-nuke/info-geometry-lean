@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.AkivisIdentity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # NC-Zorn-facing names for the generic Akivis owner

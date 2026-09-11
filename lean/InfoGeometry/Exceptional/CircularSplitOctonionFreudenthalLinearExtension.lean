@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.CircularSplitOctonionContactLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Linear extension of the circular charge readout

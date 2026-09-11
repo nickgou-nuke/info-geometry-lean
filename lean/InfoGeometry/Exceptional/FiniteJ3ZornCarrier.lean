@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.SplitOctonionZornReal
 import InfoGeometry.Exceptional.ZornMatrixRealCanonicalBridge
 

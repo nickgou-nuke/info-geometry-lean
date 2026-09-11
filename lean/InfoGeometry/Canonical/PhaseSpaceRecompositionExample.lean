@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PhaseSpaceRecompositionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativePotentialCountBridge
 import InfoGeometry.Clifford.NeutralPhaseSpaceRankOne
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Restriction-preserving morphisms of compatible readout families

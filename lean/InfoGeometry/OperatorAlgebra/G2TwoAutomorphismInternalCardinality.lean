@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2GroupOrderReduction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoBasisRigidity
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.GradeActionInterface
 
 /-! A carrier-independent statement for indexed mode actions.  Mode shifts are

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Module.LinearMap.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Abel

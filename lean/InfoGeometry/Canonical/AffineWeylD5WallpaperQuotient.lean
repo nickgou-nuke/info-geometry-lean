@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.V4D4WeylEmbedding
 import InfoGeometry.Canonical.WallpaperAffineWeylD5Bridge
 

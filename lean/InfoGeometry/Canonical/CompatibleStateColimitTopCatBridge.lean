@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarInductiveCoconeTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatible state readouts through the TopCat colimit

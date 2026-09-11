@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.RHRealDoubledKreinReformulation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.SpectralGap
 import InfoGeometry.Canonical.LogCftMonodromyBridge
 import InfoGeometry.Capstone.ZornOrderCapstone

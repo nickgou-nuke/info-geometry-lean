@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.OrderOfElement
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 import Mathlib.Tactic
 import InfoGeometry.Canonical.TwelveFoldArithmeticNative

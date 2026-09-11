@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoPCRecovery
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
 
 namespace InfoGeometry.Algebra.Zorn.G2PCRecoveryFactorization

@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Category.Preorder
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Category.Ring.Basic
 import InfoGeometry.Causal.Alexandrov
 import InfoGeometry.Algebra.ZornVectorMatrix

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ResidualSimpleExact
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2BruhatResidualSimpleEquiv
 import InfoGeometry.Algebra.Zorn.G2BruhatResidual
 import InfoGeometry.GroupTheory.G2BruhatInversions

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzOperatorTreeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Matrix-unit action on cylinder projections

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.SmoothSeries
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Module.Connected
 import Mathlib.Analysis.SpecificLimits.Normed
 import InfoGeometry.Canonical.NoncommutativeGibbsExpectationBridge

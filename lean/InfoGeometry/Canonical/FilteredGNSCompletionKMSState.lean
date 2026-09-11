@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSRepresentedCStarModularAutomorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Algebraic KMS states on the completed represented carrier

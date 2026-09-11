@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MoorePenrose
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.RGFlow
 

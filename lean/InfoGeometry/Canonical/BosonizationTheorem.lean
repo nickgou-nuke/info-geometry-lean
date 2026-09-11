@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundaryMajoranaCircuitModel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Canonical.SplitCliffordCurrentLift
 import InfoGeometry.Canonical.CurrentSugawaraBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.ExteriorKleinTwoPlaneQuotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Real two-planes and the projective Klein locus

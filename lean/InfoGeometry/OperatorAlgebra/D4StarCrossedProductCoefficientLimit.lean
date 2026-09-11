@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PauliJungTrialityD4Synthesis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.D4StarObservableDirectLimitAction
 import InfoGeometry.OperatorAlgebra.FiniteGroupCrossedProductDirectLimitConvolution
 import InfoGeometry.OperatorAlgebra.FiniteGroupCrossedProductCoefficientLimit

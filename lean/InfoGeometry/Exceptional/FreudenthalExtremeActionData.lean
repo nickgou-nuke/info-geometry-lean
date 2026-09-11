@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalFiveGradedLieClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Explicit extreme-grade action data

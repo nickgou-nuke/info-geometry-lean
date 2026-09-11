@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.ChiralCircularTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

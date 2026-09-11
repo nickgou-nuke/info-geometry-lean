@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.AsanoContractionNative
 import InfoGeometry.Analysis.AsanoRuelleObstruction
 import InfoGeometry.Analysis.MultiaffinePolynomialSlices

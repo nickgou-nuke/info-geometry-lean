@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.WallpaperSymmetry
 import InfoGeometry.Topology.KANWallpaperIsomorphism
 import InfoGeometry.Topology.WallpaperToWeylBridge
@@ -31,8 +32,8 @@ namespace InfoGeometry.Topology.KleinCompatibleWallpaperClassification
 
 open InfoGeometry.Topology.Wallpaper
 
-abbrev Root2Q := Fin 2 → ℚ
-abbrev Root5Q := Fin 5 → ℚ
+abbrev Root2Q := InfoGeometry.Algebra.FiniteSpin.Vec2Q
+abbrev Root5Q := InfoGeometry.Algebra.FiniteSpin.Vec5Q
 
 instance : DecidableEq Root2Q :=
   Fintype.decidablePiFintype

@@ -14,6 +14,7 @@ This module isolates the algebraic mechanism:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.KreinIsotropicCone
 import InfoGeometry.OperatorAlgebra.KreinIsotropicCone
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit

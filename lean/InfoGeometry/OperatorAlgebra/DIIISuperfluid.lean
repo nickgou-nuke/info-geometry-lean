@@ -16,6 +16,7 @@ or a richer index/winding datum depending on dimension and interaction regime.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section

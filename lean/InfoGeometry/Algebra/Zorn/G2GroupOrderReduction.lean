@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.Coset.Card
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.Sylow
 import Mathlib.GroupTheory.Coset.Basic
 import InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup

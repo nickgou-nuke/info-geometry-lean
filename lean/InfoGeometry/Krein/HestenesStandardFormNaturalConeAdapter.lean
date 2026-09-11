@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.StandardFormNaturalConeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.HestenesKreinNaturalConeBridge
 import InfoGeometry.Meta.Architecture
 

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import DAG.GraphHodge
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget

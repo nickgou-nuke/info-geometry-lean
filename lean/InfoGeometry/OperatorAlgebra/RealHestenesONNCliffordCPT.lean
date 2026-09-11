@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.O44PinCPTReflectionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovTransport
 
 /-!

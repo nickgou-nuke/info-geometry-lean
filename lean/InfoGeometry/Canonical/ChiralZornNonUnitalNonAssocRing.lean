@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Octonion.ChiralZornAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.AkivisIdentity
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.EulerProduct.DirichletLSeries
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Module.MultipliableUniformlyOn
 import InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences

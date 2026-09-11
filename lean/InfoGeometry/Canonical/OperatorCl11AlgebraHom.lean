@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Category.Ring.Colimits
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorCl11WittBasis
 
 /-!

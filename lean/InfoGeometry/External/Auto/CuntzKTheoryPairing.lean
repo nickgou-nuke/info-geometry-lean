@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.ZMod.Basic
 import InfoGeometry.External.Auto.ConnesSpectralAction
 import InfoGeometry.External.Auto.AnomalousKMSFlow

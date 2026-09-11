@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteSingleModeCARTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Topology.Category.TopCat.Basic
 

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.PeirceLadderOperators
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import InfoGeometry.Geometry.FiniteHestenesCR

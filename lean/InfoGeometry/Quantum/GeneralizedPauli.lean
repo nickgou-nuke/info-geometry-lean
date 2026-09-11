@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.QutritPrimitiveWeyl
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.QutritGates
 import InfoGeometry.Quantum.QutritCircuitGeometry
 

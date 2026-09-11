@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Canonical.WheelerItFromBit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Wheeler's `it from bit` compatibility path

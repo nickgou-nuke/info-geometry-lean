@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KreinDoubledAtom
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # `K`-Linear Representation

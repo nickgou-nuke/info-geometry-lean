@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitOrbitClosureCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentModularOrbitClosureFlowCompHaus
 
 /-!

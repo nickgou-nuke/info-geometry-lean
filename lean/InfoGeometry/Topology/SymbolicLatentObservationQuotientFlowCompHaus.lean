@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentObservationQuotientReversalCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compact-Hausdorff flow on the observational quotient

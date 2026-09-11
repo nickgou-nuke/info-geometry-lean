@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinCoreFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.EPAndGroupInverse
 import InfoGeometry.Meta.Architecture
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModularSpinorGrassmannianBoundaryBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitQuaternionGrassmannianGelfandSheaf
 
 namespace InfoGeometry.Canonical

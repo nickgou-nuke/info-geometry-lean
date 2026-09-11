@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ChiralOperatorEnvelope
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Sage basis readout for the canonical chiral operator envelope

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.TransferInstance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.OperatorValuedJones
 import InfoGeometry.Canonical.CoordinateFreeConnectionChannels
 import InfoGeometry.OperatorAlgebra.OperatorProjectiveRatio

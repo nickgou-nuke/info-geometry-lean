@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularTomitaLorentzSynthesis
 import InfoGeometry.Canonical.KMSSubstateKMSCondition
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Prequantum.GNSBridge
 
 /-!

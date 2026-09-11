@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.FiniteMajoranaPairingBlocks
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

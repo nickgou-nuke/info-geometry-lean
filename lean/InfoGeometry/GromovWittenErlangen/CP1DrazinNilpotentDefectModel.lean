@@ -1,4 +1,5 @@
 import InfoGeometry.GromovWittenErlangen.CP1DrazinModel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GromovWittenErlangen.ProjectiveCountProbabilityDrazinBridge
 
 /-!

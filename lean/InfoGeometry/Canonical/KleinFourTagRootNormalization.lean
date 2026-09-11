@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.KleinFourTag
 import InfoGeometry.Topology.V4RootSystem
 

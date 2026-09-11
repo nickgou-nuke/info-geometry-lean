@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CayleyParityUnitsBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CayleyDualityUnitsBridge
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorialCentralCharge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CentralChargeKKTParityBridge
 import InfoGeometry.Canonical.SuperchargeGapHessianBridge
 import InfoGeometry.Meta.Architecture

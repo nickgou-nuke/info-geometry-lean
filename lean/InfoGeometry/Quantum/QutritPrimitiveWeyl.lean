@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.QutritBraidIncidenceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.AharonovBohmConcreteVortex
 
 /-!

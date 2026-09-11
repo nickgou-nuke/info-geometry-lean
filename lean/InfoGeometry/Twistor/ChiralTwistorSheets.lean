@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.PenroseIncidence
 import InfoGeometry.Twistor.PenroseTwistor
 import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis

@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.SemidirectProduct
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SplitOctonionF2SectorExchange
 
 noncomputable section

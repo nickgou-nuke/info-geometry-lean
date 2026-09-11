@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.Basic
 
 namespace InfoGeometry.LLM.PinCPTBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KK
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpinConnection
 import InfoGeometry.Canonical.SuperAnomaly
 

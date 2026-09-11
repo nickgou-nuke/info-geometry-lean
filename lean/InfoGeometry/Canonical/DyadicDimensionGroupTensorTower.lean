@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DyadicDimensionGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TensorTowerColimit
 
 namespace InfoGeometry.Canonical

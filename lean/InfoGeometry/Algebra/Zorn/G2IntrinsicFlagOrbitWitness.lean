@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2IntrinsicFlagActionBijective
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Explicit witnesses for intrinsic flag orbits

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.StandardFormNaturalConeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularCartanCantorSystem
 import InfoGeometry.Volume.ConnesCocycle
 import InfoGeometry.Krein.KreinSpace

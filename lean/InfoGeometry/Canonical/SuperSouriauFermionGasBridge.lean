@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauLieThermoKKTBridge
 import InfoGeometry.Canonical.GrandCanonicalFockNumberBridge
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge

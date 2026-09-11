@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.End
 import Mathlib.Tactic
 

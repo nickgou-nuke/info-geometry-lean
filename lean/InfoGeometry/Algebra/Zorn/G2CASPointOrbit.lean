@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2CASNativePointAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeLineFiber
 
 namespace InfoGeometry.Algebra.Zorn.G2CASPointOrbit

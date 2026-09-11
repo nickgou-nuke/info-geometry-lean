@@ -1,4 +1,5 @@
 import InfoGeometry.Codes.MajoranaStabilizerThreshold
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.MonodromyFlowAdapter
 import Mathlib.Analysis.Complex.Basic
 
@@ -26,7 +27,7 @@ open InfoGeometry.Clifford.MonodromyFlowAdapter
 open InfoGeometry.Codes.MajoranaStabilizerThreshold
 
 /-- A simplified two-coordinate Gaussian envelope, e.g. location plus covariance profile. -/
-abbrev GaussianStateEnvelope := Fin 2 → ℂ
+abbrev GaussianStateEnvelope := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 /--
 JKO-style entropy step in the finite parabolic envelope.  The parameter `η`

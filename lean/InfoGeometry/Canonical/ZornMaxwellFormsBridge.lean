@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornDifferentialFormsLaplacianBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Maxwell equations on the finite differential-form carrier

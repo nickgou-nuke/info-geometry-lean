@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option autoImplicit false
 

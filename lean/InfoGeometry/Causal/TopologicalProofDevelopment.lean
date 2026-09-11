@@ -1,4 +1,5 @@
 import Mathlib.Order.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Order.Bounds.Basic
 import Mathlib.Order.UpperLower.Basic
 import Mathlib.Data.Set.Basic

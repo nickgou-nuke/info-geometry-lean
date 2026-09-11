@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.Projective
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
 
 /-!

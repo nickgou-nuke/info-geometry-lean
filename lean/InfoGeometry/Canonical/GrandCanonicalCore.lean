@@ -1,4 +1,5 @@
 import InfoGeometry.GrandCanonical.Core
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry
 

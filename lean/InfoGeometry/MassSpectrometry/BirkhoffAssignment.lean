@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Convex.Birkhoff
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MassSpectrometry.PeakFragmentMatching
 
 /-!

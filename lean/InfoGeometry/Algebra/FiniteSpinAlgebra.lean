@@ -23,12 +23,53 @@ abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
 abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
 
 abbrev Mat3C := Matrix (Fin 3) (Fin 3) ℂ
+abbrev Mat3R := Matrix (Fin 3) (Fin 3) ℝ
 
 abbrev QutritMatrix := Mat3C
 
 abbrev Mat4R := Matrix (Fin 4) (Fin 4) ℝ
 
 abbrev Mat4C := Matrix (Fin 4) (Fin 4) ℂ
+
+/-- Canonical larger finite matrix carriers shared by concrete modules. -/
+abbrev Mat10R := Matrix (Fin 10) (Fin 10) ℝ
+abbrev Mat32Z := Matrix (Fin 32) (Fin 32) ℤ
+abbrev Mat10Z := Matrix (Fin 10) (Fin 10) ℤ
+abbrev Mat3Z := Matrix (Fin 3) (Fin 3) ℤ
+abbrev Mat2Q := Matrix (Fin 2) (Fin 2) ℚ
+abbrev Mat8Z := Matrix (Fin 8) (Fin 8) ℤ
+abbrev Mat5R := Matrix (Fin 5) (Fin 5) ℝ
+abbrev Mat8R := Matrix (Fin 8) (Fin 8) ℝ
+abbrev Mat32R := Matrix (Fin 32) (Fin 32) ℝ
+abbrev Mat2Z := Matrix (Fin 2) (Fin 2) ℤ
+abbrev Mat6C := Matrix (Fin 6) (Fin 6) ℂ
+abbrev Mat2x1C := Matrix (Fin 2) (Fin 1) ℂ
+abbrev Mat2x1R := Matrix (Fin 2) (Fin 1) ℝ
+abbrev Mat16R := Matrix (Fin 16) (Fin 16) ℝ
+abbrev Mat32SplitR := Matrix (Fin 2) (Fin 2) Mat16R
+abbrev Vec8R := Fin 8 → ℝ
+abbrev Vec3R := Fin 3 → ℝ
+abbrev Vec4R := Fin 4 → ℝ
+abbrev Vec2C := Fin 2 → ℂ
+abbrev Vec2R := Fin 2 → ℝ
+abbrev Vec2Q := Fin 2 → ℚ
+abbrev Vec2Z := Fin 2 → ℤ
+abbrev Vec3C := Fin 3 → ℂ
+abbrev Vec3Z := Fin 3 → ℤ
+abbrev Vec3Q := Fin 3 → ℚ
+abbrev Vec4Q := Fin 4 → ℚ
+abbrev Vec5Q := Fin 5 → ℚ
+abbrev Vec5Z := Fin 5 → ℤ
+abbrev Vec4C := Fin 4 → ℂ
+abbrev Vec5R := Fin 5 → ℝ
+abbrev Vec6C := Fin 6 → ℂ
+abbrev Vec6R := Fin 6 → ℝ
+abbrev Vec7R := Fin 7 → ℝ
+abbrev Vec8C := Fin 8 → ℂ
+abbrev Vec10R := Fin 10 → ℝ
+abbrev Vec10Q := Fin 10 → ℚ
+abbrev Vec10Z := Fin 10 → ℤ
+abbrev Vec32R := Fin 32 → ℝ
 
 /-- Matrix commutator. -/
 def comm (A B : Mat2C) : Mat2C :=

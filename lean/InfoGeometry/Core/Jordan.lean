@@ -1,4 +1,5 @@
 import InfoGeometry.Jordan.Core
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Jordan.SPD
 
 /-!

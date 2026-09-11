@@ -1,4 +1,5 @@
 import InfoGeometry.Feynman.FeynmanTwistedDeRhamComplex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

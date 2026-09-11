@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.ToLin
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import DAG.MatrixRepresentation
 import DAG.HodgeTheorems
 

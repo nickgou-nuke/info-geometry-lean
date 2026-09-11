@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalFiveGradedLieClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalFiveGradedCarrierAddGroup
 import InfoGeometry.Exceptional.FreudenthalFiveGradedCarrierModule
 import InfoGeometry.Exceptional.FreudenthalFiveGradedBracketScalarBilinearity

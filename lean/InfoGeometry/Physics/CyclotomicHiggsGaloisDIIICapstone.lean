@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Analysis.SpecialFunctions.Sqrt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
 import InfoGeometry.Canonical.TwelveFoldCyclotomicNative

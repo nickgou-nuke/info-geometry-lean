@@ -1,4 +1,5 @@
 import Mathlib.Data.Fintype.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Ring

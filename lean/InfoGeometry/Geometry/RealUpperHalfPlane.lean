@@ -8,6 +8,7 @@ It does not import any complex-analysis or upper-half-plane compatibility layer.
 -/
 
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Sqrt
 
 namespace InfoGeometry.Geometry

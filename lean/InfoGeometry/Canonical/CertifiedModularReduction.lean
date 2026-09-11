@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CertifiedInverseKernel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InverseKernelAlgebra
 import InfoGeometry.Canonical.InverseKernelNormalForm
 import InfoGeometry.Canonical.DrazinKreinCompatibility

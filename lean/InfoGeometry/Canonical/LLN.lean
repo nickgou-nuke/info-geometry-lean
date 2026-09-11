@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.LLNCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.LLN

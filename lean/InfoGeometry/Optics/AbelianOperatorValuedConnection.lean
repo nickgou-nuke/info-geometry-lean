@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.OperatorValuedConnection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BottPeriodicity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine
 import InfoGeometry.Clifford.SplitCl44Complexification
 

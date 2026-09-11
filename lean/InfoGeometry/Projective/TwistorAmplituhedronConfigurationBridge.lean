@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.KleinQuadricIncidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.NonIsoConf3RankIngestion
 import InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge
 import InfoGeometry.Projective.Twistor.Incidence

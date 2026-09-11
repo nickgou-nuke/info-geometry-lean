@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.Bernoulli
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.LSeries.Dirichlet
 import Mathlib.NumberTheory.LSeries.Nonvanishing
 import Mathlib.Tactic

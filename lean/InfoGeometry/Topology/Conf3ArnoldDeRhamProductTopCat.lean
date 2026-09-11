@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.Conf3ArnoldDeRhamProductTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # `TopCat` packaging for the Conf₃ braid-shadow / de Rham product packet

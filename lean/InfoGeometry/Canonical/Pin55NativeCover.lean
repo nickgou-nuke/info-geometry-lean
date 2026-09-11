@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittPinNativeTwistedAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittPinKernel
 import InfoGeometry.Clifford.Cl55WittPinSignatureBoundary
 import InfoGeometry.Clifford.Cl55WittNativeIsometryGroup

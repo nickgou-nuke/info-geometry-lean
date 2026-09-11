@@ -1,4 +1,5 @@
 import InfoGeometry.RootSystem.D4DiscriminantCardinality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.RootSystem.D4DualExponentTwo
 import Mathlib.GroupTheory.SpecificGroups.KleinFour
 

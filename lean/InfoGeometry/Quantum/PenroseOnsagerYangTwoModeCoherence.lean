@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.PenroseOnsagerYangOrderParameter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
 
 /-!

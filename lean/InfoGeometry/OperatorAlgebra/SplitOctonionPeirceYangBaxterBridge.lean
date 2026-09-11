@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionCuntzInductionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteMajoranaBraiding
 
 /-!

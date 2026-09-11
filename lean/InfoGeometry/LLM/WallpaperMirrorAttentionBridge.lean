@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.WallpaperToWeylBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LLM.MirrorPhaseCuntzAttention
 
 /-!

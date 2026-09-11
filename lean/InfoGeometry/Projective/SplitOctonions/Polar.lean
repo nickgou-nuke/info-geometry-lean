@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitOctonions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Projective.SplitOctonions.Polar

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConcreteCuntzMatrixIsometries
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Module.FiniteDimension
 import Mathlib.Topology.Category.TopCat.Basic
 

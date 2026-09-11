@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TrifactorSU3
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2PositiveRootCoordinateBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The two simple reflections on the signed `G₂` root carrier

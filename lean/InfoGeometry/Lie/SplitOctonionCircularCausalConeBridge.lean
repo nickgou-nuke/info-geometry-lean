@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularWittForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.RealPauliCausalCone
 
 namespace InfoGeometry.Lie.SplitOctonionCircularCausalConeBridge

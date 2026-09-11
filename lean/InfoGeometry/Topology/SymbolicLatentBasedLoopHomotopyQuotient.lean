@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentLoop
 import InfoGeometry.Topology.SymbolicLatentPathHomotopyPathReversal
 import InfoGeometry.Topology.SymbolicLatentPathHomotopyReversalFixedPoints

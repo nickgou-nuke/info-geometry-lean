@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Reindex
 import InfoGeometry.External.Auto.TLChain
 import InfoGeometry.Physics.ChiralTensorMatrixBridge

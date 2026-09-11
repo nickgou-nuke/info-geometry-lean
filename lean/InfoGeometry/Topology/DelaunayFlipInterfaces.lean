@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.DelaunayPureBraidInvariant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Delaunay Flip Interfaces

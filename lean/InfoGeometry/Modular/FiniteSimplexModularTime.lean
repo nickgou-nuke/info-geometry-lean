@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FiniteRelativeModularLogBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Probability.AitchisonFinite
 
 /-!

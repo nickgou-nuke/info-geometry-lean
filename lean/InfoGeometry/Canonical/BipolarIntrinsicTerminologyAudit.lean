@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarIntrinsicTerminologyPristineChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transitive axiom inspection for the intrinsic terminology correction

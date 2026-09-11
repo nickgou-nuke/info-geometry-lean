@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.HessianGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpectralInference
 
 namespace InfoGeometry.Canonical.InformationTorsion

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.CStarCuntzTensorQuotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.TensorProduct.Basic
 import Mathlib.Algebra.Star.TensorProduct
 import Mathlib.LinearAlgebra.Complex.Module

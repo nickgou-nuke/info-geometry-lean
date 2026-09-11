@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.NonAssocDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornDerivation
 import InfoGeometry.Canonical.CanonicalZornNonUnitalNonAssocRing
 

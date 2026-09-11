@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55Q55NativeSplitBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped BigOperators
 

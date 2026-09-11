@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.DiracPauliGamma
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Section 5: Clifford Structure (Pauli-Dirac)

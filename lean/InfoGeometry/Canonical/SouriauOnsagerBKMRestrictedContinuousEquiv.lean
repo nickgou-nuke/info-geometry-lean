@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauOnsagerBKMSelfAdjoint
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Algebra.Module.Equiv
 
 noncomputable section

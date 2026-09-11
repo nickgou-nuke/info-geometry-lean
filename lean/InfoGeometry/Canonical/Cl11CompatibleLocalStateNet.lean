@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11MarkovJonesEngine
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativeModularCenteredFunctional
 
 set_option autoImplicit false

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.InvolutionParityProjectors

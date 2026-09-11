@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.RealSplitClifford
 import InfoGeometry.Canonical.SpectralInference
 import Mathlib.LinearAlgebra.TensorProduct.Map

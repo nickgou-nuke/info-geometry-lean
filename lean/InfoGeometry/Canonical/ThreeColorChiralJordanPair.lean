@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TKKJordanPairData
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.ConcreteComposition
 import Mathlib.Tactic
 

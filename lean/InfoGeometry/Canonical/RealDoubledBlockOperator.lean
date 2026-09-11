@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Generic continuous real two-sheet block operators. -/
 

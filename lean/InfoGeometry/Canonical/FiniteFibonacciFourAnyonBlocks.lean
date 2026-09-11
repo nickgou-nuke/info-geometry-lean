@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.FiniteFibonacciFourAnyonBlocks

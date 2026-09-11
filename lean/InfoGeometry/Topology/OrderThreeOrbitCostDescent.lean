@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.OrderThreeHomeomorphOrbitQuotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.OrderThreeInvariantMetricAction
 
 /-!

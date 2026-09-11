@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraFiniteGroupActionDirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Star-algebra equivalences from compatible finite-group actions on the native direct limit

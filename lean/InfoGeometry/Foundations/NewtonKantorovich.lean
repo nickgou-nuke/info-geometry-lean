@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Foundations.NewtonKantorovichBase
 import InfoGeometry.Foundations.NewtonKantorovichRoots
 import InfoGeometry.Foundations.NewtonKantorovichSequence

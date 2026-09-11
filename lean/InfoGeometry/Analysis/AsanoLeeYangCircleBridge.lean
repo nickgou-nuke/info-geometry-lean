@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Tactic
 import InfoGeometry.Analysis.AsanoUnitDiskContractionBridge

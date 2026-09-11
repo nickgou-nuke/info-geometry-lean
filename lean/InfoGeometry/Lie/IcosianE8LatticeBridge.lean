@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IcosianE8LatticeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Icosian Realization of the $E_8$ Lattice

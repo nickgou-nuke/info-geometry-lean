@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CertifiedInverseKernel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularSourceBridge
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.RealBdG

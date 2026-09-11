@@ -2,6 +2,7 @@
 Ported from cmu-phil/Spectral/cohomology/basic.hlean (Lean 2 HoTT) to Lean 4.28.0 / mathlib4. -/
 
 import InfoGeometry.Spectral.Spectrum.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Int.Basic
 import Mathlib.Algebra.Group.Basic
 import Mathlib.Algebra.Group.PUnit

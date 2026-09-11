@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.IntegralSplitOctonionAlternativity
 import InfoGeometry.Algebra.ZornAlternativeLaws
 

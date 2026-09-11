@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.AlternativeDerivations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.CanonicalDerivationBridge
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
 

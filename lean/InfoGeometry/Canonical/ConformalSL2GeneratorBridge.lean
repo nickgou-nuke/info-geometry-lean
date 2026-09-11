@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ConformalLieAlgebra55Dilation
 import InfoGeometry.OperatorAlgebra.PO55ConformalClosure
 import InfoGeometry.Krein.DoubledSpace

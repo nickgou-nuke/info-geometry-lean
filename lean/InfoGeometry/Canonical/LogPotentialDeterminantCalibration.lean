@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Volume.LogPotential
 
 /-!

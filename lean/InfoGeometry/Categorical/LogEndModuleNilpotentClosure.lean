@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CommutingNilpotentSum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.LogEndModuleCategory
 
 /-!

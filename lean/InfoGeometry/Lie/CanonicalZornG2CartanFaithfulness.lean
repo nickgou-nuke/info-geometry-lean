@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2GellMannRootComparison
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Faithfulness and canonical-generator readout for the G₂ Cartan plane

@@ -9,6 +9,7 @@ All 5 grading slots are non-trivial:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 
 set_option linter.dupNamespace false

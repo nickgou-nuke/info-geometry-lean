@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.GeometricTensorPolarizedPullback
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Rectangular bi-frame pullback

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionStandardDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
 
 namespace InfoGeometry.Lie.SplitOctonionStandardDerivationRootBridge

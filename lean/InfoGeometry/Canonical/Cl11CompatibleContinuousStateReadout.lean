@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11CompatibleRealAlgebraicStateNetTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitBridge
 import InfoGeometry.Canonical.Cl11MarkovJonesTopologicalColimit
 

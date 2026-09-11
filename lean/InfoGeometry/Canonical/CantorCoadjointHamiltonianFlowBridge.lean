@@ -1,3 +1,4 @@
 import InfoGeometry.Canonical.CantorCoadjointHamiltonianFlowBridge.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorCoadjointHamiltonianFlowBridge.Flow
 import InfoGeometry.Canonical.CantorCoadjointHamiltonianFlowBridge.Metriplectic

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinHadamard
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Graph sections of a doubled null frame

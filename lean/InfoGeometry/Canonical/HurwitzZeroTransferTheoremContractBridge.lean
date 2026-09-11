@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TheoremHonestHurwitzConvergenceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
 /-!

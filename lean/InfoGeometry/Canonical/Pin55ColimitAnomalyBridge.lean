@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TensorTowerColimit
 import InfoGeometry.Canonical.OperatorPin55Action
 import InfoGeometry.Canonical.OperatorTKKAnomalyAnnihilation

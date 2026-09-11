@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FibonacciGrothendieckRing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FibonacciGrothendieckLimit
 
 /-!

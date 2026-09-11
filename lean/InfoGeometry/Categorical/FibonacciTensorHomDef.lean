@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.EqToHom
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.FibonacciBraidedCategory
 
 /-!

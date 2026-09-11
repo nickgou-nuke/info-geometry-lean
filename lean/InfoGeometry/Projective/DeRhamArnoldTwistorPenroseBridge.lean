@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.KleinQuadricGrothendieckDeRham
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.ArnoldRelations
 import InfoGeometry.Projective.TwistorAmplituhedronBoundary
 import InfoGeometry.Projective.PenroseSpinTilingConfig

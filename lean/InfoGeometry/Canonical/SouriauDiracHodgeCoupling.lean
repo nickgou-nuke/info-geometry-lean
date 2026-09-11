@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 import InfoGeometry.Canonical.ChiralAnomalyCantor
 import InfoGeometry.Canonical.BregmanAnalyticBound

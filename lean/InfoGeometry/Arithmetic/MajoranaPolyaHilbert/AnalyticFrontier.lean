@@ -1,2 +1,3 @@
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.Bridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.RelativeDeterminant

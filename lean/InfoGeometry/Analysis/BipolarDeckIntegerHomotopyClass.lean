@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarLoopLiftHomotopyInvariant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Deck integers on homotopy classes

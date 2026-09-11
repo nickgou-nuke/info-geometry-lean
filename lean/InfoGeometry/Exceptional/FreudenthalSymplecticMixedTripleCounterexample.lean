@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticTKKJacobiObstruction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The symplectic rank-two operator is not the Freudenthal mixed triple

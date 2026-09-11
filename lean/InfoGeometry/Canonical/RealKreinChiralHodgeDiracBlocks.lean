@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConcreteChiralHodgeDiracHestenesColimit
 import InfoGeometry.Canonical.ExteriorAlgebraChiralHodgeDiracBlockBridge
 import InfoGeometry.Canonical.ChiralExterior3HodgeDiracBlocks

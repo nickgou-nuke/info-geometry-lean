@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikCantorWittBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.QutritPrimitiveWeyl
 
 /-!
@@ -25,7 +26,7 @@ open scoped Kronecker
 
 local notation "ζ₃" => InfoGeometry.Topology.Parafermion.omega
 
-abbrev SheetMatrix := Matrix (Fin 2) (Fin 2) ℂ
+abbrev SheetMatrix := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev ColourMatrix := Matrix (Fin 3) (Fin 3) ℂ
 abbrev SheetColourMatrix := Matrix (Fin 2 × Fin 3) (Fin 2 × Fin 3) ℂ
 

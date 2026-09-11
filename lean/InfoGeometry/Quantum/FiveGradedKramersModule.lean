@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ComplexKramersAntiunitary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Five contact grades carrying the native complex Kramers antiunitary. -/
 noncomputable section

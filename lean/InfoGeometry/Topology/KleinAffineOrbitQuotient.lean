@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.KleinQuotientDeckInvariants
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.KleinDeckNormalForm
 import Mathlib.Topology.Constructions
 

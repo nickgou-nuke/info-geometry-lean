@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.KreinAdjointCommutantBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

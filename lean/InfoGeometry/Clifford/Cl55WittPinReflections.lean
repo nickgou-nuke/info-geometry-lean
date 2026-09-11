@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittOrthogonalReflections
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittPinAlgebraLemmas
 
 namespace InfoGeometry.Clifford.Clifford55

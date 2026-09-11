@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2OrderedRootProduct
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2RootPCAlignment
 import InfoGeometry.Algebra.Zorn.G2BruhatResidualTopEquiv
 

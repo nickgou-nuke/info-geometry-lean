@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ClosureDrazinBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GlobalChiralDecomposition
 import InfoGeometry.Canonical.GrandCanonicalFockNumberBridge
 import InfoGeometry.Canonical.OperatorLightconeCoordinates

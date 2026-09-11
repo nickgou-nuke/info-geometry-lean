@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CPTComplexStructure
 import InfoGeometry.OperatorAlgebra.CliffordCAR
 

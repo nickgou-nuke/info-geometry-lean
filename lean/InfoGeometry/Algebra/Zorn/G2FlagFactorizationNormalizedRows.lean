@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2FlagFactorizationRows
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Proven normalized flag-factorization rows

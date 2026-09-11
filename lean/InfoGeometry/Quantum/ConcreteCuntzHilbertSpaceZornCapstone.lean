@@ -1,5 +1,6 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 import Mathlib.Order.Zorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzStarRepresentationBridge
 import InfoGeometry.Canonical.CantorBoundaryCuntzShift

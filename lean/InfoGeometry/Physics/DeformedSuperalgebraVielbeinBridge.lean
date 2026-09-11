@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Algebra.Equiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.BdGChiralBlockMatrix
 
 namespace InfoGeometry.Physics

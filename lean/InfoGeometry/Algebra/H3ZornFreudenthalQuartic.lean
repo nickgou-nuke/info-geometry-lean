@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.H3ZornJordanIdentity
 import InfoGeometry.Algebra.H3ZornCubicNormStructure
 import InfoGeometry.Exceptional.Freudenthal

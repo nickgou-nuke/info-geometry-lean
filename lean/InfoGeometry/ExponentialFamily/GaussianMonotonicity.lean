@@ -1,4 +1,5 @@
 import InfoGeometry.ExponentialFamily.Gaussian
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Basic
 
 namespace InfoGeometry.ExponentialFamily

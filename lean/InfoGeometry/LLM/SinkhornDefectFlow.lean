@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.TrialityMoE
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.WindingOrbitClosure
 import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.Canonical.RelativePotentialCountBridge

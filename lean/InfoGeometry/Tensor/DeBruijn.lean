@@ -1,4 +1,5 @@
 import Mathlib.Data.Nat.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # De Bruijn tensor-port controller

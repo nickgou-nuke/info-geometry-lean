@@ -1,4 +1,5 @@
 import InfoGeometry.Streaming.PositiveBoundaryConditioning
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Scalar routing weights and discrete gauge transport are different data

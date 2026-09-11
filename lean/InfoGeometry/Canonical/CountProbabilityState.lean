@@ -1,4 +1,5 @@
 import InfoGeometry.KL.Finite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.CountSubstrateBridge
 

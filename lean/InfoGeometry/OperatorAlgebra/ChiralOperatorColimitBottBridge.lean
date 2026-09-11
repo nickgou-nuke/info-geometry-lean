@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TensorTowerColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.BottPeriodicity
 
 /-!

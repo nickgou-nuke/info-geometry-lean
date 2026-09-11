@@ -20,6 +20,7 @@ rays.  Concrete matrix/Clifford models can later instantiate the quotient.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.O44PinMobiusProjective
 import InfoGeometry.OperatorAlgebra.TKKClosure
 

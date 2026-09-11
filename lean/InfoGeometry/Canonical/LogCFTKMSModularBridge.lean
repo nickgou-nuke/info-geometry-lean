@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Thermodynamics.LogCFTKMSModularTriple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # LogCFT KMS modular bridge

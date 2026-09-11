@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSTomitaGraphClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Closability criterion for filtered algebraic Tomita cores

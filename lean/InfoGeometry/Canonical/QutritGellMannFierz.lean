@@ -1,6 +1,6 @@
 import Mathlib
-import InfoGeometry.Canonical.QutritGellMannCasimir
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.QutritGellMannCasimir
 
 /-!
 # Explicit qutrit Gell--Mann Fierz completeness

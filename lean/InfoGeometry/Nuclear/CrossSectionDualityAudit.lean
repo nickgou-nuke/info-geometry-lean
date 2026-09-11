@@ -1,4 +1,5 @@
 import InfoGeometry.Nuclear.CrossSectionDuality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 #print axioms InfoGeometry.Nuclear.CrossSectionDuality.Speak_independent_of_activity
 #print axioms InfoGeometry.Nuclear.CrossSectionDuality.peak_to_total_cross_ratio

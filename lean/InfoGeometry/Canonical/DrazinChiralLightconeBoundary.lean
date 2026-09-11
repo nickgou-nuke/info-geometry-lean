@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.FiniteInvariantTransport
 

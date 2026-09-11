@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.AharonovBohmVortices
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.AmplituhedronBoundary
 import InfoGeometry.Topology.AmplituhedronBoundaryExternalDeRhamBridge
 import InfoGeometry.Topology.AmplituhedronBoundaryExternalRankBridge

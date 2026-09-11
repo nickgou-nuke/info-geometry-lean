@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Three-point non-isotropic configuration: Orlik--Solomon skeleton
@@ -53,7 +54,7 @@ inductive PairProduct where
 
 open PairProduct
 
-abbrev Rank2Vector := Fin 2 → ℤ
+abbrev Rank2Vector := InfoGeometry.Algebra.FiniteSpin.Vec2Z
 
 def vadd (u v : Rank2Vector) : Rank2Vector := fun i => u i + v i
 def vsub (u v : Rank2Vector) : Rank2Vector := fun i => u i - v i

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.JordanKKTData
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GrandUnification
 import Mathlib.Analysis.InnerProductSpace.Positive
 import Mathlib.Analysis.Calculus.Deriv.Slope

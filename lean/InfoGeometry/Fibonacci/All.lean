@@ -1,4 +1,5 @@
 import InfoGeometry.Fibonacci.FibAnyonThm1
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Fibonacci.FibAnyonThm2
 import InfoGeometry.Fibonacci.FibAnyonThm3
 import InfoGeometry.Fibonacci.FibAnyonThm4

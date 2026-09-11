@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.SplitCliffordAlgebras
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Projectors and chirality from a CAR pair

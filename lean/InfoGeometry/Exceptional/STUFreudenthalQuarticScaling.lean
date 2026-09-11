@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalChargeLinear
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.STUAdjointHomogeneity
 
 /-!

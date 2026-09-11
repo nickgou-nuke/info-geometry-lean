@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornCartanRootSystem
 import InfoGeometry.Lie.CanonicalZornOppositeRootNondegeneracy
 import InfoGeometry.Lie.CanonicalZornG2LiteratureBridge

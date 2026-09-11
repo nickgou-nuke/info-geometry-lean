@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionPeirceYangBaxterBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzOperatorTreeBridge
 import InfoGeometry.Topological.FibonacciBraiding
 

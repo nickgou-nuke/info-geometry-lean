@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55ContactMultiGrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! The five contact-degree projections of an endomorphism. -/
 

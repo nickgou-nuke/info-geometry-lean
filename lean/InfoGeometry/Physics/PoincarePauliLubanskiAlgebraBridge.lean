@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Type-Safe Poincaré Pauli-Lubanski Algebra Bridge
@@ -26,8 +27,8 @@ noncomputable section
 
 namespace InfoGeometry.Physics.PoincarePauliLubanskiAlgebraBridge
 
-abbrev FourVector := Fin 4 → ℝ
-abbrev FourCovector := Fin 4 → ℝ
+abbrev FourVector := InfoGeometry.Algebra.FiniteSpin.Vec4R
+abbrev FourCovector := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
 /-- The Minkowski metric tensor $\eta_{\mu\nu} = \operatorname{diag}(1, -1, -1, -1)$. -/
 def etaMetric (μ ν : Fin 4) : ℝ :=

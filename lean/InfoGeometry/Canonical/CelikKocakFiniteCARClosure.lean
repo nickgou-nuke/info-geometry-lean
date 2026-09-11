@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.JordanWignerCelikKocakBridgeNDepth
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite two-site Jordan--Wigner closure

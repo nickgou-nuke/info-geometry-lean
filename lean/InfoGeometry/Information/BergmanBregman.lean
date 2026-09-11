@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Convex.Bregman
 
 namespace InfoGeometry.Information

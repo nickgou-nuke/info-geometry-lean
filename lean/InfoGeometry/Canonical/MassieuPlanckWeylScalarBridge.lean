@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
 open scoped InnerProductSpace BigOperators

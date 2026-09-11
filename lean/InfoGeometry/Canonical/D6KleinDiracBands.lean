@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.D6KleinDiracHamiltonian
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.D6GlideSectorBundle
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic

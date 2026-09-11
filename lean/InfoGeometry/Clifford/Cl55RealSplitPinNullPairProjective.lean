@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55RealSplitPinNullPairAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.Cl55RealSplitPinNullIncidence
 
 namespace InfoGeometry.Clifford.Clifford55

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanWeylNormalizedObservables
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Left-action convention for finite Weyl ensembles

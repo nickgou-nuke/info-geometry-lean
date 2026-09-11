@@ -1,4 +1,5 @@
 import Mathlib.Data.Nat.Squarefree
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 
 noncomputable section

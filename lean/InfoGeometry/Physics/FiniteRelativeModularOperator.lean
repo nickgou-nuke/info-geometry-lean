@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.RegularBimoduleCommutant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Complex.Basic
 

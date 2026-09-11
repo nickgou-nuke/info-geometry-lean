@@ -1,4 +1,5 @@
 import InfoGeometry.Inference.PoissonSinkhornTCSBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Inference.PoissonUnbalancedSinkhorn
 import InfoGeometry.Inference.PoissonUnbalancedSinkhornTopological
 

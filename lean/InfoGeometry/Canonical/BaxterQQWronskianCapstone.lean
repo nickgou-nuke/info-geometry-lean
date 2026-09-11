@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.BaxterQQWronskian
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.BaxterQQWronskianCapstone
 

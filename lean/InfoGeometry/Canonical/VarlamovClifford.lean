@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.SpinGroup
 import Mathlib.LinearAlgebra.CliffordAlgebra.Star
 import Mathlib.Tactic

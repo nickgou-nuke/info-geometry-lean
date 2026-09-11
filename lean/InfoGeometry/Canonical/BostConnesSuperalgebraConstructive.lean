@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBoundaryCuntzShift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Constructive Bost--Connes Superalgebra Interface

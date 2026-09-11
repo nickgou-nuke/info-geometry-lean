@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.H3ZornPeirce0QuadraticHomothety
 import InfoGeometry.Lie.SO55MatrixLieSubalgebra
 

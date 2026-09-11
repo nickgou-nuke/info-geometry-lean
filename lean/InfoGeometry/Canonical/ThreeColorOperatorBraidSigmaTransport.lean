@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThreeColorOperatorCrossCommutator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Three-color operator braid transport into the sigma sectors

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionThreeColorSplitQuaternionCores
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Basis.VectorSpace
 import Mathlib.LinearAlgebra.Matrix.Basis
 

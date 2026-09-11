@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentPathConcatenationImage
 import InfoGeometry.Topology.SymbolicLatentPathConcatenationNaturality
 import InfoGeometry.Topology.SymbolicLatentPath

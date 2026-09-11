@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.KuzminCuntzPath
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge
 
 /-!

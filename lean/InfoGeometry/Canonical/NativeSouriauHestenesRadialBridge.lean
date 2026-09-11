@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CompletedXiHestenesHomogeneousCoordinates
 import InfoGeometry.Canonical.SouriauThermodynamics
 import InfoGeometry.Arithmetic.PrimeGrandCanonicalSouriauSpecialization

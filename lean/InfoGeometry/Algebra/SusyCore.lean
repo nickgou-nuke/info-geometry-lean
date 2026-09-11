@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SpinCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.Fin
 
 open Matrix

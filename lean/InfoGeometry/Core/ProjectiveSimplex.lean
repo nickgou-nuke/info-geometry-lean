@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Projectivization.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Convex.StdSimplex
 import Mathlib.Analysis.Convex.Between
 import Mathlib.Analysis.Convex.Extreme

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-- A spacetime is a topological space equipped with a causal preorder relation. -/
 class Spacetime (M : Type) [TopologicalSpace M] where

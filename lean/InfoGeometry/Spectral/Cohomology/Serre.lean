@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.ExactCouple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Spectral.Algebra.ConcreteIteratedExactCouple
 import InfoGeometry.Spectral.Algebra.ExactCoupleFiltration
 import InfoGeometry.Spectral.Algebra.SpectralSequence

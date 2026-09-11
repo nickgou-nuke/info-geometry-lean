@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ComplexAnalyticBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The local logarithmic-pole period kernel

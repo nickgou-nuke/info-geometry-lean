@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.QutritGates
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.GeomSum
 import Mathlib.Analysis.CStarAlgebra.Matrix
 import Mathlib.Data.Fintype.Powerset

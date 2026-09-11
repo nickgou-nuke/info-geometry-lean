@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.H3ZornFreudenthalQuadraticLaws
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalSymplecticAction
 
 /-!

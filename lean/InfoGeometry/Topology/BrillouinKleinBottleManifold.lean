@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.BrillouinKleinGaugeInvariant
 import InfoGeometry.Topology.ProjectiveKleinCompactification
 import InfoGeometry.Topology.V4RootSystem
@@ -27,13 +28,14 @@ connections, spectral gaps, edge modes, or a full condensed-matter phase
 classification.  Those remain explicit certificate fields.
 -/
 
+
 namespace InfoGeometry.Topology.BrillouinKleinBottleManifold
 
 open Matrix
 open InfoGeometry.Topology.BrillouinKleinGauge
 
-abbrev M2Q := Matrix (Fin 2) (Fin 2) ℚ
-abbrev KPoint := Fin 2 → ℚ
+abbrev M2Q := InfoGeometry.Algebra.FiniteSpin.Mat2Q
+abbrev KPoint := InfoGeometry.Algebra.FiniteSpin.Vec2Q
 
 /-- Horizontal projective translation/gauge generator. -/
 def Tx : M2Q :=

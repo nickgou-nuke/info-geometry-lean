@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQ11
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledSpace
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.Tactic

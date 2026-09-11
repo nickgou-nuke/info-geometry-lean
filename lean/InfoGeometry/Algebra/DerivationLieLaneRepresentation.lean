@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.DerivationLieLane
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.OfAssociative
 
 /-!

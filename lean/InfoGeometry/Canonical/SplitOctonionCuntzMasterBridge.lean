@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.TripotentClSUSYBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 /-!

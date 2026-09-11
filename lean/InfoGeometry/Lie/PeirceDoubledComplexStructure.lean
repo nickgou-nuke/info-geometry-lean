@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionPeirceExterior3CoordinateBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Module.FiniteDimension
 
 /-!

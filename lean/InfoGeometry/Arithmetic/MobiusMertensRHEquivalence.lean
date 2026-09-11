@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Asymptotics.Defs
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import InfoGeometry.Arithmetic.PrimeBitLattice

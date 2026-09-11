@@ -15,6 +15,7 @@ No cosmological, observational, or Navier-Stokes conclusion is asserted.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

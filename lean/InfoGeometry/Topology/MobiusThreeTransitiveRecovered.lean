@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.MobiusGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.MobiusRecoveredHelpers
 import InfoGeometry.Topology.MobiusNormalizationRecovered
 

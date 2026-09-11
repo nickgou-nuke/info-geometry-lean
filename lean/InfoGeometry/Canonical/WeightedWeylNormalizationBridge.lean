@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DensityWeightIntertwinerBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.SimpRw
 

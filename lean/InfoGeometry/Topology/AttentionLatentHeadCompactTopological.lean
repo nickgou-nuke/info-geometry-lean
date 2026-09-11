@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.AttentionLatentHeadTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology
 

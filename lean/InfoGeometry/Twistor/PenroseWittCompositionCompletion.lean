@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.PenroseZornWittBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.PenroseLiteralCrossObstruction
 import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 import InfoGeometry.Algebra.ZornDerivationBridge

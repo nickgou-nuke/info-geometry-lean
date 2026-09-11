@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.ToLin
 import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
 import Mathlib.Tactic

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MadelungCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MoebiusCore
 import InfoGeometry.Thermo.SplitChiralPolarizationBasis
 

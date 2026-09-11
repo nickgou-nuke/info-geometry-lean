@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix
 
@@ -152,7 +153,7 @@ theorem sector_nullProjector : detSector nullProjector = DetSector.null := by
 
 /-- Homogeneous coordinate carrier for the `CP¹` twistor fiber, before quotienting
 by nonzero complex scale. -/
-abbrev TwistorFiberCoord : Type := Fin 2 → ℂ
+abbrev TwistorFiberCoord : Type := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 /-- Left chiral projector on the two homogeneous twistor-fiber coordinates. -/
 def chiralProjectorL : Matrix (Fin 2) (Fin 2) ℂ := !![1, 0; 0, 0]

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.CanonicalRapidityAngleMetriplecticFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ApolloniusSurprisalCriticalLineBridge
 import InfoGeometry.Krein.SplitBoost
 

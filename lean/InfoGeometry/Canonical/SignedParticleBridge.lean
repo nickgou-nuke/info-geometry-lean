@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinKreinCompatibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.OperatorAlgebra.CrossoverResidue

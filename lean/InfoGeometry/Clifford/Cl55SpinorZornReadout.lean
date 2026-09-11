@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55SpinorDimensionReadout
 import InfoGeometry.Algebra.ZornMatrix
 

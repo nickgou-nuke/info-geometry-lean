@@ -1,4 +1,5 @@
 import InfoGeometry.Prequantum.Scaling
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.Rays
 
 open InfoGeometry.Projective

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealComplexRotorHomeomorph
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

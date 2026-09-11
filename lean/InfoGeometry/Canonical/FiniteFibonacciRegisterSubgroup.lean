@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteFibonacciMonodromyInterface
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.FiniteFibonacciRegisterSubgroup

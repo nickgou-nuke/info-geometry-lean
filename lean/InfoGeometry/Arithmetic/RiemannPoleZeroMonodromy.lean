@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.EulerLaurentDerivation
 import InfoGeometry.Algebraic.EulerLaurentHestenesDivisor
 import InfoGeometry.Clifford.HestenesWindingRotor

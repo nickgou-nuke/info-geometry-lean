@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullConfigurationTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Closed topology of a projective null boundary

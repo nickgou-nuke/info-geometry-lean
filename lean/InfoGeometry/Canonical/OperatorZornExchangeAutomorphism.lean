@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornOperatorGradeReversalContract
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorZornGaugeCovariance
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixStarRepresentationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Generator-level dyadic refinement of the finite matrix readout

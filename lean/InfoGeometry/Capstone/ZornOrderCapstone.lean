@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BraidColimitZornBarrier
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 import InfoGeometry.OperatorAlgebra.FiniteJkoJaynesContinuumBridge

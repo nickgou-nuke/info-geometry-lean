@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ZornMatrixSU3.ZornSU3Properties
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Physics.ZornMatrixSU3
 

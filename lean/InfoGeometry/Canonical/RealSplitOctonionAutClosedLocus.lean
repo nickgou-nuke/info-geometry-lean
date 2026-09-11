@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Canonical.RealSplitOctonionAutCandidateConstraint
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Closedness of the existing split-octonion automorphism locus

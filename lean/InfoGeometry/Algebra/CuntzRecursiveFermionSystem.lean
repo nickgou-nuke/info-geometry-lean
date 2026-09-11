@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.KawamuraCuntzCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 
 open InfoGeometry.Topology

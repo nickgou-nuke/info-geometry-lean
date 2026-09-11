@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Incidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.NonIsoConf3RankIngestion
 import InfoGeometry.Topology.RohozhkinDelaunayBraiding
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

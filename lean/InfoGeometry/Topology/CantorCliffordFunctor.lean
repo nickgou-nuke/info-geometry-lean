@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Category.Preorder
 import Mathlib.Algebra.Category.AlgCat.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Basic

@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.TwistorAmplituhedronBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bost-Connes / Amplituhedron Synthesis Interface

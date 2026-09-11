@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2BruhatCardinalities
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2CyclotomicPoincareFactorization
 import Mathlib.RingTheory.Polynomial.Basic
 

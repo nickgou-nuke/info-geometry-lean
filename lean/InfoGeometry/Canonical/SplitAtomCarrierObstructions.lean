@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitAtomDoubling
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.H3ZornCarrierBasis
 
 /-!

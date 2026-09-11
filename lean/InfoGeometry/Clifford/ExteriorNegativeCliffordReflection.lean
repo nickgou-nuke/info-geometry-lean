@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Negative Clifford generators on the existing three-mode exterior carrier

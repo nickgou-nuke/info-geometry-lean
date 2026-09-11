@@ -9,6 +9,7 @@ capacity and that an Andreev/modular mirror is beginning to fail.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

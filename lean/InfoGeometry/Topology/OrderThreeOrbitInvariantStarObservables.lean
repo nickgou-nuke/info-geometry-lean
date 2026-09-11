@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.OrderThreeOrbitObservable
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Star-valued observables on an order-three orbit quotient

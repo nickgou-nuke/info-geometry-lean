@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.HadjiivanovFiniteLaurentModeRealification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.HadjiivanovLogConnectionHestenesKreinConsumer
 
 /-!

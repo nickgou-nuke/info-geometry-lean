@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.BlackHoleEntropy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebraic.SplitSuperGeometry
 
 /-!

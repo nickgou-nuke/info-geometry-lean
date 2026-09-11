@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AmariBinarySimplexBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Probability.SimplexQuadraticResponse
 import InfoGeometry.Probability.FisherRaoMadelungIsometry
 

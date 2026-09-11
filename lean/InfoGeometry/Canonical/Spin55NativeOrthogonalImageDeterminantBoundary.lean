@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Spin55NativeOrthogonalImageQuotientBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Spin55NativeOrthogonalCentralKernel
 import InfoGeometry.Canonical.Spin55OrthogonalActionCoherence
 import InfoGeometry.Clifford.Cl55WittOrthogonalDeterminantSign

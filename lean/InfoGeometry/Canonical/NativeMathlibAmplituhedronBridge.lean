@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Finsupp.Basic
 import Mathlib.Tactic.NoncommRing
 

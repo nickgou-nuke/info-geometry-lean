@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionWittHypercomplexPlaneBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Peirce-defect parity on the finite Witt coordinate carrier

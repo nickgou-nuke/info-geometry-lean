@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.PACKreinEquivalence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.NeutralPhaseSpaceCore
 
 /-!

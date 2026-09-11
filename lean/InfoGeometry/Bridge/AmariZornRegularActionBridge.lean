@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.BilinearForm.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.RegularActionAssociator
 import InfoGeometry.Geometry.Statistical.DualFlatCurvature
 

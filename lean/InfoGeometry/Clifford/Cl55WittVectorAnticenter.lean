@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittVectorCommutant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55RealSplitPinVolumeAnticommutation
 
 namespace InfoGeometry.Clifford.Clifford55

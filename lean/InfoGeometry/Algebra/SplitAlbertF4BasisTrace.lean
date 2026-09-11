@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.BaezF4H3Zorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment
 import InfoGeometry.Algebra.SplitAlbertInnerTraceSpan
 import InfoGeometry.Canonical.QutritGellMannBasis

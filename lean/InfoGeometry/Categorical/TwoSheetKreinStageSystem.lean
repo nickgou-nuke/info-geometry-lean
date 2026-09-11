@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.TwoSheetKreinFilteredColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.HestenesKreinFinite
 
 /-!

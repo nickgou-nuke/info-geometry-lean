@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerFullPeel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native flag-stabilizer closure from the final residual readbacks

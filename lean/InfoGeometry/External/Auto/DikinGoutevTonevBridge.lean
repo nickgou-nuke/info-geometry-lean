@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.KreinMoorePenrose
 import InfoGeometry.External.Auto.InformationGeometricCutoff
 import InfoGeometry.External.Auto.SouriauOperatorThermodynamics

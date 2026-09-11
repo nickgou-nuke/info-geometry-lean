@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.BdGChiralBlockMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NCG.NoncommutativeChiralZornAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases

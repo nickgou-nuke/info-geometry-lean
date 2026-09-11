@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11FiniteNormalizedTraceState
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Prequantum.AlgebraicGNSState
 import InfoGeometry.Clifford.Cl11MarkovJonesEngine
 

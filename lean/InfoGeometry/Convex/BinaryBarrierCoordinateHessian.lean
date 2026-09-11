@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.BipolarLogitBarrierDuality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.LogOddsSimplexGeometry
 
 /-!

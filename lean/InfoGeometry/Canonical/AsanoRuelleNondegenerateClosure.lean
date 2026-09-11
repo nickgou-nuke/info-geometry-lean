@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AsanoRuelleEndpoint
 import InfoGeometry.Canonical.AsanoRuelleTopologicalEndpoint
 import InfoGeometry.Canonical.AsanoRuelleNondegenerateBridge

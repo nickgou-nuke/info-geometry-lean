@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Analysis.Calculus.FDeriv.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.RealDeriv
 import Mathlib.Tactic
 import InfoGeometry.Canonical.ApolloniusHomogeneousCoordinatesBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BostConnesGalois
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BostConnesSymmetryBreaking
 import InfoGeometry.Canonical.BostConnesProjectiveGeometry
 import InfoGeometry.Quantum.FibonacciFusionCategory

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorAlgebraReadiness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorAlgebraModularAtom
 import InfoGeometry.Canonical.OperatorAlgebraAQFTPackage
 import InfoGeometry.Canonical.OperatorAlgebraKKBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CartanDecomposition
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.SpineAttributes

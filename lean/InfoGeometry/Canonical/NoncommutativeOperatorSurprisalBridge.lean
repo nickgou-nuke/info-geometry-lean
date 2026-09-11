@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.OfAssociative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.FDeriv.Basic
 import Mathlib.Tactic
 

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.CondensedMatter.NonOrientableWeylSemimetal
 import InfoGeometry.Topology.TwistedCohomologyWeyl
 import InfoGeometry.Topology.BrillouinKleinBottleManifold

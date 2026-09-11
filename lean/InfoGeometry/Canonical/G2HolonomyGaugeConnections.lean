@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitG2StructureOnImaginaryOctonions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Discrete split-`G₂` gauge connections on the imaginary split-octonion carrier

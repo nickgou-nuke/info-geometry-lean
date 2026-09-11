@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Indexed compact-Hausdorff quotient/range readout

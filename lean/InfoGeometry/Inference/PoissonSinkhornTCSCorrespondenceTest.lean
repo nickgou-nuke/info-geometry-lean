@@ -1,4 +1,5 @@
 import InfoGeometry.Inference.PoissonSinkhornTCSCorrespondence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped BigOperators
 

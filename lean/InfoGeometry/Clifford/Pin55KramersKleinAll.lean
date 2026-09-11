@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ComplexKramersAntiunitary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.KramersPhaseGlideRepresentation
 import InfoGeometry.Quantum.FiveGradedKramersModule
 import InfoGeometry.Topology.KleinDeckNormalForm

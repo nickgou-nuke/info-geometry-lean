@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Cl11Fermions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 import Mathlib.Tactic
 

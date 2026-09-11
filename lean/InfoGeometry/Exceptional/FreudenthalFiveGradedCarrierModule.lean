@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalFiveGradedCarrierAddGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

@@ -9,6 +9,7 @@ supplied circuit witness, not as a proof of minimal circuit complexity.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

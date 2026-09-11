@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Trace
 import InfoGeometry.Algebraic.SplitCliffordCarrier
 import InfoGeometry.Algebraic.SplitSuperGeometry

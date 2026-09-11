@@ -1,6 +1,6 @@
 import Mathlib
-import InfoGeometry.Canonical.A2QutritTransitionRootBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.A2QutritTransitionRootBridge
 
 /-!
 # The finite `A₂` root-space decomposition of the qutrit matrix algebra

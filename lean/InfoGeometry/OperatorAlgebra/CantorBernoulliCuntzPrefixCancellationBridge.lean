@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzOperatorTreeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Prefix cancellation for the concrete Cantor Cuntz word operators

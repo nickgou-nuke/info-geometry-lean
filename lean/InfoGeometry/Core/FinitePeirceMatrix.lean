@@ -1,4 +1,5 @@
 import InfoGeometry.Core.PeirceDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.Idempotents
 import Mathlib.Data.Matrix.Basic
 

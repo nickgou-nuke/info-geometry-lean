@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoBasisRigidity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylGroup
 
 namespace InfoGeometry.Algebra.Zorn.G2TwoSylowCandidate

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornSemisimple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.MathlibBackportCartanCriterion
 import InfoGeometry.Lie.CanonicalZornCartanRootSystem
 import InfoGeometry.Lie.CanonicalZornMathlibBridge

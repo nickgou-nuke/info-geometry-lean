@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.RiemannZetaGeometricDynamicsCorridor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.RiemannZetaExtendedEvidenceLogosMap
 
 open InfoGeometry.Arithmetic.RiemannZetaGeometricDynamicsCorridor

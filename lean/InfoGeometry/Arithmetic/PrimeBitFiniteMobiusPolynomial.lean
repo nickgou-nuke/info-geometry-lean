@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Nat.Squarefree
 import InfoGeometry.Arithmetic.PrimeBitFiniteMertens
 import InfoGeometry.Arithmetic.PrimonWittenIndexZetaBridge

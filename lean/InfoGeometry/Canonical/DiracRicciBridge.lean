@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BottDirac
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GrandSynthesis
 import InfoGeometry.Canonical.GrandUnification
 import InfoGeometry.Jordan.LogDet

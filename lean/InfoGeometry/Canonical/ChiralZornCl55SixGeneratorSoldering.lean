@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55ThreeColorWittChannels
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ThreeColorOperatorCrossCommutator
 
 /-!

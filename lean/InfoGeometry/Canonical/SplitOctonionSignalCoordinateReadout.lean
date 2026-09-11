@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionGogberashviliNormBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

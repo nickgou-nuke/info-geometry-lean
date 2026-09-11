@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzN
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzSupergradedSUSY
 import InfoGeometry.Algebra.CuntzPrimonHamiltonian
 

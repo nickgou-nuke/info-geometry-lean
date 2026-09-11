@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Convex.Radon
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Radon and Helly Theorems

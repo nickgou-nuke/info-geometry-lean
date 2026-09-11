@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KleinMonodromyRepresentationSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Central even sector of the algebraic Klein relation

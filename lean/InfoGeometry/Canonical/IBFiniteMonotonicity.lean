@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBMonotonicity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.IBFinitePythagorean
 import InfoGeometry.Measure.Normalized
 import InfoGeometry.MaxEnt.IProjection

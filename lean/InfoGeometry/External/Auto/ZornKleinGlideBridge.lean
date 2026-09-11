@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.ZornScalingFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.TitsBruhatBrillouinKlein
 
 /-!

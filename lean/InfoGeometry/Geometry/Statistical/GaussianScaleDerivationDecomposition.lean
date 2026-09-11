@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.Statistical.GaussianSplitOctonionDerivationField
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.Statistical.SplitOctonionDualFlatDerivationBridge
 
 /-!

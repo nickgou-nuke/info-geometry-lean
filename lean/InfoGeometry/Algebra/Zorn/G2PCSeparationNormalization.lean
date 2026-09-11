@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoPCGroup
 import InfoGeometry.Algebra.Zorn.G2TwoPCConcreteCollector
 

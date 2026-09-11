@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesKreinColimitRealBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PositiveHomogeneousBarrier
 
 noncomputable section

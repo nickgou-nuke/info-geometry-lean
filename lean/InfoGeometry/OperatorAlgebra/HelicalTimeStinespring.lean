@@ -14,6 +14,7 @@ The key distinction:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.Meta.OwnerTarget
 

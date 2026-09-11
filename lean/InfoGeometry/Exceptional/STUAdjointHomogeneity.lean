@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.STUDatum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Homogeneity readouts for the concrete STU cubic datum

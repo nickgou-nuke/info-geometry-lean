@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeModularOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RestrictedVolumeCharacter
 import InfoGeometry.Geometry.KreinAsHessian
 import InfoGeometry.Algebraic.SplitSuperGeometry

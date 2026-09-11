@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Operator.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Algebra.Spectrum
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DrazinExistenceBridge

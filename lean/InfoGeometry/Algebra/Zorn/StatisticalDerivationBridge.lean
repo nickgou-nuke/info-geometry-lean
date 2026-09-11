@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZornDerivationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Statistical curvature and Zorn standard derivations

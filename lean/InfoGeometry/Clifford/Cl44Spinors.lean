@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl44Witt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Clifford.Cl44Spinors
 

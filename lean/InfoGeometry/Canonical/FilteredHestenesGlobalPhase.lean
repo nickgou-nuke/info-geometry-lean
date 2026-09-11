@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredHestenesGlobalOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

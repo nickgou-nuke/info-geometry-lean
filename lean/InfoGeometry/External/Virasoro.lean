@@ -1,5 +1,6 @@
 -- This module serves as the root of the integrated VirasoroProject.
 import InfoGeometry.External.Virasoro.CentralExtension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.Commutator
 import InfoGeometry.External.Virasoro.CyclicTripleSum
 import InfoGeometry.External.Virasoro.CentralChargeCalc

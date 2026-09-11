@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesHyperbolicDoubling
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Two products on the same eight-dimensional real carrier

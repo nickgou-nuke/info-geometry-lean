@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.HilbertPolya
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.HilbertPolyaCapstone
 

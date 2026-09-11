@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Tactic
 import InfoGeometry.Architecture.CartanLieBracket

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2CyclotomicSignedRootBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Permutation
 
 /-!

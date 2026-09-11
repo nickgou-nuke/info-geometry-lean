@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.CantorBoundaryCuntzFamily
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzChiralSuperchargeRepresentation
 noncomputable section
 namespace InfoGeometry.Topology.CantorBoundaryCuntzLengthTwoSector

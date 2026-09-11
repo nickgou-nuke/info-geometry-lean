@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ParafermionIdentityRealization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.UHFInductiveColimit
 
 /-!

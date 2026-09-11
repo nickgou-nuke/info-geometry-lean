@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.KitaevChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Quantum.KitaevChain
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ThermodynamicAlgebraicCenter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.TwoSheetedAlgebra
 import Mathlib.Data.Set.Basic
 import Mathlib.Algebra.Ring.Equiv

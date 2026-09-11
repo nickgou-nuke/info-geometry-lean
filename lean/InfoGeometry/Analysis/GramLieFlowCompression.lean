@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.GramPathDeformationEntropy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.LieExponentialTraceDeterminant
 import InfoGeometry.LinearAlgebra.FiniteExponentialDeformationEntropy
 

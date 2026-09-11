@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThreeColorOperatorCrossCommutator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The additive real module of the existing operator-Zorn carrier

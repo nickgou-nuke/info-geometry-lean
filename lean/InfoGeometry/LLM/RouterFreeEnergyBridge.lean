@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.ThermodynamicSwitching
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.ThermodynamicIdentities
 import InfoGeometry.ExponentialFamily.Analytic.LogSumExp
 import InfoGeometry.Meta.Architecture

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 import InfoGeometry.Algebraic.NarainOrthogonalCore
 import InfoGeometry.Clifford.SpinorRep

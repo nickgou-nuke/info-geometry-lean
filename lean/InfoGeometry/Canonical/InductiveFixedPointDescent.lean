@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Fixed-point descent through an algebraic inductive colimit

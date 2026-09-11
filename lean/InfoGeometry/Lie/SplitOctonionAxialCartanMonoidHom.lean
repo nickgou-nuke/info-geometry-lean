@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionAxialCartanFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native one-parameter subgroup readout for the traceless Cartan flow

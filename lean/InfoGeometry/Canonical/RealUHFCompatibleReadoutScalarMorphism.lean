@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutFamilyMorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Scalar rescaling of compatible real readout families

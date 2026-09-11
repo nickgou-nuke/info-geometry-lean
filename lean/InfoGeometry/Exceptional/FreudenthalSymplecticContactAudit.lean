@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticContactAll
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transitive axiom inspection for the corrected symplectic contact lane

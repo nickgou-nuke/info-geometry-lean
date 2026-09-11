@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.KANLightConeAffineBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.H3ZornTKKNative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! The Kantor-facing normal form of the already installed H3 triple.
 Only identities owned by the native Jordan and TKK carriers are exported here;

@@ -1,4 +1,5 @@
 import InfoGeometry.Measure.Potential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 set_option linter.unnecessarySimpa false
 
 /-!

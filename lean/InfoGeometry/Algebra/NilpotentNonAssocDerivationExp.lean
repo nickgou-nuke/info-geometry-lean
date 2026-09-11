@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Module.LinearMap.End
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Nat.Choose.Sum
 import Mathlib.Tactic
 import InfoGeometry.Algebra.NonAssocIteratedLeibniz

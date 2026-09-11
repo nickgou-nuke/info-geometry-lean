@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55FiniteCommutingRotorAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55RoPESplitTorusBridge
 import InfoGeometry.Clifford.Cl55RotorUnitsRepresentation
 

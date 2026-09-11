@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzUpperTailQCCRRestrictionCoherence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Fiber/ambient naturality for upper-tail restriction

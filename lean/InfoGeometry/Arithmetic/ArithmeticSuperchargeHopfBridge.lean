@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Basic
 import InfoGeometry.Arithmetic.ArithmeticErlangenSquareRootBridge
 

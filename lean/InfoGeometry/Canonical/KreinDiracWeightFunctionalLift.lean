@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordThermalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InformationPartitionCore
 
 /-!

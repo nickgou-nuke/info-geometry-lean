@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SupermatrixKoszul
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.KoszulFoundation
 import InfoGeometry.Clifford.DiscreteMoebiusGroup
 import InfoGeometry.Clifford.MonodromyFlowAdapter
@@ -25,7 +26,7 @@ open InfoGeometry.Clifford.LogCftMonodromy
 open InfoGeometry.Clifford.MonodromyFlowAdapter
 
 /-- A logical two-state Majorana code carrier. -/
-abbrev MajoranaCodeSpace := Fin 2 → ℂ
+abbrev MajoranaCodeSpace := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 /-- Logical parity readout for the two-state carrier. -/
 def fermionParityOperator : Matrix (Fin 2) (Fin 2) ℂ :=

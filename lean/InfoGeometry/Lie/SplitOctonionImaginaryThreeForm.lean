@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionImaginaryAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionImaginaryTensor
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ModularCftBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.OpSignatureBridge
 import InfoGeometry.OptimalTransport.EntropyGradientFlow
 import Mathlib.Tactic

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornVectorMatrix
 
 /-!

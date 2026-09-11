@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.RealPhaseSpectralTriple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinAdjoint
 
 /-!

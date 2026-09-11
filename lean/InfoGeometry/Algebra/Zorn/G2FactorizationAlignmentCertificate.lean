@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2QuotientRepresentativeInjectivity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Selected-row factorization/alignment interface for the 189 flag carrier

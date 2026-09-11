@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.L2Multiplier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped ENNReal
 open MeasureTheory

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentNoncommutativeObservationCovariantQuotientCompHausFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Covariant readout of compact operator-valued quotients

@@ -1,4 +1,5 @@
 import Mathlib.Combinatorics.SimpleGraph.Clique
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Tactic.NormNum

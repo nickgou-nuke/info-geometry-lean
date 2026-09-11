@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBUpdate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.IBTrajectory

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionTKK55LieEquivalence
 
 /-!

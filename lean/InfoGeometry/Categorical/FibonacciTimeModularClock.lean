@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciSelfDualCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.Monodromy
 
 /-!

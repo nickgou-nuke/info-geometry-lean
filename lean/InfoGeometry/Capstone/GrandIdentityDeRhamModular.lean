@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.Deriv.Add
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Canonical.DeRhamBoltzmannModular

@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Tactic.Linarith
 import InfoGeometry.Meta.SocketTarget

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoRootSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Structural Weyl-rotation bridge for concrete `G₂(2)` root automorphisms

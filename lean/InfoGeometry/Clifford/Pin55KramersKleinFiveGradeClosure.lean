@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.KramersPhaseGlideRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.KleinAffineOrbitQuotient
 import InfoGeometry.Clifford.O55FiveGradeKramersBridge
 import InfoGeometry.Clifford.Pin55KramersContactMultigrading

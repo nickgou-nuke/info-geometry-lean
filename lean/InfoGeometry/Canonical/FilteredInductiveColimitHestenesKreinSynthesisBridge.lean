@@ -1,1 +1,2 @@
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra

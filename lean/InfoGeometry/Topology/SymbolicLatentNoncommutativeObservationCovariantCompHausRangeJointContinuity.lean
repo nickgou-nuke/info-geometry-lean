@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentNoncommutativeObservationCovariantCompHausRangeAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Joint continuity of the covariant action on the operator-observation range

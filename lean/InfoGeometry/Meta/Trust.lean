@@ -1,4 +1,5 @@
 import Lean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Lean.Util.CollectAxioms
 import DAG.Basic
 import InfoGeometry.Meta.Admission

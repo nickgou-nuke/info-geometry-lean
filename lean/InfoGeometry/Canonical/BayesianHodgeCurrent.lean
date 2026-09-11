@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MaximumCaliberKLSplit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.DiscreteHodgeStabilizer
 
 /-!

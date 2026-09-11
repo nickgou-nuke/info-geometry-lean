@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.FiveGradedIncidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.CliffordBridge
 import InfoGeometry.Twistor.Incidence
 import InfoGeometry.Twistor.LightconeBridge

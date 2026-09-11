@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.OrderOfElement
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 import InfoGeometry.Canonical.TwoSheetThreeColorWeyl

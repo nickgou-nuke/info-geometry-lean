@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ChiralPoincareSouriauBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ChiralCausalCone
 
 /-!

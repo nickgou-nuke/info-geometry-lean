@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Subgroup.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Symmetric Space Architecture

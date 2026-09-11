@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.NoetherModularFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.OperatorAlgebra.FierzNoetherBridge

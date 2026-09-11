@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FormalPrimeRootSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConcreteHilbertCommutation
 import InfoGeometry.Canonical.CayleyBregmanBridge
 import InfoGeometry.Canonical.SouriauBostConnesClosureProofs

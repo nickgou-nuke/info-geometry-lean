@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.SpectralFormFactor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.SpectralFormFactorCapstone
 

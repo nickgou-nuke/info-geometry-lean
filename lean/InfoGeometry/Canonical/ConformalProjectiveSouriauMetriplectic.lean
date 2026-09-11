@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Singular
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.Metriplectic
 import InfoGeometry.Projective.FiveGradedCentralizer
 

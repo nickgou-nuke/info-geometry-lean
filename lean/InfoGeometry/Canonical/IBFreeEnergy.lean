@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBMeasure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.KL.Measure
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.MeasureTheory.Integral.Bochner.Basic

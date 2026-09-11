@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.ExpectationRatioMetric
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analytic.LogSumExp
 import InfoGeometry.Routing.FiniteSoftmax
 

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse

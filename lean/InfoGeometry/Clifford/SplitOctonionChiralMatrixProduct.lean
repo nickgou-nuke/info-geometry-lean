@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitOctonionChiralMatrixReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 

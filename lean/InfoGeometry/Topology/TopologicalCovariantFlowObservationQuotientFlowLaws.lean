@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.TopologicalCovariantFlowObservationQuotientFunctor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.TopologicalCovariantFlowCompHausFunctor
 
 /-!

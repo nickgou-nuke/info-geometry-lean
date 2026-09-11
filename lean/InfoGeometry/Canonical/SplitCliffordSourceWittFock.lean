@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Data.Int.Basic
 import InfoGeometry.Canonical.CurrentSugawaraBridge

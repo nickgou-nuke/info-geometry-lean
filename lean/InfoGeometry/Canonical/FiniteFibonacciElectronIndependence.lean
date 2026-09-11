@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteFibonacciMonodromyInterface
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauRelativeEntropySublevelDiagram
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace SouriauRelativeEntropyLevelTopology
 

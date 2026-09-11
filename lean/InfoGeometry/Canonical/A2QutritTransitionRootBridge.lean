@@ -1,7 +1,7 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.A2InsideD5RootSubsystem
 import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The `A₂` transition-root realization on the qutrit carrier

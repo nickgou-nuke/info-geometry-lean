@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.NonIsoConf3DeRhamCooperad
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Logarithmic wedge obstruction for the naive quadric Arnold relation

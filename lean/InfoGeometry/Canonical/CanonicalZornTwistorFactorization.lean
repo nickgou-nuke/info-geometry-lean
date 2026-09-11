@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornNullProjectiveBoundaryBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Explicit rank-one factorization on the split Zorn carrier

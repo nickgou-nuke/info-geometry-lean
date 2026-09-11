@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitCayleyF2
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SplitCayleyF2DeltaComponents
 import InfoGeometry.Algebra.SplitCayleyF2Delta2Components
 import InfoGeometry.Algebra.SplitCayleyF2AddMulAutomorphism

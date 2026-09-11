@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AnalyticalIndexCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.Clifford
 
 set_option linter.unusedSectionVars false

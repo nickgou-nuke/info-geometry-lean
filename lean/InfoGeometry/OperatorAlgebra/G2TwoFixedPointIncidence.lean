@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Fixed-point incidence ledger for the `G₂(2)` outer `C₂` witness

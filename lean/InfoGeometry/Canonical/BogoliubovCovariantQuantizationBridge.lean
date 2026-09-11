@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThermalBogoliubov
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR
 import InfoGeometry.Quantum.RealMajorana
 import InfoGeometry.Canonical.BogoliubovFockSuper

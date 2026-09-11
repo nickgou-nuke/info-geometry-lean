@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.FDeriv.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.MetricSpace.Basic
 import Mathlib.MeasureTheory.Measure.MeasureSpace
 import Mathlib.MeasureTheory.Integral.Bochner.Basic

@@ -12,6 +12,7 @@ scattering determinant zeroes are later instantiations supplied by calibration.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 

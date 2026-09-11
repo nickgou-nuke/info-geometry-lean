@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MajoranaCARTopologicalLocus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.QCCRResidual
 import InfoGeometry.Krein.Automorphisms
 import Mathlib.Topology.Category.TopCat.Basic

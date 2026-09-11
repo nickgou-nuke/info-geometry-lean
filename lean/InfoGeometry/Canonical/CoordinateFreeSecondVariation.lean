@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelationalInformationDynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativeModularPotential
 import InfoGeometry.Canonical.CorrelationSymmetrization
 import InfoGeometry.Canonical.AlgebraicStationarity

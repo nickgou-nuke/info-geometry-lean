@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Physics.Pin
 

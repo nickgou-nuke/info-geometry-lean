@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarCartanCl3PhaseBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Pristine Cartan--Pauli--Zorn--`Cl(3)` chain
@@ -41,7 +42,7 @@ open InfoGeometry.Algebra.ZornMatrix
 open InfoGeometry.Lie.SplitOctonionCircularWittForm
 open InfoGeometry.Clifford.GullDoranPseudoscalarBridge
 
-abbrev Matrix4R := Matrix (Fin 4) (Fin 4) ℝ
+abbrev Matrix4R := InfoGeometry.Algebra.FiniteSpin.Mat4R
 
 /-- Complete finite theorem packet for the reconstructed representation chain. -/
 theorem bipolar_cartan_pauli_zorn_cl3_pristine_chain

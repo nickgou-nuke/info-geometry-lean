@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SpinorRep
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Clifford.SpinorRep_REAL

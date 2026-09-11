@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteMatrixGibbsOperatorReadout
 
 /-!

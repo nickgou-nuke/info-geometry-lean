@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ActualRiemannXiRegularityBridge
 import InfoGeometry.Topology.ZetaLogDerivativeDeRhamPeriodBridge
 import InfoGeometry.Topology.ActualRiemannXiLogDerivativeBridge

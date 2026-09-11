@@ -1,7 +1,7 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordJordanWigner
 import InfoGeometry.Canonical.SplitCliffordSourceWickBase
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordTwoModeCAR

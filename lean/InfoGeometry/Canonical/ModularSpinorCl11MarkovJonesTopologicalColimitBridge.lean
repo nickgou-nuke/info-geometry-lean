@@ -1,2 +1,3 @@
 import InfoGeometry.Canonical.ModularSpinorCl11CuntzStageComplexificationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11MarkovJonesTopologicalColimit

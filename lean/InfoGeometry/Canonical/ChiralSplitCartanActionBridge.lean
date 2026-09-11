@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ChiralCuntzSUSYNative
 

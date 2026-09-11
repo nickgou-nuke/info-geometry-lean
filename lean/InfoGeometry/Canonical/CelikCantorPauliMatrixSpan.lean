@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikCantorPauliJ
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Matrix closure of the rank-one Pauli packet

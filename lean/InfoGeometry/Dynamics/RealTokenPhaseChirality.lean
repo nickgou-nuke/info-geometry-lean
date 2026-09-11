@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.RealTokenCoordinateOperatorTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Internal phase and chiral involutions on the real token carrier

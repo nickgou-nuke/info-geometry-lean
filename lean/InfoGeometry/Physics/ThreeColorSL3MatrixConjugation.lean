@@ -1,8 +1,8 @@
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Algebra.Group.Basic
 import Mathlib.Topology.Instances.Matrix
 import InfoGeometry.Physics.GellMannSU3
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuous `SL₃` conjugation on the three-color `3×3` matrix carrier

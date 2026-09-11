@@ -15,6 +15,7 @@ representation bridge should relate them.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.KreinIsotropicCone
 

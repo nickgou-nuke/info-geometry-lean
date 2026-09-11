@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciFusionTreeBraiding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Two-sided Fibonacci braid generators

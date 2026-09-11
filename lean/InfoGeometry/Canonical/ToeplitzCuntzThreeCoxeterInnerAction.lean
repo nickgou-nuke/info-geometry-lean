@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ToeplitzCuntzThreeArtinBraidBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Coxeter unit and inner action in the ternary Toeplitz--Cuntz carrier

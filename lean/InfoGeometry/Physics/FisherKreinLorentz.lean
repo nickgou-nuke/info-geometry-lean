@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.FinCases

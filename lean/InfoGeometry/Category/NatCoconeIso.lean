@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Limits.HasLimits
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Category.Preorder
 
 /-!

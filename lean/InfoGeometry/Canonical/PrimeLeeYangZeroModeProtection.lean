@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PrimeMertensDefectBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.SocketTarget
 
 /-!

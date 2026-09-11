@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.MobiusThreeTransitiveRecovered
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # MobiusNonParabolicRecovered

@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.TensorProduct.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Dimension.Constructions
 import InfoGeometry.Canonical.ZornVectorMatrixRationalEquiv
 import InfoGeometry.Physics.BdGChiralBlockMatrix

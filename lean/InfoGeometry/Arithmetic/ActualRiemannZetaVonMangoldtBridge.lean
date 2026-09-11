@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.LSeries.Dirichlet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Actual von Mangoldt logarithmic derivative of `riemannZeta`

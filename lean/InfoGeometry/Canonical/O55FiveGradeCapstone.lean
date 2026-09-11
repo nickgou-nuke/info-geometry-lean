@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ConformalGeneratorLemmas55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.FiveGradedTKK
 import InfoGeometry.Canonical.ConformalFiveGradeInversion
 import InfoGeometry.Canonical.O55FiveGradeClosure

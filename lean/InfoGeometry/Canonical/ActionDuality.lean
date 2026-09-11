@@ -1,4 +1,5 @@
 import Paperproof
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.QFTTDFTLaunchpad
 import InfoGeometry.Canonical.HeatKernel
 import InfoGeometry.Canonical.SpectralInference

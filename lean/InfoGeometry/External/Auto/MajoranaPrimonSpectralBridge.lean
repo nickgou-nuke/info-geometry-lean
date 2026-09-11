@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SupergradedCuntzBdG
 /-!
 # Majorana → Primon Spectral Bridge

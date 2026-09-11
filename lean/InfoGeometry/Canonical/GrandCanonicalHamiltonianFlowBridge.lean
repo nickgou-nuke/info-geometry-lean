@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 import InfoGeometry.Dynamics.HamiltonianFlowBridge
 import InfoGeometry.Canonical.BogoliubovOptimalTransport

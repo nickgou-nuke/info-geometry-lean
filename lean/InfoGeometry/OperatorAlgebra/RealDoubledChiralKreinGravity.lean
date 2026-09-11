@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinDualConnection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Krein-metric gravity data

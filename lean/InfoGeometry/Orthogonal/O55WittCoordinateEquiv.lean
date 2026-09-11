@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55WittRootRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Coordinate presentation of the Witt-skew `O(5,5)` Lie algebra

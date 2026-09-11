@@ -9,6 +9,7 @@ signature change require separate concrete data.
 -/
 
 import InfoGeometry.OperatorAlgebra.SpectralTriple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

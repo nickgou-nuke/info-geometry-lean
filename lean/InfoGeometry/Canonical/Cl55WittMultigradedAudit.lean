@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55WittMultigradedPristineChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Dependency audit for the local Cl(5,5) multigraded bridge

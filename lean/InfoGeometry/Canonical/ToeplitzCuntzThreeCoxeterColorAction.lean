@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ToeplitzCuntzThreeCoxeterInnerAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Star.Basic
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Algebra.LinearTripotentTrifactor
 import InfoGeometry.Lie.SplitOctonionCircularOperatorReadout
 import Mathlib.Data.Matrix.Basic
@@ -23,7 +24,7 @@ open InfoGeometry.Physics.Algebra
 open InfoGeometry.Lie.SplitOctonionCircularOperatorReadout
 
 abbrev CZ := CanonicalZorn
-abbrev Coord := Fin 8 → ℝ
+abbrev Coord := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 def axialWeight : Fin 8 → ℝ
   | 0 => 0

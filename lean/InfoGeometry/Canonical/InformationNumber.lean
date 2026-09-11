@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.LinearAlgebra.Dimension.Finite
 set_option linter.unusedSectionVars false

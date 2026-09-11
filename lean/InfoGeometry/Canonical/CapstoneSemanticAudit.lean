@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SingularDecompositionSurrogate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GlobalChiralDecomposition
 import InfoGeometry.Canonical.RelativeModularScaleShapeSplit
 import InfoGeometry.Canonical.InverseKernelAlgebra

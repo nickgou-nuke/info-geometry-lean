@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.Basic
 import InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 import InfoGeometry.Physics.TKKIsospinEmbedding

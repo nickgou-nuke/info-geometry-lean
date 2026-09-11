@@ -1,4 +1,5 @@
 import InfoGeometry.LightCone.ApolloniusCylinder
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ApolloniusCylinderCapstone
 

@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.ToLin
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.TensorProduct.Basic
 import Mathlib.LinearAlgebra.TensorProduct.Tower
 import Mathlib.RingTheory.TensorProduct.Basic
@@ -18,7 +19,7 @@ namespace InfoGeometry.Physics
 
 open ChiralCausalCone
 
-abbrev ChiralCarrier := Fin 2 → ℂ
+abbrev ChiralCarrier := InfoGeometry.Algebra.FiniteSpin.Vec2C
 abbrev ChiralTensorCarrier := TensorProduct ℂ ChiralCarrier ChiralCarrier
 abbrev ChiralMatrixTensor := TensorProduct ℂ M2C M2C
 

@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.CasimirHessianFisherBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Retired scalar spectral-defect compatibility path

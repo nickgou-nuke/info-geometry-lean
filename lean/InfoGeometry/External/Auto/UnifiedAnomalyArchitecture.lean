@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.AnomalousKMSFlow
 import InfoGeometry.External.Auto.CuntzKTheoryPairing
 import InfoGeometry.External.Auto.ZetaCoordinateSymmetry

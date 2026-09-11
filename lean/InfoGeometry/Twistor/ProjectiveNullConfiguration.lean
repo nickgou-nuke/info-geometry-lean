@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullArtinBraid
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.ProjectiveNullBoundaryBraidFrameBridge
 
 /-!

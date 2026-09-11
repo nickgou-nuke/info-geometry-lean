@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.ChiralHodgeAdjointBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Singular.MoorePenrose
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Abel
 import InfoGeometry.Categorical.ModularDoubledRealHopfFibration
 

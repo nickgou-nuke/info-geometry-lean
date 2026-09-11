@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ToeplitzCuntzThreeCyclicSuperchargeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

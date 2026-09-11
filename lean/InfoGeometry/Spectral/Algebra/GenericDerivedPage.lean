@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.GradedExactCouple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Derived pages of arbitrary graded exact couples

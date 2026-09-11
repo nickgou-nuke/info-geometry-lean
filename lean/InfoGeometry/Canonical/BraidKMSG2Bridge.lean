@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BraidKMSCompatibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.QuantumKMSSymmetricSpace
 import InfoGeometry.Canonical.G2HolonomyGaugeConnections
 import InfoGeometry.Canonical.SplitG2StructureOnImaginaryOctonions

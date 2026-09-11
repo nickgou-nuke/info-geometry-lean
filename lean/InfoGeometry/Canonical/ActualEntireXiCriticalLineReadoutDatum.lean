@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ActualXiHardyZRealizationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ActualEntireXiFunctionDatumBridge
 import InfoGeometry.Topology.RiemannZetaMathlibVicinityBridge
 import InfoGeometry.Canonical.ActualEntireXiReadoutNormalizationBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BostConnesGalois
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NormalConeInductive
 import InfoGeometry.Canonical.ThermalCompactRecurrence
 import DAG.AnalyticBridge

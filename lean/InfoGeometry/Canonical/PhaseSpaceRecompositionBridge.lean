@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PhaseSpacePolarizedBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge
 import InfoGeometry.Canonical.GeneralizedMetricRecompositionBridge
 import InfoGeometry.Canonical.KKTGeneralizedMetricBridge

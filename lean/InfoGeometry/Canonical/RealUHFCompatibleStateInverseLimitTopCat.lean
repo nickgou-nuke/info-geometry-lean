@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topological coordinate readouts for compatible real stage families

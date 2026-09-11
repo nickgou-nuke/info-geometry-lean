@@ -13,6 +13,7 @@ embed Standard Model gauge groups.
 -/
 
 import Mathlib.Algebra.Lie.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Classical
 import Mathlib.GroupTheory.SpecificGroups.Alternating
 import Mathlib.NumberTheory.ArithmeticFunction.Defs

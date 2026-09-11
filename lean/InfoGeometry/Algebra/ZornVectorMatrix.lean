@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.MinimalAxioms
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Data.Fin.Basic

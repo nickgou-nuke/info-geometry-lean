@@ -1,4 +1,5 @@
 import Mathlib.Data.ZMod.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Shared coordinate carrier for the parabolic line constructions. -/
 

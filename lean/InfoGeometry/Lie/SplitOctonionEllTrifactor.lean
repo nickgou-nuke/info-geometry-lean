@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllFlowOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Physics.Algebra.TripotentPeirceProjectors
 import InfoGeometry.Physics.Algebra.LinearTripotentTrifactor

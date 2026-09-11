@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionBogoliubovCarrierBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuous carrier capstone for the split-octonion/Bogoliubov bridge

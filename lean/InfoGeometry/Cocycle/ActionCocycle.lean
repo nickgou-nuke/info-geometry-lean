@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Algebraic.ModularRotorCocycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
 

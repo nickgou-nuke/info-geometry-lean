@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.UnifiedOwnerTriadBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SuperMetriplectic.EntropyShadowBridge
 import InfoGeometry.Meta.Architecture
 

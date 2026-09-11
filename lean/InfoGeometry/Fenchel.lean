@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.Bregman
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bregman Divergence and Fenchel Duality (1D)

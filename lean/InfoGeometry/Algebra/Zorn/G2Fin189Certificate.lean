@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2CanonicalResidualFibers
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The canonical `Fin 189` flag index

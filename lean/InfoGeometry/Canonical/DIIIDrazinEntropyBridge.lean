@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealBdGDIIIAtom
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.MoorePenroseDivisionRank
 import InfoGeometry.Quantum.BulkBoundary
 

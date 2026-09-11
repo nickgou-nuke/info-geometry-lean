@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModularSpinorCl11CuntzTopologicalStarBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11ConcreteSequentialColimitConsequences
 
 namespace InfoGeometry.Canonical

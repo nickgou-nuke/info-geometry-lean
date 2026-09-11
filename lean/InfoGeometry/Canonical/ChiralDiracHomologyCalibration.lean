@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealHomologyCohomologyDictionary
 import InfoGeometry.Meta.Architecture
 import Mathlib.Tactic.Abel

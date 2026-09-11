@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.GroupWithZero.Units.Lemmas
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.RingTheory.Derivation.Basic

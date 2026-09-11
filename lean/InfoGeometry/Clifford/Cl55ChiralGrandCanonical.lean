@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55CARSpinAutomorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Chiral grand-canonical generators in `Cl(5,5)`

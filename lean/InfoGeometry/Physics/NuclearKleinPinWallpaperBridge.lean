@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearKleinParameterBundle
 import InfoGeometry.Canonical.Pin55WallpaperQuotientBridge
 import InfoGeometry.Canonical.KleinBottleBoundaryActionPacket

@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.STUQuarticPolarization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite-difference polarization of a quartic invariant

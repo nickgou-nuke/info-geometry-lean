@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeCertificateTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2CASNativePointAction
 
 /-!

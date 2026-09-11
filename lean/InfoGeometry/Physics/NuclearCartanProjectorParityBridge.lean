@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearQuasiparticleCARBridge
 import InfoGeometry.Physics.NuclearWignerSupermultipletSymmetry
 import InfoGeometry.Physics.NuclearSpinIsospinTensorRepresentation

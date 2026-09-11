@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorFrechetFormColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TopCatColimitCompatibleEndomorphism
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermodynamics.FiniteGibbsRelative
 import InfoGeometry.Thermodynamics.FiniteConnesCocycle
 import InfoGeometry.Physics.SouriauMassieuPlanckFunctional

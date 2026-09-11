@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.A2WeylFin3Action
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.A2WeylPermutationAction
 

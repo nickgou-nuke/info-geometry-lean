@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.EmergentGravity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.StressEnergyTensor
 
 noncomputable section

@@ -24,6 +24,7 @@ It does not assert that every fixed diagonal is a protected Majorana edge mode.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
 import InfoGeometry.Meta.OwnerTarget

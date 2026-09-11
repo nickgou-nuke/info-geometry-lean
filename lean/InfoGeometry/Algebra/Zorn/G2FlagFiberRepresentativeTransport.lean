@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2Fin189Certificate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebraic.CartanExponentialFamily
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.BoundaryMajoranaMassGap
 import InfoGeometry.Physics.FreeEntropyDiffusionFunctional
 import InfoGeometry.Physics.HolographicPressureFunctional

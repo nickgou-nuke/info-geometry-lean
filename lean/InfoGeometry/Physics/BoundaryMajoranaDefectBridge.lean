@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.BoundaryMajoranaMassGap
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Boundary Majorana Defect Bridge

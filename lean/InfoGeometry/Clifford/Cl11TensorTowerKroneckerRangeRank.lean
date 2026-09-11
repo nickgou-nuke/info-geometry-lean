@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealStageKroneckerAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealProjectionRankConjugation
 import InfoGeometry.Clifford.Cl11TensorTower
 

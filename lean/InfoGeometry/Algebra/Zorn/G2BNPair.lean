@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Subgroup.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Set.Basic
 import Mathlib.Data.Fintype.Basic
 import Mathlib.GroupTheory.GroupAction.Quotient

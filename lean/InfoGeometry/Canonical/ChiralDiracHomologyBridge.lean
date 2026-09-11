@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesAnalyticity
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.OwnerTarget

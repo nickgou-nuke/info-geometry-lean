@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PositionalDynamicsRegimeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Routing.DiscreteRoPERepresentation
 
 namespace InfoGeometry.Canonical.PositionalDynamicsRegimeBridge

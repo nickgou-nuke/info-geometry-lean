@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesDiracAdjoint
 
 set_option autoImplicit false

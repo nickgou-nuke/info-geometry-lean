@@ -1,4 +1,5 @@
 import InfoGeometry.SignedNetwork.All
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Transitive axiom audit for the signed-network causal cone. -/
 #print axioms InfoGeometry.SignedNetwork.QubitWignerBridge.analysis_synthesis

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Split-Octonion Witt Vector-Covector Duality Bridge
@@ -27,9 +28,9 @@ noncomputable section
 
 namespace InfoGeometry.Lie.SplitOctonionWittVectorCovectorBridge
 
-abbrev VPlus := Fin 4 → ℝ
-abbrev VMinus := Fin 4 → ℝ
-abbrev Oct8 := Fin 8 → ℝ
+abbrev VPlus := InfoGeometry.Algebra.FiniteSpin.Vec4R
+abbrev VMinus := InfoGeometry.Algebra.FiniteSpin.Vec4R
+abbrev Oct8 := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 /-- Split-octonion Witt quadratic form $N(X) = u_+ u_- - (u_1 v_1 + u_2 v_2 + u_3 v_3)$. -/
 def wittNorm (x : Oct8) : ℝ :=

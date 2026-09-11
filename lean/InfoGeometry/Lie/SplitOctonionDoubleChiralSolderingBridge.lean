@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionChiralMinkowskiFixedSectionBridge
 import InfoGeometry.Quantum.PauliSoldering
 

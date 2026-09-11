@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.QutritProjectiveColorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.MobiusGeometry
 import InfoGeometry.Twistor.RollingSpinorMobiusBridge
 

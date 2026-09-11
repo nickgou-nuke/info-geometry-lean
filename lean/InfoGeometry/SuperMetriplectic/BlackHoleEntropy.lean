@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.BPS
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # BPS Black-Hole Entropy Packets

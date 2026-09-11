@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.MontgomeryPairCorrelation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.MontgomeryPairCorrelationCapstone
 

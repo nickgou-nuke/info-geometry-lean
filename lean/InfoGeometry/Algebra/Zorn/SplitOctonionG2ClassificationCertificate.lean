@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Split-octonion automorphism boundary

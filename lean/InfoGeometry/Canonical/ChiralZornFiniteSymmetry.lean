@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Octonion.ChiralZornAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite colour/sheet symmetries of the chiral Zorn carrier

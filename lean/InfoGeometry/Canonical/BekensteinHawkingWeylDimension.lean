@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Algebra.Module.Basic

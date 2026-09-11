@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.CartanInstance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.Algebra.Group.Units.Basic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic

@@ -1,6 +1,6 @@
 import InfoGeometry.Physics.ParabolicClock
-import InfoGeometry.Physics.ChiralCausalCone
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Physics.ChiralCausalCone
 
 /-!
 # Native chiral/parabolic nilpotent weld

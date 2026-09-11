@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DualConnectionsCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Information.MultiLogPotential
 import Mathlib.Tactic.Ring
 set_option linter.unusedSimpArgs false

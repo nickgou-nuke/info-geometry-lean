@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.CircularOperatorFourPotentialRotorReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.OperatorFourVectorZornReadout
 import InfoGeometry.Physics.NuclearOperatorZornSuperSolovievBridge
 import InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Colimit.DirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Colimit.Module
 import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
 import Mathlib.RingTheory.Flat.Basic

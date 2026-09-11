@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Spectral Yang-Baxter Stitching
@@ -19,7 +20,7 @@ global statement about zeta zeros or spectral torsion.
 
 noncomputable section
 
-abbrev HestenesField := Fin 3 → ℝ
+abbrev HestenesField := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 def sigma₁ (v : HestenesField) : HestenesField :=
   fun i =>

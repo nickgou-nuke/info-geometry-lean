@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.Cl44WeylD4
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SuperMetriplectic.Axioms
 import InfoGeometry.SuperMetriplectic.SupertraceBodyBridge
 

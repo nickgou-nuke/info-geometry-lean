@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ToeplitzCuntzCoxeterInvariantContinuousMapAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuous-map equivalence for the Coxeter orbit quotient

@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Category.AlgCat.Limits
 import InfoGeometry.Arithmetic.PrimeCyclotomicFieldMaps
 import InfoGeometry.Arithmetic.GaloisIdeleTatePrimonSuperalgebraCapstone

@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.OperatorCausalSoldering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Integrated operator-valued causal framework

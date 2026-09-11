@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.Qutrit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Probability.ProbabilityMassFunction.Constructions
 
 /-!

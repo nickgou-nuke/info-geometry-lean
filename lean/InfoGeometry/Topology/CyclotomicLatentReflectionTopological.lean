@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.CyclotomicLatentQuotientTopological
 import InfoGeometry.Topology.KleinBottleCubicRootInversionTopological
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DiscreteSplitOctonionStokes
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

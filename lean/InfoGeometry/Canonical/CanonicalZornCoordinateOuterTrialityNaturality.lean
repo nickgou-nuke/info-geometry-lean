@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornTrialitySpinEquivariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 
@@ -7,7 +8,7 @@ namespace InfoGeometry.Canonical.CanonicalZornCoordinateOuterTrialityNaturality
 open CanonicalZornCompositionTriality
 open CanonicalZornTrialitySpinEquivariance
 
-abbrev Coordinates := Fin 8 → ℂ
+abbrev Coordinates := InfoGeometry.Algebra.FiniteSpin.Vec8C
 
 def cyclic : Equiv.Perm (Fin 3) :=
   Equiv.swap 0 1 * Equiv.swap 1 2

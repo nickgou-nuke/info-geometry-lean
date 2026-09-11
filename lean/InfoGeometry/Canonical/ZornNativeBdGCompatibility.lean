@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornBdGDerivationBridge
 import InfoGeometry.Canonical.PhysicalBdGPairingBridge
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CblinfunMatrix

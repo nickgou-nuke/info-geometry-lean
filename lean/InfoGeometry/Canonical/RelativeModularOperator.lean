@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeModularCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MaxEnt.JaynesInfoStatMech
 import InfoGeometry.Meta.Architecture
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic

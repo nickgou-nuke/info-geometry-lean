@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55RealSplitPinKernelVolumeElimination
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55NativeCenterScalar
 import InfoGeometry.Clifford.Cl55RealSplitPinVolume
 import InfoGeometry.Clifford.Cl55RealSplitPinKernelNative

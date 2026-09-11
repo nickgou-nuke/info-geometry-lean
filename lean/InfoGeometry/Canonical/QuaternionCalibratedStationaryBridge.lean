@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.QuaternionEffectiveActionBridge
 import InfoGeometry.Physics.FreeEntropyCalibrationVariationPacket
 

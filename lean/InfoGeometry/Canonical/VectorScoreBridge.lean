@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.UnifiedPositionalRegime
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.PositionalDynamicsRegimeBridge
 

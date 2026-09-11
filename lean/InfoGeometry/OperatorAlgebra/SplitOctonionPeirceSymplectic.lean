@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionSymplecticFoundation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The native Peirce polarized carrier
@@ -13,7 +14,7 @@ namespace InfoGeometry.OperatorAlgebra.SplitOctonions.PeirceSymplectic
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
-abbrev Vector3 := Fin 3 → ℤ
+abbrev Vector3 := InfoGeometry.Algebra.FiniteSpin.Vec3Z
 
 @[ext]
 structure Carrier where
@@ -178,7 +179,7 @@ twistor layers; it is deliberately defined as a product of two genuine real
 modules rather than identified with a Hilbert or twistor space.
 -/
 
-abbrev RealVector3 := Fin 3 → ℝ
+abbrev RealVector3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 abbrev RealCarrier := RealVector3 × RealVector3
 
 def realPairing (X Y : RealCarrier) : ℝ :=

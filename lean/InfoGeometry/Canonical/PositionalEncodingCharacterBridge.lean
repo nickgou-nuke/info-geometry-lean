@@ -1,4 +1,5 @@
 import InfoGeometry.Routing.DiscreteRoPERepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CliffordRoPETorus
 import InfoGeometry.Clifford.DiscreteMoebiusGroup
 import InfoGeometry.Clifford.ModularCftBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ModularSignCPT
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
 
 /-!

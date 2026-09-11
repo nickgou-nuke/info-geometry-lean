@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
@@ -18,7 +19,7 @@ noncomputable section
 
 namespace InfoGeometry.Clifford.SplitClifford55ExteriorSpinor
 
-abbrev V5 := Fin 5 → ℝ
+abbrev V5 := InfoGeometry.Algebra.FiniteSpin.Vec5R
 abbrev Spinor := ExteriorAlgebra ℝ V5
 abbrev SpinorEnd := Module.End ℝ Spinor
 

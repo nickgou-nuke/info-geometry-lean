@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TrifactorDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TrifactorPropagation
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Supersymmetry.OctonionicKugoOjima
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Supersymmetry.All

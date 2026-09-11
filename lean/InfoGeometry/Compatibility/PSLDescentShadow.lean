@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PSLDescent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 Compatibility names for the native projective descent theorems.

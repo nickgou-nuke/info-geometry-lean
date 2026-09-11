@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitTopCat
 
 /-!

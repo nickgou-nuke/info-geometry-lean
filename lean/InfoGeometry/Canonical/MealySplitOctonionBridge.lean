@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MealyAlgebraicIdentityConsequences
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitQuaternionAssociativeCoassociativeCalibrationBridge
 
 namespace InfoGeometry.Canonical

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.FiniteJaynesFormalism

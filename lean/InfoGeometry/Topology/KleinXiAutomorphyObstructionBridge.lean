@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ZetaCenteredCoordinateBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Affine Klein deck action and the scalar-descent obstruction

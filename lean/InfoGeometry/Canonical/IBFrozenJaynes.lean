@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBBase
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.IBFrozenJaynes

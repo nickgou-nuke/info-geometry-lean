@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorModularTemperatureDuality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.OperatorModularTemperatureDualityChecks

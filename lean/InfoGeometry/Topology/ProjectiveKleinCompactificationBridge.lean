@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ProjectiveKleinCompactification
 import InfoGeometry.Canonical.PSLDescent
 import InfoGeometry.Canonical.MobiusHyperbolicCompactification

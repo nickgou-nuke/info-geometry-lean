@@ -1,4 +1,5 @@
 import Mathlib.Topology.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Order.Basic
 import InfoGeometry.Causal.ProofTopology
 

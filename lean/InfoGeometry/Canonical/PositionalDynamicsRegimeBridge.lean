@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55RoPESplitTorusBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CliffordRoPETorus
 import InfoGeometry.LogJordanKreinCore
 import InfoGeometry.Physics.LogCFTJordanShear

@@ -1,4 +1,5 @@
 import InfoGeometry.Modular.ExactSequence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exact commutator equilibrium criterion

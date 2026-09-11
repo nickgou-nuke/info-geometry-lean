@@ -1,4 +1,5 @@
 import InfoGeometry.Conformal.SchwarzianApollonius
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.SchwarzianApolloniusCapstone
 

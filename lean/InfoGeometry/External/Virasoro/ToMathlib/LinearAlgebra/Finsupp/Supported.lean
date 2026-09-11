@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Finsupp.Supported
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 --import Mathlib
 
 lemma finsum_mem_span {ι R V : Type*} [Semiring R] [AddCommMonoid V] [Module R V]

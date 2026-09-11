@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalChargeLinear
 import InfoGeometry.Exceptional.SymplecticTripleSystem
 

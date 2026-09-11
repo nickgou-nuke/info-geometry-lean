@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionQuaternionPolar
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
 
 noncomputable section
@@ -10,7 +11,7 @@ open InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
 open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 abbrev H := Quaternion ℝ
-abbrev Vec3 := Fin 3 → ℝ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 abbrev QuaternionCoordinates := ℝ × Vec3
 abbrev CartesianCoordinates := QuaternionCoordinates × QuaternionCoordinates
 abbrev CanonicalZorn := InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates.CZ

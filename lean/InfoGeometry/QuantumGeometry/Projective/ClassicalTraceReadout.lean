@@ -1,4 +1,5 @@
 import InfoGeometry.QuantumGeometry.Projective.QGT
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix
 import InfoGeometry.Physics.Section38StressEnergyDomainSeparation
 import InfoGeometry.Physics.SplitOctonionFibration

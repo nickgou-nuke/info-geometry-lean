@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFProjectionRankTailSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealUHFProjectionRankRealCompletionTopological
 
 namespace InfoGeometry.Canonical

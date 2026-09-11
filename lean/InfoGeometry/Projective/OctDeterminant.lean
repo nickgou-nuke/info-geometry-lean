@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.Cl44QuaternionSplit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Projective.OctDeterminant

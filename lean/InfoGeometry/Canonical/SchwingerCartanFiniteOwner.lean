@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SuperchargeNilpotence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebraic.JordanCliffordLieSplit
 import InfoGeometry.Algebra.JordanTripleTKK
 import InfoGeometry.Algebra.NonAssocDerivation

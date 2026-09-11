@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Trace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Scalar and traceless operator parts

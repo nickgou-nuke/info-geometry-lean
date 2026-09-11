@@ -1,4 +1,5 @@
 import InfoGeometry.SignedNetwork.BranchingInitialization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SignedNetwork.QubitWignerBridge
 
 set_option maxHeartbeats 800000

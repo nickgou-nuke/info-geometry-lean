@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.NoncommutativeRenyi
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # CFC commutation for operator surprisal kernels

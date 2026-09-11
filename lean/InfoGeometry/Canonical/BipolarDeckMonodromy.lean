@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarTwoSheetCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Finite deck-monodromy model: traversal parity acts by the sheet involution. -/
 namespace InfoGeometry.Canonical.BipolarDeckMonodromy

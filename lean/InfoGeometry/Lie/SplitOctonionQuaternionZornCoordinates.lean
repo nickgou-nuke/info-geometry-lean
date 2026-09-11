@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllFlowOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllClosedFlow
 
 /-!
@@ -29,7 +30,7 @@ open InfoGeometry.Canonical.ZornMatrix
 open InfoGeometry.Lie.SplitOctonionEllClosedFlow
 open InfoGeometry.Lie.SplitOctonionEllFlowOperator
 
-abbrev Vec3 := Fin 3 → ℝ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 abbrev QuaternionCoordinates := ℝ × Vec3
 abbrev CartesianCoordinates := QuaternionCoordinates × QuaternionCoordinates
 abbrev CZ := CanonicalZorn

@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Arithmetic.MoebiusWeylEuler
 import InfoGeometry.Canonical.SplitCliffordJordanWigner

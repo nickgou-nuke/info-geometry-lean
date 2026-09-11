@@ -1,4 +1,5 @@
 import InfoGeometry.External.Virasoro.FockSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 /-!

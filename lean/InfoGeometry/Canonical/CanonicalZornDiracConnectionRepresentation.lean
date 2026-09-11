@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornRealSpin44
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
 import InfoGeometry.Optics.OperatorValuedConnection
 

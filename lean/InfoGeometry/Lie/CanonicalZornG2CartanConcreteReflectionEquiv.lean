@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanMellinWeylBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2CartanWeylEquivariant
 
 /-!
@@ -45,7 +46,7 @@ def canonicalLongReflectionEquiv : Cartan ≃ₗ[ℝ] Cartan :=
   LinearEquiv.ofInvolutive canonicalLongReflection
     canonicalLongReflection_involutive
 
-abbrev Parameter := Fin 2 → ℝ
+abbrev Parameter := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 def canonicalShortParameterDualLinear : Parameter →ₗ[ℝ] Parameter where
   toFun := canonicalShortReflectionDualReal

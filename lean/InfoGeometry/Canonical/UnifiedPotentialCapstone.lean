@@ -1,4 +1,5 @@
 import InfoGeometry.ParaKahler.UnifiedPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.UnifiedPotentialCapstone
 

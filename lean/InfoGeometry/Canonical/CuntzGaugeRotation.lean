@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ToeplitzCuntzVacuumBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

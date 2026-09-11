@@ -4,6 +4,7 @@ Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
 Bulgarian Academy of Sciences.
 -/
 import InfoGeometry.Arithmetic.PrimonFinite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.InfiniteInductiveSUSY
 
 /-!

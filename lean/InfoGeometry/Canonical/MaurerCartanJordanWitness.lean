@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.Monodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.LogCftMonodromy
 import InfoGeometry.OperatorAlgebra.LogExchangeMonodromy
 

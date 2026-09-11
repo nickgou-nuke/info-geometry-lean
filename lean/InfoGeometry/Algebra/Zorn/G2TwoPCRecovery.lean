@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
 import InfoGeometry.Algebra.Zorn.G2TwoCarrierCoordinateLemmas
 import InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier

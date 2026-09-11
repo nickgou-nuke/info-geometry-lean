@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.PenroseIncidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricPlucker
 
 /-!

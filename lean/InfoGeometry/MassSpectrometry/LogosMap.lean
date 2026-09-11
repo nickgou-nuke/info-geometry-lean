@@ -1,4 +1,5 @@
 import Lean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpineAttributes
 import InfoGeometry.MassSpectrometry.PeakSpectrum
 import InfoGeometry.MassSpectrometry.MellinMassEncoding

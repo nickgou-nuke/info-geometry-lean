@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzCantorSupergradedBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 
 /-!

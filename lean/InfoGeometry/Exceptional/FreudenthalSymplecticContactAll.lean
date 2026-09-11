@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticContactRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalLegacyFiveGradedJacobiCounterexample
 import InfoGeometry.Exceptional.FreudenthalSymplecticContactLieAlgebra
 import InfoGeometry.Exceptional.FreudenthalSymplecticContactGrading

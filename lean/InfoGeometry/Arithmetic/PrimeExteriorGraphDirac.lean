@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinSupercharge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InverseKernelAlgebra
 import InfoGeometry.Canonical.ModularSpectralWedge
 import InfoGeometry.Canonical.ModularSpectralWedgeBridge

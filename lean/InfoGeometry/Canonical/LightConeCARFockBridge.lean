@@ -13,6 +13,7 @@ pair.  It separates:
 -/
 
 import InfoGeometry.Canonical.DrazinLightConeDictionary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.SuperSouriauFermionGasBridge
 import InfoGeometry.Meta.Architecture

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralStokesPauliBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ChiralStokesPauliBasis
 

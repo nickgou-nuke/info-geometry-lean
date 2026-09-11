@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Data.Set.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Order.Zorn
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic

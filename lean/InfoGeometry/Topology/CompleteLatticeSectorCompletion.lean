@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorCylinderLattice
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KreinProjectorLattice
 import InfoGeometry.Canonical.SectorLattice
 import InfoGeometry.Canonical.RefinementGaloisConnection

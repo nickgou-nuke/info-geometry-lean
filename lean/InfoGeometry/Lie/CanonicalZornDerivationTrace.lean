@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Cocycle.MatrixDetExpTrace
 
 /-!
@@ -19,7 +20,7 @@ open InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 open InfoGeometry.Lie.CanonicalZornDerivationDimension
 
 abbrev VZ := ZornVectorMatrix ℝ
-abbrev Coord8 := Fin 8 → ℝ
+abbrev Coord8 := InfoGeometry.Algebra.FiniteSpin.Vec8R
 abbrev VDer8 := ZornVectorMatrix.Derivation (R := ℝ)
 
 noncomputable def canonicalVectorLinearEquiv :

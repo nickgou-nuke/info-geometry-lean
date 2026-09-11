@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornMaxwellFormsBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge
 import Mathlib.Algebra.Algebra.Bilinear
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundaryBraidRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullConfigurationExchangeLoop
 import InfoGeometry.Twistor.ProjectiveNullConfigurationLocalSystemMonodromy
 import InfoGeometry.Twistor.ProjectiveNullOrderedExchangePath

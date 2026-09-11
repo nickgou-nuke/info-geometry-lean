@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Hestenes
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hestenes 1975 compatibility import

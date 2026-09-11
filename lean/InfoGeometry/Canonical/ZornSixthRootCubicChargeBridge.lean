@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ZornScalingFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ThreeColorCyclotomicChargeProjectors
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.Data.Nat.Choose.Multinomial
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.KL.Finite
 import InfoGeometry.PositiveMeasure
 

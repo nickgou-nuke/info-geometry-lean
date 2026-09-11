@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ChiralRetainedWordFiveGradeClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra
 import InfoGeometry.Algebra.NonAssocDerivation
 

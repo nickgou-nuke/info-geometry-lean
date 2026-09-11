@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralEinsteinBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ChiralGravity
 

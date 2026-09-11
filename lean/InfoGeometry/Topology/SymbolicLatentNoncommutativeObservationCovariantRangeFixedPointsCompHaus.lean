@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentNoncommutativeObservationCovariantCompHausRangeActionLaws
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Fixed points of the covariant action on the operator-observation range

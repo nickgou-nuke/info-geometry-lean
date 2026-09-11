@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 import Mathlib.Topology.Instances.Complex
 import Mathlib.Tactic

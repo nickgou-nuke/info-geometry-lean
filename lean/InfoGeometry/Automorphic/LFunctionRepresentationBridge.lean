@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.SuperKaehlerGromovWittenBridge
 import InfoGeometry.Automorphic.LanglandsPrimeResonance
 import InfoGeometry.Arithmetic.LFunctionPotential

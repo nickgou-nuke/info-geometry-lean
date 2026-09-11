@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ChiralOperatorEnvelope
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Integer and cyclotomic readouts of the canonical operator-word charge

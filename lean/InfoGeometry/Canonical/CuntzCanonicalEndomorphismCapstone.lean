@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzCanonicalEndomorphismBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.CuntzCanonicalEndomorphismCapstone
 

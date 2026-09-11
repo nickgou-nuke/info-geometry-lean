@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FixedIndexCuntzModularFlowTopologicalColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # TopCat isomorphism carried by the descended Cuntz modular flow

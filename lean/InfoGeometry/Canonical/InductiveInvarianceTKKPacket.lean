@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.TKKClosure
 import InfoGeometry.OperatorAlgebra.RecursiveSupercharge
 import InfoGeometry.Meta.Architecture

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AnalyticalIndexCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
 import InfoGeometry.Meta.Architecture
 

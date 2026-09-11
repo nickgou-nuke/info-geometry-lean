@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.LogJordanTensorPowerBraidRelations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.BraidGroupFiniteInfiniteColimitBridge
 import proofs.BraidProject.BraidGroup
 

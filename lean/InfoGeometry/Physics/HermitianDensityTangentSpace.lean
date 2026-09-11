@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Finite Hermitian density states and their trace-zero tangent carrier. -/
 

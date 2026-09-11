@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Star.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.CStarAlgebra.GelfandNaimarkSegal
 import Mathlib.Analysis.CStarAlgebra.PositiveLinearMap

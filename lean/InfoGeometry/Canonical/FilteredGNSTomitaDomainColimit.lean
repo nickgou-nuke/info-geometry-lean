@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSTomitaClosedTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native colimit of filtered closed Tomita domains

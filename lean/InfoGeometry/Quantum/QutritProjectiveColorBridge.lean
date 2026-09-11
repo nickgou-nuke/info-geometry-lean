@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.Qutrit
 import InfoGeometry.Topology.MobiusGeometry
 import InfoGeometry.Twistor.PenroseTwistor

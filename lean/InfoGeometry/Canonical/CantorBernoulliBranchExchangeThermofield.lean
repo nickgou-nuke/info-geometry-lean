@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBernoulliL2OperatorTransport
 import InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzCStarRealization
 import InfoGeometry.OperatorAlgebra.CantorBernoulliKMSStateBridge

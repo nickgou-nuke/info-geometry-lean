@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Thermodynamics.FiniteGibbsRelative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analytic.LogSumExp
 import Mathlib.Analysis.Calculus.Deriv.Basic
 

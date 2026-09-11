@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredColimitColorDiracKahler
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

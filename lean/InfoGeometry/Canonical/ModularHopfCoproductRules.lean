@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModularCoproductFlux
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.Coalgebra.Basic
 
 /-!

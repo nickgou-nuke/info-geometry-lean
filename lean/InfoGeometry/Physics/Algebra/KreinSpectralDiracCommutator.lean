@@ -1,4 +1,5 @@
 import Mathlib.Analysis.NormedSpace.OperatorNorm.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Algebra.LogCFTDiracCommutator
 
 /-!

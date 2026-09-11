@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.ProjectiveRays
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.State
 import InfoGeometry.Projective.Dynamics
 import InfoGeometry.Quantum.RealSplitClifford

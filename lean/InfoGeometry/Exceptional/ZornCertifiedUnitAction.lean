@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.SplitOctonionZornReal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Norm preservation for certified Zorn unit actions

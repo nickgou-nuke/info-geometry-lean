@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredQCCRFixedParameterColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredQCCRParameterTopologicalLimit
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
 

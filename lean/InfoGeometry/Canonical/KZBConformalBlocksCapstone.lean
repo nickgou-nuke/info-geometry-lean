@@ -1,4 +1,5 @@
 import InfoGeometry.CFT.KZBConformalBlocks
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.KZBConformalBlocksCapstone
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KuzminColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KuzminInductiveLimitBridge
 
 /-!

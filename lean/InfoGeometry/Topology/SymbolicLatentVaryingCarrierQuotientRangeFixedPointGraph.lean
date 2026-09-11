@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientRangeJointContinuity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientRangeFixedPointsCompHaus
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientRangeFixedPointsNaturality
 import Mathlib.Topology.Defs.Induced

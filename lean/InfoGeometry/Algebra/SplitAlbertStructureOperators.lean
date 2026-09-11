@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.JordanInnerDerivations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.BaezF4H3Zorn
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Operator.Basic
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.Topology.Algebra.Module.FiniteDimension

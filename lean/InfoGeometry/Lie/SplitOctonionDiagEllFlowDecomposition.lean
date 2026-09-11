@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllFlowOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllTrifactor
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 import InfoGeometry.Canonical.ZornSpinor

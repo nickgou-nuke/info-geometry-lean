@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AttentionEuclidean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Convex.LogSumExp
 import InfoGeometry.Krein.PolarizedSector
 import Mathlib.Analysis.InnerProductSpace.Basic

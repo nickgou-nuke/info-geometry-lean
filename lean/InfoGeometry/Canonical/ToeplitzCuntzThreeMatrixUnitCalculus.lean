@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ToeplitzCuntzThreeVacuumBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Minimal, reusable off-diagonal vocabulary for the ternary carrier. -/
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesAnalyticity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesRealStructures
 import InfoGeometry.Meta.Architecture
 

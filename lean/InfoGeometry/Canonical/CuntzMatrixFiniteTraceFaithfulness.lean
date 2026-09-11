@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite faithfulness of the normalized matrix trace

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikErlangenBraidBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CreationAnnihilationTomitaBridge
 import InfoGeometry.Canonical.SouriauDiracHodgeCoupling
 import InfoGeometry.Canonical.TrifactorDecomposition

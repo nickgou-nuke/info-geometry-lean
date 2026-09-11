@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesLogScaleSamplingBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Dirichlet transport through a Hestenes log-shift intertwiner

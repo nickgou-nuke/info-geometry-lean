@@ -1,4 +1,5 @@
 import InfoGeometry.CFT.VirasoroAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

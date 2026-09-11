@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciGlobalChannelBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.FibonacciGlobalAssociator
 
 noncomputable section

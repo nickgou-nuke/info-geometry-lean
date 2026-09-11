@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovFrameKreinMetricBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Multi-parameter connection coefficients

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarDeckMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ChiralDirectedGraphHomotopy
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Cohomology.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Long exact sequences for the spectral port

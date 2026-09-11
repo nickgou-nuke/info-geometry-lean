@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.CelikZ3FibonacciCuntzBoundaryBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Salih Çelik Z3 braided tensor owner route

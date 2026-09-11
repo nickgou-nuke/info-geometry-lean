@@ -1,4 +1,5 @@
 import InfoGeometry.Carrier.HestenesKrein
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinAdjoint
 
 /-!

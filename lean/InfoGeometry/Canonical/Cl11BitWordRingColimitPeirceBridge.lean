@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11TwoSheetPeirceCorners
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11HestenesKreinBitWordBridge
 
 /-!

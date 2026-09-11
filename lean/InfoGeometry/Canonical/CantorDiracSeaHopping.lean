@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBinaryHopCharge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

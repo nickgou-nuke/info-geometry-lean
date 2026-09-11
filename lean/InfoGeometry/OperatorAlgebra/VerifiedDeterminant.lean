@@ -17,6 +17,7 @@ No vacuous determinant-invariance certificate is used.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.IndividuatedCasimir
 
 noncomputable section

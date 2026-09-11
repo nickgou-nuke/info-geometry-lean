@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorKMSCylinderState
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Additivity of the finite Cantor GNS pairing

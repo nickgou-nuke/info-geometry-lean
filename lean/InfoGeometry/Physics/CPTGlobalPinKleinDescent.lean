@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KleinMonodromyRepresentationSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesKreinCPTColimitContinuation
 import InfoGeometry.Clifford.Cl55WittPinKernel
 import InfoGeometry.Topology.KleinBerryPhase

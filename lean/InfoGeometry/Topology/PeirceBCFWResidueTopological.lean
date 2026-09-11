@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PeirceBCFWResidueSpecialization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.BCFWMeromorphicTopological
 
 namespace InfoGeometry.Topology

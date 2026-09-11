@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralZornFiniteSymmetry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HexagonalSixRootTiling
 import InfoGeometry.Canonical.HexIndexSplitOctonionBridge
 import InfoGeometry.Canonical.NonAbelianDihedralSymmetry12

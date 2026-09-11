@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesBivectorCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open CliffordAlgebra InfoGeometry.Canonical.CliffordParity InfoGeometry.Canonical.HestenesBivectorCarrier HasVolumeElement
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittNativeIsometryGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullIsometryIncidence
 
 /-!

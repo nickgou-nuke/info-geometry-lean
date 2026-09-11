@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConcreteChiralHodgeDiracHestenesColimit
 import InfoGeometry.Canonical.HodgeFockEmbeddingBridge
 import InfoGeometry.Canonical.Cl55MasterCoordinateReindexBridge
@@ -26,8 +27,8 @@ open InfoGeometry.Canonical.HodgeFockEmbeddingBridge
 open InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
 open InfoGeometry.Canonical.Cl55MasterCoordinateReindexBridge
 
-abbrev Spinor8 := Fin 8 → ℝ
-abbrev Spinor32 := Fin 32 → ℝ
+abbrev Spinor8 := InfoGeometry.Algebra.FiniteSpin.Vec8R
+abbrev Spinor32 := InfoGeometry.Algebra.FiniteSpin.Vec32R
 abbrev DoubledSpinor8 := Spinor8 × Spinor8
 
 noncomputable def exteriorToSpinor8 : Exterior3 ≃ₗ[ℝ] Spinor8 :=

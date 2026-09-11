@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Algebra.BigOperators.Ring.Finset

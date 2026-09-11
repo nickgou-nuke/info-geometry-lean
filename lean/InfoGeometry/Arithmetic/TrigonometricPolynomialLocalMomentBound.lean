@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.Deriv.Add
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.MeanValue
 import Mathlib.Analysis.Complex.RealDeriv
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv

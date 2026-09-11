@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BeliefDynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ChiralTorsionBridge
 

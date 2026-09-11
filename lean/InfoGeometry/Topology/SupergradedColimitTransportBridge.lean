@@ -1,4 +1,5 @@
 import Mathlib.Topology.Category.TopCat.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.HasLimits
 
 namespace InfoGeometry.Topology

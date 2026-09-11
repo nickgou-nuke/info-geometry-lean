@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.AlgebraicTomitaTakesakiBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.TomitaTakesakiModularFlow
 import Mathlib.RingTheory.Morita.Basic
 

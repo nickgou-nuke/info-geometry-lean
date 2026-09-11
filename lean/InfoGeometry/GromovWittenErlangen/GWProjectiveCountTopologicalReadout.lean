@@ -1,4 +1,5 @@
 import InfoGeometry.GromovWittenErlangen.ProjectiveCountBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topology of finite projective count readouts

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelationalInformationDynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.EinsteinAnomalyOperator
 
 open scoped InnerProductSpace

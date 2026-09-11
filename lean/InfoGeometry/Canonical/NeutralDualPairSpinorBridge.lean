@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NeutralDualPairClifford
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 Compatibility import for the former standalone Chevalley spinor bridge.

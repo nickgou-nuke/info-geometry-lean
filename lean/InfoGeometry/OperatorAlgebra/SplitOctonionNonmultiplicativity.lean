@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionImaginaryAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionClassificationCore
 import InfoGeometry.OperatorAlgebra.SplitOctonionPseudoReal
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge

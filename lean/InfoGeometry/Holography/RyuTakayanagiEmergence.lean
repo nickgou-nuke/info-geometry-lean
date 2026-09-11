@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Base
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometryCore.Basic
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealStageMatrixAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealStageMatrixVectorReindex
 
 namespace InfoGeometry.Canonical

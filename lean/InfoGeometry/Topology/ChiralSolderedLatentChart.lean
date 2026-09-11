@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentSpace
 
 /-!
@@ -14,7 +15,7 @@ namespace InfoGeometry.Topology
 
 noncomputable section
 
-abbrev RealChiralCoefficientSpace := Fin 8 → ℝ
+abbrev RealChiralCoefficientSpace := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 def realChiralCoefficientSystem :
     FiniteSymbolicLatentSystem RealChiralCoefficientSpace (Fin 8) :=

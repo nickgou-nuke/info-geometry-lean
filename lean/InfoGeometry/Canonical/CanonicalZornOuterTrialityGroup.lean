@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.GeneralLinearGroup.AlgEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CanonicalZornTrialitySpinEquivariance
 
 /-!

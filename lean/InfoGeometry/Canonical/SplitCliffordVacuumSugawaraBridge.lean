@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordSourceWickVacuum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordSourceHeisenberg
 import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 

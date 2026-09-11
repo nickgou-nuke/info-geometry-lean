@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorMongeAmpereItakuraSaito
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ArakiItakuraSaitoEquivalence
 import InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
 import InfoGeometry.Canonical.OperatorialHessianBridge

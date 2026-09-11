@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.ExteriorPower.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Canonical.KleinExteriorAlternating
 import InfoGeometry.Projective.KleinQuadricPlucker
@@ -143,7 +144,7 @@ private theorem bivector4_exists_wedge_of_klein
             apply Bivector4.ext <;>
               simp [u, v, wedgeVec4, h01, h02, h03, h12, h13]
 
-abbrev PluckerCoords := Fin 6 → ℝ
+abbrev PluckerCoords := InfoGeometry.Algebra.FiniteSpin.Vec6R
 
 def pluckerCoords (u v : Vec4) : PluckerCoords := ![
   u I4.t * v I4.x - u I4.x * v I4.t,

@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Algebra.Module.LinearMap.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic
 import InfoGeometry.NCG.CategoricalInductiveColimitKMSBridge

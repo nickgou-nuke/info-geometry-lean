@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornMaxwellComponentReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

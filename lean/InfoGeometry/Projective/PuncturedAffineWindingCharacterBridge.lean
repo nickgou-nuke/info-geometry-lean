@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.PuncturedAffineLogDeRhamBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricLogCharacter
 
 /-!

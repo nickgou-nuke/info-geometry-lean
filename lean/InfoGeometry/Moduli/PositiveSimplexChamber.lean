@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Moduli.SimplexArnoldRational
 
 /-! The open two-state simplex as a positive one-dimensional chamber.

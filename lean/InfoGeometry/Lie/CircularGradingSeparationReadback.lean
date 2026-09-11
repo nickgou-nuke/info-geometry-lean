@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularAxialGrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCircularHyperbolicFlow
 
 noncomputable section

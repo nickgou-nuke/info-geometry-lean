@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2WeylGroupEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.SpecificGroups.Dihedral
 
 /-!

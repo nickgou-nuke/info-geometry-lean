@@ -6,6 +6,7 @@ Chiral Compasses: Cl(1,1) ⊗ Cl(1,1) ≅ Cl(2,2)
 -/
 
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Grading
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.LinearAlgebra.TensorProduct.Basic

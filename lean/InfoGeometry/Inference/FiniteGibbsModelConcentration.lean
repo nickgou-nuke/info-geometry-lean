@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.FiniteGibbsModelFamily
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Quantitative concentration of finite Gibbs model volume

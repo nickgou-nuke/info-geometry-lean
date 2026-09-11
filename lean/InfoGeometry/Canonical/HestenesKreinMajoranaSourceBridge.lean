@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesKreinMajoranaColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.BerryKeating
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.ZetaSpectral
 

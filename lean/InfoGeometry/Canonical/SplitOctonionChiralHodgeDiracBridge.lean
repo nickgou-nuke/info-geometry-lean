@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllCircularCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 import InfoGeometry.Analysis.FiniteDirichletShiftOperatorBridge
 

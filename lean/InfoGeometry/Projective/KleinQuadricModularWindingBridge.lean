@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricGrothendieckDeRham
 import InfoGeometry.Projective.KleinQuadricTime
 import InfoGeometry.Modular.DerivationLieIdeal

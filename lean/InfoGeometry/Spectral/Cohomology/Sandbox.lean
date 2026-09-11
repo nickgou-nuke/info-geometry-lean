@@ -1,6 +1,7 @@
 /- Sandbox for Serre Spectral Sequence - one genuine lemma at a time -/
 
 import InfoGeometry.Spectral.Spectrum.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Spectral.Algebra.ExactCouple
 import InfoGeometry.Spectral.Algebra.SpectralSequence
 import InfoGeometry.Spectral.Cohomology.SerreExactCouple

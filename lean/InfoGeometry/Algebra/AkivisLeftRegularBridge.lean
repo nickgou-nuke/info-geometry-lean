@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.AkivisIdentity
 import InfoGeometry.Algebra.AlternativeDerivations
 import InfoGeometry.Algebra.ZornDerivationBridge

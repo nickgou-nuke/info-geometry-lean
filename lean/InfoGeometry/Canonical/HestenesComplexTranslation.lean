@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealBdG
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.NoncommutativeModularSignum
 import InfoGeometry.Meta.Architecture

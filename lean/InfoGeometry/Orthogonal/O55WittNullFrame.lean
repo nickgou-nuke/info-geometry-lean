@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55CoordinateNormalization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! The normalized five-pair Witt frame on the native `(5,5)` carrier. -/
 

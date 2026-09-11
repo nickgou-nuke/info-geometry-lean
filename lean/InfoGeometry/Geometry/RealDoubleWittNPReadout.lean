@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!
@@ -11,7 +12,7 @@ transverse readout.  No connection or curvature data are assumed.
 
 namespace InfoGeometry.Geometry.RealDoubleWittNP
 
-abbrev Plane := Fin 2 → ℝ
+abbrev Plane := InfoGeometry.Algebra.FiniteSpin.Vec2R
 abbrev Carrier := Plane × Plane
 
 def causalForm (x y : Carrier) : ℝ :=

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryReadoutBounds
 import InfoGeometry.Canonical.CantorBoundaryFiniteReadout
 import InfoGeometry.Canonical.CantorBoundaryReadoutComplexRealBridge

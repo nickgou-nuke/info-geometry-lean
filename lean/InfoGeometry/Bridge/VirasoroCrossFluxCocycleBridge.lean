@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularCoproductFlux
 import InfoGeometry.Canonical.CoproductToVirasoroCocycleBridge
 import InfoGeometry.External.Virasoro.VirasoroAlgebra

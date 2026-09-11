@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauKreinMetriplecticContext
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.LegendreHessianInverse
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.Vacuity

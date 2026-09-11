@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.MDPASJMSouriau
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.MDPASJMSouriauDigest
 import InfoGeometry.Physics.MDPASJMSouriauGlobalObstruction
 import InfoGeometry.Physics.SouriauEntropyFoliation

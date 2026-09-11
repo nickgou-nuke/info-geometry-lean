@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Units.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.Basic
 
 /-!

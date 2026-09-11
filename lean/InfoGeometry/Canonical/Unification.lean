@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Singular
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Quantum.ModularAnomaly

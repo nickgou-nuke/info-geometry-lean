@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Polynomial.Laurent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Physics.SymmetricAsymmetricXP
 

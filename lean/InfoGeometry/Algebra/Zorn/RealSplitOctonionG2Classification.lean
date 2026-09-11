@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoSplitZorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismOrderLedger
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.RealSplitAlbert
 import InfoGeometry.Algebra.RealAlbertJordanProofs
 import Mathlib.Data.Matrix.Basic

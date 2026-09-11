@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Braid actions transported through `TopCat` direct colimits

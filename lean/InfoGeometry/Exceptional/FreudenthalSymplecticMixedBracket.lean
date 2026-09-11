@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalChargeLinear
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The proven symplectic mixed bracket on Freudenthal charges

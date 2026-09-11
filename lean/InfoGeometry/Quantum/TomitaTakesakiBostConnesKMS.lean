@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Aut
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.Complex.Basic

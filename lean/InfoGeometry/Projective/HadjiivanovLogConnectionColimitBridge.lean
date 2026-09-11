@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.HadjiivanovLogConnectionReadoutBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TensorTowerColimit
 
 /-!

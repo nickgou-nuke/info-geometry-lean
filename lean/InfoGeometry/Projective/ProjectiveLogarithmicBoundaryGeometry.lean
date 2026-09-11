@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Projective.CrossRatio
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.Quadrics.PluckerKlein
 import InfoGeometry.Canonical.ThreePointMoebiusCrossRatioBridge
 import InfoGeometry.Canonical.NativeMathlibAmplituhedronBridge

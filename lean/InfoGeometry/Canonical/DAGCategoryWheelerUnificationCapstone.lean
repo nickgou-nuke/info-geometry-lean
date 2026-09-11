@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DAGCategoryWheelerUnificationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.WheelerBoundaryHomologyBridge
 
 namespace InfoGeometry.Canonical.DAGCategoryWheelerUnificationCapstone

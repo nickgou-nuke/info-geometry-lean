@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzChiralProjectors
 import InfoGeometry.Algebra.CuntzContractionLemmas
 import InfoGeometry.Algebra.CuntzSupergradedSUSY

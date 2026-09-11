@@ -11,6 +11,7 @@ Edge/topological claims require explicit BdG, localization, and index data.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
 
 noncomputable section

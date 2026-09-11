@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwelveFoldExplicitOperators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SixStateSpectralBridge
 
 open scoped Matrix

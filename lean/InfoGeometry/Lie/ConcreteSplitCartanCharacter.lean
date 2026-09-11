@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.ConcreteSplitCartan
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The rank-one split-Cartan character

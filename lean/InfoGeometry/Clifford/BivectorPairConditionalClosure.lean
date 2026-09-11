@@ -1,4 +1,5 @@
 import Mathlib.Tactic.NoncommRing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Conditional closure for a mixed bivector pair

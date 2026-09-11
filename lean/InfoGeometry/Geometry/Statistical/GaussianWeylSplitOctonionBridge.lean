@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.Statistical.GaussianScaleDerivationDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.Statistical.WeylSplitOctonionDualFlatBridge
 
 /-!

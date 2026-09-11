@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55OperatorZ2Grading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Chiral projectors from the native Clifford volume element.
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionRegularMultiplicationSpectralBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.HestenesKreinOperatorCalculus
 
 /-!

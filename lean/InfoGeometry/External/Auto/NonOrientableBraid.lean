@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.ExceptionalNonorientableTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Non-orientable braid charge compatibility layer

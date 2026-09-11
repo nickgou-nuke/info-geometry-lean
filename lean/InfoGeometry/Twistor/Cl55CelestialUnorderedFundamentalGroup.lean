@@ -1,4 +1,5 @@
 import Mathlib.AlgebraicTopology.FundamentalGroupoid.InducedMaps
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.Cl55CelestialUnorderedConfiguration
 
 /-!

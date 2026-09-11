@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.LogVolumePathIntegral
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteBogoliubovFrameDeformationEntropy
 
 /-!

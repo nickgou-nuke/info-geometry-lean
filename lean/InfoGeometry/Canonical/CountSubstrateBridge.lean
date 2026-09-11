@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CountProbabilityState
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CountSinkhornFlow
 
 namespace InfoGeometry

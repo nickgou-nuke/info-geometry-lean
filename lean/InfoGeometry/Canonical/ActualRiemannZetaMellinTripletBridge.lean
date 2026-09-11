@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.LSeries.Dirichlet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ActualRiemannZetaVonMangoldtBridge
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences
 import InfoGeometry.Topology.MellinDeRhamArithmeticCayleyBridge

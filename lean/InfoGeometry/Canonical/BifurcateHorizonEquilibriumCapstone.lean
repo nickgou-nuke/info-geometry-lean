@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.BifurcateHorizonEquilibrium
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.BifurcateHorizonEquilibriumCapstone
 

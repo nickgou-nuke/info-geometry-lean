@@ -3,6 +3,7 @@ InfoGeometry/OperatorAlgebra/ConstructiveConnesCocycle.lean
 -/
 
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 noncomputable section

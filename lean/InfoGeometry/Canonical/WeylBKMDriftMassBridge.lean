@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BKMDriftMetric
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Meta.Architecture
 

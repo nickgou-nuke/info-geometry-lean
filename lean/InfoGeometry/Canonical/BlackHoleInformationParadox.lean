@@ -1,4 +1,5 @@
 import Mathlib.Topology.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.ContinuousMap.Basic
 import Mathlib.Topology.Instances.Int
 import Mathlib.Topology.Connected.Basic

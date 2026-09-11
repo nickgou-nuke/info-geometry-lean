@@ -1,4 +1,5 @@
 import InfoGeometry.NCG.NoncommutativeConnectionCurvature
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.LocalGaugeCovariantDerivative
 import InfoGeometry.Krein.HessianFrameConjugation
 

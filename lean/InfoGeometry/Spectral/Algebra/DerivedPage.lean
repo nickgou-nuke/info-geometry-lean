@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.ExactCouple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The homology page of an exact couple

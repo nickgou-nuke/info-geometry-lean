@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.HestenesKahler
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CorrelationSymmetrization
 
 open scoped InnerProductSpace

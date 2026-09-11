@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ModularCftBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 noncomputable section

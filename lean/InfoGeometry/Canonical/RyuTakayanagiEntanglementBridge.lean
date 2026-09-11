@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.EntanglementGeometryLedger
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.HolographicPressureFunctional
 import InfoGeometry.Canonical.CelikErlangenBraidBridge
 import InfoGeometry.Canonical.CantorResolutionScaling

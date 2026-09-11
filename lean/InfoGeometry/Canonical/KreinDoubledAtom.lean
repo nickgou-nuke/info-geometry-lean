@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.AnticommutingInvolutionCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.RealMajoranaCategory
 import InfoGeometry.Quantum.SplitCliffordAtom
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZornVectorMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The Günaydin-Gürsey 1973 Split Octonion Quark Basis

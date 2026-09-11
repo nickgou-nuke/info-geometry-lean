@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Limits.Preserves.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Algebra.Category.Ring.Basic

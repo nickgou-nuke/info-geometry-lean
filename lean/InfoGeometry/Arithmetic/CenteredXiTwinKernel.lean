@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Trigonometric
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences
 import InfoGeometry.Geometry.RealRotorCore

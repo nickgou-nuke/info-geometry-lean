@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularCausalConeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.NullProjective
 import InfoGeometry.Lie.SplitOctonionCircularWittForm
 import InfoGeometry.Geometry.PauliParavectorBridge
@@ -27,7 +28,7 @@ open InfoGeometry.Lie.SplitOctonionCircularMinkowskiPauliBridge
 open InfoGeometry.Lie.SplitOctonionCircularQuadraticCoherence
 open InfoGeometry.Twistor
 
-abbrev Coord := Fin 8 → ℝ
+abbrev Coord := InfoGeometry.Algebra.FiniteSpin.Vec8R
 abbrev CircularProjective := ℙ ℝ Coord
 
 /-- Projectivized circular null cone. -/

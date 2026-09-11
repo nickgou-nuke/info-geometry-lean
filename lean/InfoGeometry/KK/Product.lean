@@ -1,4 +1,5 @@
 import InfoGeometry.KK.KasparovCycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped InnerProductSpace
 

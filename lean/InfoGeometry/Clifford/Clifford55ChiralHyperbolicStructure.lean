@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55SpinorChirality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hyperbolic chirality projectors for the native `Cl(5,5)` spinor carrier

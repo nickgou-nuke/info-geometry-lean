@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentCompactHausdorffPrefixLimitAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentBoundaryInverseLimitCompHaus
 import Mathlib.Topology.Category.CompHaus.Basic
 

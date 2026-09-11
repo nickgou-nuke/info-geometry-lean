@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.NeutralPhaseSpaceCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The canonical splitting of a neutral dual pair

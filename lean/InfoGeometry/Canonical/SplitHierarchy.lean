@@ -1,4 +1,5 @@
 import InfoGeometry.Algebraic.SplitSuperGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl44ConformalNormalization
 
 /-!

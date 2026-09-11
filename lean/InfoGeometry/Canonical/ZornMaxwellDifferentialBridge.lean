@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornFiniteVectorCalculus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornMaxwellComponentReadout
 import Mathlib.Tactic
 

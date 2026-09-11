@@ -1,1 +1,2 @@
 import InfoGeometry.Clifford.Tower
+import InfoGeometry.Algebra.FiniteSpinAlgebra

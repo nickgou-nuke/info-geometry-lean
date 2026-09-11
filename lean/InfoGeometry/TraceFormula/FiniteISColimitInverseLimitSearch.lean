@@ -1,4 +1,5 @@
 import InfoGeometry.TraceFormula.ItakuraSaitoMongeAmpere
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentBoundaryInverseLimitCompHaus
 import InfoGeometry.KMSGNS
 

@@ -19,6 +19,7 @@
 -/
 
 import Mathlib.Algebra.Field.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Ring
 
 namespace InfoGeometry.Canonical.GoldenRatioInvariants

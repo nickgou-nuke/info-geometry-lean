@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.Metric
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Krein Orthogonal Group

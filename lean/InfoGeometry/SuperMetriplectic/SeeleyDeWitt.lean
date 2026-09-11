@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.CasimirZeta
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Seeley-DeWitt / Weyl-Anomaly Layer

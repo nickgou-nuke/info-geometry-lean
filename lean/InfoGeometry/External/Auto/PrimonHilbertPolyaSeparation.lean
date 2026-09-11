@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.PrimonFockTraceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.PrimonSuperThermodynamics
 import InfoGeometry.External.Auto.RiemannHypothesis
 open RiemannHypothesis

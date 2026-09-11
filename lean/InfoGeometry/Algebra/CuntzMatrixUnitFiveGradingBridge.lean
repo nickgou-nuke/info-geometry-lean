@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzMatrixUnits
 import InfoGeometry.Algebra.CuntzSuperalgebra
 import InfoGeometry.Physics.TripotentAdjointDerivation

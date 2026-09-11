@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraDirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatible noncommutative actions on the native filtered star direct limit

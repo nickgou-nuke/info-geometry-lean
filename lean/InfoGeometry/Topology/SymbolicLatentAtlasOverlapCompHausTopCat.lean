@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentAtlasCechCocycleTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.CompHaus.Basic
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitG2MetricCalibrationPrerequisites
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitG2VolumeAndGramPairing
 
 namespace InfoGeometry.Canonical

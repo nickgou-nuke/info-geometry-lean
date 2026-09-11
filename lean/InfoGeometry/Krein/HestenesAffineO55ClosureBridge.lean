@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.HestenesCPTONNDualityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace BigOperators

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentIndexedObservationFunctor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # `TopCat` mirror for the finite five-grade observation range

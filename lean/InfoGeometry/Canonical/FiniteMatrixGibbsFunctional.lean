@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Action.ConjAct
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Matrix.Order
 import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
 import Mathlib.LinearAlgebra.Matrix.Trace

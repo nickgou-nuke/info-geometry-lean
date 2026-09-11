@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionNonmultiplicativity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SplitCliffordAlgebras
 import InfoGeometry.Canonical.WittenMoebiusChiralParityIndex
 import InfoGeometry.Clifford.Cl55SpinorChirality

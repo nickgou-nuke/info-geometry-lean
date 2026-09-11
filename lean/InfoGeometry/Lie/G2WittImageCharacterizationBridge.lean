@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Intrinsic Leibniz selector for the transported `G₂` Witt image

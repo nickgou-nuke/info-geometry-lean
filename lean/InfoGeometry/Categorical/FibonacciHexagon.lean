@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciBraiding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Categorical.FibonacciHexagon
 

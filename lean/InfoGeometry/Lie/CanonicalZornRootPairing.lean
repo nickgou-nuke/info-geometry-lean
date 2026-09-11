@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornCartanAdjointSpectrum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
 import Mathlib.LinearAlgebra.RootSystem.Basic
 import Mathlib.LinearAlgebra.Dimension.OrzechProperty

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GrandCanonicalThermodynamicEngine
 import InfoGeometry.Canonical.LatticeHoppingDiffusionFlow
 import InfoGeometry.Canonical.ContinuumPropagatorLimitBridge

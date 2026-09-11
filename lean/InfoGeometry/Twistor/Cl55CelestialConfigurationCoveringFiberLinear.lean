@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Cl55CelestialConfigurationFiberEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullConfigurationPermutationLinearMonodromy
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SpatialDerivativeBogoliubovIntertwiner
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
 
 open scoped InnerProductSpace

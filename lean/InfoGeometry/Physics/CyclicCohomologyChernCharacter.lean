@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.TQFTCobordismKasparovIndex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Physics
 

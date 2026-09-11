@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciBraiding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TensorTowerColimit
 import InfoGeometry.Canonical.TriFacetGeometry
 import InfoGeometry.Convex.SelfDualCone

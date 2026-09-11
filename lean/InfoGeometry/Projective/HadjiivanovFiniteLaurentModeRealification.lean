@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.HadjiivanovFiniteLaurentModeColimitProjection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Realification of the finite Laurent-mode connection cone

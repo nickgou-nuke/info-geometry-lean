@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.TransformerBlock
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped BigOperators
 

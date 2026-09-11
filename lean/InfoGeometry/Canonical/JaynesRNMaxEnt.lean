@@ -1,4 +1,5 @@
 import InfoGeometry.MaxEnt.JaynesRNMaxEnt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.JaynesRNMaxEnt

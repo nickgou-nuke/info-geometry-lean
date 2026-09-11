@@ -1,4 +1,5 @@
 import InfoGeometry.Analytic.HKColimitStructures
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Spectral.Cohomology.MayerVietoris
 
 /-!

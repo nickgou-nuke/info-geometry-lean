@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Order.Filter.AtTopBot.Basic
 import Mathlib.Order.Filter.Tendsto

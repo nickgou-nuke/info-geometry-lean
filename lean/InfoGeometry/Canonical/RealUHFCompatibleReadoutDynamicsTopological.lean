@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutScalarDynamicsBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topological scalar dynamics on compatible readout families

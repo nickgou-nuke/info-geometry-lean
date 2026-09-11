@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.MobiusFermionBosonization
 import InfoGeometry.Arithmetic.PrimonFinite
 import InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge

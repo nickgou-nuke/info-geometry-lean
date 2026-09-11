@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DeRhamHodgeIsomorphismBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of DeRhamHodgeIsomorphismBridge

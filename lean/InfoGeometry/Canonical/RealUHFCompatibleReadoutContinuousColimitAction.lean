@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutActionColimitBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuous scalar action on the normalized-trace colimit readout

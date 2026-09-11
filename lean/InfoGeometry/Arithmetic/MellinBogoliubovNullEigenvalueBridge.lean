@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovCovariantMellinKreinQuantizationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MoebiusBogoliubovVirasoroBridge
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 

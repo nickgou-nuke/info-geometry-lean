@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.StableFibonacciAnyonBraidLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topological.FibonacciColimit
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite three-stack braid--Lorentz--metriplectic packet
@@ -18,7 +19,7 @@ metriplectic thermodynamics.
 
 namespace InfoGeometry.Topology.ThreeStackBraidLorentzMetriplectic
 
-abbrev Mat2Q := Matrix (Fin 2) (Fin 2) ℚ
+abbrev Mat2Q := InfoGeometry.Algebra.FiniteSpin.Mat2Q
 
 /-- The `1+1` Minkowski metric with signature `(-,+)`. -/
 def eta : Mat2Q :=

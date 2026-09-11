@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.TomitaTakesakiModularFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Physics
 

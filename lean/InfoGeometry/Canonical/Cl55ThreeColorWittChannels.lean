@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55WittLieRouting
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 set_option autoImplicit false

@@ -1,6 +1,6 @@
 import InfoGeometry.OptimalTransport.LogDetBarrier
-import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Tactic
 
 noncomputable section
 

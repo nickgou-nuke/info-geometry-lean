@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2CanonicalPCCollector
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Generated from the GAP ExtRep witness export.
 The carrier is the concrete SplitOctF2Aut factor-word carrier; integer

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Circular coordinate operators
@@ -16,7 +17,7 @@ open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 open InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 open InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 
-abbrev Coord := Fin 8 → ℝ
+abbrev Coord := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 noncomputable def circularCoordinateLinearEquiv : CanonicalZorn ≃ₗ[ℝ] Coord :=
   circularPeirceBasis.equivFun

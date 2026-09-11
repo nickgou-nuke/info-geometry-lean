@@ -6,6 +6,7 @@ No complex imports.
 -/
 
 import Mathlib.Algebra.Group.Action.End
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.QuotientGroup.Defs
 import InfoGeometry.Canonical.PSLDescent
 import InfoGeometry.ProjectiveFoundation

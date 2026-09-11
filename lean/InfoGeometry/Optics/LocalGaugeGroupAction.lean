@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.LocalGaugeFrameInverse
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native group action of local operator gauge frames

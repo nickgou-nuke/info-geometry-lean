@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraDirectLimitTopologicalCompatibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Algebraic-to-topological filtered star-colimit comparison

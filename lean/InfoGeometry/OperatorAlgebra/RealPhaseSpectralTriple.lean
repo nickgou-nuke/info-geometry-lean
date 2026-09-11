@@ -11,6 +11,7 @@ This module keeps the strict separation:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.Normed.Operator.Compact
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix
 
@@ -22,8 +23,8 @@ Proved Theorems:
 5. Right Boundary 8D Majorana Zero Mode: $H_{\text{sweet8}} \cdot \gamma_8 = 0$.
 -/
 
-abbrev Mat8R := Matrix (Fin 8) (Fin 8) ℝ
-abbrev Vec8R := Fin 8 → ℝ
+abbrev Mat8R := InfoGeometry.Algebra.FiniteSpin.Mat8R
+abbrev Vec8R := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 /-- Particle-hole charge conjugation operator C₈ = τ_x ⊗ I₄ in 8×8 real Nambu space. -/
 def particleHole8 : Mat8R :=

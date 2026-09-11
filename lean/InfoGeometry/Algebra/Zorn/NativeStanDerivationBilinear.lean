@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZornDerivationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Native vector-carrier interface for the standard derivations of the split
 octonion Zorn algebra.  The standard formula and its Leibniz proof remain

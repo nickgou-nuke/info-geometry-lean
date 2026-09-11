@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.BdGChiralBlockMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.NoncommRing
 

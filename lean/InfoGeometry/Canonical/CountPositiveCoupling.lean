@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CountProbabilityState
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SinkhornFoundation
 
 namespace InfoGeometry.Canonical.CountSubstrateBridge

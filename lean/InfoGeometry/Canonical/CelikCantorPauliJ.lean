@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikCantorClifford
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Rank-one Pauli coupling readout

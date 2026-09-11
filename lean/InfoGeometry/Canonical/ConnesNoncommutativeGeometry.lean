@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConnesNCGFormAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzConnesSpectralDistance
 
 /-!

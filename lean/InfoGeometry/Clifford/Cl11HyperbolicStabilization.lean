@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.BottPeriodicity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealCliffordStageDimension
 
 open scoped TensorProduct

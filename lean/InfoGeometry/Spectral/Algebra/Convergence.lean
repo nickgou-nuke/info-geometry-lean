@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.IteratedPageStabilization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Spectral.Algebra.ExactCoupleFiltration
 import InfoGeometry.Spectral.Algebra.ConvergenceCore
 import Mathlib.Algebra.Module.Submodule.Basic

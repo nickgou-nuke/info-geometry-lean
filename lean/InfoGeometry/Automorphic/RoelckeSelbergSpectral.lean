@@ -18,6 +18,7 @@ The algebraic consequences are proved here:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Automorphic.SiegelResonance
 
 noncomputable section

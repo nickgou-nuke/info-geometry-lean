@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ChiralOperatorQuotientBraidCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compact-Hausdorff braid transport to the observation range

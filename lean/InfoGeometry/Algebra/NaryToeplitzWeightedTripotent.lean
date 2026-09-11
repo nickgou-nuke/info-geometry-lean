@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzN
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Algebra.Cuntz
 

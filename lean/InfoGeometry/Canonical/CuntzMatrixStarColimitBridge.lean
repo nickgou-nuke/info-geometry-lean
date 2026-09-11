@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Category.Ring.FilteredColimits
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.HasLimits
 import Mathlib.Algebra.Star.StarAlgHom
 import InfoGeometry.Canonical.CuntzMatrixRingColimitHestenesBridge

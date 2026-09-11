@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Coordinate audit: the affine eight-coordinate carrier is not the 189-flag variety. -/
 

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BitWordComplexStageReindex
 import InfoGeometry.Canonical.BoundaryBondSquare
 import InfoGeometry.Canonical.CuntzMatrixTraceTower

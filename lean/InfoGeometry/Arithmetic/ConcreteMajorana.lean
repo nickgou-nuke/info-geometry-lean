@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FinCases

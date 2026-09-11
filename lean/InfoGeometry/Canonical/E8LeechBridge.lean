@@ -1,4 +1,5 @@
 import Mathlib.Data.Nat.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.NormNum
 import InfoGeometry.Algebra.SplitE88Group

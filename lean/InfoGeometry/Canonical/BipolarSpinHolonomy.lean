@@ -1,8 +1,8 @@
 import InfoGeometry.Analysis.BipolarWindingPeriodLattice
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Spinorial holonomy of the bipolar winding lattice

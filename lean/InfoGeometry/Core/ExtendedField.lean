@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Order.Monoid.WithTop
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Order.WithBot
 import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Algebra.Order.Ring.Defs

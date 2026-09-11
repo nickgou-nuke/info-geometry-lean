@@ -1,4 +1,5 @@
 import InfoGeometry.GroupTheory.GeneratedSetExhaustion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2ConcreteGeneratorInfrastructure
 
 /-!

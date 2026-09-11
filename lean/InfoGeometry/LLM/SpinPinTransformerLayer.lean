@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.TransformerArchitecture
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LLM.PinCPTBridge
 import InfoGeometry.Canonical.SpinConnection
 import InfoGeometry.Canonical.SplitCliffordTensorBridge

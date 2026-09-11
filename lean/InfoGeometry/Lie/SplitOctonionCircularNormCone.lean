@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Circular Norm Normal Form and Null Cone

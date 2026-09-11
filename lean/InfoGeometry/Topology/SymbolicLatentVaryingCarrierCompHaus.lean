@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierCategory
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentObservationRangeCompHaus
 import Mathlib.Topology.Category.CompHaus.Basic
 

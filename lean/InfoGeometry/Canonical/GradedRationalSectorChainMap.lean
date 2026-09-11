@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GradedRationalChainMap
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

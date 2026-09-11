@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionChiralPhaseSpace
 import InfoGeometry.Projective.KleinQuadricPlucker
 
@@ -17,7 +18,7 @@ open InfoGeometry.Algebra.ZornMatrix
 
 noncomputable section
 
-abbrev Vec := Fin 3 → ℝ
+abbrev Vec := InfoGeometry.Algebra.FiniteSpin.Vec3R
 abbrev Phase := Vec × Vec
 
 structure KleinCoordinates where

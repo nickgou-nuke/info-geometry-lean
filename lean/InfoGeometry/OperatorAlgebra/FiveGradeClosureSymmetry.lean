@@ -15,6 +15,7 @@ element is fixed.  Pointwise survival still requires `theta x = x`.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 
 noncomputable section

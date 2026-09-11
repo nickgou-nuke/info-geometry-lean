@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Base point of the native flag representative map

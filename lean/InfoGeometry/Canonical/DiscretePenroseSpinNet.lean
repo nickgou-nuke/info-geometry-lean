@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PenrosePosetCategoryFoundation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Discrete Penrose spin nets grounded in posets/categories

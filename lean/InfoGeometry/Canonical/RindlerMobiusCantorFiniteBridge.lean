@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RindlerMobiusLogDeRhamBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryFinitePrecision
 import InfoGeometry.Canonical.CantorBoundaryReadoutComplexRealBridge
 import InfoGeometry.Canonical.CantorProjectiveLimit

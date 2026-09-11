@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionColorS3Automorphisms
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornMatrixVectorCarrierBridge
 
 /-!

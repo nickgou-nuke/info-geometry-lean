@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.PO55RicciFlux
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Linear probe boundary for a hidden grade

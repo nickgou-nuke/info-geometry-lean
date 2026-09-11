@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Matrix.Basic

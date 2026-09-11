@@ -8,6 +8,7 @@ not infer perfect Andreev reflection from `epsilon < Δ` alone.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
 
 noncomputable section

@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Permutation
-import InfoGeometry.Canonical.A2QutritTransitionRootBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.A2QutritTransitionRootBridge
 
 /-!
 # Weyl transport of the qutrit `A₂` transition roots

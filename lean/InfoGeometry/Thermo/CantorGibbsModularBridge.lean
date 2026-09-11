@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorKMSState
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorLocalCl11HopParity
 import InfoGeometry.Thermo.FiniteDiagonal
 import InfoGeometry.Canonical.AmariBinarySimplexBridge

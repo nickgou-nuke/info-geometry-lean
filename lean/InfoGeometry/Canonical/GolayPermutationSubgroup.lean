@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.LeechGolayCoordinateAction
 
 /-! The exact pre-classification subgroup of coordinate symmetries preserving

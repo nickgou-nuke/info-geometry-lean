@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.PenroseTwistor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.MvPolynomial.PDeriv
 import Mathlib.RingTheory.Derivation.Lie
 import Mathlib.Tactic

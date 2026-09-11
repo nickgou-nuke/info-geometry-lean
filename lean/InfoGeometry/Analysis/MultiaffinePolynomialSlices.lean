@@ -1,4 +1,5 @@
 import Mathlib.Algebra.MvPolynomial.Equiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.MvPolynomial.Degrees
 import Mathlib.Algebra.Polynomial.Degree.SmallDegree
 

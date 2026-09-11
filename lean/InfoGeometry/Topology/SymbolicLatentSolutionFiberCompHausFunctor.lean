@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentSolutionFiberCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentObservationRangeFunctor
 
 namespace InfoGeometry.Topology

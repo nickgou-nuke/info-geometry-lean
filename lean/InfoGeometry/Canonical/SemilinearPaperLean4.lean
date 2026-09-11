@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Lean 4 / mathlib4 surface for semilinear-map paper snippets

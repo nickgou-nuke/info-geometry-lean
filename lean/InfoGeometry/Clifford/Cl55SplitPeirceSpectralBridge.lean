@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55RoPESplitTorusBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittProjectors
 
 /-! Spectral normal form for the native split rotor.

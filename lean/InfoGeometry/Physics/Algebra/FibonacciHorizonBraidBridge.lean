@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.ToLin
 import InfoGeometry.Canonical.YangBaxterProof
 import InfoGeometry.Canonical.FibonacciBraidNoncommutativityBridge
@@ -41,7 +42,7 @@ open InfoGeometry.Canonical.YangBaxterProof
 open InfoGeometry.Canonical.FibonacciBraidNoncommutativityBridge
 open InfoGeometry.Physics.Algebra
 
-abbrev HorizonSpace := Fin 2 → ℂ
+abbrev HorizonSpace := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 /-! ## 1. Direct Linear Map Formulation of Horizon Braid Operators -/
 

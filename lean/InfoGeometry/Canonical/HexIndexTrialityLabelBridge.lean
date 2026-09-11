@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HexIndexTrialityEquivariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanWeylEquivariant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Rank-two `G₂` Weyl invariants

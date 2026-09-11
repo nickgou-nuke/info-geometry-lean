@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CyclotomicProjectorReadout
 
 set_option synthInstance.maxHeartbeats 100000

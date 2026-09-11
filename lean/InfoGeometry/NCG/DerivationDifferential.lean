@@ -1,4 +1,5 @@
 import InfoGeometry.NCG.NoncommutativeDifferentialCalculus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.NCG.NoncommutativeNoetherPoisson
 import Mathlib.LinearAlgebra.Alternating.Basic
 import Mathlib.Algebra.Lie.Cochain

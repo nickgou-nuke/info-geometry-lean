@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.RiemannXiV4CharacterBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovCovariantMellinKreinQuantizationBridge
 import InfoGeometry.Canonical.BogoliubovCenteredMellinMoebiusWeld
 

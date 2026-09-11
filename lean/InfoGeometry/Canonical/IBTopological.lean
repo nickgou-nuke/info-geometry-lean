@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBMeasure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Measure.Tilted
 import Mathlib.Probability.Moments.Tilted
 

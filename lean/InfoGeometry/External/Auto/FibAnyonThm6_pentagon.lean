@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-══════════════════════════════════════════════════════════════════════
   FIBONACCI ANYON THEOREM 6 — FINITE F-MATRIX IDENTITIES

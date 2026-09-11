@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Algebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Data.Fintype.Card

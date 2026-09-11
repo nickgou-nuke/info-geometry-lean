@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Cl11OSp12
 import InfoGeometry.Canonical.ErlangenInductiveClosure
 

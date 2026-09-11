@@ -1,4 +1,5 @@
 import InfoGeometry.Volume.RadonNikodym
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.Thermal
 import InfoGeometry.Canonical.ProjectiveFoundation
 import InfoGeometry.Topological.StabilizerAnomalies

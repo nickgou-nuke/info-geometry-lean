@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.BostConnesFiniteFisherBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Retired scalar Onsager wrapper

@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.NullProjective
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Polar incidence on projective null geometry

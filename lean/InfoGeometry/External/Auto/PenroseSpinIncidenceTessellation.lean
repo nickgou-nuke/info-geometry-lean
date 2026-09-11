@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.QuadraticConfiguration3
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.NonIsoConf3QuadricD4PointCount
 
 /-!

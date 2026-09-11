@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ActualRiemannXiSchwarzBridge
 import InfoGeometry.Canonical.CompletedZetaV4CharacterBridge
 

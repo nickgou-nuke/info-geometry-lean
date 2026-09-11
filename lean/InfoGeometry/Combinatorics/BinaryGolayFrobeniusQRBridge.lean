@@ -1,4 +1,5 @@
 import Mathlib.Data.Finset.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.NormNum
 import InfoGeometry.Combinatorics.BinaryGolayRootField

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GradedRationalCohomologyShadow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

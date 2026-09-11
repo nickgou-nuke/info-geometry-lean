@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.AZTenFoldCompleteClassification
 
 open InfoGeometry.Quantum.AZTenFoldCompleteClassification
@@ -37,7 +38,7 @@ theorem brst_charge_sq_zero {V : Type*} [AddCommGroup V] [Module ℝ V]
   exact h
 
 /-- 2D Nambu-Gor'kov Matrix Space -/
-abbrev NambuSpace : Type := Fin 2 → ℝ
+abbrev NambuSpace : Type := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 /-- The 2D Boundary Majorana BRST Charge Operator -/
 def boundaryBRSTCharge : (Fin 2 → ℝ) →ₗ[ℝ] (Fin 2 → ℝ) :=

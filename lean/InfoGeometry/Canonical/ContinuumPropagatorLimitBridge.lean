@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.LatticeHoppingDiffusionFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.YangMillsContinuum
 import InfoGeometry.Canonical.HamiltonianFlowBridge
 import InfoGeometry.Volume.ConnesCocycle

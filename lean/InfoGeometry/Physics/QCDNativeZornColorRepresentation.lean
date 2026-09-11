@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Lie.Matrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basis
 import InfoGeometry.Physics.SplitOctonionBraidSU3
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native faithful color representation on the complex Zorn upper lane
@@ -30,7 +30,7 @@ open InfoGeometry.Physics.SplitOctonionBraidSU3
 
 abbrev Zorn := InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn
 abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
-abbrev ColorLane := Fin 3 → ℂ
+abbrev ColorLane := InfoGeometry.Algebra.FiniteSpin.Vec3C
 
 /-- The defining matrix action on the three-component color lane. -/
 def colorAction (A : M3C) : ColorLane →ₗ[ℂ] ColorLane where

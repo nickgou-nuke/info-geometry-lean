@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.PiL2
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorKMSCylinderState
 
 noncomputable section

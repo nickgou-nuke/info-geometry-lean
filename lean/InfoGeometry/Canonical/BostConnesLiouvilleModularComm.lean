@@ -7,6 +7,7 @@ modular-flow phase `σ_t` on the chosen arithmetic generators.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Canonical.BostConnesModularFlow
 import InfoGeometry.Canonical.BostConnesKMS

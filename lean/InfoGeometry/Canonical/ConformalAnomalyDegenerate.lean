@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalAnomalyReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ConformalUnification
 

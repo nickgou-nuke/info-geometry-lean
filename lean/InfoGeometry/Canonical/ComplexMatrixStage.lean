@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TensorTowerColimit
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 

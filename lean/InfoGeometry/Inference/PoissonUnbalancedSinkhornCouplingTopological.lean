@@ -1,4 +1,5 @@
 import InfoGeometry.Inference.PoissonUnbalancedSinkhornTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.ContinuousMap.Basic
 
 /-!

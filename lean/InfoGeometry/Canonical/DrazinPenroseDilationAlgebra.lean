@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.EPDefectAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InverseKernelCartanCore
 import Mathlib.Tactic.NoncommRing
 

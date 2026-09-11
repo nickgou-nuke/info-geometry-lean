@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzThermalQBridge
 import InfoGeometry.Krein.Thermal
 import InfoGeometry.Canonical.BogoliubovTransport

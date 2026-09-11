@@ -1,4 +1,5 @@
 import InfoGeometry.MeasureProjective
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility Import for Projective Measure States

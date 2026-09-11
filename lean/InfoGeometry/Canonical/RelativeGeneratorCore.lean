@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectiveStateCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MeasureProjective.Invariant
 
 /-!

@@ -24,7 +24,7 @@ open InfoGeometry.Canonical.HestenesSpinAction
 
 abbrev SL2C := Matrix.SpecialLinearGroup (Fin 2) ℂ
 abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
-abbrev WeylSpinor := Fin 2 → ℂ
+abbrev WeylSpinor := InfoGeometry.Algebra.FiniteSpin.Vec2C
 abbrev WeylPair := WeylSpinor × WeylSpinor
 
 /-- Right multiplier in the Hermitian-vector congruence action. -/

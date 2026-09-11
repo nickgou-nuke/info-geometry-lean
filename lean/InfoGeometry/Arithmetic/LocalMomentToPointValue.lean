@@ -1,4 +1,5 @@
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

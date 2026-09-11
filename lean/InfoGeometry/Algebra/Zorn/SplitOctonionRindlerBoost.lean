@@ -6,6 +6,7 @@ parameter, while `lUnit` supplies the hyperbolic generator with square `+1`.
 -/
 
 import InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermodynamics.UnruhTemperature
 
 noncomputable section

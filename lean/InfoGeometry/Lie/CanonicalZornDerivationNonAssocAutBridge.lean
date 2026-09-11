@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornDerivationRealAutBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.BaezG2SplitOctonion
 
 noncomputable section

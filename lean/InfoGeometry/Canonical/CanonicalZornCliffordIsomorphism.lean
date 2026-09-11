@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.FreeModule.Finite.Matrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
 
 /-!

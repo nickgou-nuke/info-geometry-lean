@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55ChiralSectorFinrankLedger
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Contract for the missing chiral-sector flip

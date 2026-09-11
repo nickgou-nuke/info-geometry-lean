@@ -1,4 +1,5 @@
 import InfoGeometry.Capstone.CommutantMoebiusLegendre
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Capstone.ErlangenLanglandsConnesCapstone
 import InfoGeometry.Capstone.FockCapstone
 

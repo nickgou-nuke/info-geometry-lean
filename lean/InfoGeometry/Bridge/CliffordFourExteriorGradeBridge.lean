@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.ExteriorPower.Basis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Grading
 import Mathlib.Data.Complex.Basic
 
@@ -7,7 +8,7 @@ This is deliberately an exterior grading, not a Lie or contact grading. -/
 
 namespace InfoGeometry.Bridge.CliffordFourExteriorGradeBridge
 
-abbrev V4 := Fin 4 → ℂ
+abbrev V4 := InfoGeometry.Algebra.FiniteSpin.Vec4C
 
 noncomputable def vBasis : Module.Basis (Fin 4) ℂ V4 := Pi.basisFun ℂ (Fin 4)
 

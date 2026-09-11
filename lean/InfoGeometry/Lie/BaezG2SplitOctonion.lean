@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.RealSplitOctonionDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

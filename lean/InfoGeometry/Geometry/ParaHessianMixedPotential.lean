@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.DualFlatKreinLegendreGraph
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.Metric
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.InnerProductSpace.Dual

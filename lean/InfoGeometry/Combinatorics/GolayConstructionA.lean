@@ -1,4 +1,5 @@
 import InfoGeometry.Combinatorics.ExtendedBinaryGolay
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Construction A of the extended binary Golay code

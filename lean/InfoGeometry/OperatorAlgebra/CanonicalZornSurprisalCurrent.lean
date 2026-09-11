@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.CanonicalZornDerivationDifferentialForms
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical split-octonion operator surprisal current

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AttentionExpertSimplexModuliTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KANModuliCompact
 
 open scoped BigOperators

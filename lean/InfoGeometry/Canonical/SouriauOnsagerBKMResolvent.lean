@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauOnsagerBKMSelfAdjoint
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

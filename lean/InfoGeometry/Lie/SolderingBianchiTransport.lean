@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitAlgebraSolderingForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Additive Bianchi transport through the canonical soldering form

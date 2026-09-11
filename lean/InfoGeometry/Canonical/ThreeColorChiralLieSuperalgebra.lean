@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.ThreeColorNativeBracketTable
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.SplitCayleyStabilizer
 
 /-!

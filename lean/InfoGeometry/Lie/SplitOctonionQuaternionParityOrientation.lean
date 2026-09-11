@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCrossTensor
 
 /-!
@@ -20,7 +21,7 @@ open InfoGeometry.Lie.SplitOctonionCrossTensor
 open InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
 open InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
 
-abbrev V3 := Fin 3 → ℝ
+abbrev V3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 /-- The coordinate transposition `(i,j,k) -> (i,k,j)`. -/
 def swapJK : V3 ≃ₗ[ℝ] V3 where

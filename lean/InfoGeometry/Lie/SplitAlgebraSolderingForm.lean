@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularHyperbolicZornFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Soldering form for the canonical split-octonion carrier

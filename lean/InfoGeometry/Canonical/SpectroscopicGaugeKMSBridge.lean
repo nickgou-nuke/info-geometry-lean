@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.UnruhKMS
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.Thermal
 import InfoGeometry.Meta.Architecture
 

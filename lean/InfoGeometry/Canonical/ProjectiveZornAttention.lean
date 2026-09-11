@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.AttentionFrameCorrections
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.GibbsReferenceGauge
 import InfoGeometry.Projective.PositiveOperatorExpectation
 

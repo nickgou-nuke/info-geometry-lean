@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Codex
 -/
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Thermo.SplitChiralPolarizationBasis

@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Ring
 
 theorem cross_ratio_translation (z1 z2 z3 z4 c : ℝ) : (z1+c - (z2+c)) * (z3+c - (z4+c)) = (z1-z2)*(z3-z4) := by ring

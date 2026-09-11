@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! The inverse-limit spine of the boundary of a rooted `n`-ary tree.
 

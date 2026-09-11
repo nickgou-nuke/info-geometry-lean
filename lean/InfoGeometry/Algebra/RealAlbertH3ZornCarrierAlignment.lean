@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.RealSplitAlbert
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.QuadraticJordanH3Zorn
 import InfoGeometry.Algebra.H3ZornJordanIdentity
 import InfoGeometry.Algebra.RealSplitOctZornAlignment

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzGeneratorKMSLogThree
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzKMSCondition
 import InfoGeometry.Physics.B3PresentedGroup
 import InfoGeometry.Physics.JonesBraidB3

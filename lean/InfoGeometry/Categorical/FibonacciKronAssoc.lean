@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciFinMulAssoc
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.FibonacciBraidedCategory
 
 namespace InfoGeometry.Categorical.FibonacciBraidedCategory

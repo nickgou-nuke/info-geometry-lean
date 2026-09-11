@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FinitePartitionCumulantReadback
 import InfoGeometry.Physics.StateFamilyBKMBridge
 import InfoGeometry.Topology.FiniteGibbsFisherBridge

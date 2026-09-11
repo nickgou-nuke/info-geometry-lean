@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.BartonSudberyTrialityAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Three-channel triality action

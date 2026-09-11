@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitG2MetricDerivedHodgeStar
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitG2StructureOnImaginaryOctonions
 import Mathlib.LinearAlgebra.Basis.VectorSpace
 import Mathlib.LinearAlgebra.Determinant

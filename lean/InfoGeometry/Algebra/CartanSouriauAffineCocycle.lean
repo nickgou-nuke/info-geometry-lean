@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauCoadjointCovariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Equiv.Basic
 
 noncomputable section

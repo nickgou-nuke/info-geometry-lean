@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.CircularSplitOctonionContactLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Exceptional.Freudenthal
 

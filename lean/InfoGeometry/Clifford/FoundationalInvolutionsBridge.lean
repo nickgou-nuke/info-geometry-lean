@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.DotProduct
 import Mathlib.Tactic.Ring
@@ -11,7 +12,7 @@ namespace InfoGeometry.Clifford.Involutions
 
 abbrev Dim32 := Fin 32
 abbrev Mat32 := Matrix Dim32 Dim32 ℝ
-abbrev Spinor32 := Fin 32 → ℝ
+abbrev Spinor32 := InfoGeometry.Algebra.FiniteSpin.Vec32R
 
 /-!
 # Universal Hexad of Involutions & Krein-Dirac-Tomita Duality Bridge

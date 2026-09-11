@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BottPeriodicity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ClNNBottBridge
 import InfoGeometry.Canonical.KreinDoubledAtom
 import InfoGeometry.Canonical.TomitaTakesaki

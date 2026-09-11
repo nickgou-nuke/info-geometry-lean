@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bilinear TKK input from the native symplectic Freudenthal carrier

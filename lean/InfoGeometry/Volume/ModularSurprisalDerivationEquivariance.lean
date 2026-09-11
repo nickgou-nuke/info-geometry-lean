@@ -1,4 +1,5 @@
 import InfoGeometry.Volume.ConnesInfinitesimal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Volume.ModularSurprisalKillingReadback
 
 /-!

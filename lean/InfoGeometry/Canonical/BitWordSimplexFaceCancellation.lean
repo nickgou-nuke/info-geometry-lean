@@ -1,4 +1,5 @@
 import Mathlib.Data.Fin.SuccPred
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

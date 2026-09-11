@@ -1,7 +1,7 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.GellMannSU3
 import InfoGeometry.Canonical.A2QutritTransitionRootBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Gell--Mann coordinates for the `A₂` root directions

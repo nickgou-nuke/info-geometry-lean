@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteFibonacciHigherAnyonPaperBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteFibonacciGeneralBraidGenerators
 import InfoGeometry.Canonical.FiniteFibonacciRegisterWords
 import InfoGeometry.Canonical.FiniteFibonacciRegisterSubgroup

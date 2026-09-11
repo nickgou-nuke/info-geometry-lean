@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.MDPASJMSouriauCantorColimit
 import InfoGeometry.Canonical.UHFBooleanProjectionCantorBridge
 
@@ -142,7 +143,7 @@ end FiniteTapePrior
 /-! ## Finite algebraic shadows of the logarithmic/twistor discussion -/
 
 /-- A two-component Weyl spinor over exact rationals. -/
-abbrev WeylSpinor := Fin 2 → ℚ
+abbrev WeylSpinor := InfoGeometry.Algebra.FiniteSpin.Vec2Q
 
 /-- A `2 × 2` rational matrix acting on Weyl spinors. -/
 abbrev Matrix2Q := Fin 2 → Fin 2 → ℚ

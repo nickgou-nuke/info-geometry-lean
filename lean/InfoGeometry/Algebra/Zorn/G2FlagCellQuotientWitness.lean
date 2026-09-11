@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate
 import InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
 import InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup

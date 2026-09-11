@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Category.Grp.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Category.Grp.Limits
 import Mathlib.Algebra.Category.Grp.FilteredColimits
 import Mathlib.CategoryTheory.Functor.OfSequence

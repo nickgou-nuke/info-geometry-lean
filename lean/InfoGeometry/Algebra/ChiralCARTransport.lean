@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ChiralZornCARAndSchurBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transport of algebraic CAR relations

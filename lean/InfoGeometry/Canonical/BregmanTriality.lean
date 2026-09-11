@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.JordanKKTData
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GrandUnification
 import InfoGeometry.Canonical.Triality
 import InfoGeometry.Convex.HessianGeometry

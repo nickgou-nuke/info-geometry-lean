@@ -1,4 +1,5 @@
 import Mathlib.Data.Nat.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Tactic
 

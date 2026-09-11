@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Section32QuaternionicEmergentSpacetime
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Section 33 repaired: Pauli completion and finite biquaternion socket

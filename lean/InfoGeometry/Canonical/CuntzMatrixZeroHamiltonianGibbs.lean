@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteMatrixGibbsFunctional
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixTraceTower
 import InfoGeometry.Canonical.CuntzMatrixAlgebraicTraceFunctional
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CayleyDualitySectorPermutationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CayleyDualityUnitSectorBridge
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TrifactorSU3
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Split-octonion / `G₂(2)` classification boundary

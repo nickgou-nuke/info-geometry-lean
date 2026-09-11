@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.WallpaperSymmetry
 import InfoGeometry.Canonical.AffineWeylD5WallpaperQuotient
 

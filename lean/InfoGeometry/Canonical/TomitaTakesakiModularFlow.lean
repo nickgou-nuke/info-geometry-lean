@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TomitaTakesakiCommutantBridge
 
 /-!

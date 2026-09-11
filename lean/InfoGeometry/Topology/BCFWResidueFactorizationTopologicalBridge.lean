@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BCFWMeromorphicResidueRecursion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.PeirceBCFWResidueFactorizationTopological
 
 namespace InfoGeometry.Topology.BCFWResidueFactorizationTopologicalBridge

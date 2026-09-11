@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.DiscreteRouterBayesStep
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LLM.PromptDefectRegularization
 import InfoGeometry.Meta.Architecture
 

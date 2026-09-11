@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeSurprisalRadonNikodymBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Retired scalar Radon--Nikodym readout

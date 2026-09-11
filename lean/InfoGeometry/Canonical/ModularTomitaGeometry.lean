@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry/Canonical/ModularTomitaGeometry.lean

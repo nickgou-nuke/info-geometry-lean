@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionImaginaryEllSupport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionImaginaryCircularForm
 import InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
 import InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates

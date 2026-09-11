@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.MobiusFourierLocalMoment
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Paper-facing readout for finite Möbius Fourier polynomials

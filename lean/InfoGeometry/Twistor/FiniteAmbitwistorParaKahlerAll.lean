@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.FiniteAmbitwistorParaKahler
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Canonical aggregate for the finite ambitwistor and para-Kähler interface.
 

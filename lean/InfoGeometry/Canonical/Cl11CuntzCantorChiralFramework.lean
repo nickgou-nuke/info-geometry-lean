@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzN
 import InfoGeometry.Algebra.CuntzInductiveLimit
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation

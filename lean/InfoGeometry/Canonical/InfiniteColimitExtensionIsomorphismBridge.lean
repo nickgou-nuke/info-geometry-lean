@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModuleCatDirectLimitKernelSurvivalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 set_option linter.unusedSectionVars false

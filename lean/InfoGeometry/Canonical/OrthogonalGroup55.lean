@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.O55OrthogonalLieCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 namespace InfoGeometry.Canonical.O55Representation

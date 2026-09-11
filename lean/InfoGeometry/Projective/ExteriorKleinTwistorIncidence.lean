@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.ExteriorKleinCoordinateIncidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricCarrierEquiv
 
 /-!

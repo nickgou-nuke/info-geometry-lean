@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConcreteChiralHodgeDiracHestenesColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteHestenesDirichletFilteredColimitBridge
 import InfoGeometry.Canonical.FiniteHestenesDirichletOperatorBridge
 

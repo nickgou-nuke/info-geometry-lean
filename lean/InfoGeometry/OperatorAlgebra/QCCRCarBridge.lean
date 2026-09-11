@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.QCCRCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility imports for the q-CCR/CAR owner

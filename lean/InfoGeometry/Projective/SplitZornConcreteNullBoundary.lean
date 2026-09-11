@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.NullBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitZornNullBoundary
 
 /-!

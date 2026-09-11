@@ -1,4 +1,5 @@
 import InfoGeometry.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Ring
 
 open scoped BigOperators

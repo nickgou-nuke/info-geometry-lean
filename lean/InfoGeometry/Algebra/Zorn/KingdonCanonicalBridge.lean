@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.KingdonSplitOctonion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 import InfoGeometry.Algebra.Zorn.Composition
 

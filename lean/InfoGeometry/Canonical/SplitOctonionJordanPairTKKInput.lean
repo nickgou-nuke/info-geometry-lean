@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThreeColorChiralJordanPair
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.TKKClosure
 
 /-!

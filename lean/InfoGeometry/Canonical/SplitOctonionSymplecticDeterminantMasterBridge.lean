@@ -1,2 +1,3 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionGroundedCrossSection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge

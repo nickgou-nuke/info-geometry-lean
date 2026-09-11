@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SplitOctonionG2TypeGenerators
 import InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
 

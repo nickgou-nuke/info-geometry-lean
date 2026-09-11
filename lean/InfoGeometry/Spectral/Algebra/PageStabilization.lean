@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.DerivedNaturality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Algebraic stabilization of a derived page

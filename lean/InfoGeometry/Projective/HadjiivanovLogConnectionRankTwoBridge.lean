@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.HadjiivanovLogConnectionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native rank-two realization of the algebraic logarithmic residue

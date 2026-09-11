@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11Matrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KleinFourTagRootNormalization
 
 /-!

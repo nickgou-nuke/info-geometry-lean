@@ -1,4 +1,5 @@
 import InfoGeometry.Volume.ConnesInfinitesimal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Information.ExpLogRadonNikodymDerivationBridge
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic

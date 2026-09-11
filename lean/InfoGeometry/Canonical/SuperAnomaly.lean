@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.Clifford
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.HilbertBridge
 
 open scoped InnerProductSpace

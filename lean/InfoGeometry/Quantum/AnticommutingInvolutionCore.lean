@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.InvolutionCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Anticommuting Involution Core

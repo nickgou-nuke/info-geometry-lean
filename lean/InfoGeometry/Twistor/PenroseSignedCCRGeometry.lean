@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.PenrosePolynomialCCR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
 /-!

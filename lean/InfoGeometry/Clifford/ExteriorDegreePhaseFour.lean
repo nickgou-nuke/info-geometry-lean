@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FourthRootPeirceProjectors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ExteriorSpinorChiralityBridge
 import Mathlib.LinearAlgebra.ExteriorPower.Basic
 

@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

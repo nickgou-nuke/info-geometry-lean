@@ -12,6 +12,7 @@ and gives a finite readback from `FiniteDefectStokesModel`.
 -/
 
 import InfoGeometry.Geometry.FiniteDefectStokesModel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.VerifiedCauchyKernel
 import InfoGeometry.Meta.Architecture
 

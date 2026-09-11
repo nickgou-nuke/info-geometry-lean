@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitMetricSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SplitMetricLieAlgebra
 import Mathlib.RingTheory.GradedAlgebra.Basic
 import Mathlib.Algebra.Module.GradedModule

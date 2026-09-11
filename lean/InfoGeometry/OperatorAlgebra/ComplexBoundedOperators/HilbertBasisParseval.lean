@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.l2Space
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # AFP CBO Hilbert-basis and Parseval adapters

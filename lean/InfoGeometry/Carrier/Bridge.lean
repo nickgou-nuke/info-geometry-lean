@@ -6,6 +6,7 @@ Krein infrastructure.
 -/
 
 import InfoGeometry.Krein.InvolutiveSelfDualCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Carrier.TripleAlgebra
 import InfoGeometry.Carrier.SupergradedHopping
 import InfoGeometry.Carrier.HestenesKrein

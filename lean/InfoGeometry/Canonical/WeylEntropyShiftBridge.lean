@@ -9,6 +9,7 @@ standard additive shift forced by multiplicative Weyl homogeneity.
 -/
 
 import InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import Mathlib.Tactic
 

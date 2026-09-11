@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55SpinGroupChiralityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Chiral sector submodules for the matrix `Spin(5,5)` action

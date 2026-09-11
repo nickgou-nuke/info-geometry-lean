@@ -1,4 +1,5 @@
 import Mathlib.Topology.Category.TopCat.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ContinuousModularFlowQuotientDescent
 
 namespace InfoGeometry.Topology.ContinuousQuotientDescent

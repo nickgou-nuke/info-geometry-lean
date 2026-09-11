@@ -6,6 +6,7 @@ No complex imports.
 -/
 
 import Mathlib.Order.Filter.AtTopBot.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Order.Filter.Tendsto
 import Mathlib.Topology.Basic
 import InfoGeometry.Algebraic.MatrixAutomorphyFactor

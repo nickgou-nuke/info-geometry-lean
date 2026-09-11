@@ -1,7 +1,7 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Optics.OperatorLiftCarrier
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite chiral operator lift

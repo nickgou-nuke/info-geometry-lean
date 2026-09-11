@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.CuntzShiftTilt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.CuntzShiftTiltCapstone
 

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionCyclicAutomorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite `G₂(2)`-type split-octonion automorphism generators

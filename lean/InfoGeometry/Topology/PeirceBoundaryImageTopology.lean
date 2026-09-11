@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.PeircePositiveBoundaryTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology
 

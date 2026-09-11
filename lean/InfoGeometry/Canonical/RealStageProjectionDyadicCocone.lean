@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DyadicDimensionGroupUniversalProperty
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealStageNormalizedProjectionRank
 
 /-!

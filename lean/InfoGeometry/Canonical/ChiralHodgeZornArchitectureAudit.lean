@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralHodgeZornArchitectureBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of ChiralHodgeZornArchitectureBridge

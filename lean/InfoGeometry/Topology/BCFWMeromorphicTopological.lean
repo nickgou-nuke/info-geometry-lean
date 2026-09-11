@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BCFWMeromorphicResidueRecursion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology.BCFWMeromorphic
 

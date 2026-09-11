@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinKreinCompatibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ProjectorEquivariance
 import InfoGeometry.Canonical.HestenesRealStructures
 import InfoGeometry.Meta.Architecture

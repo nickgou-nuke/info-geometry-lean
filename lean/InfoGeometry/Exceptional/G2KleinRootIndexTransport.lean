@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.G2ArtinKleinBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.G2CoordinateRootIndexBridge
 
 /-!

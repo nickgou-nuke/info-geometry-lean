@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullConfigurationWordTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Fundamental-group maps induced by projective-null word actions

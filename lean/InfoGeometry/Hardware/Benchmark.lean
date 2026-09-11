@@ -1,4 +1,5 @@
 import InfoGeometry.Hardware.TensorCoreFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Tensor Core 1-Megapixel Benchmark (Pinned Memory Edition)

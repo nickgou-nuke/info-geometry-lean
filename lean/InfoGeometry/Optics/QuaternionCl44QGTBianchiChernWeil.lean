@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.QuaternionCl44QGTCurvatureCovariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.OperatorQGTChernWeil
 
 set_option autoImplicit false

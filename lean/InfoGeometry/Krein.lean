@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.Prelude
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.Metric
 import InfoGeometry.Krein.HilbertBridge
 import InfoGeometry.Krein.Automorphisms

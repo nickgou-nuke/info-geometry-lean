@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55SpinGroupRestrictedChiralRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bundled invertibility of the restricted chiral Spin actions

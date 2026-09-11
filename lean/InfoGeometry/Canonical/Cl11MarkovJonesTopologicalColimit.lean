@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11MarkovJonesTopologicalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
 
 /-!

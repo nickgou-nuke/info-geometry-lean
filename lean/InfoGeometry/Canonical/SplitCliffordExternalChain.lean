@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikKocakSplitCliffordBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 import InfoGeometry.Canonical.PrimeVirasoroSugawara
 import InfoGeometry.Probability.HomologicalProbability

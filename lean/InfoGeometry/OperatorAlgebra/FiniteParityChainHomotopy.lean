@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FiniteParityChainEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

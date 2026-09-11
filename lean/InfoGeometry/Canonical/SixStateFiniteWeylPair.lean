@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SixStateGeneralizedCliffordAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.HestenesCuntzPhaseSpace
 
 /-!

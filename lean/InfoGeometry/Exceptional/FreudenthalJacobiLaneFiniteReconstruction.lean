@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalJacobiLaneFiniteEncoding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalJacobiLaneLinearMaps
 
 noncomputable section

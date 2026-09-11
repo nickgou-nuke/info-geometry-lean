@@ -1,4 +1,5 @@
 import Mathlib.Topology.Category.TopCat.Limits.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # `TopCat` colimit for a two-stage supergraded Dirac crystal tower

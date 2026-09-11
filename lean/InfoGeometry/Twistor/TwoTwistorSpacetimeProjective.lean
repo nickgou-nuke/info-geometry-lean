@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.TwoTwistorSpacetimeNode
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.TwistorFrameCovariance
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 

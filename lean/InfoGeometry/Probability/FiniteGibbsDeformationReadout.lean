@@ -1,4 +1,5 @@
 import InfoGeometry.Probability.FiniteDeformationEntropyReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

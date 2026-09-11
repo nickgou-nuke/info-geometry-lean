@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.NullCone
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

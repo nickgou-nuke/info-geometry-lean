@@ -16,6 +16,7 @@ needed for a later theta/supervolume theorem:
 -/
 
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebraic.NarainOrthogonalCore
 import InfoGeometry.Algebraic.NarainRealification
 import InfoGeometry.Algebraic.SplitSuperGeometry

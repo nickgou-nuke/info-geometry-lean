@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.OperatorZornMatrixAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! The associative operator-Zorn shell is an ordinary transported `2 × 2`
 matrix algebra.  This owner records only finite Peirce data independent of

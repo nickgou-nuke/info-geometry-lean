@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.RingTheory.RootsOfUnity.Basic
 import Mathlib.Tactic

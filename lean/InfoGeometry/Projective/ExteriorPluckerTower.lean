@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.ExteriorPower.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exterior-power and exterior-form tower interface

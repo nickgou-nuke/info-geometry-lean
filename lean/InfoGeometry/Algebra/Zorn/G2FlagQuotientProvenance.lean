@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2FlagCellQuotientWitness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2FlagCellFactorizationBridge
 import InfoGeometry.Algebra.Zorn.G2FlagFactorizationRows
 import InfoGeometry.Algebra.Zorn.G2FactorizationFromQuotient

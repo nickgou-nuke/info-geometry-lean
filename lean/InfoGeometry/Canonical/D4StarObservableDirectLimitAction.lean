@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraFiniteGroupActionDirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredStarAlgebraFiniteGroupActionEquivDirectLimit
 import InfoGeometry.OperatorAlgebra.D4StarFiniteCrossedProduct
 

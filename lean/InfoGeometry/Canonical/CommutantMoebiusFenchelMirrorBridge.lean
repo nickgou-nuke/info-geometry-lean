@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesCommutantGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauDiracHodgeCoupling
 import InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem

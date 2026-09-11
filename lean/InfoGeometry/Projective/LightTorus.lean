@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitQuaternionMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Projective.LightTorus

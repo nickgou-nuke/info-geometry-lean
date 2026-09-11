@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55WittFiveGradeDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl55WittLieSubalgebra
 
 /-!

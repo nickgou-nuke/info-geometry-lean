@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectorEquivariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.SuperchargeGapBridge
 import InfoGeometry.Canonical.AnalyticalIndexCore

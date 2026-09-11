@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraDirectLimitTopologicalRealization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility of algebraic and topological star-colimit readouts

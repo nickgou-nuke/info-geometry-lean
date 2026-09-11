@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonion1331OperatorGradingBridge
 
 /-! Native exterior/Dirac--Souriau readout for the established `1+3+3+1`

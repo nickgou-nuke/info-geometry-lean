@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.HyperbolicComponent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 noncomputable section

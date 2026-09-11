@@ -1,4 +1,5 @@
 import InfoGeometry.GromovJaynesProbability
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility import for finite Gromov--Jaynes combinatorial probability

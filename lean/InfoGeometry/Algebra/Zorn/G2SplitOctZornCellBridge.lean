@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.Concrete
 import InfoGeometry.Algebra.Zorn.G2FiniteIsotropicPoints
 import InfoGeometry.Algebra.Zorn.G2ImaginaryIsotropicPoints

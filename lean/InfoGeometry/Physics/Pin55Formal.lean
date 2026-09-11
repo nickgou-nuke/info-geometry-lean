@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.SpinGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 
 /-!

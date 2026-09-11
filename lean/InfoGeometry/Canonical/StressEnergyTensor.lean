@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Module.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Algebra.Module.Basic
 import Mathlib.Data.Complex.Basic
 

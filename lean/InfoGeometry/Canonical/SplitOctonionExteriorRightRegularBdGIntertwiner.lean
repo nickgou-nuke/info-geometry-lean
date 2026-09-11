@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.ExteriorPower.Basis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Grading
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.Tactic
@@ -66,7 +67,7 @@ abbrev V3 :=
   InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge.V3
 abbrev CZ :=
   InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.CanonicalZorn
-abbrev Coord8 := Fin 8 → ℝ
+abbrev Coord8 := InfoGeometry.Algebra.FiniteSpin.Vec8R
 abbrev EndCZ := Module.End ℝ CZ
 
 /-! ## The signed coordinate realization -/

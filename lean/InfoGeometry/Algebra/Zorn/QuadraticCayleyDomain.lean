@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11Matrix
 
 /-!

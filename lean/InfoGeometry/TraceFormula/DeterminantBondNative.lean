@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.PrimonColimitAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native determinant law for the Primon matrix bond

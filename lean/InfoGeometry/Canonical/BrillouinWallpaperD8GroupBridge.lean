@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.BrillouinKleinBottleManifold
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.V4D4WeylEmbedding
 
 /-!
@@ -9,6 +10,7 @@ authoritative finite data.  This owner packages that table as a genuine group
 and exposes the matrix representation.  The projective central-sign quotient
 is deliberately left to a separate owner.
 -/
+
 
 namespace InfoGeometry.Canonical.BrillouinWallpaperD8GroupBridge
 
@@ -82,7 +84,7 @@ instance : Group D8PointGroup where
 @[simp] theorem d8PointGroup_index_inv (a : D8PointGroup) :
     a⁻¹.index = d8InvIndex a.index := rfl
 
-abbrev M2Q := Matrix (Fin 2) (Fin 2) ℚ
+abbrev M2Q := InfoGeometry.Algebra.FiniteSpin.Mat2Q
 
 noncomputable def wallpaperD4Representation : D8PointGroup →* M2Q where
   toFun a := wallpaperD4 a.index

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2CartanParameterSpan
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeRootWeightFunctional
 import InfoGeometry.Lie.LieEquivEigenvectorTransport
 import InfoGeometry.Lie.EigenRootSpaceTransport

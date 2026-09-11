@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitSpinorCARAlgebraBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exterior-spinor chirality bridge

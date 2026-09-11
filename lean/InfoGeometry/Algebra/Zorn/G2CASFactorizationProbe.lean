@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2CASFactorizationCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate
 import InfoGeometry.Algebra.Zorn.G2FlagRepresentativeBase
 import InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier

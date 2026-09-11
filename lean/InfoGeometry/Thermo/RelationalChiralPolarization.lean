@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.FiniteMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Relational finite chiral polarization

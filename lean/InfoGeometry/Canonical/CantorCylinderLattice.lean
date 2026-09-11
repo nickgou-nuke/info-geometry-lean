@@ -1,4 +1,5 @@
 import Mathlib.Order.BooleanAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Fintype.Lattice
 import Mathlib.Data.Set.Lattice
 import Mathlib.Data.Fintype.Pi

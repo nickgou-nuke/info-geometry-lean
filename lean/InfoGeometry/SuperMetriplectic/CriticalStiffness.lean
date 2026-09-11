@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.DarkEnergyMapping
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Critical Stiffness for Dark-Energy Dominance

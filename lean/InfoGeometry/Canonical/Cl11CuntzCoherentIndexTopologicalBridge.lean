@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11CuntzStageComplexificationTopologicalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CliffordCARAlgebraicTopologicalComparison
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.B3PresentedGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.YangBaxterQSwap
 import InfoGeometry.Canonical.BoundarySpinFiveGradeBridge
 import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
@@ -22,7 +23,7 @@ open InfoGeometry.Physics.YangBaxterQSwap
 
 abbrev BoundaryBraidGroup := B3
 abbrev BoundaryBraidCarrier := GL8
-abbrev BoundaryBraidState := Fin 8 → ℂ
+abbrev BoundaryBraidState := InfoGeometry.Algebra.FiniteSpin.Vec8C
 abbrev BoundaryBraidLinearCarrier :=
   LinearMap.GeneralLinearGroup ℂ BoundaryBraidState
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ParabolicLineAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeLineFiberTransport
 import InfoGeometry.Algebra.Zorn.G2NativeLineFiber
 

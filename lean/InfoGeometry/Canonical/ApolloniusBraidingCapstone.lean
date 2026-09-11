@@ -1,4 +1,5 @@
 import InfoGeometry.Topological.ApolloniusBraiding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ApolloniusBraidingCapstone
 

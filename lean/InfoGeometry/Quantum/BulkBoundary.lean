@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.KitaevChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.RealMajorana
 import InfoGeometry.Meta.Architecture
 import Mathlib.LinearAlgebra.Dimension.Finrank

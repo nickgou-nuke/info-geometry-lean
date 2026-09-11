@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.ExtractBraid
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.FibAnyonThm7_hexagon
 import InfoGeometry.External.Auto.rigorous_proofs
 import InfoGeometry.External.Auto.KleinBottle

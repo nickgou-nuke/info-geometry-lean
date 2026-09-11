@@ -13,6 +13,7 @@ categorical colimit without a supplied map.
 -/
 
 import InfoGeometry.Categorical.BraidColimitVirasoroAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.External.Virasoro.FockSpaceSugawara
 

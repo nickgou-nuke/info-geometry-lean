@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The concrete chiral grand-canonical modular generator

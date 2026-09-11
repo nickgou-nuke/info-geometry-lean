@@ -6,6 +6,7 @@ colimit interpretation.
 -/
 
 import Mathlib.Data.ZMod.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Category.ModuleCat.Basic
 import Mathlib.Algebra.Category.ModuleCat.Colimits
 import Mathlib.CategoryTheory.Limits.Filtered

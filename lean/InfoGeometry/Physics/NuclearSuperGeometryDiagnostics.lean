@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lint.Vacuity
 import InfoGeometry.Physics.NuclearSuperGeometryAll
 

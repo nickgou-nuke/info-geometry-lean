@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
 
 /-!

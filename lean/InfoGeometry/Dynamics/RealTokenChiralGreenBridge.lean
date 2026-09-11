@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.RealTokenChiralHodgeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Green/resolvent contract for the chiral token Laplacian

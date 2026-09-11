@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.BostConnesAmplituhedronSynthesis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bost-Connes / Zeta Readouts for the Amplituhedron Lane

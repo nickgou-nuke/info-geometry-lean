@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Canonical.CanonicalZornAutomorphismConstraintDifferential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCircularPeirceBasis
 import InfoGeometry.Lie.CanonicalZornDerivation
 import InfoGeometry.Lie.CanonicalZornDerivationDimension

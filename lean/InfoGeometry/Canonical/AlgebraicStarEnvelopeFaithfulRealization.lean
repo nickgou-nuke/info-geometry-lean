@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AlgebraicStarEnvelopeNorm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Faithful realizations of the algebraic star envelope

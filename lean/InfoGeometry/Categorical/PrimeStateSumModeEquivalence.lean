@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeOccupationAlgebra
 import InfoGeometry.Categorical.PrimeThermodynamicDirectLimit
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas

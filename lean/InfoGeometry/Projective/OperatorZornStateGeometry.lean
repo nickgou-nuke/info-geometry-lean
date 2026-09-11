@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.LogRatioDifferential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorZornRealModule
 import InfoGeometry.Canonical.OperatorZornGaugeCovariance
 

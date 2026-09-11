@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwoBoundaryChiralCurrentBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of TwoBoundaryChiralCurrentBridge

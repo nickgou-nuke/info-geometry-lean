@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinCoreFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinLightConeDictionary
 import InfoGeometry.Canonical.HestenesRealStructures
 import InfoGeometry.Krein.KreinSpace

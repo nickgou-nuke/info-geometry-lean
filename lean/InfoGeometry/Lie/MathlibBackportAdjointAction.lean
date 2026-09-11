@@ -1,6 +1,7 @@
 module
 
 import Mathlib.Algebra.Field.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 public import Mathlib.Algebra.Lie.Killing
 public import Mathlib.LinearAlgebra.JordanChevalley
 public import Mathlib.LinearAlgebra.Semisimple

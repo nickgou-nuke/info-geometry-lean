@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.MasterIdentity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.MoebiusWeylEuler
 import InfoGeometry.Arithmetic.UResRepresentations
 import InfoGeometry.Arithmetic.HilbertPolyaBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeWeylCartanRestriction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeWeylReflectionCartanSpan
 import InfoGeometry.Algebra.Zorn.G2NativeRootWeightFunctional
 

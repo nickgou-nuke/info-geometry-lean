@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GrandCanonicalGaugePotentialBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovFockSuper
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SpinorRep
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The finite `Cl(5,5)` spinor carrier

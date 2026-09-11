@@ -9,6 +9,7 @@ structures (`SuperLieRing`, `SuperLieAlgebra`) extend this.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option linter.dupNamespace false
 

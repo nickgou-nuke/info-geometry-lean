@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HodgeStar4DFinite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Basis.Basic
 
 /-!

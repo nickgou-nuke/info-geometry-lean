@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.Zorn.G2CoordinateSignedBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Word-level transport of the signed Weyl action

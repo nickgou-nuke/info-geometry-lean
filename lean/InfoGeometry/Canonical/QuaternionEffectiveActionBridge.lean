@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebraic.NarainSupervolumeBridgeData
 import InfoGeometry.Canonical.QuaternionGeometry
 import InfoGeometry.Physics.FreeEntropyCalibrationVariationPacket

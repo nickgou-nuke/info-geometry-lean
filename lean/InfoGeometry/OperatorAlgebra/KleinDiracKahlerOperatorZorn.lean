@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.AssociativeOperatorZornCartanPeirce
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Exact square calculus for the associative two-sheet block.  The name is
 historical; the statements below are ordinary ring identities and make no

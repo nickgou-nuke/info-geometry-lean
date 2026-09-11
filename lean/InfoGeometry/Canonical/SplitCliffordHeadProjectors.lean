@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordHeadPolarization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordHeadProjectors

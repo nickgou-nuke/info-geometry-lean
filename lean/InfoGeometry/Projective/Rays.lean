@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.GroupAction.Quotient
 import InfoGeometry.Stratum.Projective
 

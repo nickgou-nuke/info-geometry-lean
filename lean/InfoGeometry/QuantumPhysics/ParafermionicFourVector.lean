@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionChiralPhaseSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Chiral four-vector readout for the native split-Zorn carrier

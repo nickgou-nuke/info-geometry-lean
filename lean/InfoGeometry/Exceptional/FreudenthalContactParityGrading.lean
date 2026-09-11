@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticContactGrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.FiveGradedKramersModule
 
 /-! The integer contact grading and its derived `ZMod 2` parity.

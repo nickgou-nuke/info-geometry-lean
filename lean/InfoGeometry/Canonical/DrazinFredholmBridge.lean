@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinKreinCompatibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.KK.RealSplitKreinKasparovCycle
 import InfoGeometry.Meta.Architecture
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic

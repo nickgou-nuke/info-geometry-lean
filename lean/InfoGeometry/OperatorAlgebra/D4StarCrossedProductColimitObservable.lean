@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductColimitDynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Observational descent for the crossed-product colimit flow

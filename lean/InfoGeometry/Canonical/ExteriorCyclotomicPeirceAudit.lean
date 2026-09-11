@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native transitive axiom inspection of the new public declarations

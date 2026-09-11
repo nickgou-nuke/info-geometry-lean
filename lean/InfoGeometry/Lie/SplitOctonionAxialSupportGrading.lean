@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionAxialClosedFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionAxialDrazinDefect
 
 /-!

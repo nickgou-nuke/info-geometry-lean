@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2AppendixDGenerators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionStandardDerivation
 
 noncomputable section

@@ -1,4 +1,5 @@
 import InfoGeometry.LinearAlgebra.TraceInvariantSubmodule
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

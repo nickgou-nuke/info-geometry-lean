@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BohmMadelungOperatorialBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PolarizedMadelungBridge
 import InfoGeometry.SuperMetriplectic.CasimirHessianFisherBridge
 

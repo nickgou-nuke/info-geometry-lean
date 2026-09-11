@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.DerivedPage
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Isomorphisms
 
 /-!

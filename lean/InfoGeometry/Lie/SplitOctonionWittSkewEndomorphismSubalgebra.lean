@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KleinFourTagRootNormalization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionKleinFourTagRepresentation
 import InfoGeometry.Canonical.Cl11KleinFourAdjointRepresentation
 

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.MvPolynomial.Basic
 import InfoGeometry.Arithmetic.PrimeThermodynamicStage
 import InfoGeometry.Arithmetic.ChiralPrimonGas

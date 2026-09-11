@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientCompHausIndexed
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Colimits of compact-Hausdorff varying-carrier quotients

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesComplexTranslation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Biquaternion
 import InfoGeometry.Meta.Architecture
 

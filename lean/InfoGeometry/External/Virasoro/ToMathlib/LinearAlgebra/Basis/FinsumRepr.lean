@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Basis.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.DFinsupp
 import Mathlib.Algebra.Module.Torsion.Free
 import Mathlib.Algebra.GroupWithZero.Defs

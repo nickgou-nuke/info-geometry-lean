@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.Pin55KreinConformalBridge
 
 open InfoGeometry.Lie.Pin55KreinConformalBridge
@@ -7,7 +8,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.ZwegersMockModularBridge
 
-abbrev Vector32 := Fin 32 → ℝ
+abbrev Vector32 := InfoGeometry.Algebra.FiniteSpin.Vec32R
 
 /-- Krein (16,16) Inner Product on ℝ³² -/
 def kreinInner16_16 (x y : Vector32) : ℝ :=

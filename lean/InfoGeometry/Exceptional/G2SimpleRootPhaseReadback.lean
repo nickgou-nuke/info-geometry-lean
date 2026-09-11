@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Exceptional.G2DiagonalPhaseTable
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2CoordinateSignedSign
 import InfoGeometry.Algebra.Zorn.G2PositiveRootsInvariance
 

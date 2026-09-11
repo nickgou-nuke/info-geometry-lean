@@ -1,4 +1,5 @@
 import InfoGeometry.MasterCapstone.GrandUnification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.GrandUnificationCapstone
 

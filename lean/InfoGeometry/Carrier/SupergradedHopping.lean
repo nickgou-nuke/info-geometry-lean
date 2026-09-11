@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.ZMod.Basic
 import InfoGeometry.Carrier.HestenesKrein
 

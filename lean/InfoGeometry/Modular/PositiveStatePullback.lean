@@ -1,4 +1,5 @@
 import Mathlib.Analysis.CStarAlgebra.PositiveLinearMap
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CStarAlgebraStateColimit
 
 /-!

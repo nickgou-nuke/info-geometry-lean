@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.LogVolumeEntropyRate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

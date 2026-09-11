@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.BottPeriodicity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11Quaternion
 import InfoGeometry.Clifford.Hestenes
 import InfoGeometry.Clifford.SplitCl44Complexification

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.MeanValue
 import Mathlib.Analysis.Calculus.Deriv.Polynomial
 import Mathlib.Analysis.SpecialFunctions.Exponential

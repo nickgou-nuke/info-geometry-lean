@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllCircularAxialGrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCircularZ3Grading
 
 /-!

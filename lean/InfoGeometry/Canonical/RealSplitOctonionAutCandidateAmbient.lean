@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Canonical.RealSplitOctonionAutTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Ambient action of candidate split-octonion automorphisms

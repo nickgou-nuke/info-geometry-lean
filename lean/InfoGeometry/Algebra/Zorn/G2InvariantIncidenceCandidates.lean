@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeLineFiber
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Intrinsic incidence candidates

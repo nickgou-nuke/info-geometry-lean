@@ -1,4 +1,5 @@
 import InfoGeometry.Tessellation.CantorDiracSeaWalk
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.CondensedMatter.CliffordAtomsZ2n
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 

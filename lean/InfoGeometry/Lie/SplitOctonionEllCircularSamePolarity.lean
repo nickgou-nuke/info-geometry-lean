@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllPolarization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllCircularAxialGrading
 
 /-!

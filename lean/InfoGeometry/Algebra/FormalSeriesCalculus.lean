@@ -1,4 +1,5 @@
 import Mathlib.RingTheory.PowerSeries.Exp
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.PowerSeries.WellKnown
 
 /-!

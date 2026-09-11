@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentBoundaryCylinderColimitTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cylinder neighborhoods on the symbolic-latent carrier colimit

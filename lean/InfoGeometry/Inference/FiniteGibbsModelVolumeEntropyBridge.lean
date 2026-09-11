@@ -5,6 +5,7 @@ Bulgarian Academy of Sciences.
 -/
 
 import InfoGeometry.Inference.FiniteGibbsSimplexVolume
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Inference.FiniteGibbsThermodynamicIdentity
 
 /-!

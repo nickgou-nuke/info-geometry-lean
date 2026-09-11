@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Topology.Algebra.Module.LinearMapPiProd
 import Mathlib.Topology.Algebra.Module.Equiv

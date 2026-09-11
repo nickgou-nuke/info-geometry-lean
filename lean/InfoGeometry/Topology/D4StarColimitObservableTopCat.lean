@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.D4StarColimitFlowTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology.ColimitDynamics
 

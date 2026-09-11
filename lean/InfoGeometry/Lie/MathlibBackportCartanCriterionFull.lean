@@ -6,6 +6,7 @@ Authors: Janos Wolosz
 module
 
 import Mathlib.Algebra.Algebra.Rat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 public import InfoGeometry.Lie.MathlibBackportAdjointAction
 public import InfoGeometry.Lie.MathlibBackportBasisLieEnd
 public import InfoGeometry.Lie.MathlibBackportCartanCriterionFoundations

@@ -13,6 +13,7 @@ This module keeps analytic residue extraction proof-bearing:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.BilingualAnalyticity
 
 noncomputable section

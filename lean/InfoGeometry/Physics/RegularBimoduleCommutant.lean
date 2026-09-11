@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Algebra.Bilinear
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native regular-bimodule commutant equality

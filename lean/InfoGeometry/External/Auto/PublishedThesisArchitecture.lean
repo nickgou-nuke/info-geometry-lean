@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Physics.CPTAtom
 
 /-!
 # Published thesis architecture seal
@@ -43,29 +44,21 @@ def scalarSquash (δ : ℂ) : ℂ := (δ - 1) / (δ + 1)
 theorem scalarSquash_defect : scalarSquash 1 = 0 := by
   norm_num [scalarSquash]
 
-def eps : M2R := !![0, 1; 1, 0]
-def J : M2R := !![0, -1; 1, 0]
-def CPT : M2R := eps * J
+abbrev eps : M2R := InfoGeometry.Physics.CPTAtom.eps
+abbrev J : M2R := InfoGeometry.Physics.CPTAtom.J
+abbrev CPT : M2R := InfoGeometry.Physics.CPTAtom.CPT
 
 theorem eps_sq : eps * eps = 1 := by
-  ext i j <;> fin_cases i <;> fin_cases j <;> simp [eps, Matrix.mul_apply, Fin.sum_univ_two]
+  simpa [eps] using InfoGeometry.Physics.CPTAtom.eps_sq
 
 theorem J_sq : J * J = (-1 : ℝ) • (1 : M2R) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;> simp [J, Matrix.mul_apply, Matrix.smul_apply, Fin.sum_univ_two]
+  simpa [J] using InfoGeometry.Physics.CPTAtom.J_sq
 
 theorem eps_J_anticomm : eps * J = - (J * eps) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;> simp [eps, J, Matrix.mul_apply, Matrix.neg_apply, Fin.sum_univ_two]
+  simpa [eps, J] using InfoGeometry.Physics.CPTAtom.eps_J_anticomm
 
 theorem CPT_sq : CPT * CPT = 1 := by
-  unfold CPT
-  calc
-    (eps * J) * (eps * J) = eps * (J * eps) * J := by simp [mul_assoc]
-    _ = eps * (-(eps * J)) * J := by
-      have h := congrArg Neg.neg eps_J_anticomm
-      simp at h
-      rw [h]
-    _ = -((eps * eps) * (J * J)) := by simp [mul_assoc]
-    _ = 1 := by rw [eps_sq, J_sq]; ext i j <;> fin_cases i <;> fin_cases j <;> simp
+  simpa [CPT] using InfoGeometry.Physics.CPTAtom.CPT_sq
 
 /-! ## Bogoliubov frame preservation -/
 

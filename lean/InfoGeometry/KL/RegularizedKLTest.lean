@@ -1,4 +1,5 @@
 import InfoGeometry.RegularizedKL
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 namespace InfoGeometry.KL.RegularizedKLTest

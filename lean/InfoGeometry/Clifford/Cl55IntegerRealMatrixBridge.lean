@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Scalar extension of the finite split `O(5,5)` matrix readout
@@ -16,7 +17,7 @@ open InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws
 open Matrix
 
 abbrev M10R := Matrix (Fin 10) (Fin 10) ℝ
-abbrev V10R := Fin 10 → ℝ
+abbrev V10R := InfoGeometry.Algebra.FiniteSpin.Vec10R
 
 /-- Entrywise coefficient extension from integer to real matrices. -/
 def intMatrixToReal (A : M10Z) : M10R := fun i j => (A i j : ℝ)

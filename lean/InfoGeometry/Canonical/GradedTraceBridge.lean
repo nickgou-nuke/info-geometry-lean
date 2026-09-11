@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BostConnesKMS
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionAxialCartanFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllCrossChannel
 
 /-!

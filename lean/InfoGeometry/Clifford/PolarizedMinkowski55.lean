@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Cl55MinkowskiCelestialSlice
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55NeutralHyperbolicIsometry
 
 /-!

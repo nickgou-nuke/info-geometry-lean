@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PrimitiveCuntzIsometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.GrandUnification.UHF
 open InfoGeometry.Canonical.PrimitiveCuntzIsometry

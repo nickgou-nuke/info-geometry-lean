@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KKFoundation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped InnerProductSpace
 

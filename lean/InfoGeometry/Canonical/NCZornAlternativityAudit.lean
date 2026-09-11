@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ZornMultiplicationOverBdG
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.FinCases
 
 /-!

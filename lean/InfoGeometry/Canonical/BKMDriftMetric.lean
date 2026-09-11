@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
 import InfoGeometry.SuperMetriplectic.OperatorKLBKM
 import InfoGeometry.Meta.Architecture

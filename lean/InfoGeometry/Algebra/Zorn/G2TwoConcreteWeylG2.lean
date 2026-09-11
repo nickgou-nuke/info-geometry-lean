@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylGroup
 import InfoGeometry.Algebra.Zorn.G2CyclotomicWeylBridge
 import Mathlib.Tactic

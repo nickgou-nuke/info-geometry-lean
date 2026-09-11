@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitClifford55ExteriorDegrees
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite support of the exterior spinor

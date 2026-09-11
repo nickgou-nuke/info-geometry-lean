@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CrystallographicRootCyclotomicBridge
 import InfoGeometry.Canonical.QuantumDeformationRootBridge
 import InfoGeometry.Canonical.WeylCharacterThetaBridge

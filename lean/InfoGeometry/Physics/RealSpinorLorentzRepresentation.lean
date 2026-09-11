@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.SpecialLinearGroup
 import InfoGeometry.Physics.LorentzChiralCuntzBridge
 
@@ -17,7 +18,7 @@ namespace InfoGeometry.Physics.RealSpinorLorentzRepresentation
 
 open InfoGeometry.Physics.LorentzChiralCuntzBridge
 
-abbrev Spinor := Fin 2 → ℂ
+abbrev Spinor := InfoGeometry.Algebra.FiniteSpin.Vec2C
 abbrev RealSpinorUnits := LinearMap.GeneralLinearGroup ℝ Spinor
 
 def realSpinorRepresentation : SL2C →* RealSpinorUnits where

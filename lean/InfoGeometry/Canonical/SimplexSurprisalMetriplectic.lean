@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences

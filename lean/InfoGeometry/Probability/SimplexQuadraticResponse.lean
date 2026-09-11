@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic

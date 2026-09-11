@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
 import InfoGeometry.Algebra.ZornMatrix

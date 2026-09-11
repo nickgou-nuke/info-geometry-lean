@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SpacetimeSynthesis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularEvolution
 
 open CategoryTheory Limits

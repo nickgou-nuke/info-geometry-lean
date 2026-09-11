@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11CuntzCoherentIndexTopologicalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuous involution readout on the matrix colimit

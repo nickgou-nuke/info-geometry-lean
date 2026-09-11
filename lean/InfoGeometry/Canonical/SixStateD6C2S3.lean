@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.SpecificGroups.Dihedral
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Canonical.A2WeylFin3Action
 import InfoGeometry.Canonical.SixStateWeylReflection

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.H3ZornPeirce0QuadraticRepresentation
 import InfoGeometry.Algebra.H3ZornCoordinateReadback
 import InfoGeometry.Algebra.ZornAlternativeLaws

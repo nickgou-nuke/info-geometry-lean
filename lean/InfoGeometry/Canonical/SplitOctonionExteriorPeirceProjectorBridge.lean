@@ -1,4 +1,5 @@
 import Mathlib.RingTheory.GradedAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonion1331ExteriorDiracSouriauBridge
 import InfoGeometry.Canonical.Exterior3NativeGradedLadderBridge
 import InfoGeometry.Canonical.SplitOctonion1331PureSpinorGradingBridge

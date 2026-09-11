@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PeirceChiralOperatorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionThreeColorMatrixRepresentation
 import InfoGeometry.Canonical.ThreeColorOperatorCrossCommutator
 import InfoGeometry.Optics.CircularPolarizationSuperconnectionBridge

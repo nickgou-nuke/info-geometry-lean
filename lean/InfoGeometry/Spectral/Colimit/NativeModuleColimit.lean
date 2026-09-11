@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Category.ModuleCat.Limits
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 
 /-!

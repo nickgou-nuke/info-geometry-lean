@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalFiveGradedJacobiClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Contact/zero-grade homogeneous Jacobi closure for the negative extreme. -/
 

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Clifford.Cl11Matrix
 

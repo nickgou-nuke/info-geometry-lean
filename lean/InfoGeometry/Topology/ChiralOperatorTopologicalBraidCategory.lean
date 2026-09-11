@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ChiralOperatorTopologicalBraidHomeomorph
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Categorical braid transport for the chiral latent carriers

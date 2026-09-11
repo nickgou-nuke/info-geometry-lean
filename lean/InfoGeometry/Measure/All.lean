@@ -1,4 +1,5 @@
 import InfoGeometry.Measure.DiscreteRN
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Measure.Normalized
 import InfoGeometry.Measure.Potential
 import InfoGeometry.Measure.Projective

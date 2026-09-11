@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitSpinFactorTKKConformalSO66
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

@@ -1,4 +1,5 @@
 import InfoGeometry.ExponentialFamily.Gaussian
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MoorePenrose
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55QuadraticSpinAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.DiracPauliGamma
 
 /-!

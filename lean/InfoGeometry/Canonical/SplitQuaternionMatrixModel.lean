@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11Matrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitQ11CausalCone
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.NormNum

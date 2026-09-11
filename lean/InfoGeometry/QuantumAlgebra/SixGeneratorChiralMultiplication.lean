@@ -1,4 +1,5 @@
 import InfoGeometry.QuantumAlgebra.ThreePlaneChiralCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Six-generator chiral multiplication re-export

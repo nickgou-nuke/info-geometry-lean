@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralLightConeTensorTower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # One-step decomposition of the finite causal-word tower

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Native symmetric `ℤ₂` block grading of the split `(5,5)` matrix carrier.
 The external generator-count artifact is intentionally not imported; the

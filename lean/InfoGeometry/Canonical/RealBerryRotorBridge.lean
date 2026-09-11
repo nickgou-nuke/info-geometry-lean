@@ -9,6 +9,7 @@ The hard analytic Stokes theorem is isolated as a field.
 -/
 
 import Mathlib.Order.Filter.AtTopBot.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Order.Filter.Tendsto
 import Mathlib.Topology.Basic
 import InfoGeometry.Algebraic.RealModularReadout

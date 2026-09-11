@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.Axioms
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SuperMetriplectic.InverseBridge
 import InfoGeometry.SuperMetriplectic.EntropyShadowBridge
 import InfoGeometry.Canonical.AssociativeSuperBracket

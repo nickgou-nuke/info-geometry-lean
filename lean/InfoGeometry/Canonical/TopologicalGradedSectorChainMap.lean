@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GradedRationalSectorCohomology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GradedRationalSectorChainMap
 
 namespace InfoGeometry.Canonical

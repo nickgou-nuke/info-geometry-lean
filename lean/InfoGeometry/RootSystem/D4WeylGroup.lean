@@ -1,4 +1,5 @@
 import InfoGeometry.RootSystem.D4RootLattice
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The generated `D₄` Weyl subgroup

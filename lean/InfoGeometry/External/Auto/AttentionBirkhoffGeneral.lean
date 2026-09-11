@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Convex.Birkhoff
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 
 open scoped BigOperators

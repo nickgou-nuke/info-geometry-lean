@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalProjectorCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.EinsteinAnomalyOperator
 import InfoGeometry.Krein.DoubledSpace
 

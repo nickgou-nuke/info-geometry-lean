@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.UniformSpace.LocallyUniformConvergence
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.Polynomial.Quotient
 import Mathlib.Algebra.Polynomial.Bivariate
 

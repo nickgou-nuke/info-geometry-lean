@@ -1,4 +1,5 @@
 import InfoGeometry.Streaming.WeakPropertySeparation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Pristine finite two-boundary weak-value chain

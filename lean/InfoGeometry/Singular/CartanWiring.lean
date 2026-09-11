@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.CartanInstance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Decomposition
 
 namespace InfoGeometry.Singular.CartanWiring

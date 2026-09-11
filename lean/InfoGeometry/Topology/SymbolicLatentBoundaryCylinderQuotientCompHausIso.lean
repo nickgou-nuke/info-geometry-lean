@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentBoundaryCylinderQuotientCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bijective boundary-cylinder readout in `CompHaus`

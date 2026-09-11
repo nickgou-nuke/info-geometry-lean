@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55ContactAll
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # O(5,5) contact audit entry point

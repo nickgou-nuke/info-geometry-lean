@@ -1,4 +1,5 @@
 import InfoGeometry.Streaming.CausalMemory
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Streaming.PositiveBoundaryConditioning
 import InfoGeometry.Streaming.WeakValueBoundary
 import InfoGeometry.Streaming.GaugeCovariantRouting

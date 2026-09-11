@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite Pin(5,5) matrix laws
@@ -24,12 +25,13 @@ or a continuum proof that every non-null unit vector acts by Clifford sandwich.
 It closes the finite basis-generator matrix-law surface used by this repository.
 -/
 
+
 namespace InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws
 
 open Matrix
 
-abbrev M10Z := Matrix (Fin 10) (Fin 10) ℤ
-abbrev V10Z := Fin 10 → ℤ
+abbrev M10Z := InfoGeometry.Algebra.FiniteSpin.Mat10Z
+abbrev V10Z := InfoGeometry.Algebra.FiniteSpin.Vec10Z
 
 /-- Split `O(5,5)` metric `diag(1,1,1,1,1,-1,-1,-1,-1,-1)`. -/
 def eta : M10Z :=

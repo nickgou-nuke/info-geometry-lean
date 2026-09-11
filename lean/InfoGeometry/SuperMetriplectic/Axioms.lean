@@ -1,4 +1,5 @@
 import InfoGeometry.Core.SymmetricLie
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AssociativeSuperBracket
 
 /-!

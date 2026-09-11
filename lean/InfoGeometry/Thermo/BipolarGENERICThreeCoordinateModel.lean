@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.GenericMetriplecticFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!
@@ -36,7 +37,7 @@ namespace InfoGeometry.Thermo.BipolarGENERICThreeCoordinateModel
 open InfoGeometry.Thermo.GenericMetriplecticFlow
 
 /-- Three-coordinate state carrier `(η, θ, auxiliary)`. -/
-abbrev State3 := Fin 3 → ℝ
+abbrev State3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 /-- Basis vector in the longitudinal `η` direction. -/
 def etaBasis3 : State3 := ![1, 0, 0]

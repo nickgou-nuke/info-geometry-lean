@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzNativeGNSTopologicalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topological readout of a represented algebraic Cuntz quotient

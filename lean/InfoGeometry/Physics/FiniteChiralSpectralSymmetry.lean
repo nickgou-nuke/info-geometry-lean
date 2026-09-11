@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Algebra.Bilinear
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite chiral spectral symmetry

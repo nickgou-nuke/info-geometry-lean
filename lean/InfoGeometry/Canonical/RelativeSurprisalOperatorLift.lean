@@ -1,4 +1,5 @@
 import InfoGeometry.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InformationPartitionCore
 import InfoGeometry.Canonical.RelativeModularOperator
 import InfoGeometry.Canonical.RelativePotentialCountBridge

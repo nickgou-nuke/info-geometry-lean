@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientRangeFixedPointGraphCompHausNaturality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Fibers of compact fixed-point graphs

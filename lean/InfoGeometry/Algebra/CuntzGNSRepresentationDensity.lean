@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzNativeGNSBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.PositiveLinearMapGNSVacuum
 
 noncomputable section

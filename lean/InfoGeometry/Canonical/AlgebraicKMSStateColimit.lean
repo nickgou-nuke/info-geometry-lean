@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzMatrixCompatibleStateNet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.Action.ConjAct
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.CPTSymmetryBranch
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ChiralModularTomitaBridge
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
 

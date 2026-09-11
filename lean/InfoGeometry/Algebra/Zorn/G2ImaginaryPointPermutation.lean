@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ImaginaryPointAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Discrete permutation interface for the 63-point action

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.LocalZornCl11Slice
 
 namespace InfoGeometry.Canonical

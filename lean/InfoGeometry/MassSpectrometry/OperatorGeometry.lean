@@ -1,4 +1,5 @@
 import InfoGeometry.MassSpectrometry.DirectedOperatorDoubling
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Operator-geometry compatibility surface

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Order.Quotient
 import InfoGeometry.OperatorAlgebra.ErlangenNet
 import InfoGeometry.OperatorAlgebra.SpectralTriple

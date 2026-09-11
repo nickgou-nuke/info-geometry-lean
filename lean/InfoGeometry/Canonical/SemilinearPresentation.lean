@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.Prod

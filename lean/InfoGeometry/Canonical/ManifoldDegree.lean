@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ManifoldDegreeCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.ManifoldDegree

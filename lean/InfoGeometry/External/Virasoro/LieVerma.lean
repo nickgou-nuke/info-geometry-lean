@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
 import Mathlib.Data.Sign.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.Torsion.Free
 import Mathlib.Algebra.GroupWithZero.Defs
 import InfoGeometry.External.Virasoro.LieAlgebraModuleUEA

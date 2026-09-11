@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Cl55CelestialConfigurationCoveringFiberLinear
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.Cl55CelestialConfigurationCoveringLocalSystem
 import InfoGeometry.Twistor.ProjectiveNullConfigurationDeckMonodromy
 

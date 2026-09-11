@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionAxialCartanErlangen
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
 import InfoGeometry.Lie.CanonicalZornDerivation

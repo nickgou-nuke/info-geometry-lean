@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Convex.StdSimplex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Fin.Basic
 import Mathlib.Tactic

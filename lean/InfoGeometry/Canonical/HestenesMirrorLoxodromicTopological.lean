@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesMirrorLoxodromic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesLoxodromicRotorTopological
 
 namespace InfoGeometry.Canonical

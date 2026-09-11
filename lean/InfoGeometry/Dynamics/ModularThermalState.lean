@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.UnruhKMS
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import Mathlib.Data.Complex.Basic

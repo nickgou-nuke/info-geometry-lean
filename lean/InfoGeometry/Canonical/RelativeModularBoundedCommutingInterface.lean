@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeModularCommutingLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MultiplicativeToAdditiveBridge
 import InfoGeometry.Meta.Architecture
 

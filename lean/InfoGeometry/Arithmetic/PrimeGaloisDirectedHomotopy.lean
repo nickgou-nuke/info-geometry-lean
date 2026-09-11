@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ChiralDirectedGraphHomotopy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeGaloisTower
 import Mathlib.Data.Nat.Prime.Basic
 

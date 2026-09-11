@@ -1,4 +1,5 @@
 import InfoGeometry.KL.Measure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Jaynesian MaxEnt (Measure-Theoretic Core)

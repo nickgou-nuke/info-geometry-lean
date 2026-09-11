@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55CARAutomorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55SpinOperatorConnection
 import InfoGeometry.OperatorAlgebra.OperatorGrandCanonicalChiralGenerator
 import InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR

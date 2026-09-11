@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55RealSplitPinKernelExact
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55RealSplitPinProjectiveQuotient
 import InfoGeometry.Clifford.RealQuadraticReflection
 import InfoGeometry.Clifford.Cl55WittNativeCartanDieudonne

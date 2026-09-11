@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Exact noncommutative obstruction to Pauli scalar factorization. -/
 

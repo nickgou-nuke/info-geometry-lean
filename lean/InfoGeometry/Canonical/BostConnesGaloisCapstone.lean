@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.BostConnesGalois
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.BostConnesGaloisCapstone
 

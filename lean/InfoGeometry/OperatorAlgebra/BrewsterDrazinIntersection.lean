@@ -16,6 +16,7 @@ model supplies that bridge.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.JonesCalibration
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 import InfoGeometry.Thermo.SusceptibilityHessian

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornOperatorDerivationLane
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.DerivationDifferentialForms
 import InfoGeometry.OperatorAlgebra.DerivationVectorCalculus
 

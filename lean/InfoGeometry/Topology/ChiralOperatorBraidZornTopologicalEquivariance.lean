@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ThreeColorOperatorBraidSigmaTransport
 import InfoGeometry.Topology.ChiralOperatorBraidLatentFlow
 import InfoGeometry.Topology.ChiralOperatorZornTopologicalMultiplication

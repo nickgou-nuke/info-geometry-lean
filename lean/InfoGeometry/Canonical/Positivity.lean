@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PositiveMeasureSpectrum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteDiagonalSpectrumDischarge
 
 /-!

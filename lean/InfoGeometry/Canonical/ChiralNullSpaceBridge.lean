@@ -1,4 +1,5 @@
 import InfoGeometry.Analytic.ZetaRegVolume
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ChiralRadiationCones
 import InfoGeometry.Canonical.TopologicalGapShadow
 

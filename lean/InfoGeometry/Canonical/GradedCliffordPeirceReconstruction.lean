@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FourthRootSpectralProjectors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CyclotomicPeirceMatrix
 import InfoGeometry.Algebra.CyclicShiftNilpotencySeparation
 import InfoGeometry.Clifford.ExteriorDegreeFourierClock

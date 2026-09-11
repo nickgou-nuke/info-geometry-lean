@@ -1,4 +1,5 @@
 import Mathlib.Algebra.BigOperators.Finprod
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 section
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GeneratedFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

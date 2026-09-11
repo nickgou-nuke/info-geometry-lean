@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
 import Mathlib.Algebra.Lie.Abelian
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.ToMathlib.Algebra.Lie.Basic
 
 /-!

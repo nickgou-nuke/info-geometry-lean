@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionColorCycleMultiplicativity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Basis.Basic
 
 namespace InfoGeometry.Canonical

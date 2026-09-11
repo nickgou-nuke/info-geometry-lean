@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesHermitianMatrixBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteHestenesModularOperator
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.HadjiivanovLogConnectionKleinBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.HadjiivanovLogConnectionBraidBridge
 
 /-!

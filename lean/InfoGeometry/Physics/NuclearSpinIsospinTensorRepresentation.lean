@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ChiralTensorRecoupling
 import InfoGeometry.External.Auto.WeakIsospinSU2
 

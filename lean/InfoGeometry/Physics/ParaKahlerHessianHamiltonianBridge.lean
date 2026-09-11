@@ -1,7 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 import Mathlib.LinearAlgebra.BilinearForm.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.F4ActionMatrixRankCertificateBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Dimension.Finrank
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.Tactic

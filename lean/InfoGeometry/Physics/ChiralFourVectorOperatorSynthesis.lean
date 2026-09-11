@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SolderingSpinConnectionBogoliubov
 import InfoGeometry.Optics.OperatorCausalSoldering
 import InfoGeometry.Optics.AbelianOperatorValuedConnection

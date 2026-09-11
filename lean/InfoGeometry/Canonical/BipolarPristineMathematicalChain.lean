@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarConformalLogos
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MatrixStageLorentzKANSoldering
 import InfoGeometry.Analysis.BipolarWindingPeriodLattice
 import InfoGeometry.Canonical.ApolloniusRapidityFlowBridge

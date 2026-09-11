@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.IndexTheorem
 import InfoGeometry.Algebra.EulerLaurentDerivation
 

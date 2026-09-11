@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Incidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Spacetime
 import InfoGeometry.Meta.Architecture
 

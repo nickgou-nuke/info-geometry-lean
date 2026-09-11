@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Section33PauliBiquaternionCompletion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Section31UnifiedMatrixDynamics
 
 /-!

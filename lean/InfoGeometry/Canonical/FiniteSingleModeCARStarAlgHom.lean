@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteSingleModeCARMatrixBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A genuine finite matrix-to-operator `StarAlgHom`

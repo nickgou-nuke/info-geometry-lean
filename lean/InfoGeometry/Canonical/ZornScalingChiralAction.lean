@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornChiralPeirceDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Chiral action of the algebraic Zorn scaling

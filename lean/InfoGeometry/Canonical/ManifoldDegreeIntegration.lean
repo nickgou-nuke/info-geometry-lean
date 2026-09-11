@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ManifoldDegreeCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.DualFlat
 import Mathlib.Analysis.Calculus.FDeriv.Basic
 import Mathlib.MeasureTheory.Integral.Bochner.Basic

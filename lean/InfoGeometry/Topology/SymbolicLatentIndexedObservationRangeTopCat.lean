@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.TripotentFiveGradeMirrorTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Indexed symbolic-latent observation transport

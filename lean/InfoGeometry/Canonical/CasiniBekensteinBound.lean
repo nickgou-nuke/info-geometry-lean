@@ -1,4 +1,5 @@
 import InfoGeometry.Volume.ConnesCocycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConnesArakiTomita
 import InfoGeometry.Canonical.ModularWeldBridge
 

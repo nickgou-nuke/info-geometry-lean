@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Order.Field.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Linarith
 
 namespace InfoGeometry.Canonical

@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarPeriodDescent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarWindingExactSequence
 import Mathlib.Analysis.Complex.CauchyIntegral
 import Mathlib.Tactic

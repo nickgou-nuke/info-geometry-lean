@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllNativeSupportGrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exact dimensions of the native split-octonion ell-flow sectors

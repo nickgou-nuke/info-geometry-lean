@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ChiralPoincareSouriauBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.LorentzBoostMinkowski
 import InfoGeometry.Geometry.PauliParavectorBridge
 import InfoGeometry.Physics.ZornMatrixSU3.Vector3

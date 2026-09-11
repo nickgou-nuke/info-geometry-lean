@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarElementaryContourPeriods
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarSchwarzianWardPristineChain
 import Mathlib.Tactic
 

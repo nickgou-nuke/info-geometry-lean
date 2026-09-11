@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Field.Basic
 import Mathlib.Data.Rat.Lemmas
 import Mathlib.Tactic

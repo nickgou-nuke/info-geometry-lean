@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AlbertCayleyDickson
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Canonical.Cl44ConformalNormalization
 import InfoGeometry.Clifford.BottPeriodicity

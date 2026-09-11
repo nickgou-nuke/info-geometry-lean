@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The Euclidean `G₂` double-hexagon readout
@@ -13,8 +14,8 @@ namespace InfoGeometry.RootSystem.G2
 
 noncomputable section
 
-abbrev Euclidean3 := Fin 3 → ℝ
-abbrev Euclidean2 := Fin 2 → ℝ
+abbrev Euclidean3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
+abbrev Euclidean2 := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 noncomputable def projection : Matrix (Fin 2) (Fin 3) ℝ :=
   !![(Real.sqrt 2)⁻¹, -(Real.sqrt 2)⁻¹, 0;

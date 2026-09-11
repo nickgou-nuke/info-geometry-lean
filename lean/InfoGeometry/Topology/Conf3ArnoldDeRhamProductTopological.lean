@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.Conf3ArnoldBraidShadowTopological
 import InfoGeometry.Topology.Conf3DeRhamCandidateTopological
 

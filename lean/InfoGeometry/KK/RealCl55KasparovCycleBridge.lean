@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.KK.RealSplitKreinKasparovCycle
 import InfoGeometry.KK.RealSplitKreinHilbertizationBridge
 import InfoGeometry.Canonical.Cl55MasterWittSpinorEnvelopeBridge

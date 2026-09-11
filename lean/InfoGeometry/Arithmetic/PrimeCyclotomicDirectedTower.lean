@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Prime cyclotomic directed tower: native Lean readback of the CAS prime payload

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FibonacciParafermion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.OSp12
 import InfoGeometry.Canonical.ModularHopfCoproductRules
 import InfoGeometry.Canonical.CelikCantorClifford

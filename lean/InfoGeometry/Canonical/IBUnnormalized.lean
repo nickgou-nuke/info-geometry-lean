@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBUpdate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Integral.Lebesgue.Countable
 import Mathlib.MeasureTheory.Measure.Count
 import Mathlib.MeasureTheory.Measure.WithDensity

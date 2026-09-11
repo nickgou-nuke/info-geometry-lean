@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Module.Dual
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Dual
 import InfoGeometry.Meta.Architecture

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.PositiveGrassmannianAmplituhedronTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentCore
 
 /-!

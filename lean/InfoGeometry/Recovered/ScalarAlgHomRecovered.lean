@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Algebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

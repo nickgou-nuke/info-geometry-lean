@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoPCConcreteFacts
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoPCConjugation
 
 namespace InfoGeometry.Algebra.Zorn.G2TwoPCConcreteMultiplication

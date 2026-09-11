@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.HamiltonianFlowBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Dynamics.BisognanoWichmann
 import InfoGeometry.Dynamics.HyperbolicComponent
 import InfoGeometry.Dynamics.JkoWeylGromov

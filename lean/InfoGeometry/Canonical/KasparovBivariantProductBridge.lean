@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl55MasterWittSpinorEnvelopeBridge
 import InfoGeometry.Canonical.Cl55MasterParityOddnessBridge
 import InfoGeometry.Canonical.Cl55MasterChiralHodgeBlockBridge

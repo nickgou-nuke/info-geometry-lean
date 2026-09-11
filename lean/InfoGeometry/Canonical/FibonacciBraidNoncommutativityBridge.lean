@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.YangBaxterProof
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Explicit noncommutativity of the Fibonacci braid generators

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularAxialGrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hyperbolic flow in circular coordinates
@@ -16,7 +17,7 @@ namespace InfoGeometry.Lie.SplitOctonionCircularHyperbolicFlow
 open InfoGeometry.Lie.SplitOctonionCircularAxialGrading
 open InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
 
-abbrev Coord := Fin 8 → ℝ
+abbrev Coord := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 def hyperbolicScale (t : ℝ) (i : Fin 8) : ℝ :=
   Real.exp (t * axialWeight i)

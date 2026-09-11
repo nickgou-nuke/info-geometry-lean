@@ -1,4 +1,5 @@
 import InfoGeometry.MaxEnt.Optimality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.PositiveMeasure
 
 open scoped BigOperators

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Spin44CharacterShadow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauTheoremTranslatorPacket
 import InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
 

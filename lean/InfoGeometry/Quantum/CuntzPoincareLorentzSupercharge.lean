@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzLorentzPoincarePresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.PoincareSupercharge
 
 /-!

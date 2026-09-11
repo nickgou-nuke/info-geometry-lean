@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 import InfoGeometry.Lie.RealSplitOctonionG2Classification

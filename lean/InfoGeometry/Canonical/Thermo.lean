@@ -19,6 +19,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Thermo.FiniteDiagonal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.FiniteMatrix
 import InfoGeometry.Thermo.FromBregman
 import InfoGeometry.Canonical.ThermoFromLogDet

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.WeylGaugeGWProjectiveScaleCalibration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Weyl/GW volume bridge compatibility shim

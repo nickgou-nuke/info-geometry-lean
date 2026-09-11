@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ZetaSouriauSymmetryThermodynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Horizontal Souriau flow in the centered zeta chart

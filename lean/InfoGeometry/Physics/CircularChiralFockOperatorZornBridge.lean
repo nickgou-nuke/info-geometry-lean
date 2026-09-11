@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CircularChiralOperatorEightBridge
 import InfoGeometry.Clifford.Cl55ZornCARComparison
 import InfoGeometry.Physics.Cl55SpinorCartanFock

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoConcreteWeylG2
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoRootSystem
 import InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 import InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure

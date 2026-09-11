@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DyadicDimensionGroupTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Concrete carrier interface for the dyadic stage colimit

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ColimitBracketTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Colimit inheritance of conserved grand-canonical operators

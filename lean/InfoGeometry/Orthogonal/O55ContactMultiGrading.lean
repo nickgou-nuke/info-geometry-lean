@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55ContactGrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.ZMod.Basic
 
 /-! Native source/target block multigrading for the contact carrier. -/

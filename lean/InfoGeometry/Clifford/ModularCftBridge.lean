@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.MonodromyFlowAdapter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11Matrix
 import Mathlib.Tactic
 

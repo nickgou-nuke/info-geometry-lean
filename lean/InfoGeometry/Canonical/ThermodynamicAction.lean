@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelationalInformationCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ThermodynamicGenerator
 import InfoGeometry.Meta.Vacuity
 

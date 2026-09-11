@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullPositiveArtinTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Path transport for positive Artin configuration actions

@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarCayleyOccupation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.NCG.BerezinianSuperdeterminant
 
 /-!

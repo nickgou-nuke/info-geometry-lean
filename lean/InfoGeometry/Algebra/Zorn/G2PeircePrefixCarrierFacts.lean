@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2FixedPrefixResidualConstraints
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge
 
 namespace InfoGeometry.Algebra.Zorn.G2PeircePrefixCarrierFacts

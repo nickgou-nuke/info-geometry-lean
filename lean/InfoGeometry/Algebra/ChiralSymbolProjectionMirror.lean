@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ChiralOperatorSymbolProjection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Mirror transport of a symbolic operator projection

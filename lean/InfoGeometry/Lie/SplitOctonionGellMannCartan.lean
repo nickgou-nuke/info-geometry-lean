@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionAxialCartanDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCartanSixWeights
 import InfoGeometry.Lie.SplitOctonionAxialCartanErlangen
 import Mathlib.Tactic

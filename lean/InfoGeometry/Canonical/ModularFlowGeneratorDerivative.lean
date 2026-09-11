@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.Deriv.Mul
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Derivative of an implemented operator flow

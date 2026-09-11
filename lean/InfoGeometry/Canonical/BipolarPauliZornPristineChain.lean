@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarComplexCartanLine
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarPauliHestenesSolderingBridge
 import InfoGeometry.Canonical.BipolarPauliZornWittBridge
 

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Mathematical Unification of Tri-Facet Geometry, Drazin Inverses, and Golden Ratio Invariants

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.QCDChiralStructuralBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.QCDZornColorSlotBridge
 import InfoGeometry.Physics.QCDTrialityStructuralBridge
 import InfoGeometry.Physics.QCDExceptionalArtinBridge

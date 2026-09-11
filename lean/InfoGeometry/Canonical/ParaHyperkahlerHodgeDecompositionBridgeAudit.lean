@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ParaHyperkahlerHodgeDecompositionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.Canonical.ParaHyperkahlerHodgeDecompositionBridge
 open PolarizedHodgeForm

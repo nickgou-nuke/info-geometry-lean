@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQuaternion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity

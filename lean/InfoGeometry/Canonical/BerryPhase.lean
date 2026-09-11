@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BerryConnection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TopologicalInvariants
 
 set_option linter.unusedSectionVars false

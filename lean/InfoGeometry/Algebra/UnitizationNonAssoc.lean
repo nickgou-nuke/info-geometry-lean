@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Algebra.Unitization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Nonassociative unitization lift

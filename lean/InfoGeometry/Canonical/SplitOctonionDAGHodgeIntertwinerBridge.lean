@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Lie.SplitOctonionExteriorAlgebraPeirceBridge
 
@@ -39,7 +40,7 @@ namespace InfoGeometry.Canonical.SplitOctonionDAGHodgeIntertwinerBridge
 open Matrix
 open InfoGeometry.Lie.SplitOctonionExteriorAlgebraPeirceBridge
 
-abbrev Mat8 := Matrix (Fin 8) (Fin 8) ℝ
+abbrev Mat8 := InfoGeometry.Algebra.FiniteSpin.Mat8R
 
 /-- The exterior Hodge–Dirac matrix $D_{\rm ext} = \varepsilon_0 + \iota_0$. -/
 def exteriorDiracMat : Mat8 :=

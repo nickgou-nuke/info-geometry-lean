@@ -1,4 +1,5 @@
 import InfoGeometry.SignedNetwork.PauliContextBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SignedNetwork.BalancedPairKernel
 
 /-! A finite qubit frame built on the repository Pauli paravector owner.

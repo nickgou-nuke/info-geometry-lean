@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Category.ModuleCat.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Equivalence
 import Mathlib.LinearAlgebra.Complex.Module
 import Mathlib.Data.Matrix.Basic

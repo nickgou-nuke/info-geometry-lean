@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteJaynesFormalism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.FiniteJaynesInductiveFormalism

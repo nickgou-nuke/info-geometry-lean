@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Exceptional.G2CircularRootLabelTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Exceptional.G2CircularRootComplement
 

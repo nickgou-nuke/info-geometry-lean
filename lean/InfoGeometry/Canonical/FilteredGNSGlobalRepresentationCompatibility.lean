@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSGlobalStageRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transition compatibility of global filtered GNS representations

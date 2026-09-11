@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Algebra.CuntzToeplitzBraidRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cuntz projection equivalence: the algebraic K₀ precursor

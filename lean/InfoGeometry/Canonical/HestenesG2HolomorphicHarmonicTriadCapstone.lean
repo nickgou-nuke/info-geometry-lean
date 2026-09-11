@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesG2HolomorphicHarmonicTriadBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.HestenesG2HolomorphicHarmonicTriadCapstone
 

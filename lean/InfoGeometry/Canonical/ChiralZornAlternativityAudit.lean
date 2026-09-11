@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralZornNonUnitalNonAssocRing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ChiralZornNCZornBridge
 import InfoGeometry.Canonical.NCZornAlternativityAudit
 

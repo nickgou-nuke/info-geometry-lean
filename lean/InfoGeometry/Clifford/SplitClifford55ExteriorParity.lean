@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ExteriorSpinorChiralityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitClifford55ExteriorFiniteGraded
 import InfoGeometry.Clifford.Cl55ExteriorSpinorCoordinateReadout
 import Mathlib.LinearAlgebra.CliffordAlgebra.Even

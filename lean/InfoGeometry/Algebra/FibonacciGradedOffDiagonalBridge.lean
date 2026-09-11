@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FibonacciParafermion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The finite graded/off-diagonal readout of the Fibonacci carrier

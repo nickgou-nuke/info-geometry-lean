@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.FractalCantorFockWitness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Çelik's Cantor-Set Clifford Representation

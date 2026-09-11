@@ -1,9 +1,9 @@
 import Mathlib.Algebra.Star.Unitary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 import InfoGeometry.Canonical.CyclotomicCliffordPauliQutrit
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The special unitary three-colour group

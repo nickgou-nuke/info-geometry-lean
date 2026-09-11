@@ -1,4 +1,5 @@
 import InfoGeometry.Measure.DiscreteRN
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Measure.Decomposition.Lebesgue
 import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
 import Mathlib.Probability.ProbabilityMassFunction.Constructions

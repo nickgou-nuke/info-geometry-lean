@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.Hurwitz
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ProjectorEquivariance
 import InfoGeometry.Meta.Architecture
 

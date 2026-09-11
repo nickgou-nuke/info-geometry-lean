@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductNonUnitalStarSurface
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuity of coefficientwise crossed-product star homomorphisms

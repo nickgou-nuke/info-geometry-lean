@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionQuaternionZornPolarBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionAxialCartanFlow
 import InfoGeometry.Lie.SplitOctonionAxialCartanErlangen
 

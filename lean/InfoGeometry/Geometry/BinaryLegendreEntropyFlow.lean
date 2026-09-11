@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.ParaHessianMixedPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Probability.BinaryAitchisonMoments
 
 /-!

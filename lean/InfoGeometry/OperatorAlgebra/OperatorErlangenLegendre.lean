@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SymmetryInvariants
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative

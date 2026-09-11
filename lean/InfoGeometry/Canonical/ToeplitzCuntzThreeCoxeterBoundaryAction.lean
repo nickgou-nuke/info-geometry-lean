@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ToeplitzCuntzThreeTrialityBoundaryGroupoidColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PauliJungTrialityD4Synthesis
 
 /-!

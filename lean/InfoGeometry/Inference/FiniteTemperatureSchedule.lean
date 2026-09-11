@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.GibbsTemperatureSusceptibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite temperature schedule selection

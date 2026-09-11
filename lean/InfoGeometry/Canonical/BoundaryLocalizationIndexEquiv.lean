@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TopologicalInvariantInvariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace

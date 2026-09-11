@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorThermodynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 import InfoGeometry.Meta.Architecture
 

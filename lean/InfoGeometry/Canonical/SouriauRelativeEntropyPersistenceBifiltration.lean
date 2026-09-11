@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauRelativeEntropyPersistenceCutoffLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace SouriauRelativeEntropyPersistenceBifiltration
 

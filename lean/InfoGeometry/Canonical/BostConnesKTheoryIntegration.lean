@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BostConnesKTheory
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BostConnesKMS
 import InfoGeometry.Algebra.Grothendieck
 

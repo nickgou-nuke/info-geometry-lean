@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ChiralCausalCone
 import InfoGeometry.Physics.ChiralTensorRecoupling
 import InfoGeometry.Physics.BraidIdealDescent

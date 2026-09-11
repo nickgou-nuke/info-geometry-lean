@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.GeometricTensorMixedPullback
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CanonicalZornSpinVectorAction
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciFinitePentagonBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.FibonacciHomSpace
 import InfoGeometry.Categorical.FibonacciFusionCategoryData
 

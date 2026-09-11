@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoPCAbstractGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoPCNormalFormInverse
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic.FinCases

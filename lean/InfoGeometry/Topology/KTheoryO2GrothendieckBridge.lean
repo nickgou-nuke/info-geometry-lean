@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.KTheoryO2
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.PeirceProjectorGrothendieckTopological
 import InfoGeometry.Canonical.CuntzGrothendieckShadow
 

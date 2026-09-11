@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.NaryTreeBoundaryInverseLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cylinder topology on an n-ary tree boundary

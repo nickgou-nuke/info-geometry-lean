@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.QuadraticConfiguration3
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Oriented triangle affinities and braid pullback

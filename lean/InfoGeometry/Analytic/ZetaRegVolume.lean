@@ -1,4 +1,5 @@
 import InfoGeometry.Algebraic.SplitSuperGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!

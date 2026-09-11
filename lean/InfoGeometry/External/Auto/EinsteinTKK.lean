@@ -1,4 +1,5 @@
 import Mathlib.Geometry.Manifold.Instances.Real
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Basic
 
 /-!

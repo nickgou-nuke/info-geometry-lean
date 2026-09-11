@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQ11
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitQ11Equivariance
 import Mathlib.Data.Complex.Basic
 

@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.TransformerBlock
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LLM.MaskedTransformerBlock
 import InfoGeometry.LLM.TransformerArchitecture
 import InfoGeometry.LLM.ThermodynamicSwitching

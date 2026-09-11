@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.ChainComplex
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Morphisms of module chain complexes

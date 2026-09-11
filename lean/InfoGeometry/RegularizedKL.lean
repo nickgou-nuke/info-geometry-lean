@@ -1,4 +1,5 @@
 import InfoGeometry.PositiveMeasure -- canonical PositiveMeasure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.RegularizedKL
 end InfoGeometry.RegularizedKL

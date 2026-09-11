@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NormalOrderedCurrent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Canonical.MajoranaPHSZeroMode
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge

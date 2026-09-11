@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HeckeBraidTopologicalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.JonesBraidB3
 
 /-!

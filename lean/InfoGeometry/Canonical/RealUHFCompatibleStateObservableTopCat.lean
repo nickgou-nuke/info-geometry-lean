@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutStageAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuous finite-stage observables on compatible readout families

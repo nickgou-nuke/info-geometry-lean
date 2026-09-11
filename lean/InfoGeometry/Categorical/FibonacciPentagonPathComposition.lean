@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciPentagonPathCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Composition of finite Fibonacci pentagon paths

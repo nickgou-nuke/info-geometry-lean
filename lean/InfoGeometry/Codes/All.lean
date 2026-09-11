@@ -1,4 +1,5 @@
 import InfoGeometry.Codes.MajoranaStabilizerThreshold
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Codes
 

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Concrete cyclotomic matrix witnesses
@@ -7,12 +8,13 @@ These are finite representation-neutral witnesses.  They do not identify a
 matrix with a physical Hamiltonian or a Lie-group action.
 -/
 
+
 namespace InfoGeometry.Canonical.CyclotomicExplicitMatrixRealizations
 
 open Matrix
 
-abbrev M3Z := Matrix (Fin 3) (Fin 3) ℤ
-abbrev M8Z := Matrix (Fin 8) (Fin 8) ℤ
+abbrev M3Z := InfoGeometry.Algebra.FiniteSpin.Mat3Z
+abbrev M8Z := InfoGeometry.Algebra.FiniteSpin.Mat8Z
 
 def tripotentStage : M3Z :=
   !![1, 0, 0; 0, -1, 0; 0, 0, 0]

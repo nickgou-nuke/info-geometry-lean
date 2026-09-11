@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Zero-grade symplectic action on the Freudenthal Heisenberg sector

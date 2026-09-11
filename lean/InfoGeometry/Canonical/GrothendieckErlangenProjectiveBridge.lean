@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GrothendieckGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ErlangenOperator2
 import InfoGeometry.GromovWittenErlangen.GWCanonicalCountRayBridge
 import InfoGeometry.GromovWittenErlangen.GWProjectiveCountCalibration

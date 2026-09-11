@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.RealRotorCore
 import InfoGeometry.Krein.FiniteMadelungPhaseRotation
 import InfoGeometry.Canonical.ArakiItakuraSaitoEquivalence

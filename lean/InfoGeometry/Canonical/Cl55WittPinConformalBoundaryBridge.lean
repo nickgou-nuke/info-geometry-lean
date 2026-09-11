@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittPinProjectiveNullAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittCartanDieudonneReduction
 import InfoGeometry.Canonical.PACSplit55Cl55CoordinateBridge
 

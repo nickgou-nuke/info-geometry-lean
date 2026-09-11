@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55ContactCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Small reusable coordinate lemmas for the native `(5,5)` carrier. -/
 

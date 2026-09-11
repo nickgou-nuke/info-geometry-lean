@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Boundedness of the finite-support GNS left action

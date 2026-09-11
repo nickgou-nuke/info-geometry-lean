@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.LambdaCausalNetNegativeGrammarBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredHestenesAnalyticFamily
 import InfoGeometry.Categorical.HadjiivanovBraidGroupColimit
 import InfoGeometry.Krein.DoubledSpace

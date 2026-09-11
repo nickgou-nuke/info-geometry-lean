@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import Mathlib.Algebra.Category.ModuleCat.Basic

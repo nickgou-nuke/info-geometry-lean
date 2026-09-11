@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.PuncturedAffineLogDifferential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Laurent inversion and the logarithmic Euler derivation

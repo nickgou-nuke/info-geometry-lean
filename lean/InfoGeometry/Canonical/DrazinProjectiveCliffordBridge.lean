@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinKreinCompatibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Lift
 import InfoGeometry.Twistor.NullProjective
 

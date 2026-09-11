@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2FlagFactorizationRecursion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2FlagCellFactorizationBridge
 import InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 

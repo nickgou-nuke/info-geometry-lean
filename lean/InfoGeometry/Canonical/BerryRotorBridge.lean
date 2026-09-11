@@ -10,6 +10,7 @@ modules.
 -/
 
 import Mathlib.NumberTheory.Modular
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Geometry.Manifold.Algebra.LieGroup

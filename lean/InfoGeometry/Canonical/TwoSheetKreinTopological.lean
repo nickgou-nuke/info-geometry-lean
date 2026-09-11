@@ -1,4 +1,5 @@
 import Mathlib.Topology.Algebra.Module.FiniteDimension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Topology.Instances.Matrix
 import InfoGeometry.Canonical.TwoSheetKreinAdjoint

@@ -1,4 +1,5 @@
 import InfoGeometry.CFT.ModularInvariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ModularInvarianceCapstone
 

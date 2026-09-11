@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativePotentialCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 /-!

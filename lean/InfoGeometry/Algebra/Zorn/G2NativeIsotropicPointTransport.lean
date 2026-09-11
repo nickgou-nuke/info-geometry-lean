@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2SplitOctNormComposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SplitCayleyF2NormAutomorphismInvariance
 import InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraDirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredGNSFaithfulRangeQuotient
 import InfoGeometry.Canonical.FilteredGNSRepresentedCStarClosure
 import InfoGeometry.Canonical.FilteredGNSTomitaModularHilbertCompletion

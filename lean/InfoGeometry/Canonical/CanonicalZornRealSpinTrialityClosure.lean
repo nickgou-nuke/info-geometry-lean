@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornSpinVectorAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Real-locus Spin triality and affine projective closure

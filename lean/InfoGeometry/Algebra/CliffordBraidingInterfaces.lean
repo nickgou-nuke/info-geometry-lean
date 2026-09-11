@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Algebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Field.Basic
 import Mathlib.Algebra.Ring.Basic
 

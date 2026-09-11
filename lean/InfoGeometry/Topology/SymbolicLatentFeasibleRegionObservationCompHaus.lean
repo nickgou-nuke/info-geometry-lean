@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentFeasibleSubspaceCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentFeasibleRegionCompHaus
 import InfoGeometry.Topology.SymbolicLatentFeasibleSubspaceTopCat
 

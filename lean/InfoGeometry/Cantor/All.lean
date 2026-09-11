@@ -1,4 +1,5 @@
 import InfoGeometry.Cantor.CantorRandomWalk
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Cantor
 

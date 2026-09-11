@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimonPhaseLift
 import InfoGeometry.Twistor.Cl55MinkowskiCelestialSlice
 

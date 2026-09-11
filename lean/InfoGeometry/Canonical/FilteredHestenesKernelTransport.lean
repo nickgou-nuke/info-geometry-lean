@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredHestenesAnalyticFamily
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredHestenesIteratedTransport
 
 noncomputable section

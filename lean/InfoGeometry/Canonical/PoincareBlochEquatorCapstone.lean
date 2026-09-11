@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.PoincareBlochEquator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.PoincareBlochEquatorCapstone
 

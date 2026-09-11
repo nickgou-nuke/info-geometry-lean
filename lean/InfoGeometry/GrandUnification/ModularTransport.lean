@@ -1,4 +1,5 @@
 import InfoGeometry.GrandUnification.AlgebraicSouriauTomita
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermodynamics.FiniteConnesCocycle
 
 /-!

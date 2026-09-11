@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarBoundaryTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarLogDifferential
 import InfoGeometry.Analysis.BipolarLocalConformalCoordinate
 import Mathlib.Tactic
@@ -6,7 +7,7 @@ import Mathlib.Tactic
 noncomputable section
 namespace InfoGeometry.Analysis.BipolarPlanarHodgePair
 
-abbrev PlaneCovector := Fin 2 → ℝ
+abbrev PlaneCovector := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 def hodgeRotate (v : PlaneCovector) : PlaneCovector := ![-v 1, v 0]
 

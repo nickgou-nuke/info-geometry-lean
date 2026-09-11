@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SouriauGibbsSoftmax
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauWassersteinGradientFlow
 
 /-! A finite interface from normalized Gibbs weights to the native

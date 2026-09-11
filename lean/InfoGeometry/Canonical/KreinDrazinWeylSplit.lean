@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Operator.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.TriadicWeylBridge
 import InfoGeometry.Canonical.DrazinWeylConstructive
 

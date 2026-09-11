@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Null Zorn vectors and the native Clifford/Dirac nilpotent closure

@@ -1,4 +1,5 @@
 import Mathlib.Topology.Category.TopCat.Limits.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Constructions
 import Mathlib.Topology.Maps.OpenQuotient
 import Mathlib.Topology.Maps.Proper.Basic

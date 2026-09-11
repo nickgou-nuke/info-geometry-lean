@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
 import InfoGeometry.Arithmetic.KudinoorWittenIndexBridge

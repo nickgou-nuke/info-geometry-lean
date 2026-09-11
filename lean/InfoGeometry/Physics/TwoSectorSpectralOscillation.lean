@@ -13,7 +13,7 @@ open Matrix
 namespace InfoGeometry.Physics.TwoSector
 
 abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
-abbrev Vec2 := Fin 2 → ℝ
+abbrev Vec2 := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 /-!
 # Exact Symmetric Two-Sector Spectral Splitting and Coherent Oscillation

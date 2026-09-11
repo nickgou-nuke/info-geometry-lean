@@ -1,4 +1,5 @@
 import InfoGeometry.Holography.BekensteinHawkingDyadicEntropy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Witten--Möbius / Bekenstein--Hawking imports

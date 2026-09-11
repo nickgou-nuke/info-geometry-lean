@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Primon Zeta and Möbius Fermion Parity

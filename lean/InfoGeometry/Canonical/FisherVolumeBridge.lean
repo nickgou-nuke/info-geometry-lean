@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.Superphysics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.SuperchargeMultiplet
 import InfoGeometry.Canonical.RelationalInformationCore
 import InfoGeometry.Canonical.ModularHessian

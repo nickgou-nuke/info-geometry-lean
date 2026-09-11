@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBFunctional
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Fintype.BigOperators
 
 open MeasureTheory

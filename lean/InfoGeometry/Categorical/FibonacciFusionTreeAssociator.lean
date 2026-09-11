@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciBraidedCategory
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 
 /-!

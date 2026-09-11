@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitRealNullTetradZornProjectiveBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Eigenspace readout for the projectivized double-Witt flow

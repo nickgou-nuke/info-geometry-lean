@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PositionalDynamicsRegimeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RoPERepresentationBridge
 import InfoGeometry.Canonical.FourierCharacterRepresentationBridge
 import InfoGeometry.LLM.ALiBi

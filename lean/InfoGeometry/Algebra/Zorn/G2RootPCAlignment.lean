@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2PCPositiveRootPacket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Labels for the verified positive-root PC packet

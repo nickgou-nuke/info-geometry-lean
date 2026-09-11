@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.OfAssociative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SL2SpinorLadder
 
 noncomputable section

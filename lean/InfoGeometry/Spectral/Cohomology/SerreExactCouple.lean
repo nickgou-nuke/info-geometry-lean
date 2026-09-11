@@ -1,6 +1,7 @@
 /- Serre Exact Couple Construction -/
 
 import InfoGeometry.Spectral.Spectrum.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Spectral.Algebra.ExactCouple
 import InfoGeometry.Spectral.Algebra.SpectralSequence
 

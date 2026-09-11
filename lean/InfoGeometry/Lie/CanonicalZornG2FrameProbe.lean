@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZornVectorMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
 
 noncomputable section

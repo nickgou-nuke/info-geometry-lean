@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentBoundaryCylinderColimitTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentBoundaryCylinderPushoutTopCat
 import InfoGeometry.Topology.SymbolicLatentBoundaryCylinderReadoutTopCat
 

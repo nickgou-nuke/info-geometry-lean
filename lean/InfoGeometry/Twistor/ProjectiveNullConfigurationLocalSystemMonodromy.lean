@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Category.ModuleCat.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
 import InfoGeometry.Twistor.ProjectiveNullPositiveArtinFundamentalGroupoidEquivalence
 

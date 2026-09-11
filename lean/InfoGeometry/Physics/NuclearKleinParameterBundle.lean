@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.D6HexTiledKleinBottleQuotient
 import InfoGeometry.Physics.NuclearInternalExternalParityFactorization
 import InfoGeometry.Physics.NuclearOperatorSchurComplement

@@ -12,6 +12,7 @@ through a closure involution, and proves that the diagonal survives.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
 
 noncomputable section

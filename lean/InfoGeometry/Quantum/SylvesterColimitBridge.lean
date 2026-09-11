@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.GeneralizedPauli
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TensorTowerColimit
 import Mathlib.LinearAlgebra.Matrix.Permutation
 

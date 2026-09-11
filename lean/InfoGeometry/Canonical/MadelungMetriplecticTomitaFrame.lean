@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NavierStokesBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorialItakuraSaitoFramework
 import InfoGeometry.Dynamics.KanDecomposition
 import InfoGeometry.Physics.MetriplecticDynamicsDrivers

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoChevalleyRootCoordinates
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.G2PositiveRootIndex
 
 /-!

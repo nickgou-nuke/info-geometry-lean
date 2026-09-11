@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2BNPair
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2QuotientOrbitSeparation
 import InfoGeometry.Algebra.Zorn.G2FlagCellQuotientWitness
 import InfoGeometry.Algebra.Zorn.G2FlagCellFactorizationBridge

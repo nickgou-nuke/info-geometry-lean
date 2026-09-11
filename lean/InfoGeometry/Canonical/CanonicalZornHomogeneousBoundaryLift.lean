@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornNullProjectiveBoundaryBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Homogeneous and linear null lifts for the canonical Zorn carrier

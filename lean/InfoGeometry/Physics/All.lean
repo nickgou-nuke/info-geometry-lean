@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Cl11ChiralCARBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.BoundaryMajoranaDefectBridge
 import InfoGeometry.Physics.BoundaryMajoranaMassGap
 import InfoGeometry.Physics.FisherKreinLorentz

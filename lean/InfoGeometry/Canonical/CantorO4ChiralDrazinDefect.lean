@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.CantorBoundaryCuntzLengthTwoSector
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Singular.DrazinGreen
 
 noncomputable section

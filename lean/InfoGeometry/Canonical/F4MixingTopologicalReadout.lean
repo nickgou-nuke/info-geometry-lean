@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.F4DerivationsTopCatAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Albert.F4Action
 import InfoGeometry.Canonical.CubicJordanOsTopologicalReadout
 

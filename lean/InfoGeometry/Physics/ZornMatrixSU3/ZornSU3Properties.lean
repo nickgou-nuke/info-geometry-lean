@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ZornMatrixSU3.ZornMatrixCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornVectorMatrix
 import InfoGeometry.Algebra.KingdonSplitOctonion
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra

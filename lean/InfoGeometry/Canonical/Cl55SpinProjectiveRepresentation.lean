@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectiveFoundation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55ProjectiveOperatorAction
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.G2Cl55FiniteHodgeEquivarianceDatum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralFredholmIndex
 
 /-!

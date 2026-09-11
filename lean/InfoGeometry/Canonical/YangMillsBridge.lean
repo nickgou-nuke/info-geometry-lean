@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.YangMillsFinite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.YangMillsBridge

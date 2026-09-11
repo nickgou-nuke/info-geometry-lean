@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GenuineMatrixStageMorphism
 import InfoGeometry.Canonical.CantorKMSState
 import InfoGeometry.Canonical.FiniteCantorCuntzBranches

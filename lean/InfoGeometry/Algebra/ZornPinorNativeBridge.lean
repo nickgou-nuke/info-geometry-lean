@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZornMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native Zorn realization of the Pin-minus and split ladder carriers

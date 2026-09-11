@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.PolarizedBoundaryInvolutions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HodgeStar4DFinite
 import Mathlib.LinearAlgebra.ExteriorPower.Basic
 

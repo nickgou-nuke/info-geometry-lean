@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.ProjectiveNullBoundaryBraidMonodromyComparison
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.ProjectiveNullBoundaryJonesPermutationObstruction
 import InfoGeometry.Twistor.Cl55ProjectiveNullOrderedExchangeMonodromy
 import InfoGeometry.Twistor.ProjectiveNullConfigurationPureMonodromy

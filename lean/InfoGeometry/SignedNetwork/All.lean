@@ -1,4 +1,5 @@
 import InfoGeometry.SignedNetwork.ExactCancellation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SignedNetwork.BalancedPairKernel
 import InfoGeometry.SignedNetwork.GaugeTransport
 import InfoGeometry.SignedNetwork.RegularBimoduleSeparation

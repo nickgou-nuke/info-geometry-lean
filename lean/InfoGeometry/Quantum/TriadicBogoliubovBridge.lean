@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.LinearMap
 
 namespace InfoGeometry.Quantum.TriadicBogoliubovBridge

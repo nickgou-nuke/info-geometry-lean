@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BCFWAffineChannelPole
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Topology.BCFWShiftTopological
 

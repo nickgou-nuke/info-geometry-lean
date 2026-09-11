@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.FredholmDeterminantXi
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.FredholmDeterminantXiCapstone
 

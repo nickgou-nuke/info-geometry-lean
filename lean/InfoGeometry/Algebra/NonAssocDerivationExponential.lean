@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.NonAssocDerivationKernel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.BaezG2SplitOctonion
 import InfoGeometry.Lie.ContinuousDerivationExponential
 import Mathlib.Topology.Algebra.Module.FiniteDimension

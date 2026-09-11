@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.NaryTreeBoundaryCylinderTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compact finite-alphabet boundary spaces

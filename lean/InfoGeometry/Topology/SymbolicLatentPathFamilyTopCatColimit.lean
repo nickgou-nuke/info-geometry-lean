@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SpinorSpectrumTopCatColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentObservedFamilyTopCat
 
 /-!

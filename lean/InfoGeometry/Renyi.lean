@@ -1,4 +1,5 @@
 import InfoGeometry.KL
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Rényi Divergence Interface

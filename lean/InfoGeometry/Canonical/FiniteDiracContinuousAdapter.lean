@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredColimitDiracIndexBridge
 import InfoGeometry.Canonical.DiracHeatSemigroupBridge
 

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Fourier.FourierTransform
 import Mathlib.Analysis.Fourier.Inversion
 import Mathlib.Analysis.MellinTransform

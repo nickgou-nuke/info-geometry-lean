@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.PrimeCounting
 import InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
 import InfoGeometry.Meta.FiniteToInfiniteTransitionSOP

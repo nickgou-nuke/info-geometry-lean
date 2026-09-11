@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornVectorMatrix
 import InfoGeometry.Algebra.ZornAlternativeLaws
 

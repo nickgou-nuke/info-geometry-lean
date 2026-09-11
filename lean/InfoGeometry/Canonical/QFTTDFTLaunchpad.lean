@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.LegendreDuality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RGFlow
 
 /-!

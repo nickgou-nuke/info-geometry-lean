@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CompletionPathway
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
 import InfoGeometry.External.Virasoro.Sugawara
 

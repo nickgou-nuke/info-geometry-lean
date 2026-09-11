@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 import InfoGeometry.Algebra.Zorn.G2TwoPCNormalForm
 import InfoGeometry.Algebra.Zorn.G2PCWordSubgroupEquiv

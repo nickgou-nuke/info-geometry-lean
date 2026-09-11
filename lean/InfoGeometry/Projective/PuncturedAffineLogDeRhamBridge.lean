@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.PuncturedAffineLogDifferential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.PuncturedAffineKleinInversionBridge
 import InfoGeometry.Projective.KleinQuadricDeRhamComplex
 

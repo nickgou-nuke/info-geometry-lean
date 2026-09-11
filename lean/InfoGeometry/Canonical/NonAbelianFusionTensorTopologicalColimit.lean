@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Kronecker
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Limits.Basic
 import InfoGeometry.Canonical.NonAbelianFusionFRTopologicalBridge
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit

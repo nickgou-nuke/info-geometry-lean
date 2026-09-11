@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ToeplitzCuntzCoxeterInvariantContinuousMapEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The theorem-backed topological projection of the Coxeter construction

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzSupergradedSUSYTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topological isomorphism of the supergraded parity

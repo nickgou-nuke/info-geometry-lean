@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.H3ZornMcCrimmonTraceIdentities
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # McCrimmon's dual polarized adjoint identity

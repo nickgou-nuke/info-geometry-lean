@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # KR Duality Cascade
@@ -29,6 +30,7 @@ geometry, Katz-Sarnak monodromy, or a global non-orientable orbifold quotient.
 -/
 
 noncomputable section
+
 
 namespace InfoGeometry.Canonical.KRDualityCascade
 
@@ -90,7 +92,7 @@ theorem buscher_shift_involutive {X : Type*} [TopologicalSpace X]
   cases cl
   simp [buscher_shift]
 
-abbrev M10Z := Matrix (Fin 10) (Fin 10) ℤ
+abbrev M10Z := InfoGeometry.Algebra.FiniteSpin.Mat10Z
 
 /--
 The standard split-pairing `O(5,5)` metric.

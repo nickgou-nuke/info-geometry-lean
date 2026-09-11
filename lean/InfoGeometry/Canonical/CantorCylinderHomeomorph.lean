@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorCylinderClopen
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryCuntzShiftTopology
 
 /-!

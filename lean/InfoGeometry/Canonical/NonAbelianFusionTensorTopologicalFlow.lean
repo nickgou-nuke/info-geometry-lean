@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NonAbelianFusionTensorTopologicalColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Stagewise topological flow on the tensor fusion colimit

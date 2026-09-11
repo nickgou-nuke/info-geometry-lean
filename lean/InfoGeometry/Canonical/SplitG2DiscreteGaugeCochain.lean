@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitG2DiscreteCoframePullback
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.G2HolonomyGaugeConnections
 
 namespace InfoGeometry.Canonical

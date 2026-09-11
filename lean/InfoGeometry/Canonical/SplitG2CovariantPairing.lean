@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitG2VolumeAndGramPairing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
 namespace InfoGeometry.Canonical

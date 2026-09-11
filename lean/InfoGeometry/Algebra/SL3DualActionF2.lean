@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SplitCayleyF2
 import InfoGeometry.Algebra.SplitCayleyF2FiniteVerification
 import InfoGeometry.Algebra.SplitCayleyF2AddMulAutomorphism

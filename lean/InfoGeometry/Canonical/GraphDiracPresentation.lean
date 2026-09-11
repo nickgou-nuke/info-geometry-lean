@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.QuantumPresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import Mathlib.Data.Real.Basic
 

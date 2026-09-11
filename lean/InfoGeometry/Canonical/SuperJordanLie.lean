@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BerryConnection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Supergraded Jordan–Lie Split on the Doubled Krein Carrier

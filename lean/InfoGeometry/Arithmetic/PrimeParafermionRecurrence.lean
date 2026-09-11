@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeParafermionGrandCanonicalClock
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite prime parafermion recurrence

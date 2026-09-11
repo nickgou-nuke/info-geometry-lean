@@ -1,4 +1,5 @@
 import InfoGeometry.Quiver.BetheAnsatzXXZ
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
 
 /-!

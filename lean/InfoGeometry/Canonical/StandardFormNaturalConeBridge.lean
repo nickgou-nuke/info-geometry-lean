@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.StandardFormCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Meta.Architecture

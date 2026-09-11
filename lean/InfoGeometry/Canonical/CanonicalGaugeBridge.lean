@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeModularPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped InnerProductSpace
 

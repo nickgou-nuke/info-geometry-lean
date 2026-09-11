@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentAtlasClosedRegionCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # `TopCat` readout of a compact closed atlas-local feature region

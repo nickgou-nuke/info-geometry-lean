@@ -1,4 +1,5 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Assumptions.Determinant
 import InfoGeometry.Assumptions.DualConnections

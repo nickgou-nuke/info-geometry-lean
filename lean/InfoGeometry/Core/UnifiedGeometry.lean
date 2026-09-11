@@ -1,4 +1,5 @@
 import InfoGeometry.Core.Involution
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.SymmetricLieGeneric
 import InfoGeometry.Architecture.SymmetricSpace
 

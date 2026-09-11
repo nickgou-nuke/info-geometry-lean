@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ZornMatrixSU3.ZornMatrixCore
 import InfoGeometry.OperatorAlgebra.KreinIsotropicCone
 

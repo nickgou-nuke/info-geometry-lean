@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentAtlasOverlapTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # TopCat transport of atlas overlap feature regions

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.WallpaperKleinBottleCartan
 import InfoGeometry.Canonical.Pin55WeylWallpaper
 
@@ -33,9 +34,9 @@ open InfoGeometry.Canonical.WallpaperKleinBottleCartan
 
 noncomputable section
 
-abbrev Root2Q := Fin 2 → ℚ
-abbrev Root5Q := Fin 5 → ℚ
-abbrev Mat2Q := Matrix (Fin 2) (Fin 2) ℚ
+abbrev Root2Q := InfoGeometry.Algebra.FiniteSpin.Vec2Q
+abbrev Root5Q := InfoGeometry.Algebra.FiniteSpin.Vec5Q
+abbrev Mat2Q := InfoGeometry.Algebra.FiniteSpin.Mat2Q
 abbrev Mat5Q := Matrix (Fin 5) (Fin 5) ℚ
 abbrev Split55Index := Fin 2 × Fin 5
 abbrev MatSplit55Q := Matrix Split55Index Split55Index ℚ

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FierzKleinFoundation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native linear structure on canonical Klein bivector coordinates

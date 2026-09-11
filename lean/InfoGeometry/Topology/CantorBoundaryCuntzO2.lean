@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.CantorBoundaryCuntzFamily
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

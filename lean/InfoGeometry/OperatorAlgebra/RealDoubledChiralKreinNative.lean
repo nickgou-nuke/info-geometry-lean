@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinReal
 import InfoGeometry.Krein.KreinSpace
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornChiralPeirceDecomposition
 import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.MappingTorusGluing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Conditional anomaly pairing

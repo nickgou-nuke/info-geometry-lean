@@ -8,6 +8,7 @@ read through invariants under the chosen admissible morphism class.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

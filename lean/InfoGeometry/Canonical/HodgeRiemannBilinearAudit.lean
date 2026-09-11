@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HodgeRiemannBilinearBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of HodgeRiemannBilinearBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.NaryTreeBoundaryInverseLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatible prefix families for the symbolic boundary

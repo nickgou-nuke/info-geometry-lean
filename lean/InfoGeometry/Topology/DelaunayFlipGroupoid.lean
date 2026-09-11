@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.DelaunayPureBraidInvariant
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.WeightGrading55
 import InfoGeometry.Algebra.Cl11Fermions
 import InfoGeometry.Canonical.ConformalFiveGradeInversion

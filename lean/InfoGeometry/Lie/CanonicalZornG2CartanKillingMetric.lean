@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornIsKilling
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cartan--Killing metric surface for the canonical Zorn derivations

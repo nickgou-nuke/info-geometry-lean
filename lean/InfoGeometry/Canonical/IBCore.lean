@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBUnnormalized
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.IBNormalize
 import InfoGeometry.Canonical.IBTilted
 import InfoGeometry.Canonical.IBDynamics

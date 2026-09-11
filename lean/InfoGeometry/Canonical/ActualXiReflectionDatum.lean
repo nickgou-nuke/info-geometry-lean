@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Concrete reflection datum for the completed Riemann `xi` readout

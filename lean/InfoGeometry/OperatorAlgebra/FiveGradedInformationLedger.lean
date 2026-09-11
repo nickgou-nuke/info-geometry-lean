@@ -5,6 +5,7 @@ Projected information accounting identity and five-grade memory ledger sockets.
 -/
 
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

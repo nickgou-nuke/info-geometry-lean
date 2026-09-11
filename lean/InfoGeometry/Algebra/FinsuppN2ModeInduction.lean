@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FiniteN2Induction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finitely supported infinite-mode N=2 supercharge transport

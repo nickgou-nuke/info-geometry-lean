@@ -15,7 +15,7 @@ noncomputable section
 
 namespace InfoGeometry.Physics.SplitAtomParticleHole
 
-abbrev Spinor := Fin 2 → ℂ
+abbrev Spinor := InfoGeometry.Algebra.FiniteSpin.Vec2C
 abbrev CMat2 := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 def particleHole (v : Spinor) : Spinor := ![star (v 1), star (v 0)]

@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55ContactFullFormalism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical O(5,5) contact entry point

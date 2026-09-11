@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.HadjiivanovFiniteLaurentModeTower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.HadjiivanovLogConnectionColimitBridge
 
 /-!

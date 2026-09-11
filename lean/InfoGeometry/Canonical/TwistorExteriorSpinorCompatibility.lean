@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ExteriorGrassmannianTwistorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitSpinorCARAlgebraBridge
 
 /-!

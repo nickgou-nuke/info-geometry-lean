@@ -11,6 +11,7 @@ It does not assert that a bare Clifford algebra has a Klein-bottle topology.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 

@@ -1,4 +1,5 @@
 import InfoGeometry.SignedNetwork.BranchingFrontier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Axiom audit for the finite branching owners. -/
 #print axioms InfoGeometry.SignedNetwork.BranchingInitialization.abs_mul_seedSign

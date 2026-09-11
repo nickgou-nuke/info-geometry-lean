@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Pin55Formal
 
 /-!
@@ -74,7 +75,7 @@ theorem null_not_generic {Q : QuadraticForm R M} {x : M}
 /-! ## Concrete `(5,5)` specialization -/
 
 /-- Coordinate carrier for the concrete split `(5,5)` form from `Pin55Formal`. -/
-abbrev Vec55 := Fin 10 → ℚ
+abbrev Vec55 := InfoGeometry.Algebra.FiniteSpin.Vec10Q
 
 /-- Zero/null/generic stratum for the concrete `q55` coordinate form. -/
 abbrev Q55Stratum (x : Vec55) : Prop :=

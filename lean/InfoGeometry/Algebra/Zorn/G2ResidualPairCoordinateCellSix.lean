@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2GAPFlagWitnessData
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2QuotientResidualInjectivity
 
 namespace InfoGeometry.Algebra.Zorn.G2ResidualPairCoordinateCellSix

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionCanonicalThreeForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Four coordinate planes in the split-octonion carrier

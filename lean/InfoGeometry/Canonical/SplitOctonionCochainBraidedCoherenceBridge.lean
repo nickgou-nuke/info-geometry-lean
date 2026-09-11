@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionCochainMonoidalCoherenceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Split Octonion Cochain Braided Coherence Bridge

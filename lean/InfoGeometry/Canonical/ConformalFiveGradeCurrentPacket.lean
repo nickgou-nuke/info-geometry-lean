@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalFiveGradeInversion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NormalOrderedCurrent
 
 /-!

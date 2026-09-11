@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HarmonicWeakHorizonBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of HarmonicWeakHorizonBridge

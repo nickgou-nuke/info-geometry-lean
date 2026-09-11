@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealMirrorComplexStructure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

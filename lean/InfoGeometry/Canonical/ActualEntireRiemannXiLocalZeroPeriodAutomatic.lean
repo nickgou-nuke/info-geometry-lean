@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ActualEntireRiemannXiLocalZeroPeriod
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ActualEntireRiemannXiZeroFreeClosedForm
 
 /-!

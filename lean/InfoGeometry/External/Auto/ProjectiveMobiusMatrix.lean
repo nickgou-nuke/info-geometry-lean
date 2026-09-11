@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.KanCayley
 import InfoGeometry.External.Auto.ProjectivePenrosePGA
 

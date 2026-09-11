@@ -1,4 +1,5 @@
 import InfoGeometry.RootSystem.D4DualCosetNormalForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cardinality of the `D₄` discriminant carrier

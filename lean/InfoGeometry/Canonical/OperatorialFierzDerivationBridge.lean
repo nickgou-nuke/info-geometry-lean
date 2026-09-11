@@ -1,4 +1,5 @@
 import InfoGeometry.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FierzReadout
 import InfoGeometry.Meta.Architecture
 import Mathlib.Algebra.Lie.OfAssociative

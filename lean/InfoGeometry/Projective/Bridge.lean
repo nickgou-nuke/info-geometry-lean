@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.Projective
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.Orthant
 import InfoGeometry.Projective.SelfDualCone
 import Mathlib.Topology.Constructions

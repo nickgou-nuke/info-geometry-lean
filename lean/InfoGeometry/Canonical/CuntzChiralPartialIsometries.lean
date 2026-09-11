@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzChiralSuperchargeRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Singular.MoorePenrose
 import InfoGeometry.Singular.Drazin
 import InfoGeometry.Singular.DrazinGreen

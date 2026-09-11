@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Projectivization.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.Tactic
 
@@ -22,7 +23,7 @@ open scoped LinearAlgebra.Projectivization
 
 namespace InfoGeometry.Clifford.SplitRealNullTetrad
 
-abbrev Carrier := Fin 4 → ℝ
+abbrev Carrier := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
 /-- The symmetric split `(2,2)` pairing. -/
 def pairing (X Y : Carrier) : ℝ :=

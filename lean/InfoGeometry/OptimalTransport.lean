@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.FromBregman
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.ExponentialFamily.KLBregman
 import InfoGeometry.ExponentialFamily.Analytic.LogSumExp
 

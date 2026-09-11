@@ -6,6 +6,7 @@ No complex imports.
 -/
 
 import InfoGeometry.Algebraic.CartanCocycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

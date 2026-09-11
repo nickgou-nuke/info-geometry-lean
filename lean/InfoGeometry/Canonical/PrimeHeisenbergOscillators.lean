@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CurrentSugawaraBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Prime Heisenberg Oscillators

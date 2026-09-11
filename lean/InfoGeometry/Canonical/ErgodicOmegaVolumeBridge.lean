@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ErgodicFixedPointBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
 
 open scoped InnerProductSpace BigOperators

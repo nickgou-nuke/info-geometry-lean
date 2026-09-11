@@ -57,7 +57,7 @@ theorem anomalyIndex_55_zero : anomalyIndex 5 5 = 0 := by
 
 abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 abbrev M3C := InfoGeometry.Algebra.FiniteSpin.Mat3C
-abbrev M6C := Matrix (Fin 6) (Fin 6) ℂ
+abbrev M6C := InfoGeometry.Algebra.FiniteSpin.Mat6C
 
 /-- A concrete odd generator. -/
 def Gatom : M2C := !![0, 1; 1, 0]

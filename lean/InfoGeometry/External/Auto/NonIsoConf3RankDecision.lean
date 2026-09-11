@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.NonIsoConf3DeRhamCooperad
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.NonIsoConf3DupontGysinModel
 
 /-!

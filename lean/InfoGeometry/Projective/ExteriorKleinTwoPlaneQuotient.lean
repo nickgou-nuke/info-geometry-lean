@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.ExteriorKleinFrameSurjection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The framed exterior cover and the real two-plane carrier

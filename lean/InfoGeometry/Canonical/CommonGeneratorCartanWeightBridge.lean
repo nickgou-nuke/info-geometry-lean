@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CartanInfinitesimalExponentialBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry
 
 /-!

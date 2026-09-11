@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native para-Kaehler algebra on the active `(3 + 3)` carrier
@@ -16,7 +17,7 @@ namespace InfoGeometry.Lie.SplitOctonionActiveParaKahler
 
 open InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
 
-abbrev Vec3 := Fin 3 → ℝ
+abbrev Vec3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 abbrev Active := Vec3 × Vec3
 
 def vecDot (x y : Vec3) : ℝ := ∑ i, x i * y i

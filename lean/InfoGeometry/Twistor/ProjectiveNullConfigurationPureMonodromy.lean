@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullOrderedExchangeDeckMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Pure covering monodromy of projective-null configurations

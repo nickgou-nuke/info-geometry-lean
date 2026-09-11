@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.H3ZornJordanKantorCapstone
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Compatibility owner for the upstream concrete H₃ Kantor path.
 

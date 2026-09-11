@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConcreteCompatibleCuntzRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixFaithfulness
 
 /-!

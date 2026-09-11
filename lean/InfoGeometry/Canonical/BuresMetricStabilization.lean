@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TensorColimitExpectation
 import InfoGeometry.Thermo.BuresWassersteinKMSCost
 

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Colimit.Module
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

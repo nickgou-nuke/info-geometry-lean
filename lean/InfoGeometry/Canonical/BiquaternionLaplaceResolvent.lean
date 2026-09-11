@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BiquaternionLaplaceTripotent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Biquaternion Laplace resolvent

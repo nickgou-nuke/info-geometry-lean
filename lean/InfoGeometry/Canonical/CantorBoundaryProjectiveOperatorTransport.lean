@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.UHFInductiveColimitBoundaryInverseLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.UHFBoundaryExactSequence
 import InfoGeometry.Canonical.UHFBoundaryOperatorTopology
 import InfoGeometry.Canonical.UHFBoundaryFunctionOperatorTopCat

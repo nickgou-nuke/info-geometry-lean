@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.ExteriorKleinNullTwistor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.ExteriorKleinCoordinateIncidence
 import InfoGeometry.Twistor.ProjectiveNullPolarIncidence
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ThreeColorSL3ZornActionTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Three-color `SL₃` Zorn action topological bridge

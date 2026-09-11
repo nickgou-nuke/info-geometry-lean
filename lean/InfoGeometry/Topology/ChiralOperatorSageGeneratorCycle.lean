@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ChiralOperatorSageLatentBasis
 import InfoGeometry.Topology.ChiralOperatorBraidLatentFlow
 

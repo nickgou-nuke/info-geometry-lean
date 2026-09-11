@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauOnsagerBKMRealForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauOnsagerBKMPositivity
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra
 

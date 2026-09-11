@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FierzKleinFoundation
 import InfoGeometry.Canonical.RealSpacetime4x4Closure
 import InfoGeometry.Exceptional.Freudenthal

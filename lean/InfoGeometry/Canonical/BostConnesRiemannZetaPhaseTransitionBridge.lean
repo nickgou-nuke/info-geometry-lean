@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.BostConnesCriticality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BostConnesKMS
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.CFT.VirasoroVOAZeta
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.VirasoroVOAZetaCapstone
 

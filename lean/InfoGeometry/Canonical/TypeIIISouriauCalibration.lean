@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauModularHamiltonianBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TypeIIIContinuousCoreReal
 import InfoGeometry.Meta.Architecture
 

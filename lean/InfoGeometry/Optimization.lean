@@ -2,6 +2,7 @@
 /- Imports all optimization submodules for the Birkhoff Spectral Descent Engine -/
 
 import InfoGeometry.Optimization.PolarDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optimization.Dykstra
 import InfoGeometry.Optimization.BirkhoffPolytope
 import InfoGeometry.Optimization.DualAscent

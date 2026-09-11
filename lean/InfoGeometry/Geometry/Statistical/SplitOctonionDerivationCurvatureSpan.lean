@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.Statistical.SplitOctonionDualFlatDerivationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Algebraic span of split-octonion derivation curvature

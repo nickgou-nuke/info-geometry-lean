@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealStagePrefixProjectionTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryDyadicCover
 import InfoGeometry.Canonical.RealUHFProjectionRankCompletionReadoutSquare
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.Graph
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 `InfoGeometry.Analysis`

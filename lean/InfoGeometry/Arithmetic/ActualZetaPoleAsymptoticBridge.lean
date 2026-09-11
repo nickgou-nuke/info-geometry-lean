@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.BostConnesNativeZetaPartition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Rescaled actual zeta pole asymptotic

@@ -1,6 +1,7 @@
 -- ConnesMarcolliShimura.lean
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 This file keeps the former Connes--Marcolli/Shimura interface honest by making

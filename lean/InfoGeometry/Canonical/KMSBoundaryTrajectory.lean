@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 import InfoGeometry.Canonical.ConnesRadonNikodymCocycle
 import InfoGeometry.Thermo.BuresWassersteinKMSCost

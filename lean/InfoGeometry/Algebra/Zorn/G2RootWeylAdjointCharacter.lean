@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2CoordinateWeylAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2CyclotomicSignedRootBridge
 import InfoGeometry.Algebra.Zorn.G2RootWeylNormalForm
 import InfoGeometry.Algebra.Zorn.G2WeylDihedralEquiv

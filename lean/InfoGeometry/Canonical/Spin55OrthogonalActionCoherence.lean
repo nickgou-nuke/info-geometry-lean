@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Spin55NativeOrthogonalActionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittSpinOrthogonalAction
 
 namespace InfoGeometry.Clifford.Clifford55

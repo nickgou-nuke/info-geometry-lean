@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55RealSplitPinReverseNorm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55Q55NativeSplitBridge
 import InfoGeometry.Clifford.Cl55SpinorAlgebraEquiv
 

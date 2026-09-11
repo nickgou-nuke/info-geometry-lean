@@ -1,4 +1,5 @@
 import Mathlib.Topology.Algebra.Module.FiniteDimension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TwoSheetStokesTopological
 
 noncomputable section

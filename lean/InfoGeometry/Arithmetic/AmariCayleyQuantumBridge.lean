@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.RiemannXiCayleyZeroBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.AmariZetaDuallyFlatGeometry
 import InfoGeometry.Canonical.AmariBinarySimplexBridge
 import InfoGeometry.Clifford.ThermodynamicZetaGeometry

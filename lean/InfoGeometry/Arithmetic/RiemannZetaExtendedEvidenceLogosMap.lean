@@ -1,4 +1,5 @@
 import Lean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpineAttributes
 import InfoGeometry.Arithmetic.RiemannZetaGeometricDynamicsCorridor
 

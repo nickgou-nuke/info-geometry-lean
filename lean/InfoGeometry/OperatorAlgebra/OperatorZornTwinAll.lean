@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.AssociativeOperatorZornCartanPeirce
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ModularTwinZornRepresentation
 import InfoGeometry.OperatorAlgebra.KleinDiracKahlerOperatorZorn
 import InfoGeometry.OperatorAlgebra.GradeActionInterface

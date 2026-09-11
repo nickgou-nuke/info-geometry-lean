@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Block
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Volume.PfaffianGeneral
 import InfoGeometry.Volume.PfaffianPathBridge
 import InfoGeometry.Quantum.NeutralKreinMajoranaFrame

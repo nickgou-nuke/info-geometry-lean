@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 import InfoGeometry.Canonical.FiniteMatrixGibbsFunctional
 import InfoGeometry.Canonical.SouriauOnsagerBKMBridge

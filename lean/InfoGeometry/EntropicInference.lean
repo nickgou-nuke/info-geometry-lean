@@ -1,4 +1,5 @@
 import Architect
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Basic
 import InfoGeometry.KL.Finite
 import InfoGeometry.MaxEnt.IProjection

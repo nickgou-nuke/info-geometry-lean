@@ -19,6 +19,7 @@ No ethical claim is encoded.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CrossoverResidue
 import InfoGeometry.Meta.OwnerTarget
 

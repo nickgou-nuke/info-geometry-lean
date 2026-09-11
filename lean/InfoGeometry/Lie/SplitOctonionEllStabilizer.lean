@@ -7,6 +7,7 @@ automorphism-group identification with `G₂(2)`.
 -/
 
 import InfoGeometry.Lie.CanonicalZornDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 import InfoGeometry.Algebra.Zorn.SplitOctonionRindlerBoost
 

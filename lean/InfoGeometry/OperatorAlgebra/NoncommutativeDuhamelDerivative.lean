@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.NoncommutativePowerDerivative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 

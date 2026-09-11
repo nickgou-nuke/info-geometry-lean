@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Vandermonde
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.FieldTheory.Finite.Extension
 
 /-!

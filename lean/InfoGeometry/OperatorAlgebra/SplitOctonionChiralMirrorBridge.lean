@@ -8,6 +8,7 @@ chiral grading.
 -/
 
 import InfoGeometry.Algebra.Zorn.SplitOctonionRindlerBoost
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 
 noncomputable section

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometryCore.Basic
 import InfoGeometry.Physics.ElectronParafermionFlow
 import InfoGeometry.Algebra.PeirceLadderOperators

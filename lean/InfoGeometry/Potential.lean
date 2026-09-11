@@ -1,4 +1,5 @@
 import InfoGeometry.Potential.LogPotential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Potential.Thermo
 
 namespace InfoGeometry

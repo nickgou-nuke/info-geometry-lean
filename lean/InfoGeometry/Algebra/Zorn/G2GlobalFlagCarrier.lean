@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ParabolicGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Type-level carrier for the certified global incidence flags

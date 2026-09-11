@@ -1,4 +1,5 @@
 import Mathlib.Data.ZMod.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.Polynomial.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.IntervalCases

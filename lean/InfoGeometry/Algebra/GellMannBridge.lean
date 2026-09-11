@@ -8,6 +8,7 @@ vacuous propositions.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SpecialUnitary
 import InfoGeometry.Algebra.GellMannBasis
 import InfoGeometry.Algebra.StructureConstants

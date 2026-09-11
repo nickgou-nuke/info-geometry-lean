@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.BottPeriodicity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55SpinorChirality
 import InfoGeometry.Clifford.Cl55SpinBivectorImage
 

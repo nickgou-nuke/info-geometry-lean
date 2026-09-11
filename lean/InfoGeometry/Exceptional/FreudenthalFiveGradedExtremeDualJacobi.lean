@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalFiveGradedJacobiClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! The dual contact-sector homogeneous Jacobi cell. -/
 

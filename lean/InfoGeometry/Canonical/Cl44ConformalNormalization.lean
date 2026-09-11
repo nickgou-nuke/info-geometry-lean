@@ -1,4 +1,5 @@
 import Mathlib.Tactic.NormNum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
 import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Meta.OwnerTarget

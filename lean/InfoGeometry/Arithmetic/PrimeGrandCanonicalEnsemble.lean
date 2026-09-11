@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GrandCanonical.ResponseMatrix
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Meta.Architecture

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Algebra.Exponential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

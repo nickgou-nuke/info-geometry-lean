@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornCliffordRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Chiral Clifford Split Algebra

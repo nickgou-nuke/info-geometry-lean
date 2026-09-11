@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Thermodynamics.ChiralSimilarityWeightedSelfAdjointness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Physics.Thermodynamics
 

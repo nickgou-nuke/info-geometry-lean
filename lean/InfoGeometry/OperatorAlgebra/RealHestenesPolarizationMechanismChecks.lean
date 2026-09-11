@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.RealHestenesPolarizationMechanism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.OperatorAlgebra.RealHestenesPolarizationMechanism.Checks
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Inductive transport of SUSY superbrackets to a direct limit

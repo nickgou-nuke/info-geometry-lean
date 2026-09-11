@@ -1,7 +1,7 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SixStateSpectralBridge
 import InfoGeometry.Topology.AharonovBohmConcreteVortex
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Qutrit Fourier basis change

@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55TwoBoundarySelection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Orthogonal.O55NativePinGradeReadout
 
 /-! A native, type-correct two-boundary readout packet for the O(5,5) lane.

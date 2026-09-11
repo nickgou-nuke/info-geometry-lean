@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.ContDiff.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.FDeriv.Basic
 import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv

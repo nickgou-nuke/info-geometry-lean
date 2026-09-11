@@ -17,6 +17,7 @@ The resulting theorem is the intended CPT/noncompact branch:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.TomitaCartanDynamics
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 

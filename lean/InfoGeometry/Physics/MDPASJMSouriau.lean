@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Jean-Marie Souriau, MDPAS 1974: finite spin-particle algebra
@@ -24,7 +25,7 @@ namespace InfoGeometry
 namespace Physics
 namespace MDPASJMSouriau
 
-abbrev Vec4 := Fin 4 → ℚ
+abbrev Vec4 := InfoGeometry.Algebra.FiniteSpin.Vec4Q
 abbrev Tensor2 := Matrix (Fin 4) (Fin 4) ℚ
 
 def dot (u v : Vec4) : ℚ := ∑ i : Fin 4, u i * v i

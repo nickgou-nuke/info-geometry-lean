@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornVectorMatrixIsomorphism
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

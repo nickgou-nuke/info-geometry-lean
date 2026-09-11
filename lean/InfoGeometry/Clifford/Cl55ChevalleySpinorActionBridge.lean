@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.OfAssociative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Lie.ChevalleySpinorBlueprint
 
@@ -21,7 +22,7 @@ namespace InfoGeometry.Clifford.Cl55ChevalleySpinorActionBridge
 
 open InfoGeometry.Lie.ChevalleySpinor
 
-abbrev W5 := Fin 5 → ℝ
+abbrev W5 := InfoGeometry.Algebra.FiniteSpin.Vec5R
 abbrev SplitCarrier55 := SplitV ℝ W5
 abbrev SpinorCarrier55 := SpinorSpace ℝ W5
 abbrev CliffordCarrier55 := CliffordAlgebra (splitQ (R := ℝ) (W := W5))

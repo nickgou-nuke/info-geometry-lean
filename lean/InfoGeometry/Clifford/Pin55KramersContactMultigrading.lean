@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.FiveGradedKramersModule
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.KleinParityDeck
 import InfoGeometry.Exceptional.FreudenthalContactParityGrading
 import InfoGeometry.Exceptional.FreudenthalSymplecticContactGrading

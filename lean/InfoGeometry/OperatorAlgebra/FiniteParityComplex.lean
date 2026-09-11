@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FiniteParitySupertrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Quotient.Basic
 
 open Matrix

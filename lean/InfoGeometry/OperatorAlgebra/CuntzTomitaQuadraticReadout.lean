@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.PosDef
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.OperatorAlgebra.CuntzTomitaTakesaki
 

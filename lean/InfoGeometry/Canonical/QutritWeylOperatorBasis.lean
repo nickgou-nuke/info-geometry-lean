@@ -1,7 +1,7 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 import InfoGeometry.Topology.AharonovBohmConcreteVortex
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The canonical nine-word qutrit Weyl family

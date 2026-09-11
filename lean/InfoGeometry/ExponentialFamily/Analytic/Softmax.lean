@@ -1,4 +1,5 @@
 import InfoGeometry.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.ExponentialFamily.Analytic.LogSumExp
 import Mathlib.Probability.ProbabilityMassFunction.Constructions
 

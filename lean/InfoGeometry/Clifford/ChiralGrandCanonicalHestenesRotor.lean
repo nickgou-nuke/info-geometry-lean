@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQ11Projectors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Pi
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Logic.Equiv.Basic
 
 /-!

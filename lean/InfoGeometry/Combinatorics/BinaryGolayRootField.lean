@@ -1,4 +1,5 @@
 import Mathlib.FieldTheory.Finite.Extension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.Perm.Cycle.Type
 import Mathlib.Tactic.NormNum
 import InfoGeometry.Combinatorics.BinaryBCHMinimumDistance

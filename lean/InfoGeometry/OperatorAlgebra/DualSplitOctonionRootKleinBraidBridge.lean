@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.ZMod.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import InfoGeometry.OperatorAlgebra.DualSplitOctonionAlgebra
@@ -53,7 +54,7 @@ theorem fourth_root_grade_one_lands_even :
     z2PowerGrade 4 true = false := by
   rfl
 
-abbrev Mat2Z := Matrix (Fin 2) (Fin 2) ℤ
+abbrev Mat2Z := InfoGeometry.Algebra.FiniteSpin.Mat2Z
 
 /-- The finite identity matrix. -/
 def I2Z : Mat2Z := 1
@@ -76,7 +77,7 @@ theorem negI2Z_sq : negI2Z * negI2Z = I2Z := by
 
 /-! ## Tripotent and `Z₃` clock readouts -/
 
-abbrev Mat3Z := Matrix (Fin 3) (Fin 3) ℤ
+abbrev Mat3Z := InfoGeometry.Algebra.FiniteSpin.Mat3Z
 
 /-- Diagonal tripotent with entries `-1,0,1`. -/
 def tripotentZ3 : Mat3Z :=
@@ -108,7 +109,7 @@ theorem z3Rotate_cube (s : Z3Sector) :
 
 /-! ## Finite Klein monodromy block witness -/
 
-abbrev Mat8Z := Matrix (Fin 8) (Fin 8) ℤ
+abbrev Mat8Z := InfoGeometry.Algebra.FiniteSpin.Mat8Z
 
 /-- Central sign monodromy `-I₈`. -/
 def Mx : Mat8Z :=

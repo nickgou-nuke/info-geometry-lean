@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Z3GrassmannDifferentialCalculus
 import InfoGeometry.Canonical.FibonacciParafermionAtoms
 import InfoGeometry.Canonical.YangBaxterProof

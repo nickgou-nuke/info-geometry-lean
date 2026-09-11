@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Trace
 import InfoGeometry.Algebra.ZornMatrix
 import InfoGeometry.Canonical.SplitQuaternionConcrete

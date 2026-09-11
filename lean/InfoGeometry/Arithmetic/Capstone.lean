@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.BostConnesSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimonGasPartition
 import InfoGeometry.Arithmetic.UResRepresentations
 import InfoGeometry.Arithmetic.MoebiusWeylEuler

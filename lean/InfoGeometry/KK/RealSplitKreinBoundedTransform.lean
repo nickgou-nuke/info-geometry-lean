@@ -1,4 +1,5 @@
 import InfoGeometry.KK.RealSplitKreinUnboundedCycle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.KK.CompactOperatorBridge
 import InfoGeometry.KK.KasparovCycle
 

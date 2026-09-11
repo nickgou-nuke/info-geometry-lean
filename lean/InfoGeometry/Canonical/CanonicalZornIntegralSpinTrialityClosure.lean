@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IntegralZornII44Bridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CanonicalZornRealComplexSpinBaseChange
 
 /-!

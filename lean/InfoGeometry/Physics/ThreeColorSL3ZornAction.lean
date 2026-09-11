@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 import InfoGeometry.Physics.SplitOctonionBraidSU3
 import InfoGeometry.Physics.QCDNativeZornColorRepresentation

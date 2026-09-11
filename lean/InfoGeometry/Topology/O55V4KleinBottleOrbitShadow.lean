@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.O55V4KleinBottleFinite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

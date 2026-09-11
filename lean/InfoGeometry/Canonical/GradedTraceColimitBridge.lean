@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GradedTraceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CategoricalRecursiveClosureBridge
 
 /-!

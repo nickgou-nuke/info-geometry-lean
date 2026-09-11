@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativeModularHamiltonian
 import InfoGeometry.Canonical.StandardFormCore
 import InfoGeometry.Meta.Architecture

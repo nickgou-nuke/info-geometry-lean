@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Rat.Defs
 import Mathlib.Data.Rat.Lemmas
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -6,7 +7,7 @@ import Mathlib.Tactic
 
 namespace InfoGeometry.Geometry
 
-abbrev RatVec2 := Fin 2 → ℚ
+abbrev RatVec2 := InfoGeometry.Algebra.FiniteSpin.Vec2Q
 abbrev RatMat2 := Matrix (Fin 2) (Fin 2) ℚ
 
 /-- The hyperbolic Möbius matrix acting by `z ↦ 4z` on the affine chart. -/

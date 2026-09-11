@@ -1,4 +1,5 @@
 import InfoGeometry.Cartan.Involution
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.NeutralPhaseSpaceCore
 import InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge
 import InfoGeometry.Meta.Architecture

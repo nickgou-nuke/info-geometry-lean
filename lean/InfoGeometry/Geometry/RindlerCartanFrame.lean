@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.RindlerLapseCalculus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11Matrix
 import Mathlib
 

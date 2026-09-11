@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.TomitaTakesaki
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Dynamics.ModularThermalState
 import InfoGeometry.Canonical.BostConnesSymmetryBreaking
 

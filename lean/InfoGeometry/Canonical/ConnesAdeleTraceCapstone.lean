@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ConnesAdeleTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ConnesAdeleTraceCapstone
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55WittCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralRetainedWordFiveGradeClosure
 import InfoGeometry.OperatorAlgebra.GradeActionInterface
 

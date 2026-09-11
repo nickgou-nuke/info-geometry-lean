@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Real.Basic

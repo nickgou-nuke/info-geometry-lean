@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.MatrixTraceBimodulePairingNative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Sqrt
 
 /-!

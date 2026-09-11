@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AnalyticalIndexCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorialCentralCharge
 import InfoGeometry.KK.QuasilatticeIndexInvariance
 import InfoGeometry.Meta.Architecture

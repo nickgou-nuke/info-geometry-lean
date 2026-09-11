@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinInfiniteCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Algebra.Spectrum
 import Mathlib.Analysis.Normed.Operator.Basic
 

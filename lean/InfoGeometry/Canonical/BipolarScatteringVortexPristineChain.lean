@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarLoxodromicAndreevBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarTwoSheetCore
 import InfoGeometry.Canonical.BipolarTwoSheetCausalBulkBridge
 import InfoGeometry.Canonical.BipolarTwoSheetParabolicCausalBoundaryBridge

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Canonical.NoncommutativeModularSignum
 

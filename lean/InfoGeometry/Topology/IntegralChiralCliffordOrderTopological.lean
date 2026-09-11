@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IntegralChiralCliffordOrder
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topological readout of the integral chiral order

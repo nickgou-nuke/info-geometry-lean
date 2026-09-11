@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionStandardDerivationRootBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Standard-derivation basis boundary

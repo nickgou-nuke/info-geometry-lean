@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.YSystemIntegrability
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.YSystemIntegrabilityCapstone
 

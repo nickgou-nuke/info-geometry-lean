@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionThreeColorChiralRelations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornVectorMatrix
 
 namespace InfoGeometry.Canonical

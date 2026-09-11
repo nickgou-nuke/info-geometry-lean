@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2ZornDerivationRootRepresentation
 import InfoGeometry.Algebra.Zorn.G2NativeRootIndexAlignment
 import InfoGeometry.Lie.SplitOctonionAxialCartanErlangen

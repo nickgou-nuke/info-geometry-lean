@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Analytic.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.CauchyIntegral
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Geometry.BilingualAnalyticity

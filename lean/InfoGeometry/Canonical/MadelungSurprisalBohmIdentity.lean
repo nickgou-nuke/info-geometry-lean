@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MadelungScaleQuantum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bohm potential as a surprisal differential readout

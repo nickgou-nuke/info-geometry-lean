@@ -1,4 +1,5 @@
 import Mathlib.Data.Nat.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Int.Basic
 
 namespace InfoGeometry.Canonical

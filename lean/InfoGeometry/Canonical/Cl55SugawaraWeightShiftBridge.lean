@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55VirasoroWeightShiftBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SugawaraFiveGradingObstruction
 
 /-! Comparison of the native Sugawara and Clifford weight-shift mechanisms.

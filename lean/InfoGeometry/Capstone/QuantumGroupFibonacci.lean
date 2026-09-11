@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Coalgebra.HopfConvolution
 import InfoGeometry.Algebra.Quantum.QBinomial
 import InfoGeometry.Canonical.FibonacciParafermionAtoms

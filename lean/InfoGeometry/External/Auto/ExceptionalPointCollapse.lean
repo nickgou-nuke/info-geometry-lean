@@ -20,7 +20,7 @@ open Matrix Complex
 namespace InfoGeometry.GrandUnification.ExceptionalPointCollapse
 
 abbrev M2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
-abbrev C2 := Matrix (Fin 2) (Fin 1) ℂ
+abbrev C2 := InfoGeometry.Algebra.FiniteSpin.Mat2x1C
 
 /-- Nontrivial unipotent KAN shear / Drazin defect. -/
 def shearN (x : ℂ) : M2C := !![1, x; 0, 1]

@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.SupertraceBodyBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Grading
 
 /-!

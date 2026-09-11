@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.OfAssociative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Cartan.Involution
 import InfoGeometry.Clifford.TowerMatrix
 import InfoGeometry.Clifford.Decomposition

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Analysis.Normed.Operator.ContinuousLinearMap
 import InfoGeometry.Krein.DoubledSpace

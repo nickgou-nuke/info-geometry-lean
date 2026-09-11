@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealProjectionRankDyadicBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

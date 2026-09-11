@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AlgebraicStarEnvelope
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Unbundled.RingSeminorm
 
 /-!

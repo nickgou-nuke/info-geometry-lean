@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.TensorProduct.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.LinearAlgebra.Dual.Lemmas
 import Mathlib.Tactic

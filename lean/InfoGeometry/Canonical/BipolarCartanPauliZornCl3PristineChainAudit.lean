@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarCartanPauliZornCl3PristineChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transitive axiom inspection for the pristine finite representation chain

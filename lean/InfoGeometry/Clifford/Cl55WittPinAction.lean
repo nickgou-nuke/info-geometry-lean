@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittPinReflections
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native Pin twisted action on the `Cl(5,5)` Witt vector range

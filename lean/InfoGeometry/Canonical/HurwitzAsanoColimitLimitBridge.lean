@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.AbsMax
 import Mathlib.Analysis.Complex.LocallyUniformLimit
 import Mathlib.Analysis.Analytic.Basic

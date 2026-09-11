@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11FiniteTraceGNSReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Prequantum.GNSAction
 
 /-!

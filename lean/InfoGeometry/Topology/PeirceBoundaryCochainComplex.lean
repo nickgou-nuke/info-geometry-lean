@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.PeirceDifferentialForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.DiscreteDiracHodge
 import InfoGeometry.Canonical.DiscreteDiracHodgeChiralBridge
 

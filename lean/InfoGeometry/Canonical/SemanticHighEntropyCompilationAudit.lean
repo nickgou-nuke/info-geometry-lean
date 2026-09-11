@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SemanticHighEntropyCompilationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of SemanticHighEntropyCompilationBridge

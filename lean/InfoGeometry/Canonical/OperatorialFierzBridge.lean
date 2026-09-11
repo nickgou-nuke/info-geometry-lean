@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorialHessianBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FierzReadout
 
 open scoped InnerProductSpace

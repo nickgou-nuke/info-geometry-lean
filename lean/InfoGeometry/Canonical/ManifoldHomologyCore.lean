@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.FDeriv.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Data.Int.Basic
 import Mathlib.Data.Set.Countable

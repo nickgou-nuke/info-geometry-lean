@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentFeasibleSubspaceCompHausFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Joint continuity on a feasible symbolic-latent subspace

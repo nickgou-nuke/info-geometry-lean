@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealTomitaCore
 import InfoGeometry.Canonical.ModularSuperchargeClosure
 import InfoGeometry.Canonical.OperatorDictionary

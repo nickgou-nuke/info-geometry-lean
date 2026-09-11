@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SpectralInference
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.TopologicalEuler
 

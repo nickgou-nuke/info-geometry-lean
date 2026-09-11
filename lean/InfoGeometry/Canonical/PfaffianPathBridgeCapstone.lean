@@ -1,4 +1,5 @@
 import InfoGeometry.Volume.PfaffianPathBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.PfaffianPathBridgeCapstone
 

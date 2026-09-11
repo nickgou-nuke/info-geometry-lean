@@ -17,6 +17,7 @@ This is a bridge datum, not a global theorem about every modular conjugation.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.Meta.OwnerTarget
 

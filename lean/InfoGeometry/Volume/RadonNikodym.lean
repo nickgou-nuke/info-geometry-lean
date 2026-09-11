@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.LogGenerator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ProjectiveFoundation
 import InfoGeometry.Volume.LogPotential
 import InfoGeometry.Meta.Architecture

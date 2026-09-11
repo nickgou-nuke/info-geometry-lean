@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittProjectors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55RealSplitPinVolumeAnticommutation
 
 /-!

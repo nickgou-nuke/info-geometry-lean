@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.CuntzFibonacciBraidInclusion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.FibonacciGrothendieckRing
 import InfoGeometry.Algebra.GoldenMeanShift
 import Mathlib.Analysis.Complex.Basic

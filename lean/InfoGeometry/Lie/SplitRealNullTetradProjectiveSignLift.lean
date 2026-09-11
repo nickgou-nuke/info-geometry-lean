@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitRealNullTetradZornProjectiveBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Signed representatives above the projective tetrad rays

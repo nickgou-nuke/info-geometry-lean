@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Category.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.HasLimits
 import Mathlib.CategoryTheory.Filtered.Basic
 

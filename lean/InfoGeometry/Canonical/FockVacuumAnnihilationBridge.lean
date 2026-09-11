@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ExteriorContractionOperatorBridge
 import InfoGeometry.Canonical.SpinorMixedCARBridge
 import Mathlib.Tactic.NoncommRing

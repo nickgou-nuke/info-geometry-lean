@@ -1,4 +1,5 @@
 import InfoGeometry.Probability.AitchisonFinite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.FiniteGibbsFisherBridge
 import InfoGeometry.Analysis.LogOddsSimplexGeometry
 

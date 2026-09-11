@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittPinParity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittPinOrthogonalAction
 import InfoGeometry.Clifford.Cl55WittPinCoverBridge
 import InfoGeometry.Clifford.Cl55WittNegativeVectorPin

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauConformalKKTContext
 import InfoGeometry.Canonical.NoetherInference
 import InfoGeometry.Quantum.SplitTrialityKernel

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearAll
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearFiveGradeBdGSolovievAll
 
 /-!

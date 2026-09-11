@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Sqrt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Determinant
 import Mathlib.LinearAlgebra.Trace

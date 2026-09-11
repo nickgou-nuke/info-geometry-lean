@@ -1,4 +1,5 @@
 import InfoGeometry.Volume.ModularSurprisalDerivationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Modular surprisal generator readback

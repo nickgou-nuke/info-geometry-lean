@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ChiralCausalCone
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cl(1,1) atom to chiral CAR basis bridge

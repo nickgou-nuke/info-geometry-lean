@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.BerryKeating
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.RealProblem
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.ZetaSpectral
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.TraceFormula

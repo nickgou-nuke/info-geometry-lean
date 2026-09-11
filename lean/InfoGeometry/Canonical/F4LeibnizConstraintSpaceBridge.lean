@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.F4LeibnizResidualBridge
 import InfoGeometry.Canonical.H3ZornCoordinateBasisBridge
 

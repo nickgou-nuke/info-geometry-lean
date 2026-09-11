@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.OperatorValuedJonesProduct
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite operator-valued polarization equivalence

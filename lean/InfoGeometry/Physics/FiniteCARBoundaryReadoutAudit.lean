@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.FiniteCARBoundaryReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Transitive axiom inspection for the finite CAR boundary bridge. -/
 

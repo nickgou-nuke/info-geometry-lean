@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical Souriau Thermodynamics for Pauli Algebra (toy finite model)
@@ -16,10 +17,10 @@ open scoped BigOperators
 namespace CanonicalSouriauPauliThermodynamics
 
 /-- Pauli dual space in the su(2) lane: 3 real components. -/
-abbrev PauliDual : Type := Fin 3 → ℝ
+abbrev PauliDual : Type := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 /-- Full Pauli/paravector dual space: 4 real components `(s₀,s₁,s₂,s₃)`. -/
-abbrev PauliParavector : Type := Fin 4 → ℝ
+abbrev PauliParavector : Type := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
 /-- Canonical 3-component pairing `⟨β, J⟩ = ∑ β_i J_i`. -/
 def pauliPairing (β J : PauliDual) : ℝ :=

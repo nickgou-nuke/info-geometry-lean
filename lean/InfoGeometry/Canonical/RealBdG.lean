@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 set_option linter.unusedSimpArgs false
 set_option linter.unusedSectionVars false
 

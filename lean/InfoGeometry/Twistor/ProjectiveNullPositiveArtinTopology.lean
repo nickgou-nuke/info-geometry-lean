@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullPositiveArtinMonoid
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullConfigurationWordTopology
 
 /-!

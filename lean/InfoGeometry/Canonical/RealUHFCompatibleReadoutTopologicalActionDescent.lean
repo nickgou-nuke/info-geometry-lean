@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutTopologicalDescent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Continuous time slices of the normalized-trace descent

@@ -1,4 +1,5 @@
 import InfoGeometry.Core
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Legacy Claim Registry

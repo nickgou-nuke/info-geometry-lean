@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Data.ZMod.Basic
 import InfoGeometry.OperatorAlgebra.DualSplitOctonionRootKleinBraidBridge

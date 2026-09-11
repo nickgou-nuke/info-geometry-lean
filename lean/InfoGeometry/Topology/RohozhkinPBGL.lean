@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.DelaunayPureBraidRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Rohozhkin PB → GL boundary

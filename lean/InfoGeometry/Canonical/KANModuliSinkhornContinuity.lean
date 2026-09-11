@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KANModuliTopology
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.KANModuli
 

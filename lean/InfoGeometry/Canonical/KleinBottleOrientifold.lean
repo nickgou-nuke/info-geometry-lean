@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PrimeGasMaxEnt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.HestenesDirac
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Topology.V4RootSystem

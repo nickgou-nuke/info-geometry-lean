@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeModularCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 import InfoGeometry.Canonical.RelativePotentialCountBridge
 import InfoGeometry.Meta.Architecture

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.BaezG2AlternativeDerivations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Split-octonion ternary bracket from standard derivations

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.TwoFourOperatorVectorZorn
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Weyl soldering for the existing operator-valued four-vector carrier.
 The result is a matrix-valued coordinate map; no Lorentz representation or

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 import Mathlib.Algebra.Order.Field.Basic
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary

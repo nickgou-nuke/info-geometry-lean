@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DeterminantCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.LogGenerator
 import InfoGeometry.Volume.Base
 import InfoGeometry.Volume.LogPotential

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

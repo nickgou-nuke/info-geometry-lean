@@ -1,3 +1,4 @@
 import InfoGeometry.ParaKahler.ApolloniusCylinder
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.ParaKahler.RapidityAngleApollonius
 import InfoGeometry.ParaKahler.UnifiedPotential

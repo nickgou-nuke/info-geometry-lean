@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.SplitCliffordAlgebras
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Pin55Formal
 import InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition
 import InfoGeometry.Clifford.Cl55QuadraticSpinAction

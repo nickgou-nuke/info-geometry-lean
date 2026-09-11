@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Jordan.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 namespace InfoGeometry.Algebra.Jordan

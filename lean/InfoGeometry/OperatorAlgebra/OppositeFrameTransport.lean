@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.CPTCommutantSpinFrame
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Opposite-frame transport

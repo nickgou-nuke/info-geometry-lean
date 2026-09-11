@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularOperatorReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 import InfoGeometry.Algebra.ZornDerivationBridge
 

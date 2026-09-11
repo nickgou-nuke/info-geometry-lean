@@ -1,13 +1,15 @@
 import InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization
 
 noncomputable section
 set_option maxHeartbeats 800000
+
 namespace InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge
 open InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
 open InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization
 abbrev Derivation := SplitOctonionDerivationWittOrthogonalBridge.Derivation
-abbrev Mat10 := Matrix (Fin 10) (Fin 10) ℝ
+abbrev Mat10 := InfoGeometry.Algebra.FiniteSpin.Mat10R
 def derivationToSO55 (D : Derivation) : Mat10 := so44ToSO55 (canonicalDerivationFinMatrix D)
 theorem so44ToSO55_injective : Function.Injective so44ToSO55 := by
   intro M N h; ext i j

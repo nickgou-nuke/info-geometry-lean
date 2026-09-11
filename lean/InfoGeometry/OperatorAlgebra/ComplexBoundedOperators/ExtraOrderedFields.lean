@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Order.Field.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Order.Field.Power
 import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.Basic

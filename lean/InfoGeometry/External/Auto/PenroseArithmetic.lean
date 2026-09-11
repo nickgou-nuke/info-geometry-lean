@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.NumberField.Basic
 import Mathlib.Topology.MetricSpace.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic

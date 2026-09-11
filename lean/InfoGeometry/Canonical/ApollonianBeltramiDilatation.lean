@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Trigonometric
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

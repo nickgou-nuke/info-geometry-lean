@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.TripotentAdjointDerivation
 import InfoGeometry.Physics.Algebra.TripotentPeirceProjectors
 

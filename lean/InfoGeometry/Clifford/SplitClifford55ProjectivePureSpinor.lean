@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Projectivization.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Dual.Lemmas
 import Mathlib.LinearAlgebra.BilinearForm.Orthogonal
 import InfoGeometry.Clifford.SplitClifford55ExteriorSpinor

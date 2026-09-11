@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11TensorInductiveLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CliffordCARAlgebraicTopologicalComparison
 
 /-!

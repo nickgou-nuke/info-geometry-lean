@@ -1,2 +1,3 @@
 import InfoGeometry.Canonical.MasterFiniteBridgeLedger
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GrandSynthesis

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Matrix-unit coefficient sandwich on the Bernoulli boundary

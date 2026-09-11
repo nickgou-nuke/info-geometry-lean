@@ -1,4 +1,5 @@
 import InfoGeometry.Routing.BirkhoffVonNeumann
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AttentionPolarizedGibbsBridge
 import InfoGeometry.Canonical.SinkhornFoundation
 

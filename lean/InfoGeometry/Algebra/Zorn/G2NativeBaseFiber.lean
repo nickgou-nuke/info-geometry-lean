@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge
 import InfoGeometry.Algebra.Zorn.G2NativePointFoundation
 

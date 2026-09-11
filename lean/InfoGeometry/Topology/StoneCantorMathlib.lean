@@ -1,4 +1,5 @@
 import Mathlib.Order.Category.BoolAlg
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.CompHaus.Basic
 import Mathlib.Order.Filter.Ultrafilter.Basic
 import Mathlib.Data.Matrix.Basic

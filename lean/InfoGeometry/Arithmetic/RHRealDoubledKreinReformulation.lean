@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.RHQuantumStabilityBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.HestenesComplexTranslation
 import InfoGeometry.Krein.HestenesModularKMSBridge

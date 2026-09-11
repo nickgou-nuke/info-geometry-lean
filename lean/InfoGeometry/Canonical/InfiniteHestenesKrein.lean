@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.InfiniteInductiveSUSY
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.InfiniteHestenesKrein

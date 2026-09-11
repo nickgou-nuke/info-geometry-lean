@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Concrete Bruhat-cell invariance under left/right PC factors

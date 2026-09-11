@@ -12,6 +12,7 @@ This module bridges modular sign/CPT data to phase-real spectral geometry:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ModularSignCPT
 import InfoGeometry.OperatorAlgebra.RealPhaseSpectralTriple
 import InfoGeometry.OperatorAlgebra.RenormalizedTrace

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalNormalOrdering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.AffineKacMoody
 import InfoGeometry.External.Virasoro.Sugawara
 import Mathlib.Tactic

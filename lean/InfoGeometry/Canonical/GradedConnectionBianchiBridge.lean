@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge
 import InfoGeometry.Canonical.ExteriorGradedDerivationBridge
 import InfoGeometry.Canonical.CurvatureFromConnectionBianchiBridge

@@ -12,6 +12,7 @@ diagonal phase-centralizer subgroup.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.FiniteJonesModel
 
 noncomputable section

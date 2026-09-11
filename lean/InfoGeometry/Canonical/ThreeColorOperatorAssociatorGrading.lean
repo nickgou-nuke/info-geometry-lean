@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThreeColorOperatorZ3Grading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Associator grading of the native three-colour operator carrier

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.PrimeGrandCanonical
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ItakuraSaitoPrimes
 import InfoGeometry.Physics.TopologicalMTheoryGromovWitten
 import InfoGeometry.Physics.ChiralityPseudoscalarCuntz

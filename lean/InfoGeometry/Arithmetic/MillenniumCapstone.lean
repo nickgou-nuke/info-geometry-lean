@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.RiemannHypothesis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.RHEquivalence
 import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Arithmetic.MoebiusWeylEuler

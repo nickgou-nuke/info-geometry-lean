@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11TensorTower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Complexification of the concrete real Cl(1,1) matrix stages

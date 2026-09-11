@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealComplexRotor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

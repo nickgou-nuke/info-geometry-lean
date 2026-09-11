@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinCentralChargeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CentralChargeAnomaly
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
 import InfoGeometry.OperatorAlgebra.FiveGradedDefectAbsorption

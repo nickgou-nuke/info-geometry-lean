@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.JacobianBregmanBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.Thermo
 

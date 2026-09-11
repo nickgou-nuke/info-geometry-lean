@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitQuaternionMatrices
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ProofDAGRepresentationBridge
 import InfoGeometry.Geometry.PenroseKleinTiling
 import InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge

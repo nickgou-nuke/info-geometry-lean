@@ -1,4 +1,5 @@
 import Architect
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
 import Mathlib.Topology.Instances.Matrix

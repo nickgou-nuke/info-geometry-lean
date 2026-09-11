@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DiscreteRationalHodgeConjugation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

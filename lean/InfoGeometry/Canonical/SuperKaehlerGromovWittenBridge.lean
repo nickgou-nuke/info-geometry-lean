@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.SuperKaehlerGromovWittenBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical Super-Kähler / Gromov–Witten bridge entry point

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.BipolarGENERICThreeCoordinateModel
 import Mathlib
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Nuclear.ApollonianBipolarField
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.QuadraticResponseSimplex
 import InfoGeometry.Probability.BinaryAitchisonMoments
 import InfoGeometry.Modular.FiniteSimplexModularTime

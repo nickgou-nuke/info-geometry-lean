@@ -14,6 +14,7 @@ surface that is already constructive:
 -/
 
 import InfoGeometry.Geometry.BilingualAnalyticity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Dynamics.ModularThermalState
 
 noncomputable section

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 
@@ -6,8 +7,8 @@ namespace SarsSU5Cl55Supertrace
 
 open Matrix
 
-abbrev M16R := Matrix (Fin 16) (Fin 16) ℝ
-abbrev M32SplitR := Matrix (Fin 2) (Fin 2) M16R
+abbrev M16R := InfoGeometry.Algebra.FiniteSpin.Mat16R
+abbrev M32SplitR := InfoGeometry.Algebra.FiniteSpin.Mat32SplitR
 
 def Gamma32 : M32SplitR := !![(1 : M16R), 0; 0, -(1 : M16R)]
 

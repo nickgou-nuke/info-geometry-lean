@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitG2HodgeWedgeCharacterization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

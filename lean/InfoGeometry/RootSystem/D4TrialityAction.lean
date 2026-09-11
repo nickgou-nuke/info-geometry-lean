@@ -1,4 +1,5 @@
 import InfoGeometry.RootSystem.D4DualTriality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Explicit permutation action on the three nonzero `D₄` discriminant classes

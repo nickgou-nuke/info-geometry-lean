@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ApollonianDeRhamFreudenthalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.Canonical.ApollonianDeRhamFreudenthalBridge
 open InfoGeometry.Canonical.ApollonianDeRhamFreudenthalBridge.CylinderForms

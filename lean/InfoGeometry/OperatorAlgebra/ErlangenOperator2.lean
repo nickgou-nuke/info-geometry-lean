@@ -24,6 +24,7 @@ later consume.
 -/
 
 import InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.VerifiedCasimir
 import InfoGeometry.OperatorAlgebra.CasimirInvariance
 import InfoGeometry.OperatorAlgebra.SymmetryInvariants

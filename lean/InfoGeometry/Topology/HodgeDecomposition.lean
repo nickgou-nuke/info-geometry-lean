@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.DiscreteDiracHodgeChiral
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native finite Hodge decomposition

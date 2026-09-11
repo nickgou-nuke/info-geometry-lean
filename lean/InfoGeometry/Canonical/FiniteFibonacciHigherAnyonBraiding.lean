@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteFibonacciElectronIndependence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.FiniteFibonacciHigherAnyonBraiding

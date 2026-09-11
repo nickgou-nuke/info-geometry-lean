@@ -1,4 +1,5 @@
 import Mathlib.Algebra.FreeAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
 import Mathlib.Algebra.RingQuot
 import Mathlib.RingTheory.Adjoin.Basic

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GradedCliffordPeirceReconstruction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Execute these commands; their presence alone is not an axiom audit. -/
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.O55BottAnomalyClosure
 

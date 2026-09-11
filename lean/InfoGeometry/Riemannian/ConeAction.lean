@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Action.Defs
 import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
 import InfoGeometry.Clifford.HestenesLorentzJordanCone

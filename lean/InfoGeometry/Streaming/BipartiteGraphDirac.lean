@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DiscreteDiracHodgeChiral
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A concrete finite graph/cochain realization of the existing Dirac-Hodge algebra

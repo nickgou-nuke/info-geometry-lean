@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.NaryTreeBoundaryQuotientHomeomorphAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.CompHaus.Basic
 
 /-!

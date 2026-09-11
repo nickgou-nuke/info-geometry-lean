@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearFiveGradeSolovievCommonCompression
 
 /-! Canonical projected-Hamiltonian interface for the common CAR--CCR carrier. -/

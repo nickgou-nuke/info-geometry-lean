@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentIndexedObservationRangeTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Functorial indexed symbolic-latent observation ranges

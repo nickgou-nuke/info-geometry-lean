@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native eta--zeta identity on the absolutely convergent half-plane

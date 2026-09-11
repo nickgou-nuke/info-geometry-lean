@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteWDVVSystemTopologicalReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GromovWittenPrepotentialTopologicalReadout
 
 namespace InfoGeometry.Canonical

@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.ModularKLDivergence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical Modular KL scale/shape wrapper (constructive)

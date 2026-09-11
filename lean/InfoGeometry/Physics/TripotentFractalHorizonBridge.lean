@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Physics.CuntzFractalHoppingAnyons
 import InfoGeometry.Physics.Algebra.TripotentInvariantCarrierBridge
@@ -21,7 +22,7 @@ namespace InfoGeometry.Physics.TripotentFractalHorizonBridge
 open InfoGeometry.Physics
 open InfoGeometry.Physics.Algebra
 
-abbrev Carrier := Fin 4 → ℝ
+abbrev Carrier := InfoGeometry.Algebra.FiniteSpin.Vec4R
 abbrev Op := Module.End ℝ Carrier
 
 def horizonTripotentMatrix : Matrix (Fin 4) (Fin 4) ℝ :=

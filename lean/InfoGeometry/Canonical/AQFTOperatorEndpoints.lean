@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AQFTReadiness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KMSSinkhornWeightedTransport
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Canonical.BogoliubovFockSuper

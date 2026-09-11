@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Vertex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Mode Iterate Formula from the Borcherds Identity

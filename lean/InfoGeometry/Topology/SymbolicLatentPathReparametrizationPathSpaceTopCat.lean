@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentPathReparametrizationComposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentPathEvaluationTopCat
 import Mathlib.Topology.Category.TopCat.Basic
 

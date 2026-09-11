@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Algebra.Subalgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 

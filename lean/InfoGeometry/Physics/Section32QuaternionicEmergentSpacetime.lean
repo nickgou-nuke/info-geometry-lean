@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Section31UnifiedMatrixDynamics
 
 /-!

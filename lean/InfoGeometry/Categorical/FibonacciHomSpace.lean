@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Category.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Categorical.FibonacciFusionCategoryData

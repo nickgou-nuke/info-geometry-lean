@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Ring.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.MetricSpace.Basic
 import Mathlib.Topology.Algebra.Star
 

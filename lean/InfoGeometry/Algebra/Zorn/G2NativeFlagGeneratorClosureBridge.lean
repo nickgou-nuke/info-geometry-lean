@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeFlagMatrixReadback
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native containment of the direct flag-generator closure

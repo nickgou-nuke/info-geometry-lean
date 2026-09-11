@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovClosedForms
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.SplitQuadraticSheets
 import Mathlib.Analysis.Normed.Algebra.Exponential
 import Mathlib.Analysis.Calculus.FDeriv.Analytic

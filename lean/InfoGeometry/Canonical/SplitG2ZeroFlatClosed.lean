@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitG2GaugeHodgeCurvatureBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

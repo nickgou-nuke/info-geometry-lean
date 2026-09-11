@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Exact finite factorization of the Boolean-occupation Gibbs sum. -/
 

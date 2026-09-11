@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open TensorProduct
 open scoped TensorProduct DirectSum

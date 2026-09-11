@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Lp.ProdLp
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Module

@@ -1,6 +1,6 @@
 import InfoGeometry.Algebra.ZornMatrix
-import InfoGeometry.Algebra.ZornMatrixRealModule
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Algebra.ZornMatrixRealModule
 import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 import Mathlib.LinearAlgebra.Dimension.Constructions

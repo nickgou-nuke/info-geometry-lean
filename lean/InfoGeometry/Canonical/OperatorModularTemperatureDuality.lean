@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Volume.ConnesCocycle
 import InfoGeometry.Canonical.OperatorFenchelRegularCone
 import InfoGeometry.Meta.Architecture

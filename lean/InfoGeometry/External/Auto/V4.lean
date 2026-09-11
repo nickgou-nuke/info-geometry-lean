@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 theorem my_add_comm (a b : ℕ) : a + b = b + a := by
   exact Nat.add_comm a b

@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.PenroseIncidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
 import InfoGeometry.Canonical.FiniteTwistorCCRGeneratingFunction
 import InfoGeometry.Canonical.FiniteHeisenbergGroup
@@ -179,7 +180,7 @@ theorem ambitwistorHeisenberg_center_commutes {n : ℕ} (c : ZMod n)
       x := by
   exact InfoGeometry.Canonical.FiniteHeisenbergCore.finiteHeisenberg_center_commutes c x
 
-abbrev AmbitwistorVector := Fin 4 → ℂ
+abbrev AmbitwistorVector := InfoGeometry.Algebra.FiniteSpin.Vec4C
 
 def ambitwistorRankOne (Z W : AmbitwistorVector) : AmbitwistorVector →ₗ[ℂ] AmbitwistorVector where
   toFun x := (∑ j : Fin 4, W j * x j) • Z

@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.ProjectiveNullBoundaryBraidFrameBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ArtinBraidS3Quotient
 import Mathlib.GroupTheory.PresentedGroup
 

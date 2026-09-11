@@ -1,4 +1,5 @@
 import Architect
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GrandCanonical.Core
 import Mathlib.Algebra.Module.Basic
 

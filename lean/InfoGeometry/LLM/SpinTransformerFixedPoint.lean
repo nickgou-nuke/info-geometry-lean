@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.Normed.Group.Basic

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TimeReversalKramers
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KramersPhaseAxisReduction
 import InfoGeometry.Meta.Architecture
 

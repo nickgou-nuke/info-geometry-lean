@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AlbertPeirceCoordinateProjection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionTwoPlusSixProjection
 import InfoGeometry.Canonical.GrassmannAlbertBodySoulBridge
 

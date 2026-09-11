@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.GroupAction.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Order.Filter.Tendsto
 import Mathlib.Topology.Basic
 import InfoGeometry.Algebraic.RealModularReadout

@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ChiralParityCharge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ReferenceSectorGaugeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularTwoStateCorrelation
 import InfoGeometry.Canonical.VortexAnomalyLink
 

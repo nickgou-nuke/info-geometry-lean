@@ -1,4 +1,5 @@
 import InfoGeometry.Spectral.Algebra.IteratedPageStabilization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Explicit convergence contract

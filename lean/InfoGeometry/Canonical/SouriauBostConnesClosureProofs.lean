@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Canonical.ConcreteHilbertCommutation
 import InfoGeometry.Canonical.CayleyBregmanBridge

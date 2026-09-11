@@ -22,6 +22,7 @@ to `SusceptibilityHessian.lean`.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.JonesCalibration
 
 noncomputable section

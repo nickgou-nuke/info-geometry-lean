@@ -1,4 +1,5 @@
 import InfoGeometry.Causal.Cones
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Causal.MirrorAlignment
 import InfoGeometry.Causal.ProofCone
 import InfoGeometry.Causal.ProofDAGRepresentation

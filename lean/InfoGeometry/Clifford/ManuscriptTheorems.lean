@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl44Witt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.FibonacciCl55Carrier
 import InfoGeometry.Clifford.ConformalLift55
 import InfoGeometry.Clifford.LogCftMonodromy

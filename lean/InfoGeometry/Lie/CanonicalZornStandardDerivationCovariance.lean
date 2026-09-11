@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionStandardDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Covariance of canonical Zorn standard derivations

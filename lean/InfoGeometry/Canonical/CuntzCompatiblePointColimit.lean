@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredQCCRCompatiblePointColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CARCCRFockCuntzParameterTopologicalReadout
 
 /-!

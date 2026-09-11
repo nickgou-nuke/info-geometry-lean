@@ -15,6 +15,7 @@ added in later calibration layers.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.FiniteJonesModel
 
 noncomputable section

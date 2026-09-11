@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzTowerGeneratorActionTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredStarAlgebraTopologicalColimit
 
 /-!

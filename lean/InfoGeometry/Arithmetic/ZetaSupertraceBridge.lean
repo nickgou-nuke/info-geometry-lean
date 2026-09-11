@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeBosonFermionGas
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeMajoranaPfaffian
 import Mathlib.Analysis.Analytic.Basic
 import Mathlib.Order.Filter.Basic

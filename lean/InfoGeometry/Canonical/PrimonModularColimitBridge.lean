@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AlgebraicKMSStateColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixTraceModularInvariance
 
 /-!

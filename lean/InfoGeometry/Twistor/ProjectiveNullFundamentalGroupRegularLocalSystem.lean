@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullConfigurationLocalSystemMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullFundamentalGroupRegularMonodromy
 import Mathlib.LinearAlgebra.Finsupp.LSum
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCARCurrentSource
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 

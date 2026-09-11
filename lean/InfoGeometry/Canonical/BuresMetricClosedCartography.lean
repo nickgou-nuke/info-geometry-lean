@@ -1,1 +1,2 @@
 import InfoGeometry.External.Auto.BuresMetricClosedCartography
+import InfoGeometry.Algebra.FiniteSpinAlgebra

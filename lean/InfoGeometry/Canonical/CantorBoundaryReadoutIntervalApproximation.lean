@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBoundaryDyadicCover
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryReadoutTopCat
 import InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
 import Mathlib.Topology.Instances.Real.Lemmas

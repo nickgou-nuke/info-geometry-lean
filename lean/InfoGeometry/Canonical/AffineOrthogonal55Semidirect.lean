@@ -1,4 +1,5 @@
 import Mathlib.GroupTheory.SemidirectProduct
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OrthogonalGroup55
 
 open scoped Matrix

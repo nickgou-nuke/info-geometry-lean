@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCGenerators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
 
 namespace InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup

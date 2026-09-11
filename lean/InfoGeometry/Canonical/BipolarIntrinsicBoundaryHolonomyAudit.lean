@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BipolarIntrinsicBoundaryHolonomyPristineChain
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarDeckPathClass
 
 /-!

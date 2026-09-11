@@ -6,6 +6,7 @@ The canonical `Cl(1,1)` quadratic algebra is represented concretely by the
 split-quaternion matrix model from `Cl11SplitQuaternionMobiusBridge`.
 -/
 import InfoGeometry.Canonical.Cl11SplitQuaternionMobiusBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitQ11PhaseFlip
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 

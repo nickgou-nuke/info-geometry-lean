@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PowerVarianceCumulants
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exact third-order cumulant boundary

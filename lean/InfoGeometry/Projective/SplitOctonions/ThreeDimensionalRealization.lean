@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitOctonions.BoundaryPacket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

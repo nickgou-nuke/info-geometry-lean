@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Isometric dilation and the induced Krein involution

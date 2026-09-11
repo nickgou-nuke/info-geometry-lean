@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CognitiveArchetype
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CognitiveLineage
 import InfoGeometry.Canonical.CognitiveShadow
 

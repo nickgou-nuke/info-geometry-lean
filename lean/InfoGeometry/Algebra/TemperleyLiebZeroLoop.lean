@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.GL11LocalGenerators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.LogarithmicJordanPair
 
 /-!

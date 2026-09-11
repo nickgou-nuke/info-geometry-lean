@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativePotentialCountBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
 import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
 import InfoGeometry.Canonical.OnsagerReciprocity

@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import InfoGeometry.Physics.PenroseQuantizedTwistorSplitOctonion
 import InfoGeometry.Krein.DoubledSpace
@@ -21,9 +22,9 @@ namespace InfoGeometry.Physics.PenroseTwistor
 open InfoGeometry.Krein
 open InfoGeometry.Lie.SplitOctonionPeirceExterior3CoordinateBridge
 
-abbrev PenroseRealCarrier := Fin 4 → ℂ
-abbrev RealSheet := Fin 4 → ℝ
-abbrev PenrosePeirceCarrier := Fin 8 → ℝ
+abbrev PenroseRealCarrier := InfoGeometry.Algebra.FiniteSpin.Vec4C
+abbrev RealSheet := InfoGeometry.Algebra.FiniteSpin.Vec4R
+abbrev PenrosePeirceCarrier := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 def realBiTwistor (u : PenroseRealCarrier) : BiTwistor where
   up := u

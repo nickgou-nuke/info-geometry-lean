@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeCyclotomicAmbientTower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Directed-system maps for the six-prime cyclotomic field tower

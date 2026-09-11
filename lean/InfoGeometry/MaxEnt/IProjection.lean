@@ -1,4 +1,5 @@
 import InfoGeometry.MaxEnt.Finite
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Measure.DiscreteRN
 import Mathlib.InformationTheory.KullbackLeibler.Basic
 import Mathlib.Probability.ProbabilityMassFunction.Integrals

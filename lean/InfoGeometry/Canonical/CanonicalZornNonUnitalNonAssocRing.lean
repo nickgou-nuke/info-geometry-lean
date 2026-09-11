@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornSpinor
 
 /-! Native non-unital non-associative ring laws for the canonical Zorn carrier. -/

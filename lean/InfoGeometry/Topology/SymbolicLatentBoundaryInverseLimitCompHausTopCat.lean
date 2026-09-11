@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentBoundaryInverseLimitCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # `TopCat` readout of the compact boundary inverse-limit comparison

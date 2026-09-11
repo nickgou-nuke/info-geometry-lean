@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauDiracHodgeCoupling
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.HilbertPolyaBridge
 import InfoGeometry.Arithmetic.CantorDiracOperator
 import InfoGeometry.Meta.Architecture

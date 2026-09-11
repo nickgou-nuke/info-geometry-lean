@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Canonical.Cl55WittCAR
 import InfoGeometry.Canonical.SplitOctonionDAGHodgeIntertwinerBridge
@@ -119,10 +120,10 @@ theorem split_exceptional_dimension_chain :
     dimSO8LieAlgebra]
 
 /-- 8-dimensional split-octonion / `W_{4,4}` carrier. -/
-abbrev Carrier8 := Fin 8 → ℝ
+abbrev Carrier8 := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 /-- 10-dimensional `W_{5,5}` carrier = `W_{4,4} ⊕ H`. -/
-abbrev Carrier10 := Fin 10 → ℝ
+abbrev Carrier10 := InfoGeometry.Algebra.FiniteSpin.Vec10R
 
 /-- Canonical embedding `ι_{4,5} : W_{4,4} ↪ W_{5,5}`. -/
 def embed4to5 (x : Carrier8) : Carrier10 :=

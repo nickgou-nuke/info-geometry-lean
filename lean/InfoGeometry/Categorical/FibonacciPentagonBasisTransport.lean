@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciPentagonPathComposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Vertex-basis transport for finite Fibonacci pentagon paths

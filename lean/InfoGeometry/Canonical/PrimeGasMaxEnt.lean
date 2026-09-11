@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.JaynesRNMaxEnt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MaxEnt.Core
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.BostConnes.BostConnesParity

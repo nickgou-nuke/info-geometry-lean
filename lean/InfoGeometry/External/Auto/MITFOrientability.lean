@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Eigenspace.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralSuperPoincareSouriauBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.TwistorSpace
 import InfoGeometry.OperatorAlgebra.SuperchargeNilpotence
 import InfoGeometry.OperatorAlgebra.CARFermionParity

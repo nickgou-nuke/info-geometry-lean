@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11BitWordCuntzCantorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # `Cl(1,1)` colimit CAR readout and the chiral-cone projectors

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Monoidal.Braided.Basic
 open CategoryTheory
 open CategoryTheory.MonoidalCategory

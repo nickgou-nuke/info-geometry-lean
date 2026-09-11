@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SpectroscopicGaugeKMSBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.List.Basic

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NavierStokesBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Quantum.RealMajorana

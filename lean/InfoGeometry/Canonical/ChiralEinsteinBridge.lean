@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralAnomaly
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RicciMongeAmpere
 
 namespace InfoGeometry.Canonical.ChiralEinsteinBridge

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.RealDeriv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 import InfoGeometry.Arithmetic.BostConnesNativeZetaPartition
 

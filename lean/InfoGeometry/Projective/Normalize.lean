@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.Bridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Projective.Normalize

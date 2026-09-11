@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55ContactGeneratorLabels
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Crosscap covariance on the common CAR--CCR representation

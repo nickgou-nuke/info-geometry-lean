@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzTensorToeplitzThreeBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ToeplitzCuntzThreeArtinBraidBridge
 
 /-!

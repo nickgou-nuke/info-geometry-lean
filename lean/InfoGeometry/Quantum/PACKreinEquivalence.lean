@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.SplitOctonionGlobalWittNorm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.SplitOctonionExteriorFrameBridge
 import InfoGeometry.Quantum.DualFlatKreinGraph
 

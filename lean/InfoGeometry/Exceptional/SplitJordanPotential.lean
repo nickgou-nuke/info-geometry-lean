@@ -5,6 +5,7 @@ Cubic norm N_J and Φ_J pseudo-barrier.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

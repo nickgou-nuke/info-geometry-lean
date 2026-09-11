@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.SusceptibilityHessian
 import InfoGeometry.Meta.Architecture
 

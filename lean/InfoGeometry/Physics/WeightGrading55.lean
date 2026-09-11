@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.OrbitClassification55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

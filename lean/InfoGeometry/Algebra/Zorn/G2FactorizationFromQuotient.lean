@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2FlagCellQuotientWitness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative
 import InfoGeometry.Algebra.Zorn.G2FlagWordCertificateEval
 

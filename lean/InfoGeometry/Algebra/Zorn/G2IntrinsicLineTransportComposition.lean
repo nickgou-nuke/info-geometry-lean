@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2IntrinsicLineFiberTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Composition readback for intrinsic line transport

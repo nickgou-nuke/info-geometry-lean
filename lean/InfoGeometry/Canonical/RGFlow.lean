@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.HessianGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.FDeriv.Basic
 import Mathlib.Topology.MetricSpace.Contracting
 

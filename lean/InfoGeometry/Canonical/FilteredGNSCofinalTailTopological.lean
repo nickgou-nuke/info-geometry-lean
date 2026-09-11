@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSCofinalTail
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredGNSHilbertColimitTopology
 import InfoGeometry.Canonical.FilteredGNSCofinalTailTopCatEquivalence
 import InfoGeometry.Canonical.FilteredGNSGlobalStageRepresentationTransport

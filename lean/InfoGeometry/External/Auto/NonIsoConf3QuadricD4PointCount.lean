@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.NonIsoConf3QuadricD4Model
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite-field point-count fingerprint for the D=4 non-isotropic model

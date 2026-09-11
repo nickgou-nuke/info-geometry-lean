@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.Metriplectic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.G2TwistedBraiding
 import InfoGeometry.Algebra.ColeFuryQuadrants
 

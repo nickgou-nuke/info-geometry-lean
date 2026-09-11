@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55ContactLie
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Native contact grading of the split orthogonal endomorphism lane. -/
 

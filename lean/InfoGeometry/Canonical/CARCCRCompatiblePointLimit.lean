@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CARCompatiblePointColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CCRCompatiblePointColimit
 import InfoGeometry.Canonical.FilteredQCCRParameterTopologicalLimit
 

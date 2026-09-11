@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.HoradamIonBinetSlice
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Horadam `2^k`-ion Catalan/Cassini Binet slice

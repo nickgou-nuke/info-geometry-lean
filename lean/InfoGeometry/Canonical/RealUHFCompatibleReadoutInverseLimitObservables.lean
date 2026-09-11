@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitDynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Observable evaluations on the categorical inverse limit

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.IBCanonical
 import InfoGeometry.Canonical.IBMeasure
 import InfoGeometry.Canonical.IBGaugeBridge

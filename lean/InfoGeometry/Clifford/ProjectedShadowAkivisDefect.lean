@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ChiralOperatorSymbolProjection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Akivis identity for a projected associative shadow

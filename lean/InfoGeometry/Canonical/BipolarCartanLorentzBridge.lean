@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BipolarCrossRatioLog
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BipolarLogSL2
 import InfoGeometry.Canonical.MatrixStageLorentzKANSoldering
 import InfoGeometry.Projective.ApolloniusNatural

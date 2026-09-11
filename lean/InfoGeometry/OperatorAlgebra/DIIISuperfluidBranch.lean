@@ -18,6 +18,7 @@ or CPT/BdG mirror, and `chi` is the induced chiral grading.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 
 noncomputable section

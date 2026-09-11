@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientRangeFixedPointGraphCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Projections of compact fixed-point graphs

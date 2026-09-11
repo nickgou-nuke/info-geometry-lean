@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.BregmanAnalyticBound
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebraic.MatrixAutomorphyFactor
 import InfoGeometry.OperatorAlgebra.ModularSignCPT
 import DAG.AffineProjectiveClosure

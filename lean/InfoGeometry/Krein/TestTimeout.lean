@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.Metric
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 open InfoGeometry.Krein
 open KreinSpace
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]

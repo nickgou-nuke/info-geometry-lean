@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Krein.DoubledSpaceNambuSUSY
 

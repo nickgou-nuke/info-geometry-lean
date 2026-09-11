@@ -1,4 +1,5 @@
 import InfoGeometry.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.Derivatives
 import InfoGeometry.Core.DerivativesSmoke
 import InfoGeometry.Core.Entropy

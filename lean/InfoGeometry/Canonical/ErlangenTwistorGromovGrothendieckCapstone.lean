@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ErlangenTwistorGromovGrothendieckBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ErlangenTwistorGromovGrothendieckCapstone
 

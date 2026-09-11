@@ -1,4 +1,5 @@
 import InfoGeometry.Singular.MoorePenrose
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Singular.CartanWiring
 import InfoGeometry.Singular.Drazin
 import InfoGeometry.Singular.DrazinGreen

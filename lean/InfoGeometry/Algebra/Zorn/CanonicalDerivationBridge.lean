@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.KingdonSplitOctonion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 import Mathlib.Algebra.Lie.OfAssociative

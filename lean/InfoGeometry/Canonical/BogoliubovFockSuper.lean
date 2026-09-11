@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.Fock
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.RealMajorana
 import InfoGeometry.Quantum.RealMajoranaCategory
 import InfoGeometry.Canonical.RicciMongeAmpere

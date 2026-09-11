@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2RootSubgroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoOuterGenerators
 import InfoGeometry.Algebra.Zorn.G2TwoExplicitGenerators
 import InfoGeometry.Algebra.Zorn.G2RootAutShortOneMatrix

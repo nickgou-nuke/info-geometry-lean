@@ -1,4 +1,5 @@
 import InfoGeometry.Volume.ConnesTomitaKreinDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Volume.ConnesTomitaKreinBridge

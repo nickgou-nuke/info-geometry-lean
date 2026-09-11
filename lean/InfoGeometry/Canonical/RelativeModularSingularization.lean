@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeModularOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Singular
 import InfoGeometry.Meta.Architecture
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose

@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Canonical.CanonicalZornAnalytic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! The differential of one multiplicativity equation on the ambient
 continuous endomorphism space. -/

@@ -1,4 +1,5 @@
 import InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Multigraded two-boundary selection rules

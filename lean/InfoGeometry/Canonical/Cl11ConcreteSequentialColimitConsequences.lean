@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11SequentialColimitSystemBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11InfiniteCarrier
 
 set_option autoImplicit false

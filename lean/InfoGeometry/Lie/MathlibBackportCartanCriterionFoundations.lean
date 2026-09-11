@@ -1,6 +1,7 @@
 module
 
 import InfoGeometry.Lie.MathlibBackportBasisLieEnd
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 public import Mathlib.LinearAlgebra.Lagrange
 public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 public import Mathlib.RingTheory.Flat.Basic

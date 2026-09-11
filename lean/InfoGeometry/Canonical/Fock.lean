@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.Fock
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 set_option linter.unusedSectionVars false
 
 /-!

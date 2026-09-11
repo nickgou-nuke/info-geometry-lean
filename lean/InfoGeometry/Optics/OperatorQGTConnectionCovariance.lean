@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.OperatorQGTBogoliubovNaturality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.OperatorDerivationForms
 
 /-!

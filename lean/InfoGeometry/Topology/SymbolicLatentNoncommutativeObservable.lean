@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Operator-valued symbolic-latent observables

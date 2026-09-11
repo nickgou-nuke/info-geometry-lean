@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Projectivization.Action
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
 import Mathlib.GroupTheory.QuotientGroup.Basic
 

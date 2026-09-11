@@ -5,6 +5,7 @@ Realified Tomita–Takesaki in a Doubled Krein Space — Hodge Connection.
 -/
 
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.KreinSpace
 import InfoGeometry.Meta.Architecture
 

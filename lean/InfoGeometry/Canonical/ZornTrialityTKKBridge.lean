@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TKKJordanPairData
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Zorn triality to TKK grading bridge

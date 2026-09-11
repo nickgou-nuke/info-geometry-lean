@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HeisenbergFiniteModeColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Canonical.AlgebraicDerivations
 import InfoGeometry.External.Virasoro.Commutator

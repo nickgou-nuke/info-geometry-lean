@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.KleinSpinorOrbit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.KleinSpinorOrbitSocketClosure
 import Mathlib.Tactic
 

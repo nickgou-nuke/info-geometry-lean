@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.SocketTarget
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.Bridge
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.RelativeDeterminant
 

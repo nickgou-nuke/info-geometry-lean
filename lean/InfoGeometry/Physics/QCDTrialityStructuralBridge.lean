@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.TopologicalStandardModelBridge
 import InfoGeometry.Canonical.TrialitySpin8Permutations
 

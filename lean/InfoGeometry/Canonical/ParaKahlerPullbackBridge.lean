@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Pullback interface for para-Kähler two-forms

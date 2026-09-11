@@ -1,4 +1,5 @@
 import Mathlib.Data.Finset.Lattice.Fold
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Linarith
 

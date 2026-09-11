@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.DikinApolloniusTrap
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

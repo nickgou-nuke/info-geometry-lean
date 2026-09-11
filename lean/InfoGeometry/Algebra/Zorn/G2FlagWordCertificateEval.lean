@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2FlagWordEvaluator
 
 /-! The CAS word table evaluated in the exact Lean carrier.  No theorem about

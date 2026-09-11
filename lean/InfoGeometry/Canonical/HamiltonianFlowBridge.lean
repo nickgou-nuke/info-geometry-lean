@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovOptimalTransport
 import InfoGeometry.Canonical.LatticeHoppingDiffusionFlow
 import InfoGeometry.Canonical.CertifiedModularReduction

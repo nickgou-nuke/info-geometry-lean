@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwelveFoldExplicitOperators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import proofs.KleinAffineDeckGroup
 import proofs.KleinSixStateVectorBundleCore
 

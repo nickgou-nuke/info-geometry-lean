@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.WallpaperSymmetry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.CondensedMatter.NonOrientableWeylSemimetal
 
 /-!

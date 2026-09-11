@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitAlbertPeirceZeroJordanTripleRestriction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.H3ZornJordanTripleBridge
 
 /-! The induced Jordan product on the Peirce-zero carrier, reconstructed from

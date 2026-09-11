@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorialInformationLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KreinDiracWeightFunctionalLift
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Canonical.CertifiedInverseKernel

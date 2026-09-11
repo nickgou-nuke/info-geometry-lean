@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.InverseKernelCartanCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
 
 namespace InfoGeometry.Canonical

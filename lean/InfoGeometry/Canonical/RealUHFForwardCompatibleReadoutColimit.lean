@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleStateObservableTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CliffordCARTopologicalColimit
 import InfoGeometry.Canonical.Cl11TensorInductiveLimitTopologicalTrace
 

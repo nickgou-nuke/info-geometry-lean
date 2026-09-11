@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ChiralGrandCanonicalLoxodromicRotor
 
 /-!

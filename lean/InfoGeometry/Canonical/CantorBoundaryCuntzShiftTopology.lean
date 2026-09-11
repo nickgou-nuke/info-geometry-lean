@@ -1,4 +1,5 @@
 import Mathlib.Topology.Constructions
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryCuntzShift
 import InfoGeometry.Canonical.CantorBoundaryFiniteReadout
 

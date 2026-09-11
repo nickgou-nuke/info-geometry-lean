@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55SpinorRepresentationGeneration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitCliffordNativeTensorFinrank
 
 namespace InfoGeometry.Clifford.Clifford55

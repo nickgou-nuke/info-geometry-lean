@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.ChiralPrimonGas
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeBosonFermionGas
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.SUSYCentralChargeBridge

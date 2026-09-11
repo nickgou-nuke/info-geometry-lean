@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportStateLinear
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Algebra congruence of the finite-support GNS quotient

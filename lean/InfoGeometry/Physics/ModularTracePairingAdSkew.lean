@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.MatrixTraceBimodulePairingNative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Ad-skewness of the finite trace pairing

@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.SymplecticTripleSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

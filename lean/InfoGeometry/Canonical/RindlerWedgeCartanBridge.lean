@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealTomitaCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TomitaTakesakiRealStandardForm
 import InfoGeometry.Canonical.WedgeBoostModularBridge
 import InfoGeometry.Canonical.ChiralOperatorConeClosure

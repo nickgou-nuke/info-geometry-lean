@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinGraphSection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Dual connections for the doubled chiral frame

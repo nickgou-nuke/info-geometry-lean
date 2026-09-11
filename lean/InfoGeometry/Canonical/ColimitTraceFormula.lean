@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzMatrixCompatibleStateNet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixTraceColimitComparison
 
 /-!

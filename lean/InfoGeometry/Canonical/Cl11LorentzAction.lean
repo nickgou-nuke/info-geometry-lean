@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KKTCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KKTLorentzOrbitBridge
 import InfoGeometry.Meta.Architecture
 

@@ -15,6 +15,7 @@ proof-carrying calibration datum.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
 

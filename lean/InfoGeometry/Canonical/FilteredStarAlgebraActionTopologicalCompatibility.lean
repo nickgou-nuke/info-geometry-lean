@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraActionEquivDirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredStarAlgebraDirectLimitTopologicalCompatibility
 
 /-!

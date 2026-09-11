@@ -14,6 +14,7 @@ Conf n de Rham complex is fabricated here.
 -/
 
 import InfoGeometry.Canonical.ArnoldKohnoParaKahlerConnection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KZLogarithmicConnection
 import InfoGeometry.Projective.Conf3ConcreteDLog
 

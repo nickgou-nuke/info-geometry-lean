@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThermodynamicGenerator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RosettaSourceBridge
 
 open scoped InnerProductSpace

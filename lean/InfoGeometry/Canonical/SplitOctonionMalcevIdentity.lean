@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.ZornAlternativeLaws
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.AlternativeDerivations
 
 /-!

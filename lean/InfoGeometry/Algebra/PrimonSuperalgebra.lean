@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Colimit.DirectLimit
 import Mathlib.Tactic
 import InfoGeometry.Algebra.PrimonColimitAlgebra

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AffineOrthogonal55Semidirect
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility import for the affine orthogonal `55` layer

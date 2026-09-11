@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Arithmetic.PrimeCantorBooleanCubeBridge

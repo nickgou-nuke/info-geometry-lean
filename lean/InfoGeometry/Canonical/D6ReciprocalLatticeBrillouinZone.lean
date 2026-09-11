@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.D6SixModeAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Int.Basic
 import Mathlib.Tactic
 
@@ -14,7 +15,7 @@ namespace InfoGeometry.Canonical.D6ReciprocalLatticeBrillouinZone
 
 open InfoGeometry.Canonical.D6SixModeAction
 
-abbrev ReciprocalCoord := Fin 2 → ℤ
+abbrev ReciprocalCoord := InfoGeometry.Algebra.FiniteSpin.Vec2Z
 
 def hexStarFin : Fin 6 → ReciprocalCoord :=
   ![![1, 0], ![1, -1], ![0, -1], ![-1, 0], ![-1, 1], ![0, 1]]

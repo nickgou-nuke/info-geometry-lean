@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KleinPresentedGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KleinAffinePin55RealizationBridge
 import InfoGeometry.Clifford.Cl55RealSplitPinKernelBridge
 

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.CliffordCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # CAR occupation projectors

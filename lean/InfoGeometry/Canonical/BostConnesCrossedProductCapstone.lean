@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.BostConnesCrossedProduct
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.BostConnesCrossedProductCapstone
 

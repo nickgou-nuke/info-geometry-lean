@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2AppendixDSourceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

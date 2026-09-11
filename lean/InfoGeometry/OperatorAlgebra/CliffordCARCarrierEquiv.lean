@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.CliffordSplitOctonionCAR
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ClNN
 import InfoGeometry.Clifford.SpinorRep
 

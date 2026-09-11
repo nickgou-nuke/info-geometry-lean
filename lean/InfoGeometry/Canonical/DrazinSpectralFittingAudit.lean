@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinSpectralFittingBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of DrazinSpectralFittingBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CentralChargeAnomaly
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Canonical.ModularSourceBridge
 import InfoGeometry.Canonical.RelativeModularScaleShapeSplit

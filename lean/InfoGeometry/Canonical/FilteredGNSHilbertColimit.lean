@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredIsometricHilbertCompletion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredGNSTomitaModularForm
 
 /-!

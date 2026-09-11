@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NoncommutativeGibbsFaithfulNormalizationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Normalized Duhamel two-point function as a Kubo--Mori pairing

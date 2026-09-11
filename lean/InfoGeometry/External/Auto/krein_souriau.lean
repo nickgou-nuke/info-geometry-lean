@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 open Matrix
 
 /- THE KREIN-SOURIAU-FISHER-METRIPLECTIC COMPLEX

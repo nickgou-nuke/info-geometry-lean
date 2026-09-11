@@ -1,4 +1,5 @@
 import InfoGeometry.External.Virasoro.HeisenbergAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.ToMathlib.LinearAlgebra.Basis.FinsumRepr
 
 /-!

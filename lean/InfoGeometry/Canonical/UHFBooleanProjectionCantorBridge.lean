@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.StoneBridgeMathlib
 import InfoGeometry.Canonical.StoneCantorMathlib
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary

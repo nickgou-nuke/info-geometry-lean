@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BostConnesSuperalgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Deformed Super-Cuntz Warp

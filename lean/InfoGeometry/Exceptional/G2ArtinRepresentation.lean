@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2CoordinateWeylAction
 import InfoGeometry.Exceptional.G2ArtinRootPermutationLift
 import InfoGeometry.Exceptional.G2ChiralBivectorCarriers

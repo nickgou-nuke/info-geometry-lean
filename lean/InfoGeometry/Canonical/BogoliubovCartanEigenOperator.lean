@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinKreinCompatibility
 import Mathlib.Tactic.Abel
 

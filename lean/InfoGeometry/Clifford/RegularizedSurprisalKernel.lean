@@ -1,10 +1,11 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Clifford.RegularizedSurprisalKernel
 
 noncomputable section
 
-abbrev SpinorMatrix32 := Matrix (Fin 32) (Fin 32) ℝ
+abbrev SpinorMatrix32 := InfoGeometry.Algebra.FiniteSpin.Mat32R
 
 def secondOrder (K : SpinorMatrix32) (β : ℝ) : SpinorMatrix32 :=
   ((1 / 2 : ℝ) * β ^ 2) • (K * K)

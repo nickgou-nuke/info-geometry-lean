@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Exceptional.CircularSplitOctonionContactLift
 import InfoGeometry.Algebra.Zorn.G2ChiralOperatorNativeBridge

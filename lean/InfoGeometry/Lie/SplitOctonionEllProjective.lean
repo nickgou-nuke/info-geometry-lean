@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllCrossChannel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.NormNum

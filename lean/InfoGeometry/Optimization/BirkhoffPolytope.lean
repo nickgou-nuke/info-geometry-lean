@@ -3,6 +3,7 @@
    Birkhoff Spectral Descent optimization framework. -/
 
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 
 open Matrix

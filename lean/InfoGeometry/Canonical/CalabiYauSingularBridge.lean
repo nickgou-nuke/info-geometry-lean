@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CalabiYauMetricRicci
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SingularTransportSystem
 
 /-!

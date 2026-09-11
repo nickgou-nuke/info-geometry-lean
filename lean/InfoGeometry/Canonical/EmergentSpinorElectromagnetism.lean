@@ -1,4 +1,5 @@
 import Mathlib.Data.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
 import InfoGeometry.Clifford.DiracPauliGamma
 import Mathlib.Tactic.FinCases

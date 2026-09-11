@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectorNoncommutativityDilationClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorProjectorMismatch
 import InfoGeometry.Canonical.MetricTransport
 import InfoGeometry.Holography.RyuTakayanagiEmergence

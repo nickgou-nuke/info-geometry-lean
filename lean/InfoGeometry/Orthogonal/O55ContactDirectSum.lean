@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55ContactFiveGrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Full five-grade projection decomposition of split `O(5,5)`

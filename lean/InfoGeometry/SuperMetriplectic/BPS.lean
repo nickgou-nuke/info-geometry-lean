@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.Flow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # BPS Central Charge and Witten Index Packets

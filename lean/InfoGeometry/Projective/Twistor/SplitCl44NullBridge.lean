@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.Twistor.Incidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.SplitCl44NullBoundary
 
 /-!

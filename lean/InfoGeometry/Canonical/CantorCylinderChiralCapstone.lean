@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorCylinderChiral
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.CantorCylinderChiralCapstone
 

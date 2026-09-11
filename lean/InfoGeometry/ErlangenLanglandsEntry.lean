@@ -1,4 +1,5 @@
 import InfoGeometry.ErlangenLanglandsLane
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.ErlangenLanglandsGeometryLane
 import InfoGeometry.ErlangenLanglandsGromovEntry
 import InfoGeometry.ErlangenLanglandsRoadmap

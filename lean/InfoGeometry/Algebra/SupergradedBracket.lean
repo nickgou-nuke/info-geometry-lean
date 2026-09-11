@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.InvariantTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Supergraded brackets

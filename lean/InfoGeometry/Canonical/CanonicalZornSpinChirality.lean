@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornSpinRelatedFiber
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Chirality preservation of the canonical Zorn spin representation

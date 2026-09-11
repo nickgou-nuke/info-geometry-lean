@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Section35IntegratedConcepts
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Section 36 repaired: conformal-coordinate finite algebra
@@ -33,7 +34,7 @@ open InfoGeometry.Physics.Section32QuaternionicEmergentSpacetime
 open InfoGeometry.Physics.Section35IntegratedConcepts
 
 /-- Real three-vector used for finite conformal-coordinate algebra. -/
-abbrev RVec3 := Fin 3 → ℝ
+abbrev RVec3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 /-- Squared Euclidean norm of a finite real direction vector. -/
 def directionNormSq (n : RVec3) : ℝ :=

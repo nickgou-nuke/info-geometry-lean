@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CorrelationSymmetrization
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Ring
 
 open scoped InnerProductSpace

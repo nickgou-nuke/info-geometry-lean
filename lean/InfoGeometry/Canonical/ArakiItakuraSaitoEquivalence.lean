@@ -1,4 +1,5 @@
 import Mathlib.Analysis.CStarAlgebra.GelfandNaimarkSegal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

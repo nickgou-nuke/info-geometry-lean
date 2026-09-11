@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovPolarizationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Meta.Architecture
 

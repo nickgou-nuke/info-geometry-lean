@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.CantorBoundaryCuntzFamily
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite word operators on the Cantor-boundary Cuntz carrier

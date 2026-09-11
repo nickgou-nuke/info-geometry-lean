@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 import InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative
 import InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate

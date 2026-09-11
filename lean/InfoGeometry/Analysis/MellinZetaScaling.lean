@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.MellinTransform
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget

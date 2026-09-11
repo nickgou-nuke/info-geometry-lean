@@ -1,4 +1,5 @@
 import InfoGeometry.Jordan.LogDet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Jordan.BurgStein
 
 /-!

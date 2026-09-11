@@ -1,4 +1,5 @@
 import InfoGeometry.Core.Entropy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativePotentialCore
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Canonical.LogDetRadonNikodymMechanism

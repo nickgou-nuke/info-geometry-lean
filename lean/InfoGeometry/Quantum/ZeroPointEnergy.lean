@@ -1,4 +1,5 @@
 import InfoGeometry.Architecture.SpinFactor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Convex.SpinFactorHessian
 import InfoGeometry.Cramer
 import Mathlib.LinearAlgebra.Dimension.Finrank

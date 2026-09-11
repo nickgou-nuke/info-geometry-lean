@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2BruhatResidualEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2RootResidualGenerators
 import InfoGeometry.Algebra.Zorn.G2CanonicalTopInversionOrder
 import InfoGeometry.Algebra.Zorn.G2BruhatResidual

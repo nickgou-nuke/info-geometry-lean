@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.Incidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cyclic three-twistor null triangles

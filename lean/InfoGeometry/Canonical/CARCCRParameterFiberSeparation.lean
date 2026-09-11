@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CStarCuntzCARCCRParameterTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Maps.Basic
 
 /-!

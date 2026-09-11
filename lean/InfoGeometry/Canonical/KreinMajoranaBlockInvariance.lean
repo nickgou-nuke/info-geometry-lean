@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix
 
@@ -20,8 +21,8 @@ Proved Theorems:
 4. Right Boundary Majorana Zero Mode Negative Krein Norm: $\langle \gamma_8, \gamma_8 \rangle_J = -1$.
 -/
 
-abbrev Mat8R := Matrix (Fin 8) (Fin 8) ℝ
-abbrev Vec8R := Fin 8 → ℝ
+abbrev Mat8R := InfoGeometry.Algebra.FiniteSpin.Mat8R
+abbrev Vec8R := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 /-- Krein metric matrix J₈ = τ_z ⊗ I₄ in 8×8 real Nambu space. -/
 def kreinMetric8 : Mat8R :=

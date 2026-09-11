@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorZornConnectionCurvatureBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Representation channels for operator-Zorn curvature

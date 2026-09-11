@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2SteinbergPositiveRoots
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
 
 /-!

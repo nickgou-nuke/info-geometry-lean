@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2FlagCellWitnessCertificate
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Carrier alignment for the finite G2 flag-cell witness table

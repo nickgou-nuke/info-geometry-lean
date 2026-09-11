@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Polynomial.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
 import Mathlib.GroupTheory.SpecificGroups.Dihedral
 import Mathlib.Tactic

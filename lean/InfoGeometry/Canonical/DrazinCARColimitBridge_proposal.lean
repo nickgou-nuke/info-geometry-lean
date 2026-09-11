@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ClosureDrazinBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CliffordCAR
 import InfoGeometry.OperatorAlgebra.CliffordInfinityCAR
 

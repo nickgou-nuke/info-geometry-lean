@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Module.FiniteDimension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
 import InfoGeometry.Canonical.TwoSheetStokesKreinTopological
 

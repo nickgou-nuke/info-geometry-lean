@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionLoxodromic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Left multiplication on the canonical split-octonion carrier
@@ -17,7 +18,7 @@ open InfoGeometry.OperatorAlgebra.SplitOctonionPseudoReal
 open InfoGeometry.OperatorAlgebra.SplitOctonionLoxodromic
 
 abbrev Carrier := InfoGeometry.OperatorAlgebra.SplitOctonionPseudoReal.CanonicalZorn
-abbrev State := Fin 8 → ℝ
+abbrev State := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 @[simp] theorem leftMulLinearGeneral_apply (Z : Carrier) (v : State) :
     leftMulLinearGeneral Z v = coordLE (Z * coordLE.symm v) := by

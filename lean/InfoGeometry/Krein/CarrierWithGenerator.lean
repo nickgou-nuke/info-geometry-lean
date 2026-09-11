@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.CarrierTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Carrier With Generator

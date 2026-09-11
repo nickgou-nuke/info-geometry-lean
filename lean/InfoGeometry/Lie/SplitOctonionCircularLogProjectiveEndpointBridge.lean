@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularReciprocalExponentialBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
 
 /-!

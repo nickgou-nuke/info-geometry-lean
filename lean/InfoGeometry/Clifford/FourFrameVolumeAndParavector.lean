@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.KoszulFoundation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!

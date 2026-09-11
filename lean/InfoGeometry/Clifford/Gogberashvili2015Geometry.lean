@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitOctonionicDiracCoordinates
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Geometrical Applications of Split Octonions (2015), equations (1), (8)--(10)

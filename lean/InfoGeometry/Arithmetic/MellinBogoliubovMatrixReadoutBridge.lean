@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.MellinBogoliubovNullEigenvalueBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovCovariantMellinKreinQuantizationBridge
 
 /-!

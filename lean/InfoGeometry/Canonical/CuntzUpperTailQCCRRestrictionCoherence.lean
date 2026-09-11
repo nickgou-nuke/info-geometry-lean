@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzUpperTailQCCRInverseRestriction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Nested upper-tail restriction and coherence

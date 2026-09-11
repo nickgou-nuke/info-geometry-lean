@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FibonacciParafermionAtoms
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 import InfoGeometry.Canonical.FibonacciParafermionFusionBridge
@@ -144,7 +145,7 @@ theorem F_matrix_sl₂_decomposition (a b : ℝ) : F_matrix a b = a • sl₂H +
 
 /-! ## 6. F-matrix action on spinors -/
 
-abbrev RealDiracSpinor := Fin 2 → ℝ
+abbrev RealDiracSpinor := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 def F_action (a b : ℝ) (v : RealDiracSpinor) : RealDiracSpinor := (F_matrix a b).mulVec v
 

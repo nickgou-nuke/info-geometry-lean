@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.FromLogDet
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.ThermoFromLogDet

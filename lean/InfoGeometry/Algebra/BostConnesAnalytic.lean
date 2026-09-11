@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.PSeries
 import Mathlib.Algebra.Order.Field.Basic

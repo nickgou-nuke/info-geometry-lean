@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularZ3Grading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Multiplicativity boundary for the uniform circular hyperbolic flow

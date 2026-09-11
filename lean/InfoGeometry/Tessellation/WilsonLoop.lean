@@ -1,4 +1,5 @@
 import InfoGeometry.Tessellation.Incidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Tessellation Wilson loops

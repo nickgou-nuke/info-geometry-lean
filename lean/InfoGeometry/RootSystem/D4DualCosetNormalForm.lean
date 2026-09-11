@@ -1,4 +1,5 @@
 import InfoGeometry.RootSystem.D4DualLattice
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The four explicit discriminant representatives for `D₄`

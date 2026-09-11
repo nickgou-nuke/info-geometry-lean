@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.RealMajoranaCategory
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Volume.Pfaffian
 import Mathlib.Data.Sign.Basic
 import Mathlib.Data.ZMod.Basic

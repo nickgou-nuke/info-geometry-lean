@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitAlbertPeirceZeroQuadraticRepresentation
 import InfoGeometry.Canonical.SplitOctonionTKKFiniteDimensionalBridges
 import InfoGeometry.Clifford.Cl55BivectorVectorRepresentation

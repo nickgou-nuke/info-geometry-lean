@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Order.Filter.Basic
 import Mathlib.Topology.Neighborhoods
 import Mathlib.Topology.Basic

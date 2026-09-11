@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.CircularChiralDerivationsFourteen
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # First explicit readback for the circular chiral carrier

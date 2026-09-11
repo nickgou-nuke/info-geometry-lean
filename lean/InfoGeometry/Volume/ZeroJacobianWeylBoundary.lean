@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitCl44CausalEnvelope
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 

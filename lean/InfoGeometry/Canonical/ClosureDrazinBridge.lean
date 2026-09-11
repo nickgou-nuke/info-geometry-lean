@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralOperatorConeClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinInfiniteCore
 import InfoGeometry.Canonical.DrazinPenroseDilationKKT
 import InfoGeometry.Meta.Architecture

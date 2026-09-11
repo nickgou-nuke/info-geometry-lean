@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.UHFBoundaryFunctionOperatorTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.UHFBoundaryOperatorTopCat
 
 /-!

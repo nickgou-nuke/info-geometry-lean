@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11VacuumTensorTower
 import InfoGeometry.Physics.Cl55VacuumMinimalIdealBridge
 

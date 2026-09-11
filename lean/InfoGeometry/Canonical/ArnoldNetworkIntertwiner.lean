@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ArnoldNetworkPresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FierzReadout
 import InfoGeometry.Meta.Architecture
 

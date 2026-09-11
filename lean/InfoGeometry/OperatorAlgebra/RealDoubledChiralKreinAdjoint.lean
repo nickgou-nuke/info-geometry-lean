@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DiracHodgeDoubledSpace
 
 /-!

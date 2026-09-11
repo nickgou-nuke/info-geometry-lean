@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.HeisenbergCyclotomicAtlasTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.KleinBottleCyclotomicChiralLift
 
 /-!

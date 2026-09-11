@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 import InfoGeometry.Arithmetic.ZetaSymmetryHeuristicComplement
 import InfoGeometry.Arithmetic.PrimeDistributionLaw

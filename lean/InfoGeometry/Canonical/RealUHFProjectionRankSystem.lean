@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11TensorTower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DyadicDimensionGroup
 import InfoGeometry.Canonical.RealStageNormalizedProjectionRank
 

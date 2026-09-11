@@ -1,4 +1,5 @@
 import Lean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Trust
 
 open Lean Meta

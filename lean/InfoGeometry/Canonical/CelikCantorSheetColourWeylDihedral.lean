@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikCantorSheetColourWeyl
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Orientation-reversing sheet/colour Weyl action

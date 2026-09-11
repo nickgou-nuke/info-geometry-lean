@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.ChiralPhaseMatrix
 import InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
 import InfoGeometry.QuantumAlgebra.G2ArtinCyclotomicLift

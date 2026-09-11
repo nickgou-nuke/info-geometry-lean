@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThreeColorOperatorSuperBracketClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ThreeColorOperatorCrossCommutator
 
 /-!

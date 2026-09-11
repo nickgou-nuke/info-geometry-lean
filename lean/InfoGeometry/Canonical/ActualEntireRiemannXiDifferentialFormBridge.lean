@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.DifferentialForm.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ActualEntireRiemannXiLogDerivativeBridge
 import InfoGeometry.Canonical.ActualEntireRiemannXiRegularLogDerivativeBridge
 import InfoGeometry.Canonical.ActualEntireRiemannXiZeroFreeLocus

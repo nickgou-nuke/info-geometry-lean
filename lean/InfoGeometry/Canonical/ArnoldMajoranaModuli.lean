@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ArnoldMajoranaNetwork
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Logic.Equiv.Defs
 
 namespace InfoGeometry.Canonical.MoE

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cole-Fury 32-dimensional ideal quadrant laws
@@ -23,11 +24,12 @@ Cole-Fury/electron-positron classification theorem or a Cuntz quasilattice
 boundary theorem.
 -/
 
+
 namespace InfoGeometry.OperatorAlgebra.ColeFury
 
 open Matrix
 
-abbrev Spin32Matrix := Matrix (Fin 32) (Fin 32) ℤ
+abbrev Spin32Matrix := InfoGeometry.Algebra.FiniteSpin.Mat32Z
 
 /-- Upper-left `16 × 16` diagonal block. -/
 def upperLeft : Spin32Matrix :=

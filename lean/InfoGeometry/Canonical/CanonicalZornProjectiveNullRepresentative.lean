@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornNullProjectiveBoundaryBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Nonzero annihilator representatives in the projective null boundary

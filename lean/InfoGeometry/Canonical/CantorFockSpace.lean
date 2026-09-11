@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordSourceWickBase
 import InfoGeometry.Canonical.SplitCliffordJordanWigner
 import InfoGeometry.Canonical.ModularNilpotentAutomorphism

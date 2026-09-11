@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonion1331PureSpinorGradingBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonion1331GradedProjectorActionBridge
 import InfoGeometry.Canonical.Exterior3NativeGradedLadderBridge
 import InfoGeometry.Canonical.HeisenbergColimitVirasoroGradedBridge

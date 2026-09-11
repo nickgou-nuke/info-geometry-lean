@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55ConcreteHestenesCarrierEmbeddingBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hestenes phase transport on the embedded master carrier

@@ -1,4 +1,5 @@
 import Mathlib.Order.Filter.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Order.Filter.Tendsto
 import Mathlib.Topology.Basic
 

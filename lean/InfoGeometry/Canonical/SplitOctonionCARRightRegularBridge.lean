@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllCrossChannel
 import InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
 import InfoGeometry.Canonical.SplitOctonion1331ExteriorDiracSouriauBridge

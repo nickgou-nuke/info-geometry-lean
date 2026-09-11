@@ -1,4 +1,5 @@
 import InfoGeometry.Core.PeirceDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic

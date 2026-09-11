@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ChiralCausalCone
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.OperatorValuedJones
 import InfoGeometry.Geometry.ParavectorZornBoundary
 

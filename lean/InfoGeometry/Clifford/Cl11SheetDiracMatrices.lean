@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.OperatorValuedJones
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cl(1,1) sheet matrices

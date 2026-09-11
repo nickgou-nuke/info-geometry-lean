@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55ContactCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Native orthogonal endomorphism lane over the `(5,5)` contact carrier. -/
 

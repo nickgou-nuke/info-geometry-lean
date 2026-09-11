@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorCl11WittBasis
 
 /-!

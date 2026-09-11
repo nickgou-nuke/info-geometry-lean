@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DIIIDrazinEntropyBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.DIIIModularEntropyFlowBridge

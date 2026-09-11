@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PrimeHurwitzLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Lee--Yang root limits

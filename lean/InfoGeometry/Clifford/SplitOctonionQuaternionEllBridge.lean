@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.GogberashviliSplitOctonionBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Quaternionic split doubling by the hyperbolic unit `ℓ`

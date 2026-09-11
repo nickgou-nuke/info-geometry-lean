@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Category.AlgCat.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Category.Ring.Colimits
 import Mathlib.Algebra.Category.Ring.FilteredColimits
 import InfoGeometry.OperatorAlgebra.CliffordInfinityCAR

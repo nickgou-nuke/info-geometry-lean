@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.DiracKahlerMultiplication
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.PeirceBoundaryCochainComplex
 
 /-!

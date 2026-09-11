@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullUnorderedConfiguration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteMajoranaBraiding
 
 /-!

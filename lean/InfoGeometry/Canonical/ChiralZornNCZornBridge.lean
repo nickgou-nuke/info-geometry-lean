@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NCG.NoncommutativeChiralZornAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Octonion.ChiralZornAlgebra
 import InfoGeometry.Canonical.ChiralZornCasimirChannels
 

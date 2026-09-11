@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.FromBregman
 import InfoGeometry.Thermo.Gibbs
 import InfoGeometry.Thermo.ThermodynamicIdentities

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThreeColorFixedCoreSuperLie
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Fixed-colour matrix core inside the native operator-valued Zorn carrier

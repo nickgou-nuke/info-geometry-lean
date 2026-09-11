@@ -1,4 +1,5 @@
 import InfoGeometry.Algebraic.CartanExponentialFamily
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Probability.FiniteGibbsVariational
 
 /-!

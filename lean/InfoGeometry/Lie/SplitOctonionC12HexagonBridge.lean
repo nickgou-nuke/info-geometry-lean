@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.C12CyclotomicPhase
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCanonicalColorRootAction
 
 /-!

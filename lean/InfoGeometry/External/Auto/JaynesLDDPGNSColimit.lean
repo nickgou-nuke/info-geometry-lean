@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.UHFInductiveColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!

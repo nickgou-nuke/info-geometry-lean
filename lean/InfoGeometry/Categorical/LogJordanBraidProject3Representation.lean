@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.BraidGroup3PresentationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.BraidGroupFiniteInfiniteColimitBridge
 import InfoGeometry.Categorical.LogJordanBraidGroup3Representation
 

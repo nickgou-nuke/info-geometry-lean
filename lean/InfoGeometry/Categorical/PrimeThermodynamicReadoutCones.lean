@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.PrimeThermodynamicDirectLimit
 import InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 import InfoGeometry.Arithmetic.PrimeParafermionGrandCanonicalClock

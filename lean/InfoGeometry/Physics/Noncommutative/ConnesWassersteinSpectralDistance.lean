@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Operator-valued Connes spectral distance on the native Cuntz carrier

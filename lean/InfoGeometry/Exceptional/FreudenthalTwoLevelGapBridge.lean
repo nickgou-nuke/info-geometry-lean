@@ -16,7 +16,7 @@ variable {J : Type*} [AddCommGroup J] [Module ℝ J]
 variable (D : CubicJordanDatum J)
 
 abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
-abbrev Vec2 := Fin 2 → ℝ
+abbrev Vec2 := InfoGeometry.Algebra.FiniteSpin.Vec2R
 
 /-!
 # Native Freudenthal Mixed Bracket to Two-Level Spectral Gap Bridge

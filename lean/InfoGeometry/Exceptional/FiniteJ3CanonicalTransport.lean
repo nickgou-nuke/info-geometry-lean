@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FiniteJ3ZornCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.ZornMatrixRealCanonicalBridge
 import InfoGeometry.Algebra.QuadraticJordanH3Zorn
 import InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment

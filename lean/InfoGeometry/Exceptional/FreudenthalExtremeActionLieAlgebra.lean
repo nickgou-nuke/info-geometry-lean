@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalExtremeActionData
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalFiveGradedJacobiClosure
 
 /-!

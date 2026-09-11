@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.H3ZornS3JordanTopologicalReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Closed equalizer of the S₃ Jordan-product action

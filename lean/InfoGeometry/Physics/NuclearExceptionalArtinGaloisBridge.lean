@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearChargeSpinSymmetry
 import InfoGeometry.Physics.NuclearCartanGradeNormalizationBridge
 import InfoGeometry.Canonical.SL2SpinorLadder

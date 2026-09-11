@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Two-strand Jones projector and spin Casimir
@@ -16,7 +17,7 @@ namespace InfoGeometry.Physics.TwoStrandJonesCasimir
 
 open scoped Matrix
 
-abbrev Spinor := Fin 2 → ℂ
+abbrev Spinor := InfoGeometry.Algebra.FiniteSpin.Vec2C
 abbrev TwoStrandState := Fin 2 → Fin 2 → ℂ
 abbrev TwoStrandOperator := Module.End ℂ TwoStrandState
 

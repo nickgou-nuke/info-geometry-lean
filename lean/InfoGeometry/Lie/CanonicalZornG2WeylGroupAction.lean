@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanConcreteReflectionEquiv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2CartanParameterCoordinates
 import InfoGeometry.Lie.CanonicalZornCartanRootReflections
 import InfoGeometry.Lie.CanonicalZornG2CoxeterRelations

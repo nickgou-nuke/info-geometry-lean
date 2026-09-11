@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.SplitChiralPolarizationBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.WittenParityAnomalyBridge
 import InfoGeometry.Canonical.WeylKMSGromovWittenCounts
 import InfoGeometry.Canonical.GeometricMonodromy

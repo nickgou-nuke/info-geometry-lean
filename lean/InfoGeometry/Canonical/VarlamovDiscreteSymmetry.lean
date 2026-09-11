@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KreinDoubledAtom
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.RealMod8Classification
 
 /-!

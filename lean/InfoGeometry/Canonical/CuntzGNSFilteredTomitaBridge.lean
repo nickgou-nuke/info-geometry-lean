@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzGNSFilteredSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredGNSTomitaModularForm
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.ExteriorPower.Basis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Grading
 import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
 import Mathlib.Tactic
@@ -33,7 +34,7 @@ open InfoGeometry.Canonical.ExteriorSpinorChiralityBridge
 open InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 open InfoGeometry.Analysis.FiniteDirichletShiftOperatorBridge
 
-abbrev V3 := Fin 3 → ℝ
+abbrev V3 := InfoGeometry.Algebra.FiniteSpin.Vec3R
 abbrev Exterior3 := ExteriorAlgebra ℝ V3
 abbrev Exterior3End := Module.End ℝ Exterior3
 abbrev SplitOctonionCoordinateCarrier := Dim8 → ℝ

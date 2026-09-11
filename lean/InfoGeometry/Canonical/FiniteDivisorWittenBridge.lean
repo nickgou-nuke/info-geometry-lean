@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.EulerLaurentDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteSuperchargeIndex
 import InfoGeometry.Arithmetic.RiemannPoleZeroMonodromy
 

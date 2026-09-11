@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility imports for the Andreev boundary owner

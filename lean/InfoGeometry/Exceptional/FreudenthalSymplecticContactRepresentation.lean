@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalFiveGradedCarrierModule
 import InfoGeometry.Exceptional.FreudenthalSymplecticAction
 import InfoGeometry.Exceptional.FreudenthalSymplecticMixedTripleCounterexample

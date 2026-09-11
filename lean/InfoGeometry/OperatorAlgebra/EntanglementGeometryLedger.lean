@@ -23,6 +23,7 @@ only after a concrete calibration is supplied.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

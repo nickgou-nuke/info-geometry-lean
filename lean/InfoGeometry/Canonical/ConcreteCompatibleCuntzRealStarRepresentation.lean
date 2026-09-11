@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConcreteCompatibleCuntzFaithfulness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Real-scalar analogue of the faithful norming representation contract. -/
 

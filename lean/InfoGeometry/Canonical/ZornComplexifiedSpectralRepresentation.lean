@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornLeftRegularRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.ToLin
 
 /-!
@@ -16,7 +17,7 @@ namespace InfoGeometry.Canonical.ZornComplexifiedSpectralRepresentation
 open InfoGeometry.Algebra
 open InfoGeometry.Canonical.ZornLeftRegularRepresentation
 
-abbrev ComplexCoord := Fin 8 → ℂ
+abbrev ComplexCoord := InfoGeometry.Algebra.FiniteSpin.Vec8C
 
 noncomputable def complexifiedLeftRegularMatrix (F : ZM) :
     Matrix (Fin 8) (Fin 8) ℂ := fun i j =>

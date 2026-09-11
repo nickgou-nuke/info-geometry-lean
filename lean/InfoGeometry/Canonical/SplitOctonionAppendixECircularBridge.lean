@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.GogberashviliAppendixE
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitOctonionQuaternionEllBridge
 
 /-!

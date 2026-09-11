@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornRootSystemComparison
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.RiemannHypothesis
 
 /-!

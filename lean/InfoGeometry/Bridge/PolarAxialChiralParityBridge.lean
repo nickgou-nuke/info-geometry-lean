@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Bridge.QuaternionicPauliDiracSoldering
 
 /-! Finite parity bridge for diagonal and off-diagonal Weyl operators. -/

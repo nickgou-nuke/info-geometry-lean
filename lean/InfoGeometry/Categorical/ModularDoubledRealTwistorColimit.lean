@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.ModularDoubledRealHopfFibration
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Categorical.ModularDoubledRealTwistorColimit

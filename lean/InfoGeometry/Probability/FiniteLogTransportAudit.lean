@@ -1,4 +1,5 @@
 import InfoGeometry.Probability.FiniteLogTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Axiom readback for every theorem in the finite robust transport owners. -/
 #print axioms InfoGeometry.Probability.FiniteMedianShift.loss_continuous

@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.Meta.Architecture
 

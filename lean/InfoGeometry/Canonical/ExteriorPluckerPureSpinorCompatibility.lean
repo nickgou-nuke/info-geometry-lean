@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ChevalleyPureSpinor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TwistorExteriorSpinorCompatibility
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.TriadicTransportCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Quantum.TriadicTransport
 

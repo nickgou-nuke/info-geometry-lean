@@ -1,4 +1,5 @@
 import InfoGeometry.Streaming.BipartiteGraphDirac
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Streaming.CausalMemory
 import InfoGeometry.Streaming.Cl55FiveGradeBoundaryReadout
 import InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional

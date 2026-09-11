@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Kronecker
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option autoImplicit false
 

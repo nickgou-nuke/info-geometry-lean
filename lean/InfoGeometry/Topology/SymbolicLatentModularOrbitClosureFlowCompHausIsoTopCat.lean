@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentModularOrbitClosureFlowTopCatIso
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # `TopCat` readout of compact orbit-closure flow isomorphisms

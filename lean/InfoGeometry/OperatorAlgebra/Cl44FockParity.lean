@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cl(4,4) Fock Parity — 16-state occupation sheet (PROVED)

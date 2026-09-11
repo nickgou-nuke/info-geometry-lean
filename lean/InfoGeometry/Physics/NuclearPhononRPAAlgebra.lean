@@ -1,4 +1,5 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic

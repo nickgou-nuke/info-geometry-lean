@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Killing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.InvariantForm
 
 open scoped Invertible

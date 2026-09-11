@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.Section36ConformalCoordinateAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Section 37 repaired: reviewer-response finite audit

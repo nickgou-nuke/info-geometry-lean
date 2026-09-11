@@ -1,4 +1,5 @@
 import InfoGeometry.CFT.StressTensorCentralCharge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.StressTensorCentralChargeCapstone
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Probability.SquareRootSimplexBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.QutritDensityMatrix
 
 /-!

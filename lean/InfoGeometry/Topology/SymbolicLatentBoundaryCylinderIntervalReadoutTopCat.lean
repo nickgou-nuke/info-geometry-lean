@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentBoundaryCylinderPushoutTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
 
 /-!

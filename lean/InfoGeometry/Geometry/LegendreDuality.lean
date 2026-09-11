@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.FDeriv.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Operator.ContinuousLinearMap
 import Mathlib.Analysis.Convex.Function
 import Mathlib.Tactic.Linarith

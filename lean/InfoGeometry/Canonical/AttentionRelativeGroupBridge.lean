@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KreinPositionalScoreBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GrandCanonical.Core
 
 /-!

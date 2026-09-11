@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.TensorAlgebraInduction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.FiniteInductiveSUSY
 import InfoGeometry.Algebra.InfiniteInductiveSUSY
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas

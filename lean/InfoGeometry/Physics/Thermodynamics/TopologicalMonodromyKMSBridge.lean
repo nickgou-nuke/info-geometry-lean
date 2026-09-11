@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.HorizonKMS
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Algebra.TopologicalBraidMonodromyOperator
 
 /-!

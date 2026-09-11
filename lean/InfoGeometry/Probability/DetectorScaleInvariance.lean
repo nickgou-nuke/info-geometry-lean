@@ -614,7 +614,10 @@ theorem universal_coincidence_invariant (C1 C2 K12 z : ℝ) (hz : z ≠ 0) (hK12
     K12 = A * P12 * W0 * ε1 * ε2,
     the invariant closure ratio (C1 * C2) / K12 identically eliminates
     the detector efficiencies ε1, ε2:
-    (C1 * C2) / K12 = A * (P1 * P2) / (P12 * W0). -/
+    (C1 * C2) / K12 = A * (P1 * P2) / (P12 * W0),
+    where W0 represents the specified or adopted cascade angular factor
+    (e.g., W(0) = 10/9 for ⁶⁰Co, or the adopted factor 1.1072 for ²⁰⁸Tl,
+    distinguished from the unattenuated point-direction value 155/132). -/
 theorem closure_efficiency_cancellation
     (A P1 P2 P12 W0 ε1 ε2 : ℝ)
     (hP12 : P12 ≠ 0) (hW0 : W0 ≠ 0) (hε1 : ε1 ≠ 0) (hε2 : ε2 ≠ 0) (hA : A ≠ 0) :
@@ -628,7 +631,7 @@ theorem closure_efficiency_cancellation
 
 /-- **Theorem (Calibration Archetype: Absolute Activity Extraction)**:
     The true physical source activity A is extracted from the invariant closure ratio
-    by multiplying by nuclear branching and angular correlation factors:
+    by multiplying by nuclear branching and the specified cascade angular factor:
     A = ((C1 * C2) / K12) * (P12 * W0) / (P1 * P2). -/
 theorem calibration_activity_recovery
     (A P1 P2 P12 W0 ε1 ε2 : ℝ)
@@ -649,7 +652,10 @@ theorem calibration_activity_recovery
 def virtualLossCrossSection (C K a : ℝ) : ℝ :=
   (4 * Real.pi * K) / (C * a ^ 2)
 
-/-- Equivalent HPGe crystal diameter: D_equiv = (4 / a) * √(K / C). -/
+/-- Equivalent response loss diameter: D_equiv = (4 / a) * √(K / C).
+    This describes a channel- and energy-dependent effective coincidence loss area
+    (e.g., ~66.9 mm at 583 keV vs ~74.9 mm at 2615 keV on GEM50),
+    rather than a universal mechanical crystal dimension. -/
 def equivalentCrystalDiameter (C K a : ℝ) : ℝ :=
   (4 / a) * Real.sqrt (K / C)
 

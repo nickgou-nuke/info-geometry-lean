@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonArtinBraidOperators
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CoarseGraining
 import Mathlib.Algebra.Ring.Associator
 

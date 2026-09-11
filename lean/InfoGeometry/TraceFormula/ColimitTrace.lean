@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.PrimonColimitAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The real linear colimit trace

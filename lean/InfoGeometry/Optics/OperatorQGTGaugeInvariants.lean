@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.OperatorQGTGaugeModuli
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Gauge-invariant curvature traces for operator-valued QGT connections

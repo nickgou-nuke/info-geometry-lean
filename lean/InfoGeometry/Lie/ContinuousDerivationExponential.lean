@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Exponential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.MeanValue
 import Mathlib.Analysis.Normed.Operator.Bilinear
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus

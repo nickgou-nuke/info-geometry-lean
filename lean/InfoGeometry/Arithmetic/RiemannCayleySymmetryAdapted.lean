@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.RiemannXiCayleyZeroBridge
 import InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.Legendre
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Convex.Bregman
 import Mathlib.Analysis.Calculus.Deriv.Pow
 import Mathlib.Analysis.Convex.SpecificFunctions.Deriv

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Split-quaternion relations on the six-state sheet carrier

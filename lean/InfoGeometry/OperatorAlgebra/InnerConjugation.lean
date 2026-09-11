@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR
 import InfoGeometry.OperatorAlgebra.ThreeZ2OperatorGradings
 import InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity

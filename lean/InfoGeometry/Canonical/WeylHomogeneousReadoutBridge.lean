@@ -11,6 +11,7 @@ surfaces below, not proof fields.
 -/
 
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import Mathlib.Tactic
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Inference.PoissonSinkhornTCSTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Inference.RegularizedPoissonDeviance
 import InfoGeometry.Inference.PoissonBregmanTopological
 

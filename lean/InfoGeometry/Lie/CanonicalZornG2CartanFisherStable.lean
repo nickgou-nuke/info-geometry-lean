@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanMassieuStable
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2MassieuConvexity
 import InfoGeometry.Analytic.LogSumExpVariancePositivity
 

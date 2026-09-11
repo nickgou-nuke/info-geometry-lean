@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.RealProjectionMurrayVonNeumann
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Projection classes modulo Murray--von Neumann equivalence

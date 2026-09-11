@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GromovWittenPrepotentialGaugeQuotient
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topology of the finite prepotential gauge quotient

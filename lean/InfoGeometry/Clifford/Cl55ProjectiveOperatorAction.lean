@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55CAROperatorTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.KreinIsotropicCone
 
 /-!

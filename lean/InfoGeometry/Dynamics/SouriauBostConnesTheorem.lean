@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.FibonacciFusionCategory
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CayleyBregmanBridge
 import InfoGeometry.Canonical.YangBaxterProof
 import InfoGeometry.Canonical.BostConnesKMS

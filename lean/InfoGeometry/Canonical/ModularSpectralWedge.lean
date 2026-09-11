@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealTomitaCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace

@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.STUFreudenthalQuarticScaling
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Explicit STU quartic polarization readout

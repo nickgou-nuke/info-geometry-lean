@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.LogJordanTensorPowerBraidSector
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.LogNilpotentTensorPowerBraid
 
 /-!

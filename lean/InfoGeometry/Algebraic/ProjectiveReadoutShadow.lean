@@ -1,4 +1,5 @@
 import Mathlib.Order.Filter.Tendsto
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Basic
 import InfoGeometry.Algebraic.ProjectiveOperatorReadout
 

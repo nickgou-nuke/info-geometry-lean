@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.BostConnesSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Grothendieck
 import InfoGeometry.Analysis.BregmanAnalyticBound
 import InfoGeometry.Analysis.RotorCocycleBregmanBridge

@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.CompletedXiHestenesHomogeneousCoordinates

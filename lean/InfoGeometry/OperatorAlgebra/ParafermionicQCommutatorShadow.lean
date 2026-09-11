@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite q-commutator shadow for the Peirce-Witt lane
@@ -20,7 +21,7 @@ parafermionic field theory, or a global automorphism classification.
 
 namespace InfoGeometry.OperatorAlgebra.ParafermionicQCommutatorShadow
 
-abbrev M2Z := Matrix (Fin 2) (Fin 2) ℤ
+abbrev M2Z := InfoGeometry.Algebra.FiniteSpin.Mat2Z
 
 /-- Matrix unit over `ℤ` in the `2 × 2` carrier. -/
 def mUnit (i j : Fin 2) : M2Z :=

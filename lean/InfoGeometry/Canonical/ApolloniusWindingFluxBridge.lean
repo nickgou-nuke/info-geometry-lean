@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.KleinQuadricMonodromy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ApolloniusScalarOperatorSurprisalNoGo
 
 /-!

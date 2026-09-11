@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Topology.Algebra.Module.StrongTopology
 

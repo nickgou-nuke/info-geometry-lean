@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectiveCountsModularBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CauchyResidueReadback
 import InfoGeometry.Canonical.BogoliubovHomologyFrameEquiv
 import InfoGeometry.Canonical.BottStabilizedFrameEquiv

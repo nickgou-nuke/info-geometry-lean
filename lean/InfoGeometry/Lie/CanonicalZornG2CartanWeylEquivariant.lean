@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanSouriauCharacterBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2CartanMellinWeylBridge
 import InfoGeometry.Lie.CanonicalZornG2CartanSouriauMassieu
 import InfoGeometry.Lie.CanonicalZornG2CartanFisherSouriauMetric

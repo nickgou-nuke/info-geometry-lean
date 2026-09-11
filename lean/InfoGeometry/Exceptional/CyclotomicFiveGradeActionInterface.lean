@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.CyclotomicExceptionalGaloisActionBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalFiveGradedCarrierDecomposition
 import InfoGeometry.Exceptional.SymplecticOperatorConjugation
 import InfoGeometry.OperatorAlgebra.GradeActionInterface

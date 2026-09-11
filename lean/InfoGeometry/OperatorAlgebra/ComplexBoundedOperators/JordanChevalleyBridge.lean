@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.JordanChevalley
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanChevalleyBridge

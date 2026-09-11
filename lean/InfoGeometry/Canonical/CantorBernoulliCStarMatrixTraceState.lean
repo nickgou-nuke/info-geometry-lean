@@ -1,4 +1,5 @@
 import Mathlib.Analysis.CStarAlgebra.CStarMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixFiniteTraceFaithfulness
 import InfoGeometry.Canonical.CuntzMatrixTraceTower
 import InfoGeometry.Canonical.FilteredStarAlgebraTopologicalColimit

@@ -1,4 +1,5 @@
 import InfoGeometry.ExponentialFamily.Gaussian
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KreinLadder
 import InfoGeometry.Canonical.QuantumInference
 

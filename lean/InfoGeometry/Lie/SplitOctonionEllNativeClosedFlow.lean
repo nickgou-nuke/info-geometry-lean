@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllFlowDecomposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exp
 
 /-!

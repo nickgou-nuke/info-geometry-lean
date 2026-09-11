@@ -1,4 +1,5 @@
 import InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LinearAlgebra.RegularDyadCompression
 
 /-!

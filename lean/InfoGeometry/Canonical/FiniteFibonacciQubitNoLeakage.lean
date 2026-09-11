@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteFibonacciPailRopeQubits
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices
 
 /-!

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Neurosymbolic.BornNMFEngine
 import InfoGeometry.Canonical.AttentionPolarizedGibbsBridge
 

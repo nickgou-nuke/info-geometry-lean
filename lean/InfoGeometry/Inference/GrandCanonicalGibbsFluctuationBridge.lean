@@ -5,6 +5,7 @@ Bulgarian Academy of Sciences.
 -/
 
 import InfoGeometry.GrandCanonical.Core
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Inference.GibbsTemperatureResponse
 import InfoGeometry.Inference.GibbsFluctuation
 import InfoGeometry.Inference.GibbsTemperatureSusceptibility

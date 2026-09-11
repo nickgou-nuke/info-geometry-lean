@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GradedRationalSectorIntersections
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 

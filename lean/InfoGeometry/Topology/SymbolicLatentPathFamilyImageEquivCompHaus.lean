@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentPathFamilyImageCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentPathFamilyImageEquivTopCat
 import Mathlib.Topology.Category.CompHaus.Basic
 

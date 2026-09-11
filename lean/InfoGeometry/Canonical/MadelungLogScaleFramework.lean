@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.CenteredXiTwinKernel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Compatibility.MathlibUpperHalfPlaneShadow
 import InfoGeometry.Clifford.Cl11InfiniteCarrier
 

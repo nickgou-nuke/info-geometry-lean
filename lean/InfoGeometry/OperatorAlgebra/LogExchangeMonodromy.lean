@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ExchangeSMatrixBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ModularCftBridge
 import InfoGeometry.Clifford.MonodromyFlowAdapter
 import InfoGeometry.Dynamics.KanDecomposition

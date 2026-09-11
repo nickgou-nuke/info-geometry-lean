@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ChiralSuperchargeAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.ChiralSuperchargeAlgebraCapstone
 

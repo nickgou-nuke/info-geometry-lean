@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitOctonions.ZornMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Modular Tensor Category: Pentagon and Triangle Equations on the Zorn Diagonal

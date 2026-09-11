@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinHodgeResidueBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FierzReadout
 import InfoGeometry.Canonical.OperatorialFierzBridge
 import InfoGeometry.Meta.Architecture

@@ -1,2 +1,3 @@
 import InfoGeometry.Canonical.CliffordDirectColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CategoricalRiemannInductiveColimitBridge

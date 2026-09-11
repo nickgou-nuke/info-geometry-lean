@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciPentagonPathCarrier
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.FibonacciSixAnyonMatrixArtin
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.LogNilpotentMonoidalCategory
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.QuantumG2RMatrixBraidingDatum
 
 /-!

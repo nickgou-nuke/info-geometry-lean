@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import proofs.BraidProject.BraidGroup
 import InfoGeometry.Categorical.FibonacciBraidGroup3Representation
 import InfoGeometry.Categorical.HadjiivanovBraidGroupColimit

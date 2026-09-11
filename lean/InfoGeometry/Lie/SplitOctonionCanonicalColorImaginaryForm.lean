@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalChiralZornEquivariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionImaginaryThreeForm
 import InfoGeometry.Lie.SplitOctonionImaginaryTensor
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.GenericMetriplecticFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Probability.BinaryAitchisonMoments
 
 /-!
@@ -18,7 +19,7 @@ open InfoGeometry.Thermo.GenericMetriplecticFlow
 open InfoGeometry.Canonical.AmariBinarySimplexBridge
 open InfoGeometry.Probability.BinaryAitchisonMoments
 
-abbrev V := Fin 3 → ℝ
+abbrev V := InfoGeometry.Algebra.FiniteSpin.Vec3R
 
 def e (i : Fin 3) : V := Pi.single i 1
 

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.FiveGradeZornShadowProjection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Typed algebraic Bianchi defect for a projected nonassociative shadow

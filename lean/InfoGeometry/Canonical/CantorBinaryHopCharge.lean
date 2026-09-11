@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorCuntzBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordCantorFock
 import Mathlib.Tactic
 

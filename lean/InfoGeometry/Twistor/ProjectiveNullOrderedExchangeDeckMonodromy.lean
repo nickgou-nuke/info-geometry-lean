@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.ProjectiveNullOrderedExchangePath
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullConfigurationPermutationLinearMonodromy
 
 /-!

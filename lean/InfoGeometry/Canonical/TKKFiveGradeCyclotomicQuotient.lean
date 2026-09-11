@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FiveGradedTKK
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cyclotomic quotient of the five TKK weights

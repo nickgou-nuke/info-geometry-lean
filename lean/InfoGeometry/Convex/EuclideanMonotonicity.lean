@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.Euclidean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Basic
 
 namespace InfoGeometry.Convex

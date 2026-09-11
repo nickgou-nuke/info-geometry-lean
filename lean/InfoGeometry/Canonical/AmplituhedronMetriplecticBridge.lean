@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AmplituhedronBostConnesBridge
 import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem

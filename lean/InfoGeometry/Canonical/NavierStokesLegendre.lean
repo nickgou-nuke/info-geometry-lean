@@ -1,4 +1,5 @@
 import InfoGeometry.Potential.Thermo
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NavierStokesBridge
 import InfoGeometry.Canonical.BohmMadelungOperatorialBridge
 import Mathlib.CategoryTheory.Category.Preorder

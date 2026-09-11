@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KreinDoubledCartanPeirceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularTomitaTwoStateKleinBridge
 import InfoGeometry.Canonical.ZornBdGHamiltonianChiralBridge
 import InfoGeometry.Canonical.ZitterbewegungMassEmergenceBridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BeliefAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GaussianHolonomy
 import InfoGeometry.Canonical.PathIntegral
 import InfoGeometry.Canonical.QuantumInference

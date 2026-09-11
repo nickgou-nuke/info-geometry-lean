@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.SphericalVMFExponentialFamily
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 set_option autoImplicit false

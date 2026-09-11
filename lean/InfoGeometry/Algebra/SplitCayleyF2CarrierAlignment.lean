@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.SplitCayleyF2
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.Concrete
 import InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge
 

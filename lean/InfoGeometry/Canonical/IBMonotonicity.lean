@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBPythagorean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open MeasureTheory
 open ProbabilityTheory

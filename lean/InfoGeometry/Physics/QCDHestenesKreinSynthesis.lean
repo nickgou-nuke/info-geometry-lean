@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.QCDHestenesRealColorRepresentation
 import InfoGeometry.Physics.QCDHestenesKreinFockPhaseBridge
 import InfoGeometry.Physics.QCDHestenesKreinInterfaces

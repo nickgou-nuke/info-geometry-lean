@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Quaternion
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.Quantum.RealMajoranaCategory
 import InfoGeometry.Krein.DoubledSpace

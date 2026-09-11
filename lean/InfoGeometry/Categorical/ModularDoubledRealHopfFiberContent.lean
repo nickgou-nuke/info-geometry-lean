@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Ring
 import InfoGeometry.Categorical.FibonacciFusionCategoryData
 import InfoGeometry.Categorical.ModularDoubledRealHopfTransport

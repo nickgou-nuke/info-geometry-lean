@@ -1,5 +1,6 @@
 import InfoGeometry.External.Auto.MinkowskiBiquaternion
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Physics.CPTAtom
 import InfoGeometry.External.Auto.TripotentPenroseHolography
 
 /-!
@@ -49,26 +50,22 @@ theorem char_Xst (lam t x y z : ℂ) :
   ring
 
 /-- `Cl(1,1)` generator. -/
-def eps : M2R := !![0, 1; 1, 0]
+abbrev eps : M2R := InfoGeometry.Physics.CPTAtom.eps
 /-- Complex-structure/glide generator. -/
-def J : M2R := !![0, -1; 1, 0]
-def CPT : M2R := eps * J
+abbrev J : M2R := InfoGeometry.Physics.CPTAtom.J
+abbrev CPT : M2R := InfoGeometry.Physics.CPTAtom.CPT
 
 theorem eps_sq : eps * eps = 1 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [eps, Matrix.mul_apply, Fin.sum_univ_two]
+  simpa [eps] using InfoGeometry.Physics.CPTAtom.eps_sq
 
 theorem J_sq : J * J = (-1 : ℝ) • (1 : M2R) := by
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [J, Matrix.mul_apply, Fin.sum_univ_two]
+  simpa [J] using InfoGeometry.Physics.CPTAtom.J_sq
 
 theorem eps_J_anticomm : eps * J = -(J * eps) := by
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [eps, J, Matrix.mul_apply, Fin.sum_univ_two]
+  simpa [eps, J] using InfoGeometry.Physics.CPTAtom.eps_J_anticomm
 
 theorem CPT_sq : CPT * CPT = 1 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [CPT, eps, J, Matrix.mul_apply, Fin.sum_univ_two]
+  simpa [CPT] using InfoGeometry.Physics.CPTAtom.CPT_sq
 
 def Trip : M3C := (fun i j => (TripotentPenrose.T_zero i j : ℂ))
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.FourierTripartiteSlicing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.FourierTripartiteSlicingCapstone
 

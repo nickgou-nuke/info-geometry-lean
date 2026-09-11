@@ -1,4 +1,5 @@
 import Mathlib.Analysis.PSeries
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.SumPrimeReciprocals
 import InfoGeometry.Canonical.VarlamovDiscreteSymmetry
 

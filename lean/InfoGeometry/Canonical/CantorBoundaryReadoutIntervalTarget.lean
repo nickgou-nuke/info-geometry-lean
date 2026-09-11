@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBoundaryReadoutKernelQuotientTopCat
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryDyadicCover
 import Mathlib.Topology.Homeomorph.Lemmas
 import Mathlib.Topology.Category.CompHaus.Basic

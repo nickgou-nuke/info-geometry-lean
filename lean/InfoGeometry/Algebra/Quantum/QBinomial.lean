@@ -7,6 +7,7 @@ LICENSE file in the root directory of this source tree.
 -/
 
 import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.GroupWithZero.Finset
 import Mathlib.Tactic
 

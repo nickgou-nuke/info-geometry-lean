@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Clifford55ChiralHyperbolicStructure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55SpinBivectorLieBridge
 
 /-!

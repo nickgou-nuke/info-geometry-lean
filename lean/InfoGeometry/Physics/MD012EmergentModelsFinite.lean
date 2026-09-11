@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.MD011StatisticalInfoGeometry
 import InfoGeometry.Physics.Section38StressEnergyDomainSeparation
 

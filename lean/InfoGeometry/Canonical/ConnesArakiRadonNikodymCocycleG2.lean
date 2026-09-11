@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Exponential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SL2RToG2WiesbrockEmbedding
 
 noncomputable section

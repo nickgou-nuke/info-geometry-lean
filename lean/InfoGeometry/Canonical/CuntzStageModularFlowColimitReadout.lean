@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BoundedModularKMSBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Modular-flow readout export

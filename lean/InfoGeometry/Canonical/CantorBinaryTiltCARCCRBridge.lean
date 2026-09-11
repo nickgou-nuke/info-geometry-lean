@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 import InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge

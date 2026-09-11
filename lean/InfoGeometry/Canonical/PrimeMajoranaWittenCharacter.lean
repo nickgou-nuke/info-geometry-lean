@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.MobiusPrimonParity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.SplitMajoranaPrimon
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.OwnerTarget

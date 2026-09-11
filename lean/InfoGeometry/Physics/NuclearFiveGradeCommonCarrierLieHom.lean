@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native Lie homomorphism for the concrete nuclear five-grading

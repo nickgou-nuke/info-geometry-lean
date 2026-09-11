@@ -12,6 +12,7 @@ Drazin Dilation Gap:
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 
 noncomputable section

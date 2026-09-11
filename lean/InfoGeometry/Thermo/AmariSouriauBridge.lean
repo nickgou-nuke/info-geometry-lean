@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.Legendre
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Potential.LogPotential
 import InfoGeometry.Thermo.FromBregman
 import InfoGeometry.Thermo.SusceptibilityHessian

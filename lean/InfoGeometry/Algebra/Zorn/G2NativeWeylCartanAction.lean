@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeWeylRootSpaceTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativeWeylCartanRestriction
 
 /-! Kernel-checked Cartan basis action for the real Weyl generators. -/

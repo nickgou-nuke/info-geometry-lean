@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk1
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SingularDecompositionSurrogate
 import InfoGeometry.Canonical.RelativeModularScaleShapeSplit
 import InfoGeometry.Meta.Architecture

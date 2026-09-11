@@ -1,5 +1,6 @@
 
 import InfoGeometry.Projective.LogSum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Log-sum inequality wrapper alias

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.G2Cl55ChiralEquivarianceBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Conditional chiral/Hodge equivariance on the `Cl(5,5)` spinor carrier

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.RegularCARVacuumSeparation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A real split torus fixes both Zorn idempotents

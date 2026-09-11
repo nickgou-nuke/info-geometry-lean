@@ -1,4 +1,5 @@
 import InfoGeometry.Automorphic.LanglandsFunctorialityNuclearBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.LanglandsFunctorialityNuclearCapstone
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.JordanInnerDerivations
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.NonAssocDerivation
 import InfoGeometry.Canonical.BogoliubovFrameDeformationEntropy
 import InfoGeometry.Canonical.OperatorialFierzDerivationBridge

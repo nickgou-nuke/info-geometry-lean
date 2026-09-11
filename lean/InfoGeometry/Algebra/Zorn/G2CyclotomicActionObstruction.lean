@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.Zorn.G2CyclotomicSignedRootBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Boundary of the sectorwise cyclotomic model

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DualConnectionsCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InformationTorsion
 
 /-!

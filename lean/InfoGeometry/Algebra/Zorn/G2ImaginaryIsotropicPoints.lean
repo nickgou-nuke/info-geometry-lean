@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2FiniteIsotropicPoints
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Finset.Basic
 
 /-!

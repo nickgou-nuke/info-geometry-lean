@@ -4,6 +4,7 @@ Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
 Bulgarian Academy of Sciences.
 -/
 import Lean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Witness-Pack Lint — Detection Logic

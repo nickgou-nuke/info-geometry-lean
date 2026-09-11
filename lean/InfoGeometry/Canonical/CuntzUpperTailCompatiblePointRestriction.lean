@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzUpperTailQCCRRestrictionCompatibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzCompatiblePointLimit
 
 /-!

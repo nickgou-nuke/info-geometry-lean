@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CompletedZetaPotentialSymmetryBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.CompletedZetaPotentialAndRealGibbsFisherBridge
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences
 import InfoGeometry.Arithmetic.ActualRiemannXiSchwarzBridge

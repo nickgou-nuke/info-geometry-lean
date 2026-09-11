@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.F4Derivations
 import InfoGeometry.Algebra.SplitAlbertF4BasisTrace
 import InfoGeometry.Canonical.H3ZornS3JordanTopologicalReadout

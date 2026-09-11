@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.STUDatum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The concrete STU Freudenthal adjoint identity

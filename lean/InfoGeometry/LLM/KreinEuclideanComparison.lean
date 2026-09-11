@@ -1,4 +1,5 @@
 import InfoGeometry.LLM.KreinAttentionEnergy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Attention
 import InfoGeometry.Meta.Architecture
 

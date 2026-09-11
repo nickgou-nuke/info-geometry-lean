@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.TCSSensitivity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Directional derivative of the TCS response

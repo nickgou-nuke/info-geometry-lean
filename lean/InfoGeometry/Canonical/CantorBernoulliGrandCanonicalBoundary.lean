@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBernoulliBranchExchangeThermofield
 import InfoGeometry.Canonical.GrandCanonicalCore
 import InfoGeometry.Canonical.NambuGorkovParticleHoleBridge

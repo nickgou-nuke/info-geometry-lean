@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.DiscreteHodgeStarConjugation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
   The theorem-honest Portal 4 surface.

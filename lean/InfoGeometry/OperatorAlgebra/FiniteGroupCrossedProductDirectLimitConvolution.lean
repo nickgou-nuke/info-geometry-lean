@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraFiniteGroupActionDirectLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Convolution after descent to the native star-algebra direct limit

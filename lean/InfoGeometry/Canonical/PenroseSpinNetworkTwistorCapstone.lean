@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PenroseSpinNetworkTwistorBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.PenroseSpinNetworkTwistorCapstone
 

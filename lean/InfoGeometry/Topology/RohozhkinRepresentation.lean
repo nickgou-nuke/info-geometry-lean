@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.DelaunayPureBraidRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.PureBraidGroup
 import InfoGeometry.Topology.RohozhkinPBGL
 

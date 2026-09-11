@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinHodgeChiralBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Quantum.RealMajoranaCategory
 import InfoGeometry.Meta.Architecture

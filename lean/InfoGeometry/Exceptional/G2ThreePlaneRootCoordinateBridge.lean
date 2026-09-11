@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Exceptional.G2ThreePlaneWeightBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.QuantumAlgebra.ThreePlaneChiralCarrier
 import InfoGeometry.Algebra.Zorn.G2PositiveRootCoordinateBridge
 import InfoGeometry.Algebra.ZornMatrix

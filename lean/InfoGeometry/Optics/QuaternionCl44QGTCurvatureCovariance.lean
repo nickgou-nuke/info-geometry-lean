@@ -1,4 +1,5 @@
 import InfoGeometry.Optics.QuaternionCl44QGTDiracCovariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.OperatorQGTConnectionCovariance
 import InfoGeometry.Optics.OperatorQGTGaugeInvariants
 

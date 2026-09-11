@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NormNum
 import InfoGeometry.Clifford.CliffordTower
 import InfoGeometry.Physics.PellisFineStructure

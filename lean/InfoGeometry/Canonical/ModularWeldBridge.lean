@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativeModularOperator
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Volume.ConnesCocycle
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential

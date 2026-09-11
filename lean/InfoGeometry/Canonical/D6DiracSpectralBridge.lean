@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.D6SixModeAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
 

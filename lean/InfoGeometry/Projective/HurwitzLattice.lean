@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitQuaternionMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.TwistorBlockGrid
 
 /-!

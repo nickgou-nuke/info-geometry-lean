@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Krein.SplitBoost

@@ -1,4 +1,5 @@
 import InfoGeometry.Orthogonal.O55D5RootMultigrading
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Orthogonal.O55WittRootRepresentation
 import InfoGeometry.Orthogonal.O55WittCoordinateEquiv
 import InfoGeometry.Orthogonal.O55ContactFiveGrading

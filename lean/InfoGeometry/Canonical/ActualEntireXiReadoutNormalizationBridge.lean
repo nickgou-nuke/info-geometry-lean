@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.XiHardyZNormalizationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ActualEntireXiRealReadoutBridge
 
 /-!

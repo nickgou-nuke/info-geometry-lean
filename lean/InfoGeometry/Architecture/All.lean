@@ -1,4 +1,5 @@
 import InfoGeometry.Architecture.SpinFactor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Architecture.SymmetricSpace
 import InfoGeometry.Architecture.OctonionicFlow
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MultiplicativeToAdditiveBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.VolumeDeformationPrinciple

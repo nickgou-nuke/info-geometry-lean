@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 noncomputable section

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Measure.MeasureSpace
 import InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace

@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import Mathlib.Analysis.SpecialFunctions.Exp
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite good/bad Gibbs responsibilities

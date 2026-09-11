@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GrandCanonicalExperts
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.HyperbolicRotor
 import InfoGeometry.Canonical.KreinDoubledAtom

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.FiveGradedCentralizer
 import InfoGeometry.Projective.FiveGradedTopologicalBridge
 import InfoGeometry.Projective.AndreevHorizonUnitarity

@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllCrossChannel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The global circular Peirce basis for the split-octonion carrier
@@ -439,7 +440,7 @@ theorem ellCommutator_frame_seven :
   change ellCommutator (rootMinus 2) = (-2 : ℝ) • rootMinus 2
   exact ellCommutator_rootMinus 2
 
-abbrev Coordinate : Type := Fin 8 → ℝ
+abbrev Coordinate : Type := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 noncomputable def coordinateEquiv : CanonicalZorn ≃ₗ[ℝ] Coordinate :=
   circularPeirceBasis.equivFun

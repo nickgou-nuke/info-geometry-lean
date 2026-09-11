@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Hom.Defs
 import Mathlib.Algebra.Category.Grp.Basic
 import Mathlib.GroupTheory.Coprod.Basic

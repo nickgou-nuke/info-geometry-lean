@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteHestenesTomitaBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! # Finite modular operator on the Hestenes standard form
 

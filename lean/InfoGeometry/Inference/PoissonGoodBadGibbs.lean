@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.GoodBadGibbs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Inference.GoodFitVolume
 import InfoGeometry.Inference.RegularizedPoissonDeviance
 

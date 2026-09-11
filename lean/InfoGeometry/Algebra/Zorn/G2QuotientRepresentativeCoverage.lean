@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2NativeQuotientRepresentative
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exact coverage criterion for the 189 native quotient representatives

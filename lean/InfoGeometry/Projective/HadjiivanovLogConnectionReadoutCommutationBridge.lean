@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.HadjiivanovLogConnectionReadoutBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Commutation of logarithmic connection and residue readout

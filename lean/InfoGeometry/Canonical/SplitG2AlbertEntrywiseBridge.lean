@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornDerivation
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
 import InfoGeometry.Lie.SplitOctonionGogberashviliDerivationBridge

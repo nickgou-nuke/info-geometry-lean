@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorSurprisal
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import InfoGeometry.Canonical.RelativeSurprisalRadonNikodymBridge
 

@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.CanonicalZornCircularCARProjectors
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The associative envelope of the circular Peirce readouts

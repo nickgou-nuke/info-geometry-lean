@@ -1,4 +1,5 @@
 import Mathlib.Tactic.Ring
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # InfoGeometry.Canonical.MassieuOptimalTransport

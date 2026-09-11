@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionWittVectorCovectorBridge
 
 set_option linter.unusedSimpArgs false
@@ -31,7 +32,7 @@ namespace InfoGeometry.Lie.SplitOctonionPeirceDecompositionBridge
 
 open InfoGeometry.Lie.SplitOctonionWittVectorCovectorBridge
 
-abbrev Oct8 := Fin 8 → ℝ
+abbrev Oct8 := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 /-- Coordinate projection of the (1,1) scalar block: $u_+$. -/
 def proj11 (x : Oct8) : Oct8 :=

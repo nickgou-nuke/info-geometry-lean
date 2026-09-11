@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularProjectiveReciprocalFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.ProjectiveNullPolarIncidence
 
 noncomputable section
@@ -18,7 +19,7 @@ open InfoGeometry.Lie.SplitOctonionEllCircularQuadraticCoordinates
 open InfoGeometry.Twistor
 open InfoGeometry.Twistor.ProjectiveNullPolarIncidence
 
-abbrev Coord := Fin 8 → ℝ
+abbrev Coord := InfoGeometry.Algebra.FiniteSpin.Vec8R
 abbrev CircularNullBoundary := TwistorSpace circularPeirceQuadratic
 
 def zeroWeightSubmodule : Submodule ℝ Coord :=

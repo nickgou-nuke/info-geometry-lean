@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealBdG
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!

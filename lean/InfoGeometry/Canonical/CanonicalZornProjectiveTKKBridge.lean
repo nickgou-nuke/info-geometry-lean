@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.SplitOctonionBraidSU3
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
 import InfoGeometry.Canonical.ZornTrialityTKKBridge
 import InfoGeometry.Canonical.ZornCore

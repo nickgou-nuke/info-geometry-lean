@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornOuterTrialityGroup
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Spin/related-triples representation fiber

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.B3PresentedGroup
 import InfoGeometry.Physics.TwoStrandJonesWeakReadout
 
@@ -81,7 +82,7 @@ theorem e23_e12_e23 :
 
 /-! ## Fusion-basis data and adjacent Jones operators -/
 
-abbrev FusionState := Fin 2 → ℂ
+abbrev FusionState := InfoGeometry.Algebra.FiniteSpin.Vec2C
 
 /-- The two-channel recoupling matrix.  The parameters are kept explicit so
 the same carrier supports classical and quantum-dimension specializations. -/

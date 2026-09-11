@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzMatrixAlgebraicTraceFunctional
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Inner invariance of the algebraic trace

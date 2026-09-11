@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.AffineKacMoody
 import InfoGeometry.External.Virasoro.FockSpaceSugawara
 import InfoGeometry.Meta.Architecture

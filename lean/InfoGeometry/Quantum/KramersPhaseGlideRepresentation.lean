@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.ComplexKramersAntiunitary
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! The finite phase-inverting glide carried by the native Kramers operator.
 The antiunitary and the deck action remain distinct carriers.

@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.LogNilpotentCheckedRAdapter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.LogNilpotentMonoidalUnit
 
 /-!

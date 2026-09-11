@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Defs
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitOctonionsDualProduct
 import InfoGeometry.Clifford.EvenRegularRepresentation
 import InfoGeometry.Krein.DoubledSpace

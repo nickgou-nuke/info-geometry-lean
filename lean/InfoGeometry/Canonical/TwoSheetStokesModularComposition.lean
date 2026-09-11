@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.TwoSheetModularComposition
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.TwoSheetModularTopological
 

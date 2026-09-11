@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.GL11GradedSwap
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The defining `gl(1|1)` matrix representation

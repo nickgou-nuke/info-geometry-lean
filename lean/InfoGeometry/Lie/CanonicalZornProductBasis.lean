@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionStandardDerivation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Canonical products of the Zorn basis elements

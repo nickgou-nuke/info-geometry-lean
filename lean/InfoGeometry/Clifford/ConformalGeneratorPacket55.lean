@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.ConformalLieAlgebra55Dilation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ConformalReflection55
 import InfoGeometry.Clifford.ModularCftBridge
 import InfoGeometry.Clifford.DiscreteMoebiusGroup

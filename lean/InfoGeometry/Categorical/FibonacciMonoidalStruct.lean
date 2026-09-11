@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.FibonacciMonoidalStructBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Compatibility names for the canonical Fibonacci monoidal struct owner

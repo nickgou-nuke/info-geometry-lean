@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.MajoranaLiftPacket
 import InfoGeometry.Canonical.RealBdGDIIIAtom
 import InfoGeometry.Canonical.UnifiedSuperchargeAlgebra

@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.Axioms
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.UnifiedSuperchargeAlgebra
 import InfoGeometry.Canonical.AssociativeSuperBracket
 import InfoGeometry.Meta.Architecture

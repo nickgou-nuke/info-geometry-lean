@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.WeylGromovReadoutCompatibility
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 namespace InfoGeometry.Canonical

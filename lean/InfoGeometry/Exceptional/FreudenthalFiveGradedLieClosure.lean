@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticTKKTotalBracket
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalHeisenbergLieRepresentation
 
 /-!

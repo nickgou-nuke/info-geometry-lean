@@ -1,4 +1,5 @@
 import Mathlib.Topology.UrysohnsLemma
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # AFP Urysohn locally compact Hausdorff adapter

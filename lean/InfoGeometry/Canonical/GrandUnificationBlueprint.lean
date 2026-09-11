@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InformationNumber
 import InfoGeometry.Canonical.PathIntegral
 import InfoGeometry.Canonical.ChiralRGFlow

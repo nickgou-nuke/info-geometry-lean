@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ZornScalingFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The formal null boundary of the Zorn carrier

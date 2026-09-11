@@ -5,6 +5,7 @@ Authors: ...
 -/
 
 import InfoGeometry.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.Field
 
 namespace InfoGeometry

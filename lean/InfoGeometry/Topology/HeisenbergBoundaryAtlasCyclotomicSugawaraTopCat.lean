@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.HeisenbergBoundaryAtlasCyclotomicSugawaraTopological
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # TopCat packaging for the Heisenberg boundary / sixth-root / Sugawara packet

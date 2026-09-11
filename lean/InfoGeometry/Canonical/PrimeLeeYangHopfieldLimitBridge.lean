@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import InfoGeometry.Canonical.RelativeDeterminantScatteringSocket

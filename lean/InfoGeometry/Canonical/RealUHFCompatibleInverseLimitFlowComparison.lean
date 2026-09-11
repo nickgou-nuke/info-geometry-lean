@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutObservableOrbitClosureCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitDynamics
 import InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationTopCat
 

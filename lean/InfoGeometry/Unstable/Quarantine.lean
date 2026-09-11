@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AQFTOperatorInterface
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AnomalyDilationBridge
 import InfoGeometry.Canonical.BeliefDynamics
 import InfoGeometry.Canonical.BerryPhase

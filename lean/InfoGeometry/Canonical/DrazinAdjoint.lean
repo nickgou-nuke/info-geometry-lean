@@ -1,4 +1,5 @@
 import InfoGeometry.Singular.Drazin
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry
 

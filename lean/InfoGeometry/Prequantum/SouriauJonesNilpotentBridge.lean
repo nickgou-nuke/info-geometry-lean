@@ -1,4 +1,5 @@
 import InfoGeometry.Prequantum.SouriauJaynesTrace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases

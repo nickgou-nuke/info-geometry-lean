@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NavierStokesBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NeuralOperatorCore
 import InfoGeometry.Meta.Architecture
 

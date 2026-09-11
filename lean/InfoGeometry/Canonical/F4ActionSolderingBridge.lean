@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.F4ActionMatrixRankCertificateBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.F4ActionMatrixRationalCertificate
 import InfoGeometry.Algebra.SplitAlbertF4BasisTrace
 import InfoGeometry.Canonical.H3ZornCoordinateBasisBridge

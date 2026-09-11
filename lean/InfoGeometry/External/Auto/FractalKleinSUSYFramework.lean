@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Fractal/Cuntz logCFT and Brillouin-Klein SUSY framework

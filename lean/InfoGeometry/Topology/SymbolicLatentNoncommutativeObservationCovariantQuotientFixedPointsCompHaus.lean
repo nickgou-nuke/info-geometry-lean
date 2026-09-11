@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentNoncommutativeObservationCovariantQuotientCompHausFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Fixed points of covariant operator-observation quotient flows

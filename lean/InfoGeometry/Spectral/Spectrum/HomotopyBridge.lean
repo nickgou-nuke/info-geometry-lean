@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Spectral.Spectrum.Basic
 import InfoGeometry.Spectral.Spectrum.GPreSpectrum
 import InfoGeometry.Spectral.Spectrum.Product

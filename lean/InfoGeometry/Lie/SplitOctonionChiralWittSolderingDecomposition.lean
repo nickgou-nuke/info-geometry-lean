@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCircularWittForm
 import InfoGeometry.Lie.SplitOctonionChiralMinkowskiFixedSectionBridge
 
@@ -17,8 +18,8 @@ namespace InfoGeometry.Lie.SplitOctonionChiralWittSolderingDecomposition
 open InfoGeometry.Lie.SplitOctonionCircularWittForm
 open InfoGeometry.Lie.SplitOctonionChiralMinkowskiFixedSectionBridge
 
-abbrev Coord := Fin 8 → ℝ
-abbrev Four := Fin 4 → ℝ
+abbrev Coord := InfoGeometry.Algebra.FiniteSpin.Vec8R
+abbrev Four := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
 def minkowskiSignEquiv : Four ≃ₗ[ℝ] Four where
   toFun ξ := ![ξ 0, -ξ 1, -ξ 2, -ξ 3]

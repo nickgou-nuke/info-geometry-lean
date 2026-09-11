@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 namespace InfoGeometry.SignedNetwork.GaugeTransport
 variable {V G : Type*} [Group G]
 def endpoint (start : V) : List V → V | [] => start | v :: xs => endpoint v xs

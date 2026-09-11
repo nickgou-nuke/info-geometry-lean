@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.SplitTrialityKernel
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BogoliubovFockSuper
 
 /-!

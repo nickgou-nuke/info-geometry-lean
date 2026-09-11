@@ -1,4 +1,5 @@
 import InfoGeometry.Categorical.LogJordanBraidProjectTensorPowerRepresentation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Stabilization of logarithmic tensor-power braid actions

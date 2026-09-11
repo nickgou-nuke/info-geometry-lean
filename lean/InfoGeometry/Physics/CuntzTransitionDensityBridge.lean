@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.CuntzTransitionGramBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.HermitianDensityTangentSpace
 
 /-!

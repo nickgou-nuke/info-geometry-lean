@@ -24,6 +24,7 @@ The proof is algebraic and works in any starred ring.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.OwnerTarget
 

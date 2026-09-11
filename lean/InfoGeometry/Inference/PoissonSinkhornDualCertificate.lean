@@ -5,6 +5,7 @@ Bulgarian Academy of Sciences.
 -/
 
 import InfoGeometry.Inference.PoissonSinkhornPrimalDual
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Balanced Poisson Sinkhorn property

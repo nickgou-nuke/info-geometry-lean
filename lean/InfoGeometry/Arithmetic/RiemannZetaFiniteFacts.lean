@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.LSeries.Nonvanishing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 
 /-!

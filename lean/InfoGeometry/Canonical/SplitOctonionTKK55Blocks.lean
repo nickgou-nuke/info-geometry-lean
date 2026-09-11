@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionTKK55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exhaustive hyperbolic block decomposition

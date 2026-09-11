@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanSouriauMassieu
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauCoadjointCovariance
 import Mathlib.Analysis.Normed.Module.Basic
 import Mathlib.Analysis.Normed.Lp.PiLp

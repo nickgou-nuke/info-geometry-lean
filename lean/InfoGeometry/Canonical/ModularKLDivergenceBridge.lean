@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.ModularKLDivergence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MeasureProjective
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 import InfoGeometry.Canonical.DPDWedgeCompatibility

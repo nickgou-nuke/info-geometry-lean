@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornG2CartanMellinBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2SplitCartanCharacter
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.Fock
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.HilbertBridge
 import InfoGeometry.Krein.DoubledSpace
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonionZ2ThreeCochainBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Native split-octonion grading readout

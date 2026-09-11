@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.Cl55FreudenthalZornRestrictedGradeMaps
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConformalFiveGradeInversion
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic

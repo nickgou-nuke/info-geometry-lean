@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.Z2ThreeCochainBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Binary cochain twists and their associators

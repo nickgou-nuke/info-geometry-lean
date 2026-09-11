@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.FarneaGe64IsospinMixing
 import InfoGeometry.External.Auto.LECM2022ElectroweakRadiiISB
 

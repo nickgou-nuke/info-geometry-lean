@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.EulerProduct.DirichletLSeries
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Experimental.WeylDenominator
 
 open scoped BigOperators

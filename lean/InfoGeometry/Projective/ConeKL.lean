@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.FaithfulKL
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.Normalize
 set_option linter.unnecessarySimpa false
 

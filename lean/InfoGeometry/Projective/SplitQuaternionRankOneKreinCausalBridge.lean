@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitQuaternionRankOneKreinProjective
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.SplitQuaternionCausalEntropyAxes
 
 /-!

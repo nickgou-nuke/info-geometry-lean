@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredQCCRParameterTopologicalLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CARCCRFockCuntzParameterTopologicalReadout
 import InfoGeometry.Canonical.FixedIndexCuntzStarTower
 

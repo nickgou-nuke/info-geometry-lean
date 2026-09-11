@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.SupervolumeFunctional
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Casimir Energy from Zeta/Supervolume Residues

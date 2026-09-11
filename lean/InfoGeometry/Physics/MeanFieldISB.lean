@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.TKKIsospinEmbedding
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Physics
 

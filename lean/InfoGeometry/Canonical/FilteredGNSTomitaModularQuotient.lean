@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FilteredGNSTomitaComplexColimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Null-space quotient of the filtered Tomita modular form

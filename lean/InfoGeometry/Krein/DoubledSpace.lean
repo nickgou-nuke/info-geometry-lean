@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.InvolutiveSelfDualCarrier
 import InfoGeometry.Cartan.Involution
 import Mathlib.Analysis.InnerProductSpace.Adjoint

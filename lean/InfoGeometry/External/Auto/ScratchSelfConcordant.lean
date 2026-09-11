@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.ZPow
 import Mathlib.Analysis.Calculus.Deriv.Inv
 import Mathlib.Analysis.Calculus.Deriv.Pow

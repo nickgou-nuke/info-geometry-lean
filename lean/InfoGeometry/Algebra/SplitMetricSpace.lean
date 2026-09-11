@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Module.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.SkewAdjoint
 import Mathlib.LinearAlgebra.BilinearForm.Properties
 import Mathlib.LinearAlgebra.Dimension.Finrank

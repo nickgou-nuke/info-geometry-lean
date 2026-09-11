@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.RCLike.Sqrt
 import InfoGeometry.External.Auto.TransformsAndScale
 open TransformsAndScale

@@ -9,6 +9,7 @@ accounting identity needed by a later Einstein-readout theorem.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
 
 noncomputable section

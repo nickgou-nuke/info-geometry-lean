@@ -11,6 +11,7 @@ analytic classification theorem.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CliffordAtomsZ2n
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 

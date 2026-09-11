@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55CAROperatorTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Concrete Bogoliubov covariance of the `Cl(5,5)` CAR carrier

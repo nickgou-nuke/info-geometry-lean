@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.G2Cl55FiniteFredholmIndexBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

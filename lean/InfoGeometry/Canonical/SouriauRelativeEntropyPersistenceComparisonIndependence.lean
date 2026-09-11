@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauRelativeEntropyPersistenceLimitColimitComparison
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace SouriauRelativeEntropyPersistenceComparisonIndependence
 

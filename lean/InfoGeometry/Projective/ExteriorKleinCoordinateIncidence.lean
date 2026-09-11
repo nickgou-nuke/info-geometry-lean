@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.ExteriorKleinTwoPlaneIncidence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricIncidence
 
 /-!

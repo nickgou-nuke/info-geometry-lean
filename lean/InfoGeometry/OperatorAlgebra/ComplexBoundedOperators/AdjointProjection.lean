@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Adjoint
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.Basic
 

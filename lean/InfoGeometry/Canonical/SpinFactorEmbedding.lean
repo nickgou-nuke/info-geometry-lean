@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Block
 import Mathlib.Algebra.Group.Basic
 import InfoGeometry.Canonical.SplitGaugeGroup

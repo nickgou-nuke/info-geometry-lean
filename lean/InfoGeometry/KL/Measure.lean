@@ -1,4 +1,5 @@
 import Mathlib.InformationTheory.KullbackLeibler.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Measure KL Divergence

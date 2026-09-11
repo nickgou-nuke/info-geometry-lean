@@ -18,6 +18,7 @@ namespace.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorFenchelRegularCone
 import InfoGeometry.Geometry.OperatorBregmanDivergence
 import InfoGeometry.Krein.DoubledSpace

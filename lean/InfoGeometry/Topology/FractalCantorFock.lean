@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.l2Space
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Clifford.Lift

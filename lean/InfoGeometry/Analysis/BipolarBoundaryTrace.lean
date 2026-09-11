@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 noncomputable section

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CurrentSugawaraBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.External.Virasoro.CentralChargeCalc
 import Mathlib.Tactic

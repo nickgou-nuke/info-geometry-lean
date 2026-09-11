@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentPathFamilyImageCompHaus
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentObservedFamilyImageFeasibleTopCat
 import InfoGeometry.Topology.SymbolicLatentFeasibleRegionCompHaus
 

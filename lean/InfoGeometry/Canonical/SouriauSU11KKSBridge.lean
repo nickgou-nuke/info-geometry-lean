@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SU11MetriplecticCoadjointOrbit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Concrete `SU(1,1)` KKS bridge

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ProjectorEquivariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.KreinSpace
 import Mathlib.Analysis.SpecialFunctions.Exp
 

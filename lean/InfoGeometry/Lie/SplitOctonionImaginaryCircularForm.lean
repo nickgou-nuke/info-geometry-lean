@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionCircularMultiplicationTable
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionImaginaryThreeForm
 
 /-!

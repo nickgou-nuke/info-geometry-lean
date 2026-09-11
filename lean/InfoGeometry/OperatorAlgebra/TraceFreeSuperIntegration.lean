@@ -16,6 +16,7 @@ explicit backend.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.ENNReal.Basic
 
 noncomputable section

@@ -1,4 +1,5 @@
 import InfoGeometry.Exceptional.FreudenthalGenericJacobiClosure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalFiveGradedCarrierModule
 
 noncomputable section

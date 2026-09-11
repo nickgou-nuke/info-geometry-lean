@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CelikKocakEndpointRankOne
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CelikKocakPaperTiltSwitchClosure
 
 /-!

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AbjChiralCuntzHallBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Axiomatic Audit of AbjChiralCuntzHallBridge

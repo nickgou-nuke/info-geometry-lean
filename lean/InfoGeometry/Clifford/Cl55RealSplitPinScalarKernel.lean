@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55CenterMatrixBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55RealSplitPinKernelCenter
 
 namespace InfoGeometry.Clifford.Clifford55

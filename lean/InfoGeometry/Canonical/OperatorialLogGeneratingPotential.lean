@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.InformationPartitionCore
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 /-!

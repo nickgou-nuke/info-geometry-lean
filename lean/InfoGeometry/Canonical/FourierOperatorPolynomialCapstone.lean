@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.FourierOperatorPolynomial
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical.FourierOperatorPolynomialCapstone
 

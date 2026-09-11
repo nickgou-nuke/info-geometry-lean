@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CuntzMapKreinBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
 
 /-!

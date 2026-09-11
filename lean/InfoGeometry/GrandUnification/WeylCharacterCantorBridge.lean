@@ -1,4 +1,5 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.UHFBooleanProjectionCantorBridge
 import InfoGeometry.SuperMetriplectic.WeylCharacter
 

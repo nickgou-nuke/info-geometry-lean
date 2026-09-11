@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionAxialCartanSupport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionAxialKleinProjective
 
 /-!

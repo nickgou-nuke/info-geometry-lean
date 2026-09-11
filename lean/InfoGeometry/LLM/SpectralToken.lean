@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.LLM.SpectralToken
 

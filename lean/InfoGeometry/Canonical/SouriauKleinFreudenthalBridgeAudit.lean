@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauKleinFreudenthalBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.Canonical.SouriauKleinFreudenthalBridge
 

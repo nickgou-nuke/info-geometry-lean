@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Clifford55
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55SpinorChirality
 import InfoGeometry.Clifford.Cl55RealSplitPin
 import InfoGeometry.Clifford.Cl55RealSplitPinAction

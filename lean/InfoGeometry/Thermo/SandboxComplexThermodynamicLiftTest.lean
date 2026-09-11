@@ -1,4 +1,5 @@
 import InfoGeometry.Thermo.ComplexThermodynamicLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open InfoGeometry.Thermo.ComplexThermodynamicLift
 

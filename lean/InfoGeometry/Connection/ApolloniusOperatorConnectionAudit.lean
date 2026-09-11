@@ -1,4 +1,5 @@
 import InfoGeometry.Connection.ApolloniusOperatorConnection
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Transitive axiom inspection for the native Apollonius connection layer

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Cl11StageTwoMatrixEquivalence
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
 
 /-!

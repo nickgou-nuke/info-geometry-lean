@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauLieThermoKKTBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 /-!

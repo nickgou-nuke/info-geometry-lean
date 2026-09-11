@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.ConnesQuantumDifferential
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Physics
 

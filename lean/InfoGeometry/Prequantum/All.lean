@@ -1,4 +1,5 @@
 import InfoGeometry.Prequantum.Scaling
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Prequantum.LiouvilleCapacity
 import InfoGeometry.Prequantum.AlgebraicGNSState
 import InfoGeometry.Prequantum.SouriauJaynesTrace

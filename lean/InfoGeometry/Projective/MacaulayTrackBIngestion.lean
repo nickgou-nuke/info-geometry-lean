@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.NonIsoConf3RankIngestion
 import InfoGeometry.Projective.PenroseSpinTilingConfig
 

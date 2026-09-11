@@ -16,6 +16,7 @@ modes. Topological edge protection is a separate witness.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 import InfoGeometry.Meta.OwnerTarget
 

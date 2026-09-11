@@ -1,4 +1,5 @@
 import Mathlib.Topology.Category.TopCat.Limits.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PauliJungTrialityD4Synthesis
 import InfoGeometry.Topology.PauliJungTrialityD4Topological
 import InfoGeometry.Topology.NaryTreeBoundaryInverseLimit

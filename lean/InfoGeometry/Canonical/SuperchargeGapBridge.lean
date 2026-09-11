@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SuperchargeTransportBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open scoped InnerProductSpace
 

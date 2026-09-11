@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.NuclearKleinParameterBundle
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearKleinSpectralDescentBridge
 import InfoGeometry.Physics.NuclearKleinPinWallpaperBridge
 import InfoGeometry.Physics.NuclearKleinPresentationOperatorBridge

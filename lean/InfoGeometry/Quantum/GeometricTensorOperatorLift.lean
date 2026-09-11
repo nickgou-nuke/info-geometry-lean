@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.GeometricTensor
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.EinsteinAnomalyOperator

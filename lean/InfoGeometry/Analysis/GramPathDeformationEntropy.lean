@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.MatrixPathDeformationEntropy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LinearAlgebra.FiniteGramDeformationEntropy
 
 noncomputable section

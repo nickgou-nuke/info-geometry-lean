@@ -5,6 +5,7 @@ Phase 2: Normalized Gell-Mann basis for 𝔰𝔲(3)
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Classical
 import Mathlib.LinearAlgebra.Matrix.Basis
 import Mathlib.LinearAlgebra.Matrix.Trace

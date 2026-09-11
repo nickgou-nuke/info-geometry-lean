@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl11TensorTower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Algebra.Module.FiniteDimension
 import Mathlib.Topology.Category.TopCat.Basic
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit

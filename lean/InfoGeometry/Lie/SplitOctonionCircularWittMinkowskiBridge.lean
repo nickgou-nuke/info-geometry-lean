@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.PauliParavectorBridge
 import InfoGeometry.Lie.SplitOctonionCircularHyperbolicFlow
 
@@ -20,7 +21,7 @@ namespace InfoGeometry.Lie.SplitOctonionCircularWittMinkowskiBridge
 open InfoGeometry.Geometry.PauliParavectorBridge
 open InfoGeometry.Lie.SplitOctonionCircularHyperbolicFlow
 
-abbrev Coordinate := Fin 8 → ℝ
+abbrev Coordinate := InfoGeometry.Algebra.FiniteSpin.Vec8R
 
 @[simp] theorem add_t (u v : Minkowski4) : (u + v).t = u.t + v.t := rfl
 @[simp] theorem add_x (u v : Minkowski4) : (u + v).x = u.x + v.x := rfl

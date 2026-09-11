@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.LaplaceUniqueness
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! 
 # InfoGeometry.Analysis.LaplaceContour

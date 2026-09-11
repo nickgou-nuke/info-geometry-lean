@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.QuaternionPauliRealForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Chiral operator matrices with quaternionic Pauli entries

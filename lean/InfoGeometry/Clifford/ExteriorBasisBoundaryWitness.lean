@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55ExteriorSpinorCoordinateReadout
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LinearAlgebra.RegularDyadCompression
 import Mathlib.Tactic
 

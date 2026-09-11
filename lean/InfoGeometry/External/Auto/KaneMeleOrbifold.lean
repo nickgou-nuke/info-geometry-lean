@@ -1,4 +1,5 @@
 import InfoGeometry.External.Auto.FreedAnomalyCancellation
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.CauchyHolography
 
 namespace KaneMeleOrbifold

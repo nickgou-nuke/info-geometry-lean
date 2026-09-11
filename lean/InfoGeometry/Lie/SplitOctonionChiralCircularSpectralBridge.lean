@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralOperatorEnvelope
 
 /-!

@@ -21,6 +21,7 @@ longer hidden inside a bare `is_central` hypothesis.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.IndividuatedCasimir
 
 noncomputable section

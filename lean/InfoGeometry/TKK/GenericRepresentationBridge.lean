@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.DerivationLieLane
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Honest grading contract for a future TKK/Freudenthal representation. -/
 namespace InfoGeometry.TKK.GenericRepresentation

@@ -17,6 +17,7 @@ No claim is made that every vortex hosts a Majorana zero mode.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 import InfoGeometry.Meta.OwnerTarget
 

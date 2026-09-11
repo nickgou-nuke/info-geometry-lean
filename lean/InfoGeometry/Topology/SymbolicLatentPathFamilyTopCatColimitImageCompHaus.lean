@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.SymbolicLatentPathFamilyTopCatColimitImage
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SymbolicLatentPathFamilyImageCompHaus
 
 namespace InfoGeometry.Topology.SymbolicLatentPathFamilyTopCatColimitImageCompHaus

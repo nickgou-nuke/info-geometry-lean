@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.SplitOctonionGlobalWittNorm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The finite `1 + 3 + 3 + 1` exterior-frame readout

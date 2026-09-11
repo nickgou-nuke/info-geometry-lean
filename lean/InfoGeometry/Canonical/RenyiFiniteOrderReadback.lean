@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite scalar Rényi order readback

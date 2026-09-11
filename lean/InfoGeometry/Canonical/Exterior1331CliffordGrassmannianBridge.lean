@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitOctonion1331ExteriorDiracSouriauBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ExteriorPluckerPureSpinorCompatibility
 
 /-!

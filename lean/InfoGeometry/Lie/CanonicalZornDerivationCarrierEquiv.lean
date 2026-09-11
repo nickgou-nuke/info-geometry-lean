@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.CanonicalZornMathlibRootSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

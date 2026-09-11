@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Canonical.PrimeSUSYVacuum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Prime SUSY vacuum finite capstone

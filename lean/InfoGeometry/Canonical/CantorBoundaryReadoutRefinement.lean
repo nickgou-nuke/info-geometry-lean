@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorCylinderHomeomorph
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Finite-readout compatibility with symbolic refinement

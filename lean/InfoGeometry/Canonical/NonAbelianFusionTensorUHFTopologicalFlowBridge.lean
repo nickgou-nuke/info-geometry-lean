@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.NonAbelianFusionTensorTopologicalFlow
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NonAbelianFusionTensorUHFTopologicalBridge
 
 /-!

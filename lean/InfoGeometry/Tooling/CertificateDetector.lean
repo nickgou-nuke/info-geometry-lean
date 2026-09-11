@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SelfDualCone
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.Orthant
 import InfoGeometry.Meta.Architecture
 

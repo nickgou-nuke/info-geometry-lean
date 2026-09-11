@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBoundaryReadoutDyadicRange
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryReadoutRefinement
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Tessellation.CantorDiracSeaCharge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.CantorDiracSeaHestenesBridge
 
 /-!

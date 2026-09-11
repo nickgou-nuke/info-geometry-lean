@@ -20,6 +20,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 
 import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MoorePenrose
 import Mathlib.Algebra.Module.Basic
 

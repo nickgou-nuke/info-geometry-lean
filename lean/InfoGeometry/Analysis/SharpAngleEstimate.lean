@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.DirichletForm
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 /-!
 # InfoGeometry.Analysis.SharpAngleEstimate
 The full sharp-angle theorem for elliptic divergence forms is not encoded by

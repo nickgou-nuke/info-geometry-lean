@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ChiralCliffordSplit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Chiral soldering compatibility import

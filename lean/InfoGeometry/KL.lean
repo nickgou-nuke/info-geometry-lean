@@ -1,5 +1,6 @@
 
 import InfoGeometry.KL.Measure
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.KL.Finite
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 

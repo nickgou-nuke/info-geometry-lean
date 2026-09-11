@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.MobiusWindingRootBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.MobiusGauge
 
 /-!
@@ -11,7 +12,7 @@ of all Möbius conjugacy classes.
 
 namespace InfoGeometry.Projective.MobiusLoxodromicSpectralParameter
 
-abbrev Matrix2 := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Matrix2 := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 noncomputable def flow (κ : ℂ) : Matrix2 :=
   !![Complex.exp κ, 0; 0, Complex.exp (-κ)]

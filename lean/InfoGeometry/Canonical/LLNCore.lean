@@ -1,4 +1,5 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
 import Mathlib.Probability.StrongLaw
 

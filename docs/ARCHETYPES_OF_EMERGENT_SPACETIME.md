@@ -974,9 +974,31 @@ Formalizing the microscopic physical foundations of True Coincidence Summing:
 * **Master TCS Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_true_coincidence_summing_synthesis`).
   In Lean 4: [`DetectorTrueCoincidenceSumming.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorTrueCoincidenceSumming.lean) and [`DetectorTrueCoincidenceSummingAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorTrueCoincidenceSummingAudit.lean).
 
+### 5.68 Holistic Macroscopic Quantum Observer & Holographic Dimension Collapse
+Formalizing the paradigm shift from classical optical ray-tracing to holistic macroscopic quantum measurement:
+* **Holographic Dimension Collapse (3D Crystal $\to$ 1D Eigen-Scale):** For an arbitrary 3D semiconductor crystal with volume form factor $\mathcal{G} \ne 0$, the singles response is $L_i(X) = \mathcal{G} C_i X$ and coincidence is $Q(X) = \mathcal{G}^2 \kappa X^2$. In the Copula cross-ratio $(L_1 L_2)/Q$, the 3D geometry factor $\mathcal{G}^2 / \mathcal{G}^2 = 1$ self-annihilates identically (`holisticCopulaProduct_eq`, `holographic_dimension_collapse`).
+* **Quantum Square-Root Inversion:** The square root operator $\sqrt{\cdot}$ is the exact mathematical inverse of the two-particle joint quantum event: $\sqrt{Q / (\mathcal{G}^2 \kappa)} = X$ (`quantum_sqrt_inversion`), and under normalized coupling $\sqrt{Q(X)} = X$ (`quantum_sqrt_eigen_scale`).
+* **Efficiency & Form-Factor Self-Annihilation:** Complete self-annihilation of microscopic efficiencies $\varepsilon_1, \varepsilon_2$ and 3D form factor $\mathcal{G}$ (`holistic_efficiency_annihilation`), recovering absolute source activity $A$.
+* **Dilation Gauge Invariance:** Rescaling $(X, C_i, \kappa) \mapsto (l X, C_i / l, \kappa / l^2)$ preserves the holistic cross-ratio strictly (`holistic_dilation_invariance`).
+* **Master Holistic Observer Synthesis:** Full structural conjunction certified in Mathlib 4 (`certified_holistic_quantum_observer_synthesis`).
+  In Lean 4: [`DetectorHolisticQuantumObserver.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorHolisticQuantumObserver.lean) and [`DetectorHolisticQuantumObserverAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorHolisticQuantumObserverAudit.lean).
+
+### 5.69 Holistic Detector Observability, Spatial Integral Annihilation, and Profile Least-Squares
+Formalizing the elimination of Monte Carlo spatial voxel integration and the zero-intercept linear law $L_1 L_2 = H \cdot Q$:
+* **Spatial Volume Integral Annihilation:** For ANY arbitrary active crystal volume, dead-layer geometry, or spatial attenuation profile with integral $I \ne 0$, the cross-ratio $(L_1 L_2)/Q$ identically annihilates $I$ and $I^2$ (`spatial_integral_annihilation`).
+* **Monte Carlo Geometry Redundancy:** Two crystals or simulation models with differing spatial integrals $I_A \ne I_B$ yield identically equal Campion cross-ratios (`monte_carlo_geometry_redundancy`).
+* **Zero-Intercept Linear Law:** Across all distances and scales $X$, the restored product satisfies $L_1(X) L_2(X) = H \cdot Q(X)$ with zero intercept (`restored_product_linear_law`, `far_field_zero_intercept`).
+* **Absolute Activity from Global Slope:** $A = H \cdot (P_{12} W) / (P_1 P_2)$ without detector peak efficiencies (`global_slope_identifies_cascade`, `activity_recovered_from_slope`).
+* **Profile Least-Squares Residual Annihilation:** Multi-point RSS $\mathcal{R}(H) = \sum_j (L_{1,j} L_{2,j} - H Q_j)^2$ vanishes identically at the global slope (`profileResidualRSS_nonneg`, `regression_profile_residual_zero`).
+* **Stationarity & Noise Suppression:** The normal equation stationarity uniquely identifies the Gauss-Markov slope $\hat{H} = (\sum Q_j Y_j) / (\sum Q_j^2)$, weighting points by $Q_j^2 \propto X_j^4$ and eliminating large-distance asymptotic singular noise (`normal_equation_stationarity`).
+* **Holistic Rank-One Minor Vanishing:** The $2 \times 2$ minor of the joint detection matrix vanishes identically (`holistic_rank_one_minor_vanishing`).
+* **Master Holistic Detector Synthesis:** Full conjunction certified in Mathlib 4 (`certified_holistic_detector_observer_synthesis`).
+  In Lean 4: [`DetectorHolisticObserver.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorHolisticObserver.lean) and [`DetectorHolisticObserverAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorHolisticObserverAudit.lean).
+
 ---
 
 ## Master Verification Matrix
+
 
 | Physical Archetype | Algebraic Carrier | Core Theorem in Lean 4 | Verification Status |
 | :--- | :--- | :--- | :--- |
@@ -1060,7 +1082,8 @@ Formalizing the microscopic physical foundations of True Coincidence Summing:
 | **Detector Copula Decoupling** | Product Copula $\Pi = uv$ / Bayes Decoupling / Linear Marginal / Scale Invariant Quotient | `certified_detector_copula_decoupling_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Detector Bayesian Copula** | Zero Intercept $R(0)=0$ / Copula Product $Y=(C_1 C_2)X^2$ / Dilation Invariance / Efficiency Cancellation | `certified_detector_bayesian_copula_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Detector Foundational Copula** | 2D Copula Axioms / Flux Bound $R(0)=0$ / Residual $\mathcal{E} \ge 0$ / Convergence $X=\sqrt{Q/\kappa}$ | `certified_detector_foundational_copula_synthesis` | **Kernel-Checked (0 gaps)** |
-| **Detector True Coincidence Summing** | Efficiency Cancellation $(C_1 C_2)/\kappa = A/W$ / Peak-to-Total $\kappa/K_i = p_j$ / Curvature Bound $\kappa \le K_i$ | `certified_true_coincidence_summing_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Detector Holistic Quantum Observer** | Holographic Collapse $\mathcal{G}^2/\mathcal{G}^2=1$ / Sqrt Inversion $\sqrt{Q}=X$ / Efficiency Annihilation / Dilation Invariance | `certified_holistic_quantum_observer_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Detector Holistic Regression Observer**| Spatial Integral Annihilation / Zero Intercept $L_1 L_2 = H Q$ / Gauss-Markov $\sum Q_j^2$ Weighting / Minor Vanishing | `certified_holistic_detector_observer_synthesis` | **Kernel-Checked (0 gaps)** |
 
 All modules are unified and verified under [`InfoGeometry.Canonical.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean) and [`InfoGeometry.All`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/All.lean).
 

@@ -1,0 +1,13 @@
+import InfoGeometry.Probability.DetectorHolisticQuantumObserver
+
+/-!
+# Audit for Holistic Macroscopic Quantum Observer
+-/
+
+#print axioms InfoGeometry.Probability.DetectorHolisticQuantumObserver.holisticCopulaProduct_eq
+#print axioms InfoGeometry.Probability.DetectorHolisticQuantumObserver.holographic_dimension_collapse
+#print axioms InfoGeometry.Probability.DetectorHolisticQuantumObserver.quantum_sqrt_inversion
+#print axioms InfoGeometry.Probability.DetectorHolisticQuantumObserver.quantum_sqrt_eigen_scale
+#print axioms InfoGeometry.Probability.DetectorHolisticQuantumObserver.holistic_efficiency_annihilation
+#print axioms InfoGeometry.Probability.DetectorHolisticQuantumObserver.holistic_dilation_invariance
+#print axioms InfoGeometry.Probability.DetectorHolisticQuantumObserver.certified_holistic_quantum_observer_synthesis

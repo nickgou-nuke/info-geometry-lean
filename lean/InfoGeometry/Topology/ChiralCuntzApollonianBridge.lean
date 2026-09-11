@@ -187,38 +187,35 @@ theorem conformal_measure_preservation_nil {d : ℕ} (W : MarkovWeights d ℝ) :
 /-! ## 3. Certified Synthesis Bundle -/
 
 /-- Certified structural synthesis bundle for the Chiral Cuntz Apollonian Bridge. -/
-structure CertifiedChiralCuntzApollonianBridge where
-  measure_preservation_cons : ∀ {d : ℕ} (W : MarkovWeights d ℝ) (j : Fin d) (ws : List (Fin d)),
+theorem chiral_cuntz_apollonian_relations :
+  (∀ {d : ℕ} (W : MarkovWeights d ℝ) (j : Fin d) (ws : List (Fin d)),
     (∑ i : Fin d, W.p i * (if i = j then wordMeasure W ws else 0)) =
-      wordMeasure W (j :: ws)
-  measure_preservation_nil : ∀ {d : ℕ} (W : MarkovWeights d ℝ),
-    (∑ i : Fin d, W.p i * 1) = 1
-  martingale_child_sum : ∀ {d : ℕ} (W : MarkovWeights d ℝ) (ws : List (Fin d)),
-    (∑ j : Fin d, wordMeasure W (j :: ws)) = wordMeasure W ws
-  cuntz_unitality : ∀ {A : Type*} [Ring A] [Module ℝ A] [IsScalarTower ℝ A A] [SMulCommClass ℝ A A]
+      wordMeasure W (j :: ws)) ∧
+  (∀ {d : ℕ} (W : MarkovWeights d ℝ),
+    (∑ i : Fin d, W.p i * 1) = 1) ∧
+  (∀ {d : ℕ} (W : MarkovWeights d ℝ) (ws : List (Fin d)),
+    (∑ j : Fin d, wordMeasure W (j :: ws)) = wordMeasure W ws) ∧
+  (∀ {A : Type*} [Ring A] [Module ℝ A] [IsScalarTower ℝ A A] [SMulCommClass ℝ A A]
     {d : ℕ} (C : CuntzGenerators d A) (w : MarkovWeights d ℝ),
-    cuntzMarkovStep C w 1 = 1
-  cuntz_cylinder_action : ∀ {A : Type*} [Ring A] [Module ℝ A] [IsScalarTower ℝ A A] [SMulCommClass ℝ A A]
+    cuntzMarkovStep C w 1 = 1) ∧
+  (∀ {A : Type*} [Ring A] [Module ℝ A] [IsScalarTower ℝ A A] [SMulCommClass ℝ A A]
     {d : ℕ} (C : CuntzGenerators d A) (w : MarkovWeights d ℝ) (j : Fin d) (y : A),
-    cuntzMarkovStep C w (C.S j * y * C.S_star j) = w.p j • y
-  chiral_supercharge_anticommutator : ∀ {R : Type*} [Ring R] [StarRing R]
+    cuntzMarkovStep C w (C.S j * y * C.S_star j) = w.p j • y) ∧
+  (∀ {R : Type*} [Ring R] [StarRing R]
     (sys : ChiralCuntzSuperchargeBridge.Cuntz2System R),
     ChiralCuntzSuperchargeBridge.Q_plus sys * ChiralCuntzSuperchargeBridge.Q_minus sys +
-    ChiralCuntzSuperchargeBridge.Q_minus sys * ChiralCuntzSuperchargeBridge.Q_plus sys = 1
-  weyl_scale_add_eq : ∀ (α σ₁ σ₂ : ℝ),
-    weylScale α (σ₁ + σ₂) = weylScale α σ₁ * weylScale α σ₂
-  weyl_horizon_divergence : ∀ (T α : ℝ), 0 < α →
-    Tendsto (fun t => weylScale α (dilatonHorizonField T t)) (𝓝[<] T) atTop
-
-/-- Canonical certified witness for the Chiral Cuntz Apollonian Bridge. -/
-def certified_chiral_cuntz_apollonian_bridge : CertifiedChiralCuntzApollonianBridge where
-  measure_preservation_cons := fun W j ws => conformal_measure_preservation_cons W j ws
-  measure_preservation_nil := fun W => conformal_measure_preservation_nil W
-  martingale_child_sum := fun W ws => wordMeasure_sum_children W ws
-  cuntz_unitality := fun C => cuntzMarkovStep_one C
-  cuntz_cylinder_action := fun C => cuntzMarkovStep_cylinder C
-  chiral_supercharge_anticommutator := fun sys => ChiralCuntzSuperchargeBridge.chiral_susy_anticommutator_eq_one sys
-  weyl_scale_add_eq := weylScale_add
-  weyl_horizon_divergence := weylScale_horizon_tendsto_atTop
+    ChiralCuntzSuperchargeBridge.Q_minus sys * ChiralCuntzSuperchargeBridge.Q_plus sys = 1) ∧
+  (∀ (α σ₁ σ₂ : ℝ),
+    weylScale α (σ₁ + σ₂) = weylScale α σ₁ * weylScale α σ₂) ∧
+  (∀ (T α : ℝ), 0 < α →
+    Tendsto (fun t => weylScale α (dilatonHorizonField T t)) (𝓝[<] T) atTop) := by
+  exact ⟨fun W j ws => conformal_measure_preservation_cons W j ws,
+    fun W => conformal_measure_preservation_nil W,
+    fun W ws => wordMeasure_sum_children W ws,
+    fun C => cuntzMarkovStep_one C,
+    fun C => cuntzMarkovStep_cylinder C,
+    fun sys => ChiralCuntzSuperchargeBridge.chiral_susy_anticommutator_eq_one sys,
+    weylScale_add,
+    weylScale_horizon_tendsto_atTop⟩
 
 end InfoGeometry.Topology.ChiralCuntzApollonian

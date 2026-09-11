@@ -1,0 +1,12 @@
+import InfoGeometry.Canonical.OpenAIFrontierUnificationBridge
+
+namespace InfoGeometry.Canonical.OpenAIFrontierUnification.Audit
+
+#print axioms InfoGeometry.Canonical.OpenAIFrontierUnification.tensorFidelity_le_exp_decay
+#print axioms InfoGeometry.Canonical.OpenAIFrontierUnification.quantum_parallel_repetition_bound
+#print axioms InfoGeometry.Canonical.OpenAIFrontierUnification.pfaffian_fermionic_tractability
+#print axioms InfoGeometry.Canonical.OpenAIFrontierUnification.primon_spectral_gap_openAI_synthesis
+#print axioms InfoGeometry.Canonical.OpenAIFrontierUnification.primon_thermal_intermittency_synthesis
+#print axioms InfoGeometry.Canonical.OpenAIFrontierUnification.master_unification_theorem
+
+end InfoGeometry.Canonical.OpenAIFrontierUnification.Audit

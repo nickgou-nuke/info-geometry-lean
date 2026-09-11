@@ -1,0 +1,12 @@
+import InfoGeometry.Arithmetic.LongPrimeGapsPrimonEnergyBridge
+
+namespace InfoGeometry.Arithmetic.LongGapsPrimon.Audit
+
+#print axioms InfoGeometry.Arithmetic.LongGapsPrimon.log_sub_log_ge_div
+#print axioms InfoGeometry.Arithmetic.LongGapsPrimon.log_sub_log_ge_div_of_le
+#print axioms InfoGeometry.Arithmetic.LongGapsPrimon.primonEnergyGap_ge_of_gap
+#print axioms InfoGeometry.Arithmetic.LongGapsPrimon.primonBoltzmannRatio_le_of_gap
+#print axioms InfoGeometry.Arithmetic.LongGapsPrimon.primon_spectral_vacuum
+#print axioms InfoGeometry.Arithmetic.LongGapsPrimon.primon_long_gap_consequence
+
+end InfoGeometry.Arithmetic.LongGapsPrimon.Audit

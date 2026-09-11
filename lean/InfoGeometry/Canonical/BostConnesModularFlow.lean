@@ -107,6 +107,22 @@ theorem scaled_generator_mul (C : CuntzMultiplicativeIndexing Op)
   rw [phaseFactor_mul_index, C.generator_mul]
   simp [smul_smul, mul_comm]
 
+theorem generator_ne_zero [Nontrivial Op] (C : CuntzMultiplicativeIndexing Op) (n : ℕ+) :
+    C.generator n ≠ 0 := by
+  intro hzero
+  have h := C.generator_isometry n
+  change C.toMultiplicativeIndexing.generator n = 0 at hzero
+  change star (C.toMultiplicativeIndexing.generator n) *
+      C.toMultiplicativeIndexing.generator n = 1 at h
+  rw [hzero, mul_zero] at h
+  exact zero_ne_one h
+
+theorem scaled_generator_ne_zero [Nontrivial Op] (C : CuntzMultiplicativeIndexing Op)
+    (t : ℝ) (n : ℕ+) :
+    (Complex.exp (Complex.I * (t : ℂ) * (Real.log (n.val : ℝ) : ℂ))) •
+        C.generator n ≠ 0 := by
+  exact smul_ne_zero (phaseFactor_ne_zero t n) (generator_ne_zero C n)
+
 /-!
 ## 2. Formal Flow Intertwining (Liouville Grading)
 

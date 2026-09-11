@@ -72,6 +72,16 @@ theorem bostConnesExpectation_mono (β : ℝ) (hβ : 1 < β)
   exact hf.tsum_le_tsum (fun n => mul_le_mul_of_nonneg_left (hfg n)
     (le_of_lt (normalizedBostConnesWeight_pos β hβ n))) hg
 
+/- A nonnegative observable contributes at least each individual weighted term. -/
+theorem bostConnesExpectation_ge_term (β : ℝ) (hβ : 1 < β)
+    {f : ℕ+ → ℝ} (hf_nonneg : ∀ n, 0 ≤ f n)
+    (hf_sum : Summable fun n : ℕ+ => normalizedBostConnesWeight β n * f n)
+    (n : ℕ+) :
+    normalizedBostConnesWeight β n * f n ≤ bostConnesExpectation β hβ f := by
+  rw [bostConnesExpectation]
+  exact hf_sum.le_tsum n (fun m _ => mul_nonneg
+    (le_of_lt (normalizedBostConnesWeight_pos β hβ m)) (hf_nonneg m))
+
 /-- Additivity of Gibbs expectation under the corresponding summability hypotheses. -/
 theorem bostConnesExpectation_add (β : ℝ) (hβ : 1 < β)
     {f g : ℕ+ → ℝ}

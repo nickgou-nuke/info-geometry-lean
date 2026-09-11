@@ -119,6 +119,16 @@ theorem tau_mul_peirceMinus (tau half : R) (htau : tau * tau = 1) :
     _ = half * (tau - 1) := by rw [htau]
     _ = - (half * (1 - tau)) := by ring
 
+theorem peircePlus_mul_tau (tau half : R) (htau : tau * tau = 1) :
+    peircePlus tau half * tau = peircePlus tau half := by
+  rw [mul_comm]
+  exact tau_mul_peircePlus tau half htau
+
+theorem peirceMinus_mul_tau (tau half : R) (htau : tau * tau = 1) :
+    peirceMinus tau half * tau = - peirceMinus tau half := by
+  rw [mul_comm]
+  exact tau_mul_peirceMinus tau half htau
+
 /-- Chirality grading: $P_+ - P_- = \tau$ when $2 \cdot \mathrm{half} = 1$. -/
 theorem peirce_diff (tau half : R) (h2 : 2 * half = 1) :
     peircePlus tau half - peirceMinus tau half = tau := by

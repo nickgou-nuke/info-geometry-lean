@@ -1,0 +1,19 @@
+import InfoGeometry.Physics.WillertonIsbellQuadratic
+
+namespace InfoGeometry.Physics.WillertonIsbellAmari
+
+#check quadraticPotential
+#check quadraticIsbellPair
+#check quadratic_bregman_nonneg
+#check quadratic_bregman_self
+#check quadratic_bregman_eq_half_sq_distance
+#check quadratic_bregman_eq_zero_iff
+#check quadratic_bregman_comm
+
+#print axioms quadratic_bregman_nonneg
+#print axioms quadratic_bregman_self
+#print axioms quadratic_bregman_eq_half_sq_distance
+#print axioms quadratic_bregman_eq_zero_iff
+#print axioms quadratic_bregman_comm
+
+end InfoGeometry.Physics.WillertonIsbellAmari

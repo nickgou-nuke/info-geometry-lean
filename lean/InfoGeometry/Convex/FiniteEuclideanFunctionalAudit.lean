@@ -1,0 +1,19 @@
+import InfoGeometry.Convex.FiniteEuclideanFunctional
+
+namespace InfoGeometry.Convex
+
+#check finiteEuclideanFunctional
+#check finiteEuclideanFunctional_apply
+#check euclidean_inner_eq_sum
+#check euclidean_equiv_inner_eq_pairing
+#check finiteEuclideanFunctional_eq_pairing
+#check convexFunctional_affineSet_eq_fenchelSet
+#check convexFunctional_legendre_eq_fenchelConj
+#print axioms finiteEuclideanFunctional_apply
+#print axioms euclidean_inner_eq_sum
+#print axioms euclidean_equiv_inner_eq_pairing
+#print axioms finiteEuclideanFunctional_eq_pairing
+#print axioms convexFunctional_affineSet_eq_fenchelSet
+#print axioms convexFunctional_legendre_eq_fenchelConj
+
+end InfoGeometry.Convex

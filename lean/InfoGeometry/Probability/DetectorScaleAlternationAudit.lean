@@ -1,0 +1,5 @@
+import InfoGeometry.Probability.DetectorScaleAlternation
+
+#print axioms InfoGeometry.Probability.DetectorScaleAlternation.rowSumScale_rankOne
+#print axioms InfoGeometry.Probability.DetectorScaleAlternation.rowSumScale_fixedPoint
+#print axioms InfoGeometry.Probability.DetectorScaleAlternation.alsIterate_rankOne

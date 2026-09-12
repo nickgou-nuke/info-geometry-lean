@@ -7350,6 +7350,13 @@ import InfoGeometry.Convex.Duality
 import InfoGeometry.Convex.Euclidean
 import InfoGeometry.Convex.EuclideanMonotonicity
 import InfoGeometry.Convex.FenchelConjugate
+import InfoGeometry.Convex.FenchelConjugateAudit
+import InfoGeometry.Convex.ExtendedFenchel
+import InfoGeometry.Convex.ExtendedFenchelAudit
+import InfoGeometry.Convex.FiniteEuclideanFunctional
+import InfoGeometry.Convex.FiniteEuclideanFunctionalAudit
+import InfoGeometry.Convex.TransportedFenchel
+import InfoGeometry.Convex.TransportedFenchelAudit
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Convex.InductiveBarrierOptimization
 import InfoGeometry.Convex.Legendre
@@ -7459,6 +7466,7 @@ import InfoGeometry.EndToEnd
 import InfoGeometry.EndToEnd.KMS
 import InfoGeometry.EntropicInference
 import InfoGeometry.Epistemology.SemanticReflector
+import InfoGeometry.Epistemology.SemanticReflectorAudit
 import InfoGeometry.Ergodic.RuelleTransfer
 import InfoGeometry.Erlangen.InvariantGeometry
 import InfoGeometry.Erlangen.KillingFisher
@@ -7825,6 +7833,7 @@ import InfoGeometry.External.Auto.ImprovedLLMTheory
 import InfoGeometry.External.Auto.InductiveAnalyticFlow
 import InfoGeometry.External.Auto.InfinityAnomalyWiring
 import InfoGeometry.External.Auto.InfinityFilteredColimits
+import InfoGeometry.External.Auto.InfinityFilteredColimitsAudit
 import InfoGeometry.External.Auto.InformationGeometricCutoff
 import InfoGeometry.External.Auto.InstantonQCD
 import InfoGeometry.External.Auto.IsospinSymmetryBreaking
@@ -10512,6 +10521,8 @@ import InfoGeometry.Probability.DetectorOperatorSplittingAudit
 import InfoGeometry.Probability.ApertureEntanglementFlux
 import InfoGeometry.Probability.ApertureEntanglementFluxAudit
 import InfoGeometry.Probability.DetectorRankOneScale
+import InfoGeometry.Probability.DetectorScaleAlternation
+import InfoGeometry.Probability.DetectorScaleAlternationAudit
 import InfoGeometry.Probability.DetectorRankTwoResponse
 import InfoGeometry.Probability.DetectorRankTwoResponseAudit
 import InfoGeometry.Probability.DetectorScaleInvariance
@@ -12602,3 +12613,11 @@ import InfoGeometry.Physics.SelfConcordantModularSouriau
 import InfoGeometry.Physics.SelfConcordantModularSouriauAudit
 import InfoGeometry.SelfConcordantModularSouriau
 import InfoGeometry.SelfConcordantModularSouriauAudit
+import InfoGeometry.Physics.WillertonIsbellAmariDuality
+import InfoGeometry.Physics.WillertonIsbellAmariDualityAudit
+import InfoGeometry.Physics.WillertonIsbellQuadratic
+import InfoGeometry.Physics.WillertonIsbellQuadraticAudit
+import InfoGeometry.WillertonIsbellAmariDuality
+import InfoGeometry.WillertonIsbellAmariDualityAudit
+import InfoGeometry.EpigraphHahnBanachSeparation
+import InfoGeometry.EpigraphHahnBanachSeparationAudit

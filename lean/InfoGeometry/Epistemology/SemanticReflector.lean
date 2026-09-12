@@ -75,6 +75,38 @@ def repairUnit (reflectiveAdj : Repair ⊣ Inclusion) (X : RawType) : X ⟶ Incl
 def repairCounit (reflectiveAdj : Repair ⊣ Inclusion) (T : SoundType) : Repair.obj (Inclusion.obj T) ⟶ T :=
   reflectiveAdj.counit.app T
 
+/-- The left triangle identity for the repair unit and counit. -/
+theorem repair_unit_counit_triangle
+    (reflectiveAdj : Repair ⊣ Inclusion) (X : RawType) :
+    Repair.map (repairUnit RawType SoundType Inclusion Repair reflectiveAdj X) ≫
+        repairCounit RawType SoundType Inclusion Repair reflectiveAdj (Repair.obj X) =
+      𝟙 (Repair.obj X) := by
+  exact reflectiveAdj.left_triangle_components X
+
+/-- The right triangle identity for the repair unit and counit. -/
+theorem repair_counit_unit_triangle
+    (reflectiveAdj : Repair ⊣ Inclusion) (T : SoundType) :
+    repairUnit RawType SoundType Inclusion Repair reflectiveAdj (Inclusion.obj T) ≫
+        Inclusion.map (repairCounit RawType SoundType Inclusion Repair reflectiveAdj T) =
+      𝟙 (Inclusion.obj T) := by
+  exact reflectiveAdj.right_triangle_components T
+
+/-- Naturality of the repair unit with respect to raw morphisms. -/
+theorem repair_unit_naturality
+    (reflectiveAdj : Repair ⊣ Inclusion) {X Y : RawType} (f : X ⟶ Y) :
+    f ≫ repairUnit RawType SoundType Inclusion Repair reflectiveAdj Y =
+      repairUnit RawType SoundType Inclusion Repair reflectiveAdj X ≫
+        Inclusion.map (Repair.map f) := by
+  exact reflectiveAdj.unit.naturality f
+
+/-- Naturality of the repair counit with respect to sound morphisms. -/
+theorem repair_counit_naturality
+    (reflectiveAdj : Repair ⊣ Inclusion) {T U : SoundType} (f : T ⟶ U) :
+    Repair.map (Inclusion.map f) ≫
+        repairCounit RawType SoundType Inclusion Repair reflectiveAdj U =
+      repairCounit RawType SoundType Inclusion Repair reflectiveAdj T ≫ f := by
+  exact reflectiveAdj.counit.naturality f
+
 /--
 The categorical repair theorem: any sound realization of a raw specification
 factors uniquely through the repaired structure.

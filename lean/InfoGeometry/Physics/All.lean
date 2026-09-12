@@ -193,6 +193,8 @@ import InfoGeometry.Physics.MarsdenWeinsteinHasimotoVortex
 import InfoGeometry.Physics.MarsdenWeinsteinHasimotoVortexAudit
 import InfoGeometry.Physics.SelfConcordantModularSouriau
 import InfoGeometry.Physics.SelfConcordantModularSouriauAudit
+import InfoGeometry.Physics.WillertonIsbellAmariDuality
+import InfoGeometry.Physics.WillertonIsbellAmariDualityAudit
 
 /-!
 # Physics Umbrella

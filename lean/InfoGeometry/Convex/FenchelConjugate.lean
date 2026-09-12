@@ -71,4 +71,23 @@ theorem fenchelConj_eq_of_isGreatest (f : E → ℝ) (y : DualSpace E) (x : E)
   simpa [fenchelConj] using
     (hG.csSup_eq : sSup (fenchelSet f y) = (⟪y, x⟫ₗ - f x))
 
+theorem fenchelConj_eq_iff_isGreatest (f : E → ℝ) (y : DualSpace E) (x : E)
+    (hb : BddAbove (fenchelSet f y)) :
+    fenchelConj f y = (⟪y, x⟫ₗ - f x) ↔
+      IsGreatest (fenchelSet f y) (⟪y, x⟫ₗ - f x) := by
+  constructor
+  · intro h
+    refine ⟨⟨x, rfl⟩, ?_⟩
+    intro z hz
+    rw [← h]
+    exact le_csSup hb hz
+  · intro hG
+    exact fenchelConj_eq_of_isGreatest f y x hG
+
+theorem fenchelSet_bddAbove_of_isGreatest (f : E → ℝ) (y : DualSpace E) (x : E)
+    (hG : IsGreatest (fenchelSet f y) (⟪y, x⟫ₗ - f x)) :
+    BddAbove (fenchelSet f y) := by
+  refine ⟨⟪y, x⟫ₗ - f x, ?_⟩
+  exact hG.2
+
 end InfoGeometry.Convex

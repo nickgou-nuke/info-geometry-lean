@@ -1,0 +1,32 @@
+import InfoGeometry.Convex.ExtendedFenchel
+
+namespace InfoGeometry.Convex
+
+#check extendedFenchelSet
+#check extendedFenchelConj
+#check extendedFenchelBiconj
+#check extendedFenchelBiconj_le
+#check le_extendedFenchelBiconj_of_dual_witness
+#check extendedFenchel_le_biconj_of_all_lower_witnesses
+#check extendedFenchelConj_le_iff
+#check extendedFenchelSet_nonempty
+#check extendedFenchelYoung
+#check IsProperEReal
+#check epigraph
+#check epigraph_not_mem_iff
+#check IsConvexEReal
+#check IsLowerSemicontinuousEReal
+#check epigraph_separates_point
+#check separator_value_decomposition
+#check ProperConvexLowerSemicontinuousEReal
+#check FiniteOnEReal
+#check extendedFenchelConj_ne_bot
+#check proper_extendedFenchelConj_ne_bot
+#check extendedFenchelConj_ne_top_of_bound
+#print axioms extendedFenchelSet_nonempty
+#print axioms extendedFenchelYoung
+#print axioms extendedFenchelConj_ne_bot
+#print axioms proper_extendedFenchelConj_ne_bot
+#print axioms extendedFenchelConj_ne_top_of_bound
+
+end InfoGeometry.Convex

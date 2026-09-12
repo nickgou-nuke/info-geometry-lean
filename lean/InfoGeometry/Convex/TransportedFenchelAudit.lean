@@ -1,0 +1,32 @@
+import InfoGeometry.Convex.TransportedFenchel
+
+namespace InfoGeometry.Convex
+
+#check transportedFenchelSet
+#check dualTransport
+#check transportedFenchelSetFromDual_eq
+#check transportedFenchelConjFromDual_eq
+#check transportedFenchelSetFromDual_bddAbove
+#check transportedFenchelSetFromDual_bddAbove_iff
+#check transportedFenchelSetFromDual_nonempty
+#check transportedFenchelConjFromDual_eq_of_isGreatest
+#check transportedFenchelConjFromDual_eq_iff_isGreatest
+#check transportedFenchelYoungFromDual
+#check transportedFenchelYoungFromDual_eq_of_isGreatest
+#check transportedFenchelConj
+#check transportedFenchelConj_def
+#check transportedFenchelSet_nonempty
+#check transportedFenchelYoung
+#check transportedFenchelConj_eq_of_isGreatest
+#check transportedFenchelYoung_eq_of_isGreatest
+#print axioms transportedFenchelConj_def
+#print axioms transportedFenchelSet_nonempty
+#print axioms transportedFenchelSetFromDual_nonempty
+#print axioms transportedFenchelSetFromDual_bddAbove_iff
+#print axioms transportedFenchelYoung
+#print axioms transportedFenchelConjFromDual_eq_of_isGreatest
+#print axioms transportedFenchelYoungFromDual_eq_of_isGreatest
+#print axioms transportedFenchelConj_eq_of_isGreatest
+#print axioms transportedFenchelYoung_eq_of_isGreatest
+
+end InfoGeometry.Convex

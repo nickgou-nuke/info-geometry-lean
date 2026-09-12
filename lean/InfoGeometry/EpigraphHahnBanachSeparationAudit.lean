@@ -1,0 +1,15 @@
+import InfoGeometry.EpigraphHahnBanachSeparation
+
+namespace InfoGeometry.EpigraphHahnBanachSeparation
+
+#check epigraph
+#check convex_epigraph
+#check strict_separation
+#check extract_affine_minorant
+#check fenchel_moreau_topological_bridge
+#print axioms convex_epigraph
+#print axioms strict_separation
+#print axioms extract_affine_minorant
+#print axioms fenchel_moreau_topological_bridge
+
+end InfoGeometry.EpigraphHahnBanachSeparation

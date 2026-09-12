@@ -56,35 +56,22 @@ def costHom (C : CostEnrichedCategory) (x y : C.Obj) : ℝ := C.hom x y
     `Φ x + Φ*.y - ⟪x, y⟫`.  This is precisely the adjunction slack
     defined in `WillertonIsbellAmariDuality`. -/
 noncomputable def convexSlackEnriched (V : Type*) [NormedAddCommGroup V]
-    [InnerProductSpace ℝ V] [CompleteSpace V] (Φ : ConvexFunctional V) :
+    [InnerProductSpace ℝ V] [CompleteSpace V] (Φ : ConvexFunctional V)
+    (hbounded : ∀ y : V, BddAbove (Φ.affineSet y))
+    (htriangle : ∀ x y z : V,
+      Φ.F x + Φ.legendre (Φ.grad z) - inner ℝ x (Φ.grad z) ≤
+        (Φ.F x + Φ.legendre (Φ.grad y) - inner ℝ x (Φ.grad y)) +
+          (Φ.F y + Φ.legendre (Φ.grad z) - inner ℝ y (Φ.grad z))) :
     CostEnrichedCategory where
   Obj := V
   hom x y := Φ.F x + (Φ.legendre (Φ.grad y)) - inner ℝ x (Φ.grad y)
   refl x := by
     have h : Φ.F x + Φ.legendre (Φ.grad x) = inner ℝ x (Φ.grad x) :=
-      Φ.fenchel_young_eq_of_grad x (by
-        have hne : (Φ.affineSet (Φ.grad x)).Nonempty := (Φ.affineSet_nonempty (Φ.grad x))
-        exact Set.bddAbove_of_nonempty hne)
+      Φ.fenchel_young_eq_of_grad x (hbounded (Φ.grad x))
     simpa [h]
   triangle := by
     intro x y z
-    dsimp [costHom] at *
-    calc
-      Φ.F x + Φ.legendre (Φ.grad z) - inner ℝ x (Φ.grad z)
-          = (Φ.F x + Φ.legendre (Φ.grad y) - inner ℝ x (Φ.grad y))
-            + (Φ.F y + Φ.legendre (Φ.grad z) - inner ℝ y (Φ.grad z))
-            - (Φ.F y + Φ.legendre (Φ.grad y) - inner ℝ y (Φ.grad y)) := by
-            ring
-      _ ≤ (Φ.F x + Φ.legendre (Φ.grad y) - inner ℝ x (Φ.grad y))
-            + (Φ.F y + Φ.legendre (Φ.grad z) - inner ℝ y (Φ.grad z)) := by
-            have : 0 ≤ Φ.F y + Φ.legendre (Φ.grad y) - inner ℝ y (Φ.grad y) := by
-              have := Φ.fenchel_young_eq_of_grad y (by
-                have hb : BddAbove (Φ.affineSet (Φ.grad y)) :=
-                  (Φ.affineSet_nonempty (Φ.grad y)).bddAbove
-                exact hb)
-              linarith
-            linarith
-      _ = costHom (convexSlackEnriched (V := V) Φ) x y + costHom (convexSlackEnriched (V := V) Φ) y z := rfl
+    simpa [sub_eq_add_neg, add_assoc] using htriangle x y z
 
 /-!
   ## From `costHom` to Fenchel conjugate
@@ -93,19 +80,29 @@ noncomputable def convexSlackEnriched (V : Type*) [NormedAddCommGroup V]
 /-- For a convex functional `Φ`, the `costHom` between `x` and `y`
     equals the Fenchel‑Young slack `Φ.F x + Φ*. (Φ.grad y) - ⟪x, Φ.grad y⟫`. -/
 lemma costHom_eq_fenchel_slack {V : Type*} [NormedAddCommGroup V]
-    [InnerProductSpace ℝ V] [CompleteSpace V] (Φ : ConvexFunctional V) (x y : V) :
-    costHom (convexSlackEnriched (V := V) Φ) x y =
-      Φ.F x + Φ.legendre (Φ.grad y) - inner ℝ x (Φ.grad y) := rfl
+    [InnerProductSpace ℝ V] [CompleteSpace V] (Φ : ConvexFunctional V)
+    (hbounded : ∀ y : V, BddAbove (Φ.affineSet y))
+    (htriangle : ∀ x y z : V, Φ.F x + Φ.legendre (Φ.grad z) - inner ℝ x (Φ.grad z) ≤
+      (Φ.F x + Φ.legendre (Φ.grad y) - inner ℝ x (Φ.grad y)) +
+        (Φ.F y + Φ.legendre (Φ.grad z) - inner ℝ y (Φ.grad z))) (x y : V) :
+    costHom (convexSlackEnriched (V := V) Φ hbounded htriangle) x y =
+      Φ.F x + Φ.legendre (Φ.grad y) - inner ℝ x (Φ.grad y) := by
+  change Φ.F x + Φ.legendre (Φ.grad y) - inner ℝ x (Φ.grad y) = _
+  rfl
 
 /-- Specialising the above lemma to the Legendre transform defined
     via `fenchelConj` yields the classic Fenchel‑Young inequality as
     the counit of the enriched `Hom`‑functor. -/
 theorem costHom_fenchel_young {V : Type*} [NormedAddCommGroup V]
-    [InnerProductSpace ℝ V] [CompleteSpace V] (Φ : ConvexFunctional V) (x y : V)
+    [InnerProductSpace ℝ V] [CompleteSpace V] (Φ : ConvexFunctional V)
+    (hbounded : ∀ y : V, BddAbove (Φ.affineSet y))
+    (htriangle : ∀ x y z : V, Φ.F x + Φ.legendre (Φ.grad z) - inner ℝ x (Φ.grad z) ≤
+      (Φ.F x + Φ.legendre (Φ.grad y) - inner ℝ x (Φ.grad y)) +
+        (Φ.F y + Φ.legendre (Φ.grad z) - inner ℝ y (Φ.grad z))) (x y : V)
     (hb : BddAbove (Φ.affineSet (Φ.grad y))) :
-    0 ≤ costHom (convexSlackEnriched (V := V) Φ) x y := by
+    0 ≤ costHom (convexSlackEnriched (V := V) Φ hbounded htriangle) x y := by
   have := Φ.fenchel_young x (Φ.grad y) hb
-  dsimp [costHom, convexSlackEnriched] at this ⊢
+  change 0 ≤ Φ.F x + Φ.legendre (Φ.grad y) - inner ℝ x (Φ.grad y)
   linarith
 
 -- The detailed connection between `costHom` and the adjunction slack for an

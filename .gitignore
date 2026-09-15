@@ -238,3 +238,47 @@ recovery/
 black_books/
 docs/black_books/
 archon/
+
+# Generated recovery mirrors, exports, caches, and compiler products
+/recovered/
+/output/
+/--stream/
+/.cache/
+/.tmp*/
+/.tmp_*
+/.venv_write_test
+/build/
+*.egg-info/
+*.vo
+*.vos
+*.vok
+*.glob
+*.aux
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.olean.private
+*.olean.server
+*.trace
+*.o
+*.so
+*.a
+.lia.cache
+.nra.cache
+/.z3-agent/
+/handover/*.tar.gz
+
+# Keep authored documentation and validation scripts alongside generated outputs.
+!artifacts/
+artifacts/**
+!artifacts/**/
+!artifacts/**/README.md
+!artifacts/formalization/detector_response_integral/scripts/*.py
+!artifacts/formalization/detector_response_integral/scripts/*.sh
+!reports/
+reports/**
+!reports/README.md
+
+# Source manifests are not generated analysis text.
+!**/CMakeLists.txt
+!**/requirements*.txt

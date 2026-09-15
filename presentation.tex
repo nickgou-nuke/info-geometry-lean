@@ -1,0 +1,36 @@
+\documentclass{article}
+\usepackage[paperwidth=160mm,paperheight=90mm,margin=0mm]{geometry}
+\usepackage{pdfpages,tikz}
+\pdfminorversion=7
+\pagestyle{empty}
+
+% Revised ISNP 2026 route.
+% The deck moves from observable Q and X=sqrt(Q), through line restoration
+% and activity cancellation, to multiline validation and geometric interpretation.
+\newcommand{\masterpdf}{/home/goutev/Varna/delivery/isnp2026/master_clean_noframe.pdf}
+
+\begin{document}
+\includepdf[
+  pages={
+    1,4,2,3,5,6,
+    8,9,11,12,14,16,
+    17,19,20,
+    23,26,27,33,34,
+    195,196,197,198,
+    24,25,43,44,41,51,55,56,216
+  },
+  fitpaper=true,
+  picturecommand*={%
+    \begin{tikzpicture}[remember picture,overlay]
+      \fill[white] (current page.south west)
+        rectangle ([yshift=15mm]current page.south east);
+      \node[
+        anchor=south east,
+        inner sep=0pt,
+        font=\sffamily\fontsize{6}{7}\selectfont
+      ] at ([xshift=-2mm,yshift=2mm]current page.south east)
+        {\thepage\,/\,33};
+    \end{tikzpicture}%
+  }
+]{\masterpdf}
+\end{document}

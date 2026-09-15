@@ -52,7 +52,7 @@
 	ignore = dirty
 [submodule "external_refs/gift-framework-core"]
 	path = external_refs/gift-framework-core
-	url = https://github.com/gift-framework/core.git
+	url = https://github.com/Arithmon/K7-Lean.git
 	ignore = dirty
 [submodule "external_refs/geoalg"]
 	path = external_refs/geoalg

@@ -82,7 +82,7 @@ objective is also a different problem from maximizing it.
 
 ## Verification environment
 
-Serial checks use the shared build lock, installed Lean 4.28.0, cached Mathlib,
+Serial checks use the shared build lock, installed Lean 4.28.x, cached Mathlib,
 and isolated outputs. Pinned Lean 4.28.1 is unavailable locally; no toolchain or
 dependency metadata is changed. This is not a full-repository build.
 

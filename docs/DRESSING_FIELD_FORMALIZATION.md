@@ -70,7 +70,7 @@ bundle, connection, or quantum measurement theory is defined by this extension.
 
 ## Validation
 
-Narrow serial checks use the shared build lock and the installed Lean 4.28.0
+Narrow serial checks use the shared build lock and the installed Lean 4.28.x
 with cached Mathlib, writing only isolated build outputs. The pinned Lean 4.28.1
 is unavailable; no toolchain or dependency metadata was changed. The checks are
 not a full repository build or a pinned-toolchain validation.

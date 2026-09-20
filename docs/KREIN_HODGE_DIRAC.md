@@ -117,12 +117,12 @@ by the positive Hodge theorem.
 positive-inner-product comparison modules. Their norm and harmonic
 representative theorems must **not** be applied to the indefinite pairing.
 
-The Krein owners and regression modules pass isolated Lean **4.28.0** checks
+The Krein owners and regression modules pass isolated Lean **4.28.x** checks
 against the cached Mathlib revision `8f9d9cff6bd728b17a24e163c9402775d9e6a365`.
 The thirteen algebraic and fourteen bounded/homology regression axiom audits
 contain only `propext`, `Classical.choice`,
 and `Quot.sound`, with no `sorryAx` or added axioms.
 
 This is **not** a verified pinned Lean 4.28.1 build. The installed 4.28.1
-compiler rejects the cached 4.28.0 `.olean` headers. Dependency pins have
+compiler rejects the cached 4.28.x `.olean` headers. Dependency pins have
 not been changed; a compatible pinned dependency build remains necessary.

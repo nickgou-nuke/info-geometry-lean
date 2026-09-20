@@ -61,7 +61,7 @@ orthogonal projection. These distinctions remain unchanged by this extension.
 
 ## Validation
 
-Checks use installed Lean 4.28.0 and cached Mathlib, serially under the shared
+Checks use installed Lean 4.28.x and cached Mathlib, serially under the shared
 build lock, with isolated outputs. Pinned Lean 4.28.1 remains unavailable; no
 dependency metadata or caches are changed. This is not a full repository build.
 

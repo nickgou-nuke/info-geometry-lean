@@ -18,7 +18,7 @@ index 9f2f9ffe..e878d7d1 100644
     "rev": "c360b5df5d8a67ed8f1a8769aa157f6adca7dd53",
     "name": "LeanCopilot",
     "manifestFile": "lake-manifest.json",
--   "inputRev": "v4.28.0",
+-   "inputRev": "v4.28.x",
 +   "inputRev": "c360b5df5d8a67ed8f1a8769aa157f6adca7dd53",
     "inherited": false,
 -   "configFile": "lakefile.lean"},
@@ -56,7 +56,7 @@ index 9f2f9ffe..e878d7d1 100644
 -   "name": "«doc-gen4»",
 +   "name": "\u00abdoc-gen4\u00bb",
     "manifestFile": "lake-manifest.json",
--   "inputRev": "v4.28.0",
+-   "inputRev": "v4.28.x",
 +   "inputRev": "a41d5ebebfa77afe737fec8de8ad03fc8b08fdff",
     "inherited": false,
 -   "configFile": "lakefile.lean"},
@@ -71,7 +71,7 @@ index 9f2f9ffe..e878d7d1 100644
     "rev": "54d3fb249685db8e5a564e0b3f331cff77991607",
     "name": "LeanArchitect",
     "manifestFile": "lake-manifest.json",
--   "inputRev": "v4.28.0",
+-   "inputRev": "v4.28.x",
 +   "inputRev": "54d3fb249685db8e5a564e0b3f331cff77991607",
     "inherited": false,
 -   "configFile": "lakefile.lean"},
@@ -201,7 +201,7 @@ index 9f2f9ffe..e878d7d1 100644
     "rev": "4f10f47646cb7d5748d6f423f4a07f98f7bbcc9e",
     "name": "Cli",
     "manifestFile": "lake-manifest.json",
--   "inputRev": "v4.28.0",
+-   "inputRev": "v4.28.x",
 +   "inputRev": "4f10f47646cb7d5748d6f423f4a07f98f7bbcc9e",
     "inherited": true,
 -   "configFile": "lakefile.toml"},
@@ -337,11 +337,11 @@ index a7a497f3..24bf6afd 100644
 +  @ "11c2385ade3cc417d69ce837bfda9d2c5b1d61ab"
  require LeanArchitect from git
    "https://github.com/hanwenzhu/LeanArchitect.git"
--  @ "v4.28.0"
+-  @ "v4.28.x"
 +  @ "54d3fb249685db8e5a564e0b3f331cff77991607"
  require «doc-gen4» from git
    "https://github.com/leanprover/doc-gen4.git"
--  @ "v4.28.0"
+-  @ "v4.28.x"
 +  @ "a41d5ebebfa77afe737fec8de8ad03fc8b08fdff"
  
  require «GIFT» from
@@ -350,7 +350,7 @@ index a7a497f3..24bf6afd 100644
    "external_refs/atlas-lean"
  require LeanCopilot from git
    "https://github.com/lean-dojo/LeanCopilot.git"
--  @ "v4.28.0"
+-  @ "v4.28.x"
 +  @ "c360b5df5d8a67ed8f1a8769aa157f6adca7dd53"
  
  lean_lib DAG where
@@ -360,7 +360,7 @@ index a7a497f3..24bf6afd 100644
  
  This library is intentionally not a default target: the external proof repo is
 -pinned to Lean `v4.30.0-rc1`, while this repository is currently pinned to
--Lean `v4.28.0`. Build/import it explicitly after toolchain alignment.
+-Lean `v4.28.x`. Build/import it explicitly after toolchain alignment.
 +pinned to a foreign Lean toolchain outside the root repository freeze. Build/import it only after explicit external toolchain alignment.
  -/
  lean_lib PrimitiveSetsAboveX where
@@ -373,7 +373,7 @@ index cef1200a..80d5ddd0 100755
  
  Options:
    --with-infra         Install scientific Python deps and run full infra refresh pipeline
-+  --refresh-deps       Disabled under the immutable v4.28.0 manifest freeze
++  --refresh-deps       Disabled under the immutable v4.28.x manifest freeze
    --skip-apt           Skip apt-get install/update steps
    --skip-strict-check  Skip 'lake script run strictCheck'
    --dry-run            Print commands without executing
@@ -414,7 +414,7 @@ index cef1200a..80d5ddd0 100755
 +run_cmd "$REPO_ROOT/scripts/infra/enforce-v428-local-manifests.sh"
 +
 +if [[ "$REFRESH_DEPS" -eq 1 ]]; then
-+  echo "error: --refresh-deps is disabled by the immutable v4.28.0 manifest freeze" >&2
++  echo "error: --refresh-deps is disabled by the immutable v4.28.x manifest freeze" >&2
 +  exit 1
 +fi
 +log "Manifest freeze enforced; Lake dependency refresh is disabled"
@@ -455,22 +455,22 @@ index 0faeaf57..5e55b735 100644
  
  cd "$REPO"
  
--# 1. Set toolchain to v4.28.0
--echo "leanprover/lean4:v4.28.0" > lean-toolchain
+-# 1. Set toolchain to v4.28.x
+-echo "leanprover/lean4:v4.28.x" > lean-toolchain
 +python3 "$ROOT/tools/infra/assert_v428_manifest_freeze.py" --root "$REPO" --external-package
  
--# 2. Change mathlib pin to v4.28.0 in lakefile (handle all formats)
+-# 2. Change mathlib pin to v4.28.x in lakefile (handle all formats)
 -if [ -f lakefile.lean ]; then
 -    # Format: require mathlib from git "URL" @ "v4.X.Y.Z"
--    sed -i 's|@ "v4\.[0-9]*\.[0-9]*\(-rc[0-9]*\)\?"|@ "v4.28.0"|g' lakefile.lean
+-    sed -i 's|@ "v4\.[0-9]*\.[0-9]*\(-rc[0-9]*\)\?"|@ "v4.28.x"|g' lakefile.lean
 -    # Format: require "mathlib" from git "URL" @ "commithash"
--    sed -i 's|require "mathlib" from git "[^"]*" @ "[^"]*"|require mathlib from git "https://github.com/leanprover-community/mathlib4.git" @ "v4.28.0"|' lakefile.lean
+-    sed -i 's|require "mathlib" from git "[^"]*" @ "[^"]*"|require mathlib from git "https://github.com/leanprover-community/mathlib4.git" @ "v4.28.x"|' lakefile.lean
 +if [ "$REFRESH_DEPS" -eq 1 ]; then
-+    echo "  >>> BUILD FAILED ($1) - REFRESH_DEPS is disabled by the immutable v4.28.0 manifest freeze"
++    echo "  >>> BUILD FAILED ($1) - REFRESH_DEPS is disabled by the immutable v4.28.x manifest freeze"
 +    exit 1
  fi
  
--# 3. Update manifest to reflect v4.28.0 mathlib
+-# 3. Update manifest to reflect v4.28.x mathlib
 -if [ -f lake-manifest.json ]; then
 -    python3 -c "
 -import json
@@ -479,7 +479,7 @@ index 0faeaf57..5e55b735 100644
 -changed = False
 -for pkg in data.get('packages', []):
 -    if pkg.get('name') in ('mathlib', 'mathlib4'):
--        pkg['rev'] = 'v4.28.0'
+-        pkg['rev'] = 'v4.28.x'
 -        changed = True
 -if changed:
 -    with open('lake-manifest.json', 'w') as f:
@@ -540,14 +540,14 @@ index 9fa737af..1068f789 100755
 -  local file="$1"
 -  while IFS= read -r line; do
 -    if [[ "$line" == *"leanprover/lean4:"* ]]; then
--      if [[ "$line" != *"leanprover/lean4:v4.28.0"* ]]; then
+-      if [[ "$line" != *"leanprover/lean4:v4.28.x"* ]]; then
 -        echo "$file: $line"
 -        BAD=1
 -      fi
 -    fi
 -    if [[ "$line" == *"rev = "* ]]; then
 -      if [[ "$line" =~ rev[[:space:]]*=[[:space:]]*"v4\.[0-9]+\.[0-9]+(-rc[0-9]+)?" ]]; then
--        if [[ "$line" != *'rev = "v4.28.0"'* ]]; then
+-        if [[ "$line" != *'rev = "v4.28.x"'* ]]; then
 -          echo "$file: $line"
 -          BAD=1
 -        fi
@@ -555,7 +555,7 @@ index 9fa737af..1068f789 100755
 -    fi
 -    if [[ "$line" == *'"inputRev": '* ]]; then
 -      if [[ "$line" =~ \"inputRev\"[[:space:]]*:[[:space:]]*"v4\.[0-9]+\.[0-9]+" ]]; then
--        if [[ "$line" != *'"inputRev": "v4.28.0"'* ]]; then
+-        if [[ "$line" != *'"inputRev": "v4.28.x"'* ]]; then
 -          echo "$file: $line"
 -          BAD=1
 -        fi
@@ -573,7 +573,7 @@ index 9fa737af..1068f789 100755
 -done
 -
 -if [[ $BAD -ne 0 ]]; then
--  echo "Nested package policy violation: non-v4.28.0 pin detected in .lake/packages." >&2
+-  echo "Nested package policy violation: non-v4.28.x pin detected in .lake/packages." >&2
 -  exit 1
 -fi
 -
@@ -596,11 +596,11 @@ index d2bce6ac..63cdd5a8 100644
  
  echo '[]' > "$SUMMARY"
  
- # Ensure loogle is built for v4.28.0
- echo ">>> Ensuring loogle is built for v4.28.0..."
--echo "leanprover/lean4:v4.28.0" > "$LOOGLE_TC"
-+if [ ! -f "$LOOGLE_TC" ] || [ "$(tr -d '[:space:]' < "$LOOGLE_TC")" != "leanprover/lean4:v4.28.0" ]; then
-+    echo ">>> loogle lean-toolchain is not frozen to leanprover/lean4:v4.28.0; refusing to rewrite it automatically"
+ # Ensure loogle is built for v4.28.x
+ echo ">>> Ensuring loogle is built for v4.28.x..."
+-echo "leanprover/lean4:v4.28.x" > "$LOOGLE_TC"
++if [ ! -f "$LOOGLE_TC" ] || [ "$(tr -d '[:space:]' < "$LOOGLE_TC")" != "leanprover/lean4:v4.28.x" ]; then
++    echo ">>> loogle lean-toolchain is not frozen to leanprover/lean4:v4.28.x; refusing to rewrite it automatically"
 +    exit 1
 +fi
 +python3 "$ROOT/tools/infra/assert_v428_manifest_freeze.py"
@@ -613,11 +613,11 @@ index d2bce6ac..63cdd5a8 100644
      echo ">>> Processing $name..."
      echo "=========================================="
  
--    # 1. Set toolchain to v4.28.0
--    echo "leanprover/lean4:v4.28.0" > "$tc"
+-    # 1. Set toolchain to v4.28.x
+-    echo "leanprover/lean4:v4.28.x" > "$tc"
 +    # 1. Enforce toolchain immutability; never rewrite external repos here.
-+    if [ ! -f "$tc" ] || [ "$(tr -d '[:space:]' < "$tc")" != "leanprover/lean4:v4.28.0" ]; then
-+        echo ">>> $name: lean-toolchain is not frozen to leanprover/lean4:v4.28.0; skipping"
++    if [ ! -f "$tc" ] || [ "$(tr -d '[:space:]' < "$tc")" != "leanprover/lean4:v4.28.x" ]; then
++        echo ">>> $name: lean-toolchain is not frozen to leanprover/lean4:v4.28.x; skipping"
 +        ((FAIL++))
 +        return
 +    fi
@@ -685,7 +685,7 @@ index b01c95c7..2dc6633e 100644
  
 +python_guard_bin="$(command -v python3 2>/dev/null || command -v python 2>/dev/null || true)"
 +if [[ -z "${python_guard_bin}" ]]; then
-+  echo "[sandbox-bootstrap] missing python interpreter for v4.28.0 freeze preflight" >&2
++  echo "[sandbox-bootstrap] missing python interpreter for v4.28.x freeze preflight" >&2
 +  return 2 2>/dev/null || exit 2
 +fi
 +"${python_guard_bin}" "${repo_root}/tools/infra/assert_v428_manifest_freeze.py"
@@ -719,7 +719,7 @@ index 6fca2fe5..66c35541 100644
      """Hydrate the precompiled mathlib cache if the local build artifacts are missing."""
 +    rc = assert_v428_manifest_freeze(root)
 +    if rc != 0:
-+        raise RuntimeError("v4.28.0 manifest freeze guard failed before mathlib cache hydration")
++        raise RuntimeError("v4.28.x manifest freeze guard failed before mathlib cache hydration")
      mathlib_olean = (
          root / ".lake" / "packages" / "mathlib" / ".lake" / "build" / "lib" / "lean" / "Mathlib.olean"
      )
@@ -730,7 +730,7 @@ index 6fca2fe5..66c35541 100644
 +    
 +    rc = assert_v428_manifest_freeze(root)
 +    if rc != 0:
-+        print("  >>> BUILD FAILED - v4.28.0 manifest freeze guard failed", file=sys.stderr)
++        print("  >>> BUILD FAILED - v4.28.x manifest freeze guard failed", file=sys.stderr)
 +        return rc
 +
      ensure_mathlib_cache(root)

@@ -6,7 +6,7 @@ from pathlib import Path
 import subprocess
 import sys
 
-EXPECTED_MATHLIB_HEAD = "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
+EXPECTED_MATHLIB_HEAD = "1f9fffd5ff0b854b8a1f1f69adc11c61f05f2515"
 ROOT = Path(__file__).resolve().parents[2]
 MATHLIB = ROOT / ".lake" / "packages" / "mathlib"
 

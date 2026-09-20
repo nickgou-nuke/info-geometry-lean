@@ -135,7 +135,7 @@ A useful local packet for future publication should contain:
   "definitions": [],
   "build_commands": [],
   "build_status": "focused-build-closed",
-  "lean_version": "v4.28.0",
+  "lean_version": "v4.28.1",
   "mathlib_revision": null,
   "repo_commit": null,
   "open_closure_debt": [],

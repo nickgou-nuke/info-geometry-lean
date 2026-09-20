@@ -15513,12 +15513,12 @@
         {
           "line": 186,
           "term": "Cl11",
-          "text": "\"output\": \"note: using toolchain 'leanprover/lean4:v4.28.0' from override set on '/home/goutev/repos/info-geometry-lean'\\nnote: to remove: elan override unset --path '/home/goutev/repos/info-geometry-lean' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1\\ndocs/raw_con"
+          "text": "\"output\": \"note: using toolchain 'leanprover/lean4:v4.28.x' from override set on '/home/goutev/repos/info-geometry-lean'\\nnote: to remove: elan override unset --path '/home/goutev/repos/info-geometry-lean' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1\\ndocs/raw_con"
         },
         {
           "line": 236,
           "term": "Cl11",
-          "text": "\"output\": \"note: using toolchain 'leanprover/lean4:v4.28.0' from override set on '/home/goutev/repos/info-geometry-lean'\\nnote: to remove: elan override unset --path '/home/goutev/repos/info-geometry-lean' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1\\ndocs/raw_con"
+          "text": "\"output\": \"note: using toolchain 'leanprover/lean4:v4.28.x' from override set on '/home/goutev/repos/info-geometry-lean'\\nnote: to remove: elan override unset --path '/home/goutev/repos/info-geometry-lean' | to suppress: ELAN_NO_OVERRIDE_NOTICE=1\\ndocs/raw_con"
         }
       ],
       "decls_nearby": [],

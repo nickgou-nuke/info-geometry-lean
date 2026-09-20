@@ -4,4 +4,4 @@ index f942ecf..4c685fa 100644
 +++ b/lean-toolchain
 @@ -1 +1 @@
 -leanprover/lean4:4.25.0
-+leanprover/lean4:v4.28.0
++leanprover/lean4:v4.28.x

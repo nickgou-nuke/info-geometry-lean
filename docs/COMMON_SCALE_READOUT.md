@@ -77,11 +77,11 @@ of those identifications or make detector-response modeling unnecessary.
 
 The regression target `Detector/CommonScaleReadoutTests.lean` passed, with seven
 examples and twelve axiom reports (only `propext`, `Classical.choice`, and
-`Quot.sound`, with no additional axioms). Checks use Lean 4.28.0, the cached Mathlib
+`Quot.sound`, with no additional axioms). Checks use Lean 4.28.x, the cached Mathlib
 source revision `8f9d9cff6bd728b17a24e163c9402775d9e6a365`, and isolated
 outputs under the shared build lock.
 
 The repository pins Lean 4.28.1. That compiler is installed, but a separate
 import probe fails with an incompatible `.olean` header in the existing
-4.28.0 Mathlib cache. These checks are not a successful pinned-toolchain or
+4.28.x Mathlib cache. These checks are not a successful pinned-toolchain or
 whole-repository build. No dependency pins or cached artifacts are changed.

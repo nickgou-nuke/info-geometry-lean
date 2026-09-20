@@ -4,7 +4,7 @@
 This runbook outlines the exact procedure required to reproduce the 8400+ job Lean build, execute the SymPy physical witnesses, and ingest the external Betti certificates.
 
 ## Prerequisites
-* **Lean 4 Toolchain**: `leanprover/lean4:v4.28.0` (managed via `elan`).
+* **Lean 4 Toolchain**: `leanprover/lean4:v4.28.1` (managed via `elan`).
 * **Python**: `3.10+` with `sympy`, `numpy`, and `scipy`.
 
 ## Phase 1: The Finite SymPy Witnesses

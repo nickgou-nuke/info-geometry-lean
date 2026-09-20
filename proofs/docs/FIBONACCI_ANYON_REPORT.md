@@ -148,7 +148,7 @@ All 6 SymPy witnesses verified successfully.
 
 ### 3.2 Lean 4 Formal Proofs
 
-Five Lean 4 files compile against mathlib4 v4.28.0:
+Five Lean 4 files compile against mathlib4 v4.28.x:
 
 | File | Theorems | Status |
 |------|----------|--------|

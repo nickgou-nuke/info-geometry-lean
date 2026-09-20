@@ -137,16 +137,16 @@ Before answering, know what search tools are available ON DISK. This list was bu
 | Tool | Path | Status | How to use |
 |------|------|--------|-----------|
 | **dag_doctor** | `tools/infra/dag_doctor.py` | ✅ operational | `python3 tools/infra/dag_doctor.py` — all `[OK]` |
-| **loogle** | `external_refs/loogle/` | ✅ compiled + server | `cd external_refs/loogle && lake env loogle --json -i` — mathlib v4.28.0 search. |
-| **loogle server** | `external_refs/loogle/server.py` | ✅ operational | `python3 server.py --project-dir /home/goutev/repos/info-geometry-lean --port 8079` — HTTP mathlib search. Toolchain already v4.28.0. |
+| **loogle** | `external_refs/loogle/` | ✅ compiled + server | `cd external_refs/loogle && lake env loogle --json -i` — mathlib v4.28.x search. |
+| **loogle server** | `external_refs/loogle/server.py` | ✅ operational | `python3 server.py --project-dir /home/goutev/repos/info-geometry-lean --port 8079` — HTTP Mathlib search. Uses the repository-required toolchain. |
 | **leangz** | `external_refs/leangz/` | ✅ compiled | `cargo build --release` completed. Panics without lake env resolution — needs `lake env` wrapper. |
 | **LeanDojo** | `external_refs/LeanDojo/` | ❌ heavy deps | needs `loguru`, `tqdm`, `filelock`, `ray` (distributed computing). Install: `pip install tqdm filelock --break-system-packages`. |
 | **LeanSearch-PS** | `external_refs/REAL-Prover/LeanSearch-PS-inference/` | ❌ needs torch | PyTorch neural premise selection. `flask` available. `torch` not in env. |
-| **Lean REPL** | `external_refs/repl/` | ❌ no repl.py | Toolchain is v4.28.0 but Python entry point not at expected path. |
+| **Lean REPL** | `external_refs/repl/` | ❌ no repl.py | Python entry point is not at the expected path. |
 
 How to build a tool in this session (pattern):
 ```bash
-# loogle — already at v4.28.0 toolchain
+# loogle — use the repository-required toolchain
 cd external_refs/loogle && lake build
 # leangz
 cd external_refs/leangz && cargo build --release
@@ -218,9 +218,9 @@ If a theorem can't be proved properly, do NOT wrap it in `True := by trivial` or
 ### Mathlib is on disk — grep before fixing
 
 When a file fails with unknown lemma names:
-1. `grep -rn 'lemma_name' .lake/packages/mathlib/` to find the actual mathlib 4.28.0 names
+1. `grep -rn 'lemma_name' .lake/packages/mathlib/` to find the actual Mathlib names
 2. Do NOT guess from memory — lemma names change between versions
-3. The actual mathlib v4.28.0 lemmas were found at `.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Pow/Real.lean:672` for `Real.one_lt_rpow`, and `.lake/packages/mathlib/Mathlib/Algebra/Order/Field/Basic.lean:98` for `one_div_lt_one_div`.
+3. The relevant Mathlib lemmas were found at `.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Pow/Real.lean:672` for `Real.one_lt_rpow`, and `.lake/packages/mathlib/Mathlib/Algebra/Order/Field/Basic.lean:98` for `one_div_lt_one_div`.
 
 ## Forbidden Patterns (from session failures)
 

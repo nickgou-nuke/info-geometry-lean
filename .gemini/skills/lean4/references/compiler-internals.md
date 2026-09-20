@@ -3,7 +3,7 @@
 > **Scope:** Not part of the prove/autoprove default loop. Consulted when debugging compiler behavior, tuning performance attributes, or working with compiler passes.
 
 > **Version metadata:**
-> - **Verified on:** Lean reference + release notes through `v4.28.0`
+> - **Verified on:** Lean reference + release notes through `v4.28.x`
 > - **Last validated:** 2026-03-28
 > - **Confidence:** medium (content derived from PR #24, vetted against current docs)
 

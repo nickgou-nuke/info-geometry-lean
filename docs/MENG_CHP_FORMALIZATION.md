@@ -74,7 +74,7 @@ Not established by these new bridges: an intertwiner from the source RAT-PRM to 
 
 ## Verification environment
 
-The repository pins Lean 4.28.1, which is absent locally. Narrow checks use installed Lean 4.28.0, cached Mathlib, and isolated output under `/tmp/isnp-metacompiler-validation`, serialized by `/tmp/info-geometry-build.lock`. Dependency manifests and caches are not modified. This is not a claim of a successful full pinned-repository build.
+The repository pins Lean 4.28.1, which is absent locally. Narrow checks use installed Lean 4.28.x, cached Mathlib, and isolated output under `/tmp/isnp-metacompiler-validation`, serialized by `/tmp/info-geometry-build.lock`. Dependency manifests and caches are not modified. This is not a claim of a successful full pinned-repository build.
 
 All three new owner modules compile without warnings: 15 theorems in total.
 `lean/InfoGeometry/Physics/MengChPTranslationTests.lean` also compiles without warnings (nine theorems/examples), including a forbidden transition, a nonzero opposite-sign transition, and operator-Zorn multiplication with noncommutative matrix coefficients. Fourteen principal theorems were audited with `#print axioms`; their dependencies are only `propext`, `Classical.choice`, and `Quot.sound`. No `sorry`, custom axiom, or `native_decide` is introduced. Staged changes pass `git diff --check`.

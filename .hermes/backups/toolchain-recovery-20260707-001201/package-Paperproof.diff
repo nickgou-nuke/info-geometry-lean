@@ -7,10 +7,10 @@ index 56efc7d..0550747 100644
  require Paperproof from "lean"
  
 --- require Paperproof from git "https://github.com/Paper-Proof/paperproof.git"@"main"/"lean"
-+-- require Paperproof from git "https://github.com/Paper-Proof/paperproof.git"@"v4.28.0"/"lean"
++-- require Paperproof from git "https://github.com/Paper-Proof/paperproof.git"@"v4.28.x"/"lean"
  
 -require mathlib from git "https://github.com/leanprover-community/mathlib4" @ "v4.29.0-rc8"
-+require mathlib from git "https://github.com/leanprover-community/mathlib4" @ "v4.28.0"
++require mathlib from git "https://github.com/leanprover-community/mathlib4" @ "v4.28.x"
  
  -- Uncomment this is you want to use paperproof statically
  -- @[default_target]
@@ -20,11 +20,11 @@ index ccec351..4c685fa 100644
 +++ b/lean-toolchain
 @@ -1 +1 @@
 -leanprover/lean4:v4.29.0-rc8
-+leanprover/lean4:v4.28.0
++leanprover/lean4:v4.28.x
 diff --git a/lean/lean-toolchain b/lean/lean-toolchain
 index 5249182..4c685fa 100644
 --- a/lean/lean-toolchain
 +++ b/lean/lean-toolchain
 @@ -1 +1 @@
 -leanprover/lean4:v4.27.0
-+leanprover/lean4:v4.28.0
++leanprover/lean4:v4.28.x

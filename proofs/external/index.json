@@ -7,8 +7,8 @@
 
     "lean/mathlib4": {
       "url": "https://github.com/leanprover-community/mathlib4.git",
-      "version": "v4.28.0",
-      "commit": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+      "version": "v4.28.1",
+      "commit": "1f9fffd5ff0b854b8a1f1f69adc11c61f05f2515",
       "size_mb": 9500,
       "type": "symlink",
       "source": "/home/goutev/info-geometry-lean/.lake/packages/mathlib",

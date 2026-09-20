@@ -1,4 +1,4 @@
-/- Spectral sequences in Lean 4.28.0 / mathlib4 -/
+/- Spectral sequences in Lean 4.28.x / mathlib4 -/
 
 import InfoGeometry.Spectral.Algebra.ExactCouple
 import InfoGeometry.Algebra.FiniteSpinAlgebra

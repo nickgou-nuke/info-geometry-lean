@@ -60,7 +60,7 @@ theorem finite_complex_structure_bridge_packet :
     bivector_i * bivector_i = ⟨-1, 0, 0, 0⟩
 ```
 
-**Status:** ✓ Compiles in Lean 4.28.0
+**Status:** ✓ Compiles in Lean 4.28.x
 
 ### ✅ SymPy (Computational)
 

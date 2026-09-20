@@ -178,7 +178,7 @@ Current local note:
 
 ### Lean4 base
 
-The repository is pinned to **Lean 4.28.0**.
+The repository is pinned to **Lean 4.28.1**.
 
 Verification:
 - `lake build` (or `lake build -R`) has succeeded on this host.

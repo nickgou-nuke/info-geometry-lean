@@ -106,8 +106,8 @@ these formal statements from physical modeling assumptions.
 
 ## Verification scope
 
-The regression file passed with Lean 4.28.0, cached Mathlib, and isolated
+The regression file passed with Lean 4.28.x, cached Mathlib, and isolated
 outputs under the shared build lock: five examples and axiom reports for all
 seventeen new theorems. The pinned 4.28.1 compiler is now installed, but a
 separate import probe fails on an incompatible header in the existing
-4.28.0 Mathlib `.olean` cache. A pinned-toolchain build is not claimed.
+4.28.x Mathlib `.olean` cache. A pinned-toolchain build is not claimed.

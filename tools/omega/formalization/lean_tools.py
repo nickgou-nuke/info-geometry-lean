@@ -23,7 +23,7 @@ class LeanConfig:
     repo_root: Path = Path("/home/goutev/repos/info-geometry-lean")
     lake_timeout_seconds: int = 180
     lean_timeout_seconds: int = 60
-    mathlib_rev: str = "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
+    mathlib_rev: str = "1f9fffd5ff0b854b8a1f1f69adc11c61f05f2515"
 
 
 @dataclass

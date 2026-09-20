@@ -78,7 +78,7 @@ NavierStokesAndEuler
 
 `external_refs/Lean-QuantumInfo` is a full-history nested checkout at
 `56e83a9` from `https://github.com/Timeroot/Lean-QuantumInfo.git`. Its
-`lean-toolchain` pins `leanprover/lean4:v4.28.0`, and its `lakefile.lean`
+`lean-toolchain` is an independent upstream pin, not the root repository pin, and its `lakefile.lean`
 declares `QuantumInfo`, `ClassicalInfo`, and `StatMech` Lean libraries. Its
 README says this work merged into Physlib after March 2026, so treat this as a
 reference snapshot unless we deliberately port selected theorem material.
@@ -90,8 +90,8 @@ from `https://github.com/google-deepmind/debate`. Its `lean-toolchain` pins
 `origin/main` after fetch.
 
 `external_refs/LeanAide` is a full-history nested checkout at `d7b5cc39` from
-`https://github.com/siddhartha-gadgil/LeanAide.git`. Its `lean-toolchain` pins
-`leanprover/lean4:v4.28.0`. The root `lakefile.toml` declares `LeanAide`,
+`https://github.com/siddhartha-gadgil/LeanAide.git`. Its `lean-toolchain` is
+an independent upstream pin, not the root repository pin. The root `lakefile.toml` declares `LeanAide`,
 `LeanCodePrompts`, `DataGenAide`, `StatementAutoformalisation`,
 `TacticExtraction`, `CodeGen`, and many Lean executables including `translate`
 and `leanaide_process`; the `LeanAideCore` subproject provides the

@@ -65,7 +65,7 @@ linear dependency chain.
 
 ## Validation environment
 
-Checks run serially under the shared build lock with installed Lean 4.28.0,
+Checks run serially under the shared build lock with installed Lean 4.28.x,
 cached Mathlib, and isolated outputs. Pinned Lean 4.28.1 remains unavailable;
 no toolchain, dependency metadata, existing source owner, or cache is changed.
 This is not a pinned-toolchain or full-repository build.

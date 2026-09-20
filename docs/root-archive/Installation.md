@@ -6,7 +6,7 @@
 > See: [README.md](README.md), [docs/README.md](docs/README.md), [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
 
 This repository uses:
-- Lean toolchain: `leanprover/lean4:v4.28.0`
+- Lean toolchain: `leanprover/lean4:v4.28.x`
 - Lake package management via [lakefile.lean](lakefile.lean)
 - optional repo-local Python environment under `.venv`
 

@@ -97,7 +97,7 @@ Mathematical justification: for real s > 1,
 Hence ζ(s) → 1 as s → ∞.
 
 This is a standard analytic fact about the Riemann zeta function; mathlib4
-v4.28.0 does not yet have the exact lemma used here, so this file records the
+The Mathlib API available when this file was written did not expose the exact lemma used here, so this file records the
 limit as an explicit premise of the transition theorem.
 -/
 def zeroTemperatureZetaLimit : Prop :=

@@ -17,6 +17,6 @@ import proofs.BraidProject.PartialGrids
 # Buildable BraidProject Root
 
 The upstream root imports `BraidProject.Basic`, but the file was absent in the
-cloned repository. Keep the root conservative and buildable on Lean 4.28.0 by
+cloned repository. Keep the root conservative and buildable on Lean 4.28.x by
 importing the generator-index colimit complement first.
 -/

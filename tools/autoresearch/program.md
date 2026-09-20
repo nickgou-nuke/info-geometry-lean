@@ -8,7 +8,7 @@ formalization (declaration + proof) that compiles with `lake build`.
 
 The Omega project is a Lean4 formalization of mathematical results about golden-ratio
 driven structures (x² = x + 1). The codebase has ~39K lines, ~3,476 theorems, 0 axioms,
-and depends on mathlib v4.28.0.
+and depends on mathlib v4.28.x.
 
 ## Your Task
 

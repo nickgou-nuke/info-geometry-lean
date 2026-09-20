@@ -80,7 +80,7 @@ these files do not prove it.
 
 ## Validation
 
-The earlier isolated check used Lean 4.28.0 and the Mathlib revision matching
+The earlier isolated check used Lean 4.28.x and the Mathlib revision matching
 the root manifest. The three production modules and their regression module
 passed that check, but it is not acceptance under the required Lean 4.28.1.
 Dependencies are now being rebuilt from pinned sources with 4.28.1; this

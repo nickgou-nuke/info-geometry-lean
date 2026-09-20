@@ -39,7 +39,7 @@ index 555ac1d..9b9b08d 100644
  name = "UnicodeBasic"
  git = "https://github.com/fgdorais/lean4-unicode-basic"
 -rev = "main"
-+rev = "v4.28.0"
++rev = "v4.28.x"
  
  [[lean_lib]]
  name = "BibtexQuery"

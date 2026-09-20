@@ -88,7 +88,7 @@ of the mathematical propositions, or a causal law of cognition.
 The regression module is `EpistemicGradientFlowTests.lean`. It exercises the
 decay bound, dissipation identity, both limits, and a singular-reference
 counterexample; it also requests axiom reports for all fifteen new theorems.
-Serial local verification uses the shared build lock, installed Lean 4.28.0,
+Serial local verification uses the shared build lock, installed Lean 4.28.x,
 cached Mathlib, and isolated build outputs. The repository pins Lean 4.28.1,
 which is not installed locally. No dependency metadata is changed, and this
 does not constitute a pinned-toolchain or full-repository build.

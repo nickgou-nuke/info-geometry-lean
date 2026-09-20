@@ -83,7 +83,7 @@ does not claim new identifications with nuclear chirality or the QPM.
 ## Verification environment
 
 Verification uses serial, shared-lock, isolated checks with installed Lean
-4.28.0 and cached Mathlib. The pinned Lean 4.28.1 is unavailable locally. No
+4.28.x and cached Mathlib. The pinned Lean 4.28.1 is unavailable locally. No
 toolchain, dependency source, manifest, or cache is changed. This is not a
 pinned-toolchain or full-repository build.
 

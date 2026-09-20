@@ -41,6 +41,7 @@ harvest_strict_failures_on_exit() {
 trap harvest_strict_failures_on_exit EXIT
 
 python3 tools/infra/assert_single_mathlib_source.py
+python3 tools/infra/audit_default_lean_sources.py
 
 echo "[strict-check] building modular libraries"
 python3 tools/run_locked_lake_build.py --wait-for-build-lock InfoGeometryMeta

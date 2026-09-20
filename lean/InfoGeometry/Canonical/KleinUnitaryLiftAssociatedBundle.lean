@@ -1,6 +1,6 @@
 import proofs.KleinVectorLiftObstruction
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import proofs.KleinSixStateVectorBundleCore
+import InfoGeometry.Topology.KleinSixStateVectorBundleCore
 
 /-!
 # The concrete unitary lift on the six-dimensional Klein fibre

@@ -69,21 +69,7 @@ theorem gibbs_weight_maximized_for_flat_paths (K : EndH) (path : List (TacticTra
     unfold pathSurprisal
     let f := fun step : TacticTransition E => (hestenesActionSplit K step).2
     let G := fun (acc : ℝ) (x : TacticTransition E) => acc + f x
-    have h_fold : ∀ l : List (TacticTransition E), (∀ x ∈ l, f x = 0) → ∀ z, List.foldl G z l = z := by
-      intro l hl
-      induction l with
-      | nil => intro z; rfl
-      | cons head tail ih =>
-        intro z
-        rw [List.foldl_cons]
-        have h_h : head ∈ head :: tail := List.mem_cons_self head tail
-        have h_head_zero : f head = 0 := hl head h_h
-        have h_G : G z head = z := by dsimp [G]; rw [h_head_zero, add_zero]
-        rw [h_G]
-        apply ih
-        intro x hx
-        exact hl head hx -- This was incorrect, fixed below to use hl
-    -- Redoing the induction logic slightly to be more robust
+    -- Induct over the path to evaluate the additive fold.
     have h_fold' : ∀ l : List (TacticTransition E), (∀ x ∈ l, f x = 0) → ∀ z, List.foldl G z l = z := by
       intro l
       induction l with
@@ -91,7 +77,7 @@ theorem gibbs_weight_maximized_for_flat_paths (K : EndH) (path : List (TacticTra
       | cons head tail ih =>
         intros h z
         rw [List.foldl_cons]
-        have h_h : head ∈ head :: tail := List.mem_cons_self head tail
+        have h_h : head ∈ head :: tail := List.mem_cons_self
         have h_head_zero : f head = 0 := h head h_h
         have h_G : G z head = z := by dsimp [G]; rw [h_head_zero, add_zero]
         rw [h_G]

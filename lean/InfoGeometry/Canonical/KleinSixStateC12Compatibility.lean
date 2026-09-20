@@ -1,7 +1,7 @@
 import InfoGeometry.Canonical.TwelveFoldExplicitOperators
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import proofs.KleinAffineDeckGroup
-import proofs.KleinSixStateVectorBundleCore
+import InfoGeometry.Topology.KleinSixStateVectorBundleCore
 
 /-!
 # Affine Klein transport and the six-state `C₁₂` fibre action

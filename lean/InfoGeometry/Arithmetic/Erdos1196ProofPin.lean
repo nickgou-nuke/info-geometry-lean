@@ -22,7 +22,7 @@ Its theorem authority is:
 * `Erdos1196.erdos_1196`
 
 The upstream repository was pinned to Lean `v4.30.0-rc1`. The local checkout
-has been retargeted to this repository's Lean `v4.28.0` and source-compatibility
+has been retargeted to this repository's Lean `v4.28.1` and source-compatibility
 patched so that the explicit Lake target
 
 `lake build PrimitiveSetsAboveX`
@@ -48,7 +48,7 @@ def localPath : String := "external/Erdos1196"
 def upstreamToolchain : String := "leanprover/lean4:v4.30.0-rc1"
 
 /-- Local Lean toolchain used by the vendored checkout. -/
-def localToolchain : String := "leanprover/lean4:v4.28.0"
+def localToolchain : String := "leanprover/lean4:v4.28.1"
 
 /-- Main theorem declaration in the external source. -/
 def mainTheorem : String := "PrimitiveSetsAboveX.mainTheorem"

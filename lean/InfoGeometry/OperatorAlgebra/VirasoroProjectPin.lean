@@ -44,7 +44,7 @@ def virasoroProjectPin : ExternalLeanProjectPin where
   commit := "555a9096c259b1608016b10d1d7b5e3bbc8d2477"
   localPath := "lean/InfoGeometry/External/Virasoro"
   upstreamToolchain := "leanprover/lean4:v4.27.0-rc1"
-  localToolchain := "leanprover/lean4:v4.28.0"
+  localToolchain := "leanprover/lean4:v4.28.1"
   rootModule := "InfoGeometry.External.Virasoro"
 
 /-- Candidate conductive-route map entry (non-authoritative metadata). -/
@@ -78,7 +78,7 @@ theorem virasoroConductiveRouteMap_nonempty : virasoroConductiveRouteMap ≠ [] 
 
 The external project `kkytola/VirasoroProject` is vendored under
 `InfoGeometry.External.Virasoro` and builds on the repository toolchain
-`leanprover/lean4:v4.28.0`.
+`leanprover/lean4:v4.28.1`.
 
 This status is deliberately narrow: it certifies that the VirasoroProject
 implementation is imported and usable natively from this repository. It does

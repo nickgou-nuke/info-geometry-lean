@@ -1,5 +1,9 @@
 # Info-Geometry OS: Formal Verification AI Architecture
 
+The scoped native compiler-to-runtime policy interface is documented in
+[OS–epistemic compiler bridge](HIVE_EPISTEMIC_BRIDGE.md). Its source is implemented;
+validation and deployment status are tracked there separately from this design.
+
 This document is the master narrative architecture for the Info-Geometry OS
 proof-search stack.
 

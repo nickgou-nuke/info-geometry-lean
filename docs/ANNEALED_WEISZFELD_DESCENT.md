@@ -67,11 +67,16 @@ temperature changes between steps. Those assertions are not included.
 
 ## Verification status
 
-The six new modules contain proof scripts without `sorry`, `admit`, or added
-axioms, but are **not yet claimed kernel-verified**. A sequential Lean 4.28.1
-source rebuild is in progress for the first two owners' pinned dependency closure
-(3160 modules), under the shared build lock. The full regression target must then
-be checked:
+The full regression target **passes Lean 4.28.1**. Its pinned source dependency
+closure contains 3,168 modules, checked sequentially under the shared build lock.
+All six owners elaborate successfully after repairing the explicit real inner
+product notation and two additive-inequality steps. The final regression run
+reports eleven axiom audits: only `propext`, `Classical.choice`, and `Quot.sound`
+occur; there is no `sorryAx` or added axiom. The dependency-order audit uses only
+`propext` and `Quot.sound`. These are classical Mathlib proofs, not a claim of
+choice-free constructive analysis.
+
+The successful command was:
 
 ```bash
 python3 /tmp/isnp-rebuild-pinned.py InfoGeometry.Spectrometry.AnnealedDescentTests
@@ -79,5 +84,6 @@ python3 /tmp/isnp-rebuild-pinned.py InfoGeometry.Spectrometry.AnnealedDescentTes
 
 The temporary checker validates dependency revisions against `lake-manifest.json`
 and compiles exact pinned sources into `/tmp/isnp-rebuilt-4.28.1`, without loading
-Lean 4.28.0 artifacts or changing dependency pins. Any elaboration failures in
-the new scripts must be repaired before this status is promoted to verified.
+Lean 4.28.0 artifacts or changing dependency pins. This verifies this regression
+target and its dependencies, not the entire repository or the stronger physical
+and convergence claims excluded above.

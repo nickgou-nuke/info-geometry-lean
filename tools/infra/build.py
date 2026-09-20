@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import hashlib
 import os
+import signal
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -91,14 +93,58 @@ def ensure_mathlib_cache(root: Path) -> None:
     subprocess.run(["bash", str(hydration_script)], cwd=root, check=True)
 
 
+def lake_build_command(targets: Sequence[str], *, wfail: bool = False) -> list[str]:
+    """Compile the exact Lake argv after wrapper-owned options are resolved."""
+    command = ["lake", "build"]
+    if wfail:
+        command.append("--wfail")
+    command.extend(targets)
+    return command
+
+
+def _interrupt_child_and_wait(proc: subprocess.Popen[bytes]) -> None:
+    """Forward Ctrl-C to Lake and keep owning the lock until it exits."""
+    if proc.poll() is not None:
+        return
+    try:
+        if os.name == "posix":
+            os.killpg(proc.pid, signal.SIGINT)
+        else:
+            proc.send_signal(signal.SIGINT)
+    except ProcessLookupError:
+        pass
+    except OSError as exc:
+        print(
+            f"[locked-lake-build] could not forward interrupt ({exc}); "
+            "retaining the lock until the Lake process exits",
+            file=sys.stderr,
+            flush=True,
+        )
+
+    # Repeated Ctrl-C must not release the shared lock while Lake remains alive.
+    while proc.poll() is None:
+        try:
+            proc.wait()
+        except KeyboardInterrupt:
+            continue
+
+
 def run_locked_lake_build(
     targets: Sequence[str], *, wait_for_lock: bool = False, wfail: bool = False
 ) -> int:
+    """Run the causal build transaction: validate -> lock -> execute -> release.
+
+    Cache hydration is intentionally a separate explicit operation. Child
+    stdout/stderr are inherited so diagnostics are visible as Lake emits them.
+    """
     root = repo_root()
-    ensure_mathlib_cache(root)
+    targets = tuple(str(target) for target in targets)
+    if any(not target or "\x00" in target for target in targets):
+        print("[locked-lake-build] invalid empty/NUL target argument", file=sys.stderr, flush=True)
+        return 2
     target_label = " ".join(targets) if targets else "<default>"
     owner = f"locked-lake-build:{os.getpid()}:{target_label}"
-    log_spectral_stage("PREP", target_label, "establishing locked build vacuum")
+    print(f"[locked-lake-build] requesting lock for {target_label}", flush=True)
     try:
         lock = acquire_build_lock(None, owner, block=wait_for_lock)
     except BuildLockBusyError as exc:
@@ -106,38 +152,59 @@ def run_locked_lake_build(
         owner_msg = meta.get("owner", "unknown")
         pid_msg = meta.get("pid", "unknown")
         print(
-            f"[locked-lake-build] another build already holds {exc.lock_path} "
-            f"(owner={owner_msg}, pid={pid_msg}); refusing to start a concurrent build",
+            f"[locked-lake-build] lock is held at {exc.lock_path} "
+            f"(recorded owner={owner_msg}, pid={pid_msg}); refusing concurrent build",
             file=sys.stderr,
             flush=True,
         )
         return 2
+    except OSError as exc:
+        print(f"[locked-lake-build] could not acquire build lock: {exc}",
+              file=sys.stderr, flush=True)
+        return 126
+    except KeyboardInterrupt:
+        print("[locked-lake-build] interrupted while waiting for build lock",
+              file=sys.stderr, flush=True)
+        return 130
 
-    cmd = ["lake", "build"]
-    if wfail:
-        cmd.append("--wfail")
-        log_spectral_stage("PAULI", target_label, "warnings promoted to errors (--wfail)")
-    else:
-        log_spectral_stage("ASSIGN", target_label, "running default selection rules")
-    cmd.extend(targets)
     print(f"[locked-lake-build] acquired {lock.lock_path}", flush=True)
-    log_spectral_stage("DECOMP", target_label, f"lock acquired at {lock.lock_path}")
-    print(f"[locked-lake-build] running: {' '.join(cmd)}", flush=True)
+    cmd = lake_build_command(targets, wfail=wfail)
+    status = 126
+    proc: subprocess.Popen[bytes] | None = None
+    interrupted = False
     try:
-        proc = subprocess.run(cmd, cwd=root)
-        if proc.returncode == 0:
-            log_spectral_stage("CRYSTAL", target_label, "stable closure achieved")
-        else:
-            log_spectral_stage(
-                "CONGEST",
-                target_label,
-                f"build exited with code {proc.returncode}",
-            )
-        return proc.returncode
+        print(f"[locked-lake-build] executing: {shlex.join(cmd)}", flush=True)
+        proc = subprocess.Popen(cmd, cwd=root, start_new_session=(os.name == "posix"))
+        try:
+            status = proc.wait()
+        except KeyboardInterrupt:
+            interrupted = True
+            raise
+        print(f"[locked-lake-build] lake build exited with code {status}", flush=True)
+    except FileNotFoundError as exc:
+        print(f"[locked-lake-build] could not start build command: {exc}",
+              file=sys.stderr, flush=True)
+        status = 127
+    except OSError as exc:
+        print(f"[locked-lake-build] build launch failed: {exc}",
+              file=sys.stderr, flush=True)
+        status = 126
+    except KeyboardInterrupt:
+        interrupted = True
+        print("[locked-lake-build] interrupted by user", file=sys.stderr, flush=True)
+        if proc is not None:
+            _interrupt_child_and_wait(proc)
+        status = 130
     finally:
-        lock.release()
-        print(f"[locked-lake-build] released {lock.lock_path}", flush=True)
-        log_spectral_stage("ATLAS", target_label, "lock released; registry ready for refresh")
+        try:
+            lock.release()
+            print(f"[locked-lake-build] released {lock.lock_path}", flush=True)
+        except OSError as exc:
+            print(f"[locked-lake-build] failed to release lock: {exc}",
+                  file=sys.stderr, flush=True)
+            if status == 0 and not interrupted:
+                status = 126
+    return status
 
 
 def ensure_built_executable(root: Path, target: str) -> Path:

@@ -10,7 +10,7 @@ open ContinuousLinearMap
 
 /-- Moore-Penrose operator-theoretic existence package for bounded operators between Hilbert spaces with closed range.
 
-This version supersedes the old hand-constructed package, following Mathlib v4.28.0 APIs and analytic conventions.
+This version supersedes the old hand-constructed package, following Mathlib v4.28.x APIs and analytic conventions.
 -*/
 namespace MoorePenroseClosedRange
 

@@ -111,13 +111,13 @@ The six regression modules are:
 - `Canonical/DrazinPairingAdjunctionTests.lean`
 - `HodgeCohomology/KreinFiniteGreenDecompositionTests.lean`
 
-All six regression modules pass serial, locked isolated Lean **4.28.0** checks
+All six regression modules pass serial, locked isolated Lean **4.28.x** checks
 without warnings. Their 36 axiom audits report only `propext`,
 `Classical.choice`, and `Quot.sound`, with no `sorryAx` or added axioms. These
 checks use cached Mathlib revision `8f9d9cff6bd728b17a24e163c9402775d9e6a365`.
 This is not a full repository build or verification under the pinned Lean
 **4.28.1** toolchain.
 The 4.28.1 compiler rejects the cached Mathlib `.olean` headers. The cached
-Mathlib source revision itself declares 4.28.0; some cached indirect package
+Mathlib source revision itself declares 4.28.x; some cached indirect package
 revisions also differ from the repository manifest. Pins and dependency source
 have not been changed. A compatible pinned dependency build remains open.

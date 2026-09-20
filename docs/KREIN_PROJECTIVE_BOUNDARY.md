@@ -67,12 +67,12 @@ nilpotent operator. These are intentionally distinct sufficient conditions.
 ## Verification scope
 
 The three new production modules and `KreinProjectiveBoundaryTests.lean`
-compile without warnings under Lean 4.28.0. The thirteen selected axiom
+compile without warnings under Lean 4.28.x. The thirteen selected axiom
 audits report only `propext`, `Classical.choice`, and `Quot.sound`, with no
 `sorryAx` or added axioms. Mathlib's representative selection is explicitly
 noncomputable; the ray carrier itself is the native quotient.
 
-Validation uses isolated, serial Lean 4.28.0 checks and the cached Mathlib
+Validation uses isolated, serial Lean 4.28.x checks and the cached Mathlib
 revision described in [the Green decomposition notes](KREIN_GREEN_DECOMPOSITION.md).
 The repository's pinned Lean 4.28.1 verification remains blocked by incompatible
 cached Mathlib headers. No dependency metadata or pins are changed.

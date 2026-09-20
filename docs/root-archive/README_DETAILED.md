@@ -329,7 +329,7 @@ sole proof authority.
 
 | Area | Status | Details |
 |------|--------|---------|
-| Lean build target | ✅ Indexed | Commit `37f7cca04`, toolchain `leanprover/lean4:v4.28.0` |
+| Lean build target | ✅ Indexed | Commit `37f7cca04`, toolchain `leanprover/lean4:v4.28.x` |
 | `dagIndexer` export | ✅ Fresh Jun 2 | 93,554 nodes, 782,004 edges, 5,473 types, 9,929 morphisms |
 | `dagDoctor` conformance | ✅ Passes | 10/10 checks, 0% node/edge drift |
 | LeanTrail snapshot | ✅ `graph_snapshot.json` | 375 MB, Jun 2 08:30 |
@@ -882,7 +882,7 @@ lake env lean --run lean/DAG/KernelEquivalenceExport.lean \
 
 ## Pipeline State: Current Snapshot Facts
 
-1. **The DAG is fresh** — built at commit `37f7cca04`, toolchain `v4.28.0`.
+1. **The DAG is fresh** — built at commit `37f7cca04`, toolchain `v4.28.x`.
    93,554 nodes, 782,004 edges, 5,473 types, 9,929 morphisms.
 
 2. **Conformance passes** — 10/10 checks, 0% node/edge drift, 1.0 Jaccard

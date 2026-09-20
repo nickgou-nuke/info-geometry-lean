@@ -123,7 +123,7 @@ index 18684d9..2f3881e 100644
     "rev": "4f10f47646cb7d5748d6f423f4a07f98f7bbcc9e",
     "name": "Cli",
     "manifestFile": "lake-manifest.json",
--   "inputRev": "v4.28.0",
+-   "inputRev": "v4.28.x",
 +   "inputRev": "4f10f47646cb7d5748d6f423f4a07f98f7bbcc9e",
     "inherited": true,
 -   "configFile": "lakefile.toml"}],

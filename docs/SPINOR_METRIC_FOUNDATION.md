@@ -35,7 +35,7 @@ positive statistical forms do not replace the repository's indefinite Krein
 metric or identify a fundamental symmetry with modular conjugation.
 
 Validation: all six production modules and `SpinorMetricTests.lean` pass the
-isolated Lean 4.28.0 checker using the cached Mathlib revision matching the root
+isolated Lean 4.28.x checker using the cached Mathlib revision matching the root
 manifest. Fifteen printed axiom audits contain only standard Lean axioms, with
 no `sorryAx`. Tests include a noncommuting qubit SLD and nonexistence at a
 singular zero density for nonzero variation. These earlier checks are not

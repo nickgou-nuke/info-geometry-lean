@@ -67,7 +67,7 @@ remain separate owners, as recorded in the reuse audit.
 ## Verification environment
 
 The pinned Lean 4.28.1 toolchain is unavailable locally. Narrow checks use
-installed Lean 4.28.0, cached Mathlib, isolated outputs in
+installed Lean 4.28.x, cached Mathlib, isolated outputs in
 `/tmp/isnp-metacompiler-validation`, and the shared build lock. No dependency
 source, manifest, or toolchain pin is changed. This is not a claim of a complete
 repository build on the pinned toolchain.

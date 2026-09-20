@@ -34,7 +34,7 @@ This skill enables the **Paperproof Validator** workflow within the **Info-Geome
 - **Semantic Fidelity**: Cross-reference the visual tree with the original math/physics definitions to ensure the "Multilingual Bridge" is intact.
 
 ### Tool Configuration
-- **Lean Version**: Pins to `v4.28.0`.
+- **Lean Version**: Pins to `v4.28.1`.
 - **VS Code Extension**: Requires version `v2.7.0` (matching our toolchain).
 - **Lake Integration**: Added via `require paperproof` in `lakefile.lean`.
 

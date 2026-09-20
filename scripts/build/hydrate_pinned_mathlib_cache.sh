@@ -11,7 +11,7 @@ STATE_DIR="$REPO_ROOT/.lake/cache-state"
 LOCK_FILE="$STATE_DIR/mathlib-cache.lock"
 MARKER_FILE="$STATE_DIR/mathlib-cache-hydrated"
 EXPECTED_TOOLCHAIN="leanprover/lean4:v4.28.1"
-EXPECTED_MATHLIB_REV="8f9d9cff6bd728b17a24e163c9402775d9e6a365"
+EXPECTED_MATHLIB_REV="1f9fffd5ff0b854b8a1f1f69adc11c61f05f2515"
 
 if [[ ! -d "$MATHLIB_ROOT/.git" ]]; then
   echo "error: pinned local Mathlib checkout is missing: $MATHLIB_ROOT" >&2

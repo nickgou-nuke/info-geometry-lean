@@ -55,8 +55,8 @@
     "depth_gate_min_medium": 1,
     "chapter_diversity_window": 3,
     "lake_timeout_seconds": 300,
-    "lean_version": "4.28.0",
-    "mathlib_rev": "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
+    "lean_version": "4.28.1",
+    "mathlib_rev": "1f9fffd5ff0b854b8a1f1f69adc11c61f05f2515"
   },
   "formalization": {
     "zero_sorry_policy": true,

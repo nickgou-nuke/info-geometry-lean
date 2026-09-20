@@ -4,7 +4,7 @@ Status: integrated on `main` by commit `ec1aa539c`. On 2026-09-09 the locked bui
 
 Target: `nickgou-nuke/info-geometry-lean`, main commit `fdce23724bcbd3cc63f78c6e0cdca7e371d99c1f`.
 
-Pinned environment: Lean `v4.28.1`; Mathlib `8f9d9cff6bd728b17a24e163c9402775d9e6a365`.
+Pinned environment: Lean `v4.28.1`; Mathlib `1f9fffd5ff0b854b8a1f1f69adc11c61f05f2515`.
 
 ## Mathematical object
 

@@ -8,7 +8,7 @@ import subprocess
 import sys
 
 EXPECTED = "leanprover/lean4:v4.28.1"
-EXPECTED_MATHLIB_REV = "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
+EXPECTED_MATHLIB_REV = "1f9fffd5ff0b854b8a1f1f69adc11c61f05f2515"
 EXPECTED_PACKAGE_REVISIONS = {
     "mathlib": EXPECTED_MATHLIB_REV,
     "Qq": "b8f98e9087e02c8553945a2c5abf07cec8e798c3",

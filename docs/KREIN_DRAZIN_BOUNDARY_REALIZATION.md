@@ -73,7 +73,7 @@ boundary is not silently identified with the whole generalized zero sector.
 ## Verification boundary
 
 The two production modules and both regression modules pass isolated Lean
-4.28.0 compilation. The eleven axiom audits in `KreinDrazinGreenTests.lean`
+4.28.x compilation. The eleven axiom audits in `KreinDrazinGreenTests.lean`
 and `KreinDrazinBoundaryRealizationTests.lean` contain only `propext`,
 `Classical.choice`, and `Quot.sound`; there is no `sorryAx` or added axiom.
 The new files compile without warnings. Rebuilding the existing boundary
@@ -81,8 +81,8 @@ owner's dependencies also succeeds, with unrelated pre-existing simplifier
 warnings in `Volume/ConnesCocycle.lean` and
 `Canonical/PhaseAxisCartanSymmetricLie.lean` left unchanged.
 
-These modules use the same isolated Lean 4.28.0 validation lane documented in
+These modules use the same isolated Lean 4.28.x validation lane documented in
 [the Green decomposition notes](KREIN_GREEN_DECOMPOSITION.md). The repository's
 pinned Lean 4.28.1 build is not verified: its compiler rejects the available
-4.28.0 Mathlib cache. No dependency source, pins, or toolchain metadata are
+4.28.x Mathlib cache. No dependency source, pins, or toolchain metadata are
 changed by this construction.

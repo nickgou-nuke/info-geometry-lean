@@ -44,7 +44,7 @@ stationarity equivalences, the explicit compound-weight formula, and a genuine
 
 The pinned Lean 4.28.1 check stops in the imported Mathlib
 `Analysis/InnerProductSpace/Calculus.olean` with `incompatible header`.
-The available dependency cache is built with Lean 4.28.0. Isolated validation
+The available dependency cache is built with Lean 4.28.x. Isolated validation
 uses that matching compiler, the shared build lock, and outputs under
 `/tmp/isnp-metacompiler-validation`; this is not a pinned-version or full-repo
 build claim. No dependency pins or toolchain files are changed.

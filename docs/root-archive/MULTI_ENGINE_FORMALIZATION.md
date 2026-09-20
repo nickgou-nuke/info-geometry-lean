@@ -30,7 +30,7 @@ The **finite complex structure bridge packet** establishes:
 - `peirceLadder_J_sq_neg_one`: J² = -1
 - `finite_complex_structure_bridge_packet`: Complete bridge
 
-**Status:** ✓ Compiles successfully with Lean 4.28.0
+**Status:** ✓ Compiles successfully with Lean 4.28.x
 
 **Command:**
 ```bash

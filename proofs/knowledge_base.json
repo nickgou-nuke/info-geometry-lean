@@ -2818,7 +2818,7 @@
   },
   {
     "title": "Legendre duality \u2014 complete Lean proof (theorem-004)",
-    "content": "Full Lean proof compiled with mathlib v4.28.0.\nf(x) = x\u00b2/2, f*(p) = sup_x(px - x\u00b2/2) = p\u00b2/2.\nProof: completing the square, px - x\u00b2/2 = -(x-p)\u00b2/2 + p\u00b2/2.\nInvolution: (f*)* = f, proven by same identity.\nVacuity check: PASSED (non-vacuous, complete proof).",
+    "content": "Full Lean proof compiled with mathlib v4.28.x.\nf(x) = x\u00b2/2, f*(p) = sup_x(px - x\u00b2/2) = p\u00b2/2.\nProof: completing the square, px - x\u00b2/2 = -(x-p)\u00b2/2 + p\u00b2/2.\nInvolution: (f*)* = f, proven by same identity.\nVacuity check: PASSED (non-vacuous, complete proof).",
     "source": "formalization_pipeline",
     "tags": [
       "legendre",

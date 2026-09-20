@@ -62,7 +62,7 @@ This is the live host mapping as of the current DGX Spark setup:
 - Token-free proof-state/tactic probing is active through
   `tools/infra/lean_interact_wrapper.py`, which calls the repo-pinned
   `lake env lean` toolchain and returns JSON packets for Hermes/OpenClaw.
-- `Lean 4.28.0` and `lake` are the final authority.
+- `Lean 4.28.x` and `lake` are the final authority.
 - `hermes-info-geometry-loop.timer` runs the bounded non-mutating planning
   loop.
 
@@ -387,7 +387,7 @@ Current intended local mapping on this host:
   - optional research sidecar
 - `LeanDojo-v2`
   - installed token-free proving/data substrate
-- `Lean 4.28.0`
+- `Lean 4.28.x`
   - authority layer
 
 ## 9. Canonical Rule

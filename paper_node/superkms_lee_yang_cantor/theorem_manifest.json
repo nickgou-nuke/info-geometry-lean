@@ -2,7 +2,7 @@
   "packet_id": "superkms_lee_yang_cantor",
   "created_utc": "2026-06-07T00:00:00Z",
   "repository": "/home/goutev/repos/info-geometry-lean",
-  "toolchain": "leanprover/lean4:v4.28.0",
+  "toolchain": "leanprover/lean4:v4.28.1",
   "authority": "Lean source owner files and targeted Lake builds",
   "status": "publication-prep manifest; not proof authority",
   "included_owner_modules": [

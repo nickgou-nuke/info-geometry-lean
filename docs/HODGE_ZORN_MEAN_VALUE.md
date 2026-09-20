@@ -100,9 +100,9 @@ between the branches.
 `HodgeZornFactorizationTests.lean` has six examples and twelve axiom audits.
 `HarmonicMeanValueTests.lean` has three examples and six audits, including the
 native Mathlib mean-value theorem. Both regression targets passed with Lean
-4.28.0, cached Mathlib, isolated outputs, and the shared build lock. The
+4.28.x, cached Mathlib, isolated outputs, and the shared build lock. The
 repository's pinned Lean 4.28.1 is now installed, but its import probe fails
-on an incompatible header in the existing 4.28.0 Mathlib `.olean` cache.
+on an incompatible header in the existing 4.28.x Mathlib `.olean` cache.
 This is not a pinned-toolchain or whole-repository build.
 
 The additional concentric-circle theorem and the separate common-scale

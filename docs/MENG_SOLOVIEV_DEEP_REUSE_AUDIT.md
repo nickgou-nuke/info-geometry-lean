@@ -211,7 +211,7 @@ physics definitions or duplicate theorem wrappers were added in this pass.
 ## Verification and import boundary
 
 Checks are serial and use `/tmp/info-geometry-build.lock`. The pinned Lean
-4.28.1 is not installed; isolated checks use installed 4.28.0 and cached
+4.28.1 is not installed; isolated checks use installed 4.28.x and cached
 Mathlib without editing the manifest, toolchain, dependencies, or build cache.
 
 The following existing owners compiled during this audit:

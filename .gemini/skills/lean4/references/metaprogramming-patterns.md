@@ -3,7 +3,7 @@
 > **Scope:** Not part of the prove/autoprove default loop. Consulted when building Lean 4 DSLs, macros, elaborators, or custom pretty-printing.
 
 > **Version metadata:**
-> - **Verified on:** Lean reference + release notes through `v4.28.0`
+> - **Verified on:** Lean reference + release notes through `v4.28.x`
 > - **Last validated:** 2026-02-17
 > - **Confidence:** low (MetaM/TacticM APIs are drift-prone across toolchains)
 

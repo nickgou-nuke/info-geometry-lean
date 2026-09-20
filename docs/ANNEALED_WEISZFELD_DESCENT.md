@@ -79,5 +79,5 @@ python3 /tmp/isnp-rebuild-pinned.py InfoGeometry.Spectrometry.AnnealedDescentTes
 
 The temporary checker validates dependency revisions against `lake-manifest.json`
 and compiles exact pinned sources into `/tmp/isnp-rebuilt-4.28.1`, without loading
-Lean 4.28.0 artifacts or changing dependency pins. Any elaboration failures in
+Lean 4.28.x artifacts or changing dependency pins. Any elaboration failures in
 the new scripts must be repaired before this status is promoted to verified.

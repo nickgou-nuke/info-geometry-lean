@@ -101,7 +101,7 @@ zeros of the Riemann zeta function is asserted.
 ## Validation
 
 All six Lean modules pass the serial, shared-lock isolated validation on
-2026-09-14, using installed Lean 4.28.0 and its cached Mathlib dependencies.
+2026-09-14, using installed Lean 4.28.x and its cached Mathlib dependencies.
 The thirteen regression examples and 48 explicit `#print axioms` checks pass.
 Every audited theorem uses only subsets of `propext`, `Classical.choice`, and
 `Quot.sound`; none uses `sorryAx` or an additional axiom.
@@ -113,5 +113,5 @@ this check; no toolchain or dependency metadata was changed. This is a narrow
 compatibility validation, not a successful build claim for the whole repository.
 
 The additional `Chronometry.MatrixClock` module and its two regression examples
-also pass the same serial Lean 4.28.0 validation. Its eight axiom audits report
+also pass the same serial Lean 4.28.x validation. Its eight axiom audits report
 only `propext`, `Classical.choice`, and `Quot.sound`.

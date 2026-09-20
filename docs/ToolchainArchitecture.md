@@ -288,7 +288,7 @@ class NodeRecord:
     role: str | None           # "owner" | "translator" | "coherence" | "capstone"
     module_family: str | None  # first 3 segments of module name
     commit_sha: str
-    toolchain: str             # leanprover/lean4:v4.28.0
+    toolchain: str             # leanprover/lean4:v4.28.1
     artifact_version: int
     attrs: dict                # arbitrary metadata
 
@@ -519,7 +519,7 @@ python3 -m tools.leantrail.decl_lookup --snapshot <path> --name <fully.qualified
 Prints a summary of a LeanTrail snapshot:
 ```
 commit_sha=...
-toolchain=leanprover/lean4:v4.28.0
+toolchain=leanprover/lean4:v4.28.1
 artifact_version=3
 nodes=101000 edges=825015
 node_kinds: Declaration=98741, Module=2259

@@ -11,7 +11,7 @@ import Mathlib.Topology.Algebra.Module.StrongTopology
 import Mathlib.Tactic.Abel
 
 /-!
-# Real Krein Spaces — Canonical Mathlib 4.28.0 Implementation
+# Real Krein Spaces — Canonical Mathlib 4.28.x Implementation
 
 ## Mathematical Definition
 

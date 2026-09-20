@@ -46,12 +46,12 @@ These repositories now live under `external_refs/` in this repo.
 | --- | --- | --- |
 | `cameronfreer/lean4-skills` | `external_refs/lean4-skills` | n/a |
 | `ulamai/ulamai` | `external_refs/ulamai` | n/a |
-| `lean-dojo/LeanDojo` | `external_refs/LeanDojo` | `leanprover/lean4:v4.28.0` |
-| `lean-dojo/LeanCopilot` | `external_refs/LeanCopilot` | `leanprover/lean4:v4.28.0` |
+| `lean-dojo/LeanDojo` | `external_refs/LeanDojo` | independently pinned upstream toolchain |
+| `lean-dojo/LeanCopilot` | `external_refs/LeanCopilot` | independently pinned upstream toolchain |
 | `project-numina/numina-lean-agent` | `external_refs/numina-lean-agent` | `external_refs/numina-lean-agent/leanproblems/lean-toolchain` |
-| `leanprover-community/aesop` | `external_refs/aesop` | `leanprover/lean4:v4.28.0` |
-| `Paper-Proof/paperproof` | `external_refs/paperproof` | `leanprover/lean4:v4.28.0` |
-| `leanprover-community/repl` | `external_refs/repl` | `leanprover/lean4:v4.28.0` |
+| `leanprover-community/aesop` | `external_refs/aesop` | independently pinned upstream toolchain |
+| `Paper-Proof/paperproof` | `external_refs/paperproof` | independently pinned upstream toolchain |
+| `leanprover-community/repl` | `external_refs/repl` | independently pinned upstream toolchain |
 
 ## Selection rule
 

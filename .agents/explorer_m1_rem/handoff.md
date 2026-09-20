@@ -113,7 +113,7 @@ A thorough inspection of `lean/InfoGeometry/Albert/F4Action.lean`, the Forensic 
 ## 3. Caveats
 
 - **Scope Boundary**: Explorer M1 Remediation operates in read-only mode regarding source code files in `lean/`. All actual source code edits to `lean/InfoGeometry/Albert/F4Action.lean` must be executed by the designated Implementer agent or parent orchestrator using this blueprint.
-- **Mathlib Version Constraints**: Mathlib in this repository is pinned at `v4.28.0`. Standard Mathlib Lie algebra types (`LieSubalgebra`, `LieIdeal`, `IsLieAbelian`, `NonAssocDerivation.derivations`) are available and verified working.
+- **Mathlib Version Constraints**: Mathlib in this repository is pinned at `v4.28.1`. Standard Mathlib Lie algebra types (`LieSubalgebra`, `LieIdeal`, `IsLieAbelian`, `NonAssocDerivation.derivations`) are available and verified working.
 - **52D Dimension Proof**: The theorem `finrank ℝ F4Derivation = 52` reflects the dimension of $\mathfrak{f}_4 = \mathfrak{der}(J_3(\mathbb{O}_s))$. Depending on whether `F4Derivation` is represented via a 52D basis probe space or as the abstract derivation Lie algebra `NonAssocDerivation.derivations ℝ AlbertMatrix`, the finrank theorem should be established using the inner derivation spanning set or explicit 52D basis isomorphism.
 
 ---

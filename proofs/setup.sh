@@ -11,7 +11,7 @@ set -euo pipefail
 #   4. Verifies compilation
 #
 # Prerequisites:
-#   - elan + Lean 4.28.0 (managed by elan)
+#   - elan + Lean 4.28.x (managed by elan)
 #   - Pre-built mathlib at /home/goutev/info-geometry-lean/.lake/packages/mathlib/
 # ═══════════════════════════════════════════════════════════════════════
 

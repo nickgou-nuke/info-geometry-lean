@@ -22,7 +22,7 @@
 ```
 /home/goutev/auto/
 ├── proofs/                          ← Your Lean proofs go here
-│   ├── lakefile.lean                ← Lake project config (uses mathlib v4.28.0)
+│   ├── lakefile.lean                ← Lake project config (uses mathlib v4.28.x)
 │   ├── setup.sh                     ← One-command setup script
 │   ├── FibAnyonThm1.lean            ← Fusion Rules (to complete)
 │   ├── FibAnyonThm2.lean            ← F-Matrix (to complete)

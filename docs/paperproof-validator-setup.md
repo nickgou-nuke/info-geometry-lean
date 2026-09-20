@@ -7,7 +7,7 @@
 
 ## 1) Project toolchain and compatibility
 
-- `lean-toolchain`: `leanprover/lean4:v4.28.0`
+- `lean-toolchain`: `leanprover/lean4:v4.28.1`
 - `Paper-Proof/paperproof` compatibility table (`VERSIONS.md`) supports Lean `v4.27.0` through `v4.29.0` with `rev = "main"` for the library and VSCode extension `v2.7.0`.
 
 ## 2) Exact `lakefile.lean` dependency block

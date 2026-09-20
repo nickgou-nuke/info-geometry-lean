@@ -84,7 +84,7 @@ bound is elementary algebra, not a consequence of thermodynamic dynamics.
 The regression and axiom-audit entrypoint is
 `InfoGeometry.Detector.AmariHessianDualityTests`. All four detector modules,
 seven regression examples, and thirty axiom audits pass serial shared-lock
-validation with installed Lean 4.28.0 and cached Mathlib. The audits contain
+validation with installed Lean 4.28.x and cached Mathlib. The audits contain
 only subsets of `propext`, `Classical.choice`, and `Quot.sound`, with no
 `sorryAx` or added axioms.
 

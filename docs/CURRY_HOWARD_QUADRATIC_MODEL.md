@@ -46,7 +46,7 @@ is asserted by these theorem statements.
 ## Pinned validation procedure
 
 Validation uses the configured Lean 4.28.1 executable. Dependency sources are
-checked against `lake-manifest.json`; incompatible 4.28.0 compiled artifacts
+checked against `lake-manifest.json`; incompatible 4.28.x compiled artifacts
 are not loaded or patched. The required closure is rebuilt sequentially under
 the shared `/tmp/info-geometry-build.lock`, with fresh outputs in
 `/tmp/isnp-rebuilt-4.28.1`. No dependency source, toolchain pin, or manifest is

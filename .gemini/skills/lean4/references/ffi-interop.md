@@ -3,7 +3,7 @@
 > **Scope:** Not part of the prove/autoprove default loop. Consulted when binding Lean 4 to C/C++ libraries or debugging FFI issues.
 
 > **Version metadata:**
-> - **Verified on:** Lean reference + release notes through `v4.28.0`
+> - **Verified on:** Lean reference + release notes through `v4.28.x`
 > - **Last validated:** 2026-03-28
 > - **Confidence:** medium (content derived from PR #24 and existing ffi-patterns.md, vetted against current docs)
 

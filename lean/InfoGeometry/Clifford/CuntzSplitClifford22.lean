@@ -36,6 +36,7 @@ def gamma3 : Block := !![0, v; -v, 0]
 def gamma : Fin 4 → Block := ![gamma0, gamma1, gamma2, gamma3]
 def signature : Fin 4 → ℝ := ![1, 1, -1, -1]
 
+set_option maxHeartbeats 2000000 in
 /-- All sixteen Clifford relations, including their diagonal signs. -/
 theorem gamma_anticommutator (a b : Fin 4) :
     gamma a * gamma b + gamma b * gamma a =
@@ -87,9 +88,15 @@ variable (P : AlgebraicCuntzNPresentation ℝ 2 A)
 /-- Apply the derived matrix-unit algebra homomorphism to each outer block. -/
 def blockHom : Block →ₐ[ℝ] Matrix (Fin 2) (Fin 2) A where
   toFun M i j := P.matrixTwoHom (M i j)
-  map_zero' := by ext i j; simp
-  map_one' := by ext i j; fin_cases i <;> fin_cases j <;> simp
-  map_add' M K := by ext i j; simp
+  map_zero' := by
+    ext i j
+    exact map_zero P.matrixTwoHom
+  map_one' := by
+    ext i j
+    simp only [Matrix.one_apply, apply_ite, map_one, map_zero]
+  map_add' M K := by
+    ext i j
+    exact map_add P.matrixTwoHom (M i j) (K i j)
   map_mul' M K := by
     ext i j
     change P.matrixTwoHom (∑ k, M i k * K k j) =
@@ -97,8 +104,8 @@ def blockHom : Block →ₐ[ℝ] Matrix (Fin 2) (Fin 2) A where
     simp only [map_sum, map_mul]
   commutes' r := by
     ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [Algebra.algebraMap_eq_smul_one]
+    simp only [Algebra.algebraMap_eq_smul_one, Matrix.smul_apply,
+      Matrix.one_apply, map_smul, apply_ite, map_one, map_zero]
 
 def cuntzGamma (a : Fin 4) : Matrix (Fin 2) (Fin 2) A :=
   blockHom P (gamma a)
@@ -143,22 +150,23 @@ def quotientRepresentation : CliffordAlgebra q22 →ₐ[ℝ]
     simp [gamma0, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp] theorem gamma0_star : star gamma0 = gamma0 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [gamma0, Matrix.star_apply]
+  ext i j k l
+  fin_cases i <;> fin_cases j <;> fin_cases k <;> fin_cases l <;>
+    simp [gamma0, Matrix.star_apply]
 
 /-- The adjoint defined by the additional fundamental symmetry. -/
 def kreinAdjoint (T : Block) : Block := gamma0 * star T * gamma0
 
 theorem kreinAdjoint_involutive (T : Block) :
     kreinAdjoint (kreinAdjoint T) = T := by
-  simp only [kreinAdjoint, star_mul, gamma0_star, star_star]
+  simp only [kreinAdjoint, Matrix.star_mul, gamma0_star, star_star]
   calc
     _ = (gamma0 * gamma0) * T * (gamma0 * gamma0) := by noncomm_ring
     _ = T := by simp
 
 theorem kreinAdjoint_mul (T U : Block) :
     kreinAdjoint (T * U) = kreinAdjoint U * kreinAdjoint T := by
-  simp only [kreinAdjoint, star_mul]
+  simp only [kreinAdjoint, Matrix.star_mul]
   symm
   calc
     (gamma0 * star U * gamma0) * (gamma0 * star T * gamma0) =

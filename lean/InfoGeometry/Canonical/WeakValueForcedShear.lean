@@ -35,7 +35,7 @@ theorem velocity_reconstruction (T t : ℝ) :
 
 theorem current_curl (x : Space) : curl current x = ![0, 0, 1] := by
   funext i
-  fin_cases i <;> simp [curl, current, partial, coordinate]
+  fin_cases i <;> simp [curl, current, coordPartial, coordinate]
 
 theorem current_curlEnergy (x : Space) : curlEnergy current x = 1 := by
   simp [curlEnergy, current_curl, Fin.sum_univ_succ]
@@ -96,9 +96,9 @@ theorem seam_readout_undefined (T : ℝ) (x : Space) :
   simp [post_overlap]
 
 theorem velocity_partial (T t : ℝ) (x : Space) (i k : Fin 3) :
-    partial (fun y => velocity T t y i) x k =
+    coordPartial (fun y => velocity T t y i) x k =
       if i = 1 ∧ k = 0 then 1 / (T - t) else 0 := by
-  fin_cases i <;> fin_cases k <;> simp [velocity, partial, coordinate]
+  fin_cases i <;> fin_cases k <;> simp [velocity, coordPartial, coordinate]
 
 theorem velocity_divergence (T t : ℝ) (x : Space) :
     divergence (velocity T t) x = 0 := by
@@ -108,10 +108,10 @@ theorem velocity_laplacian (T t : ℝ) (x : Space) (i : Fin 3) :
     laplacian (fun y => velocity T t y i) x = 0 := by
   simp only [laplacian]
   simp_rw [velocity_partial]
-  simp [partial]
+  simp [coordPartial]
 
 theorem velocity_advection (T t : ℝ) (x : Space) (i : Fin 3) :
-    (∑ k, velocity T t x k * partial (fun y => velocity T t y i) x k) = 0 := by
+    (∑ k, velocity T t x k * coordPartial (fun y => velocity T t y i) x k) = 0 := by
   fin_cases i <;> simp [velocity_partial, velocity, Fin.sum_univ_succ]
 
 theorem hasDerivAt_velocity (T t : ℝ) (x : Space) (i : Fin 3) (ht : t < T) :
@@ -148,6 +148,6 @@ theorem solves_forced_navier_stokes (nu T : ℝ) :
     exact velocity_divergence T t x
   · intro t ht x i
     simp [nsResidual, velocity_time_derivative T t x i ht,
-      velocity_advection, velocity_laplacian, partial]
+      velocity_advection, velocity_laplacian, coordPartial]
 
 end InfoGeometry.Canonical.WeakValueForcedShear

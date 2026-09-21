@@ -1,5 +1,9 @@
 # From potential archetypes to exact statements
 
+For the current integration review and compiler verdict, see
+[the combined PR report](REVIEWED_PR_INTEGRATION_20260921.md).
+Verification notes below describe the original branch history.
+
 The valid common structure is **a potential with specified geometric data,
 domain, and derivative operation**. It is not an equality between all the
 potentials in the manuscript. The implementation extends existing owners at

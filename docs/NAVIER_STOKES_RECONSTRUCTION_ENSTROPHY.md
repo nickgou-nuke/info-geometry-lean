@@ -1,5 +1,9 @@
 # Exact two-state reconstruction and enstrophy divergence
 
+For the current integration review and compiler verdict, see
+[the combined PR report](REVIEWED_PR_INTEGRATION_20260921.md).
+Verification notes below describe the original branch history.
+
 This extension supplies an explicit spatial momentum reconstruction, a
 pointwise forced Navier–Stokes equation, and a divergent regional enstrophy.
 It also exhibits the singular forcing that prevents this example from

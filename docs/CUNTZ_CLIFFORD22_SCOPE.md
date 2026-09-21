@@ -1,5 +1,9 @@
 # Cuntz matrix units, real Cl(2,2), and clock/trace scope
 
+For the current integration review and compiler verdict, see
+[the combined PR report](REVIEWED_PR_INTEGRATION_20260921.md).
+Verification notes below describe the original branch history.
+
 ## Input and owner reuse
 
 The supplied audit asks for algebraic repair, not a proof of the physical

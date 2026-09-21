@@ -117,6 +117,19 @@ not a replacement for the repository-wide CI. Reports are attached to the
 verification gates are unchanged. The check downloads and reuses the pinned
 Mathlib cache and writes its own compiled outputs.
 
-Verification status at preparation: kernel checking is in progress. The final
-run and its exact commit determine the status; source text alone is not a
-verification certificate.
+Kernel verification passed on 2026-09-21 for source commit
+[`ea1bde88fa88a5690a4602f77fa35577f1251b3a`](https://github.com/nickgou-nuke/info-geometry-lean/commit/ea1bde88fa88a5690a4602f77fa35577f1251b3a),
+with Lean `4.28.1` and Mathlib
+`1f9fffd5ff0b854b8a1f1f69adc11c61f05f2515`.
+The [successful run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/35577326719)
+compiled all ten modules in the import closure and audited all 90 new named
+declarations. The five new modules produced no warnings. Three unused-simp
+warnings belong to the unchanged imported owners. The axiom audit found only
+`propext`, `Classical.choice`, and `Quot.sound`, with no `sorryAx`.
+
+The repository-wide CI is not green. Its unchanged
+[Sorry Gate run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/35577326775)
+fails before compilation because `lake` is not installed in that workflow;
+`post-build-gate.yml` also reports failure. The successful narrow check certifies
+the modules listed here, not the entire repository or any analytic or physical
+claim beyond their theorem statements.

@@ -61,19 +61,24 @@ def audit_source(targets):
   let targets : Array Name := #[{module_names}]
   let allowed : Array Name := #[`propext, `Classical.choice, `Quot.sound]
   let mut count := 0
+  let mut collected : Lean.CollectAxioms.State := {{}}
   for (name, info) in env.constants do
     let some idx := env.getModuleIdxFor? name | continue
     let owner := env.header.moduleNames[idx.toNat]!
     if !targets.contains owner then continue
     if info.isUnsafe || info.isPartial then
       throwError "Unsafe or partial declaration in reviewed module: {{name}}"
-    let axioms ← Lean.collectAxioms name
-    for ax in axioms do
+    -- Retain the native collector's visited set across declarations. Every
+    -- reachable constant is checked once, including types and private proofs.
+    let (_, next) := ((Lean.CollectAxioms.collect name).run env).run collected
+    collected := next
+    for ax in collected.axioms do
       unless allowed.contains ax do
         throwError "Disallowed axiom {{ax}} in {{name}}"
     count := count + 1
-    logInfo m!"AUDIT_DECL: {{owner}}: {{name}}: {{axioms}}"
+    logInfo m!"AUDIT_DECL: {{owner}}: {{name}}"
   if count == 0 then throwError "No declarations audited"
+  logInfo m!"AUDIT_AXIOMS: {{collected.axioms}}"
   logInfo m!"AUDIT_COUNT: {{count}}"
 '''
 

@@ -71,17 +71,31 @@ The initial combined run
 [35587894781](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/35587894781)
 compiled 158 modules, found errors in two PR 172 modules, and blocked their
 four dependents. The focused Cuntz/Clifford, weak-value, and prior gauge-chain
-checks independently passed under 4.28.1. The repairs above address the
-combined run's diagnostics; compilation is required again before approval.
+checks independently passed under 4.28.1. Subsequent combined runs identified
+the remaining PR 172 API errors; the repairs above resolved them.
 
 The checker caches only successful compiler outputs, keyed by the module's
 source, recursive repository dependencies, Mathlib revision, and Lean pin.
 Cached output files have content hashes checked before reuse. Every completed
 run still imports the entire union and reruns the native declaration audit.
 
-**Compiler result: pending.** The workflow report records the exact checked
-commit, module outcomes, warnings, and final audited declaration count. This
-section will be updated with the completed kernel verdict before merge.
+**Compiler result: passed.** Combined run
+[35592289823](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/35592289823)
+checked source commit `68c81e78f5a44e10700b79c15c82b94d8ac54051`:
+164 repository modules passed, and the native audit accepted all 1,263
+declarations defined by the 55 reviewed targets. The explicit polarized-shear
+Lean probe also passed. The uploaded report records exact source SHA-256
+hashes, cached/compiler outcomes, warnings, and the declaration count.
+
+Later changes make the auditor's command import explicit, reuse the native
+collector's visited set, move aggregator imports before namespace commands,
+and record this report. No reviewed mathematical owner changed after the
+successful source check. The auditor controls passed again after the traversal
+change, and the optimized complete audit also passed in
+[35593061398](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/35593061398)
+at `348d9cd4796bb77192d2db8b5cd41f1710fd462c`, with the same 164 modules and
+1,263 declarations. All 164 current source hashes match the downloaded
+successful report.
 
 This is a check of the reviewed union and its dependency closure, not a build
 of the roughly 13,000-module exhaustive import surface. Existing repository
@@ -89,4 +103,4 @@ CI failures include missing Lake in the Sorry Gate, a sandbox preflight failure,
 missing pytest in the closure smoke test, case-collision lint, Pages setup,
 and external-dependency/post-build setup. Those gates are not disabled here.
 The old PR documents retain their historical compiler reports; this combined
-report supplies the current-pin verdict when complete.
+report supplies the current-pin verdict.

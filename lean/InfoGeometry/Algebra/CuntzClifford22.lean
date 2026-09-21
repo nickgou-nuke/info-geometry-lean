@@ -20,9 +20,15 @@ namespace InfoGeometry.Algebra.CuntzClifford22
 
 open InfoGeometry.Algebra.CuntzTensorQuotient
 open InfoGeometry.Algebra.CuntzMatrixUnits
+open scoped Matrix
 
 /-- Restriction of scalars, without changing the owned quotient or its product. -/
 abbrev Coeff := RestrictScalars ℝ ℂ (CuntzAlg 2)
+
+/-- Transport the existing formal involution through the scalar-restriction alias. -/
+instance coeffStar : Star Coeff := inferInstanceAs (Star (CuntzAlg 2))
+
+instance coeffStarRing : StarRing Coeff := inferInstanceAs (StarRing (CuntzAlg 2))
 
 /-- The extra two-sheet block factor. -/
 abbrev Block := Matrix (Fin 2) (Fin 2) Coeff
@@ -51,7 +57,7 @@ def v : Coeff := e 0 0 - e 1 1
 def w : Coeff := e 0 1 - e 1 0
 
 @[simp] theorem u_sq : u * u = 1 := by
-  simpa [u, mul_add, add_mul] using diagonal_sum
+  simpa [u, mul_add, add_mul, add_comm] using diagonal_sum
 
 @[simp] theorem v_sq : v * v = 1 := by
   simpa [v, mul_sub, sub_mul] using diagonal_sum
@@ -59,44 +65,40 @@ def w : Coeff := e 0 1 - e 1 0
 @[simp] theorem w_sq : w * w = -1 := by
   calc
     w * w = -(e 0 0 + e 1 1) := by
-      simp [w, mul_sub, sub_mul]
+      simp [w, mul_sub, sub_mul] <;> abel
     _ = -1 := by rw [diagonal_sum]
 
 @[simp] theorem u_v : u * v = -w := by
-  simp [u, v, w, add_mul, mul_sub]
+  simp [u, v, w, add_mul, mul_sub] <;> abel
 
 @[simp] theorem v_u : v * u = w := by
-  simp [u, v, w, sub_mul, mul_add]
+  simp [u, v, w, sub_mul, mul_add] <;> abel
 
 @[simp] theorem u_w : u * w = -v := by
-  simp [u, v, w, add_mul, mul_sub]
+  simp [u, v, w, add_mul, mul_sub] <;> abel
 
 @[simp] theorem w_u : w * u = v := by
-  simp [u, v, w, sub_mul, mul_add]
+  simp [u, v, w, sub_mul, mul_add] <;> abel
 
 @[simp] theorem v_w : v * w = u := by
-  simp [u, v, w, sub_mul, mul_sub]
+  simp [u, v, w, sub_mul, mul_sub] <;> abel
 
 @[simp] theorem w_v : w * v = -u := by
-  simp [u, v, w, sub_mul, mul_sub]
-  abel
+  simp [u, v, w, sub_mul, mul_sub] <;> abel
 
-@[simp] theorem star_u : star u = u := by simp [u, add_comm]
-@[simp] theorem star_v : star v = v := by simp [v]
-@[simp] theorem star_w : star w = -w := by simp [w, neg_sub]
+@[simp] theorem star_u : star u = u := by
+  simp only [u, star_add, e_star]
+  abel
+@[simp] theorem star_v : star v = v := by
+  simp only [v, star_sub, e_star]
+@[simp] theorem star_w : star w = -w := by
+  simp only [w, star_sub, e_star]
+  abel
 
 /-- The four corrected block generators, ordered with signs `+,+,-,-`. -/
 def gamma : Fin 4 → Block :=
   ![!![0, 1; 1, 0], !![0, w; -w, 0],
     !![0, u; -u, 0], !![0, v; -v, 0]]
-
-/-- All sixteen Clifford relations, not only the diagonal squares. -/
-theorem gamma_anticommutator (i j : Fin 4) :
-    gamma i * gamma j + gamma j * gamma i =
-      (if i = j then (if i.val < 2 then (2 : ℝ) else -2) else 0) • (1 : Block) := by
-  fin_cases i <;> fin_cases j <;>
-    ext a b <;> fin_cases a <;> fin_cases b <;>
-    norm_num [gamma, Matrix.mul_apply, Fin.sum_univ_two, two_smul]
 
 /-- Coordinate linear forms on the real generator space. -/
 def coordinate (i : Fin 4) : (Fin 4 → ℝ) →ₗ[ℝ] ℝ := LinearMap.proj i
@@ -140,12 +142,12 @@ theorem gammaVector_square (x : Fin 4 → ℝ) :
   have hL : (x 0 • (1 : Coeff) + spin x) * (x 0 • (1 : Coeff) - spin x) =
       quadratic x • (1 : Coeff) := by
     simp only [add_mul, mul_sub, smul_mul_assoc, mul_smul_comm, one_mul, mul_one,
-      smul_smul, spin_square, quadratic_apply]
+      spin_square, quadratic_apply]
     module
   have hR : (x 0 • (1 : Coeff) - spin x) * (x 0 • (1 : Coeff) + spin x) =
       quadratic x • (1 : Coeff) := by
     simp only [sub_mul, mul_add, smul_mul_assoc, mul_smul_comm, one_mul, mul_one,
-      smul_smul, spin_square, quadratic_apply]
+      spin_square, quadratic_apply]
     module
   rw [Algebra.algebraMap_eq_smul_one]
   ext i j
@@ -168,6 +170,22 @@ theorem gammaVector_basis (i : Fin 4) :
     gammaVector (Pi.single i (1 : ℝ)) = gamma i := by
   fin_cases i <;> ext a b <;> fin_cases a <;> fin_cases b <;>
     simp [gammaVector, gamma, spin]
+
+/-- Polarization derives every anticommutator from the full quadratic law. -/
+theorem gammaVector_polarization (x y : Fin 4 → ℝ) :
+    gammaVector x * gammaVector y + gammaVector y * gammaVector x =
+      algebraMap ℝ Block (quadratic (x + y) - quadratic x - quadratic y) := by
+  simp only [map_sub, ← gammaVector_square, map_add]
+  noncomm_ring
+
+/-- All sixteen Clifford relations follow without a matrix-entry case explosion. -/
+theorem gamma_anticommutator (i j : Fin 4) :
+    gamma i * gamma j + gamma j * gamma i =
+      (if i = j then (if i.val < 2 then (2 : ℝ) else -2) else 0) • (1 : Block) := by
+  rw [← gammaVector_basis i, ← gammaVector_basis j, gammaVector_polarization,
+    Algebra.algebraMap_eq_smul_one]
+  congr 1
+  fin_cases i <;> fin_cases j <;> norm_num [quadratic_apply]
 
 /-- Generator-level readback from the universal representation. -/
 theorem representation_basis (i : Fin 4) :

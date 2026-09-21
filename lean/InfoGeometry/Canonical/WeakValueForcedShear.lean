@@ -150,7 +150,7 @@ theorem velocity_regularity (T : ℝ) :
     · change ContDiff ℝ 2 (fun _ : Space => (0 : ℝ))
       exact contDiff_const
     · change ContDiff ℝ 2 (fun x : Space => x 0 / (T - t))
-      exact (contDiff_apply (0 : Fin 3)).div_const (T - t)
+      exact (contDiff_apply ℝ ℝ (0 : Fin 3)).div_const (T - t)
     · change ContDiff ℝ 2 (fun _ : Space => (0 : ℝ))
       exact contDiff_const
   · intro t _

@@ -38,6 +38,7 @@ def gammaCurvature (i j : Fin 4) : Block :=
     gammaCurvature i j = gamma i * gamma j - gamma j * gamma i := by
   simp [gammaCurvature, curvature]
 
+set_option maxHeartbeats 2000000 in
 /-- Exact value of the finite curvature-square action for the chosen normalization. -/
 theorem gammaAction_eq : cyclicAction blockTrace gammaCurvature = 64 := by
   norm_num [cyclicAction, gammaCurvature_eq, blockTrace,

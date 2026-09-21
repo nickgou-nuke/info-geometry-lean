@@ -87,6 +87,14 @@ requires a soldering form and a differential calculus.
   integral nor a Wilson-loop expectation, and no Jones invariant is inferred.
 - Residues of logarithmic derivatives, convergence of infinite products, and
   the Riemann hypothesis are separate analytic questions.
+- The earlier residue proposal also needs a sign correction. For
+  `uL(z) = r / (z - a)`, the condition `uR(z) = -uL(-z)` gives
+  `uR(z) = r / (z + a)`: the two simple-pole residues are equal, not opposite.
+  The holomorphic rotation `z ↦ -z` preserves contour orientation. Opposite
+  residues instead arise from `uR(z) = uL(-z)` for these coefficient functions.
+  A vanishing total residue does not remove poles: `dz/z` on the Riemann sphere
+  has residues `1` and `-1` and still has two poles. No PDE regularity theorem
+  follows from that sum alone.
 - For split octonions the correct next object is a derivation satisfying
   Leibniz, including the required associator terms. Associative inner
   derivations proved here must not be transferred to a nonassociative carrier

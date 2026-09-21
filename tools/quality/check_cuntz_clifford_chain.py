@@ -120,7 +120,7 @@ def main():
                         stack.append("")
                     elif re.match(r"end(?:\s|$)", line):
                         stack.pop()
-                    match = re.match(r"(?:@\[[^]]+\]\s*)?(?:def|theorem|lemma)\s+(\S+)", line)
+                    match = re.match(r"(?:@\[[^]]+\]\s*)?(?:abbrev|def|theorem|lemma)\s+(\S+)", line)
                     if match:
                         declarations.append(".".join([n for n in stack if n] + [match[1]]))
             audit = source / "AuditCuntzCliffordChain.lean"

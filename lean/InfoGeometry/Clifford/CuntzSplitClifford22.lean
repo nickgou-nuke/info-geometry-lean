@@ -94,6 +94,7 @@ def blockHom : Block →ₐ[ℝ] Matrix (Fin 2) (Fin 2) A where
   map_one' := by
     ext i j
     simp only [Matrix.one_apply, apply_ite, map_one, map_zero]
+    by_cases h : i = j <;> simp [h]
   map_add' M K := by
     ext i j
     exact map_add P.matrixTwoHom (M i j) (K i j)
@@ -106,6 +107,7 @@ def blockHom : Block →ₐ[ℝ] Matrix (Fin 2) (Fin 2) A where
     ext i j
     simp only [Algebra.algebraMap_eq_smul_one, Matrix.smul_apply,
       Matrix.one_apply, map_smul, apply_ite, map_one, map_zero]
+    by_cases h : i = j <;> simp [h]
 
 def cuntzGamma (a : Fin 4) : Matrix (Fin 2) (Fin 2) A :=
   blockHom P (gamma a)

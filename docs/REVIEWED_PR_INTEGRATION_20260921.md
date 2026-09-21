@@ -25,12 +25,16 @@ are recorded in `tools/quality/reviewed_prs_20260921.json`.
 - Remove the unused `Paperproof` import from the existing algebraic Fitting
   dependency. Its proof bodies and representation-depth attributes are retained.
 - Narrow full-Mathlib imports in the two new spatial/evolution owners and the
-  existing operator cross-product owner. The exact compiler will check the
-  resulting imports; dependency pins are unchanged.
+  existing operator cross-product owner. Dependency pins are unchanged.
 - Repair PR 172's reserved `partial` identifier as `coordPartial`, retaining
   its coordinate-derivative definition. Replace overbroad simplification in
   the doubled-space inner-product proofs with explicit identities, and import
   the native smooth-operation lemmas used by spatial regularity.
+- Repair the same PR's rotor equality pointwise, supply the affine-coordinate
+  derivative explicitly, and prove the forced-shear regularity componentwise
+  using the pinned Mathlib API. Rewrite established derivative identities
+  before expanding the PDE residual. The theorem statements and hypotheses
+  remain intact apart from the reserved identifier rename.
 
 The specialized algebraic quotient representation in PR 176 and the generic
 presentation/finite matrix representation in the prior branch have different
@@ -52,6 +56,11 @@ and enumerates its compiled declarations by defining module. This includes
 private/generated declarations, instances, definitions, and theorems. Each
 transitive axiom closure may contain only `propext`, `Classical.choice`, and
 `Quot.sound`; unsafe or partial target declarations fail the audit.
+
+Two compiler-only controls independently exercised the auditor under Lean
+4.28.1: the clean module audited all five declarations, including a private
+theorem and a definition using `Classical.choice`; the negative control was
+rejected for an imported unapproved axiom reached through a private proof.
 
 The maintained explicit polarized-shear Lean probe is also compiled. The
 exact SymPy companion passed locally with SymPy 1.14.0. Its role is an

@@ -160,14 +160,7 @@ fi
 
 run_cmd lake --version
 
-log "Attempting mathlib cache download"
-if [[ "$DRY_RUN" -eq 1 ]]; then
-  log "bash scripts/build/hydrate_pinned_mathlib_cache.sh"
-else
-  if ! bash scripts/build/hydrate_pinned_mathlib_cache.sh; then
-    log "Warning: pinned Mathlib cache hydration failed; continuing with existing artifacts"
-  fi
-fi
+log "Skipping cache hydration; dependency artifacts are produced by ordinary Lake builds"
 
 run_cmd python3 -m venv .venv
 VENV_PY="$REPO_ROOT/.venv/bin/python"

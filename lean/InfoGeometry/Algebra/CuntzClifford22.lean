@@ -189,7 +189,7 @@ theorem gamma_anticommutator (i j : Fin 4) :
   rw [← gammaVector_basis i, ← gammaVector_basis j, gammaVector_polarization,
     Algebra.algebraMap_eq_smul_one]
   congr 1
-  fin_cases i <;> fin_cases j <;> norm_num [quadratic_apply, Pi.single_apply]
+  fin_cases i <;> fin_cases j <;> norm_num [quadratic_apply, Pi.single_apply, Fin.ext_iff]
 
 /-- Generator-level readback from the universal representation. -/
 theorem representation_basis (i : Fin 4) :

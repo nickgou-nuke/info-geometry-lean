@@ -34,8 +34,10 @@ theorem velocity_reconstruction (T t : ℝ) :
   fin_cases i <;> simp [velocity, reconstruct, current]
 
 theorem current_curl (x : Space) : curl current x = ![0, 0, 1] := by
+  have hderiv : deriv (fun s : ℝ => x 0 + s) 0 = 1 :=
+    ((hasDerivAt_id (0 : ℝ)).const_add (x 0)).deriv
   funext i
-  fin_cases i <;> simp [curl, current, coordPartial, coordinate]
+  fin_cases i <;> simp [curl, current, coordPartial, coordinate, hderiv]
 
 theorem current_curlEnergy (x : Space) : curlEnergy current x = 1 := by
   simp [curlEnergy, current_curl, Fin.sum_univ_succ]
@@ -63,8 +65,13 @@ def postState (T t : ℝ) (x : Space) : State2 :=
 
 theorem postState_continuous (T : ℝ) (x : Space) :
     Continuous (fun t => postState T t x) := by
-  unfold postState
-  fun_prop
+  apply continuous_pi
+  intro i
+  fin_cases i
+  · change Continuous (fun t : ℝ => ((T - t : ℝ) : ℂ))
+    exact Complex.continuous_ofReal.comp (continuous_const.sub continuous_id)
+  · change Continuous (fun _ : ℝ => ((x 0 : ℝ) : ℂ))
+    exact continuous_const
 
 theorem post_overlap (T t : ℝ) (x : Space) :
     weakDenominator ket0 (postState T t x) = ((T - t : ℝ) : ℂ) := by
@@ -88,7 +95,7 @@ theorem velocity_is_real_weak_readout (T t : ℝ) (x : Space) (ht : t < T) :
     (weakValue? pauli1 ket0 (postState T t x)).map Complex.re =
       some (velocity T t x 1) := by
   rw [pauli_readout T t x ht]
-  simp [velocity]
+  rfl
 
 theorem seam_readout_undefined (T : ℝ) (x : Space) :
     weakValue? pauli1 ket0 (postState T T x) = none := by
@@ -98,7 +105,9 @@ theorem seam_readout_undefined (T : ℝ) (x : Space) :
 theorem velocity_partial (T t : ℝ) (x : Space) (i k : Fin 3) :
     coordPartial (fun y => velocity T t y i) x k =
       if i = 1 ∧ k = 0 then 1 / (T - t) else 0 := by
-  fin_cases i <;> fin_cases k <;> simp [velocity, coordPartial, coordinate]
+  have hderiv : deriv (fun s : ℝ => x 0 + s) 0 = 1 :=
+    ((hasDerivAt_id (0 : ℝ)).const_add (x 0)).deriv
+  fin_cases i <;> fin_cases k <;> simp [velocity, coordPartial, coordinate, hderiv]
 
 theorem velocity_divergence (T t : ℝ) (x : Space) :
     divergence (velocity T t) x = 0 := by
@@ -112,7 +121,8 @@ theorem velocity_laplacian (T t : ℝ) (x : Space) (i : Fin 3) :
 
 theorem velocity_advection (T t : ℝ) (x : Space) (i : Fin 3) :
     (∑ k, velocity T t x k * coordPartial (fun y => velocity T t y i) x k) = 0 := by
-  fin_cases i <;> simp [velocity_partial, velocity, Fin.sum_univ_succ]
+  simp_rw [velocity_partial]
+  fin_cases i <;> simp [velocity, Fin.sum_univ_succ]
 
 theorem hasDerivAt_velocity (T t : ℝ) (x : Space) (i : Fin 3) (ht : t < T) :
     HasDerivAt (fun s => velocity T s x i) (forcing T t x i) t := by
@@ -133,10 +143,16 @@ theorem velocity_regularity (T : ℝ) :
   refine ⟨?_, ?_, ?_⟩
   · intro t ht x i
     exact (hasDerivAt_velocity T t x i ht).differentiableAt
-  · intro t ht
-    have hd : T - t ≠ 0 := ne_of_gt (sub_pos.mpr ht)
-    unfold velocity
-    fun_prop (disch := assumption)
+  · intro t _
+    apply contDiff_pi.mpr
+    intro i
+    fin_cases i
+    · change ContDiff ℝ 2 (fun _ : Space => (0 : ℝ))
+      exact contDiff_const
+    · change ContDiff ℝ 2 (fun x : Space => x 0 / (T - t))
+      exact (contDiff_apply (0 : Fin 3)).div_const (T - t)
+    · change ContDiff ℝ 2 (fun _ : Space => (0 : ℝ))
+      exact contDiff_const
   · intro t _
     fun_prop
 
@@ -147,7 +163,8 @@ theorem solves_forced_navier_stokes (nu T : ℝ) :
   · intro t _ x
     exact velocity_divergence T t x
   · intro t ht x i
-    simp [nsResidual, velocity_time_derivative T t x i ht,
-      velocity_advection, velocity_laplacian, coordPartial]
+    rw [nsResidual, velocity_time_derivative T t x i ht,
+      velocity_advection, velocity_laplacian]
+    simp [coordPartial]
 
 end InfoGeometry.Canonical.WeakValueForcedShear

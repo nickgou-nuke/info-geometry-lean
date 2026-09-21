@@ -41,7 +41,7 @@ def covariantDerivative (D : Module.End R A) (a : A) : Module.End R A :=
 theorem connection_leibniz (D : Module.End R A) (hD : IsLeibniz D) (a x y : A) :
     covariantDerivative D a (x * y) =
       covariantDerivative D a x * y + x * D y := by
-  simp only [covariantDerivative_apply, hD]
+  simp only [covariantDerivative_apply, hD x y]
   noncomm_ring
 
 def curvature (D E : Module.End R A) (a b : A) : A :=
@@ -59,7 +59,7 @@ theorem curvature_action (D E : Module.End R A)
     covariantDerivative D a (covariantDerivative E b x) -
       covariantDerivative E b (covariantDerivative D a x) =
         curvature D E a b * x := by
-  simp only [covariantDerivative_apply, map_add, hD, hE, curvature, hcomm]
+  simp only [covariantDerivative_apply, map_add, hD b x, hE a x, curvature, hcomm]
   noncomm_ring
 
 def conjugate (g : Aˣ) (x : A) : A := (g : A) * x * (↑g⁻¹ : A)

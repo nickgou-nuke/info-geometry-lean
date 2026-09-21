@@ -9,6 +9,7 @@ on:
       - 'lean/InfoGeometry/Algebra/RegularBimoduleWeylObstruction.lean'
       - 'lean/InfoGeometry/Clifford/CuntzSplitClifford22.lean'
       - 'lean/InfoGeometry/Geometry/AssociativeGaugeConnection.lean'
+      - 'lean/InfoGeometry/Canonical/CuntzCliffordGaugeChain.lean'
       - 'tools/quality/check_cuntz_clifford_chain.py'
       - '.github/workflows/cuntz-clifford-canonical-chain.yml'
   workflow_dispatch:

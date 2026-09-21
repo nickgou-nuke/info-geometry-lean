@@ -37,11 +37,13 @@ theorem nontrivial_phase_excludes_commutation (x z : Aˣ) (q : R)
   intro hcomm
   exact hq (commuting_units_force_phase_one x z q hcomm hphase)
 
+omit [Nontrivial A] in
 theorem phase_commutator (x z : A) (q : R)
     (hphase : z * x = q • (x * z)) :
     x * z - z * x = (1 - q) • (x * z) := by
   rw [hphase, sub_smul, one_smul]
 
+omit [Nontrivial A] in
 theorem phase_anticommutator (x z : A) (q : R)
     (hphase : z * x = q • (x * z)) :
     x * z + z * x = (1 + q) • (x * z) := by

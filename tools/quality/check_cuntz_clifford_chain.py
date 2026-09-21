@@ -16,6 +16,7 @@ TARGETS = [
     "InfoGeometry.Algebra.CuntzMatrixUnitRepresentation",
     "InfoGeometry.Clifford.CuntzSplitClifford22",
     "InfoGeometry.Geometry.AssociativeGaugeConnection",
+    "InfoGeometry.Canonical.CuntzCliffordGaugeChain",
 ]
 
 

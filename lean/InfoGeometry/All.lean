@@ -1,2 +1,18 @@
 import InfoGeometry.AllExhaustive
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+
+import InfoGeometry.Canonical.KreinSeamEvolution
+import InfoGeometry.Canonical.WeakValueCylinderTransport
+import InfoGeometry.Canonical.WeakValueEnstrophy
+import InfoGeometry.Canonical.WeakValueForcedShear
+import InfoGeometry.Canonical.WeakValueReconstructionChecks
+import InfoGeometry.Canonical.WeakValueSpatialReconstruction
+import InfoGeometry.Canonical.AharonovKreinWeakValueBridge
+import InfoGeometry.Canonical.QuantumSpinNavierStokes
+import InfoGeometry.Geometry.QuadraticPotentialCalculus
+import InfoGeometry.Geometry.FlatSplitQuaternionPotential
+import InfoGeometry.Geometry.FlatSplitQuaternionFamily
+import InfoGeometry.Analysis.LogHomogeneousPotential
+import InfoGeometry.Analysis.IntervalBarrierPotential
+import InfoGeometry.Modular.KreinPotentialTrace
+import InfoGeometry.Exceptional.FreudenthalLogPotential

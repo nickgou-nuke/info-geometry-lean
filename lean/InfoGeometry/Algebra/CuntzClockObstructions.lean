@@ -14,10 +14,13 @@ noncomputable section
 
 namespace InfoGeometry.Algebra.CuntzClockObstructions
 
+open scoped Matrix
+
 section Clock
 
 variable {A : Type*} [Ring A] [Algebra ℂ A]
 
+omit [Algebra ℂ A] in
 /-- Ordinary left and right multiplication commute by associativity.
 Right multiplication is naturally a representation of the opposite algebra. -/
 theorem left_right_commute (a b : A) :

@@ -69,9 +69,12 @@ theorem normalizedBracket_reidemeister_one
       normalizedBracket c bracket writhe d := by
   unfold normalizedBracket
   rw [hbracket d, hwrithe d]
-  rw [show -(writhe d + 1) = -writhe d + (-1) by ring, zpow_add]
-  simp only [zpow_neg, zpow_one, inv_mul_cancel₀, Units.val_one, one_mul,
-    Units.val_mul]
+  have hpow : (c ^ (-(writhe d + 1)) : Units R) =
+      c ^ (-writhe d) * c⁻¹ := by
+    rw [show -(writhe d + 1) = -writhe d + (-1) by ring, zpow_add,
+      zpow_neg, zpow_one]
+  rw [hpow]
+  simp [Units.val_mul, mul_assoc]
 
 /-! ## Markov trace closure -/
 

@@ -61,23 +61,35 @@ end Clock
 open InfoGeometry.Algebra.CuntzClifford22
 open InfoGeometry.Algebra.CuntzTensorQuotient
 
+/-- The existing Cuntz isometry, typed in the real scalar-restriction carrier. -/
+abbrev shift (i : Fin 2) : Coeff := cuntzS 2 i
+
+/-- Its existing formal adjoint in the same carrier. -/
+abbrev shiftDag (i : Fin 2) : Coeff := cuntzSdag 2 i
+
+@[simp] theorem shiftDag_mul_shift (i : Fin 2) : shiftDag i * shift i = 1 :=
+  cuntz_isometry 2 i
+
+@[simp] theorem shift_mul_shiftDag (i : Fin 2) : shift i * shiftDag i = e i i :=
+  rfl
+
 /-- The original block built from a single isometry. -/
-def rawBlock : Block := !![0, cuntzS 2 0; cuntzSdag 2 0, 0]
+def rawBlock : Block := !![0, shift 0; shiftDag 0, 0]
 
 /-- Its square contains a range projector, not an identity in both corners. -/
 theorem rawBlock_square :
     rawBlock * rawBlock = !![e 0 0, 0; 0, 1] := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [rawBlock, e, InfoGeometry.Algebra.CuntzMatrixUnits.E,
-      Matrix.mul_apply, Fin.sum_univ_two, cuntz_isometry]
+    simp [rawBlock, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- The omitted range projection is nonzero in every nontrivial realization. -/
 theorem other_range_nonzero (h1 : (1 : Coeff) ≠ 0) : e 1 1 ≠ 0 := by
   intro he
-  have hh := congrArg (fun a : Coeff => cuntzSdag 2 1 * a * cuntzS 2 1) he
+  have he' : shift 1 * shiftDag 1 = 0 := by rw [shift_mul_shiftDag, he]
+  have hh := congrArg (fun a : Coeff => shiftDag 1 * a * shift 1) he'
   apply h1
-  simpa [e, InfoGeometry.Algebra.CuntzMatrixUnits.E, mul_assoc, cuntz_isometry] using hh
+  simpa only [mul_assoc, shiftDag_mul_shift, mul_one, mul_zero, zero_mul] using hh
 
 /-- A proper isometry cannot replace a square-one Clifford generator. -/
 theorem rawBlock_square_ne_one (h1 : (1 : Coeff) ≠ 0) : rawBlock * rawBlock ≠ 1 := by

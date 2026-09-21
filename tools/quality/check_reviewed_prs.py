@@ -56,7 +56,7 @@ def closure(repo, targets):
 def audit_source(targets):
     imports = '\n'.join('import ' + m for m in targets)
     module_names = ', '.join('`' + m for m in targets)
-    return imports + '\nimport Lean.Util.CollectAxioms\n\nopen Lean Elab Command\n\n' + f'''run_cmd do
+    return imports + '\nimport Lean.Util.CollectAxioms\nimport Lean.Elab.Command\n\nopen Lean Elab Command\n\n' + f'''run_cmd do
   let env ← getEnv
   let targets : Array Name := #[{module_names}]
   let allowed : Array Name := #[`propext, `Classical.choice, `Quot.sound]

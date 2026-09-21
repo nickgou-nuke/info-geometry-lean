@@ -36,6 +36,11 @@ def gamma3 : Block := !![0, v; -v, 0]
 def gamma : Fin 4 → Block := ![gamma0, gamma1, gamma2, gamma3]
 def signature : Fin 4 → ℝ := ![1, 1, -1, -1]
 
+@[simp] theorem gamma_zero : gamma 0 = gamma0 := rfl
+@[simp] theorem gamma_one : gamma 1 = gamma1 := rfl
+@[simp] theorem gamma_two : gamma 2 = gamma2 := rfl
+@[simp] theorem gamma_three : gamma 3 = gamma3 := rfl
+
 set_option maxHeartbeats 2000000 in
 /-- All sixteen Clifford relations, including their diagonal signs. -/
 theorem gamma_anticommutator (a b : Fin 4) :

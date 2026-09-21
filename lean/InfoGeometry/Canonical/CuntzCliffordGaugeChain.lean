@@ -42,7 +42,7 @@ set_option maxHeartbeats 2000000 in
 /-- Exact value of the finite curvature-square action for the chosen normalization. -/
 theorem gammaAction_eq : cyclicAction blockTrace gammaCurvature = 64 := by
   norm_num [cyclicAction, gammaCurvature_eq, blockTrace,
-    Fin.sum_univ_four, gamma, gamma0, gamma1, gamma2, gamma3,
+    Fin.sum_univ_four, gamma0, gamma1, gamma2, gamma3,
     u, v, w, InfoGeometry.Clifford.Cl11Matrix.J1,
     InfoGeometry.Clifford.Cl11Matrix.Eplus, InfoGeometry.Clifford.Cl11Matrix.Eminus,
     Matrix.mul_apply, Fin.sum_univ_two]
@@ -50,7 +50,8 @@ theorem gammaAction_eq : cyclicAction blockTrace gammaCurvature = 64 := by
 theorem gammaAction_gauge_invariant (g : Blockˣ) :
     cyclicAction blockTrace (fun i j : Fin 4 =>
       curvature (0 : Module.End ℝ Block) 0
-        (gaugePotential 0 (gamma i) g) (gaugePotential 0 (gamma j) g)) = 64 := by
+        (gaugePotential (0 : Module.End ℝ Block) (gamma i) g)
+        (gaugePotential (0 : Module.End ℝ Block) (gamma j) g)) = 64 := by
   have hzero : IsLeibniz (0 : Module.End ℝ Block) := by
     intro x y
     simp

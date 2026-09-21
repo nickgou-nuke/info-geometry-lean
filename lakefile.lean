@@ -942,6 +942,7 @@ lean_lib StandaloneMathematics where
     `GrandPartitionRational,
     `GrandPartitionRobustPoisson,
     `GrandPartitionTransform,
+    `lean.InfoGeometry.Spectral.Spectrum.Basic,
     `NonIsoConf3OrlikSolomon,
     `SplitOctonionBraidSU3,
     `Test,
@@ -950,6 +951,7 @@ lean_lib StandaloneMathematics where
     `YangBaxterZornBridge,
     `ZornScalingFlow,
     `ast_export_test,
+    `sandbox.GoldenMeanShift,
     `temp_test,
     `test_fixes2,
     `test_reflection,
@@ -964,10 +966,10 @@ The source lives under `external/Erdos1196` at commit
 `02fba13be7487cc51315f68d8fa7ef277633d3c8`, with theorem
 `PrimitiveSetsAboveX.mainTheorem`.
 
-This library is intentionally not a default target: the external proof repo is
-pinned to Lean `v4.30.0-rc1`, while this repository is currently pinned to
-Lean `v4.28.1`. Build/import it explicitly after toolchain alignment.
+The compatibility root is tracked under `lean/` and delegates only to the
+repository-owned proof-pin metadata, so it uses the root toolchain.
 -/
+@[default_target]
 lean_lib PrimitiveSetsAboveX where
   globs := #[.andSubmodules `PrimitiveSetsAboveX]
 

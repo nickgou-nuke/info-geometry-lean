@@ -97,12 +97,13 @@ jobs:
           path: |
             ~/.elan
             .lake/packages
+            .lake/build
           key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json', 'lean-toolchain', 'lakefile.lean') }}
           restore-keys: |
             ${{ runner.os }}-lake-
 
-      - name: Update Lake dependencies
-        run: lake update
+      - name: Verify pinned Lake environment
+        run: bash scripts/infra/verify_pinned_environment.sh
 
       - name: Baseline build
         run: lake build

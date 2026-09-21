@@ -1,5 +1,9 @@
 # Weak-value reconstruction and the two-sheet null locus
 
+For the current integration review and compiler verdict, see
+[the combined PR report](REVIEWED_PR_INTEGRATION_20260921.md).
+Verification notes below describe the original branch history.
+
 This extension implements the mathematical content of the supplied
 `Pasted markdown(20260910-130011).md` and the subsequent weak-value proposal.
 The repository README names the doubled vacuum, TSVF, and phase-conjugate

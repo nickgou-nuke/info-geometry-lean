@@ -1,5 +1,9 @@
 # Weak-value reconstruction boundary
 
+For the current integration review and compiler verdict, see
+[the combined PR report](REVIEWED_PR_INTEGRATION_20260921.md).
+Verification notes below describe the original branch history.
+
 This change implements a finite, native Mathlib theorem layer for the proposed
 weak-value mechanism. It reuses the repository's `DoubledSpace`, `to_doubled`,
 `modular_j`, `KreinSpace.kreinInner`, `IsKreinIsometry`, and `KreinHom` owners.

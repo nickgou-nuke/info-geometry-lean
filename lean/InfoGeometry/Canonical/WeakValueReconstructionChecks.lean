@@ -23,7 +23,7 @@ example (d : ℝ) : (Complex.I / (d : ℂ)).re = 0 := by
 /-- Spatially constant fields have zero curl even at large velocity amplitude. -/
 example (v : Fin 3 → ℝ) (x : Space) : curl (fun _ => v) x = 0 := by
   funext i
-  fin_cases i <;> simp [curl, partial]
+  fin_cases i <;> simp [curl, coordPartial]
 
 /-- A concrete nonzero spatial curl used to check that the integral theorem
 does not silently rely on a constant-velocity proxy. -/

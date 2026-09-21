@@ -1,5 +1,9 @@
 # Cuntz, Clifford, and gauge connections: mathematical dependency order
 
+For the current integration review and compiler verdict, see
+[the combined PR report](REVIEWED_PR_INTEGRATION_20260921.md).
+Verification notes below describe the original branch history.
+
 This reconstruction uses the supplied text as a list of mathematical questions.
 The order below is a dependency order for definitions and proofs. It does not
 claim to recover an author's hidden reasoning or to derive a physical theory

@@ -59,7 +59,10 @@ theorem axis_inner_zero (v : DoubledSpace E) :
 
 theorem axis_inner_self (v : DoubledSpace E) :
     inner (𝕜 := ℝ) (complex_i v) (complex_i v) = inner (𝕜 := ℝ) v v := by
-  simp [complex_i_apply, WithLp.prod_inner_apply, add_comm]
+  change inner ℝ (-WithLp.snd v) (-WithLp.snd v) +
+    inner ℝ (WithLp.fst v) (WithLp.fst v) =
+    inner ℝ (WithLp.fst v) (WithLp.fst v) + inner ℝ (WithLp.snd v) (WithLp.snd v)
+  rw [inner_neg_neg, add_comm]
 
 /-- Homogeneous double-angle coordinates. The only excluded point is (0,0). -/
 def circleCos (n d : ℝ) : ℝ := (d ^ 2 - n ^ 2) / (d ^ 2 + n ^ 2)
@@ -95,9 +98,10 @@ theorem seamRotor_at_pole (n : ℝ) (hn : n ≠ 0) :
   have hc : circleCos n 0 = -1 := by
     simp [circleCos, pow_ne_zero 2 hn]
   have hs : circleSin n 0 = 0 := by simp [circleSin]
-  simp [seamRotor, hc, hs]
+  rw [seamRotor, hc, hs, zero_smul, add_zero, neg_one_smul]
 
 /-- This is continuity of the alternative rotor readout, not continuity of n/d. -/
+set_option synthInstance.maxHeartbeats 200000 in
 theorem seamRotor_continuousAt (n d : ℝ) (h : d ^ 2 + n ^ 2 ≠ 0) :
     ContinuousAt (fun p : ℝ × ℝ => seamRotor (E := E) p.1 p.2) (n, d) := by
   unfold seamRotor circleCos circleSin
@@ -112,7 +116,8 @@ theorem descent_pairing (D : DoubledSpace E →L[ℝ] DoubledSpace E)
     (omega : ℝ) (g : DoubledSpace E) :
     inner (𝕜 := ℝ) g (descentVelocity D omega g) =
       -inner (𝕜 := ℝ) g (D g) := by
-  simp [descentVelocity, inner_sub_right, real_inner_smul_right, axis_inner_zero]
+  simp only [descentVelocity, inner_sub_right, real_inner_smul_right,
+    axis_inner_zero, mul_zero, zero_sub]
 
 /-- Chain-rule closure: the dissipation rate is proved for an actual trajectory. -/
 theorem hasDerivAt_freeEnergy
@@ -156,8 +161,8 @@ theorem rotational_midpoint_preserves_quadratic
   have hpair := congrArg
     (fun z => inner (𝕜 := ℝ) ((1 / 2 : ℝ) • (w + v)) z) hstep
   simp only [real_inner_smul_right, hzero, mul_zero] at hpair
-  simp [inner_add_left, inner_sub_right,
-    real_inner_smul_left, real_inner_comm] at hpair
+  simp only [real_inner_smul_left, inner_add_left, inner_sub_right] at hpair
+  rw [real_inner_comm v w] at hpair
   linarith
 end Evolution
 

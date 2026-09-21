@@ -1,5 +1,9 @@
 # Two-sheet residue and zero-mode pairing
 
+For the current integration review and compiler verdict, see
+[the combined PR report](REVIEWED_PR_INTEGRATION_20260921.md).
+Verification notes below describe the original branch history.
+
 The supplied narrative yields two mathematical chains with different
 hypotheses: local pole transport followed by finite residue balance, and
 operator intertwining followed by equality of kernel dimensions.  Sign

@@ -1,5 +1,9 @@
 # Weak-value reconstruction: source scope and verification
 
+For the current integration review and compiler verdict, see
+[the combined PR report](REVIEWED_PR_INTEGRATION_20260921.md).
+Verification notes below describe the original branch history.
+
 This extension is on PR #172, branch
 `codex/quantum-spin-navier-stokes-slice`. The proof terms are implementation
 candidates pending the pinned Lean kernel check. No successful build is claimed.

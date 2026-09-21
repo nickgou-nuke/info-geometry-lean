@@ -66,58 +66,58 @@ def reconstruct (j : Field) (rho : Space → ℝ) : Field :=
 def coordinate (i : Fin 3) : Space := Pi.single i 1
 
 /-- Ordinary partial derivative through a coordinate line. -/
-def partial (f : Space → ℝ) (x : Space) (i : Fin 3) : ℝ :=
+def coordPartial (f : Space → ℝ) (x : Space) (i : Fin 3) : ℝ :=
   deriv (fun s : ℝ => f (x + s • coordinate i)) 0
 
 def SpatiallyDifferentiable (f : Space → ℝ) : Prop :=
   ∀ x i, DifferentiableAt ℝ (fun s : ℝ => f (x + s • coordinate i)) 0
 
 def divergence (u : Field) (x : Space) : ℝ :=
-  ∑ i, partial (fun y => u y i) x i
+  ∑ i, coordPartial (fun y => u y i) x i
 
 def curl (u : Field) (x : Space) : Fin 3 → ℝ :=
-  ![partial (fun y => u y 2) x 1 - partial (fun y => u y 1) x 2,
-    partial (fun y => u y 0) x 2 - partial (fun y => u y 2) x 0,
-    partial (fun y => u y 1) x 0 - partial (fun y => u y 0) x 1]
+  ![coordPartial (fun y => u y 2) x 1 - coordPartial (fun y => u y 1) x 2,
+    coordPartial (fun y => u y 0) x 2 - coordPartial (fun y => u y 2) x 0,
+    coordPartial (fun y => u y 1) x 0 - coordPartial (fun y => u y 0) x 1]
 
 def laplacian (f : Space → ℝ) (x : Space) : ℝ :=
-  ∑ i, partial (fun y => partial f y i) x i
+  ∑ i, coordPartial (fun y => coordPartial f y i) x i
 
 theorem partial_quotient (f rho : Space → ℝ) (x : Space) (i : Fin 3)
     (hf : SpatiallyDifferentiable f) (hr : SpatiallyDifferentiable rho)
     (h0 : rho x ≠ 0) :
-    partial (fun y => f y / rho y) x i =
-      (partial f x i * rho x - f x * partial rho x i) / rho x ^ 2 := by
+    coordPartial (fun y => f y / rho y) x i =
+      (coordPartial f x i * rho x - f x * coordPartial rho x i) / rho x ^ 2 := by
   have hd := (hf x i).hasDerivAt.div (hr x i).hasDerivAt (by simpa using h0)
-  simpa [partial] using hd.deriv
+  simpa [coordPartial] using hd.deriv
 
 theorem partial_div_const (f : Space → ℝ) (d : ℝ) (x : Space) (i : Fin 3) :
-    partial (fun y => f y / d) x i = partial f x i / d := by
-  simp [partial]
+    coordPartial (fun y => f y / d) x i = coordPartial f x i / d := by
+  simp [coordPartial]
 
 theorem divergence_reconstruct (j : Field) (rho : Space → ℝ) (x : Space)
     (hj : ∀ i, SpatiallyDifferentiable (fun y => j y i))
     (hr : SpatiallyDifferentiable rho) (h0 : rho x ≠ 0) :
     divergence (reconstruct j rho) x =
-      (divergence j x * rho x - ∑ i, j x i * partial rho x i) / rho x ^ 2 := by
+      (divergence j x * rho x - ∑ i, j x i * coordPartial rho x i) / rho x ^ 2 := by
   simp only [divergence, reconstruct]
   have hq (i : Fin 3) := partial_quotient (fun y => j y i) rho x i (hj i) hr h0
   simp_rw [hq]
   rw [← Finset.sum_div, Finset.sum_sub_distrib, ← Finset.sum_mul]
 
 theorem partial_projection (x : Space) (a b : Fin 3) :
-    partial (fun y => y a) x b = if a = b then 1 else 0 := by
+    coordPartial (fun y => y a) x b = if a = b then 1 else 0 := by
   by_cases h : a = b
   · subst b
-    simp [partial, coordinate]
-  · simp [partial, coordinate, h, Ne.symm h]
+    simp [coordPartial, coordinate]
+  · simp [coordPartial, coordinate, h, Ne.symm h]
 
 /-- The exact weighted-current criterion for incompressibility. -/
 theorem incompressible_iff (j : Field) (rho : Space → ℝ) (x : Space)
     (hj : ∀ i, SpatiallyDifferentiable (fun y => j y i))
     (hr : SpatiallyDifferentiable rho) (h0 : rho x ≠ 0) :
     divergence (reconstruct j rho) x = 0 ↔
-      divergence j x * rho x = ∑ i, j x i * partial rho x i := by
+      divergence j x * rho x = ∑ i, j x i * coordPartial rho x i := by
   rw [divergence_reconstruct j rho x hj hr h0]
   simp [div_eq_zero_iff, pow_ne_zero 2 h0, sub_eq_zero]
 
@@ -148,8 +148,8 @@ theorem curl_reconstruct_uniform (j : Field) (d : ℝ) (x : Space) :
 def nsResidual (nu : ℝ) (u : ℝ → Field) (p : ℝ → Space → ℝ)
     (forcing : ℝ → Field) (t : ℝ) (x : Space) (i : Fin 3) : ℝ :=
   deriv (fun s => u s x i) t +
-    (∑ k, u t x k * partial (fun y => u t y i) x k) +
-    partial (p t) x i - nu * laplacian (fun y => u t y i) x - forcing t x i
+    (∑ k, u t x k * coordPartial (fun y => u t y i) x k) +
+    coordPartial (p t) x i - nu * laplacian (fun y => u t y i) x - forcing t x i
 
 /-- Minimal classical derivative regularity, kept explicit because deriv is total. -/
 def ClassicalRegularityOn (times : Set ℝ) (u : ℝ → Field)

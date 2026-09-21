@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import fcntl
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -81,9 +82,11 @@ def main():
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument('--mathlib-root', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--cache-dir', type=Path)
     args = parser.parse_args()
     repo = Path(__file__).resolve().parents[2]
     mathlib, output = args.mathlib_root.resolve(), args.output.resolve()
+    cache = args.cache_dir.resolve() if args.cache_dir else None
     output.mkdir(parents=True, exist_ok=True)
     specification = json.loads((repo / 'tools/quality/reviewed_prs_20260921.json').read_text())
     targets = specification['targets']
@@ -100,6 +103,14 @@ def main():
             raise RuntimeError('Mathlib and repository Lean versions differ')
         report.update(mathlib=pinned, toolchain=toolchain.strip())
         ordered, dependencies, native = closure(repo, targets)
+        fingerprints, source_hashes = {}, {}
+        for module in ordered:
+            path = repo / 'lean' / (module.replace('.', '/') + '.lean')
+            source_hashes[module] = hashlib.sha256(path.read_bytes()).hexdigest()
+            payload = [1, module, toolchain, pinned, source_hashes[module],
+                       [fingerprints[d] for d in dependencies[module]]]
+            fingerprints[module] = hashlib.sha256(json.dumps(payload).encode()).hexdigest()
+        report['source_sha256'] = source_hashes
         source, lib = output / 'src', output / 'lib'
         source.mkdir(exist_ok=True)
         lib.mkdir(exist_ok=True)
@@ -132,6 +143,23 @@ def main():
                 rel = Path(module.replace('.', '/'))
                 destination = (lib / rel).with_suffix('.olean')
                 destination.parent.mkdir(parents=True, exist_ok=True)
+                cached = cache / fingerprints[module] if cache else None
+                metadata = cached / 'metadata.json' if cached else None
+                if metadata and metadata.is_file():
+                    record = json.loads(metadata.read_text())
+                    files = record.get('files', {})
+                    valid = (record.get('module') == module and
+                             destination.name in files and all(
+                                 Path(name).name == name and (cached / name).is_file() and
+                                 hashlib.sha256((cached / name).read_bytes()).hexdigest() == digest
+                                 for name, digest in files.items()))
+                    if valid:
+                        for name in files:
+                            shutil.copy2(cached / name, destination.parent / name)
+                        report['modules'].append({'module': module, 'status': 'passed',
+                            'cached': True, 'warnings': record['warnings']})
+                        print(f'Reusing exact-source kernel output: {module}', flush=True)
+                        continue
                 print(f'Checking {module}', flush=True)
                 result = subprocess.run(['lean', '-o', str(destination),
                                          str((source / rel).with_suffix('.lean'))],
@@ -143,6 +171,16 @@ def main():
                     'warnings': result.stdout.count('warning:')})
                 if result.returncode:
                     failed.add(module)
+                elif cached:
+                    cached.mkdir(parents=True, exist_ok=True)
+                    files = {}
+                    for built in destination.parent.glob(destination.stem + '.*'):
+                        if built.is_file() and built.name.endswith(
+                                ('.olean', '.olean.private', '.olean.server', '.ilean')):
+                            shutil.copy2(built, cached / built.name)
+                            files[built.name] = hashlib.sha256(built.read_bytes()).hexdigest()
+                    metadata.write_text(json.dumps({'module': module, 'files': files,
+                        'warnings': result.stdout.count('warning:')}))
                 if result.stdout:
                     print(result.stdout, flush=True)
             if failed:

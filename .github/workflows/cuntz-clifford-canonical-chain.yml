@@ -1,0 +1,75 @@
+name: Cuntz Clifford Canonical Chain
+
+on:
+  push:
+    branches: ['codex/cuntz-clifford-canonical-chain']
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/CuntzMatrixUnitRepresentation.lean'
+      - 'lean/InfoGeometry/Algebra/RegularBimoduleWeylObstruction.lean'
+      - 'lean/InfoGeometry/Clifford/CuntzSplitClifford22.lean'
+      - 'lean/InfoGeometry/Geometry/AssociativeGaugeConnection.lean'
+      - 'tools/quality/check_cuntz_clifford_chain.py'
+      - '.github/workflows/cuntz-clifford-canonical-chain.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cuntz-clifford-canonical-chain
+  cancel-in-progress: false
+
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: project
+          persist-credentials: false
+          sparse-checkout: |
+            lean/InfoGeometry
+            tools/quality
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: 1f9fffd5ff0b854b8a1f1f69adc11c61f05f2515
+          path: pinned-mathlib
+          persist-credentials: false
+      - uses: actions/cache/restore@v4
+        id: cache
+        with:
+          path: |
+            ~/.elan
+            pinned-mathlib/.lake
+          key: cuntz-clifford-lean4281-mathlib-1f9fffd5-v1
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check the complete narrow import closure and declaration axioms
+        run: |
+          python3 project/tools/quality/check_cuntz_clifford_chain.py \
+            --mathlib-root pinned-mathlib \
+            --output "$RUNNER_TEMP/cuntz-clifford-check"
+      - uses: actions/cache/save@v4
+        if: always() && steps.cache.outputs.cache-hit != 'true'
+        with:
+          path: |
+            ~/.elan
+            pinned-mathlib/.lake
+          key: cuntz-clifford-lean4281-mathlib-1f9fffd5-v1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cuntz-clifford-kernel-report
+          path: |
+            ${{ runner.temp }}/cuntz-clifford-check/report.json
+            ${{ runner.temp }}/cuntz-clifford-check/*.log
+          if-no-files-found: warn

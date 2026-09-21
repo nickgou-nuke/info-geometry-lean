@@ -64,6 +64,7 @@
     "InfoGeometry.Krein.TransitionWeakValue",
     "InfoGeometry.Krein.TransitionWeakValueAudit",
     "InfoGeometry.Krein.TransitionWeakValueExamples",
-    "InfoGeometry.Modular.KreinPotentialTrace"
+    "InfoGeometry.Modular.KreinPotentialTrace",
+    "InfoGeometry.Meta.FiniteTemperleyLiebTrace"
   ]
 }

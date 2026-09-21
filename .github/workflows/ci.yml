@@ -97,12 +97,85 @@ jobs:
           path: |
             ~/.elan
             .lake/packages
+            .lake/build
           key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json', 'lean-toolchain', 'lakefile.lean') }}
           restore-keys: |
             ${{ runner.os }}-lake-
 
-      - name: Update Lake dependencies
-        run: lake update
+      - name: Verify pinned Lake dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for file in lean-toolchain lakefile.lean lake-manifest.json; do
+            if [ ! -f "$file" ]; then
+              echo "Missing required pinned dependency file: $file" >&2
+              exit 1
+            fi
+          done
+
+          if ! grep -Fxq 'leanprover/lean4:v4.28.1' lean-toolchain; then
+            echo "lean-toolchain must pin leanprover/lean4:v4.28.1" >&2
+            exit 1
+          fi
+
+          python3 - <<'PY'
+          import json
+          import re
+          import sys
+          from pathlib import Path
+
+          manifest_path = Path("lake-manifest.json")
+          lakefile_path = Path("lakefile.lean")
+
+          try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          except json.JSONDecodeError as exc:
+            print(f"Invalid lake-manifest.json: {exc}", file=sys.stderr)
+            sys.exit(1)
+
+          if not isinstance(manifest, dict):
+            print("lake-manifest.json must contain a JSON object", file=sys.stderr)
+            sys.exit(1)
+
+          packages = manifest.get("packages")
+          if not isinstance(packages, list):
+            print('lake-manifest.json must contain a "packages" array', file=sys.stderr)
+            sys.exit(1)
+
+          manifest_git_revs = {}
+          for pkg in packages:
+            if not isinstance(pkg, dict):
+              print("lake-manifest.json packages entries must be JSON objects", file=sys.stderr)
+              sys.exit(1)
+            name = pkg.get("name")
+            if pkg.get("type") == "git" and isinstance(name, str):
+              manifest_git_revs[name] = pkg.get("inputRev") or pkg.get("rev")
+
+          lakefile = lakefile_path.read_text(encoding="utf-8")
+          require_pattern = re.compile(
+            r'require\s+(?P<name>«[^»]+»|[A-Za-z0-9_]+)\s+from\s+git'
+            r'(?:(?:\s+|\n+)"[^"]+")+\s*@\s*"(?P<rev>[^"]+)"',
+            re.MULTILINE,
+          )
+          sha_pattern = re.compile(r"^[0-9a-f]{40}$")
+
+          for match in require_pattern.finditer(lakefile):
+            name = match.group("name")
+            pinned_rev = match.group("rev")
+            manifest_rev = manifest_git_revs.get(name)
+            if manifest_rev is None:
+              print(f"lake-manifest.json is missing git dependency entry for {name}", file=sys.stderr)
+              sys.exit(1)
+            if sha_pattern.fullmatch(pinned_rev) and manifest_rev != pinned_rev:
+              print(
+                f"lake-manifest.json revision mismatch for {name}: expected {pinned_rev}, got {manifest_rev}",
+                file=sys.stderr,
+              )
+              sys.exit(1)
+          PY
+
+          bash scripts/infra/enforce-v428-local-manifests.sh
 
       - name: Baseline build
         run: lake build

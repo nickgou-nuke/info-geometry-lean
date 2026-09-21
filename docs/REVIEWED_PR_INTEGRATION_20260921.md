@@ -27,6 +27,10 @@ are recorded in `tools/quality/reviewed_prs_20260921.json`.
 - Narrow full-Mathlib imports in the two new spatial/evolution owners and the
   existing operator cross-product owner. The exact compiler will check the
   resulting imports; dependency pins are unchanged.
+- Repair PR 172's reserved `partial` identifier as `coordPartial`, retaining
+  its coordinate-derivative definition. Replace overbroad simplification in
+  the doubled-space inner-product proofs with explicit identities, and import
+  the native smooth-operation lemmas used by spatial regularity.
 
 The specialized algebraic quotient representation in PR 176 and the generic
 presentation/finite matrix representation in the prior branch have different
@@ -52,6 +56,18 @@ transitive axiom closure may contain only `propext`, `Classical.choice`, and
 The maintained explicit polarized-shear Lean probe is also compiled. The
 exact SymPy companion passed locally with SymPy 1.14.0. Its role is an
 independent symbolic check; Lean remains the proof authority.
+
+The initial combined run
+[35587894781](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/35587894781)
+compiled 158 modules, found errors in two PR 172 modules, and blocked their
+four dependents. The focused Cuntz/Clifford, weak-value, and prior gauge-chain
+checks independently passed under 4.28.1. The repairs above address the
+combined run's diagnostics; compilation is required again before approval.
+
+The checker caches only successful compiler outputs, keyed by the module's
+source, recursive repository dependencies, Mathlib revision, and Lean pin.
+Cached output files have content hashes checked before reuse. Every completed
+run still imports the entire union and reruns the native declaration audit.
 
 **Compiler result: pending.** The workflow report records the exact checked
 commit, module outcomes, warnings, and final audited declaration count. This

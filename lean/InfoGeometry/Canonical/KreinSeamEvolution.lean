@@ -98,10 +98,14 @@ theorem seamRotor_at_pole (n : ℝ) (hn : n ≠ 0) :
   have hc : circleCos n 0 = -1 := by
     simp [circleCos, pow_ne_zero 2 hn]
   have hs : circleSin n 0 = 0 := by simp [circleSin]
-  rw [seamRotor, hc, hs, zero_smul, add_zero, neg_one_smul]
+  apply ContinuousLinearMap.ext
+  intro v
+  change circleCos n 0 • v + circleSin n 0 • complex_i v = -v
+  rw [hc, hs]
+  simp only [zero_smul, add_zero, neg_one_smul]
 
-/-- This is continuity of the alternative rotor readout, not continuity of n/d. -/
 set_option synthInstance.maxHeartbeats 200000 in
+/-- This is continuity of the alternative rotor readout, not continuity of n/d. -/
 theorem seamRotor_continuousAt (n d : ℝ) (h : d ^ 2 + n ^ 2 ≠ 0) :
     ContinuousAt (fun p : ℝ × ℝ => seamRotor (E := E) p.1 p.2) (n, d) := by
   unfold seamRotor circleCos circleSin

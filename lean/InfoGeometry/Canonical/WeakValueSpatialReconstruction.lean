@@ -1,4 +1,4 @@
-import Mathlib.Analysis.Calculus.ContDiff.Basic
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.Deriv.Inv
@@ -109,8 +109,9 @@ theorem partial_projection (x : Space) (a b : Fin 3) :
     coordPartial (fun y => y a) x b = if a = b then 1 else 0 := by
   by_cases h : a = b
   · subst b
-    simp [coordPartial, coordinate]
-  · simp [coordPartial, coordinate, h, Ne.symm h]
+    simpa [coordPartial, coordinate] using
+      ((hasDerivAt_id (0 : ℝ)).const_add (x a)).deriv
+  · simp [coordPartial, coordinate, h]
 
 /-- The exact weighted-current criterion for incompressibility. -/
 theorem incompressible_iff (j : Field) (rho : Space → ℝ) (x : Space)

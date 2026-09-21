@@ -83,10 +83,9 @@ time evolution.
 The three new modules contain explicit proof scripts and regression examples,
 but remain **pending Lean 4.28.1 verification**. Dependency discovery resolves
 8,041 pinned source modules for `InfoGeometry.Nuclear.WaleckaZornTests`.
-The earlier sequential run stopped at a parser error in
-`Spectrometry/WeightedQuadraticDescent.lean:29`, after compiling its Mathlib
-dependencies and `GeometricMedianCore` with Lean 4.28.1. It did not check the
-Walecka modules. No global integration or
+The earlier `Spectrometry/WeightedQuadraticDescent.lean:29` parser error has
+been repaired. The full annealed-descent regression now passes Lean 4.28.1;
+that target does not check the Walecka modules. No global integration or
 whole-repository compilation is claimed.
 
 Dependency discovery also found the empty local `lib/InfoGeometryCore` package.

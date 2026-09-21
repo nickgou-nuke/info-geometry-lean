@@ -11,9 +11,15 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from tools.infra.hive_epistemic_bridge import check_admission_output
 
 
 SCHEMA = "info_geometry.hive_workflow_policy.v1"
@@ -94,9 +100,21 @@ def check_workflow_policy(
     project_build_passed: bool | None = None,
     axiom_audit_passed: bool | None = None,
     allow_unsound_markers: bool = False,
+    epistemic_required: bool = False,
+    epistemic_execution: dict[str, Any] | None = None,
+    epistemic_declarations: list[str] | None = None,
 ) -> dict[str, Any]:
     mode = normalize_mode(mode)
     violations: list[PolicyViolation] = []
+    epistemic_check = None
+    if epistemic_required or epistemic_execution is not None or epistemic_declarations is not None:
+        epistemic_check = check_admission_output(
+            epistemic_execution, expected_declarations=epistemic_declarations or []
+        )
+        if not epistemic_check["ok"]:
+            violations.append(PolicyViolation(
+                "epistemic_admission_required", "; ".join(epistemic_check["reasons"])
+            ))
 
     if mode not in WORKFLOW_MODES:
         violations.append(
@@ -162,6 +180,7 @@ def check_workflow_policy(
             "axiom_audit_passed": axiom_audit_passed,
         },
         "violations": [v.to_json() for v in violations],
+        "epistemic_check": epistemic_check,
     }
 
 
@@ -194,6 +213,9 @@ def main(argv: Iterable[str] | None = None) -> int:
     parser.add_argument("--project-build-passed", action="store_true")
     parser.add_argument("--axiom-audit-passed", action="store_true")
     parser.add_argument("--allow-unsound-markers", action="store_true")
+    parser.add_argument("--epistemic-required", action="store_true")
+    parser.add_argument("--epistemic-execution-json", type=Path)
+    parser.add_argument("--epistemic-declaration", action="append", default=None)
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args(list(argv) if argv is not None else None)
 
@@ -207,6 +229,12 @@ def main(argv: Iterable[str] | None = None) -> int:
         project_build_passed=args.project_build_passed,
         axiom_audit_passed=args.axiom_audit_passed,
         allow_unsound_markers=args.allow_unsound_markers,
+        epistemic_required=args.epistemic_required,
+        epistemic_execution=(
+            json.loads(args.epistemic_execution_json.read_text(encoding="utf-8"))
+            if args.epistemic_execution_json else None
+        ),
+        epistemic_declarations=args.epistemic_declaration,
     )
     write_report(args.json_out, report)
     return 0 if report["ok"] else 2

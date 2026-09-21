@@ -11,6 +11,11 @@
    replaced by explicit proved theorems (mathlib/repo-derived), not carried as
    declarative assumptions.
 7. In touched modules, hypothesis debt replacement is mandatory before merge.
+8. STALE DOC & DOCSTRING PROHIBITION: Never read, resurrect, or use stale documentation,
+   historical transcript summaries, abandoned representation taxonomies, or dead markdown
+   theories in program or proof design. Lean owner source files and kernel-checked proofs
+   are the sole authority. Docstrings and comments must describe only live code verified
+   by the current Lean compiler.
 
 ## Required gate before merge
 

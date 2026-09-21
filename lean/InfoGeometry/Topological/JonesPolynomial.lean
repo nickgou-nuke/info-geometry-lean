@@ -1,4 +1,4 @@
-import Mathlib.Algebra.GroupPower.Lemmas
+import Mathlib.Algebra.Group.Basic
 import Mathlib.Tactic.Ring
 
 /-!
@@ -35,9 +35,10 @@ theorem normalizedBracket_reidemeister_one
   unfold normalizedBracket
   rw [hbracket d, hwrithe d]
   have hpow : (c ^ (-(writhe d + 1)) : Units R) =
-      c ^ (-writhe d) * c⁻¹ := by
+    c ^ (-writhe d) * c⁻¹ := by
     rw [show -(writhe d + 1) = -writhe d + (-1) by ring,
-      zpow_add, zpow_neg, zpow_one]
+      zpow_add, zpow_neg]
+    simp
   rw [hpow]
   simp [Units.val_mul, mul_assoc]
 

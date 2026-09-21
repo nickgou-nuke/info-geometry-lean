@@ -19,7 +19,8 @@ are recorded in `tools/quality/reviewed_prs_20260921.json`.
 
 - Resolve conflicting aggregator edits by retaining current main and appending
   incoming imports. Export the additional public source owners through the
-  existing `Canonical.All` and `InfoGeometry.All` import surfaces.
+  existing `Canonical.All` and `InfoGeometry.All` import surfaces. Place all
+  imports in the header, before namespace commands.
 - Preserve main's `FiniteSpinAlgebra` imports in the two exceptional owners
   whose broad Mathlib imports were narrowed by PR 175.
 - Remove the unused `Paperproof` import from the existing algebraic Fitting

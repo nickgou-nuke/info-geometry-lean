@@ -2223,32 +2223,6 @@ import InfoGeometry.Canonical.DrazinJordanChevalleyBridge
 import InfoGeometry.Canonical.DrazinJordanChevalleyAudit
 import InfoGeometry.Canonical.AlbertPeirceModularMixingBridge
 
-namespace InfoGeometry
-
-/-!
-# InfoGeometry.Canonical.All
-
-Stable umbrella import for the canonical publication surface.
-
-This file intentionally excludes modules listed in
-`scripts/quality/quarantine_manifest.txt`. Quarantined synthesis/facade layers
-must be imported explicitly from their owner modules while they remain on the
-review surface.
-
-This file is still only an import aggregator, not an authoritative description
-of the current theory graph. For current repository state and workflow, prefer:
-- `README.md`
-- `docs/README.md`
-- `lean/DAG/README.md`
-- `tools/README.md`
-
-Conceptual notes under `docs/` are orientation aids only. Exact ownership,
-theorem names, and file boundaries must be checked against the current owner
-modules in `lean/InfoGeometry/Canonical/`.
--/
-
-end InfoGeometry
-
 import InfoGeometry.Canonical.KreinSeamEvolution
 import InfoGeometry.Canonical.WeakValueCylinderTransport
 import InfoGeometry.Canonical.WeakValueEnstrophy
@@ -2283,3 +2257,29 @@ import InfoGeometry.Canonical.WeakValueKreinGeometry
 import InfoGeometry.Canonical.WeakValuePoleBounds
 import InfoGeometry.Canonical.WeakValuePoleCriterion
 import InfoGeometry.Canonical.WeakValuePoleExamples
+
+namespace InfoGeometry
+
+/-!
+# InfoGeometry.Canonical.All
+
+Stable umbrella import for the canonical publication surface.
+
+This file intentionally excludes modules listed in
+`scripts/quality/quarantine_manifest.txt`. Quarantined synthesis/facade layers
+must be imported explicitly from their owner modules while they remain on the
+review surface.
+
+This file is still only an import aggregator, not an authoritative description
+of the current theory graph. For current repository state and workflow, prefer:
+- `README.md`
+- `docs/README.md`
+- `lean/DAG/README.md`
+- `tools/README.md`
+
+Conceptual notes under `docs/` are orientation aids only. Exact ownership,
+theorem names, and file boundaries must be checked against the current owner
+modules in `lean/InfoGeometry/Canonical/`.
+-/
+
+end InfoGeometry

@@ -65,26 +65,30 @@ def w : Coeff := e 0 1 - e 1 0
 @[simp] theorem w_sq : w * w = -1 := by
   calc
     w * w = -(e 0 0 + e 1 1) := by
-      simp [w, mul_sub, sub_mul] <;> abel
+      simp [w, mul_sub, sub_mul]
+      abel
     _ = -1 := by rw [diagonal_sum]
 
 @[simp] theorem u_v : u * v = -w := by
-  simp [u, v, w, add_mul, mul_sub] <;> abel
+  simp [u, v, w, add_mul, mul_sub]
 
 @[simp] theorem v_u : v * u = w := by
-  simp [u, v, w, sub_mul, mul_add] <;> abel
+  simp [u, v, w, sub_mul, mul_add]
+  abel
 
 @[simp] theorem u_w : u * w = -v := by
-  simp [u, v, w, add_mul, mul_sub] <;> abel
+  simp [u, v, w, add_mul, mul_sub]
 
 @[simp] theorem w_u : w * u = v := by
-  simp [u, v, w, sub_mul, mul_add] <;> abel
+  simp [u, v, w, sub_mul, mul_add]
+  abel
 
 @[simp] theorem v_w : v * w = u := by
-  simp [u, v, w, sub_mul, mul_sub] <;> abel
+  simp [u, v, w, sub_mul, mul_sub]
 
 @[simp] theorem w_v : w * v = -u := by
-  simp [u, v, w, sub_mul, mul_sub] <;> abel
+  simp [u, v, w, sub_mul, mul_sub]
+  abel
 
 @[simp] theorem star_u : star u = u := by
   simp only [u, star_add, e_star]
@@ -185,7 +189,7 @@ theorem gamma_anticommutator (i j : Fin 4) :
   rw [← gammaVector_basis i, ← gammaVector_basis j, gammaVector_polarization,
     Algebra.algebraMap_eq_smul_one]
   congr 1
-  fin_cases i <;> fin_cases j <;> norm_num [quadratic_apply]
+  fin_cases i <;> fin_cases j <;> norm_num [quadratic_apply, Pi.single_apply]
 
 /-- Generator-level readback from the universal representation. -/
 theorem representation_basis (i : Fin 4) :

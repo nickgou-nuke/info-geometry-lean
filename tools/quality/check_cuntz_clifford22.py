@@ -84,6 +84,7 @@ def main() -> None:
         subprocess.run(["lake", "exe", "cache", "get"], cwd=work, env=env, check=True)
         subprocess.run(["lake", "env", "lean", "--version"], cwd=work, env=env, check=True)
         audit = ""
+        failures: list[str] = []
         for module in order:
             rel = Path("lean", *module.split(".")).with_suffix(".lean")
             out = work / ".lake/build/lib/lean" / Path(*module.split(".")).with_suffix(".olean")
@@ -93,18 +94,29 @@ def main() -> None:
                 cwd=work, env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             print(result.stdout, end="", flush=True)
             (evidence / (module + ".log")).write_text(result.stdout)
-            result.check_returncode()
+            if result.returncode != 0:
+                failures.append(f"{module}: compiler error")
             if module in NEW and "warning:" in result.stdout:
-                raise RuntimeError(f"New owner has warnings: {module}")
+                failures.append(f"{module}: compiler warning")
             if module == TARGET:
                 audit = result.stdout
-        blocks = re.findall(r"depends on axioms:\s*\[([^]]*)\]", audit)
-        if len(blocks) < 8 or "sorryAx" in audit:
-            raise RuntimeError("Incomplete axiom evidence or an unresolved proof")
-        for block in blocks:
-            unexpected = {x.strip() for x in block.split(",") if x.strip()} - ALLOWED
+        if failures:
+            raise RuntimeError("Source-check failures: " + "; ".join(failures))
+        audit_source = (ROOT / "lean/InfoGeometry/Algebra/CuntzClifford22Audit.lean").read_text()
+        expected = re.findall(r"^#print axioms\s+(\S+)", audit_source, re.M)
+        if len(expected) != 8 or len(set(expected)) != 8 or "sorryAx" in audit:
+            raise RuntimeError("Incomplete axiom audit target or an unresolved proof")
+        dependencies: dict[str, list[str]] = {}
+        for name in expected:
+            pattern = re.escape(name) + r"'?\s+(?:depends on axioms:\s*\[([^]]*)\]|does not depend on any axioms)"
+            match = re.search(pattern, audit)
+            if match is None:
+                raise RuntimeError(f"Missing axiom evidence for {name}")
+            axioms = {x.strip() for x in (match.group(1) or "").split(",") if x.strip()}
+            unexpected = axioms - ALLOWED
             if unexpected:
-                raise RuntimeError(f"Unexpected axioms: {unexpected}")
+                raise RuntimeError(f"Unexpected axioms for {name}: {unexpected}")
+            dependencies[name] = sorted(axioms)
         for module, digest in sources.items():
             rel = Path("lean", *module.split(".")).with_suffix(".lean")
             if hashlib.sha256((ROOT / rel).read_bytes()).hexdigest() != digest:
@@ -112,7 +124,8 @@ def main() -> None:
         for path, digest in original.items():
             if hashlib.sha256((ROOT / path).read_bytes()).hexdigest() != digest:
                 raise RuntimeError(f"Root metadata changed: {path}")
-        report.update(sourceCheckPassed=True, axiomAuditPassed=True, auditedDeclarations=len(blocks))
+        report.update(sourceCheckPassed=True, axiomAuditPassed=True, auditedDeclarations=len(expected),
+                      axiomDependencies=dependencies)
         report_path.write_text(json.dumps(report, indent=2) + "\n")
         print("Narrow source and axiom checks passed; no full-root build is claimed.", flush=True)
     finally:

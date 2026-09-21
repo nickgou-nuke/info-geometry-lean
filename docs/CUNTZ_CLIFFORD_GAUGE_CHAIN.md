@@ -68,6 +68,9 @@ relations. A concrete instance takes zero base derivatives and the four gamma
 matrices as constant potentials. Its unnormalized finite trace-square action
 is 64, and gauge transport preserves it. This number records matrix
 normalization; there is no conversion to a chronon, energy, or observable.
+This finite functional is not an evolution equation or a positive coercive
+energy estimate. Euler--Lagrange dynamics and PDE regularity require further
+mathematical input.
 
 The zero potential gives a flat connection on the same carrier, although the
 Clifford frame has nonzero commutators. Clifford noncommutativity alone
@@ -110,9 +113,9 @@ every new definition and theorem. It rejects axioms outside
 
 Its isolated source copy avoids building unrelated repository modules; it is
 not a replacement for the repository-wide CI. Reports are attached to the
-`Cuntz Clifford Canonical Chain` GitHub Actions run. No dependency manifest,
-toolchain, existing verification gate, or build cache is modified by this
-change.
+`Cuntz Clifford Canonical Chain` GitHub Actions run. Dependency pins and existing
+verification gates are unchanged. The check downloads and reuses the pinned
+Mathlib cache and writes its own compiled outputs.
 
 Verification status at preparation: kernel checking is in progress. The final
 run and its exact commit determine the status; source text alone is not a

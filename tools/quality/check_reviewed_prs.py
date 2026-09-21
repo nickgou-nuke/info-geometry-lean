@@ -68,9 +68,9 @@ def audit_source(targets):
     if info.isUnsafe || info.isPartial then
       throwError "Unsafe or partial declaration in reviewed module: {{name}}"
     let axioms ← Lean.collectAxioms name
-    for axiom in axioms do
-      unless allowed.contains axiom do
-        throwError "Disallowed axiom {{axiom}} in {{name}}"
+    for ax in axioms do
+      unless allowed.contains ax do
+        throwError "Disallowed axiom {{ax}} in {{name}}"
     count := count + 1
     logInfo m!"AUDIT_DECL: {{owner}}: {{name}}: {{axioms}}"
   if count == 0 then throwError "No declarations audited"

@@ -88,18 +88,27 @@ def main():
                      for p in base_path.split(os.pathsep) if p]
             env["LEAN_PATH"] = os.pathsep.join([str(lib), *paths])
             print(run(["lean", "--version"], source, env), flush=True)
+            failures = []
             for module in ordered:
                 rel = Path(module.replace(".", "/"))
                 destination = (lib / rel).with_suffix(".olean")
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 print(f"Checking {module}", flush=True)
-                diagnostics = run(["lean", "-o", str(destination),
-                                   str((source / rel).with_suffix(".lean"))], source, env)
+                result = subprocess.run(["lean", "-o", str(destination),
+                                         str((source / rel).with_suffix(".lean"))],
+                                        cwd=source, env=env, text=True,
+                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                diagnostics = result.stdout
                 (output / (module + ".log")).write_text(diagnostics)
-                report["modules"].append({"module": module, "status": "passed",
+                status = "failed" if result.returncode else "passed"
+                report["modules"].append({"module": module, "status": status,
                                           "warnings": diagnostics.count("warning:")})
+                if result.returncode:
+                    failures.append(module)
                 if diagnostics:
                     print(diagnostics, flush=True)
+            if failures:
+                raise RuntimeError("Compilation failed: " + ", ".join(failures))
             declarations = []
             for target in TARGETS:
                 text = (source / (target.replace(".", "/") + ".lean")).read_text()

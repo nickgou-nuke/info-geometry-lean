@@ -40,6 +40,7 @@ theorem matrixUnit_star [StarRing A] (hstar : ∀ i, star (P.S i) = P.T i)
   simp [matrixUnit, star_mul, hstar, ht]
 
 /-- Cyclicity determines the value at the unit, before normalization is imposed. -/
+include P in
 theorem cyclic_value_one (τ : A →ₗ[R] R)
     (hcyclic : ∀ a b, τ (a * b) = τ (b * a)) :
     τ 1 = (N : R) * τ 1 := by
@@ -79,9 +80,10 @@ def matrixTwoLinear : Matrix (Fin 2) (Fin 2) R →ₗ[R] A where
 theorem matrixTwoLinear_mul (M K : Matrix (Fin 2) (Fin 2) R) :
     P.matrixTwoLinear (M * K) = P.matrixTwoLinear M * P.matrixTwoLinear K := by
   simp only [matrixTwoLinear_apply, Matrix.mul_apply, Fin.sum_univ_two,
-    add_smul, add_mul, mul_add, smul_mul_assoc, mul_smul_comm, smul_smul,
+    add_smul, add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
     matrixUnit_mul]
   norm_num
+  simp only [smul_smul, mul_comm]
   abel
 
 def matrixTwoHom : Matrix (Fin 2) (Fin 2) R →ₐ[R] A where
@@ -98,12 +100,14 @@ def matrixTwoHom : Matrix (Fin 2) (Fin 2) R →ₐ[R] A where
     P.matrixTwoHom M = P.matrixTwoLinear M := rfl
 
 /-- A cyclic functional on a two-isometry Cuntz presentation vanishes at `1`. -/
+include P in
 theorem cyclic_value_one_eq_zero (τ : A →ₗ[R] R)
     (hcyclic : ∀ a b, τ (a * b) = τ (b * a)) : τ 1 = 0 := by
   have h := P.cyclic_value_one τ hcyclic
   have h' : τ 1 + 0 = τ 1 + τ 1 := by simpa [two_mul] using h
   exact (add_left_cancel h').symm
 
+include P in
 theorem no_normalized_cyclic_functional [Nontrivial R] :
     ¬ ∃ τ : A →ₗ[R] R, τ 1 = 1 ∧ ∀ a b, τ (a * b) = τ (b * a) := by
   rintro ⟨τ, hnorm, hcyclic⟩
@@ -118,7 +122,7 @@ theorem matrixUnit_zero_zero_ne_one [Nontrivial A] : P.matrixUnit 0 0 ≠ 1 := b
   rw [h, one_mul] at hzero
   have hisom := P.isometry 1 1
   rw [hzero, mul_zero] at hisom
-  simpa using hisom
+  simp at hisom
 
 /-- The unrepaired block has a proper range projection in its first square sector. -/
 theorem raw_isometry_block_square :

@@ -39,8 +39,8 @@ theorem matrixUnit_star [StarRing A] (hstar : ∀ i, star (P.S i) = P.T i)
   have ht : star (P.T j) = P.S j := by rw [← hstar j, star_star]
   simp [matrixUnit, star_mul, hstar, ht]
 
-/-- Cyclicity determines the value at the unit, before normalization is imposed. -/
 include P in
+/-- Cyclicity determines the value at the unit, before normalization is imposed. -/
 theorem cyclic_value_one (τ : A →ₗ[R] R)
     (hcyclic : ∀ a b, τ (a * b) = τ (b * a)) :
     τ 1 = (N : R) * τ 1 := by
@@ -99,8 +99,8 @@ def matrixTwoHom : Matrix (Fin 2) (Fin 2) R →ₐ[R] A where
 @[simp] theorem matrixTwoHom_apply (M : Matrix (Fin 2) (Fin 2) R) :
     P.matrixTwoHom M = P.matrixTwoLinear M := rfl
 
-/-- A cyclic functional on a two-isometry Cuntz presentation vanishes at `1`. -/
 include P in
+/-- A cyclic functional on a two-isometry Cuntz presentation vanishes at `1`. -/
 theorem cyclic_value_one_eq_zero (τ : A →ₗ[R] R)
     (hcyclic : ∀ a b, τ (a * b) = τ (b * a)) : τ 1 = 0 := by
   have h := P.cyclic_value_one τ hcyclic

@@ -56,22 +56,21 @@ theorem boundaryFibonacci_eps_mem_self_fusion :
 
 /-! ## Jones-style algebraic braid generators -/
 
-/-- A finite Jones/Temperley--Lieb style braid generator `A·e + A⁻¹·1`. -/
+/-- A finite Jones/Temperley--Lieb style braid generator `A·1 + A⁻¹e`. -/
 def jonesBraidGenerator {R : Type*} [Ring R] (A : Units R) (e : R) : R :=
-  (A : R) * e + ((A⁻¹ : Units R) : R)
+  (A : R) + ((A⁻¹ : Units R) : R) * e
 
 /-- If the idempotent lane is zero, the Jones-style generator reduces to the unit scalar. -/
 @[simp]
 theorem jonesBraidGenerator_zero {R : Type*} [Ring R] (A : Units R) :
-    jonesBraidGenerator A (0 : R) = ((A⁻¹ : Units R) : R) := by
-  change (A : R) * 0 + ((A⁻¹ : Units R) : R) = ((A⁻¹ : Units R) : R)
-  rw [mul_zero, zero_add]
+    jonesBraidGenerator A (0 : R) = A := by
+  change (A : R) + ((A⁻¹ : Units R) : R) * 0 = A
+  rw [mul_zero, add_zero]
 
 /-- The Jones-style generator is definitionally the finite algebraic formula. -/
 theorem jonesBraidGenerator_def {R : Type*} [Ring R] (A : Units R) (e : R) :
-    jonesBraidGenerator A e = (A : R) * e + ((A⁻¹ : Units R) : R) := by
-  change (A : R) * e + ((A⁻¹ : Units R) : R) =
-    (A : R) * e + ((A⁻¹ : Units R) : R)
+    jonesBraidGenerator A e = (A : R) + ((A⁻¹ : Units R) : R) * e := by
+  change (A : R) + ((A⁻¹ : Units R) : R) * e = (A : R) + ((A⁻¹ : Units R) : R) * e
   rfl
 
 /-! ## Cayley boundary braid action for Fibonacci braid words -/

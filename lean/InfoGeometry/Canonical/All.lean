@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ZornNavierStokesHydrodynamicBridge
+import InfoGeometry.Canonical.ArchetypeCausalSynthesis
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NavierStokesConePiolaBridge
 import InfoGeometry.Canonical.NavierStokesConePiolaAudit
@@ -1360,7 +1361,6 @@ import InfoGeometry.Canonical.FiniteInvariantTransport
 import InfoGeometry.Canonical.FiniteStageInvariantTransport
 import InfoGeometry.Canonical.FirstQuantizationProbability
 import InfoGeometry.Canonical.FisherVolumeBridge
-import InfoGeometry.Canonical.Fock
 import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Canonical.FormalScaffold
 import InfoGeometry.Canonical.FormalVerificationPacket

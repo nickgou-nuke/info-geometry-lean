@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Full CAR Proof for Furey Ladder Operators - SymPy Symbolic Verification
+Signed Furey-inspired Zorn ladder identities - SymPy exact verification
 
-This script provides a symbolic (exact rational) verification of the canonical
-anticommutation relations for Furey ladder operators in the Zorn matrix
-representation of split octonions.
+This script verifies the exact signed identities for the pair defined from
+`J` in the split-octonion Zorn algebra.  The pair is not nilpotent and its
+anticommutator is `-1`, so it is not a canonical positive CAR pair.
 
 The proof mirrors the Lean 4 formalization in:
   lean/InfoGeometry/OperatorAlgebra/SplitOctonions/FureyLadderCAR.lean
@@ -164,11 +164,11 @@ print(f"   = -1? {J_sq.is_neg_one()}")
 assert J_sq.is_neg_one(), "J² = -1 failed"
 
 # =============================================================================
-# Furey Ladder Operators
+# Signed Zorn ladder pair
 # =============================================================================
 
 print("\n" + "=" * 70)
-print("FUREY LADDER OPERATORS (x = J)")
+print("SIGNED ZORN LADDER PAIR (x = J)")
 print("=" * 70)
 
 # α = ½(J + J·J) = ½(J - 1)
@@ -181,24 +181,25 @@ print(f"α† = ½(J - J·J) = {alpha_dag}")
 
 
 # =============================================================================
-# CAR Relations
+# Signed identities; these are not the positive CAR equations
 # =============================================================================
 
 print("\n" + "=" * 70)
-print("CANONICAL ANTICOMMUTATION RELATIONS (CAR)")
+print("SIGNED ANTICOMMUTATOR IDENTITIES (NOT POSITIVE CAR)")
 print("=" * 70)
 
-# α² = 0
+# The Lean owner proves α² = ½(-J) and (α†)² = ½J.
 alpha_sq = alpha * alpha
-print(f"\n1. α² = {alpha_sq}")
-print(f"   α² = 0? {alpha_sq.is_zero()}")
-assert alpha_sq.is_zero(), "α² = 0 failed"
-
-# (α†)² = 0
 alpha_dag_sq = alpha_dag * alpha_dag
+expected_alpha_sq = (-J).half()
+expected_alpha_dag_sq = J.half()
+print(f"\n1. α² = {alpha_sq}")
+print(f"   α² = ½(-J)? {alpha_sq == expected_alpha_sq}")
+assert alpha_sq == expected_alpha_sq, "α² = ½(-J) failed"
+
 print(f"\n2. (α†)² = {alpha_dag_sq}")
-print(f"   (α†)² = 0? {alpha_dag_sq.is_zero()}")
-assert alpha_dag_sq.is_zero(), "(α†)² = 0 failed"
+print(f"   (α†)² = ½J? {alpha_dag_sq == expected_alpha_dag_sq}")
+assert alpha_dag_sq == expected_alpha_dag_sq, "(α†)² = ½J failed"
 
 # {α, α†} = αα† + α†α = -1
 alpha_alpha_dag = alpha * alpha_dag
@@ -210,17 +211,20 @@ print(f"   {{α, α†}} = {anticommutator}")
 print(f"   {{α, α†}} = -1? {anticommutator.is_neg_one()}")
 assert anticommutator.is_neg_one(), "{α, α†} = -1 failed"
 
-# Individual pieces
-print(f"\n   αα† = e₊? {alpha_alpha_dag == ePlus}")
-print(f"   α†α = -e₋? {alpha_dag_alpha == -eMinus}")
+# The Lean owner proves that both products equal -½·1.
+minus_half_one = oneZ.half() * -1
+print(f"\n   αα† = -½·1? {alpha_alpha_dag == minus_half_one}")
+print(f"   α†α = -½·1? {alpha_dag_alpha == minus_half_one}")
+assert alpha_alpha_dag == minus_half_one
+assert alpha_dag_alpha == minus_half_one
 
 
 # =============================================================================
-# Color generalization (3 colors = M₂ = 3)
+# Three coordinate directions: check the same signed scalar identity per mode
 # =============================================================================
 
 print("\n" + "=" * 70)
-print("COLOR GENERALIZATION (3 colors = M₂ = 2² - 1 = 3)")
+print("THREE SIGNED ZORN DIRECTIONS")
 print("=" * 70)
 
 up = [
@@ -246,6 +250,9 @@ for i in range(3):
     a_sq = a * a
     a_dag_sq = a_dag * a_dag
     anti = a * a_dag + a_dag * a
+    assert a_sq == (-J_color[i]).half()
+    assert a_dag_sq == J_color[i].half()
+    assert anti.is_neg_one()
 
     print(f"\n  Color {i}:")
     print(f"    J = {J_color[i]}")
@@ -260,7 +267,7 @@ for i in range(3):
 # =============================================================================
 
 print("\n" + "=" * 70)
-print("SUMMARY: ALL CAR RELATIONS VERIFIED EXACTLY OVER ℚ")
+print("SUMMARY: SIGNED ZORN IDENTITIES VERIFIED EXACTLY OVER ℚ")
 print("=" * 70)
 print("""
 ✓ J² = -1 (complex structure)
@@ -272,15 +279,16 @@ print("""
 ✓ up0 * J = e₋
 ✓ α = ½(up0 + J·up0)
 ✓ α† = ½(up0 - J·up0)
-✓ α² = 0
-✓ (α†)² = 0
+✓ α² = ½(-J)
+✓ (α†)² = ½J
 ✓ {α, α†} = αα† + α†α = -1
-✓ αα† = e₊
-✓ α†α = -e₋
-✓ All 3 colors satisfy CAR (dimension = M₂ = 3)
+✓ αα† = -½·1
+✓ α†α = -½·1
+✓ The same signed scalar identities hold in the three listed directions
+✗ These equations are not the standard positive CAR relations
 """)
 
-print("CAR PROOF COMPLETE - All relations exact over ℚ")
+print("SIGNED IDENTITIES CHECKED - Exact arithmetic over ℚ")
 
 
 # =============================================================================
@@ -304,12 +312,13 @@ export_data = {
         "a": str(alpha_dag.a), "b": str(alpha_dag.b),
         "x": [str(v) for v in alpha_dag.x], "y": [str(v) for v in alpha_dag.y]
     },
-    "alpha_sq_zero": alpha_sq.is_zero(),
-    "alpha_dag_sq_zero": alpha_dag_sq.is_zero(),
-    "anticommutator_minus_one": anticommutator.is_neg_one(),
-    "alpha_alpha_dag_ePlus": alpha_alpha_dag == ePlus,
-    "alpha_dag_alpha_neg_eMinus": alpha_dag_alpha == -eMinus,
-    "all_colors_car": True
+    "alpha_sq_half_negJ": alpha_sq == expected_alpha_sq,
+    "alpha_dag_sq_half_J": alpha_dag_sq == expected_alpha_dag_sq,
+    "signed_anticommutator_minus_one": anticommutator.is_neg_one(),
+    "alpha_alpha_dag_minus_half_one": alpha_alpha_dag == minus_half_one,
+    "alpha_dag_alpha_minus_half_one": alpha_dag_alpha == minus_half_one,
+    "three_directions_signed_identities": True,
+    "standard_positive_CAR": False
 }
 
 with open("/tmp/furey_car_sympy_verification.json", "w") as f:

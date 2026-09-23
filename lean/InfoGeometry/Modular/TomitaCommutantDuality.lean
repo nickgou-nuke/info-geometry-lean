@@ -122,48 +122,30 @@ structure TomitaDualityData (J : AntiLinearInvolution H) (M : Set (H → H)) : P
 
 variable {J : AntiLinearInvolution H} {M : Set (H → H)}
 
-/--
-MAIN THEOREM 1 (Forward Duality Inclusion):
-  `J ℳ J ⊆ ℳ'`
--/
+/-- Conditional consequence of the forward-commutation field in `TomitaDualityData`. -/
 theorem tomita_forward_inclusion (hD : TomitaDualityData J M) :
     JConjugateSet J M ⊆ commutant M := by
   rintro B ⟨A, hA, rfl⟩
   exact hD.forward_commute A hA
 
-/--
-MAIN THEOREM 2 (Backward Duality Inclusion):
-  `ℳ' ⊆ J ℳ J`
--/
+/-- Conditional consequence of the backward-inclusion field in `TomitaDualityData`. -/
 theorem tomita_backward_inclusion (hD : TomitaDualityData J M) :
     commutant M ⊆ JConjugateSet J M := by
   rintro B hB
   obtain ⟨A, hA, rfl⟩ := hD.backward_span B hB
   exact ⟨A, hA, rfl⟩
 
-/--
-MAIN THEOREM 3 (Tomita–Takesaki Commutant Duality):
-  `π_ω(𝒜_∞)' = J π_ω(𝒜_∞) J`
-The commutant of the GNS von Neumann algebra equals its spatial J-conjugation.
--/
+/-- Set equality obtained from the two inclusions supplied by `TomitaDualityData`. -/
 theorem tomita_takesaki_commutant_duality (hD : TomitaDualityData J M) :
     commutant M = JConjugateSet J M :=
   Set.Subset.antisymm (tomita_backward_inclusion hD) (tomita_forward_inclusion hD)
 
-/--
-COROLLARY 1 (Reciprocal Dual Formulation):
-  `J (ℳ') J = ℳ`
-Conjugating the commutant recovers the original algebra.
--/
+/-- Conditional reciprocal equality induced by the abstract conjugation operation. -/
 theorem tomita_reciprocal_duality (hD : TomitaDualityData J M) :
     JConjugateSet J (commutant M) = M := by
   rw [tomita_takesaki_commutant_duality hD, JConjugateSet_involutive]
 
-/--
-COROLLARY 2 (von Neumann Bicommutant Theorem via Modular Duality):
-  `ℳ'' = ℳ`
-The reflexive von Neumann bicommutant identity follows directly from Tomita duality.
--/
+/-- Abstract commutant equality under duality data for both `M` and its commutant. -/
 theorem von_neumann_bicommutant_from_tomita (hD : TomitaDualityData J M)
     (hD_prime : TomitaDualityData J (commutant M)) :
     commutant (commutant M) = M := by

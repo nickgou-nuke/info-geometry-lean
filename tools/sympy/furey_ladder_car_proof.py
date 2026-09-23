@@ -275,10 +275,8 @@ print("""
 ✓ down0² = 0 (nilpotent)
 ✓ up0 * down0 = e₊
 ✓ down0 * up0 = e₋
-✓ J * up0 = e₊
-✓ up0 * J = e₋
-✓ α = ½(up0 + J·up0)
-✓ α† = ½(up0 - J·up0)
+✓ α = ½(J + J²)
+✓ α† = ½(J - J²)
 ✓ α² = ½(-J)
 ✓ (α†)² = ½J
 ✓ {α, α†} = αα† + α†α = -1
@@ -321,7 +319,7 @@ export_data = {
     "standard_positive_CAR": False
 }
 
-with open("/tmp/furey_car_sympy_verification.json", "w") as f:
+with open("/tmp/furey_signed_zorn_verification.json", "w") as f:
     json.dump(export_data, f, indent=2)
 
 print("\nVerification data exported to /tmp/furey_car_sympy_verification.json")

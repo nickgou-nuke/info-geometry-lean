@@ -212,7 +212,7 @@ print(f"   {{α, α†}} = -1? {anticommutator.is_neg_one()}")
 assert anticommutator.is_neg_one(), "{α, α†} = -1 failed"
 
 # The Lean owner proves that both products equal -½·1.
-minus_half_one = oneZ.half() * -1
+minus_half_one = oneZ.scalar_mul(sp.Rational(-1, 2))
 print(f"\n   αα† = -½·1? {alpha_alpha_dag == minus_half_one}")
 print(f"   α†α = -½·1? {alpha_dag_alpha == minus_half_one}")
 assert alpha_alpha_dag == minus_half_one

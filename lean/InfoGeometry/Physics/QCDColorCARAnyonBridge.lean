@@ -137,6 +137,23 @@ theorem furey_charge_packet :
       fureyOccupationCharge w = 1) :=
   furey_charge_algebraic_spine
 
+/-- The finite Furey vacuum projector generates a theorem-owned left ideal, and
+the promoted physical electric-charge readout is exactly the existing finite
+occupation charge. -/
+theorem furey_left_ideal_and_physical_charge_packet :
+    (∀ x : CAR3, x * fureyVacuumIdempotent ∈ fureyVacuumLeftIdeal) ∧
+    (∀ a x : CAR3, x ∈ fureyVacuumLeftIdeal → a * x ∈ fureyVacuumLeftIdeal) ∧
+    physicalElectricChargeOp = fureyCharge ∧
+    (∀ w : Occupation3,
+      physicalElectricCharge w = 0 ∨
+      physicalElectricCharge w = (1 / 3 : ℚ) ∨
+      physicalElectricCharge w = (2 / 3 : ℚ) ∨
+      physicalElectricCharge w = 1) := by
+  refine ⟨mul_fureyVacuumIdempotent_mem, ?_, physicalElectricChargeOp_eq_fureyCharge,
+    physicalElectricCharge_spectrum⟩
+  intro a x hx
+  exact fureyVacuumLeftIdeal_left_mul_closed a x hx
+
 /-- The finite colour Weyl model and the explicit parafermion-style matrices
 both satisfy an Artin braid relation. -/
 theorem color_weyl_and_parafermion_braid_packet (t : ℂ) :

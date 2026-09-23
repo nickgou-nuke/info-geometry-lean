@@ -124,7 +124,7 @@ J = ZornMatrix(0, 0, (1, 0, 0), (-1, 0, 0))
 # =============================================================================
 
 print("=" * 70)
-print("FUREY LADDER OPERATORS - FULL CAR PROOF (SymPy Exact Rational)")
+print("SIGNED FUREY-INSPIRED LADDER IDENTITIES (SymPy exact rationals)")
 print("=" * 70)
 
 # 1. J² = -1
@@ -241,7 +241,7 @@ down = [
 
 J_color = [up[i] - down[i] for i in range(3)]
 
-print(f"\nM₂ = 2² - 1 = {2**2 - 1} = dimension of SU(3) fundamental rep")
+print(f"\nThree listed basis directions: {2**2 - 1}")
 
 for i in range(3):
     a = (J_color[i] + J_color[i] * J_color[i]).half()
@@ -257,8 +257,8 @@ for i in range(3):
     print(f"\n  Color {i}:")
     print(f"    J = {J_color[i]}")
     print(f"    α = {a}")
-    print(f"    α² = 0? {a_sq.is_zero()}")
-    print(f"    (α†)² = 0? {a_dag_sq.is_zero()}")
+    print(f"    α² = ½(-J)? {a_sq == (-J_color[i]).half()}")
+    print(f"    (α†)² = ½J? {a_dag_sq == J_color[i].half()}")
     print(f"    {{α, α†}} = -1? {anti.is_neg_one()}")
 
 
@@ -288,7 +288,7 @@ print("""
 ✗ These equations are not the standard positive CAR relations
 """)
 
-print("SIGNED IDENTITIES CHECKED - Exact arithmetic over ℚ")
+print("SIGNED IDENTITIES CHECKED - exact arithmetic over ℚ")
 
 
 # =============================================================================

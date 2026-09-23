@@ -319,7 +319,8 @@ theorem mersenne_M2_eq_color_dim : (2 : ℕ)^2 - 1 = 3 := by norm_num
   alpha_alpha_dag : alpha * alpha_dag = { a := -1/2, b := -1/2, x := ![0, 0, 0], y := ![0, 0, 0] }
   alpha_dag_alpha : alpha_dag * alpha = { a := -1/2, b := -1/2, x := ![0, 0, 0], y := ![0, 0, 0] }
 
-/-- Bundles the signed identities for the chosen pair; the anticommutator is `-1`, not `1`. -/\ntheorem furey_CAR_complete : CARResult :=
+/-- Bundles the signed identities for the chosen pair; the anticommutator is `-1`, not `1`. -/
+theorem furey_CAR_complete : CARResult :=
   ⟨J_sq, up0_sq, down0_sq, up0_mul_down0, down0_mul_up0, CAR_anticommutator, alpha_alpha_dag, alpha_dag_alpha⟩
 
 end InfoGeometry.OperatorAlgebra.SplitOctonions.FureyCAR

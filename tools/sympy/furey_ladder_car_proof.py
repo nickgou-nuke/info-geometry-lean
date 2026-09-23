@@ -322,4 +322,4 @@ export_data = {
 with open("/tmp/furey_signed_zorn_verification.json", "w") as f:
     json.dump(export_data, f, indent=2)
 
-print("\nVerification data exported to /tmp/furey_car_sympy_verification.json")
+print("\nVerification data exported to /tmp/furey_signed_zorn_verification.json")

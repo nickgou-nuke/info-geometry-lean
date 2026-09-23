@@ -309,7 +309,8 @@ theorem mersenne_M2_eq_color_dim : (2 : ℕ)^2 - 1 = 3 := by norm_num
 -- 6. Summary theorem collecting the signed ladder identities
 -- ============================================================================
 
-/-- Legacy bundle of the signed Furey-inspired identities below; its `CAR` name does not assert the standard positive CAR sign. -/\nstructure CARResult where
+/-- Legacy bundle of the signed Furey-inspired identities below; its `CAR` name does not assert the standard positive CAR sign. -/
+structure CARResult where
   J_sq : J * J = -oneZ
   up0_nilpotent : up0 * up0 = zeroZ
   down0_nilpotent : down0 * down0 = zeroZ

@@ -1,5 +1,4 @@
 import Mathlib.MeasureTheory.Constructions.HaarToSphere
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.Probability.Moments.Tilted
 import Mathlib.Probability.Moments.Covariance

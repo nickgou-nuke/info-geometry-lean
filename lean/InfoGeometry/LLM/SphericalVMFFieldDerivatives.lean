@@ -1,5 +1,4 @@
 import InfoGeometry.LLM.SphericalVMFExponentialFamily
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 set_option autoImplicit false
@@ -100,7 +99,8 @@ theorem iteratedDeriv_two_projectedResponseLine_zero_eq_cumulant_three
     exact (deriv_directionalPotential_eq_inner_response σ θ v t).symm
   rw [hline]
   unfold directionalCumulant
-  rw [← iteratedDeriv_succ']
+  exact (congrFun (iteratedDeriv_succ'
+    (n := 2) (f := directionalPotential σ θ v)) 0).symm
 
 end NaturalParameterLine
 

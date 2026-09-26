@@ -1,0 +1,102 @@
+name: Reviewed PR Integration
+
+on:
+  push:
+    branches: ['codex/integrate-reviewed-prs-20260921', 'main']
+    paths:
+      - 'lean/**'
+      - 'proofs/PolarizedShearSpinAudit.lean'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_prs_20260921.json'
+      - '.github/workflows/reviewed-pr-integration.yml'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+  pull_request:
+    branches: ['main']
+    paths:
+      - 'lean/**'
+      - 'proofs/PolarizedShearSpinAudit.lean'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_prs_20260921.json'
+      - '.github/workflows/reviewed-pr-integration.yml'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reviewed-pr-integration-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: project
+          persist-credentials: false
+          sparse-checkout: |
+            lean/InfoGeometry
+            lean/DAG
+            tools/quality
+            proofs
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: 1f9fffd5ff0b854b8a1f1f69adc11c61f05f2515
+          path: pinned-mathlib
+          persist-credentials: false
+      - uses: actions/cache/restore@v4
+        id: cache
+        with:
+          path: |
+            ~/.elan
+            pinned-mathlib/.lake
+          key: reviewed-prs-lean4281-mathlib-1f9fffd5-v1
+          restore-keys: |
+            cuntz-clifford-lean4281-mathlib-1f9fffd5-v1
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/cache/restore@v4
+        id: native-cache
+        with:
+          path: reviewed-native-cache
+          key: reviewed-native-lean4281-1f9fffd5-v1-${{ github.sha }}
+          restore-keys: |
+            reviewed-native-lean4281-1f9fffd5-v1-
+      - name: Compile reviewed union and audit every declaration
+        run: |
+          python3 project/tools/quality/check_reviewed_prs.py \
+            --mathlib-root pinned-mathlib \
+            --output "$RUNNER_TEMP/reviewed-pr-check" \
+            --cache-dir reviewed-native-cache
+      - uses: actions/cache/save@v4
+        if: always() && steps.native-cache.outputs.cache-hit != 'true'
+        with:
+          path: reviewed-native-cache
+          key: reviewed-native-lean4281-1f9fffd5-v1-${{ github.sha }}
+      - uses: actions/cache/save@v4
+        if: always() && steps.cache.outputs.cache-hit != 'true'
+        with:
+          path: |
+            ~/.elan
+            pinned-mathlib/.lake
+          key: reviewed-prs-lean4281-mathlib-1f9fffd5-v1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reviewed-pr-kernel-report
+          path: |
+            ${{ runner.temp }}/reviewed-pr-check/report.json
+            ${{ runner.temp }}/reviewed-pr-check/*.log
+          if-no-files-found: warn

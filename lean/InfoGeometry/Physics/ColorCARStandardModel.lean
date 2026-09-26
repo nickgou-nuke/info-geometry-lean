@@ -7,12 +7,14 @@ import InfoGeometry.Physics.ChiralTLDescent
 import InfoGeometry.Clifford.Cl55ThreeColorChiralGenerators
 
 /-!
-# ColorCAR — finite CAR triple-product readouts
+# Color and tensor-product occupation readouts
 
-This module proves finite algebraic identities in the imported CAR and braid
-setting.  Furey/Standard-Model terminology is used only as naming motivation;
-no theorem here constructs a Standard Model representation, proves a minimal
-left-ideal classification, or identifies physical fermions.
+This module proves finite identities for a triple tensor product of two-state
+matrix algebras and for separate imported Clifford-CAR and braid carriers.
+The local tensor-factor operators below are not claimed to satisfy graded
+cross-mode CAR relations.  Furey/Standard-Model terminology is naming
+motivation only: no theorem here identifies the tensor span with a Clifford
+minimal left ideal or identifies its states with physical fermions.
 -/
 
 noncomputable section
@@ -82,10 +84,11 @@ theorem car_submodule_is_left_tau_ideal :
   -- leftTarget is a Submodule, closed under scalar multiplication
   exact Submodule.smul_mem _ Complex.I h_base
 
-/-! ## Triple CAR product — finite eight-generator span
+/-! ## Triple tensor product — finite eight-generator span
 
-Three copies of the CAR algebra `(σ⁺ᵢ, σ⁻ᵢ)` for `i ∈ {0,1,2}` give a finite
-span of eight displayed tensor expressions. -/
+Each tensor factor has a local pair `(σ⁺, σ⁻)`.  The raw tensor product here
+does not insert the parity strings needed for cross-mode fermionic CAR
+relations; the eight displayed expressions define only a finite subspace. -/
 
 /-- Three copies of the CAR algebra: triple tensor product of M2C. -/
 abbrev CAR3 : Type := M2C ⊗[ℂ] M2C ⊗[ℂ] M2C

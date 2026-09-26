@@ -1,0 +1,63 @@
+name: Weak Value Reconstruction Narrow Check
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'lean/InfoGeometry/Krein/TransitionWeakValue*.lean'
+      - 'lean/InfoGeometry/Canonical/WeakValuePoleBounds.lean'
+      - 'tools/quality/check_weak_value_reconstruction.py'
+      - '.github/workflows/weak-value-reconstruction-narrow.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: weak-value-reconstruction-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Install elan without changing the pinned toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            ~/.cache/mathlib
+          key: ${{ runner.os }}-weak-readout-pinned-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+      - name: Record pinned compiler
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat lean-toolchain
+          lean --version
+      - name: Compile byte-identical owner closure and audit axioms
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/quality/check_weak_value_reconstruction.py 2>&1 | tee weak-value-build.log
+      - name: Preserve compiler and source evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: weak-value-reconstruction-evidence
+          path: |
+            weak-value-build.log
+            weak-value-axioms.log
+            weak-value-source-hashes.json
+            weak-value-verification.json
+            weak-value-pinned-probe.log
+          if-no-files-found: ignore

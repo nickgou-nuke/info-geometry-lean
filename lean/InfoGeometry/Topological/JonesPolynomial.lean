@@ -33,7 +33,6 @@ theorem temperleyLiebBraidGenerator_def {R : Type*} [Ring R]
     temperleyLiebBraidGenerator A e =
       (A : R) * e + ((A⁻¹ : Units R) : R) := by
   rfl
-
 /-- Integer powers of a Reidemeister-I factor cancel its bracket scaling. -/
 theorem reidemeister_factor_cancel {R : Type*} [Group R]
     (c : R) (w : ℤ) :

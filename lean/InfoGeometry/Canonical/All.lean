@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.ZornNavierStokesHydrodynamicBridge
-import InfoGeometry.Canonical.ArchetypeCausalSynthesis
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NavierStokesConePiolaBridge
 import InfoGeometry.Canonical.NavierStokesConePiolaAudit
@@ -1361,6 +1360,7 @@ import InfoGeometry.Canonical.FiniteInvariantTransport
 import InfoGeometry.Canonical.FiniteStageInvariantTransport
 import InfoGeometry.Canonical.FirstQuantizationProbability
 import InfoGeometry.Canonical.FisherVolumeBridge
+import InfoGeometry.Canonical.Fock
 import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Canonical.FormalScaffold
 import InfoGeometry.Canonical.FormalVerificationPacket
@@ -2222,6 +2222,41 @@ import InfoGeometry.Canonical.ChernSimonsCuntzBoundaryAudit
 import InfoGeometry.Canonical.DrazinJordanChevalleyBridge
 import InfoGeometry.Canonical.DrazinJordanChevalleyAudit
 import InfoGeometry.Canonical.AlbertPeirceModularMixingBridge
+
+import InfoGeometry.Canonical.KreinSeamEvolution
+import InfoGeometry.Canonical.WeakValueCylinderTransport
+import InfoGeometry.Canonical.WeakValueEnstrophy
+import InfoGeometry.Canonical.WeakValueForcedShear
+import InfoGeometry.Canonical.WeakValueReconstructionChecks
+import InfoGeometry.Canonical.WeakValueSpatialReconstruction
+import InfoGeometry.Canonical.AharonovKreinWeakValueBridge
+import InfoGeometry.Canonical.QuantumSpinNavierStokes
+import InfoGeometry.Canonical.TwoSheetResiduePairing
+
+import InfoGeometry.Canonical.AnomalyStrainRotation
+import InfoGeometry.Canonical.AnomalyStrainRotationWitness
+import InfoGeometry.Canonical.CuntzCliffordGaugeChain
+import InfoGeometry.Canonical.DiracKahlerSplitCurvature
+import InfoGeometry.Canonical.EnstrophyDivergence
+import InfoGeometry.Canonical.FiniteSuperchargePairing
+import InfoGeometry.Canonical.KreinFlowConservation
+import InfoGeometry.Canonical.NavierStokesPolarizedTransfers
+import InfoGeometry.Canonical.NavierStokesShearReconstruction
+import InfoGeometry.Canonical.PolarizedShearSpinEvolution
+import InfoGeometry.Canonical.PolarizedShearSpinFrame
+import InfoGeometry.Canonical.PolarizedShearSpinSolution
+import InfoGeometry.Canonical.ReciprocalShearFlow
+import InfoGeometry.Canonical.SpinorHydrodynamicReadout
+import InfoGeometry.Canonical.SpinorReadoutOscillation
+import InfoGeometry.Canonical.SpinorReadoutRegularity
+import InfoGeometry.Canonical.SquareZeroStrainRotation
+import InfoGeometry.Canonical.TwoStateMomentumShear
+import InfoGeometry.Canonical.TwoStateNavierStokesReconstruction
+import InfoGeometry.Canonical.WeakValueKreinBoundary
+import InfoGeometry.Canonical.WeakValueKreinGeometry
+import InfoGeometry.Canonical.WeakValuePoleBounds
+import InfoGeometry.Canonical.WeakValuePoleCriterion
+import InfoGeometry.Canonical.WeakValuePoleExamples
 
 namespace InfoGeometry
 

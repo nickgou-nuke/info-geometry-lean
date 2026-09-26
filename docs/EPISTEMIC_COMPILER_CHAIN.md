@@ -27,14 +27,12 @@ Only `proved` can be passed to `promote`.  A successful promotion returns a
 kernel term.  The other statuses remain research metadata and cannot enter the
 authoritative theorem surface.
 
-The surrounding modules provide the larger checks:
+The surrounding modules provide related checks:
 
-- `MetaEpistemicCompiler` supplies prerequisite closure and alternative valid
-  schedules;
-- `Causal.CertifiedDependencyCompiler` and `Causal.ProofCarryingSchedule`
-  supply dependency and evidence checks;
-- `Meta/EpistemicPipelineTests` exercises rejection of malformed schedules,
-  stale evidence, incomplete closure, and non-propositions.
+- `MetaEpistemicCompiler` and `Causal.CertifiedDependencyCompiler` own the
+  broader dependency and scheduling machinery;
+- `EpistemicCompilerChainTests` exercises this module's status-gated promotion
+  boundary. It does not certify external schedules or semantic claims.
 
 The promotion boundary is therefore:
 

@@ -52,6 +52,17 @@ theorem rank_injective : Function.Injective rank := by
   intro a b h
   cases a <;> cases b <;> simp [rank] at h ⊢
 
+theorem precedes_antisymm {a b : Phase}
+    (hab : precedes a b) (hba : precedes b a) : a = b := by
+  apply rank_injective
+  exact Nat.le_antisymm hab hba
+
+instance : PartialOrder Phase where
+  le := precedes
+  le_refl := precedes_refl
+  le_trans := @precedes_trans
+  le_antisymm := @precedes_antisymm
+
 theorem complete : ∀ phase, Phase.rank phase ≤ 5 := by
   intro phase
   cases phase <;> decide

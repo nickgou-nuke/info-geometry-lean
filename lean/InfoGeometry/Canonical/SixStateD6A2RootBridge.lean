@@ -63,12 +63,12 @@ private def d6RootActionMap : D6 → RootPermutation
 private theorem d6RootActionMap_one :
     d6RootActionMap (1 : D6) = 1 := by
   change d6RootActionMap (.r 0) = 1
-  native_decide
+  decide
 
 private theorem d6RootActionMap_mul (a b : D6) :
     d6RootActionMap (a * b) = d6RootActionMap a * d6RootActionMap b := by
   revert a b
-  native_decide
+  decide
 
 def d6RootAction : D6 →* RootPermutation where
   toFun := d6RootActionMap
@@ -95,9 +95,9 @@ theorem d6RootAction_preserves_root_pairing (g : D6) (r s : A2Root) :
         (a2RootVector (d6RootAction g s)) =
       dot (a2RootVector r) (a2RootVector s) := by
   revert g r s
-  native_decide
+  decide
 
 theorem d6RootAction_injective : Function.Injective d6RootAction := by
-  native_decide
+  decide
 
 end InfoGeometry.Canonical.SixStateD6A2RootBridge

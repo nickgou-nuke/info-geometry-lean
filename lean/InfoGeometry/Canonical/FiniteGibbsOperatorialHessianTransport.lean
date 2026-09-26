@@ -46,11 +46,11 @@ structure TransportData
   hessian_readout :
     ∀ (H : FiniteOperator n) (hH : IsSelfAdjoint H)
       (hZ : 0 < gibbsPartitionReal H)
-      (A B : FiniteOperator n),
+      (A : FiniteOperator n),
       readout
           (OperatorialHessianBridge.operatorInformationHessian
             (E := E) (map H) (map A)) =
-        centeredFrechetResponse H hH hZ A B
+        centeredFrechetResponse H hH hZ A A
 
 /-- The transported operatorial Hessian readout supplied by TransportData. -/
 def transportedHessianReadout
@@ -58,7 +58,7 @@ def transportedHessianReadout
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (D : TransportData n E)
-    (H A B : FiniteOperator n) : ℝ :=
+    (H A : FiniteOperator n) : ℝ :=
   D.readout
     (OperatorialHessianBridge.operatorInformationHessian (E := E) (D.map H) (D.map A))
 
@@ -69,8 +69,8 @@ theorem transportedHessianReadout_eq_double_transportCommutator
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (D : TransportData n E)
-    (H A B : FiniteOperator n) :
-    transportedHessianReadout D H A B =
+    (H A : FiniteOperator n) :
+    transportedHessianReadout D H A =
       D.readout
         (transportCommutator (D.map H)
           (transportCommutator (D.map H) (D.map A))) := by
@@ -86,10 +86,10 @@ theorem transportedHessianReadout_eq_centeredFrechetResponse
     (D : TransportData n E)
     (H : FiniteOperator n) (hH : IsSelfAdjoint H)
     (hZ : 0 < gibbsPartitionReal H)
-    (A B : FiniteOperator n) :
-    transportedHessianReadout D H A B =
-      centeredFrechetResponse H hH hZ A B :=
-  D.hessian_readout H hH hZ A B
+    (A : FiniteOperator n) :
+    transportedHessianReadout D H A =
+      centeredFrechetResponse H hH hZ A A :=
+  D.hessian_readout H hH hZ A
 
 /-- The complete finite-stage bridge: after explicit carrier transport, the
 relational Hessian readout is the native centered BKM covariance.  The
@@ -103,22 +103,22 @@ theorem transportedHessianReadout_eq_centeredBKMRealCovariance
     (D : TransportData n E)
     (H : FiniteOperator n) (hH : IsSelfAdjoint H)
     (hZ : 0 < gibbsPartitionReal H)
-    (A B : FiniteOperator n) (hA : IsSelfAdjoint A) :
-    transportedHessianReadout D H A B =
+    (A : FiniteOperator n) (hA : IsSelfAdjoint A) :
+    transportedHessianReadout D H A =
       centeredBKMRealCovariance
         (faithfulGibbsDensity H hH hZ)
         (continuous_faithfulGibbsDensity_rpow H hH hZ)
-        A B := by
+        A A := by
   calc
-    transportedHessianReadout D H A B =
-        centeredFrechetResponse H hH hZ A B :=
+    transportedHessianReadout D H A =
+        centeredFrechetResponse H hH hZ A A :=
       transportedHessianReadout_eq_centeredFrechetResponse
-        D H hH hZ A B
+        D H hH hZ A
     _ = centeredBKMRealCovariance
         (faithfulGibbsDensity H hH hZ)
         (continuous_faithfulGibbsDensity_rpow H hH hZ)
-        A B :=
+        A A :=
       centeredFrechetResponse_eq_centeredBKMRealCovariance
-        H hH hZ A B hA
+        H hH hZ A A hA
 
 end InfoGeometry.Canonical.FiniteGibbsOperatorialHessianTransport

@@ -25,11 +25,11 @@ theorem fib_mod_10_11 : Nat.fib 10 % 11 = 0 := by decide
 
 /-- fib(16) mod 7 = 0: F_16 = 987, and 7 | 987.
     def:fib-congruence -/
-theorem fib_mod_16_7 : Nat.fib 16 % 7 = 0 := by native_decide
+theorem fib_mod_16_7 : Nat.fib 16 % 7 = 0 := by decide
 
 /-- fib(20) mod 5 = 0: F_20 = 6765, and 5 | 6765.
     def:fib-congruence -/
-theorem fib_mod_20_5 : Nat.fib 20 % 5 = 0 := by native_decide
+theorem fib_mod_20_5 : Nat.fib 20 % 5 = 0 := by decide
 
 /-! ## Wall theorem divisibility seeds: p | fib(k) with explicit witnesses -/
 
@@ -43,7 +43,7 @@ theorem wall_seed_11_10 : Nat.fib 10 = 11 * 5 := by decide
 
 /-- 13 | fib(14): F_14 = 377 = 13 * 29.
     def:fib-congruence -/
-theorem wall_seed_13_14 : Nat.fib 14 = 13 * 29 := by native_decide
+theorem wall_seed_13_14 : Nat.fib 14 = 13 * 29 := by decide
 
 /-! ## Minimality witnesses -/
 

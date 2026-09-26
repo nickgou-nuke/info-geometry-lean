@@ -92,7 +92,7 @@ theorem paper_sector_dimension_sum_m6 :
     220 / 21 = 10 ∧
     cFiberHist 6 1 + cFiberHist 6 2 + cFiberHist 6 3 + cFiberHist 6 4 + cFiberHist 6 5 = 21 := by
   refine ⟨momentSum_two_six, ?_, by omega, ?_⟩
-  · rw [momentSum_zero]; native_decide
+  · rw [momentSum_zero]; decide
   · rw [cFiberHist_6_1, cFiberHist_6_2, cFiberHist_6_3, cFiberHist_6_4, cFiberHist_6_5]
 
 /-- Wedderburn dimension growth certificate: S_2 grows by factor ~2.5.
@@ -128,7 +128,7 @@ theorem paper_ea_wedderburn_growth_extended :
 
 /-- prop:fold-groupoid-wedderburn -/
 theorem wedderburn_avg_fiber_m7 : momentSum 2 7 / Nat.fib 9 = 16 := by
-  rw [momentSum_two_seven]; native_decide
+  rw [momentSum_two_seven]; decide
 
 /-- Paper: prop:fold-groupoid-wedderburn (m=7 average fiber).
     prop:fold-groupoid-wedderburn -/
@@ -174,7 +174,7 @@ theorem momentSum_two_nine_factored : momentSum 2 9 = 8 * 419 := by
   rw [momentSum_two_nine_rec]
 
 /-- prop:fold-groupoid-wedderburn -/
-theorem prime_419 : Nat.Prime 419 := by native_decide
+theorem prime_419 : Nat.Prime 419 := by decide
 
 /-- Paper package. prop:fold-groupoid-wedderburn -/
 theorem paper_ea_s2_factorization :
@@ -191,13 +191,13 @@ theorem paper_ea_s2_factorization :
     thm:fold-groupoid-z2x2-central-idempotents -/
 theorem wedderburn_dim_ratio_m7_exact :
     momentSum 2 7 = 16 * Nat.fib 9 := by
-  rw [momentSum_two_seven]; native_decide
+  rw [momentSum_two_seven]; decide
 
 /-- At m=6, S_2 is not divisible by F_8 (no exact ratio).
     thm:fold-groupoid-z2x2-central-idempotents -/
 theorem wedderburn_dim_ratio_m6_not_exact :
     momentSum 2 6 % Nat.fib 8 ≠ 0 := by
-  rw [momentSum_two_six]; native_decide
+  rw [momentSum_two_six]; decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R331: S_2 factored m=10,11,12

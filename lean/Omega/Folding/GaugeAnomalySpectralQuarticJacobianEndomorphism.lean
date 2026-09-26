@@ -72,7 +72,7 @@ theorem paper_fold_gauge_anomaly_spectral_quartic_jacobian_endomorphism_z :
       spectralQuarticGeometricEndomorphismRing = spectralQuarticIntegerScalars ∧
       spectralQuarticAbsolutelySimple := by
   have hbase : spectralQuarticCommonFrobeniusField = .base := spectralQuartic_common_field_is_base
-  refine ⟨by native_decide, by native_decide, hbase, ?_, hbase⟩
+  refine ⟨by decide, by decide, hbase, ?_, hbase⟩
   unfold spectralQuarticGeometricEndomorphismRing
   simp [hbase]
 

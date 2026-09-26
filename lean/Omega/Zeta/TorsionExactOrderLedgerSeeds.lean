@@ -37,35 +37,35 @@ The function φ(n) = n · ∏_{p|n}(1 - 1/p) gives the count of units in ℤ/n�
 
 /-- Euler totient at small values via Nat.totient.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem totient_1 : Nat.totient 1 = 1 := by native_decide
+theorem totient_1 : Nat.totient 1 = 1 := by decide
 
 /-- Euler totient seed: φ(2) = 1.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem totient_2 : Nat.totient 2 = 1 := by native_decide
+theorem totient_2 : Nat.totient 2 = 1 := by decide
 
 /-- Euler totient seed: φ(3) = 2.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem totient_3 : Nat.totient 3 = 2 := by native_decide
+theorem totient_3 : Nat.totient 3 = 2 := by decide
 
 /-- Euler totient seed: φ(4) = 2.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem totient_4 : Nat.totient 4 = 2 := by native_decide
+theorem totient_4 : Nat.totient 4 = 2 := by decide
 
 /-- Euler totient seed: φ(5) = 4.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem totient_5 : Nat.totient 5 = 4 := by native_decide
+theorem totient_5 : Nat.totient 5 = 4 := by decide
 
 /-- Euler totient seed: φ(6) = 2.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem totient_6 : Nat.totient 6 = 2 := by native_decide
+theorem totient_6 : Nat.totient 6 = 2 := by decide
 
 /-- Euler totient seed: φ(7) = 6.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem totient_7 : Nat.totient 7 = 6 := by native_decide
+theorem totient_7 : Nat.totient 7 = 6 := by decide
 
 /-- Euler totient seed: φ(12) = 4.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem totient_12 : Nat.totient 12 = 4 := by native_decide
+theorem totient_12 : Nat.totient 12 = 4 := by decide
 
 /-! ## S-coprime stripping function: n_{S⊥}
 
@@ -86,27 +86,27 @@ def sCoprimePart23 (n : ℕ) : ℕ :=
 /-- S-coprime part seed: 12_{S⊥} = 1 for S = {2,3}.
     12 = 2² · 3, so 12_{S⊥} = 12/12 = 1.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem sCoprime_12 : sCoprimePart23 12 = 1 := by native_decide
+theorem sCoprime_12 : sCoprimePart23 12 = 1 := by decide
 
 /-- S-coprime part seed: 30_{S⊥} = 5 for S = {2,3}.
     30 = 2 · 3 · 5, so 30_{S⊥} = 30/6 = 5.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem sCoprime_30 : sCoprimePart23 30 = 5 := by native_decide
+theorem sCoprime_30 : sCoprimePart23 30 = 5 := by decide
 
 /-- S-coprime part seed: 7_{S⊥} = 7 for S = {2,3}.
     7 is coprime to both 2 and 3.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem sCoprime_7 : sCoprimePart23 7 = 7 := by native_decide
+theorem sCoprime_7 : sCoprimePart23 7 = 7 := by decide
 
 /-- S-coprime part seed: 60_{S⊥} = 5 for S = {2,3}.
     60 = 2² · 3 · 5, so 60_{S⊥} = 60/12 = 5.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem sCoprime_60 : sCoprimePart23 60 = 5 := by native_decide
+theorem sCoprime_60 : sCoprimePart23 60 = 5 := by decide
 
 /-- S-coprime part seed: 35_{S⊥} = 35 for S = {2,3}.
     35 = 5 · 7, coprime to both 2 and 3.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem sCoprime_35 : sCoprimePart23 35 = 35 := by native_decide
+theorem sCoprime_35 : sCoprimePart23 35 = 35 := by decide
 
 /-! ## Euler factor seeds for the exact-order Dirichlet series
 
@@ -137,23 +137,23 @@ This is the key identity used in computing Euler factors. -/
 
 /-- Prime power totient seed: φ(4) = 4 - 2 = 2.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem totient_pow_2_2 : Nat.totient (2 ^ 2) = 2 ^ 2 - 2 ^ 1 := by native_decide
+theorem totient_pow_2_2 : Nat.totient (2 ^ 2) = 2 ^ 2 - 2 ^ 1 := by decide
 
 /-- Prime power totient seed: φ(8) = 8 - 4 = 4.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem totient_pow_2_3 : Nat.totient (2 ^ 3) = 2 ^ 3 - 2 ^ 2 := by native_decide
+theorem totient_pow_2_3 : Nat.totient (2 ^ 3) = 2 ^ 3 - 2 ^ 2 := by decide
 
 /-- Prime power totient seed: φ(9) = 9 - 3 = 6.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem totient_pow_3_2 : Nat.totient (3 ^ 2) = 3 ^ 2 - 3 ^ 1 := by native_decide
+theorem totient_pow_3_2 : Nat.totient (3 ^ 2) = 3 ^ 2 - 3 ^ 1 := by decide
 
 /-- Prime power totient seed: φ(25) = 25 - 5 = 20.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem totient_pow_5_2 : Nat.totient (5 ^ 2) = 5 ^ 2 - 5 ^ 1 := by native_decide
+theorem totient_pow_5_2 : Nat.totient (5 ^ 2) = 5 ^ 2 - 5 ^ 1 := by decide
 
 /-- Prime power totient seed: φ(27) = 27 - 9 = 18.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem totient_pow_3_3 : Nat.totient (3 ^ 3) = 3 ^ 3 - 3 ^ 2 := by native_decide
+theorem totient_pow_3_3 : Nat.totient (3 ^ 3) = 3 ^ 3 - 3 ^ 2 := by decide
 
 /-- Paper wrapper: Torsion exact-order ledger seeds.
     Euler totient values, S-coprime stripping for S={2,3},

@@ -55,8 +55,8 @@ def paper_window6_b3c3_visible_support_three_levi_planes : Prop :=
 theorem paper_window6_b3c3_visible_support_three_levi_planes_proof :
     paper_window6_b3c3_visible_support_three_levi_planes := by
   refine ⟨?_, ?_, ?_, ?_⟩
-  · native_decide
-  · native_decide
+  · decide
+  · decide
   · intro w hw
     simp [H12, H13, H23, b3VisibleSupport, c3VisibleSupport, phiB2_12, phiB2_13, phiB2_23,
       phiC2_12, phiC2_13, phiC2_23, zeroWeight] at hw ⊢

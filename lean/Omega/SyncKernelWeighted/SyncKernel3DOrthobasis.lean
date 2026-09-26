@@ -47,6 +47,6 @@ theorem paper_sync_kernel_3d_orthobasis :
       sync_kernel_3d_orthobasis_qform
         sync_kernel_3d_orthobasis_phi2
         sync_kernel_3d_orthobasis_phi2 = 2 / 9 := by
-  native_decide
+  decide
 
 end Omega.SyncKernelWeighted

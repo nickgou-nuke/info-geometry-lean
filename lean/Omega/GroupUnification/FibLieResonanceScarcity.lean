@@ -14,17 +14,17 @@ theorem paper_fib_lie_resonance_scarcity_su2_su3 (m : Nat) :
       apply Nat.fib_add_two_strictMono.injective
       calc
         Nat.fib (m + 2) = 3 := h3
-        _ = Nat.fib (2 + 2) := by native_decide
+        _ = Nat.fib (2 + 2) := by decide
     · right
       apply Nat.fib_add_two_strictMono.injective
       calc
         Nat.fib (m + 2) = 8 := h8
-        _ = Nat.fib (4 + 2) := by native_decide
+        _ = Nat.fib (4 + 2) := by decide
   · intro h
     rcases h with rfl | rfl
     · left
-      native_decide
+      decide
     · right
-      native_decide
+      decide
 
 end Omega.GroupUnification

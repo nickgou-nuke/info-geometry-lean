@@ -31,7 +31,7 @@ instance (x : Ambient) : Decidable (IsD4 x) := by
   infer_instance
 
 theorem zero_mem_D4 : IsD4 (0 : Ambient) := by
-  native_decide
+  decide
 
 theorem add_mem_D4 {x y : Ambient} (hx : IsD4 x) (hy : IsD4 y) :
     IsD4 (x + y) := by
@@ -138,7 +138,7 @@ def rootFinset : Finset Ambient :=
   (Finset.univ.image ternaryVector).filter (fun x => dot x x = 2 ∧ IsD4 x)
 
 theorem rootFinset_card : rootFinset.card = 24 := by
-  native_decide
+  decide
 
 theorem simpleRoot_norm (i : Fin 4) : dot (simpleRoot i) (simpleRoot i) = 2 := by
   fin_cases i <;>

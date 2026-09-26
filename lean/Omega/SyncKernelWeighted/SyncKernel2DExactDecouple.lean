@@ -41,6 +41,6 @@ theorem paper_sync_kernel_2d_exact_decouple :
       syncKernel2DPressureD13 = 0 ∧
       syncKernel2DPressureD21 < 0 ∧
       syncKernel2DPressureD22 < 0 := by
-  native_decide
+  decide
 
 end Omega.SyncKernelWeighted

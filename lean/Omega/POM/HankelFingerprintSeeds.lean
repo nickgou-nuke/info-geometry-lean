@@ -43,23 +43,23 @@ def signExponent (k : ℕ) : ℕ := (k - 1) * (3 * k - 4) / 2
 
 /-- Sign exponent seed: e(1) = 0.
     prop:pom-kcollision-hankel-fingerprint -/
-theorem signExponent_1 : signExponent 1 = 0 := by native_decide
+theorem signExponent_1 : signExponent 1 = 0 := by decide
 
 /-- Sign exponent seed: e(2) = 1.
     prop:pom-kcollision-hankel-fingerprint -/
-theorem signExponent_2 : signExponent 2 = 1 := by native_decide
+theorem signExponent_2 : signExponent 2 = 1 := by decide
 
 /-- Sign exponent seed: e(3) = 5.
     prop:pom-kcollision-hankel-fingerprint -/
-theorem signExponent_3 : signExponent 3 = 5 := by native_decide
+theorem signExponent_3 : signExponent 3 = 5 := by decide
 
 /-- Sign exponent seed: e(4) = 12.
     prop:pom-kcollision-hankel-fingerprint -/
-theorem signExponent_4 : signExponent 4 = 12 := by native_decide
+theorem signExponent_4 : signExponent 4 = 12 := by decide
 
 /-- Sign exponent seed: e(5) = 22.
     prop:pom-kcollision-hankel-fingerprint -/
-theorem signExponent_5 : signExponent 5 = 22 := by native_decide
+theorem signExponent_5 : signExponent 5 = 22 := by decide
 
 /-! ## Integer-level sign exponent identity
 
@@ -68,15 +68,15 @@ For k ≥ 2, verify that (k-1)(3k-4) is always even, so the division by 2 is exa
 /-- The sign exponent doubles to (k-1)(3k-4) for k ≥ 2. This is verified at integer level
     to confirm the Nat division by 2 is exact.
     prop:pom-kcollision-hankel-fingerprint -/
-theorem signExponent_double_2 : 2 * signExponent 2 = (2 - 1) * (3 * 2 - 4) := by native_decide
+theorem signExponent_double_2 : 2 * signExponent 2 = (2 - 1) * (3 * 2 - 4) := by decide
 
 /-- Sign exponent double check for k=3.
     prop:pom-kcollision-hankel-fingerprint -/
-theorem signExponent_double_3 : 2 * signExponent 3 = (3 - 1) * (3 * 3 - 4) := by native_decide
+theorem signExponent_double_3 : 2 * signExponent 3 = (3 - 1) * (3 * 3 - 4) := by decide
 
 /-- Sign exponent double check for k=4.
     prop:pom-kcollision-hankel-fingerprint -/
-theorem signExponent_double_4 : 2 * signExponent 4 = (4 - 1) * (3 * 4 - 4) := by native_decide
+theorem signExponent_double_4 : 2 * signExponent 4 = (4 - 1) * (3 * 4 - 4) := by decide
 
 /-! ## k^k power seeds (Vandermonde discriminant norm factor)
 

@@ -86,7 +86,7 @@ theorem paper_real_input_40_bartholdi_newton_puiseux_spectrum :
     realInput40BartholdiEscapeMultiplicity 0 +
         realInput40BartholdiEscapeMultiplicity 1 +
         realInput40BartholdiEscapeMultiplicity 2 = 13 := by
-  refine ⟨?_, ?_, rfl, rfl, rfl, rfl, rfl, rfl, rfl, by native_decide⟩
+  refine ⟨?_, ?_, rfl, rfl, rfl, rfl, rfl, rfl, rfl, by decide⟩
   · intro k
     rfl
   · intro x

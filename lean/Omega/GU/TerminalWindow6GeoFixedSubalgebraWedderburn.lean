@@ -70,7 +70,7 @@ theorem paper_terminal_window6_geo_fixed_subalgebra_wedderburn :
       window6GeoFixedConnectedAutPU2Factors = 12 ∧
       window6GeoFixedConnectedAutPU3Factors = 6 ∧
       window6GeoFixedConnectedAutPU4Factors = 2 := by
-  native_decide
+  decide
 
 set_option maxHeartbeats 400000 in
 /-- Paper-facing wrapper for the local symmetry-compression patterns forced by the audited
@@ -91,7 +91,7 @@ theorem paper_terminal_window6_geo_orbit_charge_symmetry_compression :
       window6GeoLocalFixedBlockSizes ⟨1, 1, 2⟩ = [2, 1] ∧
       window6GeoLocalSemisimpleBlockSizes ⟨1, 1, 2⟩ = [2] ∧
       window6GeoLocalCentralU1Rank ⟨1, 1, 2⟩ = 1 := by
-  native_decide
+  decide
 
 /-- Paper wrapper for the exact orbit-charge census attached to the geometric window-`6`
 stabilizer.

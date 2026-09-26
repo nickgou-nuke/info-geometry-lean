@@ -98,13 +98,13 @@ theorem near1_alpha_minpoly_splitting_d4_quadratic_factor_comparison :
     near1_alpha_minpoly_splitting_d4_quadratic_factor_comparison_certificate := by
   unfold near1_alpha_minpoly_splitting_d4_quadratic_factor_comparison_certificate
     near1_alpha_minpoly_splitting_d4_quadratic_factor_comparison_test
-  native_decide
+  decide
 
 theorem near1_alpha_minpoly_splitting_d4_dihedral_relations :
     near1_alpha_minpoly_splitting_d4_dihedral_certificate := by
   unfold near1_alpha_minpoly_splitting_d4_dihedral_certificate
     near1_alpha_minpoly_splitting_d4_rotation near1_alpha_minpoly_splitting_d4_reflection
-  native_decide
+  decide
 
 /-- Paper label: `thm:near1-alpha-minpoly-splitting-d4`. -/
 theorem paper_near1_alpha_minpoly_splitting_d4 :

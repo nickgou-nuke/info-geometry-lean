@@ -43,7 +43,7 @@ theorem splitHexagon_left (x y z : Grade) :
       splitCategoricalBraiding x y * splitCategoricalAssociator y x z * splitCategoricalBraiding x z := by
   unfold splitCategoricalAssociator splitCategoricalBraiding associatorCochain exchangeCochain
   revert x y z
-  native_decide
+  decide
 
 /-- 
 The right Hexagon identity: 
@@ -56,6 +56,6 @@ theorem splitHexagon_right (x y z : Grade) :
       splitCategoricalAssociator x y z * splitCategoricalBraiding y z * splitCategoricalBraiding x z := by
   unfold splitCategoricalAssociator splitCategoricalBraiding associatorCochain exchangeCochain
   revert x y z
-  native_decide
+  decide
 
 end InfoGeometry.Canonical.SplitOctonionCochainBraidedCoherenceBridge

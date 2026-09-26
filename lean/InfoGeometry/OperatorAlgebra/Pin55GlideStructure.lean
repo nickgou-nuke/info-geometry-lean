@@ -62,13 +62,13 @@ def concreteSpinorCore : Pin55SpinorCore where
   gamma_time := gamma_time
   h_space_sq := by
     unfold gamma_space upperRightId32 lowerLeftId32
-    native_decide
+    decide
   h_time_sq := by
     unfold gamma_time upperRightId32 lowerLeftId32
-    native_decide
+    decide
   h_anticomm := by
     unfold gamma_space gamma_time upperRightId32 lowerLeftId32
-    native_decide
+    decide
 
 /-- The concrete positive-norm spinor generator squares to `+1`. -/
 theorem gamma_space_sq : gamma_space * gamma_space = 1 :=
@@ -95,12 +95,12 @@ theorem spinor_glide_composition_anticommutes :
 theorem spinor_glide_right_sign :
     spinorGlideCore * gamma_space = -gamma_time := by
   unfold spinorGlideCore gamma_space gamma_time upperRightId32 lowerLeftId32
-  native_decide
+  decide
 
 /-- The two-reflection glide core squares to `+1` in the finite spinor core. -/
 theorem spinor_glide_core_sq : spinorGlideCore * spinorGlideCore = 1 := by
   unfold spinorGlideCore gamma_space gamma_time upperRightId32 lowerLeftId32
-  native_decide
+  decide
 
 /-- Finite kernel-checked packet for the concrete Pin(5,5) spinor glide core. -/
 theorem pin55_spinor_glide_packet :

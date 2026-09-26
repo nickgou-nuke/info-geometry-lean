@@ -36,7 +36,7 @@ private lemma mod2_iterate_forwardDiff_pow_two :
       rw [hleft, hright]
       rw [show m + (2 ^ t + 2 ^ t) = m + 2 ^ t + 2 ^ t by omega]
       ring_nf
-      have htwo : (2 : ZMod 2) = 0 := by native_decide
+      have htwo : (2 : ZMod 2) = 0 := by decide
       rw [htwo]
       simp
 
@@ -72,7 +72,7 @@ private theorem mod2_shadow_pure_periodic_after
     have hsum : tail (n + 2 ^ k_q) + tail n = 0 := by
       simpa [mod2_iterate_forwardDiff_pow_two] using congrFun hpowzero n
     have hself : tail n + tail n = 0 := by
-      have htwo : (2 : ZMod 2) = 0 := by native_decide
+      have htwo : (2 : ZMod 2) = 0 := by decide
       calc
         tail n + tail n = (2 : ZMod 2) * tail n := by rw [two_mul]
         _ = 0 * tail n := by rw [htwo]

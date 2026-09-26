@@ -51,7 +51,7 @@ theorem paper_fold_second_character_reflection_annihilation (m q : ℕ) (hm : 2 
     have hF1_ge2 : 2 ≤ Nat.fib (m + 1) := by
       calc
         Nat.fib (m + 1) ≥ Nat.fib 3 := Nat.fib_mono (by omega)
-        _ = 2 := by native_decide
+        _ = 2 := by decide
     have hcomm : Nat.fib (m + 1) + Nat.fib (m + 2) - 2 =
         Nat.fib (m + 2) + Nat.fib (m + 1) - 2 := by ac_rfl
     rw [hcomm, Nat.add_sub_assoc hF1_ge2]
@@ -143,7 +143,7 @@ theorem paper_fold_second_character_reflection_annihilation (m q : ℕ) (hm : 2 
     have hF1_ge2 : 2 ≤ Nat.fib (m + 1) := by
       calc
         Nat.fib (m + 1) ≥ Nat.fib 3 := Nat.fib_mono (by omega)
-        _ = 2 := by native_decide
+        _ = 2 := by decide
     have hk_ge1 : 1 ≤ k := by omega
     refine ⟨k - 1, ?_⟩
     omega

@@ -54,7 +54,7 @@ theorem paper_krylov_word_count_vs_rank (m : ℕ) (_hm : 1 ≤ m) :
     Seeds: F_3=2, F_4=3, F_5=5, F_6=8.
     thm:conclusion-disjointness-fixedm-krylov-lowrank -/
 theorem krylov_gram_fibonacci_seeds :
-    Nat.fib 3 = 2 ∧ Nat.fib 4 = 3 ∧ Nat.fib 5 = 5 ∧ Nat.fib 6 = 8 := by native_decide
+    Nat.fib 3 = 2 ∧ Nat.fib 4 = 3 ∧ Nat.fib 5 = 5 ∧ Nat.fib 6 = 8 := by decide
 
 /-- The Krylov subspace dimension is bounded by min(m, 2^q).
     For q=2, the ambient dimension is 2^2 = 4, so rank ≤ min(m, 4).
@@ -105,7 +105,7 @@ theorem fib_matrix_power_seeds :
     -- K^2 = [[2,1],[1,1]]: F_3=2, F_2=1
     (Nat.fib 3 = 2 ∧ Nat.fib 2 = 1) ∧
     -- K^3 = [[3,2],[2,1]]: F_4=3, F_3=2
-    (Nat.fib 4 = 3 ∧ Nat.fib 3 = 2) := by native_decide
+    (Nat.fib 4 = 3 ∧ Nat.fib 3 = 2) := by decide
 
 /-- Tensor power dimension: dim(K^⊗q) = 2^q.
     For q=2: 2²=4. The disjointness matrix is 4×4.

@@ -831,11 +831,11 @@ theorem exactWeightCount_one_eq (m : Nat) (hm : 1 ≤ m) :
   | zero => omega
   | succ k ih =>
     cases k with
-    | zero => native_decide
+    | zero => decide
     | succ j =>
       rw [exactWeightCount_succ_of_lt (j + 1) 1 (by
         calc 1 < 2 := by omega
-          _ = Nat.fib 3 := by native_decide
+          _ = Nat.fib 3 := by decide
           _ ≤ Nat.fib (j + 1 + 2) := Nat.fib_mono (by omega))]
       exact ih (by omega)
 

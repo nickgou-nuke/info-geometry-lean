@@ -44,7 +44,7 @@ def boundaryOrbitDouble : Finset Window6BoundaryCharacter := {χ110, χ101, χ01
 theorem boundaryCharacter_univ :
     (Finset.univ : Finset Window6BoundaryCharacter) =
       {χ000, χ111, χ100, χ010, χ001, χ110, χ101, χ011} := by
-  native_decide
+  decide
 
 /-- Paper-facing orbit stratification of the window-6 boundary character group into
 `1 + 1 + 3 + 3` under the coordinate-rotation action of `C₃`.
@@ -57,7 +57,7 @@ theorem paper_conclusion_window6_boundary_superselection_c3_orbit_stratification
     (∀ {α : Type*} [AddCommMonoid α] (M : Window6BoundaryCharacter → α),
       (∑ χ, M χ) =
         M χ000 + M χ111 + boundaryOrbitSingle.sum M + boundaryOrbitDouble.sum M) := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide, ?_⟩
+  refine ⟨by decide, by decide, by decide, by decide, ?_⟩
   intro α _ M
   rw [boundaryCharacter_univ, boundaryOrbitSingle, boundaryOrbitDouble]
   repeat rw [Finset.sum_insert]

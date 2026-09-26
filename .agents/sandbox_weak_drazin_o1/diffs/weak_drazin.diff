@@ -1,0 +1,232 @@
+--- lean/InfoGeometry/Canonical/CampbellMeyerWeakDrazin.lean	2026-09-20 18:59:42.707859459 +0300
++++ .agents/sandbox_weak_drazin_o1/lean/InfoGeometry/Canonical/CampbellMeyerWeakDrazin.lean	2026-09-22 09:07:12.351037670 +0300
+@@ -83,7 +83,9 @@
+ /-- The nilpotent lane is square-zero. -/
+ theorem weakNilpotentLane_sq_eq_zero :
+     weakNilpotentLane ^ 2 = 0 := by
+-  native_decide
++  rw [sq]
++  ext i j
++  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_three, weakNilpotentLane]
+ 
+ /-- The packet index readout: `A²` is regular while the nilpotent lane has vanished. -/
+ theorem weakA_sq_readout :
+@@ -91,12 +93,26 @@
+       !![4, 0, 0;
+          0, 0, 0;
+          0, 0, 0] := by
+-  native_decide
++  rw [sq]
++  ext i j
++  fin_cases i <;> fin_cases j <;> (simp [Matrix.mul_apply, Fin.sum_univ_three, weakA]; try norm_num)
++
++lemma weakA_pow_three :
++    weakA ^ 3 =
++      !![8, 0, 0;
++         0, 0, 0;
++         0, 0, 0] := by
++  change weakA ^ 2 * weakA = _
++  rw [weakA_sq_readout]
++  ext i j
++  fin_cases i <;> fin_cases j <;> (simp [Matrix.mul_apply, Fin.sum_univ_three, weakA]; try norm_num)
+ 
+ /-- Characteristic/minimal-polynomial readout used in the paper's polynomial formula. -/
+ theorem weakA_cubic_eq_two_smul_square :
+     weakA ^ 3 = (2 : ℚ) • weakA ^ 2 := by
+-  native_decide
++  rw [weakA_pow_three, weakA_sq_readout]
++  ext i j
++  fin_cases i <;> fin_cases j <;> (simp; try norm_num)
+ 
+ /-! ## Drazin and weak inverses -/
+ 
+@@ -110,9 +126,13 @@
+ theorem weakDrazinInverse_isDrazin :
+     Drazin.IsDrazinInverse weakA weakDrazinInverse 2 := by
+   refine Drazin.IsDrazinInverse.mk ?_ ?_ ?_
+-  · native_decide
+-  · native_decide
+-  · native_decide
++  · ext i j
++    fin_cases i <;> fin_cases j <;> (simp [Matrix.mul_apply, Fin.sum_univ_three, weakA, weakDrazinInverse]; try norm_num)
++  · ext i j
++    fin_cases i <;> fin_cases j <;> (simp [Matrix.mul_apply, Fin.sum_univ_three, weakA, weakDrazinInverse]; try norm_num)
++  · rw [weakA_pow_three, weakA_sq_readout]
++    ext i j
++    fin_cases i <;> fin_cases j <;> (simp [Matrix.mul_apply, Fin.sum_univ_three, weakDrazinInverse]; try norm_num)
+ 
+ /-- The Drazin witness is therefore a weak Drazin inverse. -/
+ theorem weakDrazinInverse_isWeak :
+@@ -129,17 +149,24 @@
+ theorem weakWildInverse_isWeak :
+     IsWeakDrazin weakA weakWildInverse 2 := by
+   unfold IsWeakDrazin
+-  native_decide
++  rw [weakA_pow_three, weakA_sq_readout]
++  ext i j
++  fin_cases i <;> fin_cases j <;> (simp [Matrix.mul_apply, Fin.sum_univ_three, weakWildInverse]; try norm_num)
+ 
+ /-- The weak inverse is not unique. -/
+ theorem weakWildInverse_ne_Drazin :
+     weakWildInverse ≠ weakDrazinInverse := by
+-  native_decide
++  intro h
++  have h0 := congr_fun (congr_fun h 0) 1
++  revert h0
++  decide
+ 
+ /-- The wild weak inverse is not a commuting weak inverse. -/
+ theorem weakWildInverse_not_commuting :
+     weakA * weakWildInverse ≠ weakWildInverse * weakA := by
+-  native_decide
++  intro h
++  have h0 := congr_fun (congr_fun h 0) 1
++  simp [Matrix.mul_apply, Fin.sum_univ_three, weakA, weakWildInverse] at h0
+ 
+ /-! ## Polynomial/Souriau--Frame weak inverse -/
+ 
+@@ -155,26 +182,30 @@
+ theorem weakPolynomialInverse_isWeak :
+     IsWeakDrazin weakA weakPolynomialInverse 2 := by
+   unfold IsWeakDrazin
+-  native_decide
++  rw [weakA_pow_three, weakA_sq_readout]
++  ext i j
++  fin_cases i <;> fin_cases j <;> (simp [Matrix.mul_apply, Fin.sum_univ_three, weakPolynomialInverse]; try norm_num)
+ 
+ /-- The polynomial/Souriau--Frame weak inverse commutes with `A`. -/
+ theorem weakPolynomialInverse_isCommuting :
+     IsCommutingWeakDrazin weakA weakPolynomialInverse 2 := by
+   constructor
+   · exact weakPolynomialInverse_isWeak
+-  · native_decide
++  · simp [weakPolynomialInverse]
+ 
+ /-- The polynomial/Souriau--Frame weak inverse is invertible. -/
+ def weakPolynomialInverseUnit : (Mat3 ℚ)ˣ where
+   val := weakPolynomialInverse
+   inv := (2 : ℚ) • (1 : Mat3 ℚ)
+-  val_inv := by native_decide
+-  inv_val := by native_decide
++  val_inv := by simp [weakPolynomialInverse, smul_smul]
++  inv_val := by simp [weakPolynomialInverse, smul_smul]
+ 
+ /-- The polynomial/Souriau--Frame weak inverse is not the Drazin inverse. -/
+ theorem weakPolynomialInverse_ne_Drazin :
+     weakPolynomialInverse ≠ weakDrazinInverse := by
+-  native_decide
++  intro h
++  have h0 := congr_fun (congr_fun h 1) 1
++  simp [weakPolynomialInverse, weakDrazinInverse] at h0
+ 
+ /-- Souriau--Frame coefficient readout: `p₁ = trace(A) = 2`. -/
+ def weakSFp1 : ℚ :=
+@@ -183,7 +214,8 @@
+ /-- Souriau--Frame `B₀ = I` gives `(1/p₁) B₀ = 1/2 I`. -/
+ theorem weakSouriauFrame_formula_eq_polynomial :
+     weakSFp1⁻¹ • (1 : Mat3 ℚ) = weakPolynomialInverse := by
+-  native_decide
++  ext i j
++  fin_cases i <;> fin_cases j <;> simp [weakSFp1, weakPolynomialInverse, weakA, Matrix.trace, Matrix.diag, Fin.sum_univ_three]
+ 
+ /-! ## Projective and commuting concrete readouts -/
+ 
+@@ -197,7 +229,9 @@
+ theorem weakProjectiveInverse_isWeak :
+     IsWeakDrazin weakA weakProjectiveInverse 2 := by
+   unfold IsWeakDrazin
+-  native_decide
++  rw [weakA_pow_three, weakA_sq_readout]
++  ext i j
++  fin_cases i <;> fin_cases j <;> (simp [Matrix.mul_apply, Fin.sum_univ_three, weakProjectiveInverse]; try norm_num)
+ 
+ /-- The `B A` readout is an idempotent with the same regular range lane. -/
+ theorem weakProjectiveInverse_BA_readout :
+@@ -205,13 +239,16 @@
+       !![1, 0, 2;
+          0, 0, 0;
+          0, 0, 0] := by
+-  native_decide
++  ext i j
++  fin_cases i <;> fin_cases j <;> (simp [Matrix.mul_apply, Fin.sum_univ_three, weakProjectiveInverse, weakA]; try norm_num)
+ 
+ /-- The projective-shaped `B A` readout is idempotent. -/
+ theorem weakProjectiveInverse_BA_idempotent :
+     (weakProjectiveInverse * weakA) * (weakProjectiveInverse * weakA) =
+       weakProjectiveInverse * weakA := by
+-  native_decide
++  rw [weakProjectiveInverse_BA_readout]
++  ext i j
++  fin_cases i <;> fin_cases j <;> (simp [Matrix.mul_apply, Fin.sum_univ_three]; try norm_num)
+ 
+ /-- A commuting weak inverse with nonzero nilpotent-lane polynomial data. -/
+ def weakCommutingInverse : Mat3 ℚ :=
+@@ -224,8 +261,11 @@
+     IsCommutingWeakDrazin weakA weakCommutingInverse 2 := by
+   constructor
+   · unfold IsWeakDrazin
+-    native_decide
+-  · native_decide
++    rw [weakA_pow_three, weakA_sq_readout]
++    ext i j
++    fin_cases i <;> fin_cases j <;> (simp [Matrix.mul_apply, Fin.sum_univ_three, weakCommutingInverse]; try norm_num)
++  · ext i j
++    fin_cases i <;> fin_cases j <;> (simp [Matrix.mul_apply, Fin.sum_univ_three, weakA, weakCommutingInverse]; try norm_num)
+ 
+ /-! ## Strict finite `GL₃(Q)` conjugation readout -/
+ 
+@@ -238,7 +278,8 @@
+ /-- The permutation representative is its own inverse. -/
+ theorem weakPermutation_sq_eq_one :
+     weakPermutation * weakPermutation = 1 := by
+-  native_decide
++  ext i j
++  fin_cases i <;> fin_cases j <;> (simp [Matrix.mul_apply, Fin.sum_univ_three, weakPermutation]; try norm_num)
+ 
+ /-- The permutation as a strict unit of the matrix algebra. -/
+ def weakPermutationUnit : (Mat3 ℚ)ˣ where
+@@ -251,13 +292,41 @@
+ def unitConj (u : (Mat3 ℚ)ˣ) (A : Mat3 ℚ) : Mat3 ℚ :=
+   (u : Mat3 ℚ) * A * ((u⁻¹ : (Mat3 ℚ)ˣ) : Mat3 ℚ)
+ 
++lemma unitConj_mul (u : (Mat3 ℚ)ˣ) (A B : Mat3 ℚ) :
++    unitConj u A * unitConj u B = unitConj u (A * B) := by
++  unfold unitConj
++  calc
++    (u : Mat3 ℚ) * A * ((u⁻¹ : (Mat3 ℚ)ˣ) : Mat3 ℚ) * ((u : Mat3 ℚ) * B * ((u⁻¹ : (Mat3 ℚ)ˣ) : Mat3 ℚ))
++      = (u : Mat3 ℚ) * A * (((u⁻¹ : (Mat3 ℚ)ˣ) : Mat3 ℚ) * (u : Mat3 ℚ)) * B * ((u⁻¹ : (Mat3 ℚ)ˣ) : Mat3 ℚ) := by
++      simp only [mul_assoc]
++    _ = (u : Mat3 ℚ) * (A * B) * ((u⁻¹ : (Mat3 ℚ)ˣ) : Mat3 ℚ) := by
++      simp only [Units.inv_mul, mul_one, mul_assoc]
++
++lemma unitConj_pow (u : (Mat3 ℚ)ˣ) (A : Mat3 ℚ) (n : ℕ) :
++    (unitConj u A) ^ n = unitConj u (A ^ n) := by
++  induction n with
++  | zero =>
++    unfold unitConj
++    simp only [pow_zero]
++    calc
++      (1 : Mat3 ℚ) = (u : Mat3 ℚ) * ((u⁻¹ : (Mat3 ℚ)ˣ) : Mat3 ℚ) := (Units.mul_inv (u : (Mat3 ℚ)ˣ)).symm
++      _ = (u : Mat3 ℚ) * 1 * ((u⁻¹ : (Mat3 ℚ)ˣ) : Mat3 ℚ) := by simp only [mul_one]
++  | succ n ih =>
++    rw [pow_succ, pow_succ, ih, unitConj_mul]
++
++/-- The weak Drazin relation is preserved by invertible unit conjugation. -/
++theorem unitConj_isWeakDrazin (u : (Mat3 ℚ)ˣ) (A B : Mat3 ℚ) (k : ℕ)
++    (h : IsWeakDrazin A B k) :
++    IsWeakDrazin (unitConj u A) (unitConj u B) k := by
++  unfold IsWeakDrazin at h ⊢
++  rw [unitConj_pow, unitConj_pow, unitConj_mul, h]
++
+ /-- The weak Drazin relation is preserved by the concrete `GL₃(Q)` conjugation. -/
+ theorem weak_conjugated_polynomial_inverse_isWeak :
+     IsWeakDrazin
+       (unitConj weakPermutationUnit weakA)
+       (unitConj weakPermutationUnit weakPolynomialInverse)
+-      2 := by
+-  unfold IsWeakDrazin
+-  native_decide
++      2 :=
++  unitConj_isWeakDrazin weakPermutationUnit weakA weakPolynomialInverse 2 weakPolynomialInverse_isWeak
+ 
+ end InfoGeometry.Canonical.CampbellMeyerWeakDrazin

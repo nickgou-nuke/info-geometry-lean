@@ -132,7 +132,7 @@ theorem blockReservoirEncode_injective :
     blockReservoirHammingWeight
         (blockReservoirListXor (blockReservoirEncodeBlock a) (blockReservoirEncodeBlock b)) =
       if a = b then 0 else 3 := by
-  cases a <;> cases b <;> native_decide
+  cases a <;> cases b <;> decide
 
 theorem blockReservoirHammingWeight_xor_encode :
     ∀ {w w' : List Bool}, w.length = w'.length →

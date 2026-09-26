@@ -69,11 +69,11 @@ theorem paper_conclusion_window6_boundary_unique_fourstate_equivariant_coarsegra
   unfold conclusion_window6_boundary_unique_fourstate_equivariant_coarsegraining_statement
   refine ⟨paper_conclusion_window6_boundary_c3_diagonal_irreducible_splitting, ?_, ?_, ?_, ?_⟩
   · unfold conclusion_window6_boundary_unique_fourstate_equivariant_coarsegraining_fourstate
-    native_decide
+    decide
   · unfold conclusion_window6_boundary_unique_fourstate_equivariant_coarsegraining_quotient_predicate
-    native_decide
+    decide
   · unfold conclusion_window6_boundary_unique_fourstate_equivariant_coarsegraining_equivariant
-    native_decide
+    decide
   · unfold
       conclusion_window6_boundary_unique_fourstate_equivariant_coarsegraining_isomorphism_predicate
     intro s
@@ -82,7 +82,7 @@ theorem paper_conclusion_window6_boundary_unique_fourstate_equivariant_coarsegra
     · have h :=
         (show conclusion_window6_boundary_unique_fourstate_equivariant_coarsegraining_equivariant by
           unfold conclusion_window6_boundary_unique_fourstate_equivariant_coarsegraining_equivariant
-          native_decide)
+          decide)
       simpa [conclusion_window6_boundary_unique_fourstate_equivariant_coarsegraining_quotient] using
         h ![s.1, s.2, 0]
 

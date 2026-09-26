@@ -1,0 +1,10 @@
+default_permissions = "org-workspace"
+
+[permissions.org-workspace]
+extends = ":workspace"
+
+[permissions.org-workspace.filesystem.":workspace_roots"]
+"." = "write"
+".git" = "write"
+".codex" = "read"
+".agents" = "read"

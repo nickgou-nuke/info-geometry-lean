@@ -26,7 +26,7 @@ theorem su5_count_closure_fib :
     cor:fold6-tail-offsets-gut-top-terms -/
 theorem fold6_tail_offsets :
     Nat.fib 8 = 21 ∧ Nat.fib 9 = 34 ∧ Nat.fib 10 = 55 := by
-  refine ⟨by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide⟩
 
 /-- GUT top-term Fibonacci alignment: SU(5)/SO(10)/E_6.
     cor:fold6-tail-offsets-gut-top-terms -/
@@ -34,7 +34,7 @@ theorem gut_top_fibonacci_terms :
     (24 = Nat.fib 8 + Nat.fib 4) ∧
     (45 = Nat.fib 9 + Nat.fib 6 + Nat.fib 4) ∧
     (78 = Nat.fib 10 + Nat.fib 8 + Nat.fib 3) := by
-  refine ⟨by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide⟩
 
 /-- Tail offsets = |X_6|, |X_7|, |X_8|.
     cor:fold6-tail-offsets-gut-top-terms -/
@@ -68,7 +68,7 @@ theorem paper_su5_count_closure :
     Nat.fib 4 = Fintype.card (X 2) ∧
     Nat.factorial 4 = 24 := by
   refine ⟨by rw [X.card_X_six, X.card_X_two], su5_count_closure_fib.1,
-    su5_count_closure_fib.2.1, by native_decide⟩
+    su5_count_closure_fib.2.1, by decide⟩
 
 /-- Extended Zeckendorf count certificates: |X_m| = F(m+2) for m=9..12.
     subsec:bdry-tower-zeck-gut-part1 -/
@@ -78,10 +78,10 @@ theorem paper_zeckendorf_count_small_extended :
     Fintype.card (X 11) = Nat.fib 13 ∧
     Fintype.card (X 12) = Nat.fib 14 := by
   refine ⟨?_, ?_, ?_, ?_⟩
-  · rw [X.card_X_nine]; native_decide
-  · rw [X.card_X_ten]; native_decide
-  · rw [X.card_X_eleven]; native_decide
-  · rw [X.card_X_twelve]; native_decide
+  · rw [X.card_X_nine]; decide
+  · rw [X.card_X_ten]; decide
+  · rw [X.card_X_eleven]; decide
+  · rw [X.card_X_twelve]; decide
 
 /-- The unique minimal even Zeckendorf-valid triple with boundary sum 12.
     cor:sm-minimal-triple-selection-law -/
@@ -94,7 +94,7 @@ theorem sm_minimal_triple_selection_law :
       m₂ - m₁ ≥ 2 → m₃ - m₂ ≥ 2 →
       (m₁, m₂, m₃) = (4, 6, 8)) := by
   constructor
-  · native_decide
+  · decide
   · intro m₁ m₂ m₃ hm₁ he₁ hm₂ he₂ hm₃ he₃ h12 h23 hsum hgap12 hgap23
     obtain ⟨k₁, rfl⟩ := he₁; obtain ⟨k₂, rfl⟩ := he₂; obtain ⟨k₃, rfl⟩ := he₃
     -- Normalize: 2*k = k+k in hsum
@@ -105,7 +105,7 @@ theorem sm_minimal_triple_selection_law :
       by_contra h; push_neg at h
       have hfib_ge : Nat.fib (2 * k₃ - 2) ≥ 21 := by
         calc Nat.fib (2 * k₃ - 2) ≥ Nat.fib 8 := Nat.fib_mono (by omega)
-          _ = 21 := by native_decide
+          _ = 21 := by decide
       linarith [Nat.zero_le (Nat.fib (2 * k₁ - 2)),
                 Nat.zero_le (Nat.fib (2 * k₂ - 2))]
     have hk₁ : k₁ = 1 ∨ k₁ = 2 := by omega
@@ -135,8 +135,8 @@ theorem paper_gu_sm_signature_union :
     1 + 3 + 8 = 12 ∧
     12 = Nat.fib 6 + Nat.fib 4 + Nat.fib 2 ∧
     (6 - 4 ≥ 2) ∧ (4 - 2 ≥ 2) ∧ (6 - 2 ≥ 2) := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
-          by omega, by native_decide, by omega, by omega, by omega⟩
+  refine ⟨by decide, by decide, by decide,
+          by omega, by decide, by omega, by omega, by omega⟩
 
 /-- GUT dimension Zeckendorf audit.
     subsec:bdry-tower-zeck-gut-part1 -/
@@ -145,7 +145,7 @@ theorem paper_gu_gut_dimension_zeckendorf :
     45 = Nat.fib 9 + Nat.fib 6 + Nat.fib 4 ∧
     78 = Nat.fib 10 + Nat.fib 8 + Nat.fib 3 ∧
     (8 - 4 ≥ 2) ∧ (9 - 6 ≥ 2) ∧ (6 - 4 ≥ 2) ∧ (10 - 8 ≥ 2) ∧ (8 - 3 ≥ 2) := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
+  refine ⟨by decide, by decide, by decide,
           by omega, by omega, by omega, by omega, by omega⟩
 
 /-- E7 and E8 dimension Zeckendorf decomposition.
@@ -155,22 +155,22 @@ theorem paper_gu_e7_e8_zeckendorf :
     (11 - 9 ≥ 2) ∧ (9 - 6 ≥ 2) ∧ (6 - 3 ≥ 2) ∧
     248 = Nat.fib 13 + Nat.fib 7 + Nat.fib 3 ∧
     (13 - 7 ≥ 2) ∧ (7 - 3 ≥ 2) := by
-  refine ⟨by native_decide, by omega, by omega, by omega,
-          by native_decide, by omega, by omega⟩
+  refine ⟨by decide, by omega, by omega, by omega,
+          by decide, by omega, by omega⟩
 
 /-- Extended Lie dimension small-value Zeckendorf witnesses.
     cor:fold6-tail-offsets-gut-top-terms -/
 theorem extended_lie_fibonacci_small :
     (35 = Nat.fib 9 + Nat.fib 2) ∧
     (28 = Nat.fib 8 + Nat.fib 5 + Nat.fib 3) := by
-  refine ⟨by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide⟩
 
 /-- Extended Lie dimension E_7 / E_8 Zeckendorf witnesses.
     cor:fold6-tail-offsets-gut-top-terms -/
 theorem extended_lie_fibonacci_E7_E8 :
     (133 = Nat.fib 11 + Nat.fib 9 + Nat.fib 6 + Nat.fib 3) ∧
     (248 = Nat.fib 13 + Nat.fib 7 + Nat.fib 3) := by
-  refine ⟨by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide⟩
 
 /-- Full Lie dimension Fibonacci decomposition table: SU(5), SU(6), SO(8), SO(10),
     E_6, E_7, E_8, with explicit Fibonacci base constants.
@@ -185,7 +185,7 @@ theorem paper_extended_lie_fibonacci_full_package :
     (248 = Nat.fib 13 + Nat.fib 7 + Nat.fib 3) ∧
     (Nat.fib 8 = 21 ∧ Nat.fib 9 = 34 ∧ Nat.fib 10 = 55 ∧
      Nat.fib 11 = 89 ∧ Nat.fib 13 = 233) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
 
 /-- Paper-facing wrapper for the window-6 tail three-branch alignment: the three admissible
 tail scales are exactly `{21, 34, 55} = {F₈, F₉, F₁₀}`, and these are the top Zeckendorf

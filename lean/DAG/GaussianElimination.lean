@@ -10,7 +10,7 @@ open DAG.MatrixGaussJordan
 # Gaussian Elimination — Rank Correctness via PivotFun chain
 
 Chain of small lemmas, each fully proved:
-1. `pivot_step` — one column elimination (via `native_decide`)
+1. `pivot_step` — one column elimination (via `decide`)
 2. `column_zero_or_pivot` — after pivot_step, column j has a 1 at pivot row, 0 elsewhere
 3. `pivot_fun_preserved_by_step` — PivotFun preserved by one column step
 4. `columns_induction` — processing all columns gives PivotFun with full pivot set
@@ -1228,13 +1228,13 @@ lemma columns_induction_produces_pivot_fun (A : Matrix (Fin m) (Fin n) ℚ) :
         simp only [Matrix.add_apply, Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply,
           Matrix.zero_apply, Finset.sum_apply, smul_eq_mul, Pi.add_apply, Pi.smul_apply,
           Pi.one_apply, Pi.zero_apply, FunctionalGaussJordan.scaleRowMat, stdBasisMatrix]
-        native_decide
+        decide
       have h_mul' : E2inv * E2 = 1 := by
         ext p q; dsimp [E2, E2inv, a, A1, E1, s]
         simp only [Matrix.add_apply, Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply,
           Matrix.zero_apply, Finset.sum_apply, smul_eq_mul, Pi.add_apply, Pi.smul_apply,
           Pi.one_apply, Pi.zero_apply, FunctionalGaussJordan.scaleRowMat, stdBasisMatrix]
-        native_decide
+        decide
       have hE1 : IsUnit E1 := FunctionalGaussJordan.scaleRowMat_isUnit i' (inv_ne_zero hs)
       exact ⟨⟨E2, E2inv, h_mul, h_mul'⟩, rfl⟩ |>.mul hE1
     have h_one : (Ej * M) i' k' = 1 := by

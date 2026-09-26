@@ -123,14 +123,14 @@ def neg (r : Root) : Root where
 /-- Every root has squared Euclidean length two in the integral root lattice. -/
 theorem multiDegree_sq_sum (r : Root) :
     ∑ a : Axis, (r.multiDegree a) ^ 2 = 2 := by
-  fin_cases r <;> native_decide
+  fin_cases r <;> decide
 
 /-- The contact collapse takes precisely the five degrees `-2,-1,0,1,2`. -/
 theorem contactDegree_cases (r : Root) :
     r.contactDegree = -2 ∨ r.contactDegree = -1 ∨
       r.contactDegree = 0 ∨ r.contactDegree = 1 ∨
         r.contactDegree = 2 := by
-  fin_cases r <;> native_decide
+  fin_cases r <;> decide
 
 end Root
 
@@ -143,52 +143,52 @@ def contactGradeDimension (k : ℤ) : ℕ :=
   (rootsAt k).card + if k = 0 then 5 else 0
 
 @[simp] theorem axisPair_card : Fintype.card AxisPair = 10 := by
-  native_decide
+  decide
 
 @[simp] theorem root_card : Fintype.card Root = 40 := by
-  native_decide
+  decide
 
 @[simp] theorem rootsAt_neg_two_card : (rootsAt (-2)).card = 1 := by
-  native_decide
+  decide
 
 @[simp] theorem rootsAt_neg_one_card : (rootsAt (-1)).card = 12 := by
-  native_decide
+  decide
 
 @[simp] theorem rootsAt_zero_card : (rootsAt 0).card = 14 := by
-  native_decide
+  decide
 
 @[simp] theorem rootsAt_one_card : (rootsAt 1).card = 12 := by
-  native_decide
+  decide
 
 @[simp] theorem rootsAt_two_card : (rootsAt 2).card = 1 := by
-  native_decide
+  decide
 
 @[simp] theorem contactGradeDimension_neg_two :
     contactGradeDimension (-2) = 1 := by
-  native_decide
+  decide
 
 @[simp] theorem contactGradeDimension_neg_one :
     contactGradeDimension (-1) = 12 := by
-  native_decide
+  decide
 
 @[simp] theorem contactGradeDimension_zero :
     contactGradeDimension 0 = 19 := by
-  native_decide
+  decide
 
 @[simp] theorem contactGradeDimension_one :
     contactGradeDimension 1 = 12 := by
-  native_decide
+  decide
 
 @[simp] theorem contactGradeDimension_two :
     contactGradeDimension 2 = 1 := by
-  native_decide
+  decide
 
 /-- Dimension check for the split orthogonal algebra `so(5,5)`. -/
 theorem contact_five_grade_total_dimension :
     contactGradeDimension (-2) + contactGradeDimension (-1) +
       contactGradeDimension 0 + contactGradeDimension 1 +
         contactGradeDimension 2 = 45 := by
-  native_decide
+  decide
 
 /-- The two extreme grades are exchanged by root negation. -/
 theorem neg_bijection_rootsAt (k : ℤ) :

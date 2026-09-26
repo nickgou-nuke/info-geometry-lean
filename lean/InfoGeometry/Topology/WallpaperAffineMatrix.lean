@@ -20,24 +20,24 @@ def Gx : Affine3 := !![1, 0, (1 / 2 : ℚ); 0, -1, 0; 0, 0, 1]
 def GxInv : Affine3 := !![1, 0, (-1 / 2 : ℚ); 0, -1, 0; 0, 0, 1]
 
 theorem p2_square : R2 * R2 = I3 := by
-  native_decide
+  decide
 
 theorem p2_conjugation : R2 * Tx * R2 = TxInv := by
-  native_decide
+  decide
 
 theorem pm_square : Mx * Mx = I3 := by
-  native_decide
+  decide
 
 theorem pm_conjugation : Mx * Ty * Mx = TyInv := by
-  native_decide
+  decide
 
 theorem pg_square : Gx * Gx = Tx := by
-  native_decide
+  decide
 
 theorem pg_inverse : Gx * GxInv = I3 := by
-  native_decide
+  decide
 
 theorem pg_conjugation : Gx * Ty * GxInv = TyInv := by
-  native_decide
+  decide
 
 end InfoGeometry.Topology

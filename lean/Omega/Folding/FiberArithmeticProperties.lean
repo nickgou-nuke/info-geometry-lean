@@ -347,11 +347,11 @@ theorem card_X_twelve : Fintype.card (X 12) = 377 := by
   rw [X.card_eq_fib]; rfl
 
 /-- F_12 = 233 is prime. -/
-theorem F12_is_prime : Nat.Prime (Nat.fib 13) := by native_decide
+theorem F12_is_prime : Nat.Prime (Nat.fib 13) := by decide
 
 /-- |X_13| = 610. -/
 theorem card_X_thirteen : Fintype.card (X 13) = 610 := by
-  rw [X.card_eq_fib]; native_decide
+  rw [X.card_eq_fib]; decide
 
 /-- The carry element value (named variant). -/
 theorem carryElement_value :
@@ -514,7 +514,7 @@ theorem paper_fold_order_independent :
     prop:pom-truncation-not-commute -/
 theorem paper_truncation_not_commute :
     ∃ (w : Word 3), Fold (truncate w) ≠ X.restrict (Fold w) := by
-  native_decide
+  decide
 
 end X
 
@@ -972,14 +972,14 @@ theorem paper_ea_totient_fib_extended :
     Nat.totient (Nat.fib 10) = 40 ∧
     Nat.totient (Nat.fib 11) = 88 ∧
     Nat.totient (Nat.fib 12) = 48 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> decide
 
 /-- EA unit group audit: totient values and factorizations.
     thm:mul-definitional -/
 theorem paper_ea_unit_group_audit :
     Nat.totient 21 = 12 ∧ Nat.totient 34 = 16 ∧ Nat.totient 55 = 40 ∧
     21 = 3 * 7 ∧ 34 = 2 * 17 ∧ 55 = 5 * 11 := by
-  refine ⟨?_, ?_, ?_, by omega, by omega, by omega⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, by omega, by omega, by omega⟩ <;> decide
 
 /-- EA ring characteristic for small m: Fibonacci values and 89 prime.
     thm:monoid-quotient-is-N -/
@@ -987,7 +987,7 @@ theorem paper_ea_ring_char_small :
     Nat.fib 11 = 89 ∧ Nat.Prime 89 ∧
     Nat.fib 12 = 144 ∧ 144 = 2 ^ 4 * 3 ^ 2 ∧
     Nat.fib 13 = 233 ∧ Nat.Prime 233 := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
-          by omega, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+          by omega, by decide, by decide⟩
 
 end Omega

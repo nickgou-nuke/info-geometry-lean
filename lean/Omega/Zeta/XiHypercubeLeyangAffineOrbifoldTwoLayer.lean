@@ -40,19 +40,19 @@ lemma xi_singleton0_transforms (w : Word 2) :
     walshChar xiSingleton0 (xiAffineSwapInvolution w) = -walshChar xiSingleton1 w := by
   rcases word2_cases w with ⟨b0, b1, rfl⟩
   cases b0 <;> cases b1 <;>
-  native_decide
+  decide
 
 lemma xi_singleton1_transforms (w : Word 2) :
     walshChar xiSingleton1 (xiAffineSwapInvolution w) = -walshChar xiSingleton0 w := by
   rcases word2_cases w with ⟨b0, b1, rfl⟩
   cases b0 <;> cases b1 <;>
-  native_decide
+  decide
 
 lemma xi_pair_transforms (w : Word 2) :
     walshChar xiPair (xiAffineSwapInvolution w) = walshChar xiPair w := by
   rcases word2_cases w with ⟨b0, b1, rfl⟩
   cases b0 <;> cases b1 <;>
-  native_decide
+  decide
 
 lemma xiWalshBias_singleton_antisymmetry (f : Word 2 → ℤ)
     (hf : ∀ y, f (xiAffineSwapInvolution y) = f y) :
@@ -93,17 +93,17 @@ lemma xi_character_difference_factorization (x : Word 2) :
       -(1 - walshChar xiPair x) * walshChar xiSingleton1 x := by
   rcases word2_cases x with ⟨b0, b1, rfl⟩
   cases b0 <;> cases b1 <;>
-  native_decide
+  decide
 
 lemma xi_pair_char_of_eq (x : Word 2) (h : x xiCoord0 = x xiCoord1) :
     walshChar xiPair x = 1 := by
   rcases word2_cases x with ⟨b0, b1, rfl⟩
-  cases b0 <;> cases b1 <;> simp [xiCoord0, xiCoord1] at h ⊢ <;> native_decide
+  cases b0 <;> cases b1 <;> simp [xiCoord0, xiCoord1] at h ⊢ <;> decide
 
 lemma xi_pair_char_of_ne (x : Word 2) (h : x xiCoord0 ≠ x xiCoord1) :
     walshChar xiPair x = -1 := by
   rcases word2_cases x with ⟨b0, b1, rfl⟩
-  cases b0 <;> cases b1 <;> simp [xiCoord0, xiCoord1] at h ⊢ <;> native_decide
+  cases b0 <;> cases b1 <;> simp [xiCoord0, xiCoord1] at h ⊢ <;> decide
 
 /-- Concrete two-layer decomposition on the two-cube under the affine involution.
 This is the `k = 2` Lee-Yang/Walsh model of the paper's even/odd splitting. -/

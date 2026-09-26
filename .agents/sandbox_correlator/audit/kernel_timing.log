@@ -1,0 +1,13 @@
+Compilation Timing Audit Report
+Target: .agents/sandbox_correlator/lean/InfoGeometry/Detector/FieldCorrelatorProjection.lean
+Total compilation wall time: 50.084 s
+Return code: 0
+
+Profile Breakdown:
+  elaboration took 178ms
+  elaboration took 325ms
+  elaboration took 170ms
+  interpretation of Batteries.Tactic.Alias.aliasExt took 109ms
+  interpretation of Mathlib.Linter.Style.missingEnd.initFn._@.Mathlib.Tactic.Linter.Style.3360231377._hygCtx._hyg.2._boxed took 325ms
+  interpretation of Mathlib.Tactic.refoldLetStx took 172ms
+  parsing took 232ms

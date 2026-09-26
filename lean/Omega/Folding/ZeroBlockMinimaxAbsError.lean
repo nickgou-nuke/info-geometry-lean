@@ -81,7 +81,7 @@ theorem cross_fib_diff_seeds :
     (Nat.fib 6 * Nat.fib 7 + 1 = Nat.fib 5 * Nat.fib 8) ∧
     -- n=5 (odd): F_6·F_9 + 1 = F_7·F_8
     (Nat.fib 6 * Nat.fib 9 + 1 = Nat.fib 7 * Nat.fib 8) := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide⟩
 
 /-! ## Minimax error formula: E_n = 1/(4·F_{n+3}·F_{n+4}) -/
 
@@ -94,7 +94,7 @@ theorem minimax_denominator_seeds :
     (4 * Nat.fib 5 * Nat.fib 6 = 160) ∧
     (4 * Nat.fib 6 * Nat.fib 7 = 416) ∧
     (4 * Nat.fib 7 * Nat.fib 8 = 1092) := by
-  refine ⟨by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide⟩
 
 /-- Combined paper theorem: the cross-Fibonacci identity (numerator = 1)
     and denominator seeds for the minimax error formula.
@@ -112,7 +112,7 @@ theorem paper_fold_zero_block_minimax_abs_error :
     -- General cross-Fibonacci identity (odd case, using Cassini)
     (∀ n : ℕ, ¬ Even n → Nat.fib (n + 1) * Nat.fib (n + 4) + 1 =
       Nat.fib (n + 2) * Nat.fib (n + 3)) := by
-  exact ⟨by native_decide, by native_decide, by native_decide, by native_decide,
+  exact ⟨by decide, by decide, by decide, by decide,
          cross_fib_even, cross_fib_odd⟩
 
 end Omega.Folding.ZeroBlockMinimaxAbsError

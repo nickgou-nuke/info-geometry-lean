@@ -34,7 +34,7 @@ theorem toggleScanOrderClosedFormModel_seed_examples :
       toggleScanOrderClosedFormModel 5 = 24 ∧
       toggleScanOrderClosedFormModel 6 = 231 ∧
       toggleScanOrderClosedFormModel 7 = 210 := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide⟩
 
 theorem toggleScanOrderClosedFormModel_matches_closed_form_seeds :
     toggleScanOrderClosedFormModel 4 = 15 ∧

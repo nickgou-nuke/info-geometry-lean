@@ -10,6 +10,6 @@ theorem paper_xi_time_part65e_window6_geometric_diagonal_z2_parity :
         x = 0 ∨ x = Omega.Conclusion.boundaryDiagonal) ∧
       Fintype.card {x : P6 // ∃ a : ZMod 2, x = a • Omega.Conclusion.boundaryDiagonal} = 2 ∧
       Fintype.card P6 = 8 := by
-  native_decide
+  decide
 
 end Omega.Zeta

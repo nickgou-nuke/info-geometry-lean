@@ -126,7 +126,7 @@ def parityBit (w : Occupation3) : ZMod 2 :=
 @[simp] theorem parityBit_reflected (w : Occupation3) :
     parityBit (reflected w) = 1 - parityBit w := by
   revert w
-  native_decide
+  decide
 
 theorem even_sector_card :
     Fintype.card {w : Occupation3 // Even (degree w)} = 4 := by

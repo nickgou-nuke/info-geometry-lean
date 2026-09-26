@@ -85,7 +85,7 @@ theorem paper_terminal_foldbin6_geo_stabilizer_z2 :
       geoCubeAuto6 ≠ idCubeAuto6 ∧
       cubeAutoWordInvolutive geoCubeAuto6 := by
   refine ⟨?_, ?_, geoCubeAuto6_involutive⟩
-  · native_decide
+  · decide
   · decide
 
 end Omega.GroupUnification

@@ -31,6 +31,6 @@ def auditedBoundaryCenterRank (m : ℕ) : ℕ :=
 theorem paper_window6_boundary_central_charge_unique_among_audited_lifts :
     auditedBoundaryCenterRank 6 = 3 ∧
       auditedBoundaryCenterRank 7 = 0 ∧ auditedBoundaryCenterRank 8 = 0 := by
-  native_decide
+  decide
 
 end Omega.GU

@@ -186,7 +186,7 @@ theorem cuntz_anticommutator_generates_momentum (n : ℕ) (i : Fin n) :
 /-- Odd plus odd is even in the `ZMod 2` grade bookkeeping. -/
 theorem odd_add_odd_grade_even :
     (1 : ZMod 2) + (1 : ZMod 2) = 0 := by
-  native_decide
+  decide
 
 end InfoGeometry.Algebra.SupergradedSUSY
 

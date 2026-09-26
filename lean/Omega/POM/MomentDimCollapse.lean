@@ -44,6 +44,6 @@ theorem paper_pom_moment_dim_collapse :
       [(9, 8), (10, 9), (11, 10), (12, 10), (13, 12), (14, 12), (15, 13), (16, 14),
        (17, 15), (18, 15), (19, 16), (20, 17), (21, 18), (22, 18), (23, 19)] ∧
     (∃ q ∈ auditedMomentRange, auditedMomentOrder q ≠ naiveClosureDimension q) := by
-  native_decide
+  decide
 
 end Omega.POM

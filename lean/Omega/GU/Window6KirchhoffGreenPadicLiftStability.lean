@@ -35,7 +35,7 @@ theorem window6EdgeFluxAuditedReducedLaplacian_modPStar :
     window6EdgeFluxAuditedReducedLaplacian.map
         (Int.castRingHom (ZMod window6KirchhoffGreenPadicPrime)) =
       window6KirchhoffGreenReducedModPStar := by
-  native_decide
+  decide
 
 /-- The audited diagonal form shows that, after localizing away from `2` and `3`, the
 Kirchhoff--Green obstruction is a single `571`-torsion class and solvability modulo `571` is
@@ -51,7 +51,7 @@ theorem paper_window6_kirchhoff_green_single_order_padic_rigidity :
           window6KirchhoffGreenLeftKernelFunctional b = 0) := by
   refine ⟨rfl, ?_, window6EdgeFluxAuditedReducedLaplacian_modPStar, ?_⟩
   · unfold window6KirchhoffGreenLocalizedSinglePrimeObstruction window6KirchhoffGreenPadicPrime
-    native_decide
+    decide
   · intro b
     constructor
     · rintro ⟨x, hx⟩

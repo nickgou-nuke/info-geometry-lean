@@ -147,7 +147,7 @@ def unified_cocycle_diagram : List CocycleLink :=
 
 theorem unified_cocycle_diagram_length :
     unified_cocycle_diagram.length = 2 := by
-  native_decide
+  decide
 
 end CocycleChain
 
@@ -169,6 +169,6 @@ to the broader cocycle chain already in the knowledge base.
 -/
 theorem unification :
     unified_cocycle_diagram.length ≥ 1 ∧ unified_cocycle_diagram.length ≥ 2 := by
-  native_decide
+  decide
 
 end Unification

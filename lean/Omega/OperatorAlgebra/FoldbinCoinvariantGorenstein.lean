@@ -62,6 +62,6 @@ theorem paper_foldbin_coinvariant_gorenstein (m : ℕ) : FoldbinCoinvariantGoren
     subst hm
     rcases paper_foldbin_gauge_invariant_ring with
       ⟨_hDecomp, _hdeg1, _hdeg2, _hdeg3, _hdeg4, _hseries, hdim⟩
-    exact ⟨rfl, rfl, hdim, by native_decide⟩
+    exact ⟨rfl, rfl, hdim, by decide⟩
 
 end Omega.OperatorAlgebra

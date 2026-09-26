@@ -403,7 +403,7 @@ theorem momentSum_two_determined {f : Nat → Nat}
     (by rw [h2, momentSum_two_two])
 
 -- ══════════════════════════════════════════════════════════════
--- S_2 high-order values by pure recurrence (no native_decide)
+-- S_2 high-order values by pure recurrence (no decide)
 -- ══════════════════════════════════════════════════════════════
 
 /-- thm:pom-s2-seven-rec -/
@@ -998,7 +998,7 @@ private theorem exactWeightCount_fib_sub_one (m : Nat) :
     have := @Nat.zero_le (weight (complement w)); omega
   have hF : 2 ≤ Nat.fib (m + 3) := by
     calc Nat.fib (m + 3) ≥ Nat.fib 3 := Nat.fib_mono (by omega)
-      _ = 2 := by native_decide
+      _ = 2 := by decide
   omega
 
 /-- The ewc sum over [0, F_{m+3}-2] equals 2^m.
@@ -1068,7 +1068,7 @@ theorem momentSum_q_mono_instances :
     cMomentSum 1 6 < cMomentSum 2 6 ∧
     cMomentSum 1 7 < cMomentSum 2 7 ∧
     cMomentSum 1 8 < cMomentSum 2 8 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> decide
 
 /-- S_2(m) < S_3(m) for m=4..7. prop:pom-sq-lower -/
 theorem momentSum_q2_lt_q3_instances :
@@ -1076,14 +1076,14 @@ theorem momentSum_q2_lt_q3_instances :
     cMomentSum 2 5 < cMomentSum 3 5 ∧
     cMomentSum 2 6 < cMomentSum 3 6 ∧
     cMomentSum 2 7 < cMomentSum 3 7 := by
-  refine ⟨?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> decide
 
 /-- Paper package. prop:pom-sq-lower -/
 theorem paper_momentSum_q_mono :
     cMomentSum 1 6 < cMomentSum 2 6 ∧
     cMomentSum 2 6 < cMomentSum 3 6 ∧
     cMomentSum 3 6 < cMomentSum 4 6 := by
-  refine ⟨?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_⟩ <;> decide
 
 /-- S_2(m) growth audit: strict mono, evenness, 4-divisibility.
     prop:fold-groupoid-wedderburn -/

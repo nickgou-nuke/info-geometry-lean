@@ -15,7 +15,7 @@ abbrev SplitOctonionBdGCarrier :=
 
 @[simp] theorem finrank_splitOctonionBdGCarrier :
     Module.finrank ℚ SplitOctonionBdGCarrier = 32 := by
-  have hcard : Fintype.card IntegralSplitBasis = 8 := by native_decide
+  have hcard : Fintype.card IntegralSplitBasis = 8 := by decide
   rw [Module.finrank_tensorProduct]
   simp [StandardRationalSplitOctonion,
     Module.finrank_pi, InfoGeometry.Physics.BdGBlock,

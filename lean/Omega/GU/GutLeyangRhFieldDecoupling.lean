@@ -45,7 +45,7 @@ def GutLeyangRhFieldDecouplingStatement : Prop :=
 private lemma gutRhCriticalQuinticMod11_no_root :
     ∀ a : ZMod 11, gutRhCriticalResidueEval a ≠ 0 := by
   intro a
-  fin_cases a <;> native_decide
+  fin_cases a <;> decide
 
 theorem paper_gut_leyang_rh_field_decoupling : GutLeyangRhFieldDecouplingStatement := by
   refine ⟨gutRhCriticalQuinticMod11_no_root, rfl, rfl, ?_, ?_, ?_⟩

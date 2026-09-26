@@ -150,7 +150,7 @@ private lemma binFiber6_minHamming_values (x : X 6) :
       _ = 13 + 6 + 2 := by rw [hs2, hs3, hs5]
       _ = Fintype.card (X 6) := by
         rw [X.card_eq_fib]
-        native_decide
+        decide
   have hsubset : ((s2 ∪ s3) ∪ s5) ⊆ (Finset.univ : Finset (X 6)) := by
     intro y hy
     simp

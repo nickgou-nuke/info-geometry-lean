@@ -99,16 +99,16 @@ def casPoint (i : Fin 63) : G2ParabolicLineFiber.OctImF2 := fun j =>
 
 theorem casPoint_isotropic (i : Fin 63) :
     G2ParabolicLineFiber.splitQuad (casPoint i) = 0 := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> decide
 
 theorem casPoint_nonzero (i : Fin 63) : casPoint i ≠ 0 := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> decide
 
 noncomputable def casPointEnum : Fin 63 ≃ OctImIsotropicPoint :=
   let f : Fin 63 → OctImIsotropicPoint :=
     fun i => ⟨casPoint i, casPoint_isotropic i, casPoint_nonzero i⟩
   have hraw : Function.Injective casPoint := by
-    native_decide
+    decide
   have hf : Function.Injective f := by
     intro i j h
     exact hraw (congrArg Subtype.val h)

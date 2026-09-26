@@ -27,7 +27,7 @@ theorem paper_derived_fold_multiplicity_fibonacci_zerofiber_specialization {m : 
       have hz : Nat.fib ((Nat.succ m + 2) / 2) < Nat.fib (Nat.succ m + 2) := by
         cases m with
         | zero =>
-            native_decide
+            decide
         | succ m =>
             have hlt :
                 Nat.fib ((Nat.succ (Nat.succ m) + 2) / 2) <

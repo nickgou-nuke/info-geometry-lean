@@ -49,7 +49,7 @@ def killo_leyang_quadratic_character_decoupling_conditional_irreducible_density
 
 lemma killo_leyang_quadratic_character_decoupling_sign_space_card :
     killo_leyang_quadratic_character_decoupling_sign_space.card = 4 := by
-  native_decide
+  decide
 
 lemma killo_leyang_quadratic_character_decoupling_target_sign_class_card (ε10 ε3 : ℤˣ) :
     (killo_leyang_quadratic_character_decoupling_target_sign_class ε10 ε3).card = 1 := by

@@ -2,7 +2,6 @@ import InfoGeometry.Analysis.BregmanAnalyticBound
 import InfoGeometry.Volume.ConnesCocycle
 import DAG.GraphHodge
 import DAG.HodgeTheorems
-import DAG.DiracLaplacian
 import DAG.ChiralDiracAnticommutation
 import DAG.EckmannHodge
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
@@ -135,7 +134,7 @@ For any TwoComplex, the Array-based `laplacian1` (GraphHodge.lean)
 and the Matrix-based `laplacian1Matrix` (this file) compute the same
 entries. Both encode identical boundary data from `tc.edges`/`tc.faces`.
 
-The proof is by `native_decide` on the finite number of (i,j) entries.
+The proof is by `decide` on the finite number of (i,j) entries.
 For concrete TwoComplex instances the dimensions are fixed numerals and
 all Array/Matrix operations reduce to rational arithmetic.
 -/
@@ -170,7 +169,7 @@ then the Matrix-based laplacian1Matrix applied to the Fin-function
 version of ψ also yields zero.
 
 Proof: entrywise agreement of Laplacian matrices + expansion of
-matVecMul/dotProduct into sums. For concrete instances `native_decide`
+matVecMul/dotProduct into sums. For concrete instances `decide`
 verifies the finite sum equality.
 -/
 lemma harmonic_array_implies_matrix {α} [BEq α] [Hashable α] (tc : TwoComplex α)
@@ -239,7 +238,7 @@ the Array-level Hodge Laplacian has trivial kernel:
 
 Proof chain:
   1. The Array Laplacian entries match the Matrix Laplacian entries
-     (`laplacian1_entrywise_agree`, verified by native_decide).
+     (`laplacian1_entrywise_agree`, verified by decide).
   2. The Array harmonic condition implies the Matrix harmonic condition
      (`harmonic_array_implies_matrix`).
   3. The Matrix-level Eckmann theorem (`EckmannHodge.eckmann_discrete_hodge`)
@@ -271,9 +270,9 @@ theorem betti1ZeroKernel_of_rank_full
 /--
 Variant of `betti1ZeroKernel_of_rank_full` that uses the determinant
 path for concrete TwoComplex instances. The determinant is computable
-via `native_decide` (unlike `Matrix.rank` which involves `finrank`).
+via `decide` (unlike `Matrix.rank` which involves `finrank`).
 
-The boundary condition ∂₂∂₁ = 0 is verified by `native_decide`
+The boundary condition ∂₂∂₁ = 0 is verified by `decide`
 (finite matrix equality over ℚ).
 
 For the general parametric case, use `betti1ZeroKernel_of_rank_full`

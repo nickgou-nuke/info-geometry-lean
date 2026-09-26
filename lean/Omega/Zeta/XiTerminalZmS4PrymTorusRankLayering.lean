@@ -50,6 +50,6 @@ theorem paper_xi_terminal_zm_s4_prym_torus_rank_layering :
       xiTerminalZmS4PrymTauTorusRank .one = 7 ∧
       xiTerminalZmS4PrymTauTorusRank .two = 3 ∧
       xiTerminalZmS4PrymTauTorusRank .three = 3 := by
-  native_decide
+  decide
 
 end Omega.Zeta

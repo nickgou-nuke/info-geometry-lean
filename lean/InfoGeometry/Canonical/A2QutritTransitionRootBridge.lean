@@ -123,7 +123,7 @@ theorem forward_transition_sum_eq_colorShift_sq :
       InfoGeometry.Canonical.TwoSheetThreeColorWeyl.colorShift,
       Matrix.sum_apply, Fin.sum_univ_three, Matrix.single, pow_two,
       Matrix.mul_apply] <;>
-    native_decide
+    decide
 
 theorem reverse_transition_sum_eq_colorShift :
     ∑ i : Fin 3, transitionMatrix (oppositeRoot (rootFromIndex i)) =
@@ -133,7 +133,7 @@ theorem reverse_transition_sum_eq_colorShift :
     simp [transitionMatrix, oppositeRoot, rootFromIndex, next3,
       InfoGeometry.Canonical.TwoSheetThreeColorWeyl.colorShift,
       Matrix.sum_apply, Matrix.single] <;>
-    native_decide
+    decide
 
 theorem reverse_transition_sum_eq_forward_conjTranspose :
     ∑ i : Fin 3, transitionMatrix (oppositeRoot (rootFromIndex i)) =

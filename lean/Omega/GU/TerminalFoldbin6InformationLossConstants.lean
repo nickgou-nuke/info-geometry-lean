@@ -50,7 +50,7 @@ theorem paper_terminal_foldbin6_information_loss_constants :
   refine ⟨cBinFiberHist_6_2, cBinFiberHist_6_3, cBinFiberHist_6_4, ?_, rfl,
     information_loss_closed_form, ?_, ?_⟩
   · rw [X.card_eq_fib]
-    native_decide
+    decide
   · unfold terminalFoldbin6Entropy
     rw [information_loss_closed_form]
     ring

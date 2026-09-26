@@ -73,7 +73,7 @@ theorem paper_fold_gauge_anomaly_branch_resonance_one_parameter :
     ring
   · exact ⟨rfl, rfl⟩
   · refine ⟨rfl, rfl, rfl, rfl, ?_⟩
-    native_decide
-  · exact ⟨⟨rfl, rfl⟩, ⟨rfl, rfl, rfl, rfl, by native_decide⟩⟩
+    decide
+  · exact ⟨⟨rfl, rfl⟩, ⟨rfl, rfl, rfl, rfl, by decide⟩⟩
 
 end Omega.Folding

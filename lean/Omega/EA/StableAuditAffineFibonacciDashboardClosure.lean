@@ -57,10 +57,10 @@ theorem paper_stable_audit_affine_fibonacci_dashboard_closure :
             stable_audit_affine_coefficient_criterion_data.stable_audit_affine_coefficient_criterion_coeff
               stable_audit_affine_fibonacci_dashboard_closure_sample_affine_data t) := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
+  · decide
+  · decide
+  · decide
+  · decide
   · rfl
   · rfl
   · exact

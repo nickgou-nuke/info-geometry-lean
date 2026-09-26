@@ -9,7 +9,7 @@ import InfoGeometry.Algebra.SplitCayleyF2CarrierAlignment
 
 namespace InfoGeometry.Algebra.SplitCayleyF2
 
-theorem cayley_card : Fintype.card Cayley = 256 := by native_decide
+theorem cayley_card : Fintype.card Cayley = 256 := by decide
 
 theorem splitOctF2_card :
     Fintype.card InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.SplitOctF2 = 256 := by

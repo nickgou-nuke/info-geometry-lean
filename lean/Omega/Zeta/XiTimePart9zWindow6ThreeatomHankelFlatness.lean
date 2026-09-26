@@ -44,14 +44,14 @@ private lemma xi_time_part9z_window6_threeatom_hankel_flatness_H2_factor :
       xi_time_part9z_window6_threeatom_hankel_flatness_V2 *
         xi_time_part9z_window6_threeatom_hankel_flatness_D *
           xi_time_part9z_window6_threeatom_hankel_flatness_V2.transpose := by
-  native_decide
+  decide
 
 private lemma xi_time_part9z_window6_threeatom_hankel_flatness_H3_factor :
     xi_time_part9z_window6_threeatom_hankel_flatness_H3 =
       xi_time_part9z_window6_threeatom_hankel_flatness_V3 *
         xi_time_part9z_window6_threeatom_hankel_flatness_D *
           xi_time_part9z_window6_threeatom_hankel_flatness_V3.transpose := by
-  native_decide
+  decide
 
 /-- Paper label: `thm:xi-time-part9z-window6-threeatom-hankel-flatness`. The window-`6`
 three-atom moment Hankel blocks factor through the Vandermonde matrix at the support points

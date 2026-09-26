@@ -47,6 +47,6 @@ theorem paper_xi_p7_s5_odd_ramification_discriminant_and_conductor :
         [1, 3, 7] ∧
       xi_p7_s5_odd_ramification_discriminant_and_conductor_artinConductorExponents =
         [1, 2, 3] := by
-  native_decide
+  decide
 
 end Omega.Zeta

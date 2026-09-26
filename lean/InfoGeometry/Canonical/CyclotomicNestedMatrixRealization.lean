@@ -65,7 +65,7 @@ private theorem fromBlocks_zero_pow {m n : Type*} [Fintype m] [Fintype n]
 
 /-- The direct-sum carrier has exactly twenty-four basis coordinates. -/
 theorem card_I24 : Fintype.card I24 = 24 := by
-  native_decide
+  decide
 
 /-- The complete nested block operator satisfies the common master 25-potent
 equation.  This is an exact finite computation on the 24-dimensional direct

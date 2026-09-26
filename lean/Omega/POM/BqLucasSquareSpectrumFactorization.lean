@@ -38,6 +38,6 @@ theorem paper_pom_bq_lucas_square_spectrum_factorization (q : ℕ) (hq : 1 ≤ q
   · intro d
     rfl
   · intro _hq4
-    native_decide
+    decide
 
 end Omega.POM

@@ -55,7 +55,9 @@ theorem boundaryFibonacci_eps_mem_self_fusion :
     FibonacciCharge.eps ∈ FibonacciCharge.fusion FibonacciCharge.eps FibonacciCharge.eps :=
   FibonacciCharge.eps_mem_eps_fusion_eps
 
-/-- Finite Jones/Temperley--Lieb positive-crossing generator `A·e + A⁻¹·1`. -/
+/-! ## Jones-style algebraic braid generators -/
+
+/-- A finite Jones/Temperley--Lieb positive-crossing generator `A·e + A⁻¹·1`. -/
 def jonesBraidGenerator {R : Type*} [Ring R] (A : Units R) (e : R) : R :=
   InfoGeometry.Topological.JonesPolynomial.temperleyLiebBraidGenerator A e
 

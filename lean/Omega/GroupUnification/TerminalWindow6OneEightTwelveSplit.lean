@@ -27,8 +27,8 @@ theorem paper_terminal_window6_1_8_12_split :
       Disjoint window6ZeroSector window6HeavySector ∧
       Disjoint window6LightSector window6HeavySector ∧
       window6ZeroSector ∪ window6LightSector ∪ window6HeavySector = Finset.univ := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, ?_⟩
+  refine ⟨by decide, by decide, by decide, by decide,
+    by decide, by decide, ?_⟩
   ext x
   fin_cases x <;> decide
 

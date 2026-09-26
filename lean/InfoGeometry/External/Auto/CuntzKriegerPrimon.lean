@@ -41,11 +41,11 @@ def finitePrimonPartition (β : ℝ) (n : ℕ) : ℝ :=
 
 theorem fibonacciAdj_sq :
     fibonacciAdj * fibonacciAdj = fibonacciAdj + 1 := by
-  native_decide
+  decide
 
 theorem fibonacciAdjInt_det :
     fibonacciAdjInt.det = -1 := by
-  native_decide
+  decide
 
 theorem allowed_00 : allowedTransition 0 0 := by
   simp [allowedTransition, fibonacciAdj]

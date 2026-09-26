@@ -80,7 +80,7 @@ def conclusion_window6_gauge_entropy_constants_from_tail_measure_statement : Pro
 theorem paper_conclusion_window6_gauge_entropy_constants_from_tail_measure :
     conclusion_window6_gauge_entropy_constants_from_tail_measure_statement := by
   refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, ?_, rfl, rfl, rfl, ?_⟩
-  · refine ⟨by native_decide, by native_decide, by native_decide, ?_⟩
+  · refine ⟨by decide, by decide, by decide, ?_⟩
     have conclusion_window6_gauge_entropy_constants_from_tail_measure_log_four :
         Real.log 4 = 2 * Real.log 2 := by
       rw [show (4 : ℝ) = 2 * 2 by norm_num]

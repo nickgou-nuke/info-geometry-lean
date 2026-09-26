@@ -56,7 +56,7 @@ theorem paper_bdry_even_single_layer_minimal_so10 :
   · refine ⟨by omega, ?_⟩
     have h3 : 3 ∣ (11 - 2) := ⟨3, by decide⟩
     exact (Omega.fib_even_iff_three_dvd (11 - 2)).mpr h3
-  · native_decide
+  · decide
   · intro G hG
     apply compactSimple_dim45_unique G
     simpa [bdryEvenSingleLayerDimension] using hG

@@ -19,7 +19,7 @@ theorem sync10Run_append (q : Sync10State) (left right : List (Fin 3)) :
 /-- The block `00000` resets the 10-state synchronization kernel to the state `000`. -/
 theorem sync10Run_resetBlock (q : Sync10State) :
     sync10Run q sync10ResetBlock = Sync10State.q000 := by
-  cases q <;> native_decide
+  cases q <;> decide
 
 /-- A `00000` block is a strict regeneration point for the synchronization kernel.
     prop:sync10-regeneration -/

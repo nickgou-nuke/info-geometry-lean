@@ -12,7 +12,7 @@ private theorem pom_witten_index_scan_sign_coupling_odd_fiber_fibConvSum_mod_two
   induction ℓ using Nat.strong_induction_on with
   | h n ih =>
       by_cases hsmall : n < 3
-      · interval_cases n <;> native_decide
+      · interval_cases n <;> decide
       · have hrec :
             fibConvSum n = fibConvSum (n - 1) + fibConvSum (n - 2) + Nat.fib n := by
           have h := fibConvSum_recurrence (n - 2) (by omega)

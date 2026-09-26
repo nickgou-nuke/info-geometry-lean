@@ -25,15 +25,15 @@ def sectorExchangeF2 : SplitOctF2 ≃ SplitOctF2 where
 
 theorem sectorExchangeF2_add (X Y : SplitOctF2) :
     sectorExchangeF2 (add X Y) = add (sectorExchangeF2 X) (sectorExchangeF2 Y) := by
-  native_decide +revert
+  decide +revert
 
 theorem sectorExchangeF2_mul (X Y : SplitOctF2) :
     sectorExchangeF2 (mul X Y) = mul (sectorExchangeF2 X) (sectorExchangeF2 Y) := by
-  native_decide +revert
+  decide +revert
 
 def sectorExchangeF2Aut : SplitOctF2Aut :=
   ⟨sectorExchangeF2,
-    ⟨by native_decide +revert, sectorExchangeF2_add, sectorExchangeF2_mul⟩⟩
+    ⟨by decide +revert, sectorExchangeF2_add, sectorExchangeF2_mul⟩⟩
 
 theorem sectorExchangeF2Aut_apply (X : SplitOctF2) :
     sectorExchangeF2Aut.1 X = sectorExchangeF2 X := rfl

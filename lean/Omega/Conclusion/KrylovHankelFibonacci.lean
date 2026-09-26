@@ -29,14 +29,14 @@ theorem fib_row_sum (n : ℕ) : Nat.fib (n + 1) + Nat.fib n = Nat.fib (n + 2) :=
     thm:conclusion-disjointness-krylov-hankel-symmetric-subspace -/
 theorem hankel_gram_seeds :
     Nat.fib 3 = 2 ∧ Nat.fib 4 = 3 ∧ Nat.fib 5 = 5 ∧
-    Nat.fib 6 = 8 ∧ Nat.fib 7 = 13 := by native_decide
+    Nat.fib 6 = 8 ∧ Nat.fib 7 = 13 := by decide
 
 /-- D = K^⊗q: the tensor power identity for disjointness matrix.
     When U = V = ∅ (both empty subsets), D^m_{∅,∅} = F_{m+1}^q.
     Seed: for q=2, F_2^2 = 1, F_3^2 = 4, F_4^2 = 9.
     thm:conclusion-disjointness-krylov-hankel-symmetric-subspace -/
 theorem disjointness_tensor_seed_q2 :
-    Nat.fib 2 ^ 2 = 1 ∧ Nat.fib 3 ^ 2 = 4 ∧ Nat.fib 4 ^ 2 = 9 := by native_decide
+    Nat.fib 2 ^ 2 = 1 ∧ Nat.fib 3 ^ 2 = 4 ∧ Nat.fib 4 ^ 2 = 9 := by decide
 
 /-- Fibonacci Hankel 2×2 determinant: F_{n+3}·F_{n+5} - F_{n+4}² = ±1.
     This is a shifted Cassini identity ensuring positive definiteness
@@ -45,7 +45,7 @@ theorem disjointness_tensor_seed_q2 :
     thm:conclusion-disjointness-krylov-hankel-symmetric-subspace -/
 theorem hankel_2x2_det_seeds :
     Nat.fib 3 * Nat.fib 5 = Nat.fib 4 ^ 2 + 1 ∧
-    Nat.fib 5 * Nat.fib 7 = Nat.fib 6 ^ 2 + 1 := by native_decide
+    Nat.fib 5 * Nat.fib 7 = Nat.fib 6 ^ 2 + 1 := by decide
 
 /-- Paper: `thm:conclusion-disjointness-krylov-hankel-symmetric-subspace`.
     Krylov-Hankel Fibonacci structure: the Gram matrix of the Krylov vectors
@@ -54,6 +54,6 @@ theorem paper_conclusion_krylov_hankel_fibonacci_structure :
     (∀ (n : ℕ),
       Nat.fib (n + 2) + 2 * Nat.fib (n + 1) + Nat.fib n = Nat.fib (n + 4)) ∧
     (Nat.fib 3 = 2 ∧ Nat.fib 4 = 3 ∧ Nat.fib 5 = 5) := by
-  refine ⟨fib_krylov_sum, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨fib_krylov_sum, ?_, ?_, ?_⟩ <;> decide
 
 end Omega.Conclusion

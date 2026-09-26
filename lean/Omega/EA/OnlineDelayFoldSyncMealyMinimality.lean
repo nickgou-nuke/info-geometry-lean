@@ -10,7 +10,7 @@ inductive OnlineDelayFoldSyncKernelState
 /-- The synchronizing kernel has exactly ten states. -/
 theorem onlineDelayFoldSyncKernelState_card :
     Fintype.card OnlineDelayFoldSyncKernelState = 10 := by
-  native_decide
+  decide
 
 /-- Chapter-local package for the paper-facing minimality certificate of the online delay-3
 sync-kernel Mealy transducer. The data records the residual output map on the ten-state kernel,

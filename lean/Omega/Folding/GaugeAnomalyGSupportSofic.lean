@@ -51,12 +51,12 @@ def gaugeSupportSoficZetaDenominator : Polynomial ℤ :=
 
 private theorem fourStateGaugeSupportLanguage4_eq_forbidden :
     fourStateGaugeSupportLanguage4 = forbiddenGaugeSupportLanguage4 := by
-  native_decide
+  decide
 
 private theorem gaugeSupportSoficCore_cayley_hamilton :
     gaugeSupportSoficCore ^ 5 =
       gaugeSupportSoficCore ^ 4 + gaugeSupportSoficCore ^ 3 + gaugeSupportSoficCore + 1 := by
-  native_decide
+  decide
 
 /-- The Bernoulli `p = 1/2` gauge-anomaly support is the SFT excluding `0010` and `0100`, and its
 essential companion core satisfies the characteristic-polynomial recurrence corresponding to

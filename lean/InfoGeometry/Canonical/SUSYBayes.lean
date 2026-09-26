@@ -1,20 +1,18 @@
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.Fierz
-import InfoGeometry.Canonical.Fock
+import InfoGeometry.Quantum.Fock
 
 /-!
 # InfoGeometry.Canonical.SUSYBayes
 
-Canonical bridge lemmas for the SUSY/Bayesian synthesis on doubled Krein state
-spaces.
+Information integration across doubled-space Clifford variables.
 -/
 
-namespace InfoGeometry.Canonical.SUSYBayes
-
 open InfoGeometry.Krein
-open InfoGeometry.Canonical.RicciMongeAmpere
-open InfoGeometry.Canonical.KaehlerGeometry
+open InfoGeometry.Quantum
+
+namespace InfoGeometry.Canonical.SUSYBayes
 
 section BayesianFock
 
@@ -23,15 +21,14 @@ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSp
 /-- Theorem `bayesian_inference_as_creation`. -/
 theorem bayesian_inference_as_creation
     (prior dataInnovation : Krein.DoubledSpace E) :
-    InfoGeometry.Canonical.Fock.bayesianUpdate (E := E) prior dataInnovation
-      = prior + InfoGeometry.Canonical.Fock.creationOp (E := E) dataInnovation :=
-  InfoGeometry.Canonical.Fock.bayesianUpdate_eq_creationExcitation (E := E) prior dataInnovation
+    bayesianUpdate (E := E) prior dataInnovation
+      = prior + creationOp (E := E) dataInnovation :=
+  rfl
 
 /-- Theorem `data_model_split_is_projector_split`. -/
 theorem data_model_split_is_projector_split (v : Krein.DoubledSpace E) :
-    v = InfoGeometry.Canonical.Fock.dataPart (E := E) v
-      + InfoGeometry.Canonical.Fock.modelPart (E := E) v :=
-  InfoGeometry.Canonical.Fock.data_model_decomposition (E := E) v
+    v = dataPart (E := E) v + modelPart (E := E) v :=
+  data_model_decomposition (E := E) v
 
 end BayesianFock
 

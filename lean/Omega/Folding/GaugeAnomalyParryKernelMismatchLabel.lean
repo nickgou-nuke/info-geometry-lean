@@ -53,7 +53,7 @@ def FoldGaugeAnomalyParryKernelMismatchLabel : Prop :=
 private lemma foldGaugeAnomalyMismatchMatrix_mulVec :
     foldGaugeAnomalyMismatchMatrix.mulVec foldGaugeAnomalyPerronVector =
       (2 : ℚ) • foldGaugeAnomalyPerronVector := by
-  native_decide
+  decide
 
 private lemma foldGaugeAnomalyParryKernel_formula (i j : Fin 4) :
     gaugeAnomalyJordanParryKernel i j =

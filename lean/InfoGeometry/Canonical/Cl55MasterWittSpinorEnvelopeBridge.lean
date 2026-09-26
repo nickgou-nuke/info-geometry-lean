@@ -229,13 +229,13 @@ theorem embeddedSplitOctonionHodgeDirac_sq :
         (m₀ + m₁ + m₂) * (m₀ + m₁ + m₂) := by
       dsimp [embeddedSplitOctonionHodgeDirac, m₀, m₁, m₂,
         masterHodgeMode]
-      noncomm_ring
+      simp only [Matrix.add_mul, Matrix.mul_add, add_mul, mul_add]; abel
     _ =
         (m₀ * m₀ + m₁ * m₁ + m₂ * m₂) +
           ((m₀ * m₁ + m₁ * m₀) +
             (m₀ * m₂ + m₂ * m₀) +
             (m₁ * m₂ + m₂ * m₁)) := by
-      noncomm_ring
+      simp only [Matrix.add_mul, Matrix.mul_add, add_mul, mul_add]; abel
     _ = (3 : ℝ) • (1 : Mat32) := by
       rw [h₀, h₁, h₂, h₀₁, h₀₂, h₁₂]
       ext a b

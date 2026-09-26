@@ -21,7 +21,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 import InfoGeometry.Canonical.Fierz
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Canonical.Fock
+import InfoGeometry.Quantum.Fock
 import InfoGeometry.Quantum.Hurwitz
 import InfoGeometry.Quantum.HurwitzRGFlow
 import InfoGeometry.Quantum.InvolutionCore

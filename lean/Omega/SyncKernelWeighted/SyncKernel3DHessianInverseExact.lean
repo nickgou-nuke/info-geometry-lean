@@ -22,6 +22,6 @@ def syncKernel3DHessianInverseMatrix : Matrix (Fin 3) (Fin 3) ℚ :=
 theorem paper_sync_kernel_3d_hessian_inverse_exact :
     syncKernel3DHessianMatrix * syncKernel3DHessianInverseMatrix = 1 ∧
       syncKernel3DHessianInverseMatrix * syncKernel3DHessianMatrix = 1 := by
-  native_decide
+  decide
 
 end Omega.SyncKernelWeighted

@@ -107,14 +107,16 @@ theorem dikin_boundary_condensation (z : SplitComplex) :
 
 end SplitComplex
 
-/-- Dikin Ellipsoid Metric for Self-Concordant Barrier on Para-Kähler Manifold. -/
+/-- Finite-dimensional data for a para-complex involution and an indefinite
+bilinear candidate metric.  The `barrier` field is only a scalar function:
+this structure does not identify it with the metric's Hessian or assert
+self-concordance. -/
 structure DikinParaKahlerSpace (n : ℕ) where
   metric : (Fin n → ℝ) → (Fin n → ℝ) → ℝ
   para_J : (Fin n → ℝ) →ₗ[ℝ] (Fin n → ℝ)
   barrier : (Fin n → ℝ) → ℝ
   is_para_J : ∀ v, para_J (para_J v) = v
   anti_isometry : ∀ u v, metric (para_J u) (para_J v) = - metric u v
-  self_concordant : ∀ (x v : Fin n → ℝ), metric v v ≤ 1 → True
 
 /-- KMS Modular Automorphism as Exact Split-Phase Rotation. -/
 def paraKMSFlow {n : ℕ} (space : DikinParaKahlerSpace n) (t : ℝ) (v : Fin n → ℝ) : Fin n → ℝ :=

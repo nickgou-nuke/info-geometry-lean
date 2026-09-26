@@ -497,7 +497,7 @@ theorem recursion_order_pattern :
 theorem fib_convergent_alternation :
     Nat.fib 3 ^ 2 > Nat.fib 2 * Nat.fib 4 ∧
     Nat.fib 4 ^ 2 < Nat.fib 3 * Nat.fib 5 ∧
-    Nat.fib 5 ^ 2 > Nat.fib 4 * Nat.fib 6 := by native_decide
+    Nat.fib 5 ^ 2 > Nat.fib 4 * Nat.fib 6 := by decide
 
 /-! ### ψ^n → 0 -/
 

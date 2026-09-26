@@ -75,32 +75,32 @@ def grevilleB3 : Mat3 ℚ :=
 /-- The first Souriau--Frame scalar is the trace readout. -/
 theorem greville_trace_p1 :
     Matrix.trace (grevilleA * grevilleB0) = grevilleP1 := by
-  native_decide
+  decide
 
 /-- The second Souriau--Frame scalar is zero in this packet. -/
 theorem greville_trace_p2 :
     (1 / 2 : ℚ) * Matrix.trace (grevilleA * grevilleB1) = grevilleP2 := by
-  native_decide
+  decide
 
 /-- The third Souriau--Frame scalar is zero in this packet. -/
 theorem greville_trace_p3 :
     (1 / 3 : ℚ) * Matrix.trace (grevilleA * grevilleB2) = grevilleP3 := by
-  native_decide
+  decide
 
 /-- The packet has `B₃ = 0`. -/
 theorem greville_B3_eq_zero :
     grevilleB3 = 0 := by
-  native_decide
+  decide
 
 /-- The packet has `B₂ ≠ 0`, so the first zero is not earlier than `3`. -/
 theorem greville_B2_ne_zero :
     grevilleB2 ≠ 0 := by
-  native_decide
+  decide
 
 /-- The characteristic-polynomial relation in the packet: `A³ = 2 A²`. -/
 theorem greville_A_cube_eq_two_smul_A_sq :
     grevilleA ^ 3 = (2 : ℚ) • (grevilleA ^ 2) := by
-  native_decide
+  decide
 
 /-- Greville's formula with `s = 1`, `k = 2`, `B₀ = I`, and `p₁ = 2`. -/
 def grevilleFormulaCandidate : Mat3 ℚ :=
@@ -115,15 +115,15 @@ def grevilleExpectedDrazin : Mat3 ℚ :=
 /-- Greville's formula produces the expected Drazin inverse. -/
 theorem greville_formula_candidate_eq_expected :
     grevilleFormulaCandidate = grevilleExpectedDrazin := by
-  native_decide
+  decide
 
 /-- Greville's formula satisfies the Drazin laws at index `2`. -/
 theorem greville_formula_candidate_isDrazinInverse :
     Drazin.IsDrazinInverse grevilleA grevilleFormulaCandidate 2 := by
   refine Drazin.IsDrazinInverse.mk ?_ ?_ ?_
-  · native_decide
-  · native_decide
-  · native_decide
+  · decide
+  · decide
+  · decide
 
 /-- The regular Drazin projector selected by Greville's formula. -/
 theorem greville_regular_projector_readout :
@@ -131,7 +131,7 @@ theorem greville_regular_projector_readout :
       !![0, 0, 0;
          0, 0, 0;
          0, 0, 1] := by
-  native_decide
+  decide
 
 /-- The nilpotent zero-root projector selected by Greville's formula. -/
 theorem greville_nilpotent_projector_readout :
@@ -139,7 +139,7 @@ theorem greville_nilpotent_projector_readout :
       !![1, 0, 0;
          0, 1, 0;
          0, 0, 0] := by
-  native_decide
+  decide
 
 /-! ## Strict finite `GL₃(Q)` conjugation readout -/
 
@@ -152,7 +152,7 @@ def grevillePermutation : Mat3 ℚ :=
 /-- The permutation representative is its own inverse. -/
 theorem grevillePermutation_sq_eq_one :
     grevillePermutation * grevillePermutation = 1 := by
-  native_decide
+  decide
 
 /-- The permutation as a strict unit of the matrix algebra. -/
 def grevillePermutationUnit : (Mat3 ℚ)ˣ where
@@ -172,8 +172,8 @@ theorem greville_conjugated_formula_isDrazinInverse :
       (unitConj grevillePermutationUnit grevilleFormulaCandidate)
       2 := by
   refine Drazin.IsDrazinInverse.mk ?_ ?_ ?_
-  · native_decide
-  · native_decide
-  · native_decide
+  · decide
+  · decide
+  · decide
 
 end InfoGeometry.Canonical.GrevilleSouriauFrameDrazin

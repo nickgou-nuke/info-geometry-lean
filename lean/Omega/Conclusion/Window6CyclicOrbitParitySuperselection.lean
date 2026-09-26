@@ -22,15 +22,15 @@ theorem cubicShortRootProjector_idempotent (b : Window6ShortRootOrbit) :
 
 /-- The short-root selector contributes two orbit types. -/
 theorem window6_short_root_orbit_card : Fintype.card Window6ShortRootOrbit = 2 := by
-  native_decide
+  decide
 
 /-- The boundary parity group has eight characters. -/
 theorem window6_boundary_parity_card : Fintype.card Window6BoundaryCharacter = 8 := by
-  native_decide
+  decide
 
 /-- The orbit/parity refinement therefore has sixteen labels. -/
 theorem window6_orbit_parity_sector_card : Fintype.card Window6OrbitParitySector = 16 := by
-  native_decide
+  decide
 
 /-- Wrapper data for the window-6 orbit/parity superselection theorem. -/
 structure Window6CyclicOrbitParitySuperselectionData where

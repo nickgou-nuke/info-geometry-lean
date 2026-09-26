@@ -26,6 +26,6 @@ theorem complementRootLabel_injective :
 
 theorem complementRootLabel_image :
     Finset.univ.image complementRootLabel = circularRootComplement := by
-  native_decide
+  decide
 
 end InfoGeometry.Exceptional.G2CircularRootComplementLabel

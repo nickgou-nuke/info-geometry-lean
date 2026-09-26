@@ -236,7 +236,7 @@ theorem walshBias_le_boundaryVariation (A : Finset (Fin n)) (f : Word n → ℤ)
     thm:discussion-walsh-stokes-higher-flux -/
 theorem signedHypercubeSum_one :
     signedHypercubeSum 1 (fun w => if w 0 = true then 1 else 0) = -1 := by
-  native_decide
+  decide
 
 /-- Complete Stokes-gauge-homology package for Discussion chapter.
     thm:discussion-discrete-stokes-gauge-leyang,

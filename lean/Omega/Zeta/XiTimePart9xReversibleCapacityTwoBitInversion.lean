@@ -8,11 +8,11 @@ theorem paper_xi_time_part9x_reversible_capacity_two_bit_inversion :
       (∀ B : Nat, 2 ≤ B -> C6 B = 64) ∧
       (∀ B : Nat, C6 B = 64 -> 2 ≤ B)) := by
   dsimp
-  refine ⟨by native_decide, by native_decide, ?_, ?_⟩
+  refine ⟨by decide, by decide, ?_, ?_⟩
   · intro B hB
     have h4 : 4 ≤ 2 ^ B := by
       calc
-        4 = 2 ^ 2 := by native_decide
+        4 = 2 ^ 2 := by decide
         _ ≤ 2 ^ B := Nat.pow_le_pow_right (by decide : 0 < 2) hB
     have h3 : 3 ≤ 2 ^ B := Nat.le_trans (by decide : 3 ≤ 4) h4
     have h2 : 2 ≤ 2 ^ B := Nat.le_trans (by decide : 2 ≤ 4) h4
@@ -20,12 +20,12 @@ theorem paper_xi_time_part9x_reversible_capacity_two_bit_inversion :
   · intro B hC
     cases B with
     | zero =>
-        exact False.elim ((by native_decide :
+        exact False.elim ((by decide :
           ¬ (8 * min 2 (2 ^ 0) + 4 * min 3 (2 ^ 0) + 9 * min 4 (2 ^ 0) = 64)) hC)
     | succ B =>
         cases B with
         | zero =>
-            exact False.elim ((by native_decide :
+            exact False.elim ((by decide :
               ¬ (8 * min 2 (2 ^ 1) + 4 * min 3 (2 ^ 1) + 9 * min 4 (2 ^ 1) = 64)) hC)
         | succ B =>
             exact Nat.succ_le_succ (Nat.succ_le_succ (Nat.zero_le B))

@@ -20,7 +20,7 @@ theorem paper_xi_window6_resolution_arithmetic_split_separation :
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · rw [ZMod.card]
   · exact Omega.GU.CongruenceM6IdempotentsFour.paper_congruence_m6_idempotents_four
-  · native_decide
+  · decide
   · exact X.card_X_six
   · exact Omega.cBinFiberHist_6_2
   · exact Omega.cBinFiberHist_6_3

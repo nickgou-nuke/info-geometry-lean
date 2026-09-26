@@ -9,7 +9,7 @@ namespace Omega.GU
 theorem window6_fiber_sizes_not_constant :
     ∃ x y z : X 6, cBinFiberMult 6 x = 2 ∧ cBinFiberMult 6 y = 3 ∧ cBinFiberMult 6 z = 4 := by
   refine ⟨cBinFold 6 13, cBinFold 6 33, cBinFold 6 37, ?_⟩
-  refine ⟨by native_decide, ?_, ?_⟩
+  refine ⟨by decide, ?_, ?_⟩
   · exact (paper_boundary_fiber_sizes_six).1
   · exact (paper_boundary_fiber_sizes_six).2.1
 
@@ -44,8 +44,8 @@ theorem window6_no_translation_quotient_subgroup :
     ¬ ∃ H : AddSubgroup (ZMod 64),
         ∀ x y : ZMod 64, cBinFold 6 x.val = cBinFold 6 y.val ↔ y - x ∈ H := by
   rintro ⟨H, hH⟩
-  have h21eq : cBinFold 6 37 = cBinFold 6 58 := by native_decide
-  have h34eq : cBinFold 6 37 = cBinFold 6 3 := by native_decide
+  have h21eq : cBinFold 6 37 = cBinFold 6 58 := by decide
+  have h34eq : cBinFold 6 37 = cBinFold 6 3 := by decide
   have h21 : (21 : ZMod 64) ∈ H := by
     have : ((58 : ZMod 64) - (37 : ZMod 64)) ∈ H := (hH 37 58).mp h21eq
     simpa using this

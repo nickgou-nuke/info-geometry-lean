@@ -17,7 +17,7 @@ theorem weightCongruenceCount_complement (m : Nat) (hm : 2 ≤ m) (r : Nat)
   have hF3 : Nat.fib (m + 3) = Nat.fib (m + 1) + Nat.fib (m + 2) := Nat.fib_add_two
   have hF1_ge2 : 2 ≤ Nat.fib (m + 1) := by
     calc Nat.fib (m + 1) ≥ Nat.fib 3 := Nat.fib_mono (by omega)
-      _ = 2 := by native_decide
+      _ = 2 := by decide
   have hF1_2_lt : Nat.fib (m + 1) - 2 - r < Nat.fib (m + 2) := by omega
   rw [weightCongruenceCount_eq_sum_ewc m (Nat.fib (m + 1) - 2 - r) hF1_2_lt,
     weightCongruenceCount_eq_sum_ewc m r hr]
@@ -49,7 +49,7 @@ theorem paper_fold_fiber_count_reciprocity (m : Nat) (hm : 2 ≤ m) (r : Nat)
   have hF1_ge2 : 2 ≤ Nat.fib (m + 1) := by
     calc
       Nat.fib (m + 1) ≥ Nat.fib 3 := Nat.fib_mono (by omega)
-      _ = 2 := by native_decide
+      _ = 2 := by decide
   have hr_lt : r < Nat.fib (m + 2) := by
     have htop : Nat.fib (m + 1) - 2 < Nat.fib (m + 2) := by
       have hfib : Nat.fib (m + 1) ≤ Nat.fib (m + 2) := Nat.fib_mono (Nat.le_succ _)
@@ -143,7 +143,7 @@ theorem stableValue_Fold_add_complement (w : Word m) (hm : 2 ≤ m) :
   have hF3 : Nat.fib (m + 3) = Nat.fib (m + 1) + Nat.fib (m + 2) := Nat.fib_add_two
   have hF1_ge2 : 2 ≤ Nat.fib (m + 1) := by
     calc Nat.fib (m + 1) ≥ Nat.fib 3 := Nat.fib_mono (by omega)
-      _ = 2 := by native_decide
+      _ = 2 := by decide
   -- weight(comp w) + weight w = F_{m+3} - 2 = (F_{m+1} - 2) + F_{m+2}
   have heq : weight (complement w) + weight w = Nat.fib (m + 1) - 2 + Nat.fib (m + 2) := by omega
   -- (a % F + b % F) % F = (a + b) % F
@@ -267,12 +267,12 @@ theorem ewc_spectrum_five :
     exactWeightCount 5 6 = 2 ∧ exactWeightCount 5 7 = 1 ∧
     exactWeightCount 5 8 = 3 ∧ exactWeightCount 5 9 = 2 ∧
     exactWeightCount 5 10 = 2 ∧ exactWeightCount 5 11 = 3 ∧
-    exactWeightCount 5 12 = 1 := by native_decide
+    exactWeightCount 5 12 = 1 := by decide
 
 /-- EWC total for m=5 over weight range 0..20: Σ ewc(5,n) = 2^5 = 32.
     bridge:ewc-complement-symmetry -/
 theorem ewc_sum_five :
-    (Finset.range 21).sum (exactWeightCount 5) = 32 := by native_decide
+    (Finset.range 21).sum (exactWeightCount 5) = 32 := by decide
 
 /-- Paper: bridge:ewc-complement-symmetry -/
 theorem paper_ewc_spectrum_five :
@@ -303,12 +303,12 @@ theorem ewc_spectrum_six :
     exactWeightCount 6 16 = 4 ∧ exactWeightCount 6 17 = 2 ∧
     exactWeightCount 6 18 = 3 ∧ exactWeightCount 6 19 = 3 := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
-    native_decide
+    decide
 
 /-- EWC total for m=6: Σ_{n<33} ewc(6,n) = 2^6 = 64.
     prop:pom-ewc-spectrum -/
 theorem ewc_sum_six :
-    (Finset.range 33).sum (fun n => exactWeightCount 6 n) = 64 := by native_decide
+    (Finset.range 33).sum (fun n => exactWeightCount 6 n) = 64 := by decide
 
 /-- Paper package.
     prop:pom-ewc-spectrum -/
@@ -317,7 +317,7 @@ theorem paper_ewc_spectrum_six :
     exactWeightCount 6 8 = 3 ∧ exactWeightCount 6 16 = 4 ∧
     exactWeightCount 6 32 = 1 ∧
     (Finset.range 33).sum (fun n => exactWeightCount 6 n) = 64 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
 
 /-- Fiber count reciprocity/reflection symmetry package.
     prop:fold-fiber-count-reciprocity -/

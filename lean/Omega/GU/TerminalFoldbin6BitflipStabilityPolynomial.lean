@@ -63,13 +63,13 @@ theorem paper_terminal_foldbin6_bitflip_stability_polynomial :
   rcases paper_terminal_foldbin6_three_offset_rigidity with ⟨_, _, _, hOne, _⟩
   repeat' constructor
   · exact hOne
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
   · intro p
     constructor
     · simp [terminalFoldbin6BernoulliShellExpansion, terminalFoldbin6BitflipStability]

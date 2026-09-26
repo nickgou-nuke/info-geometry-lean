@@ -17,7 +17,7 @@ open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 theorem nativeBasePoint_imaginary_value :
     (octImToImaginary nativeBasePoint).1 = up2 := by
   apply SplitOctF2.ext <;>
-    native_decide
+    decide
 
 theorem pcWord_nativeBasePoint_imaginary_value (e : Fin 6 → Bool) :
     (octImToImaginary

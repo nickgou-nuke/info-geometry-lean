@@ -151,7 +151,7 @@ def gradedJacobiator
 theorem nativeChiralSuperBracket_graded_jacobi
     (x y z : ChiralBasisElement) :
     gradedJacobiator x y z = zeroCell := by
-  cases x <;> cases y <;> cases z <;> native_decide
+  cases x <;> cases y <;> cases z <;> decide
 
 /-! ## Channelwise coefficient carrier
 

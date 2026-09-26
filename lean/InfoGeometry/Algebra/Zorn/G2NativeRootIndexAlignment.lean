@@ -54,7 +54,7 @@ theorem rootIndexOf_derivation_readback (r : G2Root) :
 
 set_option maxHeartbeats 1000000 in
 theorem rootIndexOf_injective : Function.Injective rootIndexOf := by
-  native_decide
+  decide
 
 /-- Every nonzero adjoint basis index is represented by a finite `G2Root`. -/
 theorem rootIndexOf_surjective : Function.Surjective rootIndexOf := by
@@ -101,6 +101,6 @@ theorem rootIndexOf_negAction_value (r : G2Root) :
       | 12 => 5
       | j => j := by
   rcases r with ⟨l, k⟩
-  cases l <;> fin_cases k <;> native_decide
+  cases l <;> fin_cases k <;> decide
 
 end InfoGeometry.Algebra.Zorn.G2NativeRootIndexAlignment

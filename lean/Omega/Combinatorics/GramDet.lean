@@ -132,7 +132,7 @@ def minMatrix_inv_2 : Matrix (Fin 2) (Fin 2) ℤ :=
     cor:pom-Kk-det-sine-product-normalization -/
 theorem minMatrix_mul_inv_2 :
     Matrix.of (fun (i j : Fin 2) => (min (i.val + 1) (j.val + 1) : ℤ)) * minMatrix_inv_2 = 1 := by
-  native_decide
+  decide
 
 /-- The inverse of K_3: [[2,-1,0],[-1,2,-1],[0,-1,1]].
     cor:pom-Kk-det-sine-product-normalization -/
@@ -143,7 +143,7 @@ def minMatrix_inv_3 : Matrix (Fin 3) (Fin 3) ℤ :=
     cor:pom-Kk-det-sine-product-normalization -/
 theorem minMatrix_mul_inv_3 :
     Matrix.of (fun (i j : Fin 3) => (min (i.val + 1) (j.val + 1) : ℤ)) * minMatrix_inv_3 = 1 := by
-  native_decide
+  decide
 
 /-- Paper package: min-matrix det, trace, and inverse verification.
     lem:pom-Kk-gram-det / cor:pom-Kk-det-sine-product-normalization -/

@@ -1351,7 +1351,7 @@ theorem paper_noiseBudget_strict_antitone :
     (2 * Nat.fib 4 > Nat.fib 5) ∧
     (2 * Nat.fib 7 > Nat.fib 8) ∧
     (2 * Nat.fib 12 > Nat.fib 13) := by
-  refine ⟨fun m hm => ?_, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨fun m hm => ?_, by decide, by decide, by decide⟩
   -- 2*F(m+2) > F(m+3) = F(m+2) + F(m+1), so need F(m+2) > F(m+1)
   have hlt : Nat.fib (m + 1) < Nat.fib (m + 2) :=
     Nat.fib_lt_fib_succ (by omega : 2 ≤ m + 1)
@@ -1375,7 +1375,7 @@ theorem paper_scanError_subadditivity_audit :
     Nat.fib 8 = 21 ∧ 2 ^ 6 = 64 ∧
     Nat.fib 8 - 1 = 20 ∧
     20 < 21 := by
-  refine ⟨by native_decide, by omega, by native_decide, by omega⟩
+  refine ⟨by decide, by omega, by decide, by omega⟩
 
 /-- Scan error bounded by set mass of symmetric difference.
     prop:spg-scan-error-cylinder -/

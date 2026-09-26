@@ -51,7 +51,7 @@ theorem paper_uplift_fiber_sign_dimension_reduction :
       paper_bdry_fold_gauge_sign_abelianization 3 (by decide) ∧
       (∀ φ : Equiv.Perm (Fin 3) →* ℤˣ, φ ≠ 1 → φ = upliftOrientationParity 3) := by
   refine ⟨bdryFoldGauge_orientation_eq_sign 2, ?_, ?_, ?_⟩
-  · native_decide
+  · decide
   · exact paper_bdry_fold_gauge_sign_abelianization_spec 3 (by decide)
   · intro φ hφ
     exact upliftOrientationParity_three_unique φ hφ

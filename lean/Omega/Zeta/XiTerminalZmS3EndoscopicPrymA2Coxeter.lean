@@ -58,6 +58,6 @@ theorem paper_xi_terminal_zm_s3_endoscopic_prym_a2_coxeter :
   · norm_num [xiTerminalZmS3EndoscopicPrymPolarizationType, xiTerminalZmS3EndoscopicPrymPolarization,
       a2CartanForm, Matrix.det_fin_two]
   · refine ⟨?_, xiTerminalZmS3EndoscopicDeckMatrix_trace, xiTerminalZmS3EndoscopicDeckMatrix_charpoly⟩
-    native_decide
+    decide
 
 end Omega.Zeta

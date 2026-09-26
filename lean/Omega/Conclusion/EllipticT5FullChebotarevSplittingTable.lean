@@ -62,6 +62,6 @@ theorem paper_conclusion_elliptic_t5_full_chebotarev_splitting_table
     (D : conclusion_elliptic_t5_full_chebotarev_splitting_table_data) :
     conclusion_elliptic_t5_full_chebotarev_splitting_table_statement D := by
   dsimp [conclusion_elliptic_t5_full_chebotarev_splitting_table_statement]
-  native_decide
+  decide
 
 end Omega.Conclusion

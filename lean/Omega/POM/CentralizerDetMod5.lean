@@ -122,7 +122,7 @@ theorem paper_pom_centralizer_det_norm_mod5 :
         dsimp [f]
         compute_degree
         · norm_num
-        · native_decide
+        · decide
       have hfive_ne_zero : (5 : ZMod p) ≠ 0 := by
         intro h
         have hdiv : p ∣ 5 := (ZMod.natCast_eq_zero_iff 5 p).mp h
@@ -133,7 +133,7 @@ theorem paper_pom_centralizer_det_norm_mod5 :
         dsimp [g]
         compute_degree
         · norm_num
-          exact ⟨by native_decide, hfive_ne_zero⟩
+          exact ⟨by decide, hfive_ne_zero⟩
       have hodd : Fintype.card (ZMod p) % 2 = 1 := by
         rw [ZMod.card]
         exact (Nat.Prime.mod_two_eq_one_iff_ne_two hp).mpr hp_two

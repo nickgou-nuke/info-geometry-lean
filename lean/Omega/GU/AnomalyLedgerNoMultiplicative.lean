@@ -19,8 +19,8 @@ theorem paper_gut_finite_anomaly_no_multiplicative_embedding_seeds :
     (Nat.fib 8 = 21 ∧ 2 ^ 21 = 2097152) ∧
     (0 = 0) := by
   refine ⟨⟨by omega, by omega⟩, ⟨by norm_num, by norm_num, by norm_num⟩,
-         by native_decide, by omega,
-         ⟨by native_decide, by norm_num⟩, by omega⟩
+         by decide, by omega,
+         ⟨by decide, by norm_num⟩, by omega⟩
 
 /-- Package wrapper for the finite anomaly no multiplicative embedding seeds.
     thm:gut-finite-anomaly-ledger-no-multiplicative-embedding -/

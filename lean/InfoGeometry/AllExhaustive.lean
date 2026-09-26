@@ -3665,7 +3665,6 @@ import InfoGeometry.Canonical.FixedIndexCuntzModularFlowTopologicalIso
 import InfoGeometry.Canonical.FixedIndexCuntzParameterTopologicalLimit
 import InfoGeometry.Canonical.FixedIndexCuntzStarTower
 import InfoGeometry.Canonical.FluidCore
-import InfoGeometry.Canonical.Fock
 import InfoGeometry.Canonical.FockCARTopologicalBridge
 import InfoGeometry.Canonical.FockNumberOperatorBridge
 import InfoGeometry.Canonical.FockVacuumAnnihilationBridge

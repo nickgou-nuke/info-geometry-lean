@@ -159,7 +159,7 @@ theorem alpha_dag_explicit :
     simp [alpha_dag, half, J, mul, dot, cross]
 
 -- ============================================================================
--- 4. Full CAR Proof
+-- 4. Signed anticommutator and square identities (not positive CAR)
 -- ============================================================================
 
 /-- α² = ½(-J). -/
@@ -206,7 +206,7 @@ theorem alpha_dag_sq_eq_half_J : alpha_dag * alpha_dag = half J := by
     · native_decide
     · native_decide
 
-/-- {α, α†} = αα† + α†α = -1 -/
+/-- Signed identity for this Furey-inspired pair: {α, α†} = -1. This is not the standard positive CAR equation {c, c†} = 1. -/
 theorem CAR_anticommutator : alpha * alpha_dag + alpha_dag * alpha = -oneZ := by
   rw [alpha_explicit, alpha_dag_explicit]
   apply InfoGeometry.Canonical.ZornMatrix.ext
@@ -306,9 +306,10 @@ def alpha_dag_color (i : Fin 3) : ZornMatrix ℚ :=
 theorem mersenne_M2_eq_color_dim : (2 : ℕ)^2 - 1 = 3 := by norm_num
 
 -- ============================================================================
--- 6. Summary theorem collecting all CAR results
+-- 6. Summary theorem collecting the signed ladder identities
 -- ============================================================================
 
+/-- Legacy bundle of the signed Furey-inspired identities below; its `CAR` name does not assert the standard positive CAR sign. -/
 structure CARResult where
   J_sq : J * J = -oneZ
   up0_nilpotent : up0 * up0 = zeroZ
@@ -319,6 +320,7 @@ structure CARResult where
   alpha_alpha_dag : alpha * alpha_dag = { a := -1/2, b := -1/2, x := ![0, 0, 0], y := ![0, 0, 0] }
   alpha_dag_alpha : alpha_dag * alpha = { a := -1/2, b := -1/2, x := ![0, 0, 0], y := ![0, 0, 0] }
 
+/-- Bundles the signed identities for the chosen pair; the anticommutator is `-1`, not `1`. -/
 theorem furey_CAR_complete : CARResult :=
   ⟨J_sq, up0_sq, down0_sq, up0_mul_down0, down0_mul_up0, CAR_anticommutator, alpha_alpha_dag, alpha_dag_alpha⟩
 

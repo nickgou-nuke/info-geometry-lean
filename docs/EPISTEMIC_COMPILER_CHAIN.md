@@ -30,9 +30,15 @@ authoritative theorem surface.
 The surrounding modules provide related checks:
 
 - `MetaEpistemicCompiler` and `Causal.CertifiedDependencyCompiler` own the
-  broader dependency and scheduling machinery;
+  broader dependency and scheduling machinery; `Causal.ProofCarryingSchedule`
+  supplies schedule evidence checks;
 - `EpistemicCompilerChainTests` exercises this module's status-gated promotion
-  boundary. It does not certify external schedules or semantic claims.
+  boundary;
+- `Meta/EpistemicPipelineTests` exercises malformed schedules, stale evidence,
+  incomplete closure, and non-propositions.
+
+These tests check pipeline boundaries; they do not certify external semantic
+claims without a kernel proof.
 
 The promotion boundary is therefore:
 

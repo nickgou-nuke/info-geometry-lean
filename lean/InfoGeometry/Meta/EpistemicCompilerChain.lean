@@ -62,7 +62,6 @@ instance : PartialOrder Phase where
   le_refl := precedes_refl
   le_trans := @precedes_trans
   le_antisymm := @precedes_antisymm
-
 theorem complete : ∀ phase, Phase.rank phase ≤ 5 := by
   intro phase
   cases phase <;> decide

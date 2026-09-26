@@ -5,6 +5,7 @@ import InfoGeometry.Topological.RealCuspLimitT
 import InfoGeometry.Topological.OrbifoldCorner
 import InfoGeometry.Topological.StabilizerAnomalies
 import InfoGeometry.Topological.FibonacciBraiding
+import InfoGeometry.Topological.JonesPolynomial
 
 /-!
 # InfoGeometry.Topological.All

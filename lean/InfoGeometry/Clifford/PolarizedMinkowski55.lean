@@ -1,5 +1,4 @@
 import InfoGeometry.Twistor.Cl55MinkowskiCelestialSlice
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55NeutralHyperbolicIsometry
 
 /-!
@@ -79,7 +78,7 @@ def diagonalIsometry : boundaryQuadratic.IsometryEquiv Q55 where
 
 /-- Actual dimension, not a dimension label attached to the carrier. -/
 theorem boundary_finrank : Module.finrank ℝ Boundary55 = 10 := by
-  simp [Boundary55, Minkowski13, Module.finrank_prod]
+  simp [Boundary55, Minkowski13, Module.finrank_prod, Module.finrank_pi_fintype]
 
 /-- The polar form, with the conventional factor of two retained. -/
 theorem boundary_polar (z w : Boundary55) :

@@ -184,6 +184,29 @@ theorem eps_J_anticomm :
   rw [M.J_eps_anticomm]
   simp
 
+/-- The modular/CPT mirror sends the `+1` eigenspace of the grading to its
+`-1` eigenspace.  Thus the mirror exchanges grading sectors; it is not itself
+the grading operator. -/
+theorem cpt_maps_positive_parity_to_negative
+    {v : H} (hv : M.eps v = v) :
+    M.eps (M.J v) = -M.J v := by
+  have h := congrArg (fun T : EndR H => T v) M.J_eps_anticomm
+  simp only [ContinuousLinearMap.comp_apply] at h
+  rw [hv] at h
+  have h' := congrArg Neg.neg h
+  simpa using h'.symm
+
+/-- The modular/CPT mirror sends the `-1` eigenspace of the grading to its
+`+1` eigenspace. -/
+theorem cpt_maps_negative_parity_to_positive
+    {v : H} (hv : M.eps v = -v) :
+    M.eps (M.J v) = M.J v := by
+  have h := congrArg (fun T : EndR H => T v) M.J_eps_anticomm
+  simp only [ContinuousLinearMap.comp_apply] at h
+  rw [hv] at h
+  have h' := congrArg Neg.neg h
+  simpa using h'.symm
+
 /-- The modular sign is the supergrading/parity operator. -/
 def parity : EndR H :=
   M.eps

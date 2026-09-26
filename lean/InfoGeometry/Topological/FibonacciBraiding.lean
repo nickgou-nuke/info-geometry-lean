@@ -3,6 +3,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 import InfoGeometry.Categorical.FibonacciBraiding
 import InfoGeometry.Canonical.BoundaryLoopSuperClosure
+import InfoGeometry.Topological.JonesPolynomial
 
 /-!
 # InfoGeometry.Topological.FibonacciBraiding
@@ -54,24 +55,20 @@ theorem boundaryFibonacci_eps_mem_self_fusion :
     FibonacciCharge.eps ∈ FibonacciCharge.fusion FibonacciCharge.eps FibonacciCharge.eps :=
   FibonacciCharge.eps_mem_eps_fusion_eps
 
-/-! ## Jones-style algebraic braid generators -/
-
-/-- A finite Jones/Temperley--Lieb style braid generator `A·1 + A⁻¹e`. -/
+/-- Finite Jones/Temperley--Lieb positive-crossing generator `A·e + A⁻¹·1`. -/
 def jonesBraidGenerator {R : Type*} [Ring R] (A : Units R) (e : R) : R :=
-  (A : R) + ((A⁻¹ : Units R) : R) * e
+  InfoGeometry.Topological.JonesPolynomial.temperleyLiebBraidGenerator A e
 
 /-- If the idempotent lane is zero, the Jones-style generator reduces to the unit scalar. -/
 @[simp]
 theorem jonesBraidGenerator_zero {R : Type*} [Ring R] (A : Units R) :
-    jonesBraidGenerator A (0 : R) = A := by
-  change (A : R) + ((A⁻¹ : Units R) : R) * 0 = A
-  rw [mul_zero, add_zero]
+    jonesBraidGenerator A (0 : R) = ((A⁻¹ : Units R) : R) := by
+  simp [jonesBraidGenerator]
 
 /-- The Jones-style generator is definitionally the finite algebraic formula. -/
 theorem jonesBraidGenerator_def {R : Type*} [Ring R] (A : Units R) (e : R) :
-    jonesBraidGenerator A e = (A : R) + ((A⁻¹ : Units R) : R) * e := by
-  change (A : R) + ((A⁻¹ : Units R) : R) * e = (A : R) + ((A⁻¹ : Units R) : R) * e
-  rfl
+    jonesBraidGenerator A e = (A : R) * e + ((A⁻¹ : Units R) : R) := by
+  exact InfoGeometry.Topological.JonesPolynomial.temperleyLiebBraidGenerator_def A e
 
 /-! ## Cayley boundary braid action for Fibonacci braid words -/
 

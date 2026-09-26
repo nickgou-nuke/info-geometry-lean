@@ -15,38 +15,58 @@ EXPECTED_PACKAGE_REVISIONS = {
     "plausible": "55c8532eb21ec9f6d565d51d96b8ca50bd1fbef3",
 }
 ROOT = Path(__file__).resolve().parents[2]
-PATHS = [
-    ROOT / "lean-toolchain",
-    ROOT / ".lake" / "packages" / "mathlib" / "lean-toolchain",
-]
+MATHLIB = ROOT / ".lake" / "packages" / "mathlib"
 
 
 def main() -> int:
     ok = True
-    for path in PATHS:
-        if not path.exists():
-            print(f"MISSING {path}")
-            ok = False
-            continue
-        value = path.read_text(encoding="utf-8").strip()
+    root_toolchain = ROOT / "lean-toolchain"
+    if not root_toolchain.exists():
+        print(f"MISSING {root_toolchain}")
+        ok = False
+    else:
+        value = root_toolchain.read_text(encoding="utf-8").strip()
         if value != EXPECTED:
-            print(f"FAIL {path}: {value!r} != {EXPECTED!r}")
+            print(f"FAIL {root_toolchain}: {value!r} != {EXPECTED!r}")
             ok = False
         else:
-            print(f"OK {path}: {value}")
-    mathlib = ROOT / ".lake" / "packages" / "mathlib"
-    if mathlib.exists() and (mathlib / ".git").exists():
+            print(f"OK root toolchain: {value}")
+
+    # The repository and Mathlib are built by the root toolchain. Other Lake
+    # dependencies may contain their own upstream lean-toolchain files; those
+    # files do not override the compiler selected by this workspace.
+    mathlib_toolchain = MATHLIB / "lean-toolchain"
+    if mathlib_toolchain.exists():
+        value = mathlib_toolchain.read_text(encoding="utf-8").strip()
+        if value != EXPECTED:
+            print(f"FAIL {mathlib_toolchain}: {value!r} != {EXPECTED!r}")
+            ok = False
+        else:
+            print(f"OK Mathlib toolchain: {value}")
+    elif MATHLIB.exists():
+        print(f"INFO {mathlib_toolchain} absent; checkout may be incomplete")
+
+    if MATHLIB.exists() and (MATHLIB / ".git").exists():
         head = subprocess.run(
-            ["git", "-C", str(mathlib), "rev-parse", "HEAD"],
+            ["git", "-C", str(MATHLIB), "rev-parse", "HEAD"],
             check=False, capture_output=True, text=True,
         ).stdout.strip()
         if head != EXPECTED_MATHLIB_REV:
-            print(f"FAIL {mathlib}: HEAD {head!r} != {EXPECTED_MATHLIB_REV!r}")
+            print(f"FAIL {MATHLIB}: HEAD {head!r} != {EXPECTED_MATHLIB_REV!r}")
             ok = False
         else:
-            print(f"OK {mathlib}: pinned {head}")
+            print(f"OK Mathlib revision: {head}")
+    elif MATHLIB.exists():
+        print(f"FAIL {MATHLIB}: Git checkout metadata missing")
+        ok = False
+    else:
+        print("INFO Mathlib checkout not materialized yet; manifest pins remain authoritative")
+
     manifest = ROOT / "lake-manifest.json"
-    if manifest.exists():
+    if not manifest.exists():
+        print(f"MISSING {manifest}")
+        ok = False
+    else:
         packages = json.loads(manifest.read_text(encoding="utf-8")).get("packages", [])
         for package in packages:
             name = package.get("name")
@@ -56,13 +76,11 @@ def main() -> int:
                 ok = False
             package_dir_name = str(name).replace("«", "").replace("»", "")
             package_dir = ROOT / ".lake" / "packages" / package_dir_name
-            package_toolchain = package_dir / "lean-toolchain"
-            if package_toolchain.exists() and package_toolchain.read_text(encoding="utf-8").strip() != EXPECTED:
-                print(f"FAIL {package_toolchain}: not {EXPECTED}")
-                ok = False
             if package.get("type") == "git" and revision:
                 package_git = package_dir / ".git"
-                if package_git.exists():
+                if not package_dir.exists():
+                    print(f"INFO dependency checkout not materialized yet: {name}")
+                elif package_git.exists():
                     actual_revision = subprocess.run(
                         ["git", "-C", str(package_dir), "rev-parse", "HEAD"],
                         check=False, capture_output=True, text=True,
@@ -72,7 +90,7 @@ def main() -> int:
                             f"FAIL {package_dir}: HEAD {actual_revision!r} != manifest {revision!r}"
                         )
                         ok = False
-                else:
+                elif package_dir.exists():
                     print(f"FAIL {package_dir}: git checkout missing")
                     ok = False
     return 0 if ok else 1

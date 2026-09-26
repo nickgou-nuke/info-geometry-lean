@@ -65,10 +65,10 @@ theorem paper_conclusion_window6_hidden_coinvariant_gorenstein_package :
   rcases hsix rfl with ⟨hseries, _hfactorial, hdim_six, htop_six⟩
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · exact hseries
-  · native_decide
+  · decide
   · rw [conclusion_window6_hidden_coinvariant_gorenstein_package_dimension, hdim_six]
-    native_decide
-  · native_decide
+    decide
+  · decide
   · rw [conclusion_window6_hidden_coinvariant_gorenstein_package_top_degree, htop_six]
   · rfl
   · rfl

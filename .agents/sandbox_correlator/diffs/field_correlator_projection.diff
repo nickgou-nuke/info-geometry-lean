@@ -1,0 +1,94 @@
+--- lean/InfoGeometry/Detector/FieldCorrelatorProjection.lean	2026-09-20 18:50:56.640419696 +0300
++++ .agents/sandbox_correlator/lean/InfoGeometry/Detector/FieldCorrelatorProjection.lean	2026-09-22 15:20:06.372563346 +0300
+@@ -1,5 +1,4 @@
+ import Mathlib.Data.Real.Basic
+-import Mathlib.Tactic
+ 
+ namespace DetectorGeometry.FieldCorrelatorProjection
+ 
+@@ -25,12 +24,12 @@
+         ⟨r₁ * field₁.singleAmplitude + r₂ * field₂.singleAmplitude,
+           r₁ * field₁.pairAmplitude + r₂ * field₂.pairAmplitude⟩ =
+       r₁ * projectSingle detector field₁ + r₂ * projectSingle detector field₂ := by
+-  simp [projectSingle]
+-  ring
++  dsimp [projectSingle]
++  rw [mul_add, mul_left_comm detector.singleEfficiency r₁, mul_left_comm detector.singleEfficiency r₂]
+ 
+ theorem projector_pair_bilinear_scale (ε₁ ε₂ a b : ℝ) :
+-    (ε₁ * ε₂) * (a * b) = (ε₁ * a) * (ε₂ * b) := by
+-  ring
++    (ε₁ * ε₂) * (a * b) = (ε₁ * a) * (ε₂ * b) :=
++  mul_mul_mul_comm ε₁ ε₂ a b
+ 
+ end FieldCorrelator
+ 
+@@ -40,12 +39,14 @@
+ 
+ theorem oscillatory_modes_annihilated (monopole oscillatory : ℝ) :
+     modeTrace monopole oscillatory = monopole := by
+-  simp [modeTrace]
++  dsimp [modeTrace]
++  rw [MulZeroClass.zero_mul, AddMonoid.add_zero]
+ 
+ theorem modeTrace_linear (m₁ o₁ m₂ o₂ r₁ r₂ : ℝ) :
+     modeTrace (r₁ * m₁ + r₂ * m₂) (r₁ * o₁ + r₂ * o₂) =
+       r₁ * modeTrace m₁ o₁ + r₂ * modeTrace m₂ o₂ := by
+-  simp [modeTrace]
++  dsimp [modeTrace]
++  repeat rw [MulZeroClass.zero_mul, AddMonoid.add_zero]
+ 
+ end ModeProjection
+ 
+@@ -56,16 +57,16 @@
+ def coincidenceCount (N₀ K X : ℝ) : ℝ := N₀ * K * X ^ 2
+ 
+ theorem coincidence_is_rank_two (N₀ K X : ℝ) :
+-    coincidenceCount N₀ K X = (N₀ * K) * X ^ 2 := by
++    coincidenceCount N₀ K X = (N₀ * K) * X ^ 2 :=
+   rfl
+ 
+ theorem square_root_coordinate_is_linear (N₀ ε X : ℝ) :
+-    singlesCount N₀ ε X = (N₀ * ε) * X := by
++    singlesCount N₀ ε X = (N₀ * ε) * X :=
+   rfl
+ 
+ theorem detector_projection_parabola (N₀ K X : ℝ) :
+-    coincidenceCount N₀ K X = (N₀ * K) * X ^ 2 := by
+-  rfl
++    coincidenceCount N₀ K X = (N₀ * K) * X ^ 2 :=
++  coincidence_is_rank_two N₀ K X
+ 
+ end RankHierarchy
+ 
+@@ -91,20 +92,23 @@
+ theorem causal_refl (a : Archetype) : causallyPrecedes a a := le_rfl
+ 
+ theorem causal_trans {a b c : Archetype} :
+-    causallyPrecedes a b → causallyPrecedes b c → causallyPrecedes a c := by
+-  exact Nat.le_trans
++    causallyPrecedes a b → causallyPrecedes b c → causallyPrecedes a c :=
++  Nat.le_trans
++
++theorem rank_inj : ∀ {a b : Archetype}, rank a = rank b → a = b := by
++  intro a b h
++  cases a <;> cases b <;> first | rfl | contradiction
+ 
+ theorem causal_antisymm {a b : Archetype} :
+-    causallyPrecedes a b → causallyPrecedes b a → a = b := by
+-  intro hab hba
+-  cases a <;> cases b <;> simp [causallyPrecedes, rank] at hab hba ⊢
++    causallyPrecedes a b → causallyPrecedes b a → a = b :=
++  fun hab hba => rank_inj (Nat.le_antisymm hab hba)
+ 
+ theorem canonical_chain :
+     causallyPrecedes .fieldCorrelator .detectorProjector ∧
+     causallyPrecedes .detectorProjector .modeNullspace ∧
+     causallyPrecedes .modeNullspace .rankHierarchy ∧
+-    causallyPrecedes .rankHierarchy .scaleInvariantObservable := by
+-  norm_num [causallyPrecedes, rank]
++    causallyPrecedes .rankHierarchy .scaleInvariantObservable :=
++  ⟨Nat.le_succ 195, Nat.le_succ 196, Nat.le_succ 197, Nat.le_succ 198⟩
+ 
+ end CausalPoset
+ 

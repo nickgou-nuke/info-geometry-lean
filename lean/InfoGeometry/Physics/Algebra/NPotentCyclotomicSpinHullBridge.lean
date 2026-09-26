@@ -74,9 +74,7 @@ theorem fibonacci_twist_is_primitive_root_five :
   dsimp [fibonacciTopologicalTwist, topologicalTwist, fibonacciConformalWeight]
   have hcop : Nat.Coprime 2 5 := by decide
   have h := Complex.isPrimitiveRoot_exp_of_coprime 2 5 (by decide) hcop
-  have heq : ((2 : ℕ) : ℂ) / ((5 : ℕ) : ℂ) = ((2 / 5 : ℚ) : ℂ) := by
-    push_cast
-    ring
+  have heq : ((2 : ℕ) : ℂ) / ((5 : ℕ) : ℂ) = ((2 / 5 : ℚ) : ℂ) := by norm_num
   rw [heq] at h
   exact h
 
@@ -187,8 +185,7 @@ private theorem pow_apply_eigenvector {V : Type*} [AddCommGroup V] [Module ℂ V
   induction n with
   | zero => simp
   | succ n ih =>
-      rw [pow_succ, Module.End.mul_apply, heig, map_smul, ih, smul_smul]
-      ring_nf
+      rw [pow_succ, Module.End.mul_apply, heig, map_smul, ih, smul_smul, ← pow_succ]
 
 /-- A nonzero eigenvector of an `n`-potent endomorphism has an `n`-potent
 eigenvalue.  This is the operator-level direction from the polynomial hull to

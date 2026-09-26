@@ -38,7 +38,7 @@ theorem swap01_mul (X Y : SplitOctF2) :
   rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
   rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
   revert a1 b1 x01 x11 x21 y01 y11 y21 a2 b2 x02 x12 x22 y02 y12 y22
-  native_decide
+  decide
 
 noncomputable def swap01Aut : SplitOctF2Aut :=
   ⟨swap01Equiv, by
@@ -90,7 +90,7 @@ theorem cycle012_mul (X Y : SplitOctF2) :
   rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
   rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
   revert a1 b1 x01 x11 x21 y01 y11 y21 a2 b2 x02 x12 x22 y02 y12 y22
-  native_decide
+  decide
 
 noncomputable def cycle012Aut : SplitOctF2Aut :=
   ⟨cycle012Equiv, by

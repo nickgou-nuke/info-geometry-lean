@@ -1,0 +1,108 @@
+--- lean/DAG/ConnesHodgeBridge.lean	2026-09-14 12:48:39.975616714 +0300
++++ .agents/sandbox_connes_hodge/lean/DAG/ConnesHodgeBridge.lean	2026-09-22 17:43:26.582249028 +0300
+@@ -1,13 +1,12 @@
+ import DAG.TwoComplex
+ import DAG.GraphHodge
+-import DAG.HodgeTheorems
+ import DAG.CocycleBridge
+ 
+ /-!
+ # DAG.ConnesHodgeBridge
+ 
+ Bridge data from discrete Hodge readouts to a Connes-style correspondence
+-surface. Finite Hodge data is owned by `DAG.GraphHodge`/`DAG.HodgeTheorems`.
++surface. Finite Hodge data is owned by `DAG.GraphHodge`.
+ Continuous modular-flow and analytic Connes-cocycle claims remain outside this
+ finite correspondence package.
+ -/
+@@ -37,10 +36,11 @@
+ /-- Construct Connes correspondence data from any TwoComplex. -/
+ def fromTwoComplex {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
+     ConnesCorrespondence α :=
++  let b1 := betti1Hodge tc
+   { complex := tc
+     edgeCount := tc.edges.size
+-    harmonicDim := betti1Hodge tc
+-    cocycleDimUpperBound := betti1Hodge tc
++    harmonicDim := b1
++    cocycleDimUpperBound := b1
+     eulerChar := eulerCharacteristic tc
+   }
+ 
+@@ -56,4 +56,76 @@
+     eulerChar := hd.eulerChar
+   }
+ 
++/-! ## Definitional Projections and Invariants -/
++
++@[simp]
++theorem fromTwoComplex_edgeCount {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
++    (fromTwoComplex tc).edgeCount = tc.edges.size :=
++  rfl
++
++@[simp]
++theorem fromTwoComplex_harmonicDim {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
++    (fromTwoComplex tc).harmonicDim = betti1Hodge tc :=
++  rfl
++
++@[simp]
++theorem fromTwoComplex_cocycleDimUpperBound {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
++    (fromTwoComplex tc).cocycleDimUpperBound = betti1Hodge tc :=
++  rfl
++
++@[simp]
++theorem fromTwoComplex_eulerChar {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
++    (fromTwoComplex tc).eulerChar = eulerCharacteristic tc :=
++  rfl
++
++@[simp]
++theorem fromHodgeData_edgeCount {α : Type} [BEq α] [Hashable α] (hd : DAG.CocycleBridge.HodgeCocycleData α) :
++    (fromHodgeData hd).edgeCount = hd.complex.edges.size :=
++  rfl
++
++@[simp]
++theorem fromHodgeData_harmonicDim {α : Type} [BEq α] [Hashable α] (hd : DAG.CocycleBridge.HodgeCocycleData α) :
++    (fromHodgeData hd).harmonicDim = hd.betti1 :=
++  rfl
++
++@[simp]
++theorem fromHodgeData_cocycleDimUpperBound {α : Type} [BEq α] [Hashable α] (hd : DAG.CocycleBridge.HodgeCocycleData α) :
++    (fromHodgeData hd).cocycleDimUpperBound = hd.betti1 :=
++  rfl
++
++@[simp]
++theorem fromHodgeData_eulerChar {α : Type} [BEq α] [Hashable α] (hd : DAG.CocycleBridge.HodgeCocycleData α) :
++    (fromHodgeData hd).eulerChar = hd.eulerChar :=
++  rfl
++
++/-- Invariant: Harmonic dimension equals cocycle dimension upper bound for `fromTwoComplex`. -/
++theorem fromTwoComplex_harmonicDim_eq_cocycleDimUpperBound {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
++    (fromTwoComplex tc).harmonicDim = (fromTwoComplex tc).cocycleDimUpperBound :=
++  rfl
++
++/-- Invariant: Harmonic dimension equals cocycle dimension upper bound for `fromHodgeData`. -/
++theorem fromHodgeData_harmonicDim_eq_cocycleDimUpperBound {α : Type} [BEq α] [Hashable α] (hd : DAG.CocycleBridge.HodgeCocycleData α) :
++    (fromHodgeData hd).harmonicDim = (fromHodgeData hd).cocycleDimUpperBound :=
++  rfl
++
++/-- Alias matching alternate naming convention. -/
++theorem harmonicDim_eq_cocycleDimUpperBound_fromTwoComplex {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
++    (fromTwoComplex tc).harmonicDim = (fromTwoComplex tc).cocycleDimUpperBound :=
++  rfl
++
++/-- Alias matching alternate naming convention. -/
++theorem harmonicDim_eq_cocycleDimUpperBound_fromHodgeData {α : Type} [BEq α] [Hashable α] (hd : DAG.CocycleBridge.HodgeCocycleData α) :
++    (fromHodgeData hd).harmonicDim = (fromHodgeData hd).cocycleDimUpperBound :=
++  rfl
++
++/-- Coherence: edge counts agree when bridging through HodgeCocycleData. -/
++theorem fromHodgeData_fromTwoComplex_edgeCount {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
++    (fromHodgeData (DAG.CocycleBridge.fromTwoComplex tc)).edgeCount = (fromTwoComplex tc).edgeCount :=
++  rfl
++
++/-- Coherence: Euler characteristics agree when bridging through HodgeCocycleData. -/
++theorem fromHodgeData_fromTwoComplex_eulerChar {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) :
++    (fromHodgeData (DAG.CocycleBridge.fromTwoComplex tc)).eulerChar = (fromTwoComplex tc).eulerChar :=
++  rfl
++
+ end DAG.ConnesHodgeBridge

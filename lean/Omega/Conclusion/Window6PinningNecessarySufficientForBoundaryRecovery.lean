@@ -44,7 +44,7 @@ theorem paper_conclusion_window6_pinning_necessary_sufficient_for_boundary_recov
     D.pinning_recovers_boundary_parity_and_superselection := by
   refine ⟨?_, ?_, ?_⟩
   · exact ⟨0, 1, by decide⟩
-  · exact ⟨by intro i; rfl, by native_decide⟩
-  · exact ⟨by native_decide, by intro i; rfl⟩
+  · exact ⟨by intro i; rfl, by decide⟩
+  · exact ⟨by decide, by intro i; rfl⟩
 
 end Omega.Conclusion

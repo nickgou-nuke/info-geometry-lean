@@ -5,7 +5,7 @@ namespace Omega.Zeta
 
 private lemma xi_window6_reset_clock_semigroup_coupling_witness_mod21 (r : ℕ) (hr : r < 21) :
     (34 * ((13 * r) % 21)) % 21 = r := by
-  interval_cases r <;> native_decide
+  interval_cases r <;> decide
 
 /-- cor:xi-window6-reset-clock-semigroup-coupling -/
 theorem paper_xi_window6_reset_clock_semigroup_coupling (t : ℕ) (ht : 715 ≤ t) :

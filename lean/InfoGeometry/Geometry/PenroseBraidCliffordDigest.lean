@@ -65,7 +65,7 @@ def fiveCycle : Equiv.Perm (Fin 5) :=
 
 /-- The 5-cycle has order dividing five. -/
 theorem fiveCycle_pow_five : fiveCycle ^ 5 = 1 := by
-  native_decide
+  decide
 
 /-! ## `B₃ -> S₃` Artin quotient shadow -/
 
@@ -79,15 +79,15 @@ def s₂ : Equiv.Perm (Fin 3) :=
 
 /-- The adjacent transpositions satisfy the `B₃` Artin relation. -/
 theorem s3_artin_relation : s₁ * s₂ * s₁ = s₂ * s₁ * s₂ := by
-  native_decide
+  decide
 
 /-- The first `S₃` quotient generator is involutive. -/
 theorem s3_s₁_involutive : s₁ * s₁ = 1 := by
-  native_decide
+  decide
 
 /-- The second `S₃` quotient generator is involutive. -/
 theorem s3_s₂_involutive : s₂ * s₂ = 1 := by
-  native_decide
+  decide
 
 /-! ## Hecke quadratic relation as explicit premise, not hidden proof data -/
 
@@ -109,14 +109,14 @@ def cliffordF : Matrix (Fin 2) (Fin 2) ℤ :=
 
 /-- The finite Clifford positive generator squares to the identity. -/
 theorem cliffordE_sq : cliffordE * cliffordE = 1 := by
-  native_decide
+  decide
 
 /-- The finite Clifford negative generator squares to negative identity. -/
 theorem cliffordF_sq : cliffordF * cliffordF = -1 := by
-  native_decide
+  decide
 
 /-- The two concrete Clifford generators anticommute. -/
 theorem cliffordEF_anticommute : cliffordE * cliffordF + cliffordF * cliffordE = 0 := by
-  native_decide
+  decide
 
 end InfoGeometry.Geometry.PenroseBraidCliffordDigest

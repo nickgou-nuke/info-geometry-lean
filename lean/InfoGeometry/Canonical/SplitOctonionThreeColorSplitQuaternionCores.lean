@@ -80,7 +80,7 @@ def threeColorLBasisIndex : SplitOctonionColour → IntegralSplitBasis
 private theorem threeColorStandardLabel_injective
     (c : SplitOctonionColour) :
     Function.Injective (threeColorStandardLabel c) := by
-  cases c <;> native_decide
+  cases c <;> decide
 
 private theorem threeColorStandardGenerator_linearIndependent
     (c : SplitOctonionColour) :
@@ -246,7 +246,7 @@ private theorem threeColorCoreGenerator_assoc
       splitOctonionMulQ (threeColorCoreGenerator c p)
         (splitOctonionMulQ (threeColorCoreGenerator c q)
           (threeColorCoreGenerator c r)) := by
-  fin_cases c <;> fin_cases p <;> fin_cases q <;> fin_cases r <;> native_decide
+  fin_cases c <;> fin_cases p <;> fin_cases q <;> fin_cases r <;> decide
 
 private theorem threeColorCore_mul_zero_left (x : ThreeColorCoreCarrier) :
     splitOctonionMulQ 0 x = 0 := by

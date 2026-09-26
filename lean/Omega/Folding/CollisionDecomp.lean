@@ -791,7 +791,7 @@ theorem exactWeightCollision_recurrence (m : Nat) :
     exactWeightCollision (m + 3) + 2 * exactWeightCollision m =
     2 * exactWeightCollision (m + 2) + 2 * exactWeightCollision (m + 1) := by
   induction m with
-  | zero => native_decide
+  | zero => decide
   | succ m ih =>
     show exactWeightCollision (m + 4) + 2 * exactWeightCollision (m + 1) =
         2 * exactWeightCollision (m + 3) + 2 * exactWeightCollision (m + 2)

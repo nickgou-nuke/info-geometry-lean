@@ -49,9 +49,9 @@ abbrev derived_fold_renyi_dimension_transcendence_q4_q5_q16_q17_statement : Prop
 /-- Paper label: `thm:derived-fold-renyi-dimension-transcendence-q4-q5-q16-q17`. -/
 theorem paper_derived_fold_renyi_dimension_transcendence_q4_q5_q16_q17 :
     derived_fold_renyi_dimension_transcendence_q4_q5_q16_q17_statement := by
-  refine ⟨?_, by native_decide, by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨?_, by decide, by decide, by decide, by decide,
+    by decide, by decide, by decide, by decide, by decide,
+    by decide, by decide, by decide, by decide, by decide⟩
   intro a b hb
   simpa using (paper_derived_fold_golden_rational_power_unit_obstruction a b hb).2
 

@@ -15,7 +15,7 @@ def cdim_s4_v4_jacobian_pullback_kernel_and_prym_splitting_prym_data :
   c := 2
   naturalPolarization := a2CartanForm
   hnatural := by rfl
-  hinvariant := by native_decide
+  hinvariant := by decide
   hpositive := by norm_num
   hdet := by
     norm_num [a2CartanForm, Matrix.det_fin_two]

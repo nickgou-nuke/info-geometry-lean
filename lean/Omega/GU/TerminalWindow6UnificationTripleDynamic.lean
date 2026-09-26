@@ -9,9 +9,9 @@ private def terminalWindow6ResetWitness : TerminalResetEventsSturmianData where
   smallGap := 34
   largeGap := 55
   discrepancy := 1
-  smallGap_eq := by native_decide
-  largeGap_eq := by native_decide
-  discrepancy_le_one := by native_decide
+  smallGap_eq := by decide
+  largeGap_eq := by decide
+  discrepancy_le_one := by decide
 
 /-- Paper-facing wrapper: at window `6` the triple `21, 34, 55` is seen simultaneously as the
 tail-offset package, the Sturmian reset-gap spectrum with recurrence `55 = 34 + 21`, and the

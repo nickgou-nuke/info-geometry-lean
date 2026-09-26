@@ -21,7 +21,7 @@ theorem paper_sm_uplift_residual_mediator_m7 :
     norm_num [sm_uplift_residual_mediator_m7_second_difference]
   have hlaw : Nat.fib 11 - Nat.fib 10 = Nat.fib 9 := Omega.bdry_uplift_second_diff_m7
   have hfib9 : Nat.fib 9 = 34 := by
-    native_decide
+    decide
   refine ⟨rfl, hsecond, ?_⟩
   rw [hsecond]
   exact hlaw.trans hfib9

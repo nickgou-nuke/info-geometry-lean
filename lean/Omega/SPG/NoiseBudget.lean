@@ -136,6 +136,6 @@ theorem paper_noiseBudget_decidable :
     Nat.fib 4 = 3 ∧ Nat.fib 5 = 5 ∧ Nat.fib 6 = 8 ∧
     (3 : ℚ) / 8 > (5 : ℚ) / 16 ∧
     (5 : ℚ) / 16 > (8 : ℚ) / 32 := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by norm_num, by norm_num⟩
+  refine ⟨by decide, by decide, by decide, by norm_num, by norm_num⟩
 
 end Omega.SPG

@@ -34,7 +34,7 @@ theorem paper_conclusion_finite_localized_shadow_exact_torsion_spectrum :
     rw [sCoprime_12]
   · change ZMod (sCoprimePart23 30) = ZMod 5
     rw [sCoprime_30]
-  · native_decide
-  · native_decide
+  · decide
+  · decide
 
 end Omega.Conclusion

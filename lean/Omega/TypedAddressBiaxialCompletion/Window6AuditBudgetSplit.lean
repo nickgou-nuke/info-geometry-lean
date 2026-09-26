@@ -61,15 +61,15 @@ theorem paper_typed_address_biaxial_completion_window6_audit_budget_split :
     · intro hB
       simpa [window6AuditCapacity] using hsat B hB
   · rw [window6ReplayBudget, cBinFiberMax_six]
-    native_decide
+    decide
   · rw [window6BoundaryBudget]
-    native_decide
+    decide
   · rw [window6AnomalyBudget, cBinFiberHist_6_2, cBinFiberHist_6_3, cBinFiberHist_6_4]
   · rw [window6BoundaryBudget, window6ReplayBudget, cBinFiberMax_six]
-    native_decide
+    decide
   · rw [window6AnomalyBudget, window6ReplayBudget, cBinFiberMax_six,
       cBinFiberHist_6_2, cBinFiberHist_6_3, cBinFiberHist_6_4]
-    native_decide
+    decide
   · intro k Φ
     exact paper_pom_prime_axis_vs_2d_noncommutative_externalization_part1 Φ 0 1 (by decide)
 

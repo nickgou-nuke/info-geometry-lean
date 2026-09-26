@@ -41,11 +41,11 @@ def orientationCharacter : KleinGroup →* OrientationGroup :=
 theorem orientationCharacter_genA_ne_one :
     orientationCharacter (toKlein genA) ≠ 1 := by
   rw [orientationCharacter_genA]
-  native_decide
+  decide
 
 @[simp] theorem orientationCharacter_square_genA :
     orientationCharacter (toKlein genA * toKlein genA) = 1 := by
   rw [map_mul, orientationCharacter_genA]
-  native_decide
+  decide
 
 end InfoGeometry.Canonical.KleinOrientationCharacter

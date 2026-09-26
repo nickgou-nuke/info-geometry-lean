@@ -199,7 +199,7 @@ theorem autMatrix_c_conjugate_pc6_eq_pc2_pc5_pc6 :
     G2TwoPCMatrixCertificate.autMatrix_pc6Aut_eq_C5,
     G2TwoPCMatrixCertificate.autMatrix_pc5Aut_eq_C4,
     G2TwoPCMatrixCertificate.autMatrix_pc2Aut_eq_C1]
-  native_decide
+  decide
 
 theorem rootAut_short_three_eq_pcWord :
     rootAut (RootLength.Short, (3 : ZMod 6)) =

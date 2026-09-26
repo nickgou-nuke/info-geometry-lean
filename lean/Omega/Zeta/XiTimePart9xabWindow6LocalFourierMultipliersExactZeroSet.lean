@@ -77,6 +77,6 @@ theorem paper_xi_time_part9xab_window6_local_fourier_multipliers_exact_zero_set 
   refine ⟨?_, ?_, ?_⟩
   all_goals
     ext t
-    fin_cases t <;> native_decide
+    fin_cases t <;> decide
 
 end Omega.Zeta

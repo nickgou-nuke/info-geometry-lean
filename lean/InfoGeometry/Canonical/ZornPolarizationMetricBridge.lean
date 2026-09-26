@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.ZornVectorMatrixExplicit
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorZornPolarizationSymmetry
 
 /-!
@@ -151,7 +150,6 @@ theorem hilbertized_nonneg (X : ZornCoord) : 0 ≤ polarPair X (fundamental X) :
   simp only [← pow_two]
   positivity
 
-set_option maxHeartbeats 800000 in
 theorem hilbertized_zero_iff (X : ZornCoord) :
     polarPair X (fundamental X) = 0 ↔ X = 0 := by
   constructor

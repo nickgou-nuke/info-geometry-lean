@@ -77,7 +77,7 @@ def lightConeGramTarget : M10Z :=
 /-- Decidable finite Gram check for the `O(5,5)` light-cone integer core. -/
 theorem lightConeIntegerCore_gram :
     lightConeIntegerCoreᵀ * lightConeIntegerCore = lightConeGramTarget := by
-  native_decide
+  decide
 
 /-- Standard closed-string mass-square algebraic readout. -/
 def standardClosedMassSq (alphaPrime excitation intercept : ℝ) : ℝ :=

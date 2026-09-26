@@ -182,6 +182,6 @@ check shows that any signed Weyl symmetry preserving all three layers is forced 
 four subgroup `diag(1, ε₂, ε₃)`. -/
 theorem paper_derived_window6_multiplicity_rootcloud_signed_weyl_collapse :
     derived_window6_multiplicity_rootcloud_signed_weyl_collapse_statement := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> decide
 
 end Omega.DerivedConsequences

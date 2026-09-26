@@ -14,18 +14,18 @@ namespace Omega.SPG.F2FiberCardinality
     cor:spg-partial-boundary-fiber-cardinality-f2 -/
 theorem kernel_sum3_card :
     (Finset.univ.filter (fun v : Fin 3 → ZMod 2 => v 0 + v 1 + v 2 = 0)).card = 4 := by
-  native_decide
+  decide
 
 /-- Kernel of the projection map (Fin 2 → ZMod 2) → ZMod 2 has 2 elements.
     cor:spg-partial-boundary-fiber-cardinality-f2 -/
 theorem kernel_proj2_card :
     (Finset.univ.filter (fun v : Fin 2 → ZMod 2 => v 0 = 0)).card = 2 := by
-  native_decide
+  decide
 
 /-- Full space (Fin 2 → ZMod 2) has 4 elements (kernel of zero map).
     cor:spg-partial-boundary-fiber-cardinality-f2 -/
 theorem full_space_fin2_card :
-    (Finset.univ : Finset (Fin 2 → ZMod 2)).card = 4 := by native_decide
+    (Finset.univ : Finset (Fin 2 → ZMod 2)).card = 4 := by decide
 
 /-- Paper package: F₂ fiber cardinality = 2^{dim ker}.
     cor:spg-partial-boundary-fiber-cardinality-f2 -/

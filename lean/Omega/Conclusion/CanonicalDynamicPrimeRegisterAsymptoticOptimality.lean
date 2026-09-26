@@ -35,8 +35,8 @@ private lemma conclusion_canonical_dynamic_prime_register_asymptotic_optimality_
         2 = a := by
   unfold conclusion_canonical_dynamic_prime_register_asymptotic_optimality_canonical_encoding
   rw [Nat.factorization_mul (pow_ne_zero _ (by decide)) (pow_ne_zero _ (by decide))]
-  simp [Nat.factorization_pow, show (Nat.factorization 2) 2 = 1 by native_decide,
-    show (Nat.factorization 3) 2 = 0 by native_decide]
+  simp [Nat.factorization_pow, show (Nat.factorization 2) 2 = 1 by decide,
+    show (Nat.factorization 3) 2 = 0 by decide]
 
 private lemma conclusion_canonical_dynamic_prime_register_asymptotic_optimality_factorization_three
     (a b : ℕ) :
@@ -45,8 +45,8 @@ private lemma conclusion_canonical_dynamic_prime_register_asymptotic_optimality_
         3 = b := by
   unfold conclusion_canonical_dynamic_prime_register_asymptotic_optimality_canonical_encoding
   rw [Nat.factorization_mul (pow_ne_zero _ (by decide)) (pow_ne_zero _ (by decide))]
-  simp [Nat.factorization_pow, show (Nat.factorization 2) 3 = 0 by native_decide,
-    show (Nat.factorization 3) 3 = 1 by native_decide]
+  simp [Nat.factorization_pow, show (Nat.factorization 2) 3 = 0 by decide,
+    show (Nat.factorization 3) 3 = 1 by decide]
 
 /-- The conclusion package exposes the canonical valuation recovery, the dynamic `T log T`
 bitlength sandwich, and the faithful realization on the fixed rank-two two-adic ambient. -/

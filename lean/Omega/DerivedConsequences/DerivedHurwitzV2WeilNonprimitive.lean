@@ -50,6 +50,6 @@ theorem paper_derived_hurwitz_v2_weil_nonprimitive :
     derived_hurwitz_v2_weil_nonprimitive_statement := by
   rcases paper_xi_terminal_zm_s3_endoscopic_homology_a2_identification with ⟨_, hprym, hsplit⟩
   rcases paper_xi_terminal_zm_resolvent_cubic_no_cm_max_end with ⟨_, _, _, hend⟩
-  refine ⟨hsplit.2.1, hprym.1, hend, rfl, rfl, by native_decide, rfl, by native_decide⟩
+  refine ⟨hsplit.2.1, hprym.1, hend, rfl, rfl, by decide, rfl, by decide⟩
 
 end Omega.DerivedConsequences

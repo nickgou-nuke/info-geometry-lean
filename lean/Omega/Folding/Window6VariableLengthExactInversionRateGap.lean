@@ -45,7 +45,7 @@ theorem paper_window6_variable_length_exact_inversion_rate_gap :
   · norm_num [window6VariableLengthVisibleBits, window6VariableLengthExactInversionRate,
       window6OptimalBinaryPrefixAverage, Omega.cBinFiberHist_6_2, Omega.cBinFiberHist_6_3,
       Omega.cBinFiberHist_6_4]
-  · native_decide
+  · decide
   · norm_num [window6FixedLengthExactInversionThreshold, window6VariableLengthExactInversionRate,
       window6OptimalBinaryPrefixAverage, Omega.cBinFiberHist_6_2, Omega.cBinFiberHist_6_3,
       Omega.cBinFiberHist_6_4]

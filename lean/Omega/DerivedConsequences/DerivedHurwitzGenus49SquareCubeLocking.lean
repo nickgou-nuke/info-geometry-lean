@@ -70,6 +70,6 @@ theorem paper_derived_hurwitz_genus49_square_cube_locking :
     ¬ Even derived_hurwitz_genus49_square_cube_locking_j_h.multiplicity ∧
     ¬ Even derived_hurwitz_genus49_square_cube_locking_j_c_f.multiplicity ∧
     ¬ Even derived_hurwitz_genus49_square_cube_locking_p.multiplicity := by
-  native_decide
+  decide
 
 end Omega.DerivedConsequences

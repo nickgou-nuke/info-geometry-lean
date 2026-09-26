@@ -20,7 +20,7 @@ lemma window6Idempotents_eq :
 
 lemma window6Nilradical_eq :
     window6Nilradical = ({0} : Finset (ZMod 21)) := by
-  native_decide
+  decide
 
 /-- Paper label: `prop:fold-mod-semirings-window6-semisimple-skeleton`. -/
 theorem paper_fold_mod_semirings_window6_semisimple_skeleton :
@@ -28,6 +28,6 @@ theorem paper_fold_mod_semirings_window6_semisimple_skeleton :
       Fintype.card (Units (ZMod 21)) = 12 ∧
       window6Nilradical = ({0} : Finset (ZMod 21)) := by
   refine ⟨window6Idempotents_eq, ?_, window6Nilradical_eq⟩
-  native_decide
+  decide
 
 end Omega

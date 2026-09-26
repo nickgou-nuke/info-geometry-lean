@@ -60,34 +60,34 @@ theorem paper_xi_foldbin_even_window_parity_section_center_intersection :
       (Finset.univ.filter fun w : Fin (Nat.fib 8) =>
         2 ≤ xi_foldbin_even_window_parity_section_center_intersection_multiplicity 6 w).card =
         Nat.fib 8 := by
-    native_decide
+    decide
   have h8_ge2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 10) =>
         2 ≤ xi_foldbin_even_window_parity_section_center_intersection_multiplicity 8 w).card =
         Nat.fib 10 := by
-    native_decide
+    decide
   have h10_ge2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 12) =>
         2 ≤ xi_foldbin_even_window_parity_section_center_intersection_multiplicity 10 w).card =
         Nat.fib 12 := by
-    native_decide
+    decide
   have h12_ge2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 14) =>
         2 ≤ xi_foldbin_even_window_parity_section_center_intersection_multiplicity 12 w).card =
         Nat.fib 14 := by
-    native_decide
+    decide
   have hB6 :
       xi_foldbin_even_window_parity_section_center_intersection_B 6 = 8 := by
-    native_decide
+    decide
   have hB8 :
       xi_foldbin_even_window_parity_section_center_intersection_B 8 = 0 := by
-    native_decide
+    decide
   have hB10 :
       xi_foldbin_even_window_parity_section_center_intersection_B 10 = 0 := by
-    native_decide
+    decide
   have hB12 :
       xi_foldbin_even_window_parity_section_center_intersection_B 12 = 0 := by
-    native_decide
+    decide
   refine ⟨?_, ?_, hB6, ?_, ?_, hB8, ?_, ?_, hB10, ?_, ?_, hB12⟩
   · simpa [h6_ge2] using h6.2
   · simpa [xi_foldbin_even_window_parity_section_center_intersection_B, hB6] using h6.1

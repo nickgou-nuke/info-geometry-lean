@@ -71,7 +71,7 @@ theorem paper_conclusion_s4_schur_centralizer_closed_form :
         conclusion_s4_hodge_determines_fixedpoint_counts_v2_character,
         conclusion_s4_hodge_determines_fixedpoint_counts_v3_character,
         conclusion_s4_hodge_determines_fixedpoint_counts_v3prime_character]
-  · native_decide
-  · native_decide
+  · decide
+  · decide
 
 end Omega.Conclusion

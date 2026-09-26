@@ -82,7 +82,7 @@ theorem chiralOperatorNativeReadout_nativeCircularBasis
 
 theorem chiralGeneratorIndex_surjective :
     Function.Surjective chiralGeneratorIndex := by
-  native_decide
+  decide
 
 noncomputable def chiralNativeBasis
     (g : InfoGeometry.OperatorAlgebra.ChiralGenerator) : VZ :=

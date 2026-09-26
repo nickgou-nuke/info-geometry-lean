@@ -21,20 +21,20 @@ def imaginaryRootDelta : Matrix (Fin 2) (Fin 1) ℤ :=
   !![1; 1]
 
 theorem det_A1_1Cartan_eq_zero : A1_1Cartan.det = 0 := by
-  native_decide
+  decide
 
 theorem A1_1Cartan_mul_delta_eq_zero :
     A1_1Cartan * imaginaryRootDelta = 0 := by
-  native_decide
+  decide
 
 theorem A1_1Cartan_symmetric : A1_1Cartanᵀ = A1_1Cartan := by
-  native_decide
+  decide
 
 theorem delta_first_coord_eq_one : imaginaryRootDelta 0 0 = 1 := by
-  native_decide
+  decide
 
 theorem delta_second_coord_eq_one : imaginaryRootDelta 1 0 = 1 := by
-  native_decide
+  decide
 
 theorem imaginaryRootDelta_ne_zero : imaginaryRootDelta ≠ 0 := by
   intro h
@@ -49,7 +49,7 @@ common divisor one.
 -/
 theorem imaginaryRootDelta_primitive :
     Int.gcd (imaginaryRootDelta 0 0) (imaginaryRootDelta 1 0) = 1 := by
-  native_decide
+  decide
 
 /--
 Main non-vacuous package for the affine A1^(1) imaginary root: the Cartan

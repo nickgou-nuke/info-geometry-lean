@@ -33,25 +33,25 @@ theorem gaussian_le_two_pow_17 : 97155 ≤ 2 ^ 17 := by omega
 
 /-- The group-level pinning budget is exactly 17 bits.
     thm:conclusion-window6-boundary-pinning-two-scales-memory-gap -/
-theorem group_pinning_budget_eq_17 : Nat.log 2 97155 + 1 = 17 := by native_decide
+theorem group_pinning_budget_eq_17 : Nat.log 2 97155 + 1 = 17 := by decide
 
 /-! ## Binomial coefficient C(8,3) = 56 -/
 
 /-- The ordinary binomial coefficient C(8,3) = 56.
     thm:conclusion-window6-boundary-pinning-two-scales-memory-gap -/
-theorem binom_8_3_eq : Nat.choose 8 3 = 56 := by native_decide
+theorem binom_8_3_eq : Nat.choose 8 3 = 56 := by decide
 
 /-- 2^5 = 32 < 56, so ⌈log₂ 56⌉ > 5.
     thm:conclusion-window6-boundary-pinning-two-scales-memory-gap -/
-theorem two_pow_5_lt_binom : 2 ^ 5 < Nat.choose 8 3 := by native_decide
+theorem two_pow_5_lt_binom : 2 ^ 5 < Nat.choose 8 3 := by decide
 
 /-- 56 ≤ 2^6 = 64, so ⌈log₂ 56⌉ = 6.
     thm:conclusion-window6-boundary-pinning-two-scales-memory-gap -/
-theorem binom_le_two_pow_6 : Nat.choose 8 3 ≤ 2 ^ 6 := by native_decide
+theorem binom_le_two_pow_6 : Nat.choose 8 3 ≤ 2 ^ 6 := by decide
 
 /-- The algebra-level pinning budget is exactly 6 bits.
     thm:conclusion-window6-boundary-pinning-two-scales-memory-gap -/
-theorem algebra_pinning_budget_eq_6 : Nat.log 2 (Nat.choose 8 3) + 1 = 6 := by native_decide
+theorem algebra_pinning_budget_eq_6 : Nat.log 2 (Nat.choose 8 3) + 1 = 6 := by decide
 
 /-! ## Memory gap: at least 11 bits -/
 
@@ -66,7 +66,7 @@ theorem paper_conclusion_boundary_pinning_two_scales_memory_gap :
     (2 ^ 16 < 97155 ∧ 97155 ≤ 2 ^ 17) ∧
     (Nat.choose 8 3 = 56 ∧ 2 ^ 5 < 56 ∧ 56 ≤ 2 ^ 6) ∧
     (17 - 6 ≥ 11) := by
-  refine ⟨⟨by omega, by omega⟩, ⟨by native_decide, by omega, by omega⟩, by omega⟩
+  refine ⟨⟨by omega, by omega⟩, ⟨by decide, by omega, by omega⟩, by omega⟩
 
 /-! ## Shannon information content -/
 

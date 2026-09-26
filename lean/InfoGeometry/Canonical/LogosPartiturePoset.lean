@@ -67,13 +67,13 @@ theorem canonical_cover_chain :
     arithmeticApotheosis]
 
 theorem partiture_length : partiture.length = 12 := by
-  native_decide
+  decide
 
 theorem partiture_nodup : partiture.Nodup := by
-  native_decide
+  decide
 
 theorem partiture_strictlyOrdered : partiture.Pairwise (· < ·) := by
-  native_decide
+  decide
 
 theorem node_mem_partiture (x : ArchetypalNode) : x ∈ partiture := by
   fin_cases x <;> simp [partiture, pleromaPuncture, primalPolarity,
@@ -196,18 +196,18 @@ def ownerLedger : List NodeLedgerEntry :=
   ]
 
 theorem ownerLedger_length : ownerLedger.length = 12 := by
-  native_decide
+  decide
 
 theorem ownerLedger_nodes :
     ownerLedger.map NodeLedgerEntry.node = partiture := by
-  native_decide
+  decide
 
 theorem ownerLedger_modules_nonempty :
     ∀ entry ∈ ownerLedger, entry.ownerModule ≠ "" := by
-  native_decide
+  decide
 
 theorem ownerLedger_declarations_nonempty :
     ∀ entry ∈ ownerLedger, entry.declarations ≠ [] := by
-  native_decide
+  decide
 
 end InfoGeometry.Canonical.LogosPartiturePoset

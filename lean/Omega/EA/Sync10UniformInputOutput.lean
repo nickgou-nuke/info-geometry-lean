@@ -60,6 +60,6 @@ theorem paper_sync10_uniform_de :
                       sync10ConditionalOutputOne 2 = 5 / 8 := by
   unfold sync10JointInputOutput sync10JointInputOutputFin sync10OutputOneProb
   unfold sync10ConditionalOutputOne sync10OutputBit sync10UniformStationaryVector
-  native_decide
+  decide
 
 end Omega.EA

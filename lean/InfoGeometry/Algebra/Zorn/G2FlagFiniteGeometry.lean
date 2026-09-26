@@ -21,8 +21,8 @@ def isotropicPoints : Finset SplitOctF2 := Finset.univ.filter IsIsotropic
 
 def nonzeroIsotropicPoints : Finset SplitOctF2 := isotropicPoints.erase zero
 
-theorem isotropicPoints_card : isotropicPoints.card = 136 := by native_decide
+theorem isotropicPoints_card : isotropicPoints.card = 136 := by decide
 
-theorem nonzeroIsotropicPoints_card : nonzeroIsotropicPoints.card = 135 := by native_decide
+theorem nonzeroIsotropicPoints_card : nonzeroIsotropicPoints.card = 135 := by decide
 
 end InfoGeometry.Algebra.Zorn.G2FlagFiniteGeometry

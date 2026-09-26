@@ -16,10 +16,10 @@ theorem paper_conclusion_foldbin_subcover_exponential_mincollapse
       goldenSprtTailExponent T =
         goldenSprtChernoffConstant - Real.log (Real.cos (Real.pi / (2 * (T : ℝ)))) / Real.log 2 := by
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
+  · decide
+  · decide
+  · decide
+  · decide
   · exact paper_conclusion_golden_sprt_tail_exponent_chernoff_identity T hT
 
 end Omega.Conclusion

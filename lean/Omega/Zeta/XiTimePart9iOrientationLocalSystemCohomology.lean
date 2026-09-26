@@ -36,7 +36,7 @@ theorem paper_xi_time_part9i_orientation_local_system_cohomology
       D.classifiesLocalSystem := by
   refine ⟨⟨Equiv.refl (Fin 2)⟩, ?_, ?_, ?_⟩
   · change ({true} : Finset Bool).card = 1
-    native_decide
+    decide
   · change (-1 : ℤ) ^ 2 = 1
     norm_num
   · intro a b h

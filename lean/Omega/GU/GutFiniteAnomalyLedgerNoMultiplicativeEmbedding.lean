@@ -28,7 +28,7 @@ theorem paper_gut_finite_anomaly_ledger_no_multiplicative_embedding :
           simp
         rw [← hcast]
         have hlt : (Φ p2 i).val < 2 := ZMod.val_lt (Φ p2 i)
-        interval_cases hval : (Φ p2 i).val <;> native_decide
+        interval_cases hval : (Φ p2 i).val <;> decide
   have hEq : Φ p4 = Φ p1 := by
     simpa [p1] using h4.trans h1.symm
   have hp4_eq_p1 : p4 = p1 := hinj hEq

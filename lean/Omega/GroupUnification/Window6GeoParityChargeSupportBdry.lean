@@ -30,6 +30,6 @@ boundary projection is the single `101001` axis.
 theorem paper_window6_geo_parity_charge_support_bdry : Window6GeoParityChargeSupportBdryPackage := by
   rcases Omega.GU.paper_terminal_foldbin6_geo_sign_antiinvariant_16 with ⟨_, hTwo, _, _, _⟩
   rcases paper_bdry_sheet_parity_diagonal with ⟨_, _, _, _, _, _, h33, h37, h41⟩
-  refine ⟨rfl, by native_decide, by native_decide, hTwo, h33, h37, h41⟩
+  refine ⟨rfl, by decide, by decide, hTwo, h33, h37, h41⟩
 
 end Omega.GroupUnification

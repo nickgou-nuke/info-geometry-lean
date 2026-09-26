@@ -64,31 +64,31 @@ theorem paper_xi_time_part9ze_positive_zero_temp_geometric_splitting :
     xi_time_part9ze_positive_zero_temp_geometric_splitting_statement := by
   have hMaxCard :
       xi_time_part9ze_positive_zero_temp_geometric_splitting_maxShell.card = 9 := by
-    native_decide
+    decide
   have hLongCard :
       xi_time_part9ze_positive_zero_temp_geometric_splitting_longShell.card = 4 := by
-    native_decide
+    decide
   have hShortCard :
       xi_time_part9ze_positive_zero_temp_geometric_splitting_shortShell.card = 5 := by
-    native_decide
+    decide
   have hDisjoint :
       Disjoint
         xi_time_part9ze_positive_zero_temp_geometric_splitting_longShell
         xi_time_part9ze_positive_zero_temp_geometric_splitting_shortShell := by
-    native_decide
+    decide
   have hUnion :
       xi_time_part9ze_positive_zero_temp_geometric_splitting_longShell ∪
           xi_time_part9ze_positive_zero_temp_geometric_splitting_shortShell =
         xi_time_part9ze_positive_zero_temp_geometric_splitting_maxShell := by
-    native_decide
+    decide
   have hMaxMultiplicity :
       ∀ w ∈ xi_time_part9ze_positive_zero_temp_geometric_splitting_maxShell,
         xi_time_part9ze_positive_zero_temp_geometric_splitting_multiplicity w = 4 := by
-    native_decide
+    decide
   have hOffMax :
       ∀ w, w ∉ xi_time_part9ze_positive_zero_temp_geometric_splitting_maxShell →
         xi_time_part9ze_positive_zero_temp_geometric_splitting_multiplicity w < 4 := by
-    native_decide
+    decide
   have hPower :
       ∀ q : ℕ,
         (∑ w ∈ xi_time_part9ze_positive_zero_temp_geometric_splitting_maxShell,
@@ -107,15 +107,15 @@ theorem paper_xi_time_part9ze_positive_zero_temp_geometric_splitting :
             simp [hMaxCard]
   have hTotalMass :
       (∑ w, xi_time_part9ze_positive_zero_temp_geometric_splitting_zeroTempMass w) = 1 := by
-    native_decide
+    decide
   have hLongMass :
       (∑ w ∈ xi_time_part9ze_positive_zero_temp_geometric_splitting_longShell,
           xi_time_part9ze_positive_zero_temp_geometric_splitting_zeroTempMass w) = 4 / 9 := by
-    native_decide
+    decide
   have hShortMass :
       (∑ w ∈ xi_time_part9ze_positive_zero_temp_geometric_splitting_shortShell,
           xi_time_part9ze_positive_zero_temp_geometric_splitting_zeroTempMass w) = 5 / 9 := by
-    native_decide
+    decide
   exact ⟨hMaxCard, hLongCard, hShortCard, hDisjoint, hUnion, hMaxMultiplicity, hOffMax,
     hPower, hTotalMass, hLongMass, hShortMass⟩
 

@@ -17,6 +17,6 @@ theorem paper_conclusion_window6_middle_bin_root_rectangle_affine_defect :
         x ∈ ({Omega.X.ofNat 6 9, Omega.X.ofNat 6 10, Omega.X.ofNat 6 11,
               Omega.X.ofNat 6 12} : Finset (Omega.X 6)) →
           ((Finset.range 64).filter (fun n => Omega.cBinFold 6 n = x)).card = 3) := by
-  native_decide
+  decide
 
 end Omega.Conclusion

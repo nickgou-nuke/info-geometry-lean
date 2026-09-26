@@ -160,9 +160,9 @@ def P_matrix_n2 : Matrix (Fin 4) (Fin 4) ℝ :=
   !![1,0,0,0; 0,0,1,0; 0,1,0,0; 0,0,0,1]
 
 theorem P_square_eq_I : P_matrix_n2 * P_matrix_n2 = (1 : Matrix (Fin 4) (Fin 4) ℝ) := by
-  -- Compute over ℚ where native_decide works, then cast to ℝ
+  -- Compute over ℚ where decide works, then cast to ℝ
   let P_ℚ : Matrix (Fin 4) (Fin 4) ℚ := !![1,0,0,0; 0,0,1,0; 0,1,0,0; 0,0,0,1]
-  have h_ℚ : P_ℚ * P_ℚ = (1 : Matrix (Fin 4) (Fin 4) ℚ) := by native_decide
+  have h_ℚ : P_ℚ * P_ℚ = (1 : Matrix (Fin 4) (Fin 4) ℚ) := by decide
   have h_map : (P_ℚ.map (algebraMap ℚ ℝ)) = P_matrix_n2 := by
     ext i j; fin_cases i <;> fin_cases j <;> simp [P_matrix_n2, P_ℚ]
   have h_map_one : ((1 : Matrix (Fin 4) (Fin 4) ℚ).map (algebraMap ℚ ℝ)) = (1 : Matrix (Fin 4) (Fin 4) ℝ) := by

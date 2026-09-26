@@ -189,6 +189,6 @@ def pom_resonance_disc_support_q16_q17_statement : Prop :=
 theorem paper_pom_resonance_disc_support_q16_q17 :
     pom_resonance_disc_support_q16_q17_statement := by
   unfold pom_resonance_disc_support_q16_q17_statement
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
 
 end Omega.POM

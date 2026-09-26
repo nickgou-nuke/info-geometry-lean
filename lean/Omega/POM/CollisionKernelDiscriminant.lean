@@ -67,12 +67,12 @@ theorem paper_pom_collision_kernel_discriminant :
 /-- Trace of A₂² = 8.
     rem:pom-residue-minpoly-a2a3a4 -/
 theorem trace_collisionKernel2_sq :
-    (collisionKernel2 ^ 2).trace = 8 := by native_decide
+    (collisionKernel2 ^ 2).trace = 8 := by decide
 
 /-- Trace of A₃² = 12.
     rem:pom-residue-minpoly-a2a3a4 -/
 theorem trace_collisionKernel3_sq :
-    (collisionKernel3 ^ 2).trace = 12 := by native_decide
+    (collisionKernel3 ^ 2).trace = 12 := by decide
 
 /-- Newton identity p₂ = s₁·p₁ - 2·s₂ verification for A₂:
     tr(A₂²) = tr(A₂)² - 2·(tr(A₂)² - tr(A₂²))/2 holds as 8 = 2²−2·(−2) = 4+4 = 8.
@@ -80,12 +80,12 @@ theorem trace_collisionKernel3_sq :
     We verify: (tr A₂)² - tr(A₂²) = 4 - 8 = -4, so s₂ = -2, and det = s₃ = -2.
     rem:pom-residue-minpoly-a2a3a4 -/
 theorem newton_A2_s2 :
-    (collisionKernel2.trace ^ 2 - (collisionKernel2 ^ 2).trace) / 2 = -2 := by native_decide
+    (collisionKernel2.trace ^ 2 - (collisionKernel2 ^ 2).trace) / 2 = -2 := by decide
 
 /-- Newton s₂ for A₃: ((tr A₃)² - tr(A₃²))/2 = (4 - 12)/2 = -4.
     rem:pom-residue-minpoly-a2a3a4 -/
 theorem newton_A3_s2 :
-    (collisionKernel3.trace ^ 2 - (collisionKernel3 ^ 2).trace) / 2 = -4 := by native_decide
+    (collisionKernel3.trace ^ 2 - (collisionKernel3 ^ 2).trace) / 2 = -4 := by decide
 
 /-- Paper package extended: discriminants + trace squared + Newton identities.
     rem:pom-residue-minpoly-a2a3a4 -/

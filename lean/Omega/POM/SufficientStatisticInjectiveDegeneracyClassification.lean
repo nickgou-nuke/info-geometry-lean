@@ -10,7 +10,7 @@ private theorem two_pow_half_ceiling_le_fib (l : Nat) : 2 ^ ((l + 1) / 2) ≤ Na
     rw [hk, hindex]
     simpa using Omega.fib_exponential_growth 2 k (by omega)
   · have h := Omega.fib_exponential_growth 3 k (by omega)
-    have h3 : Nat.fib 3 = 2 := by native_decide
+    have h3 : Nat.fib 3 = 2 := by decide
     have hk : ((2 * k + 1 + 1) / 2) = k + 1 := by omega
     have hindex : 2 * k + 1 + 2 = 3 + 2 * k := by ring
     rw [hk, hindex]

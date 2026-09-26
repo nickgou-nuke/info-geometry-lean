@@ -113,12 +113,12 @@ theorem paper_pom_a4t_newman_octic_field_tame : pom_a4t_newman_octic_field_tame_
     rcases hef with rfl | rfl
     · decide
     · decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
 
 /-- Recorded prime-decomposition `(e,f)` data at `2`. -/
 def pom_a4t_newman_octic_field_prime_decomp_data_2 : List (ℕ × ℕ) :=
@@ -164,14 +164,14 @@ def pom_a4t_newman_octic_field_prime_decomp_package : Prop :=
 theorem paper_pom_a4t_newman_octic_field_prime_decomp :
     pom_a4t_newman_octic_field_prime_decomp_package := by
   refine ⟨rfl, rfl, rfl, rfl, rfl, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
 
 /-- The nilpotent thickness at the four ramified residue algebras, in prime order
 `2, 7, 23, 1151`. -/
@@ -192,6 +192,6 @@ theorem paper_pom_a4t_newman_octic_field_residue_algebra :
     pom_a4t_newman_octic_field_residue_algebra_thickness_spectrum = [8, 3, 3, 2] ∧
       pom_a4t_newman_octic_field_residue_algebra_residue_degree_spectrum =
         [[1], [5], [1, 2, 2], [2, 2, 2]] := by
-  constructor <;> native_decide
+  constructor <;> decide
 
 end Omega.POM

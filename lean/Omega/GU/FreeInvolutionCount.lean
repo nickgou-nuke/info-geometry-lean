@@ -92,7 +92,7 @@ theorem freeInvolutionCount_eq_doubleFactorial (r : Nat) :
     thm:fiberwise-free-involution-matching-entropy -/
 theorem freeInvolutionCount_small :
     freeInvolutionCount 1 = 1 ∧ freeInvolutionCount 2 = 3 ∧ freeInvolutionCount 3 = 15 := by
-  native_decide
+  decide
 
 /-- The free involution count is positive for r ≥ 1.
     thm:fiberwise-free-involution-matching-entropy -/
@@ -187,7 +187,7 @@ theorem paper_freeInvolutionCount_values_and_formula :
     (∀ k : Nat, ¬ ∃ f : Fin (2*k+1) → Fin (2*k+1),
       Function.Bijective f ∧ (∀ x, f (f x) = x) ∧ (∀ x, f x ≠ x)) := by
   exact ⟨freeInvolutionCount_small.1, freeInvolutionCount_small.2.1,
-    freeInvolutionCount_small.2.2, by native_decide,
+    freeInvolutionCount_small.2.2, by decide,
     freeInvolutionCount_formula, no_free_involution_on_odd⟩
 
 /-- Free involution count is at least r! for r >= 1.
@@ -260,8 +260,8 @@ theorem paper_gu_involution_divisibility_package :
     freeInvolutionCount 5 = 9 * freeInvolutionCount 4 := by
   have h1 := freeInvolutionCount_small.2.1  -- f(2) = 3
   have h2 := freeInvolutionCount_small.2.2  -- f(3) = 15
-  refine ⟨h1, h2, by native_decide, by native_decide,
-    ⟨1, by rw [h1]⟩, ⟨1, by rw [h2]⟩, ⟨1, by native_decide⟩, ?_, ?_, ?_⟩
+  refine ⟨h1, h2, by decide, by decide,
+    ⟨1, by rw [h1]⟩, ⟨1, by rw [h2]⟩, ⟨1, by decide⟩, ?_, ?_, ?_⟩
   · rw [h2, h1]
   · rw [freeInvolutionCount_succ, h2]
   · rw [freeInvolutionCount_succ, freeInvolutionCount_succ, h2]
@@ -320,7 +320,7 @@ theorem paper_freeInvolutionCount_log_convexity_package :
 /-- thm:fiberwise-free-involution-matching-entropy -/
 theorem freeInvolutionCount_dvd_seven : ∀ r : Nat, 4 ≤ r →
     7 ∣ freeInvolutionCount r
-  | 4, _ => ⟨15, by native_decide⟩
+  | 4, _ => ⟨15, by decide⟩
   | r + 5, _ => by
     rw [freeInvolutionCount_succ]
     exact Dvd.dvd.mul_left (freeInvolutionCount_dvd_seven (r + 4) (by omega)) _
@@ -328,7 +328,7 @@ theorem freeInvolutionCount_dvd_seven : ∀ r : Nat, 4 ≤ r →
 /-- thm:fiberwise-free-involution-matching-entropy -/
 theorem freeInvolutionCount_dvd_105 : ∀ r : Nat, 4 ≤ r →
     105 ∣ freeInvolutionCount r
-  | 4, _ => ⟨1, by native_decide⟩
+  | 4, _ => ⟨1, by decide⟩
   | r + 5, _ => by
     rw [freeInvolutionCount_succ]
     exact Dvd.dvd.mul_left (freeInvolutionCount_dvd_105 (r + 4) (by omega)) _
@@ -340,7 +340,7 @@ theorem paper_freeInvolutionCount_dvd_extended :
     freeInvolutionCount 4 = 105 ∧
     freeInvolutionCount 4 / 105 = 1 := by
   exact ⟨freeInvolutionCount_dvd_seven, freeInvolutionCount_dvd_105,
-    by native_decide, by native_decide⟩
+    by decide, by decide⟩
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R312: freeInvolutionCount dvd 9 + dvd 945
@@ -349,7 +349,7 @@ theorem paper_freeInvolutionCount_dvd_extended :
 /-- thm:fiberwise-free-involution-matching-entropy -/
 theorem freeInvolutionCount_dvd_nine : ∀ r : Nat, 5 ≤ r →
     9 ∣ freeInvolutionCount r
-  | 5, _ => ⟨105, by native_decide⟩
+  | 5, _ => ⟨105, by decide⟩
   | r + 6, _ => by
     rw [freeInvolutionCount_succ]
     exact Dvd.dvd.mul_left (freeInvolutionCount_dvd_nine (r + 5) (by omega)) _
@@ -357,7 +357,7 @@ theorem freeInvolutionCount_dvd_nine : ∀ r : Nat, 5 ≤ r →
 /-- thm:fiberwise-free-involution-matching-entropy -/
 theorem freeInvolutionCount_dvd_945 : ∀ r : Nat, 5 ≤ r →
     945 ∣ freeInvolutionCount r
-  | 5, _ => ⟨1, by native_decide⟩
+  | 5, _ => ⟨1, by decide⟩
   | r + 6, _ => by
     rw [freeInvolutionCount_succ]
     exact Dvd.dvd.mul_left (freeInvolutionCount_dvd_945 (r + 5) (by omega)) _

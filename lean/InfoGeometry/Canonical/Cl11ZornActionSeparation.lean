@@ -1,5 +1,4 @@
 import InfoGeometry.Clifford.Cl11Matrix
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorZornPolarizationSymmetry
 
 /-!
@@ -31,7 +30,7 @@ theorem implementer_product_square : (J1 * Eplus) * (J1 * Eplus) = -(1 : Mat2) :
 
 /-- Conjugations commute although the implementers anticommute. -/
 theorem induced_conjugations_commute (X : Mat2) :
-    Eplus * (J1 * X * J1) * Eplus = J1 * (Eplus * X * Eplus) * J1 := by
+  Eplus * (J1 * X * J1) * Eplus = J1 * (Eplus * X * Eplus) * J1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [Eplus, J1, Matrix.mul_apply, Matrix.vecMul, Matrix.vecHead,
@@ -39,7 +38,7 @@ theorem induced_conjugations_commute (X : Mat2) :
 
 /-- `Eplus * J1` is the inverse of `J1 * Eplus`. The conjugation has order two. -/
 theorem composite_conjugation_square (X : Mat2) :
-    (J1 * Eplus) * ((J1 * Eplus) * X * (Eplus * J1)) * (Eplus * J1) = X := by
+  (J1 * Eplus) * ((J1 * Eplus) * X * (Eplus * J1)) * (Eplus * J1) = X := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [Eplus, J1, Matrix.mul_apply, Matrix.vecMul, Matrix.vecHead,

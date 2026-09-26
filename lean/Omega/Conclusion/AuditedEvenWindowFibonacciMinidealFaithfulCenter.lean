@@ -53,6 +53,6 @@ theorem paper_conclusion_audited_even_window_fibonacci_minideal_faithful_center 
     conclusion_audited_even_window_fibonacci_minideal_faithful_center_statement := by
   unfold conclusion_audited_even_window_fibonacci_minideal_faithful_center_statement
   intro i
-  fin_cases i <;> native_decide
+  fin_cases i <;> decide
 
 end Omega.Conclusion

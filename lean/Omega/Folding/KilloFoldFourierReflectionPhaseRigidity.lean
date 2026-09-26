@@ -16,15 +16,15 @@ theorem paper_killo_fold_fourier_reflection_phase_rigidity (m : ℕ) :
   rcases m with _ | _ | m
   · intro r
     fin_cases r
-    native_decide
+    decide
   · intro r
-    fin_cases r <;> native_decide
+    fin_cases r <;> decide
   · intro r
     have hm : 2 ≤ m + 2 := by omega
     have hfib_ge_two : 2 ≤ Nat.fib (m + 3) := by
       calc
         Nat.fib (m + 3) ≥ Nat.fib 3 := Nat.fib_mono (by omega)
-        _ = 2 := by native_decide
+        _ = 2 := by decide
     have hshift_lt : Nat.fib (m + 3) - 2 < Nat.fib (m + 4) := by
       have hmono : Nat.fib (m + 3) ≤ Nat.fib (m + 4) := Nat.fib_mono (by omega)
       omega

@@ -80,6 +80,6 @@ theorem paper_terminal_foldbin6_two_point_fiber_direction_spectrum :
       terminalFoldbin6FiberValuesByDirection 38 = [18, 19] ∧
       terminalFoldbin6FiberValuesByDirection 62 = [14, 15] ∧
       terminalFoldbin6GeoSwapFiberValues = terminalFoldbin6FiberValuesByDirection 34 := by
-  native_decide
+  decide
 
 end Omega.GU

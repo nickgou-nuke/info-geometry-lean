@@ -71,7 +71,7 @@ theorem paper_xi_terminal_zm_leyang_perron_p3_mod3_algebraic_automatic :
   · norm_num [xi_terminal_zm_leyang_perron_p3_mod3_algebraic_automatic_formal_derivative,
       xi_terminal_zm_leyang_perron_p3_semistable_degree_drop_formal_derivative]
   · intro i
-    fin_cases i <;> native_decide
-  · native_decide
+    fin_cases i <;> decide
+  · decide
 
 end Omega.Zeta

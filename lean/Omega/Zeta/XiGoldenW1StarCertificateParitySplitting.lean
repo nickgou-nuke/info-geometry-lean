@@ -24,7 +24,7 @@ theorem paper_xi_golden_w1_star_certificate_parity_splitting :
   · intro n hn hEven δ hδ
     let q := Nat.fib n
     have hq : 2 ≤ q := by
-      have hbase : 2 ≤ Nat.fib 3 := by native_decide
+      have hbase : 2 ≤ Nat.fib 3 := by decide
       exact le_trans hbase (Nat.fib_mono hn)
     rcases Omega.Kronecker.paper_xi_kronecker_star_discrepancy_w1_branching q hq with
       ⟨hbad, _, _, _, _⟩
@@ -46,7 +46,7 @@ theorem paper_xi_golden_w1_star_certificate_parity_splitting :
   · intro n hn hOdd
     let q := Nat.fib n
     have hq : 2 ≤ q := by
-      have hbase : 2 ≤ Nat.fib 3 := by native_decide
+      have hbase : 2 ≤ Nat.fib 3 := by decide
       exact le_trans hbase (Nat.fib_mono hn)
     rcases Omega.Kronecker.paper_xi_kronecker_star_discrepancy_w1_branching q hq with
       ⟨_, hgood, _, _, _⟩

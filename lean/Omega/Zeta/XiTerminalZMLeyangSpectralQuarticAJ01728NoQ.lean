@@ -36,7 +36,7 @@ theorem paper_xi_terminal_zm_leyang_spectral_quartic_a_j_0_1728_noq :
           ∀ n d : ZMod 11,
             8 * n ^ 3 + 15 * n ^ 2 * d - 66 * n * d ^ 2 + 35 * d ^ 3 = 0 →
               n = 0 ∧ d = 0 := by
-        native_decide
+        decide
       exact hprojective_all (a.num : ZMod 11) (a.den : ZMod 11) hmod
     have h11num : (11 : ℤ) ∣ a.num := by
       simpa [ZMod.intCast_zmod_eq_zero_iff_dvd] using hprojective.1

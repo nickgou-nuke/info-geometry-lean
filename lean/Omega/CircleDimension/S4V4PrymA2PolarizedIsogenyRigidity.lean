@@ -53,7 +53,7 @@ end S4V4PrymA2PolarizedIsogenyRigidityData
 open S4V4PrymA2PolarizedIsogenyRigidityData
 
 lemma standardGenerator_cube : s4v4StandardGenerator ^ 3 = 1 := by
-  native_decide
+  decide
 
 lemma invariant_form_is_a2_multiple (a b c : ℤ)
     (h :

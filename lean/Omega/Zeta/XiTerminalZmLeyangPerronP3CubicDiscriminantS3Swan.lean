@@ -65,6 +65,6 @@ def xi_terminal_zm_leyang_perron_p3_cubic_discriminant_s3_swan_statement : Prop 
 theorem paper_xi_terminal_zm_leyang_perron_p3_cubic_discriminant_s3_swan :
     xi_terminal_zm_leyang_perron_p3_cubic_discriminant_s3_swan_statement := by
   unfold xi_terminal_zm_leyang_perron_p3_cubic_discriminant_s3_swan_statement
-  native_decide
+  decide
 
 end Omega.Zeta

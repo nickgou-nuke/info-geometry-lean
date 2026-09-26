@@ -101,6 +101,6 @@ theorem paper_stable_audit_non_affine_witness :
           op (op 0 0) 0 = 10 ∧
             op (op (op 0 0) 0) 0 = 11 ∧
               ¬ (∀ x : Fin 36, op x x = op (op (op x x) x) x) := by
-  refine ⟨stable_audit_non_affine_witness_op, ?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨stable_audit_non_affine_witness_op, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
 
 end Omega.StableArithmetic.NonAffineWitness

@@ -72,7 +72,7 @@ def signedWeight (p : SignedWeightIndex) : TracelessWeight →ₗ[ℝ] ℝ :=
   simp [signedWeight]
 
 theorem signedWeightIndex_card : Fintype.card SignedWeightIndex = 6 := by
-  native_decide
+  decide
 
 /-- The concrete Cartan generator acts on the upper circular channel with
 weight `k i`. -/

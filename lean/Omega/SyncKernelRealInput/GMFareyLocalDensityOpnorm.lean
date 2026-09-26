@@ -69,7 +69,7 @@ theorem gm_farey_local_density_opnorm_verified :
           gm_farey_local_density_opnorm_dyadic_shell]
   · intro r
     fin_cases r
-    native_decide
+    decide
   · simp [gm_farey_local_density_opnorm_max_row_sum, gm_farey_local_density_opnorm_row_sum,
       gm_farey_local_density_opnorm_kernel]
 

@@ -67,7 +67,7 @@ theorem paper_conclusion_minimal_prime_infrastructure_smith_atomic_recovery :
     conclusion_minimal_prime_infrastructure_smith_atomic_recovery_statement := by
   rcases paper_conclusion_minimal_prime_infrastructure_smith_atomic_recovery_seeds with
     ⟨hFin, hHessianEndpoint, hHessianInterior⟩
-  refine ⟨hFin, by native_decide, ?_, hHessianEndpoint, hHessianInterior⟩
+  refine ⟨hFin, by decide, ?_, hHessianEndpoint, hHessianInterior⟩
   intro a ha b hb hab
   simp only [Finset.disjoint_singleton]
   have ha' : a = 1 ∨ a = 3 ∨ a = 5 ∨ a = 7 := by simpa using ha

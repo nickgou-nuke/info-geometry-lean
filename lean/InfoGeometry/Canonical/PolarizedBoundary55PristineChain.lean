@@ -1,5 +1,4 @@
 import InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.PolarizedBoundaryBivectors
 
 /-!

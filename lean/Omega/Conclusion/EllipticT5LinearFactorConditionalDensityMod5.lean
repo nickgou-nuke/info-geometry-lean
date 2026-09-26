@@ -46,6 +46,6 @@ theorem paper_conclusion_elliptic_t5_linear_factor_conditional_density_mod5
     (D : conclusion_elliptic_t5_linear_factor_conditional_density_mod5_data) :
     conclusion_elliptic_t5_linear_factor_conditional_density_mod5_statement D := by
   dsimp [conclusion_elliptic_t5_linear_factor_conditional_density_mod5_statement]
-  native_decide
+  decide
 
 end Omega.Conclusion

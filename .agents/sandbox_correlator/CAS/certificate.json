@@ -1,0 +1,121 @@
+{
+  "metadata": {
+    "module": "DetectorGeometry.FieldCorrelatorProjection",
+    "cas_engine": "SymPy 1.14.0",
+    "verified_invariants_count": 5
+  },
+  "field_correlator": {
+    "single_projector_linear": true,
+    "single_projector_lhs": "singleEff*(a1*r1 + a2*r2)",
+    "single_projector_rhs": "a1*r1*singleEff + a2*r2*singleEff",
+    "pair_projector_bilinear_scale": true,
+    "pair_projector_lhs": "a*b*eps1*eps2",
+    "pair_projector_rhs": "a*b*eps1*eps2",
+    "kronecker_factorization_verified": true
+  },
+  "mode_projection": {
+    "oscillatory_modes_annihilated": true,
+    "mode_trace_linear": true,
+    "projection_algebra": {
+      "Pi_0": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "Pi_1": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "idempotent_0": true,
+      "idempotent_1": true,
+      "orthogonal": true,
+      "complete": true,
+      "annihilates_oscillatory": true
+    }
+  },
+  "rank_hierarchy": {
+    "singles_count_degree": 1,
+    "coincidence_count_degree": 2,
+    "parabola_identity_verified": true,
+    "scale_invariant_ratio": "K/(N0*eps**2)",
+    "ratio_independent_of_X": true
+  },
+  "causal_poset": {
+    "archetypes": [
+      "fieldCorrelator",
+      "detectorProjector",
+      "modeNullspace",
+      "rankHierarchy",
+      "scaleInvariantObservable"
+    ],
+    "ranks": {
+      "fieldCorrelator": 195,
+      "detectorProjector": 196,
+      "modeNullspace": 197,
+      "rankHierarchy": 198,
+      "scaleInvariantObservable": 199
+    },
+    "step_deltas": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "strictly_monotonic": true,
+    "injective": true,
+    "poset_axioms": {
+      "reflexive": true,
+      "transitive": true,
+      "antisymmetric": true
+    },
+    "canonical_chain_steps": [
+      {
+        "precedes": "fieldCorrelator <= detectorProjector",
+        "rank_lhs": 195,
+        "rank_rhs": 196,
+        "delta": 1
+      },
+      {
+        "precedes": "detectorProjector <= modeNullspace",
+        "rank_lhs": 196,
+        "rank_rhs": 197,
+        "delta": 1
+      },
+      {
+        "precedes": "modeNullspace <= rankHierarchy",
+        "rank_lhs": 197,
+        "rank_rhs": 198,
+        "delta": 1
+      },
+      {
+        "precedes": "rankHierarchy <= scaleInvariantObservable",
+        "rank_lhs": 198,
+        "rank_rhs": 199,
+        "delta": 1
+      }
+    ]
+  },
+  "lean_mapping": {
+    "projector_single_linear": "dsimp [projectSingle]; rw [mul_add, mul_left_comm ...]",
+    "projector_pair_bilinear_scale": "mul_mul_mul_comm eps1 eps2 a b",
+    "oscillatory_modes_annihilated": "dsimp [modeTrace]; rw [MulZeroClass.zero_mul, AddMonoid.add_zero]",
+    "modeTrace_linear": "dsimp [modeTrace]; repeat rw [MulZeroClass.zero_mul, AddMonoid.add_zero]",
+    "coincidence_is_rank_two": "rfl",
+    "square_root_coordinate_is_linear": "rfl",
+    "detector_projection_parabola": "coincidence_is_rank_two N0 K X",
+    "rank_inj": "intro a b h; cases a <;> cases b <;> first | rfl | contradiction",
+    "causal_antisymm": "rank_inj (Nat.le_antisymm hab hba)",
+    "canonical_chain": "\u27e8Nat.le_succ 195, Nat.le_succ 196, Nat.le_succ 197, Nat.le_succ 198\u27e9"
+  }
+}

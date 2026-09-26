@@ -61,7 +61,7 @@ theorem p7_class_sizes_sum :
     p7ClassSize .one_one_one_one_one + p7ClassSize .two_one_one_one +
       p7ClassSize .two_two_one + p7ClassSize .three_one_one + p7ClassSize .three_two +
       p7ClassSize .four_one + p7ClassSize .five = 120 := by
-  native_decide
+  decide
 
 /-- Repackaging `|S₅| = 120` from the existing arithmetic seeds. -/
 theorem p7_raw_density_denominator_eq_s5_order : p7RawDensityDenominator = 120 := by
@@ -152,11 +152,11 @@ noncomputable def p7SignFreeEnergy (u : ℂ) : ℝ :=
 
 lemma p7_even_class_sizes_sum :
     Finset.sum p7EvenCycleTypes p7ClassSize = 60 := by
-  native_decide
+  decide
 
 lemma p7_odd_class_sizes_sum :
     Finset.sum p7OddCycleTypes p7ClassSize = 60 := by
-  native_decide
+  decide
 
 /-- In the concrete `S₅` sign channel, every finite Euler factor has its zero on the unit circle,
 the Chebotarev limit measure is the class average of the two atoms `±1`, and the free energy is

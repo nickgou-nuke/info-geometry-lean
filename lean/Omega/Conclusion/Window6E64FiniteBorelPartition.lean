@@ -25,13 +25,13 @@ theorem paper_conclusion_window6_e64_finite_borel_partition (t : ℂ) :
   rw [hRange]
   rw [← paper_conclusion_window6_hidden_strip_fourlayer_partition]
   have hdisj01 : Disjoint (Finset.Icc 0 20) (Finset.Icc 21 33) := by
-    native_decide
+    decide
   have hdisj012 : Disjoint (Finset.Icc 0 20 ∪ Finset.Icc 21 33) (Finset.Icc 34 54) := by
-    native_decide
+    decide
   have hdisj0123 :
       Disjoint ((Finset.Icc 0 20 ∪ Finset.Icc 21 33) ∪ Finset.Icc 34 54)
         (Finset.Icc 55 63) := by
-    native_decide
+    decide
   rw [Finset.sum_union hdisj0123, Finset.sum_union hdisj012, Finset.sum_union hdisj01]
 
 end Omega.Conclusion

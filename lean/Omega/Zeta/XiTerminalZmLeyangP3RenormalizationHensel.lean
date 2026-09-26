@@ -31,7 +31,7 @@ lemma xi_terminal_zm_leyang_perron_p3_renormalization_hensel_substitute_scale_tw
 
 lemma xi_terminal_zm_leyang_perron_p3_renormalization_hensel_dv_origin :
     xi_terminal_zm_leyang_perron_p3_renormalization_hensel_dv 0 0 = 1 := by
-  native_decide
+  decide
 
 /-- Concrete statement of the scale-`27` identity, the unit derivative at the origin, and the
 distinguished Perron-branch base point that seeds the Hensel lift. -/
@@ -48,11 +48,11 @@ def xi_terminal_zm_leyang_perron_p3_renormalization_hensel_statement : Prop :=
 theorem paper_xi_terminal_zm_leyang_perron_p3_renormalization_hensel :
     xi_terminal_zm_leyang_perron_p3_renormalization_hensel_statement := by
   refine ⟨xi_terminal_zm_leyang_perron_p3_renormalization_hensel_substitute_scale_twenty_seven,
-    by native_decide,
+    by decide,
     xi_terminal_zm_leyang_perron_p3_renormalization_hensel_dv_origin,
     ?_⟩
   refine ⟨(2, 0), ?_, ?_⟩
-  · refine ⟨by native_decide, by native_decide, by native_decide, by native_decide, by native_decide⟩
+  · refine ⟨by decide, by decide, by decide, by decide, by decide⟩
   · intro branch hbranch
     rcases hbranch with ⟨hshape, hzero, _, _, _⟩
     rcases branch with ⟨lam, v⟩

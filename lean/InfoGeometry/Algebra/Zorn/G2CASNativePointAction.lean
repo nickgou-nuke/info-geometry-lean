@@ -489,16 +489,16 @@ def casPointPermRaw : Fin 7 → Fin 63 → Fin 63
   | _ => fun _ => 0
 noncomputable def casPointPerm (k : Fin 7) : Equiv.Perm (Fin 63) :=
   Equiv.ofBijective (casPointPermRaw k) (by
-    fin_cases k <;> native_decide)
+    fin_cases k <;> decide)
 
 theorem casPointPerm_raw_bijective (k : Fin 7) :
     Function.Bijective (casPointPermRaw k) := by
-  fin_cases k <;> native_decide
+  fin_cases k <;> decide
 
 theorem casPoint_pc_action (k : Fin 6) (i : Fin 63) :
     casPoint (casPointPermRaw ⟨k, by omega⟩ i) =
       octImAction (pcGenerator k) (casPoint i) := by
-  fin_cases k <;> fin_cases i <;> native_decide
+  fin_cases k <;> fin_cases i <;> decide
 
 theorem casPointEnum_pc_intertwines (k : Fin 6) (i : Fin 63) :
     casPointEnum (casPointPerm ⟨k, by omega⟩ i) =
@@ -531,7 +531,7 @@ def correctedTPointPermRaw : Fin 63 → Fin 63 := fun i => match i with
   | 60 => 60 | 61 => 55 | 62 => 25 | _ => 0
 
 noncomputable def correctedTPointPerm : Equiv.Perm (Fin 63) :=
-  Equiv.ofBijective correctedTPointPermRaw (by native_decide)
+  Equiv.ofBijective correctedTPointPermRaw (by decide)
 
 theorem correctedTPointPerm_intertwines (i : Fin 63) :
     casPoint (correctedTPointPermRaw i) =

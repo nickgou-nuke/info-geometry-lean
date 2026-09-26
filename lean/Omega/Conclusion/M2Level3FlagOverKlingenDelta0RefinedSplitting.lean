@@ -98,6 +98,6 @@ theorem paper_conclusion_m2_level3_flag_over_klingen_delta0_refined_splitting :
     ⟨hProjOne, hProjThree, _, _, hFlagOne, hFlagThree, _, _⟩
   unfold conclusion_m2_level3_flag_over_klingen_delta0_refined_splitting_statement
   rw [hProjOne, hProjThree, hFlagOne, hFlagThree]
-  native_decide
+  decide
 
 end Omega.Conclusion

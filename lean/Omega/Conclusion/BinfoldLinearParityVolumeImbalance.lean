@@ -40,22 +40,22 @@ theorem paper_conclusion_binfold_linear_parity_volume_imbalance :
       (m := Nat.fib 14) (fiber := N 12)
   have h8_ge2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 10) => 2 ≤ N 8 w).card = Nat.fib 10 := by
-    native_decide
+    decide
   have h10_ge2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 12) => 2 ≤ N 10 w).card = Nat.fib 12 := by
-    native_decide
+    decide
   have h12_ge2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 14) => 2 ≤ N 12 w).card = Nat.fib 14 := by
-    native_decide
+    decide
   have h8_eq2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 10) => N 8 w = 2).card = 0 := by
-    native_decide
+    decide
   have h10_eq2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 12) => N 10 w = 2).card = 0 := by
-    native_decide
+    decide
   have h12_eq2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 14) => N 12 w = 2).card = 0 := by
-    native_decide
+    decide
   have hAb8 :
       Omega.OperatorAlgebra.foldGaugeAbelianizationOrder (N 8) = 2 ^ Nat.fib 10 := by
     simpa [h8_ge2] using h8.2
@@ -79,9 +79,9 @@ theorem paper_conclusion_binfold_linear_parity_volume_imbalance :
   have hFib10 : Nat.fib 10 < 2 ^ 8 := by
     exact hDist.2.2.2.2.2.1
   have hFib12 : Nat.fib 12 < 2 ^ 10 := by
-    native_decide
+    decide
   have hFib14 : Nat.fib 14 < 2 ^ 12 := by
-    native_decide
+    decide
   simpa [N] using
     (show (∃ m0, ∀ m ≥ m0, ∀ z : binfoldGaugeCenter m, z = 1) ∧
         Omega.OperatorAlgebra.foldGaugeAbelianizationOrder (N 8) = 2 ^ Nat.fib 10 ∧

@@ -44,6 +44,6 @@ theorem paper_conclusion_window6_sigma_geo_fourblock_normal_form :
     window6SigmaGeoFiberCardinality window6AmbientCardinality
     window6SigmaGeoAdjacencyBlockForm window6SigmaGeoAdjacencyDiagonal
     window6SigmaGeoSignRule window6SigmaGeoSignPattern
-  native_decide
+  decide
 
 end Omega.Conclusion

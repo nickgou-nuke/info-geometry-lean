@@ -30,26 +30,26 @@ do not agree on every basis pair. -/
 theorem splitOctonionMul_basisMul_not_universal :
     ∃ p q : IntegralSplitBasis,
       splitOctonionMul (splitBasisVector p) (splitBasisVector q) ≠ basisMul p q := by
-  native_decide
+  decide
 
 def cochainF (x y : Grade) : ℚ :=
   (basisMul (basisOfGrade x) (basisOfGrade y)) (basisOfGrade (gradeAdd x y))
 theorem cochainF_values (x y : Grade) : cochainF x y = 1 ∨ cochainF x y = -1 := by
   revert x y
-  native_decide
+  decide
 theorem cochainF_ne_zero (x y : Grade) : cochainF x y ≠ 0 := by
   rcases cochainF_values x y with h | h <;> simp [h]
 theorem native_basisMul_is_cochainF (x y : Grade) :
     (fun b => (basisMul (basisOfGrade x) (basisOfGrade y) b : ℚ)) =
       cochainF x y • (fun b => (splitBasisVector (basisOfGrade (gradeAdd x y)) b : ℚ)) := by
   revert x y
-  native_decide
+  decide
 theorem cochainF_one_left (x : Grade) : cochainF (gradeOfBasis .one) x = 1 := by
   revert x
-  native_decide
+  decide
 theorem cochainF_one_right (x : Grade) : cochainF x (gradeOfBasis .one) = 1 := by
   revert x
-  native_decide
+  decide
 
 def associatorCochain (x y z : Grade) : ℚ :=
   cochainF x y * cochainF (gradeAdd x y) z / (cochainF y z * cochainF x (gradeAdd y z))
@@ -95,7 +95,7 @@ theorem native_associator_three_cocycle (x y z w : Grade) :
     associatorCochain y z w * associatorCochain x (gradeAdd y z) w * associatorCochain x y z =
       associatorCochain (gradeAdd x y) z w * associatorCochain x y (gradeAdd z w) := by
   revert x y z w
-  native_decide
+  decide
 theorem native_exchange_is_cochain (x y : Grade) :
     cochainF x y = exchangeCochain x y * cochainF y x := by
   unfold exchangeCochain

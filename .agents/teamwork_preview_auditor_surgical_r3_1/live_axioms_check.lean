@@ -1,0 +1,7 @@
+
+import InfoGeometry.Canonical.Hartwig1976SVDMoorePenroseBorder
+
+open InfoGeometry.Canonical.Hartwig1976SVDMoorePenroseBorder
+
+#print axioms case1Border_isMoorePenrose
+#print axioms borderPermutation_sq_eq_one

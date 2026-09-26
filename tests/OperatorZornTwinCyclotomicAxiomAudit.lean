@@ -26,6 +26,7 @@ import InfoGeometry.Canonical.OperatorZornTwinCyclotomic
 #print axioms InfoGeometry.Canonical.OperatorZornExchangeAutomorphism.exchange_sub
 #print axioms InfoGeometry.Canonical.OperatorZornExchangeAutomorphism.exchange_mul
 #print axioms InfoGeometry.Canonical.OperatorZornExchangeAutomorphism.exchangeMulEquiv
+#print axioms InfoGeometry.Canonical.OperatorZornExchangeAutomorphism.unsigned_flip_product_defect
 #print axioms InfoGeometry.Canonical.OperatorZornExchangeAutomorphism.exchange_nPlus
 #print axioms InfoGeometry.Canonical.OperatorZornExchangeAutomorphism.exchange_nMinus
 #print axioms InfoGeometry.Canonical.OperatorZornExchangeAutomorphism.exchange_sigmaPlus

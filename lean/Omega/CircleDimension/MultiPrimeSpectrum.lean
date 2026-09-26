@@ -700,17 +700,17 @@ theorem paper_cdim_mobius_inversion_seeds :
      multiPrimeSpectrum S {3} = 1 ∧ multiPrimeSpectrum S {2, 3} = 0) := by
   constructor
   · constructor
-    · native_decide
+    · decide
     constructor
-    · native_decide
-    · native_decide
+    · decide
+    · decide
   · constructor
-    · native_decide
+    · decide
     constructor
-    · native_decide
+    · decide
     constructor
-    · native_decide
-    · native_decide
+    · decide
+    · decide
 
 /-- Package wrapper for the Möbius inversion localization multiset classification seeds.
     thm:cdim-multiprime-spectrum-realizability -/
@@ -801,8 +801,8 @@ theorem paper_cdim_inclusion_exclusion_seeds :
      typeCount S {2} = 1 ∧
      typeCount S {3} = 1 ∧
      typeCount S {2,3} = 1) := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide,
+          by decide, by decide, by decide⟩
 
 /-- Paper-facing counterexample package: two support families can have identical one-prime
     marginals and different two-prime spectrum values.

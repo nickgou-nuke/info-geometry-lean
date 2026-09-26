@@ -124,7 +124,7 @@ theorem paper_finite_rh_parity_general (D : finite_rh_parity_general_data) :
         Finset.sum (n.divisors.erase 1) (fun d => (ArithmeticFunction.moebius d : ℝ) * D.a (n / d)) =
           -(D.a (n / 2)) + finite_rh_parity_general_even_tail D n := by
       have hmu2_int : ArithmeticFunction.moebius 2 = -1 := by
-        native_decide
+        decide
       have hmu2 : (ArithmeticFunction.moebius 2 : ℝ) = -1 := by
         exact_mod_cast hmu2_int
       calc

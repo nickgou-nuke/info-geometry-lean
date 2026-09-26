@@ -91,23 +91,23 @@ theorem paper_xi_time_part9ze_negative_zero_temp_boundary_interior_splitting :
         · simp [xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_defect])).2
   have hMinimalCard :
       xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_minimalShell.card = 8 := by
-    native_decide
+    decide
   have hBoundaryCard :
       xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_boundaryShell.card = 3 := by
-    native_decide
+    decide
   have hInteriorCard :
       xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_interiorShell.card = 5 := by
-    native_decide
+    decide
   have hDisjoint :
       Disjoint
         xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_boundaryShell
         xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_interiorShell := by
-    native_decide
+    decide
   have hUnion :
       xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_boundaryShell ∪
           xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_interiorShell =
         xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_minimalShell := by
-    native_decide
+    decide
   have hDefect :
       ∀ w ∈ xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_minimalShell,
         xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_defect w = 1 := by
@@ -117,12 +117,12 @@ theorem paper_xi_time_part9ze_negative_zero_temp_boundary_interior_splitting :
       (∑ w ∈ xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_boundaryShell,
           xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_zeroTempMass w) =
         3 / 8 := by
-    native_decide
+    decide
   have hInteriorMass :
       (∑ w ∈ xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_interiorShell,
           xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_zeroTempMass w) =
         5 / 8 := by
-    native_decide
+    decide
   exact ⟨hMinimalCard, hBoundaryCard, hInteriorCard, hDisjoint, hUnion, hDefect, hFreeze,
     hBoundaryMass, hInteriorMass⟩
 

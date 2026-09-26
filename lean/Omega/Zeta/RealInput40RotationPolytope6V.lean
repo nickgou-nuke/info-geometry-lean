@@ -62,7 +62,7 @@ def realInput40RotChiSet : Set RotationTripleR :=
 
 private theorem realInput40RotationVerticesChi_eq_image :
     realInput40RotationVerticesChi = realInput40RotationVerticesE.image realInput40RotationShearQ := by
-  native_decide
+  decide
 
 private theorem realInput40RotationVerticesE_facets :
     ∀ v ∈ realInput40RotationVerticesE, realInput40EFacets v := by

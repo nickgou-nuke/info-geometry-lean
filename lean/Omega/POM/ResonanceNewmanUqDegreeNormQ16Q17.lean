@@ -48,15 +48,15 @@ theorem paper_pom_resonance_newman_uq_degree_norm_q16_q17 :
     pom_resonance_newman_uq_degree_norm_q16_q17_statement := by
   refine ⟨paper_pom_resonance_s13_frobenius_cycle_certificate_q16_q17, ?_, ?_, ?_, ?_,
     ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
 
 end Omega.POM

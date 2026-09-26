@@ -5,7 +5,7 @@ namespace Omega.Zeta
 
 private lemma window6_tail_witness_mod21 (r : ℕ) (hr : r < 21) :
     (34 * ((13 * r) % 21)) % 21 = r := by
-  interval_cases r <;> native_decide
+  interval_cases r <;> decide
 
 /-- The `{21, 34, 55}` tail semigroup already reduces to the two generators `{21, 34}` because
 `55 = 21 + 34`; reducing `n` modulo `21` fixes the unique canonical `34`-coefficient

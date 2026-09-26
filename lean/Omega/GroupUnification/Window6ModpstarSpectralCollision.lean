@@ -51,15 +51,15 @@ def window6ModpstarSpectralCollisionStatement : Prop :=
 
 private theorem window6_modpstar_coeff_t3 :
     (48114 : ZMod window6PStar) = 150 := by
-  native_decide
+  decide
 
 private theorem window6_modpstar_coeff_t2 :
     (7263 : ZMod window6PStar) = (-160 : ZMod window6PStar) := by
-  native_decide
+  decide
 
 private theorem window6_modpstar_coeff_t1 :
     (-506 : ZMod window6PStar) = (65 : ZMod window6PStar) := by
-  native_decide
+  decide
 
 private theorem window6_modpstar_coefficient_audit :
     window6ModpstarCoefficientAudit := by

@@ -67,6 +67,6 @@ and dividing by the total class count yields the trajectory probability.
     thm:pom-microcanonical-fold-posterior-count-and-prob -/
 theorem paper_pom_microcanonical_fold_posterior_count_and_prob :
     pom_microcanonical_fold_posterior_count_and_prob_statement := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide⟩
 
 end Omega.POM

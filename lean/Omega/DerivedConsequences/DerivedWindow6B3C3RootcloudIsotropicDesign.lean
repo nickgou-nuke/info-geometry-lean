@@ -50,10 +50,10 @@ theorem paper_derived_window6_b3c3_rootcloud_isotropic_design :
   · unfold derived_window6_b3c3_rootcloud_isotropic_design_b3_first_moment_zero
       derived_window6_b3c3_rootcloud_isotropic_design_sum_weights
       derived_window6_b3c3_rootcloud_isotropic_design_b3_roots
-    native_decide
+    decide
   · unfold derived_window6_b3c3_rootcloud_isotropic_design_c3_first_moment_zero
       derived_window6_b3c3_rootcloud_isotropic_design_sum_weights
       derived_window6_b3c3_rootcloud_isotropic_design_c3_roots
-    native_decide
+    decide
 
 end Omega.DerivedConsequences

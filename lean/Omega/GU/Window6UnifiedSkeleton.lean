@@ -54,7 +54,7 @@ theorem paper_window6_unified_skeleton : paper_window6_unified_skeleton_statemen
     exact ⟨hCoboundary.1, hCoboundary.2.1, hDensity.1, hDensity.2⟩
   · exact ⟨Omega.Conclusion.window6_qmoment_triple, Omega.Conclusion.paper_window6_collision_prob⟩
   · refine ⟨paper_window6_chiral_compression_hypercube_adjacency 6 (by omega), ?_, ?_⟩
-    · native_decide
+    · decide
     · change
         window6ChiralSectorQ4Spectrum =
           Multiset.replicate (Nat.choose 4 0) 4 +
@@ -62,6 +62,6 @@ theorem paper_window6_unified_skeleton : paper_window6_unified_skeleton_statemen
             Multiset.replicate (Nat.choose 4 2) 0 +
             Multiset.replicate (Nat.choose 4 3) (-2) +
             Multiset.replicate (Nat.choose 4 4) (-4)
-      native_decide
+      decide
 
 end Omega.GU

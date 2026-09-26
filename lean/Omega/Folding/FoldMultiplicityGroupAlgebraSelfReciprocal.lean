@@ -11,7 +11,7 @@ private def foldMultiplicityComplementIndex (m r : ℕ) : ℕ :=
 private lemma foldMultiplicityFibLowerBound (m : ℕ) (hm : 2 ≤ m) : 2 ≤ Nat.fib (m + 1) := by
   calc
     Nat.fib (m + 1) ≥ Nat.fib 3 := Nat.fib_mono (by omega)
-    _ = 2 := by native_decide
+    _ = 2 := by decide
 
 private lemma foldMultiplicityShift_lt_modulus (m : ℕ) (hm : 2 ≤ m) :
     Nat.fib (m + 1) - 2 < foldMultiplicityModulus m := by

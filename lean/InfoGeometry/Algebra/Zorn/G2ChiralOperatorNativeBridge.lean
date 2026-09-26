@@ -49,7 +49,7 @@ theorem chiralOperatorNativeReadout_ne_zero (g : ChiralGenerator) :
   exact circularBasis.ne_zero (chiralGeneratorIndex g)
 
 theorem chiralGeneratorIndex_injective : Function.Injective chiralGeneratorIndex := by
-  native_decide
+  decide
 
 theorem chiralOperatorNativeReadout_injective :
     Function.Injective chiralOperatorNativeReadout := by

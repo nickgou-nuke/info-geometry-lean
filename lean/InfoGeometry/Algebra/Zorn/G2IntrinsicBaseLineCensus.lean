@@ -36,7 +36,7 @@ def admissiblePairs : Finset (Finset Point) :=
   (zornZeroNeighborSet nativeBaseIsotropicPoint).powerset.filter admissiblePair
 
 theorem admissiblePairs_card : admissiblePairs.card = 3 := by
-  native_decide
+  decide
 
 theorem intrinsicLine_erase_mem_admissiblePairs
     (L : IntrinsicLine nativeBaseIsotropicPoint) :

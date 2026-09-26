@@ -67,6 +67,6 @@ theorem paper_xi_terminal_zm_jg_algebraic_scale_finite_exception_coherence :
   refine
     ⟨xi_terminal_zm_jg_algebraic_scale_finite_exception_coherence_permutation_quotient_surjective,
       ?_⟩
-  native_decide
+  decide
 
 end Omega.Zeta

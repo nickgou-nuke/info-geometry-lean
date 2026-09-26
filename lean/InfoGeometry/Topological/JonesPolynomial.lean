@@ -12,6 +12,28 @@ polynomial; those must be supplied by a separate owner.
 
 namespace InfoGeometry.Topological.JonesPolynomial
 
+/-! ## Temperley--Lieb crossing convention -/
+
+/-- The chosen Kauffman--Temperley--Lieb crossing element
+`A * e + A⁻¹ * 1`.  This fixes the positive-crossing convention used by the
+finite braid layer; the corresponding braid relations require the usual
+Temperley--Lieb relations on the elements `e`. -/
+def temperleyLiebBraidGenerator {R : Type*} [Ring R]
+    (A : Units R) (e : R) : R :=
+  (A : R) * e + ((A⁻¹ : Units R) : R)
+
+@[simp]
+theorem temperleyLiebBraidGenerator_zero {R : Type*} [Ring R]
+    (A : Units R) :
+    temperleyLiebBraidGenerator A (0 : R) = ((A⁻¹ : Units R) : R) := by
+  simp [temperleyLiebBraidGenerator]
+
+theorem temperleyLiebBraidGenerator_def {R : Type*} [Ring R]
+    (A : Units R) (e : R) :
+    temperleyLiebBraidGenerator A e =
+      (A : R) * e + ((A⁻¹ : Units R) : R) := by
+  rfl
+
 /-- Integer powers of a Reidemeister-I factor cancel its bracket scaling. -/
 theorem reidemeister_factor_cancel {R : Type*} [Group R]
     (c : R) (w : ℤ) :

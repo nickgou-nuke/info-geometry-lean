@@ -1,5 +1,4 @@
 import InfoGeometry.Clifford.PolarizedMinkowski55
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Three source involutions and a genuine fundamental symmetry
@@ -163,7 +162,7 @@ theorem pairSwap_matrix_action (z : Boundary55) :
   funext i
   fin_cases i <;>
     simp [pairSwapMatrix, Matrix.mulVec, dotProduct, Matrix.diagonal,
-      flat55, diagonalEquiv, pairSwap] <;> ring
+      flat55, diagonalEquiv, pairSwap, Fin.sum_univ_succ] <;> ring
 
 /-- The isometry is orientation reversing, excluding the claimed full SO stabilizer. -/
 theorem pairSwapMatrix_det : Matrix.det pairSwapMatrix = -1 := by

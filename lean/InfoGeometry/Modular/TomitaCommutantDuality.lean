@@ -9,22 +9,21 @@ set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
 
 /-!
-# Tomita–Takesaki Commutant Duality Theorem: π_ω(𝒜_∞)' = J π_ω(𝒜_∞) J
+# Abstract conditional commutant duality interface
 
-Formalizes the fundamental duality theorem of Tomita–Takesaki modular theory
-for the GNS representation of the inductive colimit `𝒜_∞`:
+This file defines an algebraic commutant of a set of endomorphisms and the
+conjugate set induced by an anti-linear involution. The equality theorem is
+conditional: `TomitaDualityData` supplies the forward and backward inclusions
+needed to derive equality. Those inclusions are inputs, not consequences
+proved here from a GNS construction, cyclic/separating vector, modular
+operator, or von Neumann algebra.
 
-  1. `AntiLinearInvolution`: Anti-linear modular conjugation `J : ℋ_ω → ℋ_ω` with `J² = id`.
-  2. `commutant`: The von Neumann commutant `ℳ' = { T | ∀ A ∈ ℳ, [T, A] = 0 }`.
-  3. `AdJ`: The operator conjugation `Ad_J(A) = J ∘ A ∘ J`.
-  4. `JConjugateSet`: The spatial conjugation `J ℳ J = { Ad_J(A) | A ∈ ℳ }`.
-  5. `tomita_forward_inclusion`: `J ℳ J ⊆ ℳ'`.
-  6. `tomita_backward_inclusion`: `ℳ' ⊆ J ℳ J`.
-  7. `tomita_takesaki_commutant_duality`: `ℳ' = J ℳ J`.
-  8. `tomita_reciprocal_duality`: `J ℳ' J = ℳ`.
-  9. `von_neumann_bicommutant_from_tomita`: `ℳ'' = ℳ`.
+The resulting set-theoretic consequences are useful as an abstract interface,
+but do not by themselves instantiate Tomita–Takesaki theory or the von
+Neumann bicommutant theorem. The separate `Cl(1,1)` modular atom and
+`StandardFormCore` likewise document their narrower scope.
 
-All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+The declarations in this file use no `sorry` and introduce no custom axioms.
 -/
 
 noncomputable section
@@ -123,48 +122,30 @@ structure TomitaDualityData (J : AntiLinearInvolution H) (M : Set (H → H)) : P
 
 variable {J : AntiLinearInvolution H} {M : Set (H → H)}
 
-/--
-MAIN THEOREM 1 (Forward Duality Inclusion):
-  `J ℳ J ⊆ ℳ'`
--/
+/-- Conditional consequence of the forward-commutation field in `TomitaDualityData`. -/
 theorem tomita_forward_inclusion (hD : TomitaDualityData J M) :
     JConjugateSet J M ⊆ commutant M := by
   rintro B ⟨A, hA, rfl⟩
   exact hD.forward_commute A hA
 
-/--
-MAIN THEOREM 2 (Backward Duality Inclusion):
-  `ℳ' ⊆ J ℳ J`
--/
+/-- Conditional consequence of the backward-inclusion field in `TomitaDualityData`. -/
 theorem tomita_backward_inclusion (hD : TomitaDualityData J M) :
     commutant M ⊆ JConjugateSet J M := by
   rintro B hB
   obtain ⟨A, hA, rfl⟩ := hD.backward_span B hB
   exact ⟨A, hA, rfl⟩
 
-/--
-MAIN THEOREM 3 (Tomita–Takesaki Commutant Duality):
-  `π_ω(𝒜_∞)' = J π_ω(𝒜_∞) J`
-The commutant of the GNS von Neumann algebra equals its spatial J-conjugation.
--/
+/-- Set equality obtained from the two inclusions supplied by `TomitaDualityData`. -/
 theorem tomita_takesaki_commutant_duality (hD : TomitaDualityData J M) :
     commutant M = JConjugateSet J M :=
   Set.Subset.antisymm (tomita_backward_inclusion hD) (tomita_forward_inclusion hD)
 
-/--
-COROLLARY 1 (Reciprocal Dual Formulation):
-  `J (ℳ') J = ℳ`
-Conjugating the commutant recovers the original algebra.
--/
+/-- Conditional reciprocal equality induced by the abstract conjugation operation. -/
 theorem tomita_reciprocal_duality (hD : TomitaDualityData J M) :
     JConjugateSet J (commutant M) = M := by
   rw [tomita_takesaki_commutant_duality hD, JConjugateSet_involutive]
 
-/--
-COROLLARY 2 (von Neumann Bicommutant Theorem via Modular Duality):
-  `ℳ'' = ℳ`
-The reflexive von Neumann bicommutant identity follows directly from Tomita duality.
--/
+/-- Abstract commutant equality under duality data for both `M` and its commutant. -/
 theorem von_neumann_bicommutant_from_tomita (hD : TomitaDualityData J M)
     (hD_prime : TomitaDualityData J (commutant M)) :
     commutant (commutant M) = M := by

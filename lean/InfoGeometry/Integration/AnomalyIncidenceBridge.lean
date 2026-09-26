@@ -27,6 +27,6 @@ theorem berry_anomaly_breaks_incidence
   rcases h with ⟨hX, hY, h_pi⟩
   have h_null := penrose_incidence_null_separation Z X Y hX hY h_pi
   rw [h_mass] at h_null
-  exact h_anomaly h_null.symm
+  exact h_anomaly h_null
 
 end InfoGeometry.Integration.AnomalyIncidenceBridge

@@ -22,7 +22,7 @@ theorem fib_lower_bound (m : ℕ) : m + 1 ≤ Nat.fib (m + 2) := by
 theorem fib_growth_seeds :
     Nat.fib 3 = 2 ∧ Nat.fib 4 = 3 ∧ Nat.fib 5 = 5 ∧
     Nat.fib 6 = 8 ∧ Nat.fib 7 = 13 ∧ Nat.fib 8 = 21 ∧
-    Nat.fib 9 = 34 ∧ Nat.fib 10 = 55 := by native_decide
+    Nat.fib 9 = 34 ∧ Nat.fib 10 = 55 := by decide
 
 /-- If P > 2B and B ≥ m+1 (from Fibonacci lower bound), then P ≥ 2(m+1)+1.
     This formalizes the core inequality for the prime budget lower bound.
@@ -39,7 +39,7 @@ theorem crt_product_lower_bound (P B m : ℕ) (hP : P > 2 * B) (hB : B ≥ m + 1
 theorem prime_count_seed_m5 :
     Nat.fib 7 = 13 ∧ 2 * 13 = 26 ∧ 3 * 11 > 26 ∧
     3 ≤ 5 ^ 2 ∧ 11 ≤ 5 ^ 2 := by
-  refine ⟨by native_decide, by omega, by omega, by omega, by omega⟩
+  refine ⟨by decide, by omega, by omega, by omega, by omega⟩
 
 /-- For m = 8, F_10 = 55, need P > 110. Using primes ≤ 64 = 8²,
     we need at least 3 primes (e.g., 5 × 7 × 11 = 385 > 110).
@@ -49,7 +49,7 @@ theorem prime_count_seed_m8 :
     Nat.fib 10 = 55 ∧ 2 * 55 = 110 ∧
     5 * 7 * 11 > 110 ∧ 5 ≤ 8 ^ 2 ∧ 7 ≤ 8 ^ 2 ∧ 11 ≤ 8 ^ 2 := by
   refine ⟨?_, by omega, by omega, by omega, by omega, by omega⟩
-  native_decide
+  decide
 
 /-- Paper: `cor:pom-order-spatialization-prime-budget`.
     CRT spatialization prime budget: Fibonacci growth forces the CRT modulus product
@@ -58,6 +58,6 @@ theorem paper_pom_crt_spatialization_prime_budget :
     (∀ m : ℕ, m + 1 ≤ Nat.fib (m + 2)) ∧
     (∀ P B m : ℕ, P > 2 * B → B ≥ m + 1 → P ≥ 2 * (m + 1) + 1) ∧
     (Nat.fib 7 = 13 ∧ Nat.fib 10 = 55) := by
-  refine ⟨fib_lower_bound, crt_product_lower_bound, ?_, ?_⟩ <;> native_decide
+  refine ⟨fib_lower_bound, crt_product_lower_bound, ?_, ?_⟩ <;> decide
 
 end Omega.POM

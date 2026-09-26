@@ -38,7 +38,7 @@ theorem paper_so10_2torsion_minimal_disconnected_repair_verified :
     paper_so10_2torsion_minimal_disconnected_repair := by
   unfold paper_so10_2torsion_minimal_disconnected_repair
     so10TwoTorsionMinimalDisconnectedRepairStatement
-  refine ⟨by native_decide, by native_decide, ?_⟩
+  refine ⟨by decide, by decide, ?_⟩
   intro D
   unfold so10MinimalDisconnectedRepairLowerBound
   have hdrop := (Omega.GU.paper_so10_2torsion_central_collapse_necessity D).2

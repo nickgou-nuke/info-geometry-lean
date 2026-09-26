@@ -100,7 +100,7 @@ theorem paper_conclusion_window6_multiplicity_shell_smith_geometry :
       conclusion_window6_multiplicity_shell_smith_geometry_snf4 = (1, 1, 1) ∧
       conclusion_window6_multiplicity_shell_smith_geometry_snf3 = (1, 2) ∧
       conclusion_window6_multiplicity_shell_smith_geometry_snf2 = (1, 1, 2) := by
-  refine ⟨by native_decide, by native_decide, by native_decide, ?_, ?_, ?_, rfl, rfl, rfl⟩
+  refine ⟨by decide, by decide, by decide, ?_, ?_, ?_, rfl, rfl, rfl⟩
   · intro x y z
     exact ⟨x, y, z, rfl⟩
   · intro x y z

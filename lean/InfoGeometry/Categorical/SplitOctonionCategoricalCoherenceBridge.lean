@@ -65,9 +65,9 @@ theorem splitOctonion_hexagon_holds :
   constructor
   · intro X Y Z
     revert X Y Z
-    native_decide
+    decide
   · intro X Y Z
     revert X Y Z
-    native_decide
+    decide
 
 end InfoGeometry.Categorical.SplitOctonionCategoricalCoherenceBridge

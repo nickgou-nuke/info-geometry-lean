@@ -26,7 +26,7 @@ instance : DecidableEq OctImIsotropicPoint := by infer_instance
 private theorem baseLineWitness_points_valid (v : OctImF2)
     (hv : v ∈ nativeBaseLineWitness) :
     splitQuad v = 0 ∧ v ≠ 0 := by
-  native_decide +revert
+  decide +revert
 
 theorem nativeBaseLineWitness_points_valid (v : OctImF2)
     (hv : v ∈ nativeBaseLineWitness) :
@@ -41,11 +41,11 @@ def baseIntrinsicLineSet : Finset OctImIsotropicPoint :=
   nativeBaseLineWitness.attach.image (fun v => intrinsicPointOf v.1 v.2)
 
 theorem baseIntrinsicLineSet_card : baseIntrinsicLineSet.card = 3 := by
-  native_decide +revert
+  decide +revert
 
 noncomputable def baseIntrinsicLine : IntrinsicLine nativeBaseIsotropicPoint := by
   refine ⟨baseIntrinsicLineSet, ?_⟩
-  native_decide +revert
+  decide +revert
 
 noncomputable def baseIntrinsicFlag : IntrinsicFlag :=
   ⟨nativeBaseIsotropicPoint, baseIntrinsicLine⟩

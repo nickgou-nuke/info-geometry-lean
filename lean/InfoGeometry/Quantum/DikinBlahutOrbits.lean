@@ -73,25 +73,30 @@ theorem dikin_ellipsoid_iff_abs_le (x y r : ℝ) (hx : 0 < x) (hr : 0 ≤ r) :
   rw [h_sqrt_le, abs_div, abs_of_pos hx]
   rw [div_le_iff₀ hx]
 
-/-- 🏆 THEOREM 2 (Strict Interior Confinement / No Boundary Collisions):
-    If y ∈ ℰ(x, r) with x > 0 and r < 1, then y is strictly positive: y > 0. -/
+/-- Quantitative lower bound for points in a one-dimensional Dikin ellipsoid:
+    if `x > 0`, `0 ≤ r`, and `y ∈ ℰ(x, r)`, then `x * (1 - r) ≤ y`. -/
+theorem dikin_ellipsoid_lower_bound (x y r : ℝ) (hx : 0 < x) (hr_nonneg : 0 ≤ r)
+    (h_in : InDikinEllipsoid x y r) :
+    x * (1 - r) ≤ y := by
+  rw [dikin_ellipsoid_iff_abs_le x y r hx hr_nonneg] at h_in
+  have h_sub_ge : - (r * x) ≤ y - x := (abs_le.mp h_in).1
+  calc x * (1 - r) = x - r * x := by ring
+       _           ≤ x + (y - x) := by linarith
+       _           = y := by ring
+
+/-- Strict interior confinement: if `y ∈ ℰ(x, r)`, `x > 0`, and `0 ≤ r < 1`,
+    then `y` is strictly positive. -/
 theorem dikin_ellipsoid_strictly_positive (x y r : ℝ) (hx : 0 < x) (hr_nonneg : 0 ≤ r) (hr_lt : r < 1)
     (h_in : InDikinEllipsoid x y r) :
     0 < y := by
-  rw [dikin_ellipsoid_iff_abs_le x y r hx hr_nonneg] at h_in
-  have h_sub_ge : - (r * x) ≤ y - x := (abs_le.mp h_in).1
-  have h_bound : x * (1 - r) ≤ y := by
-    calc x * (1 - r) = x - r * x := by ring
-         _           ≤ x + (y - x) := by linarith
-         _           = y := by ring
-  have h_pos_factor : 0 < x * (1 - r) := mul_pos hx (by linarith)
-  exact lt_of_lt_of_le h_pos_factor h_bound
+  have h_lower := dikin_ellipsoid_lower_bound x y r hx hr_nonneg h_in
+  exact lt_of_lt_of_le (mul_pos hx (by linarith)) h_lower
 
 /-!
 ### 2. Blahut-Arimoto Contraction Nested Inclusions on Periodic Orbits
 -/
 
-/-- 🏆 THEOREM 3 (Nested Dikin Shrinkage under Blahut-Arimoto Iteration):
+/-- Nested Dikin shrinkage under the stated contraction-factor bounds:
     If the Blahut-Arimoto operator contracts by factor K_c ∈ [0, 1),
     the Dikin ellipsoid along the orbit contracts geometrically:
       ℰ(x, K_c * r) ⊆ ℰ(x, r). -/

@@ -81,7 +81,7 @@ theorem simpleReflections_relation :
           InfoGeometry.Algebra.Zorn.G2SignedRootReflections.simpleWordAction
             [false, true, false, true, false, true] r := by
       revert r
-      native_decide
+      decide
     rw [hwords] at hleft
     exact hleft.trans hright.symm
   have hEq' :
@@ -220,7 +220,7 @@ theorem garsideWord_is_longest_readback :
         simpleWordAction [true, false, true, false, true, false] r =
           simpleWordAction [false, true, false, true, false, true] r := by
       revert r
-      native_decide
+      decide
     rw [hwords] at hleft
     exact hleft.trans hright.symm
   rw [← hEq]

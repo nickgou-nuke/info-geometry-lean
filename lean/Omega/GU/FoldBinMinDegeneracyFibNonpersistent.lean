@@ -85,7 +85,7 @@ private theorem fib_product_dominates_pow_four (k : ℕ) (hk : 12 ≤ k) :
     4 ^ k < Nat.fib k * Nat.fib (2 * k + 2) := by
   induction k, hk using Nat.le_induction with
   | base =>
-      native_decide
+      decide
   | succ k hk ih =>
       have hstep := fib_product_step k hk
       have hpow : 4 ^ (k + 1) = 4 * 4 ^ k := by rw [Nat.pow_succ, Nat.mul_comm]

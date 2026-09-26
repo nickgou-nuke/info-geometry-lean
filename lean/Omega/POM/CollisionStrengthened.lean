@@ -53,7 +53,7 @@ theorem collision_uniform_seed :
     cor:pom-injectivization-collision-strengthened-lowerbound -/
 theorem fold6_collision_bounds :
     64 / 26 = 2 ∧ 4 ≤ 4 ∧ Nat.clog 2 4 = 2 := by
-  refine ⟨by omega, by omega, by native_decide⟩
+  refine ⟨by omega, by omega, by decide⟩
 
 /-- For non-uniform distributions, collision bound strictly dominates.
     Example: |Ω|=6, |X|=3, fibers [1,2,3], D_f=3.
@@ -64,7 +64,7 @@ theorem fold6_collision_bounds :
 theorem nonuniform_collision_dominates_seed :
     1 * 1 + 2 * 2 + 3 * 3 = 14 ∧ 14 ≤ 3 * 6 ∧
     6 / 3 = 2 ∧ Nat.clog 2 3 = 2 ∧ Nat.clog 2 2 = 1 := by
-  refine ⟨by omega, by omega, by omega, by native_decide, by native_decide⟩
+  refine ⟨by omega, by omega, by omega, by decide, by decide⟩
 
 /-- Paper package: collision-strengthened lower bound seed values.
     cor:pom-injectivization-collision-strengthened-lowerbound -/
@@ -73,7 +73,7 @@ theorem paper_pom_collision_strengthened_lowerbound :
     (64 / 26 = 2) ∧
     (Nat.clog 2 4 = 2) ∧
     (Nat.clog 2 3 = 2) := by
-  refine ⟨fun a D h => Nat.mul_le_mul_right a h, by omega, by native_decide,
-    by native_decide⟩
+  refine ⟨fun a D h => Nat.mul_le_mul_right a h, by omega, by decide,
+    by decide⟩
 
 end Omega.POM

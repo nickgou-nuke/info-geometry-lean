@@ -1,0 +1,77 @@
+{
+  "metadata": {
+    "module": "InfoGeometry.LLM.KreinAttentionEnergy",
+    "cas_engine": "SymPy 1.14.0",
+    "verified_invariants_count": 6,
+    "status": "MATHEMATICALLY_VERIFIED"
+  },
+  "metric_and_bilinear_form": {
+    "eta": [
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        -1
+      ]
+    ],
+    "splitB11_formula": "q.1 * k.1 - q.2 * k.2",
+    "symmetric": true,
+    "bilinear": true
+  },
+  "krein_interaction_energy": {
+    "definition": "interactionEnergy q k splitB11",
+    "explicit_formula": "-(q.1 * k.1 - q.2 * k.2)",
+    "definitional_equality": "rfl"
+  },
+  "defect_invariant": {
+    "euclidean_formula": "-(q.1 * k.1 + q.2 * k.2)",
+    "defect_formula": "2 * q.2 * k.2",
+    "vanishes_on_channel_zero": true
+  },
+  "fundamental_symmetry": {
+    "J": [
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        -1
+      ]
+    ],
+    "P_plus": [
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "P_minus": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "involutive": true,
+    "projectors_orthogonal_and_complete": true
+  },
+  "lorentz_boost_invariance": {
+    "boost_matrix": "[[cosh(theta), sinh(theta)], [sinh(theta), cosh(theta)]]",
+    "metric_preserving": true,
+    "energy_invariant": true
+  },
+  "thermodynamic_weights": {
+    "partition_of_unity": "sum_i w_i = 1",
+    "lean_term_proof": "attentionWeights_sum_one q ctx splitB11 \u03b2",
+    "tactics_count": 0
+  }
+}

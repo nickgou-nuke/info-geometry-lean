@@ -120,7 +120,7 @@ theorem toZMod_one : toZMod (1 : X m) = 1 := by
     -- Goal: (0 : ZMod (Nat.fib 2)) = 1. Nat.fib 2 = 1, so ZMod 1 is trivial.
     -- ZMod (Nat.fib 2) = ZMod 1, in which 0 = 1
     change (0 : ZMod (Nat.fib 2)) = 1
-    native_decide
+    decide
   | succ n =>
     rw [stableValue_stableOne (fib_gt_one_of_ge_two (by omega))]
     simp
@@ -245,32 +245,32 @@ noncomputable def instFieldOfPrime (hp : Nat.Prime (Nat.fib (m + 2))) : Field (X
 /-- X_1 ≅ GF(2) is a field (F_3 = 2 is prime).
     cor:field-phase-fib-prime-instField-X1 -/
 noncomputable instance instField_X1 : Field (X 1) :=
-  instFieldOfPrime (by native_decide)
+  instFieldOfPrime (by decide)
 
 /-- X_2 ≅ GF(3) is a field (F_4 = 3 is prime).
     cor:field-phase-fib-prime-instField-X2 -/
 noncomputable instance instField_X2 : Field (X 2) :=
-  instFieldOfPrime (by native_decide)
+  instFieldOfPrime (by decide)
 
 /-- X_3 ≅ GF(5) is a field (F_5 = 5 is prime).
     cor:field-phase-fib-prime-instField-X3 -/
 noncomputable instance instField_X3 : Field (X 3) :=
-  instFieldOfPrime (by native_decide)
+  instFieldOfPrime (by decide)
 
 /-- X_5 ≅ GF(13) is a field (F_7 = 13 is prime).
     cor:field-phase-fib-prime-instField-X5 -/
 noncomputable instance instField_X5 : Field (X 5) :=
-  instFieldOfPrime (by native_decide)
+  instFieldOfPrime (by decide)
 
 /-- X_9 ≅ GF(89) is a field (F_11 = 89 is prime).
     cor:field-phase-fib-prime-instField-X9 -/
 noncomputable instance instField_X9 : Field (X 9) :=
-  instFieldOfPrime (by native_decide)
+  instFieldOfPrime (by decide)
 
 /-- X_11 ≅ GF(233) is a field (F_13 = 233 is prime).
     cor:field-phase-fib-prime-instField-X11 -/
 noncomputable instance instField_X11 : Field (X 11) :=
-  instFieldOfPrime (by native_decide)
+  instFieldOfPrime (by decide)
 
 /-! ### CRT decomposition when F_{m+2} = p * q with coprime factors -/
 
@@ -285,13 +285,13 @@ noncomputable def crtDecomposition (m : Nat) (p q : Nat)
 /-- X_7 ≅ ZMod 2 × ZMod 17 (since F_9 = 34 = 2 × 17).
     crt-X7-decomposition -/
 noncomputable def X7_decomposition : X 7 ≃+* ZMod 2 × ZMod 17 :=
-  crtDecomposition 7 2 17 (by native_decide) (by native_decide)
+  crtDecomposition 7 2 17 (by decide) (by decide)
 
 -- X_6: F_8 = 21 = 3 × 7, gcd(3,7) = 1.
 /-- X_6 ≃+* ZMod 3 × ZMod 7 via CRT (since F_8 = 21 = 3 × 7).
     cor:crt-X6-decomposition -/
 noncomputable def X6_decomposition : X 6 ≃+* ZMod 3 × ZMod 7 :=
-  crtDecomposition 6 3 7 (by native_decide) (by native_decide)
+  crtDecomposition 6 3 7 (by decide) (by decide)
 
 /-- X_6 admits a CRT splitting into ZMod 3 × ZMod 7.
     cor:crt-X6-split -/
@@ -300,7 +300,7 @@ theorem X6_crt_split : Nonempty (X 6 ≃+* ZMod 3 × ZMod 7) := ⟨X6_decomposit
 -- X_10: F_12 = 144 = 16 × 9, gcd(16,9) = 1.
 /-- crt-X10-decomposition -/
 noncomputable def X10_decomposition : X 10 ≃+* ZMod 16 × ZMod 9 :=
-  crtDecomposition 10 16 9 (by native_decide) (by native_decide)
+  crtDecomposition 10 16 9 (by decide) (by decide)
 
 -- X_4: F_6 = 8, with no nontrivial coprime CRT factorization.
 /-- X_4 ≃+* ZMod 8 via stable values (since F_6 = 8). -/
@@ -310,7 +310,7 @@ noncomputable def X4_iso : X 4 ≃+* ZMod 8 :=
 -- X_8: F_10 = 55 = 5 × 11, gcd(5,11) = 1.
 /-- cor:crt-factorization -/
 noncomputable def X8_decomposition : X 8 ≃+* ZMod 5 × ZMod 11 :=
-  crtDecomposition 8 5 11 (by native_decide) (by native_decide)
+  crtDecomposition 8 5 11 (by decide) (by decide)
 
 /-! ### Characteristic -/
 
@@ -435,7 +435,7 @@ theorem seven_mul_three_zero_X6 :
   -- Goal: e 7 * e 3 = 0 in ZMod (Nat.fib 8)
   rw [show (7 : X 6) = ((7 : ℕ) : X 6) from rfl, show (3 : X 6) = ((3 : ℕ) : X 6) from rfl,
     map_natCast, map_natCast]
-  native_decide
+  decide
 
 /-- Paper: thm:mul-definitional (element order) -/
 theorem paper_seven_mul_three_zero_X6 :
@@ -459,7 +459,7 @@ theorem X5_generator_two :
   rw [← e.injective.eq_iff, map_mul, map_one]
   rw [show (7 : X 5) = ((7 : ℕ) : X 5) from rfl, show (2 : X 5) = ((2 : ℕ) : X 5) from rfl,
     map_natCast, map_natCast]
-  native_decide
+  decide
 
 /-- Paper: thm:mul-definitional (doubling) -/
 theorem paper_stableValue_double (x : X m) :

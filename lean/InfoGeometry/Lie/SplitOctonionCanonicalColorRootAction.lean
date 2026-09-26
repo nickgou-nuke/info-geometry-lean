@@ -322,14 +322,14 @@ theorem cyclotomic_shiftedReflection_conjugates_stepTwoRotation
           (InfoGeometry.Canonical.D6SixModeAction.rotation 2
             (InfoGeometry.Canonical.D6SixModeAction.reflection n + 3)) + 3 =
       InfoGeometry.Canonical.D6SixModeAction.rotation 4 n := by
-  fin_cases n <;> native_decide
+  fin_cases n <;> decide
 
 theorem cyclotomic_stepTwoRotation_twice
     (n : InfoGeometry.Canonical.D6SixModeAction.D6Index) :
     InfoGeometry.Canonical.D6SixModeAction.rotation 4 n =
       InfoGeometry.Canonical.D6SixModeAction.rotation 2
         (InfoGeometry.Canonical.D6SixModeAction.rotation 2 n) := by
-  fin_cases n <;> native_decide
+  fin_cases n <;> decide
 
 theorem canonicalColorReflection_cyclotomic_conjugation
     (n : InfoGeometry.Canonical.D6SixModeAction.D6Index) :
@@ -397,7 +397,7 @@ theorem canonicalDihedralAction_r_two_cyclotomicChannel
         (InfoGeometry.Canonical.D6SixModeAction.rotation 4 n) := by
   have h : (.r 2 : DihedralGroup 3) = (.r 1) * (.r 1) := by
     simp only [DihedralGroup.r_mul_r]
-    native_decide
+    decide
   rw [h]
   change canonicalDihedralAction (.r 1)
       (canonicalDihedralAction (.r 1) (cyclotomicChannel n)) = _
@@ -415,7 +415,7 @@ theorem canonicalDihedralAction_sr_one_cyclotomicChannel
           (InfoGeometry.Canonical.D6SixModeAction.rotation 2 n) + 3) := by
   have h : (.sr 1 : DihedralGroup 3) = (.sr 0) * (.r 1) := by
     simp only [DihedralGroup.sr_mul_r]
-    native_decide
+    decide
   rw [h]
   change canonicalDihedralAction (.sr 0)
       (canonicalDihedralAction (.r 1) (cyclotomicChannel n)) = _
@@ -430,7 +430,7 @@ theorem canonicalDihedralAction_sr_two_cyclotomicChannel
           (InfoGeometry.Canonical.D6SixModeAction.rotation 4 n) + 3) := by
   have h : (.sr 2 : DihedralGroup 3) = (.sr 0) * (.r 2) := by
     simp only [DihedralGroup.sr_mul_r]
-    native_decide
+    decide
   rw [h]
   change canonicalDihedralAction (.sr 0)
       (canonicalDihedralAction (.r 2) (cyclotomicChannel n)) = _
@@ -593,7 +593,7 @@ theorem canonicalDihedralAction_r_two_circularFrame (i : Fin 8) :
         (circularFrame (cycleFrameIndex (cycleFrameIndex i))) := by
   have h : (.r 2 : DihedralGroup 3) = (.r 1) * (.r 1) := by
     simp only [DihedralGroup.r_mul_r]
-    native_decide
+    decide
   rw [h]
   change canonicalDihedralAction (.r 1)
       (canonicalDihedralAction (.r 1)
@@ -610,7 +610,7 @@ theorem canonicalDihedralAction_sr_one_circularFrame (i : Fin 8) :
         (circularFrame (reflectionFrameIndex (cycleFrameIndex i))) := by
   have h : (.sr 1 : DihedralGroup 3) = (.sr 0) * (.r 1) := by
     simp only [DihedralGroup.sr_mul_r]
-    native_decide
+    decide
   rw [h]
   change canonicalDihedralAction (.sr 0)
       (canonicalDihedralAction (.r 1)
@@ -626,7 +626,7 @@ theorem canonicalDihedralAction_sr_two_circularFrame (i : Fin 8) :
           (cycleFrameIndex (cycleFrameIndex i)))) := by
   have h : (.sr 2 : DihedralGroup 3) = (.sr 0) * (.r 2) := by
     simp only [DihedralGroup.sr_mul_r]
-    native_decide
+    decide
   rw [h]
   change canonicalDihedralAction (.sr 0)
       (canonicalDihedralAction (.r 2)

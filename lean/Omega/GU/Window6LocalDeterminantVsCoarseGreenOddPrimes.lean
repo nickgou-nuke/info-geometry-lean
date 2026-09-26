@@ -40,11 +40,11 @@ private theorem window6CoarseGreenPrime571Order_eq_one :
       (D := 2 ^ 3 * 3 ^ 3 * window6KirchhoffGreenPadicPrime)
       (pstar := window6KirchhoffGreenPadicPrime) ?_ ?_ ?_
     · unfold window6KirchhoffGreenPadicPrime
-      native_decide
+      decide
     · unfold window6KirchhoffGreenPadicPrime
-      native_decide
+      decide
     · unfold window6KirchhoffGreenPadicPrime
-      native_decide
+      decide
   simpa [window6KirchhoffGreenPadicPrime] using h571
 
 /-- Package the audited determinant factors on the local side, and combine them with the
@@ -57,7 +57,7 @@ theorem paper_window6_local_determinant_vs_coarse_green_odd_primes :
   have hdet := paper_terminal_window6_fiber_edge_coupling_det
   let _ := hdet
   refine ⟨?_, ?_, window6CoarseGreenPrime571Order_eq_one⟩
-  · native_decide
-  · native_decide
+  · decide
+  · decide
 
 end Omega.GU

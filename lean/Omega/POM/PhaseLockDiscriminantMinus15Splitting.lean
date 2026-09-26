@@ -63,8 +63,8 @@ theorem paper_pom_phase_lock_discriminant_minus15_splitting
   · intro hp35
     rcases hp35 with hp3 | hp5
     · subst p
-      refine ⟨(2 : ZMod 3), ?_, ?_⟩ <;> native_decide +revert
+      refine ⟨(2 : ZMod 3), ?_, ?_⟩ <;> decide +revert
     · subst p
-      refine ⟨(1 : ZMod 5), ?_, ?_⟩ <;> native_decide +revert
+      refine ⟨(1 : ZMod 5), ?_, ?_⟩ <;> decide +revert
 
 end Omega.POM

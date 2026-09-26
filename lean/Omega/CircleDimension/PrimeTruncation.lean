@@ -67,7 +67,7 @@ theorem paper_cdim_finite_prime_truncation_seeds :
   exact ⟨by norm_num, by norm_num, by norm_num,
          by decide, by decide, by decide,
          ⟨by norm_num, by norm_num, by norm_num, by norm_num⟩,
-         by native_decide, by norm_num, by norm_num⟩
+         by decide, by norm_num, by norm_num⟩
 
 /-- Paper package: multiplicative-object finite-ledger obstruction via prime truncation.
     This paper-facing wrapper reuses the finite prime-truncation seed certificate.

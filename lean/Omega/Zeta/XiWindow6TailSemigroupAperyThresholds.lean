@@ -49,6 +49,6 @@ theorem paper_xi_window6_tail_semigroup_apery_thresholds :
     have hmain : (∃! a : ℕ, n = 21 * a + 34 * b) ↔ 34 * b ≤ n := by
       simpa [b, hr] using (paper_xi_window6_tail_semigroup_two_generator_normal_form n).symm
     exact hcanon.trans (huniq.trans hmain)
-  · native_decide
+  · decide
 
 end Omega.Zeta

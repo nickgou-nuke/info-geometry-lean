@@ -48,6 +48,6 @@ theorem paper_xi_window6_gap_ledger_invariants :
             12 * xi_window6_gap_ledger_invariants_gapCard : ℚ) /
           xi_window6_gap_ledger_invariants_gapCard =
         722 / 3) := by
-  native_decide
+  decide
 
 end Omega.Zeta

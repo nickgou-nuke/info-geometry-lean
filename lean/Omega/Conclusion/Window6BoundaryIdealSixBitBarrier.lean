@@ -33,6 +33,6 @@ theorem paper_conclusion_window6_boundary_ideal_six_bit_barrier :
   · norm_num [Nat.choose]
   · norm_num
   · norm_num
-  · native_decide
+  · decide
 
 end Omega.Conclusion

@@ -37,23 +37,23 @@ def argDenom (k : ℕ) : ℕ := 4 * k + 2
 
 /-- Argument denominator seed: k=1 gives 6.
     thm:pom-Lk-fisher-zeros-arcsine -/
-theorem argDenom_1 : argDenom 1 = 6 := by native_decide
+theorem argDenom_1 : argDenom 1 = 6 := by decide
 
 /-- Argument denominator seed: k=2 gives 10.
     thm:pom-Lk-fisher-zeros-arcsine -/
-theorem argDenom_2 : argDenom 2 = 10 := by native_decide
+theorem argDenom_2 : argDenom 2 = 10 := by decide
 
 /-- Argument denominator seed: k=3 gives 14.
     thm:pom-Lk-fisher-zeros-arcsine -/
-theorem argDenom_3 : argDenom 3 = 14 := by native_decide
+theorem argDenom_3 : argDenom 3 = 14 := by decide
 
 /-- Argument denominator seed: k=4 gives 18.
     thm:pom-Lk-fisher-zeros-arcsine -/
-theorem argDenom_4 : argDenom 4 = 18 := by native_decide
+theorem argDenom_4 : argDenom 4 = 18 := by decide
 
 /-- Argument denominator seed: k=5 gives 22.
     thm:pom-Lk-fisher-zeros-arcsine -/
-theorem argDenom_5 : argDenom 5 = 22 := by native_decide
+theorem argDenom_5 : argDenom 5 = 22 := by decide
 
 /-! ## Angular argument numerator seeds: 2p-1
 
@@ -66,23 +66,23 @@ def oddNumerator (p : ℕ) : ℕ := 2 * p - 1
 
 /-- Odd numerator seed: p=1 gives 1.
     thm:pom-Lk-fisher-zeros-arcsine -/
-theorem oddNumerator_1 : oddNumerator 1 = 1 := by native_decide
+theorem oddNumerator_1 : oddNumerator 1 = 1 := by decide
 
 /-- Odd numerator seed: p=2 gives 3.
     thm:pom-Lk-fisher-zeros-arcsine -/
-theorem oddNumerator_2 : oddNumerator 2 = 3 := by native_decide
+theorem oddNumerator_2 : oddNumerator 2 = 3 := by decide
 
 /-- Odd numerator seed: p=3 gives 5.
     thm:pom-Lk-fisher-zeros-arcsine -/
-theorem oddNumerator_3 : oddNumerator 3 = 5 := by native_decide
+theorem oddNumerator_3 : oddNumerator 3 = 5 := by decide
 
 /-- Odd numerator seed: p=4 gives 7.
     thm:pom-Lk-fisher-zeros-arcsine -/
-theorem oddNumerator_4 : oddNumerator 4 = 7 := by native_decide
+theorem oddNumerator_4 : oddNumerator 4 = 7 := by decide
 
 /-- Odd numerator seed: p=5 gives 9.
     thm:pom-Lk-fisher-zeros-arcsine -/
-theorem oddNumerator_5 : oddNumerator 5 = 9 := by native_decide
+theorem oddNumerator_5 : oddNumerator 5 = 9 := by decide
 
 /-! ## Arcsine support discriminant seeds: Δ(t) = t(4+t)
 
@@ -144,19 +144,19 @@ def joukowskyExponent (k : ℕ) : ℕ := 2 * k + 1
 
 /-- Joukowsky exponent seed: k=1 gives 3.
     thm:pom-Lk-fisher-zeros-arcsine -/
-theorem joukowskyExponent_1 : joukowskyExponent 1 = 3 := by native_decide
+theorem joukowskyExponent_1 : joukowskyExponent 1 = 3 := by decide
 
 /-- Joukowsky exponent seed: k=2 gives 5.
     thm:pom-Lk-fisher-zeros-arcsine -/
-theorem joukowskyExponent_2 : joukowskyExponent 2 = 5 := by native_decide
+theorem joukowskyExponent_2 : joukowskyExponent 2 = 5 := by decide
 
 /-- Joukowsky exponent seed: k=3 gives 7.
     thm:pom-Lk-fisher-zeros-arcsine -/
-theorem joukowskyExponent_3 : joukowskyExponent 3 = 7 := by native_decide
+theorem joukowskyExponent_3 : joukowskyExponent 3 = 7 := by decide
 
 /-- Joukowsky exponent seed: k=4 gives 9.
     thm:pom-Lk-fisher-zeros-arcsine -/
-theorem joukowskyExponent_4 : joukowskyExponent 4 = 9 := by native_decide
+theorem joukowskyExponent_4 : joukowskyExponent 4 = 9 := by decide
 
 /-- The Joukowsky exponent is always odd.
     thm:pom-Lk-fisher-zeros-arcsine -/

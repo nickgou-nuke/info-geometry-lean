@@ -43,9 +43,9 @@ theorem paper_sheetflip_register_seeds :
     (Nat.fib 6 = 8 ∧ 3 ^ 8 = 6561) ∧
     (8 ≤ 3 ^ 5 ∧ 2 ^ 7 < 3 ^ 5) ∧
     (13 ≤ Nat.log 2 (3 ^ 8) + 1) := by
-  refine ⟨⟨by native_decide, by norm_num⟩,
-          ⟨by native_decide, by norm_num⟩,
+  refine ⟨⟨by decide, by norm_num⟩,
+          ⟨by decide, by norm_num⟩,
           ⟨by norm_num, by norm_num⟩,
-          by native_decide⟩
+          by decide⟩
 
 end Omega.GU.SheetflipRegisterBound

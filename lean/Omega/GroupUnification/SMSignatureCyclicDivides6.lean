@@ -31,19 +31,19 @@ def torsionExponent (m : Nat) : Nat :=
 
 /-- The torsion exponent at m = 4 equals 6.
     eq:foldbin4_groupoid_aut_pi1_torsion_exponent -/
-theorem torsionExponent_four : torsionExponent 4 = 6 := by native_decide
+theorem torsionExponent_four : torsionExponent 4 = 6 := by decide
 
 /-- BinFold fiber histogram at m = 4: 3 words with multiplicity 1.
     eq:foldbin4_groupoid_aut_pi1_torsion_exponent -/
-theorem cBinFiberHist_4_1 : cBinFiberHist 4 1 = 3 := by native_decide
+theorem cBinFiberHist_4_1 : cBinFiberHist 4 1 = 3 := by decide
 
 /-- BinFold fiber histogram at m = 4: 2 words with multiplicity 2.
     eq:foldbin4_groupoid_aut_pi1_torsion_exponent -/
-theorem cBinFiberHist_4_2 : cBinFiberHist 4 2 = 2 := by native_decide
+theorem cBinFiberHist_4_2 : cBinFiberHist 4 2 = 2 := by decide
 
 /-- BinFold fiber histogram at m = 4: 3 words with multiplicity 3.
     eq:foldbin4_groupoid_aut_pi1_torsion_exponent -/
-theorem cBinFiberHist_4_3 : cBinFiberHist 4 3 = 3 := by native_decide
+theorem cBinFiberHist_4_3 : cBinFiberHist 4 3 = 3 := by decide
 
 /-- Total stable words at m = 4: |X_4| = F_6 = 8. -/
 theorem window4_count : cBinFiberHist 4 1 + cBinFiberHist 4 2 + cBinFiberHist 4 3 = 8 := by

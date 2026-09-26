@@ -48,10 +48,10 @@ theorem paper_gut_window6_zero_block_half_rate_budget (D : GutWindow6ZeroBlockHa
   have hcard : D.zeroBlockCard = 12 := gutWindow6_zeroBlockCard D
   refine ⟨?_, ?_, ?_⟩
   · rw [GutWindow6ZeroBlockHalfRateBudgetData.halfRateLowerBound, hcard]
-    native_decide
+    decide
   · rw [GutWindow6ZeroBlockHalfRateBudgetData.halfScaleShareFormula, hcard]
-    native_decide
+    decide
   · rw [GutWindow6ZeroBlockHalfRateBudgetData.injectionBitBudget, hcard]
-    native_decide
+    decide
 
 end Omega.GroupUnification

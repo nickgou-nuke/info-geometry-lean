@@ -1,4 +1,5 @@
-import Mathlib.Algebra.GroupPower.Lemmas
+import Mathlib.Algebra.Group.Basic
+import Mathlib.Algebra.Group.Units.Basic
 import Mathlib.Tactic.Ring
 
 /-!

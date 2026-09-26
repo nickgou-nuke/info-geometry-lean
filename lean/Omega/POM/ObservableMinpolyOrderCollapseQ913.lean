@@ -13,6 +13,6 @@ theorem paper_pom_observable_minpoly_order_collapse_q9_13 :
         else 0;
       (deg 9 = 7 ∧ deg 10 = 9 ∧ deg 11 = 9 ∧ deg 13 = 11) ∧
         (∀ q ∈ ({9, 10, 11, 13} : Finset ℕ), 2 * (q / 2) + 1 - deg q = 2)) := by
-  native_decide
+  decide
 
 end Omega.POM

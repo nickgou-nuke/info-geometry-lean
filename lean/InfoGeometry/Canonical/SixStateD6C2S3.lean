@@ -51,18 +51,18 @@ private theorem d6ProductMap_mul (a b : D6) :
     cases b with
     | r j =>
       fin_cases i <;> fin_cases j <;>
-        simp only [DihedralGroup.r_mul_r, d6ProductMap] <;> native_decide
+        simp only [DihedralGroup.r_mul_r, d6ProductMap] <;> decide
     | sr j =>
       fin_cases i <;> fin_cases j <;>
-        simp only [DihedralGroup.r_mul_sr, d6ProductMap] <;> native_decide
+        simp only [DihedralGroup.r_mul_sr, d6ProductMap] <;> decide
   | sr i =>
     cases b with
     | r j =>
       fin_cases i <;> fin_cases j <;>
-        simp only [DihedralGroup.sr_mul_r, d6ProductMap] <;> native_decide
+        simp only [DihedralGroup.sr_mul_r, d6ProductMap] <;> decide
     | sr j =>
       fin_cases i <;> fin_cases j <;>
-        simp only [DihedralGroup.sr_mul_sr, d6ProductMap] <;> native_decide
+        simp only [DihedralGroup.sr_mul_sr, d6ProductMap] <;> decide
 
 def d6ProductHom : D6 →* D6Product where
   toFun := d6ProductMap
@@ -73,7 +73,7 @@ def d6ProductHom : D6 →* D6Product where
   map_mul' := d6ProductMap_mul
 
 private theorem d6ProductHom_injective : Function.Injective d6ProductHom := by
-  native_decide
+  decide
 
 theorem d6ProductHom_bijective : Function.Bijective d6ProductHom := by
   apply (Fintype.bijective_iff_injective_and_card d6ProductHom).2
@@ -105,25 +105,25 @@ def d3PermutationHom : S3Model →* S3 where
       | r j =>
         rw [DihedralGroup.r_mul_r]
         fin_cases i <;> fin_cases j <;>
-          dsimp [d3PermutationMap] <;> native_decide
+          dsimp [d3PermutationMap] <;> decide
       | sr j =>
         rw [DihedralGroup.r_mul_sr]
         fin_cases i <;> fin_cases j <;>
-          dsimp [d3PermutationMap] <;> native_decide
+          dsimp [d3PermutationMap] <;> decide
     | sr i =>
       cases b with
       | r j =>
         rw [DihedralGroup.sr_mul_r]
         fin_cases i <;> fin_cases j <;>
-          dsimp [d3PermutationMap] <;> native_decide
+          dsimp [d3PermutationMap] <;> decide
       | sr j =>
         rw [DihedralGroup.sr_mul_sr]
         fin_cases i <;> fin_cases j <;>
-          dsimp [d3PermutationMap] <;> native_decide
+          dsimp [d3PermutationMap] <;> decide
 
 private theorem d3PermutationHom_injective :
     Function.Injective d3PermutationHom := by
-  native_decide
+  decide
 
 theorem d3PermutationHom_bijective :
     Function.Bijective d3PermutationHom := by
@@ -316,7 +316,7 @@ private theorem sixWeylXUnit_pow_zmod_sub (i j : ZMod 6) :
   rw [← sixWeylXUnit_pow_mod_six ((j - i).val),
     ← sixWeylXUnit_pow_mod_six (5 * i.val + j.val)]
   congr 1
-  fin_cases i <;> fin_cases j <;> native_decide
+  fin_cases i <;> fin_cases j <;> decide
 
 private def d6MatrixMap : D6 → SixMatrixˣ
   | .r i => sixWeylXUnit ^ i.val

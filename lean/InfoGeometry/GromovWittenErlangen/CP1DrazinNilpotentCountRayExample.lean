@@ -212,14 +212,14 @@ def defectEdgeDrazin : RelativeCoreNilpotentDecomposition Algebra where
     refine ⟨2, ?_⟩
     ext
     · norm_num
-    · native_decide
+    · decide
 
 /-- The concrete residue is square-zero in the `ZMod 4` factor. -/
 theorem defectResidue_square_zero :
     ((0, (2 : ZMod 4)) : Algebra) * ((0, (2 : ZMod 4)) : Algebra) = 0 := by
   ext
   · norm_num
-  · native_decide
+  · decide
 
 /-- The concrete residue is killed by the regular inverse on the right. -/
 theorem defectResidue_mul_regularInverse :

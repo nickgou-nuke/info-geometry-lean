@@ -81,6 +81,6 @@ theorem paper_group_jg_prime_register_phase_bohr_dense (D : GroupJGPrimeRegister
       (D.t * Real.log (2 : ℝ)) / (D.t * Real.log (3 : ℝ)) = Real.log (2 : ℝ) / Real.log (3 : ℝ) := by
     field_simp [D.ht, hlog3_ne]
   rw [hratio]
-  exact prime_log_ratio_irrational (by native_decide) (by native_decide) (by decide)
+  exact prime_log_ratio_irrational (by decide) (by decide) (by decide)
 
 end Omega.GU

@@ -1,0 +1,15 @@
+
+import InfoGeometry.Canonical.Hartwig1976SVDMoorePenroseBorder
+
+open InfoGeometry.Canonical.Hartwig1976SVDMoorePenroseBorder
+
+#print axioms baseA_isMoorePenrose
+#print axioms case1Z_eq
+#print axioms case1Border_isMoorePenrose
+#print axioms case1Schur_isMoorePenrose
+#print axioms case3Border_isMoorePenrose
+#print axioms case3Schur_isMoorePenrose
+#print axioms borderPermutation_sq_eq_one
+#print axioms borderPermutation_star_eq_self
+#print axioms unitConj_isMoorePenrose
+#print axioms case1_conjugated_border_isMoorePenrose

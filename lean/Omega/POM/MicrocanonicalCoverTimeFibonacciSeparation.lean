@@ -41,9 +41,9 @@ theorem paper_pom_microcanonical_cover_time_fibonacci_separation :
   · simp [pom_microcanonical_cover_time_fibonacci_separation_sectionScale,
       pom_microcanonical_cover_time_fibonacci_separation_fullIdentificationScale,
       Omega.X.card_eq_fib]
-    native_decide
+    decide
   · simp [pom_microcanonical_cover_time_fibonacci_separation_sectionScale, Omega.X.card_eq_fib]
-    native_decide
+    decide
   · simp [pom_microcanonical_cover_time_fibonacci_separation_fullIdentificationScale]
 
 end Omega.POM

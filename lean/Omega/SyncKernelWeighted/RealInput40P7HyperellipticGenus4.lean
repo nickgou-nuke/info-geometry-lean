@@ -67,7 +67,7 @@ theorem paper_real_input_40_p7_hyperelliptic_genus4 :
       real_input_40_p7_hyperelliptic_genus4_branch_degree = 10 ∧
       real_input_40_p7_hyperelliptic_genus4_branch_discriminant ≠ 0 ∧
       real_input_40_p7_hyperelliptic_genus4_hyperelliptic_genus = 4 := by
-  refine ⟨?_, ?_, ?_, ?_, rfl, ?_, by native_decide⟩
+  refine ⟨?_, ?_, ?_, ?_, rfl, ?_, by decide⟩
   · intro Λ q
     rfl
   · intro Λ

@@ -17,7 +17,7 @@ theorem budget_values :
     Nat.fib 4 * Nat.fib 8 = 63 ∧
     Nat.fib 5 * Nat.fib 10 = 275 ∧
     Nat.fib 6 * Nat.fib 12 = 1152 := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide⟩
 
 /-- Only m = 6 achieves B_m = 16 among audited even windows.
     thm:gut-audited-even-windows-unique-budget16-min-sector -/
@@ -26,19 +26,19 @@ theorem paper_gut_budget16_unique_m6 :
     Nat.fib 4 * Nat.fib 8 ≠ 16 ∧
     Nat.fib 5 * Nat.fib 10 ≠ 16 ∧
     Nat.fib 6 * Nat.fib 12 ≠ 16 := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide⟩
 
 /-- The minimum degeneracy values d_min(m) = F(m/2).
     thm:gut-audited-even-windows-unique-budget16-min-sector -/
 theorem dmin_values :
     Nat.fib 3 = 2 ∧ Nat.fib 4 = 3 ∧ Nat.fib 5 = 5 ∧ Nat.fib 6 = 8 := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide⟩
 
 /-- The sector sizes |S_{m,d_min}| = F(m).
     thm:gut-audited-even-windows-unique-budget16-min-sector -/
 theorem sector_sizes :
     Nat.fib 6 = 8 ∧ Nat.fib 8 = 21 ∧ Nat.fib 10 = 55 ∧ Nat.fib 12 = 144 := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide⟩
 
 /-- Window-6 additional identities: sector size, budget, complement.
     thm:gut-audited-even-windows-unique-budget16-min-sector -/
@@ -46,7 +46,7 @@ theorem window6_sector_identities :
     Nat.fib 6 = 8 ∧
     Nat.fib 3 * Nat.fib 6 = 16 ∧
     Nat.fib 8 - Nat.fib 6 = 13 := by
-  refine ⟨by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide⟩
 
 /-! ### Double Fibonacci minsector budget threshold -/
 
@@ -57,8 +57,8 @@ theorem paper_gut_foldbin_double_fibonacci_minsector_budget :
       Nat.fib (m / 2) * Nat.fib m ≤ 2 ^ m) ∧
     Nat.fib 3 * Nat.fib 6 = 16 ∧
     Nat.fib 10 * Nat.fib 20 = 372075 := by
-  refine ⟨by intro m hm; fin_cases hm <;> native_decide,
-          by native_decide, by native_decide⟩
+  refine ⟨by intro m hm; fin_cases hm <;> decide,
+          by decide, by decide⟩
 
 -- Phase R603: Fibonacci product strict monotonicity
 -- ══════════════════════════════════════════════════════════════
@@ -85,7 +85,7 @@ theorem budget_strict_mono :
     Nat.fib 3 * Nat.fib 6 < Nat.fib 4 * Nat.fib 8 ∧
     Nat.fib 4 * Nat.fib 8 < Nat.fib 5 * Nat.fib 10 ∧
     Nat.fib 5 * Nat.fib 10 < Nat.fib 6 * Nat.fib 12 := by
-  refine ⟨by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide⟩
 
 /-- Paper package: budget = 16 and strict monotonicity.
     thm:gut-audited-even-windows-unique-budget16-min-sector -/
@@ -94,7 +94,7 @@ theorem paper_gut_budget16_strict_mono_extended :
     (Nat.fib 3 * Nat.fib 6 < Nat.fib 4 * Nat.fib 8) ∧
     (Nat.fib 4 * Nat.fib 8 < Nat.fib 5 * Nat.fib 10) ∧
     (Nat.fib 5 * Nat.fib 10 < Nat.fib 6 * Nat.fib 12) := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide⟩
 
 /-! ### Explicit cutoff seed for the minimum degeneracy law -/
 

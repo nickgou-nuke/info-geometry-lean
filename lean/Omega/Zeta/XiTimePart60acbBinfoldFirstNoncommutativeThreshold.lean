@@ -23,7 +23,7 @@ theorem paper_xi_time_part60acb_binfold_first_noncommutative_threshold
         omega
     · intro hm_one
       subst m
-      exact (hComm 1 (by omega)).2 (by native_decide)
+      exact (hComm 1 (by omega)).2 (by decide)
   · intro hC
     have hEq : 2 ^ 2 = Nat.fib (2 + 2) := (hComm 2 (by omega)).1 hC
     have hLt : Nat.fib (2 + 2) < 2 ^ 2 :=

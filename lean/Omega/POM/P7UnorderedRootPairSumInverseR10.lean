@@ -31,6 +31,6 @@ theorem paper_pom_p7_unordered_root_pair_sum_inverse_r10 :
     exact paper_pom_p7_ordered_root_ratio_s5_ordered_pairs D
   · exact Omega.Zeta.paper_xi_terminal_zm_delta_node_preimage_elimination_r10
   · norm_num
-  · native_decide
+  · decide
 
 end Omega.POM

@@ -47,7 +47,7 @@ theorem anom_oracle_collapse {G : Type*} [AddCommGroup G] (a : G) :
     (∃ q₁ q₂ : ℤ, 2 ≤ q₁ ∧ 2 ≤ q₂ ∧ Int.gcd q₁ q₂ = 1 ∧ q₁ • a = 0 ∧ q₂ • a = 0) := by
   constructor
   · intro h
-    exact ⟨2, 3, le_refl 2, by omega, by native_decide, h 2 (le_refl 2), h 3 (by omega)⟩
+    exact ⟨2, 3, le_refl 2, by omega, by decide, h 2 (le_refl 2), h 3 (by omega)⟩
   · rintro ⟨q₁, q₂, _, _, hcop, h1, h2⟩
     have ha : a = 0 := coprime_smul_eq_zero_of_both a q₁ q₂ h1 h2 hcop
     intro q _; rw [ha, smul_zero]

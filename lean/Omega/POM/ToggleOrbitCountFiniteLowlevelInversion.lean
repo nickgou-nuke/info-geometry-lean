@@ -24,8 +24,8 @@ theorem pomToggleOrbitCount3_factorization_five (r m₁ : Nat) :
     (pomToggleOrbitCount3 r m₁).factorization 5 = r - m₁ := by
   unfold pomToggleOrbitCount3
   rw [Nat.factorization_mul (pow_ne_zero _ (by decide)) (pow_ne_zero _ (by decide))]
-  simp [Nat.factorization_pow, show (Nat.factorization 4) 5 = 0 by native_decide,
-    show (Nat.factorization 5) 5 = 1 by native_decide]
+  simp [Nat.factorization_pow, show (Nat.factorization 4) 5 = 0 by decide,
+    show (Nat.factorization 5) 5 = 1 by decide]
 
 /-- The `7`-adic exponent of `O₄` recovers `m₂`. -/
 theorem pomToggleOrbitCount4_factorization_seven (r m₁ m₂ : Nat) :
@@ -35,9 +35,9 @@ theorem pomToggleOrbitCount4_factorization_seven (r m₁ m₂ : Nat) :
   rw [Nat.factorization_mul (mul_ne_zero (pow_ne_zero _ (by decide)) (pow_ne_zero _ (by decide)))
     (pow_ne_zero _ (by decide))]
   rw [Nat.factorization_mul (pow_ne_zero _ (by decide)) (pow_ne_zero _ (by decide))]
-  simp [Nat.factorization_pow, show (Nat.factorization 8) 7 = 0 by native_decide,
-    show (Nat.factorization 14) 7 = 1 by native_decide,
-    show (Nat.factorization 15) 7 = 0 by native_decide]
+  simp [Nat.factorization_pow, show (Nat.factorization 8) 7 = 0 by decide,
+    show (Nat.factorization 14) 7 = 1 by decide,
+    show (Nat.factorization 15) 7 = 0 by decide]
 
 set_option maxHeartbeats 400000 in
 /-- Paper-facing low-level inversion package for the finite Bell orbit counts: the third and fourth

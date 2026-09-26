@@ -35,7 +35,7 @@ def isotropicPoints : Finset SplitOctF2 :=
   Finset.univ.filter (fun X => Isotropic X ∧ X ≠ zeroPoint)
 
 theorem isotropicPoints_card : isotropicPoints.card = 135 := by
-  native_decide
+  decide
 
 theorem mem_isotropicPoints (X : SplitOctF2) :
     X ∈ isotropicPoints ↔ Isotropic X ∧ X ≠ zeroPoint := by

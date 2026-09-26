@@ -1,0 +1,1065 @@
+======================================================================
+  CAS THREE-COLOUR SPLIT-OCTONION BRACKET CERTIFICATE PACKET
+======================================================================
+Module: InfoGeometry.Canonical.ThreeColorNativeBracketTable
+Total Bracket Theorems Verified: 24/24
+Status: ALL PASS
+----------------------------------------------------------------------
+ [PASS] nativeAnticommutator_sigmaPlus_sigmaPlus
+ [PASS] nativeAnticommutator_sigmaMinus_sigmaMinus
+ [PASS] nativeSigmaPlus_red_green_commutator
+ [PASS] nativeSigmaPlus_red_blue_commutator
+ [PASS] nativeSigmaPlus_green_blue_commutator
+ [PASS] nativeSigmaMinus_red_green_commutator
+ [PASS] nativeSigmaMinus_red_blue_commutator
+ [PASS] nativeSigmaMinus_green_blue_commutator
+ [PASS] nativeSigmaPlusSigmaMinus_commutator
+ [PASS] nativeSigmaPlusSigmaMinus_anticommutator
+ [PASS] nativeNPlus_sigmaPlus_commutator
+ [PASS] nativeNPlus_sigmaPlus_anticommutator
+ [PASS] nativeNMinus_sigmaPlus_commutator
+ [PASS] nativeNMinus_sigmaPlus_anticommutator
+ [PASS] nativeNPlus_sigmaMinus_commutator
+ [PASS] nativeNPlus_sigmaMinus_anticommutator
+ [PASS] nativeNMinus_sigmaMinus_commutator
+ [PASS] nativeNMinus_sigmaMinus_anticommutator
+ [PASS] nativeNPlus_NMinus_commutator
+ [PASS] nativeNPlus_NMinus_anticommutator
+ [PASS] nativeNPlus_self_commutator
+ [PASS] nativeNPlus_self_anticommutator
+ [PASS] nativeNMinus_self_commutator
+ [PASS] nativeNMinus_self_anticommutator
+======================================================================
+{
+  "module": "InfoGeometry.Canonical.ThreeColorNativeBracketTable",
+  "totalTheorems": 24,
+  "allVerified": true,
+  "basis": [
+    "one",
+    "l",
+    "i",
+    "il",
+    "j",
+    "jl",
+    "k",
+    "kl"
+  ],
+  "generators": {
+    "NPlus": [
+      "1/2",
+      "1/2",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0"
+    ],
+    "NMinus": [
+      "1/2",
+      "-1/2",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0"
+    ],
+    "fundamentalSymmetry": [
+      "0",
+      "1",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0"
+    ],
+    "sigmaPlus": {
+      "red": [
+        "0",
+        "0",
+        "-1/2",
+        "1/2",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "green": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "-1/2",
+        "1/2",
+        "0",
+        "0"
+      ],
+      "blue": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "-1/2",
+        "1/2"
+      ]
+    },
+    "sigmaMinus": {
+      "red": [
+        "0",
+        "0",
+        "1/2",
+        "1/2",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "green": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "1/2",
+        "1/2",
+        "0",
+        "0"
+      ],
+      "blue": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1/2",
+        "1/2"
+      ]
+    }
+  },
+  "theorems": {
+    "nativeAnticommutator_sigmaPlus_sigmaPlus": {
+      "statement": "\u2200 c d, nativeAnticommutator (modularSigmaPlus c) (modularSigmaPlus d) = 0",
+      "verified": true,
+      "evaluations": {
+        "red_red": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "red_green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "red_blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green_red": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green_green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green_blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "blue_red": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "blue_green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "blue_blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    },
+    "nativeAnticommutator_sigmaMinus_sigmaMinus": {
+      "statement": "\u2200 c d, nativeAnticommutator (modularSigmaMinus c) (modularSigmaMinus d) = 0",
+      "verified": true,
+      "evaluations": {
+        "red_red": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "red_green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "red_blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green_red": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green_green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green_blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "blue_red": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "blue_green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "blue_blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    },
+    "nativeSigmaPlus_red_green_commutator": {
+      "statement": "nativeCommutator (modularSigmaPlus .red) (modularSigmaPlus .green) = (2 : \u211a) \u2022 modularSigmaMinus .blue",
+      "verified": true,
+      "computed": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "1"
+      ],
+      "expected": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "1"
+      ]
+    },
+    "nativeSigmaPlus_red_blue_commutator": {
+      "statement": "nativeCommutator (modularSigmaPlus .red) (modularSigmaPlus .blue) = (-2 : \u211a) \u2022 modularSigmaMinus .green",
+      "verified": true,
+      "computed": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "-1",
+        "-1",
+        "0",
+        "0"
+      ],
+      "expected": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "-1",
+        "-1",
+        "0",
+        "0"
+      ]
+    },
+    "nativeSigmaPlus_green_blue_commutator": {
+      "statement": "nativeCommutator (modularSigmaPlus .green) (modularSigmaPlus .blue) = (2 : \u211a) \u2022 modularSigmaMinus .red",
+      "verified": true,
+      "computed": [
+        "0",
+        "0",
+        "1",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "expected": [
+        "0",
+        "0",
+        "1",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "nativeSigmaMinus_red_green_commutator": {
+      "statement": "nativeCommutator (modularSigmaMinus .red) (modularSigmaMinus .green) = (-2 : \u211a) \u2022 modularSigmaPlus .blue",
+      "verified": true,
+      "computed": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "-1"
+      ],
+      "expected": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "-1"
+      ]
+    },
+    "nativeSigmaMinus_red_blue_commutator": {
+      "statement": "nativeCommutator (modularSigmaMinus .red) (modularSigmaMinus .blue) = (2 : \u211a) \u2022 modularSigmaPlus .green",
+      "verified": true,
+      "computed": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "-1",
+        "1",
+        "0",
+        "0"
+      ],
+      "expected": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "-1",
+        "1",
+        "0",
+        "0"
+      ]
+    },
+    "nativeSigmaMinus_green_blue_commutator": {
+      "statement": "nativeCommutator (modularSigmaMinus .green) (modularSigmaMinus .blue) = (-2 : \u211a) \u2022 modularSigmaPlus .red",
+      "verified": true,
+      "computed": [
+        "0",
+        "0",
+        "1",
+        "-1",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "expected": [
+        "0",
+        "0",
+        "1",
+        "-1",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "nativeSigmaPlusSigmaMinus_commutator": {
+      "statement": "\u2200 c d, nativeCommutator (modularSigmaPlus c) (modularSigmaMinus d) = if c = d then fundamentalSymmetry else 0",
+      "verified": true,
+      "evaluations": {
+        "red_red": [
+          "0",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "red_green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "red_blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green_red": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green_green": [
+          "0",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green_blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "blue_red": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "blue_green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "blue_blue": [
+          "0",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    },
+    "nativeSigmaPlusSigmaMinus_anticommutator": {
+      "statement": "\u2200 c d, nativeAnticommutator (modularSigmaPlus c) (modularSigmaMinus d) = if c = d then rationalBasis .one else 0",
+      "verified": true,
+      "evaluations": {
+        "red_red": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "red_green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "red_blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green_red": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green_green": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green_blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "blue_red": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "blue_green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "blue_blue": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    },
+    "nativeNPlus_sigmaPlus_commutator": {
+      "statement": "\u2200 c, nativeCommutator modularNPlus (modularSigmaPlus c) = modularSigmaPlus c",
+      "verified": true,
+      "evaluations": {
+        "red": [
+          "0",
+          "0",
+          "-1/2",
+          "1/2",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1/2",
+          "1/2",
+          "0",
+          "0"
+        ],
+        "blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1/2",
+          "1/2"
+        ]
+      }
+    },
+    "nativeNPlus_sigmaPlus_anticommutator": {
+      "statement": "\u2200 c, nativeAnticommutator modularNPlus (modularSigmaPlus c) = modularSigmaPlus c",
+      "verified": true,
+      "evaluations": {
+        "red": [
+          "0",
+          "0",
+          "-1/2",
+          "1/2",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1/2",
+          "1/2",
+          "0",
+          "0"
+        ],
+        "blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1/2",
+          "1/2"
+        ]
+      }
+    },
+    "nativeNMinus_sigmaPlus_commutator": {
+      "statement": "\u2200 c, nativeCommutator modularNMinus (modularSigmaPlus c) = -modularSigmaPlus c",
+      "verified": true,
+      "evaluations": {
+        "red": [
+          "0",
+          "0",
+          "1/2",
+          "-1/2",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "1/2",
+          "-1/2",
+          "0",
+          "0"
+        ],
+        "blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1/2",
+          "-1/2"
+        ]
+      }
+    },
+    "nativeNMinus_sigmaPlus_anticommutator": {
+      "statement": "\u2200 c, nativeAnticommutator modularNMinus (modularSigmaPlus c) = modularSigmaPlus c",
+      "verified": true,
+      "evaluations": {
+        "red": [
+          "0",
+          "0",
+          "-1/2",
+          "1/2",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1/2",
+          "1/2",
+          "0",
+          "0"
+        ],
+        "blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1/2",
+          "1/2"
+        ]
+      }
+    },
+    "nativeNPlus_sigmaMinus_commutator": {
+      "statement": "\u2200 c, nativeCommutator modularNPlus (modularSigmaMinus c) = -modularSigmaMinus c",
+      "verified": true,
+      "evaluations": {
+        "red": [
+          "0",
+          "0",
+          "-1/2",
+          "-1/2",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1/2",
+          "-1/2",
+          "0",
+          "0"
+        ],
+        "blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1/2",
+          "-1/2"
+        ]
+      }
+    },
+    "nativeNPlus_sigmaMinus_anticommutator": {
+      "statement": "\u2200 c, nativeAnticommutator modularNPlus (modularSigmaMinus c) = modularSigmaMinus c",
+      "verified": true,
+      "evaluations": {
+        "red": [
+          "0",
+          "0",
+          "1/2",
+          "1/2",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "1/2",
+          "1/2",
+          "0",
+          "0"
+        ],
+        "blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1/2",
+          "1/2"
+        ]
+      }
+    },
+    "nativeNMinus_sigmaMinus_commutator": {
+      "statement": "\u2200 c, nativeCommutator modularNMinus (modularSigmaMinus c) = modularSigmaMinus c",
+      "verified": true,
+      "evaluations": {
+        "red": [
+          "0",
+          "0",
+          "1/2",
+          "1/2",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "1/2",
+          "1/2",
+          "0",
+          "0"
+        ],
+        "blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1/2",
+          "1/2"
+        ]
+      }
+    },
+    "nativeNMinus_sigmaMinus_anticommutator": {
+      "statement": "\u2200 c, nativeAnticommutator modularNMinus (modularSigmaMinus c) = modularSigmaMinus c",
+      "verified": true,
+      "evaluations": {
+        "red": [
+          "0",
+          "0",
+          "1/2",
+          "1/2",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "green": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "1/2",
+          "1/2",
+          "0",
+          "0"
+        ],
+        "blue": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1/2",
+          "1/2"
+        ]
+      }
+    },
+    "nativeNPlus_NMinus_commutator": {
+      "statement": "nativeCommutator modularNPlus modularNMinus = 0",
+      "verified": true,
+      "computed": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "nativeNPlus_NMinus_anticommutator": {
+      "statement": "nativeAnticommutator modularNPlus modularNMinus = 0",
+      "verified": true,
+      "computed": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "nativeNPlus_self_commutator": {
+      "statement": "nativeCommutator modularNPlus modularNPlus = 0",
+      "verified": true,
+      "computed": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "nativeNPlus_self_anticommutator": {
+      "statement": "nativeAnticommutator modularNPlus modularNPlus = (2 : \u211a) \u2022 modularNPlus",
+      "verified": true,
+      "computed": [
+        "1",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "expected": [
+        "1",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "nativeNMinus_self_commutator": {
+      "statement": "nativeCommutator modularNMinus modularNMinus = 0",
+      "verified": true,
+      "computed": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "nativeNMinus_self_anticommutator": {
+      "statement": "nativeAnticommutator modularNMinus modularNMinus = (2 : \u211a) \u2022 modularNMinus",
+      "verified": true,
+      "computed": [
+        "1",
+        "-1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "expected": [
+        "1",
+        "-1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    }
+  }
+}

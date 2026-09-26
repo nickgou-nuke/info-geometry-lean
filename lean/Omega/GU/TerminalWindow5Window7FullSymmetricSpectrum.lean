@@ -15,7 +15,7 @@ theorem paper_terminal_window5_window7_full_symmetric_spectrum :
       Nat.Prime p ∧ Nat.Prime q ∧
         ([33].sum = 33) ∧ ([32, 1].sum = 33) ∧ 2 ≤ 33) := by
   refine ⟨?_, ?_⟩
-  · refine ⟨101, 53, by decide, by decide, by native_decide, by native_decide, by decide⟩
-  · refine ⟨37, 83, by decide, by decide, by native_decide, by native_decide, by decide⟩
+  · refine ⟨101, 53, by decide, by decide, by decide, by decide, by decide⟩
+  · refine ⟨37, 83, by decide, by decide, by decide, by decide, by decide⟩
 
 end Omega.GU

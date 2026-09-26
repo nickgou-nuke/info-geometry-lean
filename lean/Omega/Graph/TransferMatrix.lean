@@ -16,32 +16,32 @@ def goldenMeanAdjacency : Matrix (Fin 2) (Fin 2) ℤ :=
 
 /-- Entry (0,0) = 1: transition 0 → 0 is allowed.
     prop:golden-mean-adjacency-entry-00 -/
-theorem goldenMeanAdjacency_entry_00 : goldenMeanAdjacency 0 0 = 1 := by native_decide
+theorem goldenMeanAdjacency_entry_00 : goldenMeanAdjacency 0 0 = 1 := by decide
 
 /-- Entry (0,1) = 1: transition 0 → 1 is allowed.
     prop:golden-mean-adjacency-entry-01 -/
-theorem goldenMeanAdjacency_entry_01 : goldenMeanAdjacency 0 1 = 1 := by native_decide
+theorem goldenMeanAdjacency_entry_01 : goldenMeanAdjacency 0 1 = 1 := by decide
 
 /-- Entry (1,0) = 1: transition 1 → 0 is allowed.
     prop:golden-mean-adjacency-entry-10 -/
-theorem goldenMeanAdjacency_entry_10 : goldenMeanAdjacency 1 0 = 1 := by native_decide
+theorem goldenMeanAdjacency_entry_10 : goldenMeanAdjacency 1 0 = 1 := by decide
 
 /-- Entry (1,1) = 0: transition 1 → 1 is forbidden (No11 constraint).
     prop:golden-mean-adjacency-entry-11 -/
-theorem goldenMeanAdjacency_entry_11 : goldenMeanAdjacency 1 1 = 0 := by native_decide
+theorem goldenMeanAdjacency_entry_11 : goldenMeanAdjacency 1 1 = 0 := by decide
 
 /-- Concrete Cayley-Hamilton identity: A² = A + I for the golden-mean adjacency matrix.
     thm:fold-suite-item3-cayley-hamilton -/
 theorem goldenMeanAdjacency_sq :
-    goldenMeanAdjacency ^ 2 = goldenMeanAdjacency + 1 := by native_decide
+    goldenMeanAdjacency ^ 2 = goldenMeanAdjacency + 1 := by decide
 
 /-- Trace of the golden-mean adjacency matrix is 1.
     prop:golden-mean-adjacency-trace -/
-theorem goldenMeanAdjacency_trace : goldenMeanAdjacency.trace = 1 := by native_decide
+theorem goldenMeanAdjacency_trace : goldenMeanAdjacency.trace = 1 := by decide
 
 /-- Determinant of the golden-mean adjacency matrix is -1.
     prop:golden-mean-adjacency-det -/
-theorem goldenMeanAdjacency_det : goldenMeanAdjacency.det = -1 := by native_decide
+theorem goldenMeanAdjacency_det : goldenMeanAdjacency.det = -1 := by decide
 
 /-- The characteristic polynomial of the golden mean adjacency matrix is X^2 - X - 1.
     thm:zeta-syntax-trace-linear-recurrence -/
@@ -71,8 +71,8 @@ theorem goldenMeanAdjacency_pow_add_two (m : Nat) :
 theorem goldenMeanAdjacency_row_sum :
     ∀ m : Nat, (goldenMeanAdjacency ^ m) 0 0 + (goldenMeanAdjacency ^ m) 0 1 =
       (Nat.fib (m + 2) : ℤ)
-  | 0 => by native_decide
-  | 1 => by native_decide
+  | 0 => by decide
+  | 1 => by decide
   | m + 2 => by
     have hRec := goldenMeanAdjacency_pow_add_two m
     have ih1 := goldenMeanAdjacency_row_sum (m + 1)
@@ -98,8 +98,8 @@ private theorem pow_entry_add_two (m : Nat) (i j : Fin 2) :
     thm:golden-mean-pow-entry-00 -/
 theorem goldenMeanAdjacency_pow_00 :
     ∀ m : Nat, (goldenMeanAdjacency ^ m) 0 0 = (Nat.fib (m + 1) : ℤ)
-  | 0 => by native_decide
-  | 1 => by native_decide
+  | 0 => by decide
+  | 1 => by decide
   | m + 2 => by
     rw [pow_entry_add_two, goldenMeanAdjacency_pow_00 (m + 1),
         goldenMeanAdjacency_pow_00 m, ← Nat.cast_add]
@@ -109,8 +109,8 @@ theorem goldenMeanAdjacency_pow_00 :
     thm:golden-mean-pow-entry-01 -/
 theorem goldenMeanAdjacency_pow_01 :
     ∀ m : Nat, (goldenMeanAdjacency ^ m) 0 1 = (Nat.fib m : ℤ)
-  | 0 => by native_decide
-  | 1 => by native_decide
+  | 0 => by decide
+  | 1 => by decide
   | m + 2 => by
     rw [pow_entry_add_two, goldenMeanAdjacency_pow_01 (m + 1),
         goldenMeanAdjacency_pow_01 m, ← Nat.cast_add]
@@ -120,8 +120,8 @@ theorem goldenMeanAdjacency_pow_01 :
     thm:golden-mean-pow-entry-10 -/
 theorem goldenMeanAdjacency_pow_10 :
     ∀ m : Nat, (goldenMeanAdjacency ^ m) 1 0 = (Nat.fib m : ℤ)
-  | 0 => by native_decide
-  | 1 => by native_decide
+  | 0 => by decide
+  | 1 => by decide
   | m + 2 => by
     rw [pow_entry_add_two, goldenMeanAdjacency_pow_10 (m + 1),
         goldenMeanAdjacency_pow_10 m, ← Nat.cast_add]
@@ -131,8 +131,8 @@ theorem goldenMeanAdjacency_pow_10 :
     thm:golden-mean-pow-entry-11 -/
 theorem goldenMeanAdjacency_pow_11 :
     ∀ m : Nat, (goldenMeanAdjacency ^ (m + 1)) 1 1 = (Nat.fib m : ℤ)
-  | 0 => by native_decide
-  | 1 => by native_decide
+  | 0 => by decide
+  | 1 => by decide
   | m + 2 => by
     rw [show m + 2 + 1 = (m + 1 + 1) + 1 from by omega,
         show (m + 1 + 1) + 1 = (m + 1) + 2 from by omega,
@@ -190,7 +190,7 @@ theorem goldenMean_path_count_from_true (m : Nat) :
     (goldenMeanAdjacency ^ m) 1 0 + (goldenMeanAdjacency ^ m) 1 1 =
       (Nat.fib (m + 1) : ℤ) := by
   cases m with
-  | zero => native_decide
+  | zero => decide
   | succ m =>
     rw [goldenMeanAdjacency_pow_10, goldenMeanAdjacency_pow_11, ← Nat.cast_add]
     congr 1; exact (Omega.fib_succ_succ' m).symm
@@ -237,7 +237,7 @@ theorem goldenMean_trace_recurrence_verified :
     (goldenMeanAdjacency ^ 4).trace = (goldenMeanAdjacency ^ 3).trace + (goldenMeanAdjacency ^ 2).trace ∧
     (goldenMeanAdjacency ^ 5).trace = (goldenMeanAdjacency ^ 4).trace + (goldenMeanAdjacency ^ 3).trace ∧
     (goldenMeanAdjacency ^ 6).trace = (goldenMeanAdjacency ^ 5).trace + (goldenMeanAdjacency ^ 4).trace := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> decide
 
 /-! ### Perron--Frobenius data for the golden-mean adjacency matrix -/
 
@@ -464,7 +464,7 @@ theorem goldenMeanAdjacency_fusion_rule :
 /-- Transfer matrix is symmetric: A^T = A.
     prop:Phi_m-entropy -/
 theorem goldenMeanAdjacency_symmetric :
-    goldenMeanAdjacency.transpose = goldenMeanAdjacency := by native_decide
+    goldenMeanAdjacency.transpose = goldenMeanAdjacency := by decide
 
 /-- A^m is symmetric for all m.
     prop:Phi_m-entropy -/
@@ -476,7 +476,7 @@ theorem goldenMeanAdjacency_pow_symmetric (m : Nat) :
     thm:folding-stable-syntax-fib-fusion-ring -/
 theorem goldenMeanAdjacency_irreducible :
     ∀ i j : Fin 2, 0 < (goldenMeanAdjacency + goldenMeanAdjacency ^ 2) i j := by
-  native_decide
+  decide
 
 /-- All entries of A^n are nonneg (they are Fibonacci numbers).
     thm:folding-stable-syntax-fib-fusion-ring -/
@@ -493,7 +493,7 @@ theorem goldenMeanAdjacency_pow_nonneg (n : Nat) (i j : Fin 2) :
   · linarith
   · linarith
   · cases n with
-    | zero => native_decide
+    | zero => decide
     | succ m => linarith [h11 m]
 
 /-- All entries of A^n are strictly positive for n ≥ 2 (primitive matrix).

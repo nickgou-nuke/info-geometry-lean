@@ -13,6 +13,6 @@ theorem paper_sm_square_residual_rigidity_m6 {m : ℕ} (hm : 6 ≤ m) :
     exact Omega.ZeckSig.sm_square_residual_rigidity_m6 m hm h
   · intro h
     subst h
-    native_decide
+    decide
 
 end Omega.GroupUnification

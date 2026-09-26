@@ -1,4 +1,7 @@
-import Mathlib
+import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.MeasureTheory.Integral.Bochner
+import Mathlib.Topology.MetricSpace.IsCompact
+import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!

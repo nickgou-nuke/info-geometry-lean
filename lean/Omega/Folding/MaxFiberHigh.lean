@@ -2,7 +2,7 @@ import Omega.Folding.MaxFiber
 
 /-! ### MaxFiber high-m values (m = 8, 9, 10)
 
-Expensive native_decide computations isolated here so that modifications to
+Expensive decide computations isolated here so that modifications to
 MaxFiber.lean or downstream files do not trigger recompilation of these ~90s
 computations. The .olean cache ensures this file compiles only once. -/
 
@@ -14,7 +14,7 @@ namespace Omega
 
 private theorem cached_cMaxFiberMult_values :
     cMaxFiberMult 8 = 8 ∧ cMaxFiberMult 9 = 10 ∧ cMaxFiberMult 10 = 13 := by
-  native_decide
+  decide
 
 @[simp] theorem cached_cMaxFiberMult_8 : cMaxFiberMult 8 = 8 :=
   cached_cMaxFiberMult_values.1

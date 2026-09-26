@@ -204,7 +204,7 @@ theorem paper_kappa_fibonacci_crosspoints :
     (Nat.fib 6 - 1) = 7 ∧ (Nat.fib 6 + 1) = 9 ∧
     (Nat.fib 7 - 1) * 7 = (Nat.fib 7 + 1) * 6 ∧
     (Nat.fib 8 - 1) * 11 = (Nat.fib 8 + 1) * 10 := by
-  native_decide
+  decide
 
 /-- kappa(1/4) = 5/3. prop:spg-relative-error-threshold-sharpness -/
 theorem kappa_quarter : kappa (1 / 4 : ℝ) = 5 / 3 := by unfold kappa; norm_num

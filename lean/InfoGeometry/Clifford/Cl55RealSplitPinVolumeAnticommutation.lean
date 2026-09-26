@@ -100,7 +100,7 @@ private theorem cl55WittVolumeList_pairwise :
   fin_cases i <;> fin_cases j <;>
     simp_all [QuadraticMap.isOrtho_def, cl55WittBasisFin, wittBasis,
       Q55_apply, e_pos, f_neg,
-      Fin.sum_univ_succ] <;> native_decide
+      Fin.sum_univ_succ] <;> decide
 
 private theorem cl55WittVolumeList_even : Even cl55WittVolumeList.length := by
   norm_num [cl55WittVolumeList]

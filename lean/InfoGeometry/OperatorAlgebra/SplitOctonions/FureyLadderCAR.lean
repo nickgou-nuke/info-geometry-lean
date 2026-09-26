@@ -167,44 +167,44 @@ theorem alpha_sq_eq_half_negJ : alpha * alpha = half (-J) := by
   apply InfoGeometry.Canonical.ZornMatrix.ext
   · simp [alpha, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-    native_decide
+    decide
   · simp [alpha, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-    native_decide
+    decide
   · ext i <;> fin_cases i <;>
       simp [alpha, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
         InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-    · native_decide
-    · native_decide
-    · native_decide
+    · decide
+    · decide
+    · decide
   · ext i <;> fin_cases i <;>
       simp [alpha, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
         InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-    · native_decide
-    · native_decide
-    · native_decide
+    · decide
+    · decide
+    · decide
 
 /-- (α†)² = ½J. -/
 theorem alpha_dag_sq_eq_half_J : alpha_dag * alpha_dag = half J := by
   apply InfoGeometry.Canonical.ZornMatrix.ext
   · simp [alpha_dag, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-    native_decide
+    decide
   · simp [alpha_dag, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-    native_decide
+    decide
   · ext i <;> fin_cases i <;>
       simp [alpha_dag, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
         InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-    · native_decide
-    · native_decide
-    · native_decide
+    · decide
+    · decide
+    · decide
   · ext i <;> fin_cases i <;>
       simp [alpha_dag, half, J, InfoGeometry.Canonical.ZornMatrix.mul,
         InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-    · native_decide
-    · native_decide
-    · native_decide
+    · decide
+    · decide
+    · decide
 
 /-- {α, α†} = αα† + α†α = -1 -/
 theorem CAR_anticommutator : alpha * alpha_dag + alpha_dag * alpha = -oneZ := by

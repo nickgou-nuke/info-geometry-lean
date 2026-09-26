@@ -40,10 +40,10 @@ def standardToChiral : Matrix (Fin 8) (Fin 8) ℚ :=
 
 theorem chiralToStandard_mul_standardToChiral :
     chiralToStandard * standardToChiral = (1 : Matrix (Fin 8) (Fin 8) ℚ) := by
-  native_decide
+  decide
 
 theorem standardToChiral_mul_chiralToStandard :
     standardToChiral * chiralToStandard = (1 : Matrix (Fin 8) (Fin 8) ℚ) := by
-  native_decide
+  decide
 
 end InfoGeometry.Canonical

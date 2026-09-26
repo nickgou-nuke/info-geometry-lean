@@ -37,20 +37,20 @@ def chi_moments_from_hessian_covariance_density : ℚ :=
 lemma chi_moments_from_hessian_direction_variance :
     chi_moments_from_hessian_qform chi_moments_from_hessian_direction
         chi_moments_from_hessian_direction = chi_moments_from_hessian_variance_density := by
-  native_decide
+  decide
 
 lemma chi_moments_from_hessian_direction_covariance :
     chi_moments_from_hessian_qform chi_moments_from_hessian_direction
         chi_moments_from_hessian_phi_minus_axis = chi_moments_from_hessian_covariance_density := by
-  native_decide
+  decide
 
 lemma chi_moments_from_hessian_variance_density_eq :
     chi_moments_from_hessian_variance_density = (265 / 2448 : ℚ) := by
-  native_decide
+  decide
 
 lemma chi_moments_from_hessian_covariance_density_eq :
     chi_moments_from_hessian_covariance_density = (-(5 / 128 : ℚ)) := by
-  native_decide
+  decide
 
 /-- Paper label: `cor:chi-moments-from-hessian`. On the `χ`-slice `v = (1, 0, -1)` the observable
 is exactly the reparameterized difference `φₑ - φ₂`, the mean density is the audited closed form,

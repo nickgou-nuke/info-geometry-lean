@@ -103,7 +103,7 @@ theorem momentSum_four_recurrence_sub_of
 theorem exactWeightTriple_succ_bounded (m : Nat) (hm : m ≤ 5) :
     exactWeightTriple (m + 1) = 2 * exactWeightTriple m +
     3 * crossCorrSqHigh m + 3 * crossCorrSqLow m := by
-  interval_cases m <;> native_decide
+  interval_cases m <;> decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 167
@@ -208,8 +208,8 @@ theorem momentSum_three_mod_eight (m : Nat) (hm : 7 ≤ m) :
 theorem exactWeightCollision_succ_ge_double (m : Nat) :
     2 * exactWeightCollision m ≤ exactWeightCollision (m + 1) := by
   match m with
-  | 0 => native_decide
-  | 1 => native_decide
+  | 0 => decide
+  | 1 => decide
   | m + 2 =>
     have hrec := exactWeightCollision_recurrence m
     have hmono := Nat.le_of_lt (exactWeightCollision_strict_mono m)
@@ -347,7 +347,7 @@ theorem weight_cons_true_sub_false (v : Word m) :
     weight (cons true v) = weight (cons false v) + 1 := by
   simp only [weight_eq_fib_ite_sum, cons, Fin.sum_univ_succ, Fin.cons_zero, Fin.cons_succ,
     Bool.false_eq_true, ite_false, Fin.val_zero, ite_true, Nat.zero_add,
-    show Nat.fib (0 + 2) = 1 from by native_decide]
+    show Nat.fib (0 + 2) = 1 from by decide]
   -- Goal: 1 + rest = rest + 1
   omega
 
@@ -364,7 +364,7 @@ theorem Fold_cons_false_ne_true (v : Word m) :
   rw [hdiff] at hmod
   -- hmod: w % fib(m+3) = (w+1) % fib(m+3) where w = weight(cons false v)
   have hfib_ge : 2 ≤ Nat.fib (m + 3) := by
-    have h3 : Nat.fib 3 = 2 := by native_decide
+    have h3 : Nat.fib 3 = 2 := by decide
     linarith [Nat.fib_mono (show 3 ≤ m + 3 by omega)]
   -- weight(cons true v) < fib(m+4): cons true v : Word (m+1)
   have hlt : weight (cons true v) < Nat.fib (m + 4) := X.weight_lt_fib (cons true v)
@@ -735,13 +735,13 @@ theorem momentSum_crossq_from_base (q m : Nat) (hq : 1 ≤ q) :
 -- ══════════════════════════════════════════════════════════════
 
 theorem momentSum_four_seven : momentSum 4 7 = 12208 := by
-  rw [← cMomentSum_eq]; native_decide
+  rw [← cMomentSum_eq]; decide
 theorem momentSum_four_eight : momentSum 4 8 = 47480 := by
-  rw [← cMomentSum_eq]; native_decide
+  rw [← cMomentSum_eq]; decide
 theorem momentSum_four_nine : momentSum 4 9 = 181576 := by
-  rw [← cMomentSum_eq]; native_decide
+  rw [← cMomentSum_eq]; decide
 theorem momentSum_four_ten : momentSum 4 10 = 700384 := by
-  rw [← cMomentSum_eq]; native_decide
+  rw [← cMomentSum_eq]; decide
 
 /-- S_4 is strictly increasing for 2 ≤ m ≤ 9. prop:pom-s4-recurrence -/
 theorem momentSum_four_strict_mono (m : Nat) (hm : 2 ≤ m) (hm' : m ≤ 9) :
@@ -1103,7 +1103,7 @@ theorem upper_support_card (m : Nat) (hm : 2 ≤ m) :
     Nat.fib_add_two (n := m + 1)
   have hfib1ge : 2 ≤ Nat.fib (m + 1) := by
     calc Nat.fib (m + 1) ≥ Nat.fib 3 := Nat.fib_mono (by omega)
-      _ = 2 := by native_decide
+      _ = 2 := by decide
   have hcongr : ∀ x : X m, x ∈ Finset.univ →
       (0 < fiberHiddenBitCount 1 x ↔ stableValue x ≤ Nat.fib (m + 1) - 2) := by
     intro x _
@@ -1195,7 +1195,7 @@ theorem maxFiberMult_le_two_pow_of_injective_sideinfo (m k : Nat)
 theorem fold6_binary_auxbits :
     X.maxFiberMultiplicity 6 = 5 ∧ Nat.clog 2 5 = 3 := by
   refine ⟨X.maxFiberMultiplicity_six, ?_⟩
-  native_decide
+  decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R145: S_2 doubling lower bound (cMomentSum form)

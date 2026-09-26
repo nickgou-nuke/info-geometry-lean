@@ -550,37 +550,37 @@ theorem localDefect_lastFalse (w : Word (m + 1)) (h : w ⟨m, Nat.lt_succ_self m
     thm:fold-gauge-anomaly-max -/
 theorem gauge_anomaly_max_one :
     ∃ w : Word 2, (Finset.univ.filter (fun i => localDefect w i = true)).card = 1 := by
-  exact ⟨![true, true], by native_decide⟩
+  exact ⟨![true, true], by decide⟩
 
 /-- Gauge anomaly max instance: ∃ w : Word 4 with localDefect support size 2.
     thm:fold-gauge-anomaly-max -/
 theorem gauge_anomaly_max_two :
     ∃ w : Word 4, (Finset.univ.filter (fun i => localDefect w i = true)).card = 2 := by
-  exact ⟨![true, true, true, true], by native_decide⟩
+  exact ⟨![true, true, true, true], by decide⟩
 
 /-- Gauge anomaly max instance: ∃ w : Word 5 with localDefect support size 3.
     thm:fold-gauge-anomaly-max -/
 theorem gauge_anomaly_max_three :
     ∃ w : Word 5, (Finset.univ.filter (fun i => localDefect w i = true)).card = 3 := by
-  exact ⟨![true, true, true, true, true], by native_decide⟩
+  exact ⟨![true, true, true, true, true], by decide⟩
 
 /-- Gauge anomaly max instance at m=6: support size ≥ 3.
     thm:fold-gauge-anomaly-max -/
 theorem gauge_anomaly_max_six :
     ∃ w : Word 6, (Finset.univ.filter (fun i => localDefect w i = true)).card ≥ 3 := by
-  exact ⟨![true, true, true, true, true, true], by native_decide⟩
+  exact ⟨![true, true, true, true, true, true], by decide⟩
 
 /-- Gauge anomaly max instance at m=7: support size ≥ 4.
     thm:fold-gauge-anomaly-max -/
 theorem gauge_anomaly_max_seven :
     ∃ w : Word 7, (Finset.univ.filter (fun i => localDefect w i = true)).card ≥ 4 := by
-  exact ⟨![true, true, true, true, true, true, true], by native_decide⟩
+  exact ⟨![true, true, true, true, true, true, true], by decide⟩
 
 /-- Gauge anomaly max instance at m=8: support size ≥ 4.
     thm:fold-gauge-anomaly-max -/
 theorem gauge_anomaly_max_eight :
     ∃ w : Word 8, (Finset.univ.filter (fun i => localDefect w i = true)).card ≥ 4 := by
-  exact ⟨![true, true, true, true, true, true, true, true], by native_decide⟩
+  exact ⟨![true, true, true, true, true, true, true, true], by decide⟩
 
 /-- Gauge anomaly count monotonicity witnesses.
     thm:fold-gauge-anomaly-max -/
@@ -589,8 +589,8 @@ theorem gauge_anomaly_count_mono :
     (∃ w : Word 4, (Finset.univ.filter (fun i => localDefect w i = true)).card ≥ 2) ∧
     (∃ w : Word 6, (Finset.univ.filter (fun i => localDefect w i = true)).card ≥ 3) ∧
     (∃ w : Word 8, (Finset.univ.filter (fun i => localDefect w i = true)).card ≥ 4) :=
-  ⟨⟨![true, true], by native_decide⟩,
-   ⟨![true, true, true, true], by native_decide⟩,
+  ⟨⟨![true, true], by decide⟩,
+   ⟨![true, true, true, true], by decide⟩,
    gauge_anomaly_max_six,
    gauge_anomaly_max_eight⟩
 
@@ -622,7 +622,7 @@ def periodicWord110 (m : Nat) : Word m := fun i => i.val % 3 ≠ 2
 /-- Fold(110) for m=3 produces the word 001.
     thm:fold-periodic-word-110-instance -/
 theorem Fold_periodicWord110_three :
-    ∀ i : Fin 3, (Fold (periodicWord110 3)).1 i = (i.val % 3 == 2) := by native_decide
+    ∀ i : Fin 3, (Fold (periodicWord110 3)).1 i = (i.val % 3 == 2) := by decide
 
 /-- Fold(periodicWord110 4) is idempotent (it is already a stable word).
     thm:fold-periodic-word-110-instance -/
@@ -632,11 +632,11 @@ theorem Fold_periodicWord110_four_stable :
 
 /-- The weight of periodicWord110 3 equals 3.
     thm:fold-periodic-word-110-instance -/
-theorem weight_periodicWord110_three : weight (periodicWord110 3) = 3 := by native_decide
+theorem weight_periodicWord110_three : weight (periodicWord110 3) = 3 := by decide
 
 /-- The weight of periodicWord110 4 equals 8.
     thm:fold-periodic-word-110-instance -/
-theorem weight_periodicWord110_four : weight (periodicWord110 4) = 8 := by native_decide
+theorem weight_periodicWord110_four : weight (periodicWord110 4) = 8 := by decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R59: Sprint to 200 theorems

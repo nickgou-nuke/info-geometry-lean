@@ -17,11 +17,11 @@ private lemma pom_time_reversal_orbit_count_component_parity (ℓ : ℕ) :
     · have h1 : (ℓ + 2) % 3 = 2 := by omega
       have h2 : (ℓ / 2 + 1) % 3 = 1 := by omega
       rw [h1, h2]
-      native_decide
+      decide
     · have h1 : (ℓ + 2) % 3 = 1 := by omega
       have h2 : (ℓ / 2 + 1) % 3 = 2 := by omega
       rw [h1, h2]
-      native_decide
+      decide
     · have h1 : (ℓ + 2) % 3 = 0 := by omega
       have h2 : (ℓ / 2 + 1) % 3 = 0 := by omega
       simp [h1, h2]
@@ -36,11 +36,11 @@ private lemma pom_time_reversal_orbit_count_component_parity (ℓ : ℕ) :
     · have h1 : (ℓ + 2) % 3 = 2 := by omega
       have h2 : (ℓ / 2 + 3) % 3 = 1 := by omega
       rw [h1, h2]
-      native_decide
+      decide
     · have h1 : (ℓ + 2) % 3 = 1 := by omega
       have h2 : (ℓ / 2 + 3) % 3 = 2 := by omega
       rw [h1, h2]
-      native_decide
+      decide
 
 private lemma pom_time_reversal_orbit_count_fix_le_vertex : ∀ lengths : List Nat,
     fiberTimeReversalFixCount lengths ≤ fiberTimeReversalVertexCount lengths
@@ -50,7 +50,7 @@ private lemma pom_time_reversal_orbit_count_fix_le_vertex : ∀ lengths : List N
       have hhead : timeReversalFix ℓ ≤ Nat.fib (ℓ + 2) := by
         cases ℓ with
         | zero =>
-            native_decide
+            decide
         | succ n =>
             exact timeReversalFix_le_total (Nat.succ n) (Nat.succ_le_succ (Nat.zero_le n))
       have htail := pom_time_reversal_orbit_count_fix_le_vertex lengths

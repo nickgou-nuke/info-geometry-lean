@@ -16,7 +16,7 @@ theorem fib_lt_fib_succ (m : Nat) : Nat.fib (m + 2) < Nat.fib (m + 3) := by
 /-- Upper bound: F(m+2) ≤ 2^(m+1). Source: Omega.Core.Fib -/
 theorem fib_le_pow_two : ∀ m : Nat, Nat.fib (m + 2) ≤ 2 ^ (m + 1)
   | 0 => by simp
-  | 1 => by native_decide
+  | 1 => by decide
   | m + 2 => by
     calc Nat.fib (m + 2 + 2)
         = Nat.fib (m + 2 + 1) + Nat.fib (m + 2) := fib_succ_succ' (m + 2)

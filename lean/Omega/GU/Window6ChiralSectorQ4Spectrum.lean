@@ -35,6 +35,6 @@ theorem paper_window6_chiral_sector_q4_spectrum :
           Multiset.replicate (Nat.choose 4 2) 0 +
           Multiset.replicate (Nat.choose 4 3) (-2) +
           Multiset.replicate (Nat.choose 4 4) (-4)
-    native_decide
+    decide
 
 end Omega.GU

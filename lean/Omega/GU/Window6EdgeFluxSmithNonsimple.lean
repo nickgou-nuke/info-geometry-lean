@@ -11,7 +11,7 @@ def window6EdgeFluxSkeletonAuditedMatrix : Matrix (Fin 4) (Fin 4) ℤ :=
 
 theorem det_window6EdgeFluxSkeletonAuditedMatrix :
     window6EdgeFluxSkeletonAuditedMatrix.det = 10350 := by
-  native_decide
+  decide
 
 /-- Determinants of the irreducible rank-`4` finite Cartan types `A₄`, `B₄`, `C₄`, `D₄`, `F₄`. -/
 def finiteTypeIrreducibleRank4CartanDeterminants : List ℤ :=
@@ -50,6 +50,6 @@ theorem paper_window6_edge_flux_skeleton_smith_nonsimple (D : Window6EdgeFluxSmi
   · unfold Window6EdgeFluxSmithNonsimpleData.notFiniteTypeIrreducibleCartan
       Window6EdgeFluxSmithNonsimpleData.determinant finiteTypeIrreducibleRank4CartanDeterminants
     rw [D.audited_edgeFluxMatrix, det_window6EdgeFluxSkeletonAuditedMatrix]
-    native_decide
+    decide
 
 end Omega.GU

@@ -102,12 +102,12 @@ theorem conductor_dvd_terminal (s : PrimeStage) :
   apply conductor_dvd_of_rank_le
   cases s <;> norm_num [rank]
 
-/-- The exact Euler-totient/Galois-degree ledger.  `native_decide` merely
+/-- The exact Euler-totient/Galois-degree ledger.  `decide` merely
 recomputes these closed arithmetic propositions inside Lean; it does not
 import a CAS theorem. -/
 theorem totient_conductor (s : PrimeStage) :
     Nat.totient (conductor s) = galoisDegree s := by
-  cases s <;> native_decide
+  cases s <;> decide
 
 /-- The final six-prime primorial conductor. -/
 theorem terminal_conductor : conductor .p13 = 30030 := rfl

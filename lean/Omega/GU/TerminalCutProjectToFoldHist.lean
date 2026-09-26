@@ -34,7 +34,7 @@ theorem paper_terminal_cut_project_to_fold_hist :
     rw [cBinFiberHist_6_2, cBinFiberHist_6_3, cBinFiberHist_6_4]
   · refine ⟨X.card_X_six, ?_, ?_⟩
     · rw [X.card_X_six]
-      native_decide
+      decide
     · rw [binFold6_distinct_multiplicities, X.card_X_six]
 
 end Omega.GU

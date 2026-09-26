@@ -63,7 +63,7 @@ theorem paper_xi_terminal_zm_tate_hypercube_single_layer_visibility
     XiTerminalZmTateHypercubeSingleLayerVisibilityStatement D := by
   refine ⟨xi_terminal_zm_tate_hypercube_single_layer_visibility_collapse,
     xi_terminal_zm_tate_hypercube_single_layer_visibility_torsion_card,
-    xi_terminal_zm_tate_hypercube_single_layer_visibility_zero_layer_card, ?_, ?_, by native_decide⟩
+    xi_terminal_zm_tate_hypercube_single_layer_visibility_zero_layer_card, ?_, ?_, by decide⟩
   · norm_num [xi_terminal_zm_tate_hypercube_single_layer_visibility_torsion_card]
   · norm_num [xi_terminal_zm_tate_hypercube_single_layer_visibility_zero_layer_card]
 

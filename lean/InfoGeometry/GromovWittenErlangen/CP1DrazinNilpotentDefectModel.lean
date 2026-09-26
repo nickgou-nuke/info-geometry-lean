@@ -98,14 +98,14 @@ def defectEdgeDrazin : RelativeCoreNilpotentDecomposition Algebra where
     refine ⟨2, ?_⟩
     ext
     · norm_num
-    · native_decide
+    · decide
 
 /-- The residue is a genuine square-zero nilpotent in the `ZMod 4` factor. -/
 theorem residue_square_zero :
     ((0, (2 : ZMod 4)) : Algebra) * ((0, (2 : ZMod 4)) : Algebra) = 0 := by
   ext
   · norm_num
-  · native_decide
+  · decide
 
 /-- The nonzero residue is killed by the localized regular inverse. -/
 theorem edgeLocalizedDrazinResidue_mul_regularInverse_line :

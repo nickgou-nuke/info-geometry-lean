@@ -34,7 +34,7 @@ def pc1Matrix : Matrix (Fin 8) (Fin 8) F2 :=
     ![0, 0, 0, 0, 0, 0, 0, 1]]
 
 theorem autMatrix_pc1Aut_eq : autMatrix pc1Aut = pc1Matrix := by
-  native_decide
+  decide
 
 def pc2Matrix : Matrix (Fin 8) (Fin 8) F2 :=
   ![![1, 0, 0, 0, 0, 0, 0, 1],
@@ -86,11 +86,11 @@ def pc6Matrix : Matrix (Fin 8) (Fin 8) F2 :=
     ![0, 0, 0, 0, 0, 0, 1, 0],
     ![0, 0, 0, 0, 0, 0, 0, 1]]
 
-theorem autMatrix_pc2Aut_eq : autMatrix pc2Aut = pc2Matrix := by native_decide
-theorem autMatrix_pc3Aut_eq : autMatrix pc3Aut = pc3Matrix := by native_decide
-theorem autMatrix_pc4Aut_eq : autMatrix pc4Aut = pc4Matrix := by native_decide
-theorem autMatrix_pc5Aut_eq : autMatrix pc5Aut = pc5Matrix := by native_decide
-theorem autMatrix_pc6Aut_eq : autMatrix pc6Aut = pc6Matrix := by native_decide
+theorem autMatrix_pc2Aut_eq : autMatrix pc2Aut = pc2Matrix := by decide
+theorem autMatrix_pc3Aut_eq : autMatrix pc3Aut = pc3Matrix := by decide
+theorem autMatrix_pc4Aut_eq : autMatrix pc4Aut = pc4Matrix := by decide
+theorem autMatrix_pc5Aut_eq : autMatrix pc5Aut = pc5Matrix := by decide
+theorem autMatrix_pc6Aut_eq : autMatrix pc6Aut = pc6Matrix := by decide
 
 /-! The CAS carrier is indexed by the same ordered six-generator chart.  The
 individual matrix equalities above therefore assemble into one reusable

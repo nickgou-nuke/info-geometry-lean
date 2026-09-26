@@ -63,27 +63,27 @@ v_p(n) gives the largest power of p dividing n. -/
 
 /-- v_2(12) = 2 (12 = 2² · 3).
     thm:xi-localized-quotient-index-ledger -/
-theorem val2_12 : Nat.factorization 12 2 = 2 := by native_decide
+theorem val2_12 : Nat.factorization 12 2 = 2 := by decide
 
 /-- v_3(12) = 1 (12 = 2² · 3).
     thm:xi-localized-quotient-index-ledger -/
-theorem val3_12 : Nat.factorization 12 3 = 1 := by native_decide
+theorem val3_12 : Nat.factorization 12 3 = 1 := by decide
 
 /-- v_2(30) = 1 (30 = 2 · 3 · 5).
     thm:xi-localized-quotient-index-ledger -/
-theorem val2_30 : Nat.factorization 30 2 = 1 := by native_decide
+theorem val2_30 : Nat.factorization 30 2 = 1 := by decide
 
 /-- v_3(30) = 1 (30 = 2 · 3 · 5).
     thm:xi-localized-quotient-index-ledger -/
-theorem val3_30 : Nat.factorization 30 3 = 1 := by native_decide
+theorem val3_30 : Nat.factorization 30 3 = 1 := by decide
 
 /-- v_2(7) = 0 (7 is odd prime).
     thm:xi-localized-quotient-index-ledger -/
-theorem val2_7 : Nat.factorization 7 2 = 0 := by native_decide
+theorem val2_7 : Nat.factorization 7 2 = 0 := by decide
 
 /-- v_3(7) = 0 (7 not divisible by 3).
     thm:xi-localized-quotient-index-ledger -/
-theorem val3_7 : Nat.factorization 7 3 = 0 := by native_decide
+theorem val3_7 : Nat.factorization 7 3 = 0 := by decide
 
 /-! ## Euler totient of stripped values
 
@@ -92,23 +92,23 @@ all prime factors of n are outside S. -/
 
 /-- φ(1) = 1.
     thm:xi-localized-quotient-index-ledger -/
-theorem totient_1 : Nat.totient 1 = 1 := by native_decide
+theorem totient_1 : Nat.totient 1 = 1 := by decide
 
 /-- φ(5) = 4.
     thm:xi-localized-quotient-index-ledger -/
-theorem totient_5 : Nat.totient 5 = 4 := by native_decide
+theorem totient_5 : Nat.totient 5 = 4 := by decide
 
 /-- φ(7) = 6.
     thm:xi-localized-quotient-index-ledger -/
-theorem totient_7 : Nat.totient 7 = 6 := by native_decide
+theorem totient_7 : Nat.totient 7 = 6 := by decide
 
 /-- φ(35) = 24 = φ(5)·φ(7) = 4·6 (multiplicativity for coprime arguments).
     thm:xi-localized-quotient-index-ledger -/
-theorem totient_35 : Nat.totient 35 = 24 := by native_decide
+theorem totient_35 : Nat.totient 35 = 24 := by decide
 
 /-- Totient multiplicativity seed: φ(35) = φ(5) · φ(7).
     thm:xi-localized-quotient-index-ledger -/
-theorem totient_mult_5_7 : Nat.totient 35 = Nat.totient 5 * Nat.totient 7 := by native_decide
+theorem totient_mult_5_7 : Nat.totient 35 = Nat.totient 5 * Nat.totient 7 := by decide
 
 /-! ## Cyclic realization criterion seeds
 
@@ -117,23 +117,23 @@ i.e., m is coprime to every prime in S. For S={2,3}: m coprime to 6. -/
 
 /-- Coprimality seed: gcd(5, 6) = 1 (5 realizable in G_{2,3}).
     thm:xi-localized-quotient-index-ledger -/
-theorem coprime_5_6 : Nat.gcd 5 6 = 1 := by native_decide
+theorem coprime_5_6 : Nat.gcd 5 6 = 1 := by decide
 
 /-- Coprimality seed: gcd(7, 6) = 1 (7 realizable in G_{2,3}).
     thm:xi-localized-quotient-index-ledger -/
-theorem coprime_7_6 : Nat.gcd 7 6 = 1 := by native_decide
+theorem coprime_7_6 : Nat.gcd 7 6 = 1 := by decide
 
 /-- Coprimality seed: gcd(35, 6) = 1 (35 realizable in G_{2,3}).
     thm:xi-localized-quotient-index-ledger -/
-theorem coprime_35_6 : Nat.gcd 35 6 = 1 := by native_decide
+theorem coprime_35_6 : Nat.gcd 35 6 = 1 := by decide
 
 /-- Non-coprimality seed: gcd(4, 6) = 2 ≠ 1 (4 not realizable in G_{2,3}).
     thm:xi-localized-quotient-index-ledger -/
-theorem not_coprime_4_6 : Nat.gcd 4 6 = 2 := by native_decide
+theorem not_coprime_4_6 : Nat.gcd 4 6 = 2 := by decide
 
 /-- Non-coprimality seed: gcd(9, 6) = 3 ≠ 1 (9 not realizable in G_{2,3}).
     thm:xi-localized-quotient-index-ledger -/
-theorem not_coprime_9_6 : Nat.gcd 9 6 = 3 := by native_decide
+theorem not_coprime_9_6 : Nat.gcd 9 6 = 3 := by decide
 
 /-- Paper wrapper: Localized quotient index ledger seeds for S={2,3}.
     n_{S⊥} stripping + totient + cyclic realization criterion.

@@ -51,42 +51,42 @@ theorem pc1_mul (X Y : SplitOctF2) :
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-  native_decide
+  decide
 
 theorem pc2_mul (X Y : SplitOctF2) :
     pc2Fun (mul X Y) = mul (pc2Fun X) (pc2Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-  native_decide
+  decide
 
 theorem pc3_mul (X Y : SplitOctF2) :
     pc3Fun (mul X Y) = mul (pc3Fun X) (pc3Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-  native_decide
+  decide
 
 theorem pc4_mul (X Y : SplitOctF2) :
     pc4Fun (mul X Y) = mul (pc4Fun X) (pc4Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-  native_decide
+  decide
 
 theorem pc5_mul (X Y : SplitOctF2) :
     pc5Fun (mul X Y) = mul (pc5Fun X) (pc5Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-  native_decide
+  decide
 
 theorem pc6_mul (X Y : SplitOctF2) :
     pc6Fun (mul X Y) = mul (pc6Fun X) (pc6Fun Y) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-  native_decide
+  decide
 
 theorem pc1_sq (X : SplitOctF2) : pc1Fun (pc1Fun X) = X := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩

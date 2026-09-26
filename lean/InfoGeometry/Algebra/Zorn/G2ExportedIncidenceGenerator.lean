@@ -19,7 +19,7 @@ theorem casPointPerm_zero_not_preserves_incidence :
   have hc :
       ¬ (0 ∈ parabolicIncidenceData.linePoints 1 ↔
         0 ∈ parabolicIncidenceData.linePoints 3) := by
-    native_decide
+    decide
   apply hc
   simpa [casPointPerm, casPointPermRaw] using hh
 
@@ -30,7 +30,7 @@ theorem correctedTPointPerm_not_preserves_incidence :
   have hc :
       ¬ (0 ∈ parabolicIncidenceData.linePoints 1 ↔
         28 ∈ parabolicIncidenceData.linePoints 7) := by
-    native_decide
+    decide
   apply hc
   simpa [correctedTPointPerm, correctedTPointPermRaw] using hh
 

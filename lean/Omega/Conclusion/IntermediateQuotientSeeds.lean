@@ -10,22 +10,22 @@ def stirling2 : Nat → Nat → Nat
   | n + 1, k + 1 => stirling2 n k + (k + 1) * stirling2 n (k + 1)
 
 @[simp] theorem stirling2_3_1 : stirling2 3 1 = 1 := by
-  native_decide
+  decide
 
 @[simp] theorem stirling2_3_2 : stirling2 3 2 = 3 := by
-  native_decide
+  decide
 
 @[simp] theorem stirling2_3_3 : stirling2 3 3 = 1 := by
-  native_decide
+  decide
 
 @[simp] theorem stirling2_4_2 : stirling2 4 2 = 7 := by
-  native_decide
+  decide
 
 @[simp] theorem stirling2_4_3 : stirling2 4 3 = 6 := by
-  native_decide
+  decide
 
 @[simp] theorem stirling2_4_4 : stirling2 4 4 = 1 := by
-  native_decide
+  decide
 
 /-- Concrete Stirling-partition seeds for the intermediate quotient stage.
     thm:conclusion-intermediate-quotient -/

@@ -7,7 +7,7 @@ namespace Omega.GroupUnification
 theorem paper_bdry_uplift_second_difference_residual_law :
     Nat.fib 11 - Nat.fib 10 = Nat.fib 9 ∧ Nat.fib 12 - Nat.fib 11 = Nat.fib 10 ∧
       Nat.fib 9 = 34 ∧ Nat.fib 10 = 55 := by
-  exact ⟨Omega.bdry_uplift_second_diff_m7, Omega.bdry_uplift_second_diff_m8, by native_decide,
-    by native_decide⟩
+  exact ⟨Omega.bdry_uplift_second_diff_m7, Omega.bdry_uplift_second_diff_m8, by decide,
+    by decide⟩
 
 end Omega.GroupUnification

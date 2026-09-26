@@ -9,11 +9,11 @@ def pom_ancilla_halting_inapproximability_ancilla_bits (b : ℕ) : ℕ :=
 
 lemma pom_ancilla_halting_inapproximability_budget_one_bits :
     pom_ancilla_halting_inapproximability_ancilla_bits 1 = 0 := by
-  native_decide
+  decide
 
 lemma pom_ancilla_halting_inapproximability_budget_two_bits :
     pom_ancilla_halting_inapproximability_ancilla_bits 2 = 1 := by
-  native_decide
+  decide
 
 lemma pom_ancilla_halting_inapproximability_additive_lt_one_eq
     {a b ε : ℕ} (hε : ε < 1) (ha : a ≤ b + ε) (hb : b ≤ a + ε) : a = b := by

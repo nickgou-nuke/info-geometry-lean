@@ -83,9 +83,9 @@ theorem fold_rule_completeness_seeds :
     (2 * Nat.fib 5 = Nat.fib 3 + Nat.fib 6) ∧
     (2 * Nat.fib 6 = Nat.fib 4 + Nat.fib 7) ∧
     (2 * Nat.fib 7 = Nat.fib 5 + Nat.fib 8) := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+          by decide, by decide, by decide,
+          by decide, by decide, by decide,
+          by decide, by decide⟩
 
 end Omega

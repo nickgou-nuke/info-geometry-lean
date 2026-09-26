@@ -45,6 +45,6 @@ theorem paper_sync10_uniform_output_corr :
       sync10OutputCorr 4 = -5 / 1458 := by
   unfold sync10OutputPairProb sync10FlipProb sync10OutputCorr sync10OutputLagPairProb
   unfold sync10OutputBit sync10UniformStationaryVector
-  native_decide
+  decide
 
 end Omega.EA

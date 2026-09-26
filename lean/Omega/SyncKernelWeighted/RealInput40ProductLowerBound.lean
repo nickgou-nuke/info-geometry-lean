@@ -49,13 +49,13 @@ theorem paper_real_input_40_product_lower_bound :
       realInput40Sharpness := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · change 4 ≤ Fintype.card RealInput40InputContext
-    native_decide
+    decide
   · simpa [realInput40NormalizationResidualLowerBound, realInput40NormalizationResidualStateCount]
       using (show 10 ≤ Fintype.card Omega.EA.SyncKernelState by
         simp [Omega.EA.syncKernelState_card])
   · change 40 ≤ Fintype.card RealInput40ProductState
-    native_decide
+    decide
   · change Fintype.card RealInput40ProductState = 40
-    native_decide
+    decide
 
 end Omega.SyncKernelWeighted

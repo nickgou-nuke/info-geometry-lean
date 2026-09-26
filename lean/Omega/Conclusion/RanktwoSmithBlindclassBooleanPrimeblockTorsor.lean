@@ -141,7 +141,7 @@ private theorem unitaryDivisors_card_or_zero (n : ℕ) :
   refine Nat.recOnPrimePow ?_ ?_ ?_ n
   · exact Or.inl rfl
   · right
-    native_decide
+    decide
   · intro a p k hp hpa hk ha
     have ha0 : a ≠ 0 := by
       intro h

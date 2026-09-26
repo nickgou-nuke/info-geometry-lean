@@ -20,8 +20,8 @@ theorem paper_zeta_syntax_zeckendorf_prime_language_not_regular_seeds :
     (Nat.fib 6 = 8 ∧ Nat.fib 7 = 13) := by
   refine ⟨⟨by norm_num, by norm_num, by norm_num, by norm_num⟩,
          ⟨by omega, by omega, by omega⟩,
-         ⟨by native_decide, by native_decide, by native_decide⟩,
-         ⟨by omega, by omega⟩, ⟨by decide, by native_decide⟩⟩
+         ⟨by decide, by decide, by decide⟩,
+         ⟨by omega, by omega⟩, ⟨by decide, by decide⟩⟩
 
 /-- Package wrapper for the Zeckendorf prime language non-regular seeds.
     cor:zeta-syntax-zeckendorf-prime-language-not-regular -/

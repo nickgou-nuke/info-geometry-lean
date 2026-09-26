@@ -91,7 +91,7 @@ theorem paper_xi_terminal_zm_translation_t_branch_discriminant_c3_mu3_weight
     unfold xi_terminal_zm_translation_t_branch_discriminant_c3_mu3_weight_branchForm
     ring_nf
     simp [hζ]
-  · refine ⟨by native_decide, by native_decide, ?_⟩
+  · refine ⟨by decide, by decide, ?_⟩
     intro ζ hζ
     have hζ258 : ζ ^ 258 = 1 := by
       calc

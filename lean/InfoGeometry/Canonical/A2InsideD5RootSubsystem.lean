@@ -47,7 +47,7 @@ theorem a2RootVector_isD5Root (r : A2Root) :
   simp [a2RootVector, sub_eq_add_neg]
 
 @[simp] theorem card_a2Root : Fintype.card A2Root = 6 := by
-  native_decide
+  decide
 
 theorem a2RootVector_injective : Function.Injective a2RootVector := by
   decide
@@ -96,29 +96,29 @@ def alpha2 : D5Space := a2RootVector ⟨(1, 2), by decide⟩
 def dot (x y : D5Space) : ℤ := ∑ i, x i * y i
 
 @[simp] theorem dot_alpha1_alpha1 : dot alpha1 alpha1 = 2 := by
-  native_decide
+  decide
 
 @[simp] theorem dot_alpha2_alpha2 : dot alpha2 alpha2 = 2 := by
-  native_decide
+  decide
 
 @[simp] theorem dot_alpha1_alpha2 : dot alpha1 alpha2 = -1 := by
-  native_decide
+  decide
 
 theorem a2RootVector_norm (r : A2Root) :
     dot (a2RootVector r) (a2RootVector r) = 2 := by
   revert r
-  native_decide
+  decide
 
 theorem a2RootVector_dot_eq_two_iff (r s : A2Root) :
     dot (a2RootVector r) (a2RootVector s) = 2 ↔ r = s := by
   revert s r
-  native_decide
+  decide
 
 theorem a2RootVector_dot_eq_neg_two_iff (r s : A2Root) :
     dot (a2RootVector r) (a2RootVector s) = -2 ↔
       r.1.1 = s.1.2 ∧ r.1.2 = s.1.1 := by
   revert s r
-  native_decide
+  decide
 
 theorem a2RootVector_dot_gram_values (r s : A2Root) :
     dot (a2RootVector r) (a2RootVector s) = -2 ∨
@@ -126,7 +126,7 @@ theorem a2RootVector_dot_gram_values (r s : A2Root) :
       dot (a2RootVector r) (a2RootVector s) = 1 ∨
       dot (a2RootVector r) (a2RootVector s) = 2 := by
   revert s r
-  native_decide
+  decide
 
 theorem a2RootVector_dot_opposite
     (i j : Fin 3) (hij : i ≠ j) :
@@ -134,7 +134,7 @@ theorem a2RootVector_dot_opposite
         (a2RootVector ⟨(j, i), hij.symm⟩) = -2 := by
   revert hij
   revert j i
-  native_decide
+  decide
 
 theorem a2RootVector_weyl_dot_invariant
     (σ : Equiv.Perm (Fin 3)) (r s : A2Root) :
@@ -142,7 +142,7 @@ theorem a2RootVector_weyl_dot_invariant
         (a2RootVector (weylAction σ s)) =
       dot (a2RootVector r) (a2RootVector s) := by
   revert s r σ
-  native_decide
+  decide
 
 theorem a2_inside_d5_packet :
     Fintype.card A2Root = 6 ∧

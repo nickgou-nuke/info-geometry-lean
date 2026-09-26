@@ -82,7 +82,7 @@ theorem paper_conclusion_window6_coxeter_spectrum_root_count_recovery :
     fin_cases k <;>
       simp [conclusion_window6_coxeter_spectrum_root_count_recovery_spectrum_multiplicity]
   · rfl
-  · native_decide
+  · decide
   · rfl
   · rfl
 

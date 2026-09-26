@@ -45,7 +45,7 @@ def chiralFrameCoordinateLinear (i : Fin 8) :
 
 @[simp] theorem chiralFrameCoordinate_frame (i j : Fin 8) :
     chiralFrameCoordinate (chiralFrame i) j = if i = j then 1 else 0 := by
-  fin_cases i <;> fin_cases j <;> native_decide
+  fin_cases i <;> fin_cases j <;> decide
 
 @[simp] theorem chiralFrameCoordinateLinear_frame (i j : Fin 8) :
     chiralFrameCoordinateLinear i (chiralFrame j) = if i = j then 1 else 0 := by

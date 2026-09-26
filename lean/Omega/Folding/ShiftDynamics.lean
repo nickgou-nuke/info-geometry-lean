@@ -203,19 +203,19 @@ def lucasNum : Nat → Nat
 @[simp] theorem lucasNum_one : lucasNum 1 = 1 := rfl
 theorem lucasNum_two : lucasNum 2 = 3 := rfl
 theorem lucasNum_three : lucasNum 3 = 4 := rfl
-theorem lucasNum_nine : lucasNum 9 = 76 := by native_decide
+theorem lucasNum_nine : lucasNum 9 = 76 := by decide
 @[simp] theorem lucasNum_succ_succ (n : Nat) :
     lucasNum (n + 2) = lucasNum (n + 1) + lucasNum n := rfl
 
 /-- L_n = F_{n+1} + F_{n-1} for n ≥ 1. -/
 private theorem lucasNum_eq_fib_aux :
     ∀ m : Nat, lucasNum (m + 1) = Nat.fib (m + 2) + Nat.fib m
-  | 0 => by native_decide
-  | 1 => by native_decide
+  | 0 => by decide
+  | 1 => by decide
   | m + 2 => by
     rw [lucasNum_succ_succ, lucasNum_eq_fib_aux (m + 1), lucasNum_eq_fib_aux m]
-    -- Use native_decide for m=0,1 then the recurrence handles the rest uniformly
-    -- Actually the omega issue is Nat.fib normalization. Just native_decide small + fallback.
+    -- Use decide for m=0,1 then the recurrence handles the rest uniformly
+    -- Actually the omega issue is Nat.fib normalization. Just decide small + fallback.
     simp only [ fib_succ_succ']
     omega
 
@@ -291,7 +291,7 @@ theorem lucasNum_cassini (n : Nat) (hn : 1 ≤ n) :
   obtain ⟨m, rfl⟩ : ∃ m, n = m + 1 := ⟨n - 1, by omega⟩
   simp only [show m + 1 - 1 = m from by omega]
   induction m with
-  | zero => native_decide
+  | zero => decide
   | succ k ih =>
     -- L(k+2)² - L(k+1)*L(k+3) = 5*(-1)^(k+2)
     rw [show k + 1 + 1 = k + 2 from by omega, show k + 1 + 1 + 1 = k + 3 from by omega]
@@ -318,7 +318,7 @@ theorem lucasNum_double (n : Nat) (hn : 1 ≤ n) :
   suffices cassini : (Nat.fib (m + 2) : ℤ) * Nat.fib m - (Nat.fib (m + 1) : ℤ) ^ 2 = (-1) ^ (m + 1) by
     push_cast; nlinarith
   induction m with
-  | zero => native_decide
+  | zero => decide
   | succ k ih =>
     have hrec1 : (Nat.fib (k + 3) : ℤ) = Nat.fib (k + 2) + Nat.fib (k + 1) := by
       have := @Nat.fib_add_two (k + 1); linarith
@@ -361,7 +361,7 @@ theorem lucasNum_sq (n : Nat) (hn : 1 ≤ n) :
   have cassini : (Nat.fib (m + 2) : ℤ) * Nat.fib m - (Nat.fib (m + 1) : ℤ) ^ 2 = (-1) ^ (m + 1) := by
     -- Reuse the inline Cassini from lucasNum_double
     induction m with
-    | zero => native_decide
+    | zero => decide
     | succ k ih =>
       have hr1 : (Nat.fib (k + 3) : ℤ) = Nat.fib (k + 2) + Nat.fib (k + 1) := by
         have := @Nat.fib_add_two (k + 1); linarith
@@ -1271,7 +1271,7 @@ theorem three_dvd_2q_minus_2_iff_q_mod_3 (q : Nat) (hq : 1 ≤ q) :
     cor:pom-collision-fibonacci-twist-2primary-first-appearance -/
 theorem bf_first_trigger_q4_fib6 :
     Nat.fib (2 * 4 - 2) = 8 ∧ 2 ∣ Nat.fib (2 * 4 - 2) := by
-  refine ⟨by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide⟩
 
 /-- Paper BF 2-primary trigger sequence witness package.
     cor:pom-collision-fibonacci-twist-2primary-first-appearance -/
@@ -1284,9 +1284,9 @@ theorem paper_bf_2primary_trigger_sequence :
     ((2 * 10 - 2) = 18 ∧ 3 ∣ 18) :=
   ⟨three_dvd_2q_minus_2_iff_q_mod_3,
    Omega.fib_even_iff_three_dvd,
-   ⟨by native_decide, by native_decide⟩,
    ⟨by decide, by decide⟩,
-   ⟨by decide, by decide, by native_decide, by native_decide⟩,
+   ⟨by decide, by decide⟩,
+   ⟨by decide, by decide, by decide, by decide⟩,
    ⟨by decide, by decide⟩⟩
 
 end Omega

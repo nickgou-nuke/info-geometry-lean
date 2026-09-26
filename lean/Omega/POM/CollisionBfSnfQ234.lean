@@ -72,8 +72,8 @@ theorem paper_pom_collision_bf_snf_q234 : pom_collision_bf_snf_q234_statement :=
   refine ⟨Omega.bowenFranksMatrix2_det, Omega.bowenFranksMatrix3_det, Omega.bowenFranksMatrix4_det,
     rfl, rfl, rfl, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · norm_num [pom_collision_bf_snf_q234_bf_modulus_q2, pom_collision_bf_snf_q234_snf2]
-  · native_decide
-  · native_decide
+  · decide
+  · decide
   ·
     change Subsingleton (ZMod 1)
     infer_instance

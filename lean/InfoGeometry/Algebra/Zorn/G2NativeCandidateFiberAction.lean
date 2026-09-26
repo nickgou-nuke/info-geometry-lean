@@ -41,7 +41,7 @@ abbrev NativeBaseCandidate :=
 
 theorem baseLineVector_nativeCandidateAt :
     nativeCandidateAt nativeBasePoint baseLineVector := by
-  native_decide +revert
+  decide +revert
 
 noncomputable def baseNativeCandidate : NativeBaseCandidate :=
   ⟨baseLineVector, baseLineVector_nativeCandidateAt⟩

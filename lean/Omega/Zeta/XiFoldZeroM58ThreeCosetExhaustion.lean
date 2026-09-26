@@ -72,9 +72,9 @@ private lemma xi_fold_zero_m58_three_coset_exhaustion_disjoint_20_30 :
 /-- Paper label: `cor:xi-fold-zero-m58-three-coset-exhaustion`. -/
 theorem paper_xi_fold_zero_m58_three_coset_exhaustion :
     xi_fold_zero_m58_three_coset_exhaustion_statement := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide,
+  refine ⟨by decide, by decide, by decide, by decide,
+    by decide, by decide, by decide, by decide,
+    by decide, by decide,
     xi_fold_zero_m58_three_coset_exhaustion_disjoint_15_20,
     xi_fold_zero_m58_three_coset_exhaustion_disjoint_15_30,
     xi_fold_zero_m58_three_coset_exhaustion_disjoint_20_30, ?_⟩
@@ -95,6 +95,6 @@ theorem paper_xi_fold_zero_m58_three_coset_exhaustion :
           rw [Finset.card_union_of_disjoint
             xi_fold_zero_m58_three_coset_exhaustion_disjoint_15_20]
     _ = xi_fold_zero_m58_three_coset_exhaustion_auditedCard := by
-          native_decide
+          decide
 
 end Omega.Zeta

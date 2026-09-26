@@ -1,5 +1,4 @@
 import InfoGeometry.Clifford.PolarizedBoundaryInvolutions
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HodgeStar4DFinite
 import Mathlib.LinearAlgebra.ExteriorPower.Basic
 
@@ -55,10 +54,10 @@ def coefficientAlternating : AlternatingMap ℝ Minkowski13 TwoFormC (Fin 2) whe
   toFun m := wedgeCoefficients (m 0) (m 1)
   map_update_add' m i u v := by
     fin_cases i <;> funext j <;> fin_cases j <;>
-      simp [wedgeCoefficients, Function.update] <;> ring
+      simp [wedgeCoefficients, Function.update] <;> push_cast <;> ring
   map_update_smul' m i r u := by
     fin_cases i <;> funext j <;> fin_cases j <;>
-      simp [wedgeCoefficients, Function.update] <;> ring
+      simp [wedgeCoefficients, Function.update] <;> push_cast <;> ring
   map_eq_zero_of_eq' m i j hij hne := by
     have h01 : m 0 = m 1 := by
       fin_cases i <;> fin_cases j <;> simp_all

@@ -90,11 +90,11 @@ theorem paper_conclusion_leyang_prym3_diagonal_gluing_principal_sixfold
       simp [conclusion_leyang_prym3_diagonal_gluing_principal_sixfold_diagonal] at hp hq
       simp [conclusion_leyang_prym3_diagonal_gluing_principal_sixfold_weilPairing,
         conclusion_leyang_prym3_diagonal_gluing_principal_sixfold_dot, hp, hq]
-    · native_decide
+    · decide
   · intro S hS
     rcases hS with ⟨⟨_, hcard⟩, hsub⟩
     exact Finset.eq_of_subset_of_card_le hsub (by
       rw [hcard]
-      native_decide)
+      decide)
 
 end Omega.Conclusion

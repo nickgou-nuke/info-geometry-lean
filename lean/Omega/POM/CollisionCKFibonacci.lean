@@ -12,7 +12,7 @@ def cuntzParam (q : ℕ) : ℕ := Nat.fib (2 * q - 2) + 1
 theorem cuntzParam_seeds :
     cuntzParam 2 = 2 ∧ cuntzParam 3 = 4 ∧ cuntzParam 4 = 9 ∧
     cuntzParam 5 = 22 ∧ cuntzParam 6 = 56 := by
-  simp only [cuntzParam]; refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
+  simp only [cuntzParam]; refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> decide
 
 /-- F(2q-2) < F(2(q+1)-2) for q ≥ 2.
     prop:pom-collision-ck-fibonacci-collapse -/
@@ -35,6 +35,6 @@ theorem paper_pom_collision_ck_fibonacci :
     cuntzParam 2 < cuntzParam 3 ∧ cuntzParam 3 < cuntzParam 4 ∧
     cuntzParam 4 < cuntzParam 5 := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  all_goals simp only [cuntzParam]; native_decide
+  all_goals simp only [cuntzParam]; decide
 
 end Omega.POM.CollisionCKFibonacci

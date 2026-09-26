@@ -1,0 +1,2 @@
+{"query": "Translate the native_decide brute force steps in lean/DAG/DiracLaplacian.lean to CAS and rewrite the proof in O(1).", "file": "lean/DAG/DiracLaplacian.lean"}
+{"query": "Replace simpa using chains in lean/InfoGeometry/Quantum/NoncommutativeFockBridge.lean with CAS certificates.", "file": "lean/InfoGeometry/Quantum/NoncommutativeFockBridge.lean"}

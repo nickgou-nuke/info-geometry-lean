@@ -103,7 +103,7 @@ theorem masterUnit_twelve : masterUnit ^ 12 = 1 := by
 
 theorem parityUnit_add (g h : Deck2) :
     parityUnit (g + h) = parityUnit g * parityUnit h := by
-  have h11 : (1 + 1 : Deck2) = 0 := by native_decide
+  have h11 : (1 + 1 : Deck2) = 0 := rfl
   have h6 : (masterUnit ^ 6) * (masterUnit ^ 6) = 1 := by
     rw [← pow_two, ← pow_mul, show 6 * 2 = 12 by norm_num,
       masterUnit_twelve]
@@ -128,7 +128,7 @@ theorem parityAction_mul (g h : Deck2) (v : State) :
 
 theorem parityAction_add (g h : Deck2) (v : State) :
     parityAction (g + h) v = parityAction h (parityAction g v) := by
-  have h11 : (1 + 1 : Deck2) = 0 := by native_decide
+  have h11 : (1 + 1 : Deck2) = 0 := rfl
   have h6 : (masterUnit ^ 6) * (masterUnit ^ 6) = 1 := by
     rw [← pow_two, ← pow_mul, show 6 * 2 = 12 by norm_num,
       masterUnit_twelve]

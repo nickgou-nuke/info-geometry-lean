@@ -44,7 +44,7 @@ def stable_audit_stable_arithmetic_spectra_row_product_certified
 theorem stable_audit_stable_arithmetic_spectra_row_products_certified :
     stable_audit_stable_arithmetic_spectra_rows.all
       stable_audit_stable_arithmetic_spectra_row_product_certified = true := by
-  native_decide
+  decide
 
 /-- Stored marginal union certificate for the ten stable arithmetic rows. -/
 def stable_audit_stable_arithmetic_spectra_total_certificate : List Nat :=

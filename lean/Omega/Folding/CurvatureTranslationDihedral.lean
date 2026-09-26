@@ -28,7 +28,7 @@ private theorem complementAction_translation_conjugation (m : Nat) (hm : 2 ≤ m
   have hF1_ge2 : 2 ≤ Nat.fib (m + 1) := by
     calc
       Nat.fib (m + 1) ≥ Nat.fib 3 := Nat.fib_mono (by omega)
-      _ = 2 := by native_decide
+      _ = 2 := by decide
   have hm1 : 1 ≤ m := by omega
   have hc_lt : Nat.fib (m + 1) - 2 < Nat.fib (m + 2) := by
     have hmono : Nat.fib (m + 1) ≤ Nat.fib (m + 2) := Nat.fib_mono (by omega)
@@ -100,7 +100,7 @@ theorem paper_fold_curvature_translation_full_cycle (m : Nat) :
       refine ⟨?_, ?_⟩
       · intro r s _
         apply Fin.ext
-        have hfib : Nat.fib (0 + 2) = 1 := by native_decide
+        have hfib : Nat.fib (0 + 2) = 1 := by decide
         have hr0 : r.1 = 0 := by omega
         have hs0 : s.1 = 0 := by omega
         exact hr0.trans hs0.symm
@@ -109,7 +109,7 @@ theorem paper_fold_curvature_translation_full_cycle (m : Nat) :
         apply X.eq_of_stableValue_eq
         have hxlt : stableValue x < Nat.fib (0 + 2) := stableValue_lt_fib x
         have hx0 : stableValue x = 0 := by
-          have hfib : Nat.fib (0 + 2) = 1 := by native_decide
+          have hfib : Nat.fib (0 + 2) = 1 := by decide
           omega
         simpa [curvatureTranslationSection, curvatureTranslation, X.stableValue_stableZero] using
           hx0.symm

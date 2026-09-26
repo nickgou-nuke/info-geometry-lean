@@ -68,11 +68,11 @@ private theorem twoBitPairs_enum :
         ((true, true), (false, true)),
         ((true, true), (true, false)),
         ((true, true), (true, true)) } := by
-  native_decide
+  decide
 
 private theorem twoBitCollisionPair_count :
     ((twoBitWords.product twoBitWords).filter (fun p => seedCollision p.1 p.2)).card = 8 := by
-  native_decide
+  decide
 
 /-- Two-bit parity-collision seed for the conditional Hamming MGF:
 the collision-weighted generating function agrees with the root-of-unity closed form, the

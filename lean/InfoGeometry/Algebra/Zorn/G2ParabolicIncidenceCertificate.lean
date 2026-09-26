@@ -76,12 +76,12 @@ def incidence : Fin 63 → Finset (Fin 63)
   | _ => ∅
 
 theorem incidence_card (p : Fin 63) : (incidence p).card = 3 := by
-  fin_cases p <;> native_decide
+  fin_cases p <;> decide
 
 theorem incidence_edge_card : (Finset.univ.biUnion incidence).card = 63 := by
-  native_decide
+  decide
 
 theorem incidence_flag_card : (∑ p : Fin 63, (incidence p).card) = 189 := by
-  native_decide
+  decide
 
 end InfoGeometry.Algebra.Zorn.G2ParabolicIncidenceCertificate

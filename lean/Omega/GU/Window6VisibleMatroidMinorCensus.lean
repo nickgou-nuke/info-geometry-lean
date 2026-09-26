@@ -34,6 +34,6 @@ theorem paper_window6_visible_matroid_minor_census :
       window6VisibleMinorCount 2 = 164 ∧
       window6VisibleMinorCount 0 = 491 ∧
       window6VisibleMinorSquareBudget = 1331 := by
-  native_decide
+  decide
 
 end Omega.GU

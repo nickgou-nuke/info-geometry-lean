@@ -403,7 +403,7 @@ def basisDotMatrix : Matrix (Fin 12) (Fin 12) F₂ :=
 
 /-- The 12x12 basis Gram matrix is identically zero (fast 144-entry computation via VM). -/
 theorem basisDotMatrix_zero : basisDotMatrix = 0 := by
-  native_decide
+  decide
 
 private theorem basis_dot_zero (i j : Fin 12) :
     dot (basisWord i) (basisWord j) = 0 := by
@@ -553,7 +553,7 @@ def weightEightMessage : Message := basisMessage 0
 private theorem exists_weight_encode :
     ∃ m : Message, hammingWeight (encode m) = 8 := by
   use weightEightMessage
-  native_decide
+  decide
 
 theorem exists_weight_eight :
     ∃ w ∈ code, hammingWeight w = 8 := by
@@ -693,7 +693,7 @@ private theorem four_dvd_hammingWeight_add (u v : Word24)
   omega
 
 theorem basis_weight_eight : ∀ i : Fin 12, hammingWeight (basisWord i) = 8 := by
-  native_decide
+  decide
 
 private def messageSupport (m : Message) : Finset (Fin 12) :=
   Finset.univ.filter fun i => m i ≠ 0

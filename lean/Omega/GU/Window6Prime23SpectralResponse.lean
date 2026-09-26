@@ -36,7 +36,7 @@ theorem paper_terminal_window6_coupling_response_group_23_torsion
       rw [hdet]
       norm_num
     rw [hdet_abs]
-    native_decide
+    decide
   · simpa using
       paper_terminal_window6_coupling_mod23_kernel_line
         (M := window6CouplingMatrix.map (Int.castRingHom (ZMod 23))) hRank

@@ -17,7 +17,7 @@ theorem rank_drop_at_most_one (n : Nat) (f g : Op n) : rank f - rank (Op.comp n 
 private def rankDropCore_n4 : (Enum.allOps 4).all (fun f =>
   (Enum.allOps 4).all (fun g =>
     decide (rank g = 3 → rank f - rank (Op.comp 4 g f) ≤ 1))) := by
-  native_decide
+  decide
 
 -- In n = 4 over closed full-domain operations, rank-3 generators drop rank by at most one.
 theorem rank_drop_at_most_one_n4 (f g : Op 4) (hf : f ∈ Enum.allOps 4)

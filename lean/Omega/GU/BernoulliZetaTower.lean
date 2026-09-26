@@ -102,8 +102,8 @@ theorem paper_gut_foldbin_escort_one_bit_gibbs_freezing_seeds :
     (Nat.fib 8 = 21 ∧ Nat.fib 9 = 34) ∧
     (1 + 1 = 2) ∧
     (0 = 0) := by
-  refine ⟨⟨by native_decide, by native_decide⟩, by omega,
-         ⟨by native_decide, by native_decide⟩, by omega, by omega⟩
+  refine ⟨⟨by decide, by decide⟩, by omega,
+         ⟨by decide, by decide⟩, by omega, by omega⟩
 
 /-- Paper-facing package for the one-bit Gibbs law, the two-point residual law, and the freezing
 comparison showing that the `w_m = 0` sector dominates the `w_m = 1` sector. -/

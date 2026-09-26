@@ -64,8 +64,8 @@ theorem paper_pom_multiplicity_lambdaq_large_q_transseries :
   · constructor
     · constructor
       · intro t ht
-        fin_cases ht <;> native_decide
-      · native_decide
+        fin_cases ht <;> decide
+      · decide
     · constructor <;> rfl
 
 end Omega.POM

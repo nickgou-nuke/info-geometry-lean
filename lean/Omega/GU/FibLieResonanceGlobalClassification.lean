@@ -26,14 +26,14 @@ theorem paper_fib_lie_resonance_global_classification : FibLieResonanceGlobalCla
   rcases paper_fib_lie_resonance_orthogonal_symplectic with
     ⟨hso7, hso11, hsp6, hsp10, _, _, _⟩
   refine ⟨?_, ?_, ?_, hso7, hso11, ?_, hsp6, hsp10, ?_, ?_, ?_, ?_, ?_⟩
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
 
 end Omega.GU

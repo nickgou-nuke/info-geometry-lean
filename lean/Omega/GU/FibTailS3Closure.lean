@@ -11,7 +11,7 @@ def g6Action (x : ZMod 23) : ZMod 23 := 3 * x + 1
 /-- g₆ has order 11: g₆¹¹ = id on ZMod 23.
     cor:fib-tail-s3-closure -/
 theorem g6_order_eleven : ∀ x : ZMod 23,
-    (Nat.iterate g6Action 11 x) = x := by native_decide
+    (Nat.iterate g6Action 11 x) = x := by decide
 
 /-- The fixed point of g₆ is 11.
     cor:fib-tail-s3-closure -/
@@ -65,7 +65,7 @@ theorem paper_fib_tail_s3_closure :
 /-- g₆¹¹(2) = 2: the second orbit is also period 11.
     cor:fib-tail-s3-closure -/
 theorem g6_orbit_two :
-    Nat.iterate g6Action 11 (2 : ZMod 23) = 2 := by native_decide
+    Nat.iterate g6Action 11 (2 : ZMod 23) = 2 := by decide
 
 /-- The orbit of 0 under g₆ is [0,1,4,13,17,6,19,12,14,20,15] with no duplicates,
     and 11 is not in this orbit. Every non-fixed element lies in one of the two orbits.

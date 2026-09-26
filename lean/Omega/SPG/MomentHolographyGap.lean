@@ -20,7 +20,7 @@ theorem paper_spg_single_integer_vs_linear_moment_gap_seeds :
   refine ⟨⟨by norm_num, by norm_num, by norm_num⟩,
          ⟨by norm_num, by norm_num, by norm_num, by norm_num⟩,
          by norm_num,
-         ⟨by native_decide, by native_decide, by native_decide⟩⟩
+         ⟨by decide, by decide, by decide⟩⟩
 
 /-- Linear moment holography minimal dimension seeds.
     thm:spg-linear-moment-holography-minimal-dimension -/

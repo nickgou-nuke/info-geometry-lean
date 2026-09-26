@@ -30,7 +30,7 @@ theorem unipotentShort_involutive (t : Bool) (X : SplitOctF2) :
   · rfl
   · rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
     revert a b x0 x1 x2 y0 y1 y2
-    native_decide
+    decide
 
 def unipotentShortEquiv (t : Bool) : SplitOctF2 ≃ SplitOctF2 where
   toFun := unipotentShort t
@@ -48,7 +48,7 @@ theorem unipotentShort_add (t : Bool) (X Y : SplitOctF2) :
   · rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
     rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
     revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-    native_decide
+    decide
 
 theorem unipotentShort_mul (t : Bool) (X Y : SplitOctF2) :
     unipotentShort t (mul X Y) = mul (unipotentShort t X) (unipotentShort t Y) := by
@@ -57,7 +57,7 @@ theorem unipotentShort_mul (t : Bool) (X Y : SplitOctF2) :
   · rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
     rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
     revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-    native_decide
+    decide
 
 def unipotentShortAut (t : Bool) : SplitOctF2Aut where
   val := unipotentShortEquiv t
@@ -68,7 +68,7 @@ def unipotentShortAut (t : Bool) : SplitOctF2Aut where
     cases t
     · rfl
     · revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-      native_decide, unipotentShort_mul t⟩
+      decide, unipotentShort_mul t⟩
 
 theorem unipotentShortAut_order (t : Bool) :
     unipotentShortAut t * unipotentShortAut t = 1 := by
@@ -91,7 +91,7 @@ theorem unipotentLong_involutive (t : Bool) (X : SplitOctF2) :
   · rfl
   · rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
     revert a b x0 x1 x2 y0 y1 y2
-    native_decide
+    decide
 
 def unipotentLongEquiv (t : Bool) : SplitOctF2 ≃ SplitOctF2 where
   toFun := unipotentLong t
@@ -109,7 +109,7 @@ theorem unipotentLong_add (t : Bool) (X Y : SplitOctF2) :
   · rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
     rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
     revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-    native_decide
+    decide
 
 theorem unipotentLong_mul (t : Bool) (X Y : SplitOctF2) :
     unipotentLong t (mul X Y) = mul (unipotentLong t X) (unipotentLong t Y) := by
@@ -118,7 +118,7 @@ theorem unipotentLong_mul (t : Bool) (X Y : SplitOctF2) :
   · rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
     rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
     revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-    native_decide
+    decide
 
 def unipotentLongAut (t : Bool) : SplitOctF2Aut where
   val := unipotentLongEquiv t
@@ -129,7 +129,7 @@ def unipotentLongAut (t : Bool) : SplitOctF2Aut where
     cases t
     · rfl
     · revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-      native_decide, unipotentLong_mul t⟩
+      decide, unipotentLong_mul t⟩
 
 theorem unipotentLongAut_order (t : Bool) :
     unipotentLongAut t * unipotentLongAut t = 1 := by

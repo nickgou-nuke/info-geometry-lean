@@ -486,17 +486,17 @@ axiomatic witnesses.
 theorem dagCanonicalChain_boundary_square :
     dagBoundaryOneMatrix DAG.canonicalChainComplex *
         dagBoundaryTwoMatrix DAG.canonicalChainComplex = 0 := by
-  native_decide
+  decide
 
 theorem dagCanonicalTriangle_boundary_square :
     dagBoundaryOneMatrix DAG.canonicalTriangleComplex *
         dagBoundaryTwoMatrix DAG.canonicalTriangleComplex = 0 := by
-  native_decide
+  decide
 
 theorem dagCanonicalDigon_boundary_square :
     dagBoundaryOneMatrix DAG.canonicalDigonComplex *
         dagBoundaryTwoMatrix DAG.canonicalDigonComplex = 0 := by
-  native_decide
+  decide
 
 theorem dagCanonicalChain_dirac_sq_eq_laplacian :
     dagDirac DAG.canonicalChainComplex * dagDirac DAG.canonicalChainComplex =

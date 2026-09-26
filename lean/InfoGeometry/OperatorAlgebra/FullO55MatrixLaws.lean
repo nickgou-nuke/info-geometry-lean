@@ -81,29 +81,29 @@ def boost (i j : Fin 5) : M10Z :=
 
 /-- `η² = I`, the split metric is involutive. -/
 theorem eta_sq : eta * eta = 1 := by
-  native_decide
+  decide
 
 /-- The positive-block antisymmetric generators all satisfy `Xᵀ η + η X = 0`. -/
 theorem rotPlus_all_so55 : ∀ i j : Fin 5, IsSO55Lie (rotPlus i j) := by
   intro i j
-  fin_cases i <;> fin_cases j <;> unfold IsSO55Lie rotPlus unit posIndex eta <;> native_decide
+  fin_cases i <;> fin_cases j <;> unfold IsSO55Lie rotPlus unit posIndex eta <;> decide
 
 /-- The negative-block antisymmetric generators all satisfy `Xᵀ η + η X = 0`. -/
 theorem rotMinus_all_so55 : ∀ i j : Fin 5, IsSO55Lie (rotMinus i j) := by
   intro i j
-  fin_cases i <;> fin_cases j <;> unfold IsSO55Lie rotMinus unit negIndex eta <;> native_decide
+  fin_cases i <;> fin_cases j <;> unfold IsSO55Lie rotMinus unit negIndex eta <;> decide
 
 /-- The 25 mixed boost generators all satisfy `Xᵀ η + η X = 0`. -/
 theorem boost_all_so55 : ∀ i j : Fin 5, IsSO55Lie (boost i j) := by
   intro i j
   fin_cases i <;> fin_cases j <;>
-    unfold IsSO55Lie boost unit posIndex negIndex eta <;> native_decide
+    unfold IsSO55Lie boost unit posIndex negIndex eta <;> decide
 
 /-- The five diagonal boosts are a commuting split Cartan subalgebra. -/
 theorem cartan_commutes : ∀ i j : Fin 5, comm (boost i i) (boost j j) = 0 := by
   intro i j
   fin_cases i <;> fin_cases j <;>
-    unfold comm boost unit posIndex negIndex <;> native_decide
+    unfold comm boost unit posIndex negIndex <;> decide
 
 /-- A coordinate-pair swap, exchanging the first two positive and negative coordinates. -/
 def pairSwap01 : M10Z :=
@@ -121,7 +121,7 @@ def pairSwap01 : M10Z :=
 /-- A coordinate-pair swap is an `O(5,5)` matrix. -/
 theorem pairSwap01_is_o55 : IsO55 pairSwap01 := by
   unfold IsO55
-  native_decide
+  decide
 
 /-- Even sign flip on the first two positive and negative coordinate pairs. -/
 def evenSignFlip01 : M10Z :=
@@ -139,7 +139,7 @@ def evenSignFlip01 : M10Z :=
 /-- The even coordinate-pair sign flip is an `O(5,5)` matrix. -/
 theorem evenSignFlip01_is_o55 : IsO55 evenSignFlip01 := by
   unfold IsO55
-  native_decide
+  decide
 
 /-- A one-coordinate sign flip, witnessing the larger disconnected ambient group. -/
 def singleSignFlip0 : M10Z :=
@@ -157,7 +157,7 @@ def singleSignFlip0 : M10Z :=
 /-- A single coordinate sign flip is still an `O(5,5)` matrix. -/
 theorem singleSignFlip0_is_o55 : IsO55 singleSignFlip0 := by
   unfold IsO55
-  native_decide
+  decide
 
 /-- Bilinear form associated to `η`. -/
 def etaPair (x y : V10Z) : ℤ := dotProduct x (eta.mulVec y)
@@ -170,23 +170,23 @@ def lightlikeMinus (i : Fin 5) : V10Z := basisVec (posIndex i) - basisVec (negIn
 
 /-- Every `e_i + f_i` is null for the split form. -/
 theorem lightlikePlus_null : ∀ i : Fin 5, etaPair (lightlikePlus i) (lightlikePlus i) = 0 := by
-  native_decide
+  decide
 
 /-- Every `e_i - f_i` is null for the split form. -/
 theorem lightlikeMinus_null : ∀ i : Fin 5, etaPair (lightlikeMinus i) (lightlikeMinus i) = 0 := by
-  native_decide
+  decide
 
 /-- The paired null directions have split pairing `2`. -/
 theorem lightlike_pairing : ∀ i : Fin 5, etaPair (lightlikePlus i) (lightlikeMinus i) = 2 := by
-  native_decide
+  decide
 
 /-- Finite count of the full split-block basis: `10 + 10 + 25 = 45`. -/
 theorem full_so55_basis_count : 5 * 4 / 2 + 5 * 4 / 2 + 5 * 5 = 45 := by
-  native_decide
+  decide
 
 /-- Finite D5 root count: the 45-dimensional Lie algebra has 5 Cartan and 40 roots. -/
 theorem d5_root_count_shadow : 45 - 5 = 40 := by
-  native_decide
+  decide
 
 /-- Closed finite packet for the full O(5,5) matrix-law owner surface. -/
 theorem full_o55_matrix_law_packet :

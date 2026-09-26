@@ -472,7 +472,7 @@ theorem exactWeightCount_one (m : Nat) (hm : 1 ≤ m) : exactWeightCount m 1 = 1
     -- F_{n+2} ≥ 1 always, and F_{n+2} ≤ 1 only when n+2 ≤ 2, i.e., n ≤ 0
     rw [exactWeightCount_succ]
     cases n with
-    | zero => native_decide
+    | zero => decide
     | succ k =>
       have hFib : ¬(Nat.fib (k + 3) ≤ 1) := by
         have := fib_succ_pos (k + 2)
@@ -554,7 +554,7 @@ theorem momentSum_two_mod_sixteen (m : Nat) (hm : 10 ≤ m) : 16 ∣ momentSum 2
 theorem exactWeightCollision_ge_fib (m : Nat) :
     Nat.fib (m + 2) ≤ exactWeightCollision m := by
   induction m with
-  | zero => exact le_of_eq (by native_decide)
+  | zero => exact le_of_eq (by decide)
   | succ n ih =>
     have hsucc := exactWeightCollision_succ n
     have hge := momentSum_ge_card' 2 n
@@ -838,7 +838,7 @@ theorem exactWeightCount_max_minus_one (m : Nat) (hm : 1 ≤ m) :
     exactWeightCount m (Nat.fib (m + 3) - 3) = 1 := by
   have hfib : Nat.fib (m + 3) ≥ 3 := by
     calc Nat.fib (m + 3) ≥ Nat.fib 4 := Nat.fib_mono (by omega)
-      _ = 3 := by native_decide
+      _ = 3 := by decide
   have hsub : Nat.fib (m + 3) - 2 - (Nat.fib (m + 3) - 3) = 1 := by omega
   rw [exactWeightCount_symmetric m (Nat.fib (m + 3) - 3) (by omega), hsub]
   exact exactWeightCount_one m hm
@@ -874,14 +874,14 @@ theorem exactWeightCount_two (m : Nat) (hm : 2 ≤ m) :
       cases k with
       | zero =>
         -- base case: m = 2
-        native_decide
+        decide
       | succ j =>
         -- inductive step: ewc(j+3, 2) = ewc(j+2, 2) since 2 < fib(j+4)
         rw [exactWeightCount_succ_of_lt]
         · exact ih (by omega)
         · -- 2 < Nat.fib (j + 4)
           calc 2 < 3 := by omega
-            _ = Nat.fib 4 := by native_decide
+            _ = Nat.fib 4 := by decide
             _ ≤ Nat.fib (j + 4) := Nat.fib_mono (by omega)
 
 /-- The weight F_{m+3}−4 has exactly one word, by symmetry with weight 2.
@@ -890,7 +890,7 @@ theorem exactWeightCount_fib_sub_four (m : Nat) (hm : 2 ≤ m) :
     exactWeightCount m (Nat.fib (m + 3) - 4) = 1 := by
   have hfib : Nat.fib (m + 3) ≥ 5 := by
     calc Nat.fib (m + 3) ≥ Nat.fib 5 := Nat.fib_mono (by omega)
-      _ = 5 := by native_decide
+      _ = 5 := by decide
   have hsub : Nat.fib (m + 3) - 2 - (Nat.fib (m + 3) - 4) = 2 := by omega
   rw [exactWeightCount_symmetric m (Nat.fib (m + 3) - 4) (by omega), hsub]
   exact exactWeightCount_two m hm
@@ -911,13 +911,13 @@ theorem exactWeightCount_three (m : Nat) (hm : 3 ≤ m) :
         cases j with
         | zero =>
           -- base case: m = 3
-          native_decide
+          decide
         | succ i =>
           -- inductive step: ewc(i+4, 3) = ewc(i+3, 3) since 3 < fib(i+5)
           rw [exactWeightCount_succ_of_lt]
           · exact ih (by omega)
           · calc 3 < 5 := by omega
-              _ = Nat.fib 5 := by native_decide
+              _ = Nat.fib 5 := by decide
               _ ≤ Nat.fib (i + 5) := Nat.fib_mono (by omega)
 
 /-- The weight F_{m+3}−5 has exactly two words, by symmetry with weight 3.
@@ -926,7 +926,7 @@ theorem exactWeightCount_fib_sub_five (m : Nat) (hm : 3 ≤ m) :
     exactWeightCount m (Nat.fib (m + 3) - 5) = 2 := by
   have hfib : Nat.fib (m + 3) ≥ 8 := by
     calc Nat.fib (m + 3) ≥ Nat.fib 6 := Nat.fib_mono (by omega)
-      _ = 8 := by native_decide
+      _ = 8 := by decide
   have hsub : Nat.fib (m + 3) - 2 - (Nat.fib (m + 3) - 5) = 3 := by omega
   rw [exactWeightCount_symmetric m (Nat.fib (m + 3) - 5) (by omega), hsub]
   exact exactWeightCount_three m hm
@@ -959,13 +959,13 @@ theorem exactWeightCount_four (m : Nat) (hm : 3 ≤ m) :
         cases j with
         | zero =>
           -- base case: m = 3
-          native_decide
+          decide
         | succ i =>
           -- inductive step: ewc(i+4, 4) = ewc(i+3, 4) since 4 < fib(i+5)
           rw [exactWeightCount_succ_of_lt]
           · exact ih (by omega)
           · calc 4 < 5 := by omega
-              _ = Nat.fib 5 := by native_decide
+              _ = Nat.fib 5 := by decide
               _ ≤ Nat.fib (i + 5) := Nat.fib_mono (by omega)
 
 /-- The weight F_{m+3}−6 has exactly one word, by symmetry with weight 4.
@@ -974,7 +974,7 @@ theorem exactWeightCount_fib_sub_six (m : Nat) (hm : 3 ≤ m) :
     exactWeightCount m (Nat.fib (m + 3) - 6) = 1 := by
   have hfib : Nat.fib (m + 3) ≥ 8 := by
     calc Nat.fib (m + 3) ≥ Nat.fib 6 := Nat.fib_mono (by omega)
-      _ = 8 := by native_decide
+      _ = 8 := by decide
   have hsub : Nat.fib (m + 3) - 2 - (Nat.fib (m + 3) - 6) = 4 := by omega
   rw [exactWeightCount_symmetric m (Nat.fib (m + 3) - 6) (by omega), hsub]
   exact exactWeightCount_four m hm
@@ -1002,13 +1002,13 @@ theorem exactWeightCount_five (m : Nat) (hm : 4 ≤ m) :
           cases i with
           | zero =>
             -- base case: m = 4
-            native_decide
+            decide
           | succ p =>
             -- inductive step: ewc(p+5, 5) = ewc(p+4, 5) since 5 < fib(p+6)
             rw [exactWeightCount_succ_of_lt]
             · exact ih (by omega)
             · calc 5 < 8 := by omega
-                _ = Nat.fib 6 := by native_decide
+                _ = Nat.fib 6 := by decide
                 _ ≤ Nat.fib (p + 6) := Nat.fib_mono (by omega)
 
 /-- The weight F_{m+3}−7 has exactly two words for m ≥ 4, by symmetry with weight 5.
@@ -1017,7 +1017,7 @@ theorem exactWeightCount_fib_sub_seven (m : Nat) (hm : 4 ≤ m) :
     exactWeightCount m (Nat.fib (m + 3) - 7) = 2 := by
   have hfib : Nat.fib (m + 3) ≥ 13 := by
     calc Nat.fib (m + 3) ≥ Nat.fib 7 := Nat.fib_mono (by omega)
-      _ = 13 := by native_decide
+      _ = 13 := by decide
   have hsub : Nat.fib (m + 3) - 2 - (Nat.fib (m + 3) - 7) = 5 := by omega
   rw [exactWeightCount_symmetric m (Nat.fib (m + 3) - 7) (by omega), hsub]
   exact exactWeightCount_five m hm
@@ -1048,13 +1048,13 @@ theorem exactWeightCount_eight (m : Nat) (hm : 5 ≤ m) :
             cases p with
             | zero =>
               -- base case: m = 5
-              native_decide
+              decide
             | succ q =>
               -- inductive step: ewc(q+6, 8) = ewc(q+5, 8) since 8 < fib(q+7)
               rw [exactWeightCount_succ_of_lt]
               · exact ih (by omega)
               · calc 8 < 13 := by omega
-                  _ = Nat.fib 7 := by native_decide
+                  _ = Nat.fib 7 := by decide
                   _ ≤ Nat.fib (q + 7) := Nat.fib_mono (by omega)
 
 /-- The weight F_{m+3}−10 has exactly three words for m ≥ 5, by symmetry with weight 8.
@@ -1063,7 +1063,7 @@ theorem exactWeightCount_fib_sub_ten (m : Nat) (hm : 5 ≤ m) :
     exactWeightCount m (Nat.fib (m + 3) - 10) = 3 := by
   have hfib : Nat.fib (m + 3) ≥ 21 := by
     calc Nat.fib (m + 3) ≥ Nat.fib 8 := Nat.fib_mono (by omega)
-      _ = 21 := by native_decide
+      _ = 21 := by decide
   have hsub : Nat.fib (m + 3) - 2 - (Nat.fib (m + 3) - 10) = 8 := by omega
   rw [exactWeightCount_symmetric m (Nat.fib (m + 3) - 10) (by omega), hsub]
   exact exactWeightCount_eight m hm
@@ -1111,13 +1111,13 @@ theorem exactWeightCount_six (m : Nat) (hm : 4 ≤ m) :
           cases i with
           | zero =>
             -- base case: m = 4
-            native_decide
+            decide
           | succ p =>
             -- inductive step: ewc(p+5, 6) = ewc(p+4, 6) since 6 < fib(p+6)
             rw [exactWeightCount_succ_of_lt]
             · exact ih (by omega)
             · calc 6 < 8 := by omega
-                _ = Nat.fib 6 := by native_decide
+                _ = Nat.fib 6 := by decide
                 _ ≤ Nat.fib (p + 6) := Nat.fib_mono (by omega)
 
 /-- S₂(18) = 11949760, computed via three-step recurrence from S₂(15..17).
@@ -1151,13 +1151,13 @@ theorem exactWeightCount_seven (m : Nat) (hm : 4 ≤ m) :
           cases i with
           | zero =>
             -- base case: m = 4
-            native_decide
+            decide
           | succ p =>
             -- inductive step: ewc(p+5, 7) = ewc(p+4, 7) since 7 < fib(p+6)
             rw [exactWeightCount_succ_of_lt]
             · exact ih (by omega)
             · calc 7 < 8 := by omega
-                _ = Nat.fib 6 := by native_decide
+                _ = Nat.fib 6 := by decide
                 _ ≤ Nat.fib (p + 6) := Nat.fib_mono (by omega)
 
 /-- The weight F_{m+3}−9 has exactly one word, by symmetry with weight 7.
@@ -1166,7 +1166,7 @@ theorem exactWeightCount_fib_sub_nine (m : Nat) (hm : 4 ≤ m) :
     exactWeightCount m (Nat.fib (m + 3) - 9) = 1 := by
   have hfib : Nat.fib (m + 3) ≥ 13 := by
     calc Nat.fib (m + 3) ≥ Nat.fib 7 := Nat.fib_mono (by omega)
-      _ = 13 := by native_decide
+      _ = 13 := by decide
   have hsub : Nat.fib (m + 3) - 2 - (Nat.fib (m + 3) - 9) = 7 := by omega
   rw [exactWeightCount_symmetric m (Nat.fib (m + 3) - 9) (by omega), hsub]
   exact exactWeightCount_seven m hm
@@ -1197,12 +1197,12 @@ theorem exactWeightCount_nine (m : Nat) (hm : 5 ≤ m) :
             cases p with
             | zero =>
               -- base case: m = 5
-              native_decide
+              decide
             | succ q =>
               rw [exactWeightCount_succ_of_lt]
               · exact ih (by omega)
               · calc 9 < 13 := by omega
-                  _ = Nat.fib 7 := by native_decide
+                  _ = Nat.fib 7 := by decide
                   _ ≤ Nat.fib (q + 7) := Nat.fib_mono (by omega)
 
 /-- The weight F_{m+3}−11 has exactly two words, by symmetry with weight 9.
@@ -1211,7 +1211,7 @@ theorem exactWeightCount_fib_sub_eleven (m : Nat) (hm : 5 ≤ m) :
     exactWeightCount m (Nat.fib (m + 3) - 11) = 2 := by
   have hfib : Nat.fib (m + 3) ≥ 21 := by
     calc Nat.fib (m + 3) ≥ Nat.fib 8 := Nat.fib_mono (by omega)
-      _ = 21 := by native_decide
+      _ = 21 := by decide
   have hsub : Nat.fib (m + 3) - 2 - (Nat.fib (m + 3) - 11) = 9 := by omega
   rw [exactWeightCount_symmetric m (Nat.fib (m + 3) - 11) (by omega), hsub]
   exact exactWeightCount_nine m hm
@@ -1238,12 +1238,12 @@ theorem exactWeightCount_ten (m : Nat) (hm : 5 ≤ m) :
             cases p with
             | zero =>
               -- base case: m = 5
-              native_decide
+              decide
             | succ q =>
               rw [exactWeightCount_succ_of_lt]
               · exact ih (by omega)
               · calc 10 < 13 := by omega
-                  _ = Nat.fib 7 := by native_decide
+                  _ = Nat.fib 7 := by decide
                   _ ≤ Nat.fib (q + 7) := Nat.fib_mono (by omega)
 
 /-- The weight F_{m+3}−12 has exactly two words, by symmetry with weight 10.
@@ -1252,7 +1252,7 @@ theorem exactWeightCount_fib_sub_twelve (m : Nat) (hm : 5 ≤ m) :
     exactWeightCount m (Nat.fib (m + 3) - 12) = 2 := by
   have hfib : Nat.fib (m + 3) ≥ 21 := by
     calc Nat.fib (m + 3) ≥ Nat.fib 8 := Nat.fib_mono (by omega)
-      _ = 21 := by native_decide
+      _ = 21 := by decide
   have hsub : Nat.fib (m + 3) - 2 - (Nat.fib (m + 3) - 12) = 10 := by omega
   rw [exactWeightCount_symmetric m (Nat.fib (m + 3) - 12) (by omega), hsub]
   exact exactWeightCount_ten m hm

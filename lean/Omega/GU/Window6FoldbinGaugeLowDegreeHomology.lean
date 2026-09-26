@@ -68,28 +68,28 @@ def capacityThresholdRecovery (D : Window6FoldbinGaugeLowDegreeHomologyData) : P
   dsimp [capacityCurve]
   rw [Omega.cFiberHist_6_1, Omega.cFiberHist_6_2, Omega.cFiberHist_6_3, Omega.cFiberHist_6_4,
     Omega.cFiberHist_6_5]
-  native_decide
+  decide
 
 @[simp] theorem capacityCurve_two (D : Window6FoldbinGaugeLowDegreeHomologyData) :
     D.capacityCurve 2 = 40 := by
   dsimp [capacityCurve]
   rw [Omega.cFiberHist_6_1, Omega.cFiberHist_6_2, Omega.cFiberHist_6_3, Omega.cFiberHist_6_4,
     Omega.cFiberHist_6_5]
-  native_decide
+  decide
 
 @[simp] theorem capacityCurve_three (D : Window6FoldbinGaugeLowDegreeHomologyData) :
     D.capacityCurve 3 = 55 := by
   dsimp [capacityCurve]
   rw [Omega.cFiberHist_6_1, Omega.cFiberHist_6_2, Omega.cFiberHist_6_3, Omega.cFiberHist_6_4,
     Omega.cFiberHist_6_5]
-  native_decide
+  decide
 
 @[simp] theorem capacityCurve_four (D : Window6FoldbinGaugeLowDegreeHomologyData) :
     D.capacityCurve 4 = 62 := by
   dsimp [capacityCurve]
   rw [Omega.cFiberHist_6_1, Omega.cFiberHist_6_2, Omega.cFiberHist_6_3, Omega.cFiberHist_6_4,
     Omega.cFiberHist_6_5]
-  native_decide
+  decide
 
 @[simp] theorem h1ClosedForm_true (D : Window6FoldbinGaugeLowDegreeHomologyData) :
     D.h1ClosedForm := by
@@ -99,20 +99,20 @@ def capacityThresholdRecovery (D : Window6FoldbinGaugeLowDegreeHomologyData) : P
     D.h2ClosedForm := by
   dsimp [h2ClosedForm, h2Rank]
   rw [D.n2_eq, D.n4_eq]
-  native_decide
+  decide
 
 @[simp] theorem h2CohomologyClosedForm_true (D : Window6FoldbinGaugeLowDegreeHomologyData) :
     D.h2CohomologyClosedForm := by
   dsimp [h2CohomologyClosedForm, h2CohomologyRank]
   rw [D.n2_eq, D.n4_eq]
-  native_decide
+  decide
 
 @[simp] theorem capacityThresholdRecovery_true (D : Window6FoldbinGaugeLowDegreeHomologyData) :
     D.capacityThresholdRecovery := by
   dsimp [capacityThresholdRecovery]
   rw [D.n2_eq, D.n4_eq, D.capacityCurve_one, D.capacityCurve_two, D.capacityCurve_three,
     D.capacityCurve_four]
-  native_decide
+  decide
 
 end Window6FoldbinGaugeLowDegreeHomologyData
 

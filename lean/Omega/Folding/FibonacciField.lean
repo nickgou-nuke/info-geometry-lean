@@ -5,15 +5,15 @@ import Omega.Folding.FiberArithmetic
 namespace Omega
 
 /-- cor:field-phase-fib-prime-3 -/
-theorem fib_four_prime : Nat.Prime (Nat.fib 4) := by native_decide
+theorem fib_four_prime : Nat.Prime (Nat.fib 4) := by decide
 /-- cor:field-phase-fib-prime-4 -/
-theorem fib_five_prime : Nat.Prime (Nat.fib 5) := by native_decide
+theorem fib_five_prime : Nat.Prime (Nat.fib 5) := by decide
 /-- cor:field-phase-fib-prime-6 -/
-theorem fib_seven_prime : Nat.Prime (Nat.fib 7) := by native_decide
+theorem fib_seven_prime : Nat.Prime (Nat.fib 7) := by decide
 /-- cor:field-phase-fib-prime-8-neg -/
-theorem fib_nine_not_prime : ¬ Nat.Prime (Nat.fib 9) := by native_decide
+theorem fib_nine_not_prime : ¬ Nat.Prime (Nat.fib 9) := by decide
 /-- cor:field-phase-fib-prime-12 -/
-theorem fib_thirteen_prime : Nat.Prime (Nat.fib 13) := by native_decide
+theorem fib_thirteen_prime : Nat.Prime (Nat.fib 13) := by decide
 
 namespace X
 
@@ -71,11 +71,11 @@ namespace Omega
 
 /-- F(11) = 89 is prime.
     cor:field-phase-fib-prime -/
-theorem fib_eleven_prime : Nat.Prime (Nat.fib 11) := by native_decide
+theorem fib_eleven_prime : Nat.Prime (Nat.fib 11) := by decide
 
 /-- F(17) = 1597 is prime.
     cor:field-phase-fib-prime -/
-theorem fib_seventeen_prime : Nat.Prime (Nat.fib 17) := by native_decide
+theorem fib_seventeen_prime : Nat.Prime (Nat.fib 17) := by decide
 
 /-- Extended field-phase package: X 9 and X 15 are fields (F(11), F(17) prime).
     cor:field-phase-fib-prime -/
@@ -89,11 +89,11 @@ theorem paper_fibonacci_field_phase_extended :
 
 /-- F(23) = 28657 is prime.
     cor:field-phase-fib-prime -/
-theorem fib_twentythree_prime : Nat.Prime (Nat.fib 23) := by native_decide
+theorem fib_twentythree_prime : Nat.Prime (Nat.fib 23) := by decide
 
 /-- F(29) = 514229 is prime.
     cor:field-phase-fib-prime -/
-theorem fib_twentynine_prime : Nat.Prime (Nat.fib 29) := by native_decide
+theorem fib_twentynine_prime : Nat.Prime (Nat.fib 29) := by decide
 
 /-- Extended field-phase package 2: X 21 and X 27 are fields (F(23), F(29) prime).
     cor:field-phase-fib-prime -/
@@ -107,7 +107,7 @@ theorem paper_fibonacci_field_phase_extended_2 :
 
 /-- F(43) = 433494437 is prime.
     cor:field-phase-fib-prime -/
-theorem fib_fortythree_prime : Nat.Prime (Nat.fib 43) := by native_decide
+theorem fib_fortythree_prime : Nat.Prime (Nat.fib 43) := by decide
 
 /-- Field-phase at m=41: X 41 is a field (F(43) prime).
     cor:field-phase-fib-prime -/
@@ -118,15 +118,15 @@ theorem paper_fibonacci_field_phase_m41 :
 
 /-- Composite: F_15 is not prime.
     cor:field-phase-fib-prime -/
-theorem fib_fifteen_not_prime : ¬ Nat.Prime (Nat.fib 15) := by native_decide
+theorem fib_fifteen_not_prime : ¬ Nat.Prime (Nat.fib 15) := by decide
 
 /-- Composite: F_19 is not prime.
     cor:field-phase-fib-prime -/
-theorem fib_nineteen_not_prime : ¬ Nat.Prime (Nat.fib 19) := by native_decide
+theorem fib_nineteen_not_prime : ¬ Nat.Prime (Nat.fib 19) := by decide
 
 /-- Composite: F_21 is not prime.
     cor:field-phase-fib-prime -/
-theorem fib_twentyone_not_prime : ¬ Nat.Prime (Nat.fib 21) := by native_decide
+theorem fib_twentyone_not_prime : ¬ Nat.Prime (Nat.fib 21) := by decide
 
 /-- Complete Fibonacci prime/composite classification for indices 4..29.
     cor:field-phase-fib-prime -/

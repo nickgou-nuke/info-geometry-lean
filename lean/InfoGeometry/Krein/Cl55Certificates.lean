@@ -37,7 +37,7 @@ theorem operator_det_cert : (1.000000 : ℝ) = 1.000000 := by norm_num
 /-- D4 root permutation is valid (Certificate). -/
 theorem root_perm_valid_cert :
     List.Nodup ([3, 2, 1, 0, 6, 7, 4, 5, 10, 11, 8, 9, 14, 15, 12, 13, 18, 19, 16, 17, 20, 21, 22, 23] : List ℕ) := by
-  native_decide
+  decide
 
 /-- D4 root labels (for reference). -/
 def d4RootLabels : List String :=

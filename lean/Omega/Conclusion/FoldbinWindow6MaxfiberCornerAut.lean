@@ -40,8 +40,8 @@ theorem paper_conclusion_foldbin_window6_maxfiber_corner_aut :
   · rfl
   · rfl
   · rfl
-  · native_decide
+  · decide
   · rfl
-  · native_decide
+  · decide
 
 end Omega.Conclusion

@@ -77,10 +77,10 @@ theorem paper_pom_a4t_puiseux_expansion_and_delta_asymptotics :
   refine ⟨?_, ?_, ?_⟩
   · intro n hn
     interval_cases n <;>
-      native_decide
+      decide
   · intro n hn
     interval_cases n <;>
-      native_decide
+      decide
   · norm_num [pom_a4t_puiseux_expansion_and_delta_asymptotics_delta_coefficients]
 
 end Omega.POM

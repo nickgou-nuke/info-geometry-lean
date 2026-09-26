@@ -49,7 +49,7 @@ theorem conclusion_window6_short_long_degeneracy_splitting_lookup_counts :
       conclusion_window6_short_long_degeneracy_splitting_long_degree_three.card = 4 ∧
       conclusion_window6_short_long_degeneracy_splitting_long_degree_four.card = 4 ∧
       conclusion_window6_short_long_degeneracy_splitting_boundary_degree_two.card = 3 := by
-  native_decide
+  decide
 
 /-- Paper label: `thm:conclusion-window6-short-long-degeneracy-splitting`. -/
 theorem paper_conclusion_window6_short_long_degeneracy_splitting :

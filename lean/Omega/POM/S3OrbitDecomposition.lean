@@ -141,18 +141,18 @@ theorem paper_pom_s3_orbit_decomposition : pom_s3_orbit_decomposition_statement 
     constructor <;>
       simp [pom_s3_orbit_decomposition_mixed_linear,
         pom_s3_orbit_decomposition_mixed_quadratic, hweight]
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
 
 end Omega.POM

@@ -49,14 +49,14 @@ def sectorStar : Equiv.Perm ParitySector := sectorC * sectorXi
 @[simp] theorem sectorStar_plusMinus : sectorStar plusMinus = minusPlus := by rfl
 @[simp] theorem sectorStar_minusPlus : sectorStar minusPlus = plusMinus := by rfl
 
-theorem sectorC_sq : sectorC * sectorC = 1 := by native_decide
-theorem sectorXi_sq : sectorXi * sectorXi = 1 := by native_decide
+theorem sectorC_sq : sectorC * sectorC = 1 := by decide
+theorem sectorXi_sq : sectorXi * sectorXi = 1 := by decide
 theorem sectorC_comm_sectorXi : sectorC * sectorXi = sectorXi * sectorC := by
-  native_decide
+  decide
 theorem sectorStar_eq_sectorXi_mul_sectorC :
     sectorStar = sectorXi * sectorC := by
   exact sectorC_comm_sectorXi
-theorem sectorStar_sq : sectorStar * sectorStar = 1 := by native_decide
+theorem sectorStar_sq : sectorStar * sectorStar = 1 := by decide
 
 def sectorPermutation : V4Group → Equiv.Perm ParitySector
   | V4Group.I => 1
@@ -66,22 +66,22 @@ def sectorPermutation : V4Group → Equiv.Perm ParitySector
 
 def sectorPermutationHom : V4Group →* Equiv.Perm ParitySector where
   toFun := sectorPermutation
-  map_one' := by native_decide
+  map_one' := by decide
   map_mul' := by
     intro g h
-    cases g <;> cases h <;> native_decide
+    cases g <;> cases h <;> decide
 
 @[simp] theorem sectorPermutation_I : sectorPermutation V4Group.I = 1 := rfl
 @[simp] theorem sectorPermutation_W1 : sectorPermutation V4Group.W1 = sectorC := rfl
 @[simp] theorem sectorPermutation_W2 : sectorPermutation V4Group.W2 = sectorXi := rfl
 @[simp] theorem sectorPermutation_W12 : sectorPermutation V4Group.W12 = sectorStar := rfl
 
-theorem sectorC_ne_sectorXi : sectorC ≠ sectorXi := by native_decide
-theorem sectorC_ne_sectorStar : sectorC ≠ sectorStar := by native_decide
-theorem sectorXi_ne_sectorStar : sectorXi ≠ sectorStar := by native_decide
-theorem sectorC_ne_one : sectorC ≠ 1 := by native_decide
-theorem sectorXi_ne_one : sectorXi ≠ 1 := by native_decide
-theorem sectorStar_ne_one : sectorStar ≠ 1 := by native_decide
+theorem sectorC_ne_sectorXi : sectorC ≠ sectorXi := by decide
+theorem sectorC_ne_sectorStar : sectorC ≠ sectorStar := by decide
+theorem sectorXi_ne_sectorStar : sectorXi ≠ sectorStar := by decide
+theorem sectorC_ne_one : sectorC ≠ 1 := by decide
+theorem sectorXi_ne_one : sectorXi ≠ 1 := by decide
+theorem sectorStar_ne_one : sectorStar ≠ 1 := by decide
 
 theorem sectorPermutation_injective : Function.Injective sectorPermutationHom := by
   apply (injective_iff_map_eq_one sectorPermutationHom).2
@@ -170,7 +170,7 @@ theorem sectorXi_preserves_middleSectorOrbit :
 theorem sectorStar_preserves_outerSectorOrbit :
     sectorStar '' outerSectorOrbit = outerSectorOrbit := by
   have hStar : sectorStar.symm = sectorStar := by
-    native_decide
+    decide
   ext s
   cases s <;>
     simp [hStar, outerSectorOrbit, sectorStar_plusPlus, sectorStar_minusMinus,
@@ -179,7 +179,7 @@ theorem sectorStar_preserves_outerSectorOrbit :
 theorem sectorStar_preserves_middleSectorOrbit :
     sectorStar '' middleSectorOrbit = middleSectorOrbit := by
   have hStar : sectorStar.symm = sectorStar := by
-    native_decide
+    decide
   ext s
   cases s <;>
     simp [hStar, middleSectorOrbit, sectorStar_plusPlus, sectorStar_minusMinus,

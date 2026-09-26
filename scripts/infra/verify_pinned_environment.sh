@@ -15,14 +15,16 @@ for required in lean-toolchain lakefile.lean lake-manifest.json; do
 done
 
 expected_toolchain='leanprover/lean4:v4.28.1'
+EXPECTED_MATHLIB_REV='1f9fffd5ff0b854b8a1f1f69adc11c61f05f2515'
 actual_toolchain="$(tr -d '\r' < lean-toolchain)"
 if [[ "$actual_toolchain" != "$expected_toolchain" ]]; then
   echo "[pin-check] expected $expected_toolchain, found $actual_toolchain" >&2
   exit 1
 fi
 
-python3 - <<'PY'
+EXPECTED_MATHLIB_REV="$EXPECTED_MATHLIB_REV" python3 - <<'PY'
 import json
+import os
 import re
 from pathlib import Path
 
@@ -32,6 +34,7 @@ if not isinstance(packages, list):
     raise SystemExit("[pin-check] lake-manifest.json has no packages array")
 
 manifest_revs = {}
+mathlib_entries = []
 for package in packages:
     if not isinstance(package, dict):
         raise SystemExit("[pin-check] malformed package entry in lake-manifest.json")
@@ -41,6 +44,17 @@ for package in packages:
         if not isinstance(name, str) or not isinstance(rev, str) or not rev:
             raise SystemExit(f"[pin-check] malformed git package entry: {package!r}")
         manifest_revs[name] = rev
+    if package.get("name") == "mathlib":
+        mathlib_entries.append(package)
+
+expected_mathlib_rev = os.environ["EXPECTED_MATHLIB_REV"]
+if len(mathlib_entries) != 1:
+    raise SystemExit("[pin-check] expected exactly one root mathlib manifest entry")
+mathlib_rev = mathlib_entries[0].get("inputRev") or mathlib_entries[0].get("rev")
+if mathlib_rev != expected_mathlib_rev:
+    raise SystemExit(
+        f"[pin-check] expected root mathlib {expected_mathlib_rev}, found {mathlib_rev!r}"
+    )
 
 source = Path("lakefile.lean").read_text(encoding="utf-8")
 # Lake permits quoted identifiers such as «doc-gen4» and line breaks between
@@ -78,15 +92,20 @@ if mismatches:
     raise SystemExit("[pin-check] pinned revision mismatch:\n  " + "\n  ".join(mismatches))
 
 print(f"[pin-check] verified Lean {Path('lean-toolchain').read_text().strip()} and {len(declared)} git package pins")
+print(f"[pin-check] verified root mathlib revision {expected_mathlib_rev}")
 for item in symbolic:
     print(f"[pin-check] resolved symbolic pin: {item}")
 PY
 
-# The nested-package policy is useful once Lake dependencies have been
-# materialized. It is deliberately optional here so this check remains
-# usable before a build and never performs a dependency update.
+# Third-party packages may record their own compatible toolchains. Do not
+# rewrite or reject those dependency-owned files; the root project and its
+# exact Mathlib checkout are the pinned inputs checked above.
 if [[ -d .lake/packages ]]; then
-  bash scripts/infra/enforce-v428-local-manifests.sh
+  mathlib_head="$(git -C .lake/packages/mathlib rev-parse HEAD 2>/dev/null || true)"
+  if [[ "$mathlib_head" != "$EXPECTED_MATHLIB_REV" ]]; then
+    echo "[pin-check] expected mathlib checkout $EXPECTED_MATHLIB_REV, found ${mathlib_head:-missing}" >&2
+    exit 1
+  fi
 else
-  echo "[pin-check] .lake/packages absent; skipping materialized-package policy check"
+  echo "[pin-check] .lake/packages absent; skipping checkout revision check"
 fi

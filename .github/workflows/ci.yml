@@ -97,10 +97,7 @@ jobs:
           path: |
             ~/.elan
             .lake/packages
-            .lake/build
           key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json', 'lean-toolchain', 'lakefile.lean') }}
-          restore-keys: |
-            ${{ runner.os }}-lake-
 
       - name: Verify pinned Lake environment
         run: bash scripts/infra/verify_pinned_environment.sh
@@ -557,14 +554,6 @@ jobs:
 
       - name: Enforce canonical policy
         run: python3 tools/infra/canonical_policy_lint.py
-
-      - name: Enforce nested package v4.28 policy
-        run: |
-          if [ -d .lake/packages ]; then
-            scripts/infra/enforce-v428-local-manifests.sh
-          else
-            echo "[policy] no .lake/packages directory; skipping nested manifest check"
-          fi
 
       - name: Enforce agentic autonomy policy
         run: python3 tools/infra/agentic_policy_lint.py

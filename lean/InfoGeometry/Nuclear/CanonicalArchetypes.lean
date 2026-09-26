@@ -1,6 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Algebra.DirectSum.Basic
+import Mathlib.Tactic
 
 /-!
 # Canonical Mathematical Archetypes of Chiral Non-Degeneracy

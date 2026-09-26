@@ -35,7 +35,7 @@ theorem paper_window6_boundary_dyadic_direction_flag :
       support (boundaryDirectionMask 1) ⊂ support (boundaryDirectionMask 0) ∧
       xorIndependent
         [boundaryDirectionMask 0, boundaryDirectionMask 1, boundaryDirectionMask 2] := by
-  native_decide
+  decide
 
 /-- Boundary-direction lookup for the three rigid window-6 boundary words. -/
 def boundaryDirectionOfWord6 : Nat → Nat
@@ -68,7 +68,7 @@ theorem window6_boundary_dyadic_direction_flag_requested :
       boundaryDirectionOfWord6 33 = 62 ∧ boundaryDirectionsLinearlyIndependent := by
   refine ⟨rfl, rfl, rfl, ?_⟩
   unfold boundaryDirectionsLinearlyIndependent boundaryDirectionsSupportNested boundaryDirectionSupport
-  native_decide
+  decide
 
 end Omega.GU
 

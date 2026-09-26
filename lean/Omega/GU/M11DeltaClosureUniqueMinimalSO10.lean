@@ -23,6 +23,6 @@ theorem paper_m11_delta_closure_unique_minimal_so10 :
   · intro m hm h
     exact Omega.ZeckSig.bdry_delta34_m11_uniqueness m hm h
   · simp [cBoundaryCount_six, cBoundaryCount_eight, cBoundaryCount_eleven]
-  · native_decide
+  · decide
 
 end Omega.GU

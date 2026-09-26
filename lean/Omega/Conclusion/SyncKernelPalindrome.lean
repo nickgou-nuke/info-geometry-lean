@@ -22,7 +22,7 @@ theorem paper_conclusion_sync_kernel_palindrome_seeds :
     (goldenMeanAdjacency * goldenMeanAdjacency) 0 1 +
       (goldenMeanAdjacency * goldenMeanAdjacency) 1 1 = 2 ∧
     1 * 3 + 0 * 2 = (3 : ℤ) ∧ 0 * 3 + 1 * 2 = (2 : ℤ) := by
-  refine ⟨by native_decide, by native_decide, by ring, by ring⟩
+  refine ⟨by decide, by decide, by ring, by ring⟩
 
 /-- Packaged form of the sync kernel palindrome seeds.
     thm:conclusion-selfdual-sync-kernel-finite-mirror-odd-cumulant -/
@@ -41,7 +41,7 @@ theorem paper_conclusion_edgeworth_evenness_rate_seeds :
     (2 * 11 = 22 ∧ 51 * 2 = 102) ∧
     (1 / 2 = 0 ∧ 3 / 2 = 1) ∧
     (1 - 0 = 1 ∧ 0 + 1 = 1) := by
-  exact ⟨⟨by omega, by omega, by native_decide⟩,
+  exact ⟨⟨by omega, by omega, by decide⟩,
          ⟨by omega, by omega⟩, ⟨by omega, by omega⟩, ⟨by omega, by omega⟩⟩
 
 /-- Tower defect vanishing criterion seeds.

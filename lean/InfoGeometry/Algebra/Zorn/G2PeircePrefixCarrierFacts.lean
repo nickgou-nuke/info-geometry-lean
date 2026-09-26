@@ -50,7 +50,7 @@ noncomputable instance occurringFirstPrefix_fintype :
 
 theorem nontrivialIdempotent_card_eq_72 :
     Fintype.card NontrivialIdempotent = 72 := by
-  native_decide
+  decide
 
 theorem occurringFirstPrefix_card_le_72 :
     Fintype.card AdmissibleFirstPrefix ≤ 72 := by

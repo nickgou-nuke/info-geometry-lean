@@ -34,13 +34,13 @@ theorem mixedRadixDecode3_left_inverse (a1 a2 a3 : ℕ)
     mixedRadixDecode3_1 (mixedRadixEncode3 a1 a2 a3) = a1 ∧
     mixedRadixDecode3_2 (mixedRadixEncode3 a1 a2 a3) = a2 ∧
     mixedRadixDecode3_3 (mixedRadixEncode3 a1 a2 a3) = a3 := by
-  interval_cases a1 <;> interval_cases a2 <;> interval_cases a3 <;> native_decide
+  interval_cases a1 <;> interval_cases a2 <;> interval_cases a3 <;> decide
 
 /-- Every `k < 30` is recovered from its `2,3,5` mixed-radix digits. -/
 theorem mixedRadixEncode3_right_inverse (k : ℕ) (hk : k < 30) :
     mixedRadixEncode3 (mixedRadixDecode3_1 k) (mixedRadixDecode3_2 k) (mixedRadixDecode3_3 k) =
       k := by
-  interval_cases k <;> native_decide
+  interval_cases k <;> decide
 
 /-- The ordered prime-scaling gate product collapses to the affine normal form `A_{30,K(a)}`. -/
 theorem affineCollapse3 (a1 a2 a3 : ℕ) :

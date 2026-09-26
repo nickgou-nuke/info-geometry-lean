@@ -1,0 +1,4 @@
+Token Scan Audit Report
+Target: .agents/sandbox_correlator/lean/InfoGeometry/Detector/FieldCorrelatorProjection.lean
+Forbidden tokens checked: ['sorry', 'admit', 'native_decide', 'unsafe', 'axiom ']
+Violations found: 0 (PASSED: 0 sorry, 0 admit, 0 native_decide)

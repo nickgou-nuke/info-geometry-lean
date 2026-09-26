@@ -32,6 +32,6 @@ theorem paper_xi_terminal_zm_delta_ca5_collision_node_splitting_legendre :
     XiTerminalZmDeltaCa5CollisionNodeSplittingLegendreTable := by
   unfold XiTerminalZmDeltaCa5CollisionNodeSplittingLegendreTable
   unfold collisionNodeLegendreSign isQuadraticResidueMod xiTerminalCollisionNodeResidue
-  native_decide
+  decide
 
 end Omega.Zeta

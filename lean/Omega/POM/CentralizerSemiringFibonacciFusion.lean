@@ -14,7 +14,7 @@ def goldenMeanAdjacencyNat : Matrix (Fin 2) (Fin 2) Nat :=
 /-- The concrete fusion rule `M^2 = M + I` for the `Nat`-valued golden matrix. -/
 theorem goldenMeanAdjacencyNat_sq :
     goldenMeanAdjacencyNat ^ 2 = goldenMeanAdjacencyNat + 1 := by
-  native_decide
+  decide
 
 /-- Paper label: `thm:pom-centralizer-semiring-fibonacci-fusion`.
 For the `Nat`-valued golden matrix, every commuting `2 × 2` matrix is of the form `a I + b M`. -/

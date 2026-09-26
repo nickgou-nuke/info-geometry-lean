@@ -25,8 +25,8 @@ theorem paper_stable_audit_affine_fibonacci_dashboard_closure :
       (∀ n ∈ stable_audit_affine_fibonacci_dashboard_closure_moduli,
         stable_audit_affine_fibonacci_dashboard_closure_hits n = 0) := by
   constructor
-  · native_decide
+  · decide
   · intro n hn
-    fin_cases hn <;> native_decide
+    fin_cases hn <;> decide
 
 end Omega.StableArithmetic.AffineFibonacciDashboardClosure

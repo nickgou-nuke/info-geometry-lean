@@ -5,6 +5,6 @@ import Omega.HyperKernel.AutoSeed
 namespace Omega.HyperKernel.SetStructureChecksTiny
 
 theorem pointCount_n4 : (Omega.HyperKernel.SetStructure.pointObjects 4).length = 4 := by
-  native_decide
+  decide
 
 end Omega.HyperKernel.SetStructureChecksTiny

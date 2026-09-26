@@ -60,7 +60,7 @@ def p2NonresidueConditionalDenominator : ℕ := 3
 /-- The `S₃` class sizes sum to `6`. -/
 theorem p2_s3_class_sizes_sum :
     p2S3ClassSize .identity + p2S3ClassSize .transposition + p2S3ClassSize .threeCycle = 6 := by
-  native_decide
+  decide
 
 /-- The quadratic subfield `ℚ(√37)` identifies Frobenius parity via the sign character, and the
 three `S₃` conjugacy classes recover the factorization types together with their raw and

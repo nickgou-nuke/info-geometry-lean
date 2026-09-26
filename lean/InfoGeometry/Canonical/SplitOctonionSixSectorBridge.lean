@@ -43,7 +43,7 @@ theorem colourIndex_surjective :
 
 theorem sixSector_card :
     Fintype.card (Fin 2 × SplitOctonionColour) = 6 := by
-  native_decide
+  decide
 
 theorem sixSectorBasis_injective :
     Function.Injective (fun p : Fin 2 × SplitOctonionColour =>
@@ -51,7 +51,7 @@ theorem sixSectorBasis_injective :
   intro p q
   rcases p with ⟨s, c⟩
   rcases q with ⟨t, d⟩
-  fin_cases s <;> fin_cases t <;> cases c <;> cases d <;> native_decide
+  fin_cases s <;> fin_cases t <;> cases c <;> cases d <;> decide
 
 def colourFin3Equiv : Fin 3 ≃ SplitOctonionColour :=
   Equiv.ofBijective
@@ -116,12 +116,12 @@ theorem sixSectorBasis_neg_mul_pos
 theorem sixSector_pos_mul_neg_of_ne
     {c d : SplitOctonionColour} (h : c ≠ d) :
     chiralZornMul (sixSectorBasis 0 c) (sixSectorBasis 1 d) = 0 := by
-  cases c <;> cases d <;> simp_all [sixSectorBasis, chiralZornMul] <;> native_decide
+  cases c <;> cases d <;> simp_all [sixSectorBasis, chiralZornMul] <;> decide
 
 theorem sixSector_neg_mul_pos_of_ne
     {c d : SplitOctonionColour} (h : c ≠ d) :
     chiralZornMul (sixSectorBasis 1 c) (sixSectorBasis 0 d) = 0 := by
-  cases c <;> cases d <;> simp_all [sixSectorBasis, chiralZornMul] <;> native_decide
+  cases c <;> cases d <;> simp_all [sixSectorBasis, chiralZornMul] <;> decide
 
 theorem sixSector_pos_mul_neg (c d : SplitOctonionColour) :
     chiralZornMul (sixSectorBasis 0 c) (sixSectorBasis 1 d) =
@@ -143,43 +143,43 @@ theorem sixSector_pos_mul_pos_skew
     {c d : SplitOctonionColour} (h : c ≠ d) :
     chiralZornMul (sixSectorBasis 0 c) (sixSectorBasis 0 d) =
       -chiralZornMul (sixSectorBasis 0 d) (sixSectorBasis 0 c) := by
-  cases c <;> cases d <;> simp_all [sixSectorBasis, chiralZornMul] <;> native_decide
+  cases c <;> cases d <;> simp_all [sixSectorBasis, chiralZornMul] <;> decide
 
 theorem sixSector_neg_mul_neg_skew
     {c d : SplitOctonionColour} (h : c ≠ d) :
     chiralZornMul (sixSectorBasis 1 c) (sixSectorBasis 1 d) =
       -chiralZornMul (sixSectorBasis 1 d) (sixSectorBasis 1 c) := by
-  cases c <;> cases d <;> simp_all [sixSectorBasis, chiralZornMul] <;> native_decide
+  cases c <;> cases d <;> simp_all [sixSectorBasis, chiralZornMul] <;> decide
 
 theorem sixSector_pos_red_mul_green :
     chiralZornMul (sixSectorBasis 0 .red) (sixSectorBasis 0 .green) =
       sixSectorBasis 1 .blue := by
-  native_decide
+  decide
 
 theorem sixSector_pos_red_mul_blue :
     chiralZornMul (sixSectorBasis 0 .red) (sixSectorBasis 0 .blue) =
       -sixSectorBasis 1 .green := by
-  native_decide
+  decide
 
 theorem sixSector_pos_green_mul_blue :
     chiralZornMul (sixSectorBasis 0 .green) (sixSectorBasis 0 .blue) =
       sixSectorBasis 1 .red := by
-  native_decide
+  decide
 
 theorem sixSector_neg_red_mul_green :
     chiralZornMul (sixSectorBasis 1 .red) (sixSectorBasis 1 .green) =
       -sixSectorBasis 0 .blue := by
-  native_decide
+  decide
 
 theorem sixSector_neg_red_mul_blue :
     chiralZornMul (sixSectorBasis 1 .red) (sixSectorBasis 1 .blue) =
       sixSectorBasis 0 .green := by
-  native_decide
+  decide
 
 theorem sixSector_neg_green_mul_blue :
     chiralZornMul (sixSectorBasis 1 .green) (sixSectorBasis 1 .blue) =
       -sixSectorBasis 0 .red := by
-  native_decide
+  decide
 
 theorem sixSector_corners_resolve
     (c : SplitOctonionColour) :
@@ -201,19 +201,19 @@ def nullParavectorMinus (c : SplitOctonionColour) : ChiralZornCarrier :=
 
 theorem nullParavectorPlus_idempotent (c : SplitOctonionColour) :
     chiralZornMul (nullParavectorPlus c) (nullParavectorPlus c) = nullParavectorPlus c := by
-  cases c <;> native_decide
+  cases c <;> decide
 
 theorem nullParavectorMinus_idempotent (c : SplitOctonionColour) :
     chiralZornMul (nullParavectorMinus c) (nullParavectorMinus c) = nullParavectorMinus c := by
-  cases c <;> native_decide
+  cases c <;> decide
 
 theorem nullParavectorPlus_norm (c : SplitOctonionColour) :
     coordinateSplitNorm (nullParavectorPlus c) = 0 := by
-  cases c <;> native_decide
+  cases c <;> decide
 
 theorem nullParavectorMinus_norm (c : SplitOctonionColour) :
     coordinateSplitNorm (nullParavectorMinus c) = 0 := by
-  cases c <;> native_decide
+  cases c <;> decide
 
 end
 end InfoGeometry.Canonical

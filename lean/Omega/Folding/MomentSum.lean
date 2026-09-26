@@ -54,56 +54,56 @@ end Computable
 
 -- Cached @[simp] lemmas for cMomentSum base values
 -- S_2
-@[simp] theorem cached_cMomentSum_2_0 : cMomentSum 2 0 = 1 := by native_decide
-@[simp] theorem cached_cMomentSum_2_1 : cMomentSum 2 1 = 2 := by native_decide
-@[simp] theorem cached_cMomentSum_2_2 : cMomentSum 2 2 = 6 := by native_decide
-@[simp] theorem cached_cMomentSum_2_3 : cMomentSum 2 3 = 14 := by native_decide
-@[simp] theorem cached_cMomentSum_2_4 : cMomentSum 2 4 = 36 := by native_decide
-@[simp] theorem cached_cMomentSum_2_5 : cMomentSum 2 5 = 88 := by native_decide
-@[simp] theorem cached_cMomentSum_2_6 : cMomentSum 2 6 = 220 := by native_decide
-@[simp] theorem cached_cMomentSum_2_7 : cMomentSum 2 7 = 544 := by native_decide
+@[simp] theorem cached_cMomentSum_2_0 : cMomentSum 2 0 = 1 := by decide
+@[simp] theorem cached_cMomentSum_2_1 : cMomentSum 2 1 = 2 := by decide
+@[simp] theorem cached_cMomentSum_2_2 : cMomentSum 2 2 = 6 := by decide
+@[simp] theorem cached_cMomentSum_2_3 : cMomentSum 2 3 = 14 := by decide
+@[simp] theorem cached_cMomentSum_2_4 : cMomentSum 2 4 = 36 := by decide
+@[simp] theorem cached_cMomentSum_2_5 : cMomentSum 2 5 = 88 := by decide
+@[simp] theorem cached_cMomentSum_2_6 : cMomentSum 2 6 = 220 := by decide
+@[simp] theorem cached_cMomentSum_2_7 : cMomentSum 2 7 = 544 := by decide
 -- S_3
-@[simp] theorem cached_cMomentSum_3_0 : cMomentSum 3 0 = 1 := by native_decide
-@[simp] theorem cached_cMomentSum_3_1 : cMomentSum 3 1 = 2 := by native_decide
-@[simp] theorem cached_cMomentSum_3_2 : cMomentSum 3 2 = 10 := by native_decide
-@[simp] theorem cached_cMomentSum_3_3 : cMomentSum 3 3 = 26 := by native_decide
-@[simp] theorem cached_cMomentSum_3_4 : cMomentSum 3 4 = 88 := by native_decide
-@[simp] theorem cached_cMomentSum_3_5 : cMomentSum 3 5 = 260 := by native_decide
-@[simp] theorem cached_cMomentSum_3_6 : cMomentSum 3 6 = 820 := by native_decide
-@[simp] theorem cached_cMomentSum_3_7 : cMomentSum 3 7 = 2504 := by native_decide
+@[simp] theorem cached_cMomentSum_3_0 : cMomentSum 3 0 = 1 := by decide
+@[simp] theorem cached_cMomentSum_3_1 : cMomentSum 3 1 = 2 := by decide
+@[simp] theorem cached_cMomentSum_3_2 : cMomentSum 3 2 = 10 := by decide
+@[simp] theorem cached_cMomentSum_3_3 : cMomentSum 3 3 = 26 := by decide
+@[simp] theorem cached_cMomentSum_3_4 : cMomentSum 3 4 = 88 := by decide
+@[simp] theorem cached_cMomentSum_3_5 : cMomentSum 3 5 = 260 := by decide
+@[simp] theorem cached_cMomentSum_3_6 : cMomentSum 3 6 = 820 := by decide
+@[simp] theorem cached_cMomentSum_3_7 : cMomentSum 3 7 = 2504 := by decide
 -- S_4
-@[simp] theorem cached_cMomentSum_4_0 : cMomentSum 4 0 = 1 := by native_decide
-@[simp] theorem cached_cMomentSum_4_1 : cMomentSum 4 1 = 2 := by native_decide
-@[simp] theorem cached_cMomentSum_4_2 : cMomentSum 4 2 = 18 := by native_decide
-@[simp] theorem cached_cMomentSum_4_3 : cMomentSum 4 3 = 50 := by native_decide
-@[simp] theorem cached_cMomentSum_4_4 : cMomentSum 4 4 = 228 := by native_decide
-@[simp] theorem cached_cMomentSum_4_5 : cMomentSum 4 5 = 808 := by native_decide
-@[simp] theorem cached_cMomentSum_4_6 : cMomentSum 4 6 = 3244 := by native_decide
+@[simp] theorem cached_cMomentSum_4_0 : cMomentSum 4 0 = 1 := by decide
+@[simp] theorem cached_cMomentSum_4_1 : cMomentSum 4 1 = 2 := by decide
+@[simp] theorem cached_cMomentSum_4_2 : cMomentSum 4 2 = 18 := by decide
+@[simp] theorem cached_cMomentSum_4_3 : cMomentSum 4 3 = 50 := by decide
+@[simp] theorem cached_cMomentSum_4_4 : cMomentSum 4 4 = 228 := by decide
+@[simp] theorem cached_cMomentSum_4_5 : cMomentSum 4 5 = 808 := by decide
+@[simp] theorem cached_cMomentSum_4_6 : cMomentSum 4 6 = 3244 := by decide
 -- S_5
 /-- def:pom-s5 -/
-@[simp] theorem cached_cMomentSum_5_0 : cMomentSum 5 0 = 1 := by native_decide
-@[simp] theorem cached_cMomentSum_5_1 : cMomentSum 5 1 = 2 := by native_decide
-@[simp] theorem cached_cMomentSum_5_2 : cMomentSum 5 2 = 34 := by native_decide
-@[simp] theorem cached_cMomentSum_5_3 : cMomentSum 5 3 = 98 := by native_decide
-@[simp] theorem cached_cMomentSum_5_4 : cMomentSum 5 4 = 616 := by native_decide
-@[simp] theorem cached_cMomentSum_5_5 : cMomentSum 5 5 = 2612 := by native_decide
+@[simp] theorem cached_cMomentSum_5_0 : cMomentSum 5 0 = 1 := by decide
+@[simp] theorem cached_cMomentSum_5_1 : cMomentSum 5 1 = 2 := by decide
+@[simp] theorem cached_cMomentSum_5_2 : cMomentSum 5 2 = 34 := by decide
+@[simp] theorem cached_cMomentSum_5_3 : cMomentSum 5 3 = 98 := by decide
+@[simp] theorem cached_cMomentSum_5_4 : cMomentSum 5 4 = 616 := by decide
+@[simp] theorem cached_cMomentSum_5_5 : cMomentSum 5 5 = 2612 := by decide
 -- S_6
-@[simp] theorem cached_cMomentSum_6_0 : cMomentSum 6 0 = 1 := by native_decide
-@[simp] theorem cached_cMomentSum_6_1 : cMomentSum 6 1 = 2 := by native_decide
-@[simp] theorem cached_cMomentSum_6_2 : cMomentSum 6 2 = 66 := by native_decide
-@[simp] theorem cached_cMomentSum_6_3 : cMomentSum 6 3 = 194 := by native_decide
-@[simp] theorem cached_cMomentSum_6_4 : cMomentSum 6 4 = 1716 := by native_decide
+@[simp] theorem cached_cMomentSum_6_0 : cMomentSum 6 0 = 1 := by decide
+@[simp] theorem cached_cMomentSum_6_1 : cMomentSum 6 1 = 2 := by decide
+@[simp] theorem cached_cMomentSum_6_2 : cMomentSum 6 2 = 66 := by decide
+@[simp] theorem cached_cMomentSum_6_3 : cMomentSum 6 3 = 194 := by decide
+@[simp] theorem cached_cMomentSum_6_4 : cMomentSum 6 4 = 1716 := by decide
 -- S_7
-@[simp] theorem cached_cMomentSum_7_0 : cMomentSum 7 0 = 1 := by native_decide
-@[simp] theorem cached_cMomentSum_7_1 : cMomentSum 7 1 = 2 := by native_decide
-@[simp] theorem cached_cMomentSum_7_2 : cMomentSum 7 2 = 130 := by native_decide
-@[simp] theorem cached_cMomentSum_7_3 : cMomentSum 7 3 = 386 := by native_decide
+@[simp] theorem cached_cMomentSum_7_0 : cMomentSum 7 0 = 1 := by decide
+@[simp] theorem cached_cMomentSum_7_1 : cMomentSum 7 1 = 2 := by decide
+@[simp] theorem cached_cMomentSum_7_2 : cMomentSum 7 2 = 130 := by decide
+@[simp] theorem cached_cMomentSum_7_3 : cMomentSum 7 3 = 386 := by decide
 -- S_8 (only S_2(8) needed downstream)
-@[simp] theorem cached_cMomentSum_8_2 : cMomentSum 8 2 = 258 := by native_decide
+@[simp] theorem cached_cMomentSum_8_2 : cMomentSum 8 2 = 258 := by decide
 -- S_9 (only S_2(9) needed downstream)
-@[simp] theorem cached_cMomentSum_9_2 : cMomentSum 9 2 = 514 := by native_decide
+@[simp] theorem cached_cMomentSum_9_2 : cMomentSum 9 2 = 514 := by decide
 -- S_10 (only S_2(10) needed downstream)
-@[simp] theorem cached_cMomentSum_10_2 : cMomentSum 10 2 = 1026 := by native_decide
+@[simp] theorem cached_cMomentSum_10_2 : cMomentSum 10 2 = 1026 := by decide
 
 -- S_2 base values
 /-- prop:pom-s2-recurrence-base-0 -/
@@ -184,7 +184,7 @@ theorem momentSum_six_three : momentSum 6 3 = 194 := by rw [← cMomentSum_eq]; 
 theorem momentSum_six_four : momentSum 6 4 = 1716 := by rw [← cMomentSum_eq]; simp
 
 /-- prop:pom-coarsegraining-collision-moment-strict-monotonicity -/
-theorem momentSum_six_six : momentSum 6 6 = 57820 := by rw [← cMomentSum_eq]; native_decide
+theorem momentSum_six_six : momentSum 6 6 = 57820 := by rw [← cMomentSum_eq]; decide
 
 -- S_7 base values
 /-- prop:pom-s7-base-zero -/
@@ -196,11 +196,11 @@ theorem momentSum_seven_two : momentSum 7 2 = 130 := by rw [← cMomentSum_eq]; 
 /-- prop:pom-s7-base-three -/
 theorem momentSum_seven_three : momentSum 7 3 = 386 := by rw [← cMomentSum_eq]; simp
 
--- S_8 base values (q=0,1 trivial via native_decide on X(0)/X(1), q=2 via cached)
+-- S_8 base values (q=0,1 trivial via decide on X(0)/X(1), q=2 via cached)
 /-- prop:pom-s8-base-zero -/
-theorem momentSum_eight_zero : momentSum 8 0 = 1 := by rw [← cMomentSum_eq]; native_decide
+theorem momentSum_eight_zero : momentSum 8 0 = 1 := by rw [← cMomentSum_eq]; decide
 /-- prop:pom-s8-base-one -/
-theorem momentSum_eight_one : momentSum 8 1 = 2 := by rw [← cMomentSum_eq]; native_decide
+theorem momentSum_eight_one : momentSum 8 1 = 2 := by rw [← cMomentSum_eq]; decide
 /-- prop:pom-s8-base-two -/
 theorem momentSum_eight_two : momentSum 8 2 = 258 := by rw [← cMomentSum_eq]; simp
 
@@ -335,7 +335,7 @@ theorem exists_fiber_ge_two (m : Nat) (hm : 2 ≤ m) : ∃ x : X m, 2 ≤ X.fibe
         | zero => omega
         | succ k =>
           cases k with
-          | zero => native_decide
+          | zero => decide
           | succ k =>
             have hR : Nat.fib (k + 5) = Nat.fib (k + 4) + Nat.fib (k + 3) :=
               fib_succ_succ' (k + 3)
@@ -365,9 +365,9 @@ theorem paper_momentSum_zero_one_bridge :
     momentSum 0 6 = 21 ∧ momentSum 1 6 = 64 ∧
     momentSum 0 7 = 34 ∧ momentSum 1 7 = 128 := by
   refine ⟨momentSum_zero, momentSum_one, ?_, ?_, ?_, ?_⟩
-  · rw [momentSum_zero]; native_decide
+  · rw [momentSum_zero]; decide
   · rw [momentSum_one]; norm_num
-  · rw [momentSum_zero]; native_decide
+  · rw [momentSum_zero]; decide
   · rw [momentSum_one]; norm_num
 
 end Omega

@@ -48,7 +48,7 @@ def fold_gauge_anomaly_p9_discriminant_square_finiteness_statement
 theorem paper_fold_gauge_anomaly_p9_discriminant_square_finiteness
     (D : fold_gauge_anomaly_p9_discriminant_square_finiteness_data) :
     fold_gauge_anomaly_p9_discriminant_square_finiteness_statement D := by
-  refine ⟨?_, rfl, ?_, by native_decide, ?_, ?_, ?_⟩
+  refine ⟨?_, rfl, ?_, by decide, ?_, ?_, ?_⟩
   · intro t
     simpa [fold_gauge_anomaly_p9_discriminant_square_finiteness_curve] using
       (paper_fold_gauge_anomaly_second_trigonal_structure_discriminant.1 t).symm

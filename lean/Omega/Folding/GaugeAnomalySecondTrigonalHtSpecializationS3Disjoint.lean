@@ -42,11 +42,11 @@ def secondTrigonalHtDisjointFromL9 (t : ℕ) : Prop :=
 
 private theorem secondTrigonalHt_rootfree_case_zero (u : Fin 3) :
     (u ^ 3 + 2 * u + 1 : Fin 3) ≠ 0 := by
-  fin_cases u <;> native_decide
+  fin_cases u <;> decide
 
 private theorem secondTrigonalHt_rootfree_case_two (u : Fin 3) :
     (u ^ 3 + u ^ 2 + 2 : Fin 3) ≠ 0 := by
-  fin_cases u <;> native_decide
+  fin_cases u <;> decide
 
 private theorem secondTrigonalHt_mod_cases (t : ℕ) (hmod : t % 3 ≠ 1) :
     t % 3 = 0 ∨ t % 3 = 2 := by

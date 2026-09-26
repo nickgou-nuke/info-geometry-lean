@@ -111,7 +111,7 @@ theorem paper_necklaceCorrectionKernel_odd_zero :
     necklaceCorrectionKernel 2 4 = 2 ∧
     necklaceCorrectionKernel 2 6 = 6 :=
   ⟨necklaceCorrectionKernel_odd_eq_zero,
-   by native_decide, by native_decide, by native_decide⟩
+   by decide, by decide, by decide⟩
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R301: Necklace correction kernel extended values
@@ -123,7 +123,7 @@ theorem necklaceCorrectionKernel_values_extended :
     necklaceCorrectionKernel 2 8 = 12 ∧
     necklaceCorrectionKernel 2 10 = 30 ∧
     necklaceCorrectionKernel 2 12 = 54 := by
-  refine ⟨?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_⟩ <;> decide
 
 /-- Necklace correction kernel values for v=3 (ternary).
     cor:xi-time-part73c-fixed-parameter-necklace-correction -/
@@ -131,7 +131,7 @@ theorem necklaceCorrectionKernel_ternary :
     necklaceCorrectionKernel 3 2 = 3 ∧
     necklaceCorrectionKernel 3 4 = 6 ∧
     necklaceCorrectionKernel 3 6 = 24 := by
-  refine ⟨?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_⟩ <;> decide
 
 /-- Paper package.
     cor:xi-time-part73c-fixed-parameter-necklace-correction -/
@@ -144,8 +144,8 @@ theorem paper_necklaceCorrectionKernel_extended :
     necklaceCorrectionKernel 3 4 = 6 ∧
     necklaceCorrectionKernel 3 6 = 24 :=
   ⟨necklaceCorrectionKernel_odd_eq_zero,
-   by native_decide, by native_decide, by native_decide,
-   by native_decide, by native_decide, by native_decide⟩
+   by decide, by decide, by decide,
+   by decide, by decide, by decide⟩
 
 /-- Necklace correction at v=2 for small even values.
     cor:xi-time-part73c-fixed-parameter-necklace-correction -/
@@ -156,15 +156,15 @@ theorem paper_necklace_correction_two_values :
     necklaceCorrectionKernel 2 8 = 12 ∧
     necklaceCorrectionKernel 2 10 = 30 ∧
     necklaceCorrectionKernel 2 12 = 54 := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+          by decide, by decide, by decide⟩
 
 /-- Necklace correction at v=2 is positive for 1 ≤ m ≤ 20.
     cor:xi-time-part73c-fixed-parameter-necklace-correction -/
 theorem necklaceCorrectionKernel_at_two_pos_bounded :
     ∀ m, 1 ≤ m → m ≤ 20 → 0 < necklaceCorrectionKernel 2 (2 * m) := by
   intro m hm hm'
-  interval_cases m <;> native_decide
+  interval_cases m <;> decide
 
 /-- At prime m=p: E(v,2p) - N(v,2p) = v^p + v.
     cor:xi-time-part73c-fixed-parameter-necklace-correction -/
@@ -201,8 +201,8 @@ theorem necklaceCorrectionKernel_v2_seeds :
     necklaceCorrectionKernel 2 8 = 12 ∧
     necklaceCorrectionKernel 2 10 = 30 ∧
     necklaceCorrectionKernel 2 12 = 54 := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+          by decide, by decide, by decide⟩
 
 /-- Necklace number = kernel / v for v=2.
     cor:xi-time-part73c-fixed-parameter-necklace-correction -/
@@ -211,7 +211,7 @@ theorem necklaceCorrectionKernel_v2_necklace_number :
     necklaceCorrectionKernel 2 4 / 2 = 1 ∧
     necklaceCorrectionKernel 2 6 / 2 = 3 ∧
     necklaceCorrectionKernel 2 8 / 2 = 6 := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide⟩
 
 /-- Golden-mean necklace correction seeds: even values and odd zeros.
     cor:xi-time-part73c-fixed-parameter-necklace-correction -/
@@ -222,7 +222,7 @@ theorem paper_necklace_correction_golden_mean_seeds :
     necklaceCorrectionKernel 2 1 = 0 ∧
     necklaceCorrectionKernel 2 3 = 0 ∧
     necklaceCorrectionKernel 2 5 = 0 := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+          by decide, by decide, by decide⟩
 
 end Omega.Zeta

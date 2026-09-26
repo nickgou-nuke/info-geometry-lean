@@ -80,10 +80,10 @@ theorem paper_foldbin_central_2extension_moment_certificate
   · rw [hn4, hB]
     omega
   · rw [hh2, hA, hB]
-    native_decide
+    decide
   · apply Nat.pow_le_pow_right (by decide : 0 < 2)
     rw [hh2coh, hA, hB]
-    native_decide
+    decide
 
 end
 

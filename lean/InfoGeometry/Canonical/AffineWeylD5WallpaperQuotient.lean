@@ -97,7 +97,7 @@ def weylD5CrossSection2 : Fin 8 → Mat5Q
 
 theorem weylD5CrossSection2_is_homomorphism (a b : Fin 8) :
     weylD5CrossSection2 a * weylD5CrossSection2 b = weylD5CrossSection2 (d4_comp a b) := by
-  fin_cases a <;> fin_cases b <;> native_decide
+  fin_cases a <;> fin_cases b <;> decide
 
 /-- 
 The precise lift from the boundary affine wallpaper group into the bulk 

@@ -30,17 +30,17 @@ abbrev globalAssemblyZetaStatement : Prop :=
 private lemma globalAssemblyK21Adjacency_eq :
     globalAssemblyK21Adjacency = !![2, 1; 1, 1] := by
   unfold globalAssemblyK21Adjacency
-  native_decide
+  decide
 
 private lemma globalAssemblyK21Adjacency_trace :
     globalAssemblyK21Adjacency.trace = 3 := by
   rw [globalAssemblyK21Adjacency_eq]
-  native_decide
+  decide
 
 private lemma globalAssemblyK21Adjacency_det :
     globalAssemblyK21Adjacency.det = 1 := by
   rw [globalAssemblyK21Adjacency_eq]
-  native_decide
+  decide
 
 private lemma globalAssemblyK21Adjacency_charpoly :
     globalAssemblyK21Adjacency.charpoly = Polynomial.X ^ 2 - 3 * Polynomial.X + 1 := by

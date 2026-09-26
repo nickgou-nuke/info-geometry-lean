@@ -815,15 +815,15 @@ theorem phaseSpectrumCount_Z_times_Z6_table :
     phaseSpectrumCount 1 6 5 = 5 ∧
     phaseSpectrumCount 1 6 6 = 36 ∧
     phaseSpectrumCount 1 6 12 = 72 := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide,
+    by decide, by decide, by decide⟩
 
 /-- Rank detection at coprime primes.
     thm:cdim-phase-spectrum-reconstruction -/
 theorem phaseSpectrumCount_rank_detection_Z_Z6 :
     phaseSpectrumCount 1 6 5 = 5 ^ 1 ∧
     phaseSpectrumCount 1 6 7 = 7 ^ 1 := by
-  refine ⟨by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide⟩
 
 /-- Circle dimension axiomatic completeness.
     thm:cdim-nr-nd-semiring-hom-rigidity -/
@@ -1119,7 +1119,7 @@ theorem paper_phaseSpectrumCount_small_torsion :
     phaseSpectrumCount 1 4 4 = 16 ∧
     phaseSpectrumCount 1 4 2 = 4 := by
   simp only [phaseSpectrumCount]
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
 
 /-- Phase spectrum at prime power: coprime/divisible dichotomy.
     thm:cdim-phase-spectrum-limit -/
@@ -1128,7 +1128,7 @@ theorem paper_phaseSpectrumCount_prime_power_audit :
     phaseSpectrumCount 1 4 2 = 4 ∧
     phaseSpectrumCount 1 4 4 = 16 ∧
     (∀ k : Nat, phaseSpectrumCount 1 2 (3 ^ k) = (3 ^ k) ^ 1) := by
-  refine ⟨fun k => ?_, by native_decide, by native_decide, fun k => ?_⟩
+  refine ⟨fun k => ?_, by decide, by decide, fun k => ?_⟩
   · exact phaseSpectrumCount_coprime 1 3 (2 ^ k)
       (Nat.Coprime.pow_right k (by decide))
   · exact phaseSpectrumCount_coprime 1 2 (3 ^ k)
@@ -1144,7 +1144,7 @@ theorem paper_phaseSpectrumCount_rank2 :
     phaseSpectrumCount 2 3 3 = 27 ∧
     phaseSpectrumCount 2 6 6 = 216 := by
   simp only [phaseSpectrumCount]
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
 
 /-- Paper core package for phase-spectrum limit behavior.
     thm:cdim-phase-spectrum-limit -/
@@ -1154,7 +1154,7 @@ theorem paper_phaseSpectrumCount_limit_core :
     phaseSpectrumCount 1 4 4 = 16 ∧
     (∀ k : Nat, phaseSpectrumCount 1 2 (3 ^ k) = (3 ^ k) ^ 1) ∧
     (phaseSpectrumCount 2 6 6 = 216) := by
-  refine ⟨?_, by native_decide, by native_decide, ?_, ?_⟩
+  refine ⟨?_, by decide, by decide, ?_, ?_⟩
   · intro k
     exact phaseSpectrumCount_coprime 1 3 (2 ^ k) (Nat.Coprime.pow_right k (by decide))
   · intro k
@@ -1288,9 +1288,9 @@ theorem isSmooth_6_23 : IsSmooth {2, 3} 6 := by
   interval_cases p
   · simp  -- p=2
   · simp  -- p=3
-  · exact absurd hp (by native_decide)  -- p=4 not prime
+  · exact absurd hp (by decide)  -- p=4 not prime
   · exact absurd hpd (by omega)  -- p=5 ∤ 6
-  · exact absurd hp (by native_decide)  -- p=6 not prime
+  · exact absurd hp (by decide)  -- p=6 not prime
 
 /-- 3 is not {2,5}-smooth: 3 is prime, 3 ∣ 3, but 3 ∉ {2,5}.
     thm:cdim-arithmetic-singular-ring-equivariant-splitting-criterion -/
@@ -1322,9 +1322,9 @@ theorem isSmooth_6_235 : IsSmooth {2, 3, 5} 6 := by
   interval_cases p
   · simp  -- p=2
   · simp  -- p=3
-  · exact absurd hp (by native_decide)  -- p=4
+  · exact absurd hp (by decide)  -- p=4
   · exact absurd hpd (by omega)  -- p=5
-  · exact absurd hp (by native_decide)  -- p=6
+  · exact absurd hp (by decide)  -- p=6
 
 /-- 1 is S-smooth for any S (vacuously: no prime divides 1).
     thm:cdim-arithmetic-singular-ring-equivariant-splitting-criterion -/

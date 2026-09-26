@@ -37,6 +37,6 @@ theorem paper_foldbin_groupoid_aut0_pi1_torsion_exponent :
       (show
         (List.foldl Nat.lcm 1
           (List.replicate 8 2 ++ List.replicate 4 3 ++ List.replicate 9 4)) = 12 by
-        native_decide)
+        decide)
 
 end Omega.Folding

@@ -32,6 +32,6 @@ theorem paper_conclusion_window6_boundary_rational_blind_torsion_superselection
     ⟨_, _, _, hLie⟩
   refine ⟨hLie, ?_⟩
   change Fintype.card Window6BoundaryCharacter = 8
-  native_decide
+  decide
 
 end Omega.Conclusion

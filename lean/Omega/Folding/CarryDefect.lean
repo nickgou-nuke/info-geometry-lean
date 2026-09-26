@@ -116,17 +116,17 @@ theorem restrict_stableAdd_carry_defect (x y : X (m + 1)) :
     stableValue(carryElement 6) = Nat.fib 6 = 8.
     Paper: cor:pom-carry-defect-m6-anchor-8-34 -/
 theorem carryElement_m6_value : stableValue (carryElement 6) = 8 := by
-  rw [stableValue_carryElement]; native_decide
+  rw [stableValue_carryElement]; decide
 
 /-- Concrete: carryElement 5 has value Nat.fib 5 = 5.
     cor:pom-carry-defect-m5-value -/
 theorem carryElement_m5_value : stableValue (carryElement 5) = 5 := by
-  rw [stableValue_carryElement]; native_decide
+  rw [stableValue_carryElement]; decide
 
 /-- Concrete: carryElement 7 has value Nat.fib 7 = 13.
     cor:pom-carry-defect-m7-value -/
 theorem carryElement_m7_value : stableValue (carryElement 7) = 13 := by
-  rw [stableValue_carryElement]; native_decide
+  rw [stableValue_carryElement]; decide
 
 /-- The carry element is nonzero for m ≥ 2.
     prop:pom-carry-element-nonzero -/
@@ -155,19 +155,19 @@ namespace X
 
 /-- cor:pom-carry-defect-m6-anchor-8-34 -/
 theorem carryElement_m8_value : stableValue (carryElement 8) = 21 := by
-  rw [stableValue_carryElement]; native_decide
+  rw [stableValue_carryElement]; decide
 
 /-- cor:pom-carry-defect-m6-anchor-8-34 -/
 theorem carryElement_m9_value : stableValue (carryElement 9) = 34 := by
-  rw [stableValue_carryElement]; native_decide
+  rw [stableValue_carryElement]; decide
 
 /-- cor:pom-carry-defect-m6-anchor-8-34 -/
 theorem carryElement_m10_value : stableValue (carryElement 10) = 55 := by
-  rw [stableValue_carryElement]; native_decide
+  rw [stableValue_carryElement]; decide
 
 /-- cor:pom-carry-defect-m6-anchor-8-34 -/
 theorem carryElement_m11_value : stableValue (carryElement 11) = 89 := by
-  rw [stableValue_carryElement]; native_decide
+  rw [stableValue_carryElement]; decide
 
 /-- Paper package. cor:pom-carry-defect-m6-anchor-8-34 -/
 theorem paper_carryElement_fibonacci_pattern :
@@ -191,18 +191,18 @@ theorem paper_pom_carry_fib_extended :
     stableValue (carryElement 11) = Nat.fib 11 := by
   refine ⟨carryElement_m5_value, carryElement_m6_value, carryElement_m7_value,
     carryElement_m8_value, carryElement_m9_value, ?_, ?_⟩
-  · rw [carryElement_m10_value]; native_decide
-  · rw [carryElement_m11_value]; native_decide
+  · rw [carryElement_m10_value]; decide
+  · rw [carryElement_m11_value]; decide
 
 /-- Stable value of carryElement at m = 12 equals 144.
     cor:pom-carry-defect-m6-anchor-8-34 -/
 theorem carryElement_m12_value : stableValue (carryElement 12) = 144 := by
-  rw [stableValue_carryElement]; native_decide
+  rw [stableValue_carryElement]; decide
 
 /-- Stable value of carryElement at m = 13 equals 233.
     cor:pom-carry-defect-m6-anchor-8-34 -/
 theorem carryElement_m13_value : stableValue (carryElement 13) = 233 := by
-  rw [stableValue_carryElement]; native_decide
+  rw [stableValue_carryElement]; decide
 
 /-- Universal Fibonacci pattern for m = 5..13.
     cor:pom-carry-defect-m6-anchor-8-34 -/
@@ -210,15 +210,15 @@ theorem paper_pom_carry_fib_to_thirteen :
     ∀ k, 5 ≤ k → k ≤ 13 → stableValue (carryElement k) = Nat.fib k := by
   intro k hk1 hk2
   interval_cases k
-  · rw [carryElement_m5_value]; native_decide
-  · rw [carryElement_m6_value]; native_decide
-  · rw [carryElement_m7_value]; native_decide
-  · rw [carryElement_m8_value]; native_decide
-  · rw [carryElement_m9_value]; native_decide
-  · rw [carryElement_m10_value]; native_decide
-  · rw [carryElement_m11_value]; native_decide
-  · rw [carryElement_m12_value]; native_decide
-  · rw [carryElement_m13_value]; native_decide
+  · rw [carryElement_m5_value]; decide
+  · rw [carryElement_m6_value]; decide
+  · rw [carryElement_m7_value]; decide
+  · rw [carryElement_m8_value]; decide
+  · rw [carryElement_m9_value]; decide
+  · rw [carryElement_m10_value]; decide
+  · rw [carryElement_m11_value]; decide
+  · rw [carryElement_m12_value]; decide
+  · rw [carryElement_m13_value]; decide
 
 end X
 
@@ -227,7 +227,7 @@ end X
 theorem paper_pom_carry_m6_joint_audit :
     Nat.fib 9 = 34 ∧ Nat.fib 8 = 21 ∧ 8 = Nat.fib 6 ∧
     34 = 21 + 13 ∧ Nat.fib 6 + Nat.fib 7 = Nat.fib 8 := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by omega, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by omega, by decide⟩
 
 /-- Carry congruence: Fibonacci recurrence + small values.
     thm:pom-stable-addition-carry-defect-unique-element -/
@@ -235,8 +235,8 @@ theorem paper_pom_carry_congruence (m : Nat) :
     Nat.fib m + Nat.fib (m + 1) = Nat.fib (m + 2) ∧
     Nat.fib 5 = 5 ∧ Nat.fib 6 = 8 ∧ Nat.fib 7 = 13 ∧
     Nat.fib 8 = 21 ∧ Nat.fib 9 = 34 := by
-  refine ⟨?_, by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide⟩
+  refine ⟨?_, by decide, by decide, by decide,
+          by decide, by decide⟩
   exact (Nat.fib_add_two (n := m)).symm
 
 end Omega

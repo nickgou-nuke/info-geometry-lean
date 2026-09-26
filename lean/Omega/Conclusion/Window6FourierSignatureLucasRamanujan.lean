@@ -55,6 +55,6 @@ theorem paper_conclusion_window6_fourier_signature_lucas_ramanujan :
       conclusion_window6_fourier_signature_lucas_ramanujan_mult 3 = 3 ∧
       conclusion_window6_fourier_signature_lucas_ramanujan_mult 4 = 3 ∧
       conclusion_window6_fourier_signature_lucas_ramanujan_mult 5 = 2 := by
-  native_decide
+  decide
 
 end Omega.Conclusion

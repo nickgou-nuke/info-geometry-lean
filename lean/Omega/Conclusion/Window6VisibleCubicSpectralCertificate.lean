@@ -28,8 +28,8 @@ theorem paper_conclusion_window6_visible_cubic_spectral_certificate :
       conclusion_window6_visible_cubic_spectral_certificate_projectorPolynomial 2 = 0 ∧
       conclusion_window6_visible_cubic_spectral_certificate_projectorPolynomial 3 = 0 ∧
       conclusion_window6_visible_cubic_spectral_certificate_projectorPolynomial 4 = 0 := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, ?_, ?_, ?_, ?_⟩
+  refine ⟨by decide, by decide, by decide, by decide, by decide,
+    by decide, by decide, ?_, ?_, ?_, ?_⟩
   · norm_num [conclusion_window6_visible_cubic_spectral_certificate_projectorPolynomial]
   · norm_num [conclusion_window6_visible_cubic_spectral_certificate_projectorPolynomial]
   · norm_num [conclusion_window6_visible_cubic_spectral_certificate_projectorPolynomial]

@@ -87,7 +87,7 @@ theorem paper_real_input_40_a0_tensor_hidden : real_input_40_a0_tensor_hidden_st
     ring_nf
   refine ⟨?_, ?_, ?_, ?_, rfl, ?_, ?_, ?_⟩
   · ext i j
-    fin_cases i <;> fin_cases j <;> native_decide
+    fin_cases i <;> fin_cases j <;> decide
   · exact hChar
   · exact hMinus
   · exact hPlus

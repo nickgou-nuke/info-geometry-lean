@@ -99,14 +99,14 @@ lemma signed_companion_lucas_certificate_det6 :
         signed_companion_lucas_certificate_signed_companion
           signed_companion_lucas_certificate_coeffs6).det =
       signed_companion_lucas_certificate_signedDet 6 := by
-  native_decide
+  decide
 
 lemma signed_companion_lucas_certificate_det7 :
     ((1 : Matrix (Fin 7) (Fin 7) ℤ) -
         signed_companion_lucas_certificate_signed_companion
           signed_companion_lucas_certificate_coeffs7).det =
       signed_companion_lucas_certificate_signedDet 7 := by
-  native_decide
+  decide
 
 theorem signed_companion_lucas_certificate_audited_q2_q23 :
     signed_companion_lucas_certificate_statement := by
@@ -115,14 +115,14 @@ theorem signed_companion_lucas_certificate_audited_q2_q23 :
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro q hq
     rcases hq with ⟨hq_min, hq_max⟩
-    interval_cases q <;> native_decide
+    interval_cases q <;> decide
   · intro q hq
     rcases hq with ⟨hq_min, hq_max⟩
-    interval_cases q <;> native_decide
+    interval_cases q <;> decide
   · intro q hq
     rcases hq with ⟨hq_min, hq_max⟩
-    interval_cases q <;> native_decide
+    interval_cases q <;> decide
   · intro q hq_min hq_max
-    interval_cases q <;> native_decide
+    interval_cases q <;> decide
 
 end Omega

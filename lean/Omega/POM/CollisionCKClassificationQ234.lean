@@ -47,7 +47,7 @@ theorem paper_pom_collision_ck_classification_q234 (t : ℕ) :
   · simpa [Omega.bowenFranksMatrix2_det]
   · simpa [Omega.bowenFranksMatrix3_det]
   · simpa [Omega.bowenFranksMatrix4_det]
-  · native_decide
+  · decide
   · simpa [sub_eq_add_neg, add_assoc, add_comm, add_left_comm] using
       (Omega.a4CharPoly_at_one (t := (t : ℤ)))
   · rw [Omega.a4CharPoly_at_one]

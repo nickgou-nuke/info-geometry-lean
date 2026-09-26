@@ -883,10 +883,10 @@ theorem paper_pathIndSetPoly_eval_one_extended :
     (pathIndSetPoly 7).eval 1 = (Nat.fib 9 : ℤ) ∧
     (pathIndSetPoly 8).eval 1 = (Nat.fib 10 : ℤ) := by
   refine ⟨?_, ?_, ?_, ?_⟩
-  · rw [pathIndSetPoly_five_val]; simp; native_decide
-  · rw [pathIndSetPoly_six_val]; simp; native_decide
-  · rw [pathIndSetPoly_seven_val]; simp; native_decide
-  · rw [pathIndSetPoly_eight_val]; simp; native_decide
+  · rw [pathIndSetPoly_five_val]; simp; decide
+  · rw [pathIndSetPoly_six_val]; simp; decide
+  · rw [pathIndSetPoly_seven_val]; simp; decide
+  · rw [pathIndSetPoly_eight_val]; simp; decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R293: fibPoly eval at -1, pathIndSetPolyNegOne extended values

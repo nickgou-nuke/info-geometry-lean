@@ -36,7 +36,7 @@ hyperelliptic genus count gives `g = 5`, and the `S₄` certificate identifies t
 subextension through the index-`2` subgroup `A₄`. -/
 theorem paper_gauge_pressure_sign_cover_genus5 : gaugePressureSignCoverGenus5Statement := by
   have hS4 := paper_gauge_pressure_generic_galois_s4
-  refine ⟨?_, rfl, by native_decide, rfl, rfl, ?_, hS4.2.2.2.2.1⟩
+  refine ⟨?_, rfl, by decide, rfl, rfl, ?_, hS4.2.2.2.2.1⟩
   · intro u
     simpa [Omega.Folding.GaugePressureResolventDiscIdentityData.p10Factorization] using
       (Omega.Folding.paper_root_unit_gauge_pressure_resolvent_disc_identity

@@ -24,6 +24,6 @@ def testPointV : OctImF2 := fun i => if i = 2 then 1 else 0
 theorem octCross_pc1_not_equivariant :
     octCross (octImAction pc1Aut testPointU) (octImAction pc1Aut testPointV) ≠
       octImAction pc1Aut (octCross testPointU testPointV) := by
-  native_decide +revert
+  decide +revert
 
 end InfoGeometry.Algebra.Zorn.G2CrossProductCarrierAudit

@@ -14,7 +14,7 @@ theorem paper_terminal_foldbin6_no_type_relabeling_by_geo :
   refine ⟨?_, ?_⟩
   · have hGeo :
         ∀ n : Fin 64, Omega.cBinFold 6 (terminalFoldbin6GeoImage n.1) = Omega.cBinFold 6 n.1 := by
-        native_decide
+        decide
     exact hGeo
   · calc
       terminalFoldbin6GeoSwapFiberValues = terminalFoldbin6FiberValuesByDirection 34 := hSwap

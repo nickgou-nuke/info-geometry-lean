@@ -21,11 +21,11 @@ def c3Support : Finset (ℤ × ℤ × ℤ) :=
 
 /-- The cube has 125 elements.
     thm:window6-c3-support-vanishing-ideal-hilbert -/
-theorem cube125_card : cube125.card = 125 := by native_decide
+theorem cube125_card : cube125.card = 125 := by decide
 
 /-- The C₃ support has 19 elements.
     thm:window6-c3-support-vanishing-ideal-hilbert -/
-theorem c3Support_card : c3Support.card = 19 := by native_decide
+theorem c3Support_card : c3Support.card = 19 := by decide
 
 /-- Paper package: window-6 C₃ support count = 19.
     thm:window6-c3-support-vanishing-ideal-hilbert -/

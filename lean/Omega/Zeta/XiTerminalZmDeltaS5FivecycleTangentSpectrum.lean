@@ -27,4 +27,4 @@ theorem paper_xi_terminal_zm_delta_s5_5cycle_tangent_spectrum :
       xiTerminalZmDeltaS5FivecycleNormalizerOrder / xiTerminalZmDeltaS5FivecycleInertiaOrder = 4 ∧
       Finset.univ.image xiTerminalZmDeltaS5FivecycleTangentExponent =
         (Finset.univ.erase 0 : Finset (Fin 5)) := by
-  native_decide
+  decide

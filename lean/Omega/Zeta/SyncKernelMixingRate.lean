@@ -65,7 +65,7 @@ theorem goldenMean_rh_strict_seeds :
     (Nat.fib 4 = 3 ∧ Nat.fib 3 = 2) ∧
     ((1 : ℕ) + 4 * 1 = 5) ∧
     (1 < 2 ∧ 1 ^ 2 < 2) := by
-  refine ⟨⟨by native_decide, by native_decide⟩, by omega, by omega⟩
+  refine ⟨⟨by decide, by decide⟩, by omega, by omega⟩
 
 /-- Paper package: RH stratification seeds.
     prop:rh-stratification-three-kernels -/

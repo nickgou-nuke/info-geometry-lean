@@ -46,9 +46,9 @@ theorem paper_pom_a4t_e8_two_resolution_layer_nonembedding :
   rcases he8 with ⟨_, _⟩
   rcases hade with ⟨_, _, _, _, _, _, _, _, _, _⟩
   rcases hnewman with ⟨_, _, hsig, _⟩
-  refine ⟨rfl, rfl, by native_decide, ?_, ?_⟩
+  refine ⟨rfl, rfl, by decide, ?_, ?_⟩
   · intro ht
-    have hfalse : ¬ ((8 : ℕ) ≤ 4) := by native_decide
+    have hfalse : ¬ ((8 : ℕ) ≤ 4) := by decide
     simp [pom_a4t_e8_two_resolution_layer_nonembedding_t30adj_in_tE8,
       pom_a4t_e8_two_resolution_layer_nonembedding_deg_t30adj,
       pom_a4t_e8_two_resolution_layer_nonembedding_deg_tE8] at ht

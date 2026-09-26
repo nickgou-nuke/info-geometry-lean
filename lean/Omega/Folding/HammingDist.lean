@@ -42,9 +42,9 @@ def cMinStableHammingDist (m : Nat) : Nat :=
   else 0
 
 /-- Minimum Hamming distance between distinct stable words at small resolutions. -/
-theorem cMinStableHammingDist_two : cMinStableHammingDist 2 = 1 := by native_decide
-theorem cMinStableHammingDist_three : cMinStableHammingDist 3 = 1 := by native_decide
-theorem cMinStableHammingDist_four : cMinStableHammingDist 4 = 1 := by native_decide
+theorem cMinStableHammingDist_two : cMinStableHammingDist 2 = 1 := by decide
+theorem cMinStableHammingDist_three : cMinStableHammingDist 3 = 1 := by decide
+theorem cMinStableHammingDist_four : cMinStableHammingDist 4 = 1 := by decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 207: Hamming metric properties
@@ -318,13 +318,13 @@ def cHammingWeightLayer (m k : Nat) : Nat :=
   (@Finset.univ (X m) (fintypeX m)).filter (fun x => popcount x.1 = k) |>.card
 
 /-- cor:fold6-weyl-two-orbit-compression -/
-theorem cHammingWeightLayer_6_0 : cHammingWeightLayer 6 0 = 1 := by native_decide
+theorem cHammingWeightLayer_6_0 : cHammingWeightLayer 6 0 = 1 := by decide
 /-- cor:fold6-weyl-two-orbit-compression -/
-theorem cHammingWeightLayer_6_1 : cHammingWeightLayer 6 1 = 6 := by native_decide
+theorem cHammingWeightLayer_6_1 : cHammingWeightLayer 6 1 = 6 := by decide
 /-- cor:fold6-weyl-two-orbit-compression -/
-theorem cHammingWeightLayer_6_2 : cHammingWeightLayer 6 2 = 10 := by native_decide
+theorem cHammingWeightLayer_6_2 : cHammingWeightLayer 6 2 = 10 := by decide
 /-- cor:fold6-weyl-two-orbit-compression -/
-theorem cHammingWeightLayer_6_3 : cHammingWeightLayer 6 3 = 4 := by native_decide
+theorem cHammingWeightLayer_6_3 : cHammingWeightLayer 6 3 = 4 := by decide
 
 /-- X_6 Hamming weight distribution: layers of size 1,6,10,4 (popcount 0..3).
     No11 constraint limits popcount to at most ⌊(m+1)/2⌋ = 3 for m=6.
@@ -351,19 +351,19 @@ theorem paper_X6_hammingWeight_distribution :
 
 /-- cMinStableHammingDist 5 = 1.
     def:min-stable-hamming-dist -/
-theorem cMinStableHammingDist_five : cMinStableHammingDist 5 = 1 := by native_decide
+theorem cMinStableHammingDist_five : cMinStableHammingDist 5 = 1 := by decide
 
 /-- cMinStableHammingDist 6 = 1.
     def:min-stable-hamming-dist -/
-theorem cMinStableHammingDist_six : cMinStableHammingDist 6 = 1 := by native_decide
+theorem cMinStableHammingDist_six : cMinStableHammingDist 6 = 1 := by decide
 
 /-- cMinStableHammingDist 7 = 1.
     def:min-stable-hamming-dist -/
-theorem cMinStableHammingDist_seven : cMinStableHammingDist 7 = 1 := by native_decide
+theorem cMinStableHammingDist_seven : cMinStableHammingDist 7 = 1 := by decide
 
 /-- cMinStableHammingDist 8 = 1.
     def:min-stable-hamming-dist -/
-theorem cMinStableHammingDist_eight : cMinStableHammingDist 8 = 1 := by native_decide
+theorem cMinStableHammingDist_eight : cMinStableHammingDist 8 = 1 := by decide
 
 /-- Paper package: minimum stable Hamming distance is constant 1 for m = 2..8.
     def:min-stable-hamming-dist -/

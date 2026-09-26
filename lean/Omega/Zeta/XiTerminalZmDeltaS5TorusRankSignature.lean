@@ -74,6 +74,6 @@ theorem paper_xi_terminal_zm_delta_s5_tame_collision_torus_rank_signature :
   unfold xiTerminalZmDeltaS5Dimension
   unfold xiTerminalZmDeltaS5IsotypicRank
   unfold xiTerminalZmDeltaS5PowerMultiplicity
-  native_decide
+  decide
 
 end Omega.Zeta

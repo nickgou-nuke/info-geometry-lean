@@ -67,7 +67,7 @@ private lemma terminal_foldbin6_fiber_hamming_three_valued_values (x : Omega.X 6
       _ = 13 + 6 + 2 := by rw [hs2, hs3, hs5]
       _ = Fintype.card (Omega.X 6) := by
             rw [Omega.X.card_eq_fib]
-            native_decide
+            decide
   have hsubset : ((s2 ∪ s3) ∪ s5) ⊆ (Finset.univ : Finset (Omega.X 6)) := by
     intro y hy
     simp
@@ -104,7 +104,7 @@ private theorem terminal_foldbin6_fiber_hamming_three_valued_support_injective_o
             exact Omega.indSetToWord_wordSupport (Omega.intToWord 6 b)
   have hbounded :
       ∀ m n : Fin 64, Omega.intToWord 6 m.1 = Omega.intToWord 6 n.1 → m = n := by
-    native_decide
+    decide
   exact Fin.ext_iff.mp (hbounded ⟨a, ha⟩ ⟨b, hb⟩ hword)
 
 private theorem terminal_foldbin6_fiber_hamming_three_valued_hamming_eq_symmDiff_card (a b : Nat) :

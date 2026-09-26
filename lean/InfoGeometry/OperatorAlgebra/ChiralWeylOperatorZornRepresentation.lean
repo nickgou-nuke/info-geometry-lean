@@ -32,6 +32,43 @@ theorem blockAction_comp (R : ChiralRepresentationPair (G := G) (A := A))
   apply zornBlock_ext <;>
     simp [blockAction, map_mul, mul_assoc]
 
+namespace ChiralRepresentationPair
+
+variable (R : ChiralRepresentationPair (G := G) (A := A))
+
+/-- Opposite intertwiners for the two sheet representations. -/
+structure ChiralIntertwiner where
+  plus : A
+  minus : A
+  plus_intertwines : ∀ g : G,
+    (R.left g : A) * plus = plus * (R.right g : A)
+  minus_intertwines : ∀ g : G,
+    (R.right g : A) * minus = minus * (R.left g : A)
+
+/-- The pair of intertwiners in the two off-diagonal channels. -/
+def pureChiralBlock (Q : R.ChiralIntertwiner) : ZornBlock A :=
+  ⟨0, 0, Q.plus, Q.minus⟩
+
+/-- The block action fixes a pure chiral block when its two entries intertwine
+the corresponding left and right representations. -/
+theorem blockAction_pureChiralBlock (g : G) (Q : R.ChiralIntertwiner) :
+    blockAction R g (R.pureChiralBlock Q) = R.pureChiralBlock Q := by
+  apply zornBlock_ext
+  · simp [blockAction, pureChiralBlock]
+  · simp [blockAction, pureChiralBlock]
+  · calc
+      (R.left g : A) * Q.plus * ((R.right g)⁻¹ : Units A) =
+          (Q.plus * (R.right g : A)) * ((R.right g)⁻¹ : Units A) := by
+            rw [Q.plus_intertwines]
+      _ = Q.plus := by rw [mul_assoc, Units.mul_inv, mul_one]
+  · calc
+      (R.right g : A) * Q.minus * ((R.left g)⁻¹ : Units A) =
+          (Q.minus * (R.left g : A)) * ((R.left g)⁻¹ : Units A) := by
+            rw [Q.minus_intertwines]
+      _ = Q.minus := by rw [mul_assoc, Units.mul_inv, mul_one]
+
+end ChiralRepresentationPair
+
 theorem blockAction_ePlus (R : ChiralRepresentationPair (G := G) (A := A))
     (g : G) : blockAction R g ePlus = ePlus := by
   apply zornBlock_ext <;> simp [blockAction, ePlus]

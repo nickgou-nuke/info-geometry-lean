@@ -356,7 +356,7 @@ theorem cyclicFiveGradingToFive_toCyclic (CG : CyclicFiveGrading L) :
   · intro k
     rcases CG.cyclicGradeMap_matches_fiveGrading with ⟨h0, h1, h2, h3, h4⟩
     -- Since `fiveGradingToCyclic` only distinguishes 0,1,2,3,4, we prove
-    -- the equality for each of the 5 cases individually and reduce using `native_decide`
+    -- the equality for each of the 5 cases individually and reduce using `decide`
     -- on the ZMod 5 equality tests.
     have h_cases : ∀ i : ZMod 5, (fiveGradingToCyclic L (cyclicFiveGradingToFive L CG)).cyclicGradeMap i =
       CG.cyclicGradeMap i := by

@@ -48,10 +48,10 @@ theorem paper_real_input_add_delay_rigidity :
       singlePassDelay real_input_add_delay_rigidity_delay3_online = 3 := by
     simpa using paper_online_delay_from_plocal 3 0 real_input_add_delay_rigidity_delay3_online
   refine ⟨rfl, hdelay, ?_, ?_, ?_, ?_, ?_⟩
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
+  · decide
+  · decide
+  · decide
+  · decide
   · rw [hdelay]
     omega
 

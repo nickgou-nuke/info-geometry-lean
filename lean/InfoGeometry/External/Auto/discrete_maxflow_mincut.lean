@@ -312,14 +312,14 @@ def minCutValue : ℕ := min (cutCost cut0) (cutCost cut01)
 
 /-- Brute-force max-flow equals min-cut for this fixed finite model. -/
 theorem maxFlow_eq_minCut : maxFlowValue = minCutValue := by
-  native_decide
+  decide
 
 /-- Numerical check: both sides are `3`. -/
 theorem maxFlow_eq_three : maxFlowValue = 3 := by
-  native_decide
+  decide
 
 theorem minCut_eq_three : minCutValue = 3 := by
-  native_decide
+  decide
 
 /-- For transparency, record the cut costs explicitly. -/
 theorem cut_costs : cutCost cut0 = 4 ∧ cutCost cut01 = 3 := by

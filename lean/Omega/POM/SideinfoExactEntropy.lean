@@ -51,7 +51,7 @@ theorem conditional_entropy_product_seed :
 theorem no_slack_ceiling_seed :
     Nat.clog 2 4 = 2 ∧ Nat.clog 2 5 = 3 ∧
     (2 : ℕ) ^ 2 = 4 ∧ (2 : ℕ) ^ 3 = 8 ∧ 8 ≥ 5 := by
-  refine ⟨by native_decide, by native_decide, by omega, by omega, by omega⟩
+  refine ⟨by decide, by decide, by omega, by omega, by omega⟩
 
 /-- Invertibility gives lower bound: since (f,r) injective implies
     A = Ψ(X, r(A)) for some Ψ, we have H(A|X) ≤ H(r(A)|X).

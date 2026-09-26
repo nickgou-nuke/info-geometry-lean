@@ -52,7 +52,7 @@ theorem paper_carry_free_core_block :
   · refine ⟨by norm_num [carryFreeCoreSize, auditedKernelK21Core], ?_, ?_⟩
     · norm_num [zeroCarryOutdegree, auditedKernelK21Core]
     · intro L hL
-      have hFib8 : Nat.fib (6 + 2) = 21 := by native_decide
+      have hFib8 : Nat.fib (6 + 2) = 21 := by decide
       by_contra hne
       rcases lt_or_gt_of_ne hne with hlt | hgt
       · have hstrict : Nat.fib (L + 2) < Nat.fib (6 + 2) := Nat.fib_add_two_strictMono hlt

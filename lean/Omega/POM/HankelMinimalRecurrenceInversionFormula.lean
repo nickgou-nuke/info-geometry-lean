@@ -31,7 +31,7 @@ theorem paper_xi_hankel_minimal_recurrence_inversion_formula :
   refine ⟨?_, ?_, ?_⟩
   · intro n
     simp [xiMinimalRecurrenceSequence, pow_succ, mul_comm]
-  · native_decide
-  · native_decide
+  · decide
+  · decide
 
 end Omega.POM

@@ -45,10 +45,10 @@ theorem paper_pom_second_max_gap_constant
   · intro m hm
     by_cases hsmall : m ≤ 10
     · interval_cases m
-      · have h2 : cNthMaxFiber 2 1 = 1 := by native_decide
+      · have h2 : cNthMaxFiber 2 1 = 1 := by decide
         rw [h2, Omega.X.maxFiberMultiplicity_two]
         omega
-      · have h3 : cNthMaxFiber 3 1 = 1 := by native_decide
+      · have h3 : cNthMaxFiber 3 1 = 1 := by decide
         rw [h3, Omega.X.maxFiberMultiplicity_three]
         omega
       · rw [cNthMaxFiber_second_four, Omega.X.maxFiberMultiplicity_four]

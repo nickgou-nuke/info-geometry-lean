@@ -16,7 +16,7 @@ theorem paper_fib_lie_resonance_global_classification (m : ℕ) :
         apply Nat.fib_add_two_strictMono.injective
         calc
           Nat.fib (m + 2) = 3 := h3
-          _ = Nat.fib (2 + 2) := by native_decide
+          _ = Nat.fib (2 + 2) := by decide
       exact hm'
     · right
       left
@@ -24,7 +24,7 @@ theorem paper_fib_lie_resonance_global_classification (m : ℕ) :
         apply Nat.fib_add_two_strictMono.injective
         calc
           Nat.fib (m + 2) = 8 := h8
-          _ = Nat.fib (4 + 2) := by native_decide
+          _ = Nat.fib (4 + 2) := by decide
       exact hm'
     · right
       right
@@ -33,7 +33,7 @@ theorem paper_fib_lie_resonance_global_classification (m : ℕ) :
         apply Nat.fib_add_two_strictMono.injective
         calc
           Nat.fib (m + 2) = 21 := h21
-          _ = Nat.fib (6 + 2) := by native_decide
+          _ = Nat.fib (6 + 2) := by decide
       exact hm'
     · right
       right
@@ -42,22 +42,22 @@ theorem paper_fib_lie_resonance_global_classification (m : ℕ) :
         apply Nat.fib_add_two_strictMono.injective
         calc
           Nat.fib (m + 2) = 55 := h55
-          _ = Nat.fib (8 + 2) := by native_decide
+          _ = Nat.fib (8 + 2) := by decide
       exact hm'
   · intro h
     rcases h with rfl | rfl | rfl | rfl
     · left
-      native_decide
+      decide
     · right
       left
-      native_decide
+      decide
     · right
       right
       left
-      native_decide
+      decide
     · right
       right
       right
-      native_decide
+      decide
 
 end Omega.GroupUnification

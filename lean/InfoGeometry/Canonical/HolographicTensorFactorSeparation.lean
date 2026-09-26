@@ -87,18 +87,18 @@ theorem brillouin_color_lifts_commute (G : Mat2 ℚ) (C : Mat3 ℚ) :
 /-- The Brillouin twist remains a fermionic square after tensoring with color. -/
 theorem brillouinTwist_lift_sq :
     geomLift2 brillouinTwist2 * geomLift2 brillouinTwist2 = -1 := by
-  native_decide
+  decide
 
 /-- The Brillouin glide remains an involution after tensoring with color. -/
 theorem brillouinGlide_lift_sq :
     geomLift2 brillouinGlide2 * geomLift2 brillouinGlide2 = 1 := by
-  native_decide
+  decide
 
 /-- The Brillouin twist/glide anticommutation is confined to the geometric factor. -/
 theorem brillouin_lift_anticommutes :
     geomLift2 brillouinGlide2 * geomLift2 brillouinTwist2 =
       -geomLift2 brillouinTwist2 * geomLift2 brillouinGlide2 := by
-  native_decide
+  decide
 
 /-- The lifted Brillouin twist commutes with every displayed color generator. -/
 theorem brillouinTwist_lift_commutes_color (i : Fin 8) :

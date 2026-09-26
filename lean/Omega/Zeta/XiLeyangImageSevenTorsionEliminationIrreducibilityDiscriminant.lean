@@ -85,6 +85,6 @@ def xi_leyang_image_seven_torsion_elimination_irreducibility_discriminant_statem
 theorem paper_xi_leyang_image_seven_torsion_elimination_irreducibility_discriminant :
     xi_leyang_image_seven_torsion_elimination_irreducibility_discriminant_statement := by
   unfold xi_leyang_image_seven_torsion_elimination_irreducibility_discriminant_statement
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
 
 end Omega.Zeta

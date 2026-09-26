@@ -95,6 +95,6 @@ theorem paper_xi_time_part9n1b_prym_chevalley_weil_reciprocity
         D.xi_time_part9n1b_prym_chevalley_weil_reciprocity_hNums
   · intro i
     rfl
-  · native_decide
+  · decide
 
 end Omega.Zeta

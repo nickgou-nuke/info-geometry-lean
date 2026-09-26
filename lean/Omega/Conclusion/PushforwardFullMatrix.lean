@@ -12,7 +12,7 @@ namespace Omega.Conclusion.PushforwardFullMatrix
 
 /-- F(8) = 21: dimension of the window-6 state space.
     cor:conclusion-window6-local-pushforward-envelope-full-matrix -/
-theorem fib8_eq_21 : Nat.fib 8 = 21 := by native_decide
+theorem fib8_eq_21 : Nat.fib 8 = 21 := by decide
 
 /-- Paper package: window-6 pushforward full matrix algebra.
     cor:conclusion-window6-local-pushforward-envelope-full-matrix -/
@@ -20,7 +20,7 @@ theorem paper_conclusion_window6_pushforward_full_matrix :
     Nat.fib 8 = 21 ∧ 21 ^ 2 = 441 ∧ 6 < 21 ∧
     21 = 3 * 7 ∧
     ¬ ∃ k : Nat, 1 < k ∧ k < 21 ∧ k * k = 21 := by
-  refine ⟨by native_decide, by norm_num, by omega, by omega, ?_⟩
+  refine ⟨by decide, by norm_num, by omega, by omega, ?_⟩
   intro ⟨k, hk1, hk2, hk3⟩
   have : k ≤ 4 := by nlinarith
   interval_cases k <;> omega

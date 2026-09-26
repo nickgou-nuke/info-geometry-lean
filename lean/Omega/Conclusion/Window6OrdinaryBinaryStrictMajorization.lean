@@ -10,20 +10,20 @@ private def window6BinaryFiberSizes : List Nat :=
 
 private theorem window6OrdinaryBinary_total_mass :
     window6OrdinaryFiberSizes.sum = window6BinaryFiberSizes.sum := by
-  native_decide
+  decide
 
 private theorem window6OrdinaryBinary_prefix_domination (k : Nat) (hk1 : 1 ≤ k)
     (hk2 : k ≤ window6OrdinaryFiberSizes.length) :
     (window6OrdinaryFiberSizes.take k).sum ≥ (window6BinaryFiberSizes.take k).sum := by
   have hk21 : k ≤ 21 := by
     simpa [window6OrdinaryFiberSizes] using hk2
-  interval_cases k <;> native_decide
+  interval_cases k <;> decide
 
 private theorem window6OrdinaryBinary_strict_step :
     ∃ k : Nat, 1 ≤ k ∧ k < window6OrdinaryFiberSizes.length ∧
       (window6OrdinaryFiberSizes.take k).sum > (window6BinaryFiberSizes.take k).sum := by
   refine ⟨1, ?_⟩
-  native_decide
+  decide
 
 private theorem window6OrdinaryBinaryStrictMajorization_certificate :
     window6OrdinaryFiberSizes.sum = window6BinaryFiberSizes.sum ∧

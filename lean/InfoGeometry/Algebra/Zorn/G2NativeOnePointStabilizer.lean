@@ -31,7 +31,7 @@ export InfoGeometry.Algebra.Zorn.G2NativePointFoundation (nativeBasePoint)
 
 theorem nativeBasePoint_isotropic :
     G2ParabolicLineFiber.splitQuad nativeBasePoint = 0 := by
-  native_decide +revert
+  decide +revert
 
 theorem nativeBasePoint_nonzero : nativeBasePoint ≠ 0 := by
   intro h

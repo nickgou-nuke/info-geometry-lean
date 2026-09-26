@@ -58,14 +58,14 @@ theorem s2_transport_beta :
 theorem circularRootTransport_not_s1_stable :
     ¬ (∀ i : CircularLabel, ∃ j : CircularLabel,
       s1Root (circularRootTransport.label i) = circularRootTransport.label j) := by
-  native_decide
+  decide
 
 theorem no_circular_root_equivalence :
     ¬ Nonempty (CircularLabel ≃ RootLabel) := by
   rintro ⟨e⟩
   have hcard := Fintype.card_congr e
   have hroot : Fintype.card RootLabel = 12 := by
-    native_decide
+    decide
   rw [hroot] at hcard
   norm_num at hcard
 

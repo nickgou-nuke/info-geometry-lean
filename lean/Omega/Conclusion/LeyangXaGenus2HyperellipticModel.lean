@@ -52,7 +52,7 @@ def conclusion_leyang_xa_genus2_hyperelliptic_model_statement : Prop :=
 affine equation is exactly the displayed Lee--Yang model `t² = c y (y-1) g(y)`. -/
 theorem paper_conclusion_leyang_xa_genus2_hyperelliptic_model :
     conclusion_leyang_xa_genus2_hyperelliptic_model_statement := by
-  refine ⟨by native_decide, rfl, by native_decide, by native_decide, ?_⟩
+  refine ⟨by decide, rfl, by decide, by decide, ?_⟩
   intro c hc y t
   simp [conclusion_leyang_xa_genus2_hyperelliptic_model_affine_model]
 

@@ -30,7 +30,7 @@ theorem resonance_window_five_terminal_types_distinct :
 theorem paper_resonance_window_terminal_extended :
     Nat.fib 8 = 21 ∧ Nat.fib 9 = 34 ∧
     34 > 21 := by
-  exact ⟨by native_decide, by native_decide, by omega⟩
+  exact ⟨by decide, by decide, by omega⟩
 
 /-- lcm(8,18) = 72.
     thm:conclusion-resonance-window-q13-q15-mod6-period72 -/

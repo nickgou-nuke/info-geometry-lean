@@ -40,6 +40,6 @@ theorem paper_fold_endpoint_seeds :
     Nat.fib 4 + Nat.fib 2 = Nat.fib 5 - 1 ∧
     Nat.fib 5 + Nat.fib 3 = Nat.fib 6 - 1 ∧
     Nat.fib 6 + Nat.fib 4 + Nat.fib 2 = Nat.fib 7 - 1 := by
-  native_decide
+  decide
 
 end Omega.Folding.EndpointUnique

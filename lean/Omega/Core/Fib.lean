@@ -63,7 +63,7 @@ theorem fib_succ_mod' (m : Nat) :
 /-- F(m+2) > 1 for m ≥ 1. -/
 theorem fib_gt_one_of_ge_two (hm : 1 ≤ m) : 1 < Nat.fib (m + 2) := by
   calc 1 < 2 := by omega
-    _ = Nat.fib 3 := by native_decide
+    _ = Nat.fib 3 := by decide
     _ ≤ Nat.fib (m + 2) := Nat.fib_mono (by omega)
 
 /-- Upper bound: F(m+2) ≤ 2^(m+1) for all m.
@@ -71,7 +71,7 @@ theorem fib_gt_one_of_ge_two (hm : 1 ≤ m) : 1 < Nat.fib (m + 2) := by
     fib-growth-upper-bound -/
 theorem fib_le_pow_two : ∀ m : Nat, Nat.fib (m + 2) ≤ 2 ^ (m + 1)
   | 0 => by simp
-  | 1 => by native_decide
+  | 1 => by decide
   | m + 2 => by
     calc Nat.fib (m + 2 + 2)
         = Nat.fib (m + 2 + 1) + Nat.fib (m + 2) := fib_succ_succ' (m + 2)
@@ -410,8 +410,8 @@ theorem fib_lt_pow_two_of_ge_two (m : Nat) (hm : 2 ≤ m) :
   | _ m ih =>
     match m with
     | 0 | 1 => omega
-    | 2 => native_decide
-    | 3 => native_decide
+    | 2 => decide
+    | 3 => decide
     | m + 4 =>
       have hfib := fib_succ_succ' (m + 4)
       rw [show m + 4 + 2 = m + 6 from by omega,
@@ -463,7 +463,7 @@ theorem fenceDet_eq_fib (k : Nat) : fenceDet k = Nat.fib (2 * k + 1) := by
   | _ k ih =>
     match k with
     | 0 => simp [fenceDet]
-    | 1 => simp [fenceDet]; native_decide
+    | 1 => simp [fenceDet]; decide
     | k + 2 =>
       rw [fenceDet, ih (k + 1) (by omega), ih k (by omega)]
       rw [show 2 * (k + 2) + 1 = 2 * k + 5 from by ring,
@@ -590,7 +590,7 @@ private theorem five_dvd_of_fib_five_dvd (n : Nat) (h : 5 ∣ Nat.fib n) : 5 ∣
 /-- 5 ∣ n → 5 ∣ F_n. -/
 private theorem fib_five_dvd_of_five_dvd (n : Nat) (h : 5 ∣ n) : 5 ∣ Nat.fib n := by
   obtain ⟨k, rfl⟩ := h
-  exact dvd_trans (show (5 : Nat) ∣ Nat.fib 5 from by native_decide) (Nat.fib_dvd 5 (5 * k) ⟨k, rfl⟩)
+  exact dvd_trans (show (5 : Nat) ∣ Nat.fib 5 from by decide) (Nat.fib_dvd 5 (5 * k) ⟨k, rfl⟩)
 
 /-- Pisano period mod 5: 5 | F_n ↔ 5 | n. -/
 theorem fib_five_dvd_iff (n : Nat) : 5 ∣ Nat.fib n ↔ 5 ∣ n :=
@@ -639,7 +639,7 @@ private theorem eight_dvd_of_fib_seven_dvd (n : Nat) (h : 7 ∣ Nat.fib n) : 8 �
 /-- 8 ∣ n → 7 ∣ F_n. -/
 private theorem fib_seven_dvd_of_eight_dvd (n : Nat) (h : 8 ∣ n) : 7 ∣ Nat.fib n := by
   obtain ⟨k, rfl⟩ := h
-  exact dvd_trans (show (7 : Nat) ∣ Nat.fib 8 from by native_decide)
+  exact dvd_trans (show (7 : Nat) ∣ Nat.fib 8 from by decide)
     (Nat.fib_dvd 8 (8 * k) ⟨k, rfl⟩)
 
 /-- Pisano entry point mod 7 is 8: 7 | F_n ↔ 8 | n. -/
@@ -843,7 +843,7 @@ theorem fenceDet_double_lower (k : Nat) (hk : 1 ≤ k) :
 
 /-- F_6 and F_8 are coprime. prop:crt-235-min-depth framework. -/
 theorem fib_six_eight_coprime : Nat.Coprime (Nat.fib 6) (Nat.fib 8) := by
-  rw [Nat.Coprime, fib_gcd]; native_decide
+  rw [Nat.Coprime, fib_gcd]; decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 194
@@ -890,7 +890,7 @@ private theorem six_dvd_of_fib_eight_dvd (n : Nat) (h : 8 ∣ Nat.fib n) : 6 ∣
 /-- 6 ∣ n → 8 ∣ F_n. -/
 private theorem fib_eight_dvd_of_six_dvd (n : Nat) (h : 6 ∣ n) : 8 ∣ Nat.fib n := by
   obtain ⟨k, rfl⟩ := h
-  exact dvd_trans (show (8 : Nat) ∣ Nat.fib 6 from by native_decide)
+  exact dvd_trans (show (8 : Nat) ∣ Nat.fib 6 from by decide)
     (Nat.fib_dvd 6 (6 * k) ⟨k, rfl⟩)
 
 /-- Pisano entry point mod 8 is 6: 8 | F_n ↔ 6 | n. -/
@@ -1226,7 +1226,7 @@ theorem paper_fenceDet_diff_package :
     (∀ k, fenceDet (k + 1) = fenceDet k + Nat.fib (2 * k + 2)) ∧
     fenceDet 5 - fenceDet 4 = 55 := by
   refine ⟨fenceDet_succ_sub, fenceDet_succ_eq_add, ?_⟩
-  rw [fenceDet_succ_sub]; native_decide
+  rw [fenceDet_succ_sub]; decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R309: fenceDet consecutive product identity
@@ -1254,16 +1254,16 @@ theorem paper_fenceDet_product_package :
 -- ══════════════════════════════════════════════════════════════
 
 /-- cor:pom-Lk-t1-fibonacci-det-green -/
-theorem fenceDet_eight : fenceDet 8 = 1597 := by rw [fenceDet_eq_fib]; native_decide
+theorem fenceDet_eight : fenceDet 8 = 1597 := by rw [fenceDet_eq_fib]; decide
 
 /-- cor:pom-Lk-t1-fibonacci-det-green -/
-theorem fenceDet_nine : fenceDet 9 = 4181 := by rw [fenceDet_eq_fib]; native_decide
+theorem fenceDet_nine : fenceDet 9 = 4181 := by rw [fenceDet_eq_fib]; decide
 
 /-- cor:pom-Lk-t1-fibonacci-det-green -/
-theorem fenceDet_ten : fenceDet 10 = 10946 := by rw [fenceDet_eq_fib]; native_decide
+theorem fenceDet_ten : fenceDet 10 = 10946 := by rw [fenceDet_eq_fib]; decide
 
 /-- 1597 = F(17) is prime. cor:pom-Lk-t1-fibonacci-det-green -/
-theorem prime_1597 : Nat.Prime 1597 := by native_decide
+theorem prime_1597 : Nat.Prime 1597 := by decide
 
 /-- Paper package. cor:pom-Lk-t1-fibonacci-det-green -/
 theorem paper_fenceDet_values_extended :
@@ -1348,8 +1348,8 @@ theorem fib_sq_gt_fib_shift (n : Nat) (hn : 6 ≤ n) :
   induction k using Nat.strongRecOn with
   | _ k ih =>
     match k with
-    | 0 => native_decide  -- F(10) = 55 < 64 = 8²
-    | 1 => native_decide  -- F(11) = 89 < 169 = 13²
+    | 0 => decide  -- F(10) = 55 < 64 = 8²
+    | 1 => decide  -- F(11) = 89 < 169 = 13²
     | k + 2 =>
       -- IH at k and k+1: F(k+10) < F(k+6)² and F(k+11) < F(k+7)²
       have ih1 := ih k (by omega) (by omega)
@@ -1441,7 +1441,7 @@ theorem fib_shift5 (n : Nat) : Nat.fib (n + 5) = 5 * Nat.fib (n + 1) + 3 * Nat.f
   have h5 : Nat.fib (n + 5) = Nat.fib (n + 3) + Nat.fib (n + 4) := Nat.fib_add_two
   linarith
 
-theorem fib_fourteen_eq : Nat.fib 14 = 377 := by native_decide
+theorem fib_fourteen_eq : Nat.fib 14 = 377 := by decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R135: 2^m > F(m+2) for m >= 4
@@ -1454,8 +1454,8 @@ theorem two_pow_gt_fib (m : Nat) (hm : 4 ≤ m) :
   induction m using Nat.strongRecOn with
   | _ m ih =>
     match m, hm with
-    | 4, _ => native_decide
-    | 5, _ => native_decide
+    | 4, _ => decide
+    | 5, _ => decide
     | m + 6, _ =>
       have h1 := ih (m + 5) (by omega) (by omega)
       have h2 := ih (m + 4) (by omega) (by omega)
@@ -1483,10 +1483,10 @@ theorem floor_pow_div3_parity_bounded (m : Nat) (hm1 : 2 ≤ m) (hm2 : m ≤ 12)
   have hk : k ≤ 10 := by omega
   -- Enumerate k = 0..10, m = 2..12
   match k, hk with
-  | 0, _ => native_decide  | 1, _ => native_decide  | 2, _ => native_decide
-  | 3, _ => native_decide  | 4, _ => native_decide  | 5, _ => native_decide
-  | 6, _ => native_decide  | 7, _ => native_decide  | 8, _ => native_decide
-  | 9, _ => native_decide  | 10, _ => native_decide
+  | 0, _ => decide  | 1, _ => decide  | 2, _ => decide
+  | 3, _ => decide  | 4, _ => decide  | 5, _ => decide
+  | 6, _ => decide  | 7, _ => decide  | 8, _ => decide
+  | 9, _ => decide  | 10, _ => decide
   | k + 11, hk => omega
 
 /-- Paper: thm:pom-hidden-bit-count -/
@@ -1704,26 +1704,26 @@ theorem paper_fenceDet_values_and_strict_mono :
     fenceDet 0 = 1 ∧ fenceDet 1 = 2 ∧ fenceDet 2 = 5 ∧
     fenceDet 3 = 13 ∧ fenceDet 4 = 34 ∧ fenceDet 5 = 89 ∧
     (∀ k : ℕ, fenceDet k < fenceDet (k + 1)) := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, by native_decide, fun k => ?_⟩
+  refine ⟨by decide, by decide, by decide,
+    by decide, by decide, by decide, fun k => ?_⟩
   match k with
-  | 0 => native_decide
+  | 0 => decide
   | k + 1 => exact fenceDet_strict_mono (k + 1) (by omega)
 
 /-- Pisano period π(12) = 24.
     cor:pom-fiber-modq-pisano-invariant -/
 theorem fib_mod12_period_24 :
-    Nat.fib 24 % 12 = 0 ∧ Nat.fib 25 % 12 = 1 := by native_decide
+    Nat.fib 24 % 12 = 0 ∧ Nat.fib 25 % 12 = 1 := by decide
 
 /-- Pisano period π(13) = 28.
     cor:pom-fiber-modq-pisano-invariant -/
 theorem fib_mod13_period_28 :
-    Nat.fib 28 % 13 = 0 ∧ Nat.fib 29 % 13 = 1 := by native_decide
+    Nat.fib 28 % 13 = 0 ∧ Nat.fib 29 % 13 = 1 := by decide
 
 /-- Pisano period π(15) = 40.
     cor:pom-fiber-modq-pisano-invariant -/
 theorem fib_mod15_period_40 :
-    Nat.fib 40 % 15 = 0 ∧ Nat.fib 41 % 15 = 1 := by native_decide
+    Nat.fib 40 % 15 = 0 ∧ Nat.fib 41 % 15 = 1 := by decide
 
 /-- Paper Pisano period witnesses for composite moduli 12, 13, 15.
     cor:pom-fiber-modq-pisano-invariant -/
@@ -1736,17 +1736,17 @@ theorem paper_pisano_period_12_13_15_package :
 /-- Pisano period π(16) = 24.
     cor:pom-fiber-modq-pisano-invariant -/
 theorem fib_mod16_period_24 :
-    Nat.fib 24 % 16 = 0 ∧ Nat.fib 25 % 16 = 1 := by native_decide
+    Nat.fib 24 % 16 = 0 ∧ Nat.fib 25 % 16 = 1 := by decide
 
 /-- Pisano period π(18) = 24.
     cor:pom-fiber-modq-pisano-invariant -/
 theorem fib_mod18_period_24 :
-    Nat.fib 24 % 18 = 0 ∧ Nat.fib 25 % 18 = 1 := by native_decide
+    Nat.fib 24 % 18 = 0 ∧ Nat.fib 25 % 18 = 1 := by decide
 
 /-- Pisano period π(24) = 24 (self-period).
     cor:pom-fiber-modq-pisano-invariant -/
 theorem fib_mod24_period_24 :
-    Nat.fib 24 % 24 = 0 ∧ Nat.fib 25 % 24 = 1 := by native_decide
+    Nat.fib 24 % 24 = 0 ∧ Nat.fib 25 % 24 = 1 := by decide
 
 /-- Common Pisano period 24 witness package for moduli 16, 18, 24.
     cor:pom-fiber-modq-pisano-invariant -/
@@ -1757,6 +1757,6 @@ theorem paper_pisano_period_24_common_16_18_24_package :
     Nat.fib 24 = 46368 ∧
     Nat.fib 25 = 75025 :=
   ⟨fib_mod16_period_24, fib_mod18_period_24, fib_mod24_period_24,
-   by native_decide, by native_decide⟩
+   by decide, by decide⟩
 
 end Omega

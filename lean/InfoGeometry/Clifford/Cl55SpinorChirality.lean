@@ -234,7 +234,7 @@ def split55RecursiveOrderPerm : Equiv.Perm (Fin 10) :=
 
 theorem split55RecursiveOrderPerm_sign :
     Equiv.Perm.sign split55RecursiveOrderPerm = 1 := by
-  native_decide
+  decide
 
 theorem gammaBasis55_sq (i : Fin 10) :
     gammaBasis55 i * gammaBasis55 i =
@@ -927,7 +927,7 @@ theorem orderedGammaVolume55_eq_chiralityMatrix :
     rfl
   have hindices : List.ofFn (fun i : Fin 10 => i) =
       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] := by
-    native_decide
+    decide
   have hlist : List.ofFn gammaBasis55 =
       [gammaBasis55 0, gammaBasis55 1, gammaBasis55 2, gammaBasis55 3,
         gammaBasis55 4, gammaBasis55 5, gammaBasis55 6, gammaBasis55 7,

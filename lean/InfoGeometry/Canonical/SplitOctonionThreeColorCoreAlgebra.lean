@@ -47,7 +47,7 @@ theorem colorCore_one_mul (c : SplitOctonionColour) (x : colorCore c) :
     induction hy using Submodule.span_induction with
     | mem p hp =>
         rcases hp with ⟨p, rfl⟩
-        fin_cases p <;> cases c <;> native_decide
+        fin_cases p <;> cases c <;> decide
     | zero => rw [splitOctonionMulQ_zero_right]
     | add x y hx hy ihx ihy =>
         rw [splitOctonionMulQ_add_right, ihx, ihy]
@@ -64,7 +64,7 @@ theorem colorCore_mul_one (c : SplitOctonionColour) (x : colorCore c) :
     induction hy using Submodule.span_induction with
     | mem p hp =>
         rcases hp with ⟨p, rfl⟩
-        fin_cases p <;> cases c <;> native_decide
+        fin_cases p <;> cases c <;> decide
     | zero => rw [splitOctonionMulQ_zero_left]
     | add x y hx hy ihx ihy =>
         rw [splitOctonionMulQ_add_left, ihx, ihy]

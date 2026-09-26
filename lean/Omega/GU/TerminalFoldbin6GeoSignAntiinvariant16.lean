@@ -33,7 +33,7 @@ theorem paper_terminal_foldbin6_geo_sign_antiinvariant_16 :
       window6GeoPermutationRepresentationDim = 64 ∧
       window6GeoSignAntiinvariantDim = 16 ∧
       Fintype.card Window6GeoSignAntiinvariantBasis = 16 := by
-  native_decide
+  decide
 
 /-- Paper: `cor:terminal-foldbin6-geo-cycle-quotient-48`.
 The geometric stabilizer has cycle type `1^32 2^16`, so the quotient has `48` orbits. -/

@@ -135,26 +135,26 @@ def zero : SplitOctF2 := ⟨false, false, false, false, false, false, false, fal
 @[simp] theorem add_self (X : SplitOctF2) : add X X = zero := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   revert a b x0 x1 x2 y0 y1 y2
-  native_decide
+  decide
 @[simp] theorem zero_add (X : SplitOctF2) : add zero X = X := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   revert a b x0 x1 x2 y0 y1 y2
-  native_decide
+  decide
 @[simp] theorem add_zero (X : SplitOctF2) : add X zero = X := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   revert a b x0 x1 x2 y0 y1 y2
-  native_decide
+  decide
 theorem add_comm (X Y : SplitOctF2) : add X Y = add Y X := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-  native_decide
+  decide
 theorem add_assoc (X Y Z : SplitOctF2) : add (add X Y) Z = add X (add Y Z) := by
   rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
   rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
   rcases Z with ⟨a'',b'',x0'',x1'',x2'',y0'',y1'',y2''⟩
   revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2' a'' b'' x0'' x1'' x2'' y0'' y1'' y2''
-  native_decide
+  decide
 
 /-- Zorn unit `e₊ + e₋`. -/
 def one : SplitOctF2 := ⟨true, true, false, false, false, false, false, false⟩

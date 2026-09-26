@@ -8,7 +8,7 @@ private theorem window6_foldbin6_same_fiber_gap_spectrum_fin :
     ∀ a b : Fin 64,
       cBinFold 6 a.1 = cBinFold 6 b.1 →
         Nat.dist a.1 b.1 ∈ ({0, 13, 21, 34, 55} : Finset Nat) := by
-  native_decide
+  decide
 
 /-- Paper-facing same-fiber distance spectrum for `cBinFold` at window `6`.
     lem:window6-foldbin6-fiber-difference-spectrum -/

@@ -15,7 +15,7 @@ namespace Omega
 private theorem fib_prev_ge_two (m : Nat) (hm : 2 ≤ m) : 2 ≤ Nat.fib (m + 1) := by
   calc
     Nat.fib (m + 1) ≥ Nat.fib 3 := Nat.fib_mono (by omega)
-    _ = 2 := by native_decide
+    _ = 2 := by decide
 
 private theorem fib_prev_minus_two_lt_current (m : Nat) (hm : 2 ≤ m) :
     Nat.fib (m + 1) - 2 < Nat.fib (m + 2) := by

@@ -110,7 +110,7 @@ theorem paper_xi_fold_zero_dyadic_tower_synchronous_information_gap_improvement 
   intro hm
   subst hm
   constructor
-  · native_decide
-  · native_decide
+  · decide
+  · decide
 
 end Omega.Zeta

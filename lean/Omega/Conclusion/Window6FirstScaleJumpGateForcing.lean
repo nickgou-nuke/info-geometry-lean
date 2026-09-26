@@ -28,6 +28,6 @@ theorem paper_conclusion_window6_first_scale_jump_gate_forcing :
   simp [conclusion_window6_first_scale_jump_gate_forcing_faithful_binary_readout,
     conclusion_window6_first_scale_jump_gate_forcing_Bmin,
     conclusion_window6_first_scale_jump_gate_forcing_boundary_fiber_size]
-  native_decide
+  decide
 
 end Omega.Conclusion

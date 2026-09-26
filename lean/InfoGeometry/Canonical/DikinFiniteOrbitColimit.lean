@@ -246,6 +246,24 @@ theorem bkmDikinEllipsoid_preimage
   simp only [InBkmDikinEllipsoid]
   rw [hL A]
 
+/-- A BKM-isometric affine change of coordinates preserves centered Dikin
+ellipsoid membership.  The translation cancels in the displacement, and the
+linear part preserves its BKM quadratic form. -/
+theorem bkmDikinEllipsoidAt_affineMap_iff
+    (D : FaithfulDensityOperator n) (h : Continuous D.rpow)
+    (L : SelfAdjointOperator n →ₗ[ℝ] SelfAdjointOperator n)
+    (hL : ∀ A : SelfAdjointOperator n,
+      bkmDikinQuadratic D h (L A) = bkmDikinQuadratic D h A)
+    (b C A : SelfAdjointOperator n) (r : ℝ) :
+    InBkmDikinEllipsoidAt D h (L C + b) (L A + b) r ↔
+      InBkmDikinEllipsoidAt D h C A r := by
+  unfold InBkmDikinEllipsoidAt
+  have hdisplacement : (L C + b) - (L A + b) = L (C - A) := by
+    calc
+      (L C + b) - (L A + b) = L C - L A := by abel
+      _ = L (C - A) := (L.map_sub C A).symm
+  rw [hdisplacement, hL]
+
 /-- Combining metric preservation with radius enlargement transports a BKM
 Dikin constraint along a finite-stage transition. -/
 theorem bkmDikinEllipsoid_map_mono_radius

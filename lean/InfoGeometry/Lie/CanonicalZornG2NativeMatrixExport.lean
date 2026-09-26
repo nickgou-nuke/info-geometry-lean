@@ -168,7 +168,7 @@ theorem rootDerivationRationalTable_matrix (k : Fin 14) :
     rootDerivationRationalTable k = rationalCircularOperatorMatrix k := by
   fin_cases k <;>
     rw [rationalCircularOperatorMatrix, rationalCircularFrameMatrix_inv] <;>
-    native_decide
+    decide
 
 theorem rootDerivationRationalTable_entry (k : Fin 14) (i j : Fin 8) :
     rootDerivationRationalTable k i j = rationalCircularOperatorMatrix k i j := by

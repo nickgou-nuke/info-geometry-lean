@@ -43,12 +43,12 @@ def imaginaryPoints : Finset (Fin 7 → Bool) :=
     |>.erase (fun _ => false)
 
 theorem imaginaryPoints_card : imaginaryPoints.card = 63 := by
-  native_decide
+  decide
 
 def fanoIncidenceFlags : Finset (Fin 7 × Fin 7) :=
   Finset.univ.filter (fun p : Fin 7 × Fin 7 => fanoIncidence p.1 p.2)
 
 theorem fanoIncidenceFlags_card : fanoIncidenceFlags.card = 21 := by
-  native_decide
+  decide
 
 end InfoGeometry.Algebra.Zorn.G2FlagFiniteGeometry

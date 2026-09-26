@@ -339,7 +339,7 @@ theorem two_signedHalfCoordinate_mem_integralSubgroup :
       integralSubgroup := by
   apply AddSubgroup.mem_map.mpr
   let y : Lattice :=
-    ⟨![1, 1, 1, -1], by native_decide⟩
+    ⟨![1, 1, 1, -1], by decide⟩
   refine ⟨y, Set.mem_univ _, ?_⟩
   apply Subtype.ext
   funext i
@@ -644,8 +644,8 @@ theorem discriminantCarrier_nontrivial :
 theorem dual_two_coordinate_integral (x : DualLattice) (i : Fin 4) :
     ∃ n : ℤ, 2 * x.1 i = n := by
   fin_cases i
-  · let ym : Lattice := ⟨![1, -1, 0, 0], by native_decide⟩
-    let yp : Lattice := ⟨![1, 1, 0, 0], by native_decide⟩
+  · let ym : Lattice := ⟨![1, -1, 0, 0], by decide⟩
+    let yp : Lattice := ⟨![1, 1, 0, 0], by decide⟩
     obtain ⟨m, hm⟩ := x.2 ym
     obtain ⟨p, hp⟩ := x.2 yp
     refine ⟨m + p, ?_⟩
@@ -656,8 +656,8 @@ theorem dual_two_coordinate_integral (x : DualLattice) (i : Fin 4) :
       simpa [rationalDot, integerEmbedding, yp, Fin.sum_univ_four] using hp
     change 2 * x.1 0 = (m + p : ℤ)
     exact_mod_cast (by linarith : 2 * x.1 0 = (m : ℚ) + p)
-  · let ym : Lattice := ⟨![1, -1, 0, 0], by native_decide⟩
-    let yp : Lattice := ⟨![1, 1, 0, 0], by native_decide⟩
+  · let ym : Lattice := ⟨![1, -1, 0, 0], by decide⟩
+    let yp : Lattice := ⟨![1, 1, 0, 0], by decide⟩
     obtain ⟨m, hm⟩ := x.2 ym
     obtain ⟨p, hp⟩ := x.2 yp
     refine ⟨p - m, ?_⟩
@@ -668,8 +668,8 @@ theorem dual_two_coordinate_integral (x : DualLattice) (i : Fin 4) :
       simpa [rationalDot, integerEmbedding, yp, Fin.sum_univ_four] using hp
     change 2 * x.1 1 = (p - m : ℤ)
     exact_mod_cast (by linarith : 2 * x.1 1 = (p : ℚ) - m)
-  · let ym : Lattice := ⟨![0, 0, 1, -1], by native_decide⟩
-    let yp : Lattice := ⟨![0, 0, 1, 1], by native_decide⟩
+  · let ym : Lattice := ⟨![0, 0, 1, -1], by decide⟩
+    let yp : Lattice := ⟨![0, 0, 1, 1], by decide⟩
     obtain ⟨m, hm⟩ := x.2 ym
     obtain ⟨p, hp⟩ := x.2 yp
     refine ⟨m + p, ?_⟩
@@ -680,8 +680,8 @@ theorem dual_two_coordinate_integral (x : DualLattice) (i : Fin 4) :
     have hp' : x.1 2 + x.1 3 = (p : ℚ) := by
       simpa [rationalDot, integerEmbedding, yp, Fin.sum_univ_four] using hp
     exact_mod_cast (by linarith : 2 * x.1 2 = (m : ℚ) + p)
-  · let ym : Lattice := ⟨![0, 0, 1, -1], by native_decide⟩
-    let yp : Lattice := ⟨![0, 0, 1, 1], by native_decide⟩
+  · let ym : Lattice := ⟨![0, 0, 1, -1], by decide⟩
+    let yp : Lattice := ⟨![0, 0, 1, 1], by decide⟩
     obtain ⟨m, hm⟩ := x.2 ym
     obtain ⟨p, hp⟩ := x.2 yp
     refine ⟨p - m, ?_⟩
@@ -704,10 +704,10 @@ theorem dual_simpleRoot_pairings_integral (x : DualLattice) :
     (∃ b : ℤ, x.1 1 - x.1 2 = b) ∧
     (∃ c : ℤ, x.1 2 - x.1 3 = c) ∧
     (∃ d : ℤ, x.1 2 + x.1 3 = d) := by
-  let r01 : Lattice := ⟨![1, -1, 0, 0], by native_decide⟩
-  let r12 : Lattice := ⟨![0, 1, -1, 0], by native_decide⟩
-  let r23 : Lattice := ⟨![0, 0, 1, -1], by native_decide⟩
-  let r2p3 : Lattice := ⟨![0, 0, 1, 1], by native_decide⟩
+  let r01 : Lattice := ⟨![1, -1, 0, 0], by decide⟩
+  let r12 : Lattice := ⟨![0, 1, -1, 0], by decide⟩
+  let r23 : Lattice := ⟨![0, 0, 1, -1], by decide⟩
+  let r2p3 : Lattice := ⟨![0, 0, 1, 1], by decide⟩
   obtain ⟨a, ha⟩ := x.2 r01
   obtain ⟨b, hb⟩ := x.2 r12
   obtain ⟨c, hc⟩ := x.2 r23

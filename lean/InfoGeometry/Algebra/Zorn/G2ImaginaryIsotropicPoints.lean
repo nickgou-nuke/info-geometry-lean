@@ -29,7 +29,7 @@ finite algebra multiplication.  This is the key fact needed before an
 automorphism action can be restricted to the seven-dimensional carrier. -/
 
 private theorem add_self (X : SplitOctF2) : add X X = zero := by
-  native_decide +revert
+  decide +revert
 
 private theorem map_zero (f : SplitOctF2Aut) : f.1 zero = zero := by
   calc
@@ -43,7 +43,7 @@ private def SquareScalar (X : SplitOctF2) : Prop :=
 theorem traceZero_iff_squareScalar (X : SplitOctF2) :
     TraceZero X ↔ SquareScalar X := by
   dsimp [TraceZero, SquareScalar]
-  native_decide +revert
+  decide +revert
 
 theorem automorphism_map_traceZero (f : SplitOctF2Aut) (X : SplitOctF2)
     (hX : TraceZero X) : TraceZero (f.1 X) := by
@@ -57,7 +57,7 @@ theorem automorphism_map_traceZero (f : SplitOctF2Aut) (X : SplitOctF2)
 theorem isotropic_iff_square_zero (X : SplitOctF2) (hX : TraceZero X) :
     Isotropic X ↔ mul X X = zero := by
   dsimp [Isotropic, zornNorm, TraceZero] at hX ⊢
-  native_decide +revert
+  decide +revert
 
 theorem automorphism_map_isotropic (f : SplitOctF2Aut) (X : SplitOctF2)
     (hX : TraceZero X) (hiso : Isotropic X) :
@@ -148,10 +148,10 @@ def isotropicPoints7 : Finset Imaginary :=
   Finset.univ.filter (fun X => Isotropic X.1 ∧ X ≠ zeroImaginary)
 
 theorem isotropicPoint_card : Fintype.card IsotropicPoint = 63 := by
-  native_decide
+  decide
 
 theorem isotropicPoints7_card : isotropicPoints7.card = 63 := by
-  native_decide
+  decide
 
 theorem mem_isotropicPoints7 (X : Imaginary) :
     X ∈ isotropicPoints7 ↔ Isotropic X.1 ∧ X ≠ zeroImaginary := by

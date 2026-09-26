@@ -13,9 +13,9 @@ theorem xi_time_part72a_zero_coset_global_inclusion_odd_divisibility_requested_s
   intro hiff
   have hIncl : Omega.Folding.sgMFrequencySet 0 1 ⊆ Omega.Folding.sgMFrequencySet 0 2 := by
     have h1 : Omega.Folding.sgMFrequencySet 0 1 = ({0} : Finset ℕ) := by
-      native_decide
+      decide
     have h2 : Omega.Folding.sgMFrequencySet 0 2 = ({0} : Finset ℕ) := by
-      native_decide
+      decide
     intro x hx
     rw [h1] at hx
     rw [h2]

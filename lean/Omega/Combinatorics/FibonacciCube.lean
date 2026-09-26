@@ -362,7 +362,7 @@ theorem maxFiberMultiplicity_le_two_mul_fib_half_verified (m : Nat) (hm : m ≤ 
     X.maxFiberMultiplicity_zero, X.maxFiberMultiplicity_one, X.maxFiberMultiplicity_two,
     X.maxFiberMultiplicity_three, X.maxFiberMultiplicity_four, X.maxFiberMultiplicity_five,
     X.maxFiberMultiplicity_six, X.maxFiberMultiplicity_seven, X.maxFiberMultiplicity_eight,
-    X.maxFiberMultiplicity_nine, X.maxFiberMultiplicity_ten] <;> native_decide
+    X.maxFiberMultiplicity_nine, X.maxFiberMultiplicity_ten] <;> decide
 
 /-- Paper: bounded fiber decomposition certificate for small dimensions.
     prop:pom-fiber-decompose, thm:pom-max-fiber -/
@@ -766,7 +766,7 @@ private theorem cCoordOneCount_eq_coordOneCount (n : Nat) (i : Fin n) :
 theorem coordOneCount_eq_fib_prod_verified (n : Nat) (hn : n ≤ 6) (i : Fin n) :
     coordOneCount n i = Nat.fib (i.val + 1) * Nat.fib (n - i.val) := by
   rw [← cCoordOneCount_eq_coordOneCount]
-  interval_cases n <;> fin_cases i <;> native_decide
+  interval_cases n <;> fin_cases i <;> decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 218: FibCube f-vector k=2 base values + recurrence
@@ -793,10 +793,10 @@ theorem fibcubeFVector_two_recurrence (n : Nat) :
   simp [fibcubeFVector]
 
 /-- f(5, 2) = 9. thm:pom-fibcube-fvector-closed -/
-@[simp] theorem fibcubeFVector_two_five : fibcubeFVector 5 2 = 9 := by native_decide
+@[simp] theorem fibcubeFVector_two_five : fibcubeFVector 5 2 = 9 := by decide
 
 /-- f(6, 2) = 22. thm:pom-fibcube-fvector-closed -/
-@[simp] theorem fibcubeFVector_two_six : fibcubeFVector 6 2 = 22 := by native_decide
+@[simp] theorem fibcubeFVector_two_six : fibcubeFVector 6 2 = 22 := by decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 219: Fib product split + edge count convolution
@@ -884,7 +884,7 @@ private theorem cTotalPopcount_eq (m : Nat) : cTotalPopcount m = totalPopcount m
 
 /-- totalPopcount 1 = 1. thm:pom-totalPopcount-one -/
 theorem totalPopcount_one : totalPopcount 1 = 1 := by
-  rw [← cTotalPopcount_eq]; native_decide
+  rw [← cTotalPopcount_eq]; decide
 
 /-- Embed X m into X (m+2) by appending "01" (false then true). -/
 private def embedFalseTrue (w : X m) : X (m + 2) :=
@@ -1246,9 +1246,9 @@ theorem fibcubeFVector_three_recurrence (n : Nat) :
 @[simp] theorem fibcubeFVector_three_four : fibcubeFVector 4 3 = 0 := by
   simp [fibcubeFVector]
 
-@[simp] theorem fibcubeFVector_three_five : fibcubeFVector 5 3 = 1 := by native_decide
+@[simp] theorem fibcubeFVector_three_five : fibcubeFVector 5 3 = 1 := by decide
 
-@[simp] theorem fibcubeFVector_three_six : fibcubeFVector 6 3 = 4 := by native_decide
+@[simp] theorem fibcubeFVector_three_six : fibcubeFVector 6 3 = 4 := by decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 238: FibCube edge bound
@@ -1890,8 +1890,8 @@ theorem fibcubeEdgeCount_ge_vertex (n : Nat) (hn : 3 ≤ n) :
   -- For n ≥ 3: 2n-3 ≥ 3, and F(n+1) ≥ F(n) ≥ 1
   -- Case-split: n=3, n=4, n≥5
   match n, hn with
-  | 3, _ => native_decide
-  | 4, _ => native_decide
+  | 3, _ => decide
+  | 4, _ => decide
   | n + 5, _ =>
     -- For n ≥ 5: (n-5)*F(n+1) ≥ 0 and (2n-3)*F(n) ≥ 0, so sum ≥ 5*F(n+2)
     have hfn_pos : 0 < Nat.fib (n + 5) := Nat.fib_pos.mpr (by omega)
@@ -1948,12 +1948,12 @@ theorem totalPopcount_small_values :
     totalPopcount 2 = 2 ∧ totalPopcount 3 = 5 ∧
     totalPopcount 4 = 10 ∧ totalPopcount 5 = 20 := by
   refine ⟨totalPopcount_zero, totalPopcount_one, ?_, ?_, ?_, ?_⟩
-  · rw [totalPopcount_succ_succ 0, totalPopcount_one, totalPopcount_zero]; native_decide
+  · rw [totalPopcount_succ_succ 0, totalPopcount_one, totalPopcount_zero]; decide
   · rw [totalPopcount_succ_succ 1, totalPopcount_succ_succ 0,
-      totalPopcount_one, totalPopcount_zero]; native_decide
+      totalPopcount_one, totalPopcount_zero]; decide
   · rw [totalPopcount_succ_succ 2, totalPopcount_succ_succ 1, totalPopcount_succ_succ 0,
-      totalPopcount_one, totalPopcount_zero]; native_decide
+      totalPopcount_one, totalPopcount_zero]; decide
   · rw [totalPopcount_succ_succ 3, totalPopcount_succ_succ 2, totalPopcount_succ_succ 1,
-      totalPopcount_succ_succ 0, totalPopcount_one, totalPopcount_zero]; native_decide
+      totalPopcount_succ_succ 0, totalPopcount_one, totalPopcount_zero]; decide
 
 end Omega

@@ -20,7 +20,7 @@ theorem paper_fold_epsilon_machine_fibonacci_mobius_seeds :
     (2 * 5 = 10 ∧ 5 * 2 = 10) := by
   refine ⟨⟨by decide, by decide, by decide, by decide, by decide⟩,
          ⟨by decide, by decide⟩, ⟨by decide, by decide⟩,
-         ⟨by decide, by decide⟩, ⟨by native_decide, by native_decide⟩,
+         ⟨by decide, by decide⟩, ⟨by decide, by decide⟩,
          ⟨by omega, by omega⟩⟩
 
 /-- Closed forms for the Möbius recursion governing the uncertain epsilon-machine states.
@@ -100,7 +100,7 @@ theorem paper_fold_gauge_anomaly_zero_run_fibonacci_seeds :
     (Nat.fib 9 = 34 ∧ Nat.fib 10 = 55) := by
   refine ⟨⟨by decide, by decide⟩, ⟨by decide, by decide⟩,
          ⟨by decide, by decide⟩, ⟨by omega, by omega⟩,
-         by omega, ⟨by native_decide, by native_decide⟩⟩
+         by omega, ⟨by decide, by decide⟩⟩
 
 /-- Stationary distribution Fibonacci tail seeds.
     thm:fold-gauge-anomaly-epsilon-machine-stationary-fibonacci-tail -/
@@ -113,7 +113,7 @@ theorem paper_fold_epsilon_machine_stationary_fibonacci_tail_seeds :
     (Nat.fib 7 = 13 ∧ Nat.fib 8 = 21) := by
   refine ⟨⟨by decide, by decide⟩, ⟨by decide, by decide⟩,
          ⟨by decide, by decide⟩, ⟨by omega, by omega⟩,
-         by omega, ⟨by native_decide, by native_decide⟩⟩
+         by omega, ⟨by decide, by decide⟩⟩
 
 /-- Synchronizing word and countable epsilon-machine seeds.
     thm:fold-gauge-anomaly-epsilon-machine-synchronizing-word -/

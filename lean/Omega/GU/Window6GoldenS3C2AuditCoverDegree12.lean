@@ -39,5 +39,5 @@ theorem paper_window6_golden_s3c2_audit_cover_degree12 :
       using paper_window6_edge_flux_coarse_markov_galois.2.1
   · norm_num [window6EdgeFluxCoarseMarkovSquarefreeDiscriminant, window6GoldenFieldRadicand]
   · simpa [window6GoldenAuditCoverDegree, Window6GoldenAuditGaloisGroup] using
-      (show Fintype.card (Equiv.Perm (Fin 3) × Multiplicative (ZMod 2)) = 12 by native_decide)
+      (show Fintype.card (Equiv.Perm (Fin 3) × Multiplicative (ZMod 2)) = 12 by decide)
   · exact paper_window6_golden_s3c2_c6_phase_source

@@ -75,6 +75,6 @@ theorem paper_xi_degree11_cyclic_cubic_normalization_genus3 :
     xi_degree11_cyclic_cubic_normalization_genus3_total_ramification
     xi_degree11_cyclic_cubic_normalization_genus3_genus
     xi_degree11_cyclic_cubic_normalization_genus3_deck_transform
-  native_decide
+  decide
 
 end Omega.Zeta

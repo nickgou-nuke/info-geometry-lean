@@ -165,16 +165,16 @@ def finiteRootPermutationCharacter (p : WeylG2) : ℕ :=
 
 theorem cAction_bijective :
     Function.Bijective cAction := by
-  native_decide
+  decide
 
 theorem sAction_bijective :
     Function.Bijective sAction := by
-  native_decide
+  decide
 
 theorem weylRootAction_bijective (p : WeylG2) :
     Function.Bijective (weylRootAction p) := by
   rcases p with ⟨k, b⟩
-  fin_cases k <;> cases b <;> native_decide
+  fin_cases k <;> cases b <;> decide
 
 noncomputable def weylRootActionEquiv (p : WeylG2) :
     G2Root ≃ G2Root :=
@@ -281,7 +281,7 @@ def finiteRootCyclotomicLabel (r : G2Root) : Root :=
 
 theorem finiteRootCyclotomicLabel_bijective :
     Function.Bijective finiteRootCyclotomicLabel := by
-  native_decide
+  decide
 
 noncomputable def finiteRootCyclotomicEquiv : G2Root ≃ Root :=
   Equiv.ofBijective finiteRootCyclotomicLabel
@@ -339,7 +339,7 @@ def finiteToConcretePhaseCalibration : Root → Root
 
 theorem finiteToConcretePhaseCalibration_bijective :
     Function.Bijective finiteToConcretePhaseCalibration := by
-  native_decide
+  decide
 
 noncomputable def finiteToConcretePhaseEquiv : Root ≃ Root :=
   Equiv.ofBijective finiteToConcretePhaseCalibration
@@ -360,11 +360,11 @@ theorem finiteToConcretePhaseEquiv_reflection_conjugacy (r : Root) :
 
 theorem finiteReflectionPhase_bijective :
     Function.Bijective finiteReflectionPhase := by
-  native_decide
+  decide
 
 theorem finiteCoxeterPhase_bijective :
     Function.Bijective finiteCoxeterPhase := by
-  native_decide
+  decide
 
 theorem finiteRootCyclotomicLabel_cAction (r : G2Root) :
     finiteRootCyclotomicLabel (cAction r) =
@@ -405,12 +405,12 @@ theorem finitePhaseWeylAction_mul_semidirect (p q : WeylG2) :
   rcases p with ⟨kp, bp⟩
   rcases q with ⟨kq, bq⟩
   fin_cases kp <;> fin_cases kq <;> cases bp <;> cases bq <;>
-    native_decide
+    decide
 
 theorem finitePhaseWeylAction_bijective (p : WeylG2) :
     Function.Bijective (finitePhaseWeylAction p) := by
   rcases p with ⟨k, b⟩
-  fin_cases k <;> cases b <;> native_decide
+  fin_cases k <;> cases b <;> decide
 
 noncomputable def finitePhaseWeylActionEquiv (p : WeylG2) :
     Root ≃ Root :=

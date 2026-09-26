@@ -11,17 +11,17 @@ open AutoSeed
 
 /-- rank-1 idempotents for n=3 and n=4 -/
 theorem pointCount_n3 : (pointObjects 3).length = 3 := by
-  native_decide
+  decide
 
 theorem pointCount_n4 : (pointObjects 4).length = 4 := by
-  native_decide
+  decide
 
 /-- idempotents for n=3 and n=4 -/
 theorem setObjCount_n3 : (setObjects 3).length = 10 := by
-  native_decide
+  decide
 
 theorem setObjCount_n4 : (setObjects 4).length = 41 := by
-  native_decide
+  decide
 
 /-- canonical signature curve from seed generators -/
 def seedClosure_n4 : Option (Closure.Dict 4) := do
@@ -37,7 +37,7 @@ def signatureCurve_seed_n4 : Option (List (Prod Nat Nat)) :=
 /-- every length has a prefix count entry -/
 theorem signatureCurve_seed_n4_has8 :
     (signatureCurve_seed_n4).map List.length = some 8 := by
-  native_decide
+  decide
 
 end SetStructureChecksLite
 end Omega.HyperKernel

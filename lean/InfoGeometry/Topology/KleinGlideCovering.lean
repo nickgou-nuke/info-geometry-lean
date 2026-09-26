@@ -19,7 +19,7 @@ instance : AddAction Deck2 BrillouinTorus where
   zero_vadd k := by change deckVAdd 0 k = k; simp [deckVAdd]
   add_vadd g h k := by
     change deckVAdd (g + h) k = deckVAdd g (deckVAdd h k)
-    have h11 : (1 + 1 : Deck2) = 0 := by native_decide
+    have h11 : (1 + 1 : Deck2) = 0 := by decide
     fin_cases g <;> fin_cases h <;>
       simp [deckVAdd, h11, torusGlide_involutive]
     exact (torusGlide_involutive k).symm

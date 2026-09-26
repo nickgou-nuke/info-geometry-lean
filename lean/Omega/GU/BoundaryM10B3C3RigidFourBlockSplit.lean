@@ -33,7 +33,7 @@ theorem boundary_m10_b3c3_rigid_four_block_split_partition_certificate :
           boundary_m10_b3c3_rigid_four_block_split_a2_plus ∪
           boundary_m10_b3c3_rigid_four_block_split_a2_minus =
         b3VisibleSupport.erase zeroWeight := by
-  native_decide
+  decide
 
 /-- Paper-facing wrapper for the rigid `6 + 6 + 6 + 3` split carried by the `m = 10` boundary
 layer through the shift-4 uplift from the window-6 `B₃/C₃` root--Cartan dictionary. -/

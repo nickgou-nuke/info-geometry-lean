@@ -69,7 +69,7 @@ def conclusion_window6_minimal_fiber_spin_hypercube_statement : Prop :=
 theorem paper_conclusion_window6_minimal_fiber_spin_hypercube :
     conclusion_window6_minimal_fiber_spin_hypercube_statement := by
   refine ⟨?_, ⟨conclusion_window6_minimal_fiber_spin_hypercube_vertex_equiv⟩, ?_, ?_, ?_⟩
-  · native_decide
+  · decide
   · intro v w
     rfl
   · intro i

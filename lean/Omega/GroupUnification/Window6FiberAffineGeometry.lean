@@ -45,7 +45,7 @@ private theorem window6_affine_geometry_counts :
       window6NonAffineThreePointFibers.card = 4 ∧
       window6NonAffineFourPointFibers.card = 6 ∧
       window6NonAffineFibers.card = 10 := by
-  native_decide
+  decide
 
 /-- The window-6 BinFold fibers split into eight affine lines, three affine planes, and ten
 non-affine fibers; equivalently the existing `cAffineFlatCount_six` computation is the `8 + 3`

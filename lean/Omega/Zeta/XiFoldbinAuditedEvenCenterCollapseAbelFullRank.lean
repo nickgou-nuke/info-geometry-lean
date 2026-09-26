@@ -60,7 +60,7 @@ private lemma xi_foldbin_audited_even_center_collapse_abel_full_rank_fib_split
     xi_foldbin_audited_even_center_collapse_abel_full_rank_abelianization_rank m =
       xi_foldbin_audited_even_center_collapse_abel_full_rank_output_rank m := by
   rcases hm with rfl | rfl | rfl | rfl <;>
-    native_decide
+    decide
 
 /-- Paper label: `thm:xi-foldbin-audited-even-center-collapse-abel-full-rank`. -/
 theorem paper_xi_foldbin_audited_even_center_collapse_abel_full_rank :
@@ -72,11 +72,11 @@ theorem paper_xi_foldbin_audited_even_center_collapse_abel_full_rank :
   · intro m hm
     exact xi_foldbin_audited_even_center_collapse_abel_full_rank_fib_split m hm
   · unfold xi_foldbin_audited_even_center_collapse_abel_full_rank_center_m6_rank
-    native_decide
+    decide
   · unfold xi_foldbin_audited_even_center_collapse_abel_full_rank_centers_m8_m10_m12_trivial
-    native_decide
+    decide
   · unfold xi_foldbin_audited_even_center_collapse_abel_full_rank_boundary_quotient_rank
       xi_foldbin_audited_even_center_collapse_abel_full_rank_boundary_quotient_rank_value
-    native_decide
+    decide
 
 end Omega.Zeta

@@ -29,7 +29,7 @@ theorem contact_grade_count_agrees_with_native_o55 :
 
 theorem witt_index_card_agrees_with_native_o55 :
     Fintype.card Index = 10 := by
-  native_decide
+  decide
 
 theorem existing_pin_crosscap_null_pair_packet :
     realSplitPinNullAction

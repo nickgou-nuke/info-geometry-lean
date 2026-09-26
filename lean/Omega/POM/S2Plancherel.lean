@@ -48,7 +48,7 @@ def s2FactorizationFormula : Prop :=
 private lemma sum_s2_group {R : Type*} [AddCommMonoid R] (f : S2FibGroup → R) :
     (∑ x, f x) = f 0 + f 1 := by
   have huniv : (Finset.univ : Finset S2FibGroup) = {0, 1} := by
-    native_decide
+    decide
   rw [huniv]
   simp
 

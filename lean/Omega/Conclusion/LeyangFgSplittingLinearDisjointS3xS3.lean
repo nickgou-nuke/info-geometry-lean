@@ -36,6 +36,6 @@ theorem paper_conclusion_leyang_fg_splitting_linear_disjoint_s3xs3
   change
     Nat.factorial 3 = 6 ∧ Nat.factorial 3 = 6 ∧ (37 : ℤ) ≠ -111 ∧
       Nat.factorial 3 * Nat.factorial 3 = 36
-  native_decide
+  decide
 
 end Omega.Conclusion

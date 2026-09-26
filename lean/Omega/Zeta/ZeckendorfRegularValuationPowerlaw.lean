@@ -35,14 +35,14 @@ theorem paper_zeta_syntax_zeckendorf_regular_valuation_powerlaw
     · calc
         zeckendorfLengthSliceCount 6 = Nat.fib 8 := by
           simpa [zeckendorfLengthSliceCount] using (Omega.X.card_eq_fib 6)
-        _ = 21 := by native_decide
+        _ = 21 := by decide
     · calc
         zeckendorfLengthSliceCount 8 = Nat.fib 10 := by
           simpa [zeckendorfLengthSliceCount] using (Omega.X.card_eq_fib 8)
-        _ = 55 := by native_decide
+        _ = 55 := by decide
     · calc
         zeckendorfLengthSliceCount 10 = Nat.fib 12 := by
           simpa [zeckendorfLengthSliceCount] using (Omega.X.card_eq_fib 10)
-        _ = 144 := by native_decide
+        _ = 144 := by decide
 
 end Omega.Zeta

@@ -7,7 +7,7 @@ lemma truncatedBell_two_eq_two (n : ℕ) (hn : 2 ≤ n) : truncatedBell 2 n = 2 
   clear hn
   induction m with
   | zero =>
-      native_decide
+      decide
   | succ m ih =>
       rw [truncatedBell, Finset.sum_range_succ]
       have hz : Nat.stirlingSecond 2 (m + 3) = 0 := Nat.stirlingSecond_eq_zero_of_lt (by omega)

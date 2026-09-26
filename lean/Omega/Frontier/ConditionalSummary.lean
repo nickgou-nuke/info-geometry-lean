@@ -619,7 +619,7 @@ theorem entropy_gap_strict (m : Nat) (hm : 2 ≤ m) : Nat.fib (m + 2) < 2 ^ m :=
       | zero => omega
       | succ k =>
         cases k with
-        | zero => native_decide
+        | zero => decide
         | succ k =>
           have hR := Omega.fib_succ_succ' (k + 3)
           have ihk : Nat.fib (k + 4) < 2 ^ (k + 2) := ih (by omega)

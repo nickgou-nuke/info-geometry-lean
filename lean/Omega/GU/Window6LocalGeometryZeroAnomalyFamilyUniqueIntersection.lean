@@ -15,7 +15,7 @@ theorem paper_window6_local_geometry_zero_anomaly_family_unique_intersection (Nf
     ⟨_, _, _, hFib9, hFib4⟩
   have hNf : Nf = 3 := by
     rw [hFib9] at hTop
-    have hFib10 : Nat.fib 10 = 55 := by native_decide
+    have hFib10 : Nat.fib 10 = 55 := by decide
     rw [hFib10] at hTop
     omega
   have hδ : δ = 34 := by

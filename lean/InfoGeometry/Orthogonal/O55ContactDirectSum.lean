@@ -62,7 +62,7 @@ theorem entryDegree_mem (p q : Index) :
   rcases p with ⟨sp, i⟩
   rcases q with ⟨sq, j⟩
   fin_cases sp <;> fin_cases sq <;> fin_cases i <;> fin_cases j <;>
-    native_decide
+    decide
 
 /-- Diagonal Cartan commutator evaluated entrywise. -/
 theorem cartan_commutator_entry

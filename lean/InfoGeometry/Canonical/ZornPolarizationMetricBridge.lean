@@ -159,33 +159,42 @@ theorem hilbertized_zero_iff (X : ZornCoord) :
     simp only [zornA, zornB, zornX, zornY, dot3] at h
     have hs : a*a + b*b + (u 0)*(u 0) + (u 1)*(u 1) + (u 2)*(u 2) +
         (v 0)*(v 0) + (v 1)*(v 1) + (v 2)*(v 2) = 0 := by linarith
-    have hbb : 0 ≤ b*b := by nlinarith [sq_nonneg b]
-    have hu0 : 0 ≤ (u 0)*(u 0) := by nlinarith [sq_nonneg (u 0)]
-    have hu1 : 0 ≤ (u 1)*(u 1) := by nlinarith [sq_nonneg (u 1)]
-    have hu2 : 0 ≤ (u 2)*(u 2) := by nlinarith [sq_nonneg (u 2)]
-    have hv0 : 0 ≤ (v 0)*(v 0) := by nlinarith [sq_nonneg (v 0)]
-    have hv1 : 0 ≤ (v 1)*(v 1) := by nlinarith [sq_nonneg (v 1)]
-    have hv2 : 0 ≤ (v 2)*(v 2) := by nlinarith [sq_nonneg (v 2)]
-    have ha : a = 0 := by nlinarith [hs, hbb, hu0, hu1, hu2, hv0, hv1, hv2]
-    have hb : b = 0 := by nlinarith [hs, hu0, hu1, hu2, hv0, hv1, hv2]
+    have haa : 0 ≤ a*a := mul_self_nonneg _
+    have hbb : 0 ≤ b*b := mul_self_nonneg _
+    have hu0 : 0 ≤ (u 0)*(u 0) := mul_self_nonneg _
+    have hu1 : 0 ≤ (u 1)*(u 1) := mul_self_nonneg _
+    have hu2 : 0 ≤ (u 2)*(u 2) := mul_self_nonneg _
+    have hv0 : 0 ≤ (v 0)*(v 0) := mul_self_nonneg _
+    have hv1 : 0 ≤ (v 1)*(v 1) := mul_self_nonneg _
+    have hv2 : 0 ≤ (v 2)*(v 2) := mul_self_nonneg _
+    have ha : a = 0 := mul_self_eq_zero.mp (show a*a = 0 by
+      linarith only [hs, haa, hbb, hu0, hu1, hu2, hv0, hv1, hv2])
+    have hb : b = 0 := mul_self_eq_zero.mp (show b*b = 0 by
+      linarith only [hs, haa, hbb, hu0, hu1, hu2, hv0, hv1, hv2])
     have hu : u = 0 := by
       funext i
       fin_cases i
       · change u 0 = 0
-        nlinarith [hs, hbb, hu1, hu2, hv0, hv1, hv2]
+        exact mul_self_eq_zero.mp (show (u 0)*(u 0) = 0 by
+          linarith only [hs, haa, hbb, hu0, hu1, hu2, hv0, hv1, hv2])
       · change u 1 = 0
-        nlinarith [hs, hbb, hu0, hu2, hv0, hv1, hv2]
+        exact mul_self_eq_zero.mp (show (u 1)*(u 1) = 0 by
+          linarith only [hs, haa, hbb, hu0, hu1, hu2, hv0, hv1, hv2])
       · change u 2 = 0
-        nlinarith [hs, hbb, hu0, hu1, hv0, hv1, hv2]
+        exact mul_self_eq_zero.mp (show (u 2)*(u 2) = 0 by
+          linarith only [hs, haa, hbb, hu0, hu1, hu2, hv0, hv1, hv2])
     have hv : v = 0 := by
       funext i
       fin_cases i
       · change v 0 = 0
-        nlinarith [hs, hbb, hu0, hu1, hu2, hv1, hv2]
+        exact mul_self_eq_zero.mp (show (v 0)*(v 0) = 0 by
+          linarith only [hs, haa, hbb, hu0, hu1, hu2, hv0, hv1, hv2])
       · change v 1 = 0
-        nlinarith [hs, hbb, hu0, hu1, hu2, hv0, hv2]
+        exact mul_self_eq_zero.mp (show (v 1)*(v 1) = 0 by
+          linarith only [hs, haa, hbb, hu0, hu1, hu2, hv0, hv1, hv2])
       · change v 2 = 0
-        nlinarith [hs, hbb, hu0, hu1, hu2, hv0, hv1]
+        exact mul_self_eq_zero.mp (show (v 2)*(v 2) = 0 by
+          linarith only [hs, haa, hbb, hu0, hu1, hu2, hv0, hv1, hv2])
     ext <;> simp [ha, hb, hu, hv]
   · intro hX
     subst X

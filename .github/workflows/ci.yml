@@ -97,12 +97,19 @@ jobs:
           path: |
             ~/.elan
             .lake/packages
+            .lake/build
           key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json', 'lean-toolchain', 'lakefile.lean') }}
           restore-keys: |
             ${{ runner.os }}-lake-
 
-      - name: Update Lake dependencies
-        run: lake update
+      - name: Verify pinned root Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! grep -Fxq 'leanprover/lean4:v4.28.1' lean-toolchain; then
+            echo "lean-toolchain must pin leanprover/lean4:v4.28.1" >&2
+            exit 1
+          fi
 
       - name: Baseline build
         run: lake build
@@ -557,13 +564,8 @@ jobs:
       - name: Enforce canonical policy
         run: python3 tools/infra/canonical_policy_lint.py
 
-      - name: Enforce nested package v4.28 policy
-        run: |
-          if [ -d .lake/packages ]; then
-            scripts/infra/enforce-v428-local-manifests.sh
-          else
-            echo "[policy] no .lake/packages directory; skipping nested manifest check"
-          fi
+      - name: Enforce root and Mathlib v4.28.1 pins
+        run: scripts/infra/enforce-v428-local-manifests.sh
 
       - name: Enforce agentic autonomy policy
         run: python3 tools/infra/agentic_policy_lint.py

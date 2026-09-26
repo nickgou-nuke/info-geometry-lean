@@ -39,20 +39,6 @@ theorem pureDiracBlock_sq
       ⟨dp * dm, dm * dp, 0, 0⟩ := by
   simpa [pureDiracBlock] using twinBoundaryDiracBlock_sq 0 0 dp dm
 
-/-- An odd two-channel block is odd for the sheet Cartan involution. -/
-theorem pureDiracBlock_isOdd (dp dm : A) :
-    IsOdd (pureDiracBlock dp dm) := by
-  unfold IsOdd
-  rw [cartanInvolution_coordinates]
-  apply zornBlock_ext <;> simp [pureDiracBlock, twinBoundaryDiracBlock]
-
-/-- The square of an odd two-channel block is even. -/
-theorem pureDiracBlock_sq_isEven (dp dm : A) :
-    IsEven (pureDiracBlock dp dm * pureDiracBlock dp dm) := by
-  unfold IsEven
-  rw [pureDiracBlock_sq, cartanInvolution_coordinates]
-  rfl
-
 /-- If both off-diagonal coupling defects vanish, the square of a
 twin-boundary block is diagonal. -/
 theorem twinBoundaryDiracBlock_sq_diagonal

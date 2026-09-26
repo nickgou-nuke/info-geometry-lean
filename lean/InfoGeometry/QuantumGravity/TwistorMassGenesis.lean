@@ -43,4 +43,6 @@ def CPT_grading_involution (q : StokesQuad) : StokesQuad :=
 def topological_mass_gap : Prop :=
   ∀ n, finite_obstruction_class n
 
+end
+
 end InfoGeometry.QuantumGravity.TwistorMassGenesis

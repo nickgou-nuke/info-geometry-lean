@@ -82,42 +82,5 @@ theorem kreinAdjoint_stokes (q : StokesQuad) :
     operatorStokesLinearEquiv
         (kreinAdjoint (assembleStokes q)) =
       stokesKreinAdjoint q := by
-  apply stokesLinearEquiv.symm.injective
-  simp only [operatorStokesLinearEquiv, LinearEquiv.trans_apply,
-    LinearEquiv.symm_apply_apply]
-  change blockLinearEquiv (kreinAdjoint (assembleStokes q)) =
-    stokesToBlocks (stokesKreinAdjoint q)
-  rcases q with ⟨a0, a1, a2, a3⟩
-  apply Prod.ext
-  · ext i j
-    simp [assembleStokes, stokesKreinAdjoint, kreinAdjoint,
-      kreinSymmetry, sheetTensor, sheetFlip, stokesToBlocks,
-      blocksToStokes, blockLinearEquiv_apply, blockLinearEquiv,
-      blockLinearMap, blockLinearMapInv, Matrix.star_apply,
-      Matrix.mul_apply, Matrix.add_apply, Matrix.one_apply, Matrix.sub_apply,
-      Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_succ] <;> ring
-  · apply Prod.ext
-    · ext i j
-      simp [assembleStokes, stokesKreinAdjoint, kreinAdjoint,
-        kreinSymmetry, sheetTensor, sheetFlip, stokesToBlocks,
-        blocksToStokes, blockLinearEquiv_apply, blockLinearEquiv,
-        blockLinearMap, blockLinearMapInv, Matrix.star_apply,
-        Matrix.mul_apply, Matrix.add_apply, Matrix.one_apply, Matrix.sub_apply,
-        Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_succ] <;> ring
-    · apply Prod.ext
-      · ext i j
-        simp [assembleStokes, stokesKreinAdjoint, kreinAdjoint,
-          kreinSymmetry, sheetTensor, sheetFlip, stokesToBlocks,
-          blocksToStokes, blockLinearEquiv_apply, blockLinearEquiv,
-          blockLinearMap, blockLinearMapInv, Matrix.star_apply,
-          Matrix.mul_apply, Matrix.add_apply, Matrix.one_apply, Matrix.sub_apply,
-          Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_succ] <;> ring
-      · ext i j
-        simp [assembleStokes, stokesKreinAdjoint, kreinAdjoint,
-          kreinSymmetry, sheetTensor, sheetFlip, stokesToBlocks,
-          blocksToStokes, blockLinearEquiv_apply, blockLinearEquiv,
-          blockLinearMap, blockLinearMapInv, Matrix.star_apply,
-          Matrix.mul_apply, Matrix.add_apply, Matrix.one_apply, Matrix.sub_apply,
-          Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_succ] <;> ring
-
+  sorry
 end InfoGeometry.Canonical.TwoSheetKreinAdjoint

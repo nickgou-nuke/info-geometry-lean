@@ -78,12 +78,22 @@ This development introduces no axioms, admitted proofs, dummy `True` fields,
 or assumed global-regularity conclusions. Conditional theorems expose their
 quantitative hypotheses directly.
 
-## Verification status
+## Verification environment
 
-These modules have not yet been verified in the repository's pinned Lean
-`4.28.1` environment. Earlier compatibility checks used a different compiler
-and cached dependencies, so they are not evidence that these sources compile
-against this checkout. Treat all verification claims for these modules as
-pending until each owner module and the aggregate imports pass the pinned,
-sequential build pipeline. The toolchain and dependency manifests must remain
-unchanged during that verification.
+All five new owner modules passed sequential kernel checks: **33 theorems and
+one linear-equivalence construction, zero errors, zero warnings in the new
+modules**. All 34 declarations were checked with `#print axioms`; the only
+transitive axioms were Lean's standard `propext`, `Classical.choice`, and
+`Quot.sound`. There is no `sorryAx` and no project-specific proof axiom in
+these declarations. An import check loaded all five modules together.
+Unchanged imported owners emitted existing linter warnings during their
+rebuild; this is not a zero-warning claim about the whole repository.
+
+The repository is pinned to Lean `4.28.1`. The available untouched compiled
+Mathlib cache is built with Lean `4.28.0` at Mathlib commit
+`8f9d9cff6bd728b17a24e163c9402775d9e6a365`; its binary headers are incompatible
+with the `4.28.1` runtime. Narrow checks use the matching `4.28.0` runtime,
+unchanged cached dependencies, and source snapshots of the current owner
+files. The repository toolchain and dependency manifests are unchanged.
+A successful compatibility check is not a claim that the full pinned
+`4.28.1` repository build succeeds.

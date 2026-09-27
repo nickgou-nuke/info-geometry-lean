@@ -90,9 +90,8 @@ theorem cycle_pathEntropyProduction_eq_zero_of_exact
     (C : InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus.Cycle E)
     (hC : G.GaugeClosedCycle C)
     (hexact : ∀ e ∈ C.edges, G.logAffinity e = G.gaugeCoboundary φ e) :
-    G.pathEntropyProduction C.edges = 0 := by
-  rw [cycle_pathEntropyProduction_eq_cycleCurvatureLog G C]
-  exact G.cycleCurvatureLog_eq_zero_of_logAffinity_eq_coboundary φ C hC hexact
+    G.pathEntropyProduction C.edges = 0 :=
+  G.cycleCurvatureLog_eq_zero_of_logAffinity_eq_coboundary φ C hC hexact
 
 /-- Positive-rate path ratios are the graph-owner exponential MaxCal readout. -/
 theorem pathForwardBackwardRatio_eq_exp_maxCalConstraint
@@ -106,9 +105,8 @@ theorem detailedBalanceOnCycle_of_pathEntropyProduction_eq_zero
     (C : InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus.Cycle E)
     (hpos : ∀ e ∈ C.edges, 0 < G.forwardRate e / G.reverseRate e)
     (hzero : G.pathEntropyProduction C.edges = 0) :
-    G.DetailedBalanceOnCycle C := by
-  rw [(G.logWilsonCycleLaw_of_pos C hpos).detailedBalance_iff_zero_log_curvature]
-  simpa [cycle_pathEntropyProduction_eq_cycleCurvatureLog G C] using hzero
+    G.DetailedBalanceOnCycle C :=
+  (G.logWilsonCycleLaw_of_pos C hpos).detailedBalance_iff_zero_log_curvature.mpr hzero
 
 end ThermodynamicGraph
 

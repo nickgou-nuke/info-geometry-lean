@@ -12621,3 +12621,4 @@ import InfoGeometry.WillertonIsbellAmariDualityAudit
 import InfoGeometry.EpigraphHahnBanachSeparation
 import InfoGeometry.EpigraphHahnBanachSeparationAudit
 import InfoGeometry.OperatorAlgebra.TKKRegressiveBridge
+import InfoGeometry.Geometry.AmbitwistorAnomalyClosure

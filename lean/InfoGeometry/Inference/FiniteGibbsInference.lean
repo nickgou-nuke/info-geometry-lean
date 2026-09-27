@@ -46,17 +46,8 @@ noncomputable def freeEnergy
 
 theorem partitionFunction_pos
     (M : Model (Data := Data) (Theta := Theta)) (θ : Theta) (ε : ℝ) :
-    0 < partitionFunction M θ ε := by
-  classical
-  unfold partitionFunction
-  simpa using
-    (Finset.sum_pos
-      (s := (Finset.univ : Finset Data))
-      (f := fun i => Real.exp (-M.energy i θ / ε))
-      (by
-        intro i hi
-        exact Real.exp_pos _)
-      Finset.univ_nonempty)
+    0 < partitionFunction M θ ε :=
+  Finset.sum_pos (fun _ _ ↦ Real.exp_pos _) Finset.univ_nonempty
 
 theorem partitionFunction_ne_zero
     (M : Model (Data := Data) (Theta := Theta)) (θ : Theta) (ε : ℝ) :
@@ -65,9 +56,8 @@ theorem partitionFunction_ne_zero
 
 theorem weight_pos
     (M : Model (Data := Data) (Theta := Theta)) (θ : Theta) (ε : ℝ) (i : Data) :
-    0 < weight M θ ε i := by
-  unfold weight
-  exact div_pos (Real.exp_pos _) (partitionFunction_pos M θ ε)
+    0 < weight M θ ε i :=
+  div_pos (Real.exp_pos _) (partitionFunction_pos M θ ε)
 
 theorem weight_nonneg
     (M : Model (Data := Data) (Theta := Theta)) (θ : Theta) (ε : ℝ) (i : Data) :
@@ -78,17 +68,7 @@ theorem weight_nonneg
 theorem weights_sum_one
     (M : Model (Data := Data) (Theta := Theta)) (θ : Theta) (ε : ℝ) :
     ∑ i : Data, weight M θ ε i = 1 := by
-  classical
-  unfold weight
-  have hZne : partitionFunction M θ ε ≠ 0 := partitionFunction_ne_zero M θ ε
-  calc
-    ∑ i : Data, Real.exp (-M.energy i θ / ε) / partitionFunction M θ ε
-        = (∑ i : Data, Real.exp (-M.energy i θ / ε)) /
-            partitionFunction M θ ε := by
-            simp_rw [div_eq_mul_inv]
-            rw [Finset.sum_mul]
-    _ = partitionFunction M θ ε / partitionFunction M θ ε := by
-          rfl
-    _ = 1 := div_self hZne
+  simp_rw [weight, ← Finset.sum_div]
+  exact div_self (partitionFunction_ne_zero M θ ε)
 
 end InfoGeometry.Inference.FiniteGibbs

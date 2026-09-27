@@ -12620,3 +12620,4 @@ import InfoGeometry.WillertonIsbellAmariDuality
 import InfoGeometry.WillertonIsbellAmariDualityAudit
 import InfoGeometry.EpigraphHahnBanachSeparation
 import InfoGeometry.EpigraphHahnBanachSeparationAudit
+import InfoGeometry.Clifford.RegressiveProduct

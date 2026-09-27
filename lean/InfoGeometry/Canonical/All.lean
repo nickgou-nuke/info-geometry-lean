@@ -2283,3 +2283,6 @@ modules in `lean/InfoGeometry/Canonical/`.
 -/
 
 end InfoGeometry
+import InfoGeometry.Canonical.Archetypes.FiniteMaximum
+import InfoGeometry.Canonical.Archetypes.ConvexBound
+import InfoGeometry.Canonical.Archetypes.UniqueMaximum

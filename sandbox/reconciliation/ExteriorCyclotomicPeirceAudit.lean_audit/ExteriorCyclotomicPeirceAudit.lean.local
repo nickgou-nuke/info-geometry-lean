@@ -1,0 +1,89 @@
+import InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge
+
+/-!
+# Native transitive axiom inspection of the new public declarations
+
+Execute after the focused build. Only standard logical axioms propext,
+Classical.choice, and Quot.sound are allowed. Before execution this file is
+an audit request, not a certificate of elaboration or proof dependencies.
+-/
+
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.blocks
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.assemble
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.assemble_blocks
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.blocks_mul
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.blocks_one
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.block_cross_zero
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.off_diagonal_square_zero
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.cornerSpace
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.blocks_mem
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.corner_left_right
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.cut_corner
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.blocks_assemble
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.cornerEquiv
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.cornerSpace_mul_mem
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.corner_unit_left
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.corner_unit_right
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.blocks_injective
+#print axioms InfoGeometry.Core.FinitePeirceMatrix.binary_existing_components
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.phase
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.projector
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.phase_fourth
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.projector_fourier_sum
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.projector_eigen
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.power_on_eigenvector
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.projector_on_eigenvector
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.power_apply_on_eigenvector
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.projector_apply_on_eigenvector
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.projector_mul
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.projector_sum
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.completeProjectors
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.fourthRootReadout
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.projector_synthesis
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.spectralCornerEquiv
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.spectral_blocks_mul
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.square_neg_one_projectors
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.cyclicShift
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.degreeClock
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.cyclicShift_fourth
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.degreeClock_fourth
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.degreeClock_shift
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.cyclicShift_projector
+#print axioms InfoGeometry.Algebra.FourthRootPeirceProjectors.cyclicShift_fourth_ne_zero
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.degreePhase
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.phaseEnd
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.degreePhase_ι
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.degreePhase_square
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.phaseEnd_square
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.phaseEnd_fourth
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.degreePhase_ιMulti
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.degreePhase_homogeneous
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.I_pow_mod_four
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.degreeProjector
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.degreeProjector_homogeneous
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.degreeProjectorsComplete
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.degreePhase_wedge
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.degreePhase_contract
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.degree_even_coarsening
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.degree_odd_coarsening
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.phaseEnd_square_ne_neg_one
+#print axioms InfoGeometry.Clifford.ExteriorDegreePhaseFour.no_phase_algHom
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.odd_diagonal_zero
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.even_offDiagonal_zero
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.spinProjector
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.spinProjectorsComplete
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.realSpinorCornerEquiv
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.realSpinor_blocks_reconstruct
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.realSpinor_blocks_mul
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.neutralAction_odd
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.neutralAction_diagonal_zero
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.neutralAction_pair_even
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.neutralAction_pair_offDiagonal_zero
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.evenClifford_offDiagonal_zero
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.exteriorDegreeCornerEquiv
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.exterior_creation_square_zero
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.hodge_operator_square
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.hodge_fourier_projectors
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.degree_phase_not_square_minus_one
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.clifford_product_exterior_readout
+#print axioms InfoGeometry.Canonical.ExteriorCyclotomicPeirceBridge.clifford_paravector_interval

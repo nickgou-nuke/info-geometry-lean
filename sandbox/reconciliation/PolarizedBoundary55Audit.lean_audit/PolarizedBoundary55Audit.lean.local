@@ -1,0 +1,98 @@
+import InfoGeometry.Canonical.PolarizedBoundary55PristineChain
+
+/-!
+# Native transitive axiom inspection
+
+This file must be executed after a successful focused build. A source scan
+is not an elaboration or transitive-axiom certificate. Only the standard
+logical axioms propext, Classical.choice, and Quot.sound are allowed.
+-/
+
+#print axioms InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55.NativeZorn
+#print axioms InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55.boundaryZornHyperbolicEquiv
+#print axioms InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55.boundaryZornHyperbolic_quadratic
+#print axioms InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55.zornEmbedding
+#print axioms InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55.zornEmbedding_injective
+#print axioms InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55.zornEmbedding_norm
+#print axioms InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55.naive_spatial_inclusion
+#print axioms InfoGeometry.Algebra.Zorn.PolarizedQuadraticExtension55.zornEmbedding_null_iff
+#print axioms InfoGeometry.Canonical.PolarizedBoundary55PristineChain.zorn_quadratic_clifford_chain
+#print axioms InfoGeometry.Canonical.PolarizedBoundary55PristineChain.source_involution_packet
+#print axioms InfoGeometry.Canonical.PolarizedBoundary55PristineChain.boundary_chiral_packet
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.pairSwap
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.vectorFlip
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.mixedSwap
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.pairSwap_sq
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.vectorFlip_sq
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.swap_flip_commute
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.mixedSwap_sq
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.pairSwap_preserves
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.vectorFlip_preserves
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.mixedSwap_preserves
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.pairSwapIsometry
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.vectorFlipIsometry
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.mixedSwapIsometry
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.vectorFlip_not_positive
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.fundamentalSymmetry
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.fundamentalSymmetry_sq
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.fundamentalSymmetry_diagonal
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.fundamentalSymmetry_preserves
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.fundamentalSymmetry_polar
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.fundamentalSymmetry_positive
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.flat55
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.pairSwapMatrix
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.pairSwap_matrix_action
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.pairSwapMatrix_det
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.mixedSwap_fixed_point
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.mixedSwapClifford
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.mixedSwapClifford_ι
+#print axioms InfoGeometry.Clifford.PolarizedBoundaryInvolutions.mixedSwapClifford_sq
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.Boundary55
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.mixedPairing
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundaryQuadratic
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundaryQuadratic_apply
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.diagonalEquiv
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.diagonalEquiv_quadratic
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.diagonalIsometry
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundary_finrank
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundary_polar
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.alphaRay
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.betaRay
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.alphaRay_null
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.betaRay_null
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundary_rays_polar
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.left_half_null
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.right_half_null
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundaryCliffordEquiv
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundaryCliffordEquiv_ι
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundaryToNeutral
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundaryToNeutral_quadratic
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundaryExteriorAction
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundaryExteriorAction_sq
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundaryCliffordMatrixEquiv
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundaryMatrixAction
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundaryMatrixAction_sq
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundaryMatrixAction_anticommutator
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundary_scalar_nilpotents
+#print axioms InfoGeometry.Clifford.PolarizedMinkowski55.boundary_scalar_CAR
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.Bivector13
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.nativeWedge
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.wedgeCoefficients
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.wedgeCoefficients_self
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.wedgeCoefficients_swap
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.coefficientAlternating
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.bivectorReadout
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.bivectorReadout_wedge
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.nativeWedge_self
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.boundaryBivector
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.pairSwap_bivector
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.mixedSwap_bivector
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.mixedSwap_hodge
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.spatialParity
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.twoFormParity
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.spatialParity_wedge
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.spatialParity_hodge
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.spatialParity_selfDual
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.spatialParity_antiSelfDual
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.bivector_chiral_reconstruction
+#print axioms InfoGeometry.Geometry.PolarizedBoundaryBivectors.symmetric_scalar_contraction_zero

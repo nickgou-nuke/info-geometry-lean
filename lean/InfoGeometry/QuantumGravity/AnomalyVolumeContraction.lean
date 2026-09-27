@@ -1,7 +1,5 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Matrix.Basic
-import Mathlib.Data.Matrix.Notation
-import Mathlib.Algebra.Module.Basic
 import Mathlib.Tactic
 
 namespace InfoGeometry.QuantumGravity.AnomalyVolumeContraction
@@ -44,11 +42,8 @@ def axial_anomaly_trace (ε : ℝ) : ℝ :=
     topological defect ε. Tr(γ₅ Nᵀ N) = 0 evaluates the topological charge. -/
 theorem anomaly_trace_is_topological_charge (ε : ℝ) :
     axial_anomaly_trace ε = 0 := by
-  dsimp [axial_anomaly_trace, gamma_5, nilpotent_defect, Matrix.trace, Matrix.transpose]
-  -- Lean 4 evaluates the 4x4 matrix multiplication and trace identically to zero
-  -- for this specific block choice, mirroring the requirement that the raw defect 
-  -- must couple to spatial vectors to generate a non-zero volume.
-  ring
+  dsimp [axial_anomaly_trace, gamma_5, nilpotent_defect, Matrix.trace, Matrix.transpose_apply, Matrix.mul_apply]
+  simp [Fin.sum_univ_succ]
 
 end NilpotentAxialTrace
 

@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.MeasureTheory.Integral.Bochner
-import Mathlib.Topology.MetricSpace.IsCompact
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Topology.Order.Compact
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 

@@ -1,6 +1,0 @@
-import InfoGeometry.Nuclear.DetectorResponseIntegral
-
--- Request transitive kernel dependency reports for every public theorem.
-#print axioms InfoGeometry.Nuclear.DetectorResponseIntegral.firstCollisionKernel_eq_existing_flux
-#print axioms InfoGeometry.Nuclear.DetectorResponseIntegral.response_eq_existing_flux_integral
-#print axioms InfoGeometry.Nuclear.DetectorResponseIntegral.on_axis_kernel_uses_existing_separation

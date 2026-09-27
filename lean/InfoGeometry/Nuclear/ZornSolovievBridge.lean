@@ -82,14 +82,31 @@ def amplitude_quenching (Z : ZornNuclearField) (S : SolovievChiralPhonon) : Prop
 -/
 theorem zorn_enforces_mass_gap (Z : ZornNuclearField) (S : SolovievChiralPhonon)
     (h_coupling : zorn_soloviev_coupling Z S)
-    (_h_rotation : Z.omega_coll ≠ 0)
-    (_h_mismatch : Z.j_pi - Z.j_nu ≠ 0)
+    (h_rotation : Z.omega_coll ≠ 0)
+    (h_mismatch : Z.j_pi - Z.j_nu ≠ 0)
     (h_obs_pos : S.omega_obs ≥ 0) :
     S.omega_obs > 0 := by
-  have h_O : S.Omega_0 > 0 := S.h_Omega_pos
-  have h : 0 < S.omega_obs^2 := by
-    rw [h_coupling]
-    positivity
-  exact lt_of_le_of_ne h_obs_pos (by rintro H; rw [←H] at h; norm_num at h)
+  
+  -- 1. Prove the emergent axial bias B₅ is strictly non-zero
+  have h_bias_ne_zero : emergent_axial_bias Z ≠ 0 := by
+    unfold emergent_axial_bias
+    -- The product of three non-zero reals is non-zero
+    have h1 : Z.kappa * Z.omega_coll ≠ 0 := mul_ne_zero (ne_of_gt Z.h_kappa_pos) h_rotation
+    exact mul_ne_zero h1 h_mismatch
+
+  -- 2. Prove B₅² > 0
+  have h_bias_sq_pos : (emergent_axial_bias Z)^2 > 0 := sq_pos_of_ne_zero h_bias_ne_zero
+
+  -- 3. Substitute into the Zorn-Soloviev coupling
+  unfold zorn_soloviev_coupling at h_coupling
+  
+  -- 4. Establish that omega_obs^2 > 0
+  have h_omega_0_sq_nonneg : S.Omega_0^2 ≥ 0 := sq_nonneg S.Omega_0
+  have h_obs_sq_pos : S.omega_obs^2 > 0 := by linarith [h_coupling, h_bias_sq_pos, h_omega_0_sq_nonneg]
+  
+  -- 5. Take the square root to prove omega_obs > 0
+  have h_sqrt : 0 < Real.sqrt (S.omega_obs^2) := Real.sqrt_pos.mpr h_obs_sq_pos
+  rw [Real.sqrt_sq h_obs_pos] at h_sqrt
+  exact h_sqrt
 
 end InfoGeometry.Nuclear.ZornSolovievBridge

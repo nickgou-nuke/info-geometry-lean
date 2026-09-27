@@ -29,18 +29,12 @@ def signedExchange (X : OperatorZornMatrix A) : OperatorZornMatrix A :=
   ⟨X.n_minus, X.n_plus, -X.sigma_minus, -X.sigma_plus⟩
 
 @[simp] theorem offDiagonalSign_sq (X : OperatorZornMatrix A) :
-    offDiagonalSign (offDiagonalSign X) = X := by
-  cases X
-  simp [offDiagonalSign]
+    offDiagonalSign (offDiagonalSign X) = X := by cases X; simp [offDiagonalSign]
 
-@[simp] theorem exchange_sq (X : OperatorZornMatrix A) : exchange (exchange X) = X := by
-  cases X
-  rfl
+@[simp] theorem exchange_sq (X : OperatorZornMatrix A) : exchange (exchange X) = X := by cases X; rfl
 
 @[simp] theorem signedExchange_sq (X : OperatorZornMatrix A) :
-    signedExchange (signedExchange X) = X := by
-  cases X
-  simp [signedExchange]
+    signedExchange (signedExchange X) = X := by cases X; simp [signedExchange]
 
 theorem coordinate_actions_commute (X : OperatorZornMatrix A) :
     offDiagonalSign (exchange X) = exchange (offDiagonalSign X) := rfl
@@ -77,24 +71,11 @@ def signedExchangeMulEquiv : OperatorZornMatrix A ≃* OperatorZornMatrix A wher
 commutators vanish. -/
 theorem sigmaPlus_square_zero_iff (U : OperatorVector A) :
     operatorZornMul (sigmaPlus U) (sigmaPlus U) = 0 ↔ operatorCross U U = 0 := by
-  rw [sigmaPlus_mul_sigmaPlus]
-  constructor
-  · intro h
-    exact congrArg NCZornElement.sigma_minus h
-  · intro h
-    rw [h]
-    rfl
+  rw [sigmaPlus_mul_sigmaPlus]; exact ⟨congrArg NCZornElement.sigma_minus, fun h ↦ by rw [h]; rfl⟩
 
 theorem sigmaMinus_square_zero_iff (U : OperatorVector A) :
     operatorZornMul (sigmaMinus U) (sigmaMinus U) = 0 ↔ operatorCross U U = 0 := by
-  rw [sigmaMinus_mul_sigmaMinus]
-  constructor
-  · intro h
-    have hz : -operatorCross U U = 0 := congrArg NCZornElement.sigma_plus h
-    exact neg_eq_zero.mp hz
-  · intro h
-    rw [h, neg_zero]
-    rfl
+  rw [sigmaMinus_mul_sigmaMinus]; exact ⟨fun h ↦ neg_eq_zero.mp (congrArg NCZornElement.sigma_plus h), fun h ↦ by rw [h, neg_zero]; rfl⟩
 
 theorem sigmaPlus_square_zero_iff_commuting (U : OperatorVector A) :
     operatorZornMul (sigmaPlus U) (sigmaPlus U) = 0 ↔
@@ -111,16 +92,10 @@ theorem coordinate_peirce_decomposition (X : OperatorZornMatrix A) :
     nPlus X.n_plus + nMinus X.n_minus + sigmaPlus X.sigma_plus +
       sigmaMinus X.sigma_minus = X := by
   apply operatorZornMatrix_ext
-  · change X.n_plus + 0 + 0 + 0 = X.n_plus
-    simp
-  · change 0 + X.n_minus + 0 + 0 = X.n_minus
-    simp
-  · ext i
-    change 0 + 0 + X.sigma_plus i + 0 = X.sigma_plus i
-    simp
-  · ext i
-    change 0 + 0 + 0 + X.sigma_minus i = X.sigma_minus i
-    simp
+  · change X.n_plus + 0 + 0 + 0 = X.n_plus; simp
+  · change 0 + X.n_minus + 0 + 0 = X.n_minus; simp
+  · ext i; change 0 + 0 + X.sigma_plus i + 0 = X.sigma_plus i; simp
+  · ext i; change 0 + 0 + 0 + X.sigma_minus i = X.sigma_minus i; simp
 
 /-- The source's ordered quadratic readout vanishes on every upper vector,
 including upper vectors whose operator-valued square is nonzero. -/
@@ -164,11 +139,7 @@ theorem coordinate_actions_do_not_anticommute :
     ¬ ∀ U V : OperatorVector ℝ,
       offDiagonalSign (exchange (chiralOperatorZorn U V)) =
         -(exchange (offDiagonalSign (chiralOperatorZorn U V))) := by
-  intro h
-  have h0 := congrArg (fun X : OperatorZornMatrix ℝ => X.sigma_minus 0)
-    (h ![1, 0, 0] 0)
-  norm_num [offDiagonalSign, exchange, chiralOperatorZorn, operatorZornCoordinates] at h0
-  change (-1 : ℝ) = -(-1 : ℝ) at h0
-  linarith
+  intro h; have h0 := congrArg (fun X : OperatorZornMatrix ℝ => X.sigma_minus 0) (h ![1, 0, 0] 0)
+  change (-1 : ℝ) = -(-1 : ℝ) at h0; linarith
 
 end InfoGeometry.Canonical.OperatorZornPolarizationSymmetry

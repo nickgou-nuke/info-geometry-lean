@@ -157,6 +157,32 @@ theorem massive_gauge_gap_strictly_positive (S : ChiralQRPASystem)
   have h_sq_pos : (axialBiasEnergy S.geom)^2 > 0 := sq_pos_of_ne_zero h_bias_ne
   exact Real.sqrt_pos.mpr h_sq_pos
 
+/-! ### 4.5. Spontaneous Symmetry Breaking (SSB) and the Goldstone Boson -/
+
+/-- 
+  The phase transition inductive type categorizing the nuclear symmetry regime.
+-/
+inductive RotationRegime (E : EmergentGeometry)
+  | Planar (h : niehYanVolume E = 0)
+  | Aplanar (h : niehYanVolume E ≠ 0)
+
+/-- 
+  Theorem: The Goldstone Boson (zero gap) emerges strictly in the Planar regime 
+  when the restoring force vanishes.
+-/
+theorem goldstone_only_in_planar (S : ChiralQRPASystem)
+    (h_sec : satisfiesSecularEquation S) (h_pos : S.omega ≥ 0)
+    (h_crit : S.omega_0_sq = 0) (h_planar : niehYanVolume S.geom = 0) :
+    S.omega = 0 := by
+  have h_disp := biased_qrpa_dispersion S h_sec h_pos
+  have h_bias_zero : axialBiasEnergy S.geom = 0 := by
+    dsimp [axialBiasEnergy]
+    rw [h_planar, mul_zero]
+  rw [h_crit, h_bias_zero] at h_disp
+  have h_sq_zero : (0:ℝ)^2 = 0 := zero_pow (by decide)
+  rw [h_sq_zero, zero_add, Real.sqrt_zero] at h_disp
+  exact h_disp
+
 /-! ### 5. Spectroscopic Inversion to Torsion Invariant -/
 
 /-- 

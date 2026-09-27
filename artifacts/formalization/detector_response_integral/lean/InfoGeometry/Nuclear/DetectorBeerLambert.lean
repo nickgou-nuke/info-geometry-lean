@@ -1,7 +1,4 @@
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib
 
 /-!
 # Exact first-collision path integration

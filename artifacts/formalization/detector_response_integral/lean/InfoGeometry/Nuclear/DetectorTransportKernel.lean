@@ -1,8 +1,4 @@
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Topology.Order.Compact
-import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib
 
 /-!
 # A first-collision transport kernel for a solid cylindrical detector
@@ -123,10 +119,8 @@ theorem materialPath_sq_eq_separationSq {d : ℝ} {p : Point}
 theorem materialPath_on_axis {d z : ℝ} (hd : 0 < d) (hz : 0 ≤ z) :
     materialPath d ((0, 0), z) = z := by
   have hgap : 0 < d + z := by linarith
-  have hsq : (0 : ℝ) ^ 2 + (0 : ℝ) ^ 2 + (d + z) ^ 2 = (d + z) ^ 2 := by ring
-  unfold materialPath sourceRange rangeSq
-  dsimp
-  rw [hsq, Real.sqrt_sq (le_of_lt hgap)]
+  simp only [materialPath, sourceRange, rangeSq, zero_pow, zero_add]
+  rw [Real.sqrt_sq (le_of_lt hgap)]
   exact mul_div_cancel_right₀ z (ne_of_gt hgap)
 
 /-- The positive path length equals the Euclidean length from the entrance. -/
@@ -176,7 +170,7 @@ theorem continuousOn_firstCollisionKernel (R L μ d : ℝ) (hd : 0 < d) :
   have hp := continuousOn_materialPath R L d hd
   unfold firstCollisionKernel
   apply ContinuousOn.div
-  · exact continuousOn_const.mul (Real.continuous_exp.comp_continuousOn (continuousOn_const.mul hp))
+  · exact continuousOn_const.mul ((continuousOn_const.mul hp).exp)
   · exact continuousOn_const.mul (continuous_rangeSq d).continuousOn
   · intro p hp
     exact mul_ne_zero (mul_ne_zero (by norm_num) Real.pi_ne_zero)

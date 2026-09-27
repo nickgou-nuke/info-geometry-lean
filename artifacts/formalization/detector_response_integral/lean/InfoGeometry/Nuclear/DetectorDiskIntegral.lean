@@ -1,8 +1,4 @@
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib
 
 /-!
 # Exact finite-aperture reference integral
@@ -62,12 +58,8 @@ theorem diskProbability_eq {d : ℝ} (hd : 0 < d) (R : ℝ) :
   rw [intervalIntegral.integral_eq_sub_of_hasDerivAt
     (fun ρ _ => hasDerivAt_diskPrimitive hd ρ)
     ((continuous_diskDensity hd).intervalIntegrable 0 R)]
-  have h0 : Real.sqrt (d ^ 2 + (0 : ℝ) ^ 2) = d := by
-    rw [sq (0 : ℝ), mul_zero, add_zero, Real.sqrt_sq hd.le]
-  change (-d / 2) * (Real.sqrt (d ^ 2 + R ^ 2))⁻¹ - (-d / 2) * (Real.sqrt (d ^ 2 + (0 : ℝ) ^ 2))⁻¹ = _
-  rw [h0]
-  field_simp [hd0, hR0]
-  ring
+  simp only [zero_pow, add_zero, Real.sqrt_sq hd.le]
+  field_simp [hd0, hR0] <;> ring
 
 theorem diskProbability_nonneg {d R : ℝ} (hd : 0 < d) (hR : 0 ≤ R) :
     0 ≤ diskProbability d R := by

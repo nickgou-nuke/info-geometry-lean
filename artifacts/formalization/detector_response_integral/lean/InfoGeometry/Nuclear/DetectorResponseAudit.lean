@@ -1,5 +1,4 @@
 import InfoGeometry.Nuclear.DetectorResponseCore
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 -- Request transitive kernel dependency reports for every public theorem.
 #print axioms InfoGeometry.Nuclear.DetectorTransportKernel.isClosed_transverseDisk

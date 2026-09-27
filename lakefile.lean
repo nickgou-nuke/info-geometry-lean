@@ -1105,8 +1105,4 @@ package_facet dagArtifactsManifest (pkg : Package) : FilePath := do
 lean_lib Experimental where
   globs := #[.andSubmodules `Experimental]
 
-lean_lib AuditNative where
-  globs := #[`AuditNative]
 
-lean_lib AuditStrict where
-  globs := #[`AuditStrict]

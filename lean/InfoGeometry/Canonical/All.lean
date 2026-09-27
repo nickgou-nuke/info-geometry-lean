@@ -2286,4 +2286,3 @@ end InfoGeometry
 import InfoGeometry.Canonical.Archetypes.FiniteMaximum
 import InfoGeometry.Canonical.Archetypes.ConvexBound
 import InfoGeometry.Canonical.Archetypes.UniqueMaximum
-import InfoGeometry.Canonical.Clifford55Cascade

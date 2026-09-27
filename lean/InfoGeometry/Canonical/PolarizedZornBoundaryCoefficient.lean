@@ -23,8 +23,7 @@ theorem rankOne_numerator (p : RegularBoundaryPair ι)
     (v : State ι) (f : Module.Dual ℂ (State ι)) :
     numerator p (f.smulRight v) = pairing p.post v * f p.pre := by
   change pairing p.post (f p.pre • v) = _
-  rw [pairing_smul_right]
-  ring
+  rw [pairing_smul_right, mul_comm]
 
 /-- The denominator is the original overlap, independently of the inserted probe. -/
 theorem rankOne_weakValue (p : RegularBoundaryPair ι)
@@ -43,18 +42,13 @@ theorem rankOne_boundary_compression (p : RegularBoundaryPair ι)
 and therefore any fixed boundary trace or determinant, stay unchanged. -/
 theorem same_boundary_distinct_probe_readouts (p : RegularBoundaryPair ι) :
     weakValue p (0 : Operator ι) = 0 ∧ weakValue p (1 : Operator ι) = 1 ∧
-      weakValue p (0 : Operator ι) ≠ weakValue p (1 : Operator ι) := by
-  simp
+      weakValue p (0 : Operator ι) ≠ weakValue p (1 : Operator ι) :=
+  ⟨weakValue_zero p, weakValue_one p, fun h => zero_ne_one <| (weakValue_zero p).symm.trans <| h.trans (weakValue_one p)⟩
 
 /-- A constant function of boundary-only invariants cannot represent the
 entire probe-dependent weak functional. -/
 theorem no_boundary_only_weakValue (p : RegularBoundaryPair ι) :
-    ¬ ∃ c : ℂ, ∀ A : Operator ι, weakValue p A = c := by
-  rintro ⟨c, hc⟩
-  have h0 := hc 0
-  have h1 := hc 1
-  rw [weakValue_zero] at h0
-  rw [weakValue_one] at h1
-  exact zero_ne_one (h0.trans h1.symm)
+    ¬ ∃ c : ℂ, ∀ A : Operator ι, weakValue p A = c :=
+  fun ⟨_, hc⟩ => zero_ne_one <| (weakValue_zero p).symm.trans <| (hc 0).trans <| (hc 1).symm.trans (weakValue_one p)
 
 end InfoGeometry.Canonical.PolarizedZornBoundaryCoefficient

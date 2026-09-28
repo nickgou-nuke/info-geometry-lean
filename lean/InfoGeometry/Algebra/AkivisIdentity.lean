@@ -36,7 +36,7 @@ def rightNestedJacobiator (x y z : A) : A :=
 
 theorem rightNestedJacobiator_eq_neg (x y z : A) :
     rightNestedJacobiator x y z = -akivisJacobiator x y z := by
-  simp [rightNestedJacobiator, akivisJacobiator, akivisBracket]
+  simp only [rightNestedJacobiator, akivisJacobiator, akivisBracket, sub_mul, mul_sub]
   abel_nf
 
 theorem akivisBracket_swap (x y : A) :
@@ -91,9 +91,7 @@ theorem leftMultiplicationCommutatorDefect_eq_associator_difference
     (x y z : A) :
     leftMultiplicationCommutatorDefect x y z =
       -_root_.associator x y z + _root_.associator y x z := by
-  simp [leftMultiplicationCommutatorDefect, leftMultiplication,
-    akivisBracket, _root_.associator_apply, sub_eq_add_neg, mul_add,
-    add_mul]
+  simp only [leftMultiplicationCommutatorDefect, leftMultiplication, akivisBracket, _root_.associator_apply, sub_mul, mul_sub]
   abel
 
 /-- Under the explicit alternative-law consequence

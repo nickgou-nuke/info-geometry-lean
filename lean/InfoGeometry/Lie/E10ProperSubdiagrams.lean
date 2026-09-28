@@ -30,15 +30,15 @@ open InfoGeometry.Lie.E10
 open InfoGeometry.Lie.E10LorentzianDecomposition
 
 /-! ## A₉ Subdiagram (Delete Node 1) -/
-noncomputable def A9_b9 (x : Fin 10 → ℝ) : ℝ := x 9
-noncomputable def A9_b8 (x : Fin 10 → ℝ) : ℝ := x 8 - (1/2 : ℝ) * x 9
-noncomputable def A9_b7 (x : Fin 10 → ℝ) : ℝ := x 7 - (2/3 : ℝ) * x 8
-noncomputable def A9_b6 (x : Fin 10 → ℝ) : ℝ := x 6 - (3/4 : ℝ) * x 7
-noncomputable def A9_b5 (x : Fin 10 → ℝ) : ℝ := x 5 - (4/5 : ℝ) * x 6
-noncomputable def A9_b4 (x : Fin 10 → ℝ) : ℝ := x 4 - (5/6 : ℝ) * x 5
-noncomputable def A9_b0 (x : Fin 10 → ℝ) : ℝ := x 0 - (6/7 : ℝ) * x 4
-noncomputable def A9_b2 (x : Fin 10 → ℝ) : ℝ := x 2 - (7/8 : ℝ) * x 0
-noncomputable def A9_b3 (x : Fin 10 → ℝ) : ℝ := x 3 - (8/9 : ℝ) * x 2
+noncomputable def A9_b9 (x : Fin 10 → ℝ) : ℝ := x 9 - (1/2 : ℝ) * x 8
+noncomputable def A9_b8 (x : Fin 10 → ℝ) : ℝ := x 8 - (2/3 : ℝ) * x 7
+noncomputable def A9_b7 (x : Fin 10 → ℝ) : ℝ := x 7 - (3/4 : ℝ) * x 6
+noncomputable def A9_b6 (x : Fin 10 → ℝ) : ℝ := x 6 - (4/5 : ℝ) * x 5
+noncomputable def A9_b5 (x : Fin 10 → ℝ) : ℝ := x 5 - (5/6 : ℝ) * x 4
+noncomputable def A9_b4 (x : Fin 10 → ℝ) : ℝ := x 4 - (6/7 : ℝ) * x 0
+noncomputable def A9_b0 (x : Fin 10 → ℝ) : ℝ := x 0 - (7/8 : ℝ) * x 2
+noncomputable def A9_b2 (x : Fin 10 → ℝ) : ℝ := x 2 - (8/9 : ℝ) * x 3
+noncomputable def A9_b3 (x : Fin 10 → ℝ) : ℝ := x 3
 
 theorem A9_form_eq (x : Fin 10 → ℝ) (h1 : x 1 = 0) :
     cartanQuadraticFormReal x = 
@@ -61,25 +61,35 @@ theorem A9_positive_definite (x : Fin 10 → ℝ) (h1 : x 1 = 0)
   have heq := A9_form_eq x h1
   rw [hq] at heq
   
-  have p9 : 0 ≤ 2 * A9_b9 x ^ 2 := by positivity
-  have p8 : 0 ≤ (3/2 : ℝ) * A9_b8 x ^ 2 := by positivity
-  have p7 : 0 ≤ (4/3 : ℝ) * A9_b7 x ^ 2 := by positivity
-  have p6 : 0 ≤ (5/4 : ℝ) * A9_b6 x ^ 2 := by positivity
-  have p5 : 0 ≤ (6/5 : ℝ) * A9_b5 x ^ 2 := by positivity
-  have p4 : 0 ≤ (7/6 : ℝ) * A9_b4 x ^ 2 := by positivity
-  have p0 : 0 ≤ (8/7 : ℝ) * A9_b0 x ^ 2 := by positivity
-  have p2 : 0 ≤ (9/8 : ℝ) * A9_b2 x ^ 2 := by positivity
-  have p3 : 0 ≤ (10/9 : ℝ) * A9_b3 x ^ 2 := by positivity
+  generalize hy9 : A9_b9 x = y9
+  generalize hy8 : A9_b8 x = y8
+  generalize hy7 : A9_b7 x = y7
+  generalize hy6 : A9_b6 x = y6
+  generalize hy5 : A9_b5 x = y5
+  generalize hy4 : A9_b4 x = y4
+  generalize hy0 : A9_b0 x = y0
+  generalize hy2 : A9_b2 x = y2
+  generalize hy3 : A9_b3 x = y3
   
-  have e9 : A9_b9 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
-  have e8 : A9_b8 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
-  have e7 : A9_b7 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
-  have e6 : A9_b6 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
-  have e5 : A9_b5 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
-  have e4 : A9_b4 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
-  have e0 : A9_b0 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
-  have e2 : A9_b2 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
-  have e3 : A9_b3 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
+  have p9 : 0 ≤ 2 * y9 ^ 2 := by positivity
+  have p8 : 0 ≤ (3/2 : ℝ) * y8 ^ 2 := by positivity
+  have p7 : 0 ≤ (4/3 : ℝ) * y7 ^ 2 := by positivity
+  have p6 : 0 ≤ (5/4 : ℝ) * y6 ^ 2 := by positivity
+  have p5 : 0 ≤ (6/5 : ℝ) * y5 ^ 2 := by positivity
+  have p4 : 0 ≤ (7/6 : ℝ) * y4 ^ 2 := by positivity
+  have p0 : 0 ≤ (8/7 : ℝ) * y0 ^ 2 := by positivity
+  have p2 : 0 ≤ (9/8 : ℝ) * y2 ^ 2 := by positivity
+  have p3 : 0 ≤ (10/9 : ℝ) * y3 ^ 2 := by positivity
+  
+  have e9 : y9 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
+  have e8 : y8 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
+  have e7 : y7 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
+  have e6 : y6 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
+  have e5 : y5 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
+  have e4 : y4 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
+  have e0 : y0 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
+  have e2 : y2 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
+  have e3 : y3 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p0, p2, p3]
   
   have z9 := sq_eq_zero_iff.mp e9
   have z8 := sq_eq_zero_iff.mp e8
@@ -91,25 +101,25 @@ theorem A9_positive_definite (x : Fin 10 → ℝ) (h1 : x 1 = 0)
   have z2 := sq_eq_zero_iff.mp e2
   have z3 := sq_eq_zero_iff.mp e3
   
-  have d9 : A9_b9 x = x 9 := rfl
-  have d8 : A9_b8 x = x 8 - (1/2 : ℝ) * x 9 := rfl
-  have d7 : A9_b7 x = x 7 - (2/3 : ℝ) * x 8 := rfl
-  have d6 : A9_b6 x = x 6 - (3/4 : ℝ) * x 7 := rfl
-  have d5 : A9_b5 x = x 5 - (4/5 : ℝ) * x 6 := rfl
-  have d4 : A9_b4 x = x 4 - (5/6 : ℝ) * x 5 := rfl
-  have d0 : A9_b0 x = x 0 - (6/7 : ℝ) * x 4 := rfl
-  have d2 : A9_b2 x = x 2 - (7/8 : ℝ) * x 0 := rfl
-  have d3 : A9_b3 x = x 3 - (8/9 : ℝ) * x 2 := rfl
+  have d9 : y9 = x 9 - (1/2 : ℝ) * x 8 := hy9.symm
+  have d8 : y8 = x 8 - (2/3 : ℝ) * x 7 := hy8.symm
+  have d7 : y7 = x 7 - (3/4 : ℝ) * x 6 := hy7.symm
+  have d6 : y6 = x 6 - (4/5 : ℝ) * x 5 := hy6.symm
+  have d5 : y5 = x 5 - (5/6 : ℝ) * x 4 := hy5.symm
+  have d4 : y4 = x 4 - (6/7 : ℝ) * x 0 := hy4.symm
+  have d0 : y0 = x 0 - (7/8 : ℝ) * x 2 := hy0.symm
+  have d2 : y2 = x 2 - (8/9 : ℝ) * x 3 := hy2.symm
+  have d3 : y3 = x 3 := hy3.symm
   
-  have x9 : x 9 = 0 := by linarith
-  have x8 : x 8 = 0 := by linarith
-  have x7 : x 7 = 0 := by linarith
-  have x6 : x 6 = 0 := by linarith
-  have x5 : x 5 = 0 := by linarith
-  have x4 : x 4 = 0 := by linarith
-  have x0 : x 0 = 0 := by linarith
-  have x2 : x 2 = 0 := by linarith
   have x3 : x 3 = 0 := by linarith
+  have x2 : x 2 = 0 := by linarith
+  have x0 : x 0 = 0 := by linarith
+  have x4 : x 4 = 0 := by linarith
+  have x5 : x 5 = 0 := by linarith
+  have x6 : x 6 = 0 := by linarith
+  have x7 : x 7 = 0 := by linarith
+  have x8 : x 8 = 0 := by linarith
+  have x9 : x 9 = 0 := by linarith
   
   intro i
   match i with
@@ -125,15 +135,15 @@ theorem A9_positive_definite (x : Fin 10 → ℝ) (h1 : x 1 = 0)
   | ⟨9, _⟩ => exact x9
 
 /-! ## D₉ Subdiagram (Delete Node 3) -/
-noncomputable def D9_c9 (x : Fin 10 → ℝ) : ℝ := x 9
-noncomputable def D9_c8 (x : Fin 10 → ℝ) : ℝ := x 8 - (1/2 : ℝ) * x 9
-noncomputable def D9_c7 (x : Fin 10 → ℝ) : ℝ := x 7 - (2/3 : ℝ) * x 8
-noncomputable def D9_c6 (x : Fin 10 → ℝ) : ℝ := x 6 - (3/4 : ℝ) * x 7
-noncomputable def D9_c5 (x : Fin 10 → ℝ) : ℝ := x 5 - (4/5 : ℝ) * x 6
-noncomputable def D9_c4 (x : Fin 10 → ℝ) : ℝ := x 4 - (5/6 : ℝ) * x 5
-noncomputable def D9_c1 (x : Fin 10 → ℝ) : ℝ := x 1
-noncomputable def D9_c2 (x : Fin 10 → ℝ) : ℝ := x 2
-noncomputable def D9_c0 (x : Fin 10 → ℝ) : ℝ := x 0 - (6/7 : ℝ) * x 4 - (1/2 : ℝ) * x 1 - (1/2 : ℝ) * x 2
+noncomputable def D9_c9 (x : Fin 10 → ℝ) : ℝ := x 9 - (1/2 : ℝ) * x 8
+noncomputable def D9_c8 (x : Fin 10 → ℝ) : ℝ := x 8 - (2/3 : ℝ) * x 7
+noncomputable def D9_c7 (x : Fin 10 → ℝ) : ℝ := x 7 - (3/4 : ℝ) * x 6
+noncomputable def D9_c6 (x : Fin 10 → ℝ) : ℝ := x 6 - (4/5 : ℝ) * x 5
+noncomputable def D9_c5 (x : Fin 10 → ℝ) : ℝ := x 5 - (5/6 : ℝ) * x 4
+noncomputable def D9_c4 (x : Fin 10 → ℝ) : ℝ := x 4 - (6/7 : ℝ) * x 0
+noncomputable def D9_c1 (x : Fin 10 → ℝ) : ℝ := x 1 - (1/2 : ℝ) * x 0
+noncomputable def D9_c2 (x : Fin 10 → ℝ) : ℝ := x 2 - (1/2 : ℝ) * x 0
+noncomputable def D9_c0 (x : Fin 10 → ℝ) : ℝ := x 0
 
 theorem D9_form_eq (x : Fin 10 → ℝ) (h3 : x 3 = 0) :
     cartanQuadraticFormReal x = 
@@ -156,25 +166,35 @@ theorem D9_positive_definite (x : Fin 10 → ℝ) (h3 : x 3 = 0)
   have heq := D9_form_eq x h3
   rw [hq] at heq
   
-  have p9 : 0 ≤ 2 * D9_c9 x ^ 2 := by positivity
-  have p8 : 0 ≤ (3/2 : ℝ) * D9_c8 x ^ 2 := by positivity
-  have p7 : 0 ≤ (4/3 : ℝ) * D9_c7 x ^ 2 := by positivity
-  have p6 : 0 ≤ (5/4 : ℝ) * D9_c6 x ^ 2 := by positivity
-  have p5 : 0 ≤ (6/5 : ℝ) * D9_c5 x ^ 2 := by positivity
-  have p4 : 0 ≤ (7/6 : ℝ) * D9_c4 x ^ 2 := by positivity
-  have p1 : 0 ≤ 2 * D9_c1 x ^ 2 := by positivity
-  have p2 : 0 ≤ 2 * D9_c2 x ^ 2 := by positivity
-  have p0 : 0 ≤ (1/7 : ℝ) * D9_c0 x ^ 2 := by positivity
+  generalize hy9 : D9_c9 x = y9
+  generalize hy8 : D9_c8 x = y8
+  generalize hy7 : D9_c7 x = y7
+  generalize hy6 : D9_c6 x = y6
+  generalize hy5 : D9_c5 x = y5
+  generalize hy4 : D9_c4 x = y4
+  generalize hy1 : D9_c1 x = y1
+  generalize hy2 : D9_c2 x = y2
+  generalize hy0 : D9_c0 x = y0
   
-  have e9 : D9_c9 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
-  have e8 : D9_c8 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
-  have e7 : D9_c7 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
-  have e6 : D9_c6 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
-  have e5 : D9_c5 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
-  have e4 : D9_c4 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
-  have e1 : D9_c1 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
-  have e2 : D9_c2 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
-  have e0 : D9_c0 x ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
+  have p9 : 0 ≤ 2 * y9 ^ 2 := by positivity
+  have p8 : 0 ≤ (3/2 : ℝ) * y8 ^ 2 := by positivity
+  have p7 : 0 ≤ (4/3 : ℝ) * y7 ^ 2 := by positivity
+  have p6 : 0 ≤ (5/4 : ℝ) * y6 ^ 2 := by positivity
+  have p5 : 0 ≤ (6/5 : ℝ) * y5 ^ 2 := by positivity
+  have p4 : 0 ≤ (7/6 : ℝ) * y4 ^ 2 := by positivity
+  have p1 : 0 ≤ 2 * y1 ^ 2 := by positivity
+  have p2 : 0 ≤ 2 * y2 ^ 2 := by positivity
+  have p0 : 0 ≤ (1/7 : ℝ) * y0 ^ 2 := by positivity
+  
+  have e9 : y9 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
+  have e8 : y8 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
+  have e7 : y7 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
+  have e6 : y6 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
+  have e5 : y5 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
+  have e4 : y4 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
+  have e1 : y1 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
+  have e2 : y2 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
+  have e0 : y0 ^ 2 = 0 := by linarith [heq, p9, p8, p7, p6, p5, p4, p1, p2, p0]
   
   have z9 := sq_eq_zero_iff.mp e9
   have z8 := sq_eq_zero_iff.mp e8
@@ -186,25 +206,25 @@ theorem D9_positive_definite (x : Fin 10 → ℝ) (h3 : x 3 = 0)
   have z2 := sq_eq_zero_iff.mp e2
   have z0 := sq_eq_zero_iff.mp e0
   
-  have d9 : D9_c9 x = x 9 := rfl
-  have d8 : D9_c8 x = x 8 - (1/2 : ℝ) * x 9 := rfl
-  have d7 : D9_c7 x = x 7 - (2/3 : ℝ) * x 8 := rfl
-  have d6 : D9_c6 x = x 6 - (3/4 : ℝ) * x 7 := rfl
-  have d5 : D9_c5 x = x 5 - (4/5 : ℝ) * x 6 := rfl
-  have d4 : D9_c4 x = x 4 - (5/6 : ℝ) * x 5 := rfl
-  have d1 : D9_c1 x = x 1 := rfl
-  have d2 : D9_c2 x = x 2 := rfl
-  have d0 : D9_c0 x = x 0 - (6/7 : ℝ) * x 4 - (1/2 : ℝ) * x 1 - (1/2 : ℝ) * x 2 := rfl
+  have d9 : y9 = x 9 - (1/2 : ℝ) * x 8 := hy9.symm
+  have d8 : y8 = x 8 - (2/3 : ℝ) * x 7 := hy8.symm
+  have d7 : y7 = x 7 - (3/4 : ℝ) * x 6 := hy7.symm
+  have d6 : y6 = x 6 - (4/5 : ℝ) * x 5 := hy6.symm
+  have d5 : y5 = x 5 - (5/6 : ℝ) * x 4 := hy5.symm
+  have d4 : y4 = x 4 - (6/7 : ℝ) * x 0 := hy4.symm
+  have d1 : y1 = x 1 - (1/2 : ℝ) * x 0 := hy1.symm
+  have d2 : y2 = x 2 - (1/2 : ℝ) * x 0 := hy2.symm
+  have d0 : y0 = x 0 := hy0.symm
   
-  have x9 : x 9 = 0 := by linarith
-  have x8 : x 8 = 0 := by linarith
-  have x7 : x 7 = 0 := by linarith
-  have x6 : x 6 = 0 := by linarith
-  have x5 : x 5 = 0 := by linarith
-  have x4 : x 4 = 0 := by linarith
+  have x0 : x 0 = 0 := by linarith
   have x1 : x 1 = 0 := by linarith
   have x2 : x 2 = 0 := by linarith
-  have x0 : x 0 = 0 := by linarith
+  have x4 : x 4 = 0 := by linarith
+  have x5 : x 5 = 0 := by linarith
+  have x6 : x 6 = 0 := by linarith
+  have x7 : x 7 = 0 := by linarith
+  have x8 : x 8 = 0 := by linarith
+  have x9 : x 9 = 0 := by linarith
   
   intro i
   match i with
@@ -262,23 +282,32 @@ theorem E8_nullspace (x : Fin 10 → ℝ) (h9 : x 9 = 0)
   have heq := E8_form_eq x h9
   rw [hq] at heq
   
-  have p1 : 0 ≤ 2 * E8_d1 x ^ 2 := by positivity
-  have p3 : 0 ≤ 2 * E8_d3 x ^ 2 := by positivity
-  have p2 : 0 ≤ (3/2 : ℝ) * E8_d2 x ^ 2 := by positivity
-  have p8 : 0 ≤ 2 * E8_d8 x ^ 2 := by positivity
-  have p7 : 0 ≤ (3/2 : ℝ) * E8_d7 x ^ 2 := by positivity
-  have p6 : 0 ≤ (4/3 : ℝ) * E8_d6 x ^ 2 := by positivity
-  have p5 : 0 ≤ (5/4 : ℝ) * E8_d5 x ^ 2 := by positivity
-  have p4 : 0 ≤ (6/5 : ℝ) * E8_d4 x ^ 2 := by positivity
+  generalize hy1 : E8_d1 x = y1
+  generalize hy3 : E8_d3 x = y3
+  generalize hy2 : E8_d2 x = y2
+  generalize hy8 : E8_d8 x = y8
+  generalize hy7 : E8_d7 x = y7
+  generalize hy6 : E8_d6 x = y6
+  generalize hy5 : E8_d5 x = y5
+  generalize hy4 : E8_d4 x = y4
   
-  have e1 : E8_d1 x ^ 2 = 0 := by linarith [heq, p1, p3, p2, p8, p7, p6, p5, p4]
-  have e3 : E8_d3 x ^ 2 = 0 := by linarith [heq, p1, p3, p2, p8, p7, p6, p5, p4]
-  have e2 : E8_d2 x ^ 2 = 0 := by linarith [heq, p1, p3, p2, p8, p7, p6, p5, p4]
-  have e8 : E8_d8 x ^ 2 = 0 := by linarith [heq, p1, p3, p2, p8, p7, p6, p5, p4]
-  have e7 : E8_d7 x ^ 2 = 0 := by linarith [heq, p1, p3, p2, p8, p7, p6, p5, p4]
-  have e6 : E8_d6 x ^ 2 = 0 := by linarith [heq, p1, p3, p2, p8, p7, p6, p5, p4]
-  have e5 : E8_d5 x ^ 2 = 0 := by linarith [heq, p1, p3, p2, p8, p7, p6, p5, p4]
-  have e4 : E8_d4 x ^ 2 = 0 := by linarith [heq, p1, p3, p2, p8, p7, p6, p5, p4]
+  have p1 : 0 ≤ 2 * y1 ^ 2 := by positivity
+  have p3 : 0 ≤ 2 * y3 ^ 2 := by positivity
+  have p2 : 0 ≤ (3/2 : ℝ) * y2 ^ 2 := by positivity
+  have p8 : 0 ≤ 2 * y8 ^ 2 := by positivity
+  have p7 : 0 ≤ (3/2 : ℝ) * y7 ^ 2 := by positivity
+  have p6 : 0 ≤ (4/3 : ℝ) * y6 ^ 2 := by positivity
+  have p5 : 0 ≤ (5/4 : ℝ) * y5 ^ 2 := by positivity
+  have p4 : 0 ≤ (6/5 : ℝ) * y4 ^ 2 := by positivity
+  
+  have e1 : y1 ^ 2 = 0 := by linarith [heq, p1, p3, p2, p8, p7, p6, p5, p4]
+  have e3 : y3 ^ 2 = 0 := by linarith [heq, p1, p3, p2, p8, p7, p6, p5, p4]
+  have e2 : y2 ^ 2 = 0 := by linarith [heq, p1, p3, p2, p8, p7, p6, p5, p4]
+  have e8 : y8 ^ 2 = 0 := by linarith [heq, p1, p3, p2, p8, p7, p6, p5, p4]
+  have e7 : y7 ^ 2 = 0 := by linarith [heq, p1, p3, p2, p8, p7, p6, p5, p4]
+  have e6 : y6 ^ 2 = 0 := by linarith [heq, p1, p3, p2, p8, p7, p6, p5, p4]
+  have e5 : y5 ^ 2 = 0 := by linarith [heq, p1, p3, p2, p8, p7, p6, p5, p4]
+  have e4 : y4 ^ 2 = 0 := by linarith [heq, p1, p3, p2, p8, p7, p6, p5, p4]
   
   have z1 := sq_eq_zero_iff.mp e1
   have z3 := sq_eq_zero_iff.mp e3
@@ -289,14 +318,14 @@ theorem E8_nullspace (x : Fin 10 → ℝ) (h9 : x 9 = 0)
   have z5 := sq_eq_zero_iff.mp e5
   have z4 := sq_eq_zero_iff.mp e4
   
-  have d1 : E8_d1 x = x 1 - (1/2 : ℝ) * x 0 := rfl
-  have d3 : E8_d3 x = x 3 - (1/2 : ℝ) * x 2 := rfl
-  have d2 : E8_d2 x = x 2 - (2/3 : ℝ) * x 0 := rfl
-  have d8 : E8_d8 x = x 8 - (1/2 : ℝ) * x 7 := rfl
-  have d7 : E8_d7 x = x 7 - (2/3 : ℝ) * x 6 := rfl
-  have d6 : E8_d6 x = x 6 - (3/4 : ℝ) * x 5 := rfl
-  have d5 : E8_d5 x = x 5 - (4/5 : ℝ) * x 4 := rfl
-  have d4 : E8_d4 x = x 4 - (5/6 : ℝ) * x 0 := rfl
+  have d1 : y1 = x 1 - (1/2 : ℝ) * x 0 := hy1.symm
+  have d3 : y3 = x 3 - (1/2 : ℝ) * x 2 := hy3.symm
+  have d2 : y2 = x 2 - (2/3 : ℝ) * x 0 := hy2.symm
+  have d8 : y8 = x 8 - (1/2 : ℝ) * x 7 := hy8.symm
+  have d7 : y7 = x 7 - (2/3 : ℝ) * x 6 := hy7.symm
+  have d6 : y6 = x 6 - (3/4 : ℝ) * x 5 := hy6.symm
+  have d5 : y5 = x 5 - (4/5 : ℝ) * x 4 := hy5.symm
+  have d4 : y4 = x 4 - (5/6 : ℝ) * x 0 := hy4.symm
   
   constructor
   · linarith

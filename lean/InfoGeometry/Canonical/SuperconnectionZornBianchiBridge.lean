@@ -1,5 +1,5 @@
 import InfoGeometry.Canonical.CanonicalZornBianchiDefect
-import InfoGeometry.Canonical.NCZorn
+import InfoGeometry.Canonical.NCZornAkivisIdentity
 
 namespace InfoGeometry.Canonical.Superconnection
 

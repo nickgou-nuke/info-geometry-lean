@@ -38,17 +38,29 @@ def riemannCurvatureTwoForm
 def IsAntiSymmetricSpinConnection (omega : Fin d → Fin d → ExteriorAlgebra R V) : Prop :=
   ∀ a b, omega b a = -omega a b
 
+/-- Degree-one elements of the exterior algebra anticommute.  The proof uses
+the definition of degree one as the span of the exterior generators and the
+generator relation `ι x * ι y + ι y * ι x = 0`. -/
+theorem homogeneous_one_forms_anticommute
+    (x y : ExteriorAlgebra R V)
+    (hx : IsHomogeneousExteriorDegree (R := R) (V := V) 1 x)
+    (hy : IsHomogeneousExteriorDegree (R := R) (V := V) 1 y) :
+    x * y = -(y * x) := by
+  rcases (homogeneous_one_iff_exists_generator x).mp hx with ⟨v, rfl⟩
+  rcases (homogeneous_one_iff_exists_generator y).mp hy with ⟨w, rfl⟩
+  exact (eq_neg_iff_add_eq_zero).2 (ExteriorAlgebra.ι_add_mul_swap v w)
+
 /-- **Theorem**: Product Anti-Commutativity of Spin Connection 1-Forms ω^{bc} ∧ ω^{ca} = -ω^{ac} ∧ ω^{cb} Derived from Spin Connection Anti-Symmetry and 1-Form Degree Anti-Commutativity. -/
 theorem spinConnection_product_antiSymmetric
     (omega : Fin d → Fin d → ExteriorAlgebra R V)
     (h_anti : IsAntiSymmetricSpinConnection omega)
     (hω : ∀ a b, IsHomogeneousExteriorDegree (R:=R) (V:=V) 1 (omega a b))
-    (h_1form_anti : ∀ x y, IsHomogeneousExteriorDegree (R:=R) (V:=V) 1 x → IsHomogeneousExteriorDegree (R:=R) (V:=V) 1 y → x * y = -(y * x))
     (a b c : Fin d) :
     omega b c * omega c a = -(omega a c * omega c b) := by
   have h_bc : omega b c = -omega c b := h_anti c b
   have h_ca : omega c a = -omega a c := h_anti a c
-  have h_swap := h_1form_anti (omega c b) (omega a c) (hω c b) (hω a c)
+  have h_swap := homogeneous_one_forms_anticommute (omega c b) (omega a c)
+    (hω c b) (hω a c)
   rw [h_bc, h_ca, neg_mul_neg, h_swap]
 
 /-- **Theorem**: Anti-Symmetry of Riemann Curvature 2-Form R^{ba} = -R^{ab} Derived Structurally from Spin Connection Anti-Symmetry and 1-Form Degree. -/
@@ -57,7 +69,6 @@ theorem riemannCurvature_antiSymmetric
     (omega : Fin d → Fin d → ExteriorAlgebra R V)
     (h_anti : IsAntiSymmetricSpinConnection omega)
     (hω : ∀ a b, IsHomogeneousExteriorDegree (R:=R) (V:=V) 1 (omega a b))
-    (h_1form_anti : ∀ x y, IsHomogeneousExteriorDegree (R:=R) (V:=V) 1 x → IsHomogeneousExteriorDegree (R:=R) (V:=V) 1 y → x * y = -(y * x))
     (a b : Fin d) :
     riemannCurvatureTwoForm diff omega b a = -riemannCurvatureTwoForm diff omega a b := by
   dsimp [riemannCurvatureTwoForm]
@@ -65,7 +76,7 @@ theorem riemannCurvature_antiSymmetric
     rw [← Finset.sum_neg_distrib]
     congr 1
     ext c
-    exact spinConnection_product_antiSymmetric omega h_anti hω h_1form_anti a b c
+    exact spinConnection_product_antiSymmetric omega h_anti hω a b c
   have h_neg_ba : omega b a = -omega a b := h_anti a b
   have h1 : diff (omega b a) = -diff (omega a b) := by rw [h_neg_ba, map_neg]
   rw [neg_add, h1, h_sum]
@@ -94,13 +105,12 @@ theorem master_einstein_cartan_palatini_synthesis
     (omega : Fin 4 → Fin 4 → ExteriorAlgebra R V)
     (h_anti : IsAntiSymmetricSpinConnection omega)
     (hω : ∀ a b, IsHomogeneousExteriorDegree (R:=R) (V:=V) 1 (omega a b))
-    (h_1form_anti : ∀ x y, IsHomogeneousExteriorDegree (R:=R) (V:=V) 1 x → IsHomogeneousExteriorDegree (R:=R) (V:=V) 1 y → x * y = -(y * x))
     (a b : Fin 4) :
     (riemannCurvatureTwoForm diff omega b a = -riemannCurvatureTwoForm diff omega a b) ∧
     (torsionTwoForm diff e omega a = diff (e a) + ∑ c, omega a c * e c) ∧
     (palatiniLagrangianFourForm diff e omega =
       ∑ a1, ∑ b1, ∑ c1, ∑ d1, (leviCivita4D R a1 b1 c1 d1 • (e a1 * e b1 * riemannCurvatureTwoForm diff omega c1 d1))) := ⟨
-  riemannCurvature_antiSymmetric diff omega h_anti hω h_1form_anti a b,
+  riemannCurvature_antiSymmetric diff omega h_anti hω a b,
   rfl,
   rfl
 ⟩

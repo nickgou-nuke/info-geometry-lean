@@ -28,7 +28,12 @@ def finite_obstruction_class (n : ℕ) : Prop :=
 theorem colimit_injection_preserves_obstruction (n : ℕ) 
     (h_obs : finite_obstruction_class n) :
     finite_obstruction_class (n + 1) := by
-  sorry
+  rcases h_obs with ⟨Z, hZ⟩
+  refine ⟨amplituhedronInclusion n Z, ?_⟩
+  intro h_inclusion
+  apply hZ
+  apply amplituhedronInclusion_injective n
+  simpa using h_inclusion
 
 /-- ARCHETYPE A_2: The Two-Sheeted T-Dual Grading.
     The macroscopic stability of the space requires the CPT involution 

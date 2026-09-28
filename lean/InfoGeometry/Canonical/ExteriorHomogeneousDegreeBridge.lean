@@ -15,6 +15,45 @@ variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
 def IsHomogeneousExteriorDegree (k : ℕ) (x : ExteriorAlgebra R V) : Prop :=
   x ∈ (Submodule.span R (Set.range (fun (v : Fin k → V) => List.prod (List.ofFn (fun i => ι R (v i))))))
 
+/-- The length-one exterior products span exactly the range of the canonical
+generator map. -/
+theorem homogeneous_one_iff_exists_generator (x : ExteriorAlgebra R V) :
+    IsHomogeneousExteriorDegree (R := R) (V := V) 1 x ↔
+      ∃ v : V, ι R v = x := by
+  have hgen : Set.range (fun v : Fin 1 → V =>
+      List.prod (List.ofFn (fun i => ι R (v i)))) =
+      Set.range (ι R : V → ExteriorAlgebra R V) := by
+    ext y
+    constructor
+    · rintro ⟨v, rfl⟩
+      refine ⟨v 0, ?_⟩
+      have hv : v = fun _ => v 0 := by
+        funext i
+        exact congrArg v (Subsingleton.elim i 0)
+      rw [hv]
+      simp
+    · rintro ⟨v, rfl⟩
+      refine ⟨fun _ => v, ?_⟩
+      simp
+  have hspan : Submodule.span R (Set.range (ι R : V → ExteriorAlgebra R V)) =
+      LinearMap.range (ι R : V →ₗ[R] ExteriorAlgebra R V) := by
+    apply le_antisymm
+    · exact Submodule.span_le.2 fun _ hx => hx
+    · intro y hy
+      rcases LinearMap.mem_range.mp hy with ⟨v, rfl⟩
+      exact Submodule.subset_span ⟨v, rfl⟩
+  constructor
+  · intro hx
+    change x ∈ Submodule.span R (Set.range (fun v : Fin 1 → V =>
+      List.prod (List.ofFn (fun i => ι R (v i))))) at hx
+    rw [hgen, hspan] at hx
+    exact LinearMap.mem_range.mp hx
+  · rintro ⟨v, rfl⟩
+    change ι R v ∈ Submodule.span R (Set.range (fun v : Fin 1 → V =>
+      List.prod (List.ofFn (fun i => ι R (v i)))))
+    rw [hgen]
+    exact Submodule.subset_span ⟨v, rfl⟩
+
 /-- **Definition**: Entrywise Matrix Homogeneity MatrixIsHomogeneous k M for M ∈ Matrix_{n×n}(⋀^k V). -/
 def MatrixIsHomogeneous (k : ℕ) (M : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V)) : Prop :=
   ∀ i j, IsHomogeneousExteriorDegree k (M i j)

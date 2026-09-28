@@ -1,6 +1,5 @@
-import Mathlib.Algebra.TrivSqZeroExt
-import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Clifford.Cl55BivectorVectorRepresentation
+import InfoGeometry.Clifford.CliffordExteriorLift
 
 /-!
 # Exterior derivation induced by a `Cl(5,5)` bivector
@@ -8,9 +7,8 @@ import InfoGeometry.Clifford.Cl55BivectorVectorRepresentation
 The Clifford commutator action on vectors is already established in
 `Cl55BivectorVectorRepresentation`. This file lifts that linear action from the
 generators to the exterior algebra, and proves the ordinary Leibniz rule on the
-whole carrier. The lift is constructed by the universal property of the
-exterior algebra, using the trivial square-zero extension as the tangent
-algebra.
+whole carrier by specializing the generic construction in
+`CliffordExteriorLift`.
 -/
 
 noncomputable section
@@ -21,55 +19,19 @@ open ExteriorAlgebra
 open InfoGeometry.Clifford.Clifford55
 open InfoGeometry.Clifford.BivectorVectorRepresentation
 
-private abbrev TangentAlgebra (R V : Type*) [CommRing R] [AddCommGroup V]
-    [Module R V] :=
-  TrivSqZeroExt (ExteriorAlgebra R V) (ExteriorAlgebra R V)
-
-private def tangentGeneratorMap {R V : Type*} [CommRing R]
-    [AddCommGroup V] [Module R V] (f : V →ₗ[R] V) :
-    V →ₗ[R] TangentAlgebra R V :=
-  LinearMap.prod (ExteriorAlgebra.ι R)
-    ((ExteriorAlgebra.ι R).comp f)
-
-private theorem tangentGeneratorMap_sq_zero {R V : Type*} [CommRing R]
-    [AddCommGroup V] [Module R V] (f : V →ₗ[R] V) (v : V) :
-    tangentGeneratorMap f v * tangentGeneratorMap f v = 0 := by
-  apply TrivSqZeroExt.ext
-  · simp [tangentGeneratorMap, ExteriorAlgebra.ι_sq_zero]
-  · change ExteriorAlgebra.ι R v * ExteriorAlgebra.ι R (f v) +
-      ExteriorAlgebra.ι R (f v) * ExteriorAlgebra.ι R v = 0
-    exact ExteriorAlgebra.ι_add_mul_swap v (f v)
-
-private noncomputable def tangentLift {R V : Type*} [CommRing R]
-    [AddCommGroup V] [Module R V] (f : V →ₗ[R] V) :
-    ExteriorAlgebra R V →ₐ[R] TangentAlgebra R V :=
-  ExteriorAlgebra.lift R ⟨tangentGeneratorMap f, tangentGeneratorMap_sq_zero f⟩
-
 /-- The linear endomorphism of the exterior algebra induced by a linear map on
 its degree-one generators. -/
 noncomputable def liftExteriorDerivation {R V : Type*} [CommRing R]
     [AddCommGroup V] [Module R V] (f : V →ₗ[R] V) :
     ExteriorAlgebra R V →ₗ[R] ExteriorAlgebra R V :=
-  (TrivSqZeroExt.sndHom (ExteriorAlgebra R V) (ExteriorAlgebra R V)).restrictScalars R ∘ₗ
-    (tangentLift f).toLinearMap
+  CliffordExteriorLift.exteriorLift f
 
 /-- On degree-one generators, the lifted map agrees with the prescribed
 linear action. -/
 theorem liftExteriorDerivation_ι {R V : Type*} [CommRing R]
     [AddCommGroup V] [Module R V] (f : V →ₗ[R] V) (v : V) :
     liftExteriorDerivation f (ExteriorAlgebra.ι R v) = ExteriorAlgebra.ι R (f v) := by
-  simp [liftExteriorDerivation, tangentLift, tangentGeneratorMap]
-
-private theorem tangentLift_fst {R V : Type*} [CommRing R]
-    [AddCommGroup V] [Module R V] (f : V →ₗ[R] V) (x : ExteriorAlgebra R V) :
-    (tangentLift f x).fst = x := by
-  have h : (TrivSqZeroExt.fstHom R (ExteriorAlgebra R V)
-      (ExteriorAlgebra R V)).comp (tangentLift f) = AlgHom.id R (ExteriorAlgebra R V) := by
-    apply ExteriorAlgebra.hom_ext
-    ext v
-    simp [tangentLift, tangentGeneratorMap]
-  exact congrArg (fun g : ExteriorAlgebra R V →ₐ[R] ExteriorAlgebra R V => g x) h
-    |> by simpa using id
+  exact CliffordExteriorLift.exteriorLift_ι f v
 
 /-- The extension satisfies the ordinary (degree-zero) Leibniz rule on all
 exterior-algebra elements. -/
@@ -78,10 +40,7 @@ theorem liftExteriorDerivation_leibniz {R V : Type*} [CommRing R]
     (x y : ExteriorAlgebra R V) :
     liftExteriorDerivation f (x * y) =
       liftExteriorDerivation f x * y + x * liftExteriorDerivation f y := by
-  change ((tangentLift f) (x * y)).snd =
-    ((tangentLift f x).snd * y) + (x * (tangentLift f y).snd)
-  rw [map_mul, TrivSqZeroExt.snd_mul, tangentLift_fst, tangentLift_fst]
-  simp [mul_comm, add_comm]
+  exact CliffordExteriorLift.exteriorLift_even_derivation f x y
 
 /-- The degree-one action appearing in the Clifford commutator formula, bundled
 as a linear endomorphism of `V55`. -/
@@ -95,8 +54,7 @@ noncomputable def bivectorVectorTransformLinear (u v : V55) : V55 →ₗ[ℝ] V5
   map_smul' c w := by
     dsimp [bivectorVectorTransform]
     rw [QuadraticMap.polar_smul_right, QuadraticMap.polar_smul_right,
-      smul_smul, smul_smul]
-    rfl
+      smul_assoc, smul_assoc, smul_sub]
 
 local notation "Exterior55" => ExteriorAlgebra ℝ V55
 

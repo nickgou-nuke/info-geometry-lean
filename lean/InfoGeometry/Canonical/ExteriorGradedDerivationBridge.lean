@@ -25,6 +25,13 @@ structure ExteriorDifferentialData (R V : Type*) [CommRing R] [AddCommGroup V] [
   gradedLeibniz : IsGradedDerivation d
   sq_zero : d.comp d = 0
 
+/-- The square-zero law, evaluated at any exterior-algebra element. -/
+theorem differential_sq_zero
+    (D : ExteriorDifferentialData R V) (x : ExteriorAlgebra R V) :
+    D.d (D.d x) = 0 := by
+  have h := congrArg (fun d : Module.End R (ExteriorAlgebra R V) => d x) D.sq_zero
+  simpa only [LinearMap.comp_apply, LinearMap.zero_apply] using h
+
 /-- **Theorem**: Odd-Degree 1-Form Leibniz Derivation Rule d(A·y) = dA·y - A·dy (with (-1)^1 = -1). -/
 theorem one_form_leibniz
     (D : ExteriorDifferentialData R V)

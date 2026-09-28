@@ -26,8 +26,7 @@ theorem akivis_identity (x y z : A) :
       _root_.associator x y z + _root_.associator y z x +
         _root_.associator z x y - _root_.associator y x z -
           _root_.associator z y x - _root_.associator x z y := by
-  simp [akivisJacobiator, akivisBracket, _root_.associator_apply,
-    sub_eq_add_neg, mul_add, add_mul]
+  simp only [akivisJacobiator, akivisBracket, _root_.associator_apply, sub_mul, mul_sub]
   abel
 
 def rightNestedJacobiator (x y z : A) : A :=

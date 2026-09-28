@@ -35,7 +35,12 @@ inductive colimit. It cannot be resolved at any finite stage.
 theorem obstruction_persists_in_tower (n : ℕ) (ħ : ℝ) 
     (h_obs : finite_heisenberg_obstruction n ħ) :
     finite_heisenberg_obstruction (n + 1) ħ := by
-  sorry
+  rcases h_obs with ⟨Z, hZ⟩
+  refine ⟨amplituhedronInclusion n Z, ?_⟩
+  intro h_inclusion
+  apply hZ
+  apply amplituhedronInclusion_injective n
+  simpa using h_inclusion
 
 /-!
 # Archetype 402: The Modular Krein CPT Grading

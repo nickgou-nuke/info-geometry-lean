@@ -74,9 +74,9 @@ theorem logarithmicCohomologyGenerator_ne_zero : dlogClass ≠ 0 := by
   have h' := congrArg puncturedAffineH1EquivComplex h
   norm_num at h'
 
-/-- The Carnot capacity bound is the period of the de Rham logarithmic potential (Dilogarithm).
-    This establishes the mathematical stream linking the Carnot cycle to the unipotent motive. -/
-theorem carnot_capacity_is_dilog_seam_period :
+/-- Algebraic rearrangement of the declared closed-form value
+`li2_half_value`; this does not identify that value with an integral. -/
+theorem carnot_capacity_from_closed_form_identity :
     W_carnot_invariant = (2 / Real.pi ^ 2) * (li2_half_value + (1 / 2) * H_shannon_bit ^ 2) := by
   have h := dilogarithm_carnot_shannon_unification
   have h2 : li2_half_value + (1 / 2) * (H_shannon_bit) ^ 2 = (Real.pi ^ 2 / 2) * W_carnot_invariant := by

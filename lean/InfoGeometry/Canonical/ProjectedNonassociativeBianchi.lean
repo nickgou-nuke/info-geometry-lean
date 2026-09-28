@@ -91,4 +91,67 @@ theorem rightNestedBianchi_eq_neg_leakage_sum
     shadowAssociator_eq_associatorLeakage,
     shadowAssociator_eq_associatorLeakage]
 
+/-- The projected algebraic Bianchi defect vanishes exactly when the cyclic
+associator-leakage balance vanishes.  This is an algebraic criterion only; it
+does not assert a differential-form or torsion identity. -/
+theorem rightNestedBianchi_eq_zero_iff_leakage_balance_eq_zero
+    (inclusion : Z →ₗ[R] E) (readout : E →ₗ[R] Z)
+    (C : ProjectedConnection (Z := Z) Point Tangent)
+    (p : Point) (X Y Z₁ : Tangent) :
+    rightNestedBianchi inclusion readout C p X Y Z₁ = 0 ↔
+      ((associatorLeakage inclusion readout (C.form p X) (C.form p Y) (C.form p Z₁) +
+          associatorLeakage inclusion readout (C.form p Y) (C.form p Z₁) (C.form p X) +
+          associatorLeakage inclusion readout (C.form p Z₁) (C.form p X) (C.form p Y)) -
+        (associatorLeakage inclusion readout (C.form p Y) (C.form p X) (C.form p Z₁) +
+          associatorLeakage inclusion readout (C.form p Z₁) (C.form p Y) (C.form p X) +
+          associatorLeakage inclusion readout (C.form p X) (C.form p Z₁) (C.form p Y))) = 0 := by
+  rw [rightNestedBianchi_eq_neg_leakage_sum]
+  simp
+
+/-- If the included shadow is closed under the ambient product and `readout`
+is a left inverse to `inclusion`, then the projected product is associative.
+Thus its associator defect vanishes for a structural reason: projection loses
+no products. -/
+theorem shadowAssociator_eq_zero_of_mul_closed_image
+    (inclusion : Z →ₗ[R] E) (readout : E →ₗ[R] Z)
+    (hsection : ∀ x, readout (inclusion x) = x)
+    (hclosed : ∀ x y, ∃ w, inclusion x * inclusion y = inclusion w)
+    (x y z : Z) :
+    shadowAssociator inclusion readout x y z = 0 := by
+  have hmul (a b : Z) :
+      inclusion (shadowMul inclusion readout a b) = inclusion a * inclusion b := by
+    obtain ⟨w, hw⟩ := hclosed a b
+    calc
+      inclusion (shadowMul inclusion readout a b) =
+          inclusion (readout (inclusion a * inclusion b)) := rfl
+      _ = inclusion (readout (inclusion w)) := by rw [hw]
+      _ = inclusion w := by rw [hsection]
+      _ = inclusion a * inclusion b := hw.symm
+  unfold shadowAssociator shadowMul
+  rw [← map_sub]
+  congr 1
+  rw [hmul x y, hmul y z]
+  simp [mul_assoc]
+
+/-- Under multiplicative closure of the included shadow, the projected
+right-nested commutator Bianchi expression vanishes. This does not assert the
+same for a genuinely nonassociative projected product whose image is not
+closed. -/
+theorem rightNestedBianchi_eq_zero_of_mul_closed_image
+    (inclusion : Z →ₗ[R] E) (readout : E →ₗ[R] Z)
+    (hsection : ∀ x, readout (inclusion x) = x)
+    (hclosed : ∀ x y, ∃ w, inclusion x * inclusion y = inclusion w)
+    (C : ProjectedConnection (Z := Z) Point Tangent)
+    (p : Point) (X Y Z₁ : Tangent) :
+    rightNestedBianchi inclusion readout C p X Y Z₁ = 0 := by
+  have hassoc (a b c : Z) : shadowAssociator inclusion readout a b c = 0 :=
+    shadowAssociator_eq_zero_of_mul_closed_image
+      inclusion readout hsection hclosed a b c
+  have hjac : shadowJacobiator inclusion readout
+      (C.form p X) (C.form p Y) (C.form p Z₁) = 0 := by
+    rw [shadow_akivis_identity]
+    simp [hassoc]
+  rw [rightNestedBianchi_eq_neg_shadowJacobiator, hjac]
+  simp
+
 end InfoGeometry.Canonical.ProjectedNonassociativeBianchi

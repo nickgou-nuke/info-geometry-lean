@@ -72,6 +72,12 @@ def exteriorLift (T : V →ₗ[R] V) : ExteriorAlgebra R V →ₗ[R] ExteriorAlg
   map_add' x y := by simp [exteriorLiftAux]
   map_smul' c x := by simp [exteriorLiftAux]
 
+/-- The lifted derivation restricts to the given linear map on generators. -/
+@[simp] theorem exteriorLift_ι (T : V →ₗ[R] V) (v : V) :
+    exteriorLift T (ι R v) = ι R (T v) := by
+  simp [exteriorLift, exteriorLiftAux, liftMatrix,
+    ExteriorAlgebra.lift_ι_apply]
+
 theorem exteriorLift_even_derivation (T : V →ₗ[R] V) (x y : ExteriorAlgebra R V) :
     exteriorLift T (x * y) = exteriorLift T x * y + x * exteriorLift T y := by
   dsimp [exteriorLift]

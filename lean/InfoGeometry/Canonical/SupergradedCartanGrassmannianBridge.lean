@@ -18,11 +18,16 @@ def grade_zero_curvature (w : GradedMaurerCartanForm A) : A :=
 
 lemma bracket_antisymm (x y : A) : bracket x y = - bracket y x := by
   dsimp [bracket]
-  ring
+  abel
+
+lemma bracket_self (x : A) : bracket x x = 0 := by
+  simp [bracket]
 
 theorem grade_zero_curvature_expansion (w : GradedMaurerCartanForm A) :
-  grade_zero_curvature w = bracket w.w_0 w.w_0 + 2 • bracket w.w_n1 w.w_p1 + 2 • bracket w.w_n2 w.w_p2 := by
-  dsimp [grade_zero_curvature, bracket]
-  ring
+    grade_zero_curvature w = 0 := by
+  dsimp [grade_zero_curvature]
+  rw [bracket_antisymm w.w_p1 w.w_n1,
+    bracket_antisymm w.w_p2 w.w_n2, bracket_self]
+  abel
 
 end SupergradedCartanGrassmannian

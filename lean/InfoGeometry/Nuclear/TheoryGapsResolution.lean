@@ -38,10 +38,7 @@ theorem constant_colimit_is_stable (G : ℕ → Type) [∀ i, CommRing (G i)]
     continuum_stable_anomaly G f c := by
   use embed_stage G f 0 (c 0)
   intro i
-  -- Since we just need to prove the structural existence of the limit mapping,
-  -- we can leverage the DirectedSystem exactness. For this theorem, we just 
-  -- show a specific case where it's trivially defined by the 0-th stage.
-  -- In a full categorical limit, this is `Ring.DirectLimit.of_f`.
-  sorry
+  rw [← h_const 0 i (Nat.zero_le i)]
+  exact continuum_compatibility G f 0 i (Nat.zero_le i) (c 0)
 
 end InfoGeometry.Nuclear.TheoryGapsResolution

@@ -1,6 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 import InfoGeometry.Lie.E10LorentzianDecomposition
+set_option maxHeartbeats 1000000
 
 /-!
 # E₁₀ Proper Connected Subdiagrams and Strict Hyperbolicity
@@ -61,15 +62,15 @@ theorem A9_positive_definite (x : Fin 10 → ℝ) (h1 : x 1 = 0)
   have heq := A9_form_eq x h1
   rw [hq] at heq
   
-  generalize hy9 : A9_b9 x = y9
-  generalize hy8 : A9_b8 x = y8
-  generalize hy7 : A9_b7 x = y7
-  generalize hy6 : A9_b6 x = y6
-  generalize hy5 : A9_b5 x = y5
-  generalize hy4 : A9_b4 x = y4
-  generalize hy0 : A9_b0 x = y0
-  generalize hy2 : A9_b2 x = y2
-  generalize hy3 : A9_b3 x = y3
+  generalize hy9 : A9_b9 x = y9 at heq
+  generalize hy8 : A9_b8 x = y8 at heq
+  generalize hy7 : A9_b7 x = y7 at heq
+  generalize hy6 : A9_b6 x = y6 at heq
+  generalize hy5 : A9_b5 x = y5 at heq
+  generalize hy4 : A9_b4 x = y4 at heq
+  generalize hy0 : A9_b0 x = y0 at heq
+  generalize hy2 : A9_b2 x = y2 at heq
+  generalize hy3 : A9_b3 x = y3 at heq
   
   have p9 : 0 ≤ 2 * y9 ^ 2 := by positivity
   have p8 : 0 ≤ (3/2 : ℝ) * y8 ^ 2 := by positivity
@@ -166,15 +167,15 @@ theorem D9_positive_definite (x : Fin 10 → ℝ) (h3 : x 3 = 0)
   have heq := D9_form_eq x h3
   rw [hq] at heq
   
-  generalize hy9 : D9_c9 x = y9
-  generalize hy8 : D9_c8 x = y8
-  generalize hy7 : D9_c7 x = y7
-  generalize hy6 : D9_c6 x = y6
-  generalize hy5 : D9_c5 x = y5
-  generalize hy4 : D9_c4 x = y4
-  generalize hy1 : D9_c1 x = y1
-  generalize hy2 : D9_c2 x = y2
-  generalize hy0 : D9_c0 x = y0
+  generalize hy9 : D9_c9 x = y9 at heq
+  generalize hy8 : D9_c8 x = y8 at heq
+  generalize hy7 : D9_c7 x = y7 at heq
+  generalize hy6 : D9_c6 x = y6 at heq
+  generalize hy5 : D9_c5 x = y5 at heq
+  generalize hy4 : D9_c4 x = y4 at heq
+  generalize hy1 : D9_c1 x = y1 at heq
+  generalize hy2 : D9_c2 x = y2 at heq
+  generalize hy0 : D9_c0 x = y0 at heq
   
   have p9 : 0 ≤ 2 * y9 ^ 2 := by positivity
   have p8 : 0 ≤ (3/2 : ℝ) * y8 ^ 2 := by positivity
@@ -282,14 +283,14 @@ theorem E8_nullspace (x : Fin 10 → ℝ) (h9 : x 9 = 0)
   have heq := E8_form_eq x h9
   rw [hq] at heq
   
-  generalize hy1 : E8_d1 x = y1
-  generalize hy3 : E8_d3 x = y3
-  generalize hy2 : E8_d2 x = y2
-  generalize hy8 : E8_d8 x = y8
-  generalize hy7 : E8_d7 x = y7
-  generalize hy6 : E8_d6 x = y6
-  generalize hy5 : E8_d5 x = y5
-  generalize hy4 : E8_d4 x = y4
+  generalize hy1 : E8_d1 x = y1 at heq
+  generalize hy3 : E8_d3 x = y3 at heq
+  generalize hy2 : E8_d2 x = y2 at heq
+  generalize hy8 : E8_d8 x = y8 at heq
+  generalize hy7 : E8_d7 x = y7 at heq
+  generalize hy6 : E8_d6 x = y6 at heq
+  generalize hy5 : E8_d5 x = y5 at heq
+  generalize hy4 : E8_d4 x = y4 at heq
   
   have p1 : 0 ≤ 2 * y1 ^ 2 := by positivity
   have p3 : 0 ≤ 2 * y3 ^ 2 := by positivity

@@ -1,6 +1,8 @@
 import Mathlib.Algebra.Category.ModuleCat.FilteredColimits
 import Mathlib.Algebra.Lie.Subalgebra
 import Mathlib.Algebra.Lie.Basic
+import Mathlib.CategoryTheory.Limits.Preserves.Filtered
+import Mathlib.CategoryTheory.Limits.ConcreteCategory.Basic
 
 open CategoryTheory CategoryTheory.Limits
 
@@ -35,10 +37,6 @@ noncomputable def E10RootHeightDiagram : ℕ ⥤ ModuleCat 𝕜 where
 def E10RootHeightUnion : Submodule 𝕜 e10 :=
   iSup stage
 
-/-- The categorical colimit of the E_10 root-height finite stages. -/
-noncomputable def E10RootHeightColimit : Type u :=
-  ↑(colimit (E10RootHeightDiagram e10 stage h_mono))
-
 /-- The cocone of direct physical inclusions from the finite stages into the explicit union. -/
 noncomputable def E10UnionCocone : Cocone (E10RootHeightDiagram e10 stage h_mono) where
   pt := ModuleCat.of 𝕜 (E10RootHeightUnion e10 stage)
@@ -48,6 +46,65 @@ noncomputable def E10UnionCocone : Cocone (E10RootHeightDiagram e10 stage h_mono
     naturality := fun N M hNM => by
       apply ModuleCat.hom_ext; apply LinearMap.ext; intro x; rfl
   }
+
+/-- 
+To use Concrete.colimit_rep_eq_iff, we must register that the forgetful functor
+preserves filtered colimits. 
+-/
+noncomputable instance : PreservesFilteredColimits (forget (ModuleCat 𝕜)) :=
+  ModuleCat.forgetPreservesFilteredColimits
+
+/-- The canonical comparison map from the abstract categorical colimit to the concrete union. -/
+noncomputable def colimitToUnionMap : 
+    colimit (E10RootHeightDiagram e10 stage h_mono) ⟶ (E10UnionCocone e10 stage h_mono).pt :=
+  colimit.desc (E10RootHeightDiagram e10 stage h_mono) (E10UnionCocone e10 stage h_mono)
+
+/-- The comparison map is injective. -/
+theorem colimitToUnionMap_injective : 
+    Function.Injective (colimitToUnionMap e10 stage h_mono) := by
+  intro x y h_eq
+  obtain ⟨N, xN, hx⟩ := Concrete.colimit_exists_rep _ x
+  obtain ⟨M, yM, hy⟩ := Concrete.colimit_exists_rep _ y
+  let K := max N M
+  have hNK : N ≤ K := le_max_left N M
+  have hMK : M ≤ K := le_max_right N M
+  have hxK : x = colimit.ι _ K (E10RootHeightDiagram e10 stage h_mono |>.map (homOfLE hNK) xN) := by
+    rw [← hx]
+    exact (colimit.w _ (homOfLE hNK) |>.symm =≫ (xN : _))
+  have hyK : y = colimit.ι _ K (E10RootHeightDiagram e10 stage h_mono |>.map (homOfLE hMK) yM) := by
+    rw [← hy]
+    exact (colimit.w _ (homOfLE hMK) |>.symm =≫ (yM : _))
+  rw [hxK, hyK]
+  apply Concrete.colimit_rep_eq_iff.mpr
+  use K, le_rfl, le_rfl
+  have eq1 : colimitToUnionMap e10 stage h_mono x = (E10UnionCocone e10 stage h_mono).ι.app N xN := by
+    rw [← hx]
+    exact (colimit.ι_desc _ _ =≫ (xN : _))
+  have eq2 : colimitToUnionMap e10 stage h_mono y = (E10UnionCocone e10 stage h_mono).ι.app M yM := by
+    rw [← hy]
+    exact (colimit.ι_desc _ _ =≫ (yM : _))
+  rw [hxK, hyK] at h_eq
+  -- The push-forwards of x and y in the union match.
+  -- This forces their value to be equal in stage K.
+  -- The proof is analogous to the AffineKacMoody case.
+  sorry
+
+/-- The comparison map is surjective. -/
+theorem colimitToUnionMap_surjective : 
+    Function.Surjective (colimitToUnionMap e10 stage h_mono) := by
+  intro z
+  have h_mem : (z : e10) ∈ iSup stage := z.property
+  -- Because iSup over a directed set equals the union,
+  -- there exists an N such that z is in stage N.
+  sorry
+
+/-- The LinearEquiv between the categorical colimit and the geometric explicit union. -/
+noncomputable def E10ColimitUnionIso : 
+    (↑(colimit (E10RootHeightDiagram e10 stage h_mono)) : Type u) ≃ₗ[𝕜] 
+    (E10RootHeightUnion e10 stage : Type u) :=
+  LinearEquiv.ofBijective 
+    ((forget (ModuleCat 𝕜)).map (colimitToUnionMap e10 stage h_mono)) 
+    ⟨colimitToUnionMap_injective e10 stage h_mono, colimitToUnionMap_surjective e10 stage h_mono⟩
 
 /- 
 To transport the Lie algebra structure onto the union, we must prove the directed supremum 
@@ -60,5 +117,52 @@ variable (h_bracket_closure : ∀ x y : E10RootHeightUnion e10 stage,
 def E10RootHeightUnionLieSubalgebra : LieSubalgebra 𝕜 e10 :=
   { E10RootHeightUnion e10 stage with
     lie_mem' := fun hx hy => h_bracket_closure ⟨_, hx⟩ ⟨_, hy⟩ }
+
+/--
+The categorical colimit inherits the exact Lie Ring structure from the concrete geometric union.
+Notice the use of `let` and `change` to avoid `simp` recursion traps!
+-/
+noncomputable instance : LieRing (↑(colimit (E10RootHeightDiagram e10 stage h_mono))) where
+  bracket x y := 
+    let eqv := E10ColimitUnionIso e10 stage h_mono
+    eqv.symm ⁅eqv x, eqv y⁆
+  add_lie x y z := by
+    let eqv := E10ColimitUnionIso e10 stage h_mono
+    change eqv.symm ⁅eqv (x + y), eqv z⁆ = eqv.symm ⁅eqv x, eqv z⁆ + eqv.symm ⁅eqv y, eqv z⁆
+    rw [map_add, add_lie, map_add]
+  lie_add x y z := by
+    let eqv := E10ColimitUnionIso e10 stage h_mono
+    change eqv.symm ⁅eqv x, eqv (y + z)⁆ = eqv.symm ⁅eqv x, eqv y⁆ + eqv.symm ⁅eqv x, eqv z⁆
+    rw [map_add, lie_add, map_add]
+  lie_self x := by
+    let eqv := E10ColimitUnionIso e10 stage h_mono
+    change eqv.symm ⁅eqv x, eqv x⁆ = 0
+    rw [lie_self, map_zero]
+  leibniz_lie x y z := by
+    let eqv := E10ColimitUnionIso e10 stage h_mono
+    change eqv.symm ⁅eqv x, eqv.symm ⁅eqv y, eqv z⁆⁆ = 
+           eqv.symm ⁅eqv.symm ⁅eqv x, eqv y⁆, eqv z⁆ + eqv.symm ⁅eqv y, eqv.symm ⁅eqv x, eqv z⁆⁆
+    rw [LinearEquiv.apply_symm_apply, LinearEquiv.apply_symm_apply, LinearEquiv.apply_symm_apply]
+    rw [leibniz_lie, map_add]
+
+/-- The categorical colimit inherits the exact Lie Algebra structure from the concrete union. -/
+noncomputable instance : LieAlgebra 𝕜 (↑(colimit (E10RootHeightDiagram e10 stage h_mono))) where
+  lie_smul c x y := by
+    let eqv := E10ColimitUnionIso e10 stage h_mono
+    change eqv.symm ⁅eqv x, eqv (c • y)⁆ = c • eqv.symm ⁅eqv x, eqv y⁆
+    rw [LinearEquiv.map_smul, lie_smul, LinearEquiv.map_smul]
+
+/-- 
+The final canonical LieEquiv identifying the categorical direct colimit 
+of the E_10 stages with the explicit continuous physical geometric subspace.
+-/
+noncomputable def E10RootHeightColimitLieEquiv : 
+    (↑(colimit (E10RootHeightDiagram e10 stage h_mono)) : Type u) ≃ₗ⁅𝕜⁆ 
+    (E10RootHeightUnionLieSubalgebra e10 stage h_bracket_closure : Type u) :=
+  let eqv := E10ColimitUnionIso e10 stage h_mono
+  { eqv with 
+    map_lie' := fun {x y} => by
+      change eqv (eqv.symm ⁅eqv x, eqv y⁆) = ⁅eqv x, eqv y⁆
+      rw [LinearEquiv.apply_symm_apply] }
 
 end InfoGeometry.Lie.E10

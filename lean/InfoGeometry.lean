@@ -146,3 +146,13 @@ import InfoGeometry.GrandUnification.TypeDBitwordAtomikBridge
 import InfoGeometry.GrandUnification.TypeDZeroOrbitRigidity
 import InfoGeometry.GrandUnification.TypeDWeylSemidirectAction
 import InfoGeometry.GrandUnification.CantorTypeDBitwordLimit
+
+/-!
+# Recovered Architecture Integrations
+Re-integrating the Cuntz Colimit GPU Split Algebra architecture that was
+previously orphaned in the recovery tree.
+-/
+import InfoGeometry.NCG.CuntzColimitKMSTiltGNS
+import InfoGeometry.NCG.CuntzColimitShiftKMSGNSBridge
+import InfoGeometry.MassSpectrometry.GPUExecutionContracts
+import InfoGeometry.Canonical.CuntzFractalHoppingAnyons

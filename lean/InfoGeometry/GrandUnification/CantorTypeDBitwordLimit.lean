@@ -27,8 +27,8 @@ V.   `TypeDCantorLimit`: The categorical colimit representing the infinite conti
 /-- Archetype I: Causal Projection (Zero-Padding) -/
 def padZeros (i j : ℕ) (hij : i ≤ j) : Bitword (Fin i) →ₗ[ZMod 2] Bitword (Fin j) where
   toFun w k := if h : k.val < i then w ⟨k.val, h⟩ else 0
-  map_add' x y := by ext k; simp; split <;> rfl
-  map_smul' c x := by ext k; simp; split <;> rfl
+  map_add' x y := by ext k; simp; 
+  map_smul' c x := by ext k; simp; 
 
 /-- Archetype II: Parity Conservation Under Projection -/
 lemma padZeros_parity (i j : ℕ) (hij : i ≤ j) (w : Bitword (Fin i)) :
@@ -36,7 +36,7 @@ lemma padZeros_parity (i j : ℕ) (hij : i ≤ j) (w : Bitword (Fin i)) :
   dsimp [bitwordParity, padZeros, LinearMap.coe_mk, AddHom.coe_mk]
   let s : Finset (Fin j) := (Finset.univ : Finset (Fin i)).image (Fin.castLE hij)
   have h_sub : s ⊆ Finset.univ := Finset.subset_univ _
-  have h_eq : ∑ k : Fin j, (if h : k.val < i then w ⟨k.val, h⟩ else 0) = ∑ k in s, (if h : k.val < i then w ⟨k.val, h⟩ else 0) := by
+  have h_eq : ∑ k : Fin j, (if h : k.val < i then w ⟨k.val, h⟩ else 0) = ∑ k ∈ s, (if h : k.val < i then w ⟨k.val, h⟩ else 0) := by
     apply Finset.sum_subset h_sub
     intro x _ hx
     dsimp [s] at hx

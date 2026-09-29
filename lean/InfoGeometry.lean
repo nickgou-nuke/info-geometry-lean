@@ -140,3 +140,5 @@ available through the root project surface.  `InfoGeometry.All` is the explicit
 whole-project umbrella; `InfoGeometry.Library` is only a compatibility umbrella
 for the canonical subset.
 -/
+import InfoGeometry.GrandUnification.SiegelModuliSpace
+import InfoGeometry.GrandUnification.MTheoryComplexTorus

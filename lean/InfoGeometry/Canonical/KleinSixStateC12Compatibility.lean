@@ -128,15 +128,8 @@ theorem parityAction_mul (g h : Deck2) (v : State) :
 
 theorem parityAction_add (g h : Deck2) (v : State) :
     parityAction (g + h) v = parityAction h (parityAction g v) := by
-  have h11 : (1 + 1 : Deck2) = 0 := rfl
-  have h6 : (masterUnit ^ 6) * (masterUnit ^ 6) = 1 := by
-    rw [← pow_two, ← pow_mul, show 6 * 2 = 12 by norm_num,
-      masterUnit_twelve]
-  have h6m : masterTwelve ^ 6 * masterTwelve ^ 6 = (1 : StateMatrix) := by
-    rw [← pow_two, ← pow_mul, show 6 * 2 = 12 by norm_num,
-      masterTwelve_twelve]
-  fin_cases g <;> fin_cases h <;>
-    simp [parityAction, parityUnit, h6m, h11, Matrix.mulVec_mulVec]
+  rw [add_comm g h]
+  exact parityAction_mul h g v
 
 def c12StateCoordChange (i j x : KleinSixStateVectorBundleCore.Base) : State →L[ℂ] State :=
   parityActionCLM (deckTransition i j x)

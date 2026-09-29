@@ -8915,3 +8915,4 @@ import InfoGeometry.WillertonIsbellAmariDualityAudit
 import InfoGeometry.auto_blueprints
 import InfoGeometry.generalizedKL
 import InfoGeometry.Canonical.ProjectedLFunctionCalibration
+import InfoGeometry.Canonical.KleinSixStateC12Compatibility

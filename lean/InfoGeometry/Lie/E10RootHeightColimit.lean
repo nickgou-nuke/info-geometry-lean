@@ -74,7 +74,6 @@ def height (a : RootLattice) : ℤ :=
 theorem height_add (a b : RootLattice) : height (a + b) = height a + height b := by
   dsimp [height]
   ring
-  linarith
 
 def HeightCutoff (N : ℕ) : Submodule ℚ SerreAlgebra :=
   ⨆ (a : RootLattice) (_ : |height a| ≤ N), SerreHomogeneousSubmodule a

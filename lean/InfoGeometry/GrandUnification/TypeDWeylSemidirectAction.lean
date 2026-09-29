@@ -60,7 +60,7 @@ def permAction (σ : Equiv.Perm ι) (w : Bitword ι) : Bitword ι :=
 lemma perm_preserves_parity (σ : Equiv.Perm ι) (w : Bitword ι) :
     bitwordParity (permAction σ w) = bitwordParity w := by
   unfold bitwordParity permAction
-  exact Fintype.sum_equiv σ.symm w (fun x => w x) (fun x => rfl)
+  exact Equiv.sum_comp σ.symm w
 
 /-- 
 Archetype V: The Orbit Equivalence Theorem.

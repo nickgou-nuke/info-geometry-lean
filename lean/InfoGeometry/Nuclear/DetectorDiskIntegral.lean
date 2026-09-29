@@ -58,7 +58,8 @@ theorem diskProbability_eq {d : ℝ} (hd : 0 < d) (R : ℝ) :
   rw [intervalIntegral.integral_eq_sub_of_hasDerivAt
     (fun ρ _ => hasDerivAt_diskPrimitive hd ρ)
     ((continuous_diskDensity hd).intervalIntegrable 0 R)]
-  simp only [zero_pow, add_zero, Real.sqrt_sq hd.le]
+  norm_num
+  rw [Real.sqrt_sq hd.le]
   field_simp [hd0, hR0] <;> ring
 
 theorem diskProbability_nonneg {d R : ℝ} (hd : 0 < d) (hR : 0 ≤ R) :

@@ -21,7 +21,7 @@ IV.  `permAction`: The Routing Permutation (Weyl Group Action)
 V.   `typeD_hardware_preserves_parity`: The Orbit Equivalence Theorem
 -/
 
-variable {ι : Type u} [Fintype ι]
+variable {ι : Type u} [Fintype ι] [DecidableEq ι]
 
 /-- Archetype I: The Bitword Vector Space -/
 abbrev Bitword (ι : Type u) := ι → ZMod 2
@@ -111,7 +111,8 @@ theorem typeD_reachable_iff_parity_eq (x y : Bitword ι) :
     refine ⟨⟨x + y, hdelta⟩, Equiv.refl ι, ?_⟩
     change x + (x + y) = y
     funext i
-    change (x i + x i) + y i = y i
+    change x i + (x i + y i) = y i
+    rw [← add_assoc]
     rw [Omega.SPG.zmod2_add_self, zero_add]
 
 end InfoGeometry.GrandUnification.TypeDWeyl

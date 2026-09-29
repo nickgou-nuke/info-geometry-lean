@@ -117,23 +117,27 @@ noncomputable def colimitEquivLieSubalgebra :
 noncomputable instance colimitLieRing : LieRing (affineFiniteModeColimit Φ hΦ hΦs) where
   bracket x y := (colimitEquivLieSubalgebra Φ hΦ hΦs).symm ⁅colimitEquivLieSubalgebra Φ hΦ hΦs x, colimitEquivLieSubalgebra Φ hΦ hΦs y⁆
   add_lie x y z := by
-    change (colimitEquivLieSubalgebra Φ hΦ hΦs).symm ⁅colimitEquivLieSubalgebra Φ hΦ hΦs (x + y), colimitEquivLieSubalgebra Φ hΦ hΦs z⁆ = _
+    let eqv := colimitEquivLieSubalgebra Φ hΦ hΦs
+    change eqv.symm ⁅eqv (x + y), eqv z⁆ = eqv.symm ⁅eqv x, eqv z⁆ + eqv.symm ⁅eqv y, eqv z⁆
     rw [map_add, add_lie, map_add]
   lie_add x y z := by
-    change (colimitEquivLieSubalgebra Φ hΦ hΦs).symm ⁅colimitEquivLieSubalgebra Φ hΦ hΦs x, colimitEquivLieSubalgebra Φ hΦ hΦs (y + z)⁆ = _
+    let eqv := colimitEquivLieSubalgebra Φ hΦ hΦs
+    change eqv.symm ⁅eqv x, eqv (y + z)⁆ = eqv.symm ⁅eqv x, eqv y⁆ + eqv.symm ⁅eqv x, eqv z⁆
     rw [map_add, lie_add, map_add]
   lie_self x := by
-    change (colimitEquivLieSubalgebra Φ hΦ hΦs).symm ⁅colimitEquivLieSubalgebra Φ hΦ hΦs x, colimitEquivLieSubalgebra Φ hΦ hΦs x⁆ = _
+    let eqv := colimitEquivLieSubalgebra Φ hΦ hΦs
+    change eqv.symm ⁅eqv x, eqv x⁆ = 0
     rw [lie_self, map_zero]
   leibniz_lie x y z := by
-    change (colimitEquivLieSubalgebra Φ hΦ hΦs).symm ⁅_, _⁆ = (colimitEquivLieSubalgebra Φ hΦ hΦs).symm ⁅_, _⁆ + (colimitEquivLieSubalgebra Φ hΦ hΦs).symm ⁅_, _⁆
+    let eqv := colimitEquivLieSubalgebra Φ hΦ hΦs
+    change eqv.symm ⁅eqv x, eqv (eqv.symm ⁅eqv y, eqv z⁆)⁆ = eqv.symm ⁅eqv (eqv.symm ⁅eqv x, eqv y⁆), eqv z⁆ + eqv.symm ⁅eqv y, eqv (eqv.symm ⁅eqv x, eqv z⁆)⁆
     simp only [LinearEquiv.apply_symm_apply]
     rw [leibniz_lie, map_add]
 
 noncomputable instance colimitLieAlgebra : LieAlgebra 𝕜 (affineFiniteModeColimit Φ hΦ hΦs) where
   lie_smul r x y := by
-    change (colimitEquivLieSubalgebra Φ hΦ hΦs).symm ⁅_, _⁆ = r • _
-    have h_symm_apply := (colimitEquivLieSubalgebra Φ hΦ hΦs).apply_symm_apply
+    let eqv := colimitEquivLieSubalgebra Φ hΦ hΦs
+    change eqv.symm ⁅eqv x, eqv (r • y)⁆ = r • eqv.symm ⁅eqv x, eqv y⁆
     rw [map_smul, lie_smul, map_smul]
 
 noncomputable def colimitLieEquiv :
@@ -141,6 +145,7 @@ noncomputable def colimitLieEquiv :
   { colimitEquivLieSubalgebra Φ hΦ hΦs with
     map_lie' := by
       intro x y
-      change (colimitEquivLieSubalgebra Φ hΦ hΦs) ((colimitEquivLieSubalgebra Φ hΦ hΦs).symm _) = _
-      exact (colimitEquivLieSubalgebra Φ hΦ hΦs).apply_symm_apply _
+      let eqv := colimitEquivLieSubalgebra Φ hΦ hΦs
+      change eqv (eqv.symm ⁅eqv x, eqv y⁆) = ⁅eqv x, eqv y⁆
+      exact eqv.apply_symm_apply _
   }

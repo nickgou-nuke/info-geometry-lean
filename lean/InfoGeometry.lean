@@ -156,4 +156,4 @@ import InfoGeometry.NCG.CuntzColimitKMSTiltGNS
 import InfoGeometry.NCG.CuntzColimitShiftKMSGNSBridge
 import InfoGeometry.MassSpectrometry.GPUExecutionContracts
 import InfoGeometry.Canonical.CuntzFractalHoppingAnyons
-import InfoGeometry.RecoveredIndex
+-- import InfoGeometry.RecoveredIndex

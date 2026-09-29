@@ -69,7 +69,9 @@ def EvenParitySubgroup (n : ℕ) : AddSubgroup (BitWord n) where
   neg_mem' {a} ha := by
     change parity a = 0 at ha
     change parity (-a) = 0
-    rw [← Finset.sum_neg_distrib, ha, neg_zero]
+    change ∑ i, (-a) i = 0
+    have h_neg : (fun i => (-a) i) = fun i => -(a i) := rfl
+    rw [h_neg, ← Finset.sum_neg_distrib, ha, neg_zero]
 
 /-- 
 Archetype V: The Atomik-Weyl Transition Rigidity.

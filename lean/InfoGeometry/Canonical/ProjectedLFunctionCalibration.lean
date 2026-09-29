@@ -56,10 +56,7 @@ theorem projectedL_resonance_iff_zero
 
 /-- Canonical re-export of the projected-L owner target. -/
 theorem projectedAutomorphicLFunctionOwnerTarget :
-    ProjectedAutomorphicLFunctionOwnerTarget := by
-  intro Bulk _ _ Boundary _ _ W Λ F
-  intro s
-  exact InfoGeometry.Automorphic.SiegelResonance.projectedAutomorphicLFunctionOwnerTarget
-    Bulk Boundary W Λ F s
+    ProjectedAutomorphicLFunctionOwnerTarget :=
+  InfoGeometry.Automorphic.SiegelResonance.projectedAutomorphicLFunctionOwnerTarget
 
 end InfoGeometry.Canonical.ProjectedLFunctionCalibration

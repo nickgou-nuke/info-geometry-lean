@@ -8914,3 +8914,4 @@ import InfoGeometry.WillertonIsbellAmariDuality
 import InfoGeometry.WillertonIsbellAmariDualityAudit
 import InfoGeometry.auto_blueprints
 import InfoGeometry.generalizedKL
+import InfoGeometry.Canonical.ProjectedLFunctionCalibration

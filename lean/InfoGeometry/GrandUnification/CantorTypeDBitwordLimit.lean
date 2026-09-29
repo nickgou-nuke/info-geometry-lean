@@ -34,9 +34,7 @@ lemma padZeros_parity (i j : ℕ) (hij : i ≤ j) (w : Bitword (Fin i)) :
         have h_eq_k : (Fin.last k).val = k := rfl
         rw [h_eq_k]
         omega
-      split_ifs with h
-      · exfalso; exact h_not h
-      · rfl
+      simp [h_not]
     rw [h_last, add_zero]
 
 def typeDTransitionMap (i j : ℕ) (hij : i ≤ j) : 

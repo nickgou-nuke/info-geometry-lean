@@ -144,3 +144,4 @@ import InfoGeometry.GrandUnification.SiegelModuliSpace
 import InfoGeometry.GrandUnification.MTheoryComplexTorus
 import InfoGeometry.GrandUnification.TypeDBitwordAtomikBridge
 import InfoGeometry.GrandUnification.TypeDZeroOrbitRigidity
+import InfoGeometry.GrandUnification.TypeDWeylSemidirectAction

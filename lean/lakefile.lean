@@ -21,3 +21,15 @@ require mathlib from git
 
 @[default_target]
 lean_lib InfoGeometry where
+
+@[default_target]
+lean_lib Omega where
+
+@[default_target]
+lean_lib DAG where
+
+@[default_target]
+lean_lib VirasoroProject where
+
+@[default_target]
+lean_lib Experimental where

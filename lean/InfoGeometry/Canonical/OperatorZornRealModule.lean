@@ -1,3 +1,4 @@
+import Mathlib.Algebra.Group.MinimalAxioms
 import InfoGeometry.Canonical.ThreeColorOperatorCrossCommutator
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 

@@ -11109,7 +11109,6 @@ import InfoGeometry.Sandbox.InfiniteColimitRigor
 import InfoGeometry.Sandbox.KTheoryIndexSandbox
 import InfoGeometry.Sandbox.LefschetzFixedPoint
 import InfoGeometry.Sandbox.SpectralStabilitySandbox
-import InfoGeometry.Sandbox.scratch_colim_test
 import InfoGeometry.Section10
 import InfoGeometry.Section10_11
 import InfoGeometry.Section11

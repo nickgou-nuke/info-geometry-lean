@@ -168,3 +168,5 @@ import InfoGeometry.GrandUnification.ModularPhaseSeparation
 import InfoGeometry.GrandUnification.DirectSumDecomposition
 import InfoGeometry.GrandUnification.KleinDiracRealization
 import InfoGeometry.GrandUnification.MoebiusWittenIndex
+import InfoGeometry.GrandUnification.MoebiusTomitaPacket
+import InfoGeometry.GrandUnification.HorizonCapacitance

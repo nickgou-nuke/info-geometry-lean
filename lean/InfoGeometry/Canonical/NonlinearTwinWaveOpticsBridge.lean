@@ -146,6 +146,37 @@ theorem pin_two_cycle_readout :
         InfoGeometry.Clifford.Clifford55.negOnePin = 1 :=
   pin_central_two_cycle_is_trivial
 
+/-! ## 4. Abstract birefringent index splitting -/
+
+/-- Symmetric left/right refractive-index parameterization around a baseline.
+The splitting parameter is deliberately abstract. -/
+structure BirefringentIndexPair where
+  n0 : ℝ
+  deltaN : ℝ
+
+def refractivePlus (b : BirefringentIndexPair) : ℝ :=
+  b.n0 + b.deltaN / 2
+
+def refractiveMinus (b : BirefringentIndexPair) : ℝ :=
+  b.n0 - b.deltaN / 2
+
+/-- Exact algebraic chiral splitting:
+n_+ - n_- = Δn. -/
+theorem refractivePlus_sub_refractiveMinus
+    (b : BirefringentIndexPair) :
+    refractivePlus b - refractiveMinus b = b.deltaN := by
+  unfold refractivePlus refractiveMinus
+  ring
+
+/-- Vanishing splitting collapses the two refractive indices to the same
+baseline value. -/
+theorem refractive_indices_eq_of_deltaN_zero
+    (b : BirefringentIndexPair)
+    (h : b.deltaN = 0) :
+    refractivePlus b = b.n0 ∧ refractiveMinus b = b.n0 := by
+  rw [refractivePlus, refractiveMinus, h]
+  norm_num
+
 /-! ## 4. Explicit comparison boundary to the spectral cross term -/
 
 /-- Scalar mixed term from the finite polynomial spectral action. -/

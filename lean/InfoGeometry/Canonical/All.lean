@@ -2201,6 +2201,7 @@ import InfoGeometry.Canonical.DiracKreinMaurerCartanBridge
 import InfoGeometry.Canonical.GrassmannianCartanInteroperability
 import InfoGeometry.Canonical.KahlerAtiyahCartanForms
 import InfoGeometry.Canonical.KahlerAtiyahSpinConnection
+import InfoGeometry.Canonical.ZornAssociatorKreinBridge
 import InfoGeometry.Canonical.ModularWedgeAAVInterferenceBridge
 import InfoGeometry.Canonical.KreinRindlerBogoliubovBridge
 import InfoGeometry.Canonical.IwasawaMaurerCartanBdGBridge

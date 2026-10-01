@@ -83,8 +83,9 @@ theorem commutator_compositeDirac_embedLeft
   rw [Matrix.add_mul, Matrix.mul_add]
   repeat rw [Matrix.mul_kronecker_mul]
   simp only [Matrix.one_mul, Matrix.mul_one]
-  rw [Matrix.sub_kronecker]
-  abel
+  ext x y
+  simp [Matrix.kroneckerMap_apply, commutatorL]
+  ring
 
 /-- First commutator with a right observable:
 the left Dirac term retains [β_R,b], and the right Dirac term contributes
@@ -98,8 +99,9 @@ theorem commutator_compositeDirac_embedRight
   rw [Matrix.add_mul, Matrix.mul_add]
   repeat rw [Matrix.mul_kronecker_mul]
   simp only [Matrix.one_mul, Matrix.mul_one]
-  rw [Matrix.kronecker_sub, Matrix.kronecker_sub]
-  abel
+  ext x y
+  simp [Matrix.kroneckerMap_apply, commutatorR]
+  ring
 
 /-- Exact factorization of the left-right double commutator:
   [[D_tot, a⊗I], I⊗b] = [D_L,a] ⊗ [β_R,b]. -/
@@ -113,7 +115,9 @@ theorem orderOne_factorization
   unfold commutator embedRight commutatorR
   rw [Matrix.mul_kronecker_mul, Matrix.mul_kronecker_mul]
   simp only [Matrix.mul_one, Matrix.one_mul]
-  rw [Matrix.kronecker_sub]
+  ext x y
+  simp [Matrix.kroneckerMap_apply]
+  ring
 
 /-- Finite order-one condition under the exact evenness hypothesis
 [β_R,b]=0. -/

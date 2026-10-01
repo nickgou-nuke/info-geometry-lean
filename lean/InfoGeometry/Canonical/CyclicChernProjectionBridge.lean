@@ -192,13 +192,16 @@ theorem chern4_commutes_reflection :
     (P.reflection * P.de4 D) * P.reflection
         = P.reflection * (P.de4 D * P.reflection) := by
             rw [mul_assoc]
-    _ = P.reflection * (P.reflection * P.de4 D) := by rw [← h]
-    _ = (P.reflection * P.reflection) * P.de4 D := by rw [mul_assoc]
-    _ = P.de4 D := by rw [hJ, one_mul]
-    _ = (P.de4 D * P.reflection) * P.reflection := by
-          rw [h, mul_assoc, hJ, mul_one]
     _ = P.reflection * (P.reflection * P.de4 D) := by
-          rw [← h, mul_assoc]
+            rw [← h]
+    _ = (P.reflection * P.reflection) * P.de4 D := by
+            rw [← mul_assoc]
+    _ = P.de4 D := by
+            rw [hJ, one_mul]
+    _ = P.reflection * (P.reflection * P.de4 D) := by
+            symm
+            rw [← mul_assoc, hJ, one_mul]
+    _ = P.reflection * P.chern4 D := rfl
 
 end ChiralProjection
 

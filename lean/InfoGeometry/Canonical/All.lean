@@ -2298,3 +2298,4 @@ import InfoGeometry.Canonical.Cl11BipartiteSpectralCurvature
 import InfoGeometry.Canonical.Cl11BipartitePolynomialSpectralAction
 import InfoGeometry.Canonical.CartanBladePolynomialSpectralAction
 import InfoGeometry.Canonical.ChiralBipartiteDiracNetworkBridge
+import InfoGeometry.Canonical.NonlinearTwinWaveOpticsBridge

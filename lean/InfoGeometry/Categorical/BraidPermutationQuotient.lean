@@ -182,3 +182,33 @@ theorem normalClosure_generatorSquares_le_kernel
   exact generatorSquare_mem_kernel m i
 
 end InfoGeometry.Categorical.BraidPermutationQuotient
+
+
+/-! ## Pure braid kernel readout -/
+
+/-- The pure braid subgroup on `m+1` strands, defined intrinsically as the
+kernel of the canonical permutation quotient. -/
+def pureBraidSubgroup (m : ℕ) : Subgroup (braid_group (m + 1)) :=
+  (braidToPerm m).ker
+
+@[simp] theorem mem_pureBraidSubgroup_iff
+    (m : ℕ) (g : braid_group (m + 1)) :
+    g ∈ pureBraidSubgroup m ↔ braidToPerm m g = 1 :=
+  Iff.rfl
+
+/-- Every standard Artin generator square belongs to the pure braid kernel. -/
+theorem generatorSquare_mem_pureBraidSubgroup
+    (m : ℕ) (i : Fin m) :
+    (σ' m i) ^ 2 ∈ pureBraidSubgroup m :=
+  generatorSquare_mem_kernel m i
+
+/-- Every conjugate of a standard generator square is pure. -/
+theorem conjugate_generatorSquare_mem_pureBraidSubgroup
+    (m : ℕ) (w : braid_group (m + 1)) (i : Fin m) :
+    w * (σ' m i) ^ 2 * w⁻¹ ∈ pureBraidSubgroup m := by
+  change braidToPerm m (w * (σ' m i) ^ 2 * w⁻¹) = 1
+  simp only [map_mul, map_pow, map_inv, braidToPerm_generator]
+  have hs : adjacentSwap m i ^ 2 = 1 := by
+    simpa [pow_two] using adjacentSwap_sq m i
+  rw [hs]
+  simp

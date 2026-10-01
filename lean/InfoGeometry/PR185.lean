@@ -15,6 +15,7 @@ import InfoGeometry.Canonical.ClusterMutationIndexBridge
 import InfoGeometry.Canonical.BipartiteCuntzUHFBridge
 import InfoGeometry.Canonical.CantorCuntzFractalBridge
 import InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge
+import InfoGeometry.Canonical.G2BlockCirculantZornBridge
 
 import InfoGeometry.Categorical.ArtinGarsideCenterBridge
 import InfoGeometry.Categorical.UniversalArtinBraidRepresentation
@@ -220,6 +221,19 @@ theorem g2_concrete_ck_packet
       InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.concreteG2TransitionDatum i,
     InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.garsideTheta_involutive i,
     InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.G2BoundaryMatrix_det
+  ⟩
+
+/-- Concrete G2 block-circulant and boundary-determinant packet. -/
+theorem g2_block_circulant_packet :
+    InfoGeometry.Canonical.G2BlockCirculantZornBridge.blockAdjacencyInt =
+      InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.A_G2_int ∧
+    ((1 : Matrix
+      InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.G2Vertex
+      InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.G2Vertex ℤ) -
+      InfoGeometry.Canonical.G2BlockCirculantZornBridge.blockAdjacencyInt.transpose).det = -1456 := by
+  exact ⟨
+    InfoGeometry.Canonical.G2BlockCirculantZornBridge.blockAdjacencyInt_eq_A_G2_int,
+    InfoGeometry.Canonical.G2BlockCirculantZornBridge.boundary_det_eq_neg_1456
   ⟩
 
 end InfoGeometry.PR185

@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Data.Matrix.Basic
+import Mathlib.LinearAlgebra.Matrix.Integer
 
 import InfoGeometry.Categorical.UniversalArtinBraidRepresentation
 import InfoGeometry.Topology.MajoranaBraidGroup
@@ -34,7 +35,7 @@ abbrev M8Q := Matrix (Fin 8) (Fin 8) ℚ
 
 /-- Entrywise rational lift of an integer 8×8 matrix. -/
 def ratLift (A : M8Z) : M8Q :=
-  fun i j => (A i j : ℚ)
+  A.map (Int.cast : ℤ → ℚ)
 
 @[simp] theorem ratLift_add (A B : M8Z) :
     ratLift (A + B) = ratLift A + ratLift B := by
@@ -43,14 +44,11 @@ def ratLift (A : M8Z) : M8Q :=
 
 @[simp] theorem ratLift_mul (A B : M8Z) :
     ratLift (A * B) = ratLift A * ratLift B := by
-  ext i j
-  simp [ratLift, Matrix.mul_apply]
-  norm_cast
+  exact Matrix.map_mul_intCast A B
 
 @[simp] theorem ratLift_one :
     ratLift (1 : M8Z) = (1 : M8Q) := by
-  ext i j
-  simp [ratLift]
+  exact Matrix.map_one (Int.cast : ℤ → ℚ) Int.cast_zero Int.cast_one
 
 @[simp] theorem ratLift_zsmul (n : ℤ) (A : M8Z) :
     ratLift (n • A) = (n : ℚ) • ratLift A := by
@@ -101,9 +99,8 @@ def braid23Unit : Units M8Q where
 theorem majoranaQ_adjacent_artin :
     braid12Q * braid23Q * braid12Q =
       braid23Q * braid12Q * braid23Q := by
-  rw [braid12Q, braid23Q, ← ratLift_mul, ← ratLift_mul,
-    ← ratLift_mul, ← ratLift_mul]
-  exact congrArg ratLift majorana_adjacent_artin
+  have h := congrArg ratLift majorana_adjacent_artin
+  simpa [braid12Q, braid23Q, ratLift_mul] using h
 
 /-- The two rational Majorana units satisfy the B₃ Artin relation. -/
 theorem majoranaUnit_adjacent_artin :

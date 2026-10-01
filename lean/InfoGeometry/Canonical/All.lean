@@ -2301,3 +2301,4 @@ import InfoGeometry.Canonical.ChiralBipartiteDiracNetworkBridge
 import InfoGeometry.Canonical.NonlinearTwinWaveOpticsBridge
 import InfoGeometry.Canonical.ClusterMutationIndexBridge
 import InfoGeometry.Canonical.BipartiteCuntzUHFBridge
+import InfoGeometry.Canonical.CantorCuntzFractalBridge

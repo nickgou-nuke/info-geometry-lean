@@ -2293,3 +2293,4 @@ import InfoGeometry.Canonical.Archetypes.ConvexBound
 import InfoGeometry.Canonical.Archetypes.UniqueMaximum
 import InfoGeometry.Canonical.Cl11LeftRightDoubleBridge
 import InfoGeometry.Canonical.Cl11BipartiteDiracBridge
+import InfoGeometry.Canonical.Cl11BipartiteOrderOneCondition

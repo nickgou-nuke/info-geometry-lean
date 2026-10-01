@@ -89,6 +89,36 @@ theorem zero_transition_annihilation
   rw [hzero]
   simp
 
+/-- Adjacency acts as the transition eigenvalue on each generator:
+(S_j^* S_j) S_k = A_jk • S_k. -/
+theorem transition_eigen (j k : Fin n) :
+    (C.Sstar j * C.S j) * C.S k =
+      C.adjacency j k • C.S k := by
+  rw [C.ck_relation j]
+  rw [Finset.sum_mul]
+  rw [Finset.sum_eq_single k]
+  · calc
+      (C.adjacency j k • (C.S k * C.Sstar k)) * C.S k =
+          C.adjacency j k • ((C.S k * C.Sstar k) * C.S k) := by
+            rw [Algebra.smul_mul_assoc]
+      _ = C.adjacency j k • (C.S k * C.Sstar k * C.S k) := by
+            simp only [mul_assoc]
+      _ = C.adjacency j k • C.S k := by
+            rw [C.partial_isometry k]
+  · intro m _ hmk
+    calc
+      (C.adjacency j m • (C.S m * C.Sstar m)) * C.S k =
+          C.adjacency j m • ((C.S m * C.Sstar m) * C.S k) := by
+            rw [Algebra.smul_mul_assoc]
+      _ = C.adjacency j m •
+          (C.S m * (C.Sstar m * C.S k)) := by
+            simp only [mul_assoc]
+      _ = 0 := by
+            rw [C.source_orthogonal m k hmk]
+            simp
+  · intro hk
+    exact (hk (Finset.mem_univ k)).elim
+
 end ScalarSeparatedCK
 
 /-! ## 2. Proof-carrying finite G2 transition datum -/

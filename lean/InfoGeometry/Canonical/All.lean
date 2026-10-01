@@ -2299,3 +2299,4 @@ import InfoGeometry.Canonical.Cl11BipartitePolynomialSpectralAction
 import InfoGeometry.Canonical.CartanBladePolynomialSpectralAction
 import InfoGeometry.Canonical.ChiralBipartiteDiracNetworkBridge
 import InfoGeometry.Canonical.NonlinearTwinWaveOpticsBridge
+import InfoGeometry.Canonical.ClusterMutationIndexBridge

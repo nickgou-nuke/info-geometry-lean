@@ -209,3 +209,4 @@ Massieu-Planck functionals.
 namespace InfoGeometry.Physics
 
 end InfoGeometry.Physics
+import InfoGeometry.Physics.EightStateTraceRatio

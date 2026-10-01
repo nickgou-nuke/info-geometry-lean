@@ -282,3 +282,4 @@ reports/**
 # Source manifests are not generated analysis text.
 !**/CMakeLists.txt
 !**/requirements*.txt
+sandbox/swarm/oracle/

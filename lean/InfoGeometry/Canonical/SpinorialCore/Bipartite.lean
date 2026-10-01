@@ -7,6 +7,8 @@ The right-even hypothesis is retained explicitly. No spectral-triple,
 continuum-action, or singularity-resolution claim is inferred here.
 -/
 
+noncomputable section
+open scoped BigOperators
 namespace InfoGeometry.Canonical.SpinorialCore
 
 section Tensor

@@ -7,6 +7,7 @@ The phase-conjugation theorem requires transformation of both the value and
 its spatial derivative. Boundary intensity alone is not a flux theorem.
 -/
 
+noncomputable section
 namespace InfoGeometry.Canonical.SpinorialCore
 
 /-- Current density with its overall real physical coefficient suppressed. -/

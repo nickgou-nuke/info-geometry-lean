@@ -22,8 +22,6 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
       - name: Restore isolated dependency cache
         id: deps
         uses: actions/cache/restore@v4

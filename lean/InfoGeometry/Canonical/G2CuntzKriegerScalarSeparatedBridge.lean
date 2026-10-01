@@ -211,4 +211,145 @@ end Realization
 
 end G2TransitionDatum
 
+
+/-! ## 4. Concrete G2 double-star transition graph -/
+
+/-- Concrete Boolean adjacency supplied by the G2 double-star model.
+
+Vertices 0..5 are the short-root hexagon and 6..11 the long-root hexagon.
+A short root s_u connects to l_u, l_{u-1}, and s_{u+1}.
+A long root l_u connects to s_u, s_{u+1}, and l_{u+1}, with indices modulo 6.
+-/
+def A_G2_bool (i j : G2Vertex) : Bool :=
+  let u := i.val
+  let v := j.val
+  if u < 6 then
+    v = u + 6 ||
+      v = ((u + 5) % 6) + 6 ||
+      v = (u + 1) % 6
+  else
+    let u' := u - 6
+    v = u' ||
+      v = (u' + 1) % 6 ||
+      v = ((u' + 1) % 6) + 6
+
+/-- Antipodal/root inversion on the two six-cycles. -/
+def garsideTheta (i : G2Vertex) : G2Vertex :=
+  let u := i.val
+  if h : u < 6 then
+    ⟨(u + 3) % 6, by omega⟩
+  else
+    ⟨((u - 6 + 3) % 6) + 6, by omega⟩
+
+theorem garsideTheta_involutive (i : G2Vertex) :
+    garsideTheta (garsideTheta i) = i := by
+  revert i
+  decide
+
+def garsideThetaEquiv : Equiv.Perm G2Vertex where
+  toFun := garsideTheta
+  invFun := garsideTheta
+  left_inv := garsideTheta_involutive
+  right_inv := garsideTheta_involutive
+
+theorem A_G2_row_degree_three (i : G2Vertex) :
+    ((Finset.univ.filter fun j => A_G2_bool i j).card) = 3 := by
+  revert i
+  decide
+
+theorem A_G2_theta_invariant (i j : G2Vertex) :
+    A_G2_bool (garsideTheta i) (garsideTheta j) =
+      A_G2_bool i j := by
+  revert i j
+  decide
+
+/-- The concrete graph as an instance of the proof-carrying transition datum. -/
+def concreteG2TransitionDatum : G2TransitionDatum where
+  edge := A_G2_bool
+  rowDegreeThree := A_G2_row_degree_three
+  theta := garsideThetaEquiv
+  theta_involutive := garsideTheta_involutive
+  theta_invariant := by
+    intro i j
+    exact A_G2_theta_invariant i j
+
+/-- Concrete integer adjacency matrix. -/
+def A_G2_int : Matrix G2Vertex G2Vertex ℤ :=
+  concreteG2TransitionDatum.adjacency
+
+theorem A_G2_row_sum_three (i : G2Vertex) :
+    ∑ j : G2Vertex, A_G2_int i j = 3 :=
+  G2TransitionDatum.adjacency_row_sum_three concreteG2TransitionDatum i
+
+/-- The concrete graph is also indegree-three at every vertex. -/
+theorem A_G2_column_sum_three (j : G2Vertex) :
+    ∑ i : G2Vertex, A_G2_int i j = 3 := by
+  revert j
+  native_decide
+
+theorem A_G2_constant_eigenvector :
+    A_G2_int.mulVec (fun _ => (1 : ℤ)) =
+      fun _ => (3 : ℤ) :=
+  G2TransitionDatum.adjacency_constant_eigenvector concreteG2TransitionDatum
+
+/-- Integer Cuntz--Krieger boundary matrix I - A^T. -/
+def G2BoundaryMatrix : Matrix G2Vertex G2Vertex ℤ :=
+  (1 : Matrix G2Vertex G2Vertex ℤ) - A_G2_int.transpose
+
+/-- Exact determinant of the concrete G2 boundary matrix. -/
+theorem G2BoundaryMatrix_det :
+    G2BoundaryMatrix.det = -1456 := by
+  native_decide
+
+/-! ## 5. Short/long aggregate projections in a concrete realization -/
+
+def shortRoots : Finset G2Vertex :=
+  Finset.univ.filter (fun i => i.val < 6)
+
+def longRoots : Finset G2Vertex :=
+  Finset.univ.filter (fun i => 6 ≤ i.val)
+
+namespace ConcreteRealization
+
+variable
+  {R A : Type*}
+  [CommRing R] [Ring A] [Algebra R A]
+  (X : concreteG2TransitionDatum.Realization R A)
+
+def Pshort : A :=
+  ∑ i ∈ shortRoots, X.ck.rangeProjection i
+
+def Plong : A :=
+  ∑ j ∈ longRoots, X.ck.rangeProjection j
+
+/-- The short-root and long-root aggregate range projections are orthogonal. -/
+theorem chiral_sheets_orthogonal :
+    X.Pshort * X.Plong = 0 := by
+  unfold Pshort Plong
+  rw [Finset.sum_mul]
+  apply Finset.sum_eq_zero
+  intro i hi
+  rw [Finset.mul_sum]
+  apply Finset.sum_eq_zero
+  intro j hj
+  have hi : i.val < 6 := by
+    simpa [shortRoots] using hi
+  have hj : 6 ≤ j.val := by
+    simpa [longRoots] using hj
+  have hij : i ≠ j := by
+    intro h
+    subst j
+    omega
+  exact X.ck.rangeProjection_orthogonal hij
+
+/-- Concrete CK transition formula for the supplied G2 adjacency. -/
+theorem transition_formula (i : G2Vertex) :
+    X.ck.Sstar i * X.ck.S i =
+      ∑ j : G2Vertex,
+        (if A_G2_bool i j then (1 : R) else 0) •
+          X.ck.rangeProjection j :=
+  X.ck_transition_formula i
+
+end ConcreteRealization
+
 end InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge

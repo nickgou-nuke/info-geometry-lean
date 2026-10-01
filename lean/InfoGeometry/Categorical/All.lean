@@ -12,3 +12,4 @@ import InfoGeometry.Categorical.ArtinGarsideCenterBridge
 import InfoGeometry.Categorical.UniversalArtinBraidRepresentation
 import InfoGeometry.Categorical.BraidPermutationQuotient
 import InfoGeometry.Categorical.MajoranaUniversalB3Bridge
+import InfoGeometry.Categorical.FibonacciUniversalB3Bridge

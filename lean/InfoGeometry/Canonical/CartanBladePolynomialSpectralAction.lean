@@ -58,13 +58,17 @@ theorem simpleBlade2_sq_zero (u v : V) :
         ExteriorAlgebra.ι ℝ v := by
           simp [mul_assoc]
     _ =
-      - ExteriorAlgebra.ι ℝ u *
-        (ExteriorAlgebra.ι ℝ u * ExteriorAlgebra.ι ℝ v) *
+      ExteriorAlgebra.ι ℝ u *
+        (-(ExteriorAlgebra.ι ℝ u * ExteriorAlgebra.ι ℝ v)) *
         ExteriorAlgebra.ι ℝ v := by
-          rw [ExteriorAlgebra.ι_mul_ι_swap]
-          simp [mul_assoc]
+          have hanti := ExteriorAlgebra.ι_add_mul_swap (R := ℝ) u v
+          have hswap :
+              ExteriorAlgebra.ι ℝ v * ExteriorAlgebra.ι ℝ u =
+                -(ExteriorAlgebra.ι ℝ u * ExteriorAlgebra.ι ℝ v) := by
+            exact eq_neg_of_add_eq_zero_left hanti
+          rw [hswap]
     _ = 0 := by
-      rw [← mul_assoc, ExteriorAlgebra.ι_sq_zero]
+      rw [mul_neg, ← mul_assoc, ExteriorAlgebra.ι_sq_zero]
       simp
 
 /-- Exterior product of two 2-blades, interpreted algebraically as a 4-blade. -/

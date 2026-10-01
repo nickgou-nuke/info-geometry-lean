@@ -12,6 +12,7 @@ import InfoGeometry.Canonical.CartanBladePolynomialSpectralAction
 import InfoGeometry.Canonical.ChiralBipartiteDiracNetworkBridge
 import InfoGeometry.Canonical.NonlinearTwinWaveOpticsBridge
 import InfoGeometry.Canonical.ClusterMutationIndexBridge
+import InfoGeometry.Canonical.BipartiteCuntzUHFBridge
 
 import InfoGeometry.Categorical.ArtinGarsideCenterBridge
 import InfoGeometry.Categorical.UniversalArtinBraidRepresentation
@@ -156,6 +157,25 @@ theorem cluster_count_index_packet
     InfoGeometry.Canonical.ClusterMutationIndexBridge.PlabicCounts.helicityDefect_eq_colorIndex s,
     InfoGeometry.Canonical.ClusterMutationIndexBridge.PlabicCounts.squareMove_colorIndex s,
     InfoGeometry.Canonical.ClusterMutationIndexBridge.PlabicCounts.bubbleReduction_colorIndex s
+  ⟩
+
+/-- Native Cuntz/UHF interoperability packet: left/right commutation and
+normalized trace preservation along finite matrix-tower transitions. -/
+theorem cuntz_uhf_packet
+    {n : ℕ}
+    (a b x : InfoGeometry.Algebra.CuntzTensorQuotient.CuntzAlg n)
+    {i j : ℕ} (hij : i ≤ j)
+    (A : InfoGeometry.Canonical.CuntzMatrixTowerInstantiation.MatrixStage i) :
+    InfoGeometry.Algebra.CuntzLeftRightCommutant.leftMultiplication n a
+        (InfoGeometry.Algebra.CuntzLeftRightCommutant.rightMultiplication n b x) =
+      InfoGeometry.Algebra.CuntzLeftRightCommutant.rightMultiplication n b
+        (InfoGeometry.Algebra.CuntzLeftRightCommutant.leftMultiplication n a x) ∧
+    InfoGeometry.Canonical.CuntzMatrixTowerInstantiation.matrixTraceState j
+        (InfoGeometry.Canonical.CuntzMatrixTraceTower.concreteMap hij A) =
+      InfoGeometry.Canonical.CuntzMatrixTowerInstantiation.matrixTraceState i A := by
+  exact ⟨
+    InfoGeometry.Canonical.BipartiteCuntzUHFBridge.cuntz_left_right_commute a b x,
+    InfoGeometry.Canonical.BipartiteCuntzUHFBridge.normalized_trace_transition hij A
   ⟩
 
 end InfoGeometry.PR185

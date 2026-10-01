@@ -16,6 +16,7 @@ import InfoGeometry.Canonical.BipartiteCuntzUHFBridge
 import InfoGeometry.Canonical.CantorCuntzFractalBridge
 import InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge
 import InfoGeometry.Canonical.G2BlockCirculantZornBridge
+import InfoGeometry.Canonical.CyclicChernProjectionBridge
 
 import InfoGeometry.Categorical.ArtinGarsideCenterBridge
 import InfoGeometry.Categorical.UniversalArtinBraidRepresentation
@@ -234,6 +235,25 @@ theorem g2_block_circulant_packet :
   exact ⟨
     InfoGeometry.Canonical.G2BlockCirculantZornBridge.blockAdjacencyInt_eq_A_G2_int,
     InfoGeometry.Canonical.G2BlockCirculantZornBridge.boundary_det_eq_neg_1456
+  ⟩
+
+/-- Noncommutative chiral projection calculus packet. -/
+theorem cyclic_chern_projection_packet
+    {R A : Type*}
+    [CommRing R] [Ring A] [Algebra R A]
+    (D : InfoGeometry.NCG.CyclicAlgebraDerivation R A)
+    (P : InfoGeometry.Canonical.CyclicChernProjectionBridge.ChiralProjection (A := A)) :
+    P.e * P.de D * P.e = 0 ∧
+    (1 - P.e) * P.de D * (1 - P.e) = 0 ∧
+    P.e * (P.de D * P.de D) =
+      (P.de D * P.de D) * P.e ∧
+    P.reflection * P.de4 D =
+      P.de4 D * P.reflection := by
+  exact ⟨
+    P.e_de_e_zero D,
+    P.one_sub_e_de_one_sub_e_zero D,
+    P.e_commutes_de_sq D,
+    P.reflection_commutes_de4 D
   ⟩
 
 end InfoGeometry.PR185

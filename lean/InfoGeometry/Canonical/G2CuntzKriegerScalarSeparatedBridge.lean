@@ -151,12 +151,12 @@ theorem adjacency_row_sum_three
     ∑ j : G2Vertex, G.adjacency (R := ℤ) i j = 3 := by
   classical
   unfold adjacency
-  rw [← Finset.sum_filter]
-  have hcard := G.rowDegreeThree i
   calc
-    ∑ j ∈ Finset.univ.filter (fun j => G.edge i j), (1 : ℤ) =
-        ((Finset.univ.filter fun j => G.edge i j).card : ℤ) := by simp
-    _ = 3 := by exact_mod_cast hcard
+    (∑ j : G2Vertex, if G.edge i j then (1 : ℤ) else 0) =
+        ((Finset.univ.filter fun j => G.edge i j).card : ℤ) := by
+          simp
+    _ = 3 := by
+      exact_mod_cast G.rowDegreeThree i
 
 /-- The all-ones vector is a right eigenvector of the integer adjacency
 matrix with eigenvalue 3. -/

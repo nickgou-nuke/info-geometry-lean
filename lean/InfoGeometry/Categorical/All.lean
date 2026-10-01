@@ -6,3 +6,5 @@ import InfoGeometry.Categorical.HadjiivanovRMatrixBraid
 import InfoGeometry.Categorical.RindlerFilteredColimit
 import InfoGeometry.Categorical.PrimeThermodynamicLimitCapstone
 import InfoGeometry.Categorical.PrimonParafermionGrandCanonicalColimitCapstone
+
+import InfoGeometry.Categorical.BraidGroup3S3QuotientBridge

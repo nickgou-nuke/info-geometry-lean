@@ -2303,3 +2303,4 @@ import InfoGeometry.Canonical.ClusterMutationIndexBridge
 import InfoGeometry.Canonical.BipartiteCuntzUHFBridge
 import InfoGeometry.Canonical.CantorCuntzFractalBridge
 import InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge
+import InfoGeometry.Canonical.G2BlockCirculantZornBridge

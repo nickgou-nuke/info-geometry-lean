@@ -67,10 +67,7 @@ def stageTwoConjugate (U : Units StageTwo) (X : StageTwo) : StageTwo :=
     (U : Units StageTwo) (r : ℝ) (X : StageTwo) :
     stageTwoConjugate U (r • X) =
       r • stageTwoConjugate U X := by
-  ext i j
-  simp [stageTwoConjugate, Matrix.mul_apply, Finset.mul_sum,
-    Finset.sum_mul, Finset.smul_sum, mul_assoc]
-  ring
+  simp [stageTwoConjugate, Matrix.mul_smul, Matrix.smul_mul]
 
 @[simp] theorem stageTwoConjugate_mul
     (U : Units StageTwo) (X Y : StageTwo) :
@@ -128,17 +125,20 @@ theorem tensorSum_sq (DeltaL : StageOne) (DeltaR : Atom) :
 /-- Trace of the stage-one identity is 2. -/
 theorem trace_stageOne_one :
     Matrix.trace (1 : StageOne) = 2 := by
-  simp [Matrix.trace, Finset.univ_prod]
+  rw [Matrix.trace_one]
+  norm_num [InfoGeometry.Clifford.TowerMatrix.idx_card_pow_two]
 
 /-- Trace of the Cl(1,1) atom identity is 2. -/
 theorem trace_atom_one :
     Matrix.trace (1 : Atom) = 2 := by
-  simp [Matrix.trace, Fin.sum_univ_two]
+  rw [Matrix.trace_one]
+  norm_num
 
 /-- Trace of the stage-two identity is 4. -/
 theorem trace_stageTwo_one :
     Matrix.trace (1 : StageTwo) = 4 := by
-  simp [Matrix.trace, Finset.univ_prod]
+  rw [Matrix.trace_one]
+  norm_num [InfoGeometry.Clifford.TowerMatrix.idx_card_pow_two]
 
 /-- Exact trace of the tensor-sum operator. -/
 theorem trace_tensorSum (DeltaL : StageOne) (DeltaR : Atom) :

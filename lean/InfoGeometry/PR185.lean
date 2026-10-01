@@ -13,6 +13,7 @@ import InfoGeometry.Canonical.ChiralBipartiteDiracNetworkBridge
 import InfoGeometry.Canonical.NonlinearTwinWaveOpticsBridge
 import InfoGeometry.Canonical.ClusterMutationIndexBridge
 import InfoGeometry.Canonical.BipartiteCuntzUHFBridge
+import InfoGeometry.Canonical.CantorCuntzFractalBridge
 
 import InfoGeometry.Categorical.ArtinGarsideCenterBridge
 import InfoGeometry.Categorical.UniversalArtinBraidRepresentation
@@ -176,6 +177,21 @@ theorem cuntz_uhf_packet
   exact ⟨
     InfoGeometry.Canonical.BipartiteCuntzUHFBridge.cuntz_left_right_commute a b x,
     InfoGeometry.Canonical.BipartiteCuntzUHFBridge.normalized_trace_transition hij A
+  ⟩
+
+/-- Native Cantor/Cuntz packet: binary cylinder refinement and dyadic KMS weight. -/
+theorem cantor_cuntz_packet
+    {Op : Type*} [Ring Op] [StarRing Op]
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op)
+    (w : List Bool) (beta : ℝ)
+    (hEq : 2 * Real.exp (-beta * 1) = 1) :
+    InfoGeometry.Canonical.CantorCuntzFractalBridge.cylinderProjection C (w ++ [false]) +
+        InfoGeometry.Canonical.CantorCuntzFractalBridge.cylinderProjection C (w ++ [true]) =
+      InfoGeometry.Canonical.CantorCuntzFractalBridge.cylinderProjection C w ∧
+    beta = Real.log 2 := by
+  exact ⟨
+    InfoGeometry.Canonical.CantorCuntzFractalBridge.cylinder_children_sum C w,
+    InfoGeometry.Canonical.CantorCuntzFractalBridge.kms_beta_eq_log_two beta hEq
   ⟩
 
 end InfoGeometry.PR185

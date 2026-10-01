@@ -37,6 +37,7 @@ open InfoGeometry.Canonical.AmplituhedronBCFW
 open InfoGeometry.Canonical.ArnoldCohenPluckerBridge
 open InfoGeometry.Projective.KleinQuadricPlucker
 open InfoGeometry.Projective.KleinQuadricPlucker.Plucker6
+open InfoGeometry.Twistor.PenroseIncidence
 open InfoGeometry.Twistor.TwoTwistorPlucker
 
 /-! ## 1. Exact conversion between the two Plucker coordinate conventions -/

@@ -51,7 +51,7 @@ def vertexGrading (black white : ℕ) :
 
 theorem vertexGrading_trace (black white : ℕ) :
     Matrix.trace (vertexGrading black white) = vertexDefect black white := by
-  simp [vertexGrading, vertexDefect, Matrix.trace_diagonal]
+  simp [vertexGrading, vertexDefect, Matrix.trace_diagonal, sub_eq_add_neg]
 
 /-- A non-vacuous bridge: the network map is an arbitrary supplied linear map. -/
 theorem network_index_eq_trace {K : Type*} [Field K] (black white : ℕ)

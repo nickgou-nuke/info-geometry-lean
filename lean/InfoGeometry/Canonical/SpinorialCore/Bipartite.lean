@@ -68,10 +68,10 @@ section Trace
 variable {R n : Type*} [CommRing R] [Fintype n] [DecidableEq n]
 
 theorem trace_conjugation (u : (Matrix n n R)ˣ) (X : Matrix n n R) :
-    Matrix.trace ((u : Matrix n n R) * X * ↑(u⁻¹)) = Matrix.trace X := by
+    Matrix.trace ((u : Matrix n n R) * X * (↑(u⁻¹) : Matrix n n R)) = Matrix.trace X := by
   have hui : (↑(u⁻¹) : Matrix n n R) * (u : Matrix n n R) = 1 := u.inv_val
   calc
-    Matrix.trace ((u : Matrix n n R) * X * ↑(u⁻¹)) =
+    Matrix.trace ((u : Matrix n n R) * X * (↑(u⁻¹) : Matrix n n R)) =
         Matrix.trace ((↑(u⁻¹) : Matrix n n R) * ((u : Matrix n n R) * X)) :=
       Matrix.trace_mul_comm _ _
     _ = Matrix.trace X := by rw [← mul_assoc, hui, one_mul]
@@ -82,7 +82,7 @@ def polynomialTrace (N : ℕ) (c : Fin (N + 1) → R) (X : Matrix n n R) : R :=
 
 theorem polynomialTrace_conjugation (N : ℕ) (c : Fin (N + 1) → R)
     (u : (Matrix n n R)ˣ) (X : Matrix n n R) :
-    polynomialTrace N c ((u : Matrix n n R) * X * ↑(u⁻¹)) =
+    polynomialTrace N c ((u : Matrix n n R) * X * (↑(u⁻¹) : Matrix n n R)) =
       polynomialTrace N c X := by
   unfold polynomialTrace
   apply Finset.sum_congr rfl

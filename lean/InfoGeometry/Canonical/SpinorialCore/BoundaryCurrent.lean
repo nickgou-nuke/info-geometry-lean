@@ -25,7 +25,7 @@ theorem phase_conjugate_current (phase z dz : ℂ)
       _ = star dz * z := by rw [hphase]; ring
   unfold currentDensity
   rw [h]
-  simp
+  simp [add_comm]
 
 /-- Equal intensities can carry different currents. -/
 theorem equal_intensity_does_not_determine_current :

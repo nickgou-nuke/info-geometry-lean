@@ -55,8 +55,20 @@ theorem coordinateResidue_zero_iff (x : Lattice) :
     rw [Matrix.mulVec_diagonal]
     fin_cases i <;> simp [w, diagonalEntries, ha, hb, hc]
   · rintro ⟨w, rfl⟩
-    ext <;> norm_num [coordinateResidue, smithDiagonal,
-      Matrix.mulVec_diagonal, diagonalEntries]
+    apply Prod.ext
+    · change (((Matrix.diagonal diagonalEntries *ᵥ w) 9 : ℤ) : ZMod 2) = 0
+      rw [Matrix.mulVec_diagonal]
+      change ((2 * w 9 : ℤ) : ZMod 2) = 0
+      norm_num
+    · apply Prod.ext
+      · change (((Matrix.diagonal diagonalEntries *ᵥ w) 10 : ℤ) : ZMod 2) = 0
+        rw [Matrix.mulVec_diagonal]
+        change ((2 * w 10 : ℤ) : ZMod 2) = 0
+        norm_num
+      · change (((Matrix.diagonal diagonalEntries *ᵥ w) 11 : ℤ) : ZMod 364) = 0
+        rw [Matrix.mulVec_diagonal]
+        change ((364 * w 11 : ℤ) : ZMod 364) = 0
+        norm_num
 
 /-- The certificate transports image membership without invoking determinants. -/
 theorem image_smith_iff (x : Lattice) :
@@ -156,7 +168,7 @@ theorem no_surjection_to_zmod16 (f : TwoPrimary →+ ZMod 16) :
     calc
       (4 : ℕ) • (1 : ZMod 16) = f ((4 : ℕ) • x) := by rw [map_nsmul, hx]
       _ = 0 := by rw [twoPrimary_four_smul, map_zero]
-  norm_num at h
+  exact (by decide : (4 : ℕ) • (1 : ZMod 16) ≠ 0) h
 
 end
 end InfoGeometry.Canonical.SpinorialCore.G2

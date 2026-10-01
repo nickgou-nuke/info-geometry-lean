@@ -1,6 +1,8 @@
 import InfoGeometry.Canonical.SpinorialCore.Algebra
+import InfoGeometry.Canonical.SpinorialCore.NativeClifford
 import InfoGeometry.Canonical.SpinorialCore.Bipartite
 import InfoGeometry.Canonical.SpinorialCore.FiniteIndex
+import InfoGeometry.Canonical.SpinorialCore.FiniteSupertrace
 import InfoGeometry.Canonical.SpinorialCore.DualFlow
 import InfoGeometry.Canonical.SpinorialCore.BoundaryCurrent
 import InfoGeometry.Canonical.SpinorialCore.G2Certificate

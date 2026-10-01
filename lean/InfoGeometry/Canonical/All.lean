@@ -2296,3 +2296,4 @@ import InfoGeometry.Canonical.Cl11BipartiteDiracBridge
 import InfoGeometry.Canonical.Cl11BipartiteOrderOneCondition
 import InfoGeometry.Canonical.Cl11BipartiteSpectralCurvature
 import InfoGeometry.Canonical.Cl11BipartitePolynomialSpectralAction
+import InfoGeometry.Canonical.CartanBladePolynomialSpectralAction

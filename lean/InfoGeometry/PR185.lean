@@ -14,6 +14,7 @@ import InfoGeometry.Canonical.NonlinearTwinWaveOpticsBridge
 import InfoGeometry.Canonical.ClusterMutationIndexBridge
 import InfoGeometry.Canonical.BipartiteCuntzUHFBridge
 import InfoGeometry.Canonical.CantorCuntzFractalBridge
+import InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge
 
 import InfoGeometry.Categorical.ArtinGarsideCenterBridge
 import InfoGeometry.Categorical.UniversalArtinBraidRepresentation
@@ -192,6 +193,18 @@ theorem cantor_cuntz_packet
   exact ⟨
     InfoGeometry.Canonical.CantorCuntzFractalBridge.cylinder_children_sum C w,
     InfoGeometry.Canonical.CantorCuntzFractalBridge.kms_beta_eq_log_two beta hEq
+  ⟩
+
+/-- G2 CK architecture packet: scalar-separated noncommutative realization
+and degree-three adjacency eigenvector. -/
+theorem g2_ck_scalar_separation_packet
+    (G : InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.G2TransitionDatum)
+    (i : InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.G2Vertex) :
+    (G.adjacency (R := ℤ)).mulVec (fun _ => (1 : ℤ)) i = 3 ∧
+    G.theta (G.theta i) = i := by
+  exact ⟨
+    InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.G2TransitionDatum.adjacency_mulVec_one_eq_three G i,
+    InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.G2TransitionDatum.theta_sq G i
   ⟩
 
 end InfoGeometry.PR185

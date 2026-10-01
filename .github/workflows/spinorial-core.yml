@@ -22,8 +22,11 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
-      - name: Restore isolated verification cache
-        uses: actions/cache@v4
+        with:
+          persist-credentials: false
+      - name: Restore isolated dependency cache
+        id: deps
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/.elan
@@ -38,7 +41,7 @@ jobs:
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.28.1
-      - name: Check the mathlib-only source closure
+      - name: Prepare pinned mathlib dependencies
         shell: bash
         working-directory: verification/spinorial-core
         run: |
@@ -46,4 +49,18 @@ jobs:
           lean --version
           lake update
           lake exe cache get
+      - name: Save verified dependency download before checking candidate proofs
+        if: steps.deps.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            verification/spinorial-core/.lake
+          key: spinorial-core-lean4281-mathlib1f9fffd5-v1
+      - name: Check the mathlib-only source closure
+        shell: bash
+        working-directory: verification/spinorial-core
+        run: |
+          set -euo pipefail
           lake build InfoGeometry.Canonical.SpinorialCore.All
+          lake env lean ../../lean/InfoGeometry/Canonical/SpinorialCore/AxiomAudit.lean

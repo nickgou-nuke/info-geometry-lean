@@ -11,6 +11,7 @@ import InfoGeometry.Canonical.Cl11BipartitePolynomialSpectralAction
 import InfoGeometry.Canonical.CartanBladePolynomialSpectralAction
 import InfoGeometry.Canonical.ChiralBipartiteDiracNetworkBridge
 import InfoGeometry.Canonical.NonlinearTwinWaveOpticsBridge
+import InfoGeometry.Canonical.ClusterMutationIndexBridge
 
 import InfoGeometry.Categorical.ArtinGarsideCenterBridge
 import InfoGeometry.Categorical.UniversalArtinBraidRepresentation
@@ -144,5 +145,17 @@ theorem eight_state_ratio_packet :
         InfoGeometry.Physics.EightStateTraceRatio.traceQSq =
       (3 : ℚ) / 8 :=
   InfoGeometry.Physics.EightStateTraceRatio.trace_ratio_eq_three_eighths
+
+/-- Exact plabic count identity and cluster-move invariance packet. -/
+theorem cluster_count_index_packet
+    (s : InfoGeometry.Canonical.ClusterMutationIndexBridge.PlabicCounts) :
+    s.helicityDefect = s.colorIndex ∧
+    (s.squareMove).colorIndex = s.colorIndex ∧
+    (s.bubbleReduction).colorIndex = s.colorIndex := by
+  exact ⟨
+    InfoGeometry.Canonical.ClusterMutationIndexBridge.PlabicCounts.helicityDefect_eq_colorIndex s,
+    InfoGeometry.Canonical.ClusterMutationIndexBridge.PlabicCounts.squareMove_colorIndex s,
+    InfoGeometry.Canonical.ClusterMutationIndexBridge.PlabicCounts.bubbleReduction_colorIndex s
+  ⟩
 
 end InfoGeometry.PR185

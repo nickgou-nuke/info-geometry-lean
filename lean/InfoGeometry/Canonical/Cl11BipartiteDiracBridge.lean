@@ -11,19 +11,14 @@ operator
 
   D_tot = D_L ⊗ β_R + I_L ⊗ D_R
 
-onto the repository-owned Cl(1,1) matrix atom and stage-two tensor carrier.
+onto the repository-owned stage-one/stage-two tensor tower.
 
-Proved here:
+The left factor uses the native `MatStage 1`; the right factor uses the
+executable Cl(1,1) atom `M₂(ℝ)`.  The explicit stage-one algebra equivalence
+from `Cl11LeftRightDoubleBridge` is used only when exchanging factors.
 
-* exact square expansion;
-* decoupling when β_R² = I and {β_R,D_R}=0;
-* the standard off-diagonal Dirac anticommutes with β = diag(1,-1);
-* finite Krein-adjoint compatibility under β_L ⊗ β_R;
-* tensor-factor swap sends A ⊗ B to B ⊗ A and therefore reflects D_tot.
-
-These are finite matrix identities.  They are not, by themselves, a
-formalization of the analytic Baaj--Julg theorem, Tomita--Takesaki theory, or
-an unbounded Kasparov product.
+These are finite matrix identities, not a formalization of the analytic
+Baaj--Julg theorem, Tomita--Takesaki theory, or an unbounded Kasparov product.
 -/
 
 noncomputable section
@@ -37,18 +32,19 @@ open InfoGeometry.Clifford.TowerMatrix
 open InfoGeometry.Canonical.Cl11LeftRightDoubleBridge
 
 abbrev Atom := Mat2
+abbrev StageOne := MatStage 1
 abbrev StageTwo := MatStage 2
 
 /-- Composite bipartite Dirac operator on the native two-site carrier. -/
-def compositeDirac (DL betaR DR : Atom) : StageTwo :=
-  DL ⊗ₖ betaR + (1 : Atom) ⊗ₖ DR
+def compositeDirac (DL : StageOne) (betaR DR : Atom) : StageTwo :=
+  DL ⊗ₖ betaR + (1 : StageOne) ⊗ₖ DR
 
 /-- Exact algebraic square expansion of the bipartite composite operator. -/
-theorem compositeDirac_sq_expansion (DL betaR DR : Atom) :
+theorem compositeDirac_sq_expansion (DL : StageOne) (betaR DR : Atom) :
     compositeDirac DL betaR DR * compositeDirac DL betaR DR =
       (DL * DL) ⊗ₖ (betaR * betaR) +
       DL ⊗ₖ (betaR * DR + DR * betaR) +
-      (1 : Atom) ⊗ₖ (DR * DR) := by
+      (1 : StageOne) ⊗ₖ (DR * DR) := by
   unfold compositeDirac
   rw [add_mul, mul_add, mul_add]
   simp only [Matrix.mul_kronecker_mul, Matrix.one_mul, Matrix.mul_one]
@@ -58,12 +54,12 @@ theorem compositeDirac_sq_expansion (DL betaR DR : Atom) :
 /-- If the right grading is involutive and the right Dirac operator is odd,
 the mixed term vanishes. -/
 theorem compositeDirac_sq_decoupled
-    (DL betaR DR : Atom)
+    (DL : StageOne) (betaR DR : Atom)
     (hbeta : betaR * betaR = 1)
     (hodd : betaR * DR + DR * betaR = 0) :
     compositeDirac DL betaR DR * compositeDirac DL betaR DR =
       (DL * DL) ⊗ₖ (1 : Atom) +
-      (1 : Atom) ⊗ₖ (DR * DR) := by
+      (1 : StageOne) ⊗ₖ (DR * DR) := by
   rw [compositeDirac_sq_expansion, hbeta, hodd]
   simp
 
@@ -96,29 +92,29 @@ theorem offDiagonalDirac_anticomm_kreinBeta (v w : ℝ) :
 
 /-- Concrete decoupling for the native off-diagonal right Dirac sector. -/
 theorem compositeDirac_chiral_decoupled
-    (DL : Atom) (v w : ℝ) :
+    (DL : StageOne) (v w : ℝ) :
     compositeDirac DL kreinBeta (offDiagonalDirac v w) *
         compositeDirac DL kreinBeta (offDiagonalDirac v w) =
       (DL * DL) ⊗ₖ (1 : Atom) +
-      (1 : Atom) ⊗ₖ
+      (1 : StageOne) ⊗ₖ
         (offDiagonalDirac v w * offDiagonalDirac v w) := by
   apply compositeDirac_sq_decoupled
   · exact kreinBeta_sq
   · exact offDiagonalDirac_anticomm_kreinBeta v w
 
 /-- Total fundamental symmetry β_L ⊗ β_R. -/
-def totalBeta (betaL betaR : Atom) : StageTwo :=
+def totalBeta (betaL : StageOne) (betaR : Atom) : StageTwo :=
   betaL ⊗ₖ betaR
 
 /-- Transpose of the native composite operator. -/
-theorem compositeDirac_transpose (DL betaR DR : Atom) :
+theorem compositeDirac_transpose (DL : StageOne) (betaR DR : Atom) :
     (compositeDirac DL betaR DR)ᵀ =
-      DLᵀ ⊗ₖ betaRᵀ + (1 : Atom) ⊗ₖ DRᵀ := by
+      DLᵀ ⊗ₖ betaRᵀ + (1 : StageOne) ⊗ₖ DRᵀ := by
   simp [compositeDirac, TowerMatrix.transpose_kronecker]
 
 /-- Finite Krein-adjoint compatibility of the composite operator. -/
 theorem compositeDirac_krein_self_adjoint
-    (DL betaL DR betaR : Atom)
+    (DL betaL : StageOne) (DR betaR : Atom)
     (hSymmR : betaRᵀ = betaR)
     (hSqR : betaR * betaR = 1)
     (hAdjL : betaL * DLᵀ = DL * betaL)
@@ -134,49 +130,59 @@ theorem compositeDirac_krein_self_adjoint
 
 /-! ## Tensor-factor reflection -/
 
-/-- Swap the two binary tensor coordinates in the native stage-two index. -/
+/-- Swap the two binary coordinates of `Idx 2 = (Fin 1 × Fin 2) × Fin 2`. -/
 def swapStageTwoIndex :
     InfoGeometry.Clifford.TowerMatrix.Idx 2 →
       InfoGeometry.Clifford.TowerMatrix.Idx 2
   | ((u, i), j) => ((u, j), i)
 
-/-- Tensor-factor swap on stage-two matrices. -/
-def tensorSwap (M : StageTwo) : StageTwo :=
-  M.submatrix swapStageTwoIndex swapStageTwoIndex
+def swapStageTwoIndexEquiv :
+    InfoGeometry.Clifford.TowerMatrix.Idx 2 ≃
+      InfoGeometry.Clifford.TowerMatrix.Idx 2 where
+  toFun := swapStageTwoIndex
+  invFun := swapStageTwoIndex
+  left_inv x := by
+    rcases x with ⟨⟨u, i⟩, j⟩
+    rfl
+  right_inv x := by
+    rcases x with ⟨⟨u, i⟩, j⟩
+    rfl
 
-@[simp] theorem swapStageTwoIndex_involutive (x : InfoGeometry.Clifford.TowerMatrix.Idx 2) :
-    swapStageTwoIndex (swapStageTwoIndex x) = x := by
-  rcases x with ⟨⟨u, i⟩, j⟩
-  rfl
+/-- Tensor-factor swap as a matrix reindexing automorphism. -/
+noncomputable def tensorSwap : StageTwo ≃ₐ[ℝ] StageTwo :=
+  Matrix.reindexAlgEquiv ℝ ℝ swapStageTwoIndexEquiv
 
-/-- Tensor swap exchanges elementary Kronecker tensors. -/
-theorem tensorSwap_kronecker (A B : Atom) :
-    tensorSwap (A ⊗ₖ B) = B ⊗ₖ A := by
+/-- Tensor swap exchanges an elementary native left/right tensor. -/
+theorem tensorSwap_kronecker (A : StageOne) (B : Atom) :
+    tensorSwap (A ⊗ₖ B) =
+      atomToStageOne B ⊗ₖ stageOneToAtom A := by
   ext x y
   rcases x with ⟨⟨ux, ix⟩, jx⟩
   rcases y with ⟨⟨uy, iy⟩, jy⟩
   have hux : ux = uy := Subsingleton.elim _ _
   subst uy
-  rfl
+  simp [tensorSwap, swapStageTwoIndexEquiv, swapStageTwoIndex,
+    atomToStageOne, stageOneToAtom, stageOneIndexEquiv,
+    Matrix.reindexAlgEquiv_apply, Matrix.reindex_apply,
+    Matrix.kroneckerMap_apply]
 
 /-- Tensor swap is involutive. -/
 theorem tensorSwap_involutive :
     Function.Involutive tensorSwap := by
   intro M
   ext x y
-  simp [tensorSwap, swapStageTwoIndex_involutive]
-
-/-- Tensor swap reflects the composite operator into the opposite ordering. -/
-theorem tensorSwap_compositeDirac (DL betaR DR : Atom) :
-    tensorSwap (compositeDirac DL betaR DR) =
-      betaR ⊗ₖ DL + DR ⊗ₖ (1 : Atom) := by
-  unfold compositeDirac tensorSwap
-  ext x y
   rcases x with ⟨⟨ux, ix⟩, jx⟩
   rcases y with ⟨⟨uy, iy⟩, jy⟩
-  have hux : ux = uy := Subsingleton.elim _ _
-  subst uy
-  simp [swapStageTwoIndex, Matrix.submatrix_apply, Matrix.kroneckerMap_apply]
-  ring
+  simp [tensorSwap, swapStageTwoIndexEquiv, swapStageTwoIndex,
+    Matrix.reindexAlgEquiv_apply, Matrix.reindex_apply]
+
+/-- Tensor reflection of the composite operator. -/
+theorem tensorSwap_compositeDirac (DL : StageOne) (betaR DR : Atom) :
+    tensorSwap (compositeDirac DL betaR DR) =
+      atomToStageOne betaR ⊗ₖ stageOneToAtom DL +
+      atomToStageOne DR ⊗ₖ (1 : Atom) := by
+  rw [compositeDirac]
+  rw [map_add, tensorSwap_kronecker, tensorSwap_kronecker]
+  simp
 
 end InfoGeometry.Canonical.Cl11BipartiteDiracBridge

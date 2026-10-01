@@ -207,4 +207,19 @@ theorem g2_ck_scalar_separation_packet
     InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.G2TransitionDatum.theta_sq G i
   ⟩
 
+/-- Concrete G2 double-star CK packet. -/
+theorem g2_concrete_ck_packet
+    (i : InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.G2Vertex) :
+    (InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.A_G2_int.mulVec
+      (fun _ => (1 : ℤ))) i = 3 ∧
+    InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.garsideTheta
+      (InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.garsideTheta i) = i ∧
+    InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.G2BoundaryMatrix.det = -1456 := by
+  exact ⟨
+    InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.G2TransitionDatum.adjacency_mulVec_one_eq_three
+      InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.concreteG2TransitionDatum i,
+    InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.garsideTheta_involutive i,
+    InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge.G2BoundaryMatrix_det
+  ⟩
+
 end InfoGeometry.PR185

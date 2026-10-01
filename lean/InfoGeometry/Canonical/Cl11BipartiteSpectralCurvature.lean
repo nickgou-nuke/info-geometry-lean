@@ -181,6 +181,46 @@ theorem curvatureDefect_gauge_covariant_of_commute
   apply curvatureDefect_gauge_covariant
   exact unitConjugate_sq_eq_of_commute u D hcomm
 
+
+/-! ## Finite spectral trace invariance -/
+
+/-- Native matrix trace on the stage-one carrier. -/
+def spectralTrace (X : StageOne) : ℝ :=
+  Matrix.trace X
+
+/-- Trace is invariant under conjugation by a unit. -/
+theorem spectralTrace_unitConjugate
+    (u : Units StageOne) (X : StageOne) :
+    spectralTrace (unitConjugate u X) = spectralTrace X := by
+  unfold spectralTrace unitConjugate
+  calc
+    Matrix.trace ((u : StageOne) * X * (↑u⁻¹ : StageOne))
+        = Matrix.trace ((X * (↑u⁻¹ : StageOne)) * (u : StageOne)) := by
+            rw [Matrix.trace_mul_comm]
+    _ = Matrix.trace (X * ((↑u⁻¹ : StageOne) * (u : StageOne))) := by
+            rw [Matrix.mul_assoc]
+    _ = Matrix.trace X := by simp
+
+/-- Quadratic spectral trace built from the covariant Dirac square. -/
+def quadraticSpectralTrace (D A : StageOne) : ℝ :=
+  spectralTrace (covariantSquare D A)
+
+/-- Exact finite gauge invariance of the quadratic spectral trace. -/
+theorem quadraticSpectralTrace_gauge_invariant
+    (u : Units StageOne) (D A : StageOne) :
+    quadraticSpectralTrace D (gaugeTransform u D A) =
+      quadraticSpectralTrace D A := by
+  unfold quadraticSpectralTrace
+  rw [covariantSquare_gauge_covariant]
+  exact spectralTrace_unitConjugate u (covariantSquare D A)
+
+/-- Equivalent direct trace statement for the squared covariant Dirac. -/
+theorem trace_covariantSquare_gauge_invariant
+    (u : Units StageOne) (D A : StageOne) :
+    Matrix.trace (covariantSquare D (gaugeTransform u D A)) =
+      Matrix.trace (covariantSquare D A) := by
+  exact quadraticSpectralTrace_gauge_invariant u D A
+
 /-! ## Bipartite readout -/
 
 /-- Left-sheet curvature embedded in the doubled stage-two carrier. -/

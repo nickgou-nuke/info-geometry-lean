@@ -89,34 +89,37 @@ theorem b3_garside_sq_comm_sigmaTwo :
     _ = sigmaTwo * garsideDelta ^ 2 := by
           simp [pow_two, mul_assoc]
 
-/-- The square of the B₃ Garside element is central. -/
-theorem b3_garside_sq_mem_center :
-    garsideDelta ^ 2 ∈ Subgroup.center BraidGroup3 := by
-  rw [Subgroup.mem_center_iff]
-  intro g
-  induction g using PresentedGroup.inductionOn with
-  | of x =>
-      cases x
-      · exact b3_garside_sq_comm_sigmaOne
-      · exact b3_garside_sq_comm_sigmaTwo
-  | one =>
-      simp
-  | mul x y hx hy =>
-      calc
-        garsideDelta ^ 2 * (x * y)
-            = (garsideDelta ^ 2 * x) * y := by simp only [mul_assoc]
-        _ = (x * garsideDelta ^ 2) * y := by rw [hx]
-        _ = x * (garsideDelta ^ 2 * y) := by simp only [mul_assoc]
-        _ = x * (y * garsideDelta ^ 2) := by rw [hy]
-        _ = (x * y) * garsideDelta ^ 2 := by simp only [mul_assoc]
-  | inv x hx =>
-      apply (mul_right_cancel₀ x)
-      calc
-        (garsideDelta ^ 2 * x⁻¹) * x
-            = garsideDelta ^ 2 := by simp [mul_assoc]
-        _ = x⁻¹ * (x * garsideDelta ^ 2) := by simp
-        _ = x⁻¹ * (garsideDelta ^ 2 * x) := by rw [hx]
-        _ = (x⁻¹ * garsideDelta ^ 2) * x := by simp only [mul_assoc]
+/-- Elements commuting with a fixed group element form a subgroup. -/
+def commutantSubgroup {G : Type*} [Group G] (z : G) : Subgroup G where
+  carrier := {g | z * g = g * z}
+  one_mem' := by simp
+  mul_mem' := by
+    intro x y hx hy
+    calc
+      z * (x * y) = (z * x) * y := by simp only [mul_assoc]
+      _ = (x * z) * y := by rw [hx]
+      _ = x * (z * y) := by simp only [mul_assoc]
+      _ = x * (y * z) := by rw [hy]
+      _ = (x * y) * z := by simp only [mul_assoc]
+  inv_mem' := by
+    intro x hx
+    apply (mul_right_cancel₀ x)
+    calc
+      (z * x⁻¹) * x = z := by simp [mul_assoc]
+      _ = x⁻¹ * (x * z) := by simp
+      _ = x⁻¹ * (z * x) := by rw [hx]
+      _ = (x⁻¹ * z) * x := by simp only [mul_assoc]
+
+/-- The square of the B₃ Garside element commutes with every braid. -/
+theorem b3_garside_sq_central (g : BraidGroup3) :
+    garsideDelta ^ 2 * g = g * garsideDelta ^ 2 := by
+  let H : Subgroup BraidGroup3 := commutantSubgroup (garsideDelta ^ 2)
+  have hgen : ∀ j : Generator, PresentedGroup.of j ∈ H := by
+    intro j
+    cases j
+    · exact b3_garside_sq_comm_sigmaOne
+    · exact b3_garside_sq_comm_sigmaTwo
+  exact PresentedGroup.generated_by relations H hgen g
 
 /-- The B₃ full twist is a pure braid: its permutation image is trivial. -/
 theorem b3_garside_sq_mem_permutation_kernel :
@@ -159,37 +162,27 @@ theorem garside_comm_sigmaOne :
       simp only [mul_assoc]
     _ = sigmaOne * garside := by rfl
 
-/-- The G₂/I₂(6) Garside element itself is central. -/
-theorem garside_mem_center :
-    garside ∈ Subgroup.center ArtinG2 := by
-  rw [Subgroup.mem_center_iff]
-  intro g
-  induction g using PresentedGroup.inductionOn with
-  | of i =>
-      fin_cases i
-      · exact garside_comm_sigmaZero
-      · exact garside_comm_sigmaOne
-  | one =>
-      simp
-  | mul x y hx hy =>
-      calc
-        garside * (x * y) = (garside * x) * y := by simp only [mul_assoc]
-        _ = (x * garside) * y := by rw [hx]
-        _ = x * (garside * y) := by simp only [mul_assoc]
-        _ = x * (y * garside) := by rw [hy]
-        _ = (x * y) * garside := by simp only [mul_assoc]
-  | inv x hx =>
-      apply (mul_right_cancel₀ x)
-      calc
-        (garside * x⁻¹) * x = garside := by simp [mul_assoc]
-        _ = x⁻¹ * (x * garside) := by simp
-        _ = x⁻¹ * (garside * x) := by rw [hx]
-        _ = (x⁻¹ * garside) * x := by simp only [mul_assoc]
+/-- The G₂/I₂(6) Garside element commutes with every Artin-group element. -/
+theorem garside_central (g : ArtinG2) :
+    garside * g = g * garside := by
+  let H : Subgroup ArtinG2 :=
+    InfoGeometry.Categorical.ArtinGarsideCenterBridge.commutantSubgroup garside
+  have hgen : ∀ j : Generator, PresentedGroup.of j ∈ H := by
+    intro j
+    fin_cases j
+    · exact garside_comm_sigmaZero
+    · exact garside_comm_sigmaOne
+  exact PresentedGroup.generated_by relations H hgen g
 
-/-- Consequently Δ² is central as well, though Δ is already central. -/
-theorem garside_sq_mem_center :
-    garside ^ 2 ∈ Subgroup.center ArtinG2 := by
-  exact (Subgroup.center ArtinG2).pow_mem garside_mem_center 2
+/-- Consequently Δ² also commutes with every element, although Δ already does. -/
+theorem garside_sq_central (g : ArtinG2) :
+    garside ^ 2 * g = g * garside ^ 2 := by
+  calc
+    garside ^ 2 * g = garside * (garside * g) := by simp [pow_two, mul_assoc]
+    _ = garside * (g * garside) := by rw [garside_central]
+    _ = (garside * g) * garside := by simp only [mul_assoc]
+    _ = (g * garside) * garside := by rw [garside_central]
+    _ = g * garside ^ 2 := by simp [pow_two, mul_assoc]
 
 end G2
 

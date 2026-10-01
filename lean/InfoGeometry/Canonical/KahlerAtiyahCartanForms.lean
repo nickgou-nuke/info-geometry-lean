@@ -268,6 +268,88 @@ def metricQuadraticForm
     metricQuadraticForm g v = g v v := by
   simp [metricQuadraticForm]
 
+/-! ## The deformed Kähler--Atiyah product on the exterior carrier -/
+
+/-- Mathlib's PBW/change-of-form linear equivalence from the metric Clifford
+algebra to the exterior algebra.  This is a module equivalence, not an algebra
+equivalence: the target still carries its ordinary wedge multiplication. -/
+def cliffordExteriorEquiv
+    (g : LinearMap.BilinForm ℝ V) :
+    CliffordAlgebra (metricQuadraticForm g) ≃ₗ[ℝ] Forms V :=
+  CliffordAlgebra.equivExterior (metricQuadraticForm g)
+
+@[simp] theorem cliffordExteriorEquiv_ι
+    (g : LinearMap.BilinForm ℝ V) (v : V) :
+    cliffordExteriorEquiv g
+        (CliffordAlgebra.ι (metricQuadraticForm g) v) =
+      ExteriorAlgebra.ι ℝ v := by
+  simp [cliffordExteriorEquiv]
+
+@[simp] theorem cliffordExteriorEquiv_one
+    (g : LinearMap.BilinForm ℝ V) :
+    cliffordExteriorEquiv g
+        (1 : CliffordAlgebra (metricQuadraticForm g)) =
+      (1 : Forms V) := by
+  simp [cliffordExteriorEquiv]
+
+/-- The Kähler--Atiyah product on forms, obtained by transporting Clifford
+multiplication through Mathlib's `CliffordAlgebra.equivExterior`.
+
+The carrier is literally `ExteriorAlgebra ℝ V`; only the multiplication is
+deformed. -/
+def kahlerAtiyahProduct
+    (g : LinearMap.BilinForm ℝ V)
+    (α β : Forms V) :
+    Forms V :=
+  cliffordExteriorEquiv g
+    ((cliffordExteriorEquiv g).symm α *
+      (cliffordExteriorEquiv g).symm β)
+
+/-- The transported Kähler--Atiyah product is associative. -/
+theorem kahlerAtiyahProduct_assoc
+    (g : LinearMap.BilinForm ℝ V)
+    (α β γ : Forms V) :
+    kahlerAtiyahProduct g (kahlerAtiyahProduct g α β) γ =
+      kahlerAtiyahProduct g α (kahlerAtiyahProduct g β γ) := by
+  apply (cliffordExteriorEquiv g).symm.injective
+  simp [kahlerAtiyahProduct, mul_assoc]
+
+/-- The ordinary exterior scalar unit remains the unit for the transported
+Clifford product. -/
+theorem kahlerAtiyahProduct_one_left
+    (g : LinearMap.BilinForm ℝ V)
+    (α : Forms V) :
+    kahlerAtiyahProduct g 1 α = α := by
+  apply (cliffordExteriorEquiv g).symm.injective
+  simp [kahlerAtiyahProduct, cliffordExteriorEquiv]
+
+theorem kahlerAtiyahProduct_one_right
+    (g : LinearMap.BilinForm ℝ V)
+    (α : Forms V) :
+    kahlerAtiyahProduct g α 1 = α := by
+  apply (cliffordExteriorEquiv g).symm.injective
+  simp [kahlerAtiyahProduct, cliffordExteriorEquiv]
+
+/-- The transported product is additive in the left argument. -/
+theorem kahlerAtiyahProduct_add_left
+    (g : LinearMap.BilinForm ℝ V)
+    (α β γ : Forms V) :
+    kahlerAtiyahProduct g (α + β) γ =
+      kahlerAtiyahProduct g α γ +
+        kahlerAtiyahProduct g β γ := by
+  apply (cliffordExteriorEquiv g).symm.injective
+  simp [kahlerAtiyahProduct, add_mul]
+
+/-- The transported product is additive in the right argument. -/
+theorem kahlerAtiyahProduct_add_right
+    (g : LinearMap.BilinForm ℝ V)
+    (α β γ : Forms V) :
+    kahlerAtiyahProduct g α (β + γ) =
+      kahlerAtiyahProduct g α β +
+        kahlerAtiyahProduct g α γ := by
+  apply (cliffordExteriorEquiv g).symm.injective
+  simp [kahlerAtiyahProduct, mul_add]
+
 /-- Canonical Clifford-algebra representation on the same exterior carrier.
 
 The universal property is discharged by `cartanCliffordAction_sq`; no

@@ -59,16 +59,19 @@ theorem coordinateResidue_zero_iff (x : Lattice) :
     · change (((Matrix.diagonal diagonalEntries *ᵥ w) 9 : ℤ) : ZMod 2) = 0
       rw [Matrix.mulVec_diagonal]
       change ((2 * w 9 : ℤ) : ZMod 2) = 0
-      norm_num
+      rw [ZMod.intCast_zmod_eq_zero_iff_dvd]
+      exact ⟨w 9, rfl⟩
     · apply Prod.ext
       · change (((Matrix.diagonal diagonalEntries *ᵥ w) 10 : ℤ) : ZMod 2) = 0
         rw [Matrix.mulVec_diagonal]
         change ((2 * w 10 : ℤ) : ZMod 2) = 0
-        norm_num
+        rw [ZMod.intCast_zmod_eq_zero_iff_dvd]
+        exact ⟨w 10, rfl⟩
       · change (((Matrix.diagonal diagonalEntries *ᵥ w) 11 : ℤ) : ZMod 364) = 0
         rw [Matrix.mulVec_diagonal]
         change ((364 * w 11 : ℤ) : ZMod 364) = 0
-        norm_num
+        rw [ZMod.intCast_zmod_eq_zero_iff_dvd]
+        exact ⟨w 11, rfl⟩
 
 /-- The certificate transports image membership without invoking determinants. -/
 theorem image_smith_iff (x : Lattice) :

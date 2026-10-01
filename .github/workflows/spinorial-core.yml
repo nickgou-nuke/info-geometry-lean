@@ -60,5 +60,9 @@ jobs:
         working-directory: verification/spinorial-core
         run: |
           set -euo pipefail
-          lake build InfoGeometry.Canonical.SpinorialCore.All
-          lake env lean ../../lean/InfoGeometry/Canonical/SpinorialCore/AxiomAudit.lean
+          lake build InfoGeometry.Canonical.SpinorialCore.All 2>&1 | tee build.log
+          lake env lean ../../lean/InfoGeometry/Canonical/SpinorialCore/AxiomAudit.lean 2>&1 | tee axiom-audit.log
+          if grep -E 'sorryAx|Lean.ofReduceBool|Lean.trustCompiler' axiom-audit.log; then
+            echo 'Unapproved proof dependency detected.' >&2
+            exit 1
+          fi

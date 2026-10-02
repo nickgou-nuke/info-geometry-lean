@@ -1,0 +1,68 @@
+name: Spinorial corrected core
+
+on:
+  push:
+    branches: [formalization/spinorial-corrected-core-20261001]
+    paths:
+      - 'lean/InfoGeometry/Canonical/SpinorialCore/**'
+      - 'verification/spinorial-core/**'
+      - '.github/workflows/spinorial-core.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: spinorial-core-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore isolated dependency cache
+        id: deps
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            verification/spinorial-core/.lake
+          key: spinorial-core-lean4281-mathlib1f9fffd5-v1
+      - name: Install pinned Lean if needed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.28.1
+      - name: Prepare pinned mathlib dependencies
+        shell: bash
+        working-directory: verification/spinorial-core
+        run: |
+          set -euo pipefail
+          lean --version
+          lake update
+          lake exe cache get
+      - name: Save verified dependency download before checking candidate proofs
+        if: steps.deps.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            verification/spinorial-core/.lake
+          key: spinorial-core-lean4281-mathlib1f9fffd5-v1
+      - name: Check the mathlib-only source closure
+        shell: bash
+        working-directory: verification/spinorial-core
+        run: |
+          set -euo pipefail
+          lake build InfoGeometry.Canonical.SpinorialCore.All 2>&1 | tee build.log
+          lake env lean ../../lean/InfoGeometry/Canonical/SpinorialCore/AxiomAudit.lean 2>&1 | tee axiom-audit.log
+          if grep -E 'sorryAx|Lean.ofReduceBool|Lean.trustCompiler' axiom-audit.log; then
+            echo 'Unapproved proof dependency detected.' >&2
+            exit 1
+          fi

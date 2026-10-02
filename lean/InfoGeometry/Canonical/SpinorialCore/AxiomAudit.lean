@@ -1,0 +1,39 @@
+import InfoGeometry.Canonical.SpinorialCore.All
+
+#print axioms InfoGeometry.Canonical.SpinorialCore.mixed_bivector_square
+#print axioms InfoGeometry.Canonical.SpinorialCore.clifford_mixed_bivector_square
+#print axioms InfoGeometry.Canonical.SpinorialCore.innerDiff_square_is_even
+#print axioms InfoGeometry.Canonical.SpinorialCore.order_one_factorization
+#print axioms InfoGeometry.Canonical.SpinorialCore.polynomialTrace_conjugation
+#print axioms InfoGeometry.Canonical.SpinorialCore.network_index_eq_trace
+#print axioms InfoGeometry.Canonical.SpinorialCore.normalized_network_supertrace
+#print axioms InfoGeometry.Canonical.SpinorialCore.dual_flow_closed_form
+#print axioms InfoGeometry.Canonical.SpinorialCore.phase_conjugate_current
+#print axioms InfoGeometry.Canonical.SpinorialCore.G2.smith_certificate
+#print axioms InfoGeometry.Canonical.SpinorialCore.G2.cokernelEquiv
+#print axioms InfoGeometry.Canonical.SpinorialCore.G2.relation_kernel_zero
+#print axioms InfoGeometry.Canonical.SpinorialCore.G2.primaryDecomposition
+#print axioms InfoGeometry.Canonical.SpinorialCore.G2.no_surjection_to_zmod16
+
+#print axioms InfoGeometry.Canonical.SpinorialCore.DerivationAction.commutator_leibniz
+#print axioms InfoGeometry.Canonical.SpinorialCore.DerivationAction.representation_faithful
+#print axioms InfoGeometry.Canonical.SpinorialCore.DerivationAction.cutStabilizer
+#print axioms InfoGeometry.Canonical.SpinorialCore.DerivationAction.linearized_idempotent
+#print axioms InfoGeometry.Canonical.SpinorialCore.Krein.sharp_involutive
+#print axioms InfoGeometry.Canonical.SpinorialCore.Krein.sharp_commutator
+#print axioms InfoGeometry.Canonical.SpinorialCore.Krein.clifford_boost_skew
+#print axioms InfoGeometry.Canonical.SpinorialCore.Krein.Counterexample.boost_preserves_signature
+#print axioms InfoGeometry.Canonical.SpinorialCore.Krein.Counterexample.boost_not_orthogonal
+#print axioms InfoGeometry.Canonical.SpinorialCore.Krein.sharp_exp
+#print axioms InfoGeometry.Canonical.SpinorialCore.Krein.exp_isIsometry
+#print axioms InfoGeometry.Canonical.SpinorialCore.Krein.SplitTwo.boost_isIsometry
+#print axioms InfoGeometry.Canonical.SpinorialCore.Krein.metricDual_antilinear
+#print axioms InfoGeometry.Canonical.SpinorialCore.Krein.pairing_isometry
+#print axioms InfoGeometry.Canonical.SpinorialCore.Krein.projective_null_iff
+#print axioms InfoGeometry.Canonical.SpinorialCore.Krein.positiveMass_recovery
+#print axioms InfoGeometry.Canonical.SpinorialCore.Krein.IncidenceExample.hermitian_null
+#print axioms InfoGeometry.Canonical.SpinorialCore.Krein.IncidenceExample.bilinear_not_null
+#print axioms InfoGeometry.Canonical.SpinorialCore.Mixing.two_flavor_quartet_zero
+#print axioms InfoGeometry.Canonical.SpinorialCore.Mixing.quartet_rephasing
+#print axioms InfoGeometry.Canonical.SpinorialCore.Mixing.three_flavors_allow_nonzero
+#print axioms InfoGeometry.Canonical.SpinorialCore.Mixing.three_flavors_allow_zero

@@ -15,3 +15,4 @@ import InfoGeometry.Lie.G2RollingBall
 import InfoGeometry.Lie.SagerschnigS2S3Distribution
 import InfoGeometry.Lie.SplitOctonion235Distribution
 import InfoGeometry.Lie.Pin55GenuineSieveBridge
+import InfoGeometry.Lie.ZornPeirceDerivationStabilizer

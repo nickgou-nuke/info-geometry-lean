@@ -78,46 +78,62 @@ theorem kreinAdjoint_smul (c : ℂ) (A : M6C) :
   simp [star_smul, smul_mul_assoc, mul_smul_comm]
   rfl
 
+lemma star_sheetTensor (P : SheetMatrix) (A : M3C) :
+    star (sheetTensor P A) = sheetTensor (star P) (star A) := by
+  ext s t
+  simp [sheetTensor, Matrix.star_apply, mul_comm]
+
+lemma kreinAdjoint_sheetTensor (P : SheetMatrix) (A : M3C) :
+    kreinAdjoint (sheetTensor P A) =
+      sheetTensor (sheetFlip * star P * sheetFlip) (star A) := by
+  rw [kreinAdjoint, star_sheetTensor, kreinSymmetry]
+  rw [sheetTensor_mul, sheetTensor_mul]
+  simp [Matrix.mul_assoc]
+
+lemma sheetFlip_conjugate_identity :
+    sheetFlip * star sheetIdentity * sheetFlip = sheetIdentity := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [sheetFlip, sheetIdentity, Matrix.star_apply, Matrix.mul_apply,
+      Fin.sum_univ_two]
+
+lemma sheetFlip_conjugate_parity :
+    sheetFlip * star sheetParity * sheetFlip = -sheetParity := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [sheetFlip, sheetParity, Matrix.star_apply, Matrix.mul_apply,
+      Fin.sum_univ_two]
+
+lemma sheetFlip_conjugate_flip :
+    sheetFlip * star sheetFlip * sheetFlip = sheetFlip := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [sheetFlip, Matrix.star_apply, Matrix.mul_apply, Fin.sum_univ_two]
+
+lemma sheetFlip_conjugate_phase :
+    sheetFlip * star sheetPhase * sheetFlip = -sheetPhase := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [sheetFlip, sheetPhase, Matrix.star_apply, Matrix.mul_apply,
+      Fin.sum_univ_two] <;> ring
+
 theorem kreinAdjoint_stokes (q : StokesQuad) :
     operatorStokesLinearEquiv
         (kreinAdjoint (assembleStokes q)) =
       stokesKreinAdjoint q := by
-  apply stokesLinearEquiv.symm.injective
-  simp only [operatorStokesLinearEquiv, LinearEquiv.trans_apply,
-    LinearEquiv.symm_apply_apply]
-  change blockLinearEquiv (kreinAdjoint (assembleStokes q)) =
-    stokesToBlocks (stokesKreinAdjoint q)
-  rcases q with ⟨a0, a1, a2, a3⟩
-  apply Prod.ext
-  · ext i j
-    simp [assembleStokes, stokesKreinAdjoint, kreinAdjoint,
-      kreinSymmetry, sheetTensor, sheetFlip, stokesToBlocks,
-      blocksToStokes, blockLinearEquiv_apply, blockLinearEquiv,
-      blockLinearMap, blockLinearMapInv, Matrix.star_apply,
-      Matrix.mul_apply, Matrix.add_apply, Matrix.one_apply, Matrix.sub_apply,
-      Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_succ] <;> ring
-  · apply Prod.ext
-    · ext i j
-      simp [assembleStokes, stokesKreinAdjoint, kreinAdjoint,
-        kreinSymmetry, sheetTensor, sheetFlip, stokesToBlocks,
-        blocksToStokes, blockLinearEquiv_apply, blockLinearEquiv,
-        blockLinearMap, blockLinearMapInv, Matrix.star_apply,
-        Matrix.mul_apply, Matrix.add_apply, Matrix.one_apply, Matrix.sub_apply,
-        Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_succ] <;> ring
-    · apply Prod.ext
-      · ext i j
-        simp [assembleStokes, stokesKreinAdjoint, kreinAdjoint,
-          kreinSymmetry, sheetTensor, sheetFlip, stokesToBlocks,
-          blocksToStokes, blockLinearEquiv_apply, blockLinearEquiv,
-          blockLinearMap, blockLinearMapInv, Matrix.star_apply,
-          Matrix.mul_apply, Matrix.add_apply, Matrix.one_apply, Matrix.sub_apply,
-          Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_succ] <;> ring
-      · ext i j
-        simp [assembleStokes, stokesKreinAdjoint, kreinAdjoint,
-          kreinSymmetry, sheetTensor, sheetFlip, stokesToBlocks,
-          blocksToStokes, blockLinearEquiv_apply, blockLinearEquiv,
-          blockLinearMap, blockLinearMapInv, Matrix.star_apply,
-          Matrix.mul_apply, Matrix.add_apply, Matrix.one_apply, Matrix.sub_apply,
-          Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_succ] <;> ring
-
+  rcases q with ⟨q₀, q₁, q₂, q₃⟩
+  have hconj : kreinAdjoint (assembleStokes (q₀, q₁, q₂, q₃)) =
+      assembleStokes (star q₀, star q₁, -star q₂, -star q₃) := by
+    rw [assembleStokes_eq_pauli_expansion, assembleStokes_eq_pauli_expansion]
+    simp only [pauliExpansion, kreinAdjoint_add, kreinAdjoint_sheetTensor,
+      sheetFlip_conjugate_identity, sheetFlip_conjugate_parity,
+      sheetFlip_conjugate_flip, sheetFlip_conjugate_phase]
+    ext s t
+    simp [sheetTensor]
+    ring
+  have hcoords (r : StokesQuad) : operatorStokesLinearEquiv (assembleStokes r) = r := by
+    change blocksToStokes (blockLinearMap (blockLinearMapInv (stokesToBlocks r))) = r
+    rw [blockLinearMap_blockLinearMapInv, blocksToStokes_stokesToBlocks]
+  rw [hconj]
+  exact hcoords (star q₀, star q₁, -star q₂, -star q₃)
 end InfoGeometry.Canonical.TwoSheetKreinAdjoint

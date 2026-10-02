@@ -1,0 +1,45 @@
+name: Cuntz Clifford22 Mathlib-pin Source Check
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'lean/InfoGeometry/Algebra/CuntzClifford22*.lean'
+      - 'lean/InfoGeometry/Algebra/CuntzClockObstructions.lean'
+      - 'tools/quality/check_cuntz_clifford22.py'
+      - '.github/workflows/cuntz-clifford22-narrow.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: cuntz-clifford22-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  source-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Install elan without selecting a new root toolchain
+        run: |
+          set -euo pipefail
+          curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            ~/.cache/mathlib
+          key: ${{ runner.os }}-cuntz-clifford22-${{ hashFiles('lake-manifest.json') }}
+      - name: Compile unchanged owners and audit their proof dependencies
+        run: |
+          set -euo pipefail
+          mkdir -p cuntz-clifford-evidence
+          python3 tools/quality/check_cuntz_clifford22.py 2>&1 | tee cuntz-clifford-evidence/build.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cuntz-clifford22-evidence
+          path: cuntz-clifford-evidence/

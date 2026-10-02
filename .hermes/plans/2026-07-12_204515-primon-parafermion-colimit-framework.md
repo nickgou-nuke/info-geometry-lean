@@ -6,7 +6,7 @@
 
 **Architecture:** The framework proceeds through explicit finite prime-cutoff stages, one-step bonding maps, recurrent finite-prefix identities, finite-chain invariance, and a genuine algebraic direct limit with canonical stage maps and compatible-cone lifts. Thermodynamic and `d ln Q` readouts are first proved at each finite stage and then transported through the direct system. Existing Mathlib zeta theorems may remain as classical comparison/readout theorems, but they are not the repository’s finite-to-infinite construction or proof authority.
 
-**Tech Stack:** Lean 4.28.0; pinned Mathlib; `Finset`, `Finsupp`, `RingHom`/`StarRingHom`; `Mathlib.Algebra.Colimit.DirectLimit`; repository owners `FiniteToInfiniteTransitionSOP`, `DirectLimitSuperClosureLemmas`, `UHFInductiveColimitBoundary`, `TensorTowerColimit`, and `ErlangenColimitResolution`.
+**Tech Stack:** Lean 4.28.x; pinned Mathlib; `Finset`, `Finsupp`, `RingHom`/`StarRingHom`; `Mathlib.Algebra.Colimit.DirectLimit`; repository owners `FiniteToInfiniteTransitionSOP`, `DirectLimitSuperClosureLemmas`, `UHFInductiveColimitBoundary`, `TensorTowerColimit`, and `ErlangenColimitResolution`.
 
 ---
 

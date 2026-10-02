@@ -57,27 +57,27 @@ def colourSplitQuaternionCore (c : SplitOctonionColour) : Set StandardRationalSp
 
 theorem modularJ_eq_colourLUnit (c : SplitOctonionColour) :
     modularJ c = colourLUnit c := by
-  cases c <;> native_decide
+  cases c <;> decide
 
 @[simp] theorem fundamentalSymmetry_sq :
     splitOctonionMulQ fundamentalSymmetry fundamentalSymmetry =
       rationalBasis .one := by
-  native_decide
+  decide
 
 @[simp] theorem colourUnit_sq (c : SplitOctonionColour) :
     splitOctonionMulQ (colourUnit c) (colourUnit c) =
       -(rationalBasis .one) := by
-  cases c <;> native_decide
+  cases c <;> decide
 
 @[simp] theorem colourLUnit_sq (c : SplitOctonionColour) :
     splitOctonionMulQ (colourLUnit c) (colourLUnit c) =
       rationalBasis .one := by
-  cases c <;> native_decide
+  cases c <;> decide
 
 @[simp] theorem modularJ_sq (c : SplitOctonionColour) :
     splitOctonionMulQ (modularJ c) (modularJ c) =
       rationalBasis .one := by
-  cases c <;> native_decide
+  cases c <;> decide
 
 @[simp] theorem phaseAxis_sq (c : SplitOctonionColour) :
     splitOctonionMulQ (phaseAxis c) (phaseAxis c) =
@@ -86,11 +86,11 @@ theorem modularJ_eq_colourLUnit (c : SplitOctonionColour) :
 
 theorem modularJ_mul_fundamentalSymmetry (c : SplitOctonionColour) :
     splitOctonionMulQ (modularJ c) fundamentalSymmetry = phaseAxis c := by
-  cases c <;> native_decide
+  cases c <;> decide
 
 theorem fundamentalSymmetry_mul_modularJ (c : SplitOctonionColour) :
     splitOctonionMulQ fundamentalSymmetry (modularJ c) = -(phaseAxis c) := by
-  cases c <;> native_decide
+  cases c <;> decide
 
 theorem modularJ_anticommutes_fundamentalSymmetry
     (c : SplitOctonionColour) :

@@ -32,7 +32,7 @@ def Window6SemisimpleInvariantsFactorThroughCapacity (m : Nat) : Prop :=
 private theorem window6HistogramFromCapacity_eq (d : ℕ) :
     window6HistogramFromCapacity window6CapacityCurve d = window6SemisimpleHistogram d := by
   rcases lt_or_ge d 5 with hd | hd
-  · interval_cases d <;> native_decide
+  · interval_cases d <;> decide
   · have hCd : window6CapacityCurve d = 64 := by
       unfold window6CapacityCurve
       norm_num [Nat.min_eq_left (by omega : 2 ≤ d), Nat.min_eq_left (by omega : 3 ≤ d),

@@ -4,6 +4,7 @@ from __future__ import annotations
 import fcntl
 import json
 import os
+import sys
 import time
 from pathlib import Path
 from typing import Any
@@ -48,9 +49,13 @@ class BuildLock:
         self.lock_path = lock_path
         self.owner = owner
         self.block = block
-        self._handle: object | None = None
+        self._handle: Any = None
+        self._ref_count: int = 0
 
     def acquire(self) -> "BuildLock":
+        if self._handle is not None:
+            self._ref_count += 1
+            return self
         self.lock_path.parent.mkdir(parents=True, exist_ok=True)
         handle = self.lock_path.open("a+", encoding="utf-8")
         flags = fcntl.LOCK_EX
@@ -59,28 +64,45 @@ class BuildLock:
         try:
             fcntl.flock(handle.fileno(), flags)
         except BlockingIOError as exc:
+            meta = read_lock_metadata(self.lock_path) or {}
             handle.close()
-            raise BuildLockBusyError(self.lock_path, read_lock_metadata(self.lock_path)) from exc
-        handle.seek(0)
-        handle.truncate(0)
-        handle.write(
-            json.dumps(
-                {
-                    "owner": self.owner,
-                    "pid": os.getpid(),
-                    "acquiredAt": time.time(),
-                },
-                ensure_ascii=False,
+            raise BuildLockBusyError(self.lock_path, meta) from exc
+        except BaseException:
+            handle.close()
+            raise
+
+        try:
+            handle.seek(0)
+            handle.truncate(0)
+            handle.write(
+                json.dumps(
+                    {
+                        "owner": self.owner,
+                        "pid": os.getpid(),
+                        "acquiredAt": time.time(),
+                    },
+                    ensure_ascii=False,
+                )
+                + "\n"
             )
-            + "\n"
-        )
-        handle.flush()
+            handle.flush()
+        except BaseException:
+            try:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+            finally:
+                handle.close()
+            raise
         self._handle = handle
+        self._ref_count = 1
         return self
 
     def release(self) -> None:
         if self._handle is None:
             return
+        if self._ref_count > 1:
+            self._ref_count -= 1
+            return
+        self._ref_count = 0
         handle = self._handle
         self._handle = None
         try:
@@ -94,7 +116,7 @@ class BuildLock:
     def __enter__(self) -> "BuildLock":
         return self.acquire()
 
-    def __exit__(self, exc_type, exc, tb) -> None:
+    def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> None:
         self.release()
 
 

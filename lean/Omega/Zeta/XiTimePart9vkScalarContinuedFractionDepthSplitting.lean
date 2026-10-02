@@ -46,7 +46,7 @@ theorem paper_xi_time_part9vk_scalar_continued_fraction_depth_splitting
     change
       xi_time_part9vk_scalar_continued_fraction_depth_splitting_data.xi_time_part9vk_scalar_continued_fraction_depth_splitting_fold_poles.card =
         2
-    native_decide
+    decide
   have hres : D.resonance_no_terminating_cf :=
     paper_xi_time_part9vk_resonance_shadow_finite_step_pole_generation D.S D.term D.hS1 D.hrec
   exact ⟨hfold, hres, hfold, hres⟩

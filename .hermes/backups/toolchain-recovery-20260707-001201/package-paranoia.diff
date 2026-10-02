@@ -39,11 +39,11 @@ index 5acb433..3f0e383 100644
  name = "lean4checker"
  git = "https://github.com/leanprover/lean4checker.git"
 -rev = "master"
-+rev = "v4.28.0"
++rev = "v4.28.x"
 diff --git a/lean-toolchain b/lean-toolchain
 index e5ab73a..4c685fa 100644
 --- a/lean-toolchain
 +++ b/lean-toolchain
 @@ -1 +1 @@
 -leanprover/lean4:v4.25.0
-+leanprover/lean4:v4.28.0
++leanprover/lean4:v4.28.x

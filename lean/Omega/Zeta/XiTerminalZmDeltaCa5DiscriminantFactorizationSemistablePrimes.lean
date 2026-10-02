@@ -50,9 +50,9 @@ theorem paper_xi_terminal_zm_delta_ca5_discriminant_factorization_semistable_pri
       xiTerminalZmDeltaCa5OddSemistablePrimeCharacterization := by
   refine ⟨?_, ?_, ?_⟩
   · unfold xiTerminalZmDeltaCa5DiscriminantFactorization
-    native_decide
-  · refine ⟨by native_decide, rfl⟩
+    decide
+  · refine ⟨by decide, rfl⟩
   · unfold xiTerminalZmDeltaCa5OddSemistablePrimeCharacterization
-    native_decide
+    decide
 
 end Omega.Zeta

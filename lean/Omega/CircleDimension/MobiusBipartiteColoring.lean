@@ -45,7 +45,7 @@ theorem paper_cdim_mobius_bipartite_coloring {a p : ℕ}
 
 /-- ω(1) = 0: 1 has no prime factors.
     cor:cdim-mobius-bipartite-coloring -/
-theorem omega_one : omega 1 = 0 := by native_decide
+theorem omega_one : omega 1 = 0 := by decide
 
 /-- ω(p) = 1 for prime p.
     cor:cdim-mobius-bipartite-coloring -/
@@ -57,16 +57,16 @@ theorem omega_prime (p : ℕ) (hp : p.Prime) : omega p = 1 := by
 theorem omega_seeds :
     omega 1 = 0 ∧ omega 2 = 1 ∧ omega 3 = 1 ∧
     omega 6 = 2 ∧ omega 30 = 3 ∧ omega 210 = 4 := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+          by decide, by decide, by decide⟩
 
 /-- Mobius sign seeds.
     cor:cdim-mobius-bipartite-coloring -/
 theorem mobiusSign_seeds :
     mobiusSign 1 = 1 ∧ mobiusSign 2 = -1 ∧ mobiusSign 3 = -1 ∧
     mobiusSign 6 = 1 ∧ mobiusSign 30 = -1 ∧ mobiusSign 210 = 1 := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+          by decide, by decide, by decide⟩
 
 /-- Double prime flip preserves Mobius sign: μ(a·p·q) = μ(a) when p,q are new primes.
     cor:cdim-mobius-bipartite-coloring -/
@@ -86,8 +86,8 @@ theorem paper_cdim_mobius_bipartite_extended :
     (omega 1 = 0 ∧ omega 6 = 2 ∧ omega 30 = 3) ∧
     (mobiusSign 1 = 1 ∧ mobiusSign 6 = 1 ∧ mobiusSign 30 = -1) ∧
     (2 * 3 * 5 * 7 = 210 ∧ omega 210 = 4) := by
-  refine ⟨⟨by native_decide, by native_decide, by native_decide⟩,
-          ⟨by native_decide, by native_decide, by native_decide⟩,
-          ⟨by omega, by native_decide⟩⟩
+  refine ⟨⟨by decide, by decide, by decide⟩,
+          ⟨by decide, by decide, by decide⟩,
+          ⟨by omega, by decide⟩⟩
 
 end Omega.CircleDimension.MobiusBipartiteColoring

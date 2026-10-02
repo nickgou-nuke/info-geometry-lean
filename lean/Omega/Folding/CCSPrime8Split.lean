@@ -372,7 +372,7 @@ theorem momentSum_three_recurrence (m : Nat) :
     momentSum 3 (m + 3) + 2 * momentSum 3 m =
     2 * momentSum 3 (m + 2) + 4 * momentSum 3 (m + 1) := by
   match m with
-  | 0 => simp only [← cMomentSum_eq]; native_decide
+  | 0 => simp only [← cMomentSum_eq]; decide
   | m + 1 =>
     show momentSum 3 (m + 4) + 2 * momentSum 3 (m + 1) =
         2 * momentSum 3 (m + 3) + 4 * momentSum 3 (m + 2)

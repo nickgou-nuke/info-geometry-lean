@@ -18,8 +18,8 @@ theorem paper_gut_cphi_forces_l2_tv_renyi2_deficit_seeds :
     (0 ≤ 0) ∧
     (3 * 1 = 3 ∧ 1 * 9 = 9) ∧
     (3 * 3 = 9 ∧ 8 * 1 = 8 ∧ 9 > 8) := by
-  refine ⟨⟨by decide, by decide, by native_decide⟩,
-         by native_decide, by omega,
+  refine ⟨⟨by decide, by decide, by decide⟩,
+         by decide, by omega,
          ⟨by omega, by omega⟩, ⟨by omega, by omega, by omega⟩⟩
 
 /-- Concrete bulk-resonance deficit data: the collision identity produces the squared `L²`

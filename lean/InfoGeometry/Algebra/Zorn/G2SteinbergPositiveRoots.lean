@@ -40,11 +40,11 @@ def uMidEquiv : SplitOctF2 ≃ SplitOctF2 where
   left_inv X := by
     rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
     revert a b x0 x1 x2 y0 y1 y2
-    native_decide
+    decide
   right_inv X := by
     rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
     revert a b x0 x1 x2 y0 y1 y2
-    native_decide
+    decide
 
 /-- Proof that `uMidEquiv` preserves the split-octonion unit, addition, and multiplication. -/
 theorem isSplitOctF2Aut_uMid : IsSplitOctF2Aut uMidEquiv := by
@@ -57,14 +57,14 @@ theorem isSplitOctF2Aut_uMid : IsSplitOctF2Aut uMidEquiv := by
     · rfl
     · dsimp [uMidEquiv, uMidFun, add]
       revert a1 b1 x01 x11 x21 y01 y11 y21 a2 b2 x02 x12 x22 y02 y12 y22
-      native_decide
+      decide
     · rfl
     · rfl
     · rfl
     · rfl
     · dsimp [uMidEquiv, uMidFun, add]
       revert a1 b1 x01 x11 x21 y01 y11 y21 a2 b2 x02 x12 x22 y02 y12 y22
-      native_decide
+      decide
   · intro X Y
     rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
     rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩

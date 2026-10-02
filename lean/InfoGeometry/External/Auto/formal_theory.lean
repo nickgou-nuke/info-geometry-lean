@@ -87,8 +87,8 @@ theorem kac_moody_root_decomposition :
     A1_1Cartan.det = 0 ∧ A1_1Cartan * imaginaryRootDelta = 0 ∧
       imaginaryRootDelta ≠ 0 := by
   refine ⟨?_, ?_, ?_⟩
-  · native_decide
-  · native_decide
+  · decide
+  · decide
   · intro h
     have h00 : imaginaryRootDelta 0 0 = (0 : ℤ) := by
       rw [h]

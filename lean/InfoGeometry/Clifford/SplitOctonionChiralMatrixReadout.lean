@@ -114,7 +114,7 @@ theorem ordinary_matrix_cl11_packet (a : Fin 3) :
     operatorE a * operatorE a = -chiralOne ∧
     ell * operatorE a = -(operatorE a * ell) := by
   fin_cases a
-  all_goals constructor <;> native_decide
+  all_goals constructor <;> decide
 
 -/
 

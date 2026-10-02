@@ -3,7 +3,7 @@
 > **Scope:** Not part of the prove/autoprove default loop. Consulted when the agent encounters goals that `simp` cannot close, or when cross-domain reasoning is needed.
 
 > **Version metadata:**
-> - **Verified on:** Lean reference + release notes through `v4.28.0`
+> - **Verified on:** Lean reference + release notes through `v4.28.x`
 > - **Last validated:** 2026-02-17
 > - **Confidence:** medium (mixed: official docs + targeted examples, not full snippet CI)
 
@@ -95,8 +95,8 @@ example : (5 : Fin 3) = 2 := by
 | `grind +splitImp` | `v4.20.0` | Allow implication splitting |
 | Interactive `instantiate` supports local theorems/hyps | `v4.25.0` | Older toolchains may require global constants |
 | `@[grind_pattern]` constraints | `v4.26.0` | Pattern shaping became more expressive |
-| `@[grind_pattern]` guards | `v4.28.0` | More precise pattern activation |
-| `grind -funCC`, `grind +revert`, `grind -reducible` | `v4.28.0` | Additional control over congruence/reduction/search |
+| `@[grind_pattern]` guards | `v4.28.x` | More precise pattern activation |
+| `grind -funCC`, `grind +revert`, `grind -reducible` | `v4.28.x` | Additional control over congruence/reduction/search |
 
 If your toolchain is older than these entries, expect option/behavior differences.
 

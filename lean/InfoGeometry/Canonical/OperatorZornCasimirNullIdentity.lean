@@ -21,11 +21,7 @@ theorem operatorZornCasimir_zero_diagonal_implies_dot_zero
     (hcasimir : operatorZornCasimir Z = 0)
     (hplus : Z.n_plus = 0)
     (hminus : Z.n_minus = 0) :
-    operatorDot Z.sigma_plus Z.sigma_minus = 0 := by
-  have hdiag : Z.n_plus * Z.n_minus = 0 := by
-    rw [hplus, hminus, zero_mul]
-  unfold operatorZornCasimir at hcasimir
-  rw [hdiag] at hcasimir
-  exact neg_eq_zero.mp (by simpa using hcasimir)
+    operatorDot Z.sigma_plus Z.sigma_minus = 0 :=
+  neg_eq_zero.mp (by unfold operatorZornCasimir at hcasimir; rwa [hplus, hminus, zero_mul, zero_sub] at hcasimir)
 
 end InfoGeometry.Canonical

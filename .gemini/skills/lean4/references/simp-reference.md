@@ -3,7 +3,7 @@
 > **Scope:** Not part of the prove/autoprove default loop. Consulted when `simp` needs a deterministic, reusable rewrite that simp lemmas alone cannot provide.
 
 > **Version metadata:**
-> - **Verified on:** Lean reference + release notes through `v4.28.0`
+> - **Verified on:** Lean reference + release notes through `v4.28.x`
 > - **Last validated:** 2026-02-17
 > - **Confidence:** medium (docs reviewed; snippets not batch-compiled)
 

@@ -81,6 +81,6 @@ theorem paper_xi_terminal_zm_leyang_linear_twist_parameter_map_s5 :
   · refine ⟨Omega.POM.S5GaloisArithmetic.p17_unramified, ?_, ?_⟩
     · exact Omega.POM.S5GaloisArithmetic.disc_not_square
     · unfold xi_terminal_zm_leyang_linear_twist_parameter_map_s5_factorization_witness
-      native_decide
+      decide
 
 end Omega.Zeta

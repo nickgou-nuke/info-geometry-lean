@@ -140,3 +140,33 @@ available through the root project surface.  `InfoGeometry.All` is the explicit
 whole-project umbrella; `InfoGeometry.Library` is only a compatibility umbrella
 for the canonical subset.
 -/
+import InfoGeometry.GrandUnification.SiegelModuliSpace
+import InfoGeometry.GrandUnification.MTheoryComplexTorus
+import InfoGeometry.GrandUnification.TypeDBitwordAtomikBridge
+import InfoGeometry.GrandUnification.TypeDZeroOrbitRigidity
+import InfoGeometry.GrandUnification.TypeDWeylSemidirectAction
+import InfoGeometry.GrandUnification.CantorTypeDBitwordLimit
+
+/-!
+# Recovered Architecture Integrations
+Re-integrating the Cuntz Colimit GPU Split Algebra architecture that was
+previously orphaned in the recovery tree.
+-/
+import InfoGeometry.NCG.CuntzColimitKMSTiltGNS
+import InfoGeometry.NCG.CuntzColimitShiftKMSGNSBridge
+import InfoGeometry.MassSpectrometry.GPUExecutionContracts
+import InfoGeometry.Canonical.CuntzFractalHoppingAnyons
+import InfoGeometry.GrandUnification.Capstone
+import InfoGeometry.GrandUnification.BulkBoundaryCorrespondence
+import InfoGeometry.GrandUnification.AnomalyInflow
+import InfoGeometry.GrandUnification.MachianPhaseSeparation
+import InfoGeometry.GrandUnification.MachianPauliRealization
+import InfoGeometry.GrandUnification.MachianCosmology
+import InfoGeometry.GrandUnification.DiracSpinorRealization
+import InfoGeometry.GrandUnification.TomitaTakesakiRealization
+import InfoGeometry.GrandUnification.ModularPhaseSeparation
+import InfoGeometry.GrandUnification.DirectSumDecomposition
+import InfoGeometry.GrandUnification.KleinDiracRealization
+import InfoGeometry.GrandUnification.MoebiusWittenIndex
+import InfoGeometry.GrandUnification.MoebiusTomitaPacket
+import InfoGeometry.GrandUnification.HorizonCapacitance

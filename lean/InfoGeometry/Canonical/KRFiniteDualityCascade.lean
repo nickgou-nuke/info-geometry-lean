@@ -142,17 +142,17 @@ def parityFirstCell : M10Z :=
 /-- The first-cell Buscher swap is an involution. -/
 theorem buscherFirst_involutive :
     buscherFirst * buscherFirst = 1 := by
-  native_decide
+  decide
 
 /-- The first-cell Buscher swap preserves the split-pairing `O(5,5)` metric. -/
 theorem buscherFirst_preserves_etaO55 :
     buscherFirstᵀ * etaO55 * buscherFirst = etaO55 := by
-  native_decide
+  decide
 
 /-- The first-cell Buscher swap anticommutes with the local parity operator. -/
 theorem buscherFirst_parityFirstCell_anticomm :
     buscherFirst * parityFirstCell = -parityFirstCell * buscherFirst := by
-  native_decide
+  decide
 
 /-- Finite packet collecting the KR-shadow and `O(5,5)` Buscher facts. -/
 theorem finite_kr_buscher_o55_packet {X : Type*} [TopologicalSpace X]

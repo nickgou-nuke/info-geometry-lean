@@ -22,7 +22,7 @@ private theorem cl55WittVolumeList_pairwise_operator_grading :
   intro i j hij
   fin_cases i <;> fin_cases j <;>
     simp_all [QuadraticMap.isOrtho_def, cl55WittBasisFin, wittBasis,
-      Q55_apply, e_pos, f_neg, Fin.sum_univ_succ] <;> native_decide
+      Q55_apply, e_pos, f_neg, Fin.sum_univ_succ] <;> decide
 
 private theorem cl55WittVolumeList_even_operator_grading :
     Even cl55WittVolumeList.length := by

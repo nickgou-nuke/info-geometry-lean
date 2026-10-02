@@ -19,7 +19,7 @@ def hankelS2_2x2 : Matrix (Fin 2) (Fin 2) ℤ :=
 
 /-- The 2×2 Hankel determinant for S_2 is 2.
     lem:pom-s2-hankel-det-2x2 -/
-theorem hankelS2_2x2_det : hankelS2_2x2.det = 2 := by native_decide
+theorem hankelS2_2x2_det : hankelS2_2x2.det = 2 := by decide
 
 /-- The 3×3 Hankel matrix for S_2:
     [[S_2(0), S_2(1), S_2(2)],
@@ -30,7 +30,7 @@ def hankelS2_3x3 : Matrix (Fin 3) (Fin 3) ℤ :=
 
 /-- The 3×3 Hankel determinant for S_2 is −4 (nonzero).
     lem:pom-s2-hankel-det-3x3 -/
-theorem hankelS2_3x3_det : hankelS2_3x3.det = -4 := by native_decide
+theorem hankelS2_3x3_det : hankelS2_3x3.det = -4 := by decide
 
 /-- The 3×3 Hankel determinant is nonzero, so S_2 does not satisfy any order-2
     linear recurrence with constant coefficients.
@@ -45,7 +45,7 @@ def hankelS2_4x4 : Matrix (Fin 4) (Fin 4) ℤ :=
 
 /-- The 4×4 Hankel determinant for S_2 is 0, consistent with the order-3 recurrence.
     lem:pom-s2-hankel-det-4x4 -/
-theorem hankelS2_4x4_det : hankelS2_4x4.det = 0 := by native_decide
+theorem hankelS2_4x4_det : hankelS2_4x4.det = 0 := by decide
 
 /-- The minimal linear recurrence order for S_2 is exactly 3:
     the 3×3 Hankel det is nonzero (order < 3 insufficient) and
@@ -62,7 +62,7 @@ def hankelS3_2x2 : Matrix (Fin 2) (Fin 2) ℤ :=
   !![1, 2; 2, 10]
 
 /-- The 2×2 Hankel determinant for S_3 is 6. -/
-theorem hankelS3_2x2_det : hankelS3_2x2.det = 6 := by native_decide
+theorem hankelS3_2x2_det : hankelS3_2x2.det = 6 := by decide
 
 /-- The 3×3 Hankel matrix for S_3: [[1,2,10],[2,10,26],[10,26,88]]. -/
 def hankelS3_3x3 : Matrix (Fin 3) (Fin 3) ℤ :=
@@ -70,7 +70,7 @@ def hankelS3_3x3 : Matrix (Fin 3) (Fin 3) ℤ :=
 
 /-- The 3×3 Hankel determinant for S_3 is −108 (nonzero).
     lem:pom-s3-hankel-det-3x3 -/
-theorem hankelS3_3x3_det : hankelS3_3x3.det = -108 := by native_decide
+theorem hankelS3_3x3_det : hankelS3_3x3.det = -108 := by decide
 
 /-- The 4×4 Hankel matrix for S_3:
     [[1,2,10,26],[2,10,26,88],[10,26,88,260],[26,88,260,820]]. -/
@@ -79,7 +79,7 @@ def hankelS3_4x4 : Matrix (Fin 4) (Fin 4) ℤ :=
 
 /-- The 4×4 Hankel determinant for S_3 is 0.
     lem:pom-s3-hankel-det-4x4 -/
-theorem hankelS3_4x4_det : hankelS3_4x4.det = 0 := by native_decide
+theorem hankelS3_4x4_det : hankelS3_4x4.det = 0 := by decide
 
 /-- The minimal linear recurrence order for S_3 is also 3.
     lem:pom-s3-minimal-order -/
@@ -119,7 +119,7 @@ theorem collisionKernel3_charpoly :
 theorem collisionKernel2_charpoly_eval :
     collisionKernel2 ^ 3 + 2 • (1 : Matrix (Fin 3) (Fin 3) ℤ) =
       2 • collisionKernel2 ^ 2 + 2 • collisionKernel2 := by
-  native_decide
+  decide
 
 /-- Evaluation of the characteristic polynomial of A_3 at A_3:
     A_3³ − 2·A_3² − 4·A_3 + 2·I = 0.
@@ -128,7 +128,7 @@ theorem collisionKernel2_charpoly_eval :
 theorem collisionKernel3_charpoly_eval :
     collisionKernel3 ^ 3 + 2 • (1 : Matrix (Fin 3) (Fin 3) ℤ) =
       2 • collisionKernel3 ^ 2 + 4 • collisionKernel3 := by
-  native_decide
+  decide
 
 /-- The collision kernels A_2 and A_3 have equal traces. -/
 theorem collisionKernel_trace_eq : collisionKernel2.trace = collisionKernel3.trace := by
@@ -154,7 +154,7 @@ assuming the recurrence holds universally. -/
     thm:pom-rank-exact-s2-strict-mono -/
 theorem momentSum_two_strict_mono_verified (m : Nat) (hm : m ≤ 6) :
     momentSum 2 m < momentSum 2 (m + 1) := by
-  interval_cases m <;> (simp only [← cMomentSum_eq]; native_decide)
+  interval_cases m <;> (simp only [← cMomentSum_eq]; decide)
 
 /-- S_2 is monotone on verified resolutions: S_2(m) ≤ S_2(m+1) for m ≤ 6.
     prop:pom-s2-recurrence-mono-verified -/
@@ -166,7 +166,7 @@ theorem momentSum_two_mono_verified (m : Nat) (hm : m ≤ 6) :
     thm:pom-rank-exact-s3-strict-mono -/
 theorem momentSum_three_strict_mono_verified (m : Nat) (hm : m ≤ 6) :
     momentSum 3 m < momentSum 3 (m + 1) := by
-  interval_cases m <;> (simp only [← cMomentSum_eq]; native_decide)
+  interval_cases m <;> (simp only [← cMomentSum_eq]; decide)
 
 /-- S_3 is monotone on verified resolutions: S_3(m) ≤ S_3(m+1) for m ≤ 6.
     prop:pom-s3-recurrence-mono-verified -/
@@ -193,8 +193,8 @@ theorem momentSum_two_mono_of_recurrence
   induction m with
   | zero =>
     constructor
-    · simp only [← cMomentSum_eq]; native_decide
-    · simp only [← cMomentSum_eq]; native_decide
+    · simp only [← cMomentSum_eq]; decide
+    · simp only [← cMomentSum_eq]; decide
   | succ n ih =>
     have ih1 := ih.1  -- S(n) ≤ S(n+1)
     have ih2 := ih.2  -- S(n+1) ≤ S(n+2)
@@ -222,8 +222,8 @@ theorem momentSum_three_mono_of_recurrence
   induction m with
   | zero =>
     constructor
-    · simp only [← cMomentSum_eq]; native_decide
-    · simp only [← cMomentSum_eq]; native_decide
+    · simp only [← cMomentSum_eq]; decide
+    · simp only [← cMomentSum_eq]; decide
   | succ n ih =>
     have ih1 := ih.1
     have ih2 := ih.2
@@ -244,7 +244,7 @@ def hankelS2 : Matrix (Fin 3) (Fin 3) ℤ :=
   !![3, 7, 18; 7, 18, 44; 18, 44, 110]
 
 /-- The determinant of the normalized Hankel matrix is −2. -/
-theorem hankelS2_det : hankelS2.det = -2 := by native_decide
+theorem hankelS2_det : hankelS2.det = -2 := by decide
 
 /-- The normalized Hankel determinant is nonzero. -/
 theorem hankelS2_det_ne_zero : hankelS2.det ≠ 0 := by rw [hankelS2_det]; decide
@@ -257,7 +257,7 @@ def hankelS2_norm_4x4 : Matrix (Fin 4) (Fin 4) ℤ :=
 
 /-- The normalized 4×4 Hankel determinant for S_2 is 0.
     lem:pom-s2-hankel-norm-4x4 -/
-theorem hankelS2_norm_4x4_det : hankelS2_norm_4x4.det = 0 := by native_decide
+theorem hankelS2_norm_4x4_det : hankelS2_norm_4x4.det = 0 := by decide
 
 /-- The minimal recurrence order for the normalized S_2 sequence is 3:
     3×3 Hankel nonsingular, 4×4 Hankel singular.
@@ -274,7 +274,7 @@ def hankelS3 : Matrix (Fin 3) (Fin 3) ℤ :=
 
 /-- The determinant of the normalized S_3 Hankel matrix is −54.
     lem:pom-s3-hankel-normalized -/
-theorem hankelS3_det : hankelS3.det = -54 := by native_decide
+theorem hankelS3_det : hankelS3.det = -54 := by decide
 
 /-- The normalized S_3 Hankel determinant is nonzero.
     lem:pom-s3-hankel-normalized-nonzero -/

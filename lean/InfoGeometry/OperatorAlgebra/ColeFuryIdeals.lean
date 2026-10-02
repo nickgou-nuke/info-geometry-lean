@@ -67,38 +67,38 @@ def concreteSplit : ColeFurySplit where
   horizonDown := horizonDown
   h_nilpotent := by
     unfold horizonUp
-    native_decide
+    decide
   h_dag_nilpotent := by
     unfold horizonDown
-    native_decide
+    decide
   h_commutator := by
     unfold horizonUp horizonDown expectedG0Core upperLeft lowerRight
-    native_decide
+    decide
 
 /-- Upper-left quadrant is an idempotent projector. -/
 theorem upperLeft_idempotent : upperLeft * upperLeft = upperLeft := by
   unfold upperLeft
-  native_decide
+  decide
 
 /-- Lower-right quadrant is an idempotent projector. -/
 theorem lowerRight_idempotent : lowerRight * lowerRight = lowerRight := by
   unfold lowerRight
-  native_decide
+  decide
 
 /-- Diagonal quadrants are orthogonal in this block decomposition. -/
 theorem upperLeft_lowerRight_zero : upperLeft * lowerRight = 0 := by
   unfold upperLeft lowerRight
-  native_decide
+  decide
 
 /-- Diagonal quadrants are orthogonal in the reverse order. -/
 theorem lowerRight_upperLeft_zero : lowerRight * upperLeft = 0 := by
   unfold upperLeft lowerRight
-  native_decide
+  decide
 
 /-- The two diagonal quadrants partition the full spinor identity. -/
 theorem diagonal_quadrants_sum : upperLeft + lowerRight = 1 := by
   unfold upperLeft lowerRight
-  native_decide
+  decide
 
 /-- The upper-right horizon block is nilpotent. -/
 theorem horizonUp_nilpotent : horizonUp * horizonUp = 0 :=
@@ -111,12 +111,12 @@ theorem horizonDown_nilpotent : horizonDown * horizonDown = 0 :=
 /-- Upper-right followed by lower-left closes to the upper-left diagonal block. -/
 theorem horizonUp_horizonDown : horizonUp * horizonDown = upperLeft := by
   unfold horizonUp horizonDown upperLeft
-  native_decide
+  decide
 
 /-- Lower-left followed by upper-right closes to the lower-right diagonal block. -/
 theorem horizonDown_horizonUp : horizonDown * horizonUp = lowerRight := by
   unfold horizonUp horizonDown lowerRight
-  native_decide
+  decide
 
 /-- Anticommutator of the two horizon blocks is the full identity. -/
 theorem horizon_anticomm_identity : horizonUp * horizonDown + horizonDown * horizonUp = 1 := by
@@ -135,17 +135,17 @@ theorem g0Core_eq_expected : g0Core = expectedG0Core := by
 /-- The diagonal grading core is an involution. -/
 theorem g0Core_sq : g0Core * g0Core = 1 := by
   unfold g0Core horizonUp horizonDown
-  native_decide
+  decide
 
 /-- The diagonal grading core acts on the upper-right horizon with weight `-2`. -/
 theorem g0Core_horizonUp_weight : g0Core * horizonUp - horizonUp * g0Core = (-2 : ℤ) • horizonUp := by
   unfold g0Core horizonUp horizonDown
-  native_decide
+  decide
 
 /-- The diagonal grading core acts on the lower-left horizon with weight `+2`. -/
 theorem g0Core_horizonDown_weight : g0Core * horizonDown - horizonDown * g0Core = (2 : ℤ) • horizonDown := by
   unfold g0Core horizonUp horizonDown
-  native_decide
+  decide
 
 /-- Finite kernel-checked packet for the 32-dimensional quadrant ideal laws. -/
 theorem coleFury_ideal_packet :

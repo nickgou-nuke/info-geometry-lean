@@ -36,8 +36,8 @@ local notation "DerivedFoldNewmanGoldenExponentTranscendenceQ4Q16Q17Statement" =
 /-- Paper label: `thm:derived-fold-newman-golden-exponent-transcendence-q4-q16-q17`. -/
 theorem paper_derived_fold_newman_golden_exponent_transcendence_q4_q16_q17 :
     DerivedFoldNewmanGoldenExponentTranscendenceQ4Q16Q17Statement := by
-  refine ⟨?_, by native_decide, by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨?_, by decide, by decide, by decide, by decide,
+    by decide, by decide, by decide, by decide, by decide⟩
   intro a b hb
   simpa using (paper_derived_fold_golden_rational_power_unit_obstruction a b hb).2
 

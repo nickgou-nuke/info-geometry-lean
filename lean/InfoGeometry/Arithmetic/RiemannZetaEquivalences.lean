@@ -119,7 +119,7 @@ def dirichletEtaLSeries (s : ℂ) : ℂ :=
 
 /-- The mod-2 sign character has zero mean. -/
 theorem etaPhi_sum_zero : (∑ j : ZMod 2, etaPhi j) = 0 := by
-  rw [show (Finset.univ : Finset (ZMod 2)) = {0, 1} by native_decide]
+  rw [show (Finset.univ : Finset (ZMod 2)) = {0, 1} by decide]
   norm_num [etaPhi]
 
 /-- `zmodEtaLFunction` is `Complex.differentiable` everywhere. -/

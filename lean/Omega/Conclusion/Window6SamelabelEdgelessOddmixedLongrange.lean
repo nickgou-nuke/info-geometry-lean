@@ -59,6 +59,6 @@ theorem paper_conclusion_window6_samelabel_edgeless_oddmixed_longrange :
   unfold conclusion_window6_samelabel_edgeless_oddmixed_longrange_pair_total
   unfold conclusion_window6_samelabel_edgeless_oddmixed_longrange_distance_total
   unfold conclusion_window6_samelabel_edgeless_oddmixed_longrange_average_distance
-  native_decide
+  decide
 
 end Omega.Conclusion

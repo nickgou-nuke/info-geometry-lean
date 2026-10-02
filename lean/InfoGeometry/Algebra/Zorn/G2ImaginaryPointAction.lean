@@ -69,7 +69,7 @@ noncomputable instance : MulAction SplitOctF2Aut Point where
     rfl
 
 theorem point_card : Fintype.card Point = 63 := by
-  native_decide
+  decide
 
 theorem point_mem_isotropicPoints7 (p : Point) :
     p.1 ∈ isotropicPoints7 := by

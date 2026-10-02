@@ -38,6 +38,6 @@ delta-defect `27`. -/
 theorem paper_fold_gauge_anomaly_rate_curve_delta_defect_27 :
     foldGaugeAnomalyRateCurveDeltaDefect27Claim := by
   rcases paper_fold_gauge_anomaly_rate_curve_function_field_identity with ⟨_, hbir, _⟩
-  refine ⟨hbir, rfl, rfl, ?_, rfl, rfl, ?_⟩ <;> native_decide
+  refine ⟨hbir, rfl, rfl, ?_, rfl, rfl, ?_⟩ <;> decide
 
 end Omega.Folding

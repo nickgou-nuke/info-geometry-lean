@@ -127,12 +127,12 @@ def J3Zero : Mat3 ℚ :=
 /-- The order-three zero Jordan block is nilpotent at power three. -/
 theorem J3Zero_cube_eq_zero :
     J3Zero ^ 3 = 0 := by
-  native_decide
+  decide
 
 /-- But `J₃(0)²` is not the zero matrix, so the nilpotence index is exactly `3`. -/
 theorem J3Zero_sq_ne_zero :
     J3Zero ^ 2 ≠ 0 := by
-  native_decide
+  decide
 
 /--
 For zero Jordan block sizes `[3,2,1]`, the GNSD diagonal sizes are the counts
@@ -148,45 +148,45 @@ def countBlocksExact (j : ℕ) (sizes : List ℕ) : ℕ :=
 
 @[simp] theorem countBlocksGE_example_one :
     countBlocksGE 1 exampleZeroJordanSizes = 3 := by
-  native_decide
+  decide
 
 @[simp] theorem countBlocksGE_example_two :
     countBlocksGE 2 exampleZeroJordanSizes = 2 := by
-  native_decide
+  decide
 
 @[simp] theorem countBlocksGE_example_three :
     countBlocksGE 3 exampleZeroJordanSizes = 1 := by
-  native_decide
+  decide
 
 @[simp] theorem countBlocksExact_example_one :
     countBlocksExact 1 exampleZeroJordanSizes = 1 := by
-  native_decide
+  decide
 
 @[simp] theorem countBlocksExact_example_two :
     countBlocksExact 2 exampleZeroJordanSizes = 1 := by
-  native_decide
+  decide
 
 @[simp] theorem countBlocksExact_example_three :
     countBlocksExact 3 exampleZeroJordanSizes = 1 := by
-  native_decide
+  decide
 
 /-- In the `[3,2,1]` example, `μ₁ - μ₂` recovers the number of size-one blocks. -/
 theorem exactSizeOne_example_eq_mu_sub :
     countBlocksExact 1 exampleZeroJordanSizes =
       countBlocksGE 1 exampleZeroJordanSizes - countBlocksGE 2 exampleZeroJordanSizes := by
-  native_decide
+  decide
 
 /-- In the `[3,2,1]` example, `μ₂ - μ₃` recovers the number of size-two blocks. -/
 theorem exactSizeTwo_example_eq_mu_sub :
     countBlocksExact 2 exampleZeroJordanSizes =
       countBlocksGE 2 exampleZeroJordanSizes - countBlocksGE 3 exampleZeroJordanSizes := by
-  native_decide
+  decide
 
 /-- In the `[3,2,1]` example, `μ₃ - μ₄` recovers the number of size-three blocks. -/
 theorem exactSizeThree_example_eq_mu_sub :
     countBlocksExact 3 exampleZeroJordanSizes =
       countBlocksGE 3 exampleZeroJordanSizes - countBlocksGE 4 exampleZeroJordanSizes := by
-  native_decide
+  decide
 
 end RationalJordan
 

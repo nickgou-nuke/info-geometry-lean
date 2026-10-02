@@ -256,7 +256,7 @@ function formatResult(result: StructuredResult, theoremName: string, code: strin
       : "";
     return [
       `[LEAN SUCCESS] Theorem '${theoremName}' verified. No errors.`,
-      `Lean 4.28.0 | --json diagnostics`,
+      `Lean 4.28.x | --json diagnostics`,
       diagSummary,
     ].join("\n");
   }

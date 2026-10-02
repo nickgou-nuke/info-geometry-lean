@@ -3665,7 +3665,6 @@ import InfoGeometry.Canonical.FixedIndexCuntzModularFlowTopologicalIso
 import InfoGeometry.Canonical.FixedIndexCuntzParameterTopologicalLimit
 import InfoGeometry.Canonical.FixedIndexCuntzStarTower
 import InfoGeometry.Canonical.FluidCore
-import InfoGeometry.Canonical.Fock
 import InfoGeometry.Canonical.FockCARTopologicalBridge
 import InfoGeometry.Canonical.FockNumberOperatorBridge
 import InfoGeometry.Canonical.FockVacuumAnnihilationBridge
@@ -11110,7 +11109,6 @@ import InfoGeometry.Sandbox.InfiniteColimitRigor
 import InfoGeometry.Sandbox.KTheoryIndexSandbox
 import InfoGeometry.Sandbox.LefschetzFixedPoint
 import InfoGeometry.Sandbox.SpectralStabilitySandbox
-import InfoGeometry.Sandbox.scratch_colim_test
 import InfoGeometry.Section10
 import InfoGeometry.Section10_11
 import InfoGeometry.Section11
@@ -12621,3 +12619,6 @@ import InfoGeometry.WillertonIsbellAmariDuality
 import InfoGeometry.WillertonIsbellAmariDualityAudit
 import InfoGeometry.EpigraphHahnBanachSeparation
 import InfoGeometry.EpigraphHahnBanachSeparationAudit
+import InfoGeometry.Clifford.CliffordExteriorLift
+import InfoGeometry.Canonical.SupergradedCartanGrassmannianBridge
+import InfoGeometry.Canonical.SuperconnectionZornBianchiBridge

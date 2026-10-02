@@ -47,6 +47,6 @@ theorem paper_real_input_40_arity_2d_rigidity_n2 (D : RealInput40Arity2dRigidity
       realInput40Arity2dOrbitMultiplicity realInput40Arity2dRigidityN2Table 0 2 = 1 ∧
       realInput40Arity2dOrbitMultiplicity realInput40Arity2dRigidityN2Table 1 1 = 2 ∧
       realInput40Arity2dOrbitMultiplicity realInput40Arity2dRigidityN2Table 1 0 = 4
-  native_decide
+  decide
 
 end Omega.Zeta

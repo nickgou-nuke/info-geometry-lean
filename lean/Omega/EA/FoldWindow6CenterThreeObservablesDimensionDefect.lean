@@ -46,9 +46,9 @@ theorem paper_fold_window6_center_three_observables_dimension_defect :
   · omega
   · omega
   · omega
-  · native_decide
+  · decide
   · rw [foldWindow6CenterThreeObservablesDimensionDefect, hdim]
-    native_decide
+    decide
   · intro a b c d ha hb hc hd
     exact foldWindow6CenterThreeObservables_saturation ha hb hc hd
 

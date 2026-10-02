@@ -10,7 +10,7 @@
 
 | # | Engine | Version | Status | Artifact |
 |---|--------|---------|--------|----------|
-| 1 | **Lean4** | 4.28.0 | ✅ PASSED | `.olean` compiled |
+| 1 | **Lean4** | 4.28.x | ✅ PASSED | `.olean` compiled |
 | 2 | **SymPy** | Python 3.12 | ✅ PASSED | `/tmp/sympy_bridge_verification.json` |
 | 3 | **SageMath** | 10.9 | ✅ PASSED | `/tmp/sage_aql_instance.json` |
 | 4 | **Coq/Rocq** | 9.1.1 | ✅ PASSED | `ComplexStructureBridge.vo` |

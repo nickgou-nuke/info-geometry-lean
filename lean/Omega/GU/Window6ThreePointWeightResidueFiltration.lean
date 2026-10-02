@@ -6,7 +6,7 @@ import Omega.GU.Window6BdryUpliftResidueStratification
 namespace Omega.GU
 
 private def unit21 : (ZMod 571)ˣ :=
-  Units.mk0 (21 : ZMod 571) (by native_decide)
+  Units.mk0 (21 : ZMod 571) (by decide)
 
 private theorem prime_dvd_285 {p : ℕ} (hp : Nat.Prime p) (hpdvd : p ∣ 285) :
     p = 3 ∨ p = 5 ∨ p = 19 := by
@@ -21,9 +21,9 @@ private theorem prime_dvd_285 {p : ℕ} (hp : Nat.Prime p) (hpdvd : p ∣ 285) :
 
 private theorem order_unit21 : orderOf unit21 = 285 := by
   refine orderOf_eq_of_pow_and_pow_div_prime (x := unit21) (n := 285) (by decide) ?_ ?_
-  · native_decide
+  · decide
   · intro p hp hpdvd
-    rcases prime_dvd_285 hp hpdvd with rfl | rfl | rfl <;> native_decide
+    rcases prime_dvd_285 hp hpdvd with rfl | rfl | rfl <;> decide
 
 private theorem order_zmod21 : orderOf (21 : ZMod 571) = 285 := by
   change orderOf (unit21 : ZMod 571) = 285
@@ -40,6 +40,6 @@ theorem paper_window6_three_point_weight_residue_filtration :
       (55 : ZMod 571) = (34 : ZMod 571) ^ 15 ∧
       (55 : ZMod 571) = (21 : ZMod 571) ^ 30 := by
   rcases paper_window6_bdry_uplift_residue_stratification with ⟨h34, _, h55, _⟩
-  refine ⟨order_zmod21, h34, h55, by native_decide, by native_decide⟩
+  refine ⟨order_zmod21, h34, h55, by decide, by decide⟩
 
 end Omega.GU

@@ -62,6 +62,11 @@ The DAG and Python layers are maintained memory.
 Use them to restore context, surface transport pressure, and choose what to read next.
 Do not use them to replace Lean source or invent ontology absent from code.
 
+## ANTI-STALE-DOC MANDATE (STRICT LAW)
+Never read, cite, or use stale documentation, dead markdown notes, obsolete transcript summaries, or superseded docstrings in program or proof design.
+Lean owner files and kernel-checked proofs are the sole source of truth.
+Do not resurrect abandoned taxonomies or dead documentation. All code changes and docstrings must strictly describe live, kernel-checked Lean code.
+
 ## Deep Retrieval Mandate for Presence / Absence Claims
 
 When the task is "is this theorem/lane/corridor already in the repo?", do not

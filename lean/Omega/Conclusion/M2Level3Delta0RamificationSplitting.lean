@@ -56,7 +56,7 @@ theorem paper_conclusion_m2_level3_delta0_ramification_splitting :
       delta0FlagThreeCycles = 48 ∧
       delta0RamificationComponentCounts = (9, 12, 48) ∧
       delta1Monodromy = id := by
-  refine ⟨rfl, by native_decide, rfl, by native_decide, rfl, by native_decide, ?_, rfl⟩
-  native_decide
+  refine ⟨rfl, by decide, rfl, by decide, rfl, by decide, ?_, rfl⟩
+  decide
 
 end Omega.Conclusion

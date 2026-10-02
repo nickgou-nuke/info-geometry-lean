@@ -97,13 +97,13 @@ theorem nativeCandidateAt_isotropic
     (y : G2ParabolicLineCarrier.OctImF2)
     (hy : nativeCandidateAt nativeBasePoint y) :
     splitQuad y = 0 := by
-  native_decide +revert
+  decide +revert
 
 theorem nativeCandidateAt_reverse_zero
     (y : G2ParabolicLineCarrier.OctImF2)
     (hy : nativeCandidateAt nativeBasePoint y) :
     mul (embed y) (embed nativeBasePoint) = zero := by
-  native_decide +revert
+  decide +revert
 
 theorem nativeCandidateAt_to_zornZeroRelated
     (y : G2ParabolicLineCarrier.OctImF2)
@@ -122,7 +122,7 @@ theorem nativeCandidateAt_sum_isotropic
     (y : G2ParabolicLineCarrier.OctImF2)
     (hy : nativeCandidateAt nativeBasePoint y) :
     splitQuad (nativeBasePoint + y) = 0 := by
-  native_decide +revert
+  decide +revert
 
 theorem nativeCandidateAt_sum_to_zornZeroRelated
     (y : G2ParabolicLineCarrier.OctImF2)
@@ -130,8 +130,8 @@ theorem nativeCandidateAt_sum_to_zornZeroRelated
     ZornZeroRelated nativeBaseIsotropicPoint
       (⟨nativeBasePoint + y,
         nativeCandidateAt_sum_isotropic y hy,
-        by native_decide +revert⟩ : OctImIsotropicPoint) := by
-  native_decide +revert
+        by decide +revert⟩ : OctImIsotropicPoint) := by
+  decide +revert
 
 theorem nativeCandidateAt_pair_to_zornZeroRelated
     (y : G2ParabolicLineCarrier.OctImF2)
@@ -141,8 +141,8 @@ theorem nativeCandidateAt_pair_to_zornZeroRelated
       (⟨y, hyquad, hy.1⟩ : OctImIsotropicPoint)
       (⟨nativeBasePoint + y,
         nativeCandidateAt_sum_isotropic y hy,
-        by native_decide +revert⟩ : OctImIsotropicPoint) := by
-  native_decide +revert
+        by decide +revert⟩ : OctImIsotropicPoint) := by
+  decide +revert
 
 
 noncomputable def intrinsicLineOfCandidate
@@ -152,15 +152,15 @@ noncomputable def intrinsicLineOfCandidate
     IntrinsicLine nativeBaseIsotropicPoint := by
   let py : OctImIsotropicPoint := ⟨y, hyquad, hy.1⟩
   let ps : OctImIsotropicPoint := ⟨nativeBasePoint + y,
-    nativeCandidateAt_sum_isotropic y hy, by native_decide +revert⟩
+    nativeCandidateAt_sum_isotropic y hy, by decide +revert⟩
   have h0y : nativeBaseIsotropicPoint ≠ py := by
     intro h
     apply hy.2.1
     exact (congrArg Subtype.val h).symm
   have h0s : nativeBaseIsotropicPoint ≠ ps := by
-    native_decide +revert
+    decide +revert
   have hys : py ≠ ps := by
-    native_decide +revert
+    decide +revert
   have hcard : ({nativeBaseIsotropicPoint, py, ps} :
       Finset OctImIsotropicPoint).card = 3 := by
     simp [h0y, h0s, hys]
@@ -216,7 +216,7 @@ theorem intrinsicLineOfNativeCandidate_eq_of_lineSet_eq
     have hsum :
         (⟨nativeBasePoint + (nativeBasePoint + y),
           nativeCandidateAt_sum_isotropic (nativeBasePoint + y) hz,
-          by native_decide +revert⟩ : OctImIsotropicPoint) =
+          by decide +revert⟩ : OctImIsotropicPoint) =
           ⟨y, nativeCandidateAt_isotropic y hy, hy.1⟩ := by
       apply Subtype.ext
       calc
@@ -275,7 +275,7 @@ theorem intrinsicLineOfCandidate_erase_eq_pair
       {⟨y, hyquad, hy.1⟩,
         ⟨nativeBasePoint + y,
           nativeCandidateAt_sum_isotropic y hy,
-          by native_decide +revert⟩} := by
+          by decide +revert⟩} := by
   apply Finset.ext
   intro z
   constructor
@@ -305,9 +305,9 @@ theorem intrinsicLineOfCandidate_erase_eq_pair
     · have hne :
           (⟨nativeBasePoint + y,
             nativeCandidateAt_sum_isotropic y hy,
-            by native_decide +revert⟩ : OctImIsotropicPoint) ≠
+            by decide +revert⟩ : OctImIsotropicPoint) ≠
             nativeBaseIsotropicPoint := by
-        native_decide +revert
+        decide +revert
       simp only [intrinsicLineOfCandidate, Finset.mem_erase,
         Finset.mem_insert, Finset.mem_singleton]
       exact ⟨hne, Or.inr (Or.inr True.intro)⟩
@@ -335,7 +335,7 @@ theorem intrinsicLineOfNativeCandidate_erase_eq_pair
       {⟨y, nativeCandidateAt_isotropic y hy, hy.1⟩,
         ⟨nativeBasePoint + y,
           nativeCandidateAt_sum_isotropic y hy,
-          by native_decide +revert⟩} := by
+          by decide +revert⟩} := by
   exact intrinsicLineOfCandidate_erase_eq_pair y hy
     (nativeCandidateAt_isotropic y hy)
 
@@ -347,7 +347,7 @@ theorem exists_intrinsicLine_of_nativeCandidate
         {⟨y, nativeCandidateAt_isotropic y hy, hy.1⟩,
           ⟨nativeBasePoint + y,
             nativeCandidateAt_sum_isotropic y hy,
-            by native_decide +revert⟩} := by
+            by decide +revert⟩} := by
   refine ⟨intrinsicLineOfNativeCandidate y hy, ?_⟩
   exact intrinsicLineOfNativeCandidate_erase_eq_pair y hy
 

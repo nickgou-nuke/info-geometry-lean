@@ -9,7 +9,7 @@ namespace Omega
 theorem momentSum_two_ratio_bounds (m : Nat) (hm : 2 ≤ m) (hm' : m ≤ 6) :
     2 * momentSum 2 m ≤ momentSum 2 (m + 1) ∧
     momentSum 2 (m + 1) ≤ 3 * momentSum 2 m := by
-  interval_cases m <;> (simp only [← cMomentSum_eq]; native_decide)
+  interval_cases m <;> (simp only [← cMomentSum_eq]; decide)
 
 /-! ### Sector decomposition extensions -/
 
@@ -31,7 +31,7 @@ theorem newton_A4_full :
     (collisionKernel4 ^ 3).trace = 50 ∧
     (18 + (-2) * 2 + 2 * (-7) = (0 : ℤ)) ∧
     (50 + (-2) * 18 + (-7) * 2 + 3 * 0 = (0 : ℤ)) := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by omega, by omega⟩
+  refine ⟨by decide, by decide, by decide, by omega, by omega⟩
 
 /-! ### Trace power sums -/
 
@@ -52,13 +52,13 @@ theorem cross_q_consistency_m4 :
     momentSum 2 4 ≤ momentSum 3 4 ∧ momentSum 3 4 ≤ momentSum 4 4 ∧
     momentSum 4 4 ≤ momentSum 5 4 ∧ momentSum 5 4 ≤ momentSum 6 4 ∧
     momentSum 6 4 ≤ momentSum 7 4 ∧ momentSum 7 4 ≤ momentSum 8 4 := by
-  simp only [← cMomentSum_eq]; native_decide
+  simp only [← cMomentSum_eq]; decide
 
 /-- S_q is monotone in q at m = 3. -/
 theorem cross_q_consistency_m3 :
     momentSum 2 3 ≤ momentSum 3 3 ∧ momentSum 3 3 ≤ momentSum 4 3 ∧
     momentSum 4 3 ≤ momentSum 5 3 ∧ momentSum 5 3 ≤ momentSum 6 3 := by
-  simp only [← cMomentSum_eq]; native_decide
+  simp only [← cMomentSum_eq]; decide
 
 /-- Cauchy-Schwarz instance: S_3(4)² ≤ S_2(4)·S_4(4). (88² = 7744 ≤ 36·228 = 8208.) -/
 theorem cauchy_schwarz_instance_q3_m4 :
@@ -79,7 +79,7 @@ theorem compression_growth :
     2 ^ 2 > Fintype.card (X 2) ∧ 2 ^ 4 > Fintype.card (X 4) ∧
     2 ^ 6 > Fintype.card (X 6) ∧ 2 ^ 8 > Fintype.card (X 8) ∧
     2 ^ 10 > Fintype.card (X 10) := by
-  simp only [X.card_eq_fib]; native_decide
+  simp only [X.card_eq_fib]; decide
 
 /-- Compression ratios: 2^m / |X_m| at even m. -/
 theorem compression_ratios :
@@ -87,7 +87,7 @@ theorem compression_ratios :
     2 ^ 6 / Fintype.card (X 6) = 3 ∧
     2 ^ 8 / Fintype.card (X 8) = 4 ∧
     2 ^ 10 / Fintype.card (X 10) = 7 := by
-  simp only [X.card_eq_fib]; native_decide
+  simp only [X.card_eq_fib]; decide
 
 /-! ### Trace linear recurrence certificate -/
 
@@ -95,11 +95,11 @@ theorem compression_ratios :
 theorem trace_linear_recurrence_certificate :
     (collisionKernel2 ^ 0).trace = 3 ∧ (collisionKernel3 ^ 0).trace = 3 ∧
     (collisionKernel4 ^ 0).trace = 5 := by
-  exact ⟨by native_decide, by native_decide, by native_decide⟩
+  exact ⟨by decide, by decide, by decide⟩
 
 /-- The golden-mean adjacency matrix is symmetric. -/
 theorem goldenMean_symmetric :
-    Graph.goldenMeanAdjacency = Graph.goldenMeanAdjacency.transpose := by native_decide
+    Graph.goldenMeanAdjacency = Graph.goldenMeanAdjacency.transpose := by decide
 
 /-- Lucas numbers mod 2: L(0..6) = 2,1,3,4,7,11,18. Mod 2: 0,1,1,0,1,1,0 (period 3). -/
 theorem lucas_mod2_period :
@@ -134,7 +134,7 @@ theorem stable_language_exponentially_sparse (m : Nat) (hm : 2 ≤ m) :
     | zero => omega
     | succ k =>
       cases k with
-      | zero => native_decide
+      | zero => decide
       | succ j =>
         have hR := fib_succ_succ' (j + 2 + 1)
         have ihk : Nat.fib (j + 2 + 2) < 2 ^ (j + 2) := ih (by omega)
@@ -150,7 +150,7 @@ theorem stable_language_exponentially_sparse (m : Nat) (hm : 2 ≤ m) :
 theorem density_ratio_decreasing_instances :
     Nat.fib 4 * 8 > Nat.fib 5 * 4 ∧
     Nat.fib 5 * 16 > Nat.fib 6 * 8 ∧
-    Nat.fib 6 * 32 > Nat.fib 7 * 16 := by native_decide
+    Nat.fib 6 * 32 > Nat.fib 7 * 16 := by decide
 
 /-! ### Hurwitz genus zero -/
 
@@ -164,7 +164,7 @@ theorem hurwitz_genus_zero : 2 * (4 - 1) - (3 + 5 * 1) = (-2 : ℤ) := by omega
     are not classical primes, while their generating factors (2, 3, 5) are. -/
 theorem ghost_prime_incompatibility_proxy :
     Nat.Prime 2 ∧ ¬ Nat.Prime 12 ∧ Nat.Prime 3 ∧ ¬ Nat.Prime 9 ∧
-    Nat.Prime 5 ∧ ¬ Nat.Prime 10 := by native_decide
+    Nat.Prime 5 ∧ ¬ Nat.Prime 10 := by decide
 
 /-! ### Hurwitz covering genus -/
 
@@ -185,7 +185,7 @@ theorem collision_kernel_dimensions :
     (collisionKernel3 ^ 0).trace = 3 ∧
     (collisionKernel4 ^ 0).trace = 5 ∧
     (3 = 2 * (2 / 2) + 1) ∧ (3 = 2 * (3 / 2) + 1) ∧ (5 = 2 * (4 / 2) + 1) := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by omega, by omega, by omega⟩
+  refine ⟨by decide, by decide, by decide, by omega, by omega, by omega⟩
 
 /-- All Perron roots are in (2, 4): localized by sign changes. -/
 theorem perron_roots_all_localized :
@@ -209,20 +209,20 @@ theorem dfa_density_dichotomy_golden_mean :
     (1 < Nat.fib 4 ∧ Nat.fib 4 < 2 ^ 2) := by
   refine ⟨fun m => by simp [X.card_eq_fib]; exact fib_succ_succ' (m + 2),
     fun m hm => stable_language_exponentially_sparse m hm,
-    by native_decide⟩
+    by decide⟩
 
 /-! ### Zeckendorf primes -/
 
 /-- Small primes have no short forbidden Zeckendorf pattern. -/
 theorem zeckendorf_primes_no_short_forbidden_pattern :
     Nat.Prime 2 ∧ Nat.Prime 3 ∧ Nat.Prime 7 := by
-  exact ⟨by native_decide, by native_decide, by native_decide⟩
+  exact ⟨by decide, by decide, by decide⟩
 
 /-- Primes exist at each Fibonacci index: F(3)=2, F(4)=3, F(5)=5 are prime,
     7 is prime (between F(5) and F(6)), and F(7)=13 is prime. -/
 theorem primes_at_each_zeckendorf_length :
     Nat.Prime (Nat.fib 3) ∧ Nat.Prime (Nat.fib 4) ∧ Nat.Prime (Nat.fib 5) ∧
-    Nat.Prime 7 ∧ Nat.Prime (Nat.fib 7) := by native_decide
+    Nat.Prime 7 ∧ Nat.Prime (Nat.fib 7) := by decide
 
 /-! ### Kraft partial sum -/
 
@@ -230,7 +230,7 @@ theorem primes_at_each_zeckendorf_length :
     F(2)·16 + F(3)·8 + F(4)·4 + F(5)·2 + F(6)·1 = 62 < 64 = 2^6. -/
 theorem kraft_sum_partial_integer :
     Nat.fib 2 * 16 + Nat.fib 3 * 8 + Nat.fib 4 * 4 + Nat.fib 5 * 2 + Nat.fib 6 * 1 = 62 := by
-  native_decide
+  decide
 
 /-- The Kraft sum is strictly less than the capacity: 62 < 64. -/
 theorem kraft_sum_lt_capacity : 62 < 64 := by omega
@@ -241,11 +241,11 @@ theorem kraft_sum_lt_capacity : 62 < 64 := by omega
 theorem constant_memory_exponential_forgetting :
     (Graph.goldenMeanAdjacency ^ 2) 0 0 > 0 ∧ (Graph.goldenMeanAdjacency ^ 2) 0 1 > 0 ∧
     (Graph.goldenMeanAdjacency ^ 2) 1 0 > 0 ∧ (Graph.goldenMeanAdjacency ^ 2) 1 1 > 0 := by
-  native_decide
+  decide
 
 /-- Finite forbidden pattern → exponential sparsity. -/
 theorem finite_forbidden_exp_sparse :
-    Nat.fib 8 < 2 ^ 5 ∧ Nat.fib 10 < 2 ^ 7 ∧ Nat.fib 12 < 2 ^ 9 := by native_decide
+    Nat.fib 8 < 2 ^ 5 ∧ Nat.fib 10 < 2 ^ 7 ∧ Nat.fib 12 < 2 ^ 9 := by decide
 
 /-- All zeta poles are real (discriminants > 0). -/
 theorem finite_zeta_all_real_poles :
@@ -255,18 +255,18 @@ theorem finite_zeta_all_real_poles :
 theorem zeckendorf_regular_powerlaw :
     (∀ m, Fintype.card (X (m + 2)) = Fintype.card (X (m + 1)) + Fintype.card (X m)) ∧
     (Nat.fib 8 = 21 ∧ Nat.fib 10 = 55 ∧ Nat.fib 12 = 144) := by
-  exact ⟨fun m => by simp [X.card_eq_fib]; exact fib_succ_succ' (m + 2), by native_decide⟩
+  exact ⟨fun m => by simp [X.card_eq_fib]; exact fib_succ_succ' (m + 2), by decide⟩
 
 /-- Mealy machines (regular languages) cannot detect primes. -/
 theorem mealy_regular_cannot_detect_primes :
     Nat.Prime 2 ∧ Nat.Prime 3 ∧ Nat.Prime 5 ∧ Nat.Prime 7 ∧
-    Nat.Prime 13 ∧ ¬ Nat.Prime 4 ∧ ¬ Nat.Prime 6 ∧ ¬ Nat.Prime 8 := by native_decide
+    Nat.Prime 13 ∧ ¬ Nat.Prime 4 ∧ ¬ Nat.Prime 6 ∧ ¬ Nat.Prime 8 := by decide
 
 /-- Nielsen cardinality for S_4. -/
 theorem nielsen_cardinality_s4 :
     Nat.factorial 4 = 24 ∧ Nat.choose 4 2 = 6 ∧ Nat.factorial 3 = 6 ∧
     4 * (0 - 2) + (3 + 5) = (0 : ℤ) := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by omega⟩
+  refine ⟨by decide, by decide, by decide, by omega⟩
 
 /-- Double discriminant for the two-parameter family. -/
 theorem double_discriminant_two_parameter :
@@ -286,7 +286,7 @@ theorem leftce_density_algebraic_golden_mean :
 theorem euler_product_dense_phases :
     Nat.Prime 2 ∧ Nat.Prime 3 ∧ Nat.Prime 5 ∧ Nat.Prime 7 ∧
     Nat.Prime 11 ∧ Nat.Prime 13 ∧
-    2 ≠ 3 ∧ 3 ≠ 5 ∧ 5 ≠ 7 ∧ 7 ≠ 11 ∧ 11 ≠ 13 := by native_decide
+    2 ≠ 3 ∧ 3 ≠ 5 ∧ 5 ≠ 7 ∧ 7 ≠ 11 ∧ 11 ≠ 13 := by decide
 
 /-- The Omega system is not regular: the growth rate is irrational (φ). -/
 theorem omega_not_regular_structural : Irrational Real.goldenRatio :=
@@ -316,7 +316,7 @@ theorem mobius_primitive_comprehensive :
 /-- Cyclotomic polynomial values at Fibonacci numbers. -/
 theorem cyclotomic_at_fibonacci :
     Nat.fib 8 % 3 = 0 ∧ Nat.fib 8 % 7 = 0 ∧
-    Nat.fib 8 / 3 = 7 ∧ Nat.fib 8 / 7 = 3 := by native_decide
+    Nat.fib 8 / 3 = 7 ∧ Nat.fib 8 / 7 = 3 := by decide
 
 /-- Spectral gap: the Perron root strictly dominates the second eigenvalue.
     For A_2: Perron ∈ (2,3), second root ∈ (0,1), gap > 1. -/
@@ -349,12 +349,12 @@ theorem real_arc_convergence :
 
 /-! ### Round 56: Sprint to 95% -/
 
-theorem truncation_error_decay : Nat.fib 8 < 2 ^ 5 := by native_decide
+theorem truncation_error_decay : Nat.fib 8 < 2 ^ 5 := by decide
 theorem primitive_moments : 1 * 1 + 2 * 1 + 3 * 1 + 4 * 1 + 5 * 2 + 6 * 2 = 32 := by omega
 
 theorem cyclic_block_det_sign :
     (-1 : ℤ) ^ (1 - 1) = 1 ∧ (-1 : ℤ) ^ (2 - 1) = -1 ∧
-    (-1 : ℤ) ^ (3 - 1) = 1 ∧ (-1 : ℤ) ^ (4 - 1) = -1 := by native_decide
+    (-1 : ℤ) ^ (3 - 1) = 1 ∧ (-1 : ℤ) ^ (4 - 1) = -1 := by decide
 
 theorem primitive_data_nonneg :
     (1 ≥ 0 ∧ 1 ≥ 0 ∧ 1 ≥ 0 ∧ 1 ≥ 0 ∧ 2 ≥ 0 ∧ 2 ≥ 0) ∧
@@ -366,11 +366,11 @@ theorem fredholm_witt_product_check :
 
 theorem tensor_gcd_lcm_instances :
     Nat.lcm 2 3 = 6 ∧ Nat.gcd 2 3 = 1 ∧ Nat.lcm 2 4 = 4 ∧ Nat.gcd 2 4 = 2 ∧
-    Nat.lcm 3 6 = 6 ∧ Nat.gcd 3 6 = 3 := by native_decide
+    Nat.lcm 3 6 = 6 ∧ Nat.gcd 3 6 = 3 := by decide
 
 theorem tensor_det_instances :
     (-1 : ℤ) ^ (1 * 3 + 2 * 2) = -1 ∧ (-1 : ℤ) ^ (1 * 4 + 3 * 2) = 1 ∧
-    (-1 : ℤ) ^ (2 * 4 + 3 * 3) = -1 := by native_decide
+    (-1 : ℤ) ^ (2 * 4 + 3 * 3) = -1 := by decide
 
 theorem schatten_norm_cyclic :
     (1 : Nat) = 1 ∧ (2 : Nat) = 2 ∧ (3 : Nat) = 3 ∧ (4 : Nat) = 4 := by omega
@@ -382,10 +382,10 @@ theorem spectral_flow_sign_change :
     (3^3-2*3^2-4*3+2:ℤ)<0 ∧ (4^3-2*4^2-4*4+2:ℤ)>0 := by omega
 theorem reduced_determinant_residue_golden : (1:ℤ)^2 + 4*1 = 5 := by omega
 theorem p_typical_frobenius_instances :
-    Nat.gcd 6 2=2 ∧ 6/2=3 ∧ Nat.gcd 6 3=3 ∧ 6/3=2 ∧ 2*3=6 ∧ 3*2=6 := by native_decide
+    Nat.gcd 6 2=2 ∧ 6/2=3 ∧ Nat.gcd 6 3=3 ∧ 6/3=2 ∧ 2*3=6 ∧ 3*2=6 := by decide
 theorem witt_ghost_trace_correspondence :
     collisionKernel2.trace = 2 ∧ (collisionKernel2^2).trace = 8 :=
-  ⟨collisionKernel2_trace, by native_decide⟩
+  ⟨collisionKernel2_trace, by decide⟩
 
 
 /-! ### Round 58: 5 new theorems
@@ -398,12 +398,12 @@ theorem moment_anomaly_ratio_proxy :
 /-- cor:finite-part-moment-anomaly-channel-additivity -/
 theorem anomaly_channel_count :
     (collisionKernel2^0).trace=3 ∧ (collisionKernel3^0).trace=3 ∧ (collisionKernel4^0).trace=5 :=
-  ⟨by native_decide, by native_decide, by native_decide⟩
+  ⟨by decide, by decide, by decide⟩
 /-- thm:finite-part-reduced-determinant-group-inverse-gradient -/
 theorem group_inverse_vieta_proxy : (2-2:ℤ)=0 ∧ (2-3:ℤ)=-1 := by omega
 /-- prop:finite-part-reduced-determinant-sq-channel-factorization -/
 theorem symmetric_group_orders :
-    Nat.factorial 2=2 ∧ Nat.factorial 3=6 ∧ Nat.factorial 4=24 := by native_decide
+    Nat.factorial 2=2 ∧ Nat.factorial 3=6 ∧ Nat.factorial 4=24 := by decide
 
 /-! ### Round 59: Final sprint to 99% -/
 
@@ -422,7 +422,7 @@ theorem nonlumpable_by_nonuniform_fibers :
 theorem succ_unique_branch_partial :
     stableValue (X.ofNat 6 12) = 12 ∧ X.ofNat 6 13 ≠ X.ofNat 6 0 ∧
     stableValue (X.ofNat 6 0) = 0 := by
-  refine ⟨by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide⟩
 
 /-- thm:terminal-window6-edge-flux-skeleton -/
 theorem edge_flux_skeleton_totals :
@@ -480,7 +480,7 @@ theorem momentSum_strict_mono_q_six :
     momentSum 3 6 < momentSum 4 6 ∧
     momentSum 4 6 < momentSum 5 6 ∧
     momentSum 5 6 < momentSum 6 6 := by
-  simp only [← cMomentSum_eq]; native_decide
+  simp only [← cMomentSum_eq]; decide
 
 /-- Paper: prop:pom-coarsegraining-collision-moment-strict-monotonicity -/
 theorem paper_momentSum_strict_mono_q_six :
@@ -527,7 +527,7 @@ theorem paper_dfa_prime_recall_precision_collapse :
     (∀ m, 2 ≤ m → Nat.fib (m + 2) < 2 ^ m) ∧
     (Nat.fib 15 < 2 ^ 13 / 13) ∧
     (Nat.fib 22 < 2 ^ 20 / 20) :=
-  ⟨stable_language_exponentially_sparse, by native_decide, by native_decide⟩
+  ⟨stable_language_exponentially_sparse, by decide, by decide⟩
 
 /-- Fiber spectrum resolvent witness at m=5:
     thm:pom-fiber-spectrum-resolvent-rational -/
@@ -535,7 +535,7 @@ theorem paper_fiber_resolvent_rational_m5 :
     momentSum 0 5 = 13 ∧
     momentSum 1 5 = 32 ∧
     momentSum 0 5 * momentSum 2 5 ≥ momentSum 1 5 ^ 2 := by
-  simp only [← cMomentSum_eq]; native_decide
+  simp only [← cMomentSum_eq]; decide
 
 /-- Nielsen class cardinality for the S_4 passport (4)(2)^5.
     cor:cdim-s4-abs-nielsen-cardinality-degree -/
@@ -546,8 +546,8 @@ theorem paper_nielsen_class_cardinality_s4 :
     3840 / 24 = 160 ∧
     160 * 24 = 3840 ∧
     4 * (0 - 2) + (3 + 5) = (0 : ℤ) := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, by omega⟩
+  refine ⟨by decide, by decide, by decide,
+    by decide, by decide, by omega⟩
 
 /-- Double discriminant integer translate rigidity.
     prop:cdim-double-discriminant-integer-translate-rigidity -/
@@ -565,7 +565,7 @@ theorem paper_fold_gauge_entropy_defect_witness :
     momentSum 2 5 * momentSum 0 5 > momentSum 1 5 ^ 2 ∧
     momentSum 0 6 = Nat.fib 8 ∧
     momentSum 1 6 = 2 ^ 6 := by
-  simp only [← cMomentSum_eq]; native_decide
+  simp only [← cMomentSum_eq]; decide
 
 /-- Power-sum moment log-convexity concrete instances.
     cor:pom-crossq-logconvex-chain -/
@@ -573,7 +573,7 @@ theorem paper_momentSum_log_convex_chain :
     momentSum 1 6 ^ 2 ≤ momentSum 0 6 * momentSum 2 6 ∧
     momentSum 2 6 ^ 2 ≤ momentSum 1 6 * momentSum 3 6 ∧
     momentSum 1 7 ^ 2 ≤ momentSum 0 7 * momentSum 2 7 := by
-  simp only [← cMomentSum_eq]; native_decide
+  simp only [← cMomentSum_eq]; decide
 
 /-- Fold fundamental properties.
     thm:fold-suite -/
@@ -592,8 +592,8 @@ theorem paper_stable_arithmetic_and_rewrite :
     momentSum 1 5 = 2 ^ 5 ∧
     momentSum 1 6 = 2 ^ 6 ∧
     momentSum 1 7 = 2 ^ 7 := by
-  refine ⟨by rw [X.card_eq_fib]; native_decide, by rw [X.card_eq_fib]; native_decide,
-    by rw [X.card_eq_fib]; native_decide,
+  refine ⟨by rw [X.card_eq_fib]; decide, by rw [X.card_eq_fib]; decide,
+    by rw [X.card_eq_fib]; decide,
     momentSum_one 5, momentSum_one 6, momentSum_one 7⟩
 
 /-- Wedderburn block dimension and central idempotent package.
@@ -603,7 +603,7 @@ theorem paper_wedderburn_central_idempotent_package :
     Fintype.card (X 6) = 21 ∧
     momentSum 0 6 = 21 ∧ momentSum 1 6 = 64 ∧
     momentSum 1 6 ^ 2 ≤ momentSum 0 6 * momentSum 2 6 := by
-  simp only [← cMomentSum_eq, X.card_eq_fib]; native_decide
+  simp only [← cMomentSum_eq, X.card_eq_fib]; decide
 
 /-- Moment sum spectrum at m=7.
     prop:pom-power-sum-hankel-psd -/
@@ -613,7 +613,7 @@ theorem paper_momentSum_spectrum_m7 :
     momentSum 0 7 = Nat.fib 9 ∧
     momentSum 1 7 = 2 ^ 7 ∧
     momentSum 1 7 ^ 2 ≤ momentSum 0 7 * momentSum 2 7 := by
-  simp only [← cMomentSum_eq]; native_decide
+  simp only [← cMomentSum_eq]; decide
 
 /-- Global defect theory Fibonacci audit.
     prop:fold-defect-cocycle -/
@@ -621,7 +621,7 @@ theorem paper_globalDefect_theory_package :
     Nat.fib 7 = 13 ∧ Nat.fib 8 = 21 ∧ Nat.fib 9 = 34 ∧
     21 * 5 > 13 * 8 ∧ 34 * 5 > 21 * 8 ∧
     13 + 21 = 34 := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
+  refine ⟨by decide, by decide, by decide,
     by omega, by omega, by omega⟩
 
 /-- Power sum superadditivity certificates.

@@ -41,7 +41,7 @@ Orbit sizes `2`, `3`, and `4` force divisibility by `lcm(2,3,4) = 12`, and the d
 `8 * (C₁₂ / C₆) + 4 * (C₁₂ / C₄) + 9 * (C₁₂ / C₃)` realizes the sharp witness with `64` points. -/
 theorem paper_xi_time_part70da_window6_abstract_orbittype_minimal_c12 :
     Window6AbstractOrbittypeMinimalC12Statement := by
-  refine ⟨?_, by decide, by native_decide, by native_decide⟩
+  refine ⟨?_, by decide, by decide, by decide⟩
   intro n h2 h3 h4
   have h6 : Nat.lcm 2 3 ∣ n := Nat.lcm_dvd h2 h3
   have h12 : Nat.lcm (Nat.lcm 2 3) 4 ∣ n := Nat.lcm_dvd h6 h4

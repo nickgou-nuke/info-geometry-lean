@@ -34,6 +34,10 @@ capability map of the vendored Lean skill pack and related tooling.
 ## Use rules
 
 - Keep Lean proof authority in Lean, not in the skill catalog.
+- NEVER USE STALE DOCS: Do not read, cite, or use stale documents, obsolete docstrings,
+  or dead historical taxonomies (e.g. abandoned representation ladders or outdated transcript
+  summaries) in program design or proof construction. Live Lean source and kernel-checked
+  theorems decide truth.
 - Prefer repo-local skills first.
 - Install external skills only when the local stack lacks the capability.
 - Update the catalog when a skill is added, removed, or promoted.

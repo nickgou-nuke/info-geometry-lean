@@ -37,6 +37,6 @@ def sync10UniformNormalizedStationaryVector : Prop :=
 theorem paper_sync10_uniform_stationary : sync10UniformNormalizedStationaryVector := by
   unfold sync10UniformNormalizedStationaryVector sync10UniformLeftAction sync10UniformKernel
   unfold sync10UniformStationaryVector
-  native_decide
+  decide
 
 end Omega.EA

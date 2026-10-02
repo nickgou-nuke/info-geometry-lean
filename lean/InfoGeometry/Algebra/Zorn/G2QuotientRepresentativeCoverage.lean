@@ -7,7 +7,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 This owner isolates the genuine remaining statement behind
 `quotientRepresentative_surjective`.
 
-It does not enumerate `SplitOctF2Aut`, does not use `native_decide` on the
+It does not enumerate `SplitOctF2Aut`, does not use `decide` on the
 noncomputable `flagRepresentative` evaluator, and does not assume the ambient
 automorphism-group order.  Instead it proves that surjectivity of the existing
 map

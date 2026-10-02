@@ -15,7 +15,7 @@ def circularRootComplement : Finset RootLabel :=
 
 theorem circularRootComplement_card :
     (circularRootComplement).card = 4 := by
-  native_decide
+  decide
 
 theorem mem_circularRootComplement_iff (r : RootLabel) :
     r ∈ circularRootComplement ↔

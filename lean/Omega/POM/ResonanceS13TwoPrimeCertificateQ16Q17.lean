@@ -48,16 +48,16 @@ theorem paper_pom_resonance_s13_two_prime_certificate_q16_q17 :
     · simp [pomResonanceCharacteristicDegree]
     · norm_num [pomResonanceIrreduciblePrime]
     · norm_num [pomResonanceElevenTwoPrime]
-    · native_decide
-    · native_decide
+    · decide
+    · decide
     · simp [pomResonanceCharacteristicDegree]
   · unfold pomResonanceS13CertificateAt
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
     · simp [pomResonanceCharacteristicDegree]
     · norm_num [pomResonanceIrreduciblePrime]
     · norm_num [pomResonanceElevenTwoPrime]
-    · native_decide
-    · native_decide
+    · decide
+    · decide
     · simp [pomResonanceCharacteristicDegree]
   · simp [pomResonanceIrreduciblePrime, pomResonanceElevenTwoPrime]
   · simp [pomResonanceIrreduciblePrime, pomResonanceElevenTwoPrime]

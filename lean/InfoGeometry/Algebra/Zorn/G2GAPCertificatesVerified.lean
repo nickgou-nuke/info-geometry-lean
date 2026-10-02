@@ -39,7 +39,7 @@ def gapWitnessBits (i : Fin 64) : G2TwoSylowSubgroup.PCWordExp := fun k =>
   decide (i.val / 2 ^ k.val % 2 = 1)
 
 theorem gapWitnessBits_injective : Function.Injective gapWitnessBits := by
-  native_decide
+  decide
 
 theorem gapWitnessBits_card : Fintype.card (Fin 64) = 64 := by
   rfl

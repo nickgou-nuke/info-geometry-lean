@@ -60,7 +60,7 @@ def threeColorPolarizedMul (c : SplitOctonionColour) (a b : PolarizedBasisIdx) :
 /-- Verify that polarizedMul agrees with the actual split-octonion multiplication -/
 theorem threeColorPolarizedMul_correct (c : SplitOctonionColour) (a b : PolarizedBasisIdx) :
     threeColorPolarizedMul c a b = splitOctonionMulQ (polarizedBasis c a) (polarizedBasis c b) := by
-  fin_cases a <;> fin_cases b <;> fin_cases c <;> native_decide
+  fin_cases a <;> fin_cases b <;> fin_cases c <;> decide
 
 /-- The 4×4 matrix of multiplication coefficients for a fixed colour -/
 def polarizedMultiplicationMatrix (c : SplitOctonionColour) : Matrix (Fin 4) (Fin 4) (ℚ) :=

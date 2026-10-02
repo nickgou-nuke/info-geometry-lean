@@ -65,20 +65,20 @@ theorem rational_hyperbolic_projector_plus_idempotent :
         rationalHyperbolicProjectorPlus
         rationalHyperbolicProjectorPlus =
       rationalHyperbolicProjectorPlus := by
-  ext r <;> fin_cases r <;> native_decide
+  ext r <;> fin_cases r <;> decide
 
 theorem rational_hyperbolic_projector_minus_idempotent :
     rationalSplitOctonionMul
         rationalHyperbolicProjectorMinus
         rationalHyperbolicProjectorMinus =
       rationalHyperbolicProjectorMinus := by
-  ext r <;> fin_cases r <;> native_decide
+  ext r <;> fin_cases r <;> decide
 
 theorem rational_hyperbolic_projectors_orthogonal :
     rationalSplitOctonionMul
         rationalHyperbolicProjectorPlus
         rationalHyperbolicProjectorMinus = 0 := by
-  ext r <;> fin_cases r <;> native_decide
+  ext r <;> fin_cases r <;> decide
 
 theorem rational_hyperbolic_projectors_complete :
     rationalHyperbolicProjectorPlus + rationalHyperbolicProjectorMinus =
@@ -89,27 +89,27 @@ theorem rational_hyperbolic_projectors_complete :
 
 theorem rational_red_nilpotent_plus_sq_zero :
     rationalSplitOctonionMul rationalRedNilpotentPlus rationalRedNilpotentPlus = 0 := by
-  ext r <;> fin_cases r <;> native_decide
+  ext r <;> fin_cases r <;> decide
 
 theorem rational_red_nilpotent_minus_sq_zero :
     rationalSplitOctonionMul rationalRedNilpotentMinus rationalRedNilpotentMinus = 0 := by
-  ext r <;> fin_cases r <;> native_decide
+  ext r <;> fin_cases r <;> decide
 
 theorem rational_green_nilpotent_plus_sq_zero :
     rationalSplitOctonionMul rationalGreenNilpotentPlus rationalGreenNilpotentPlus = 0 := by
-  ext r <;> fin_cases r <;> native_decide
+  ext r <;> fin_cases r <;> decide
 
 theorem rational_green_nilpotent_minus_sq_zero :
     rationalSplitOctonionMul rationalGreenNilpotentMinus rationalGreenNilpotentMinus = 0 := by
-  ext r <;> fin_cases r <;> native_decide
+  ext r <;> fin_cases r <;> decide
 
 theorem rational_blue_nilpotent_plus_sq_zero :
     rationalSplitOctonionMul rationalBlueNilpotentPlus rationalBlueNilpotentPlus = 0 := by
-  ext r <;> fin_cases r <;> native_decide
+  ext r <;> fin_cases r <;> decide
 
 theorem rational_blue_nilpotent_minus_sq_zero :
     rationalSplitOctonionMul rationalBlueNilpotentMinus rationalBlueNilpotentMinus = 0 := by
-  ext r <;> fin_cases r <;> native_decide
+  ext r <;> fin_cases r <;> decide
 
 theorem rational_red_nilpotents_are_distinct :
     rationalRedNilpotentPlus ≠ rationalRedNilpotentMinus := by

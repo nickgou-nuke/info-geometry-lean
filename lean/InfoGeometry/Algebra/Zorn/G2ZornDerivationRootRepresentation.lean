@@ -642,11 +642,11 @@ theorem realWeylReflection_nativeCircularBasis (i : Fin 8) :
 
 theorem cycleFrameIndex_bijective :
     Function.Bijective cycleFrameIndex := by
-  native_decide
+  decide
 
 theorem reflectionFrameIndex_bijective :
     Function.Bijective reflectionFrameIndex := by
-  native_decide
+  decide
 
 @[simp] theorem realWeylCycle_apply (X : SplitOctonionReal) :
     (realWeylCycle : SplitOctonionAutCandidate ℝ) X =

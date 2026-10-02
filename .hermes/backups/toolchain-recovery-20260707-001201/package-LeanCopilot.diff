@@ -7,12 +7,12 @@ index e25c914..a7b7664 100644
  
  meta if get_config? env = some "dev" then -- dev is so not everyone has to build it
 -require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "main"
-+require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "v4.28.0"
++require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "v4.28.x"
 diff --git a/lean-toolchain b/lean-toolchain
 index ea6ca7f..4c685fa 100644
 --- a/lean-toolchain
 +++ b/lean-toolchain
 @@ -1 +1 @@
--leanprover/lean4:v4.28.0
+-leanprover/lean4:v4.28.x
 \ No newline at end of file
-+leanprover/lean4:v4.28.0
++leanprover/lean4:v4.28.x

@@ -116,14 +116,14 @@ theorem cMaxFiberMult_eq (m : Nat) : cMaxFiberMult m = X.maxFiberMultiplicity m 
 
 -- Cached @[simp] lemmas for cMaxFiberMult (m ≤ 7 only — fast)
 -- m = 8,9,10 are in MaxFiberHigh.lean (expensive, compiled separately)
-@[simp] theorem cached_cMaxFiberMult_0 : cMaxFiberMult 0 = 1 := by native_decide
-@[simp] theorem cached_cMaxFiberMult_1 : cMaxFiberMult 1 = 1 := by native_decide
-@[simp] theorem cached_cMaxFiberMult_2 : cMaxFiberMult 2 = 2 := by native_decide
-@[simp] theorem cached_cMaxFiberMult_3 : cMaxFiberMult 3 = 2 := by native_decide
-@[simp] theorem cached_cMaxFiberMult_4 : cMaxFiberMult 4 = 3 := by native_decide
-@[simp] theorem cached_cMaxFiberMult_5 : cMaxFiberMult 5 = 4 := by native_decide
-@[simp] theorem cached_cMaxFiberMult_6 : cMaxFiberMult 6 = 5 := by native_decide
-@[simp] theorem cached_cMaxFiberMult_7 : cMaxFiberMult 7 = 6 := by native_decide
+@[simp] theorem cached_cMaxFiberMult_0 : cMaxFiberMult 0 = 1 := by decide
+@[simp] theorem cached_cMaxFiberMult_1 : cMaxFiberMult 1 = 1 := by decide
+@[simp] theorem cached_cMaxFiberMult_2 : cMaxFiberMult 2 = 2 := by decide
+@[simp] theorem cached_cMaxFiberMult_3 : cMaxFiberMult 3 = 2 := by decide
+@[simp] theorem cached_cMaxFiberMult_4 : cMaxFiberMult 4 = 3 := by decide
+@[simp] theorem cached_cMaxFiberMult_5 : cMaxFiberMult 5 = 4 := by decide
+@[simp] theorem cached_cMaxFiberMult_6 : cMaxFiberMult 6 = 5 := by decide
+@[simp] theorem cached_cMaxFiberMult_7 : cMaxFiberMult 7 = 6 := by decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R142: Minimum fiber multiplicity + m=7 bounds
@@ -135,7 +135,7 @@ def cMinFiberMult (m : Nat) : Nat :=
     (@Finset.univ_nonempty _ (fintypeX m) (X.instNonempty m)) (fun x => cFiberMult x)
 
 /-- thm:terminal-foldbin7-128-to-34-hist -/
-theorem cMinFiberMult_seven : cMinFiberMult 7 = 1 := by native_decide
+theorem cMinFiberMult_seven : cMinFiberMult 7 = 1 := by decide
 
 /-- Fiber size bounds at m=7: min=1, max=6.
     thm:terminal-foldbin7-128-to-34-hist -/
@@ -169,7 +169,7 @@ theorem maxFiberMultiplicity_five : maxFiberMultiplicity 5 = 4 := by rw [← cMa
 theorem maxFiberMultiplicity_six : maxFiberMultiplicity 6 = 5 := by rw [← cMaxFiberMult_eq]; simp
 /-- cor:pom-D-rec-base-seven -/
 theorem maxFiberMultiplicity_seven : maxFiberMultiplicity 7 = 6 := by rw [← cMaxFiberMult_eq]; simp
--- m=8,9,10 values are in MaxFiberHigh.lean (expensive native_decide, compiled separately)
+-- m=8,9,10 values are in MaxFiberHigh.lean (expensive decide, compiled separately)
 
 /-! ### Two-step recurrence and closed-form expressions
 

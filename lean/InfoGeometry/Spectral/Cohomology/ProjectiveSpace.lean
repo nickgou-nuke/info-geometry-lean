@@ -1,5 +1,5 @@
 /- Projective Space Cohomology - Wave 5 of the Spectral port.
-Ported from cmu-phil/Spectral/cohomology/projective_space.hlean (Lean 2 HoTT) to Lean 4.28.0 / mathlib4. -/
+Ported from cmu-phil/Spectral/cohomology/projective_space.hlean (Lean 2 HoTT) to Lean 4.28.x / mathlib4. -/
 
 import InfoGeometry.Spectral.Cohomology.Serre
 import InfoGeometry.Algebra.FiniteSpinAlgebra

@@ -180,23 +180,23 @@ def cSecondMaxFiberMult (m : Nat) : Nat :=
 
 /-- D^{(2)} base values.
     cor:pom-second-max-fiber-base-2 -/
-theorem cSecondMaxFiberMult_two : cSecondMaxFiberMult 2 = 1 := by native_decide
+theorem cSecondMaxFiberMult_two : cSecondMaxFiberMult 2 = 1 := by decide
 /-- cor:pom-second-max-fiber-base-3 -/
-theorem cSecondMaxFiberMult_three : cSecondMaxFiberMult 3 = 1 := by native_decide
+theorem cSecondMaxFiberMult_three : cSecondMaxFiberMult 3 = 1 := by decide
 /-- cor:pom-second-max-fiber-base-4 -/
-theorem cSecondMaxFiberMult_four : cSecondMaxFiberMult 4 = 2 := by native_decide
+theorem cSecondMaxFiberMult_four : cSecondMaxFiberMult 4 = 2 := by decide
 /-- cor:pom-second-max-fiber-base-5 -/
-theorem cSecondMaxFiberMult_five : cSecondMaxFiberMult 5 = 3 := by native_decide
+theorem cSecondMaxFiberMult_five : cSecondMaxFiberMult 5 = 3 := by decide
 /-- cor:pom-second-max-fiber-base-6 -/
-theorem cSecondMaxFiberMult_six : cSecondMaxFiberMult 6 = 4 := by native_decide
+theorem cSecondMaxFiberMult_six : cSecondMaxFiberMult 6 = 4 := by decide
 /-- cor:pom-second-max-fiber-base-7 -/
-theorem cSecondMaxFiberMult_seven : cSecondMaxFiberMult 7 = 5 := by native_decide
+theorem cSecondMaxFiberMult_seven : cSecondMaxFiberMult 7 = 5 := by decide
 
 /-- D^{(2)}(m) = D(m-1) for m = 4..7.
     cor:pom-second-max-fiber-eq-prev -/
 theorem cSecondMaxFiberMult_eq_prev (m : Nat) (hm1 : 4 ≤ m) (hm : m ≤ 7) :
     cSecondMaxFiberMult m = cMaxFiberMult (m - 1) := by
-  interval_cases m <;> native_decide
+  interval_cases m <;> decide
 
 /-! ### Fiber splitting structural lemma (false-ending case)
 

@@ -1,0 +1,14 @@
+import DAG.DiracLaplacian
+
+#print axioms DAG.DiracLaplacian.laplacian0_chain_eq
+#print axioms DAG.DiracLaplacian.down_laplacian1_chain_eq
+#print axioms DAG.DiracLaplacian.dirac_squared_block_diagonal_chain
+#print axioms DAG.DiracLaplacian.dirac_square_check_chain
+#print axioms DAG.DiracLaplacian.dirac_sq_upper_left_is_laplacian0_chain
+#print axioms DAG.DiracLaplacian.dirac_sq_lower_right_is_down_laplacian1_chain
+#print axioms DAG.DiracLaplacian.dirac_sq_upper_right_is_zero_chain
+#print axioms DAG.DiracLaplacian.dirac_sq_lower_left_is_zero_chain
+#print axioms DAG.DiracLaplacian.trace_D_sq_equals_trace_laplacians_chain
+#print axioms DAG.DiracLaplacian.dirac_squared_block_diagonal_triangle
+#print axioms DAG.DiracLaplacian.dirac_squared_block_diagonal_digon
+#print axioms DAG.DiracLaplacian.dirac_square_check_triangle

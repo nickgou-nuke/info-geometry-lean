@@ -136,13 +136,13 @@ theorem splitQuad_imaginary (X : Imaginary) :
     splitQuad (imaginaryToOctIm X) =
       boolToZMod (zornNorm X.1) := by
   dsimp [imaginaryToOctIm, splitQuad, zornNorm, boolToZMod]
-  native_decide +revert
+  decide +revert
 
 theorem isotropic_iff_splitQuad_zero (X : Imaginary) :
     Isotropic X.1 ↔ splitQuad (imaginaryToOctIm X) = 0 := by
   rw [splitQuad_imaginary]
   dsimp [Isotropic, zornNorm, boolToZMod]
-  native_decide +revert
+  decide +revert
 
 /-! The native automorphism action can now be transported to the seven
 coordinates used by the finite Peirce geometry. -/

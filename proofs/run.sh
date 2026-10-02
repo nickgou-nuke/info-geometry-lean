@@ -102,7 +102,7 @@ if command -v lean &>/dev/null; then
   echo -e "${GREEN}✓${NC} $LEAN_VER"
   # Check if mathlib project is available
   if [ -d "/home/goutev/info-geometry-lean/.lake/packages/mathlib" ]; then
-    echo -e "  ${GREEN}✓${NC} mathlib v4.28.0 project ready (6.9GB package cache)"
+    echo -e "  ${GREEN}✓${NC} mathlib v4.28.x project ready (6.9GB package cache)"
   else
     echo -e "  ${YELLOW}⚠${NC} mathlib project not found — plain Lean code only"
   fi

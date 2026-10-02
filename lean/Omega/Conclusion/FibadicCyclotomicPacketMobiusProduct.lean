@@ -56,7 +56,7 @@ theorem paper_conclusion_fibadic_cyclotomic_packet_mobius_product :
   · intro F a Pi hdeg hfactor
     exact conclusion_fibadic_cyclotomic_packet_mobius_product_existing_decomposition F a Pi
       hdeg hfactor
-  · native_decide
+  · decide
   · intro Pi hPi
     exact hPi
 

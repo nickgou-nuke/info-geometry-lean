@@ -145,7 +145,7 @@ and `5`.
     prop:cdim-denominator-positive-density-thin-forbidden -/
 theorem card_non_multiples_235_100_exact :
     ((Finset.Icc 1 100).filter (fun n => ∀ q ∈ ({2, 3, 5} : Finset ℕ), ¬ q ∣ n)).card = 26 := by
-  native_decide
+  decide
 
 /-- Paper-facing denominator-thinness package: the forbidden union is controlled by the finite
 union bound, the complement count has the corresponding lower bound, and the concrete truncation

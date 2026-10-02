@@ -108,7 +108,7 @@ def cNontrivialFiberCount (m : Nat) : Nat :=
   (@Finset.univ (X m) (fintypeX m)).filter (fun x => cFiberMult x ≥ 2) |>.card
 
 /-- At resolution 6, exactly 19 stable words have nontrivial fibers. -/
-theorem cNontrivialFiberCount_six : cNontrivialFiberCount 6 = 19 := by native_decide
+theorem cNontrivialFiberCount_six : cNontrivialFiberCount 6 = 19 := by decide
 
 /-- The trivial fiber count at resolution 6: exactly 2 words have multiplicity 1. -/
 theorem cTrivialFiberCount_six : cFiberHist 6 1 = 2 := cFiberHist_6_1
@@ -143,36 +143,36 @@ The idempotents of ℤ/21ℤ encode the CRT projection structure. -/
 
 /-- F(8) = 21 = 3 × 7.
     thm:conclusion-window6-visible-crt-arithmetic-phase-space -/
-theorem fib8_factorization : Nat.fib 8 = 3 * 7 := by native_decide
+theorem fib8_factorization : Nat.fib 8 = 3 * 7 := by decide
 
 /-- 21 = 3 × 7 (direct). -/
 theorem card_X6_factorization : 21 = 3 * 7 := by omega
 
 /-- The CRT idempotent e₁ = 7 in ℤ/21ℤ: 7² ≡ 7 (mod 21).
     prop:conclusion-window6-crt-idempotent-sector-splitting -/
-theorem crt_idempotent_7 : (7 : ZMod 21) ^ 2 = 7 := by native_decide
+theorem crt_idempotent_7 : (7 : ZMod 21) ^ 2 = 7 := by decide
 
 /-- The CRT idempotent e₂ = 15 in ℤ/21ℤ: 15² ≡ 15 (mod 21).
     prop:conclusion-window6-crt-idempotent-sector-splitting-15 -/
-theorem crt_idempotent_15 : (15 : ZMod 21) ^ 2 = 15 := by native_decide
+theorem crt_idempotent_15 : (15 : ZMod 21) ^ 2 = 15 := by decide
 
 /-- The CRT idempotents are orthogonal: e₁ · e₂ = 0.
     prop:conclusion-window6-crt-idempotent-orthogonal -/
-theorem crt_idempotent_product : (7 : ZMod 21) * 15 = 0 := by native_decide
+theorem crt_idempotent_product : (7 : ZMod 21) * 15 = 0 := by decide
 
 /-- The CRT idempotents are complementary: e₁ + e₂ = 1.
     prop:conclusion-window6-crt-idempotent-complementary -/
-theorem crt_idempotent_sum : (7 : ZMod 21) + 15 = 1 := by native_decide
+theorem crt_idempotent_sum : (7 : ZMod 21) + 15 = 1 := by decide
 
 /-- Complete classification of idempotents in ℤ/21ℤ: exactly {0, 1, 7, 15}.
     thm:conclusion-window6-crt-idempotent-complete-classification -/
 theorem zmod21_idempotents_complete :
-    ∀ x : ZMod 21, x ^ 2 = x ↔ x = 0 ∨ x = 1 ∨ x = 7 ∨ x = 15 := by native_decide
+    ∀ x : ZMod 21, x ^ 2 = x ↔ x = 0 ∨ x = 1 ∨ x = 7 ∨ x = 15 := by decide
 
 /-- The unit group of ℤ/21ℤ has 12 elements (Euler's φ(21) = 12).
     prop:conclusion-window6-crt-euler-phi -/
 theorem zmod21_unit_count :
-    (Finset.univ.filter (fun x : ZMod 21 => IsUnit x)).card = 12 := by native_decide
+    (Finset.univ.filter (fun x : ZMod 21 => IsUnit x)).card = 12 := by decide
 
 /-- The non-unit, non-zero elements of ℤ/21ℤ: 21 - 12 - 1 = 8. -/
 theorem zmod21_nonunit_nonzero_count : 21 - 1 - 12 = 8 := by omega
@@ -332,13 +332,13 @@ theorem cst_degree_counts_from_histogram :
 /-- Weyl group orders (symmetric group factorials).
     thm:conclusion-window6-hidden-reflection-invariant-polynomial-ring-weyl -/
 theorem weyl_orders :
-    Nat.factorial 2 = 2 ∧ Nat.factorial 3 = 6 ∧ Nat.factorial 4 = 24 := by native_decide
+    Nat.factorial 2 = 2 ∧ Nat.factorial 3 = 6 ∧ Nat.factorial 4 = 24 := by decide
 
 /-- Gauge group order factored: (2!)^8 · (3!)^4 · (4!)^9 = 2^8 · 6^4 · 24^9.
     thm:conclusion-window6-hidden-reflection-invariant-polynomial-ring-gauge -/
 theorem gauge_group_order_factored :
     (Nat.factorial 2) ^ 8 * (Nat.factorial 3) ^ 4 * (Nat.factorial 4) ^ 9 =
-      2 ^ 8 * 6 ^ 4 * 24 ^ 9 := by native_decide
+      2 ^ 8 * 6 ^ 4 * 24 ^ 9 := by decide
 
 /-! ### Higher-order sector sums + genus recurrence -/
 
@@ -354,7 +354,7 @@ theorem sector_sum_six_q5 :
 
 /-- The genus recurrence order at m = 6: 5 distinct fiber multiplicities.
     prop:conclusion-tqft-genus-generating-function-rational-genus -/
-theorem genus_recurrence_order_six : (cFiberSpectrum 6).length = 5 := by native_decide
+theorem genus_recurrence_order_six : (cFiberSpectrum 6).length = 5 := by decide
 
 /-- Distinct fiber multiplicity squares.
     prop:conclusion-tqft-genus-generating-function-rational-sq -/
@@ -375,13 +375,13 @@ theorem sector_sum_six_q4_gt_q3 :
 theorem q6_multiplicities :
     Nat.choose 6 0 = 1 ∧ Nat.choose 6 1 = 6 ∧ Nat.choose 6 2 = 15 ∧
     Nat.choose 6 3 = 20 ∧ Nat.choose 6 4 = 15 ∧ Nat.choose 6 5 = 6 ∧
-    Nat.choose 6 6 = 1 := by native_decide
+    Nat.choose 6 6 = 1 := by decide
 
 /-- Sum of binomial coefficients: ∑ C(6,k) = 2^6 = 64.
     thm:conclusion-hypercube-phase-quadratic-closure-sum -/
 theorem q6_multiplicity_sum :
     Nat.choose 6 0 + Nat.choose 6 1 + Nat.choose 6 2 + Nat.choose 6 3 +
-    Nat.choose 6 4 + Nat.choose 6 5 + Nat.choose 6 6 = 64 := by native_decide
+    Nat.choose 6 4 + Nat.choose 6 5 + Nat.choose 6 6 = 64 := by decide
 
 /-- Weighted trace sums for Q_6 adjacency eigenvalues.
     thm:conclusion-hypercube-phase-quadratic-closure-trace -/
@@ -431,7 +431,7 @@ theorem master_audit_certificate :
     -- Hidden dimensions
     2 ^ 6 - Fintype.card (X 6) = 43 := by
   exact ⟨X.card_X_six, by norm_num, momentSum_two_six, momentSum_three_six,
-    collisionKernel2_trace, collisionKernel2_det, by native_decide,
+    collisionKernel2_trace, collisionKernel2_det, by decide,
     cBinFiberHist_6_2, cBinFiberHist_6_3, cBinFiberHist_6_4,
     by rw [X.card_X_six]; norm_num⟩
 
@@ -441,7 +441,7 @@ theorem fibonacci_backbone :
     Nat.fib 9 - Nat.fib 2 = 33 ∧
     Nat.fib 8 = 3 * 7 ∧
     Nat.fib 4 = 3 ∧ Nat.fib 6 = 8 := by
-  refine ⟨?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> decide
 
 /-! ### Pimsner-Popa index instances -/
 
@@ -483,10 +483,10 @@ theorem coverage_certificate :
     collisionKernel2.trace = 2 ∧ collisionKernel2.det = -2 ∧
     -- Zeckendorf
     (45 : Nat) = Nat.fib 9 + Nat.fib 6 + Nat.fib 4 := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
+  refine ⟨by decide, by decide, by decide,
     X.card_X_six, momentSum_two_six, momentSum_three_six, momentSum_four_six,
     cBinFiberHist_6_2, cBinFiberHist_6_3, cBinFiberHist_6_4,
-    collisionKernel2_trace, collisionKernel2_det, by native_decide⟩
+    collisionKernel2_trace, collisionKernel2_det, by decide⟩
 
 /-! ### Paper-numbered theorems -/
 
@@ -570,15 +570,15 @@ theorem higher_spectrum_not_determined_by_marginals :
 
 /-- S_4 basic combinatorial counts. -/
 theorem s4_basic_counts :
-    Nat.factorial 4 = 24 ∧ Nat.factorial 3 = 6 ∧ Nat.choose 4 2 = 6 := by native_decide
+    Nat.factorial 4 = 24 ∧ Nat.factorial 3 = 6 ∧ Nat.choose 4 2 = 6 := by decide
 
 /-- Successor branch: adjacent stable values map to distinct stable words at m=6.
     thm:terminal-succ-unique-branch-merge-branch -/
-theorem succ_branch_at_b6 : X.ofNat 6 12 ≠ X.ofNat 6 13 := by native_decide
+theorem succ_branch_at_b6 : X.ofNat 6 12 ≠ X.ofNat 6 13 := by decide
 
 /-- Zero is the merge point: stableValue of ofNat 6 0 is 0.
     thm:terminal-succ-unique-branch-merge-zero -/
-theorem zero_is_merge_point : stableValue (X.ofNat 6 0) = 0 := by native_decide
+theorem zero_is_merge_point : stableValue (X.ofNat 6 0) = 0 := by decide
 
 /-- thm:conclusion-pom-curvature-ledger-parenthesization-invariance:
     XOR on Word m is associative and commutative. -/
@@ -596,9 +596,9 @@ theorem curvature_parenthesization :
 theorem conclusion_window6_three_rigidity_scales :
     Nat.fib 8 = 21 ∧ cBinFiberMax 6 = 4 ∧ 2 ^ 6 = 64 ∧
     cBinFiberMax 6 < Nat.fib 8 ∧ Nat.fib 8 < 2 ^ 6 := by
-  refine ⟨by native_decide, cBinFiberMax_six, by omega, ?_, ?_⟩
-  · rw [cBinFiberMax_six]; native_decide
-  · native_decide
+  refine ⟨by decide, cBinFiberMax_six, by omega, ?_, ?_⟩
+  · rw [cBinFiberMax_six]; decide
+  · decide
 
 /-- Window-6 collision dimension: Σ d²_bin = 9·16 + 4·9 + 8·4 = 212.
     thm:conclusion-window6-groupoid-collision-dimension-identity. -/
@@ -655,8 +655,8 @@ theorem conclusion_foldbin_stable_k0_rank_six :
     Fintype.card (X 6) = 21 ∧
     21 = Nat.fib 8 ∧
     cBinFiberHist 6 2 + cBinFiberHist 6 3 + cBinFiberHist 6 4 = 21 := by
-  refine ⟨?_, by native_decide, ?_⟩
-  · rw [X.card_eq_fib]; native_decide
+  refine ⟨?_, by decide, ?_⟩
+  · rw [X.card_eq_fib]; decide
   · rw [cBinFiberHist_6_2, cBinFiberHist_6_3, cBinFiberHist_6_4]
 
 -- ══════════════════════════════════════════════════════════════
@@ -666,7 +666,7 @@ theorem conclusion_foldbin_stable_k0_rank_six :
 /-- Window-6 boundary parity residual: 21 - 3 = 18 anomaly directions.
     cor:conclusion-window6-boundary-parity-residual-two-bits-nonfunctorial. -/
 theorem conclusion_window6_boundary_parity_residual :
-    Nat.fib 8 - 3 = 18 := by native_decide
+    Nat.fib 8 - 3 = 18 := by decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 178
@@ -677,7 +677,7 @@ theorem conclusion_window6_boundary_parity_residual :
 theorem conclusion_window6_boundary_parity_gap :
     Nat.fib 8 = 21 ∧ 21 - 3 = 18 ∧ 18 > 0 := by
   constructor
-  · native_decide
+  · decide
   · omega
 
 -- ══════════════════════════════════════════════════════════════
@@ -703,7 +703,7 @@ theorem conclusion_window6_not_free_algebra :
     cBinFiberHist 6 4 * 4 ^ 2 + cBinFiberHist 6 3 * 3 ^ 2 +
     cBinFiberHist 6 2 * 2 ^ 2 < Nat.fib 8 ^ 2 := by
   rw [cBinFiberHist_6_4, cBinFiberHist_6_3, cBinFiberHist_6_2]
-  native_decide
+  decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 181
@@ -724,7 +724,7 @@ theorem conclusion_window6_fiber_nonuniform :
 /-- Window-6: 8 ∤ 21, so no free (Z/2)^3-action on X_6.
     cor:conclusion-window6-boundary-z6-no-global-free-extension. -/
 theorem conclusion_window6_no_free_boundary_extension :
-    ¬ (2 ^ 3 ∣ Nat.fib 8) := by native_decide
+    ¬ (2 ^ 3 ∣ Nat.fib 8) := by decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 184
@@ -736,7 +736,7 @@ theorem conclusion_window6_dimension_not_divisible :
     ¬ (Nat.fib 8 ∣ (cBinFiberHist 6 4 * 4 ^ 2 + cBinFiberHist 6 3 * 3 ^ 2 +
     cBinFiberHist 6 2 * 2 ^ 2)) := by
   rw [cBinFiberHist_6_4, cBinFiberHist_6_3, cBinFiberHist_6_2]
-  native_decide
+  decide
 
 /-- Window-6 has exactly 3 distinct fiber multiplicities (2,3,4).
     thm:conclusion-window6-groupoid-collision-dimension-identity -/
@@ -744,7 +744,7 @@ theorem conclusion_window6_three_distinct_multiplicities :
     cBinFiberHist 6 2 > 0 ∧ cBinFiberHist 6 3 > 0 ∧ cBinFiberHist 6 4 > 0 ∧
     cBinFiberHist 6 0 = 0 ∧ cBinFiberHist 6 1 = 0 ∧ cBinFiberHist 6 5 = 0 :=
   ⟨by rw [cBinFiberHist_6_2]; omega, by rw [cBinFiberHist_6_3]; omega,
-    by rw [cBinFiberHist_6_4]; omega, cBinFiberHist_6_0, cBinFiberHist_6_1, by native_decide⟩
+    by rw [cBinFiberHist_6_4]; omega, cBinFiberHist_6_0, cBinFiberHist_6_1, by decide⟩
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 186
@@ -781,7 +781,7 @@ theorem conclusion_window6_standard_collision :
 theorem conclusion_window6_moment_chain :
     Nat.fib 8 < 2 ^ 6 ∧ 2 ^ 6 < momentSum 2 6 := by
   constructor
-  · native_decide
+  · decide
   · rw [momentSum_two_six]; omega
 
 -- ══════════════════════════════════════════════════════════════
@@ -790,7 +790,7 @@ theorem conclusion_window6_moment_chain :
 
 /-- φ(21) = 12. thm:conclusion-foldbin-stable-collapse-ordered-k0-memory. -/
 theorem conclusion_window6_euler_totient :
-    Nat.totient 21 = 12 := by native_decide
+    Nat.totient 21 = 12 := by decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 191
@@ -800,7 +800,7 @@ theorem conclusion_window6_euler_totient :
     thm:conclusion-foldbin-stable-collapse-ordered-k0-memory -/
 theorem conclusion_window6_crt_factorization :
     Nat.fib 8 = 3 * 7 ∧ Nat.Coprime 3 7 :=
-  ⟨by native_decide, by decide⟩
+  ⟨by decide, by decide⟩
 
 /-- 212/4096 = 53/1024 cross-multiplication.
     thm:conclusion-window6-groupoid-collision-dimension-identity. -/
@@ -811,13 +811,13 @@ theorem conclusion_window6_collision_prob_certificate :
     cor:conclusion-window6-boundary-parity-misses-eighteen-anomaly-directions -/
 theorem conclusion_window6_prime_factorization :
     Nat.Prime 3 ∧ Nat.Prime 7 ∧ ¬ Nat.Prime 21 ∧ Nat.fib 8 = 21 :=
-  ⟨by decide, by decide, by decide, by native_decide⟩
+  ⟨by decide, by decide, by decide, by decide⟩
 
 /-- φ(21)=12=2×6=(3-1)(7-1). Unit group structure.
     thm:conclusion-foldbin-stable-collapse-ordered-k0-memory -/
 theorem conclusion_window6_unit_group_structure :
     Nat.totient 21 = 12 ∧ 12 = 2 * 6 ∧ 2 = 3 - 1 ∧ 6 = 7 - 1 ∧ 12 = (3 - 1) * (7 - 1) :=
-  ⟨by native_decide, by omega, by omega, by omega, by omega⟩
+  ⟨by decide, by omega, by omega, by omega, by omega⟩
 
 /-- Window-6 BinFold is a proper coloring of the 6-hypercube.
     thm:conclusion-foldbin-stable-collapse-ordered-k0-memory -/
@@ -830,20 +830,20 @@ theorem conclusion_window6_binfold_proper_coloring :
     thm:conclusion-foldbin-stable-collapse-ordered-k0-memory -/
 theorem conclusion_window6_nonaffine_count :
     cAffineFlatCount 6 = 11 ∧ Nat.fib 8 - cAffineFlatCount 6 = 10 :=
-  ⟨cAffineFlatCount_six, by rw [cAffineFlatCount_six]; native_decide⟩
+  ⟨cAffineFlatCount_six, by rw [cAffineFlatCount_six]; decide⟩
 
 /-- The number of zero-divisors in ZMod 21 is 8.
     thm:pom-zmod21-zerodiv-count -/
 theorem zmod21_zerodiv_count :
     (Finset.univ.filter (fun x : ZMod 21 =>
-      x ≠ 0 ∧ ∃ y : ZMod 21, y ≠ 0 ∧ x * y = 0)).card = 8 := by native_decide
+      x ≠ 0 ∧ ∃ y : ZMod 21, y ≠ 0 ∧ x * y = 0)).card = 8 := by decide
 
 /-- Every element of ZMod 21 is zero, a unit, or a zero-divisor.
     thm:pom-zmod21-trichotomy -/
 theorem zmod21_trichotomy (x : ZMod 21) :
     x = 0 ∨ IsUnit x ∨ (x ≠ 0 ∧ ∃ y : ZMod 21, y ≠ 0 ∧ x * y = 0) := by
   have : ∀ x : ZMod 21,
-      x = 0 ∨ IsUnit x ∨ (x ≠ 0 ∧ ∃ y : ZMod 21, y ≠ 0 ∧ x * y = 0) := by native_decide
+      x = 0 ∨ IsUnit x ∨ (x ≠ 0 ∧ ∃ y : ZMod 21, y ≠ 0 ∧ x * y = 0) := by decide
   exact this x
 
 /-- Window-6 anomaly-collision splitting: 21+53=74, 212=4*53, 8*1+4*3+9*6=74.
@@ -863,7 +863,7 @@ theorem conclusion_window6_collision_mass :
     thm:conclusion-window6-groupoid-collision-dimension-identity -/
 theorem window6_excess_capacity :
     Nat.fib 8 * (cBinFiberMax 6 - 1) = 2 ^ 6 - 1 := by
-  rw [cBinFiberMax_six]; native_decide
+  rw [cBinFiberMax_six]; decide
 
 /-- D_max(6)^2 = 16.
     thm:conclusion-window6-groupoid-collision-dimension-identity -/
@@ -874,7 +874,7 @@ theorem conclusion_window6_max_fiber_sq :
     thm:conclusion-window6-hidden-a-type-weyl-package -/
 theorem conclusion_window6_visible_hidden_split :
     2 ^ 6 = Nat.fib 8 + (cBinFiberHist 6 2 * 1 + cBinFiberHist 6 3 * 2 + cBinFiberHist 6 4 * 3) := by
-  rw [cBinFiberHist_6_2, cBinFiberHist_6_3, cBinFiberHist_6_4]; native_decide
+  rw [cBinFiberHist_6_2, cBinFiberHist_6_3, cBinFiberHist_6_4]; decide
 
 /-- The abelianization of the window-6 fold gauge group has rank |X_6| - #{x : d(x)=1} = 19.
     thm:window6-foldbin-gauge-abelianization-even-parity -/

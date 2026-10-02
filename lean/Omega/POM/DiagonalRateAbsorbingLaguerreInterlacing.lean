@@ -59,7 +59,7 @@ private lemma diagonalRateAbsorbingLaguerrePolynomial_root_iff (z : ℝ) :
 /-- Paper label: `thm:pom-diagonal-rate-absorbing-laguerre-interlacing`. -/
 theorem paper_pom_diagonal_rate_absorbing_laguerre_interlacing :
     diagonalRateAbsorbingLaguerreInterlacingStatement := by
-  refine ⟨by native_decide, rfl, ?_, ?_, diagonalRateAbsorbingLaguerrePolynomial_root_iff, ?_, ?_⟩
+  refine ⟨by decide, rfl, ?_, ?_, diagonalRateAbsorbingLaguerrePolynomial_root_iff, ?_, ?_⟩
   · norm_num [diagonalRateAbsorbingSecularResidual, diagonalRateAbsorbingLaguerreKappa]
   · norm_num [diagonalRateAbsorbingSecularResidual, diagonalRateAbsorbingLaguerreKappa]
   · refine ⟨2, ?_, ?_⟩

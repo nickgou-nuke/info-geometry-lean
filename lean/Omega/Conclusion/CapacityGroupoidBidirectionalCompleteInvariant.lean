@@ -54,9 +54,9 @@ def conclusion_capacity_groupoid_bidirectional_complete_invariant_statement : Pr
 /-- Paper label: `thm:conclusion-capacity-groupoid-bidirectional-complete-invariant`. -/
 theorem paper_conclusion_capacity_groupoid_bidirectional_complete_invariant :
     conclusion_capacity_groupoid_bidirectional_complete_invariant_statement := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, ?_, ?_⟩
+  refine ⟨by decide, by decide, by decide, by decide, by decide,
+    by decide, by decide, by decide, by decide, by decide,
+    by decide, by decide, ?_, ?_⟩
   · intro T
     simp [conclusion_capacity_groupoid_bidirectional_complete_invariant_capacity_curve,
       conclusion_capacity_groupoid_bidirectional_complete_invariant_histogram]

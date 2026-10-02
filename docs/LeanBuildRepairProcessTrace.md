@@ -17,7 +17,7 @@ Branch:
 
 Toolchain bootstrap used in-session:
 - install `elan`
-- set Lean toolchain: `leanprover/lean4:v4.28.0`
+- set Lean toolchain: `leanprover/lean4:v4.28.x`
 - use explicit binaries when needed:
   - `~/.elan/bin/lean`
   - `~/.elan/bin/lake`

@@ -57,6 +57,6 @@ theorem paper_xi_window6_minrep_zeckendorf_signature_injection :
         2 ∈ xi_window6_minrep_zeckendorf_signature_injection_signature r ∧
         3 ∉ xi_window6_minrep_zeckendorf_signature_injection_signature r) ∧
       Function.Injective xi_window6_minrep_zeckendorf_signature_injection_signature := by
-  native_decide
+  decide
 
 end Omega.Zeta

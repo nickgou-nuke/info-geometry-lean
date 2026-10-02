@@ -15,7 +15,7 @@ theorem paper_conclusion_serrin_wulff_ray_eventual_centerless_gauge
     intro k
     induction k with
     | zero =>
-        native_decide
+        decide
     | succ k ih =>
         have hrec :
             Nat.fib (6 + Nat.succ k + 2) =

@@ -6,19 +6,19 @@ import Mathlib.Tactic
 namespace Omega.GU
 
 instance factPrime571Window6BdryUpliftResidueStratification : Fact (Nat.Prime 571) := by
-  exact ⟨by native_decide⟩
+  exact ⟨by decide⟩
 
 private def unit34 : (ZMod 571)ˣ :=
-  Units.mk0 (34 : ZMod 571) (by native_decide)
+  Units.mk0 (34 : ZMod 571) (by decide)
 
 private def unit144 : (ZMod 571)ˣ :=
-  Units.mk0 (144 : ZMod 571) (by native_decide)
+  Units.mk0 (144 : ZMod 571) (by decide)
 
 private def unit55 : (ZMod 571)ˣ :=
-  Units.mk0 (55 : ZMod 571) (by native_decide)
+  Units.mk0 (55 : ZMod 571) (by decide)
 
 private def unit89 : (ZMod 571)ˣ :=
-  Units.mk0 (89 : ZMod 571) (by native_decide)
+  Units.mk0 (89 : ZMod 571) (by decide)
 
 private theorem prime_dvd_285 {p : ℕ} (hp : Nat.Prime p) (hpdvd : p ∣ 285) :
     p = 3 ∨ p = 5 ∨ p = 19 := by
@@ -48,29 +48,29 @@ private theorem prime_dvd_570 {p : ℕ} (hp : Nat.Prime p) (hpdvd : p ∣ 570) :
 
 private theorem order_unit34 : orderOf unit34 = 285 := by
   refine orderOf_eq_of_pow_and_pow_div_prime (x := unit34) (n := 285) (by decide) ?_ ?_
-  · native_decide
+  · decide
   · intro p hp hpdvd
-    rcases prime_dvd_285 hp hpdvd with rfl | rfl | rfl <;> native_decide
+    rcases prime_dvd_285 hp hpdvd with rfl | rfl | rfl <;> decide
 
 private theorem order_unit144 : orderOf unit144 = 285 := by
   refine orderOf_eq_of_pow_and_pow_div_prime (x := unit144) (n := 285) (by decide) ?_ ?_
-  · native_decide
+  · decide
   · intro p hp hpdvd
-    rcases prime_dvd_285 hp hpdvd with rfl | rfl | rfl <;> native_decide
+    rcases prime_dvd_285 hp hpdvd with rfl | rfl | rfl <;> decide
 
 private theorem order_unit55 : orderOf unit55 = 19 := by
   refine orderOf_eq_of_pow_and_pow_div_prime (x := unit55) (n := 19) (by decide) ?_ ?_
-  · native_decide
+  · decide
   · intro p hp hpdvd
     have hp19 : p = 19 := (Nat.prime_dvd_prime_iff_eq hp (by decide : Nat.Prime 19)).mp hpdvd
     subst hp19
-    native_decide
+    decide
 
 private theorem order_unit89 : orderOf unit89 = 570 := by
   refine orderOf_eq_of_pow_and_pow_div_prime (x := unit89) (n := 570) (by decide) ?_ ?_
-  · native_decide
+  · decide
   · intro p hp hpdvd
-    rcases prime_dvd_570 hp hpdvd with rfl | rfl | rfl | rfl <;> native_decide
+    rcases prime_dvd_570 hp hpdvd with rfl | rfl | rfl | rfl <;> decide
 
 private theorem order_zmod34 : orderOf (34 : ZMod 571) = 285 := by
   change orderOf (unit34 : ZMod 571) = 285

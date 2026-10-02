@@ -31,7 +31,7 @@ theorem paper_sync_hatdelta_quotient_triple_cover_s3_discriminant :
       syncHatdeltaTripleCoverDiscriminant (-1) = -3552 ∧
       ¬ IsSquare (syncHatdeltaTripleCoverDiscriminant (-1)) ∧
       syncHatdeltaHyperellipticGenus syncHatdeltaHyperellipticDegree = 4 := by
-  refine ⟨?_, by norm_num [syncHatdeltaTripleCoverDiscriminant], ?_, by native_decide⟩
+  refine ⟨?_, by norm_num [syncHatdeltaTripleCoverDiscriminant], ?_, by decide⟩
   · intro x
     unfold syncHatdeltaTripleCoverDiscriminant syncHatdeltaP8
     ring

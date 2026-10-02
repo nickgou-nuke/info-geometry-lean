@@ -12,6 +12,6 @@ theorem paper_fold_bin_gauge_m6 :
       cBinFiberHist 6 4 = 9 ∧
       8 + 4 + 9 = 21 := by
   refine ⟨paper_fold_bin_gauge_decomposition_spec 6, cBinFiberHist_6_2, cBinFiberHist_6_3,
-    cBinFiberHist_6_4, by native_decide⟩
+    cBinFiberHist_6_4, by decide⟩
 
 end Omega.Folding

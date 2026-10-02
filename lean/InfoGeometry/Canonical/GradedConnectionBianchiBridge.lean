@@ -33,7 +33,7 @@ theorem matrixExteriorDerivative_sq_zero
     matrixExteriorDerivative D.d (matrixExteriorDerivative D.d A) = 0 := by
   ext i j
   dsimp [matrixExteriorDerivative]
-  exact LinearMap.congr_fun D.sq_zero (A i j)
+  exact differential_sq_zero D (A i j)
 
 /-- **Theorem**: Matrix Exterior Derivative Product Rule d(A·A) = dA·A - A·dA for 1-Forms Derived Structurally from Graded Leibniz Rule and |A|=1. -/
 theorem matrix_one_form_square_leibniz

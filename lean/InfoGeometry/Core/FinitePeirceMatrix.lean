@@ -1,5 +1,4 @@
 import InfoGeometry.Core.PeirceDecomposition
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.Idempotents
 import Mathlib.Data.Matrix.Basic
 
@@ -135,12 +134,14 @@ theorem blocks_assemble (e : I → A) (he : OrthogonalIdempotents e)
   funext i j
   simp only [blocks, assemble, Finset.mul_sum, Finset.sum_mul]
   simp_rw [cut_corner e he B]
-  have h : ∀ k l, (if i = k ∧ l = j then B.1 k l else 0) = if k = i then (if l = j then B.1 k l else 0) else 0 := by
+  have h : ∀ k l, (if i = k ∧ l = j then B.1 k l else 0) =
+      if k = i then (if l = j then B.1 k l else 0) else 0 := by
     intro k l
     by_cases hk : k = i
     · subst hk
       by_cases hl : l = j
-      · subst hl; simp
+      · subst hl
+        simp
       · simp [hl]
     · have hki : ¬(i = k) := fun h => hk h.symm
       simp [hk, hki]

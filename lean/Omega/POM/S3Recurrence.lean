@@ -49,6 +49,6 @@ lemma pom_s3_recurrence_relation (m : ℕ) (hm : 5 ≤ m) :
 
 /-- Paper label: `prop:pom-s3-recurrence`. -/
 theorem paper_pom_s3_recurrence : pom_s3_recurrence_statement := by
-  refine ⟨?_, ?_, ?_, pom_s3_recurrence_relation⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, pom_s3_recurrence_relation⟩ <;> decide
 
 end Omega.POM

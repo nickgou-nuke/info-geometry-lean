@@ -18,23 +18,23 @@ namespace Omega.Conclusion.TimeReversalOrbitParity
 /-- A single swap on Fin 2 has sign -1.
     thm:conclusion-time-reversal-orbit-compression-gap-parity -/
 theorem swap_fin2_sign :
-    (Equiv.swap (0 : Fin 2) 1).sign = -1 := by native_decide
+    (Equiv.swap (0 : Fin 2) 1).sign = -1 := by decide
 
 /-- Two disjoint swaps on Fin 4 have sign +1.
     thm:conclusion-time-reversal-orbit-compression-gap-parity -/
 theorem double_swap_fin4_sign :
-    ((Equiv.swap (0 : Fin 4) 1) * (Equiv.swap (2 : Fin 4) 3)).sign = 1 := by native_decide
+    ((Equiv.swap (0 : Fin 4) 1) * (Equiv.swap (2 : Fin 4) 3)).sign = 1 := by decide
 
 /-- The identity on Fin 3 has sign +1.
     thm:conclusion-time-reversal-orbit-compression-gap-parity -/
 theorem id_fin3_sign :
-    (1 : Equiv.Perm (Fin 3)).sign = 1 := by native_decide
+    (1 : Equiv.Perm (Fin 3)).sign = 1 := by decide
 
 /-- Three swaps on Fin 6 have sign -1.
     thm:conclusion-time-reversal-orbit-compression-gap-parity -/
 theorem triple_swap_fin6_sign :
     ((Equiv.swap (0 : Fin 6) 1) * (Equiv.swap (2 : Fin 6) 3) *
-     (Equiv.swap (4 : Fin 6) 5)).sign = -1 := by native_decide
+     (Equiv.swap (4 : Fin 6) 5)).sign = -1 := by decide
 
 /-! ## Compression gap arithmetic -/
 

@@ -53,15 +53,15 @@ noncomputable def conclusion_leyang_stokes_quadratic_character_prime_law_irreduc
 
 lemma conclusion_leyang_stokes_quadratic_character_prime_law_split_card :
     conclusion_leyang_stokes_quadratic_character_prime_law_split_set.card = 1 := by
-  native_decide
+  decide
 
 lemma conclusion_leyang_stokes_quadratic_character_prime_law_one_plus_two_card :
     conclusion_leyang_stokes_quadratic_character_prime_law_one_plus_two_set.card = 3 := by
-  native_decide
+  decide
 
 lemma conclusion_leyang_stokes_quadratic_character_prime_law_irreducible_card :
     conclusion_leyang_stokes_quadratic_character_prime_law_irreducible_set.card = 2 := by
-  native_decide
+  decide
 
 /-- Paper label: `thm:conclusion-leyang-stokes-quadratic-character-prime-law`. The shared Artin
 and common-quadratic-resolvent packages identify the quadratic character with the sign on `S₃`;

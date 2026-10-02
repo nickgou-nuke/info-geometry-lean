@@ -45,7 +45,7 @@ identifies each matrix block with one copy of the base invariant, and additivity
 direct sum therefore collapses `K₀`, `K₁`, `HH`, and `HP` to `21` copies of the base package. -/
 theorem paper_conclusion_window6_groupoid_algebra_morita_collapse
     (D : Window6GroupoidAlgebraMoritaCollapseData) : D.moritaCollapse := by
-  refine ⟨by native_decide, ?_, ?_, ?_, ?_⟩
+  refine ⟨by decide, ?_, ?_, ?_, ?_⟩
   · unfold Window6GroupoidAlgebraMoritaCollapseData.k0Collapsed
     omega
   · unfold Window6GroupoidAlgebraMoritaCollapseData.k1Collapsed

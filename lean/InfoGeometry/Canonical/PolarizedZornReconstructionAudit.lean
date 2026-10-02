@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.PolarizedZornReconstruction
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Run this audit: its presence is not a certification. -/
 

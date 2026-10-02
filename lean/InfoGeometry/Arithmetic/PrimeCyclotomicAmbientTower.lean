@@ -53,12 +53,12 @@ def fieldStage (i : Fin 7) : IntermediateField ℚ KInf :=
 
 @[simp] theorem rootExponent_values :
     List.ofFn rootExponent = [30030, 15015, 5005, 1001, 143, 13, 1] := by
-  native_decide
+  decide
 
 /-- The root exponents are terminal conductor divided by stage conductor. -/
 theorem rootExponent_mul_conductor (i : Fin 7) :
     rootExponent i * conductor i = 30030 := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> decide
 
 /-- Each consecutive generator is a prime power root of the previous one. -/
 theorem stageRoot_step (i : Fin 6) :

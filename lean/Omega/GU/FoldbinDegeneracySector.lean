@@ -17,7 +17,7 @@ theorem paper_gut_foldbin_degeneracy_sector_lastbit_interval_seeds :
     (Nat.fib 4 = 3 ∧ Nat.fib 5 = 5) ∧
     (1 ≤ 2 ∧ 2 ≤ 3) ∧
     (Nat.fib 6 = 8 ∧ 16 / 8 = 2) := by
-  refine ⟨⟨by native_decide, by native_decide⟩, by norm_num,
+  refine ⟨⟨by decide, by decide⟩, by norm_num,
          ⟨by decide, by decide⟩, ⟨by omega, by omega⟩,
          ⟨by decide, by omega⟩⟩
 

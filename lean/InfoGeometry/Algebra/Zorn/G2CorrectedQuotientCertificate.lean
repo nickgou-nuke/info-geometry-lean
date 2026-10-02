@@ -241,18 +241,18 @@ theorem correctedQuotientCells_card (k : Fin 12) :
 set_option maxRecDepth 100000 in
 theorem correctedQuotientCells_total_card :
     (∑ k : Fin 12, (correctedQuotientCells k).card) = 189 := by
-  native_decide
+  decide
 
 set_option maxRecDepth 100000 in
 theorem correctedQuotientCells_partition :
     Finset.univ.biUnion correctedQuotientCells = Finset.univ := by
-  native_decide
+  decide
 
 set_option maxRecDepth 100000 in
 theorem correctedQuotientCells_pairwise_disjoint :
     ∀ ⦃k l : Fin 12⦄, k ≠ l →
       Disjoint (correctedQuotientCells k) (correctedQuotientCells l) := by
-  native_decide
+  decide
 
 /-! This is only injectivity of the exported finite word table, not of its
     noncomputable group evaluation. -/

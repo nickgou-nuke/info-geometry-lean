@@ -866,20 +866,30 @@ require Atlas from
 require LeanCopilot from git "https://github.com/lean-dojo/LeanCopilot.git"
   @ "c360b5df5d8a67ed8f1a8769aa157f6adca7dd53"
 
+@[default_target]
 lean_lib DAG where
   globs := #[.andSubmodules `DAG]
 
+@[default_target]
 lean_lib Agent where
   globs := #[.andSubmodules `Agent]
 
+@[default_target]
 lean_lib Docs where
   globs := #[.andSubmodules `Docs]
 
+@[default_target]
 lean_lib Socratic where
   globs := #[.andSubmodules `Socratic]
 
+@[default_target]
 lean_lib Omega where
   globs := #[.andSubmodules `Omega]
+
+@[default_target]
+lean_lib proofs where
+  srcDir := ".."
+  globs := #[.submodules `proofs]
 
 @[default_target]
 lean_lib InfoGeometry where
@@ -890,17 +900,63 @@ lean_lib InfoGeometry where
   -- them and wire them into the provided library surface.
   globs := #[.andSubmodules `InfoGeometry]
 
-@[test_driver]
+@[default_target, test_driver]
 lean_lib InfoGeometryTestSuite where
   srcDir := "../tests"
-  roots := #[
-    `InfoGeometryTests,
-    `ComplexAnalyticBridgeTests,
-    `PrimitiveExactnessTests,
-    `PrimitiveCuntzIsometryTests,
+  roots := #[]
+  globs := #[
     `BekensteinHawkingDyadicEntropyTests,
+    `ComplexAnalyticBridgeTests,
+    `DvorakSystemTest,
+    `InfoGeometryTests,
+    `OperatorZornTwinCyclotomicAxiomAudit,
     `PO55ConformalClosureTests,
-    `DvorakSystemTest
+    `PR78Audit,
+    `PrimitiveCuntzIsometryTests,
+    `PrimitiveExactnessTests,
+    `ProjectiveGraphZornBilayerAxiomAudit,
+    `QutritMobiusFiniteFlowTests,
+    `QutritProjectiveColorBridgeTests,
+    `QutritProjectiveGeometryOwnerBridgeTests,
+    `benchmarks.TrialityNonVacuity,
+    `lean.InfoGeometry.Lint.PauliTest,
+    `sandbox_hestenes
+  ]
+
+@[default_target]
+lean_lib VirasoroProject where
+  globs := #[.andSubmodules `VirasoroProject]
+
+@[default_target]
+lean_lib StandaloneMathematics where
+  roots := #[]
+  globs := #[
+    `B3PresentedGroup,
+    `CheckBasis,
+    `CheckTemp,
+    `GrandPartitionAll,
+    `GrandPartitionEuler,
+    `GrandPartitionOnline,
+    `GrandPartitionPolynomial,
+    `GrandPartitionProbability,
+    `GrandPartitionRational,
+    `GrandPartitionRobustPoisson,
+    `GrandPartitionTransform,
+    `lean.InfoGeometry.Spectral.Spectrum.Basic,
+    `NonIsoConf3OrlikSolomon,
+    `SplitOctonionBraidSU3,
+    `Test,
+    `TestFin,
+    `YangBaxterQSwap,
+    `YangBaxterZornBridge,
+    `ZornScalingFlow,
+    `ast_export_test,
+    `sandbox.GoldenMeanShift,
+    `temp_test,
+    `test_fixes2,
+    `test_reflection,
+    `test_rpow,
+    `test_selfconcordance
   ]
 
 /--
@@ -910,25 +966,30 @@ The source lives under `external/Erdos1196` at commit
 `02fba13be7487cc51315f68d8fa7ef277633d3c8`, with theorem
 `PrimitiveSetsAboveX.mainTheorem`.
 
-This library is intentionally not a default target: the external proof repo is
-pinned to Lean `v4.30.0-rc1`, while this repository is currently pinned to
-Lean `v4.28.1`. Build/import it explicitly after toolchain alignment.
+The compatibility root is tracked under `lean/` and delegates only to the
+repository-owned proof-pin metadata, so it uses the root toolchain.
 -/
+@[default_target]
 lean_lib PrimitiveSetsAboveX where
   globs := #[.andSubmodules `PrimitiveSetsAboveX]
 
+@[default_target]
 lean_lib InfoGeometryMeta where
   globs := #[.andSubmodules `InfoGeometry.Meta]
 
+@[default_target]
 lean_lib InfoGeometryCanonical where
   roots := #[`InfoGeometry.Canonical.All]
 
+@[default_target]
 lean_lib InfoGeometryLLM where
   globs := #[.andSubmodules `InfoGeometry.LLM]
 
+@[default_target]
 lean_lib SelfReference where
   globs := #[.andSubmodules `SelfReference]
 
+@[default_target]
 lean_lib scripts where
   globs := #[.submodules `scripts]
 
@@ -1040,11 +1101,8 @@ package_facet dagArtifactsManifest (pkg : Package) : FilePath := do
       } (quiet := true)
     return manifestPath
 
+@[default_target]
 lean_lib Experimental where
   globs := #[.andSubmodules `Experimental]
 
-lean_lib AuditNative where
-  globs := #[`AuditNative]
 
-lean_lib AuditStrict where
-  globs := #[`AuditStrict]

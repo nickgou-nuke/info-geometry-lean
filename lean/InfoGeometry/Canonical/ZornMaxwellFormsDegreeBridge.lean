@@ -1,6 +1,8 @@
 import InfoGeometry.Canonical.ZornMaxwellFormsBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge
+import InfoGeometry.Canonical.ExteriorGradedDerivationBridge
+import InfoGeometry.Canonical.EinsteinCartanBianchiBridge
 import Mathlib.Algebra.Algebra.Bilinear
 
 /-!
@@ -19,6 +21,7 @@ open ExteriorAlgebra
 open ZornDifferentialFormsLaplacianBridge
 open ZornMaxwellFormsBridge
 open ExteriorHomogeneousDegreeBridge
+open ExteriorGradedDerivationBridge
 
 variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
@@ -245,6 +248,55 @@ structure TypedMaxwellOperators
       D.differential (x * y) =
         D.differential x * y +
           ((-1 : R) ^ n) • (x * D.differential y)
+
+/-- The existing Maxwell differential and its typed graded-Leibniz API
+assemble the differential data consumed by the matrix Bianchi developments.
+No differential law is introduced here: square-zero comes from `D`, and the
+graded product rule comes from `O`. -/
+def typedMaxwellExteriorDifferentialData
+    (D : FormDifferentialLaplacianData (R := R) (V := V))
+    (O : TypedMaxwellOperators D) : ExteriorDifferentialData R V where
+  d := D.differential
+  gradedLeibniz := by
+    intro n x y hx
+    exact O.d_gradedLeibniz n x y hx
+  sq_zero := D.differential_sq
+
+/-- The Cartan first Bianchi identity for a degree-one connection follows
+from the already-packaged typed Maxwell differential and its graded rule. -/
+theorem typedMaxwell_first_bianchi_identity_torsion
+    (D : FormDifferentialLaplacianData (R := R) (V := V))
+    (O : TypedMaxwellOperators D)
+    (omega : InfoGeometry.Canonical.SpinConnectionMatrix d_dim R V)
+    (e : InfoGeometry.Canonical.TetradVector d_dim R V)
+    (hω : ∀ a b,
+      IsHomogeneousExteriorDegree 1 (omega a b)) :
+    (fun a => D.differential
+        (InfoGeometry.Canonical.torsionForm D.differential omega e a) +
+      InfoGeometry.Canonical.spinConnectionWedgeTetrad omega
+        (InfoGeometry.Canonical.torsionForm D.differential omega e) a) =
+    InfoGeometry.Canonical.spinConnectionWedgeTetrad
+      (InfoGeometry.Canonical.riemannCurvatureForm D.differential omega) e := by
+  exact InfoGeometry.Canonical.first_bianchi_identity_torsion_of_homogeneous_connection
+    (typedMaxwellExteriorDifferentialData D O) omega e hω
+
+/-- The curvature Bianchi identity for a degree-one connection follows from
+the same typed Maxwell differential package. -/
+theorem typedMaxwell_second_bianchi_identity_curvature
+    (D : FormDifferentialLaplacianData (R := R) (V := V))
+    (O : TypedMaxwellOperators D)
+    (omega : InfoGeometry.Canonical.SpinConnectionMatrix d_dim R V)
+    (hω : ∀ a b,
+      IsHomogeneousExteriorDegree 1 (omega a b)) :
+    (fun i j =>
+      InfoGeometry.Canonical.matrixExteriorDerivative D.differential
+          (InfoGeometry.Canonical.riemannCurvatureForm D.differential omega) i j +
+        (∑ k, omega i k *
+          InfoGeometry.Canonical.riemannCurvatureForm D.differential omega k j) -
+        (∑ k, InfoGeometry.Canonical.riemannCurvatureForm D.differential omega i k *
+          omega k j)) = 0 := by
+  exact InfoGeometry.Canonical.second_bianchi_identity_curvature_of_homogeneous_connection
+    (typedMaxwellExteriorDifferentialData D O) omega hω
 
 theorem typed_differential_closed
     (D : FormDifferentialLaplacianData (R := R) (V := V))

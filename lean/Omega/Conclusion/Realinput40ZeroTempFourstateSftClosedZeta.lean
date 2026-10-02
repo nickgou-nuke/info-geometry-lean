@@ -38,11 +38,11 @@ theorem paper_conclusion_realinput40_zero_temp_fourstate_sft_closed_zeta :
     conclusion_realinput40_zero_temp_fourstate_sft_closed_zeta_statement := by
   refine ⟨?_, ?_, ?_⟩
   · unfold conclusion_realinput40_zero_temp_fourstate_sft_closed_zeta_matrix_int
-    native_decide
+    decide
   · intro z
     rfl
   · unfold conclusion_realinput40_zero_temp_fourstate_sft_closed_zeta_primitiveWitness
     unfold conclusion_realinput40_zero_temp_fourstate_sft_closed_zeta_matrix_nat
-    native_decide
+    decide
 
 end Omega.Conclusion

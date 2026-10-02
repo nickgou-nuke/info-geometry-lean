@@ -52,7 +52,7 @@ theorem paper_xi_terminal_zm_leyang_ramification_sum_zero
     (D : xi_terminal_zm_leyang_ramification_sum_zero_Data) :
     D.finite_branch_sum_zero ∧ D.rational_split_certificate := by
   refine ⟨?_, ?_⟩
-  · exact ⟨by native_decide, paper_xi_terminal_zm_leyang_ramification_divisor_stokes.2.2⟩
+  · exact ⟨by decide, paper_xi_terminal_zm_leyang_ramification_divisor_stokes.2.2⟩
   · norm_num [rational_split_certificate, rational_split_pair_sum, rational_split_triple_sum]
 
 end Omega.Zeta

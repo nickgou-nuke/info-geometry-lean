@@ -31,6 +31,6 @@ theorem paper_derived_chain_arithmetic_median_unique_minimizer :
     (∀ E ∈ derivedChainArithmeticCarrier.image squarefreeEllipseOf,
       derivedChainEllipseObjective E = derivedChainEllipseObjective (squarefreeEllipseOf 30) →
         E = squarefreeEllipseOf 30) := by
-  native_decide
+  decide
 
 end Omega.CircleDimension

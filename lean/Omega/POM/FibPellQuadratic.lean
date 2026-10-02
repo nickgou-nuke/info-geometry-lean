@@ -61,7 +61,7 @@ theorem pom_fib_pell_quadratic_characterization_inverse
         nlinarith
     have hv_two : v = 2 := by omega
     subst v
-    exact ⟨2, by native_decide⟩
+    exact ⟨2, by decide⟩
   · have hu_two : 2 ≤ u := by omega
     let w : ℕ := v - u
     have hw_pos : 0 < w := Nat.sub_pos_of_lt huv
@@ -163,7 +163,7 @@ theorem paper_pom_fib_pell_quadratic :
     Nat.fib 2 ^ 2 + 1 = Nat.fib 1 * Nat.fib 2 + Nat.fib 1 ^ 2 ∧
     Nat.fib 3 ^ 2 = Nat.fib 2 * Nat.fib 3 + Nat.fib 2 ^ 2 + 1 ∧
     Nat.fib 4 ^ 2 + 1 = Nat.fib 3 * Nat.fib 4 + Nat.fib 3 ^ 2 := by
-  native_decide
+  decide
 
 /-- Paper-facing golden-ratio certificate: the Fibonacci convergents have exact error
 `(-1)^k * φ⁻ᵏ`, and the associated Pell norm is `(-1)^k`. -/

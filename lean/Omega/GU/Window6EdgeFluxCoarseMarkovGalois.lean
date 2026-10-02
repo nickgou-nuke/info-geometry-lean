@@ -24,7 +24,7 @@ def window6EdgeFluxCoarseMarkovDiscriminant : ℚ :=
 
 private theorem no_root_mod13 :
     ∀ x : ZMod 13, x ^ 3 + 9 * x ^ 2 + x + 10 ≠ 0 := by
-  native_decide
+  decide
 
 private lemma factor_window6EdgeFluxCoarseMarkovDiscriminant :
     window6EdgeFluxCoarseMarkovDiscriminant =

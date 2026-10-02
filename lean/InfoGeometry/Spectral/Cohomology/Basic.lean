@@ -1,5 +1,5 @@
 /- Cohomology of spectra and cohomology theories - Wave 5 of the Spectral port.
-Ported from cmu-phil/Spectral/cohomology/basic.hlean (Lean 2 HoTT) to Lean 4.28.0 / mathlib4. -/
+Ported from cmu-phil/Spectral/cohomology/basic.hlean (Lean 2 HoTT) to Lean 4.28.x / mathlib4. -/
 
 import InfoGeometry.Spectral.Spectrum.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra

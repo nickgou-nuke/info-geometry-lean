@@ -50,6 +50,6 @@ def casBracketExpansion (i j : Fin 14) : Matrix (Fin 8) (Fin 8) ℚ :=
 
 theorem casBracket_eq_structure_constants (i j : Fin 14) :
     casBracket i j = casBracketExpansion i j := by
-  fin_cases i <;> fin_cases j <;> native_decide
+  fin_cases i <;> fin_cases j <;> decide
 
 end InfoGeometry.Lie.CanonicalZornG2CASReplay

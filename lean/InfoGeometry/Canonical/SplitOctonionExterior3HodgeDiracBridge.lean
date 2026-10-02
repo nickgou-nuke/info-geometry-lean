@@ -72,7 +72,7 @@ def peirceSubset : Fin 8 → Finset (Fin 3) :=
   ![∅, {0}, {1}, {2}, {0, 1, 2}, {1, 2}, {0, 2}, {0, 1}]
 
 theorem peirceSubset_bijective : Function.Bijective peirceSubset := by
-  native_decide
+  decide
 
 noncomputable def peirceSubsetEquiv : Fin 8 ≃ Finset (Fin 3) :=
   Equiv.ofBijective peirceSubset peirceSubset_bijective
@@ -89,12 +89,12 @@ noncomputable def exterior3PeirceBasis : Module.Basis (Fin 8) ℝ Exterior3 :=
 
 @[simp] theorem peirceSubset_scalarMinus :
     peirceSubset 4 = (Finset.univ : Finset (Fin 3)) := by
-  native_decide
+  decide
 
 @[simp] theorem peirceSubset_rootMinus (i : Fin 3) :
     peirceSubset ⟨i.val + 5, by omega⟩ =
       (Finset.univ : Finset (Fin 3)).erase i := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> decide
 
 theorem exterior3_finrank : Module.finrank ℝ Exterior3 = 8 := by
   rw [Module.finrank_eq_card_basis exterior3PeirceBasis]

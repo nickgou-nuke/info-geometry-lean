@@ -112,7 +112,7 @@ private theorem hankel4_det_zero (h : GaugeAnomalyAutocovarianceData) :
       simpa using Matrix.det_updateCol_sum h.hankel4 3
         (![1 / 8, 1 / 4, -1 / 2, 0] : Fin 4 → ℚ)
     _ = (0 : ℚ) * h.hankel4.det := by
-      have hc : ((![1 / 8, 1 / 4, -1 / 2, 0] : Fin 4 → ℚ) 3) = 0 := by native_decide
+      have hc : ((![1 / 8, 1 / 4, -1 / 2, 0] : Fin 4 → ℚ) 3) = 0 := by decide
       rw [hc]
     _ = 0 := by ring
 

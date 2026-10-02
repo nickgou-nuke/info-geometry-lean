@@ -30,6 +30,6 @@ theorem paper_pom_collision_aq_fibonacci_bf_primitive_prime_divisor :
     collisionAQFreshAuditPrime 6 11 ∧
     collisionAQFreshAuditPrime 8 13 ∧
     ({2, 3, 7, 11, 13} : Finset ℕ).card = 5 := by
-  native_decide
+  decide
 
 end Omega.POM

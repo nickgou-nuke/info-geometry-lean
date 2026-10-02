@@ -39,11 +39,11 @@ def casPrime (i : Fin 6) : ℕ :=
 /-- Exact readback of the imported six-prime payload. -/
 theorem casPrime_values :
     List.ofFn casPrime = [2, 3, 5, 7, 11, 13] := by
-  native_decide
+  decide
 
 /-- Every imported CAS prime is re-certified by Lean. -/
 theorem casPrime_prime (i : Fin 6) : Nat.Prime (casPrime i) := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> decide
 
 /-- Cumulative conductors for adjoining the six prime orders successively. -/
 def conductor (i : Fin 7) : ℕ :=
@@ -52,16 +52,16 @@ def conductor (i : Fin 7) : ℕ :=
 /-- Exact readback of all seven conductor stages. -/
 theorem conductor_values :
     List.ofFn conductor = [1, 2, 6, 30, 210, 2310, 30030] := by
-  native_decide
+  decide
 
 /-- Every conductor in the finite tower is nonzero. -/
 theorem conductor_ne_zero (i : Fin 7) : conductor i ≠ 0 := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> decide
 
 /-- One directed step multiplies the conductor by the corresponding imported prime. -/
 theorem conductor_step (i : Fin 6) :
     conductor i.castSucc * casPrime i = conductor i.succ := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> decide
 
 /-- Consequently each conductor divides the next conductor. -/
 theorem conductor_step_dvd (i : Fin 6) :
@@ -103,15 +103,15 @@ theorem conductor_transport_comp {i j k : Fin 7}
 /-- The terminal conductor is the product of the imported six-prime payload. -/
 theorem terminal_conductor_product :
     conductor 6 = ∏ i : Fin 6, casPrime i := by
-  native_decide
+  decide
 
 /-- Numerical terminal readback. -/
 theorem terminal_conductor_eq : conductor 6 = 30030 := by
-  native_decide
+  decide
 
 /-- Every imported prime divides the terminal conductor. -/
 theorem casPrime_dvd_terminal (i : Fin 6) : casPrime i ∣ conductor 6 := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> decide
 
 /-- The cyclotomic field attached to a stage of the directed conductor spine. -/
 abbrev StageField (i : Fin 7) := CyclotomicField (conductor i) ℚ

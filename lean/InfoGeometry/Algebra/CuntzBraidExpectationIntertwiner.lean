@@ -187,7 +187,7 @@ def cuntzBraidGenerator (i : Fin 2) : CuntzAlg 3 ≃ₐ[ℂ] CuntzAlg 3 :=
 theorem braidPerm_artin :
     braidPerm 0 * braidPerm 1 * braidPerm 0 =
       braidPerm 1 * braidPerm 0 * braidPerm 1 := by
-  native_decide
+  decide
 
 theorem cuntzBraidGenerator_artin :
     (cuntzBraidGenerator 0).trans

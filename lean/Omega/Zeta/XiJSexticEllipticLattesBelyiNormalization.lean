@@ -131,7 +131,7 @@ theorem paper_xi_j_sextic_elliptic_lattes_belyi_normalization
   · unfold xi_j_sextic_elliptic_lattes_belyi_normalization_mobiusDenominator
       xi_j_sextic_elliptic_lattes_belyi_normalization_beta
     ring
-  · native_decide
+  · decide
 
 end
 

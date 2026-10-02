@@ -34,7 +34,7 @@ def cycleWeight : TracelessWeight →ₗ[ℝ] TracelessWeight where
 
 theorem zmod6_val_succ (j : ZMod 6) :
     (j + 1).val = if j.val = 5 then 0 else j.val + 1 := by
-  fin_cases j <;> native_decide
+  fin_cases j <;> decide
 
 theorem rootWeight_cycle_short_0 (k : TracelessWeight) :
     rootWeight 0 (cycleWeight k) = rootWeight 3 k := by

@@ -9,7 +9,7 @@ by `Fin 4 → Bool`. The even-cardinality subsets (0,2,4 elements)
 and odd-cardinality subsets (1,3 elements) both count to 8.
 Hence the finite Witten index Tr((-1)^F) = 8 - 8 = 0.
 
-All theorems are proved by `native_decide` on the finite type.
+All theorems are proved by `decide` on the finite type.
 This is the algebraic bridge from the four-mode CAR packet to the
 Witten-Möbius chiral parity cancellation layer.
 -/

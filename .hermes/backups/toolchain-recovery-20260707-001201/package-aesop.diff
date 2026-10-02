@@ -18,7 +18,7 @@ index c04efe5..0fb5eb6 100644
     "rev": "495c008c3e3f4fb4256ff5582ddb3abf3198026f",
     "name": "batteries",
     "manifestFile": "lake-manifest.json",
--   "inputRev": "v4.28.0",
+-   "inputRev": "v4.28.x",
 +   "inputRev": "495c008c3e3f4fb4256ff5582ddb3abf3198026f",
     "inherited": false,
 -   "configFile": "lakefile.toml"}],

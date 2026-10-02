@@ -70,7 +70,7 @@ theorem paper_conclusion_s4_invariant_hermitian_cone_product :
   refine ⟨?_, ?_, ?_⟩
   · exact ⟨fun _b _i _j => 0⟩
   · change conclusion_s4_invariant_hermitian_cone_product_total_real_dimension = 131
-    native_decide
+    decide
   · intro b
     cases b <;> norm_num [conclusion_s4_invariant_hermitian_cone_product_block_size]
 

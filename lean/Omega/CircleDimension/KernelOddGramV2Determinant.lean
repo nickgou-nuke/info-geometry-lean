@@ -38,6 +38,6 @@ theorem paper_cdim_kernel_odd_gram_v2_determinant :
   refine ⟨kernelOddPascal_det, by simp [kernelOddPascal_det], kernelOddGram_det,
     by simp [kernelOddGramDetNat, kernelOddGram_det], ?_⟩
   simpa [kernelOddGramV2, kernelOddGramDetNat, kernelOddGram_det] using
-    (show Nat.factorization 4 2 = 2 by native_decide)
+    (show Nat.factorization 4 2 = 2 by decide)
 
 end Omega.CircleDimension

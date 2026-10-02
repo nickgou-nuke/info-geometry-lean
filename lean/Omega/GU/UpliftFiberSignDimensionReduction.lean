@@ -73,7 +73,7 @@ noncomputable def upliftOrientationTorsorEquivSignFiber (d : ℕ) :
     rfl
 
 lemma perm_fin_two_commutative : ∀ σ τ : Equiv.Perm (Fin 2), σ * τ = τ * σ := by
-  native_decide
+  decide
 
 lemma perm_fin_three_center_trivial (z : Equiv.Perm (Fin 3))
     (hz : ∀ σ : Equiv.Perm (Fin 3), z * σ = σ * z) : z = 1 := by

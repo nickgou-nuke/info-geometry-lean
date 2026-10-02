@@ -38,6 +38,6 @@ theorem paper_killo_leyang_ramification_hard_separation :
   · refine ⟨-((2 : ℤ) ^ 6 * (3 : ℤ) ^ 9), ?_⟩
     rw [hdisc]
     ring
-  · native_decide
+  · decide
 
 end Omega.Folding

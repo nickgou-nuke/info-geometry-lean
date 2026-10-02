@@ -117,7 +117,7 @@ def localBettiRank : ℕ := verifiedBettiNumbers.sum
 
 /-- The recorded Betti signature has local rank `8`. -/
 theorem verifiedBettiNumbers_sum : verifiedBettiNumbers.sum = 8 := by
-  native_decide
+  decide
 
 /-- The spin tiling multiplicity turning the local Betti signature into rank `32`. -/
 def spinTilingMultiplicity : ℕ := 4
@@ -128,7 +128,7 @@ def spinTiledDeRhamRank : ℕ := spinTilingMultiplicity * localBettiRank
 /-- The rank-32 configuration follows from the Betti signature and spin tiling multiplicity. -/
 theorem spinTiledDeRhamRank_eq_assumedTotalDeRhamRank :
     spinTiledDeRhamRank = assumedTotalDeRhamRank := by
-  native_decide
+  decide
 
 /-- Explicit rank-configuration record used by downstream capstone modules. -/
 structure SpinTilingRankConfig where
@@ -150,10 +150,10 @@ def rank32Config : SpinTilingRankConfig where
 
 /-- The canonical configuration records total rank `32`. -/
 theorem rank32Config_totalRank : rank32Config.totalRank = 32 := by
-  native_decide
+  decide
 
 /-- The canonical configuration records local Betti rank `8`. -/
 theorem rank32Config_localRank : rank32Config.localRank = 8 := by
-  native_decide
+  decide
 
 end InfoGeometry.Projective.PenroseSpinTiling

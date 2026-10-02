@@ -38,7 +38,7 @@ theorem paper_xi_window6_tail_semigroup_frobenius_threshold :
             ((∃ a c : ℕ, n = 21 * a + 34 * c) ↔ 34 * ((13 * r.1) % 21) ≤ n) := by
         simpa using paper_xi_window6_tail_semigroup_apery_thresholds.1
       have hmain : (∃ a b : ℕ, 659 = 21 * a + 34 * b) ↔ 680 ≤ 659 := by
-        simpa using hresidue ⟨8, by decide⟩ 659 (by native_decide : 659 % 21 = 8)
+        simpa using hresidue ⟨8, by decide⟩ 659 (by decide : 659 % 21 = 8)
       have hfalse : ¬ 680 ≤ 659 := by decide
       exact fun hrep => hfalse (hmain.mp hrep)
     exact hno_two ((tail_three_generator_iff_two_generator 659).mp h)

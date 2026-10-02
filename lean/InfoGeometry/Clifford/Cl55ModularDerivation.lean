@@ -57,7 +57,7 @@ theorem cl55Commutator_eq_two_left_mul_of_anticommute
   calc
     K * x - x * K = K * x - (-(K * x)) := by rw [hk]
     _ = K * x + K * x := by rw [sub_neg_eq_add]
-    _ = (2 : Cl55) * K * x := by noncomm_ring
+    _ = (2 : Cl55) * K * x := by rw [← two_mul (K * x), mul_assoc]
 
 theorem cl55Commutator_eq_two_right_mul_of_anticommute
     (K x : Cl55) (h : K * x = -(x * K)) :
@@ -66,7 +66,7 @@ theorem cl55Commutator_eq_two_right_mul_of_anticommute
   calc
     K * x - x * K = -(x * K) - x * K := by rw [h]
     _ = -(x * K) + -(x * K) := by simp only [sub_eq_add_neg]
-    _ = -(2 : Cl55) * x * K := by noncomm_ring
+    _ = -(2 : Cl55) * x * K := by rw [← two_mul, ← mul_assoc, neg_mul_eq_neg_mul]
 
 @[simp] theorem cl55ModularDerivation_apply (K x : Cl55) :
     cl55ModularDerivation K x = K * x - x * K := by

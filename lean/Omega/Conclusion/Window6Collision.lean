@@ -101,7 +101,7 @@ theorem window6_collision_prob_reduced :
 
 /-- GCD reduction factor.
     thm:conclusion-window6-groupoid-collision-dimension-identity -/
-theorem window6_collision_gcd : Nat.gcd 212 4096 = 4 := by native_decide
+theorem window6_collision_gcd : Nat.gcd 212 4096 = 4 := by decide
 
 /-- Microstate count squared: 64² = 4096.
     thm:conclusion-window6-groupoid-collision-dimension-identity -/
@@ -140,13 +140,13 @@ def isNonzeroQR21 (a : Nat) : Bool :=
 /-- Number of nonzero quadratic residues in Z/21Z equals 7.
     prop:conclusion-window6-crt-euler-phi -/
 theorem quadratic_residues_mod21 :
-    ((Finset.range 21).filter (fun a => isNonzeroQR21 a)).card = 7 := by native_decide
+    ((Finset.range 21).filter (fun a => isNonzeroQR21 a)).card = 7 := by decide
 
 /-- The nonzero QRs mod 21 are {1, 4, 7, 9, 15, 16, 18}.
     prop:conclusion-window6-crt-euler-phi -/
 theorem quadratic_residues_mod21_explicit :
     (Finset.range 21).filter (fun a => isNonzeroQR21 a) = {1, 4, 7, 9, 15, 16, 18} := by
-  native_decide
+  decide
 
 /-- Paper: prop:conclusion-window6-crt-euler-phi -/
 theorem paper_quadratic_residues_mod21 :
@@ -186,12 +186,12 @@ def isIdempotent21 (a : Nat) : Bool := a * a % 21 == a
 /-- Number of idempotents in Z/21Z is exactly 4.
     prop:conclusion-window6-crt-euler-phi -/
 theorem idempotent_count_mod21 :
-    ((Finset.range 21).filter (fun a => isIdempotent21 a)).card = 4 := by native_decide
+    ((Finset.range 21).filter (fun a => isIdempotent21 a)).card = 4 := by decide
 
 /-- The idempotents in Z/21Z are {0, 1, 7, 15}.
     prop:conclusion-window6-crt-euler-phi -/
 theorem idempotent_set_mod21 :
-    (Finset.range 21).filter (fun a => isIdempotent21 a) = {0, 1, 7, 15} := by native_decide
+    (Finset.range 21).filter (fun a => isIdempotent21 a) = {0, 1, 7, 15} := by decide
 
 /-- Paper: prop:conclusion-window6-crt-euler-phi -/
 theorem paper_idempotent_count_mod21 :
@@ -210,9 +210,9 @@ theorem paper_fold_chi2_certificates :
     (Fintype.card (X 7) * momentSum 2 7 - 4 ^ 7 = 2112) ∧
     (Fintype.card (X 8) * momentSum 2 8 - 4 ^ 8 = 8824) := by
   refine ⟨?_, ?_, ?_⟩
-  · rw [X.card_eq_fib, momentSum_two_six]; native_decide
-  · rw [X.card_eq_fib, momentSum_two_seven]; native_decide
-  · rw [X.card_eq_fib, momentSum_two_eight_rec]; native_decide
+  · rw [X.card_eq_fib, momentSum_two_six]; decide
+  · rw [X.card_eq_fib, momentSum_two_seven]; decide
+  · rw [X.card_eq_fib, momentSum_two_eight_rec]; decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R166: Section ledger product formula
@@ -453,13 +453,13 @@ theorem window10_basic_consistency :
     (2 : ℕ) ^ 10 = 1024 ∧
     momentSum 1 10 = 1024 := by
   refine ⟨?_, by norm_num, ?_⟩
-  · rw [X.card_eq_fib]; native_decide
+  · rw [X.card_eq_fib]; decide
   · rw [momentSum_one]; norm_num
 
 /-- Window-10 S_2 value: S_2(10) = 8320.
     thm:conclusion-window10-groupoid-collision-dimension-identity -/
 theorem window10_S2 : momentSum 2 10 = 8320 := by
-  rw [← cMomentSum_eq]; native_decide
+  rw [← cMomentSum_eq]; decide
 
 /-- Window-6 visible CRT arithmetic phase space certificate.
     thm:conclusion-window6-visible-crt-arithmetic-phase-space -/
@@ -497,8 +497,8 @@ theorem paper_window6_collision_complementary :
     2 ^ 6 = 64 ∧
     220 > 3 * 64 ∧
     Nat.gcd 220 4096 = 4 := by
-  refine ⟨momentSum_two_six, by rw [X.card_eq_fib]; native_decide,
-    by omega, by omega, by native_decide⟩
+  refine ⟨momentSum_two_six, by rw [X.card_eq_fib]; decide,
+    by omega, by omega, by decide⟩
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R300: Window-6 gauge defect exact log gap
@@ -591,7 +591,7 @@ theorem window6_S4_from_histogram :
 theorem window6_histogram_cross_validation :
     cMomentSum 1 6 = 64 ∧ cMomentSum 2 6 = 220 ∧
     cMomentSum 3 6 = 820 ∧ cMomentSum 4 6 = 3244 := by
-  refine ⟨?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> decide
 
 /-- Paper package. prop:fold-groupoid-wedderburn -/
 theorem paper_window6_moment_hierarchy :
@@ -600,7 +600,7 @@ theorem paper_window6_moment_hierarchy :
     (2 * 1 + 4 * 8 + 8 * 27 + 5 * 64 + 2 * 125 = 820) ∧
     (2 * 1 + 4 * 16 + 8 * 81 + 5 * 256 + 2 * 625 = 3244) ∧
     cMomentSum 3 6 = 820 ∧ cMomentSum 4 6 = 3244 := by
-  refine ⟨by omega, by omega, by omega, by omega, ?_, ?_⟩ <;> native_decide
+  refine ⟨by omega, by omega, by omega, by omega, ?_, ?_⟩ <;> decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R310: S_2 coprimality certificates
@@ -609,28 +609,28 @@ theorem paper_window6_moment_hierarchy :
 /-- prop:fold-groupoid-wedderburn -/
 theorem momentSum_two_six_coprime_card :
     Nat.Coprime (momentSum 2 6) (Nat.fib 8) := by
-  rw [momentSum_two_six]; native_decide
+  rw [momentSum_two_six]; decide
 
 /-- prop:fold-groupoid-wedderburn -/
 theorem momentSum_two_eight_coprime_card :
     Nat.Coprime (momentSum 2 8) (Nat.fib 10) := by
-  rw [momentSum_two_eight_rec]; native_decide
+  rw [momentSum_two_eight_rec]; decide
 
 /-- prop:fold-groupoid-wedderburn -/
 theorem momentSum_two_nine_coprime_card :
     Nat.Coprime (momentSum 2 9) (Nat.fib 11) := by
-  rw [momentSum_two_nine_rec]; native_decide
+  rw [momentSum_two_nine_rec]; decide
 
 /-- prop:fold-groupoid-wedderburn -/
 theorem momentSum_two_seven_gcd_card :
     Nat.gcd (momentSum 2 7) (Nat.fib 9) = 34 := by
-  rw [momentSum_two_seven]; native_decide
+  rw [momentSum_two_seven]; decide
 
 /-- Paper package. prop:fold-groupoid-wedderburn -/
 theorem paper_momentSum_coprimality_pattern :
     Nat.Coprime 220 21 ∧ Nat.gcd 544 34 = 34 ∧
     Nat.Coprime 1352 55 ∧ Nat.Coprime 3352 89 := by
-  refine ⟨?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R313: collision excess values

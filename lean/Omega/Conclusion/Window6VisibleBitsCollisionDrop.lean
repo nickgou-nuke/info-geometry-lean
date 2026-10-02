@@ -74,8 +74,8 @@ the visible-bit count by the explicit logarithmic amount and lowers the normaliz
 fingerprint from `1155/1024` to `1113/1024`. -/
 theorem paper_conclusion_window6_visible_bits_collision_drop :
     conclusion_window6_visible_bits_collision_drop_statement := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide, rfl, rfl, ?_,
-    by native_decide, ?_, ?_, ?_⟩
+  refine ⟨by decide, by decide, by decide, by decide, rfl, rfl, ?_,
+    by decide, ?_, ?_, ?_⟩
   · unfold conclusion_window6_visible_bits_collision_drop_binary_visible_bits
       conclusion_window6_visible_bits_collision_drop_ordinary_visible_bits
       conclusion_window6_visible_bits_collision_drop_binary_hidden_bits

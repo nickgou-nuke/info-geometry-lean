@@ -75,7 +75,7 @@ where the two boundaries differ. -/
 theorem boundary_hamming_seed :
     Finset.card (Finset.filter (fun i : Fin 3 => (![1, 0, 1] : Fin 3 → ZMod 2) i ≠
       (![1, 1, 0] : Fin 3 → ZMod 2) i) Finset.univ) = 2 := by
-  native_decide
+  decide
 
 /-! ## The isometry chain: G_{n-1} ∘ ∂_n preserves distance
 
@@ -121,7 +121,7 @@ theorem hamming_triangle_seed :
       (![0, 1, 0] : Fin 3 → ZMod 2) i) Finset.univ) +
     Finset.card (Finset.filter (fun i : Fin 3 => (![0, 1, 0] : Fin 3 → ZMod 2) i ≠
       (![0, 0, 1] : Fin 3 → ZMod 2) i) Finset.univ) := by
-  native_decide
+  decide
 
 /-! ## Paper interface -/
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Executable v4.28.0 Lean/Lake manifest freeze guard.
+"""Executable v4.28.x Lean/Lake manifest freeze guard.
 
 Default mode audits the active root build graph only: root Lean/Lake files plus
 package roots named by the root manifest. It intentionally does not recursively
@@ -16,8 +16,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
-EXPECTED_TOOLCHAIN = "leanprover/lean4:v4.28.0"
-EXPECTED_VERSION_TAG = "v4.28.0"
+EXPECTED_TOOLCHAIN = "leanprover/lean4:v4.28.x"
+EXPECTED_VERSION_TAG = "v4.28.x"
 EXPECTED_MATHLIB_REV = "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
 FORBIDDEN_ROOT_PACKAGES: set[str] = set()
 ROOT_FILES = {"lean-toolchain", "lakefile.lean", "lakefile.toml", "lake-manifest.json"}
@@ -191,7 +191,7 @@ def check_manifest(root: Path, path: Path) -> list[str]:
                 problems.append(f"{rel(root, path)}: mathlib must be repo-local path .lake/packages/mathlib")
             head = git_head(root / ".lake" / "packages" / "mathlib")
             if head != EXPECTED_MATHLIB_REV:
-                problems.append(f".lake/packages/mathlib: HEAD is '{head}', expected v4.28.0 mathlib '{EXPECTED_MATHLIB_REV}'")
+                problems.append(f".lake/packages/mathlib: HEAD is '{head}', expected v4.28.x mathlib '{EXPECTED_MATHLIB_REV}'")
         for field in ("inputRev", "rev"):
             value = pkg.get(field)
             if isinstance(value, str):
@@ -221,10 +221,10 @@ def main() -> int:
     if problems:
         for problem in problems:
             print(f"error: {problem}", file=sys.stderr)
-        print("error: v4.28.0 manifest freeze violated; refusing bootstrap/update/build until every active surface is immutably pinned.", file=sys.stderr)
+        print("error: v4.28.x manifest freeze violated; refusing bootstrap/update/build until every active surface is immutably pinned.", file=sys.stderr)
         return 1
     scope = "root+external" if args.include_external else "root"
-    print(f"v4.28.0 manifest freeze ({scope}): OK")
+    print(f"v4.28.x manifest freeze ({scope}): OK")
     return 0
 
 

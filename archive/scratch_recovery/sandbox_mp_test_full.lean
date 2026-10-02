@@ -18,7 +18,7 @@ def IsMoorePenroseInverse (A B : Type*) [Ring A] [StarRing A] : Prop :=
   (A * B)† = A * B ∧
   (B * A)† = B * A
 
-/-- The analytic closed-range Moore-Penrose existence and projector identities (see Mathlib v4.28.0 continuous-linear map API).
+/-- The analytic closed-range Moore-Penrose existence and projector identities (see Mathlib v4.28.x continuous-linear map API).
 
 This package supersedes the old hand-constructed version and matches modern Mathlib conventions. See `MoorePenroseClosedRange` for details.
 -*/

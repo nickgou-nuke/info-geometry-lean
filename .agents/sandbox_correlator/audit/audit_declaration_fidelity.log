@@ -1,0 +1,31 @@
+Declaration Fidelity Audit Report
+Live file: lean/InfoGeometry/Detector/FieldCorrelatorProjection.lean (total 21)
+Sandbox file: .agents/sandbox_correlator/lean/InfoGeometry/Detector/FieldCorrelatorProjection.lean (total 22)
+Missing live declarations count: 0
+Fidelity rate: 100.0%
+
+Live Declarations Status:
+  [OK] structure FieldCorrelator
+  [OK] structure DetectorProjector
+  [OK] def projectSingle
+  [OK] def projectPair
+  [OK] theorem projector_single_linear
+  [OK] theorem projector_pair_bilinear_scale
+  [OK] def modeTrace
+  [OK] theorem oscillatory_modes_annihilated
+  [OK] theorem modeTrace_linear
+  [OK] def singlesCount
+  [OK] def coincidenceCount
+  [OK] theorem coincidence_is_rank_two
+  [OK] theorem square_root_coordinate_is_linear
+  [OK] theorem detector_projection_parabola
+  [OK] inductive Archetype
+  [OK] def rank
+  [OK] def causallyPrecedes
+  [OK] theorem causal_refl
+  [OK] theorem causal_trans
+  [OK] theorem causal_antisymm
+  [OK] theorem canonical_chain
+
+New Declarations Added:
+  [ADDED] rank_inj

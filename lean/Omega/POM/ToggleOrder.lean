@@ -32,8 +32,8 @@ theorem timeReversal_sign_positive :
     timeReversalSignExp 9 % 2 = 0 ∧ timeReversalSignExp 10 % 2 = 0 ∧
     timeReversalSignExp 11 % 2 = 0 ∧ timeReversalSignExp 12 % 2 = 0 := by
   simp only [timeReversalSignExp, timeReversalFix]
-  refine ⟨by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+          by decide, by decide, by decide⟩
 
 /-- Negative sign positions: sgn(ι_ℓ) = -1 for ℓ ≡ 2,3,4,6,7,8 (mod 12).
     Verified for one complete period ℓ = 2..8.
@@ -43,8 +43,8 @@ theorem timeReversal_sign_negative :
     timeReversalSignExp 4 % 2 = 1 ∧ timeReversalSignExp 6 % 2 = 1 ∧
     timeReversalSignExp 7 % 2 = 1 ∧ timeReversalSignExp 8 % 2 = 1 := by
   simp only [timeReversalSignExp, timeReversalFix]
-  refine ⟨by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+          by decide, by decide, by decide⟩
 
 /-- Paper package: time-reversal sign mod 12 periodicity.
     thm:pom-toggle-time-reversal-sign-mod12 -/
@@ -54,7 +54,7 @@ theorem paper_pom_toggle_time_reversal_sign_mod12 :
     (∀ ℓ ∈ ({2, 3, 4, 6, 7, 8} : Finset Nat),
       timeReversalSignExp ℓ % 2 = 1) := by
   constructor <;> intro ℓ hℓ <;> fin_cases hℓ <;>
-    simp only [timeReversalSignExp, timeReversalFix] <;> native_decide
+    simp only [timeReversalSignExp, timeReversalFix] <;> decide
 
 /-- Scan-order intrinsic period lcm closed-form seeds.
     thm:pom-toggle-scan-order-closed-form -/
@@ -109,26 +109,26 @@ def toggleCycleCount (horizon toggle scan : Nat) : Nat :=
   horizon / toggleScanPeriod toggle scan
 
 @[simp] theorem toggleScanPeriod_2_3 : toggleScanPeriod 2 3 = 6 := by
-  native_decide
+  decide
 
 @[simp] theorem toggleScanPeriod_3_4 : toggleScanPeriod 3 4 = 12 := by
-  native_decide
+  decide
 
 @[simp] theorem toggleScanPeriod_2_5 : toggleScanPeriod 2 5 = 10 := by
-  native_decide
+  decide
 
 @[simp] theorem toggleCycleCount_24_2_3 : toggleCycleCount 24 2 3 = 4 := by
-  native_decide
+  decide
 
 @[simp] theorem toggleCycleCount_24_3_4 : toggleCycleCount 24 3 4 = 2 := by
-  native_decide
+  decide
 
 @[simp] theorem toggleCycleCount_60_2_5 : toggleCycleCount 60 2 5 = 6 := by
-  native_decide
+  decide
 
 @[simp] theorem gcd_toggleScanPeriod_23_34 :
     Nat.gcd (toggleScanPeriod 2 3) (toggleScanPeriod 3 4) = 6 := by
-  native_decide
+  decide
 
 /-- Concrete toggle/scan cycle-type seeds recorded as period and orbit-count instances.
     thm:pom-toggle-scan-cycle-type -/
@@ -172,12 +172,12 @@ theorem primitiveBinaryNecklaceCount_toggleEll :
 theorem toggleCycleCount_closed_form_seed :
     toggleCycleCount toggleN1 toggleG toggleL =
       primitiveBinaryNecklaceCount toggleEll + toggleEll + Nat.gcd toggleG toggleL := by
-  native_decide
+  decide
 
 /-- Base-value cycle count for the toggle scan seed. -/
 theorem toggleCycleCount_toggleSeeds :
     toggleCycleCount toggleN1 toggleG toggleL = 4 := by
-  native_decide
+  decide
 
 /-- Paper package: toggle scan cycle type closed-form seed.
     thm:pom-toggle-scan-cycle-type-closed -/
@@ -200,8 +200,8 @@ theorem timeReversal_sign_positive_period2 :
     timeReversalSignExp 21 % 2 = 0 ∧ timeReversalSignExp 22 % 2 = 0 ∧
     timeReversalSignExp 23 % 2 = 0 ∧ timeReversalSignExp 24 % 2 = 0 := by
   simp only [timeReversalSignExp, timeReversalFix]
-  refine ⟨by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+          by decide, by decide, by decide⟩
 
 /-- Negative sign positions in second period (ℓ = 14..20).
     thm:pom-toggle-time-reversal-sign-mod12 -/
@@ -210,8 +210,8 @@ theorem timeReversal_sign_negative_period2 :
     timeReversalSignExp 16 % 2 = 1 ∧ timeReversalSignExp 18 % 2 = 1 ∧
     timeReversalSignExp 19 % 2 = 1 ∧ timeReversalSignExp 20 % 2 = 1 := by
   simp only [timeReversalSignExp, timeReversalFix]
-  refine ⟨by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+          by decide, by decide, by decide⟩
 
 /-- Fix(ι_ℓ) ≤ F(ℓ+2) for all ℓ ≥ 1.
     thm:pom-toggle-time-reversal-sign-mod12 -/
@@ -232,7 +232,7 @@ theorem paper_pom_toggle_time_reversal_two_periods :
     (∀ ℓ ∈ ({2,3,4,6,7,8,14,15,16,18,19,20} : Finset Nat),
       timeReversalSignExp ℓ % 2 = 1) := by
   constructor <;> intro ℓ hℓ <;> fin_cases hℓ <;>
-    simp only [timeReversalSignExp, timeReversalFix] <;> native_decide
+    simp only [timeReversalSignExp, timeReversalFix] <;> decide
 
 /-- Fixed-point count of a fiberwise time-reversal involution over a list of path components. -/
 def fiberTimeReversalFixCount : List Nat → Nat

@@ -95,6 +95,6 @@ def alignedCASBasisMatrix (i : Fin 14) : Matrix (Fin 8) (Fin 8) ℚ :=
 theorem casBasisMatrix_eq_aligned (i : Fin 14) :
     InfoGeometry.Lie.CanonicalZornG2CASData.casBasisMatrix i =
       alignedCASBasisMatrix i := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> decide
 
 end InfoGeometry.Lie.CanonicalZornG2BasisAlignment

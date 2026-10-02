@@ -26,7 +26,7 @@ namespace Omega.Folding.GaugeAnomalyTrigonalGenus
 
 /-- The S₃ Galois closure has degree 6 = |S₃|.
     cor:fold-gauge-anomaly-second-trigonal-monodromy-genus -/
-theorem s3_order_eq : Nat.factorial 3 = 6 := by native_decide
+theorem s3_order_eq : Nat.factorial 3 = 6 := by decide
 
 /-- Number of simple branch points: 1 (from t=1) + 9 (from P₉) = 10.
     cor:fold-gauge-anomaly-second-trigonal-monodromy-genus -/

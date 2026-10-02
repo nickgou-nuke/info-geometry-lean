@@ -38,7 +38,7 @@ private lemma iteratedEPlusOneMod2_pow_two :
       rw [hleft, hright]
       rw [show m + (2 ^ t + 2 ^ t) = m + 2 ^ t + 2 ^ t by omega]
       ring_nf
-      have htwo : (2 : ZMod 2) = 0 := by native_decide
+      have htwo : (2 : ZMod 2) = 0 := by decide
       rw [htwo]
       simp
 
@@ -69,7 +69,7 @@ theorem paper_conclusion_mod2_eplus1_power_period (a : Nat -> ZMod 2) (e t : Nat
   have hsum : a (m + 2 ^ t) + a m = 0 := by
     simpa [iteratedEPlusOneMod2_pow_two] using congrFun hpowzero m
   have hself : a m + a m = 0 := by
-    have htwo : (2 : ZMod 2) = 0 := by native_decide
+    have htwo : (2 : ZMod 2) = 0 := by decide
     calc
       a m + a m = (2 : ZMod 2) * a m := by rw [two_mul]
       _ = 0 * a m := by rw [htwo]

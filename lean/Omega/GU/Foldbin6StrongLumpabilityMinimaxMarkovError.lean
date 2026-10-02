@@ -25,7 +25,7 @@ def foldbin6WitnessMinimaxError : ℚ :=
 
 private lemma foldbin6_support_overlap :
     foldbin6WitnessSupportOverlap.card = 2 := by
-  native_decide
+  decide
 
 /-- Paper label: `thm:foldbin6-strong-lumpability-minimax-markov-error`. The same-fiber witnesses
 `0` and `21` have one-step folded supports with audited overlap `2`, so the corresponding uniform

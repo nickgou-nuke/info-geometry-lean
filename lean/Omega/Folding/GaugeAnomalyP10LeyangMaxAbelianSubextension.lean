@@ -12,6 +12,6 @@ theorem paper_fold_gauge_anomaly_p10_leyang_max_abelian_subextension :
     let KLY : ℤ := killoLeyangCubicQuadraticSubfieldDiscriminant
     ({0, K10, KLY, K10 * KLY} : Finset ℤ).card = 4 := by
   dsimp [foldGaugeAnomalyP10QuadraticSubfield, killoLeyangCubicQuadraticSubfieldDiscriminant]
-  native_decide
+  decide
 
 end Omega.Folding

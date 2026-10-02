@@ -1,5 +1,4 @@
 import Mathlib
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Exact first-collision path integration

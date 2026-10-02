@@ -61,6 +61,6 @@ theorem paper_xi_terminal_zm_elliptic_weight_tripling_ramification_count
   unfold torsionContribution finiteBranchContribution totalRamificationDegree hurwitzSide
   unfold torsionPreimageCount finiteBranchPacketCount torsionContributionPerPoint
   unfold finiteContributionPerPoint tripledWeightDegree
-  native_decide
+  decide
 
 end Omega.Zeta

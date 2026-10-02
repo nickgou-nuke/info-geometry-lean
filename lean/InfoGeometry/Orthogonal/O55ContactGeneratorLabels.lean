@@ -129,7 +129,7 @@ abbrev ContactLaneLabel (k : ℤ) :=
 /-- Total coordinate-generator count. -/
 theorem contact_generator_label_count :
     Fintype.card ContactGeneratorLabel = 45 := by
-  native_decide
+  decide
 
 /-- Exact contact-lane count pattern. -/
 theorem contact_lane_label_counts :
@@ -138,7 +138,7 @@ theorem contact_lane_label_counts :
       Fintype.card (ContactLaneLabel 0) = 19 ∧
       Fintype.card (ContactLaneLabel 1) = 12 ∧
       Fintype.card (ContactLaneLabel 2) = 1 := by
-  native_decide
+  decide
 
 /-- The lane counts sum to the orthogonal-generator count. -/
 theorem contact_lane_counts_sum :

@@ -55,7 +55,7 @@ theorem monster_conjugacy_class_count :
 theorem monster_order_factorization :
   monsterOrder =
     2^46 * 3^20 * 5^9 * 7^6 * 11^2 * 13^3 * 17 * 19 * 23 * 29 * 31 * 41 * 47 * 59 * 71 := by
-  native_decide
+  decide
 
 /-- Sample Mersenne-prime values that divide the stored order constant. -/
 def mersenne_in_monster : List ℕ :=
@@ -65,9 +65,9 @@ theorem mersenne_divides_monster (M_p : ℕ) (h : M_p ∈ mersenne_in_monster) :
   M_p ∣ monsterOrder := by
   simp [mersenne_in_monster] at h
   rcases h with rfl | rfl | rfl
-  · native_decide
-  · native_decide
-  · native_decide
+  · decide
+  · decide
+  · decide
 
 /-- 
 A data packet for a graded-dimension sequence and coefficient sequence.
@@ -176,7 +176,7 @@ theorem sample_mersenne_values_divide_monster_order_constant :
   M3 ∣ monsterOrder ∧
   M5 ∣ monsterOrder := by
   simp [mersenne_prime]
-  native_decide
+  decide
 
 /-- 
 A pure numerical implication involving the displayed Leech-lattice constants;

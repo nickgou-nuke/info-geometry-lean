@@ -1,24 +1,7 @@
-/-
-Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
-Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
-Bulgarian Academy of Sciences.
-
-Authors: Nikolay Goutev, Dimitar Tonev
--/
-
 import Mathlib.Analysis.Calculus.Deriv.Add
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Data.Matrix.Basic
-
-/-!
-# TCS parameter sensitivity and Fisher information
-
-The TCS raw-count mean is `T * (C * X - K * X^2)`. This module records its
-exact coordinate sensitivities and the corresponding finite weighted Fisher
-matrix. It does not identify the inverse Fisher matrix with an uncertainty
-estimate without an additional statistical regularity contract.
--/
 
 open scoped BigOperators
 
@@ -40,18 +23,16 @@ theorem hasDerivAt_tcsMeanAt_C
     HasDerivAt (fun c => tcsMeanAt liveTime x c K)
       (tcsSensitivity liveTime x 0) C := by
   unfold tcsMeanAt tcsSensitivity
-  convert
-    (((hasDerivAt_id' C).mul_const x).sub_const (K * x ^ 2)).const_mul liveTime
-    using 1 <;> ring
+  convert (((hasDerivAt_id' C).mul_const x).sub_const (K * x ^ 2)).const_mul liveTime using 1
+  simp only [one_mul]
 
 theorem hasDerivAt_tcsMeanAt_K
     (liveTime x C K : ℝ) :
     HasDerivAt (fun k => tcsMeanAt liveTime x C k)
       (tcsSensitivity liveTime x 1) K := by
   unfold tcsMeanAt tcsSensitivity
-  convert
-    ((hasDerivAt_const K (C * x)).sub ((hasDerivAt_id' K).mul_const (x ^ 2))).const_mul liveTime
-    using 1 <;> ring
+  convert ((hasDerivAt_const K (C * x)).sub ((hasDerivAt_id' K).mul_const (x ^ 2))).const_mul liveTime using 1
+  simp only [zero_sub, one_mul, mul_neg]
 
 /-- Finite weighted Fisher-information matrix from sensitivity vectors. -/
 noncomputable def fisherInformation
@@ -69,11 +50,8 @@ theorem fisherInformation_symmetric
     (w : Data → ℝ) (sensitivity : Data → Fin 2 → ℝ) :
     Matrix.transpose (fisherInformation w sensitivity) =
       fisherInformation w sensitivity := by
-  funext a b
-  simp only [Matrix.transpose_apply, fisherInformation]
-  congr 1
-  funext i
-  ring
+  ext a b
+  exact Fintype.sum_congr _ _ (fun i => (mul_right_comm (w i) (sensitivity i a) (sensitivity i b)).symm)
 
 /-- TCS Fisher information using the physical sensitivity vector. -/
 noncomputable def tcsFisherInformation

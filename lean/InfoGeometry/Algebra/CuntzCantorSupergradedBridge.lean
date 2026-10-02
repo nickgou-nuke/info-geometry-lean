@@ -62,7 +62,7 @@ theorem oddStep_parity (b : Bool) :
 theorem evenTwoStep_parity (a b : Bool) :
     wordParityZ2 (evenTwoStep a b) = 0 := by
   change (2 : ZMod 2) = 0
-  native_decide
+  decide
 
 /-- Word parity is additive under concatenation. -/
 theorem wordParityZ2_append (u v : BinaryWord) :
@@ -73,7 +73,7 @@ theorem wordParityZ2_append (u v : BinaryWord) :
 theorem odd_odd_concat_even (a b : Bool) :
     wordParityZ2 (oddStep a ++ oddStep b) = 0 := by
   change (2 : ZMod 2) = 0
-  native_decide
+  decide
 
 end InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 

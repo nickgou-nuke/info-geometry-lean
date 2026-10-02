@@ -116,8 +116,8 @@ theorem goldenMean_trace_values :
     (Graph.goldenMeanAdjacency ^ 6).trace = 18 ∧
     (Graph.goldenMeanAdjacency ^ 7).trace = 29 ∧
     (Graph.goldenMeanAdjacency ^ 8).trace = 47 := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide,
+    by decide, by decide, by decide, by decide, by decide⟩
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R136: Extended trace values L(9)..L(12)
@@ -130,7 +130,7 @@ theorem goldenMean_trace_values_extended :
     (Graph.goldenMeanAdjacency ^ 10).trace = 123 ∧
     (Graph.goldenMeanAdjacency ^ 11).trace = 199 ∧
     (Graph.goldenMeanAdjacency ^ 12).trace = 322 := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide⟩
 
 /-- Paper: thm:zeta-syntax-trace-linear-recurrence (extended) -/
 theorem paper_goldenMean_trace_values_extended :
@@ -148,7 +148,7 @@ theorem goldenMean_trace_recurrence :
       (Graph.goldenMeanAdjacency ^ (n + 2)).trace =
         (Graph.goldenMeanAdjacency ^ (n + 1)).trace +
         (Graph.goldenMeanAdjacency ^ n).trace := by
-  intro n hn; interval_cases n <;> native_decide
+  intro n hn; interval_cases n <;> decide
 
 /-! ## Primitive orbit counts via Möbius inversion
 
@@ -294,7 +294,7 @@ This is the key input for the trace recurrence (Cayley-Hamilton).
     thm:zeta-syntax-trace-linear-recurrence -/
 theorem goldenMean_cayleyHamilton :
     Graph.goldenMeanAdjacency ^ 2 - Graph.goldenMeanAdjacency - 1 = 0 := by
-  native_decide
+  decide
 
 /-- The trace recurrence Tr(A^{n+2}) = Tr(A^{n+1}) + Tr(A^n) holds for ALL n,
     not just n ≤ 6. Proved algebraically via the Cayley-Hamilton theorem
@@ -306,7 +306,7 @@ theorem goldenMean_trace_recurrence_unbounded (n : ℕ) :
       (Graph.goldenMeanAdjacency ^ n).trace := by
   -- Cayley-Hamilton gives A² = A + 1
   have hCH : Graph.goldenMeanAdjacency ^ 2 = Graph.goldenMeanAdjacency + 1 := by
-    native_decide
+    decide
   -- A^(n+2) = A^n * A² = A^n * (A + 1) = A^(n+1) + A^n
   have hpow : Graph.goldenMeanAdjacency ^ (n + 2) =
       Graph.goldenMeanAdjacency ^ (n + 1) + Graph.goldenMeanAdjacency ^ n := by
@@ -332,8 +332,8 @@ theorem trace_eq_lucasNum (n : ℕ) :
   induction n using Nat.strongRecOn with
   | _ n ih =>
     match n with
-    | 0 => native_decide
-    | 1 => native_decide
+    | 0 => decide
+    | 1 => decide
     | n + 2 =>
       rw [goldenMean_trace_recurrence_unbounded n, ih (n + 1) (by omega),
         ih n (by omega), lucasNum_succ_succ]
@@ -341,7 +341,7 @@ theorem trace_eq_lucasNum (n : ℕ) :
 /-- Cayley-Hamilton for golden-mean adjacency: A^2 = A + 1.
     thm:zeta-syntax-trace-linear-recurrence -/
 theorem goldenMeanAdjacency_sq :
-    Graph.goldenMeanAdjacency ^ 2 = Graph.goldenMeanAdjacency + 1 := by native_decide
+    Graph.goldenMeanAdjacency ^ 2 = Graph.goldenMeanAdjacency + 1 := by decide
 
 /-- General trace recurrence: Tr(A^{n+2}) = Tr(A^{n+1}) + Tr(A^n) for all n.
     thm:zeta-syntax-trace-linear-recurrence -/
@@ -806,17 +806,17 @@ theorem goldenMean_zeta_roots_exist : (5 : ℤ) > 0 := by omega
 /-- A² = A + I (Cayley-Hamilton direct form).
     subsec:operator-zeta-interface -/
 theorem goldenMean_sq :
-    Graph.goldenMeanAdjacency ^ 2 = Graph.goldenMeanAdjacency + 1 := by native_decide
+    Graph.goldenMeanAdjacency ^ 2 = Graph.goldenMeanAdjacency + 1 := by decide
 
 /-- A³ = 2A + I.
     subsec:operator-zeta-interface -/
 theorem goldenMean_cube :
-    Graph.goldenMeanAdjacency ^ 3 = 2 * Graph.goldenMeanAdjacency + 1 := by native_decide
+    Graph.goldenMeanAdjacency ^ 3 = 2 * Graph.goldenMeanAdjacency + 1 := by decide
 
 /-- A⁴ = 3A + 2I.
     subsec:operator-zeta-interface -/
 theorem goldenMean_fourth :
-    Graph.goldenMeanAdjacency ^ 4 = 3 * Graph.goldenMeanAdjacency + 2 := by native_decide
+    Graph.goldenMeanAdjacency ^ 4 = 3 * Graph.goldenMeanAdjacency + 2 := by decide
 
 /-- Paper: subsec:operator-zeta-interface (Fibonacci powers) -/
 theorem paper_goldenMean_fibonacci_powers :
@@ -969,12 +969,12 @@ end
 /-- Golden-mean adjacency trace: Tr(A) = 1.
     prop:finite-part-residue-reduced-determinant -/
 theorem goldenMean_trace_eq_one :
-    Graph.goldenMeanAdjacency.trace = 1 := by native_decide
+    Graph.goldenMeanAdjacency.trace = 1 := by decide
 
 /-- Golden-mean adjacency determinant: det(A) = -1.
     prop:finite-part-residue-reduced-determinant -/
 theorem goldenMean_det_eq_neg_one :
-    Graph.goldenMeanAdjacency.det = -1 := by native_decide
+    Graph.goldenMeanAdjacency.det = -1 := by decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R131: 2^n > L(n), Lucas monotonicity, Lucas-Cassini
@@ -1163,8 +1163,8 @@ theorem primitiveOrbitNumerator_two_primes_small :
     primitiveOrbitNumerator (3 * 5) = lucasNum (3 * 5) - lucasNum 3 - lucasNum 5 + 1 ∧
     primitiveOrbitNumerator (2 * 7) = lucasNum (2 * 7) - lucasNum 2 - lucasNum 7 + 1 ∧
     primitiveOrbitNumerator (3 * 7) = lucasNum (3 * 7) - lucasNum 3 - lucasNum 7 + 1 := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+          by decide, by decide⟩
 
 /-- Primitive orbit numerator at prime square: P(p²) = L(p²) - L(p).
     prop:zetaK-mobius-primitive -/
@@ -1282,7 +1282,7 @@ theorem primitiveOrbitNumerator_pos (n : Nat) (hn : 1 ≤ n) :
   induction n using Nat.strongRecOn with
   | _ n ih =>
     match n, hn with
-    | 1, _ => native_decide
+    | 1, _ => decide
     | n + 2, _ =>
       -- From definition: prOrbNum(n) = L(n) + ∑_{d|n,d<n} μ(n/d)*L(d)
       -- Since |μ| ≤ 1: prOrbNum(n) ≥ L(n) - ∑_{d|n,d<n} L(d) > 0
@@ -1327,7 +1327,7 @@ theorem paper_euler_product_natural_boundary_witness :
     (∀ z : ℤ, (fredholmGoldenMean z).det = 1 - z - z ^ 2) ∧
     (∀ N : ℕ, ∃ p : ℕ, Nat.Prime p ∧ p > N) :=
   ⟨fun _ hp _ => hp.two_le,
-   ⟨by native_decide, by native_decide, by native_decide, by native_decide, by native_decide⟩,
+   ⟨by decide, by decide, by decide, by decide, by decide⟩,
    fredholmGoldenMean_det,
    fun N => by
      obtain ⟨p, hle, hp⟩ := Nat.exists_infinite_primes (N + 1)
@@ -1382,7 +1382,7 @@ theorem paper_lucas_five_fib_and_cassini :
     (∀ n : Nat, 1 ≤ n →
       lucasNum (n + 1) * lucasNum (n - 1) - lucasNum n ^ 2 = -5 * (-1) ^ n) ∧
     lucasNum 6 = 18 ∧ Nat.fib 6 = 8 ∧ 18 ^ 2 - 5 * 8 ^ 2 = 4 :=
-  ⟨lucasNum_cassini, by native_decide, by native_decide, by omega⟩
+  ⟨lucasNum_cassini, by decide, by decide, by omega⟩
 
 /-- Lucas double formula and concrete values.
     thm:zeta-syntax-trace-linear-recurrence -/
@@ -1392,7 +1392,7 @@ theorem paper_lucas_double_and_add :
     lucasNum 8 = lucasNum 4 ^ 2 - 2 ∧
     lucasNum 2 = 3 ∧ lucasNum 3 = 4 ∧ lucasNum 4 = 7 ∧
     lucasNum 5 = 11 ∧ lucasNum 6 = 18 ∧ lucasNum 8 = 47 := by
-  native_decide
+  decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R279: Fibonacci quadratic form and spectrum sign law
@@ -1406,8 +1406,8 @@ def onesVec : Fin 2 → ℤ := ![1, 1]
 theorem goldenMean_ones_quadratic_form :
     ∀ b : ℕ, onesVec ⬝ᵥ (Graph.goldenMeanAdjacency ^ b).mulVec onesVec =
       ↑(Nat.fib (b + 3))
-  | 0 => by native_decide
-  | 1 => by native_decide
+  | 0 => by decide
+  | 1 => by decide
   | b + 2 => by
     have hRec := Graph.goldenMeanAdjacency_pow_add_two b
     -- K^(b+2) = K^(b+1) + K^b, so mulVec distributes
@@ -1457,7 +1457,7 @@ theorem allOnes_mul_goldenMean_pow_mul_allOnes (b : ℕ) :
 
 /-- J^2 = 2·J. prop:conclusion-softcore-wordtrace-fibonacci-factorization -/
 theorem allOnesMatrix_sq :
-    allOnesMatrix ^ 2 = (2 : ℤ) • allOnesMatrix := by native_decide
+    allOnesMatrix ^ 2 = (2 : ℤ) • allOnesMatrix := by decide
 
 /-- J * J = 2 • J (multiplicative form). -/
 private theorem allOnesMatrix_mul_self :
@@ -1539,7 +1539,7 @@ theorem paper_word_trace_m2_traces :
 -- ══════════════════════════════════════════════════════════════
 
 /-- det(J) = 0. prop:conclusion-softcore-wordtrace-fibonacci-factorization -/
-theorem allOnesMatrix_det : allOnesMatrix.det = 0 := by native_decide
+theorem allOnesMatrix_det : allOnesMatrix.det = 0 := by decide
 
 /-- J² - 2J = 0 (minimal polynomial relation).
     prop:conclusion-softcore-wordtrace-fibonacci-factorization -/
@@ -1550,7 +1550,7 @@ theorem allOnesMatrix_minimal_poly :
 /-- J + K = [[2,2],[2,1]].
     prop:conclusion-softcore-wordtrace-fibonacci-factorization -/
 theorem softcore_T1_eq_half_sum :
-    (allOnesMatrix + Graph.goldenMeanAdjacency) = !![2, 2; 2, 1] := by native_decide
+    (allOnesMatrix + Graph.goldenMeanAdjacency) = !![2, 2; 2, 1] := by decide
 
 /-- Characteristic polynomial of J is X² - 2X.
     prop:conclusion-softcore-wordtrace-fibonacci-factorization -/
@@ -1591,7 +1591,7 @@ theorem goldenMean_primitive_orbit_27_30 :
     (710647 + (-1) * 843 + (-1) * 7 + 1 * 3 : ℤ) = 28 * 25350 ∧
     (1149851 - 1 : ℤ) = 29 * 39650 ∧
     (1860498 + (-1) * 1364 + (-1) * 123 + (-1) * 18 + 1 * 11 + 1 * 4 + 1 * 3 + (-1) * 1 : ℤ) =
-      30 * 61967 := by native_decide
+      30 * 61967 := by decide
 
 /-- Paper: primitive orbit Möbius sums for n=23..26.
     prop:zetaK-mobius-primitive -/
@@ -1623,9 +1623,9 @@ theorem paper_word_trace_m3_selected :
   · -- Tr(K³) = L(3) = 4
     rw [trace_eq_lucasNum]; simp [lucasNum]
   · -- J * K² = J * (K + I) = JK + J
-    native_decide
+    decide
   · -- J² * K = 2J * K
-    native_decide
+    decide
   · -- J³ = 4J, Tr(4J) = 8
     rw [show (3 : ℕ) = 2 + 1 from rfl, allOnesMatrix_pow_succ, Matrix.trace_smul,
       allOnesMatrix_trace]; norm_num
@@ -1639,21 +1639,21 @@ theorem fib_divisibility_instances :
     Nat.fib 5 ∣ Nat.fib 10 ∧ Nat.fib 5 ∣ Nat.fib 15 ∧ Nat.fib 5 ∣ Nat.fib 20 ∧
     Nat.fib 6 ∣ Nat.fib 12 ∧ Nat.fib 6 ∣ Nat.fib 18 ∧
     Nat.fib 7 ∣ Nat.fib 14 ∧ Nat.fib 7 ∣ Nat.fib 21 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
 
 /-- thm:zeta-syntax-trace-linear-recurrence -/
 theorem fib_divisibility_quotients :
     Nat.fib 10 / Nat.fib 5 = 11 ∧
     Nat.fib 12 / Nat.fib 6 = 18 ∧
     Nat.fib 14 / Nat.fib 7 = 29 := by
-  refine ⟨?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_⟩ <;> decide
 
 /-- Paper package. thm:zeta-syntax-trace-linear-recurrence -/
 theorem paper_fib_divisibility_lucas_quotient :
     Nat.fib 10 / Nat.fib 5 = 11 ∧ (11 : ℤ) = lucasNum 5 ∧
     Nat.fib 12 / Nat.fib 6 = 18 ∧ (18 : ℤ) = lucasNum 6 ∧
     Nat.fib 14 / Nat.fib 7 = 29 ∧ (29 : ℤ) = lucasNum 7 := by
-  refine ⟨by native_decide, ?_, by native_decide, ?_, by native_decide, ?_⟩
+  refine ⟨by decide, ?_, by decide, ?_, by decide, ?_⟩
   all_goals simp [lucasNum]
 
 -- ══════════════════════════════════════════════════════════════
@@ -2012,7 +2012,7 @@ theorem paper_zeta_syntax_mealy_regular_impossible :
     2 * 3 = 6 ∧ 4 * 5 = 20 ∧
     Nat.fib 4 = 3 ∧ Nat.fib 8 = 21 := by
   refine ⟨fun a b ha hb => Nat.mul_pos ha hb,
-          by omega, by omega, by native_decide, by native_decide⟩
+          by omega, by omega, by decide, by decide⟩
 
 /-! ### Omega-regular impossibility for HALT_U -/
 
@@ -2035,7 +2035,7 @@ theorem paper_zeta_syntax_constant_memory_exponential_forgetting :
     Nat.log 2 2 = 1 ∧ Nat.log 2 8 = 3 ∧ Nat.log 2 16 = 4 ∧
     (∀ K m : Nat, K < m → 0 < m → K / m = 0) ∧
     2 ^ 10 = 1024 := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
+  refine ⟨by decide, by decide, by decide,
           fun K m hKm _hm => Nat.div_eq_zero_iff.mpr (Or.inr hKm),
           by norm_num⟩
 
@@ -2048,7 +2048,7 @@ theorem fredholmGoldenMean_sq_det (z : ℤ) :
     (1 - z • (Graph.goldenMeanAdjacency * Graph.goldenMeanAdjacency :
       Matrix (Fin 2) (Fin 2) ℤ)).det = 1 - 3 * z + z ^ 2 := by
   have hA2 : Graph.goldenMeanAdjacency * Graph.goldenMeanAdjacency =
-      !![2, 1; 1, 1] := by native_decide
+      !![2, 1; 1, 1] := by decide
   rw [hA2]; simp [det_fin_two]; ring
 
 /-- Trace of A^n equals Lucas number F_{n+1} + F_{n-1} for n ≥ 1.
@@ -2089,7 +2089,7 @@ theorem goldenMean_trace_seeds :
     (Graph.goldenMeanAdjacency ^ 6).trace = (18 : ℤ) := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
   · exact_mod_cast Graph.goldenMeanAdjacency_trace
-  all_goals (rw [trace_eq_lucasNum]; native_decide)
+  all_goals (rw [trace_eq_lucasNum]; decide)
 
 /-- Paper package: trace-Lucas identity seeds.
     prop:zetaK-mobius-primitive -/
@@ -2098,8 +2098,8 @@ theorem paper_goldenMean_trace_lucas_seeds :
     (Graph.goldenMeanAdjacency ^ 2).trace = (3 : ℤ) ∧
     (Nat.fib 4 + Nat.fib 2 = 4) ∧
     (Nat.fib 5 + Nat.fib 3 = 7) := by
-  refine ⟨?_, ?_, by native_decide, by native_decide⟩
+  refine ⟨?_, ?_, by decide, by decide⟩
   · exact_mod_cast Graph.goldenMeanAdjacency_trace
-  · rw [trace_eq_lucasNum]; native_decide
+  · rw [trace_eq_lucasNum]; decide
 
 end Omega.Zeta

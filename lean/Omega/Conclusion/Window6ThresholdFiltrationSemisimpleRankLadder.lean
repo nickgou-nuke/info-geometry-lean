@@ -73,11 +73,11 @@ def conclusion_window6_threshold_filtration_semisimple_rank_ladder_statement : P
 theorem paper_conclusion_window6_threshold_filtration_semisimple_rank_ladder :
     conclusion_window6_threshold_filtration_semisimple_rank_ladder_statement := by
   unfold conclusion_window6_threshold_filtration_semisimple_rank_ladder_statement
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, ?_⟩
+  refine ⟨by decide, by decide, by decide, by decide,
+    by decide, by decide, ?_⟩
   intro r hr
   have hr_cases : r = 2 ∨ r = 3 ∨ r = 4 := by
     simpa using hr
-  rcases hr_cases with rfl | rfl | rfl <;> native_decide
+  rcases hr_cases with rfl | rfl | rfl <;> decide
 
 end Omega.Conclusion

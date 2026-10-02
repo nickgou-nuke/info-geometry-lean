@@ -73,6 +73,25 @@ def exchangeMulEquiv : OperatorZornMatrix A ≃* OperatorZornMatrix A where
   right_inv := exchange_involutive
   map_mul' := exchange_mul
 
+/-- The unsigned sheet flip is not generally multiplicative: this identity
+records its exact cross-product defect in the two vector coordinates. -/
+theorem unsigned_flip_product_defect (X Y : OperatorZornMatrix A) :
+    zornFlipOperator (X * Y) - zornFlipOperator X * zornFlipOperator Y =
+      operatorZornCoordinates 0 0
+        (operatorCross X.sigma_plus Y.sigma_plus + operatorCross X.sigma_plus Y.sigma_plus)
+        (-(operatorCross X.sigma_minus Y.sigma_minus + operatorCross X.sigma_minus Y.sigma_minus)) := by
+  apply operatorZornMatrix_ext
+  · simp [zornFlipOperator, NCZornElement.mul, NCZornElement.zornDot]
+  · simp [zornFlipOperator, NCZornElement.mul, NCZornElement.zornDot]
+  · funext i
+    fin_cases i <;>
+      simp [zornFlipOperator, operatorCross, NCZornElement.mul,
+        NCZornElement.zornCross, sub_eq_add_neg] <;> abel
+  · funext i
+    fin_cases i <;>
+      simp [zornFlipOperator, operatorCross, NCZornElement.mul,
+        NCZornElement.zornCross, sub_eq_add_neg] <;> abel
+
 @[simp] theorem exchange_nPlus (a : A) : exchange (nPlus a) = nMinus a := by
   apply operatorZornMatrix_ext
   all_goals first | rfl | (funext i; simp [exchange, nPlus, nMinus, operatorZornCoordinates])

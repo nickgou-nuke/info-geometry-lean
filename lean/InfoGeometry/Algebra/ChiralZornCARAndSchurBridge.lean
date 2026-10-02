@@ -13,11 +13,11 @@ namespace GogberashviliNilpotentCARBridge
 
 variable {K A : Type*} [Field K] [Ring A] [Algebra K A]
 
-/-- Positive primitive idempotent associated with an involution `J`. -/
+/-- Positive chiral projector associated with an involution `J`. Primitivity is not asserted for a general algebra `A`. -/
 def DPlus (J : A) : A :=
   (2 : K)⁻¹ • (1 + J)
 
-/-- Negative primitive idempotent associated with an involution `J`. -/
+/-- Negative chiral projector associated with an involution `J`. Primitivity is not asserted for a general algebra `A`. -/
 def DMinus (J : A) : A :=
   (2 : K)⁻¹ • (1 - J)
 
@@ -71,7 +71,7 @@ theorem J_square_one
       rw [hI, hj]
       simp
 
-/-- The two primitive idempotents resolve the unit. -/
+/-- The two complementary idempotents resolve the unit. -/
 @[simp]
 theorem DPlus_add_DMinus
     (h2 : (2 : K) ≠ 0)
@@ -336,7 +336,7 @@ theorem G_minus_mul_G_plus
       D_plus (K := K) J :=
   GMinus_mul_GPlus h2 I j J hI hj hcross hJ
 
-/-- The nilpotent modes satisfy the full CAR anticommutation relation. -/
+/-- Under the displayed split-triad hypotheses, the nilpotent modes satisfy the positive CAR anticommutator. -/
 theorem GPlus_GMinus_CAR
     (h2 : (2 : K) ≠ 0)
     (I j J : A)

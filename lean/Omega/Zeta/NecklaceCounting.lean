@@ -23,6 +23,6 @@ theorem paper_zeta_necklace_counting_seeds :
     (4 * 6 = 16 + 4 + 4) ∧
     (5 * 8 = 32 + 8) ∧
     (6 * 14 = 64 + 8 + 8 + 4) := by
-  native_decide
+  decide
 
 end Omega.Zeta.NecklaceCounting

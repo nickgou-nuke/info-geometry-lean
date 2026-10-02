@@ -242,11 +242,11 @@ def chiralBasisChangeMatrixInv : Matrix (Fin 8) (Fin 8) ℚ := fun r =>
 
 theorem chiralBasisChangeMatrixInv_mul :
     chiralBasisChangeMatrixInv * chiralBasisChangeMatrix = 1 := by
-  native_decide
+  decide
 
 theorem chiralBasisChangeMatrix_mul_Inv :
     chiralBasisChangeMatrix * chiralBasisChangeMatrixInv = 1 := by
-  native_decide
+  decide
 
 @[simp] theorem toNative_eq_chiralSolderingMatrix_mul_coordinates
     (X : PolarizedZorn) (b : IntegralSplitBasis) :
@@ -307,11 +307,11 @@ noncomputable def toNativeEquiv :
 
 @[simp] theorem toNative_polarizedNPlus :
     toNative polarizedNPlus = modularNPlus := by
-  native_decide
+  decide
 
 @[simp] theorem toNative_polarizedNMinus :
     toNative polarizedNMinus = modularNMinus := by
-  native_decide
+  decide
 
 @[simp] theorem toNative_polarizedZornNPlus :
     toNative polarizedZornNPlus = modularNPlus :=
@@ -323,27 +323,27 @@ noncomputable def toNativeEquiv :
 
 @[simp] theorem toNative_polarizedSigmaRedPlus :
     toNative polarizedSigmaRedPlus = modularSigmaPlus .red := by
-  native_decide
+  decide
 
 @[simp] theorem toNative_polarizedSigmaGreenPlus :
     toNative polarizedSigmaGreenPlus = modularSigmaPlus .green := by
-  native_decide
+  decide
 
 @[simp] theorem toNative_polarizedSigmaBluePlus :
     toNative polarizedSigmaBluePlus = modularSigmaPlus .blue := by
-  native_decide
+  decide
 
 @[simp] theorem toNative_polarizedSigmaRedMinus :
     toNative polarizedSigmaRedMinus = modularSigmaMinus .red := by
-  native_decide
+  decide
 
 @[simp] theorem toNative_polarizedSigmaGreenMinus :
     toNative polarizedSigmaGreenMinus = modularSigmaMinus .green := by
-  native_decide
+  decide
 
 @[simp] theorem toNative_polarizedSigmaBlueMinus :
     toNative polarizedSigmaBlueMinus = modularSigmaMinus .blue := by
-  native_decide
+  decide
 
 @[simp] theorem toNative_polarizedZornSigmaPlus
     (c : SplitOctonionColour) :

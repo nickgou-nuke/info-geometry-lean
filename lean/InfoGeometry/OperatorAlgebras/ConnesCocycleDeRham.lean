@@ -1,0 +1,151 @@
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.Data.Real.Basic
+import Mathlib.Tactic
+
+namespace InfoGeometry.OperatorAlgebras.ConnesCocycleDeRham
+
+open Real
+
+/-!
+# Archetype 6401 & 6402: The Connes Radon-Nikodym Cocycle
+In von Neumann algebras, the Connes Radon-Nikodym cocycle u(t) = [Dψ : Dφ]_t
+satisfies the 1-parameter cocycle equation:
+    u(s + t) = u(s) * σ_s^φ(u(t)).
+When restricted to central/fixed-point elements, it reduces to a standard 1-parameter group.
+-/
+
+section ConnesCocycle
+
+/-- An abstract algebraic representation of the Connes Radon-Nikodym Cocycle.
+    G is the additive parameter group (ℝ, +), A is the unitary algebra. -/
+structure ConnesCocycle (G A : Type*) [AddGroup G] [Monoid A] where
+  u : G → A
+  σ : G → A → A
+  h_cocycle : ∀ s t, u (s + t) = u s * σ s (u t)
+
+/-- Master Theorem 1: Cocycle Reduction on the Modular Fixed-Point Algebra.
+    If the cocycle commutes with the modular flow σ (e.g., in the center or for commuting states),
+    the Connes cocycle reduces to a standard 1-parameter group homomorphism:
+    u(s + t) = u(s) * u(t). -/
+theorem cocycle_fixed_point_is_homomorphism
+    {G A : Type*} [AddGroup G] [Monoid A] (c : ConnesCocycle G A)
+    (h_fixed : ∀ s t, c.σ s (c.u t) = c.u t) (s t : G) :
+    c.u (s + t) = c.u s * c.u t := by
+  rw [c.h_cocycle, h_fixed]
+
+end ConnesCocycle
+
+/-!
+# Archetype 6403: The Maurer-Cartan Logarithmic 1-Form
+The differential of the 1-parameter unitary flow u(t) = exp(c * t)
+generates the left-invariant logarithmic Maurer-Cartan 1-form:
+    ω_log = u⁻¹ * (du/dt) = c (identically constant).
+-/
+
+section MaurerCartanForm
+
+/-- Master Theorem 2: Constancy of the Logarithmic Maurer-Cartan Form.
+    Evaluating u(t)⁻¹ * (du/dt) for the exponential flow exp(c * t)
+    strictly evaluates to the constant generator c across all time. -/
+theorem maurer_cartan_one_parameter_group (c t : ℝ) :
+    let u := Real.exp (c * t)
+    let du_dt := c * Real.exp (c * t)
+    (1 / u) * du_dt = c := by
+  intro u du_dt
+  dsimp [u, du_dt]
+  have h_exp_pos : 0 < Real.exp (c * t) := Real.exp_pos (c * t)
+  have h_exp_ne : Real.exp (c * t) ≠ 0 := ne_of_gt h_exp_pos
+  calc
+    (1 / Real.exp (c * t)) * (c * Real.exp (c * t))
+      = c * ((1 / Real.exp (c * t)) * Real.exp (c * t)) := by ring
+    _ = c * 1 := by rw [one_div_mul_cancel h_exp_ne]
+    _ = c := by ring
+
+end MaurerCartanForm
+
+/-!
+# Archetype 6404: Araki Relative Entropy and Negentropy
+For a 2-level quantum state ρ = diag(p, 1-p) compared against the tracial state
+ρ₀ = diag(1/2, 1/2), the Araki relative entropy is:
+    S(ρ || ρ₀) = p * ln(2p) + (1-p) * ln(2(1-p)).
+We prove that this decomposes into ln(2) + Negentropy.
+-/
+
+section ArakiRelativeEntropy
+
+/-- The Araki-Umegaki Relative Entropy for a 2-channel state p compared to the tracial state 1/2:
+    `S(p || 1/2) = p * ln(2p) + (1-p) * ln(2(1-p))`. -/
+noncomputable def araki_relative_entropy (p : ℝ) : ℝ :=
+  p * Real.log (2 * p) + (1 - p) * Real.log (2 * (1 - p))
+
+/-- The Negentropy (negative Shannon entropy): `p * ln(p) + (1-p) * ln(1-p)`. -/
+noncomputable def negentropy (p : ℝ) : ℝ :=
+  p * Real.log p + (1 - p) * Real.log (1 - p)
+
+/-- Master Theorem 3: Araki Relative Entropy Decomposes into ln(2) + Negentropy.
+    S(p || 1/2) = ln(2) - S_Shannon(p). -/
+theorem araki_relative_entropy_decomposition (p : ℝ) (hp0 : 0 < p) (hp1 : p < 1) :
+    araki_relative_entropy p = Real.log 2 + negentropy p := by
+  dsimp [araki_relative_entropy, negentropy]
+  have h2_ne : (2 : ℝ) ≠ 0 := by norm_num
+  have hp_ne : p ≠ 0 := ne_of_gt hp0
+  have h1p_pos : 0 < 1 - p := sub_pos.mpr hp1
+  have h1p_ne : 1 - p ≠ 0 := ne_of_gt h1p_pos
+  -- Expand log(2 * p) = log 2 + log p
+  have h_log_2p : Real.log (2 * p) = Real.log 2 + Real.log p :=
+    Real.log_mul h2_ne hp_ne
+  -- Expand log(2 * (1 - p)) = log 2 + log (1 - p)
+  have h_log_2_1p : Real.log (2 * (1 - p)) = Real.log 2 + Real.log (1 - p) :=
+    Real.log_mul h2_ne h1p_ne
+  rw [h_log_2p, h_log_2_1p]
+  ring
+
+/-- Master Theorem 4: Vanishing of Relative Entropy at the Curzon-Ahlborn Balance Point.
+    At p = 1/2, the state matches the tracial reference state, and relative entropy
+    strictly vanishes: S(1/2 || 1/2) = 0. -/
+theorem araki_relative_entropy_at_half :
+    araki_relative_entropy (1 / 2) = 0 := by
+  dsimp [araki_relative_entropy]
+  have h_eval : 2 * (1 / 2 : ℝ) = 1 := by norm_num
+  have h_sub : 1 - (1 / 2 : ℝ) = 1 / 2 := by norm_num
+  rw [h_sub, h_eval]
+  rw [Real.log_one]
+  ring
+
+end ArakiRelativeEntropy
+
+/-!
+# Archetype 6405: Curvature of Relative Entropy and the Master Parabola
+The Hessian curvature of the relative entropy generates the Fisher information metric:
+    g(p) = p * (1 - p).
+It is bounded globally by 1/4, attaining 1/4 at the Curzon-Ahlborn peak.
+-/
+
+section RelativeEntropyCurvature
+
+/-- The Fisher information metric generated by the curvature of relative entropy:
+    `g(p) = p * (1 - p)`. -/
+def relative_entropy_fisher_metric (p : ℝ) : ℝ :=
+  p * (1 - p)
+
+/-- Master Theorem 5: The Fisher Metric Ceiling.
+    For all p ∈ ℝ, the Fisher information curvature generated by relative entropy
+    satisfies the universal bound: g(p) ≤ 1/4. -/
+theorem relative_entropy_curvature_bound (p : ℝ) :
+    relative_entropy_fisher_metric p ≤ 1 / 4 := by
+  dsimp [relative_entropy_fisher_metric]
+  have h : p * (1 - p) = 1 / 4 - (p - 1 / 2) ^ 2 := by ring
+  rw [h]
+  have h_sq : 0 ≤ (p - 1 / 2) ^ 2 := sq_nonneg (p - 1 / 2)
+  linarith
+
+/-- Master Theorem 6: Maximum Fisher Curvature at the Equipartition Balance Point. -/
+theorem relative_entropy_curvature_max :
+    relative_entropy_fisher_metric (1 / 2) = 1 / 4 := by
+  dsimp [relative_entropy_fisher_metric]
+  ring
+
+end RelativeEntropyCurvature
+
+end InfoGeometry.OperatorAlgebras.ConnesCocycleDeRham

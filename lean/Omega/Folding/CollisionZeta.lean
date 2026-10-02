@@ -10,31 +10,31 @@ namespace Omega
 
 /-- S_2 collision kernel trace powers: tr(A_2^n) for n = 1..6.
     def:pom-collision-zeta-a2-pow1 -/
-theorem collisionKernel2_trace_pow_1 : (collisionKernel2 ^ 1).trace = 2 := by native_decide
+theorem collisionKernel2_trace_pow_1 : (collisionKernel2 ^ 1).trace = 2 := by decide
 /-- def:pom-collision-zeta-a2-pow2 -/
-theorem collisionKernel2_trace_pow_2 : (collisionKernel2 ^ 2).trace = 8 := by native_decide
+theorem collisionKernel2_trace_pow_2 : (collisionKernel2 ^ 2).trace = 8 := by decide
 /-- def:pom-collision-zeta-a2-pow3 -/
-theorem collisionKernel2_trace_pow_3 : (collisionKernel2 ^ 3).trace = 14 := by native_decide
+theorem collisionKernel2_trace_pow_3 : (collisionKernel2 ^ 3).trace = 14 := by decide
 /-- def:pom-collision-zeta-a2-pow4 -/
-theorem collisionKernel2_trace_pow_4 : (collisionKernel2 ^ 4).trace = 40 := by native_decide
+theorem collisionKernel2_trace_pow_4 : (collisionKernel2 ^ 4).trace = 40 := by decide
 /-- def:pom-collision-zeta-a2-pow5 -/
-theorem collisionKernel2_trace_pow_5 : (collisionKernel2 ^ 5).trace = 92 := by native_decide
+theorem collisionKernel2_trace_pow_5 : (collisionKernel2 ^ 5).trace = 92 := by decide
 /-- def:pom-collision-zeta-a2-pow6 -/
-theorem collisionKernel2_trace_pow_6 : (collisionKernel2 ^ 6).trace = 236 := by native_decide
+theorem collisionKernel2_trace_pow_6 : (collisionKernel2 ^ 6).trace = 236 := by decide
 
 /-- S_3 collision kernel trace powers: tr(A_3^n) for n = 1..6.
     def:pom-collision-zeta-a3-pow1 -/
-theorem collisionKernel3_trace_pow_1 : (collisionKernel3 ^ 1).trace = 2 := by native_decide
+theorem collisionKernel3_trace_pow_1 : (collisionKernel3 ^ 1).trace = 2 := by decide
 /-- def:pom-collision-zeta-a3-pow2 -/
-theorem collisionKernel3_trace_pow_2 : (collisionKernel3 ^ 2).trace = 12 := by native_decide
+theorem collisionKernel3_trace_pow_2 : (collisionKernel3 ^ 2).trace = 12 := by decide
 /-- def:pom-collision-zeta-a3-pow3 -/
-theorem collisionKernel3_trace_pow_3 : (collisionKernel3 ^ 3).trace = 26 := by native_decide
+theorem collisionKernel3_trace_pow_3 : (collisionKernel3 ^ 3).trace = 26 := by decide
 /-- def:pom-collision-zeta-a3-pow4 -/
-theorem collisionKernel3_trace_pow_4 : (collisionKernel3 ^ 4).trace = 96 := by native_decide
+theorem collisionKernel3_trace_pow_4 : (collisionKernel3 ^ 4).trace = 96 := by decide
 /-- def:pom-collision-zeta-a3-pow5 -/
-theorem collisionKernel3_trace_pow_5 : (collisionKernel3 ^ 5).trace = 272 := by native_decide
+theorem collisionKernel3_trace_pow_5 : (collisionKernel3 ^ 5).trace = 272 := by decide
 /-- def:pom-collision-zeta-a3-pow6 -/
-theorem collisionKernel3_trace_pow_6 : (collisionKernel3 ^ 6).trace = 876 := by native_decide
+theorem collisionKernel3_trace_pow_6 : (collisionKernel3 ^ 6).trace = 876 := by decide
 
 /-- Both kernels have the same trace at n = 1: tr(A_2) = tr(A_3) = 2.
     def:pom-collision-zeta-a2-trace-eq -/
@@ -52,7 +52,7 @@ theorem collisionKernel2_trace_recurrence :
       2 * (collisionKernel2 ^ 1).trace = (collisionKernel2 ^ 4).trace) ∧
     (2 * (collisionKernel2 ^ 4).trace + 2 * (collisionKernel2 ^ 3).trace -
       2 * (collisionKernel2 ^ 2).trace = (collisionKernel2 ^ 5).trace) := by
-  native_decide
+  decide
 
 /-- The trace power sequence for A_3 satisfies the recurrence
     tr(A^{n+3}) = 2·tr(A^{n+2}) + 4·tr(A^{n+1}) - 2·tr(A^n) for n = 0..2.
@@ -64,7 +64,7 @@ theorem collisionKernel3_trace_recurrence :
       2 * (collisionKernel3 ^ 1).trace = (collisionKernel3 ^ 4).trace) ∧
     (2 * (collisionKernel3 ^ 4).trace + 4 * (collisionKernel3 ^ 3).trace -
       2 * (collisionKernel3 ^ 2).trace = (collisionKernel3 ^ 5).trace) := by
-  native_decide
+  decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R155: Unbounded trace recurrence for A₃
@@ -141,9 +141,9 @@ theorem paper_collisionKernel2_trace_recurrence_unbounded (n : ℕ) :
 
 /-- tr(I_3) = tr(A^0) = 3 for both collision kernels.
     def:pom-collision-zeta-a2-trace-pow-0 -/
-theorem collisionKernel2_trace_pow_0 : (collisionKernel2 ^ 0).trace = 3 := by native_decide
+theorem collisionKernel2_trace_pow_0 : (collisionKernel2 ^ 0).trace = 3 := by decide
 /-- def:pom-collision-zeta-a3-trace-pow-0 -/
-theorem collisionKernel3_trace_pow_0 : (collisionKernel3 ^ 0).trace = 3 := by native_decide
+theorem collisionKernel3_trace_pow_0 : (collisionKernel3 ^ 0).trace = 3 := by decide
 
 /-! ### Primitive orbit counts
 
@@ -159,7 +159,7 @@ theorem primitive_orbit_A2 :
     (collisionKernel2 ^ 1).trace = 2 ∧
     ((collisionKernel2 ^ 2).trace - (collisionKernel2 ^ 1).trace) / 2 = 3 ∧
     ((collisionKernel2 ^ 3).trace - (collisionKernel2 ^ 1).trace) / 3 = 4 := by
-  native_decide
+  decide
 
 /-- Primitive orbit counts for A_3: π(1) = 2, π(2) = 5, π(3) = 8.
     def:pom-primitive-orbit-A3 -/
@@ -167,7 +167,7 @@ theorem primitive_orbit_A3 :
     (collisionKernel3 ^ 1).trace = 2 ∧
     ((collisionKernel3 ^ 2).trace - (collisionKernel3 ^ 1).trace) / 2 = 5 ∧
     ((collisionKernel3 ^ 3).trace - (collisionKernel3 ^ 1).trace) / 3 = 8 := by
-  native_decide
+  decide
 
 /-! ### Zeta function denominator coefficients
 
@@ -180,28 +180,28 @@ Coefficients: c₁ = -tr(A), c₂ = cofactor_sum = (tr² - tr(A²))/2, c₃ = -d
 theorem zeta_denom_A2_coefficients :
     (-(collisionKernel2.trace : ℤ) = -2) ∧
     (((collisionKernel2.trace : ℤ) ^ 2 - (collisionKernel2 ^ 2).trace) / 2 = -2) ∧
-    (-(collisionKernel2.det : ℤ) = 2) := by native_decide
+    (-(collisionKernel2.det : ℤ) = 2) := by decide
 
 /-- Zeta denominator coefficients for A_3: c₁ = -2, c₂ = -4, c₃ = 2.
     def:pom-zeta-denom-A3-coefficients -/
 theorem zeta_denom_A3_coefficients :
     (-(collisionKernel3.trace : ℤ) = -2) ∧
     (((collisionKernel3.trace : ℤ) ^ 2 - (collisionKernel3 ^ 2).trace) / 2 = -4) ∧
-    (-(collisionKernel3.det : ℤ) = 2) := by native_decide
+    (-(collisionKernel3.det : ℤ) = 2) := by decide
 
 /-! ### A_4 trace powers -/
 
 /-- S_4 collision kernel trace powers: tr(A_4^n) for n = 0..4.
     def:pom-collision-zeta-a4-trace-pow-0 -/
-theorem collisionKernel4_trace_pow_0 : (collisionKernel4 ^ 0).trace = 5 := by native_decide
+theorem collisionKernel4_trace_pow_0 : (collisionKernel4 ^ 0).trace = 5 := by decide
 /-- def:pom-collision-zeta-a4-trace-pow-1 -/
-theorem collisionKernel4_trace_pow_1 : (collisionKernel4 ^ 1).trace = 2 := by native_decide
+theorem collisionKernel4_trace_pow_1 : (collisionKernel4 ^ 1).trace = 2 := by decide
 /-- def:pom-collision-zeta-a4-trace-pow-2 -/
-theorem collisionKernel4_trace_pow_2 : (collisionKernel4 ^ 2).trace = 18 := by native_decide
+theorem collisionKernel4_trace_pow_2 : (collisionKernel4 ^ 2).trace = 18 := by decide
 /-- def:pom-collision-zeta-a4-trace-pow-3 -/
-theorem collisionKernel4_trace_pow_3 : (collisionKernel4 ^ 3).trace = 50 := by native_decide
+theorem collisionKernel4_trace_pow_3 : (collisionKernel4 ^ 3).trace = 50 := by decide
 /-- def:pom-collision-zeta-a4-trace-pow-4 -/
-theorem collisionKernel4_trace_pow_4 : (collisionKernel4 ^ 4).trace = 234 := by native_decide
+theorem collisionKernel4_trace_pow_4 : (collisionKernel4 ^ 4).trace = 234 := by decide
 
 /-- Primitive orbit counts for A_4: π(1) = 2, π(2) = 8, π(3) = 16.
     def:pom-collision-zeta-a4-primitive-orbit -/
@@ -209,7 +209,7 @@ theorem primitive_orbit_A4 :
     (collisionKernel4 ^ 1).trace = 2 ∧
     ((collisionKernel4 ^ 2).trace - (collisionKernel4 ^ 1).trace) / 2 = 8 ∧
     ((collisionKernel4 ^ 3).trace - (collisionKernel4 ^ 1).trace) / 3 = 16 := by
-  native_decide
+  decide
 
 /-! ### Hankel determinant for S_4 -/
 
@@ -220,7 +220,7 @@ def hankelS4_4x4 : Matrix (Fin 4) (Fin 4) ℤ :=
 
 /-- 4×4 Hankel determinant for S_4 is nonzero (recurrence order ≥ 4).
     def:pom-collision-zeta-a4-hankel-det -/
-theorem hankelS4_4x4_det : hankelS4_4x4.det = -21120 := by native_decide
+theorem hankelS4_4x4_det : hankelS4_4x4.det = -21120 := by decide
 
 /-- 4×4 Hankel determinant is nonzero.
     def:pom-collision-zeta-a4-hankel-det-ne-zero -/
@@ -231,9 +231,9 @@ theorem hankelS4_4x4_det_ne_zero : hankelS4_4x4.det ≠ 0 := by
 
 /-- det(A_2^n) = det(A_2)^n = (-2)^n for n = 2, 3.
     def:pom-collision-kernel-det-pow-a2-2 -/
-theorem collisionKernel2_det_pow_2 : (collisionKernel2 ^ 2).det = 4 := by native_decide
+theorem collisionKernel2_det_pow_2 : (collisionKernel2 ^ 2).det = 4 := by decide
 /-- def:pom-collision-kernel-det-pow-a2-3 -/
-theorem collisionKernel2_det_pow_3 : (collisionKernel2 ^ 3).det = -8 := by native_decide
+theorem collisionKernel2_det_pow_3 : (collisionKernel2 ^ 3).det = -8 := by decide
 
 /-- det(M₂^n) = (-2)^n for the S_2 collision kernel.
     prop:collision-kernel-det-pow -/
@@ -243,9 +243,9 @@ theorem collisionKernel2_det_pow_general (n : ℕ) :
 
 /-- det(A_3^n) = det(A_3)^n = (-2)^n for n = 2, 3.
     def:pom-collision-kernel-det-pow-a3-2 -/
-theorem collisionKernel3_det_pow_2 : (collisionKernel3 ^ 2).det = 4 := by native_decide
+theorem collisionKernel3_det_pow_2 : (collisionKernel3 ^ 2).det = 4 := by decide
 /-- def:pom-collision-kernel-det-pow-a3-3 -/
-theorem collisionKernel3_det_pow_3 : (collisionKernel3 ^ 3).det = -8 := by native_decide
+theorem collisionKernel3_det_pow_3 : (collisionKernel3 ^ 3).det = -8 := by decide
 
 /-- det(M₃^n) = (-2)^n for the S_3 collision kernel.
     prop:collision-kernel-det-pow -/
@@ -255,7 +255,7 @@ theorem collisionKernel3_det_pow_general (n : ℕ) :
 
 /-- det(A_4^n) = det(A_4)^n = (-2)^n for n = 2.
     def:pom-collision-kernel-det-pow-a4-2 -/
-theorem collisionKernel4_det_pow_2 : (collisionKernel4 ^ 2).det = 4 := by native_decide
+theorem collisionKernel4_det_pow_2 : (collisionKernel4 ^ 2).det = 4 := by decide
 
 /-- det(M₄^n) = (-2)^n for the S_4 collision kernel.
     prop:collision-kernel-det-pow -/
@@ -369,39 +369,39 @@ Verified: π(2)=3, π(3)=8, π(5)=20, π(7)=16, π(6)=24. -/
 
 /-- Pisano period π(2) = 3: F(3) ≡ 0 (mod 2) and F(4) ≡ 1 (mod 2).
     def:pom-pisano-period-2 -/
-theorem pisano_period_2 : Nat.fib 3 % 2 = 0 ∧ Nat.fib 4 % 2 = 1 := by native_decide
+theorem pisano_period_2 : Nat.fib 3 % 2 = 0 ∧ Nat.fib 4 % 2 = 1 := by decide
 
 /-- Pisano period π(3) = 8: F(8) ≡ 0 (mod 3) and F(9) ≡ 1 (mod 3).
     def:pom-pisano-period-3 -/
-theorem pisano_period_3 : Nat.fib 8 % 3 = 0 ∧ Nat.fib 9 % 3 = 1 := by native_decide
+theorem pisano_period_3 : Nat.fib 8 % 3 = 0 ∧ Nat.fib 9 % 3 = 1 := by decide
 
 /-- Pisano period π(5) = 20: F(20) ≡ 0 (mod 5) and F(21) ≡ 1 (mod 5).
     def:pom-pisano-period-5 -/
-theorem pisano_period_5 : Nat.fib 20 % 5 = 0 ∧ Nat.fib 21 % 5 = 1 := by native_decide
+theorem pisano_period_5 : Nat.fib 20 % 5 = 0 ∧ Nat.fib 21 % 5 = 1 := by decide
 
 /-- Pisano period π(7) = 16: F(16) ≡ 0 (mod 7) and F(17) ≡ 1 (mod 7).
     def:pom-pisano-period-7 -/
-theorem pisano_period_7 : Nat.fib 16 % 7 = 0 ∧ Nat.fib 17 % 7 = 1 := by native_decide
+theorem pisano_period_7 : Nat.fib 16 % 7 = 0 ∧ Nat.fib 17 % 7 = 1 := by decide
 
 /-- Pisano period π(6) = 24: F(24) ≡ 0 (mod 6) and F(25) ≡ 1 (mod 6).
     def:pom-pisano-period-6 -/
-theorem pisano_period_6 : Nat.fib 24 % 6 = 0 ∧ Nat.fib 25 % 6 = 1 := by native_decide
+theorem pisano_period_6 : Nat.fib 24 % 6 = 0 ∧ Nat.fib 25 % 6 = 1 := by decide
 
 /-- Pisano period π(8) = 12: F(12) ≡ 0 (mod 8) and F(13) ≡ 1 (mod 8).
     def:pom-pisano-period-2 -/
-theorem pisano_period_8 : Nat.fib 12 % 8 = 0 ∧ Nat.fib 13 % 8 = 1 := by native_decide
+theorem pisano_period_8 : Nat.fib 12 % 8 = 0 ∧ Nat.fib 13 % 8 = 1 := by decide
 
 /-- Pisano period π(11) = 10: F(10) ≡ 0 (mod 11) and F(11) ≡ 1 (mod 11).
     def:pom-pisano-period-2 -/
-theorem pisano_period_11 : Nat.fib 10 % 11 = 0 ∧ Nat.fib 11 % 11 = 1 := by native_decide
+theorem pisano_period_11 : Nat.fib 10 % 11 = 0 ∧ Nat.fib 11 % 11 = 1 := by decide
 
 /-- Pisano period π(9) = 24: F(24) ≡ 0 (mod 9) and F(25) ≡ 1 (mod 9).
     def:pom-pisano-period-2 -/
-theorem pisano_period_9 : Nat.fib 24 % 9 = 0 ∧ Nat.fib 25 % 9 = 1 := by native_decide
+theorem pisano_period_9 : Nat.fib 24 % 9 = 0 ∧ Nat.fib 25 % 9 = 1 := by decide
 
 /-- Pisano period π(10) = 60: F(60) ≡ 0 (mod 10) and F(61) ≡ 1 (mod 10).
     def:pom-pisano-period-2 -/
-theorem pisano_period_10 : Nat.fib 60 % 10 = 0 ∧ Nat.fib 61 % 10 = 1 := by native_decide
+theorem pisano_period_10 : Nat.fib 60 % 10 = 0 ∧ Nat.fib 61 % 10 = 1 := by decide
 
 /-- The Fibonacci entry point for 21: α(21) = 8.
     F(8) ≡ 0 (mod 21) and F(k) ≢ 0 (mod 21) for 1 ≤ k < 8.
@@ -409,8 +409,8 @@ theorem pisano_period_10 : Nat.fib 60 % 10 = 0 ∧ Nat.fib 61 % 10 = 1 := by nat
 theorem fib_entry_point_21 :
     Nat.fib 8 % 21 = 0 ∧ ∀ k, 1 ≤ k → k < 8 → Nat.fib k % 21 ≠ 0 := by
   constructor
-  · native_decide
-  · intro k hk1 hk8; interval_cases k <;> native_decide
+  · decide
+  · intro k hk1 hk8; interval_cases k <;> decide
 
 /-! ### Fibonacci parity (Pisano π(2)=3) -/
 
@@ -421,7 +421,7 @@ theorem fib_mod_two_table :
     Nat.fib 4 % 2 = 1 ∧ Nat.fib 5 % 2 = 1 ∧ Nat.fib 6 % 2 = 0 ∧
     Nat.fib 7 % 2 = 1 ∧ Nat.fib 8 % 2 = 1 ∧ Nat.fib 9 % 2 = 0 ∧
     Nat.fib 10 % 2 = 1 ∧ Nat.fib 11 % 2 = 1 ∧ Nat.fib 12 % 2 = 0 := by
-  native_decide
+  decide
 
 /-- Fibonacci parity law: F(n) is even iff n ≡ 0 (mod 3).
     Proof by strong induction using the Pisano period π(2)=3.
@@ -528,7 +528,7 @@ def hankelS5_3x3 : Matrix (Fin 3) (Fin 3) ℤ :=
 
 /-- 3×3 Hankel determinant for S_5 is nonzero.
     lem:pom-hankel-s5-3x3-det -/
-theorem hankelS5_3x3_det : hankelS5_3x3.det = -17100 := by native_decide
+theorem hankelS5_3x3_det : hankelS5_3x3.det = -17100 := by decide
 
 /-- cor:pom-hankel-s5-3x3-det-ne-zero -/
 theorem hankelS5_3x3_det_ne_zero : hankelS5_3x3.det ≠ 0 := by
@@ -584,7 +584,7 @@ theorem dfa_linear_recurrence_instances :
 
 /-- S_5(6) base value.
     prop:pom-moment-five-six -/
-theorem momentSum_five_six : momentSum 5 6 = 13444 := by rw [← cMomentSum_eq]; native_decide
+theorem momentSum_five_six : momentSum 5 6 = 13444 := by rw [← cMomentSum_eq]; decide
 
 /-- Moment sum hierarchy at m=6: S_1 < S_2 < S_3 < S_4 < S_5.
     prop:pom-coarsegraining-collision-moment-strict-monotonicity -/
@@ -604,7 +604,7 @@ theorem paper_collision_moment_hierarchy_m7 :
     momentSum 2 7 < momentSum 3 7 ∧
     momentSum 3 7 < momentSum 4 7 ∧
     momentSum 4 7 < momentSum 5 7 := by
-  have h4 : momentSum 4 7 = 12208 := by rw [← cMomentSum_eq]; native_decide
+  have h4 : momentSum 4 7 = 12208 := by rw [← cMomentSum_eq]; decide
   have h5 : momentSum 5 7 = 62168 := momentSum_five_seven
   rw [momentSum_one, momentSum_two_seven, momentSum_three_seven, h4, h5]
   omega
@@ -617,7 +617,7 @@ def hankelS5_4x4 : Matrix (Fin 4) (Fin 4) ℤ :=
     lem:pom-hankel-s5-4x4-det -/
 theorem hankelS5_4x4_det_ne_zero : hankelS5_4x4.det ≠ 0 := by
   show hankelS5_4x4.det ≠ 0
-  native_decide
+  decide
 
 /-! ### Newton identities -/
 
@@ -629,7 +629,7 @@ theorem newton_identity_A2 :
     (-(collisionKernel2.trace : ℤ) = -2) ∧
     (((collisionKernel2.trace : ℤ) ^ 2 - (collisionKernel2 ^ 2).trace) / 2 = -2) ∧
     (-(collisionKernel2.det : ℤ) = 2) := by
-  refine ⟨by rw [collisionKernel2_trace], by native_decide,
+  refine ⟨by rw [collisionKernel2_trace], by decide,
     by rw [collisionKernel2_det]; norm_num⟩
 
 /-- Newton identity for A_3.
@@ -638,7 +638,7 @@ theorem newton_identity_A3 :
     (-(collisionKernel3.trace : ℤ) = -2) ∧
     (((collisionKernel3.trace : ℤ) ^ 2 - (collisionKernel3 ^ 2).trace) / 2 = -4) ∧
     (-(collisionKernel3.det : ℤ) = 2) := by
-  refine ⟨by rw [collisionKernel3_trace], by native_decide,
+  refine ⟨by rw [collisionKernel3_trace], by decide,
     by rw [collisionKernel3_det]; norm_num⟩
 
 /-- Newton identity for A_4 (partial: trace and det).
@@ -674,23 +674,23 @@ theorem fiberMultiplicity_split_last_bit (x : X (m + 1)) :
 noncomputable def momentStateVec (m : Nat) : Fin 3 → ℤ :=
   ![↑(momentSum 2 m), ↑(momentSum 2 (m + 1)), ↑(momentSum 2 (m + 2))]
 
-/-- Verification: M · stateVec(0) = stateVec(1) via native_decide on concrete values.
+/-- Verification: M · stateVec(0) = stateVec(1) via decide on concrete values.
     collisionKernel2 · (1, 2, 6) = (2, 6, 14).
     aux:collision_kernel2_mulVec_base -/
 theorem collision_kernel2_mulVec_base :
-    collisionKernel2.mulVec ![1, 2, 6] = ![2, 6, 14] := by native_decide
+    collisionKernel2.mulVec ![1, 2, 6] = ![2, 6, 14] := by decide
 
 /-- Verification: M · stateVec(1) = stateVec(2).
     collisionKernel2 · (2, 6, 14) = (6, 14, 36).
     aux:collision_kernel2_mulVec_step1 -/
 theorem collision_kernel2_mulVec_step1 :
-    collisionKernel2.mulVec ![2, 6, 14] = ![6, 14, 36] := by native_decide
+    collisionKernel2.mulVec ![2, 6, 14] = ![6, 14, 36] := by decide
 
 /-- Verification: M · stateVec(2) = stateVec(3).
     collisionKernel2 · (6, 14, 36) = (14, 36, 88).
     aux:collision_kernel2_mulVec_step2 -/
 theorem collision_kernel2_mulVec_step2 :
-    collisionKernel2.mulVec ![6, 14, 36] = ![14, 36, 88] := by native_decide
+    collisionKernel2.mulVec ![6, 14, 36] = ![14, 36, 88] := by decide
 
 /-! ### Collision pairs: S_2 = |{(w₁,w₂) : Fold w₁ = Fold w₂}| -/
 
@@ -737,7 +737,7 @@ theorem collision_pairs_count_verified :
     cCollisionPairsCount 0 = 1 ∧ cCollisionPairsCount 1 = 2 ∧
     cCollisionPairsCount 2 = 6 ∧ cCollisionPairsCount 3 = 14 ∧
     cCollisionPairsCount 4 = 36 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> decide
 
 /-- Paper theorem: all collision kernels have determinant -2.
     prop:pom-collision-det -/
@@ -771,7 +771,7 @@ theorem collisionKernel4_cayley_hamilton :
     collisionKernel4 ^ 5 =
     2 * collisionKernel4 ^ 4 + 7 * collisionKernel4 ^ 3 +
     2 * collisionKernel4 - 2 * (1 : Matrix (Fin 5) (Fin 5) ℤ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> native_decide
+  ext i j; fin_cases i <;> fin_cases j <;> decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R34: A_4 trace recurrence (general)
@@ -801,9 +801,9 @@ theorem collisionKernel4_trace_recurrence (n : Nat) :
   rw [hmat]
   -- In the goal, `2 * M` means `(2 : Matrix) * M`. Since 2 = 2 • 1, this is 2 • M.
   have h2 : (2 : Matrix (Fin 5) (Fin 5) ℤ) = (2 : ℤ) • (1 : Matrix (Fin 5) (Fin 5) ℤ) := by
-    ext i j; fin_cases i <;> fin_cases j <;> native_decide
+    ext i j; fin_cases i <;> fin_cases j <;> decide
   have h7 : (7 : Matrix (Fin 5) (Fin 5) ℤ) = (7 : ℤ) • (1 : Matrix (Fin 5) (Fin 5) ℤ) := by
-    ext i j; fin_cases i <;> fin_cases j <;> native_decide
+    ext i j; fin_cases i <;> fin_cases j <;> decide
   simp only [h2, h7, smul_mul_assoc, one_mul, Matrix.trace_sub, Matrix.trace_add,
     Matrix.trace_smul, smul_eq_mul]
 
@@ -812,10 +812,10 @@ theorem collisionKernel4_trace_recurrence (n : Nat) :
 -- ══════════════════════════════════════════════════════════════
 
 /-- def:pom-collision-zeta-a4-trace-pow-5 -/
-theorem collisionKernel4_trace_pow_5 : (collisionKernel4 ^ 5).trace = 812 := by native_decide
+theorem collisionKernel4_trace_pow_5 : (collisionKernel4 ^ 5).trace = 812 := by decide
 
 /-- def:pom-collision-zeta-a4-trace-pow-6 -/
-theorem collisionKernel4_trace_pow_6 : (collisionKernel4 ^ 6).trace = 3294 := by native_decide
+theorem collisionKernel4_trace_pow_6 : (collisionKernel4 ^ 6).trace = 3294 := by decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R38: A_4 trace powers 7-10
@@ -823,38 +823,38 @@ theorem collisionKernel4_trace_pow_6 : (collisionKernel4 ^ 6).trace = 3294 := by
 
 set_option maxHeartbeats 1600000 in
 /-- def:pom-collision-zeta-a4-trace-pow-7 -/
-theorem collisionKernel4_trace_pow_7 : (collisionKernel4 ^ 7).trace = 12336 := by native_decide
+theorem collisionKernel4_trace_pow_7 : (collisionKernel4 ^ 7).trace = 12336 := by decide
 
 set_option maxHeartbeats 3200000 in
 /-- def:pom-collision-zeta-a4-trace-pow-8 -/
-theorem collisionKernel4_trace_pow_8 : (collisionKernel4 ^ 8).trace = 48098 := by native_decide
+theorem collisionKernel4_trace_pow_8 : (collisionKernel4 ^ 8).trace = 48098 := by decide
 
 set_option maxHeartbeats 6400000 in
 /-- def:pom-collision-zeta-a4-trace-pow-9 -/
-theorem collisionKernel4_trace_pow_9 : (collisionKernel4 ^ 9).trace = 183704 := by native_decide
+theorem collisionKernel4_trace_pow_9 : (collisionKernel4 ^ 9).trace = 183704 := by decide
 
 set_option maxHeartbeats 12800000 in
 /-- def:pom-collision-zeta-a4-trace-pow-10 -/
-theorem collisionKernel4_trace_pow_10 : (collisionKernel4 ^ 10).trace = 709058 := by native_decide
+theorem collisionKernel4_trace_pow_10 : (collisionKernel4 ^ 10).trace = 709058 := by decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R140: A₅ collision kernel trace powers
 -- ══════════════════════════════════════════════════════════════
 
 /-- prop:pom-s5-recurrence -/
-theorem collisionKernel5_trace_pow_0 : (collisionKernel5 ^ 0).trace = 5 := by native_decide
+theorem collisionKernel5_trace_pow_0 : (collisionKernel5 ^ 0).trace = 5 := by decide
 /-- prop:pom-s5-recurrence -/
-theorem collisionKernel5_trace_pow_1 : (collisionKernel5 ^ 1).trace = -2 := by native_decide
+theorem collisionKernel5_trace_pow_1 : (collisionKernel5 ^ 1).trace = -2 := by decide
 /-- prop:pom-s5-recurrence -/
-theorem collisionKernel5_trace_pow_2 : (collisionKernel5 ^ 2).trace = -18 := by native_decide
+theorem collisionKernel5_trace_pow_2 : (collisionKernel5 ^ 2).trace = -18 := by decide
 /-- prop:pom-s5-recurrence -/
-theorem collisionKernel5_trace_pow_3 : (collisionKernel5 ^ 3).trace = 34 := by native_decide
+theorem collisionKernel5_trace_pow_3 : (collisionKernel5 ^ 3).trace = 34 := by decide
 /-- prop:pom-s5-recurrence -/
-theorem collisionKernel5_trace_pow_4 : (collisionKernel5 ^ 4).trace = 66 := by native_decide
+theorem collisionKernel5_trace_pow_4 : (collisionKernel5 ^ 4).trace = 66 := by decide
 /-- prop:pom-s5-recurrence -/
-theorem collisionKernel5_trace_pow_5 : (collisionKernel5 ^ 5).trace = -272 := by native_decide
+theorem collisionKernel5_trace_pow_5 : (collisionKernel5 ^ 5).trace = -272 := by decide
 /-- prop:pom-s5-recurrence -/
-theorem collisionKernel5_trace_pow_6 : (collisionKernel5 ^ 6).trace = -114 := by native_decide
+theorem collisionKernel5_trace_pow_6 : (collisionKernel5 ^ 6).trace = -114 := by decide
 
 /-- Paper: prop:pom-s5-recurrence (trace powers) -/
 theorem paper_collisionKernel5_trace_powers :
@@ -883,7 +883,7 @@ theorem collisionKernel5_trace_recurrence_unbounded (n : ℕ) :
       (-2) • collisionKernel5 ^ 4 + (-11) • collisionKernel5 ^ 3 +
       (-8) • collisionKernel5 ^ 2 + (-20) • collisionKernel5 ^ 1 +
       (10 : ℤ) • (1 : Matrix (Fin 5) (Fin 5) ℤ) := by
-    ext i j; fin_cases i <;> fin_cases j <;> native_decide
+    ext i j; fin_cases i <;> fin_cases j <;> decide
   have hpow : collisionKernel5 ^ (n + 5) =
       (-2) • collisionKernel5 ^ (n + 4) + (-11) • collisionKernel5 ^ (n + 3) +
       (-8) • collisionKernel5 ^ (n + 2) + (-20) • collisionKernel5 ^ (n + 1) +
@@ -960,7 +960,7 @@ theorem collisionKernel_e2_family :
     collisionKernel3.trace ^ 2 - (collisionKernel3 ^ 2).trace = -8 ∧
     collisionKernel4.trace ^ 2 - (collisionKernel4 ^ 2).trace = -14 ∧
     collisionKernel5.trace ^ 2 - (collisionKernel5 ^ 2).trace = 22 := by
-  refine ⟨by native_decide, by native_decide, ?_, collisionKernel5_e2⟩
+  refine ⟨by decide, by decide, ?_, collisionKernel5_e2⟩
   exact collisionKernel4_e2
 
 /-- Trace recurrence for q=4 collision kernel A_4.
@@ -981,7 +981,7 @@ theorem paper_collisionKernel3_fredholm_and_recurrence :
     (∀ n : Nat, (collisionKernel3 ^ (n + 3)).trace =
       2 * (collisionKernel3 ^ (n + 2)).trace + 4 * (collisionKernel3 ^ (n + 1)).trace -
       2 * (collisionKernel3 ^ n).trace) := by
-  refine ⟨fun z => ?_, by native_decide, by native_decide, by native_decide,
+  refine ⟨fun z => ?_, by decide, by decide, by decide,
     collisionKernel3_trace_recurrence_unbounded⟩
   simp [collisionKernel3, Matrix.det_fin_three]
   ring
@@ -997,7 +997,7 @@ theorem paper_collisionKernel2_full_package :
     (collisionKernel2 ^ 0).trace = 3 ∧
     (collisionKernel2 ^ 1).trace = 2 := by
   refine ⟨fun z => ?_, collisionKernel2_trace_recurrence_unbounded,
-    by native_decide, by native_decide⟩
+    by decide, by decide⟩
   simp [collisionKernel2, Matrix.det_fin_three]
   ring
 

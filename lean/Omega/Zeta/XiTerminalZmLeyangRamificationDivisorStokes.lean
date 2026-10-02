@@ -48,6 +48,6 @@ theorem paper_xi_terminal_zm_leyang_ramification_divisor_stokes :
     xiTerminalZmLeyangRamificationDegree = 2 * xiTerminalZmLeyangPoleDegree ∧
       xiTerminalZmLeyangRamificationDegree = 8 ∧
       xiTerminalZmLeyangAbelJacobiSum = 0 := by
-  native_decide
+  decide
 
 end Omega.Zeta

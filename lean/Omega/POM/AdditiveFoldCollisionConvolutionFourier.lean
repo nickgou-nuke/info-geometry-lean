@@ -47,21 +47,21 @@ def cyclicMomentKernel {q : ℕ} [NeZero q] (c : ZMod q → ℝ) : ℝ :=
 
 private theorem sum_seed_group {R : Type*} [AddCommMonoid R] (f : FibSeedGroup → R) :
     (∑ x, f x) = f 0 + f 1 := by
-  have huniv : (Finset.univ : Finset FibSeedGroup) = {0, 1} := by native_decide
+  have huniv : (Finset.univ : Finset FibSeedGroup) = {0, 1} := by decide
   rw [huniv]
   simp
 
 private theorem seedAdditiveCollisionProfile_zero (c : FibSeedGroup → ℝ) :
     seedAdditiveCollisionProfile c 0 = c 0 ^ (2 : ℕ) + c 1 ^ (2 : ℕ) := by
   rw [seedAdditiveCollisionProfile, sum_seed_group]
-  have hsub : ((0 : FibSeedGroup) - 1) = 1 := by native_decide
+  have hsub : ((0 : FibSeedGroup) - 1) = 1 := by decide
   simp [hsub]
   ring_nf
 
 private theorem seedAdditiveCollisionProfile_one (c : FibSeedGroup → ℝ) :
     seedAdditiveCollisionProfile c 1 = 2 * c 0 * c 1 := by
   rw [seedAdditiveCollisionProfile, sum_seed_group]
-  have hsub0 : ((1 : FibSeedGroup) - 0) = 1 := by native_decide
+  have hsub0 : ((1 : FibSeedGroup) - 0) = 1 := by decide
   simp [hsub0]
   ring
 

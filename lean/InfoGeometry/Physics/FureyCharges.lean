@@ -39,6 +39,10 @@ def totalFureyNumber : FureyAlg :=
 def fureyCharge : FureyAlg :=
   (1 / 3 : ℝ) • totalFureyNumber
 
+/-- Repository-owned physical electric-charge operator on the finite Furey carrier. -/
+def physicalElectricChargeOp : FureyAlg :=
+  fureyCharge
+
 /-- Each component number operator is idempotent. -/
 theorem fureyNumber_idempotent (i : Fin 3) :
     fureyNumber i * fureyNumber i = fureyNumber i := by
@@ -59,6 +63,18 @@ def fureyOccupationNumber (w : Occupation3) : ℕ :=
 def fureyOccupationCharge (w : Occupation3) : ℚ :=
   (fureyOccupationNumber w : ℚ) / 3
 
+/-- Repository-owned physical electric-charge readout on the finite occupation carrier. -/
+def physicalElectricCharge (w : Occupation3) : ℚ :=
+  fureyOccupationCharge w
+
+@[simp] theorem physicalElectricChargeOp_eq_fureyCharge :
+    physicalElectricChargeOp = fureyCharge :=
+  rfl
+
+@[simp] theorem physicalElectricCharge_eq_fureyOccupationCharge (w : Occupation3) :
+    physicalElectricCharge w = fureyOccupationCharge w :=
+  rfl
+
 /-- The finite occupation-charge spectrum is exactly contained in
 `{0, 1/3, 2/3, 1}`. -/
 theorem fureyOccupationCharge_spectrum (w : Occupation3) :
@@ -69,6 +85,14 @@ theorem fureyOccupationCharge_spectrum (w : Occupation3) :
   dsimp [fureyOccupationCharge, fureyOccupationNumber]
   rcases w 0 <;> rcases w 1 <;> rcases w 2 <;> simp
 
+/-- The finite physical electric-charge readout has the same exact spectrum. -/
+theorem physicalElectricCharge_spectrum (w : Occupation3) :
+    physicalElectricCharge w = 0 ∨
+    physicalElectricCharge w = (1 / 3 : ℚ) ∨
+    physicalElectricCharge w = (2 / 3 : ℚ) ∨
+    physicalElectricCharge w = 1 := by
+  simpa [physicalElectricCharge] using fureyOccupationCharge_spectrum w
+
 /-- Consolidated theorem-safe Furey occupation packet. -/
 theorem furey_charge_algebraic_spine :
     (∀ i : Fin 3, fureyNumber i * fureyNumber i = fureyNumber i) ∧
@@ -78,6 +102,17 @@ theorem furey_charge_algebraic_spine :
       fureyOccupationCharge w = (2 / 3 : ℚ) ∨
       fureyOccupationCharge w = 1) :=
   ⟨fureyNumber_idempotent, fureyOccupationCharge_spectrum⟩
+
+/-- Consolidated physical charge-identification packet on the finite carrier. -/
+theorem physicalElectricCharge_identification :
+    physicalElectricChargeOp = fureyCharge ∧
+    (∀ w : Occupation3,
+      physicalElectricCharge w = 0 ∨
+      physicalElectricCharge w = (1 / 3 : ℚ) ∨
+      physicalElectricCharge w = (2 / 3 : ℚ) ∨
+      physicalElectricCharge w = 1) := by
+  exact ⟨physicalElectricChargeOp_eq_fureyCharge,
+    physicalElectricCharge_spectrum⟩
 
 end InfoGeometry.Physics.FureyCharges
 

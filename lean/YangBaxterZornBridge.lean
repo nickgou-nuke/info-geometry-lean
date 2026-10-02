@@ -1,1 +1,1 @@
-/media/goutev/SP DS72/auto/proofs/YangBaxterZornBridge.lean
+../proofs/YangBaxterZornBridge.lean

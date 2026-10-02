@@ -63,7 +63,7 @@ Each arrow is a theorem-level connection. Before the 2026-06-02 session,
 these were isolated nodes. After the session, they form a directed acyclic
 graph with the following properties:
 
-- Every node compiles (Lean 4.28.0, mathlib release)
+- Every node compiles (Lean 4.28.x, mathlib release)
 - Every edge is either a direct theorem alias or an import dependency
 - The combined SymPy test suite (`conformal_group_generator_test.py`,
   `conformal_mobius_v4_weyl_adjoint_test.py`, `conformal_rosetta_stone.py`)

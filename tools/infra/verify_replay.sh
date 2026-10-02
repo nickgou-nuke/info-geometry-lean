@@ -53,13 +53,9 @@ grep -q "\baxiom\b" "$TARGET_FILE" && {
     exit 1
 }
 
-echo "--- [REPLAY] Phase 0: Hydrate precompiled mathlib cache ---"
-bash scripts/build/hydrate_pinned_mathlib_cache.sh
-
-echo "--- [REPLAY] Phase 1: Build verification ---"
+echo "--- [REPLAY] Phase 0: Build verification (ordinary Lake build) ---"
 lake build
-
-echo "--- [REPLAY] Phase 2: Semantic audit ---"
+echo "--- [REPLAY] Phase 1: Semantic audit ---"
 python3 tools/infra/semantic_audit.py --task "$MANIFEST"
 
 echo "--- [REPLAY] SUCCESS: isolated replay passed. ---"

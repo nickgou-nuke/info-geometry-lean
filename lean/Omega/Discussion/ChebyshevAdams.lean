@@ -150,7 +150,7 @@ theorem paper_chebyAdams_product_and_values :
     (∀ S : ℤ, chebyAdams 5 S = S ^ 5 - 5 * S ^ 3 + 5 * S) ∧
     chebyAdams 2 3 = 7 ∧ chebyAdams 3 3 = 18 ∧ chebyAdams 4 3 = 47 :=
   ⟨chebyAdams_two, chebyAdams_three, chebyAdams_four, chebyAdams_five,
-   by native_decide, by native_decide, by native_decide⟩
+   by decide, by decide, by decide⟩
 
 /-- Horizon boundary layer Fibonacci/Lucas audit.
     cor:discussion-horizon-boundarylayer-phi-scaling -/
@@ -159,7 +159,7 @@ theorem paper_discussion_horizon_fibonacci_audit :
     (Nat.fib 3 * Nat.fib 5 = Nat.fib 4 ^ 2 + 1) ∧
     (Nat.fib 6 ∣ Nat.fib 12) ∧
     (Nat.gcd (Nat.fib 6) (Nat.fib 9) = Nat.fib (Nat.gcd 6 9)) := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide⟩
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R280: Chebyshev-Adams at S=1 and S=-1 periodicity

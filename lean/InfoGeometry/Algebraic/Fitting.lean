@@ -2,7 +2,6 @@ import Mathlib.Algebra.Algebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Projection
 import InfoGeometry.Meta.Architecture
-import Paperproof
 
 /-!
 # InfoGeometry.Algebraic.Fitting

@@ -39,7 +39,7 @@ theorem paper_xi_time_part9x_index_relative_entropy_identity :
     rw [xi_time_part9x_index_relative_entropy_identity_index_log_expectation,
       xi_time_part9x_index_relative_entropy_identity_kappa_6, hlog4]
     ring
-  refine ⟨by native_decide, hindex, ?_⟩
+  refine ⟨by decide, hindex, ?_⟩
   simpa [xi_time_part9x_index_relative_entropy_identity_kl_to_uniform] using
     congrArg (fun x => x - Real.log ((64 : ℝ) / 21)) hindex
 

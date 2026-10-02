@@ -69,7 +69,7 @@ theorem paper_xi_terminal_zm_delta_adjoint_conic_pure_nodal_intersection :
     And.intro (by
       intro i
       rfl) <|
-    And.intro (by native_decide) <|
+    And.intro (by decide) <|
     And.intro rfl <|
       paper_xi_terminal_zm_delta_node_preimage_sum_zero
         xi_terminal_zm_delta_adjoint_conic_pure_nodal_intersection_leftBranches

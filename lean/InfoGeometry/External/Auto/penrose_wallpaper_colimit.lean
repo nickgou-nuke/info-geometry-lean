@@ -219,4 +219,4 @@ def penrose_bridge_registry : List BridgeArtifact :=
   ]
 
 theorem penrose_bridge_registry_length : penrose_bridge_registry.length = 6 := by
-  native_decide
+  decide

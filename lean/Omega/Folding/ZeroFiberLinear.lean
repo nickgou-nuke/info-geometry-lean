@@ -59,15 +59,15 @@ theorem paper_fold_zero_fiber_linear_small :
 
 /-- Concrete m=6 case: `weightSumAtMm 6 = 3`.
     prop:fold-zero-fiber-linear -/
-theorem weightSumAtMm_six : weightSumAtMm 6 = 3 := by native_decide
+theorem weightSumAtMm_six : weightSumAtMm 6 = 3 := by decide
 
 /-- Concrete m=7 case: `weightSumAtMm 7 = 3`.
     prop:fold-zero-fiber-linear -/
-theorem weightSumAtMm_seven : weightSumAtMm 7 = 3 := by native_decide
+theorem weightSumAtMm_seven : weightSumAtMm 7 = 3 := by decide
 
 /-- Concrete m=8 case: `weightSumAtMm 8 = 4`.
     prop:fold-zero-fiber-linear -/
-theorem weightSumAtMm_eight : weightSumAtMm 8 = 4 := by native_decide
+theorem weightSumAtMm_eight : weightSumAtMm 8 = 4 := by decide
 
 /-- Step recurrence: weightSumAtMm(m+2) = weightSumAtMm(m) + 1 for m = 2..6.
     prop:fold-zero-fiber-linear -/

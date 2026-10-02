@@ -23,7 +23,7 @@ noncomputable def m11Canonical16ComplexDet : ℂ :=
 
 lemma m11_canonical_16_exponent_sum : ((∑ i : Fin 16, ((i : ℕ) + 1 : ℕ)) : ℕ) = 136 := by
   simpa using
-    (show ((Finset.univ : Finset (Fin 16)).sum fun i => ((i : ℕ) + 1 : ℕ)) = 136 by native_decide)
+    (show ((Finset.univ : Finset (Fin 16)).sum fun i => ((i : ℕ) + 1 : ℕ)) = 136 by decide)
 
 lemma m11Canonical34Root_pow_34 : m11Canonical34Root ^ 34 = 1 := by
   calc

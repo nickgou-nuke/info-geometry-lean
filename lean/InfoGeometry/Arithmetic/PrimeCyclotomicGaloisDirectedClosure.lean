@@ -56,12 +56,12 @@ theorem casRow_eq_native (i : Fin 6) :
 
 /-- Every listed stage prime is genuinely prime. -/
 theorem primeAt_isPrime (i : Fin 6) : Nat.Prime (primeAt i) := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> decide
 
 /-- Lean recomputes every reported Euler-totient degree. -/
 theorem totient_conductorAt (i : Fin 6) :
     Nat.totient (conductorAt i) = degreeAt i := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> decide
 
 /-- Exact cumulative-prime recursion at the five nonterminal edges. -/
 theorem conductor_step_01 : conductorAt 1 = conductorAt 0 * primeAt 1 := by norm_num [conductorAt, primeAt]
@@ -99,19 +99,19 @@ def primeTowerGraph : ChiralDigraph where
 
 private theorem edge01 : primeTowerGraph.edge (0 : Fin 6) (1 : Fin 6) := by
   change PrimeTowerEdge 0 1
-  native_decide
+  decide
 private theorem edge12 : primeTowerGraph.edge (1 : Fin 6) (2 : Fin 6) := by
   change PrimeTowerEdge 1 2
-  native_decide
+  decide
 private theorem edge23 : primeTowerGraph.edge (2 : Fin 6) (3 : Fin 6) := by
   change PrimeTowerEdge 2 3
-  native_decide
+  decide
 private theorem edge34 : primeTowerGraph.edge (3 : Fin 6) (4 : Fin 6) := by
   change PrimeTowerEdge 3 4
-  native_decide
+  decide
 private theorem edge45 : primeTowerGraph.edge (4 : Fin 6) (5 : Fin 6) := by
   change PrimeTowerEdge 4 5
-  native_decide
+  decide
 
 /-- The fixed directed certificate from the first to the sixth prime stage. -/
 def primeTowerPath : DirectedPath primeTowerGraph (0 : Fin 6) (5 : Fin 6) :=

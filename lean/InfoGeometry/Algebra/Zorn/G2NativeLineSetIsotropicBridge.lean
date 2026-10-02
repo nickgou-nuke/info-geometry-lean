@@ -32,6 +32,6 @@ theorem nativeLineSetAt_mem_isotropicPoint
     exact ⟨⟨y, nativeCandidateAt_isotropic y hy, hy.1⟩, rfl⟩
   · exact ⟨⟨nativeBasePoint + y,
       nativeCandidateAt_sum_isotropic y hy,
-      by native_decide +revert⟩, h.symm⟩
+      by decide +revert⟩, h.symm⟩
 
 end InfoGeometry.Algebra.Zorn.G2NativeLineSetIsotropicBridge

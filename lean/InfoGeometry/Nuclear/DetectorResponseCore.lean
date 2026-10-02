@@ -1,5 +1,4 @@
 import InfoGeometry.Nuclear.DetectorTransportKernel
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Nuclear.DetectorVolumeResponse
 import InfoGeometry.Nuclear.DetectorBeerLambert
 import InfoGeometry.Nuclear.DetectorDiskIntegral

@@ -75,7 +75,7 @@ private def zeroWord5 : Fin 5 → Fin 3 := fun _ => zeroDigit
 /-- The explicit word `00000` resets the kernel to state `000`. -/
 theorem sync10_reset_00000 :
     ∀ q : Sync10State, sync10RunWord q zeroWord5 = Sync10State.q000 := by
-  native_decide
+  decide
 
 /-- The 10-state synchronization kernel has shortest reset length exactly `5`.
     prop:sync10-reset-length-5 -/
@@ -85,6 +85,6 @@ theorem paper_sync10_reset_length_5 :
   · refine ⟨zeroWord5, ?_⟩
     intro q
     rw [sync10_reset_00000 q, sync10_reset_00000 Sync10State.q000]
-  · native_decide
+  · decide
 
 end Omega.EA

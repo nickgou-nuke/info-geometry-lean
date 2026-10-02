@@ -24,7 +24,7 @@ open Matrix Finset
 The cyclic permutation matrix Π_n sends basis vector e_i to e_{(i+1) mod n}.
 Its eigenvalues are the n-th roots of unity, so det(I - t·Π_n) = Π_{ω^n=1}(1-tω) = 1-t^n.
 
-We verify this for concrete small n via native_decide (sufficient for the paper's
+We verify this for concrete small n via decide (sufficient for the paper's
 applications where n ≤ 6), and state the general algebraic identity.
 -/
 
@@ -71,19 +71,19 @@ theorem cyclicPerm3_fredholm_det (t : ℤ) :
   ring
 
 /-- Π_2² = I (cyclic permutation of order 2). -/
-theorem cyclicPerm2_sq : cyclicPerm2 ^ 2 = 1 := by native_decide
+theorem cyclicPerm2_sq : cyclicPerm2 ^ 2 = 1 := by decide
 
 /-- Π_3³ = I (cyclic permutation of order 3). -/
-theorem cyclicPerm3_cube : cyclicPerm3 ^ 3 = 1 := by native_decide
+theorem cyclicPerm3_cube : cyclicPerm3 ^ 3 = 1 := by decide
 
 /-- Π_4⁴ = I (cyclic permutation of order 4). -/
-theorem cyclicPerm4_fourth : cyclicPerm4 ^ 4 = 1 := by native_decide
+theorem cyclicPerm4_fourth : cyclicPerm4 ^ 4 = 1 := by decide
 
 /-- Π_5⁵ = I (cyclic permutation of order 5). -/
-theorem cyclicPerm5_fifth : cyclicPerm5 ^ 5 = 1 := by native_decide
+theorem cyclicPerm5_fifth : cyclicPerm5 ^ 5 = 1 := by decide
 
 /-- Π_6⁶ = I (cyclic permutation of order 6). -/
-theorem cyclicPerm6_sixth : cyclicPerm6 ^ 6 = 1 := by native_decide
+theorem cyclicPerm6_sixth : cyclicPerm6 ^ 6 = 1 := by decide
 
 /-! ## Trace of cyclic permutation powers
 
@@ -96,7 +96,7 @@ This is the key input for the Witt/Möbius primitive counting.
 theorem cyclicPerm2_trace_powers :
     cyclicPerm2.trace = 0 ∧ (cyclicPerm2 ^ 2).trace = 2 ∧
     (cyclicPerm2 ^ 3).trace = 0 ∧ (cyclicPerm2 ^ 4).trace = 2 := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide⟩
 
 /-- Trace of Π_3^k for k=0..6: period-3 pattern.
     subsec:operator-zeta-interface -/
@@ -104,8 +104,8 @@ theorem cyclicPerm3_trace_powers :
     (cyclicPerm3 ^ 1).trace = 0 ∧ (cyclicPerm3 ^ 2).trace = 0 ∧
     (cyclicPerm3 ^ 3).trace = 3 ∧ (cyclicPerm3 ^ 4).trace = 0 ∧
     (cyclicPerm3 ^ 5).trace = 0 ∧ (cyclicPerm3 ^ 6).trace = 3 := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+    by decide, by decide, by decide⟩
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R254: Cyclic trace divisibility
@@ -117,7 +117,7 @@ theorem cyclicPerm2_trace_even (k : ℕ) (hk : Even k) :
     (cyclicPerm2 ^ k).trace = 2 := by
   obtain ⟨j, rfl⟩ := hk
   rw [show j + j = 2 * j from by ring, pow_mul, cyclicPerm2_sq, one_pow]
-  native_decide
+  decide
 
 /-- tr(Π_2^k) = 0 when k is odd.
     subsec:operator-zeta-interface -/
@@ -127,7 +127,7 @@ theorem cyclicPerm2_trace_odd (k : ℕ) (hk : ¬ Even k) :
   obtain ⟨j, rfl⟩ := hk
   rw [show 2 * j + 1 = 1 + 2 * j from by ring, pow_add, pow_mul,
     cyclicPerm2_sq, one_pow, mul_one]
-  native_decide
+  decide
 
 /-- tr(Π_3^k) = 3 when 3 ∣ k.
     subsec:operator-zeta-interface -/
@@ -145,7 +145,7 @@ theorem cyclicPerm3_trace_mod3_nonzero (k : ℕ) (hk : ¬ 3 ∣ k) :
   conv_lhs => rw [show k = k % 3 + 3 * (k / 3) from by omega]
   rw [pow_add, show 3 * (k / 3) = (k / 3) * 3 from by ring, pow_mul]
   simp [pow_right_comm, cyclicPerm3_cube]
-  rcases hmod with h | h <;> rw [h] <;> native_decide
+  rcases hmod with h | h <;> rw [h] <;> decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R103
@@ -159,8 +159,8 @@ theorem cyclicPerm4_trace_powers :
     (cyclicPerm4 ^ 2).trace = 0 ∧
     (cyclicPerm4 ^ 3).trace = 0 ∧
     (cyclicPerm4 ^ 4).trace = 4 := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+    by decide, by decide⟩
 
 /-- Trace of Π_5^k for k=1..5: period-5 pattern.
     subsec:operator-zeta-interface -/
@@ -168,8 +168,8 @@ theorem cyclicPerm5_trace_powers :
     (cyclicPerm5 ^ 1).trace = 0 ∧ (cyclicPerm5 ^ 2).trace = 0 ∧
     (cyclicPerm5 ^ 3).trace = 0 ∧ (cyclicPerm5 ^ 4).trace = 0 ∧
     (cyclicPerm5 ^ 5).trace = 5 := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+    by decide, by decide⟩
 
 /-- Trace of Π_6^k for k=1..6: period-6 pattern.
     subsec:operator-zeta-interface -/
@@ -177,8 +177,8 @@ theorem cyclicPerm6_trace_powers :
     (cyclicPerm6 ^ 1).trace = 0 ∧ (cyclicPerm6 ^ 2).trace = 0 ∧
     (cyclicPerm6 ^ 3).trace = 0 ∧ (cyclicPerm6 ^ 4).trace = 0 ∧
     (cyclicPerm6 ^ 5).trace = 0 ∧ (cyclicPerm6 ^ 6).trace = 6 := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+    by decide, by decide, by decide⟩
 
 /-- Determinant formula for a specific 4×4 matrix.
     Helper for cyclicPerm4_fredholm_det. -/
@@ -372,25 +372,25 @@ thm:operator-resolvent-trace-jump-index -/
 
 /-- For Π_2: exactly 2 eigenvalues on the unit circle (±1).
     Trace(Π_2^0) = 2 = dim. -/
-theorem cyclicPerm2_rank : (cyclicPerm2 ^ 0).trace = 2 := by native_decide
+theorem cyclicPerm2_rank : (cyclicPerm2 ^ 0).trace = 2 := by decide
 
 /-- For Π_3: exactly 3 eigenvalues on the unit circle.
     Trace(Π_3^0) = 3 = dim. -/
-theorem cyclicPerm3_rank : (cyclicPerm3 ^ 0).trace = 3 := by native_decide
+theorem cyclicPerm3_rank : (cyclicPerm3 ^ 0).trace = 3 := by decide
 
 /-- For Π_4: exactly 4 eigenvalues on the unit circle.
     Trace(Π_4^0) = 4 = dim.
     thm:operator-resolvent-trace-jump-index -/
-theorem cyclicPerm4_rank : (cyclicPerm4 ^ 0).trace = 4 := by native_decide
+theorem cyclicPerm4_rank : (cyclicPerm4 ^ 0).trace = 4 := by decide
 
 /-- For Π_5: exactly 5 eigenvalues on the unit circle.
     Trace(Π_5^0) = 5 = dim.
     thm:operator-resolvent-trace-jump-index -/
-theorem cyclicPerm5_rank : (cyclicPerm5 ^ 0).trace = 5 := by native_decide
+theorem cyclicPerm5_rank : (cyclicPerm5 ^ 0).trace = 5 := by decide
 
 /-- For Π_6: exactly 6 eigenvalues on the unit circle.
     Trace(Π_6^0) = 6 = dim. -/
-theorem cyclicPerm6_rank : (cyclicPerm6 ^ 0).trace = 6 := by native_decide
+theorem cyclicPerm6_rank : (cyclicPerm6 ^ 0).trace = 6 := by decide
 
 /-! ## 2π i periodicity certificate
 
@@ -512,13 +512,13 @@ theorem paper_cyclic_lift_trace_filter_q4 :
     (∀ k : ℕ, (cyclicPerm4 ^ (4 * k + 2)).trace = 0) ∧
     (∀ k : ℕ, (cyclicPerm4 ^ (4 * k + 3)).trace = 0) := by
   refine ⟨fun k => ?_, fun k => ?_, fun k => ?_, fun k => ?_⟩
-  · rw [pow_mul, cyclicPerm4_fourth, one_pow]; native_decide
+  · rw [pow_mul, cyclicPerm4_fourth, one_pow]; decide
   · rw [show 4 * k + 1 = 1 + 4 * k from by ring, pow_add, pow_mul,
-      cyclicPerm4_fourth, one_pow, mul_one]; native_decide
+      cyclicPerm4_fourth, one_pow, mul_one]; decide
   · rw [show 4 * k + 2 = 2 + 4 * k from by ring, pow_add, pow_mul,
-      cyclicPerm4_fourth, one_pow, mul_one]; native_decide
+      cyclicPerm4_fourth, one_pow, mul_one]; decide
   · rw [show 4 * k + 3 = 3 + 4 * k from by ring, pow_add, pow_mul,
-      cyclicPerm4_fourth, one_pow, mul_one]; native_decide
+      cyclicPerm4_fourth, one_pow, mul_one]; decide
 
 /-- Cyclic permutation P_5 trace filter concrete values.
     cor:zeta-cyclic-lift-primitive-orbits -/
@@ -526,9 +526,9 @@ theorem paper_cyclic_lift_trace_filter_q5 :
     (∀ k : ℕ, (cyclicPerm5 ^ (5 * k)).trace = 5) ∧
     (cyclicPerm5 ^ 1).trace = 0 ∧ (cyclicPerm5 ^ 2).trace = 0 ∧
     (cyclicPerm5 ^ 3).trace = 0 ∧ (cyclicPerm5 ^ 4).trace = 0 := by
-  refine ⟨fun k => ?_, by native_decide, by native_decide,
-    by native_decide, by native_decide⟩
-  rw [pow_mul, cyclicPerm5_fifth, one_pow]; native_decide
+  refine ⟨fun k => ?_, by decide, by decide,
+    by decide, by decide⟩
+  rw [pow_mul, cyclicPerm5_fifth, one_pow]; decide
 
 /-- Euler factor product for cyclic permutations n=4,5,6.
     def:fredholm-determinant -/
@@ -547,9 +547,9 @@ theorem paper_cyclic_lift_trace_filter_q6 :
     (cyclicPerm6 ^ 1).trace = 0 ∧ (cyclicPerm6 ^ 2).trace = 0 ∧
     (cyclicPerm6 ^ 3).trace = 0 ∧ (cyclicPerm6 ^ 4).trace = 0 ∧
     (cyclicPerm6 ^ 5).trace = 0 := by
-  refine ⟨fun k => ?_, by native_decide, by native_decide,
-    by native_decide, by native_decide, by native_decide⟩
-  rw [pow_mul, cyclicPerm6_sixth, one_pow]; native_decide
+  refine ⟨fun k => ?_, by decide, by decide,
+    by decide, by decide, by decide⟩
+  rw [pow_mul, cyclicPerm6_sixth, one_pow]; decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R301: Euler factor n=7,8 + Fredholm block product
@@ -710,7 +710,7 @@ theorem paper_zeta_cyclic_lift_prime_shadow_asymptotic_seeds :
     (4 - 1 = 3 ∧ 3 / 3 = 1) ∧
     (1 < 2 ∧ 2 < 4) ∧
     (7 > 3) := by
-  refine ⟨by native_decide, by omega, ⟨by omega, by omega⟩,
+  refine ⟨by decide, by omega, ⟨by omega, by omega⟩,
          ⟨by omega, by omega⟩, ⟨by omega, by omega⟩, by omega⟩
 
 /-- Small gcd/lcm period-alignment seeds for cyclic block tensor factors.

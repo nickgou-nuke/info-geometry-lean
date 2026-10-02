@@ -1,7 +1,7 @@
 # Spectral → Lean 4 Port Plan
 
 **Source**: `external_refs/Spectral` (Lean 2 HoTT, 73 `.hlean` files)  
-**Target**: `lean/InfoGeometry/Spectral/` (Lean 4.28.0, mathlib4-native)  
+**Target**: `lean/InfoGeometry/Spectral/` (Lean 4.28.x, mathlib4-native)
 **Policy**: Clean reimplementation using mathlib4 primitives; no mechanical translation.
 
 ---
@@ -32,8 +32,8 @@ homology/basic.hlean, sphere.hlean, torus.hlean
 ## Port Waves
 
 ### Wave 0: Infrastructure (this repo)
-- [x] Lean 4.28.0 toolchain pinned
-- [x] mathlib4 at v4.28.0 via `lakefile.lean`
+- [x] Lean 4.28.x toolchain pinned
+- [x] mathlib4 at v4.28.x via `lakefile.lean`
 - [x] `InfoGeometryCore` local dependency
 - [ ] Add `Spectral` Lean 4 target directory: `lean/InfoGeometry/Spectral/`
 

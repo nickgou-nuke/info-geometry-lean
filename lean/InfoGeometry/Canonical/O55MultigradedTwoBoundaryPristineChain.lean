@@ -104,7 +104,7 @@ theorem o55_full_five_grade_structure_packet :
         (fNegRealPin crosscapIndex)
         (nPairProjective crosscapIndex) =
       nbarPairProjective crosscapIndex) := by
-  exact ⟨by native_decide,
+  exact ⟨by decide,
     root_card,
     contactGradeDimension_neg_two,
     contactGradeDimension_neg_one,

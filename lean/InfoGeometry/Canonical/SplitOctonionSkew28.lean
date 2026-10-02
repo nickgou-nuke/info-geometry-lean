@@ -15,7 +15,7 @@ abbrev Matrix8 := Matrix (Fin 8) (Fin 8) ℝ
 abbrev Skew8 := skewAdjointMatricesSubmodule (1 : Matrix8)
 
 theorem index_card : Fintype.card Index = 28 := by
-  native_decide
+  decide
 
 def skewMatrix (c : Index → ℝ) : Matrix8 := fun i j =>
   if h : i < j then c ⟨(i, j), h⟩

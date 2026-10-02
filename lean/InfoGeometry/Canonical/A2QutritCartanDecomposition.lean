@@ -416,7 +416,7 @@ theorem offDiagonalSubmodule_finrank :
   rw [← span_transitionMatrix_eq_offDiagonalSubmodule]
   rw [finrank_span_eq_card transitionMatrix_linearIndependent]
   have hcard : Fintype.card {x : Fin 3 × Fin 3 // x.1 = x.2} = 3 := by
-    native_decide
+    decide
   simp [hcard]
 
 def offDiagonalTransition (r : A2Root) : offDiagonalSubmodule :=

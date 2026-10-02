@@ -20,7 +20,7 @@ def tripotentStage : M3Z :=
   !![1, 0, 0; 0, -1, 0; 0, 0, 0]
 
 theorem tripotentStage_cube : tripotentStage ^ 3 = tripotentStage := by
-  native_decide
+  decide
 
 def phi24Companion : M8Z :=
   !![0, 0, 0, 0, 0, 0, 0, -1;
@@ -34,12 +34,12 @@ def phi24Companion : M8Z :=
 
 theorem phi24Companion_polynomial :
     phi24Companion ^ 8 - phi24Companion ^ 4 + 1 = 0 := by
-  native_decide
+  decide
 
 theorem phi24Companion_pow_twenty_four : phi24Companion ^ 24 = 1 := by
-  native_decide
+  decide
 
 theorem phi24Companion_master25 : phi24Companion ^ 25 = phi24Companion := by
-  native_decide
+  decide
 
 end InfoGeometry.Canonical.CyclotomicExplicitMatrixRealizations

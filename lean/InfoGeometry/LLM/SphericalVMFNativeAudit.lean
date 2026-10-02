@@ -1,5 +1,4 @@
 import InfoGeometry.LLM.SphericalVMFFieldDerivatives
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LLM.ContinuousMeanFieldClosure
 
 /-!

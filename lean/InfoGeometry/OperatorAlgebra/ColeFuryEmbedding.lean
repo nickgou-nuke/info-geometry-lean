@@ -38,7 +38,7 @@ abbrev embed := quadrantReadout
 
 @[simp] theorem embed_zero : embed (0 : SplitOct) = 0 := by
   unfold embed
-  native_decide
+  decide
 
 theorem embed_add (X Y : SplitOct) : embed (X + Y) = embed X + embed Y := by
   change quadrantReadout (X + Y) = quadrantReadout X + quadrantReadout Y
@@ -60,7 +60,7 @@ theorem kernelElement_ne_zero : kernelElement ≠ (0 : SplitOct) := by
 
 theorem embed_kernelElement : embed kernelElement = embed (0 : SplitOct) := by
   unfold embed kernelElement
-  native_decide
+  decide
 
 theorem embed_not_injective : ¬ Function.Injective embed := by
   intro hinj
@@ -78,15 +78,15 @@ where the cross-product components vanish.
 def isAssociativeSubalgebra (X : SplitOct) : Prop :=
   X.x1 = 0 ∧ X.x2 = 0 ∧ X.y1 = 0 ∧ X.y2 = 0
 
-private theorem upperLeft_horizonUp : upperLeft * horizonUp = horizonUp := by unfold upperLeft horizonUp; native_decide
-private theorem upperLeft_horizonDown : upperLeft * horizonDown = 0 := by unfold upperLeft horizonDown; native_decide
-private theorem horizonUp_upperLeft : horizonUp * upperLeft = 0 := by unfold upperLeft horizonUp; native_decide
-private theorem horizonDown_upperLeft : horizonDown * upperLeft = horizonDown := by unfold upperLeft horizonDown; native_decide
+private theorem upperLeft_horizonUp : upperLeft * horizonUp = horizonUp := by unfold upperLeft horizonUp; decide
+private theorem upperLeft_horizonDown : upperLeft * horizonDown = 0 := by unfold upperLeft horizonDown; decide
+private theorem horizonUp_upperLeft : horizonUp * upperLeft = 0 := by unfold upperLeft horizonUp; decide
+private theorem horizonDown_upperLeft : horizonDown * upperLeft = horizonDown := by unfold upperLeft horizonDown; decide
 
-private theorem lowerRight_horizonUp : lowerRight * horizonUp = 0 := by unfold lowerRight horizonUp; native_decide
-private theorem lowerRight_horizonDown : lowerRight * horizonDown = horizonDown := by unfold lowerRight horizonDown; native_decide
-private theorem horizonUp_lowerRight : horizonUp * lowerRight = horizonUp := by unfold lowerRight horizonUp; native_decide
-private theorem horizonDown_lowerRight : horizonDown * lowerRight = 0 := by unfold lowerRight horizonDown; native_decide
+private theorem lowerRight_horizonUp : lowerRight * horizonUp = 0 := by unfold lowerRight horizonUp; decide
+private theorem lowerRight_horizonDown : lowerRight * horizonDown = horizonDown := by unfold lowerRight horizonDown; decide
+private theorem horizonUp_lowerRight : horizonUp * lowerRight = horizonUp := by unfold lowerRight horizonUp; decide
+private theorem horizonDown_lowerRight : horizonDown * lowerRight = 0 := by unfold lowerRight horizonDown; decide
 
 /--
 The aggregate readout maps split-octonion multiplication (`mulZ`) to matrix

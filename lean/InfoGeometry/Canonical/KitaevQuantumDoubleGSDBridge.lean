@@ -29,10 +29,10 @@ theorem quantum_double_total_dim_sq_formula (G : Type*) [Fintype G] :
 
 theorem toric_code_torus_gsd_eq :
     quantumDoubleTorusGSD (ZMod 2) = 4 := by
-  native_decide
+  decide
 
 theorem quantum_double_s3_total_dim_sq_eq :
     quantumDoubleTorusGSD (Equiv.Perm (Fin 3)) = 36 := by
-  native_decide
+  decide
 
 end KitaevQuantumDoubleGSDBridge

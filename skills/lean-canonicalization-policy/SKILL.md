@@ -55,6 +55,9 @@ If a file introduces new ontology and skips a layer, it is debt.
 Multi-layer files are only acceptable as coherence files or capstones.
 The point of cleanup is to make adjacent transports explicit, not to deny that the theory has several legitimate representation levels.
 
+## Anti-Stale-Doc Mandate
+Never read, resurrect, or use stale documentation, dead markdown notes, or obsolete transcript summaries in programming or proof design. Live Lean owner files and kernel-checked proofs decide truth. Do not invent or resurrect docstrings or taxonomies that are not strictly present in active, verified code.
+
 ## Mandatory Theorem Burden
 
 A new public theorem in a canonical owner file is forbidden unless it survives all three tests:

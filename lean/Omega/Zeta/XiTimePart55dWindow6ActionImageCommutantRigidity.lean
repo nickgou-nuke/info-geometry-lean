@@ -61,7 +61,7 @@ theorem paper_xi_time_part55d_window6_action_image_commutant_rigidity
   let _ := h.commutantFintype
   refine ⟨paper_xi_time_part55d_window6_microstate_hilbert_gauge_splitting, ⟨h.blockDecomposition⟩,
     ?_, ?_, h.visibleBlock_selfAdjoint, h.visibleHiddenBlock_zero, h.hiddenVisibleBlock_zero⟩
-  · native_decide
+  · decide
   · simpa [pow_two,
       xi_time_part55d_window6_action_image_commutant_rigidity_visible_matrix_sector,
       xi_time_part55d_window6_action_image_commutant_rigidity_hidden_scalar_sector] using

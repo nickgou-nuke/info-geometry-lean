@@ -62,7 +62,7 @@ def parabolicLinePoints (l : HexLine) : Finset HexPoint :=
 
 theorem parabolicLinePoints_card (l : HexLine) :
     (parabolicLinePoints l).card = 3 := by
-  fin_cases l <;> native_decide
+  fin_cases l <;> decide
 
 def parabolicIncidenceData : IncidenceData where
   linePoints := parabolicLinePoints
@@ -70,7 +70,7 @@ def parabolicIncidenceData : IncidenceData where
 theorem parabolicPointDegree (p : HexPoint) :
     (Finset.univ.filter (fun l : HexLine => p ∈ parabolicIncidenceData.linePoints l)).card = 3 :=
   by
-    fin_cases p <;> native_decide
+    fin_cases p <;> decide
 
 theorem parabolic_flag_card : Fintype.card (Flag parabolicIncidenceData) = 189 := by
   exact flag_card parabolicIncidenceData parabolicPointDegree

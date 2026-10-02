@@ -11,7 +11,7 @@ private noncomputable def zeroBlockError (n : ℕ) : ℝ :=
 /-- A linear lower bound that is sufficient to extract an explicit eventual depth threshold from
 the exact zero-block minimax formula. -/
 private theorem succ_le_fib_add_three : ∀ n : ℕ, n + 1 ≤ Nat.fib (n + 3)
-  | 0 => by native_decide
+  | 0 => by decide
   | n + 1 => by
       have ih : n + 1 ≤ Nat.fib (n + 3) := succ_le_fib_add_three n
       have hrec : Nat.fib (n + 4) = Nat.fib (n + 2) + Nat.fib (n + 3) := by

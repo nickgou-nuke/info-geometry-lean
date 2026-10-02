@@ -382,6 +382,6 @@ def bridge_registry : List BridgeArtifact :=
   ]
 
 theorem bridge_registry_length : bridge_registry.length = 17 := by
-  native_decide
+  decide
 
 end GoutevPrinciple

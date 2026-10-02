@@ -31,11 +31,11 @@ theorem paper_window6_21_adjoint_weight_multiset :
     (∀ w ∈ b3VisibleSupport.erase zeroWeight, w ≠ zeroWeight) ∧
     (∀ w ∈ c3VisibleSupport.erase zeroWeight, w ≠ zeroWeight) := by
   refine ⟨paper_window6_b3c3_visible_support_three_levi_planes_proof, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
   · intro w hw
     exact (Finset.mem_erase.mp hw).1
   · intro w hw

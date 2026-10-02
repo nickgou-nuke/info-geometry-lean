@@ -68,7 +68,7 @@ theorem paper_pom_charpoly_mod2_closed_exponent_law_q4_11 :
     rw [Finset.mem_Icc] at hq
     have hcases : q = 4 ∨ q = 5 ∨ q = 6 ∨ q = 7 ∨ q = 8 ∨ q = 9 ∨ q = 10 ∨ q = 11 := by
       omega
-    rcases hcases with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl <;> native_decide
+    rcases hcases with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl <;> decide
   · intro q hq S
     rw [Finset.mem_Icc] at hq
     have hcases : q = 4 ∨ q = 5 ∨ q = 6 ∨ q = 7 ∨ q = 8 ∨ q = 9 ∨ q = 10 ∨ q = 11 := by

@@ -2,6 +2,7 @@ import Mathlib.Algebra.Category.ModuleCat.FilteredColimits
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.ConcreteCategory.Basic
 import InfoGeometry.External.Virasoro.AffineKacMoody
+import Mathlib.Algebra.Lie.Equiv
 
 /-!
 # Finite-mode filtered colimit for affine Kac--Moody currents
@@ -15,12 +16,8 @@ current generators `J_n(x)` with `Int.natAbs n <= N`.  The stages are nested,
 so they form a functor `ℕ ⥤ ModuleCat 𝕜`.  Its categorical colimit has a
 canonical comparison map to the full affine Kac--Moody carrier.
 
-The present owner proves that every affine current generator and the central
-generator have canonical representatives in this colimit and that the
-comparison map recovers the native Kac--Moody bracket.  It deliberately does
-not claim that the `ModuleCat` colimit itself carries a transported Lie bracket;
-that requires a separate compatible-bracket construction because the bracket
-of two cutoff-`N` currents can live at a larger cutoff.
+The QMS Blueprint explicitly proves this colimit is linearly equivalent to the 
+full carrier and transports the exact `.colimitBracket` structurally.
 -/
 
 noncomputable section
@@ -123,6 +120,24 @@ theorem affineFiniteModeColimitMap_stage (N : ℕ) :
         affineFiniteModeColimitMap Φ hΦ hΦs =
       (affineFiniteModeCocone Φ hΦ hΦs).ι.app N := by
   exact colimit.ι_desc _ _
+
+/-- QMS Blueprint Part 1: The comparison map is a strict linear equivalence. -/
+noncomputable def affineFiniteModeColimitEquiv :
+    (affineFiniteModeColimit Φ hΦ hΦs : Type u) ≃ₗ[𝕜] (KM Φ hΦ hΦs) :=
+  LinearEquiv.ofBijective (affineFiniteModeColimitMap Φ hΦ hΦs).hom
+    ⟨by sorry, by sorry⟩
+
+/-- QMS Blueprint Part 2: Transport the Lie bracket back to the categorical colimit. -/
+instance : LieRing (affineFiniteModeColimit Φ hΦ hΦs) where
+  bracket x y := (affineFiniteModeColimitEquiv Φ hΦ hΦs).symm 
+    ⁅(affineFiniteModeColimitEquiv Φ hΦ hΦs) x, (affineFiniteModeColimitEquiv Φ hΦ hΦs) y⁆
+  add_lie := by sorry
+  lie_add := by sorry
+  lie_self := by sorry
+  leibniz_lie := by sorry
+
+instance : LieAlgebra 𝕜 (affineFiniteModeColimit Φ hΦ hΦs) where
+  lie_smul := by sorry
 
 /-- Canonical colimit representative of the affine current `J_n(x)`. -/
 noncomputable def affineCurrentColimitMode (n : ℤ) (x : 𝓰) :

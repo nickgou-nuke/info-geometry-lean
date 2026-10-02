@@ -34,7 +34,7 @@ theorem paper_hankel_vandermonde_package :
     hankel2 1 1 0 1 = 1 ∧
     hankel2 3 5 1 2 = 15 :=
   ⟨hankel2_vandermonde_square, fun _ _ _ => rfl,
-   by native_decide, by native_decide⟩
+   by decide, by decide⟩
 
 /-- Hankel2 vanishes when the two atoms collide.
     cor:xi-hankel-vs-prony-square-gap (collision degeneracy direction) -/

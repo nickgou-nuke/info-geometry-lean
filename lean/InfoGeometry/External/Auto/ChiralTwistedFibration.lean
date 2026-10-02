@@ -272,17 +272,17 @@ def realDim : SpaceLabel → ℕ
 /-- Quaternionic Hopf fibration dimension check: `S³ → S⁷ → S⁴`. -/
 theorem quaternionic_hopf_dimension :
     realDim SpaceLabel.S3 + realDim SpaceLabel.S4 = realDim SpaceLabel.S7 := by
-  native_decide
+  decide
 
 /-- Complex Hopf fibration dimension check: `S¹ → S⁷ → CP³`. -/
 theorem complex_hopf_dimension :
     realDim SpaceLabel.S1 + realDim SpaceLabel.CP3 = realDim SpaceLabel.S7 := by
-  native_decide
+  decide
 
 /-- Twistor fibration dimension check: `CP¹ → CP³ → S⁴`. -/
 theorem twistor_dimension :
     realDim SpaceLabel.CP1 + realDim SpaceLabel.S4 = realDim SpaceLabel.CP3 := by
-  native_decide
+  decide
 
 /-- Dimension obstruction to the informal claim `CP² → S⁷ → S⁴`.
 
@@ -290,7 +290,7 @@ As a smooth fiber-bundle slogan this cannot be right: `dim CP² + dim S⁴ = 8`,
 not `dim S⁷ = 7`. -/
 theorem not_cp2_fiber_over_s4_with_total_s7 :
     realDim SpaceLabel.CP2 + realDim SpaceLabel.S4 ≠ realDim SpaceLabel.S7 := by
-  native_decide
+  decide
 
 inductive TransportKind where
   | glideMonodromy

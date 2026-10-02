@@ -20,7 +20,7 @@ theorem entry_count_seed :
     (Finset.Icc (-1 : ℤ) 1).card = 3 ∧
     (Finset.Icc (-2 : ℤ) 2).card = 5 ∧
     (Finset.Icc (-3 : ℤ) 3).card = 7 := by
-  refine ⟨by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide⟩
 
 /-- For d×d matrices with entries in [-M, M], the total count is (2M+1)^(d²).
     This is a seed for d=1: (2M+1)^1 = 2M+1.
@@ -61,15 +61,15 @@ theorem injection_seed_d2_M2 : (2 * 2 + 1) ^ (2 * 2) = 625 := by norm_num
 /-- The bit budget identity: d² entries each needing ⌈log₂(2M+1)⌉ bits.
     For M=1 (entries in {-1,0,1}), each entry needs 2 bits.
     prop:spg-fixed-dim-linear-register-bit-lower-bound -/
-theorem bit_budget_M1 : Nat.log 2 (2 * 1 + 1) = 1 := by native_decide
+theorem bit_budget_M1 : Nat.log 2 (2 * 1 + 1) = 1 := by decide
 
 /-- For M=3 (entries in {-3,...,3}), each entry needs 3 bits (since 2*3+1=7, log₂ 7 = 2).
     prop:spg-fixed-dim-linear-register-bit-lower-bound -/
-theorem bit_budget_M3 : Nat.log 2 (2 * 3 + 1) = 2 := by native_decide
+theorem bit_budget_M3 : Nat.log 2 (2 * 3 + 1) = 2 := by decide
 
 /-- For M=7 (entries in {-7,...,7}), log₂ 15 = 3.
     prop:spg-fixed-dim-linear-register-bit-lower-bound -/
-theorem bit_budget_M7 : Nat.log 2 (2 * 7 + 1) = 3 := by native_decide
+theorem bit_budget_M7 : Nat.log 2 (2 * 7 + 1) = 3 := by decide
 
 /-- Paper wrapper: linear register bit budget seeds.
     prop:spg-fixed-dim-linear-register-bit-lower-bound -/

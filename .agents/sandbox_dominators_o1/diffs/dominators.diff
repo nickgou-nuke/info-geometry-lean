@@ -1,0 +1,105 @@
+--- lean/DAG/Dominators.lean	2026-09-14 12:48:39.979616804 +0300
++++ .agents/sandbox_dominators_o1/lean/DAG/Dominators.lean	2026-09-22 08:45:03.791006019 +0300
+@@ -44,11 +44,7 @@
+   ByteArray.mk (arrayReplicate byteWidth (0 : UInt8))
+ 
+ private def boolVecAnd (a b : ByteArray) : ByteArray :=
+-  Id.run do
+-    let mut r := ByteArray.empty
+-    for i in [:a.size] do
+-      r := r.push (a[i]! &&& b[i]!)
+-    r
++  ByteArray.mk (Array.mk (List.zipWith (· &&& ·) a.data.toList b.data.toList))
+ 
+ private def boolVecSet (a : ByteArray) (i : Nat) : ByteArray :=
+   let bi := i / 8
+@@ -69,14 +65,10 @@
+   for u in order do
+     let ps := preds[u]!
+     let base :=
+-      match ps[0]? with
+-      | none => boolVecZero byteWidth
+-      | some p0 =>
+-          Id.run do
+-            let mut acc := dom[p0]!
+-            for i in [1:ps.size] do
+-              acc := boolVecAnd acc (dom[ps[i]!]!)
+-            acc
++      match ps.toList with
++      | [] => boolVecZero byteWidth
++      | p0 :: rest =>
++          rest.foldl (fun acc p => boolVecAnd acc (dom[p]!)) (dom[p0]!)
+     dom := dom.set! u (boolVecSet base u)
+ 
+   dom
+@@ -90,12 +82,8 @@
+   ((dom[b]!)[bi]! &&& bit) != 0
+ 
+ /-- Strict dominators of `n`, i.e. dominators excluding `n` itself. -/
+-def strictDominators (dom : Array ByteArray) (n : Nat) : Array Nat := Id.run do
+-  let mut out := #[]
+-  for d in [:dom.size] do
+-    if d != n && dominates dom d n then
+-      out := out.push d
+-  return out
++def strictDominators (dom : Array ByteArray) (n : Nat) : Array Nat :=
++  Array.mk ((List.range dom.size).filter (fun d => d != n && dominates dom d n))
+ 
+ /--
+ Immediate dominator: the strict dominator closest to `n`.
+@@ -106,23 +94,17 @@
+ `0 → 1 → 3` and `0 → 2 → 3`, the immediate dominator of `3` is `0`, which is
+ not a direct predecessor.
+ -/
+-def immediateDominator (dom : Array ByteArray) (n : Nat) : Option Nat := Id.run do
++def immediateDominator (dom : Array ByteArray) (n : Nat) : Option Nat :=
+   let candidates := strictDominators dom n
+-  for d in candidates do
+-    if candidates.all (fun e => e == d || dominates dom e d) then
+-      return some d
+-  return none
++  candidates.toList.find? (fun d => candidates.toList.all (fun e => e == d || dominates dom e d))
+ 
+ /--
+ Build the immediate dominator array for all nodes.
+ Returns `idom[i] = immediateDominator i` (none for source).
+ -/
+-def buildIdom (preds : Array (Array Nat)) (dom : Array ByteArray) : Array (Option Nat) := Id.run do
+-  let mut idom := arrayReplicate preds.size (none : Option Nat)
+-  for i in [:preds.size] do
+-    if !preds[i]!.isEmpty then
+-      idom := idom.set! i (immediateDominator dom i)
+-  return idom
++def buildIdom (preds : Array (Array Nat)) (dom : Array ByteArray) : Array (Option Nat) :=
++  Array.mk ((List.range preds.size).map (fun i =>
++    if !preds[i]!.isEmpty then immediateDominator dom i else none))
+ 
+ /--
+ **Light cone**: the set of nodes strictly dominated by `n` (future light cone)
+@@ -226,7 +208,7 @@
+ 
+ theorem chain_idom_smoke :
+     buildIdom chainPreds (dominators chainPreds chainOrder) = #[none, some 0, some 1] := by
+-  native_decide
++  decide
+ 
+ private def diamondPreds : Array (Array Nat) := #[#[], #[0], #[0], #[1, 2]]
+ private def diamondOrder : Array Nat := #[0, 1, 2, 3]
+@@ -234,7 +216,7 @@
+ theorem diamond_idom_smoke :
+     buildIdom diamondPreds (dominators diamondPreds diamondOrder) =
+       #[none, some 0, some 0, some 0] := by
+-  native_decide
++  decide
+ 
+ private def multiRootPreds : Array (Array Nat) := #[#[], #[], #[0, 1]]
+ private def multiRootOrder : Array Nat := #[0, 1, 2]
+@@ -243,7 +225,7 @@
+     let dom := dominators multiRootPreds multiRootOrder
+     dominates dom 0 1 = false ∧ dominates dom 1 0 = false ∧
+       buildIdom multiRootPreds dom = #[none, none, none] := by
+-  native_decide
++  decide
+ 
+ end DAG.Dominators
+ 

@@ -98,7 +98,7 @@ def shear2Q : Matrix (Fin 2) (Fin 2) ℚ :=
 /-- The rational shear preserves the standard symplectic form. -/
 theorem shear2Q_symplectic :
     shear2Q.transpose * J2Q * shear2Q = J2Q := by
-  native_decide
+  decide
 
 /--
 Concrete 5D Kaluza--Klein block metric over `ℚ`.
@@ -117,7 +117,7 @@ def kkMetric5Q : Matrix (Fin 5) (Fin 5) ℚ :=
 /-- The concrete 5D KK metric has determinant `φ det(g₄) = 2 * (-1) = -2`. -/
 theorem kkMetric5Q_det :
     kkMetric5Q.det = (-2 : ℚ) := by
-  native_decide
+  decide
 
 /-! ## 3. Scalar prequantum quantization readout -/
 

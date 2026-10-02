@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "lean-lsp-mcp": {
+      "command": "lake",
+      "args": [
+        "env",
+        "/home/goutev/info-geometry-lean/OpenGauss/venv/bin/python",
+        "-m",
+        "lean_lsp_mcp"
+      ],
+      "cwd": "/home/goutev/info-geometry-lean",
+      "env": {
+        "LEAN_PROJECT_PATH": "/home/goutev/info-geometry-lean"
+      }
+    }
+  }
+}

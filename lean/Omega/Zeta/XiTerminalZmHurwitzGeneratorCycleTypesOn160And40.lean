@@ -41,6 +41,6 @@ theorem paper_xi_terminal_zm_hurwitz_generator_cycle_types_on_160_and_40 :
   unfold xi_terminal_zm_hurwitz_generator_cycle_types_on_160_and_40_order
   unfold xi_terminal_zm_hurwitz_generator_cycle_types_on_160_and_40_lengths160
   unfold xi_terminal_zm_hurwitz_generator_cycle_types_on_160_and_40_lengths40
-  native_decide
+  decide
 
 end Omega.Zeta

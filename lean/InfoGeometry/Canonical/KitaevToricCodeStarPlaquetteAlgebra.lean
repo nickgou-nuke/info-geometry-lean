@@ -46,7 +46,7 @@ theorem star_operator_square (g : ToricCodeLocalIntersection R)
     (h_comm_X1_X2 : g.X1 * g.X2 = g.X2 * g.X1) :
     StarOperator2 g * StarOperator2 g = 1 := by
   dsimp [StarOperator2]
-  have h_assoc : g.X1 * g.X2 * (g.X1 * g.X2) = g.X1 * (g.X2 * g.X1) * g.X2 := by noncomm_ring
+  have h_assoc : g.X1 * g.X2 * (g.X1 * g.X2) = g.X1 * (g.X2 * g.X1) * g.X2 := by simp only [mul_assoc]
   rw [h_assoc, ← h_comm_X1_X2, ← mul_assoc, h_X1_sq, one_mul, h_X2_sq]
 
 /-- **Theorem**: Plaquette Operator Involutivity: B_p² = 1. -/
@@ -56,7 +56,7 @@ theorem plaquette_operator_square (g : ToricCodeLocalIntersection R)
     (h_comm_Z1_Z2 : g.Z1 * g.Z2 = g.Z2 * g.Z1) :
     PlaquetteOperator2 g * PlaquetteOperator2 g = 1 := by
   dsimp [PlaquetteOperator2]
-  have h_assoc : g.Z1 * g.Z2 * (g.Z1 * g.Z2) = g.Z1 * (g.Z2 * g.Z1) * g.Z2 := by noncomm_ring
+  have h_assoc : g.Z1 * g.Z2 * (g.Z1 * g.Z2) = g.Z1 * (g.Z2 * g.Z1) * g.Z2 := by simp only [mul_assoc]
   rw [h_assoc, ← h_comm_Z1_Z2, ← mul_assoc, h_Z1_sq, one_mul, h_Z2_sq]
 
 /-- **Theorem**: Star and Plaquette Commutation: [A_s, B_p] = 0 (A_s B_p = B_p A_s). -/
@@ -67,11 +67,11 @@ theorem star_plaquette_commutation (g : ToricCodeLocalIntersection R)
     (h_comm_X2_Z1 : g.X2 * g.Z1 = g.Z1 * g.X2) :
     StarOperator2 g * PlaquetteOperator2 g = PlaquetteOperator2 g * StarOperator2 g := by
   dsimp [StarOperator2, PlaquetteOperator2]
-  have h1 : g.X1 * g.X2 * (g.Z1 * g.Z2) = g.X1 * (g.X2 * g.Z1) * g.Z2 := by noncomm_ring
-  have h2 : g.X1 * (g.Z1 * g.X2) * g.Z2 = (g.X1 * g.Z1) * (g.X2 * g.Z2) := by noncomm_ring
-  have h3 : (- (g.Z1 * g.X1)) * (- (g.Z2 * g.X2)) = g.Z1 * g.X1 * (g.Z2 * g.X2) := by noncomm_ring
-  have h4 : g.Z1 * g.X1 * (g.Z2 * g.X2) = g.Z1 * (g.X1 * g.Z2) * g.X2 := by noncomm_ring
-  have h5 : g.Z1 * (g.Z2 * g.X1) * g.X2 = g.Z1 * g.Z2 * (g.X1 * g.X2) := by noncomm_ring
+  have h1 : g.X1 * g.X2 * (g.Z1 * g.Z2) = g.X1 * (g.X2 * g.Z1) * g.Z2 := by simp only [mul_assoc]
+  have h2 : g.X1 * (g.Z1 * g.X2) * g.Z2 = (g.X1 * g.Z1) * (g.X2 * g.Z2) := by simp only [mul_assoc]
+  have h3 : (- (g.Z1 * g.X1)) * (- (g.Z2 * g.X2)) = g.Z1 * g.X1 * (g.Z2 * g.X2) := by simp only [neg_mul_neg]
+  have h4 : g.Z1 * g.X1 * (g.Z2 * g.X2) = g.Z1 * (g.X1 * g.Z2) * g.X2 := by simp only [mul_assoc]
+  have h5 : g.Z1 * (g.Z2 * g.X1) * g.X2 = g.Z1 * g.Z2 * (g.X1 * g.X2) := by simp only [mul_assoc]
   rw [h1, h_comm_X2_Z1, h2, h_anti1, h_anti2, h3, h4, h_comm_X1_Z2, h5]
 
 /-- **Theorem**: Stabilizer Projector Idempotent Property for A_s² = 1. -/
@@ -84,11 +84,11 @@ theorem stabilizer_projector_idempotent {S : Type*} [Ring S] [Algebra ℝ S]
     _ = 1 + As + As + 1 := by rw [h]
     _ = 2 * (1 + As) := by noncomm_ring
   calc (algebraMap ℝ S (1/2) * (1 + As)) * (algebraMap ℝ S (1/2) * (1 + As))
-    _ = algebraMap ℝ S (1/2) * ((1 + As) * algebraMap ℝ S (1/2)) * (1 + As) := by noncomm_ring
+    _ = algebraMap ℝ S (1/2) * ((1 + As) * algebraMap ℝ S (1/2)) * (1 + As) := by simp only [mul_assoc]
     _ = algebraMap ℝ S (1/2) * (algebraMap ℝ S (1/2) * (1 + As)) * (1 + As) := by rw [h_comm]
-    _ = (algebraMap ℝ S (1/2) * algebraMap ℝ S (1/2)) * ((1 + As) * (1 + As)) := by noncomm_ring
+    _ = (algebraMap ℝ S (1/2) * algebraMap ℝ S (1/2)) * ((1 + As) * (1 + As)) := by simp only [mul_assoc]
     _ = algebraMap ℝ S (1/4) * (2 * (1 + As)) := by rw [← map_mul (algebraMap ℝ S)]; norm_num; rw [h_exp]
-    _ = (algebraMap ℝ S (1/4) * algebraMap ℝ S 2) * (1 + As) := by rw [← map_ofNat (algebraMap ℝ S)]; noncomm_ring
+    _ = (algebraMap ℝ S (1/4) * algebraMap ℝ S 2) * (1 + As) := by rw [← map_ofNat (algebraMap ℝ S)]; simp only [mul_assoc]
     _ = algebraMap ℝ S (1/2) * (1 + As) := by rw [← map_mul (algebraMap ℝ S)]; norm_num
 
 end InfoGeometry.Canonical.KitaevToricCodeStarPlaquetteAlgebra

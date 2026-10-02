@@ -45,6 +45,10 @@ theorem rapidity_additive_composition (lam₁ lam₂ : ℝ) :
     simp [componentAReal, Matrix.mul_apply, Real.exp_add]
   ring
 
+theorem componentAReal_diagonal_positive (lam : ℝ) :
+    0 < componentAReal lam 0 0 ∧ 0 < componentAReal lam 1 1 := by
+  simp [componentAReal, Real.exp_pos]
+
 /-- The zero rapidity boost is the identity. -/
 theorem rapidity_zero :
     componentAReal 0 = (1 : Mat2R) :=

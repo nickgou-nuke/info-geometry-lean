@@ -43,10 +43,10 @@ def window6C3SupportVanishingIdealHilbertStatement : Prop :=
 /-- Paper label: `thm:window6-c3-support-vanishing-ideal-hilbert`. -/
 theorem paper_window6_c3_support_vanishing_ideal_hilbert :
     window6C3SupportVanishingIdealHilbertStatement := by
-  refine ⟨Omega.GU.Window6C3SupportCount.c3Support_card, by native_decide, by native_decide,
-    by native_decide, by native_decide, by native_decide, by native_decide, by native_decide,
-    by native_decide, ?_⟩
+  refine ⟨Omega.GU.Window6C3SupportCount.c3Support_card, by decide, by decide,
+    by decide, by decide, by decide, by decide, by decide,
+    by decide, ?_⟩
   rw [Omega.GU.Window6C3SupportCount.c3Support_card]
-  native_decide
+  decide
 
 end Omega.GU

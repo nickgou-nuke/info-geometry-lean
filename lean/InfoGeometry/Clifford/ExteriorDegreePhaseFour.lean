@@ -1,5 +1,4 @@
 import InfoGeometry.Algebra.FourthRootPeirceProjectors
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ExteriorSpinorChiralityBridge
 import Mathlib.LinearAlgebra.ExteriorPower.Basic
 
@@ -26,7 +25,8 @@ attribute [local instance] smulCommClass_self
 local instance instExtModule : Module ℂ (ExteriorAlgebra ℂ V) := Algebra.toModule
 local instance instExtMulAction : MulAction ℂ (ExteriorAlgebra ℂ V) := instExtModule.toMulAction
 local instance instEndModule : Module ℂ (Module.End ℂ (ExteriorAlgebra ℂ V)) := LinearMap.module
-local instance instEndMulAction : MulAction ℂ (Module.End ℂ (ExteriorAlgebra ℂ V)) := instEndModule.toMulAction
+local instance instEndMulAction : MulAction ℂ (Module.End ℂ (ExteriorAlgebra ℂ V)) :=
+  instEndModule.toMulAction
 
 /-- Extend multiplication by i on generators with the native exterior functor. -/
 def degreePhase : ExteriorAlgebra ℂ V →ₐ[ℂ] ExteriorAlgebra ℂ V :=
@@ -138,8 +138,8 @@ theorem degreePhase_contract (φ : Module.Dual ℂ V) (x : ExteriorAlgebra ℂ V
       congr 1
       · have hscalar : -Complex.I * (Complex.I * φ v) = φ v := by
           calc -Complex.I * (Complex.I * φ v) = -(Complex.I * Complex.I) * φ v := by ring
-          _ = -(-1) * φ v := by rw [Complex.I_mul_I]
-          _ = φ v := by ring
+            _ = -(-1) * φ v := by rw [Complex.I_mul_I]
+            _ = φ v := by ring
         rw [hscalar]
       · have hscalar : Complex.I * -Complex.I = -Complex.I * Complex.I := by ring
         rw [hscalar]
@@ -150,16 +150,14 @@ theorem degree_even_coarsening :
       (1/2 : ℂ) • (1 +
         (gradeInvolution : ExteriorAlgebra ℂ V →ₐ[ℂ] ExteriorAlgebra ℂ V).toLinearMap) := by
   rw [← phaseEnd_square]
-  norm_num [degreeProjector, projector, phase, pow_succ, Complex.I_mul_I]
-  module
+  norm_num [degreeProjector, projector, phase, pow_succ, Complex.I_mul_I] <;> module
 
 theorem degree_odd_coarsening :
     degreeProjector (V := V) 1 + degreeProjector 3 =
       (1/2 : ℂ) • (1 -
         (gradeInvolution : ExteriorAlgebra ℂ V →ₐ[ℂ] ExteriorAlgebra ℂ V).toLinearMap) := by
   rw [← phaseEnd_square]
-  norm_num [degreeProjector, projector, phase, pow_succ, Complex.I_mul_I]
-  module
+  norm_num [degreeProjector, projector, phase, pow_succ, Complex.I_mul_I] <;> module
 
 /-- The degree phase fixes the scalar unit and hence cannot square to minus identity. -/
 theorem phaseEnd_square_ne_neg_one :
@@ -189,7 +187,7 @@ theorem no_phase_algHom (a : A) (q : ℂ) (hq : q ≠ 0)
       _ = F (a*a) := by rw [ha, AlgHom.commutes]
       _ = (Complex.I • a) * (Complex.I • a) := by rw [map_mul, hF]
       _ = algebraMap ℂ A (-q) := by
-        rw [smul_mul_assoc, mul_smul_comm, smul_smul (M := ℂ), Complex.I_mul_I, neg_one_smul,
+        rw [smul_mul_assoc, mul_smul_comm, smul_smul, Complex.I_mul_I, neg_one_smul,
           ha, map_neg]
   have hs : q = -q := (algebraMap ℂ A).injective h
   apply hq

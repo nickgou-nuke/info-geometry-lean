@@ -17,7 +17,7 @@ theorem paper_xi_time_part60ad_window6_max_binfold_arithmetic_threshold :
             Omega.stableValue w + Nat.fib 9, Omega.stableValue w + Nat.fib 10}) ∧
     Omega.cBinFiberHist 6 4 = 9 := by
   refine ⟨?_, ?_, Omega.cBinFiberHist_6_4⟩
-  · native_decide
-  · native_decide
+  · decide
+  · decide
 
 end Omega.Zeta

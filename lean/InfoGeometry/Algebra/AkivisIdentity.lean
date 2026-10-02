@@ -21,13 +21,22 @@ def akivisJacobiator (x y z : A) : A :=
     akivisBracket (akivisBracket y z) x +
       akivisBracket (akivisBracket z x) y
 
+lemma akivisBracket_akivisBracket (x y z : A) :
+    akivisBracket (akivisBracket x y) z =
+      _root_.associator x y z - _root_.associator y x z + x * (y * z) - y * (x * z) - z * (x * y) + z * (y * x) := by
+  dsimp [akivisBracket, _root_.associator_apply]
+  rw [sub_mul, mul_sub]
+  abel
+
 theorem akivis_identity (x y z : A) :
     akivisJacobiator x y z =
       _root_.associator x y z + _root_.associator y z x +
         _root_.associator z x y - _root_.associator y x z -
           _root_.associator z y x - _root_.associator x z y := by
-  simp [akivisJacobiator, akivisBracket, _root_.associator_apply,
-    sub_eq_add_neg, mul_add, add_mul]
+  dsimp [akivisJacobiator]
+  rw [akivisBracket_akivisBracket x y z]
+  rw [akivisBracket_akivisBracket y z x]
+  rw [akivisBracket_akivisBracket z x y]
   abel
 
 def rightNestedJacobiator (x y z : A) : A :=
@@ -37,7 +46,8 @@ def rightNestedJacobiator (x y z : A) : A :=
 
 theorem rightNestedJacobiator_eq_neg (x y z : A) :
     rightNestedJacobiator x y z = -akivisJacobiator x y z := by
-  simp [rightNestedJacobiator, akivisJacobiator, akivisBracket]
+  dsimp [rightNestedJacobiator, akivisJacobiator, akivisBracket]
+  simp only [sub_mul, mul_sub]
   abel_nf
 
 theorem akivisBracket_swap (x y : A) :
@@ -92,9 +102,8 @@ theorem leftMultiplicationCommutatorDefect_eq_associator_difference
     (x y z : A) :
     leftMultiplicationCommutatorDefect x y z =
       -_root_.associator x y z + _root_.associator y x z := by
-  simp [leftMultiplicationCommutatorDefect, leftMultiplication,
-    akivisBracket, _root_.associator_apply, sub_eq_add_neg, mul_add,
-    add_mul]
+  dsimp [leftMultiplicationCommutatorDefect, leftMultiplication, akivisBracket, _root_.associator_apply]
+  simp only [sub_mul, mul_sub]
   abel
 
 /-- Under the explicit alternative-law consequence

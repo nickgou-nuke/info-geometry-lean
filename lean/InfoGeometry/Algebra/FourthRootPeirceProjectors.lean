@@ -1,5 +1,3 @@
-import Mathlib
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.FinitePeirceMatrix
 import InfoGeometry.Canonical.CyclotomicProjectorReadout
 
@@ -34,18 +32,18 @@ def projector (U : A) (k : Fin 4) : A :=
 
 lemma I_mul_I_mul (c : ℂ) : Complex.I * (c * Complex.I) = -c := by
   calc Complex.I * (c * Complex.I) = (Complex.I * Complex.I) * c := by ring
-  _ = -1 * c := by rw [Complex.I_mul_I]
-  _ = -c := by ring
+    _ = -1 * c := by rw [Complex.I_mul_I]
+    _ = -c := by ring
 
 lemma mul_I_mul_I (c : ℂ) : (c * Complex.I) * Complex.I = -c := by
   calc (c * Complex.I) * Complex.I = c * (Complex.I * Complex.I) := by ring
-  _ = c * -1 := by rw [Complex.I_mul_I]
-  _ = -c := by ring
+    _ = c * -1 := by rw [Complex.I_mul_I]
+    _ = -c := by ring
 
 lemma I_pow_three : Complex.I ^ 3 = -Complex.I := by
   calc Complex.I ^ 3 = (Complex.I * Complex.I) * Complex.I := by ring
-  _ = -1 * Complex.I := by rw [Complex.I_mul_I]
-  _ = -Complex.I := by ring
+    _ = -1 * Complex.I := by rw [Complex.I_mul_I]
+    _ = -Complex.I := by ring
 
 lemma I_sq : Complex.I ^ 2 = -1 := Complex.I_sq
 
@@ -81,14 +79,16 @@ theorem power_on_eigenvector (U x : A) (z : ℂ) (hx : U*x = z • x) (m : ℕ) 
   induction m with
   | zero => simp
   | succ m ih =>
-      rw [pow_succ', mul_assoc, ih, mul_smul_comm, hx, smul_smul (M := ℂ), pow_succ]
+      rw [pow_succ', mul_assoc, ih, mul_smul_comm, hx,
+        smul_smul (M := ℂ) (α := A), pow_succ]
 
 /-- Finite Fourier orthogonality, evaluated on a genuine operator eigenvector. -/
 theorem projector_on_eigenvector (U x : A) (j k : Fin 4)
     (hx : U*x = phase k • x) :
     projector U j * x = if j = k then x else 0 := by
   simp only [projector, smul_mul_assoc, add_mul, one_mul,
-    power_on_eigenvector U x (phase k) hx, hx, smul_add (M := ℂ), smul_smul (M := ℂ)]
+    power_on_eigenvector U x (phase k) hx, hx,
+    smul_add (M := ℂ), smul_smul (M := ℂ)]
   fin_cases j <;> fin_cases k <;> (
     norm_num [phase, pow_succ, Complex.I_mul_I]
     try simp only [mul_I_mul_I]
@@ -108,7 +108,8 @@ theorem power_apply_on_eigenvector {E : Type*} [AddCommGroup E] [Module ℂ E]
   induction m with
   | zero => simp
   | succ m ih =>
-      rw [pow_succ', Module.End.mul_apply, ih, map_smul, hx, smul_smul (M := ℂ) (α := E), pow_succ]
+      rw [pow_succ', Module.End.mul_apply, ih, map_smul, hx,
+        smul_smul (M := ℂ) (α := E), pow_succ]
 
 /-- The projectors select actual module eigenvectors, not just algebra elements. -/
 theorem projector_apply_on_eigenvector {E : Type*} [AddCommGroup E] [Module ℂ E]
@@ -132,7 +133,7 @@ theorem projector_mul (U : A) (hU : U^4 = 1) (j k : Fin 4) :
 /-- Completeness is a polynomial identity, even before imposing U^4=1. -/
 theorem projector_sum (U : A) : ∑ k : Fin 4, projector U k = 1 := by
   norm_num [projector, phase, Fin.sum_univ_succ, pow_succ,
-    Complex.I_mul_I]; module
+    Complex.I_mul_I] <;> module
 
 /-- A derived native complete orthogonal idempotent family. -/
 def completeProjectors (U : A) (hU : U^4 = 1) :
@@ -215,7 +216,7 @@ theorem cyclicShift_projector (k : Fin 4) :
       projector degreeClock (k + 1) * cyclicShift := by
   fin_cases k
   · change cyclicShift * projector degreeClock 0 = projector degreeClock 1 * cyclicShift
-    ext i j
+    funext i j
     simp only [projector, degreeClock, Matrix.diagonal_pow,
       Matrix.mul_smul, Matrix.smul_mul, Matrix.smul_apply, smul_eq_mul,
       Matrix.mul_add, Matrix.add_mul, Matrix.mul_one, Matrix.one_mul,
@@ -223,7 +224,7 @@ theorem cyclicShift_projector (k : Fin 4) :
     fin_cases i <;> fin_cases j <;>
       norm_num [cyclicShift, phase, pow_succ, Complex.I_mul_I]
   · change cyclicShift * projector degreeClock 1 = projector degreeClock 2 * cyclicShift
-    ext i j
+    funext i j
     simp only [projector, degreeClock, Matrix.diagonal_pow,
       Matrix.mul_smul, Matrix.smul_mul, Matrix.smul_apply, smul_eq_mul,
       Matrix.mul_add, Matrix.add_mul, Matrix.mul_one, Matrix.one_mul,
@@ -231,7 +232,7 @@ theorem cyclicShift_projector (k : Fin 4) :
     fin_cases i <;> fin_cases j <;>
       norm_num [cyclicShift, phase, pow_succ, Complex.I_mul_I]
   · change cyclicShift * projector degreeClock 2 = projector degreeClock 3 * cyclicShift
-    ext i j
+    funext i j
     simp only [projector, degreeClock, Matrix.diagonal_pow,
       Matrix.mul_smul, Matrix.smul_mul, Matrix.smul_apply, smul_eq_mul,
       Matrix.mul_add, Matrix.add_mul, Matrix.mul_one, Matrix.one_mul,
@@ -239,7 +240,7 @@ theorem cyclicShift_projector (k : Fin 4) :
     fin_cases i <;> fin_cases j <;>
       norm_num [cyclicShift, phase, pow_succ, Complex.I_mul_I]
   · change cyclicShift * projector degreeClock 3 = projector degreeClock 0 * cyclicShift
-    ext i j
+    funext i j
     simp only [projector, degreeClock, Matrix.diagonal_pow,
       Matrix.mul_smul, Matrix.smul_mul, Matrix.smul_apply, smul_eq_mul,
       Matrix.mul_add, Matrix.add_mul, Matrix.mul_one, Matrix.one_mul,

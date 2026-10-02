@@ -6,15 +6,15 @@ import Mathlib.Tactic
 
 namespace Omega.GroupUnification
 
-instance : Fact (Nat.Prime 571) := ⟨by native_decide⟩
+instance : Fact (Nat.Prime 571) := ⟨by decide⟩
 
 /-- The window-6 boundary uplift `δ = 34` viewed as a unit of `ZMod 571`. -/
 def delta34Unit571 : (ZMod 571)ˣ :=
-  Units.mk0 (34 : ZMod 571) (by native_decide)
+  Units.mk0 (34 : ZMod 571) (by decide)
 
 /-- An explicit square root of `34` modulo `571`. -/
 def delta34Sqrt571 : (ZMod 571)ˣ :=
-  Units.mk0 (264 : ZMod 571) (by native_decide)
+  Units.mk0 (264 : ZMod 571) (by decide)
 
 /-- The subgroup of squares inside `(ZMod 571)ˣ`. -/
 def squareUnitsSubgroup571 : Subgroup (ZMod 571)ˣ where
@@ -30,16 +30,16 @@ def squareUnitsSubgroup571 : Subgroup (ZMod 571)ˣ where
 private theorem delta34Sqrt571_sq :
     delta34Sqrt571 ^ (2 : ℕ) = delta34Unit571 := by
   ext
-  native_decide
+  decide
 
 private theorem order_delta34Unit571 :
     orderOf delta34Unit571 = 285 := by
   refine orderOf_eq_of_pow_and_pow_div_prime (x := delta34Unit571) (n := 285) (by decide) ?_ ?_
-  · native_decide
+  · decide
   · intro p hp hpdvd
     have hp_ge : 2 ≤ p := hp.two_le
     have hp_le : p ≤ 285 := Nat.le_of_dvd (by decide : 0 < 285) hpdvd
-    interval_cases p <;> native_decide
+    interval_cases p <;> decide
 
 private theorem delta34_power_is_square (n : ℕ) :
     ∃ u : (ZMod 571)ˣ, u ^ (2 : ℕ) = delta34Unit571 ^ n := by
@@ -63,7 +63,7 @@ theorem paper_window6_delta34_generates_squares :
   refine ⟨order_delta34Unit571, ?_, ?_, ?_, ?_⟩
   · rw [Fintype.card_zpowers, order_delta34Unit571]
   · rw [Fintype.card_zpowers, order_delta34Unit571]
-    native_decide
+    decide
   · exact ⟨delta34Sqrt571, delta34Sqrt571_sq⟩
   · intro n
     exact delta34_power_is_square n

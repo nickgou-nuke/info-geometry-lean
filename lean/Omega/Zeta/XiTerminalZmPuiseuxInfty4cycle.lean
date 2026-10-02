@@ -23,7 +23,7 @@ def xi_terminal_zm_puiseux_infty_4cycle_monodromy : Equiv.Perm (Fin 4) :=
 lemma xi_terminal_zm_puiseux_infty_4cycle_root_fourth (k : Fin 4) :
     (4 : ZMod 4) * xi_terminal_zm_puiseux_infty_4cycle_root k = 0 := by
   unfold xi_terminal_zm_puiseux_infty_4cycle_root
-  fin_cases k <;> native_decide
+  fin_cases k <;> decide
 
 /-- Finite algebraic certificate for the displayed Puiseux jet and four-cycle monodromy. -/
 def xi_terminal_zm_puiseux_infty_4cycle_statement : Prop :=
@@ -39,10 +39,10 @@ def xi_terminal_zm_puiseux_infty_4cycle_statement : Prop :=
 theorem paper_xi_terminal_zm_puiseux_infty_4cycle :
     xi_terminal_zm_puiseux_infty_4cycle_statement := by
   refine ⟨rfl, xi_terminal_zm_puiseux_infty_4cycle_root_fourth, ?_, ?_, ?_, ?_⟩
-  · native_decide
-  · native_decide
-  · native_decide
-  · native_decide
+  · decide
+  · decide
+  · decide
+  · decide
 
 end
 

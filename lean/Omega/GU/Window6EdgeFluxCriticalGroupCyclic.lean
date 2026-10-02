@@ -11,7 +11,7 @@ def window6EdgeFluxAuditedReducedLaplacian : Matrix (Fin 3) (Fin 3) ℤ :=
 
 theorem det_window6EdgeFluxAuditedReducedLaplacian :
     window6EdgeFluxAuditedReducedLaplacian.det = 123336 := by
-  native_decide
+  decide
 
 /-- Concrete reduced-Laplacian package for the window-`6` edge-flux audit. -/
 structure Window6EdgeFluxCriticalGroupData where

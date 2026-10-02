@@ -21,11 +21,11 @@ theorem paper_terminal_foldbin6_strong_lumpability_binary_witness :
     ((Finset.range 6).filter (fun k => cBinFold 6 (0 ^^^ (2 ^ k)) = y)).card ≠
       ((Finset.range 6).filter (fun k => cBinFold 6 (21 ^^^ (2 ^ k)) = y)).card := by
   rcases paper_terminal_foldbin6_strong_lumpability_fails with ⟨hfold, hy⟩
-  have h0 : terminalFoldbin6BinaryWitness 0 = 0 := by native_decide
-  have h21 : terminalFoldbin6BinaryWitness 21 = 1 := by native_decide
+  have h0 : terminalFoldbin6BinaryWitness 0 = 0 := by decide
+  have h21 : terminalFoldbin6BinaryWitness 21 = 1 := by decide
   refine ⟨hfold, Omega.ZeckSig.fib_8_val.symm, ?_, ?_, h0, h21, ?_, hy⟩
-  · native_decide
-  · native_decide
+  · decide
+  · decide
   · simpa [h0, h21]
 
 end Omega.GU

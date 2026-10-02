@@ -42,7 +42,7 @@ theorem paper_pom_additive_fold_collision_bounds
     (paper_pom_moment_fourier_q (q := 2) c).2
   have hgrowth := paper_pom_renyi2_near_uniform R S2 r2 hR hS2_pos hr2 hS2
   have huniv : (Finset.univ : Finset FibSeedGroup) = {0, 1} := by
-    native_decide
+    decide
   have hprofile0 :
       seedAdditiveCollisionProfile c 0 = c 0 ^ (2 : ℕ) + c 1 ^ (2 : ℕ) := by
     rw [seedAdditiveCollisionProfile, huniv]
@@ -51,7 +51,7 @@ theorem paper_pom_additive_fold_collision_bounds
   have hprofile1 : seedAdditiveCollisionProfile c 1 = 2 * c 0 * c 1 := by
     rw [seedAdditiveCollisionProfile, huniv]
     have hsub0 : ((1 : FibSeedGroup) - 0) = 1 := by
-      native_decide
+      decide
     simp [hsub0]
     ring
   have henergy :

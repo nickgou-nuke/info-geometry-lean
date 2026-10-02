@@ -1,7 +1,7 @@
 /-!
-# InfoGeometry.Krein — Greenfield Categorical Foundation (Mathlib 4.28.0)
+# InfoGeometry.Krein — Greenfield Categorical Foundation (Mathlib 4.28.x)
 
-This folder is a **greenfield** foundation: the core structures are defined using **Mathlib 4.28.0**
+This folder is a **greenfield** foundation: the core structures are defined using **Mathlib 4.28.x**
 typeclasses only, with no dependency on legacy `InfoGeometry` definitions.
 
 ## Layer stack (canonical intent)

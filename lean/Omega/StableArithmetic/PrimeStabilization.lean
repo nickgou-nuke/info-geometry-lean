@@ -33,15 +33,15 @@ theorem paper_stable_audit_prime_stabilization :
         stable_audit_prime_stabilization_stable_mul_count p = 32) ∧
       stable_audit_prime_stabilization_stable_mul_count 5 = 46 ∧
       (∀ x : ZMod 5, x = x * (x * (x * (x * x)))) := by
-  refine ⟨by native_decide, by native_decide, ?_, ?_, by native_decide, ?_⟩
+  refine ⟨by decide, by decide, ?_, ?_, by decide, ?_⟩
   · intro p _hp _hge
     unfold stable_audit_prime_stabilization_stable_add_count
-    native_decide
+    decide
   · intro p _hp hge
     unfold stable_audit_prime_stabilization_stable_mul_count
     split
     · omega
-    · native_decide
+    · decide
   · intro x
     fin_cases x <;> rfl
 

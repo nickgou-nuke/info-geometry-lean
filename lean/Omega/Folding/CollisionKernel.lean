@@ -143,13 +143,13 @@ def signedCompanionCoeffs7 : Fin 7 → ℤ :=
 theorem signedCompanionDet6 :
     ((1 : Matrix (Fin 7) (Fin 7) ℤ) - signedCompanion signedCompanionCoeffs6).det = 110 := by
   rw [signedCompanionDet]
-  native_decide
+  decide
 
 /-- q=7 signed-companion Bowen-Franks determinant. -/
 theorem signedCompanionDet7 :
     ((1 : Matrix (Fin 7) (Fin 7) ℤ) - signedCompanion signedCompanionCoeffs7).det = 422 := by
   rw [signedCompanionDet]
-  native_decide
+  decide
 
 /-- The 3x3 companion matrix for the S_2 recurrence:
     S_2(m+3) = 2·S_2(m+2) + 2·S_2(m+1) - 2·S_2(m).
@@ -159,15 +159,15 @@ def collisionKernel2 : Matrix (Fin 3) (Fin 3) ℤ :=
   !![0, 1, 0; 0, 0, 1; -2, 2, 2]
 
 /-- prop:pom-s2-recurrence-collision-kernel-trace -/
-theorem collisionKernel2_trace : collisionKernel2.trace = 2 := by native_decide
+theorem collisionKernel2_trace : collisionKernel2.trace = 2 := by decide
 /-- prop:pom-s2-recurrence-collision-kernel-det -/
-theorem collisionKernel2_det : collisionKernel2.det = -2 := by native_decide
+theorem collisionKernel2_det : collisionKernel2.det = -2 := by decide
 
 /-- Cayley-Hamilton for the collision kernel: M³ = 2M² + 2M - 2I.
     prop:pom-s2-recurrence-collision-kernel-cayley-hamilton -/
 theorem collisionKernel2_cayley_hamilton :
     collisionKernel2 ^ 3 = 2 • collisionKernel2 ^ 2 + 2 • collisionKernel2 - 2 • 1 := by
-  native_decide
+  decide
 
 /-- Verification that S_2 satisfies the linear recurrence S_2(m+3) + 2·S_2(m) = 2·S_2(m+2) + 2·S_2(m+1)
     for the base values m = 0..3. Written in additive form to avoid Nat subtraction.
@@ -189,15 +189,15 @@ def collisionKernel3 : Matrix (Fin 3) (Fin 3) ℤ :=
   !![0, 1, 0; 0, 0, 1; -2, 4, 2]
 
 /-- prop:pom-s3-recurrence-collision-kernel-trace -/
-theorem collisionKernel3_trace : collisionKernel3.trace = 2 := by native_decide
+theorem collisionKernel3_trace : collisionKernel3.trace = 2 := by decide
 /-- prop:pom-s3-recurrence-collision-kernel-det -/
-theorem collisionKernel3_det : collisionKernel3.det = -2 := by native_decide
+theorem collisionKernel3_det : collisionKernel3.det = -2 := by decide
 
 /-- Cayley-Hamilton for A_3: M³ = 2M² + 4M - 2I.
     prop:pom-s3-recurrence-collision-kernel-cayley-hamilton -/
 theorem collisionKernel3_cayley_hamilton :
     collisionKernel3 ^ 3 = 2 • collisionKernel3 ^ 2 + 4 • collisionKernel3 - 2 • 1 := by
-  native_decide
+  decide
 
 /-- S_3 recurrence verification: S_3(m+3) + 2·S_3(m) = 2·S_3(m+2) + 4·S_3(m+1) for m=0..3. -/
 theorem momentSum_three_recurrence_verified :
@@ -219,14 +219,14 @@ range m = 0..4 using the base values S_q(0)..S_q(7). -/
 theorem momentSum_two_recurrence_bounded (m : Nat) (hm : m ≤ 4) :
     momentSum 2 (m + 3) + 2 * momentSum 2 m =
       2 * momentSum 2 (m + 2) + 2 * momentSum 2 (m + 1) := by
-  interval_cases m <;> (simp only [← cMomentSum_eq]; native_decide)
+  interval_cases m <;> (simp only [← cMomentSum_eq]; decide)
 
 /-- S_3 recurrence for m ≤ 4: S_3(m+3) + 2·S_3(m) = 2·S_3(m+2) + 4·S_3(m+1).
     prop:pom-s3-recurrence-bounded -/
 theorem momentSum_three_recurrence_bounded (m : Nat) (hm : m ≤ 4) :
     momentSum 3 (m + 3) + 2 * momentSum 3 m =
       2 * momentSum 3 (m + 2) + 4 * momentSum 3 (m + 1) := by
-  interval_cases m <;> (simp only [← cMomentSum_eq]; native_decide)
+  interval_cases m <;> (simp only [← cMomentSum_eq]; decide)
 
 /-- S_2 recurrence for all m, conditional on the recurrence holding universally.
     prop:pom-s2-recurrence-of -/
@@ -261,9 +261,9 @@ def collisionKernel4 : Matrix (Fin 5) (Fin 5) ℤ :=
      -2, 2, 0, 7, 2]
 
 /-- prop:pom-s4-recurrence-trace -/
-theorem collisionKernel4_trace : collisionKernel4.trace = 2 := by native_decide
+theorem collisionKernel4_trace : collisionKernel4.trace = 2 := by decide
 /-- prop:pom-s4-recurrence-det -/
-theorem collisionKernel4_det : collisionKernel4.det = -2 := by native_decide
+theorem collisionKernel4_det : collisionKernel4.det = -2 := by decide
 
 /-- S_4 recurrence verification: S_4(m+5) + 2·S_4(m) = 2·S_4(m+4) + 7·S_4(m+3) + 2·S_4(m+1)
     for m = 0..2 using base values.
@@ -273,7 +273,7 @@ theorem momentSum_four_recurrence_verified :
       2 * momentSum 4 4 + 7 * momentSum 4 3 + 2 * momentSum 4 1) ∧
     (momentSum 4 6 + 2 * momentSum 4 1 =
       2 * momentSum 4 5 + 7 * momentSum 4 4 + 2 * momentSum 4 2) := by
-  refine ⟨?_, ?_⟩ <;> simp only [← cMomentSum_eq] <;> native_decide
+  refine ⟨?_, ?_⟩ <;> simp only [← cMomentSum_eq] <;> decide
 
 /-- All three collision kernels share trace = 2 and det = -2.
     prop:pom-s4-recurrence-triple-invariants -/
@@ -310,10 +310,10 @@ def collisionKernel5 : Matrix (Fin 5) (Fin 5) ℤ :=
   !![0, 1, 0, 0, 0; 0, 0, 1, 0, 0; 0, 0, 0, 1, 0; 0, 0, 0, 0, 1; 10, -20, -8, -11, -2]
 
 /-- prop:pom-s5-recurrence (trace) -/
-theorem collisionKernel5_trace : collisionKernel5.trace = -2 := by native_decide
+theorem collisionKernel5_trace : collisionKernel5.trace = -2 := by decide
 
 /-- prop:pom-s5-recurrence (det) -/
-theorem collisionKernel5_det : collisionKernel5.det = 10 := by native_decide
+theorem collisionKernel5_det : collisionKernel5.det = 10 := by decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 215: Bowen-Franks determinants
@@ -322,12 +322,12 @@ theorem collisionKernel5_det : collisionKernel5.det = 10 := by native_decide
 /-- BF det for collision kernel 2: det(I-A_2) = -1. prop:pom-collision-bf-snf-q234 -/
 def bowenFranksMatrix2 : Matrix (Fin 3) (Fin 3) ℤ :=
   !![1, -1, 0; 0, 1, -1; 2, -2, -1]
-theorem bowenFranksMatrix2_det : bowenFranksMatrix2.det = -1 := by native_decide
+theorem bowenFranksMatrix2_det : bowenFranksMatrix2.det = -1 := by decide
 
 /-- BF det for collision kernel 3: det(I-A_3) = -3. prop:pom-collision-bf-snf-q234 -/
 def bowenFranksMatrix3 : Matrix (Fin 3) (Fin 3) ℤ :=
   !![1, -1, 0; 0, 1, -1; 2, -4, -1]
-theorem bowenFranksMatrix3_det : bowenFranksMatrix3.det = -3 := by native_decide
+theorem bowenFranksMatrix3_det : bowenFranksMatrix3.det = -3 := by decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R129: Fredholm determinant polynomials
@@ -379,7 +379,7 @@ def bowenFranksMatrix4 : Matrix (Fin 5) (Fin 5) ℤ :=
      2, -2, 0, -7, -1]
 
 /-- det(I - A_4) = -8. prop:pom-collision-bf-snf-q234 -/
-theorem bowenFranksMatrix4_det : bowenFranksMatrix4.det = -8 := by native_decide
+theorem bowenFranksMatrix4_det : bowenFranksMatrix4.det = -8 := by decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R252: A_4 Fredholm determinant + A_5 BF matrix
@@ -403,7 +403,7 @@ private theorem fredholm4_entry (z : ℤ) (i j : Fin 5) :
     prop:pom-collision-det -/
 theorem collisionKernel4_fredholm_at_one :
     (1 - (1 : ℤ) • collisionKernel4).det = bowenFranksMatrix4.det := by
-  native_decide
+  decide
 
 /-- BF matrix for A_5: I - collisionKernel5. prop:pom-collision-bf-snf-q234 -/
 def bowenFranksMatrix5 : Matrix (Fin 5) (Fin 5) ℤ :=
@@ -414,7 +414,7 @@ def bowenFranksMatrix5 : Matrix (Fin 5) (Fin 5) ℤ :=
      -10, 20, 8, 11, 3]
 
 /-- det(I - A_5) = 32. prop:pom-collision-bf-snf-q234 -/
-theorem bowenFranksMatrix5_det : bowenFranksMatrix5.det = 32 := by native_decide
+theorem bowenFranksMatrix5_det : bowenFranksMatrix5.det = 32 := by decide
 
 /-- BF det ratio: det(I-A_5) = -4 * det(I-A_4). prop:pom-collision-bf-snf-q234 -/
 theorem bowenFranks_q5_q4_ratio :
@@ -437,13 +437,13 @@ theorem collisionKernel5_fredholm_at_one :
 
 /-- S_5 base values: m = 7,8. prop:pom-s5-recurrence -/
 @[simp] theorem momentSum_five_seven : momentSum 5 7 = 62168 := by
-  rw [← cMomentSum_eq]; native_decide
+  rw [← cMomentSum_eq]; decide
 @[simp] theorem momentSum_five_eight : momentSum 5 8 = 304456 := by
-  rw [← cMomentSum_eq]; native_decide
+  rw [← cMomentSum_eq]; decide
 
 /-- tr(A_4^2) = 18. rem:pom-s4-zero-coefficient-lock -/
 theorem collisionKernel4_trace_sq :
-    (collisionKernel4 ^ 2).trace = 18 := by native_decide
+    (collisionKernel4 ^ 2).trace = 18 := by decide
 
 /-- Newton identity: tr(A_4^2) = tr(A_4)^2 - 2*e_2(A_4), so e_2(A_4) = (4-18)/2 = -7.
     rem:pom-s4-zero-coefficient-lock -/
@@ -453,7 +453,7 @@ theorem collisionKernel4_e2 :
 
 /-- tr(A_4^3) = 50. rem:pom-s4-zero-coefficient-lock -/
 theorem collisionKernel4_trace_cube :
-    (collisionKernel4 ^ 3).trace = 50 := by native_decide
+    (collisionKernel4 ^ 3).trace = 50 := by decide
 
 /-- Newton identity for e3: the x^2 coefficient of charPoly(A_4) is 0.
     rem:pom-s4-zero-coefficient-lock -/
@@ -522,7 +522,7 @@ theorem collisionKernel_det_family :
 theorem collisionKernel5_cayley_hamilton :
     collisionKernel5 ^ 5 + 2 * collisionKernel5 ^ 4 + 11 * collisionKernel5 ^ 3 +
     8 * collisionKernel5 ^ 2 + 20 * collisionKernel5 - 10 * (1 : Matrix (Fin 5) (Fin 5) ℤ) = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> native_decide
+  ext i j; fin_cases i <;> fin_cases j <;> decide
 
 /-- Collision kernel K_4 combined audit.
     thm:fold-collision2-aut-lie-dimension-rank -/
@@ -685,11 +685,11 @@ theorem paper_signed_companion_lucas_certificate :
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hq
     rcases hq with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl |
       rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl <;>
-      native_decide
+      decide
   · intro q hq
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hq
     rcases hq with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl |
       rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl <;>
-      native_decide
+      decide
 
 end Omega

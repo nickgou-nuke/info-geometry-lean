@@ -24,6 +24,6 @@ the `2^5` bit and exactly the carry chain started at bit `1`. -/
 theorem paper_foldbin6_carry_hamming_distance (V : Nat) (hV : V < 32) :
     foldbin6CarryHammingDistance V = 2 + foldbin6CarryRunLength V := by
   unfold foldbin6CarryHammingDistance foldbin6CarryRunLength
-  interval_cases V <;> native_decide
+  interval_cases V <;> decide
 
 end Omega.GU

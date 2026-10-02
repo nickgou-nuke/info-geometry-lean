@@ -81,14 +81,14 @@ theorem g2Fun_mul (X Y : SplitOctF2) :
   rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
   rcases Y with ⟨a', b', x0', x1', x2', y0', y1', y2'⟩
   revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-  native_decide
+  decide
 
 theorem g4Fun_mul (X Y : SplitOctF2) :
     g4Fun (mul X Y) = mul (g4Fun X) (g4Fun Y) := by
   rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
   rcases Y with ⟨a', b', x0', x1', x2', y0', y1', y2'⟩
   revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-  native_decide
+  decide
 
 def g2Equiv : SplitOctF2 ≃ SplitOctF2 where
   toFun := g2Fun

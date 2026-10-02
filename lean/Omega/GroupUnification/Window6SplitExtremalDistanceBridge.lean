@@ -34,11 +34,11 @@ def window6SplitExtremalSharedClass : Prop :=
 
 private theorem window6_split_boundary_distance_five :
     Omega.cBinFiberMinHamming 6 window6SplitBoundaryExtremal = 5 := by
-  native_decide
+  decide
 
 private theorem window6_split_root_distance_five :
     Omega.cBinFiberMinHamming 6 window6SplitRootExtremal = 5 := by
-  native_decide
+  decide
 
 /-- The unique distance-`5` window-`6` fibers are the split pair
 `{100001, 010001}`, and their explicit two-point witnesses share the dyadic direction

@@ -38,43 +38,43 @@ private def word000020 : Fin 6 → Fin 3 := ![d0, d0, d0, d0, d2, d0]
 
 private theorem word00000_resets :
     ∀ q : Sync10State, sync10RunWord q word00000 = Sync10State.q000 := by
-  native_decide
+  decide
 
 private theorem word00001_resets :
     ∀ q : Sync10State, sync10RunWord q word00001 = Sync10State.q001 := by
-  native_decide
+  decide
 
 private theorem word00002_resets :
     ∀ q : Sync10State, sync10RunWord q word00002 = Sync10State.q002 := by
-  native_decide
+  decide
 
 private theorem word00010_resets :
     ∀ q : Sync10State, sync10RunWord q word00010 = Sync10State.q010 := by
-  native_decide
+  decide
 
 private theorem word00011_resets :
     ∀ q : Sync10State, sync10RunWord q word00011 = Sync10State.q100 := by
-  native_decide
+  decide
 
 private theorem word00012_resets :
     ∀ q : Sync10State, sync10RunWord q word00012 = Sync10State.q101 := by
-  native_decide
+  decide
 
 private theorem word10202_resets :
     ∀ q : Sync10State, sync10RunWord q word10202 = Sync10State.q1m12 := by
-  native_decide
+  decide
 
 private theorem word02020_resets :
     ∀ q : Sync10State, sync10RunWord q word02020 = Sync10State.q01m1 := by
-  native_decide
+  decide
 
 private theorem word000102_resets :
     ∀ q : Sync10State, sync10RunWord q word000102 = Sync10State.q0m12 := by
-  native_decide
+  decide
 
 private theorem word000020_resets :
     ∀ q : Sync10State, sync10RunWord q word000020 = Sync10State.q11m1 := by
-  native_decide
+  decide
 
 private theorem reset_q000_len5 :
     sync10ResetsToTargetOfLength Sync10State.q000 5 := by
@@ -127,39 +127,39 @@ def sync10ResetDepth (t : Sync10State) : Nat :=
   if sync10ResetsToTargetOfLength t 6 then 6 else 7
 
 private theorem depth_q000 : sync10ResetDepth Sync10State.q000 = 5 := by
-  native_decide
+  decide
 
 private theorem depth_q001 : sync10ResetDepth Sync10State.q001 = 5 := by
-  native_decide
+  decide
 
 private theorem depth_q002 : sync10ResetDepth Sync10State.q002 = 5 := by
-  native_decide
+  decide
 
 private theorem depth_q010 : sync10ResetDepth Sync10State.q010 = 5 := by
-  native_decide
+  decide
 
 private theorem depth_q100 : sync10ResetDepth Sync10State.q100 = 5 := by
-  native_decide
+  decide
 
 private theorem depth_q101 : sync10ResetDepth Sync10State.q101 = 5 := by
-  native_decide
+  decide
 
 private theorem depth_q0m12 : sync10ResetDepth Sync10State.q0m12 = 6 := by
-  native_decide
+  decide
 
 private theorem depth_q1m12 : sync10ResetDepth Sync10State.q1m12 = 5 := by
-  native_decide
+  decide
 
 private theorem depth_q01m1 : sync10ResetDepth Sync10State.q01m1 = 5 := by
-  native_decide
+  decide
 
 private theorem depth_q11m1 : sync10ResetDepth Sync10State.q11m1 = 6 := by
-  native_decide
+  decide
 
 private theorem depth_exceptional_targets :
     (Finset.univ.filter fun t : Sync10State => sync10ResetDepth t = 6) =
       {Sync10State.q0m12, Sync10State.q11m1} := by
-  native_decide
+  decide
 
 /-- The reset-depth spectrum of the 10-state synchronization kernel is concentrated at depths `5`
 and `6`: exactly the two target states `0-12` and `11-1` first appear at depth `6`, while the

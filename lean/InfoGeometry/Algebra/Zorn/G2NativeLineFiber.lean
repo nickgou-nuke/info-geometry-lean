@@ -104,7 +104,7 @@ theorem candidate_translate_mem {y : OctImF2} (hy : y ∈ candidates) :
       rw [hembed]
       change mul (embed nativeBasePoint)
           (add (embed nativeBasePoint) (embed y)) = zero
-      native_decide +revert
+      decide +revert
   simpa [candidates, kernelCandidate] using htranslated
 
 theorem lineSet_eq_lineSet_iff
@@ -315,17 +315,17 @@ def nativeLinesEquivOfFix
           octImAction_one]⟩
 
 theorem candidates_card : candidates.card = 6 := by
-  native_decide
+  decide
 
 theorem nativeLines_card : nativeLines.card = 3 := by
-  native_decide
+  decide
 
 theorem nativeBaseLine_card : Fintype.card NativeLine = 3 := by
   simpa [NativeLine, NativeLinesThroughPoint, nativeLines] using nativeLines_card
 
 theorem lineSet_card (y : OctImF2) (hy : y ∈ candidates) :
     (lineSet y).card = 3 := by
-  native_decide +revert
+  decide +revert
 
 theorem lineSet_mem_nativeLines (y : OctImF2) (hy : y ∈ candidates) :
     lineSet y ∈ nativeLines := by
@@ -342,7 +342,7 @@ from the finite pencil, so its carrier alignment is transparent. -/
 def baseLineVector : OctImF2 := fun i => if i = 3 then 1 else 0
 
 theorem baseLineVector_mem_candidates : baseLineVector ∈ candidates := by
-  native_decide +revert
+  decide +revert
 
 def nativeBaseLineWitness : Finset OctImF2 := lineSet baseLineVector
 
@@ -352,27 +352,27 @@ theorem nativeBaseLineWitness_mem_nativeLines :
 
 theorem pc1_fixes_nativeBaseLineWitness :
     nativeBaseLineWitness.image (octImAction (pcGenerator 0)) = nativeBaseLineWitness := by
-  native_decide +revert
+  decide +revert
 
 theorem pc2_fixes_nativeBaseLineWitness :
     nativeBaseLineWitness.image (octImAction (pcGenerator 1)) = nativeBaseLineWitness := by
-  native_decide +revert
+  decide +revert
 
 theorem pc3_fixes_nativeBaseLineWitness :
     nativeBaseLineWitness.image (octImAction (pcGenerator 2)) = nativeBaseLineWitness := by
-  native_decide +revert
+  decide +revert
 
 theorem pc4_fixes_nativeBaseLineWitness :
     nativeBaseLineWitness.image (octImAction (pcGenerator 3)) = nativeBaseLineWitness := by
-  native_decide +revert
+  decide +revert
 
 theorem pc5_fixes_nativeBaseLineWitness :
     nativeBaseLineWitness.image (octImAction (pcGenerator 4)) = nativeBaseLineWitness := by
-  native_decide +revert
+  decide +revert
 
 theorem pc6_fixes_nativeBaseLineWitness :
     nativeBaseLineWitness.image (octImAction (pcGenerator 5)) = nativeBaseLineWitness := by
-  native_decide +revert
+  decide +revert
 
 theorem prod_fixes_nativeBaseLineWitness (L : List SplitOctF2Aut)
     (hL : ∀ g ∈ L,

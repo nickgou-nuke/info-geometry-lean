@@ -35,7 +35,7 @@ theorem paper_m11_z34_sixteen_rotation_planes_from_family_lock :
     (∀ m : Nat, 3 ≤ m → Nat.fib (m - 2) = 34 → m = 11) ∧
     34 = 1 + 1 + 16 * 2 ∧
     33 = 1 + 16 * 2 := by
-  refine ⟨m11_z34_boundary_cardinality, by native_decide, ?_, ?_, ?_⟩
+  refine ⟨m11_z34_boundary_cardinality, by decide, ?_, ?_, ?_⟩
   · intro m hm h
     exact m11_z34_boundary_uniqueness m hm h
   · norm_num
@@ -72,7 +72,7 @@ theorem paper_m11_qz34_galois_c16
     (hGalois : Nat.totient 17 = 16 → galoisGroupC16)
     (hAction : galoisGroupC16 → rationalLayerCarriesC16) :
     Nat.totient 17 = 16 ∧ galoisGroupC16 ∧ rationalLayerCarriesC16 := by
-  have hTotient : Nat.totient 17 = 16 := by native_decide
+  have hTotient : Nat.totient 17 = 16 := by decide
   have hC16 : galoisGroupC16 := hGalois hTotient
   exact ⟨hTotient, hC16, hAction hC16⟩
 

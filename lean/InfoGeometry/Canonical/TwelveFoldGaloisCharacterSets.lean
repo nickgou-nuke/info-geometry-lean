@@ -29,77 +29,77 @@ def sigma11 : C12ˣ := Units.mkOfMulEqOne 11 11 (by decide)
 
 theorem sixCharacterSet_stable_sigma5 :
     sixCharacterSet.image (galoisPower sigma5) = sixCharacterSet := by
-  native_decide
+  decide
 
 theorem sixCharacterSet_not_stable_sigma7 :
     sixCharacterSet.image (galoisPower sigma7) ≠ sixCharacterSet := by
-  native_decide
+  decide
 
 theorem sixCharacterSet_not_stable_sigma11 :
     sixCharacterSet.image (galoisPower sigma11) ≠ sixCharacterSet := by
-  native_decide
+  decide
 
 theorem galoisCharacterSet_stable_sigma5 :
     galoisCharacterSet.image (galoisPower sigma5) = galoisCharacterSet := by
-  native_decide
+  decide
 
 theorem galoisCharacterSet_stable_sigma7 :
     galoisCharacterSet.image (galoisPower sigma7) = galoisCharacterSet := by
-  native_decide
+  decide
 
 theorem galoisCharacterSet_stable_sigma11 :
     galoisCharacterSet.image (galoisPower sigma11) = galoisCharacterSet := by
-  native_decide
+  decide
 
 theorem sixCharacterSet_card : sixCharacterSet.card = 6 := by
-  native_decide
+  decide
 
 theorem galoisCharacterSet_card : galoisCharacterSet.card = 9 := by
-  native_decide
+  decide
 
 theorem sigma5_fixes_quartic_exponent :
     galoisPower sigma5 3 = 3 := by
-  native_decide
+  decide
 
 theorem sigma5_inverts_colour_exponent :
     galoisPower sigma5 8 = 4 := by
-  native_decide
+  decide
 
 theorem sigma5_inverts_triality_exponent :
     galoisPower sigma5 2 = 10 := by
-  native_decide
+  decide
 
 theorem sigma5_fixes_parity_exponent :
     galoisPower sigma5 6 = 6 := by
-  native_decide
+  decide
 
 theorem sigma7_inverts_quartic_exponent :
     galoisPower sigma7 3 = 9 := by
-  native_decide
+  decide
 
 theorem sigma7_fixes_colour_exponent :
     galoisPower sigma7 8 = 8 := by
-  native_decide
+  decide
 
 theorem sigma7_fixes_triality_exponent :
     galoisPower sigma7 2 = 2 := by
-  native_decide
+  decide
 
 theorem sigma11_inverts_quartic_exponent :
     galoisPower sigma11 3 = 9 := by
-  native_decide
+  decide
 
 theorem sigma11_inverts_colour_exponent :
     galoisPower sigma11 8 = 4 := by
-  native_decide
+  decide
 
 theorem sigma11_inverts_triality_exponent :
     galoisPower sigma11 2 = 10 := by
-  native_decide
+  decide
 
 theorem every_galois_unit_fixes_parity_exponent (u : C12ˣ) :
     galoisPower u 6 = 6 := by
-  fin_cases u <;> native_decide
+  fin_cases u <;> decide
 
 end
 end InfoGeometry.Canonical.TwelveFoldGaloisCharacterSets

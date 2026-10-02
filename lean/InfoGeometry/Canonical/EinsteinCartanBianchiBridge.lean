@@ -73,6 +73,23 @@ theorem first_bianchi_identity_torsion
   rw [h_assoc]
   abel
 
+/-- The Cartan first Bianchi identity follows from the differential structure
+data when the connection coefficients are homogeneous one-forms; its
+nilpotency and Leibniz premises are derived rather than supplied separately. -/
+theorem first_bianchi_identity_torsion_of_homogeneous_connection
+    (D : ExteriorDifferentialData R V)
+    (omega : SpinConnectionMatrix d_dim R V)
+    (e : TetradVector d_dim R V)
+    (hω : ∀ a b, IsHomogeneousExteriorDegree 1 (omega a b)) :
+    (fun a => D.d (torsionForm D.d omega e a) +
+      spinConnectionWedgeTetrad omega (torsionForm D.d omega e) a) =
+    spinConnectionWedgeTetrad (riemannCurvatureForm D.d omega) e := by
+  apply first_bianchi_identity_torsion D omega e
+  · intro a
+    exact differential_sq_zero D (e a)
+  · intro a b
+    exact one_form_leibniz D (omega a b) (e b) (hω a b)
+
 /-- **Теорема**: ВТОРО ТЪЖДЕСТВО НА БИАНКИ ЗА КРИВИНАТА (dR + ω ∧ R - R ∧ ω = 0).
     Доказано алгебрично от d² = 0 и градуираната деривация за 1-форми. -/
 theorem second_bianchi_identity_curvature
@@ -100,6 +117,23 @@ theorem second_bianchi_identity_curvature
     rw [mul_assoc]
   rw [h_assoc_1]
   abel
+
+/-- The curvature Bianchi identity follows from the differential structure
+data and degree-one connection coefficients, with both pointwise premises
+derived from `D`. -/
+theorem second_bianchi_identity_curvature_of_homogeneous_connection
+    (D : ExteriorDifferentialData R V)
+    (omega : SpinConnectionMatrix d_dim R V)
+    (hω : ∀ a b, IsHomogeneousExteriorDegree 1 (omega a b)) :
+    (fun i j => (matrixExteriorDerivative D.d
+        (riemannCurvatureForm D.d omega)) i j +
+      (∑ k, omega i k * riemannCurvatureForm D.d omega k j) -
+      (∑ k, riemannCurvatureForm D.d omega i k * omega k j)) = 0 := by
+  apply second_bianchi_identity_curvature D omega
+  · intro i j
+    exact differential_sq_zero D (omega i j)
+  · intro a b c
+    exact one_form_leibniz D (omega a c) (omega c b) (hω a c)
 
 
 

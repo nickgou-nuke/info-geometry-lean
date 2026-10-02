@@ -31,6 +31,6 @@ theorem paper_xi_terminal_zm_leyang_chebyshev_min_conjugacy_ramification_2_7 :
   unfold xi_terminal_zm_leyang_chebyshev_min_conjugacy_ramification_2_7_statement
   unfold xi_terminal_zm_leyang_chebyshev_min_conjugacy_ramification_2_7_discriminant
   unfold xi_terminal_zm_leyang_chebyshev_min_conjugacy_ramification_2_7_ramified_primes
-  native_decide
+  decide
 
 end Omega.Zeta

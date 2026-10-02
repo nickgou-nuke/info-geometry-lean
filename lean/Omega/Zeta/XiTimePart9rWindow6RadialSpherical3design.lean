@@ -37,7 +37,7 @@ theorem paper_xi_time_part9r_window6_radial_spherical_3design :
   rcases Omega.GU.paper_window6_b3_degree3_euclidean_cubature with ⟨hodd1, hodd3, _, _, _⟩
   refine ⟨?_, hodd1, hodd3, ?_, ?_, ?_⟩
   · unfold xi_time_part9r_window6_radial_spherical_3design_b3_root_packet
-    native_decide
+    decide
   · norm_num [xi_time_part9r_window6_radial_spherical_3design_first_coordinate_second_moment]
   · norm_num [xi_time_part9r_window6_radial_spherical_3design_first_coordinate_fourth_moment]
   · norm_num [xi_time_part9r_window6_radial_spherical_3design_first_coordinate_fourth_moment]

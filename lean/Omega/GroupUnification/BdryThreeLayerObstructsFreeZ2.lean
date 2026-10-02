@@ -17,9 +17,9 @@ theorem paper_bdry_three_layer_obstructs_free_z2 :
     (Fintype.card bdryThreeLayerFiberM8 = 3 ∧
       ¬ ∃ σ : Equiv.Perm bdryThreeLayerFiberM8, σ * σ = 1 ∧ ∀ x, σ x ≠ x) := by
   have hodd7 : ¬ Even (Fintype.card bdryThreeLayerFiberM7) := by
-    simpa [bdryThreeLayerFiberM7] using (show ¬ Even 3 by native_decide)
+    simpa [bdryThreeLayerFiberM7] using (show ¬ Even 3 by decide)
   have hodd8 : ¬ Even (Fintype.card bdryThreeLayerFiberM8) := by
-    simpa [bdryThreeLayerFiberM8] using (show ¬ Even 3 by native_decide)
+    simpa [bdryThreeLayerFiberM8] using (show ¬ Even 3 by decide)
   refine ⟨?_, ?_⟩
   · refine ⟨by simp [bdryThreeLayerFiberM7], ?_⟩
     intro hfree

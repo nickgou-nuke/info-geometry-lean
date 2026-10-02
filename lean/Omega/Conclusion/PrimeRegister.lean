@@ -144,13 +144,13 @@ theorem fib_fiber_godelLift_instances :
     Nat.fib 10 = 55 ∧ (7 + 1) ^ 2 ≥ 55 ∧
     -- Fold_10: F(12)=144, register (2,11) or (3,5) works
     Nat.fib 12 = 144 ∧ (11 + 1) ^ 2 ≥ 144 ∧ (5 + 1) ^ 3 ≥ 144 := by
-  refine ⟨by native_decide, by norm_num, by native_decide, by norm_num,
-    by native_decide, by norm_num, by native_decide, by norm_num, by norm_num⟩
+  refine ⟨by decide, by norm_num, by decide, by norm_num,
+    by decide, by norm_num, by decide, by norm_num, by norm_num⟩
 
 /-- The mod-6 period shell is lcm(8, 18) = 72.
     prop:conclusion-mod6-period-shell-72 -/
 theorem conclusion_mod6_period_shell_72 :
-    Nat.lcm 8 18 = 72 := by native_decide
+    Nat.lcm 8 18 = 72 := by decide
 
 /-- Three rigidity scales: 4 < 21 < 64.
     cor:conclusion-window6-three-rigidity-scales -/
@@ -208,8 +208,8 @@ theorem godelDivisibilityTower_trans {k : ℕ} (p : Fin k → ℕ)
 -- ══════════════════════════════════════════════════════════════
 
 private theorem fib_le_two_pow : ∀ m : Nat, 1 ≤ m → Nat.fib (m + 2) ≤ 2 ^ m
-  | 1, _ => by native_decide
-  | 2, _ => by native_decide
+  | 1, _ => by decide
+  | 2, _ => by decide
   | m + 3, _ => by
     calc Nat.fib (m + 3 + 2)
         = Nat.fib (m + 3 + 1) + Nat.fib (m + 3) := fib_succ_succ' (m + 3)
@@ -275,7 +275,7 @@ theorem paper_conclusion_side_info_length_lower_bound (m M L : ℕ) (hM : 2 ≤ 
 
 private theorem fib_lower_bound (m : Nat) (_hm : 2 ≤ m) :
     2 ^ (m / 2) ≤ Nat.fib (m + 2) := by
-  have h1 : Nat.fib 2 = 1 := by native_decide
+  have h1 : Nat.fib 2 = 1 := by decide
   have h2 : 1 ≤ (2 : Nat) := by omega
   calc 2 ^ (m / 2) = 2 ^ (m / 2) * 1 := by ring
     _ = 2 ^ (m / 2) * Nat.fib 2 := by rw [h1]
@@ -593,15 +593,15 @@ theorem godelLift_fold10 : (7 + 1) ^ 2 ≥ 55 := by omega
 
 /-- Godel-lift witness for F_11 = 89: (9+1)² = 100 ≥ 89.
     thm:conclusion-bounded-prime-register-feasibility -/
-theorem godelLift_fib11_witness : (9 + 1) ^ 2 ≥ Nat.fib 11 := by native_decide
+theorem godelLift_fib11_witness : (9 + 1) ^ 2 ≥ Nat.fib 11 := by decide
 
 /-- Godel-lift witness for F_12 = 144: (11+1)² = 144 ≥ 144.
     thm:conclusion-bounded-prime-register-feasibility -/
-theorem godelLift_fib12_witness : (11 + 1) ^ 2 ≥ Nat.fib 12 := by native_decide
+theorem godelLift_fib12_witness : (11 + 1) ^ 2 ≥ Nat.fib 12 := by decide
 
 /-- Godel-lift witness for F_13 = 233: (15+1)² = 256 ≥ 233.
     thm:conclusion-bounded-prime-register-feasibility -/
-theorem godelLift_fib13_witness : (15 + 1) ^ 2 ≥ Nat.fib 13 := by native_decide
+theorem godelLift_fib13_witness : (15 + 1) ^ 2 ≥ Nat.fib 13 := by decide
 
 /-- Paper package: Godel-lift feasibility witnesses for F_11..F_13.
     thm:conclusion-bounded-prime-register-feasibility -/
@@ -613,15 +613,15 @@ theorem paper_godelLift_fib_extended_11_to_13 :
     Nat.fib 12 = 144 ∧
     Nat.fib 13 = 233 := by
   refine ⟨godelLift_fib11_witness, godelLift_fib12_witness, godelLift_fib13_witness,
-    ?_, ?_, ?_⟩ <;> native_decide
+    ?_, ?_, ?_⟩ <;> decide
 
 /-- Max fiber sizes = Fibonacci sequence.
     thm:conclusion-bounded-prime-register-feasibility -/
 theorem godelLift_maxfiber_fib_chain :
     3 = Nat.fib 4 ∧ 5 = Nat.fib 5 ∧ 8 = Nat.fib 6 ∧
     13 = Nat.fib 7 ∧ 21 = Nat.fib 8 ∧ 34 = Nat.fib 9 ∧ 55 = Nat.fib 10 := by
-  refine ⟨by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide,
+    by decide, by decide, by decide, by decide⟩
 
 /-- Optimal k=2 bases for each Fibonacci max-fiber.
     thm:conclusion-bounded-prime-register-feasibility -/
@@ -633,8 +633,8 @@ theorem godelLift_optimal_k2_bases :
     (4 + 1) ^ 2 ≥ Nat.fib 8 ∧
     (5 + 1) ^ 2 ≥ Nat.fib 9 ∧
     (7 + 1) ^ 2 ≥ Nat.fib 10 := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide,
-    by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide,
+    by decide, by decide, by decide⟩
 
 /-- Fibonacci envelope eventual strict failure: cBinFiberMax(m) < F(m+2) for m ≥ 7.
     prop:conclusion-foldbin-fibonacci-envelope-eventual-strict-failure -/
@@ -643,7 +643,7 @@ theorem paper_foldbin_fibonacci_envelope_eventual_strict_failure :
     cBinFiberMax 8 < Nat.fib 10 ∧
     cBinFiberMax 7 + 1 ≤ Nat.fib 9 := by
   rw [cBinFiberMax_seven, cBinFiberMax_eight]
-  refine ⟨by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide⟩
 
 /-- Binary fold recovery one-bit splitting witness.
     thm:conclusion-binfold-fullrecovery-visible-entropy-onebit-splitting -/
@@ -653,7 +653,7 @@ theorem paper_binfold_recovery_onebit_splitting :
     2 ^ 6 % Nat.fib 8 = 1 ∧
     2 ^ 6 / Nat.fib 8 = 3 ∧
     2 ^ 7 / 3 = 42 := by
-  rw [cBinFiberMax_six]; native_decide
+  rw [cBinFiberMax_six]; decide
 
 /-- Stable K0 rank audit.
     prop:conclusion-foldbin-stable-k0-rank -/
@@ -663,7 +663,7 @@ theorem paper_conclusion_stable_k0_rank_audit :
     cBinFiberMax 7 = 5 ∧
     momentSum 2 6 = 220 ∧
     cBinFiberMax 6 < cBinFiberMax 7 := by
-  refine ⟨by rw [X.card_eq_fib]; native_decide, cBinFiberMax_six, cBinFiberMax_seven,
+  refine ⟨by rw [X.card_eq_fib]; decide, cBinFiberMax_six, cBinFiberMax_seven,
     momentSum_two_six, by rw [cBinFiberMax_six, cBinFiberMax_seven]; omega⟩
 
 -- ══════════════════════════════════════════════════════════════

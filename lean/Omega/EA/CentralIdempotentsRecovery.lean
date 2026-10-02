@@ -223,7 +223,7 @@ theorem paper_fold_groupoid_maxblock_chi_homogeneity :
     (4 : Nat) > 0 ∧ (9 : Nat) > 0 ∧
     4 * 9 = 36 ∧ 36 < 64 ∧
     2 ^ 6 = 64 := by
-  refine ⟨by native_decide, by omega, by omega, by omega, by omega, by omega⟩
+  refine ⟨by decide, by omega, by omega, by omega, by omega, by omega⟩
 
 /-! ### Discrete gauge group double-exponential growth -/
 
@@ -235,9 +235,9 @@ theorem paper_fold_discrete_gauge_group_double_exponential :
     Nat.factorial 2 = 2 ∧ Nat.factorial 3 = 6 ∧ Nat.factorial 4 = 24 ∧
     2 ^ 3 > Nat.fib 5 ∧ 2 ^ 4 > Nat.fib 6 ∧
     2 ^ 5 > Nat.fib 7 ∧ 2 ^ 6 > Nat.fib 8 := by
-  refine ⟨by native_decide, by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide, by native_decide,
-          by native_decide, by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide, by decide,
+          by decide, by decide, by decide,
+          by decide, by decide, by decide, by decide⟩
 
 /-- Discrete gauge group Stirling coupling seeds.
     cor:fold-discrete-gauge-group-stirling-coupling -/

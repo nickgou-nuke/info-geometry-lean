@@ -57,6 +57,6 @@ theorem paper_conclusion_m2_level3_xi_inertia_permutation_ramification :
       conclusion_m2_level3_xi_inertia_permutation_ramification_lagrangian_two_cycles = 12 ∧
       conclusion_m2_level3_xi_inertia_permutation_ramification_flag_fixed = 32 ∧
       conclusion_m2_level3_xi_inertia_permutation_ramification_flag_two_cycles = 64 := by
-  native_decide
+  decide
 
 end Omega.Conclusion

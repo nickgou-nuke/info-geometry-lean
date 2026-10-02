@@ -1,6 +1,5 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometryCore.Basic
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordSourceWickBase
@@ -18,18 +17,18 @@ namespace InfoGeometry.Canonical.SplitCliffordSourceWickBase
 
 open Matrix
 
-open InfoGeometryCore
+open InfoGeometry.Algebra.FiniteSpin
 
 /-- Parabolic nilpotent atom. -/
-def N : M2R :=
+def N : Mat2R :=
   !![0, 1;
      0, 0]
 
 /-- Local annihilation operator. -/
-def a : M2R := N
+def a : Mat2R := N
 
 /-- Local creation operator. -/
-def aDag : M2R :=
+def aDag : Mat2R :=
   !![0, 0;
      1, 0]
 
@@ -47,7 +46,7 @@ theorem vacuum_annihilation :
 
 /-- Local CAR identity: `{a, a†} = 1`. -/
 theorem local_car_identity :
-    a * aDag + aDag * a = (1 : M2R) := by
+    a * aDag + aDag * a = (1 : Mat2R) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [a, aDag, N, Matrix.mul_apply, Fin.sum_univ_two]
@@ -68,7 +67,7 @@ The local fermion parity operator is
 
 In this concrete `M₂(ℝ)` model it is the diagonal grading operator.
 -/
-def parity : M2R :=
+def parity : Mat2R :=
   a * aDag - aDag * a
 
 /--
@@ -77,7 +76,7 @@ The local parity operator is an involution:
   P² = 1.
 -/
 theorem parity_sq_eq_one :
-    parity * parity = (1 : M2R) := by
+    parity * parity = (1 : Mat2R) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [parity, a, aDag, N, Matrix.mul_apply, Fin.sum_univ_two]
@@ -111,7 +110,7 @@ This is the finite algebraic fact needed before any two-mode or multi-mode
 fermionic construction.
 -/
 theorem local_jordan_wigner_parity_profile :
-    parity * parity = (1 : M2R) ∧
+    parity * parity = (1 : Mat2R) ∧
     parity * a + a * parity = 0 ∧
     parity * aDag + aDag * parity = 0 := by
   exact

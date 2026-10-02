@@ -1,0 +1,8 @@
+Compilation & Linter Audit Report
+File: .agents/sandbox_correlator/lean/InfoGeometry/Detector/FieldCorrelatorProjection.lean
+Compiler: lake env lean --threads 1 (via tools.build_lock acquire_build_lock)
+Return Code: 0
+Total Wall Time: 50.084 s
+Compiler Linter Warnings: 0 (PASSED)
+Compiler Errors: 0 (PASSED)
+Axioms / Sorries: 0 (PASSED)

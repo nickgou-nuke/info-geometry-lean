@@ -46,11 +46,11 @@ theorem lowerWeightLabel_injective : Function.Injective lowerWeightLabel := by
 theorem canonical_w0_upperWeightLabel (i : Fin 3) :
     canonicalWeylAction G2WeylElement.w0 (upperWeightLabel i) =
       lowerWeightLabel i := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> decide
 
 theorem canonical_w0_lowerWeightLabel (i : Fin 3) :
     canonicalWeylAction G2WeylElement.w0 (lowerWeightLabel i) =
       upperWeightLabel i := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> decide
 
 end InfoGeometry.Exceptional.G2ThreePlaneWeightBridge

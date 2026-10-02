@@ -120,7 +120,7 @@ theorem weighted_incDigit (w : Nat → Nat) (a : DigitCfg) (k : Nat) :
   simp [digitWeight]
 
 @[simp] theorem digitWeight_one : digitWeight 1 = 2 := by
-  native_decide
+  decide
 
 @[simp] theorem digitWeight_two : digitWeight 2 = 3 := by
   norm_num [digitWeight]

@@ -33,7 +33,7 @@ private theorem cached_cFiberSpectrum_values :
     cFiberSpectrum 5 = [4, 3, 2, 1] ∧
     cFiberSpectrum 6 = [5, 4, 3, 2, 1] ∧
     cFiberSpectrum 7 = [6, 5, 4, 3, 2, 1] := by
-  native_decide
+  decide
 
 -- Cached consistency checks (m ≤ 7 only — m ≥ 8 Finset enumeration is prohibitively slow)
 @[simp] theorem cached_cNthMaxFiber_zero_eq_0 : cNthMaxFiber 0 0 = cMaxFiberMult 0 := by
@@ -199,7 +199,7 @@ theorem cMaxFiberAchievers_le_univ (m : Nat) :
       split_ifs <;> omega
     have hfib : 4 ≤ Nat.fib (m + 2) := by
       calc
-        4 ≤ Nat.fib 5 := by native_decide
+        4 ≤ Nat.fib 5 := by decide
         _ ≤ Nat.fib (m + 2) := Nat.fib_mono (by omega)
     have hcard : 4 ≤ (@Finset.univ (X m) (fintypeX m)).card :=
       nat_le_cMaxFiberAchievers_univ m 4 hfib
@@ -212,7 +212,7 @@ def cFiberHist (m k : Nat) : Nat :=
 
 private theorem cached_cFiberHist_4_values :
     cFiberHist 4 1 = 2 ∧ cFiberHist 4 2 = 4 ∧ cFiberHist 4 3 = 2 := by
-  native_decide
+  decide
 
 @[simp] theorem cached_cFiberHist_4_1 : cFiberHist 4 1 = 2 :=
   cached_cFiberHist_4_values.1
@@ -234,7 +234,7 @@ private theorem cached_cFiberHist_6_values :
     cFiberHist 6 3 = 8 ∧
     cFiberHist 6 4 = 5 ∧
     cFiberHist 6 5 = 2 := by
-  native_decide
+  decide
 
 @[simp] theorem cached_cFiberHist_6_1 : cFiberHist 6 1 = 2 :=
   cached_cFiberHist_6_values.1
@@ -340,7 +340,7 @@ private theorem cached_cNthMaxFiber_second_high_values :
     cNthMaxFiber 8 1 = 7 ∧
     cNthMaxFiber 9 1 = 9 ∧
     cNthMaxFiber 10 1 = 12 := by
-  native_decide
+  decide
 
 @[simp] theorem cached_cNthMaxFiber_second_eight : cNthMaxFiber 8 1 = 7 :=
   cached_cNthMaxFiber_second_high_values.1
@@ -497,7 +497,7 @@ private theorem cached_cFiberParityCount_values :
     cEvenFiberCount 4 = 4 ∧
     cEvenFiberCount 5 = 5 ∧
     cEvenFiberCount 6 = 9 := by
-  native_decide
+  decide
 
 @[simp] theorem cached_cOddFiberCount_zero : cOddFiberCount 0 = 1 :=
   cached_cFiberParityCount_values.1

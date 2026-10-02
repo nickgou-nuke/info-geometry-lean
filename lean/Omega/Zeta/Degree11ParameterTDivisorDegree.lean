@@ -76,6 +76,6 @@ theorem paper_xi_degree11_parameter_t_divisor_degree :
     xi_degree11_parameter_t_divisor_degree_pole_order
     xi_degree11_parameter_t_divisor_degree_total_pole_degree
     xi_degree11_parameter_t_divisor_degree_t_degree
-  native_decide
+  decide
 
 end Omega.Zeta

@@ -9,7 +9,7 @@ inductive SyncKernelState
 
 /-- The synchronizing kernel state set has cardinality `10`. -/
 theorem syncKernelState_card : Fintype.card SyncKernelState = 10 := by
-  native_decide
+  decide
 
 /-- Concrete certificate data for the ten-state synchronizing kernel:
 `residualOutput` is the residual Mealy map, `syncKernelOutput` is the intended kernel behavior, and

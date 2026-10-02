@@ -19,7 +19,7 @@ namespace Omega.Folding.GaugeAnomalyP10Degree
 
 /-- 10! = 3628800.
     cor:fold-gauge-anomaly-p10-degree-and-unsolvability -/
-theorem factorial_10_eq : Nat.factorial 10 = 3628800 := by native_decide
+theorem factorial_10_eq : Nat.factorial 10 = 3628800 := by decide
 
 /-- The order of S_10 equals 10! = 3628800.
     cor:fold-gauge-anomaly-p10-degree-and-unsolvability -/

@@ -16,7 +16,7 @@ theorem paper_prime_ledger_linearizes_multiplication :
     -- injectivity seed
     (padicValNat 2 6 ≠ padicValNat 2 10 ∨ padicValNat 3 6 ≠ padicValNat 3 10 ∨
      padicValNat 5 6 ≠ padicValNat 5 10) := by
-  native_decide
+  decide
 
 /-- Paper label: `prop:ordinary-prime-ledger-linearizes-multiplication`. This is the exact
 paper-facing wrapper name for the already verified prime-ledger multiplicativity package. -/

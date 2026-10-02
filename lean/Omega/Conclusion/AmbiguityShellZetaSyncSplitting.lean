@@ -17,7 +17,7 @@ theorem paper_conclusion_ambiguity_shell_zeta_sync_splitting :
       (∀ n : ℕ, (ambiguityShellNilpotent ^ (n + 1)).trace = 0) ∧
       (∀ m : ℕ, 3 ≤ m → m - 1 < m) := by
   refine ⟨?_, ?_, ?_⟩
-  · native_decide
+  · decide
   · intro n
     have hzero : ambiguityShellNilpotent = 0 := by
       ext i j

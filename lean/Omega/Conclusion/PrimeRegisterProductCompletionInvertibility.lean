@@ -36,7 +36,7 @@ lemma primeRegisterProductCompletion_coeff_one_inverse
     PowerSeries.coeff 1 D.inverseSeries = -D.firstCoeff := by
   have hcoeff := PowerSeries.coeff_invOfUnit 1 D.series 1
   have hantidiagonal : Finset.antidiagonal 1 = ({(0, 1), (1, 0)} : Finset (ℕ × ℕ)) := by
-    native_decide
+    decide
   rw [hantidiagonal] at hcoeff
   simpa [PrimeRegisterProductCompletionData.inverseSeries, D.constantCoeff_eq_one, D.coeff_one_eq,
     PowerSeries.coeff_zero_eq_constantCoeff_apply] using hcoeff

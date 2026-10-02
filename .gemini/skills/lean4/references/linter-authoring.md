@@ -3,7 +3,7 @@
 > **Scope:** Not part of the prove/autoprove default loop. Consulted when writing or maintaining project-specific Lean 4 linters.
 
 > **Version metadata:**
-> - **Verified on:** Lean reference + release notes through `v4.28.0`
+> - **Verified on:** Lean reference + release notes through `v4.28.x`
 > - **Last validated:** 2026-02-17
 > - **Confidence:** medium (docs reviewed; snippets not batch-compiled)
 

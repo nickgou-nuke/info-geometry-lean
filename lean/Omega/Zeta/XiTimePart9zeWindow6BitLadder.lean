@@ -52,12 +52,12 @@ theorem paper_xi_time_part9ze_window6_bit_ladder
     (D : xi_time_part9ze_window6_bit_ladder_data) : D.statement := by
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · rw [D.xi_time_part9ze_window6_bit_ladder_indexEZ_identity]
-    native_decide
+    decide
   · rw [D.xi_time_part9ze_window6_bit_ladder_indexEpsilon_identity]
-    native_decide
+    decide
   · rw [D.xi_time_part9ze_window6_bit_ladder_indexEsc_identity]
-    native_decide
-  · native_decide
-  · exact ⟨2, by native_decide, by native_decide⟩
+    decide
+  · decide
+  · exact ⟨2, by decide, by decide⟩
 
 end Omega.Zeta

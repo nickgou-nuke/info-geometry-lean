@@ -520,7 +520,7 @@ theorem stableValue_sum_gauss_instances :
     cStableValueSum 4 = Nat.fib 6 * (Nat.fib 6 - 1) / 2 ∧
     cStableValueSum 5 = Nat.fib 7 * (Nat.fib 7 - 1) / 2 ∧
     cStableValueSum 6 = Nat.fib 8 * (Nat.fib 8 - 1) / 2 := by
-  native_decide
+  decide
 
 /-- Paper: stableValue Gauss sum instances -/
 theorem paper_stableValue_sum_gauss_instances :

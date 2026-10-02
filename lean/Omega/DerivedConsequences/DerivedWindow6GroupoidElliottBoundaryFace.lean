@@ -102,7 +102,7 @@ theorem paper_derived_window6_groupoid_elliott_boundary_face
                 Nat.factorial 2 ^ 5 * Nat.factorial 3 ^ 4 * Nat.factorial 4 ^ 9 := hMoment.1
     let χ₀ : Fin 8 := 0
     have _ := hSectorCount χ₀
-    refine ⟨by native_decide, by native_decide, by native_decide, by native_decide⟩
+    refine ⟨by decide, by decide, by decide, by decide⟩
   · refine ⟨by norm_num [derived_window6_groupoid_elliott_boundary_face_totalBlockCount,
       derived_window6_groupoid_elliott_boundary_face_boundaryBlockCount,
       derived_window6_groupoid_elliott_boundary_face_cyclicBlockCount], ?_, ?_, ?_⟩

@@ -172,7 +172,7 @@ theorem paper_xi_j_sextic_elliptic_lattes_klein_mobius :
     exact xi_j_sextic_elliptic_lattes_klein_mobius_phi2_involutive t ht
   · intro t ht
     exact xi_j_sextic_elliptic_lattes_klein_mobius_phi3_involutive t ht
-  · native_decide
+  · decide
   · intro t ht hQ
     rcases paper_xi_j_sextic_elliptic_lattes_degree_drop_by_2torsion t ht hQ with
       ⟨hpi, _, hL⟩

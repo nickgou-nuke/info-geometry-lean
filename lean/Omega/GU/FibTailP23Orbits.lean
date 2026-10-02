@@ -74,7 +74,7 @@ theorem paper_fib_tail_order3_trace :
     2 * Nat.fib 7 + 1 = 27 ∧
     2 * Nat.fib 9 + 1 = 69 ∧
     2 * Nat.fib 11 + 1 = 179 := by
-  refine ⟨by native_decide, by native_decide, by native_decide⟩
+  refine ⟨by decide, by decide, by decide⟩
 
 /-- 23 divides 2·F_9+1 = 69, giving order-3 at m = 6.
     prop:fib-tail-order3-trace -/
@@ -83,7 +83,7 @@ theorem twentythree_dvd_two_fib9_add1 : (23 : Nat) ∣ (2 * Nat.fib 9 + 1) := by
 
 /-- 27 = 3^3: the trace value at m = 4 factors as a pure cube.
     prop:fib-tail-order3-trace -/
-theorem trace_m4_eq_27 : 2 * Nat.fib 7 + 1 = 27 := by native_decide
+theorem trace_m4_eq_27 : 2 * Nat.fib 7 + 1 = 27 := by decide
 
 /-- 179 is prime: the trace value at m = 8 is itself prime.
     prop:fib-tail-order3-trace -/
@@ -91,7 +91,7 @@ theorem trace_m8_prime : Nat.Prime 179 := by norm_num
 
 /-- 179 = 2·F_11+1: combined identity.
     prop:fib-tail-order3-trace -/
-theorem trace_m8_eq_179 : 2 * Nat.fib 11 + 1 = 179 := by native_decide
+theorem trace_m8_eq_179 : 2 * Nat.fib 11 + 1 = 179 := by decide
 
 /-! ### BinFold escort log-fiber first and second moments -/
 
@@ -100,7 +100,7 @@ theorem trace_m8_eq_179 : 2 * Nat.fib 11 + 1 = 179 := by native_decide
 theorem paper_gut_foldbin_escort_logfiber_first_second_moments :
     2 ^ 6 = 64 ∧ Nat.fib 8 = 21 ∧ 64 > 21 ∧
     64 - 21 = 43 ∧ 21 * 3 = 63 := by
-  refine ⟨by norm_num, by native_decide, by omega, by omega, by omega⟩
+  refine ⟨by norm_num, by decide, by omega, by omega, by omega⟩
 
 private theorem cube_eq_one_of_trace_neg_one_det_one
     (M : Matrix (Fin 2) (Fin 2) (ZMod 23))

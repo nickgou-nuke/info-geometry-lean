@@ -345,7 +345,7 @@ In thermofield dynamics:
 | Ω(n) definition varies between systems | Use explicit prime factorization, not built-in functions |
 | Complex phase conventions differ | Fix e^{it} = cos(t) + i sin(t) universally |
 | Domain issues (t ∈ ℝ vs ℂ) | Always specify t ∈ ℝ for physical modular flow |
-| Lean mathlib API changes | Pin to mathlib 4.28.0, use `mathlib-api-discovery` skill |
+| Lean mathlib API changes | Use the repository-pinned Mathlib revision and `mathlib-api-discovery` skill |
 | Coq/Isabelle library gaps | Start with basic lemmas, build up gradually |
 
 ---

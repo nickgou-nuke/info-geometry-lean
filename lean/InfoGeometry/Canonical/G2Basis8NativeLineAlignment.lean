@@ -21,10 +21,10 @@ open InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerGenerators
 
 noncomputable section
 
-def basis8Point4 : OctImIsotropicPoint := ⟨nativeBasePoint, by native_decide⟩
-def basis8Point5 : OctImIsotropicPoint := ⟨baseLineVector, by native_decide⟩
+def basis8Point4 : OctImIsotropicPoint := ⟨nativeBasePoint, by decide⟩
+def basis8Point5 : OctImIsotropicPoint := ⟨baseLineVector, by decide⟩
 def basis8Point45 : OctImIsotropicPoint :=
-  ⟨nativeBasePoint + baseLineVector, by native_decide⟩
+  ⟨nativeBasePoint + baseLineVector, by decide⟩
 
 theorem basis8Point4_mem_baseIntrinsicLine : basis8Point4 ∈ baseIntrinsicLine.1 := by
   apply (mem_baseIntrinsicLine_iff basis8Point4).2
@@ -42,17 +42,17 @@ theorem basis8Point45_mem_baseIntrinsicLine : basis8Point45 ∈ baseIntrinsicLin
   simp [nativeBaseLineWitness, lineSet, nativeLineSetAt]
 
 theorem basis8Point4_zeroRelated_basis8Point5 :
-    ZornZeroRelated basis8Point4 basis8Point5 := by native_decide +revert
+    ZornZeroRelated basis8Point4 basis8Point5 := by decide +revert
 
 theorem embed_octImPointPerm (g : SplitOctF2Aut) (p : OctImIsotropicPoint) :
     embed (octImPointPerm g p).1 = g⁻¹.1 (embed p.1) := by
   rw [octImPointPerm_apply]
   exact embed_octImAction g p.1
 
-theorem embed_basis8Point4 : embed basis8Point4.1 = basis8 4 := by native_decide +revert
-theorem embed_basis8Point5 : embed basis8Point5.1 = basis8 5 := by native_decide +revert
+theorem embed_basis8Point4 : embed basis8Point4.1 = basis8 4 := by decide +revert
+theorem embed_basis8Point5 : embed basis8Point5.1 = basis8 5 := by decide +revert
 theorem embed_basis8Point45 :
-    embed basis8Point45.1 = add (basis8 4) (basis8 5) := by native_decide +revert
+    embed basis8Point45.1 = add (basis8 4) (basis8 5) := by decide +revert
 
 theorem fullPeel_basis8_four_add_five_readback
     {g : SplitOctF2Aut}
@@ -75,10 +75,10 @@ theorem basis8Point45_action_readback (g : SplitOctF2Aut) :
   rw [embed_octImPointPerm, embed_basis8Point45]
 
 theorem basis8Point5_zeroRelated_basis8Point45 :
-    ZornZeroRelated basis8Point5 basis8Point45 := by native_decide +revert
+    ZornZeroRelated basis8Point5 basis8Point45 := by decide +revert
 
 theorem basis8Point4_zeroRelated_basis8Point45 :
-    ZornZeroRelated basis8Point4 basis8Point45 := by native_decide +revert
+    ZornZeroRelated basis8Point4 basis8Point45 := by decide +revert
 
 end
 end InfoGeometry.Canonical.G2Basis8NativeLineAlignment

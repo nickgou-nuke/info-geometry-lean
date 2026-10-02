@@ -48,7 +48,7 @@ private lemma xi_dirichlet_residue_fourier_parseval_exact_sum_modulus {R : Type*
     (∑ x, f x) = f 0 + f 1 := by
   have huniv :
       (Finset.univ : Finset xi_dirichlet_residue_fourier_parseval_exact_modulus) = {0, 1} := by
-    native_decide
+    decide
   rw [huniv]
   simp
 

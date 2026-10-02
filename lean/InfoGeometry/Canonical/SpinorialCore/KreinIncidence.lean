@@ -27,8 +27,8 @@ theorem metricDual_antilinear (J : Matrix n n ℂ) (a : ℂ) (x : n → ℂ) :
   ext y
   simp [metricDual, pairing, star_smul, smul_dotProduct]
 
-/-- The incidence functional agrees with the indefinite Hermitian pairing. -/
 omit [DecidableEq n] in
+/-- The incidence functional agrees with the indefinite Hermitian pairing. -/
 theorem incidence_eq_pairing (J : Matrix n n ℂ) (x : n → ℂ) :
     metricDual J x x = pairing J x x := rfl
 
@@ -46,6 +46,7 @@ theorem null_incidence_preserved (J U : Matrix n n ℂ) (hU : IsIsometry J U)
   change pairing J (U *ᵥ x) (U *ᵥ x) = 0 ↔ pairing J x x = 0
   rw [pairing_isometry J U hU]
 
+omit [DecidableEq n] in
 theorem pairing_scale (J : Matrix n n ℂ) (a : ℂ) (x y : n → ℂ) :
     pairing J (a • x) (a • y) = (star a * a) * pairing J x y := by
   simp [pairing, star_smul, Matrix.mulVec_smul, smul_dotProduct, dotProduct_smul,

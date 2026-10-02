@@ -22,7 +22,7 @@ theorem quartet_zero_of_row_orthogonality (a b c d : ℂ)
   calc
     (a * d * star b * star c).im = ((a * star c) * star (b * star d)).im := by
       congr 1
-      simp only [star_mul, star_star]
+      simp only [StarMul.star_mul, star_star]
       ring
     _ = (-(b * star d) * star (b * star d)).im := by rw [hx]
     _ = 0 := by simp [Complex.mul_im]; ring
@@ -40,7 +40,7 @@ theorem quartet_rephasing (a b c d r s u v : ℂ)
     quartet (r * a * u) (r * b * v) (s * c * u) (s * d * v) = quartet a b c d := by
   unfold quartet
   congr 1
-  simp only [star_mul]
+  simp only [StarMul.star_mul]
   calc
     r * a * u * (s * d * v) * (star v * (star b * star r)) *
         (star u * (star c * star s)) =
@@ -59,7 +59,7 @@ theorem threeFlavorWitness_unitary :
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [threeFlavorWitness, Matrix.mul_apply, Fin.sum_univ_succ,
-      Matrix.conjTranspose_apply, Complex.ext_iff, Complex.mul_re, Complex.mul_im]
+      Matrix.conjTranspose_apply, Complex.ext_iff, Complex.mul_re, Complex.mul_im, map_ofNat]
 
 theorem threeFlavorWitness_quartet :
     quartet (threeFlavorWitness 0 0) (threeFlavorWitness 0 1)

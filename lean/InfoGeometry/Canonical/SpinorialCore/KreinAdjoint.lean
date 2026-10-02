@@ -91,9 +91,14 @@ def signature : Matrix (Fin 2) (Fin 2) ℚ := !![1, 0; 0, -1]
 def boost : Matrix (Fin 2) (Fin 2) ℚ := !![5 / 4, 3 / 4; 3 / 4, 5 / 4]
 
 theorem boost_preserves_signature : boost.transpose * signature * boost = signature := by
-  decide
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [boost, signature, Matrix.mul_apply, Fin.sum_univ_two, Matrix.transpose_apply]
 
-theorem boost_not_orthogonal : boost.transpose * boost ≠ 1 := by decide
+theorem boost_not_orthogonal : boost.transpose * boost ≠ 1 := by
+  intro h
+  have h0 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℚ => M 0 0) h
+  norm_num [boost, Matrix.mul_apply, Fin.sum_univ_two, Matrix.transpose_apply] at h0
 
 end Counterexample
 end InfoGeometry.Canonical.SpinorialCore.Krein

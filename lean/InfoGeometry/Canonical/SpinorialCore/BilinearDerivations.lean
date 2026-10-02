@@ -22,7 +22,9 @@ theorem commutator_leibniz (μ : V →ₗ[R] V →ₗ[R] V)
   intro x y
   change D (E (μ x y)) - E (D (μ x y)) =
     μ (D (E x) - E (D x)) y + μ x (D (E y) - E (D y))
-  simp only [hD, hE, map_add, map_sub, LinearMap.add_apply, LinearMap.sub_apply]
+  rw [hE x y, hD x y, map_add, map_add,
+    hD (E x) y, hD x (E y), hE (D x) y, hE x (D y)]
+  simp only [map_sub, LinearMap.sub_apply]
   abel
 
 /-- Native Lie carrier; the bracket is the endomorphism commutator. -/
@@ -34,12 +36,14 @@ def derivations (μ : V →ₗ[R] V →ₗ[R] V) : LieSubalgebra R (Module.End R
   add_mem' := by
     intro D E hD hE x y
     change D (μ x y) + E (μ x y) = μ (D x + E x) y + μ x (D y + E y)
-    simp only [hD, hE, map_add, LinearMap.add_apply]
+    rw [hD x y, hE x y]
+    simp only [map_add, LinearMap.add_apply]
     abel
   smul_mem' := by
     intro a D hD x y
     change a • D (μ x y) = μ (a • D x) y + μ x (a • D y)
-    simp [hD, smul_add]
+    rw [hD x y]
+    simp [smul_add]
   lie_mem' := fun {D E} hD hE => commutator_leibniz μ D E hD hE
 
 /-- The canonical representation on the original module. -/

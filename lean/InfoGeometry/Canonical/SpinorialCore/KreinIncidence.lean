@@ -52,6 +52,7 @@ theorem pairing_scale (J : Matrix n n ℂ) (a : ℂ) (x y : n → ℂ) :
   simp [pairing, star_smul, Matrix.mulVec_smul, smul_dotProduct, dotProduct_smul,
     mul_assoc, mul_left_comm]
 
+omit [DecidableEq n] in
 theorem projective_null_iff (J : Matrix n n ℂ) (a : ℂ) (ha : a ≠ 0) (x : n → ℂ) :
     pairing J (a • x) (a • x) = 0 ↔ pairing J x x = 0 := by
   rw [pairing_scale]

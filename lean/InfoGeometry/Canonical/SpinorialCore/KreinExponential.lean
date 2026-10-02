@@ -33,7 +33,7 @@ theorem exp_isIsometry (J X : Matrix n n ℂ) (hJ : J * J = 1)
 
 theorem sharp_real_smul (J X : Matrix n n ℂ) (t : ℝ) :
     sharp J (t • X) = t • sharp J X := by
-  simp [sharp, star_smul, mul_smul_comm, smul_mul_assoc]
+  simp [sharp, star_smul]
 
 theorem real_flow_isIsometry (J X : Matrix n n ℂ) (hJ : J * J = 1)
     (hX : sharp J X = -X) (t : ℝ) : IsIsometry J (exp (t • X)) := by
@@ -53,7 +53,8 @@ theorem generator_skew : sharp signature generator = -generator := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [sharp, signature, generator, Matrix.mul_apply, Fin.sum_univ_two,
-      Matrix.star_eq_conjTranspose, Matrix.conjTranspose_apply]
+      Matrix.star_eq_conjTranspose, Matrix.conjTranspose_apply, Matrix.vecMul, dotProduct,
+      map_ofNat]
 
 theorem boost_isIsometry (t : ℝ) : IsIsometry signature (exp (t • generator)) :=
   real_flow_isIsometry signature generator signature_square generator_skew t

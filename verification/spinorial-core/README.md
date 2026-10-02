@@ -36,7 +36,7 @@ All paths below are relative to `lean/InfoGeometry/Canonical/SpinorialCore/`. Al
 | `G2Certificate.lean` | `G2.adjacency_eq_blocks`, `G2.smith_certificate`, four integral inverse identities | The specified twelve-vertex matrix is integrally equivalent to diagonal entries 1,1,1,1,1,1,1,1,1,2,2,364. Finite certificates are checked by Lean's `decide`. |
 | `G2Cokernel.lean` | `G2.graphResidue_exact`, `G2.cokernelEquiv`, `G2.relation_kernel_zero`, `G2.primaryDecomposition`, `G2.no_surjection_to_zmod16` | Explicit native quotient equivalence to ZMod 2 x ZMod 2 x ZMod 364; zero integer kernel; CRT decomposition and the obstruction to a cyclic order-16 quotient of the two-primary factor. |
 
-`All.lean` imports the nine mathematical owners. `AxiomAudit.lean` prints the axiom dependencies of fourteen central constructions and theorems. The source bundle has 64 theorem declarations and 35 definitions/abbreviations. Standard logical axioms used by mathlib must be distinguished from newly postulated mathematical or physical assumptions; the audit exposes the dependencies rather than calling the entire development axiom-free.
+`All.lean` imports fourteen mathematical owners. `AxiomAudit.lean` prints the axiom dependencies of 36 selected constructions and theorems. The source bundle has 106 theorem declarations and 53 definitions/abbreviations. The five added lineage modules and their precise hypotheses are documented in `LINEAGE_EXTENSION.md`. Standard logical axioms used by mathlib must be distinguished from newly postulated mathematical or physical assumptions; the audit exposes the dependencies rather than calling the entire development axiom-free.
 
 ## Deliberately separate realization problems
 

@@ -250,7 +250,7 @@ theorem fureyVacuumIdempotent_sq :
 `Ae` when `e` is the idempotent vacuum generator. -/
 theorem mul_fureyVacuumIdempotent_mem (x : CAR3) :
     x * fureyVacuumIdempotent ∈ fureyVacuumLeftIdeal := by
-  letI : Semiring CAR3 := Algebra.TensorProduct.instSemiring
+  letI : Semigroup CAR3 := car3Semiring.toSemigroup
   change (x * fureyVacuumIdempotent) * fureyVacuumIdempotent =
     x * fureyVacuumIdempotent
   rw [mul_assoc, fureyVacuumIdempotent_sq]
@@ -260,7 +260,7 @@ multiplication by the CAR algebra. -/
 theorem fureyVacuumLeftIdeal_left_mul_closed (a x : CAR3)
     (hx : x ∈ fureyVacuumLeftIdeal) :
     a * x ∈ fureyVacuumLeftIdeal := by
-  letI : Semiring CAR3 := Algebra.TensorProduct.instSemiring
+  letI : Semigroup CAR3 := car3Semiring.toSemigroup
   change (a * x) * fureyVacuumIdempotent = a * x
   change x * fureyVacuumIdempotent = x at hx
   simpa [mul_assoc, hx]

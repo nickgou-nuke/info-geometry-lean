@@ -1,4 +1,7 @@
 import InfoGeometry.Canonical.ZornNavierStokesHydrodynamicBridge
+import InfoGeometry.Canonical.Archetypes.FiniteMaximum
+import InfoGeometry.Canonical.Archetypes.ConvexBound
+import InfoGeometry.Canonical.Archetypes.UniqueMaximum
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NavierStokesConePiolaBridge
 import InfoGeometry.Canonical.NavierStokesConePiolaAudit
@@ -2248,6 +2251,3 @@ modules in `lean/InfoGeometry/Canonical/`.
 -/
 
 end InfoGeometry
-import InfoGeometry.Canonical.Archetypes.FiniteMaximum
-import InfoGeometry.Canonical.Archetypes.ConvexBound
-import InfoGeometry.Canonical.Archetypes.UniqueMaximum

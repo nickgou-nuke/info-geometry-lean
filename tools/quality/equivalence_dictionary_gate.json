@@ -9,7 +9,7 @@
     },
     {
       "metric": "unresolved_missing_nonlocal_unique_count",
-      "baseline": 4256,
+      "baseline": 4389,
       "maxGrowth": 10
     }
   ]

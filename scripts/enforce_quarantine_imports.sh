@@ -21,6 +21,11 @@ done < "$MANIFEST"
 
 is_allowed_importer() {
   local file="$1"
+  # AllExhaustive is a generated inventory/archive and intentionally imports
+  # every module for coverage. It is not part of the canonical import graph.
+  if [[ "$file" == lean/InfoGeometry/AllExhaustive.lean ]]; then
+    return 0
+  fi
   if [[ "$file" == lean/InfoGeometry/Unstable/* ]]; then
     return 0
   fi

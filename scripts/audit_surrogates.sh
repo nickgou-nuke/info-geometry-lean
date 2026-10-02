@@ -10,6 +10,8 @@ IGNORE_GLOBS=(
   -g '!**/InfoGeometry/Archive/**'
   # Export/coverage barrels are publication surfaces, not stable owners.
   -g '!**/InfoGeometry/All.lean'
+  # Generated exhaustive inventory; it intentionally imports quarantine modules.
+  -g '!**/InfoGeometry/AllExhaustive.lean'
   -g '!**/InfoGeometry/CoverageClosure.lean'
   -g '!**/tmp/**'
   -g '!**/tmp.lean'

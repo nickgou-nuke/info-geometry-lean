@@ -7,3 +7,8 @@ import InfoGeometry.Canonical.SpinorialCore.DualFlow
 import InfoGeometry.Canonical.SpinorialCore.BoundaryCurrent
 import InfoGeometry.Canonical.SpinorialCore.G2Certificate
 import InfoGeometry.Canonical.SpinorialCore.G2Cokernel
+import InfoGeometry.Canonical.SpinorialCore.BilinearDerivations
+import InfoGeometry.Canonical.SpinorialCore.KreinAdjoint
+import InfoGeometry.Canonical.SpinorialCore.KreinExponential
+import InfoGeometry.Canonical.SpinorialCore.KreinIncidence
+import InfoGeometry.Canonical.SpinorialCore.MixingInvariant

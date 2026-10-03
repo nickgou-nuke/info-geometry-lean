@@ -8,46 +8,20 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
 
 /-!
-# KAN Dirac-Kähler Triad Architecture & Nilpotent Peirce Intertwining
+# Conditional algebraic Peirce and matrix identities
 
-This module establishes the general ring-theoretic and operator-algebraic foundations
-unifying the Iwasawa $KAN$ global decomposition, the split Peirce projectors, the
-parabolic reflection group of the Klein bottle, and the triad decomposition of the
-Dirac-Kähler operator $D = D_K + D_A + D_N$:
+This module proves reusable lemmas under explicit hypotheses about an
+involution `J`, a step element, a reflection element `R`, and three ring
+elements named `D_K`, `D_A`, and `D_N`. It also proves trace identities for
+specific `2 × 2` matrices.
 
-1. **Abstract Nilpotent Step Operator & Split Peirce Intertwining**:
-   - In any ring $A$ with involution $J^2 = 1$ and real scalar multiplication ($[Ring\ A]\ [Algebra\ \mathbb{R}\ A]$),
-     the split Peirce projectors $P_\pm = \frac{1 \pm J}{2}$ satisfy:
-     $P_+ e_+ = e_+$, $e_+ P_+ = 0$, $e_+ P_- = e_+$, $P_- e_+ = 0$.
-   - The unipotent group $u_N(x) = 1 + x e_+$ satisfies:
-     $u_N(x) u_N(y) = u_N(x + y)$, $u_N(x) P_- = P_- + x e_+$,
-     $P_+ u_N(x) P_- = x e_+$, and leaves $P_+$ fixed.
-
-2. **Parabolic Reflection and Klein Bottle Inversion**:
-   - An involution $R^2 = 1$ anticommuting with $J$ ($\{R, J\} = 0$)
-     transposes the Peirce projectors: $R P_\pm R = P_\mp$.
-   - $R$ inverts hyperbolic boosts $A(t) = \cosh t \cdot 1 + \sinh t \cdot J$:
-     $R A(t) R = A(-t)$, establishing the outer automorphism of the Klein bottle
-     crystallographic lattice $a b a^{-1} = b^{-1}$.
-
-3. **Triad Decomposition of the Dirac-Kähler Operator**:
-   - $D = D_K + D_A + D_N$, where:
-     - $D_K$ is chiral: $\{D_K, J\} = 0 \implies P_\pm D_K P_\pm = 0$.
-     - $D_A$ is radial/abelian: $[D_A, J] = 0 \implies P_\pm D_A P_\mp = 0$.
-     - $D_N$ is nilpotent/horocyclic: $D_N^2 = 0$, $J D_N = D_N$, $D_N J = -D_N$.
-   - **Diagonal Localization on $D_A$**:
-     $P_+ D P_+ = P_+ D_A P_+$ and $P_- D P_- = P_- D_A P_-$.
-   - **Off-Diagonal Decoupling**:
-     $P_+ D P_- = P_+ D_K P_- + D_N$ and $P_- D P_+ = P_- D_K P_+$.
-
-4. **Trace Functional Supported Strictly on $\mathfrak{a}$**:
-   - On $\mathrm{Mat}_2(R)$, skew-adjoint $\mathfrak{k}$ and strictly upper-triangular
-     $\mathfrak{n}$ are trace-free, proving $\operatorname{tr}(X_\mathfrak{k} + X_\mathfrak{a} + X_\mathfrak{n}) = \operatorname{tr}(X_\mathfrak{a})$.
-
-5. **Machine-Checked Master Packet**:
-   - `KANDiracKahlerTriadPacket` unifying all five strata.
-
-All theorems are proved constructively in native Lean 4 / Mathlib with zero gaps.
+It does not construct an Iwasawa decomposition, a Klein bottle group
+representation, a manifold, or a Dirac–Kähler differential operator. The
+operator-style decomposition statements are conditional identities for ring
+elements satisfying the displayed commutation or anticommutation hypotheses.
+The nilpotency of a step element is an explicit hypothesis where needed;
+nilpotency of a Lie algebra does not by itself prove that a differential
+operator squares to zero.
 -/
 
 noncomputable section
@@ -59,7 +33,7 @@ open Matrix
 set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
 
-/-! ### Stratum 1: Split Peirce Projectors and Nilpotent Step Operator -/
+/-! ### Split Peirce projectors and conditional step-element identities -/
 
 /-- Positive Peirce projector: $P_+ = \frac{1}{2}(1 + J)$. -/
 def peircePlus {A : Type*} [Ring A] [Algebra ℝ A] (J : A) : A :=
@@ -166,13 +140,13 @@ theorem peirceMinus_step_peirceMinus {A : Type*} [Ring A] [Algebra ℝ A]
     peirceMinus J * e_plus * peirceMinus J = 0 := by
   rw [peirceMinus_mul_step J e_plus h_J_e, zero_mul]
 
-/-! ### Stratum 2: The Nilpotent Horocycle Group $N(x) = 1 + x e_+$ -/
+/-! ### Additive law and projector action of an element family -/
 
-/-- Unipotent horocycle shear element: $u_N(x) = 1 + x e_+$. -/
+/-- Element family `1 + x • e_plus` in the algebra. -/
 def unipotentN {A : Type*} [Ring A] [Algebra ℝ A] (e_plus : A) (x : ℝ) : A :=
   1 + x • e_plus
 
-/-- Group multiplication law of the unipotent horocycle: $u_N(x) u_N(y) = u_N(x + y)$. -/
+/-- Under `e_plus * e_plus = 0`, the family obeys the additive parameter law. -/
 theorem unipotentN_mul {A : Type*} [Ring A] [Algebra ℝ A]
     (e_plus : A) (he_sq : e_plus * e_plus = 0) (x y : ℝ) :
     unipotentN e_plus x * unipotentN e_plus y = unipotentN e_plus (x + y) := by
@@ -235,9 +209,10 @@ theorem peirceMinus_unipotentN_peirceMinus {A : Type*} [Ring A] [Algebra ℝ A]
     peirceMinus J * unipotentN e_plus x * peirceMinus J = peirceMinus J := by
   rw [peirceMinus_unipotentN J e_plus h_J_e x, peirceMinus_sq J hJ]
 
-/-! ### Stratum 3: Parabolic Reflection and Klein Bottle Inversion -/
+/-! ### Conditional involution action on split projectors -/
 
-/-- Parabolic reflection inverts the paracomplex structure: $R J R = -J$. -/
+/-- If `R` is an involution anticommuting with `J`, conjugation sends `J` to
+`-J`. -/
 theorem R_conjugates_J {A : Type*} [Ring A]
     (R J : A) (hR_sq : R * R = 1) (hRJ : R * J + J * R = 0) :
     R * J * R = -J := by
@@ -293,9 +268,10 @@ def hyperbolicBoost {A : Type*} [Ring A] [Algebra ℝ A] (J : A) (t : ℝ) : A :
   (Real.cosh t) • (1 : A) + (Real.sinh t) • J
 
 /-- 
-Klein Bottle Inversion:
-Conjugation by the orientation-reversing reflection $R$ inverts the split boost $A(t) \mapsto A(-t)$,
-realizing the defining Klein bottle outer automorphism $a b a^{-1} = b^{-1}$.
+Conjugation by an algebra element `R` satisfying the stated involution and
+anticommutation hypotheses sends the defined split boost at `t` to the boost
+at `-t`. This identity alone does not construct a Klein bottle group
+representation.
 -/
 theorem R_inverts_hyperbolicBoost {A : Type*} [Ring A] [Algebra ℝ A]
     (R J : A) (hR_sq : R * R = 1) (hRJ : R * J + J * R = 0) (t : ℝ) :
@@ -321,7 +297,7 @@ theorem R_inverts_hyperbolicBoost {A : Type*} [Ring A] [Algebra ℝ A]
     _ = R * ((Real.cosh t) • (1 : A)) * R + R * ((Real.sinh t) • J) * R := by rw [add_mul]
     _ = (Real.cosh (-t)) • (1 : A) + (Real.sinh (-t)) • J := by rw [h1, h2]
 
-/-! ### Stratum 4: Triad Decomposition of the Dirac-Kähler Operator -/
+/-! ### Conditional Peirce identities for three ring elements -/
 
 /-- Radial / Abelian operator commutes with $J$: $[D_A, J] = 0$. -/
 theorem peircePlus_mul_DA {A : Type*} [Ring A] [Algebra ℝ A]
@@ -357,8 +333,8 @@ theorem peirceMinus_DA_peircePlus {A : Type*} [Ring A] [Algebra ℝ A]
   rw [peirceMinus_mul_DA J D_A h_abelian, mul_assoc, peirceMinus_mul_plus J hJ, mul_zero]
 
 /-- 
-Diagonal Localization of $D_A$:
-The radial Euler operator $D_A$ is strictly diagonal in the Peirce basis:
+If `D_A` commutes with `J`, its off-diagonal Peirce sandwiches vanish and it
+has the following diagonal decomposition:
 $D_A = P_+ D_A P_+ + P_- D_A P_-$.
 -/
 theorem DA_diagonal_split {A : Type*} [Ring A] [Algebra ℝ A]
@@ -448,14 +424,14 @@ theorem DK_off_diagonal_split {A : Type*} [Ring A] [Algebra ℝ A]
   _ = peircePlus J * D_K * peirceMinus J + peirceMinus J * D_K * peircePlus J := by
       abel
 
-/-- The total Dirac-Kähler operator is the sum of the Iwasawa triad operators: $D = D_K + D_A + D_N$. -/
+/-- Sum of three ring elements. This definition does not make them differential
+operators or identify them with Iwasawa components. -/
 def totalDirac {A : Type*} [Add A] (D_K D_A D_N : A) : A :=
   D_K + D_A + D_N
 
 /-- 
-THE DIAGONAL LOCALIZATION THEOREM (POSITIVE):
-The positive Peirce projection of the total Dirac-Kähler operator
-is governed exclusively by the radial Euler operator $D_A$:
+Under the stated anticommutation hypotheses, the positive Peirce sandwich of
+the sum equals the corresponding sandwich of `D_A`:
 $P_+ D P_+ = P_+ D_A P_+$.
 -/
 theorem totalDirac_peircePlus_diag {A : Type*} [Ring A] [Algebra ℝ A]
@@ -471,9 +447,8 @@ theorem totalDirac_peircePlus_diag {A : Type*} [Ring A] [Algebra ℝ A]
   abel
 
 /-- 
-THE DIAGONAL LOCALIZATION THEOREM (NEGATIVE):
-The negative Peirce projection of the total Dirac-Kähler operator
-is governed exclusively by the radial Euler operator $D_A$:
+Under the stated anticommutation hypotheses, the negative Peirce sandwich of
+the sum equals the corresponding sandwich of `D_A`:
 $P_- D P_- = P_- D_A P_-$.
 -/
 theorem totalDirac_peirceMinus_diag {A : Type*} [Ring A] [Algebra ℝ A]
@@ -489,8 +464,8 @@ theorem totalDirac_peirceMinus_diag {A : Type*} [Ring A] [Algebra ℝ A]
   abel
 
 /-- 
-THE OFF-DIAGONAL STEP THEOREM:
-The $(+, -)$ off-diagonal sector receives contributions from both $D_K$ and the horocycle $D_N$:
+Under the stated hypotheses, the `(+,-)` sandwich of the sum has the following
+algebraic expression:
 $P_+ D P_- = P_+ D_K P_- + D_N$.
 -/
 theorem totalDirac_peircePlus_minus {A : Type*} [Ring A] [Algebra ℝ A]
@@ -507,7 +482,8 @@ theorem totalDirac_peircePlus_minus {A : Type*} [Ring A] [Algebra ℝ A]
   abel
 
 /-- 
-The $(-, +)$ off-diagonal sector is purely chiral from $D_K$, with zero backward horocycle transfer:
+Under the displayed hypotheses, the `(-,+)` sandwich is the corresponding
+`D_K` sandwich:
 $P_- D P_+ = P_- D_K P_+$.
 -/
 theorem totalDirac_peirceMinus_plus {A : Type*} [Ring A] [Algebra ℝ A]
@@ -566,15 +542,16 @@ theorem trace_kan_traceless (θ t x : R) :
   rw [trace_kan_localization θ t (-t) x]
   simp [trace, diag]
 
-/-! ### Stratum 6: The KAN Dirac-Kähler Triad Master Packet -/
+/-! ### Bundle of conditional algebraic identities -/
 
 /--
-Machine-verified synthesis of the KAN Dirac-Kähler Triad Architecture:
-unifying split Peirce intertwining, unipotent horocycle flow, parabolic Klein inversion,
-and the triad decomposition of the Dirac-Kähler operator.
+Bundle of the conditional Peirce and matrix propositions proved above. Its
+construction collects those theorem statements; it does not supply the
+geometric structures, group factorizations, or operator realizations named in
+some informal interpretations.
 -/
 structure KANDiracKahlerTriadPacket where
-  -- Stratum 1: Split Peirce Projectors and Nilpotent Step Operator
+  -- Split Peirce projectors and conditional step-element identities
   peirce_plus_mul_step :
     ∀ {A : Type*} [Ring A] [Algebra ℝ A] (J e_plus : A)
       (h_J_e : J * e_plus = e_plus),
@@ -592,7 +569,7 @@ structure KANDiracKahlerTriadPacket where
       (h_J_e : J * e_plus = e_plus),
       peirceMinus J * e_plus = 0
 
-  -- Stratum 2: Horocycle Group Laws and Peirce Transitions
+  -- Additive law and projector action of an element family
   unipotent_group_mul :
     ∀ {A : Type*} [Ring A] [Algebra ℝ A] (e_plus : A)
       (he_sq : e_plus * e_plus = 0) (x y : ℝ),
@@ -611,7 +588,7 @@ structure KANDiracKahlerTriadPacket where
       (hJ : J * J = 1) (he_J : e_plus * J = -e_plus) (x : ℝ),
       peirceMinus J * unipotentN e_plus x * peircePlus J = 0
 
-  -- Stratum 3: Parabolic Reflection & Klein Bottle Inversion
+  -- Conditional involution action on projectors and split boosts
   reflection_swaps_plus :
     ∀ {A : Type*} [Ring A] [Algebra ℝ A] (R J : A)
       (hR_sq : R * R = 1) (hRJ : R * J + J * R = 0),
@@ -625,7 +602,7 @@ structure KANDiracKahlerTriadPacket where
       (hR_sq : R * R = 1) (hRJ : R * J + J * R = 0) (t : ℝ),
       R * hyperbolicBoost J t * R = hyperbolicBoost J (-t)
 
-  -- Stratum 4: Triad Dirac-Kähler Decomposition
+  -- Conditional Peirce identities for a sum of ring elements
   total_dirac_plus_diag :
     ∀ {A : Type*} [Ring A] [Algebra ℝ A] (J D_K D_A D_N : A)
       (hJ : J * J = 1) (h_chiral : D_K * J + J * D_K = 0)
@@ -660,7 +637,7 @@ structure KANDiracKahlerTriadPacket where
         trace (!![t₁, 0; 0, t₂])
 
 /--
-Constructor for the KAN Dirac-Kähler Triad Master Packet.
+Constructor bundling the conditional algebraic identities above.
 -/
 def makeKANDiracKahlerTriadPacket : KANDiracKahlerTriadPacket where
   peirce_plus_mul_step := peircePlus_mul_step

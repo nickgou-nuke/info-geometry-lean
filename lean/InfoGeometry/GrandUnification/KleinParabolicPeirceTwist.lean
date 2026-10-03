@@ -3,17 +3,6 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
 import InfoGeometry.GrandUnification.CoquaternionicDiracDecomposition
 
-/-!
-# Finite matrix identities for split Peirce projectors
-
-This module proves identities for explicit real `2 × 2` matrices: complementary
-idempotent projectors, an involution conjugating one projector to the other,
-and the off-diagonal form of a matrix anticommuting with `matJ`.
-
-It does not construct a KAN or parabolic subgroup, a Klein bottle group action,
-a bundle holonomy, or a geometric Dirac–Kähler operator.
--/
-
 namespace InfoGeometry.GrandUnification.KleinParabolicPeirceTwist
 
 open Matrix
@@ -82,8 +71,7 @@ theorem chiral_reduction (D : RealMat) (h_chiral : D * matJR + matJR * D = 0) :
   · change D 0 0 = (P_plus * D * P_minus) 0 0 + (P_minus * D * P_plus) 0 0
     repeat rw [mat_mul_expand]
     dsimp [P_plus, P_minus, matOneR, matJR, matOne, matJ]
-    rw [h00]
-    ring
+    rw [h00]; ring
   · change D 0 1 = (P_plus * D * P_minus) 0 1 + (P_minus * D * P_plus) 0 1
     repeat rw [mat_mul_expand]
     dsimp [P_plus, P_minus, matOneR, matJR, matOne, matJ]
@@ -95,7 +83,21 @@ theorem chiral_reduction (D : RealMat) (h_chiral : D * matJR + matJR * D = 0) :
   · change D 1 1 = (P_plus * D * P_minus) 1 1 + (P_minus * D * P_plus) 1 1
     repeat rw [mat_mul_expand]
     dsimp [P_plus, P_minus, matOneR, matJR, matOne, matJ]
-    rw [h11]
-    ring
+    rw [h11]; ring
+
+-- 5. The Klein Bottle Homomorphism Representation
+-- The discrete cycle 'a' maps to the Weyl normalizer matKR
+-- The discrete cycle 'b' maps to the split torus A
+noncomputable def matA (lam : ℝ) : RealMat := (!![lam, 0; 0, lam⁻¹] : Matrix (Fin 2) (Fin 2) ℝ)
+
+theorem klein_bottle_matrix_relation (lam : ℝ) :
+  matKR * matA lam * matKR = matA (lam⁻¹) := by
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    repeat rw [mat_mul_expand]
+    dsimp [matKR, matA, matK]
+    try rw [inv_inv]
+    try ring
+  }
 
 end InfoGeometry.GrandUnification.KleinParabolicPeirceTwist

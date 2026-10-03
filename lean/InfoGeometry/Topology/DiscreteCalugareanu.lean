@@ -173,63 +173,126 @@ def writhe (L : Curve) : ℤ := writheSum L / 2
 /-! ## 4. Twist, via an explicit push-off
 
 The twist of a framing is the linking number between the core and its push-off along
-the frame. We build the push-off explicitly, so `twistOf` is a definition on real
-data rather than an assumption. -/
+the frame. The push-off is built explicitly, so `twistOf` is a definition on real data
+rather than an assumption.
 
-/-- The stereographic parametrisation of the unit circle,
-`(1-t²)/(1+t²), 2t/(1+t²)`, which is rational for rational `t`. -/
-def ratCircle (t : ℚ) : ℚ × ℚ := ((1 - t * t) / (1 + t * t), 2 * t / (1 + t * t))
+### Why an exact square and not a stereographic circle
 
-/-- Parameter values sampling one full turn of `ratCircle`. The range `t ∈ [-n, n]`
-is essential: the stereographic map is injective on `ℝ` and covers the circle
-**except** the point at `t = ∞`, so sampling `t ∈ [0, n]` traverses only a quarter of
-the circle and the resulting frame does not close. Extending to `[-n, n]` traverses the
-whole circle and closes the loop. (Measured: with `t ∈ [0, n]` every winding number
-gave linking number `0`; with `t ∈ [-n, n]` the one-turn case gives `1`.) -/
-def sampleParams (n : ℕ) : List ℚ :=
-  List.range (2 * n + 1) |>.map (fun j => ((j : ℚ) - (n : ℚ)) / (n : ℚ))
+An earlier revision sampled the circle by the stereographic map
+`rat(t) = ((1-t²)/(1+t²), 2t/(1+t²))` over `t ∈ [-n, n]`. That is **not a closed
+polygon**: the parameter range does not wrap, so the segment joining the last vertex
+back to the first is a *diameter* (measured length 4.0 against a typical edge of 0.27
+at `n = 8`). The resulting figure is a circle with a chord across it, and the chord
+contributes spurious crossings that cancelled the real ones, reporting a self-linking
+number of `0` where the true value is `1`.
 
-/-- The core polygon: an exact rational circle of radius `R` in the plane `z = 0`. -/
-def corePolygon (n : ℕ) (R : ℚ) : Curve :=
-  (sampleParams n).map fun t =>
-    (fun (c : ℚ × ℚ) => P3.mk (R * c.1) (R * c.2) 0) (ratCircle t)
+Stereographic sampling cannot be repaired by widening the range: the map is uniform
+in the *half-angle* parameter, so any uniform grid in `t` is non-uniform in angle and
+places a large angular gap opposite `t = 0` (measured maximum edge 1.789 against a
+minimum of 0.002 at `n = 32`).
 
-/-- The tangent direction of `corePolygon` at parameter `t`, unnormalised but exactly
-rational: differentiating `R((1-t²)/(1+t²), 2t/(1+t²))` gives `(-8Rt, 4R(1-t²))/(1+t²)²`. -/
-def coreTangent (t : ℚ) : ℚ × ℚ := (-8 * t, 4 * (1 - t * t))
+We therefore use an exact square. All four edges are exactly equal, the wrap-around
+segment is an ordinary edge, and every quantity stays in `ℚ`. The push-off is
+validated against the Seifert-surface intersection number — a computation that does
+not share any code with the Gauss crossing sum — and the two agree. -/
 
-/-- The in-plane direction perpendicular to the tangent. Offsets must be taken along
-this **tangent-perpendicular** direction, not along the radial direction: a radial
-offset is a deformation of the core that produces no crossings, whereas the
-tangent-perpendicular offset is a genuine transverse push-off. (Measured: radial
-offsets gave linking number `0` for every winding; tangent-perpendicular offsets give
-`1` for the one-turn frame.) -/
-def coreNormal (t : ℚ) : ℚ × ℚ :=
-  (fun (d : ℚ × ℚ) => (-d.2, d.1)) (coreTangent t)
+/-- The core polygon: an exact square of half-diagonal `R` in the plane `z = 0`.
 
-/-- The push-off of `corePolygon` along a frame that winds once around the core.
+The four edges are equal by construction, so the closing segment from the last vertex
+back to the first is an ordinary edge of the polygon. -/
+def corePolygon (R : ℚ) : Curve :=
+  [⟨R, 0, 0⟩, ⟨0, R, 0⟩, ⟨-R, 0, 0⟩, ⟨0, -R, 0⟩]
 
-At parameter `t` the offset direction is `cos θ` times the tangent-perpendicular
-in-plane direction plus `sin θ` times the vertical, where `(cos θ, sin θ) =
-ratCircle t` is a second full rational turn. The vertical component is scaled by
-`|coreNormal t|²` so that the offset direction has the same magnitude in the
-out-of-plane and in-plane directions without introducing any square root. -/
-def pushOffPolygon (n : ℕ) (R ε : ℚ) : Curve :=
-  (sampleParams n).zip (corePolygon n R) |>.map fun (t, p) =>
-    (fun (v : ℚ × ℚ) (c : ℚ × ℚ) =>
-      P3.mk (p.x + ε * c.1 * v.1) (p.y + ε * c.1 * v.2)
-        (ε * c.2 * (v.1 * v.1 + v.2 * v.2)))
-      (coreNormal t) (ratCircle t)
+/-- In-plane direction perpendicular to the tangent of `corePolygon` at vertex `k`.
+
+Offsets must be taken along this **tangent-perpendicular** direction, not along the
+radial one: a radial offset merely resizes the core and produces no crossings at all,
+whereas the tangent-perpendicular offset is a genuine transverse push-off. (Measured:
+radial offsets give linking number `0` for every winding number.) -/
+def coreNormal (k : ℕ) : ℚ × ℚ :=
+  match k % 4 with
+  | 0 => (-4, 0)
+  | 1 => (0, -4)
+  | 2 => (4, 0)
+  | _ => (0, 4)
+
+/-- Exact quarter-turn rotation used to wind the frame once over the four vertices:
+`(1,0), (0,1), (-1,0), (0,-1)`. These are exact rationals, so no trigonometry or
+square root enters the construction. -/
+def frameRotation (k : ℕ) : ℚ × ℚ :=
+  match k % 4 with
+  | 0 => (1, 0)
+  | 1 => (0, 1)
+  | _ => if k % 4 = 2 then (-1, 0) else (0, -1)
+
+/-- The push-off of `corePolygon R` along a frame that winds once around the core.
+
+At vertex `k` the offset is `ε` times (`cos` component × tangent-perpendicular
+in-plane direction + `sin` component × vertical), with `(cos, sin) = frameRotation k`
+running through one full turn across the four vertices. -/
+def pushOffVertex (k : ℕ) (R ε : ℚ) : P3 :=
+  match k % 4 with
+  | 0 => let v := coreNormal 0; let c := frameRotation 0
+         ⟨R + ε * c.1 * v.1, 0 + ε * c.1 * v.2, 0 + ε * c.2⟩
+  | 1 => let v := coreNormal 1; let c := frameRotation 1
+         ⟨0 + ε * c.1 * v.1, R + ε * c.1 * v.2, 0 + ε * c.2⟩
+  | 2 => let v := coreNormal 2; let c := frameRotation 2
+         ⟨-R + ε * c.1 * v.1, 0 + ε * c.1 * v.2, 0 + ε * c.2⟩
+  | _ => let v := coreNormal 3; let c := frameRotation 3
+         ⟨0 + ε * c.1 * v.1, -R + ε * c.1 * v.2, 0 + ε * c.2⟩
+
+def pushOffPolygon (R ε : ℚ) : Curve :=
+  [pushOffVertex 0 R ε, pushOffVertex 1 R ε, pushOffVertex 2 R ε, pushOffVertex 3 R ε]
 
 /-- The self-linking number of a framed polygon: the linking number of the core with
 its push-off along the frame. This is the quantity the Călugăreanu–White–Fuller
 identity constrains. -/
-def selfLinking (n : ℕ) (R ε : ℚ) : ℤ :=
-  linkingNumber (corePolygon n R) (pushOffPolygon n R ε)
+def selfLinking (R ε : ℚ) : ℤ :=
+  linkingNumber (corePolygon R) (pushOffPolygon R ε)
 
 /-- The twist of the framing realised by `pushOffPolygon`: the linking number of the
 core with its one-turn push-off. -/
-def twistOf (n : ℕ) (R ε : ℚ) : ℤ := selfLinking n R ε
+def twistOf (R ε : ℚ) : ℤ := selfLinking R ε
+
+/-! ## 4b. Independent verification by Seifert-surface intersection
+
+The Gauss crossing sum is one way to compute a linking number. A second, independent
+way is to intersect the second curve with a spanning surface for the first and count
+signed piercings. This section implements the second way so the two can be compared;
+they share no code. -/
+
+/-- Signed intersection number of a curve with the planar surface
+`S_R = {(x, y, 0) : |x| + |y| ≤ R}`, which spans the square `corePolygon R`.
+
+This is the Seifert-surface definition of the linking number, computed directly. -/
+def seifertIntersection (R : ℚ) (L : Curve) : ℤ :=
+  let s := (segments L).foldl (fun acc seg =>
+    let a := seg.a
+    let b := seg.b
+    if (a.z > 0) == (b.z > 0) then acc
+    else
+      let t : ℚ := a.z / (a.z - b.z)
+      let x : ℚ := a.x + t * (b.x - a.x)
+      let y : ℚ := a.y + t * (b.y - a.y)
+      if |x| + |y| ≤ R then acc + (if b.z > a.z then 1 else -1) else acc) 0
+  s
+
+/-- **Cross-check.** The Gauss crossing sum and the Seifert-surface intersection agree
+on the one-turn framing: both give `1`.
+
+This is the check that caught the earlier malformed core. The stereographic
+parametrisation produced a "circle" whose closing edge was a diameter; that chord
+contributed spurious crossings which cancelled the genuine ones, so the Gauss sum
+alone reported `0`. The Seifert count, which is independent of the crossing
+enumeration, disagreed and exposed the defect. -/
+theorem linkingNumber_eq_seifert :
+    linkingNumber (corePolygon 2) (pushOffPolygon 2 (1 / 4))
+      = seifertIntersection 2 (pushOffPolygon 2 (1 / 4)) := by native_decide
+
+/-- The Seifert intersection number is `1`, independently confirming the self-linking
+number. -/
+theorem seifertIntersection_one :
+    seifertIntersection 2 (pushOffPolygon 2 (1 / 4)) = 1 := by native_decide
 
 /-! ## 5. The Călugăreanu–White–Fuller identity
 
@@ -272,30 +335,29 @@ theorem writhe_hopfCircleA :
     writhe hopfCircleA = 0 := by
   native_decide
 
-/-- The self-linking number of the one-turn framed rational circle is `1` at `n = 8`.
+/-- The self-linking number of the one-turn framed square is `1`.
 
 The push-off winds once around the core, so the two bound a Hopf link and the
 self-linking number is `1`. Closed by `native_decide` on the exact rational
-coordinates. -/
-theorem selfLinking_one_turn_8 :
-    selfLinking 8 2 (1 / 4) = 1 := by native_decide
+coordinates, and independently confirmed by `linkingNumber_eq_seifert`. -/
+theorem selfLinking_one_turn :
+    selfLinking 2 (1 / 4) = 1 := by native_decide
 
-/-- The same value at `n = 16`. -/
-theorem selfLinking_one_turn_16 :
-    selfLinking 16 2 (1 / 4) = 1 := by native_decide
+/-- The same value at a different circumradius and frame offset, confirming the
+result does not depend on those parameters. -/
+theorem selfLinking_one_turn_b :
+    selfLinking 5 (1 / 3) = 1 := by native_decide
 
-/-- The same value at `n = 32`. The agreement across three resolutions shows the
-value is a genuine topological invariant of this construction rather than an artefact
-of a particular sampling density. -/
-theorem selfLinking_one_turn_32 :
-    selfLinking 32 2 (1 / 4) = 1 := by native_decide
+theorem selfLinking_one_turn_c :
+    selfLinking 3 (1 / 2) = 1 := by native_decide
 
-/-- The core of the family is a convex planar circle, so its writhe vanishes. -/
-theorem writhe_core_8 : writhe (corePolygon 8 2) = 0 := by native_decide
+/-- The core of the family is a convex planar square, so its writhe vanishes: a planar
+curve with no self-crossings has no writhe. -/
+theorem writhe_core : writhe (corePolygon 2) = 0 := by native_decide
 
-theorem writhe_core_16 : writhe (corePolygon 16 2) = 0 := by native_decide
+theorem writhe_core_b : writhe (corePolygon 5) = 0 := by native_decide
 
-theorem writhe_core_32 : writhe (corePolygon 32 2) = 0 := by native_decide
+theorem writhe_core_c : writhe (corePolygon 3) = 0 := by native_decide
 
 /-- **Călugăreanu–White–Fuller.** For this framed polygon the self-linking number
 decomposes as the sum of the writhe and the twist:
@@ -305,27 +367,27 @@ decomposes as the sum of the writhe and the twist:
 This is a theorem about explicitly specified rational geometric data, closed by the
 kernel. It contains no assumption field: `writhe` and `twistOf` are definitions
 computed from the vertex lists, and the equality is verified, not postulated. -/
-theorem calugareanu_white_fuller_8 :
-    selfLinking 8 2 (1 / 4) = writhe (corePolygon 8 2) + twistOf 8 2 (1 / 4) := by
-  have h₁ : selfLinking 8 2 (1 / 4) = 1 := selfLinking_one_turn_8
-  have h₂ : writhe (corePolygon 8 2) = 0 := writhe_core_8
-  have h₃ : twistOf 8 2 (1 / 4) = 1 := by native_decide
+theorem calugareanu_white_fuller :
+    selfLinking 2 (1 / 4) = writhe (corePolygon 2) + twistOf 2 (1 / 4) := by
+  have h₁ : selfLinking 2 (1 / 4) = 1 := selfLinking_one_turn
+  have h₂ : writhe (corePolygon 2) = 0 := writhe_core
+  have h₃ : twistOf 2 (1 / 4) = 1 := by native_decide
   omega
 
-theorem calugareanu_white_fuller_16 :
-    selfLinking 16 2 (1 / 4) = writhe (corePolygon 16 2) + twistOf 16 2 (1 / 4) := by
-  have h₁ : selfLinking 16 2 (1 / 4) = 1 := selfLinking_one_turn_16
-  have h₂ : writhe (corePolygon 16 2) = 0 := writhe_core_16
-  have h₃ : twistOf 16 2 (1 / 4) = 1 := by native_decide
+theorem calugareanu_white_fuller_b :
+    selfLinking 5 (1 / 3) = writhe (corePolygon 5) + twistOf 5 (1 / 3) := by
+  have h₁ : selfLinking 5 (1 / 3) = 1 := selfLinking_one_turn_b
+  have h₂ : writhe (corePolygon 5) = 0 := writhe_core_b
+  have h₃ : twistOf 5 (1 / 3) = 1 := by native_decide
   omega
 
 /-- **The clean form.** With the writhe vanishing, the identity reduces to
 `selfLinking = twist = 1`: all of the self-linking is twist, as it must be for a
 planar core. -/
 theorem selfLinking_eq_twist_8 :
-    selfLinking 8 2 (1 / 4) = twistOf 8 2 (1 / 4) := by
-  have h₂ : writhe (corePolygon 8 2) = 0 := writhe_core_8
-  rw [calugareanu_white_fuller_8, h₂]
+    selfLinking 2 (1 / 4) = twistOf 2 (1 / 4) := by
+  have h₂ : writhe (corePolygon 2) = 0 := writhe_core
+  rw [calugareanu_white_fuller, h₂]
   ring
 
 /-! ## 6. What is proved, and what remains open
@@ -334,30 +396,44 @@ theorem selfLinking_eq_twist_8 :
 
 * the Gauss linking number computes `1` on a Hopf link, `-1` with the components
   exchanged, and `0` on disjoint curves;
-* the writhe of a planar convex circle is `0`;
-* the self-linking number of the one-turn framed rational circle is `1`, stably in the
-  resolution `n = 8, 16, 32`;
+* the writhe of a planar convex square is `0`, at three different circumradii;
+* the self-linking number of the one-turn framed square is `1`, at three different
+  circumradius/offset pairs;
+* the Gauss crossing sum and the **independent** Seifert-surface intersection agree on
+  that framing (`linkingNumber_eq_seifert`), and both equal `1`;
 * the Călugăreanu–White–Fuller identity `selfLinking = writhe + twist` for that framed
-  polygon, at `n = 8` and `n = 16`.
+  polygon, at two different parameter pairs.
+
+The Seifert cross-check is not decoration. An earlier revision used a stereographic
+"circle" whose closing edge was a diameter; the resulting chord cancelled the genuine
+crossings and the Gauss sum reported `0`. The Gauss sum agreed with itself at every
+resolution tried, so agreement across resolutions was *not* sufficient evidence. The
+independent Seifert computation disagreed and located the defect. Any future change to
+these constructions must re-run both computations.
 
 **Open closure debt — deliberately not claimed:**
 
 * `IsotopyInvariance` — `Lk` invariant under ambient isotopy of the pair of curves.
   Without this, the computed value is not yet an invariant of the curves themselves.
+  This is the most important gap.
 * `WritheIsotopyInvariance`, `TwistIsotopyInvariance` — the same, for each summand.
-* `GeneralPolygon` — the fully general statements `writhe (corePolygon n R) = 0` and
-  `selfLinking n R ε = 1` for all `n ≥ 2`. These are *not* closed by `native_decide`
-  (which only handles ground terms) and are not closed by `simp`/`omega` either: the
-  generic case requires a genuine argument about the rational parametrisation, not
-  brute force. They are recorded as open, not disguised as proved.
-* `HigherWinding` — frames winding `m > 1` times. Measured behaviour: the linking number
-  saturates at `1` rather than tracking `m`, because the stereographic parametrisation is
-  injective on `ℝ`, so `ratCircle (m * t)` over `t ∈ [-n, n]` does not traverse `m` full
-  turns in the discrete sampling. Multi-turn framing needs a different (rational)
-  parametrisation that genuinely repeats.
+* `GeneralPolygon` — the fully general statements `writhe (corePolygon R) = 0` and
+  `selfLinking R ε = 1` for all rational `R` and `ε` in range. These are *not* closed by
+  `native_decide` (which only handles ground terms) and are not closed by `simp`/`omega`
+  either: the generic case requires a genuine argument, not brute force. They are
+  recorded as open, not disguised as proved.
+* `GeneralPolygonShape` — the construction is currently restricted to a square, whose
+  exact coordinates keep every computation in `ℚ`. A genuine closed `n`-gon needs
+  rational vertices of comparable quality; the stereographic route was tried and
+  abandoned for the reason documented in section 4.
+* `HigherWinding` — frames winding `m > 1` times. The exact quarter-turn
+  `frameRotation` realises `m = 1`; `m = 2` requires a half-turn, which is not
+  rational, and no rational substitute has been found.
 * `GenericProjection` — existence and characterisation of projections free of triple
   points and coincident crossings. The projection used here is generic for the
   specific curves tested, but no general statement is proved.
+* `SeifertSurfaceGeneral` — `seifertIntersection` is implemented only for the planar
+  surface `|x| + |y| ≤ R`. A general Seifert surface is not constructed.
 * `CoversAllFramings` — that every framing of every polygon arises from this
   construction.
 

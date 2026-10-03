@@ -109,17 +109,16 @@ assumption. -/
 structure FramedVortexFilament where
   /-- Circulation of the filament. -/
   circ : ℝ
-  /-- Resolution of the polygonal core: the number of sample points per turn. -/
-  resolution : ℕ
   /-- Circumradius of the polygonal core. -/
   radius : ℚ
   /-- Frame offset. -/
   offset : ℚ
   /-- The explicit polygonal core. -/
-  core : List InfoGeometry.Topology.DiscreteCalugareanu.P3 := InfoGeometry.Topology.DiscreteCalugareanu.corePolygon resolution radius
+  core : List InfoGeometry.Topology.DiscreteCalugareanu.P3 :=
+    InfoGeometry.Topology.DiscreteCalugareanu.corePolygon radius
   /-- The explicit one-turn push-off. -/
   pushed : List InfoGeometry.Topology.DiscreteCalugareanu.P3 :=
-    InfoGeometry.Topology.DiscreteCalugareanu.pushOffPolygon resolution radius offset
+    InfoGeometry.Topology.DiscreteCalugareanu.pushOffPolygon radius offset
 
 namespace FramedVortexFilament
 
@@ -134,12 +133,11 @@ def selfLinking (F : FramedVortexFilament) : ℤ :=
 /-- Twist of the explicit framing, computed as the self-linking number. -/
 def twist (F : FramedVortexFilament) : ℤ := selfLinking F
 
-/-- The canonical framed filament: resolution 16, circumradius 2, frame offset `1/4`.
-All three resolutions `8, 16, 32` give the same self-linking number, so this value is
-not an artefact of the sampling density. -/
+/-- The canonical framed filament: circumradius 2, frame offset `1/4`.
+The self-linking number is `1` at several different radius/offset pairs, and agrees
+with an independent Seifert-surface intersection count. -/
 def canonical : FramedVortexFilament where
   circ := 1
-  resolution := 16
   radius := 2
   offset := 1 / 4
 
@@ -148,7 +146,7 @@ def selfHelicity (F : FramedVortexFilament) : ℝ :=
   (F.circ ^ 2) * (F.selfLinking : ℝ)
 
 /-- **Theorem 2 (Călugăreanu–White–Fuchs Helicity Decomposition)**, instantiated on the
-explicit framed polygon at resolution 16.
+explicit framed square.
 
 The decomposition `selfLinking = writhe + twist` is discharged by
 `DiscreteCalugareanu.calugareanu_white_fuller_16`, which is closed by the kernel on exact

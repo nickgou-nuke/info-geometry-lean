@@ -4,10 +4,14 @@ import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Tactic
 
+import InfoGeometry.Probability.DetectorFoundationalCopula
+
 open Matrix
 open scoped BigOperators
 
 namespace InfoGeometry.Canonical.AttentionGlauberCopulaBridge
+
+open InfoGeometry.Probability.DetectorFoundationalCopula
 
 variable {N M : ℕ} [NeZero N] [NeZero M]
 
@@ -126,9 +130,6 @@ theorem sklar_representation (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) (j : F
     jointCDF S i j = discreteCopula S i j := rfl
 
 /-! ### 5. Coherent State Equivalence: Unentangled Attention ↔ Product Copula -/
-
-/-- Independent / Product Copula Π(u, v) = u * v. -/
-def productCopula (u v : ℝ) : ℝ := u * v
 
 /-- Theorem: If the attention distribution is unentangled (A_{i, j} = q(j) independent of query i),
     then the joint CDF strictly factorizes into the Product Copula H(i, j) = F(i) * G(j). -/

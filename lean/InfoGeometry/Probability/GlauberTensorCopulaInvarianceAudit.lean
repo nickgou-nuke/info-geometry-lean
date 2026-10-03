@@ -1,13 +1,13 @@
 import InfoGeometry.Probability.GlauberTensorCopulaInvariance
 
 /-!
-# Audit for Glauber Tensor Copula Invariance (Section 5.83)
+# Audit for finite separable-kernel identities
 -/
 
 open InfoGeometry.Probability.GlauberTensorCopula
 
-#print axioms QuantumGlauberSystem.Q_fubini_factorization
-#print axioms QuantumGlauberSystem.copula_cross_ratio_invariant
-#print axioms QuantumGlauberSystem.recovered_activity_exact
-#print axioms QuantumGlauberSystem.cross_ratio_scale_invariance
-#print axioms QuantumGlauberSystem.asymmetric_scale_invariance
+#print axioms SeparableKernelModel.integratedKernel_factorization
+#print axioms SeparableKernelModel.separableKernelRatio_eq_amplitude_div_factor
+#print axioms SeparableKernelModel.factor_mul_ratio_eq_amplitude
+#print axioms SeparableKernelModel.separableKernelRatio_scale_invariance
+#print axioms SeparableKernelModel.separableKernelRatio_asymmetric_scale_invariance

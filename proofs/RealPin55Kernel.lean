@@ -138,20 +138,13 @@ theorem sq_eq_one_of_mem_centralSignSubgroup
   · simp
   · exact pinNegOne_sq
 
-theorem centralSignSubgroup_commutes
-    (z : FullPin55) (hz : z ∈ centralSignSubgroup) (g : FullPin55) :
-    z * g = g * z := by
-  rcases (mem_centralSignSubgroup_iff z).1 hz with rfl | rfl
-  · simp
-  · exact pinNegOne_commutes g
-
 instance centralSignSubgroup_normal : centralSignSubgroup.Normal := by
   refine ⟨?_⟩
   intro z hz g
   have hconj : g * z * g⁻¹ = z := by
     calc
       g * z * g⁻¹ = z * g * g⁻¹ := by
-        rw [(centralSignSubgroup_commutes z hz g).symm]
+        rw [(centralSignSubgroup_commutes hz g).symm]
       _ = z := by simp [mul_assoc]
   rw [hconj]
   exact hz
@@ -185,17 +178,13 @@ abbrev ProjectiveFullPin55 : Type :=
   FullPin55 ⧸ centralSignSubgroup
 
 def fullPinToO55ModuloCentralSigns :
-    ProjectiveFullPin55 →* RealPin55MatrixRepresentation.O55 :=
+    ProjectiveFullPin55 →* RealOrthogonalGroup55.O55 :=
   QuotientGroup.lift centralSignSubgroup fullPinToO55
     centralSignSubgroup_le_kernel
 
 @[simp] theorem fullPinToO55ModuloCentralSigns_mk (g : FullPin55) :
     fullPinToO55ModuloCentralSigns (QuotientGroup.mk' centralSignSubgroup g) =
       fullPinToO55 g := rfl
-
-theorem fullPinToO55_factor_through_centralSigns :
-    fullPinToO55ModuloCentralSigns.comp
-        (QuotientGroup.mk' centralSignSubgroup) = fullPinToO55 := rfl
 
 @[simp] theorem projective_pinNegOne_eq_one :
     QuotientGroup.mk' centralSignSubgroup pinNegOne = 1 := by

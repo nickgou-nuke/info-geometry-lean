@@ -16,14 +16,14 @@ namespace InfoGeometry.Canonical.SinaiHyperbolicErgodicGrowthBridge
 
 /-! ### Finite Products of the repository-owned Sinai Jacobians
 
-The product is non-autonomous in its input list. The quantitative theorem
-below concerns the constant-parameter orbit on the already-defined unstable
-eigenline; it makes no claim of uniform expansion for arbitrary varying
-collision parameters. -/
+Lists are read chronologically from head to tail, and vectors are column
+vectors: the first collision acts first. The quantitative theorem below is
+only for repeated copies of one Jacobian on its unstable eigenline; it does
+not establish growth for arbitrary varying collision parameters. -/
 
 def collisionChain : List (ℝ × ℝ) → Matrix (Fin 2) (Fin 2) ℝ
   | [] => 1
-  | (τ, κ) :: rest => sinaiJacobian τ κ * collisionChain rest
+  | (τ, κ) :: rest => collisionChain rest * sinaiJacobian τ κ
 
 theorem collisionChain_replicate (τ κ : ℝ) (n : ℕ) :
     collisionChain (List.replicate n (τ, κ)) = sinaiJacobian τ κ ^ n := by
@@ -32,16 +32,16 @@ theorem collisionChain_replicate (τ κ : ℝ) (n : ℕ) :
     simp [collisionChain]
   | succ n ih =>
     simp only [List.replicate_succ, collisionChain, ih]
-    rw [pow_succ']
+    rw [pow_succ]
 
 theorem collisionChain_append (xs ys : List (ℝ × ℝ)) :
-    collisionChain (xs ++ ys) = collisionChain xs * collisionChain ys := by
+    collisionChain (xs ++ ys) = collisionChain ys * collisionChain xs := by
   induction xs with
   | nil => simp [collisionChain]
   | cons x xs ih =>
     rcases x with ⟨τ, κ⟩
     simp only [List.cons_append, collisionChain, ih]
-    rw [mul_assoc]
+    rw [← mul_assoc]
 
 /-! ### 3. Algebraic Action on Invariant Vectors -/
 

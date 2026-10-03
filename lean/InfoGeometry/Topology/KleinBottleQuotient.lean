@@ -113,18 +113,6 @@ theorem critical_line_parameter_lower_bound (height : ℝ) :
   norm_num [Complex.add_re, Complex.mul_re, pow_two]
   nlinarith [sq_nonneg height]
 
-theorem critical_line_parameter_eq_quarter_iff (height : ℝ) :
-    fisherRaoMetric ((1 / 2 : ℂ) + Complex.I * (height : ℂ)) = 1 / 4 ↔
-      height = 0 := by
-  rw [fisherRaoMetric_on_critical_line]
-  constructor
-  · intro heq
-    have hreal := congrArg Complex.re heq
-    norm_num at hreal
-    nlinarith [sq_nonneg height]
-  · rintro rfl
-    norm_num
-
 theorem reflected_parameters_can_have_zero_value :
     functionalReflection (0 : ℂ) = 1 ∧
     fisherRaoMetric (0 : ℂ) = 0 ∧ fisherRaoMetric (1 : ℂ) = 0 := by

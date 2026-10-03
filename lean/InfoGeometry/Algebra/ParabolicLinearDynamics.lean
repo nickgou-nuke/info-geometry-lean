@@ -48,7 +48,7 @@ theorem APart_add (first second : ℝ) :
     APart (first + second) = APart first * APart second := by
   ext row column
   fin_cases row <;> fin_cases column <;>
-    simp [APart, Matrix.mul_apply, Fin.sum_univ_two, neg_add, Real.exp_add]
+    simp [APart, Matrix.mul_apply, Fin.sum_univ_two, Real.exp_add] <;> ring
 
 theorem APart_zero : APart 0 = 1 := by
   ext row column
@@ -88,22 +88,25 @@ theorem combinedOperator_zero (shearParameter timeParameter : ℝ) :
   map_zero _
 
 def symmetricDifferentialMatrix (parameter : ℝ) : Mat2 :=
-  (NPart parameter - 1) + (NPart parameter - 1)ᵀ
+  (NPart parameter - 1) + Matrix.transpose (NPart parameter - 1)
 
 theorem symmetricDifferentialMatrix_transpose (parameter : ℝ) :
-    (symmetricDifferentialMatrix parameter)ᵀ = symmetricDifferentialMatrix parameter := by
-  simp [symmetricDifferentialMatrix, add_comm]
+    Matrix.transpose (symmetricDifferentialMatrix parameter) =
+      symmetricDifferentialMatrix parameter := by
+  simp [symmetricDifferentialMatrix, Matrix.transpose_add,
+    Matrix.transpose_transpose, add_comm]
 
 theorem symmetricDifferentialMatrix_square (parameter : ℝ) :
     symmetricDifferentialMatrix parameter ^ 2 = parameter ^ 2 • (1 : Mat2) := by
   ext row column
   fin_cases row <;> fin_cases column <;>
-    simp [symmetricDifferentialMatrix, NPart, pow_two, Matrix.mul_apply,
-      Fin.sum_univ_two]
+    simp [symmetricDifferentialMatrix, NPart, Matrix.transpose, pow_two,
+      Matrix.mul_apply, Fin.sum_univ_two] <;> ring
 
 theorem no_two_orthogonal_matrix_isometries (first second : Mat2)
-    (hfirst : firstᵀ * first = 1) (hsecond : secondᵀ * second = 1)
-    (horthogonal : firstᵀ * second = 0) : False := by
+    (hfirst : Matrix.transpose first * first = 1)
+    (hsecond : Matrix.transpose second * second = 1)
+    (horthogonal : Matrix.transpose first * second = 0) : False := by
   have hright : first * firstᵀ = 1 := mul_eq_one_comm.mp hfirst
   have hzero : second = 0 := by
     calc

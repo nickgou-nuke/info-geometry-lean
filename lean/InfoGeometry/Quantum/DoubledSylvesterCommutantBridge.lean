@@ -11,13 +11,16 @@ namespace DoubledSylvester
 variable {R : Type*} [CommRing R]
 variable {N : ℕ}
 
-/-! ### 1. Commutator & Sylvester Matrix Generators -/
+/-! ### Commutators and finite matrix generators
+
+The parameter `ω` is arbitrary in the coefficient ring; no root-of-unity or
+unitarity property is assumed. -/
 
 /-- The Lie bracket (commutator) [X, Y] = X * Y - Y * X of two square matrices. -/
 def bracket {α : Type*} [Fintype α] [DecidableEq α] (X Y : Matrix α α R) : Matrix α α R :=
   X * Y - Y * X
 
-/-- Sylvester Clock operator C: diagonal matrix of phases C_{j,k} = δ_{j,k} ω^j. -/
+/-- Diagonal power matrix `C`, with diagonal entries `ω ^ j`. -/
 def sylvesterClock (ω : R) : Matrix (Fin N) (Fin N) R :=
   Matrix.diagonal (fun j => ω ^ (j : ℕ))
 
@@ -25,21 +28,21 @@ def sylvesterClock (ω : R) : Matrix (Fin N) (Fin N) R :=
 def sylvesterShift [NeZero N] : Matrix (Fin N) (Fin N) R :=
   fun j k => if (j : ℕ) = ((k : ℕ) + 1) % N then 1 else 0
 
-/-- Sylvester Adjoint Shift S*: cyclic backward permutation S* * e_k = e_{k-1 mod N}. -/
-def sylvesterShiftAdj [NeZero N] : Matrix (Fin N) (Fin N) R :=
+/-- Transpose of the cyclic forward permutation matrix. -/
+def sylvesterShiftTranspose [NeZero N] : Matrix (Fin N) (Fin N) R :=
   fun j k => if ((j : ℕ) + 1) % N = (k : ℕ) then 1 else 0
 
-/-! ### 2. The Doubled Algebra Embeddings -/
+/-! ### The two tensor-factor embeddings -/
 
-/-- Embedding of the physical algebra sheet M: A ↦ A ⊗ I. -/
+/-- Embedding of the first tensor factor, `A ↦ A ⊗ I`. -/
 def sheet1 (A : Matrix (Fin N) (Fin N) R) : Matrix (Fin N × Fin N) (Fin N × Fin N) R :=
   A ⊗ₖ (1 : Matrix (Fin N) (Fin N) R)
 
-/-- Embedding of the twin commutant sheet M': B ↦ I ⊗ B. -/
+/-- Embedding of the second tensor factor, `B ↦ I ⊗ B`. -/
 def sheet2 (B : Matrix (Fin N) (Fin N) R) : Matrix (Fin N × Fin N) (Fin N × Fin N) R :=
   (1 : Matrix (Fin N) (Fin N) R) ⊗ₖ B
 
-/-! ### 3. Universal Commutant Factorization & Commutation -/
+/-! ### Tensor-factor products and commutation -/
 
 /-- Factorization: (A ⊗ I) * (I ⊗ B) = A ⊗ B. -/
 theorem sheet1_mul_sheet2 (A B : Matrix (Fin N) (Fin N) R) :
@@ -60,12 +63,14 @@ theorem commutant_commutes (A B : Matrix (Fin N) (Fin N) R) :
   dsimp [bracket]
   rw [sheet1_mul_sheet2, sheet2_mul_sheet1, sub_self]
 
-/-! ### 4. Exact Proof: [C ⊗ I, I ⊗ S*] = 0 -/
+/-! The result is an algebraic tensor-factor commutation identity. It does not
+formalize Tomita–Takesaki theory or a Hilbert-space adjoint. -/
 
-/-- Formal verification that the Clock on Sheet 1 and the Adjoint Shift on Sheet 2 commute. -/
-theorem bracket_clock_shiftAdj_eq_zero [NeZero N] (ω : R) :
+/-- The diagonal power matrix on the first factor commutes with the
+transpose permutation matrix on the second factor. -/
+theorem bracket_clock_shiftTranspose_eq_zero [NeZero N] (ω : R) :
     bracket (sheet1 (sylvesterClock (N := N) ω))
-            (sheet2 (sylvesterShiftAdj (N := N))) = 0 :=
-  commutant_commutes (sylvesterClock ω) sylvesterShiftAdj
+            (sheet2 (sylvesterShiftTranspose (N := N))) = 0 :=
+  commutant_commutes (sylvesterClock ω) sylvesterShiftTranspose
 
 end DoubledSylvester

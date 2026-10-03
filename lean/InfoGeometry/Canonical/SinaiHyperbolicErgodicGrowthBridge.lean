@@ -5,32 +5,21 @@ import Mathlib.Analysis.Normed.Module.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.ToLin
 import Mathlib.Tactic
+import InfoGeometry.Canonical.SinaiHyperbolicErgodicConeFieldBridge
 
 open Matrix
 open scoped Matrix
 open Real
+open InfoGeometry.Canonical.SinaiHyperbolicErgodicConeFieldBridge
 
 namespace InfoGeometry.Canonical.SinaiHyperbolicErgodicGrowthBridge
 
-/-! ### 1. Geometric & Spectral Foundation -/
+/-! ### Finite Products of the repository-owned Sinai Jacobians
 
-def sinaiJacobian (τ κ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
-  !![-(1 + τ * κ), -τ;
-     -κ,           -1]
-
-noncomputable def lambdaU (u : ℝ) : ℝ :=
-  (-(2 + u) - Real.sqrt (u * (u + 4))) / 2
-
-noncomputable def eigenvecU (τ κ : ℝ) : Fin 2 → ℝ :=
-  ![1 + lambdaU (τ * κ), -κ]
-
-noncomputable def Eu (τ κ : ℝ) : Submodule ℝ (Fin 2 → ℝ) :=
-  Submodule.span ℝ {eigenvecU τ κ}
-
-noncomputable def lyapunovExponent (u : ℝ) : ℝ :=
-  Real.log |lambdaU u|
-
-/-! ### 2. The Non-Autonomous Cocycle -/
+The product is non-autonomous in its input list. The quantitative theorem
+below concerns the constant-parameter orbit on the already-defined unstable
+eigenline; it makes no claim of uniform expansion for arbitrary varying
+collision parameters. -/
 
 def collisionChain : List (ℝ × ℝ) → Matrix (Fin 2) (Fin 2) ℝ
   | [] => 1
@@ -44,6 +33,15 @@ theorem collisionChain_replicate (τ κ : ℝ) (n : ℕ) :
   | succ n ih =>
     simp only [List.replicate_succ, collisionChain, ih]
     rw [pow_succ']
+
+theorem collisionChain_append (xs ys : List (ℝ × ℝ)) :
+    collisionChain (xs ++ ys) = collisionChain xs * collisionChain ys := by
+  induction xs with
+  | nil => simp [collisionChain]
+  | cons x xs ih =>
+    rcases x with ⟨τ, κ⟩
+    simp only [List.cons_append, collisionChain, ih]
+    rw [mul_assoc]
 
 /-! ### 3. Algebraic Action on Invariant Vectors -/
 
@@ -122,7 +120,7 @@ lemma abs_lambdaU_gt_one_add_sqrt {u : ℝ} (hu : 0 < u) :
 theorem lyapunov_uniform_lower_bound_strict {τ κ τ_min κ_min : ℝ}
     (hτ_min : 0 < τ_min) (hκ_min : 0 < κ_min)
     (hτ : τ_min ≤ τ) (hκ : κ_min ≤ κ) :
-    Real.log (1 + Real.sqrt (τ_min * κ_min)) < lyapunovExponent (τ * κ) := by
+    Real.log (1 + Real.sqrt (τ_min * κ_min)) < Real.log |lambdaU (τ * κ)| := by
   have hu_min_pos : 0 < τ_min * κ_min := mul_pos hτ_min hκ_min
   have hu_pos : 0 < τ * κ := mul_pos (by linarith) (by linarith)
   have h_u_le : τ_min * κ_min ≤ τ * κ := by nlinarith
@@ -141,7 +139,7 @@ theorem lyapunov_uniform_lower_bound_strict {τ κ τ_min κ_min : ℝ}
 theorem lyapunov_uniform_lower_bound {τ κ τ_min κ_min : ℝ}
     (hτ_min : 0 < τ_min) (hκ_min : 0 < κ_min)
     (hτ : τ_min ≤ τ) (hκ : κ_min ≤ κ) :
-    Real.log (1 + Real.sqrt (τ_min * κ_min)) ≤ lyapunovExponent (τ * κ) :=
+    Real.log (1 + Real.sqrt (τ_min * κ_min)) ≤ Real.log |lambdaU (τ * κ)| :=
   le_of_lt (lyapunov_uniform_lower_bound_strict hτ_min hκ_min hτ hκ)
 
 lemma abs_pow_eq (x : ℝ) (n : ℕ) : |x ^ n| = |x| ^ n := by
@@ -169,7 +167,6 @@ theorem sinai_uniform_exponential_growth
     {τ κ τ_min κ_min : ℝ}
     (hτ_min : 0 < τ_min) (hκ_min : 0 < κ_min)
     (hτ : τ_min ≤ τ) (hκ : κ_min ≤ κ)
-    (h_eigen : mulVec (sinaiJacobian τ κ) (eigenvecU τ κ) = lambdaU (τ * κ) • (eigenvecU τ κ))
     (n : ℕ) {v : Fin 2 → ℝ} (hv : v ∈ Eu τ κ) :
     (1 + Real.sqrt (τ_min * κ_min)) ^ n * ‖v‖ ≤
       ‖mulVec (sinaiJacobian τ κ ^ n) v‖ := by
@@ -192,7 +189,10 @@ theorem sinai_uniform_exponential_growth
   rcases Submodule.mem_span_singleton.mp hv with ⟨c, rfl⟩
   have h_pow_action : mulVec (sinaiJacobian τ κ ^ n) (c • eigenvecU τ κ) =
       (c * (lambdaU (τ * κ) ^ n)) • eigenvecU τ κ := by
-    rw [mulVec_smul', mulVec_pow_eigen h_eigen, smul_smul, mul_comm c]
+    rw [mulVec_smul', mulVec_pow_eigen
+      (SinaiHyperbolicErgodicConeFieldBridge.sinaiJacobian_mulVec_eigenvecU
+        (lt_of_lt_of_le hτ_min hτ) (lt_of_lt_of_le hκ_min hκ)),
+      smul_smul, mul_comm c]
 
   rw [h_pow_action, norm_smul_real (c * lambdaU (τ * κ) ^ n), norm_smul_real c]
   rw [abs_mul, abs_pow_eq]
@@ -208,11 +208,10 @@ theorem sinai_cocycle_growth
     {τ κ τ_min κ_min : ℝ}
     (hτ_min : 0 < τ_min) (hκ_min : 0 < κ_min)
     (hτ : τ_min ≤ τ) (hκ : κ_min ≤ κ)
-    (h_eigen : mulVec (sinaiJacobian τ κ) (eigenvecU τ κ) = lambdaU (τ * κ) • (eigenvecU τ κ))
     (n : ℕ) {v : Fin 2 → ℝ} (hv : v ∈ Eu τ κ) :
     (1 + Real.sqrt (τ_min * κ_min)) ^ n * ‖v‖ ≤
       ‖mulVec (collisionChain (List.replicate n (τ, κ))) v‖ := by
   rw [collisionChain_replicate]
-  exact sinai_uniform_exponential_growth hτ_min hκ_min hτ hκ h_eigen n hv
+  exact sinai_uniform_exponential_growth hτ_min hκ_min hτ hκ n hv
 
 end InfoGeometry.Canonical.SinaiHyperbolicErgodicGrowthBridge

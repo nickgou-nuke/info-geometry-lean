@@ -24,12 +24,9 @@ theorem differential_range_le_ker (parameter : ℝ) :
 def chiralSwitch : Mat2 →ₗ[ℝ] Mat2 :=
   (LinearMap.mulRight ℝ J1).comp (LinearMap.mulLeft ℝ J1)
 
-theorem chiralSwitch_apply (state : Mat2) :
-    chiralSwitch state = J1 * state * J1 := rfl
-
 theorem chiralSwitch_involutive : Function.Involutive chiralSwitch := by
   intro state
-  simp only [chiralSwitch_apply]
+  change J1 * (J1 * state * J1) * J1 = state
   calc
     J1 * (J1 * state * J1) * J1 = (J1 * J1) * state * (J1 * J1) := by
       simp only [mul_assoc]
@@ -37,7 +34,7 @@ theorem chiralSwitch_involutive : Function.Involutive chiralSwitch := by
 
 theorem chiralSwitch_mul (first second : Mat2) :
     chiralSwitch (first * second) = chiralSwitch first * chiralSwitch second := by
-  simp only [chiralSwitch_apply]
+  change J1 * (first * second) * J1 = (J1 * first * J1) * (J1 * second * J1)
   symm
   calc
     (J1 * first * J1) * (J1 * second * J1) =
@@ -73,15 +70,12 @@ theorem flow_reversible (parameter : ℝ) (state : Mat2) :
 def combinedOperator (shearParameter timeParameter : ℝ) : Mat2 →ₗ[ℝ] Mat2 :=
   differential shearParameter + chiralSwitch + flow timeParameter
 
-theorem combinedOperator_apply (shearParameter timeParameter : ℝ) (state : Mat2) :
-    combinedOperator shearParameter timeParameter state =
-      (NPart shearParameter - 1) * state + J1 * state * J1 + APart timeParameter * state :=
-  rfl
-
 theorem combinedOperator_static (state : Mat2) :
     combinedOperator 0 0 state = chiralSwitch state + state := by
-  rw [combinedOperator_apply, (NPart_eq_one_iff 0).mpr rfl, APart_zero]
-  simp [chiralSwitch_apply]
+  change (NPart 0 - 1) * state + chiralSwitch state + APart 0 * state =
+    chiralSwitch state + state
+  rw [(NPart_eq_one_iff 0).mpr rfl, APart_zero]
+  simp
 
 theorem combinedOperator_zero (shearParameter timeParameter : ℝ) :
     combinedOperator shearParameter timeParameter 0 = 0 :=
@@ -101,17 +95,19 @@ theorem symmetricDifferentialMatrix_square (parameter : ℝ) :
   ext row column
   fin_cases row <;> fin_cases column <;>
     simp [symmetricDifferentialMatrix, NPart, Matrix.transpose, pow_two,
-      Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+      Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem no_two_orthogonal_matrix_isometries (first second : Mat2)
     (hfirst : Matrix.transpose first * first = 1)
     (hsecond : Matrix.transpose second * second = 1)
     (horthogonal : Matrix.transpose first * second = 0) : False := by
-  have hright : first * firstᵀ = 1 := mul_eq_one_comm.mp hfirst
+  have hright : first * Matrix.transpose first = 1 :=
+    mul_eq_one_comm.mp hfirst
   have hzero : second = 0 := by
     calc
-      second = (first * firstᵀ) * second := by rw [hright, one_mul]
-      _ = first * (firstᵀ * second) := mul_assoc _ _ _
+      second = (first * Matrix.transpose first) * second := by
+        rw [hright, one_mul]
+      _ = first * (Matrix.transpose first * second) := mul_assoc _ _ _
       _ = 0 := by rw [horthogonal, mul_zero]
   simpa [hzero] using hsecond
 

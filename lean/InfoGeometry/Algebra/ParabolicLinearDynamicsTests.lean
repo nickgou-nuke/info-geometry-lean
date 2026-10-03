@@ -26,12 +26,12 @@ example (shearParameter timeParameter : ℝ) (first second : Mat2) :
         combinedOperator shearParameter timeParameter second :=
   map_add _ _ _
 
-example : (!![(1 : ℝ), 0; 0, 0] : Mat2)ᵀ * !![1, 0; 0, 0] ≠ 1 := by
+example : Matrix.transpose (!![(1 : ℝ), 0; 0, 0] : Mat2) * !![1, 0; 0, 0] ≠ 1 := by
   intro hequal
   have hentry := congrArg (fun matrix : Mat2 => matrix 1 1) hequal
   norm_num [Matrix.mul_apply, Fin.sum_univ_two] at hentry
 
-example : (!![(0 : ℝ), 0; 1, 0] : Mat2)ᵀ * !![0, 0; 1, 0] ≠ 1 := by
+example : Matrix.transpose (!![(0 : ℝ), 0; 1, 0] : Mat2) * !![0, 0; 1, 0] ≠ 1 := by
   intro hequal
   have hentry := congrArg (fun matrix : Mat2 => matrix 1 1) hequal
   norm_num [Matrix.mul_apply, Fin.sum_univ_two] at hentry

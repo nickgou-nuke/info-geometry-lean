@@ -5,22 +5,27 @@ import InfoGeometry.Algebra.SplitCayleyDickson
 import InfoGeometry.Canonical.KleinNativeSemidirectProductBridge
 
 /-!
-# Iwasawa Cayley Archetype Causal Chain
+# Iwasawa and Split Algebra Source Index
 
-This file unifies the algebraic structures mapping the basic matrix algebra
-to the Split Cayley-Dickson multiplication rules.
+This module imports several related owners for convenient discovery. The
+imports do not themselves prove a map between the structures or unify them
+into a causal-chain API.
 
 ## The Causal Chain of Archetypes
-1. **The Core Split Algebra:**
-   `CoquaternionicDiracDecomposition` defines the baseline `Cℓ(1,1)` matrix generators (`matI`, `matJ`, `matK`).
-2. **The Projector Basis and Klein Representation:**
-   `KleinParabolicPeirceTwist` establishes the Peirce projectors (P_+, P_-) as the eigenbasis for the J matrix, and proves that `matK` acts as an outer automorphism swapping P_+ and P_-. It proves the homomorphic matrix representation of the Klein bottle group.
-3. **The Matrix Splitting:**
-   `IwasawaDiracDecomposition` proves that traceless 2x2 real matrices factor uniquely over the K, A, and N matrix generators, and proves the nilpotent matrix maps across the Peirce projectors. It proves the log-determinant trace functional properties natively on the SL(2, R) KAN matrices.
-4. **The Split Multiplication Functor:**
-   `SplitCayleyDickson` abstracts the multiplication operator over A × A with γ = +1.
-5. **The Parabolic Klein Homomorphism (Semidirect Product):**
-   `KleinNativeSemidirectProductBridge` constructs the formal semidirect product of the Klein bottle group and proves its native structure map.
+1. `CoquaternionicDiracDecomposition` contains concrete split-algebra matrices.
+2. `KleinParabolicPeirceTwist` proves finite Peirce-projector identities and a
+   coordinate-swap conjugation identity for diagonal matrices. It does not
+   define a Klein-group representation.
+3. `IwasawaDiracDecomposition` proves a basis identity for traceless matrices
+   and elementary trace calculations. It does not prove a group-level KAN
+   factorization; `trace_iwasawa` has value zero on the displayed
+   traceless-generator combination, while `trace_matOne` records the separate
+   scalar direction.
+4. `SplitCayleyDickson` defines pair operations and proves selected operation
+   laws; it does not establish a Cayley–Dickson algebra tower or a functor.
+5. `KleinNativeSemidirectProductBridge` defines an abstract semidirect-product
+   model. No homomorphism connecting that model to the concrete matrices above
+   is defined in this module.
 -/
 
 namespace InfoGeometry.GrandUnification.IwasawaCayleyArchetypeDictionary

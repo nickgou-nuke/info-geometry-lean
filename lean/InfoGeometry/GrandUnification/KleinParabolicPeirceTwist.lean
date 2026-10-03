@@ -85,11 +85,17 @@ theorem chiral_reduction (D : RealMat) (h_chiral : D * matJR + matJR * D = 0) :
     dsimp [P_plus, P_minus, matOneR, matJR, matOne, matJ]
     rw [h11]; ring
 
--- 5. The Klein Bottle Homomorphism Representation
--- The discrete cycle 'a' maps to the Weyl normalizer matKR
--- The discrete cycle 'b' maps to the split torus A
+-- 5. A finite matrix identity associated with the Klein relation
+-- `matKR` normalizes the diagonal matrices by exchanging their entries.
+-- This is not a group representation of the Klein bottle: `matA` is
+-- parameterized by `ℝ` (including zero), and no map from the presented group
+-- is defined here. In the standard SL(2, ℝ) minimal parabolic, this Weyl
+-- normalizer representative is outside the parabolic subgroup.
 noncomputable def matA (lam : ℝ) : RealMat := (!![lam, 0; 0, lam⁻¹] : Matrix (Fin 2) (Fin 2) ℝ)
 
+/-- Conjugation by the coordinate swap exchanges the entries of this diagonal
+matrix. For nonzero `lam`, this is the familiar inversion identity on the
+diagonal torus; the statement itself is a matrix identity over all reals. -/
 theorem klein_bottle_matrix_relation (lam : ℝ) :
   matKR * matA lam * matKR = matA (lam⁻¹) := by
   ext i j; fin_cases i <;> fin_cases j

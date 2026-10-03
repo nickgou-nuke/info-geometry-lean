@@ -12,12 +12,15 @@ modules.
 
 ### `GrandUnification/IwasawaDiracDecomposition.lean`
 
-The source defines four concrete real `2 × 2` matrices. `D_N_sq` proves the
+The source defines four concrete real `2 × 2` matrices. `matN_R_sq` proves the
 displayed strictly upper triangular matrix squares to zero.
-`iwasawa_dirac_decomposition` expresses an arbitrary traceless matrix
-`!![a,b;c,-a]` in a three-matrix basis. It does not define a differential
-operator or forms, establish uniqueness, prove a group-level KAN
-factorization, or construct a BRST/Koszul complex.
+`iwasawa_decomposition` expresses an arbitrary traceless matrix
+`!![a,b;c,-a]` in a three-matrix basis. `trace_matI_R`, `trace_matJ_R`, and
+`trace_matN_R` prove the generators are traceless; `trace_matOne` proves the
+identity matrix has trace `2`; `trace_iwasawa` proves the displayed linear
+combination has trace zero. These do not prove a group-level KAN
+factorization, uniqueness of the decomposition, or any differential-operator
+claim.
 
 ### `Algebra/SplitCayleyDickson.lean`
 
@@ -39,9 +42,39 @@ holonomy representation or a geometric Dirac–Kähler operator.
 
 ### `GrandUnification/IwasawaCayleyArchetypeDictionary.lean`
 
-This module contains imports and an empty namespace. It defines no master
-dictionary theorem or causal-chain API. Its earlier documentation overstated
-the imported files' scope and has been corrected.
+This module contains imports and an empty namespace. Its earlier documentation
+claimed that the imports provided a Klein group representation, an SL(2) KAN
+trace theorem, and a causal-chain API. Those claims were unsupported and the
+documentation has been corrected. No homomorphism connects the abstract
+semidirect-product owner to the finite matrix identity in
+`KleinParabolicPeirceTwist`.
+
+### `GrandUnification/KleinParabolicPeirceTwist.lean`
+
+The source proves finite projector identities and
+`matKR * matA lam * matKR = matA (lam⁻¹)`. The latter is a matrix identity;
+`matA` is defined on all reals, not on the group of nonzero real scalars, and
+the file does not define a homomorphism from the presented Klein group. The
+matrix `matKR` is a Weyl normalizer representative: it swaps diagonal entries
+and is not in the centralizer `M`. In the standard SL(2,ℝ) minimal parabolic,
+it is outside `P` as well. The Klein relation identity alone does not give a
+faithful representation, and its assignment of the glide to an involution
+would in any case have a nontrivial kernel because the presented glide has
+infinite order.
+
+### `Canonical/KANDiracKahlerTriadArchitecture.lean`
+
+This separate owner proves conditional ring identities for Peirce projectors,
+an element family `1 + x • e_plus`, an assumed involution `R`, and arbitrary
+ring elements `D_K`, `D_A`, and `D_N`. The hypotheses are explicit, so these
+conditional identities are meaningful. The file does not construct the
+algebra elements as differential operators, prove a KAN decomposition, or
+derive a Klein bottle representation. Its earlier module comments promoted
+these conditional formulas to geometric claims and have been narrowed.
+
+The affine Klein presentation and the finite matrix reflection are separate
+models here; these files establish no homomorphism connecting them to the
+displayed conditional Peirce algebra.
 
 ## Verification boundary
 

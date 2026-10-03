@@ -91,15 +91,20 @@ holonomy action unless those data are explicit in the theorem statement.
    - An algebra automorphism assumed to send $J$ to $-J$ swaps the projectors.
    - The affine glide's determinant sign alone does not imply this hypothesis.
 
-10. **$\mathrm{GL}_2(\mathbb{R})$ Iwasawa $KAN$ Factorization & Peirce Flow**:
-    - Trace localization: $\operatorname{tr}(X) = \operatorname{tr}(X_\mathfrak{a})$.
-    - Horocycle nilpotency and directed Peirce transfer: $P_+ N(x) P_- = x e_+$.
-    - Reflection boost inversion $R A(t) R = A(-t)$ and projector swap $R P_\pm R = P_\mp$.
+10. **Finite $2\times2$ matrix identities in KAN-inspired coordinates**:
+    - Trace identity for the displayed rotation, diagonal, and strictly upper
+      triangular matrices; this is not a group-level Iwasawa factorization.
+    - Nilpotent matrix and projector sandwich identities.
+    - The coordinate-swap matrix normalizes the positive diagonal torus and
+      swaps the coordinate projectors. It is not in $SO(2)$ or in the centralizer
+      $Z_K(A)$ for the usual $SL(2,\mathbb{R})$ KAN model.
 
-11. **KAN Dirac-Kähler Triad Architecture**:
-    - Operator triad decomposition: $D = D_K + D_A + D_N$.
-    - Diagonal Euler localization: $P_\pm D P_\pm = P_\pm D_A P_\pm$.
-    - Off-diagonal shear decoupling: $P_+ D P_- = P_+ D_K P_- + D_N$.
+11. **Conditional algebraic Peirce identities**:
+    - For ring elements satisfying the stated commutation and
+      anticommutation hypotheses, the sum $D_K+D_A+D_N$ has the stated Peirce
+      sandwiches.
+    - These are not a decomposition of a geometric Dirac–Kähler differential
+      operator; this owner defines no manifold or differential operator.
 
 12. **Kantor 5-Graded T-Duality & D-Brane Peirce Transposition**:
     - Freudenthal-Kantor triple system grading: $[h, [x, y]] = (i + j)[x, y]$.

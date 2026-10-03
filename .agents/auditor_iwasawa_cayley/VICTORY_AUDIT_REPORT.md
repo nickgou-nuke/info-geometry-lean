@@ -90,13 +90,11 @@ specific matrices shown in the theorem.
 
 The previous source had a compile error in the commutant closure proof: its
 Unicode-subscript binders were referenced by different, undefined ASCII names.
-The proof now uses consistently bound variables and builds. Its former comments
-claimed a Tomita–Takesaki/AQFT and Klein/Möbius phase-separation result, while
-the code only supplied algebraic hypotheses. The source now states that scope
-explicitly, names the reflection conditions by their actual commutant laws,
-and defines a Krein symmetry as an involutive isometry of a supplied bilinear
-form. This does not assert nondegeneracy, indefiniteness, completeness, or a
-geometric origin.
+The former comments claimed a Tomita–Takesaki/AQFT and Klein/Möbius
+phase-separation result, while the code only supplied algebraic hypotheses.
+Those proof-like packet structures have been replaced by direct theorems for
+commutant closure and double conjugation by an involution. This preserves the
+valid reflection algebra without asserting its geometric origin.
 
 ## Verification boundary
 
@@ -115,3 +113,5 @@ unknown `Y1`/`Y2` identifiers in the former version of
 rewrite failure in `Canonical/FiniteDimensionalCCRNoGo.lean`, and other proof
 or resource failures. The repository-wide baseline is therefore not verified
 clean by this run. This is a source audit, not an independent QMS acceptance.
+The semantic vacuity gate reports zero findings for the corrected
+`MoebiusTomitaPacket`; the staged proxy gate passes.

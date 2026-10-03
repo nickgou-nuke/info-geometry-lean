@@ -37,7 +37,8 @@ theorem conjugation_by_involution_involutive
     (J X : Module.End R M) (hJ : J * J = 1) :
     J * (J * X * J) * J = X := by
   calc
-    J * (J * X * J) * J = (J * J) * X * (J * J) := by noncomm_ring
+    J * (J * X * J) * J = (J * J) * X * (J * J) := by
+      simp only [mul_assoc]
     _ = (1 : Module.End R M) * X * 1 := by rw [hJ]
     _ = X := by simp
 

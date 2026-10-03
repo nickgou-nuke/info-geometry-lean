@@ -1,34 +1,19 @@
-import Mathlib.LinearAlgebra.BilinearForm.Basic
 import Mathlib.Algebra.Algebra.Basic
-import Mathlib.LinearAlgebra.Matrix.ToLin
 
 /-!
-# Conditional commutant and modular-reflection identities
+# Commutants and involutive conjugation
 
-This file defines a commutant for a supplied submodule of endomorphisms and
-packages explicit algebraic hypotheses for a supplied involution. It does not
-construct a von Neumann algebra, prove the Tomita–Takesaki theorem, or derive
-the involution from Klein-bottle or Möbius topology. The mathematical thread
-retained here is the relation between an algebra, its commutant, and a chosen
-conjugation-like map, with each required identity stated as a premise.
+This file proves an elementary commutant closure fact and the double-conjugation
+identity for an involution in an endomorphism ring. These algebraic results do
+not construct a von Neumann algebra, prove the Tomita–Takesaki theorem, or
+derive an involution from Klein-bottle or Möbius topology.
 -/
 
 namespace InfoGeometry.GrandUnification.MoebiusTomitaPacket
 
-open LinearMap
-
 variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
 
-/-! ### 1. A bilinear form and its isometric involution -/
-
-/-- An involutive linear isometry of a supplied bilinear form. This predicate
-does not assert nondegeneracy, indefiniteness, or completeness of the form. -/
-structure KreinSymmetry
-    (Q : LinearMap.BilinForm R M) (J : Module.End R M) : Prop where
-  involutive : J * J = 1
-  preserves_form : ∀ x y : M, Q (J x) (J y) = Q x y
-
-/-! ### 2. The Commutant (The Dual Reality) -/
+/-! ### The commutant of a submodule of endomorphisms -/
 
 variable (ℳ : Submodule R (Module.End R M))
 
@@ -45,17 +30,20 @@ def Commutant (ℳ : Submodule R (Module.End R M)) : Submodule R (Module.End R M
          _ = c • (Y * X) := by rw [hY X hX]
          _ = (c • Y) * X := (smul_mul_assoc c Y X).symm
 
-/-! ### 3. Conditional algebraic reflection laws -/
+/-! ### Double conjugation by an involution -/
 
-structure InvolutiveCommutantReflection
-    (J : Module.End R M) (A : Submodule R (Module.End R M)) : Prop where
-  involutive : J * J = 1
-  maps_into_commutant : ∀ X ∈ A, (J * X * J) ∈ Commutant A
-  surjective_onto_commutant : ∀ Y ∈ Commutant A, ∃ X ∈ A, Y = J * X * J
+/-- Conjugation by an involution is itself involutive in the endomorphism ring. -/
+theorem conjugation_by_involution_involutive
+    (J X : Module.End R M) (hJ : J * J = 1) :
+    J * (J * X * J) * J = X := by
+  calc
+    J * (J * X * J) * J = (J * J) * X * (J * J) := by noncomm_ring
+    _ = (1 : Module.End R M) * X * 1 := by rw [hJ]
+    _ = X := by simp
 
 /-! ### 4. A scalar-submodule commutant lemma -/
 
-theorem commutant_maximal_of_algebra_trivial
+theorem scalar_submodule_mem_commutant
     (h_trivial : ∀ X ∈ ℳ, ∃ c : R, X = c • (1 : Module.End R M)) :
     ∀ Y : Module.End R M, Y ∈ Commutant ℳ := by
   intro Y X hX
@@ -64,21 +52,5 @@ theorem commutant_maximal_of_algebra_trivial
        _ = c • Y := by rw [one_mul]
        _ = c • (Y * 1) := by rw [mul_one]
        _ = Y * (c • 1) := (mul_smul_comm c Y 1).symm
-
-/--
-This structure packages a supplied endomorphism, submodule, and the displayed
-reflection/nontriviality hypotheses. It does not prove that such data exist or
-that they arise from a geometric parity twist.
--/
-structure CommutantReflectionData where
-  algebra : Submodule R (Module.End R M)
-  kreinForm : LinearMap.BilinForm R M
-  involution : Module.End R M
-  krein_symmetry : KreinSymmetry kreinForm involution
-  reflection : InvolutiveCommutantReflection involution algebra
-  nontrivial_algebra : ∃ X ∈ algebra, ∀ c : R, X ≠ c • (1 : Module.End R M)
-  operator : Module.End R M
-  operator_anticommutes_with_involution :
-    involution * operator = - (operator * involution)
 
 end InfoGeometry.GrandUnification.MoebiusTomitaPacket

@@ -2,10 +2,13 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Data.Real.Sqrt
 
 namespace InfoGeometry.Canonical.SinaiHyperbolicErgodicMixingBridge
 
 open Matrix
+open Real
 
 local notation "RealMat" => Matrix (Fin 2) (Fin 2) ℝ
 
@@ -99,5 +102,30 @@ theorem sinaiEigenvalueUnstable_lt_neg_one (τ κ : ℝ) (hτ : 0 < τ) (hκ : 0
   have h_disc : 0 < Real.sqrt (sinaiDiscriminant τ κ) := 
     Real.sqrt_pos.mpr (sinaiDiscriminant_pos τ κ hτ hκ)
   linarith
+
+/-- The Lyapunov exponent χ = ln |λ_u| measuring chaotic trajectory divergence. -/
+noncomputable def sinaiLyapunovExponent (τ κ : ℝ) : ℝ :=
+  Real.log |sinaiEigenvalueUnstable τ κ|
+
+/-- Core analytic theorem: if τ > 0 and κ > 0, the Lyapunov exponent is strictly positive. -/
+theorem sinaiLyapunovExponent_pos (τ κ : ℝ) (hτ : 0 < τ) (hκ : 0 < κ) : 
+  0 < sinaiLyapunovExponent τ κ := by
+  -- 1. λ_u is strictly negative
+  have h_neg : sinaiEigenvalueUnstable τ κ < 0 := by
+    have h1 : sinaiEigenvalueUnstable τ κ < -1 := sinaiEigenvalueUnstable_lt_neg_one τ κ hτ hκ
+    linarith
+
+  -- 2. |λ_u| = -λ_u
+  have h_abs : |sinaiEigenvalueUnstable τ κ| = -(sinaiEigenvalueUnstable τ κ) := by
+    exact abs_of_neg h_neg
+
+  -- 3. Strict expansion factor: |λ_u| > 1
+  have h_gt_one : 1 < |sinaiEigenvalueUnstable τ κ| := by
+    rw [h_abs]
+    have h1 : sinaiEigenvalueUnstable τ κ < -1 := sinaiEigenvalueUnstable_lt_neg_one τ κ hτ hκ
+    linarith
+
+  -- 4. Monotonicity of the logarithm: 1 < x → 0 < ln x
+  exact Real.log_pos h_gt_one
 
 end InfoGeometry.Canonical.SinaiHyperbolicErgodicMixingBridge

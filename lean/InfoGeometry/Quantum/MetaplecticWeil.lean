@@ -43,7 +43,7 @@ lemma zmod_val_add_one_cases (j : ZMod n) :
   have hj : j.val < n := ZMod.val_lt j
   have hval : (j + 1).val = (j.val + 1) % n := by
     have h : ((j.val + 1 : ℕ) : ZMod n) = j + 1 := by
-      rw [Nat.cast_add, Nat.cast_one, ZMod.natCast_val]
+      rw [Nat.cast_add, Nat.cast_one, ZMod.natCast_zmod_val]
     rw [← h, ZMod.val_natCast]
   by_cases hlt : j.val + 1 < n
   · left
@@ -130,13 +130,11 @@ theorem chirpMatrix_mul_clockMatrix (ω : R) (κ : ℕ) :
     chirpMatrix (n := n) ω κ * clockMatrix (n := n) ω =
       clockMatrix (n := n) ω * chirpMatrix (n := n) ω κ := by
   ext i j
-  rw [Matrix.mul_apply, Matrix.mul_apply]
-  rw [mul_diagonal_left (fun k => ω ^ (κ * tri k.val))]
-  rw [mul_diagonal_left (fun k => ω ^ k.val)]
-  simp only [clockMatrix, chirpMatrix, Matrix.of_apply]
+  dsimp [chirpMatrix, clockMatrix, Matrix.mul_apply, Matrix.of_apply]
+  simp only [ite_mul, mul_ite, zero_mul, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
   split_ifs with h
-  · rw [mul_comm]
-  · rw [mul_zero, mul_zero]
+  · subst h; rw [mul_comm]
+  · rfl
 
 /-- Parabolic Shear: The quadratic chirp shears the Shift operator: U_κ * S = S * C^κ * U_κ. -/
 theorem chirpMatrix_mul_shiftMatrix (ω : R) (hn : ω ^ n = 1) (k : ℕ) (hn_odd : n = 2 * k + 1)
@@ -144,31 +142,15 @@ theorem chirpMatrix_mul_shiftMatrix (ω : R) (hn : ω ^ n = 1) (k : ℕ) (hn_odd
     chirpMatrix (n := n) ω κ * shiftMatrix (n := n) =
       (shiftMatrix (n := n) * clockMatrixPow (n := n) ω κ) * chirpMatrix (n := n) ω κ := by
   ext i j
-  rw [Matrix.mul_apply, Matrix.mul_apply]
-  -- LHS: (U_κ * S)_{i, j} = if i = j + 1 then ω ^ (κ * tri i.val) else 0
-  rw [mul_diagonal_left (fun m => ω ^ (κ * tri m.val))]
-  simp only [shiftMatrix, Matrix.of_apply]
-  -- RHS: evaluate intermediate product M = S * C^κ
-  have hM : ∀ a b, (shiftMatrix (n := n) * clockMatrixPow (n := n) ω κ) a b =
-      if a = b + 1 then ω ^ (κ * b.val) else 0 := by
-    intro a b
-    rw [Matrix.mul_apply, mul_diagonal_right]
-    simp only [shiftMatrix, clockMatrixPow, Matrix.of_apply]
-    split_ifs with h
-    · rw [mul_one]
-    · rw [mul_zero]
-  -- RHS: evaluate M * U_κ
-  rw [mul_diagonal_right _ (fun m => ω ^ (κ * tri m.val))]
-  rw [hM i j]
-  simp only [chirpMatrix, Matrix.of_apply]
+  dsimp [chirpMatrix, shiftMatrix, clockMatrixPow, Matrix.mul_apply, Matrix.of_apply]
+  simp only [ite_mul, mul_ite, zero_mul, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, mul_one, one_mul]
   split_ifs with h
   · subst h
-    rw [mul_comm, ← pow_add]
+    rw [← pow_add]
+    rw [omega_pow_mul_tri_succ ω hn k hn_odd κ j]
     congr 1
-    have : κ * tri j.val + κ * j.val = κ * (tri j.val + j.val) := by ring
-    rw [this]
-    exact omega_pow_mul_tri_succ ω hn k hn_odd κ j
-  · rw [mul_zero, zero_mul]
+    ring
+  · rfl
 
 /-! ### 5. Invertibility of the Chirp Operator -/
 
@@ -176,12 +158,12 @@ theorem chirpMatrix_mul_shiftMatrix (ω : R) (hn : ω ^ n = 1) (k : ℕ) (hn_odd
 theorem chirpMatrix_mul_inv (ω ω_inv : R) (h_inv : ω * ω_inv = 1) (κ : ℕ) :
     chirpMatrix (n := n) ω κ * chirpMatrixInv (n := n) ω_inv κ = 1 := by
   ext i j
-  rw [Matrix.mul_apply, mul_diagonal_left]
-  simp only [chirpMatrix, chirpMatrixInv, Matrix.of_apply, Matrix.one_apply]
+  dsimp [chirpMatrix, chirpMatrixInv, Matrix.mul_apply, Matrix.of_apply, Matrix.one_apply]
+  simp only [ite_mul, mul_ite, zero_mul, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
   split_ifs with h
   · subst h
     rw [← mul_pow, h_inv, one_pow]
-  · rw [mul_zero]
+  · rfl
 
 /-! ### 6. Metaplectic Covariance Theorems -/
 

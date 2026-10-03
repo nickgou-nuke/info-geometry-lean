@@ -16,8 +16,10 @@ Addresses the foundational epistemic questions of coincidence spectrometry:
    - Grounded: $C(u, 0) = 0$ and $C(0, v) = 0$.
    - Uniform marginals: $C(u, 1) = u$ and $C(1, v) = v$.
    - 2-increasing property: $V_C([u_1, u_2] \times [v_1, v_2]) \ge 0$.
-   Proves that the independent product copula $\Pi(u, v) = u \cdot v$ strictly satisfies
-   all copula axioms (`is2DCopula_product`) and the Fréchet-Hoeffding bounds.
+   Proves that the independent product copula $\Pi(u, v) = u \cdot v$ satisfies
+   the stated copula axioms (`is2DCopula_product`) and is nonnegative. This
+   file does not prove the general Fréchet-Hoeffding bounds for arbitrary
+   copulas.
 
 2. **Physical Far-Field Zero-Intercept Derivation**:
    Derives $R(0) = 0$ directly from physical flux conservation.
@@ -87,7 +89,8 @@ theorem is2DCopula_product : Is2DCopula productCopula where
     have hv_sub : 0 ≤ v₂ - v₁ := sub_nonneg.mpr hv_le
     exact mul_nonneg hu_sub hv_sub
 
-/-- 🏆 THEOREM 3: Fréchet-Hoeffding non-negativity bound on the unit square. -/
+/-- Nonnegativity of the product copula on nonnegative inputs. This is not a
+    Fréchet-Hoeffding bound for general copulas. -/
 theorem productCopula_nonneg {u v : ℝ} (hu : 0 ≤ u) (hv : 0 ≤ v) :
     0 ≤ productCopula u v := by
   unfold productCopula

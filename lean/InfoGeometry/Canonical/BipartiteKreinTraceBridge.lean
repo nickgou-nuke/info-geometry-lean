@@ -12,28 +12,28 @@ namespace InfoGeometry.Canonical.BipartiteKreinTraceBridge
 open InfoGeometry.Canonical.ClusterMutationIndexBridge
 
 /-!
-# Bipartite Krein Trace Bridge
+# Finite Grading Trace and Encoded Bipartite Counts
 
-This module formalizes the exact algebraic projection from the SPT Krein involution
-(the grading of the bipartite Clifford Dirac network) to the macroscopic
-topological invariants of the Amplituhedron's Plabic graphs.
+This module proves a finite-dimensional trace identity for a diagonal
+involution with `Vwhite` positive and `Vblack` negative coordinates. It then
+encodes those same two natural numbers as fields of `PlabicCounts` and rewrites
+the trace as the negative of the resulting count index.
 
-The topological index of the Krein involution β over a bipartite state space
-(with V_white and V_black counting the dimensions of the ±1 eigenspaces)
-is shown to exactly match the negative `colorIndex` (Helicity Defect) of the
-on-shell graph.
+No map from a Clifford Dirac eigenspace to an on-shell graph is defined here.
+The equalities below do not establish a topological index theorem, mutation
+invariance of a grading trace, or a physical helicity theorem.
 -/
 
 variable {R : Type*} [CommRing R]
 
-/-- The Krein involution β represented as a diagonal matrix over a disjoint sum
-    of white (+1 eigenspace) and black (-1 eigenspace) indices. -/
+/-- A diagonal involution with `+1` coordinates indexed by `Fin Vwhite` and
+    `-1` coordinates indexed by `Fin Vblack`. -/
 def kreinInvolution (Vwhite Vblack : ℕ) :
     Matrix (Fin Vwhite ⊕ Fin Vblack) (Fin Vwhite ⊕ Fin Vblack) R :=
   Matrix.diagonal (Sum.elim (fun _ => 1) (fun _ => -1))
 
-/-- The trace of the Krein involution is the difference in dimension:
-    Tr(β) = V_white - V_black. -/
+/-- The trace of this diagonal grading is the difference of the two index
+    cardinalities. -/
 theorem trace_kreinInvolution (Vwhite Vblack : ℕ) :
     Matrix.trace (kreinInvolution (R := R) Vwhite Vblack) =
       (Vwhite : R) - (Vblack : R) := by
@@ -42,7 +42,9 @@ theorem trace_kreinInvolution (Vwhite Vblack : ℕ) :
   rw [Fintype.sum_sum_type]
   simp; ring
 
-/-- The combinatorial count data derived from the bipartite state space. -/
+/-- Plabic count fields filled from the same cardinalities and edge data.
+    This is an encoding function; it does not construct a graph or a state
+    space map. -/
 def stateSpaceCounts (Vwhite Vblack Eint next : ℕ)
     (hbal : (next : ℤ) = 3 * ((Vblack : ℤ) + (Vwhite : ℤ)) - 2 * (Eint : ℤ)) :
     PlabicCounts where
@@ -52,9 +54,8 @@ def stateSpaceCounts (Vwhite Vblack Eint next : ℕ)
   next := (next : ℤ)
   trivalentBalance := hbal
 
-/-- Fundamental Theorem: The topological trace of the SPT Krein involution
-    over the bipartite state space is exactly the negative color index
-    (and thus the negative helicity defect) of the macroscopic Plabic graph. -/
+/-- After the cardinalities are encoded as count fields, the diagonal trace is
+    the negative of their `colorIndex`. -/
 theorem trace_krein_eq_neg_colorIndex (Vwhite Vblack Eint next : ℕ)
     (hbal : (next : ℤ) = 3 * ((Vblack : ℤ) + (Vwhite : ℤ)) - 2 * (Eint : ℤ)) :
     Matrix.trace (kreinInvolution (R := ℤ) Vwhite Vblack) =
@@ -63,8 +64,9 @@ theorem trace_krein_eq_neg_colorIndex (Vwhite Vblack Eint next : ℕ)
   dsimp [stateSpaceCounts, PlabicCounts.colorIndex]
   ring
 
-/-- Extension to Helicity Defect: The Krein trace also exactly equals the
-    negative helicity defect under the trivalent balance. -/
+/-- The encoded `helicityDefect` equals the encoded `colorIndex` by the count
+    identity in `ClusterMutationIndexBridge`, so the same trace has this
+    numerical expression. No physical helicity is defined here. -/
 theorem trace_krein_eq_neg_helicityDefect (Vwhite Vblack Eint next : ℕ)
     (hbal : (next : ℤ) = 3 * ((Vblack : ℤ) + (Vwhite : ℤ)) - 2 * (Eint : ℤ)) :
     Matrix.trace (kreinInvolution (R := ℤ) Vwhite Vblack) =

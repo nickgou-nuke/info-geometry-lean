@@ -88,17 +88,19 @@ theorem colMarginal_sum (S : Matrix (Fin N) (Fin M) ℝ) :
   rw [Finset.sum_comm]
   exact joint_total_sum S
 
-/-! ### 3. Glauber 2-Point Cross-Correlation & Copula Density -/
+/-! ### 3. Marginal-normalized attention weights -/
 
-/-- The Glauber 2-point correlation function g^(2)(i, j) = P(i, j) / (p(i) * q(j)). -/
-noncomputable def glauberCorrelator (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) (j : Fin M) : ℝ :=
+/-- A finite probability ratio derived from the attention weights. This is not
+a quantum-optics Glauber correlator. -/
+noncomputable def attentionDependenceRatio
+    (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) (j : Fin M) : ℝ :=
   jointDistribution S i j / (rowMarginal S i * colMarginal S j)
 
-/-- Fundamental Identity: The Glauber correlator is exactly the normalized attention ratio A_{i, j} / q(j). -/
-theorem glauber_correlator_eq_attention_ratio (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) (j : Fin M)
-    (hq : colMarginal S j ≠ 0) :
-    glauberCorrelator S i j = attentionMatrix S i j / colMarginal S j := by
-  dsimp [glauberCorrelator, jointDistribution]
+/- The ratio reduces to an attention weight divided by its column marginal. -/
+theorem attentionDependenceRatio_eq_weight_div_colMarginal
+    (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) (j : Fin M) :
+    attentionDependenceRatio S i j = attentionMatrix S i j / colMarginal S j := by
+  dsimp [attentionDependenceRatio, jointDistribution]
   rw [rowMarginal_eq_uniform S i]
   have hN : (1 / (N : ℝ)) ≠ 0 := one_div_ne_zero (Nat.cast_ne_zero.mpr (NeZero.ne N))
   have h_alg : ((1 / (N : ℝ)) * attentionMatrix S i j) / ((1 / (N : ℝ)) * colMarginal S j) =
@@ -106,7 +108,7 @@ theorem glauber_correlator_eq_attention_ratio (S : Matrix (Fin N) (Fin M) ℝ) (
     rw [mul_div_mul_left (attentionMatrix S i j) (colMarginal S j) hN]
   exact h_alg
 
-/-! ### 4. Cumulative Distributions & Discrete Sklar Factorization -/
+/-! ### 4. Finite cumulative tables -/
 
 /-- Joint cumulative distribution function (CDF) H(i, j) = ∑_{a ≤ i, b ≤ j} P(a, b). -/
 noncomputable def jointCDF (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) (j : Fin M) : ℝ :=
@@ -120,25 +122,21 @@ noncomputable def rowCDF (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) : ℝ :=
 noncomputable def colCDF (S : Matrix (Fin N) (Fin M) ℝ) (j : Fin M) : ℝ :=
   ∑ b : Fin M, if b ≤ j then colMarginal S b else 0
 
-/-- The discrete Copula table C(i, j) evaluated at the marginal grid points. -/
-noncomputable def discreteCopula (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) (j : Fin M) : ℝ :=
-  jointCDF S i j
+/-! ### 5. Query-independent attention and independence -/
 
-/-- Discrete Sklar Representation Theorem:
-    The joint cumulative distribution decomposes identically through the copula table. -/
-theorem sklar_representation (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) (j : Fin M) :
-    jointCDF S i j = discreteCopula S i j := rfl
-
-/-! ### 5. Coherent State Equivalence: Unentangled Attention ↔ Product Copula -/
-
-/-- Theorem: If the attention distribution is unentangled (A_{i, j} = q(j) independent of query i),
-    then the joint CDF strictly factorizes into the Product Copula H(i, j) = F(i) * G(j). -/
-theorem unentangled_attention_is_product_copula
+/- If every query row equals the key marginal, the finite joint CDF factors as
+the product of its marginal CDFs. This is an independence result for this
+finite probability model, not an identity with a quantum-optics correlator. -/
+theorem query_independent_attention_cdf_factorization
     (S : Matrix (Fin N) (Fin M) ℝ)
     (h_unentangled : ∀ (i : Fin N) (j : Fin M), attentionMatrix S i j = colMarginal S j)
     (i : Fin N) (j : Fin M) :
-    jointCDF S i j = productCopula (rowCDF S i) (colCDF S j) := by
-  dsimp [jointCDF, rowCDF, colCDF, productCopula, rowMarginal, colMarginal, jointDistribution]
+    jointCDF S i j =
+      InfoGeometry.Probability.DetectorFoundationalCopula.productCopula
+        (rowCDF S i) (colCDF S j) := by
+  dsimp [jointCDF, rowCDF, colCDF,
+    InfoGeometry.Probability.DetectorFoundationalCopula.productCopula,
+    rowMarginal, colMarginal, jointDistribution]
   have h_fact : ∀ a b, (if a ≤ i ∧ b ≤ j then (1 / (N : ℝ)) * attentionMatrix S a b else 0) =
       (if a ≤ i then (1 / (N : ℝ)) else 0) * (if b ≤ j then colMarginal S b else 0) := by
     intro a b

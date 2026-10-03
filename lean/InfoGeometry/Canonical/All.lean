@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.AttentionInformationGeometry
 import InfoGeometry.Canonical.DeterministicArgmaxAttention
 import InfoGeometry.Canonical.DoubledDiracKreinBipartite
 import InfoGeometry.Canonical.ClusterMutationIndexBridge

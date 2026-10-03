@@ -8,7 +8,7 @@ open Complex Matrix
 
 This file records the group-theoretic skeleton:
 * `K(θ)`: compact phase/rotation,
-* `A(β)`: real dilation,
+* `A(β)`: split-Cartan boost with reciprocal diagonal factors,
 * `N(z)`: nilpotent shear/unipotent shift.
 
 It also includes the Cayley compactification map
@@ -17,7 +17,7 @@ It also includes the Cayley compactification map
 Tiny bridge note:
 The determinant signatures here `(det K = 1, det A = 1, det N = 1)` and boundary sector `det (N - I) = 0`
 mirror the `DeterminantSupergrading` package's parity/sign table: unit determinants for the
-compact–dilation KAN core and grade boundary at zero determinant for the nilpotent channel.
+compact–split-Cartan KAN core and grade boundary at zero determinant for the nilpotent channel.
 -/
 
 noncomputable section
@@ -28,7 +28,8 @@ namespace InfoGeometry.Canonical.Cayley
 def KPart (θ : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
   !![Complex.exp ((θ : ℂ) * Complex.I), 0; 0, Complex.exp (-((θ : ℂ) * Complex.I))]
 
-/-- Real scaling (dilation) block: `A(β)`. -/
+/-- Split-Cartan boost block `A(β)`, with reciprocal diagonal factors and
+determinant one; this is not an overall volume dilation. -/
 def APart (β : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
   !![Complex.exp (β : ℂ), 0; 0, Complex.exp (-(β : ℂ))]
 

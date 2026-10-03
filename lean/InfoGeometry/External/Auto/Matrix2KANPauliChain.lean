@@ -61,7 +61,7 @@ def iSigma2Coord (_ b c _ : ℝ) : ℝ := (b - c) / 2
 /-- Compact K factor. -/
 def KPart (θ : ℝ) : M2R := !![Real.cos θ, -Real.sin θ; Real.sin θ, Real.cos θ]
 
-/-- Abelian A/squeeze factor. -/
+/-- Abelian split-Cartan squeeze factor with reciprocal eigenvalues. -/
 def APart (α : ℝ) : M2R := !![Real.exp α, 0; 0, Real.exp (-α)]
 
 /-- Nilpotent N/shear factor. -/
@@ -74,7 +74,7 @@ def KANMatrix (θ α n : ℝ) : M2R :=
 /-- Infinitesimal logarithmic generator for `K`. -/
 def kLog (θ : ℝ) : M2R := !![0, -θ; θ, 0]
 
-/-- Infinitesimal logarithmic generator for `A`. -/
+/-- Infinitesimal split-Cartan generator for `A`. -/
 def aLog (α : ℝ) : M2R := !![α, 0; 0, -α]
 
 /-- Infinitesimal logarithmic generator for `N`. -/

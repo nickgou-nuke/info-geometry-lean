@@ -35,7 +35,7 @@ open Matrix
 
 set_option linter.unusedVariables false
 
-/-! ### Stratum 1: The KAN Iwasawa Group Factorization in $\mathrm{GL}_2(\mathbb{R})$ -/
+/-! ### Stratum 1: Concrete $2 \times 2$ matrices used as $K$, $A$, and $N$ coordinates -/
 
 /-- Compact elliptic rotation matrix in $\mathrm{SO}(2)$. -/
 def matK_rot (θ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
@@ -153,10 +153,9 @@ theorem mat_a_gen_trace (t₁ t₂ : ℝ) : (mat_a_gen t₁ t₂).trace = t₁ +
   simp [mat_a_gen, Matrix.trace, Fin.sum_univ_two]
 
 /-- 
-Trace Localization Theorem:
-The linear additive functional in log-generator space ($\operatorname{tr} = \log\det$)
-is supported exclusively on the abelian Cartan subspace $\mathfrak{a}$:
-$\operatorname{tr}(X_\mathfrak{k} + X_\mathfrak{a} + X_\mathfrak{n}) = \operatorname{tr}(X_\mathfrak{a})$.
+For the displayed $2 \times 2$ matrices, the trace of the sum equals the
+trace of the diagonal matrix. This is a finite matrix identity; this file does
+not define a Lie algebra decomposition or a global KAN factorization.
 -/
 theorem kan_trace_supported_on_a (ω t₁ t₂ x : ℝ) :
     (mat_k_gen ω + mat_a_gen t₁ t₂ + mat_n_gen x).trace = (mat_a_gen t₁ t₂).trace := by
@@ -316,7 +315,7 @@ collection of propositions; it is not a KAN factorization or a Klein bottle
 holonomy model.
 -/
 structure KANIwasawaSplitPeirceDiracPacket where
-  -- Stratum 1: KAN Factorization & Determinants
+  -- Stratum 1: Finite matrix determinants and KAN-coordinate identities
   k_rot_det : ∀ θ : ℝ, (matK_rot θ).det = 1
   r_det : matR.det = -1
   r_sq : matR * matR = 1

@@ -8,7 +8,8 @@ open Matrix
 
 local notation "RealMat" => Matrix (Fin 2) (Fin 2) ℝ
 
--- The K, A, N Matrix Generators for sl(2, R)
+-- The three traceless matrices below are a basis of sl(2, ℝ).
+-- `matOne` is separately included for the scalar direction in gl(2, ℝ).
 def matOne : RealMat := !![1, 0; 0, 1]
 def matI_R : RealMat := !![0, -1; 1, 0]
 def matJ_R : RealMat := !![1, 0; 0, -1]
@@ -26,11 +27,28 @@ theorem matN_R_sq : matN_R * matN_R = 0 := by
   ext i j; fin_cases i <;> fin_cases j
   all_goals { rw [mat_mul_expand]; dsimp [matN_R]; ring }
 
--- 2. The Algebraic Iwasawa Decomposition of Traceless Matrices
+/-- Every displayed traceless matrix has the following coordinates in the
+concrete basis `matI_R`, `matJ_R`, `matN_R`. This is a vector-space identity,
+not a group-level Iwasawa factorization. -/
 theorem iwasawa_decomposition (a b c : ℝ) :
   !![a, b; c, -a] = c • matI_R + a • matJ_R + (b + c) • matN_R := by
   ext i j; fin_cases i <;> fin_cases j
   all_goals { dsimp [matI_R, matJ_R, matN_R, Matrix.add_apply, Matrix.smul_apply]; ring }
+
+/-- The coordinates in `iwasawa_decomposition` are unique. -/
+theorem iwasawa_decomposition_unique (a b c a' b' c' : ℝ)
+    (h : c • matI_R + a • matJ_R + (b + c) • matN_R =
+      c' • matI_R + a' • matJ_R + (b' + c') • matN_R) :
+    a = a' ∧ b = b' ∧ c = c' := by
+  have h00 := congrArg (fun M : RealMat => M 0 0) h
+  have h01 := congrArg (fun M : RealMat => M 0 1) h
+  have h10 := congrArg (fun M : RealMat => M 1 0) h
+  simp [matI_R, matJ_R, matN_R, Matrix.add_apply] at h00 h01 h10
+  constructor
+  · linarith
+  constructor
+  · linarith
+  · linarith
 
 -- 3. Spectral expansion over projectors
 theorem scale_peirce_spectrum (a : ℝ) :

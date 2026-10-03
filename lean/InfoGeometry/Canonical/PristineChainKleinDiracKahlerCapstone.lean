@@ -274,7 +274,7 @@ structure PristineChainMasterPacket where
     ∀ {A : Type*} [Ring A] [Algebra ℝ A] (J : A) (σ : A ≃ₐ[ℝ] A) (h_J : σ J = -J),
       σ (σ (peircePlus J)) = peircePlus J
 
-  -- Stratum 9: Iwasawa KAN Factorization & Peirce Flow
+  -- Stratum 9: Finite KAN-coordinate matrix and Peirce identities
   kan_packet :
     InfoGeometry.Canonical.KANIwasawaSplitPeirceDirac.KANIwasawaSplitPeirceDiracPacket
 

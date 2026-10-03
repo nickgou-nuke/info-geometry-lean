@@ -18,8 +18,9 @@ displayed strictly upper triangular matrix squares to zero.
 `!![a,b;c,-a]` in a three-matrix basis. `trace_matI_R`, `trace_matJ_R`, and
 `trace_matN_R` prove the generators are traceless; `trace_matOne` proves the
 identity matrix has trace `2`; `trace_iwasawa` proves the displayed linear
-combination has trace zero. These do not prove a group-level KAN
-factorization, uniqueness of the decomposition, or any differential-operator
+combination has trace zero. The current owner also proves
+`iwasawa_decomposition_unique` for these explicit coordinates. These results
+do not prove a group-level KAN factorization or any differential-operator
 claim.
 
 ### `Algebra/SplitCayleyDickson.lean`
@@ -75,6 +76,15 @@ these conditional formulas to geometric claims and have been narrowed.
 The affine Klein presentation and the finite matrix reflection are separate
 models here; these files establish no homomorphism connecting them to the
 displayed conditional Peirce algebra.
+
+### `Canonical/KANIwasawaSplitPeirceDiracBridge.lean`
+
+This is the more general finite-matrix owner for the displayed `K`, `A`, and
+`N` coordinates. It proves determinant/trace identities, Peirce identities,
+and the finite Weyl-normalizer action. It does not prove existence or
+uniqueness of a global `KAN` factorization, nor does it define a geometric
+Dirac–Kähler operator. Its theorem `kan_trace_supported_on_a` is scoped to the
+specific matrices shown in the theorem.
 
 ## Verification boundary
 

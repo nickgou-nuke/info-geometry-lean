@@ -6,20 +6,19 @@ import InfoGeometry.Algebra.SplitCayleyDickson
 /-!
 # Iwasawa Cayley Archetype Causal Chain
 
-This file unifies the stream of consciousness linking the `KAN` split
-geometric algebra to the Split Cayley-Dickson rank escalation functor.
+This file unifies the algebraic structures mapping the KAN matrix algebra
+to the Split Cayley-Dickson multiplication rules.
 
 ## The Causal Chain of Archetypes
 1. **The Core Split Algebra:**
-   `CoquaternionicDiracDecomposition` defines the baseline `Cℓ(1,1)` generators (`matI`, `matJ`, `matK`).
-2. **The Parabolic Scale Sector (A) and Parity Twist (M):**
-   `KleinParabolicPeirceTwist` establishes the Peirce projectors (P_+, P_-) as the eigenbasis for the A sector, and proves that the discrete Klein parity inversion (`matK`) acts as an outer automorphism swapping P_+ and P_-.
-3. **The Geometric Dirac Splitting (KAN):**
-   `IwasawaDiracDecomposition` proves that the full Dirac-Kähler matrix D uniquely splits into D_K + D_A + D_N, proving that the nilpotent horocyclic shear D_N is Koszul-nilpotent and bridges the Peirce polarization.
-4. **The Cayley-Dickson Escalation (The Functorial Lift):**
-   `SplitCayleyDickson` abstracts the doubling mechanism into a generic functor, establishing the algebraic engine for rank escalation.
+   `CoquaternionicDiracDecomposition` defines the baseline `Cℓ(1,1)` matrix generators (`matI`, `matJ`, `matK`).
+2. **The Projector Basis:**
+   `KleinParabolicPeirceTwist` establishes the Peirce projectors (P_+, P_-) as the eigenbasis for the J matrix, and proves that `matK` acts as an outer automorphism swapping P_+ and P_-.
+3. **The Matrix Splitting (KAN):**
+   `IwasawaDiracDecomposition` proves that traceless 2x2 real matrices factor uniquely over the K, A, and N matrix generators, and proves the nilpotent shears bridge the Peirce polarization.
+4. **The Split Multiplication Functor:**
+   `SplitCayleyDickson` abstracts the multiplication operator over A × A with γ = +1.
 
-This topological hierarchy is verified kernel-safe with zero vacuity.
 -/
 
 namespace InfoGeometry.GrandUnification.IwasawaCayleyArchetypeDictionary

@@ -9,41 +9,22 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
 
 /-!
-# KAN Iwasawa Decomposition, Split Peirce Projectors, and the Dirac-Kähler Operator
+# Finite `2 × 2` matrix identities related to KAN coordinates
 
-This module formalizes the structural keystone connecting the algebraic archetypes
-(determinant, trace functional, Clifford algebra, Peirce projectors) with the
-differential and topological operators (Dirac-Kähler, Klein bottle holonomy, para-hyperkähler geometry):
+This file proves concrete determinant, trace, projector, and matrix-product
+identities. It does not prove a global Iwasawa factorization, a parabolic
+subgroup theorem, a Klein bottle group action, a bundle holonomy, or a
+Dirac–Kähler differential-operator decomposition.
 
-1. **The Iwasawa $KAN$ Factorization**:
-   - $G = K \cdot A \cdot N$ in $\mathrm{GL}_2(\mathbb{R})$ and $SL_2(\mathbb{R})$.
-   - Compact/unitary core $K$: preserves volume and spin phase ($\det(K) = \pm 1$).
-   - Abelian split torus $A$: governs pure Weyl scale / dilatations ($\det(A) = a_1 a_2 > 0$).
-   - Nilpotent horocycle $N$: strictly unimodular lightcone shears ($\det(N) = 1$).
-   - Multiplicative determinant factorization: $\det(k a n) = \det(k) \det(a) \det(n) = \det(k)\det(a)$.
+The matrix `matR = [[0,1],[1,0]]` is an element of `O(2)` and normalizes the
+positive diagonal torus by swapping its diagonal entries. It is not in
+`SO(2)` and does not centralize a nontrivial diagonal boost. Thus it represents
+a Weyl-normalizer action in this matrix model, not an element of
+`M = Z_K(A)` for the usual `SL(2,ℝ)` KAN decomposition.
 
-2. **Trace Functional and Log-Generator Support on $\mathfrak{a}$**:
-   - For Lie algebra generators $X = X_\mathfrak{k} + X_\mathfrak{a} + X_\mathfrak{n} \in \mathfrak{gl}_2(\mathbb{R})$:
-     $\operatorname{tr}(X_\mathfrak{k}) = 0$ (skew-symmetric core),
-     $\operatorname{tr}(X_\mathfrak{n}) = 0$ (strictly triangular nilpotent with $X_\mathfrak{n}^2 = 0$).
-   - Consequently, the linear trace functional (log-determinant) is supported *exclusively* on $\mathfrak{a}$:
-     $$\operatorname{tr}(X) = \operatorname{tr}(X_\mathfrak{a})$$
-
-3. **$C\ell(1, 1)$, Split Peirce Projectors, and $N$-Step Transitions**:
-   - The split Peirce projectors $P_+ = !![1, 0; 0, 0]$ and $P_- = !![0, 0; 0, 1]$
-     are the spectral eigenprojectors of the $A$-action: $a \cdot P_+ = a_1 P_+$.
-   - The nilpotent generator $e_+ = !![0, 1; 0, 0]$ satisfies $e_+^2 = 0$.
-   - The horocycle group $N(x) = \mathbf{1} + x e_+$ mediates transitions across the Peirce polarization:
-     $P_+ N(x) P_- = x e_+$, while leaving $P_+$ fixed ($P_+ N(x) P_+ = P_+$).
-
-4. **The Parabolic Subgroup $P = M A N$ and Klein Bottle Crystallography**:
-   - The discrete reflection generator $R = !![0, 1; 1, 0]$ satisfies $\det(R) = -1$ and $R^2 = \mathbf{1}$.
-   - $R$ inverts the split torus: $R \cdot A(t) \cdot R = A(-t) = (A(t))^{-1}$, realizing the
-     defining Klein bottle semidirect relation $a b a^{-1} = b^{-1}$.
-   - $R$ dynamically swaps the split Peirce projectors: $R P_\pm R = P_\mp$,
-     and double traversal restores them: $R^2 P_\pm R^2 = P_\pm$.
-
-All theorems are proved constructively in native Lean 4 / Mathlib with zero gaps.
+The trace and determinant lemmas below concern the displayed matrices only;
+they do not identify every trace contribution in a general Lie algebra or
+geometric Dirac operator.
 -/
 
 noncomputable section
@@ -60,7 +41,9 @@ set_option linter.unusedVariables false
 def matK_rot (θ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   !![Real.cos θ, -Real.sin θ; Real.sin θ, Real.cos θ]
 
-/-- Discrete orientation-reversing reflection in $\mathrm{O}(2)$ / $M = Z_K(A)$. -/
+/-- The coordinate-swap reflection in `O(2)`, a Weyl-normalizer matrix for the
+positive diagonal subgroup. It is not in `SO(2)` and is not in the centralizer
+`Z_K(A)` for the usual `SL(2,ℝ)` KAN decomposition. -/
 def matR : Matrix (Fin 2) (Fin 2) ℝ :=
   !![0, 1; 1, 0]
 
@@ -264,12 +247,10 @@ theorem P_plus_matN_P_minus (x : ℝ) :
   ext i j
   fin_cases i <;> fin_cases j <;> simp [P_plus, matN, P_minus, e_plus]
 
-/-! ### Stratum 4: Parabolic Subgroup $P = M A N$ and Klein Bottle Crystallography -/
+/-! ### Weyl-normalizer action on the boost and projectors -/
 
 /--
-Klein Bottle Semidirect Inversion of $A$:
-Conjugation by the orientation-reversing reflection $R \in M = Z_K(A)$ inverts the
-hyperbolic boost:
+The coordinate-swap matrix conjugates the displayed boost to its inverse:
 $R \cdot A(t) \cdot R = A(-t)$.
 -/
 theorem matR_conjugates_boost (t : ℝ) :
@@ -278,9 +259,8 @@ theorem matR_conjugates_boost (t : ℝ) :
   fin_cases i <;> fin_cases j <;> simp [matR, matA_boost, matA]
 
 /--
-Projector Transposition Theorem:
-Conjugation by the orientation-reversing reflection $R$ dynamically swaps the positive
-and negative split Peirce projectors:
+Conjugation by the coordinate-swap matrix exchanges the two diagonal
+projectors:
 $R \cdot P_+ \cdot R = P_-$.
 -/
 theorem matR_swaps_peirce_plus :
@@ -304,11 +284,11 @@ theorem matR_restores_peirce_minus :
     matR * (matR * P_minus * matR) * matR = P_minus := by
   rw [matR_swaps_peirce_minus, matR_swaps_peirce_plus]
 
-/-! ### Stratum 5: The Dirac-Kähler Operator Iwasawa Triad -/
+/-! ### Off-diagonal decomposition for an explicit matrix -/
 
 /--
-An off-diagonal Dirac-Kähler operator $D = !![0, d_1; d_2, 0]$
-satisfies $P_\pm D P_\pm = 0$.
+An off-diagonal `2 × 2` matrix satisfies `P_± D P_± = 0` for the displayed
+coordinate projectors. No differential operator is defined here.
 -/
 def matDirac (d₁ d₂ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   !![0, d₁; d₂, 0]
@@ -328,11 +308,12 @@ theorem matDirac_off_diagonal (d₁ d₂ : ℝ) :
   ext i j
   fin_cases i <;> fin_cases j <;> simp [P_plus, P_minus, matDirac]
 
-/-! ### Master Synthesis Packet -/
+/-! ### Finite matrix identity bundle -/
 
 /--
-Master packet unifying the $KAN$ Iwasawa decomposition, trace localization,
-split Peirce projectors, $N$-mediated transitions, and Klein bottle holonomy.
+Bundle of the finite matrix identities proved above. This structure is a
+collection of propositions; it is not a KAN factorization or a Klein bottle
+holonomy model.
 -/
 structure KANIwasawaSplitPeirceDiracPacket where
   -- Stratum 1: KAN Factorization & Determinants
@@ -359,13 +340,13 @@ structure KANIwasawaSplitPeirceDiracPacket where
   n_peirce_transition : ∀ x : ℝ, P_plus * matN x * P_minus = x • e_plus
   n_peirce_no_backwards : ∀ x : ℝ, P_minus * matN x * P_plus = 0
 
-  -- Stratum 4: Klein Bottle Semidirect Inversion & Projector Swapping
+  -- Finite Weyl-normalizer inversion and projector swapping identities
   r_inverts_boost : ∀ t : ℝ, matR * matA_boost t * matR = matA_boost (-t)
   r_swaps_plus : matR * P_plus * matR = P_minus
   r_swaps_minus : matR * P_minus * matR = P_plus
   r_restores_plus : matR * (matR * P_plus * matR) * matR = P_plus
 
-  -- Stratum 5: Dirac-Kähler Off-Diagonal Decoupling
+  -- Finite off-diagonal matrix identities
   dirac_plus_zero : ∀ d₁ d₂ : ℝ, P_plus * matDirac d₁ d₂ * P_plus = 0
   dirac_minus_zero : ∀ d₁ d₂ : ℝ, P_minus * matDirac d₁ d₂ * P_minus = 0
   dirac_off_diag : ∀ d₁ d₂ : ℝ,

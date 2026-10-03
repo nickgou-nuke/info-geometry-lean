@@ -11,4 +11,3 @@ open InfoGeometry.Probability.GlauberTensorCopula
 #print axioms QuantumGlauberSystem.recovered_activity_exact
 #print axioms QuantumGlauberSystem.cross_ratio_scale_invariance
 #print axioms QuantumGlauberSystem.asymmetric_scale_invariance
-#print axioms QuantumGlauberSystem.certified_glauber_tensor_copula_synthesis

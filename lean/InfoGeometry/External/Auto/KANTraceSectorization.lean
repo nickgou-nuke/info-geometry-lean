@@ -65,7 +65,7 @@ lemma normalizeScale_det (g : M2C) (hg : g.det ≠ 0) :
 -- Existing K/A/N blocks from `KanCayley`.
 def compactBlock (θ : ℝ) : M2C := KPart θ
 
-def dilationBlock (β : ℝ) : M2C := APart β
+def splitTorusBlock (β : ℝ) : M2C := APart β
 
 def nilpotentBlock (z : ℂ) : M2C := NPart z
 
@@ -73,7 +73,8 @@ def nilpotentShearBlock (z : ℂ) : M2C := nilpotentShear z
 
 -- KAN block determinant/trace identities.
 theorem kanBlock_dets (θ : ℝ) (β : ℝ) (z : ℂ) :
-    (compactBlock θ).det = 1 ∧ (dilationBlock β).det = 1 ∧ (nilpotentBlock z).det = 1 := by
+    (compactBlock θ).det = 1 ∧ (splitTorusBlock β).det = 1 ∧
+      (nilpotentBlock z).det = 1 := by
   exact ⟨det_KPart θ, det_APart β, det_NPart z⟩
 
 /-- Pauli generators over `ℂ`. -/

@@ -15,13 +15,15 @@ namespace InfoGeometry.Canonical.KANLogDetUnification
 The concrete K/A/N dictionary in `M₂(ℂ)`:
 
 * `KPart θ` is the compact phase block.
-* `APart β` is the logarithmic scale block.
+* `APart β` is the split-Cartan boost block, with determinant one; it changes
+  the two coordinate directions by reciprocal factors and does not change
+  volume.
 * `NPart z` is the unipotent boundary block.
 * `NPart z - I` is nilpotent and has zero determinant.
 * The whole KAN product has determinant one, hence is an algebraic analytic
   flow in the determinant sense.
 -/
-theorem complex_scale_boundary_unification (θ β : ℝ) (z : ℂ) :
+theorem complex_split_torus_boundary_determinants (θ β : ℝ) (z : ℂ) :
     (KPart θ).det = 1 ∧
       (APart β).det = 1 ∧
       (NPart z).det = 1 ∧
@@ -63,9 +65,9 @@ theorem trace_zero_scale_has_zero_log_volume (θ : ℝ) :
 /--
 Combined local synthesis:
 
-complex/hypercomplex phase, logarithmic scale, and projective nilpotent
-boundary are represented here by concrete operator blocks rather than by
-separate scalar number systems.
+complex/hypercomplex phase, split-Cartan boost, and projective nilpotent
+boundary are represented here by concrete operator blocks. The boost is
+volume-preserving, as witnessed by its determinant-one identity.
 -/
 theorem kan_logdet_unification_synthesis :
     (∀ θ β : ℝ, ∀ z : ℂ,

@@ -9,7 +9,9 @@ open Matrix
 
 /--
 Coordinates for the real `SL(2,ℝ)` K/A/N decomposition vocabulary:
-compact phase `theta`, logarithmic Cartan scale `r`, and nilpotent shear `x`.
+compact angle `theta`, split-Cartan parameter `r`, and nilpotent shear `x`.
+The split-Cartan factor is a determinant-one boost, not an overall volume
+dilation.
 -/
 structure KANComponents where
   theta : ℝ
@@ -23,7 +25,7 @@ abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
 def generatorK (θ : ℝ) : M2R :=
   !![0, θ; -θ, 0]
 
-/-- Cartan/logarithmic scale generator in `sl(2,ℝ)`. -/
+/-- Split-Cartan generator in `sl(2,ℝ)` (a trace-zero boost generator). -/
 def generatorA (r : ℝ) : M2R :=
   !![r / 2, 0; 0, -r / 2]
 
@@ -39,7 +41,7 @@ def generatorH (c : KANComponents) : M2R :=
 def kPart (θ : ℝ) : M2R :=
   !![Real.cos θ, Real.sin θ; -Real.sin θ, Real.cos θ]
 
-/-- Abelian logarithmic scale block. -/
+/-- Abelian split-Cartan boost block; its determinant is one. -/
 def aPart (r : ℝ) : M2R :=
   !![Real.exp (r / 2), 0; 0, Real.exp (-(r / 2))]
 
@@ -83,7 +85,7 @@ theorem det_kPart (θ : ℝ) : (kPart θ).det = 1 := by
     simpa [sq, add_comm] using Real.sin_sq_add_cos_sq θ
   simp [kPart, htrig]
 
-/-- The Cartan scale block has determinant one. -/
+/-- The split-Cartan boost block has determinant one. -/
 theorem det_aPart (r : ℝ) : (aPart r).det = 1 := by
   rw [Matrix.det_fin_two]
   have hmul : Real.exp (r / 2) * Real.exp (-(r / 2)) = 1 := by

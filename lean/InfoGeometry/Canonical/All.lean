@@ -2307,3 +2307,5 @@ import InfoGeometry.Canonical.CantorCuntzFractalBridge
 import InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge
 import InfoGeometry.Canonical.G2BlockCirculantZornBridge
 import InfoGeometry.Canonical.CyclicChernProjectionBridge
+import InfoGeometry.Canonical.BipartiteKreinTraceBridge
+import InfoGeometry.Canonical.AttentionGlauberCopulaBridge

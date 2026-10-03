@@ -1,6 +1,5 @@
-import InfoGeometry.Canonical.AttentionEntropyDecomposition
+import InfoGeometry.Canonical.DoubledDiracKreinBipartite
 import InfoGeometry.Canonical.ClusterMutationIndexBridge
-import InfoGeometry.Canonical.AttentionGlauberMutualInformation
 import InfoGeometry.Canonical.ZornNavierStokesHydrodynamicBridge
 import InfoGeometry.Canonical.Archetypes.FiniteMaximum
 import InfoGeometry.Canonical.Archetypes.ConvexBound

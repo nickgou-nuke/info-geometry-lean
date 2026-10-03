@@ -131,13 +131,26 @@ noncomputable def affineFiniteModeColimitEquiv :
 instance : LieRing (affineFiniteModeColimit Φ hΦ hΦs) where
   bracket x y := (affineFiniteModeColimitEquiv Φ hΦ hΦs).symm 
     ⁅(affineFiniteModeColimitEquiv Φ hΦ hΦs) x, (affineFiniteModeColimitEquiv Φ hΦ hΦs) y⁆
-  add_lie := by sorry
-  lie_add := by sorry
-  lie_self := by sorry
-  leibniz_lie := by sorry
+  add_lie x y z := by
+    dsimp
+    rw [map_add, add_lie, map_add]
+  lie_add x y z := by
+    dsimp
+    rw [map_add, lie_add, map_add]
+  lie_self x := by
+    dsimp
+    rw [lie_self, map_zero]
+  leibniz_lie x y z := by
+    dsimp
+    rw [leibniz_lie, map_add]
+    congr 2
+    · rw [LinearEquiv.apply_symm_apply]
+    · rw [LinearEquiv.apply_symm_apply]
 
 instance : LieAlgebra 𝕜 (affineFiniteModeColimit Φ hΦ hΦs) where
-  lie_smul := by sorry
+  lie_smul c x y := by
+    dsimp
+    rw [map_smul, lie_smul, map_smul]
 
 /-- Canonical colimit representative of the affine current `J_n(x)`. -/
 noncomputable def affineCurrentColimitMode (n : ℤ) (x : 𝓰) :

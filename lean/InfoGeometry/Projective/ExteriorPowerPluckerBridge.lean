@@ -296,8 +296,29 @@ theorem exteriorKleinForm_eq_zero_iff_decomposable
   · rintro ⟨u, v, rfl⟩
     exact exteriorKleinForm_ιMulti u v
 
-/-- Compatibility alias for the affine exterior-power decomposability
-characterization. -/
+/-- An explicit degree-two exterior element with two independent coordinate
+    area components.  Its nonzero Klein form makes it nondecomposable. -/
+def nonDecomposableExteriorTwoVector : ⋀[ℝ]^2 Vec4 :=
+  exteriorBivectorLinearEquiv.symm ⟨1, 0, 0, 0, 0, 1⟩
+
+/-- The entire exterior square is larger than the decomposable Grassmannian
+    locus: this explicit degree-two element is not a simple wedge. -/
+theorem nonDecomposableExteriorTwoVector_not_decomposable :
+    ¬ ∃ u v : Vec4,
+      nonDecomposableExteriorTwoVector = exteriorPower.ιMulti ℝ 2 ![u, v] := by
+  rintro ⟨u, v, h⟩
+  have hzero := exteriorKleinForm_ιMulti u v
+  rw [← h] at hzero
+  have hvalue : exteriorKleinForm nonDecomposableExteriorTwoVector = 1 := by
+    simp [nonDecomposableExteriorTwoVector, exteriorKleinForm, kleinForm]
+  rw [hvalue] at hzero
+  norm_num at hzero
+
+/-- Compatibility interface for clients that name the decomposable locus by
+    its explicit `ιMulti` representatives.  The proof and canonical
+    characterization are owned by `exteriorKleinForm_eq_zero_iff_decomposable`.
+    This declaration is retained because `SplitOctonionAxialKleinBridge`
+    depends on the established name. -/
 theorem exteriorKleinForm_zero_iff_exists_ιMulti
     (X : ⋀[ℝ]^2 Vec4) :
     exteriorKleinForm X = 0 ↔

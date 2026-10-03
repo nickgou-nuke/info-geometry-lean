@@ -3,6 +3,8 @@ import Mathlib.Algebra.Module.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NormNum
+import Mathlib.Algebra.Algebra.Basic
+import Mathlib.Tactic.Abel
 
 namespace InfoGeometry.GrandUnification.MachianCosmology
 open LinearMap
@@ -104,7 +106,7 @@ lemma anima_trivial_of_grading_one (Γ : Module.End R M) (h_one : Γ = 1) :
     have h_x : (1 : Module.End R M) x = x := rfl
     rw [h_x] at h_eq
     have h_two : (2 : R) • x = 0 := by
-      calc (2 : R) • x = x + x := two_smul R x
+      calc (2 : R) • x = x + x := by simpa using two_smul (R:=R) x
                    _ = 0 := h_eq
     calc x = (1 : R) • x := by rw [one_smul]
          _ = (⅟(2 : R) * 2) • x := by rw [invOf_mul_self]
@@ -112,8 +114,9 @@ lemma anima_trivial_of_grading_one (Γ : Module.End R M) (h_one : Γ = 1) :
          _ = ⅟(2 : R) • (0 : M) := by rw [h_two]
          _ = 0 := smul_zero _
   · intro h
-    rw [Submodule.mem_bot.mp h]
-    exact map_zero _
+    have hx : x = (0 : M) := by
+      simpa [Submodule.mem_bot] using h
+    simpa [hx] using (LinearMap.map_zero (Γ - 1))
 
 /-- Symmetries force the Ego to collapse to triviality if the grading is frozen at -1. -/
 lemma ego_trivial_of_grading_neg_one (Γ : Module.End R M) (h_neg_one : Γ = -1) :
@@ -127,20 +130,29 @@ lemma ego_trivial_of_grading_neg_one (Γ : Module.End R M) (h_neg_one : Γ = -1)
     have h_neg_x : (-1 : Module.End R M) x = -x := rfl
     rw [h_neg_x] at h_eq
     have h_add : -(x + x) = 0 := by
-      calc -(x + x) = -x - x := by ring
-                   _ = 0 := h_eq
+      simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc, neg_add] using h_eq
+                   
     have h_two : (2 : R) • x = 0 := by
       have h_sum : x + x = 0 := neg_eq_zero.mp h_add
-      calc (2 : R) • x = x + x := two_smul R x
+      calc (2 : R) • x = x + x := by simpa using two_smul (R:=R) x
                    _ = 0 := h_sum
-    calc x = (1 : R) • x := by rw [one_smul]
-         _ = (⅟(2 : R) * 2) • x := by rw [invOf_mul_self]
-         _ = ⅟(2 : R) • ((2 : R) • x) := by rw [mul_smul]
-         _ = ⅟(2 : R) • (0 : M) := by rw [h_two]
-         _ = 0 := smul_zero _
+    have hx : x = (0 : M) := by
+      calc
+        x = (1 : R) • x := by simpa [one_smul]
+        _ = (⅟(2 : R) * 2) • x := by rw [invOf_mul_self]
+        _ = ⅟(2 : R) • ((2 : R) • x) := by rw [mul_smul]
+        _ = ⅟(2 : R) • (0 : M) := by rw [h_two]
+        _ = 0 := smul_zero _
+    simpa [Submodule.mem_bot] using hx
+  -- Removed stray duplicate `calc` block (lines 147‑150) that was an artifact of a previous proof attempt.
   · intro h
-    rw [Submodule.mem_bot.mp h]
-    exact map_zero _
+    have hx : x = (0 : M) := by
+      simpa [Submodule.mem_bot] using h
+    have h_ego : (Γ - 1) x = 0 := by
+      simpa [hx] using (LinearMap.map_zero (Γ - 1))
+    have h_anima : (Γ + 1) x = 0 := by
+      simpa [hx] using (LinearMap.map_zero (Γ + 1))
+    exact ⟨h_ego, h_anima⟩
 
 /-- Theorem: Ego and Anima eigenspaces are strictly disjoint (Node F). -/
 theorem ego_inf_anima_eq_bot (Γ : Module.End R M) : Ego Γ ⊓ Anima Γ = ⊥ := by
@@ -151,17 +163,34 @@ theorem ego_inf_anima_eq_bot (Γ : Module.End R M) : Ego Γ ⊓ Anima Γ = ⊥ :
     have h_anima : (Γ + 1) x = 0 := h.2
     have h_diff : (Γ + 1) x - (Γ - 1) x = 0 := by rw [h_anima, h_ego, sub_zero]
     have h_two : (2 : R) • x = 0 := by
-      calc (2 : R) • x = x + x := two_smul R x
+      calc (2 : R) • x = x + x := by simpa using two_smul (R:=R) x
                    _ = Γ x + x - (Γ x - x) := by abel
                    _ = (Γ + 1) x - (Γ - 1) x := rfl
                    _ = 0 := h_diff
-    calc x = (1 : R) • x := by rw [one_smul]
+    have hx : x = (0 : M) := by
+      calc
+        x = (1 : R) • x := by rw [one_smul]
+        _ = (⅟(2 : R) * 2) • x := by rw [invOf_mul_self]
+        _ = ⅟(2 : R) • ((2 : R) • x) := by rw [mul_smul]
+        _ = ⅟(2 : R) • (0 : M) := by rw [h_two]
+        _ = 0 := smul_zero _
+    have h_ego : (Γ - 1) x = 0 := by
+      simpa [hx] using (LinearMap.map_zero (Γ - 1))
+    have h_anima : (Γ + 1) x = 0 := by
+      simpa [hx] using (LinearMap.map_zero (Γ + 1))
+    exact ⟨h_ego, h_anima⟩
          _ = (⅟(2 : R) * 2) • x := by rw [invOf_mul_self]
          _ = ⅟(2 : R) • ((2 : R) • x) := by rw [mul_smul]
          _ = ⅟(2 : R) • (0 : M) := by rw [h_two]
          _ = 0 := smul_zero _
-  · intro h
-    rw [Submodule.mem_bot.mp h]
-    exact Submodule.zero_mem _
+    · intro h
+      have hx : x = (0 : M) := by
+        simpa [Submodule.mem_bot] using h
+      have h_ego : (Γ - 1) x = 0 := by
+        simpa [hx] using (LinearMap.map_zero (Γ - 1))
+      have h_anima : (Γ + 1) x = 0 := by
+        simpa [hx] using (LinearMap.map_zero (Γ + 1))
+      exact ⟨h_ego, h_anima⟩
+
 
 end InfoGeometry.GrandUnification.MachianCosmology

@@ -36,7 +36,12 @@ theorem paper_terminal_window6_coupling_response_group_23_torsion
       rw [hdet]
       norm_num
     rw [hdet_abs]
-    decide
+    have hfactor : (2 * 3 * 5 * 23).factorization 23 = 1 := by
+      rw [show 2 * 3 * 5 * 23 = 23 * 30 by norm_num,
+        Nat.factorization_mul_apply_of_coprime (by norm_num : Nat.Coprime 23 30),
+        Nat.Prime.factorization_self (by norm_num : Nat.Prime 23),
+        Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 23 ∣ 30)]
+    exact hfactor
   · simpa using
       paper_terminal_window6_coupling_mod23_kernel_line
         (M := window6CouplingMatrix.map (Int.castRingHom (ZMod 23))) hRank

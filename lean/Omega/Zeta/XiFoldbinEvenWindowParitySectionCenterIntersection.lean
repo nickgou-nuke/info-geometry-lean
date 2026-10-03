@@ -20,6 +20,30 @@ def xi_foldbin_even_window_parity_section_center_intersection_B (m : ℕ) : ℕ 
   (Finset.univ.filter fun w : Fin (Nat.fib (m + 2)) =>
     xi_foldbin_even_window_parity_section_center_intersection_multiplicity m w = 2).card
 
+/-- The initial segment of `Fin n` cut off at `k` has exactly `k` elements. -/
+private theorem card_fin_filter_val_lt (k n : ℕ) (hk : k < n) :
+    (Finset.univ.filter fun w : Fin n => w.val < k).card = k := by
+  simpa [Nat.min_eq_right (Nat.le_of_lt hk)] using
+    (Fin.card_filter_val_lt (n := n) (m := k))
+
+/-- If the smaller of the two model multiplicities is at least two, every fiber contributes
+to the parity abelianization count. -/
+private theorem card_filter_multiplicity_ge_two (m : ℕ)
+    (hbase : 2 ≤ auditedEvenFirstKink m) :
+    (Finset.univ.filter fun w : Fin (Nat.fib (m + 2)) =>
+      2 ≤ xi_foldbin_even_window_parity_section_center_intersection_multiplicity m w).card =
+      Nat.fib (m + 2) := by
+  have hfilter :
+      (Finset.univ.filter fun w : Fin (Nat.fib (m + 2)) =>
+        2 ≤ xi_foldbin_even_window_parity_section_center_intersection_multiplicity m w) =
+        Finset.univ := by
+    apply Finset.filter_true_of_mem
+    intro w _
+    simp only [xi_foldbin_even_window_parity_section_center_intersection_multiplicity]
+    split_ifs <;> omega
+  rw [hfilter]
+  simp
+
 /-- Paper label: `thm:xi-foldbin-even-window-parity-section-center-intersection`.
 In the audited even-window model, every fiber contributes one `C₂` to the abelianized parity
 section, while the intersection with the center comes only from the multiplicity-`2` sector.
@@ -60,34 +84,62 @@ theorem paper_xi_foldbin_even_window_parity_section_center_intersection :
       (Finset.univ.filter fun w : Fin (Nat.fib 8) =>
         2 ≤ xi_foldbin_even_window_parity_section_center_intersection_multiplicity 6 w).card =
         Nat.fib 8 := by
-    decide
+    simpa [Nat.fib] using
+      (card_filter_multiplicity_ge_two 6 (by norm_num [auditedEvenFirstKink, Nat.fib]))
   have h8_ge2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 10) =>
         2 ≤ xi_foldbin_even_window_parity_section_center_intersection_multiplicity 8 w).card =
         Nat.fib 10 := by
-    decide
+    simpa [Nat.fib] using
+      (card_filter_multiplicity_ge_two 8 (by norm_num [auditedEvenFirstKink, Nat.fib]))
   have h10_ge2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 12) =>
         2 ≤ xi_foldbin_even_window_parity_section_center_intersection_multiplicity 10 w).card =
         Nat.fib 12 := by
-    decide
+    simpa [Nat.fib] using
+      (card_filter_multiplicity_ge_two 10 (by norm_num [auditedEvenFirstKink, Nat.fib]))
   have h12_ge2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 14) =>
         2 ≤ xi_foldbin_even_window_parity_section_center_intersection_multiplicity 12 w).card =
         Nat.fib 14 := by
-    decide
+    simpa [Nat.fib] using
+      (card_filter_multiplicity_ge_two 12 (by norm_num [auditedEvenFirstKink, Nat.fib]))
   have hB6 :
       xi_foldbin_even_window_parity_section_center_intersection_B 6 = 8 := by
-    decide
+    simpa [xi_foldbin_even_window_parity_section_center_intersection_B,
+      xi_foldbin_even_window_parity_section_center_intersection_multiplicity,
+      auditedEvenFirstKink, Nat.fib] using
+      (card_fin_filter_val_lt 8 21 (by norm_num))
   have hB8 :
       xi_foldbin_even_window_parity_section_center_intersection_B 8 = 0 := by
-    decide
+    apply Finset.card_eq_zero.mpr
+    rw [Finset.filter_eq_empty_iff]
+    intro w _
+    by_cases h : w.val < 21
+    · simp [h, xi_foldbin_even_window_parity_section_center_intersection_multiplicity,
+        auditedEvenFirstKink, Nat.fib]
+    · simp [h, xi_foldbin_even_window_parity_section_center_intersection_multiplicity,
+        auditedEvenFirstKink, Nat.fib]
   have hB10 :
       xi_foldbin_even_window_parity_section_center_intersection_B 10 = 0 := by
-    decide
+    apply Finset.card_eq_zero.mpr
+    rw [Finset.filter_eq_empty_iff]
+    intro w _
+    by_cases h : w.val < 55
+    · simp [h, xi_foldbin_even_window_parity_section_center_intersection_multiplicity,
+        auditedEvenFirstKink, Nat.fib]
+    · simp [h, xi_foldbin_even_window_parity_section_center_intersection_multiplicity,
+        auditedEvenFirstKink, Nat.fib]
   have hB12 :
       xi_foldbin_even_window_parity_section_center_intersection_B 12 = 0 := by
-    decide
+    apply Finset.card_eq_zero.mpr
+    rw [Finset.filter_eq_empty_iff]
+    intro w _
+    by_cases h : w.val < 144
+    · simp [h, xi_foldbin_even_window_parity_section_center_intersection_multiplicity,
+        auditedEvenFirstKink, Nat.fib]
+    · simp [h, xi_foldbin_even_window_parity_section_center_intersection_multiplicity,
+        auditedEvenFirstKink, Nat.fib]
   refine ⟨?_, ?_, hB6, ?_, ?_, hB8, ?_, ?_, hB10, ?_, ?_, hB12⟩
   · simpa [h6_ge2] using h6.2
   · simpa [xi_foldbin_even_window_parity_section_center_intersection_B, hB6] using h6.1

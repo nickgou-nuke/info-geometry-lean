@@ -4,27 +4,18 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
+import InfoGeometry.Canonical.KleinPresentedGroup
 
 /-!
-# Master Split Cayley-Dickson, Klein Bottle Holonomy, & Dirac-Kähler Bridge
+# Finite split algebra and Klein-relation calculations
 
-This module formalizes the unified mathematical architecture connecting:
-1. **The Global/Topological Gauge Bridge**: The crystallographic semidirect product
-   $\pi_1(K) \cong \mathbb{Z} \rtimes_\sigma \mathbb{Z} = \langle a, b \mid a b a^{-1} = b^{-1} \rangle$,
-   its concrete affine realization on $\mathbb{R}^2$, the orientation-reversal
-   character $\det(T_a) = -1$, and the four inequivalent $\mathrm{Pin}^\pm$ structures.
-2. **The Internal/Algebraic Hierarchy**: The split Cayley-Dickson doubling process ($\gamma = +1$)
-   generating the sequence $\mathbb{R} \to \mathbb{D} \to \mathbb{H}'$, with the hyperbolic
-   generator $\tau^2 = 1$, zero divisors on the null cone, and the coquaternionic
-   algebra $\mathbb{H}' \cong \mathrm{Mat}_2(\mathbb{R})$.
-3. **The Dirac-Kähler Operator on Para-Hyperkähler Manifolds**: Inhomogeneous differential
-   forms $\Omega^\bullet(M)$ polarized by split Peirce projectors $P_\pm = \frac{1 \pm J}{2}$,
-   yielding an off-diagonal hyperbolic Dirac system $P_\pm D P_\pm = 0$.
-4. **The Intertwining Master Loop**: Traversing the non-orientable cycle of the Klein bottle
-   reverses the paracomplex structure ($J \mapsto -J$) and dynamically swaps the lightcone
-   polarizations: $T_a^*(P_\pm) = P_\mp$.
-
-All theorems are proved constructively in native Lean 4 / Mathlib with zero gaps.
+This file contains explicit split-complex coordinate operations, split-quaternion
+matrix identities, a generic Peirce off-diagonal lemma, and affine maps satisfying
+the Klein-bottle group relator. Its sign representations are algebraic homomorphisms
+from the presented Klein group to `Units ℤ`, not Pin structures. The matrix results
+do not define a differential operator or a manifold. In particular, the affine
+glide's determinant alone does not imply that it swaps an independently chosen
+para-complex involution.
 -/
 
 noncomputable section
@@ -371,7 +362,7 @@ theorem dirac_off_diagonal_split {A : Type*} [Ring A] [Algebra ℝ A]
     _ = peircePlus J * D * peirceMinus J + peirceMinus J * D * peircePlus J := by
       simp only [zero_add, add_zero]
 
-/-! ### Stratum 4: Global Klein Bottle Topology & Four $\mathrm{Pin}^\pm$ Structures -/
+/-! ### Affine Klein maps and their determinant sign -/
 
 /-- Affine glide reflection on $\mathbb{R}^2$: $T_a(x, y) = (x + 1, -y)$. -/
 def affineTa : (ℝ × ℝ) ≃ (ℝ × ℝ) where
@@ -403,36 +394,126 @@ def linearTa : Matrix (Fin 2) (Fin 2) ℝ :=
 theorem linearTa_det : linearTa.det = -1 := by
   simp [linearTa, Matrix.det_fin_two]
 
-/-- A Pin character on the Klein bottle group: a homomorphism $\pi_1(K) \to \{\pm 1\}$. -/
-def isKleinCharacter (signA signB : Units ℤ) : Prop :=
+/-- The affine Klein glide's linear part is the diagonal involution `matJ`. -/
+theorem linearTa_eq_matJ : linearTa = matJ (R := ℝ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> norm_num [linearTa, matJ]
+
+/-- Although its determinant is negative, the Klein glide's linear part fixes
+the chosen involution `matJ` under conjugation. -/
+theorem linearTa_conjugates_matJ :
+    linearTa * matJ (R := ℝ) * linearTa = matJ (R := ℝ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [linearTa, matJ, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- The off-diagonal reflection also has determinant `-1`. -/
+theorem matK_det : (matK (R := ℝ)).det = -1 := by
+  simp [matK, Matrix.det_fin_two]
+
+/-- This different determinant-negative matrix conjugates `matJ` to `-matJ`. -/
+theorem matK_conjugates_matJ :
+    matK (R := ℝ) * matJ (R := ℝ) * matK (R := ℝ) = -matJ (R := ℝ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [matK, matJ, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem peircePlus_matJ_eq :
+    peircePlus (matJ (R := ℝ)) = matPeircePlusJ (R := ℝ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [peircePlus, matJ, matPeircePlusJ]
+
+theorem peirceMinus_matJ_eq :
+    peirceMinus (matJ (R := ℝ)) = matPeirceMinusJ (R := ℝ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [peirceMinus, matJ, matPeirceMinusJ]
+
+/-- Conjugation by the affine glide's linear part preserves the positive
+Peirce projector for `matJ`. -/
+theorem linearTa_preserves_matJ_peircePlus :
+    linearTa * peircePlus (matJ (R := ℝ)) * linearTa =
+      peircePlus (matJ (R := ℝ)) := by
+  rw [peircePlus_matJ_eq]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [linearTa, matJ, matPeircePlusJ, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Conjugation by the other determinant-negative reflection swaps the
+positive and negative `matJ` Peirce projectors. -/
+theorem matK_swaps_matJ_peircePlus :
+    matK (R := ℝ) * peircePlus (matJ (R := ℝ)) * matK (R := ℝ) =
+      peirceMinus (matJ (R := ℝ)) := by
+  rw [peircePlus_matJ_eq, peirceMinus_matJ_eq]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [matK, matJ, matPeircePlusJ, matPeirceMinusJ,
+      Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- The sign values satisfy the Klein relator in `Units ℤ`. -/
+def kleinSignRelatorCondition (signA signB : Units ℤ) : Prop :=
   signA * signB * signA⁻¹ * signB = 1
 
-/--
-Every assignment of signs $(\epsilon_a, \epsilon_b) \in \{\pm 1\}^2$ defines a genuine
-character on the Klein bottle fundamental group, establishing the four $\mathrm{Pin}$ structures.
--/
-theorem klein_character_all (signA signB : Units ℤ) : isKleinCharacter signA signB := by
-  dsimp [isKleinCharacter]
+/- Every sign assignment satisfies the algebraic group relator. This does not
+classify geometric Pin structures. -/
+theorem klein_sign_relator_all (signA signB : Units ℤ) :
+    kleinSignRelatorCondition signA signB := by
+  dsimp [kleinSignRelatorCondition]
   rcases Int.units_eq_one_or signA with ha | ha <;>
   rcases Int.units_eq_one_or signB with hb | hb <;>
   rw [ha, hb] <;> decide
 
-/-- The four distinct $\mathrm{Pin}$ structures on the Klein bottle: -/
-def pinStructurePeriodicPeriodic : isKleinCharacter 1 1 := klein_character_all 1 1
-def pinStructurePeriodicAntiperiodic : isKleinCharacter 1 (-1) := klein_character_all 1 (-1)
-def pinStructureAntiperiodicPeriodic : isKleinCharacter (-1) 1 := klein_character_all (-1) 1
-def pinStructureAntiperiodicAntiperiodic : isKleinCharacter (-1) (-1) := klein_character_all (-1) (-1)
+/-- A sign assignment induces a genuine homomorphism from the presented Klein
+group to `Units ℤ`. This is an algebraic representation, not a geometric Pin
+lift or a classification of Pin structures. -/
+def kleinSignRepresentation (signA signB : Units ℤ) :
+    _root_.InfoGeometry.Canonical.KleinPresentedGroup.KleinGroup →* Units ℤ :=
+  _root_.InfoGeometry.Canonical.KleinPresentedGroup.kleinRep signA signB (by
+    have h := klein_sign_relator_all signA signB
+    change signA * signB * signA⁻¹ * signB = 1 at h
+    calc
+      signA * signB * signA⁻¹ =
+          (signA * signB * signA⁻¹) * (signB * signB⁻¹) := by simp
+      _ = ((signA * signB * signA⁻¹) * signB) * signB⁻¹ := by
+        simp [mul_assoc]
+      _ = 1 * signB⁻¹ := by rw [h]
+      _ = signB⁻¹ := by simp)
 
-/-! ### Stratum 5: The Closed Master Loop: Holonomy Intertwines Lightcone Polarizations -/
+theorem kleinSignRepresentation_generators (signA signB : Units ℤ) :
+    kleinSignRepresentation signA signB
+        (_root_.InfoGeometry.Canonical.KleinPresentedGroup.toKlein
+          _root_.InfoGeometry.Canonical.KleinPresentedGroup.genA) = signA ∧
+      kleinSignRepresentation signA signB
+        (_root_.InfoGeometry.Canonical.KleinPresentedGroup.toKlein
+          _root_.InfoGeometry.Canonical.KleinPresentedGroup.genB) = signB :=
+  _root_.InfoGeometry.Canonical.KleinPresentedGroup.kleinRep_relator_relation
+    signA signB _
 
-/-- Orientation reversal $J \mapsto -J$ dynamically swaps positive to negative Peirce projector. -/
+def kleinSignRepresentationPP :
+    _root_.InfoGeometry.Canonical.KleinPresentedGroup.KleinGroup →* Units ℤ :=
+  kleinSignRepresentation 1 1
+def kleinSignRepresentationPM :
+    _root_.InfoGeometry.Canonical.KleinPresentedGroup.KleinGroup →* Units ℤ :=
+  kleinSignRepresentation 1 (-1)
+def kleinSignRepresentationMP :
+    _root_.InfoGeometry.Canonical.KleinPresentedGroup.KleinGroup →* Units ℤ :=
+  kleinSignRepresentation (-1) 1
+def kleinSignRepresentationMM :
+    _root_.InfoGeometry.Canonical.KleinPresentedGroup.KleinGroup →* Units ℤ :=
+  kleinSignRepresentation (-1) (-1)
+
+/-! ### Conditional automorphism action on split projectors -/
+
+/-- An algebra automorphism sending `J` to `-J` swaps the projectors. This is
+additional data and does not follow from the orientation character alone. -/
 theorem orientation_swap_plus {A : Type*} [Ring A] [Algebra ℝ A]
     (J : A) (σ : A ≃ₐ[ℝ] A) (h_J : σ J = -J) :
     σ (peircePlus J) = peirceMinus J := by
   dsimp [peircePlus, peirceMinus]
   rw [map_smul, map_add, map_one, h_J, ← sub_eq_add_neg]
 
-/-- Orientation reversal $J \mapsto -J$ dynamically swaps negative to positive Peirce projector. -/
+/-- An algebra automorphism sending `J` to `-J` swaps the projectors. -/
 theorem orientation_swap_minus {A : Type*} [Ring A] [Algebra ℝ A]
     (J : A) (σ : A ≃ₐ[ℝ] A) (h_J : σ J = -J) :
     σ (peirceMinus J) = peircePlus J := by
@@ -456,8 +537,9 @@ theorem orientation_double_swap_minus {A : Type*} [Ring A] [Algebra ℝ A]
 /-! ### Master Synthesis Packet -/
 
 /--
-Master packet unifying global Klein bottle topology, four Pin structures,
-split Cayley-Dickson doubling, and Dirac-Kähler off-diagonal decoupling.
+Packet collecting finite split-complex, matrix, projector, and affine-relator
+identities. It does not assert a geometric Pin structure or a manifold-level
+Dirac-Kähler construction.
 -/
 structure MasterSplitCayleyDicksonKleinDiracPacket where
   -- Stratum 1: Split-complex Cayley-Dickson
@@ -492,13 +574,13 @@ structure MasterSplitCayleyDicksonKleinDiracPacket where
   mat_peirce_orthog : matPeircePlusJ (R := ℝ) * matPeirceMinusJ = 0
   mat_peirce_complete : matPeircePlusJ (R := ℝ) + matPeirceMinusJ = matOne
 
-  -- Stratum 4: Global Klein bottle topology & Pin structures
+  -- Affine Klein relation and sign-relator checks
   klein_semidirect : affineTa.trans (affineTb.trans affineTa.symm) = affineTb.symm
   linear_ta_det : linearTa.det = -1
-  pin_structure_pp : isKleinCharacter 1 1
-  pin_structure_pm : isKleinCharacter 1 (-1)
-  pin_structure_mp : isKleinCharacter (-1) 1
-  pin_structure_mm : isKleinCharacter (-1) (-1)
+  sign_relator_pp : kleinSignRelatorCondition 1 1
+  sign_relator_pm : kleinSignRelatorCondition 1 (-1)
+  sign_relator_mp : kleinSignRelatorCondition (-1) 1
+  sign_relator_mm : kleinSignRelatorCondition (-1) (-1)
 
 /-- Construction of the Master Synthesis Packet. -/
 def makeMasterSplitCayleyDicksonKleinDiracPacket :
@@ -520,9 +602,9 @@ def makeMasterSplitCayleyDicksonKleinDiracPacket :
   mat_peirce_complete := matPeirce_complete
   klein_semidirect := affine_klein_relation
   linear_ta_det := linearTa_det
-  pin_structure_pp := pinStructurePeriodicPeriodic
-  pin_structure_pm := pinStructurePeriodicAntiperiodic
-  pin_structure_mp := pinStructureAntiperiodicPeriodic
-  pin_structure_mm := pinStructureAntiperiodicAntiperiodic
+  sign_relator_pp := klein_sign_relator_all 1 1
+  sign_relator_pm := klein_sign_relator_all 1 (-1)
+  sign_relator_mp := klein_sign_relator_all (-1) 1
+  sign_relator_mm := klein_sign_relator_all (-1) (-1)
 
 end InfoGeometry.Canonical.MasterSplitCayleyDicksonKleinDirac

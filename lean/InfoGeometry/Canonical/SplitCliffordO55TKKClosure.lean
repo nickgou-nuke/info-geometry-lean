@@ -59,16 +59,15 @@ end O55ChiralParityZero
 /-- The Weyl Group order for D_5 is 2^(5-1) * 5! = 1920 -/
 lemma weyl_group_D5_order : 2^4 * Nat.factorial 5 = 1920 := by rfl
 
-/-- Chiral Cuntz generators for the Klein Tube boundary condition.
-The Klein Quadric boundary (Q = 0) represents the on-shell factorization
-replacing the standard torus. It is characterized by nilpotent 
-chiral generators S_plus^2 = 0 and S_minus^2 = 0. -/
-def KleinTubeBoundary (S_plus S_minus : Module.End 𝕜 V) : Prop :=
+/-- A pair of endomorphisms satisfying the two square-zero equations.
+This algebraic predicate alone carries no Klein topology, Cuntz relations,
+chirality, or mass-shell data. -/
+def SquareZeroEndomorphismPair (S_plus S_minus : Module.End 𝕜 V) : Prop :=
   S_plus * S_plus = 0 ∧ S_minus * S_minus = 0
 
-/-- The topological constraint of the Klein Quadric Boundary replaces the standard torus. -/
-theorem on_shell_factorization_klein_quadric
-    (S_plus S_minus : Module.End 𝕜 V) (h : KleinTubeBoundary S_plus S_minus) :
+/-- Read out the component equations of a square-zero endomorphism pair. -/
+theorem square_zero_pair_components
+    (S_plus S_minus : Module.End 𝕜 V) (h : SquareZeroEndomorphismPair S_plus S_minus) :
     S_plus ^ 2 = 0 ∧ S_minus ^ 2 = 0 := by
   constructor
   · exact h.1

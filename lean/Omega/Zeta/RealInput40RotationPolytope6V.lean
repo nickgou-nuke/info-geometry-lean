@@ -62,7 +62,14 @@ def realInput40RotChiSet : Set RotationTripleR :=
 
 private theorem realInput40RotationVerticesChi_eq_image :
     realInput40RotationVerticesChi = realInput40RotationVerticesE.image realInput40RotationShearQ := by
-  decide
+  ext ⟨chi, nu, xi⟩
+  simp [realInput40RotationVerticesChi, realInput40RotationVerticesE,
+    realInput40RotationShearQ, realInput40ChiVertex0, realInput40ChiVertex1,
+    realInput40ChiVertex2, realInput40ChiVertex3, realInput40ChiVertex4,
+    realInput40ChiVertex5, realInput40Vertex0, realInput40Vertex1,
+    realInput40Vertex2, realInput40Vertex3, realInput40Vertex4,
+    realInput40Vertex5]
+  norm_num
 
 private theorem realInput40RotationVerticesE_facets :
     ∀ v ∈ realInput40RotationVerticesE, realInput40EFacets v := by

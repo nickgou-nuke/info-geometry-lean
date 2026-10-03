@@ -15,8 +15,11 @@ import InfoGeometry.Physics.AmplituhedronZetaSum
 This module closes the fundamental mathematical-physics bridge between:
 1. **BCFW Recursion**: The Arnold-Cohen mixed 3-form relation
    `ω₁₂ ∧ ω₂₃ + ω₂₃ ∧ ω₃₁ + ω₃₁ ∧ ω₁₂ = 0` in the configuration space cohomology ring.
-2. **On-Shell Factorization**: The Klein quadric boundary `Q = 0` represented by nilpotent
-   chiral edge operators `S² = 0`, factoring scattering amplitudes into lower-point trees.
+2. **Klein/Plücker geometry**: The condition `Q = 0` characterizes decomposable
+   bivectors in the four-dimensional owner.  The square-zero edge-operator
+   identity proved below is a separate noncommutative ring fact; this module
+   does not identify it with the Klein condition or derive scattering
+   factorization from it.
 3. **All-Loop Integrand / Amplituhedron Volume**: The Bost-Connes KMS thermal partition function
    evaluating to the Riemann Zeta function on `1 < β`.
 4. **Inductive Colimit Continuum**: Pushing the finite Grassmannian `Gr(k, n)` cells into
@@ -56,10 +59,10 @@ theorem amplituhedron_partition_sum_zeta (β : ℝ) (hβ : 1 < β) :
         riemannZeta (β : ℂ) :=
   amplituhedron_partition_sum_eq_zeta β hβ
 
-/-- 3. Nilpotent On-Shell Channel Factorization:
-    A chiral operator S with S² = 0 defines an exact left ideal annihilator
-    that factors on-shell boundary channels: S * (S * x) = 0. -/
-theorem on_shell_cuntz_left_factorization {A : Type*} [Ring A] (S x : A) (hS : S * S = 0) :
+/- A square-zero element annihilates its own left multiples.  This is a
+noncommutative ring identity and does not assert a Cuntz representation or a
+physical on-shell factorization. -/
+theorem square_zero_left_annihilation {A : Type*} [Ring A] (S x : A) (hS : S * S = 0) :
     S * (S * x) = 0 := by
   rw [← mul_assoc, hS, zero_mul]
 

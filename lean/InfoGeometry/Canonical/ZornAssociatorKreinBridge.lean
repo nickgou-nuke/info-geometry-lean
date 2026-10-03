@@ -53,15 +53,26 @@ def kreinJ : Zorn :=
 def associator (X Y Z : Zorn) : Zorn :=
   (X * Y) * Z - X * (Y * Z)
 
+private theorem vector_smul_zero_coordinates (c : ℝ) :
+    c • (⟨0, 0, 0⟩ : Vector3) = ⟨0, 0, 0⟩ := by
+  change (⟨c * 0, c * 0, c * 0⟩ : Vector3) = _
+  simp
+
 @[simp] theorem kreinJ_coordinates :
     kreinJ = ⟨1, 0, 0, -1⟩ := by
-  ext <;> rfl
+  change (⟨1 + -0, ⟨0 + -0, 0 + -0, 0 + -0⟩,
+    ⟨0 + -0, 0 + -0, 0 + -0⟩, 0 + -1⟩ : Zorn) = _
+  norm_num
+  rfl
 
 /-- The two primitive idempotents resolve the algebraic unit. -/
 theorem peirce_idempotents_sum :
     SplitOctonion.idempotentE1 + SplitOctonion.idempotentE2 =
       (1 : Zorn) := by
-  ext <;> rfl
+  change (⟨1 + 0, ⟨0 + 0, 0 + 0, 0 + 0⟩,
+    ⟨0 + 0, 0 + 0, 0 + 0⟩, 0 + 1⟩ : Zorn) = _
+  norm_num
+  rfl
 
 /-- The Peirce grading is the difference of the two primitive idempotents. -/
 theorem peirce_idempotents_difference :
@@ -71,24 +82,31 @@ theorem peirce_idempotents_difference :
 /-- Multiplying two upper chiral vectors produces the lower cross-product sector. -/
 theorem upper_mul_upper (u v : Vec3) :
     upper u * upper v = lower (Vector3.cross u v) := by
+  change SplitOctonion.mul (upper u) (upper v) = _
   rcases u with ⟨ux, uy, uz⟩
   rcases v with ⟨vx, vy, vz⟩
-  ext <;> simp [upper, lower, SplitOctonion.mul,
+  ext <;> dsimp [upper, lower, SplitOctonion.mul,
     Vector3.dot, Vector3.cross, Vector3.zero, Vector3.add,
-    Vector3.sub, Vector3.smul]
+    Vector3.sub, Vector3.smul] <;>
+    simp only [show Vector3.x 0 = 0 from rfl, show Vector3.y 0 = 0 from rfl,
+      show Vector3.z 0 = 0 from rfl] <;> ring
 
 /-- Lower-by-upper multiplication evaluates the scalar triple product in the
 lower diagonal Peirce corner. -/
 theorem lower_mul_upper (u v w : Vec3) :
     lower (Vector3.cross u v) * upper w =
       (tripleDet u v w) • SplitOctonion.idempotentE2 := by
+  change SplitOctonion.mul (lower (Vector3.cross u v)) (upper w) =
+    SplitOctonion.smul (tripleDet u v w) SplitOctonion.idempotentE2
   rcases u with ⟨ux, uy, uz⟩
   rcases v with ⟨vx, vy, vz⟩
   rcases w with ⟨wx, wy, wz⟩
-  ext <;> simp [lower, upper, tripleDet, SplitOctonion.mul,
+  ext <;> dsimp [lower, upper, tripleDet, SplitOctonion.mul,
     SplitOctonion.idempotentE2, Vector3.dot, Vector3.cross,
     Vector3.zero, Vector3.add, Vector3.sub, Vector3.smul,
-    SplitOctonion.smul] <;> ring
+    SplitOctonion.smul] <;>
+    (try simp only [vector_smul_zero_coordinates, show Vector3.x 0 = 0 from rfl,
+      show Vector3.y 0 = 0 from rfl, show Vector3.z 0 = 0 from rfl]) <;> ring
 
 /-- The scalar triple product is invariant under cyclic permutation. -/
 theorem tripleDet_cyclic (u v w : Vec3) :
@@ -104,13 +122,17 @@ the upper diagonal Peirce corner. -/
 theorem upper_mul_lower (u v w : Vec3) :
     upper u * lower (Vector3.cross v w) =
       (tripleDet u v w) • SplitOctonion.idempotentE1 := by
+  change SplitOctonion.mul (upper u) (lower (Vector3.cross v w)) =
+    SplitOctonion.smul (tripleDet u v w) SplitOctonion.idempotentE1
   rcases u with ⟨ux, uy, uz⟩
   rcases v with ⟨vx, vy, vz⟩
   rcases w with ⟨wx, wy, wz⟩
-  ext <;> simp [lower, upper, tripleDet, SplitOctonion.mul,
+  ext <;> dsimp [lower, upper, tripleDet, SplitOctonion.mul,
     SplitOctonion.idempotentE1, Vector3.dot, Vector3.cross,
     Vector3.zero, Vector3.add, Vector3.sub, Vector3.smul,
-    SplitOctonion.smul] <;> ring
+    SplitOctonion.smul] <;>
+    (try simp only [vector_smul_zero_coordinates, show Vector3.x 0 = 0 from rfl,
+      show Vector3.y 0 = 0 from rfl, show Vector3.z 0 = 0 from rfl]) <;> ring
 
 /-- First bracketing of three upper vectors lands entirely in the second
 Peirce corner. -/
@@ -136,8 +158,7 @@ theorem associator_upper_eq_neg_tripleDet_smul_kreinJ
     associator (upper u₁) (upper u₂) (upper u₃) =
       (-tripleDet u₁ u₂ u₃) • kreinJ := by
   rw [associator, upper_left_bracketing, upper_right_bracketing]
-  ext <;> simp [kreinJ, SplitOctonion.idempotentE1,
-    SplitOctonion.idempotentE2, SplitOctonion.smul] <;> ring
+  rw [kreinJ, neg_smul, smul_sub, neg_sub]
 
 /-- Coordinate form of the same associator identity. -/
 theorem associator_upper_coordinates
@@ -145,8 +166,15 @@ theorem associator_upper_coordinates
     associator (upper u₁) (upper u₂) (upper u₃) =
       ⟨-tripleDet u₁ u₂ u₃, 0, 0, tripleDet u₁ u₂ u₃⟩ := by
   rw [associator_upper_eq_neg_tripleDet_smul_kreinJ]
-  ext <;> simp [kreinJ, SplitOctonion.idempotentE1,
-    SplitOctonion.idempotentE2, SplitOctonion.smul]
+  rw [kreinJ_coordinates]
+  change (⟨(-tripleDet u₁ u₂ u₃) * 1,
+    ⟨(-tripleDet u₁ u₂ u₃) * 0, (-tripleDet u₁ u₂ u₃) * 0,
+      (-tripleDet u₁ u₂ u₃) * 0⟩,
+    ⟨(-tripleDet u₁ u₂ u₃) * 0, (-tripleDet u₁ u₂ u₃) * 0,
+      (-tripleDet u₁ u₂ u₃) * 0⟩,
+    (-tripleDet u₁ u₂ u₃) * -1⟩ : Zorn) = _
+  simp
+  rfl
 
 /-- Nonzero oriented three-volume gives a genuinely nonzero associator. -/
 theorem associator_upper_ne_zero_of_tripleDet_ne_zero

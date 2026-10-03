@@ -92,7 +92,8 @@ theorem respects_braid_rels
             rfl
           · rcases hFar with ⟨i, j, hij, rfl⟩
             apply comm_rel_lift_eq_one sys
-            omega
+            change i.val + 2 ≤ j.val + 1 + 1
+            simpa [Nat.add_assoc] using Nat.add_le_add_right hij 2
 
 /-- Universal homomorphism from the repository's canonical finite braid group
 to any group carrying an Artin braid system. -/
@@ -117,12 +118,10 @@ theorem toGroupHom_unique
     (φ : braid_group (m + 1) →* G)
     (hφ : ∀ i : Fin m, φ (σ' m i) = sys.gen i) :
     φ = sys.toGroupHom := by
-  change
-    φ =
-      PresentedGroup.toGroup sys.respects_braid_rels
-  apply PresentedGroup.ext
+  apply PresentedGroup.ext (rels := braid_rels m)
   intro i
-  rw [PresentedGroup.toGroup.of]
+  change φ (σ' m i) = sys.toGroupHom (σ' m i)
+  rw [toGroupHom_generator]
   exact hφ i
 
 /-- Composition with a group homomorphism transports an Artin braid system. -/
@@ -143,9 +142,11 @@ theorem map_toGroupHom
     (sys : ArtinBraidSystem G m)
     (f : G →* H) :
     (sys.map f).toGroupHom = f.comp sys.toGroupHom := by
-  apply PresentedGroup.ext
+  apply PresentedGroup.ext (rels := braid_rels m)
   intro i
-  simp [map]
+  change (sys.map f).toGroupHom (σ' m i) = f (sys.toGroupHom (σ' m i))
+  rw [toGroupHom_generator, toGroupHom_generator]
+  rfl
 
 end ArtinBraidSystem
 

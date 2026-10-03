@@ -28,9 +28,10 @@ import InfoGeometry.Canonical.BostConnesKMS
 /-!
 # Zorn Braid Colimit KMS State
 
-This module constructs the formal mathematical structures that connect the
-`continuumCuntzGenerator` from the Zorn limit boundary directly to the
-`KMSProjectionState` defined in `InfoGeometry.Canonical.BostConnesKMS`.
+This module packages stage-indexed scalar and involution data alongside the
+`KMSProjectionState` defined in `InfoGeometry.Canonical.BostConnesKMS`.  It
+does not identify arbitrary Zorn colimit elements with Cuntz generators or
+prove a KMS evaluation law for them.
 
 ## BUCKET 1: CLOSED FINITE THEOREMS
 * `evaluate_continuum_boltzmann_weight`: Shows how the Boltzmann weights
@@ -63,17 +64,15 @@ variable (C : BostConnesCuntzSystem Op)
 variable {R : Type u} [CommRing R] {J : Type u} [Category.{u} J]
 variable (ZornSequence : J ⥤ ModuleCat.{u} R)
 variable [HasColimit ZornSequence]
-variable (M : CompatibleBilinearMultiplication R ZornSequence)
-variable (zornCuntzGenerator : ∀ j, ZornSequence.obj j)
 
 /--
 The bridge state connecting the Zorn braid colimit continuum to the 
 Bost--Connes KMS thermodynamic state.
 
-This structure assumes an assignment of positive integers to the categorical 
-stages and an involution operation on the continuum. It mandates that the 
-macroscopic Zorn state evaluates inner products of the continuum Cuntz 
-generators identically to the Bost--Connes KMS projection weights.
+This product type stores an assignment of positive integers to categorical
+stages and an involution operation on the colimit carrier.  It does not impose
+positivity, compatibility, Cuntz relations, or an evaluation identity between
+the Zorn data and the Bost--Connes state.
 -/
 abbrev ZornBraidKMSState : Type _ :=
   KMSProjectionState C ×

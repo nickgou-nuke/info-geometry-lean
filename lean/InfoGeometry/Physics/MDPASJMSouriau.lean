@@ -33,6 +33,108 @@ def dot (u v : Vec4) : ℚ := ∑ i : Fin 4, u i * v i
 def minkowskiDot (u v : Vec4) : ℚ :=
   u 0 * v 0 - u 1 * v 1 - u 2 * v 2 - u 3 * v 3
 
+/-- The Minkowski pairing is symmetric on the fixed `(+---)` four-vector carrier. -/
+theorem minkowskiDot_symm (u v : Vec4) : minkowskiDot u v = minkowskiDot v u := by
+  unfold minkowskiDot
+  ring
+
+/-- Additivity of the Minkowski pairing in its first argument. -/
+theorem minkowskiDot_add_left (u v w : Vec4) :
+    minkowskiDot (u + v) w = minkowskiDot u w + minkowskiDot v w := by
+  simp only [minkowskiDot, Pi.add_apply]
+  ring
+
+/-- Additivity of the Minkowski pairing in its second argument. -/
+theorem minkowskiDot_add_right (u v w : Vec4) :
+    minkowskiDot u (v + w) = minkowskiDot u v + minkowskiDot u w := by
+  simp only [minkowskiDot, Pi.add_apply]
+  ring
+
+/-- Scalar linearity of the Minkowski pairing in its first argument. -/
+theorem minkowskiDot_smul_left (a : ℚ) (u v : Vec4) :
+    minkowskiDot (a • u) v = a * minkowskiDot u v := by
+  simp only [minkowskiDot, Pi.smul_apply, smul_eq_mul]
+  ring
+
+/-- Scalar linearity of the Minkowski pairing in its second argument. -/
+theorem minkowskiDot_smul_right (a : ℚ) (u v : Vec4) :
+    minkowskiDot u (a • v) = a * minkowskiDot u v := by
+  simp only [minkowskiDot, Pi.smul_apply, smul_eq_mul]
+  ring
+
+/-- A linear field action is skew with respect to the Minkowski pairing. -/
+def MinkowskiSkew (F : Vec4 →ₗ[ℚ] Vec4) : Prop :=
+  ∀ u v, minkowskiDot u (F v) = -minkowskiDot (F u) v
+
+/-- The self-contraction of a Minkowski-skew field action vanishes. -/
+theorem minkowskiDot_field_self_zero (F : Vec4 →ₗ[ℚ] Vec4)
+    (hF : MinkowskiSkew F) (v : Vec4) : minkowskiDot v (F v) = 0 := by
+  have h := hF v v
+  rw [minkowskiDot_symm (F v) v] at h
+  linarith
+
+/-- Lorentz acceleration for a field action `F` and scalar coupling `k`. -/
+def lorentzAcceleration (F : Vec4 →ₗ[ℚ] Vec4) (k : ℚ) (u : Vec4) : Vec4 :=
+  k • F u
+
+/-- The algebraic BMT spin derivative in units where the normalized velocity
+satisfies `minkowskiDot u u = 1`. Its second term is parallel to `u`; it is the
+covariant correction needed to preserve the Frenkel constraint. -/
+def bmtSpinDerivative (F : Vec4 →ₗ[ℚ] Vec4) (k g : ℚ) (u s : Vec4) : Vec4 :=
+  (k * (g / 2)) • F s +
+    (k * ((g - 2) / 2) * minkowskiDot s (F u)) • u
+
+/-- The BMT spin derivative is tangent to the fixed-spin quadratic level when
+the Frenkel condition `u ⟂ s` holds. This is a pointwise algebraic identity, not
+an ODE existence or global-flow theorem. -/
+theorem bmt_spin_norm_tangent (F : Vec4 →ₗ[ℚ] Vec4)
+    (hF : MinkowskiSkew F) (k g : ℚ) (u s : Vec4)
+    (hFrenkel : minkowskiDot u s = 0) :
+    minkowskiDot s (bmtSpinDerivative F k g u s) = 0 := by
+  rw [bmtSpinDerivative, minkowskiDot_add_right,
+    minkowskiDot_smul_right, minkowskiDot_smul_right]
+  have hsu : minkowskiDot s u = 0 := by
+    rw [minkowskiDot_symm, hFrenkel]
+  rw [minkowskiDot_field_self_zero F hF s, hsu]
+  ring
+
+/-- The derivative of the Frenkel pairing vanishes algebraically along the
+coupled Lorentz/BMT tangent vectors, for every gyromagnetic ratio `g`. -/
+theorem bmt_frenkel_tangent (F : Vec4 →ₗ[ℚ] Vec4)
+    (hF : MinkowskiSkew F) (k g : ℚ) (u s : Vec4)
+    (hUnit : minkowskiDot u u = 1) :
+    minkowskiDot (lorentzAcceleration F k u) s +
+      minkowskiDot u (bmtSpinDerivative F k g u s) = 0 := by
+  rw [lorentzAcceleration, bmtSpinDerivative,
+    minkowskiDot_smul_left, minkowskiDot_add_right,
+    minkowskiDot_smul_right, minkowskiDot_smul_right]
+  have hQ : minkowskiDot (F u) s = minkowskiDot s (F u) :=
+    minkowskiDot_symm _ _
+  have hUS : minkowskiDot u (F s) = -minkowskiDot s (F u) := by
+    calc
+      minkowskiDot u (F s) = -minkowskiDot (F u) s := hF u s
+      _ = -minkowskiDot s (F u) := by rw [minkowskiDot_symm]
+  rw [hQ, hUS, hUnit]
+  ring
+
+/-- At `g = 2`, the BMT correction vanishes and the spin tangent is `k F(s)`. -/
+theorem bmt_g_two (F : Vec4 →ₗ[ℚ] Vec4) (k : ℚ) (u s : Vec4) :
+    bmtSpinDerivative F k 2 u s = k • F s := by
+  simp [bmtSpinDerivative]
+
+/-- The full change in the BMT tangent relative to `g = 2` has both a field
+rotation component and the velocity-parallel correction. In particular, it is
+not in general purely parallel to `u`. -/
+theorem bmt_anomaly_difference (F : Vec4 →ₗ[ℚ] Vec4) (k g : ℚ)
+    (u s : Vec4) :
+    bmtSpinDerivative F k g u s - bmtSpinDerivative F k 2 u s =
+      (k * ((g - 2) / 2)) •
+        (F s + minkowskiDot s (F u) • u) := by
+  unfold bmtSpinDerivative
+  ext i
+  simp only [Pi.sub_apply, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+  ring
+
 def wedge (u v : Vec4) : Tensor2 := fun i j => u i * v j - u j * v i
 
 def IsAntisymmetric (A : Tensor2) : Prop := ∀ i j, A i j = - A j i

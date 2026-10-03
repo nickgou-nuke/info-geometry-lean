@@ -20,12 +20,11 @@ For a left observable a and right observable b,
 
 Consequently the double commutator vanishes whenever b commutes with β_R.
 
-The opposite ordering is even simpler:
+The opposite ordering has the same obstruction:
 
-  [[D_tot, I ⊗ b], a ⊗ I] = 0
+  [[D_tot, I ⊗ b], a ⊗ I] = [D_L,a] ⊗ [β_R,b].
 
-for all a,b, because the surviving commutator lives purely in the right tensor
-factor.
+It vanishes under the same right-evenness hypothesis, not for arbitrary a,b.
 
 These are finite matrix identities. They are not, by themselves, a proof of
 the full analytic order-one axiom for an unbounded real spectral triple, nor
@@ -70,7 +69,7 @@ def embedRight (b : Atom) : StageTwo :=
 theorem orderZero (a : StageOne) (b : Atom) :
     commutator (embedLeft a) (embedRight b) = 0 := by
   unfold commutator embedLeft embedRight
-  rw [Matrix.mul_kronecker_mul, Matrix.mul_kronecker_mul]
+  rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul]
   simp
 
 /-- First commutator with a left observable:
@@ -81,10 +80,10 @@ theorem commutator_compositeDirac_embedLeft
       commutatorL DL a ⊗ₖ betaR := by
   unfold commutator compositeDirac embedLeft commutatorL
   rw [Matrix.add_mul, Matrix.mul_add]
-  repeat rw [Matrix.mul_kronecker_mul]
+  repeat rw [← Matrix.mul_kronecker_mul]
   simp only [Matrix.one_mul, Matrix.mul_one]
   ext x y
-  simp [Matrix.kroneckerMap_apply, commutatorL]
+  simp [Matrix.kroneckerMap_apply]
   ring
 
 /-- First commutator with a right observable:
@@ -97,10 +96,10 @@ theorem commutator_compositeDirac_embedRight
       (1 : StageOne) ⊗ₖ commutatorR DR b := by
   unfold commutator compositeDirac embedRight commutatorR
   rw [Matrix.add_mul, Matrix.mul_add]
-  repeat rw [Matrix.mul_kronecker_mul]
+  repeat rw [← Matrix.mul_kronecker_mul]
   simp only [Matrix.one_mul, Matrix.mul_one]
   ext x y
-  simp [Matrix.kroneckerMap_apply, commutatorR]
+  simp [Matrix.kroneckerMap_apply]
   ring
 
 /-- Exact factorization of the left-right double commutator:
@@ -113,7 +112,7 @@ theorem orderOne_factorization
       commutatorL DL a ⊗ₖ commutatorR betaR b := by
   rw [commutator_compositeDirac_embedLeft]
   unfold commutator embedRight commutatorR
-  rw [Matrix.mul_kronecker_mul, Matrix.mul_kronecker_mul]
+  rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul]
   simp only [Matrix.mul_one, Matrix.one_mul]
   ext x y
   simp [Matrix.kroneckerMap_apply]
@@ -147,8 +146,7 @@ theorem diagonal_commutes_kreinBeta (d0 d1 : ℝ) :
     commutatorR kreinBeta !![d0, 0; 0, d1] = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [commutatorR, kreinBeta, Eplus,
-      Matrix.mul_apply, Fin.sum_univ_two]
+    simp [commutatorR, kreinBeta, Eplus]
 
 /-- Hence every diagonal right observable satisfies the finite order-one
 condition for arbitrary left observable and arbitrary left/right Dirac data. -/
@@ -162,20 +160,30 @@ theorem orderOne_diagonal_right
   apply orderOne_of_right_even
   exact diagonal_commutes_kreinBeta d0 d1
 
-/-- Dual double commutator:
-after commuting D_tot with a right observable, commuting with any left
-observable vanishes identically. -/
-theorem dual_orderOne
+/-- Reversing the two commuting observables preserves the obstruction. -/
+theorem dual_orderOne_factorization
     (DL a : StageOne) (betaR DR b : Atom) :
     commutator
         (commutator (compositeDirac DL betaR DR) (embedRight b))
-        (embedLeft a) = 0 := by
+        (embedLeft a) = commutatorL DL a ⊗ₖ commutatorR betaR b := by
   rw [commutator_compositeDirac_embedRight]
-  unfold commutator embedLeft
+  unfold commutator embedLeft commutatorL
   rw [Matrix.add_mul, Matrix.mul_add]
-  repeat rw [Matrix.mul_kronecker_mul]
+  repeat rw [← Matrix.mul_kronecker_mul]
   simp only [Matrix.one_mul, Matrix.mul_one]
-  abel
+  ext x y
+  simp [Matrix.kroneckerMap_apply]
+  ring
+
+/-- Right evenness also kills the reversed double commutator. -/
+theorem dual_orderOne_of_right_commutes
+    (DL a : StageOne) (betaR DR b : Atom)
+    (heven : betaR * b = b * betaR) :
+    commutator
+        (commutator (compositeDirac DL betaR DR) (embedRight b))
+        (embedLeft a) = 0 := by
+  rw [dual_orderOne_factorization]
+  simp [commutatorR, heven]
 
 /-- Consolidated finite bipartite order-zero/order-one packet. -/
 theorem bipartite_order_packet
@@ -190,6 +198,6 @@ theorem bipartite_order_packet
         (embedLeft a) = 0 := by
   exact ⟨orderZero a b,
     orderOne_of_right_commutes DL a betaR DR b heven,
-    dual_orderOne DL a betaR DR b⟩
+    dual_orderOne_of_right_commutes DL a betaR DR b heven⟩
 
 end InfoGeometry.Canonical.Cl11BipartiteOrderOneCondition

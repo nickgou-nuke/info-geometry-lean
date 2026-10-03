@@ -5,7 +5,6 @@ import InfoGeometry.Clifford.HestenesDirac
 import InfoGeometry.Analytic.ZetaRegVolume
 import InfoGeometry.Canonical.OperatorSurgery
 import InfoGeometry.Canonical.WeylCharacterEquivalence
-import InfoGeometry.Canonical.SuperKMS_Equilibrium
 import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Applications.STUBlackHoleQubit
 
@@ -454,11 +453,13 @@ def STUFreudenthalEmbeddingFor
         FreudenthalCharge.quarticInvariant D (embedSTU ψ) =
           sign * ThreeQubitState.cayleyHyperdeterminant ψ
 
-def KMSExistenceSupercharge : Prop :=
-  ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    (_Q : H →L[ℝ] H),
-    ∃ S : InfoGeometry.Canonical.SuperKMS_Equilibrium.SuperKMSEquilibriumState,
-      S.absorption = S.spontaneousEmission + S.stimulatedEmission
+/-! `KMSExistenceSupercharge` previously asked for a freely chosen scalar
+balance packet for every operator, so it was trivially inhabited and expressed
+no KMS property. No replacement existence claim is recorded here: a genuine
+KMS existence problem must specify the algebra, its evolution, temperature,
+and candidate state class, and existence is not automatic for arbitrary
+evolutions. The analytic predicate itself is owned by
+`InfoGeometry.Geometry.IsKMSState`. -/
 
 end Statements
 

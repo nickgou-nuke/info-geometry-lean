@@ -72,6 +72,100 @@ def splitOctonionMulQ
     (splitQuaternionMulQ r (splitQuaternionConjQ s))
   splitOctonionOfQuaternionPairQ left right
 
+/-- The native rational split-octonion product is additive in its left input. -/
+theorem splitOctonionMulQ_add_left
+    (x y z : StandardRationalSplitOctonion) :
+    splitOctonionMulQ (x + y) z =
+      splitOctonionMulQ x z + splitOctonionMulQ y z := by
+  funext b
+  fin_cases b <;>
+    simp [splitOctonionMulQ, splitQuaternionOfQ, splitQuaternionLPartQ,
+      splitQuaternionConjQ, splitQuaternionAddQ, splitQuaternionMulQ,
+      splitOctonionOfQuaternionPairQ] <;>
+    ring
+
+/-- The native rational split-octonion product is additive in its right input. -/
+theorem splitOctonionMulQ_add_right
+    (x y z : StandardRationalSplitOctonion) :
+    splitOctonionMulQ x (y + z) =
+      splitOctonionMulQ x y + splitOctonionMulQ x z := by
+  funext b
+  fin_cases b <;>
+    simp [splitOctonionMulQ, splitQuaternionOfQ, splitQuaternionLPartQ,
+      splitQuaternionConjQ, splitQuaternionAddQ, splitQuaternionMulQ,
+      splitOctonionOfQuaternionPairQ] <;>
+    ring
+
+/-- Rational homogeneity of the native product in its left input. -/
+theorem splitOctonionMulQ_smul_left
+    (a : ℚ) (x y : StandardRationalSplitOctonion) :
+    splitOctonionMulQ (a • x) y = a • splitOctonionMulQ x y := by
+  funext b
+  fin_cases b <;>
+    simp [splitOctonionMulQ, splitQuaternionOfQ, splitQuaternionLPartQ,
+      splitQuaternionConjQ, splitQuaternionAddQ, splitQuaternionMulQ,
+      splitOctonionOfQuaternionPairQ] <;>
+    ring
+
+/-- Rational homogeneity of the native product in its right input. -/
+theorem splitOctonionMulQ_smul_right
+    (a : ℚ) (x y : StandardRationalSplitOctonion) :
+    splitOctonionMulQ x (a • y) = a • splitOctonionMulQ x y := by
+  funext b
+  fin_cases b <;>
+    simp [splitOctonionMulQ, splitQuaternionOfQ, splitQuaternionLPartQ,
+      splitQuaternionConjQ, splitQuaternionAddQ, splitQuaternionMulQ,
+      splitOctonionOfQuaternionPairQ] <;>
+    ring
+
+/-- The rational basis unit is a left identity for the native product. -/
+theorem splitOctonionMulQ_one_left (x : StandardRationalSplitOctonion) :
+    splitOctonionMulQ (rationalBasis .one) x = x := by
+  funext b
+  fin_cases b <;>
+    simp [rationalBasis, splitOctonionMulQ, splitQuaternionOfQ,
+      splitQuaternionLPartQ, splitQuaternionConjQ, splitQuaternionAddQ,
+      splitQuaternionMulQ, splitOctonionOfQuaternionPairQ, Pi.single]
+
+/-- The rational basis unit is a right identity for the native product. -/
+theorem splitOctonionMulQ_one_right (x : StandardRationalSplitOctonion) :
+    splitOctonionMulQ x (rationalBasis .one) = x := by
+  funext b
+  fin_cases b <;>
+    simp [rationalBasis, splitOctonionMulQ, splitQuaternionOfQ,
+      splitQuaternionLPartQ, splitQuaternionConjQ, splitQuaternionAddQ,
+      splitQuaternionMulQ, splitOctonionOfQuaternionPairQ, Pi.single]
+
+/-- Subtraction distributes in the right input of the native product. -/
+theorem splitOctonionMulQ_sub_right
+    (x y z : StandardRationalSplitOctonion) :
+    splitOctonionMulQ x (y - z) =
+      splitOctonionMulQ x y - splitOctonionMulQ x z := by
+  calc
+    splitOctonionMulQ x (y - z) =
+        splitOctonionMulQ x y + splitOctonionMulQ x (-z) := by
+          rw [sub_eq_add_neg, splitOctonionMulQ_add_right]
+    _ = splitOctonionMulQ x y + -splitOctonionMulQ x z := by
+          rw [← neg_one_smul ℚ z, splitOctonionMulQ_smul_right]
+          congr 1
+          exact neg_one_smul ℚ (splitOctonionMulQ x z)
+    _ = _ := by rw [← sub_eq_add_neg]
+
+/-- Subtraction distributes in the left input of the native product. -/
+theorem splitOctonionMulQ_sub_left
+    (x y z : StandardRationalSplitOctonion) :
+    splitOctonionMulQ (x - y) z =
+      splitOctonionMulQ x z - splitOctonionMulQ y z := by
+  calc
+    splitOctonionMulQ (x - y) z =
+        splitOctonionMulQ x z + splitOctonionMulQ (-y) z := by
+          rw [sub_eq_add_neg, splitOctonionMulQ_add_left]
+    _ = splitOctonionMulQ x z + -splitOctonionMulQ y z := by
+          rw [← neg_one_smul ℚ y, splitOctonionMulQ_smul_left]
+          congr 1
+          exact neg_one_smul ℚ (splitOctonionMulQ y z)
+    _ = _ := by rw [← sub_eq_add_neg]
+
 theorem zornVectorMatrixRationalEquiv_map_one :
     zornVectorMatrixRationalEquiv (rationalBasis .one) =
       ({ a := 1, v := 0, w := 0, b := 1 } : ZornVectorMatrix ℚ) :=

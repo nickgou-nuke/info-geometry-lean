@@ -184,20 +184,7 @@ def spectralMixedTerm
     (c2 : ℝ) (DeltaL : StageOne) (DeltaR : Atom) : ℝ :=
   2 * c2 * (Matrix.trace DeltaL * Matrix.trace DeltaR)
 
-/-- The spectral mixed term is an XPM energy only after an explicit
-identification of the sheet densities/coupling with the trace readouts. -/
-theorem spectralMixedTerm_eq_crossPhaseEnergy_of_readout
-    (c2 gCross : ℝ)
-    (DeltaL : StageOne) (DeltaR : Atom)
-    (s : TwinDensity)
-    (hread :
-      gCross * s.nPlus * s.nMinus =
-        2 * c2 * (Matrix.trace DeltaL * Matrix.trace DeltaR)) :
-    crossPhaseEnergy gCross s =
-      spectralMixedTerm c2 DeltaL DeltaR := by
-  exact hread
-
-/-- Equivalent comparison using separate density/readout hypotheses. -/
+/-- Comparison using separate density/readout hypotheses. -/
 theorem spectralMixedTerm_eq_crossPhaseEnergy_of_factorized_readout
     (c2 gCross : ℝ)
     (DeltaL : StageOne) (DeltaR : Atom)
@@ -207,8 +194,8 @@ theorem spectralMixedTerm_eq_crossPhaseEnergy_of_factorized_readout
     (hCoupling : gCross = 2 * c2) :
     crossPhaseEnergy gCross s =
       spectralMixedTerm c2 DeltaL DeltaR := by
-  rw [hPlus, hMinus, hCoupling]
   unfold crossPhaseEnergy spectralMixedTerm
+  rw [hPlus, hMinus, hCoupling]
   ring
 
 /-! ## 5. Compact theorem-safe synthesis -/

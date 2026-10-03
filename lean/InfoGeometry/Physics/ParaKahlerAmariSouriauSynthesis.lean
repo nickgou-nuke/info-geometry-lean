@@ -29,10 +29,11 @@ This module establishes the grand unification between:
    $$\mathcal{Q}_{\mathrm{para}}(u, v) = g(u, v) + e \Omega(u, v), \quad e^2 = +1,$$
    unifying the dissipative Riemannian Fisher metric $g$ with the conservative Berry curvature $\Omega$.
 
-4. **Logarithmic Maurer-Cartan Boundary Stratification**:
+4. **Logarithmic Maurer-Cartan Relation**:
    The logarithmic 1-form $\omega = d\log Q$ satisfying the flat Maurer-Cartan structure,
    resolving the Arnold-Cohen 3-term relations $\sum_{\mathrm{cyclic}} \omega_{ij} \wedge \omega_{jk} = 0$,
-   and governing the on-shell boundary / BCFW residue factorization.
+   The displayed relation is an exterior-algebra identity in the supplied
+   carrier; this module does not construct scattering residues or a mass shell.
 
 All proofs are native Mathlib 4 with zero `sorry`s.
 -/

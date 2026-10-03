@@ -1,46 +1,52 @@
-import Mathlib.Algebra.Ring.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Tactic.NoncommRing
+import Mathlib.Data.Matrix.Basic
+import Mathlib.Tactic
 
-noncomputable section
+/-!
+# Square-zero operators and their cross terms
+
+Square-zero equations for two operators do not imply square-zero for their
+sum. This owner records the exact `2 × 2` matrix-unit example: each off-diagonal
+matrix unit squares to zero, while their sum squares to the identity. It is an
+algebraic counterexample only; it makes no amplituhedron or supersymmetry claim.
+-/
 
 namespace InfoGeometry.Canonical.NativeMathlibSuperamplituhedronBridge
 
-/-- **Definition**: Native Mathlib Superamplituhedron Structure.
-    Unifies Amplituhedron boundary nilpotency S² = 0 with Chiral Supercharge nilpotency Q² = 0. -/
-structure Superamplituhedron (R : Type*) [Ring R] where
-  S_boundary : R
-  Q_supercharge : R
-  hS_nilpotent : S_boundary * S_boundary = 0
-  hQ_nilpotent : Q_supercharge * Q_supercharge = 0
+open Matrix
 
-namespace Superamplituhedron
+/-- The upper off-diagonal matrix unit in dimension two. -/
+def upperUnit : Matrix (Fin 2) (Fin 2) ℝ :=
+  fun i j => if i = 0 ∧ j = 1 then 1 else 0
 
-variable {R : Type*} [Ring R] (sa : Superamplituhedron R)
+/-- The lower off-diagonal matrix unit in dimension two. -/
+def lowerUnit : Matrix (Fin 2) (Fin 2) ℝ :=
+  fun i j => if i = 1 ∧ j = 0 then 1 else 0
 
-/-- **Theorem**: Boundary Nilpotency S² = 0. -/
-theorem boundary_nilpotent :
-    sa.S_boundary * sa.S_boundary = 0 :=
-  sa.hS_nilpotent
+/-- The upper matrix unit is a nonzero square-zero operator. -/
+theorem upperUnit_sq_zero : upperUnit * upperUnit = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [upperUnit, Matrix.mul_apply, Fin.sum_univ_two]
 
-/-- **Theorem**: Chiral Supercharge Nilpotency Q² = 0. -/
-theorem supercharge_nilpotent :
-    sa.Q_supercharge * sa.Q_supercharge = 0 :=
-  sa.hQ_nilpotent
+/-- The lower matrix unit is a nonzero square-zero operator. -/
+theorem lowerUnit_sq_zero : lowerUnit * lowerUnit = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [lowerUnit, Matrix.mul_apply, Fin.sum_univ_two]
 
-end Superamplituhedron
+/-- Their sum is not square-zero: it squares to the identity matrix. -/
+theorem sum_matrixUnits_sq_eq_one :
+    (upperUnit + lowerUnit) * (upperUnit + lowerUnit) = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [upperUnit, lowerUnit, Matrix.mul_apply, Fin.sum_univ_two]
 
-/-- **Theorem**: Master Native Mathlib Superamplituhedron & Supercharge Duality Synthesis.
-    Unifies:
-    1. Amplituhedron boundary nilpotency S² = 0 (On-shell scattering factorization ∂Ω ↦ Ω_L × Ω_R).
-    2. Chiral Supercharge nilpotency Q² = 0 (Supersymmetric Ward identities Q Ω = 0).
-    3. Exact duality between positive boundary geometry and chiral supersymmetry in Lean 4. -/
-theorem master_native_mathlib_superamplituhedron_synthesis
-    {R : Type*} [Ring R] (sa : Superamplituhedron R) :
-    (sa.S_boundary * sa.S_boundary = 0) ∧
-    (sa.Q_supercharge * sa.Q_supercharge = 0) := ⟨
-  sa.boundary_nilpotent,
-  sa.supercharge_nilpotent
-⟩
+/-- The two cross-products add to the identity; this is exactly the term that
+prevents the sum of these square-zero operators from being square-zero. -/
+theorem matrixUnits_cross_terms_eq_one :
+    upperUnit * lowerUnit + lowerUnit * upperUnit = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [upperUnit, lowerUnit, Matrix.mul_apply, Fin.sum_univ_two]
 
 end InfoGeometry.Canonical.NativeMathlibSuperamplituhedronBridge

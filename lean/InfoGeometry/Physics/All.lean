@@ -115,6 +115,7 @@ import InfoGeometry.Physics.LorentzBoostKreinConfinementAudit
 import InfoGeometry.Physics.DilatonWeylAnomalyInflowBridge
 import InfoGeometry.Physics.DilatonWeylAnomalyInflowBridgeAudit
 import InfoGeometry.Physics.BerryKeatingDilationSpectrum
+import InfoGeometry.Physics.DilationMetaplecticOperator
 import InfoGeometry.Physics.BerryKeatingDilationSpectrumAudit
 import InfoGeometry.Physics.KreinBRSTGhostConfinement
 import InfoGeometry.Physics.KreinBRSTGhostConfinementAudit

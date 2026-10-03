@@ -11,11 +11,12 @@ three-channel boundary calculation.
 
 Closed here:
 
-* a three-point boundary packet has three nilpotent on-shell edge operators and
-  three logarithmic channel forms;
+* a three-point algebraic packet has three square-zero edge operators and three
+  logarithmic channel forms; no on-shell interpretation is asserted;
 * the advertised "super-amplitude volume" is exactly the three-term mixed
   expression;
-* left multiplication by an on-shell nilpotent edge removes its own channel;
+* left multiplication by a square-zero edge removes its own channel under the
+  explicit mixed-volume identity;
 * if a separate owner supplies that the mixed expression vanishes, an arbitrary
   BCFW-style readout follows through the supplied comparison implication.
 

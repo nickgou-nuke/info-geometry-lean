@@ -50,9 +50,12 @@
 	path = external_refs/GIFT
 	url = https://github.com/gift-framework/GIFT.git
 	ignore = dirty
+[submodule "artifacts/alexandria/external/duality_repo"]
+	path = artifacts/alexandria/external/duality_repo
+	url = https://github.com/madvorak/duality.git
 [submodule "external_refs/gift-framework-core"]
 	path = external_refs/gift-framework-core
-	url = https://github.com/Arithmon/K7-Lean.git
+	url = https://github.com/gift-framework/core.git
 	ignore = dirty
 [submodule "external_refs/geoalg"]
 	path = external_refs/geoalg

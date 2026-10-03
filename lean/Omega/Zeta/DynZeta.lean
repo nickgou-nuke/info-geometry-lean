@@ -3,6 +3,7 @@ import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
+import Mathlib.Data.Finset.NatDivisors
 import Omega.Graph.TransferMatrix
 import Omega.Core.Fib
 import Omega.Folding.ShiftDynamics
@@ -1157,14 +1158,62 @@ theorem primitiveOrbitNumerator_prime {p : Nat} (hp : Nat.Prime p) :
 
 /-- P(pq) = L(pq) - L(p) - L(q) + 1 verified for small distinct prime pairs.
     prop:zetaK-mobius-primitive -/
+private theorem moebius_mul_primes {p q : Nat} (hp : p.Prime) (hq : q.Prime)
+    (hcop : Nat.Coprime p q) :
+    ArithmeticFunction.moebius (p * q) = 1 := by
+  have hsq : Squarefree (p * q) :=
+    (Nat.squarefree_mul hcop).2 ⟨hp.squarefree, hq.squarefree⟩
+  rw [ArithmeticFunction.moebius_apply_of_squarefree hsq,
+    ArithmeticFunction.cardFactors_mul hp.ne_zero hq.ne_zero,
+    ArithmeticFunction.cardFactors_apply_prime hp,
+    ArithmeticFunction.cardFactors_apply_prime hq]
+  norm_num
+
+private theorem divisors_mul_primes {p q : Nat} (hp : p.Prime) (hq : q.Prime) :
+    Nat.divisors (p * q) = {1, p, q, p * q} := by
+  rw [Nat.divisors_mul, hp.divisors, hq.divisors]
+  ext d
+  simp [Finset.mem_mul, eq_comm]
+  all_goals tauto
+
 theorem primitiveOrbitNumerator_two_primes_small :
     primitiveOrbitNumerator (2 * 3) = lucasNum (2 * 3) - lucasNum 2 - lucasNum 3 + 1 ∧
     primitiveOrbitNumerator (2 * 5) = lucasNum (2 * 5) - lucasNum 2 - lucasNum 5 + 1 ∧
     primitiveOrbitNumerator (3 * 5) = lucasNum (3 * 5) - lucasNum 3 - lucasNum 5 + 1 ∧
     primitiveOrbitNumerator (2 * 7) = lucasNum (2 * 7) - lucasNum 2 - lucasNum 7 + 1 ∧
     primitiveOrbitNumerator (3 * 7) = lucasNum (3 * 7) - lucasNum 3 - lucasNum 7 + 1 := by
-  refine ⟨by decide, by decide, by decide,
-          by decide, by decide⟩
+  have hμ1 : ArithmeticFunction.moebius 1 = 1 := ArithmeticFunction.moebius_apply_one
+  have hμ2 : ArithmeticFunction.moebius 2 = -1 := by
+    exact ArithmeticFunction.moebius_apply_prime (by norm_num : Nat.Prime 2)
+  have hμ3 : ArithmeticFunction.moebius 3 = -1 := by
+    exact ArithmeticFunction.moebius_apply_prime (by norm_num : Nat.Prime 3)
+  have hμ5 : ArithmeticFunction.moebius 5 = -1 := by
+    exact ArithmeticFunction.moebius_apply_prime (by norm_num : Nat.Prime 5)
+  have hμ7 : ArithmeticFunction.moebius 7 = -1 := by
+    exact ArithmeticFunction.moebius_apply_prime (by norm_num : Nat.Prime 7)
+  have hμ6 : ArithmeticFunction.moebius 6 = 1 := by
+    simpa [show 6 = 2 * 3 by norm_num] using
+      moebius_mul_primes (p := 2) (q := 3) (by norm_num) (by norm_num) (by norm_num)
+  have hμ10 : ArithmeticFunction.moebius 10 = 1 := by
+    simpa [show 10 = 2 * 5 by norm_num] using
+      moebius_mul_primes (p := 2) (q := 5) (by norm_num) (by norm_num) (by norm_num)
+  have hμ15 : ArithmeticFunction.moebius 15 = 1 := by
+    simpa [show 15 = 3 * 5 by norm_num] using
+      moebius_mul_primes (p := 3) (q := 5) (by norm_num) (by norm_num) (by norm_num)
+  have hμ14 : ArithmeticFunction.moebius 14 = 1 := by
+    simpa [show 14 = 2 * 7 by norm_num] using
+      moebius_mul_primes (p := 2) (q := 7) (by norm_num) (by norm_num) (by norm_num)
+  have hμ21 : ArithmeticFunction.moebius 21 = 1 := by
+    simpa [show 21 = 3 * 7 by norm_num] using
+      moebius_mul_primes (p := 3) (q := 7) (by norm_num) (by norm_num) (by norm_num)
+  have hdiv6 := divisors_mul_primes (p := 2) (q := 3) (by norm_num) (by norm_num)
+  have hdiv10 := divisors_mul_primes (p := 2) (q := 5) (by norm_num) (by norm_num)
+  have hdiv15 := divisors_mul_primes (p := 3) (q := 5) (by norm_num) (by norm_num)
+  have hdiv14 := divisors_mul_primes (p := 2) (q := 7) (by norm_num) (by norm_num)
+  have hdiv21 := divisors_mul_primes (p := 3) (q := 7) (by norm_num) (by norm_num)
+  norm_num [primitiveOrbitNumerator, lucasNum, hdiv6, hdiv10,
+    hdiv15, hdiv14, hdiv21,
+    hμ1, hμ2, hμ3, hμ5, hμ7, hμ6, hμ10, hμ15, hμ14, hμ21]
 
 /-- Primitive orbit numerator at prime square: P(p²) = L(p²) - L(p).
     prop:zetaK-mobius-primitive -/
@@ -1282,7 +1331,7 @@ theorem primitiveOrbitNumerator_pos (n : Nat) (hn : 1 ≤ n) :
   induction n using Nat.strongRecOn with
   | _ n ih =>
     match n, hn with
-    | 1, _ => decide
+    | 1, _ => simp [primitiveOrbitNumerator]
     | n + 2, _ =>
       -- From definition: prOrbNum(n) = L(n) + ∑_{d|n,d<n} μ(n/d)*L(d)
       -- Since |μ| ≤ 1: prOrbNum(n) ≥ L(n) - ∑_{d|n,d<n} L(d) > 0

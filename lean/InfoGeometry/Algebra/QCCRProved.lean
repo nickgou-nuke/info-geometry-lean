@@ -160,18 +160,9 @@ def P_matrix_n2 : Matrix (Fin 4) (Fin 4) ℝ :=
   !![1,0,0,0; 0,0,1,0; 0,1,0,0; 0,0,0,1]
 
 theorem P_square_eq_I : P_matrix_n2 * P_matrix_n2 = (1 : Matrix (Fin 4) (Fin 4) ℝ) := by
-  -- Compute over ℚ where decide works, then cast to ℝ
-  let P_ℚ : Matrix (Fin 4) (Fin 4) ℚ := !![1,0,0,0; 0,0,1,0; 0,1,0,0; 0,0,0,1]
-  have h_ℚ : P_ℚ * P_ℚ = (1 : Matrix (Fin 4) (Fin 4) ℚ) := by decide
-  have h_map : (P_ℚ.map (algebraMap ℚ ℝ)) = P_matrix_n2 := by
-    ext i j; fin_cases i <;> fin_cases j <;> simp [P_matrix_n2, P_ℚ]
-  have h_map_one : ((1 : Matrix (Fin 4) (Fin 4) ℚ).map (algebraMap ℚ ℝ)) = (1 : Matrix (Fin 4) (Fin 4) ℝ) := by
-    ext i j; fin_cases i <;> fin_cases j <;> simp
-  calc
-    P_matrix_n2 * P_matrix_n2 = (P_ℚ.map (algebraMap ℚ ℝ)) * (P_ℚ.map (algebraMap ℚ ℝ)) := by rw [h_map]
-    _ = (P_ℚ * P_ℚ).map (algebraMap ℚ ℝ) := by simp [Matrix.map_mul]
-    _ = (1 : Matrix (Fin 4) (Fin 4) ℚ).map (algebraMap ℚ ℝ) := by rw [h_ℚ]
-    _ = (1 : Matrix (Fin 4) (Fin 4) ℝ) := by rw [h_map_one]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [P_matrix_n2, Matrix.mul_apply, Fin.sum_univ_four]
 
 theorem T_eq_q_mul_P (q : ℝ) : T_matrix_n2 q = q • P_matrix_n2 := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [T_matrix_n2, P_matrix_n2, Matrix.smul_apply]

@@ -1,0 +1,1 @@
+Kernel target: `lean/InfoGeometry/Algebra/CubicJordanFreudenthal.lean`. Formal proof currently covers the diagonal cubic Jordan subalgebra via `freudenthal_identity_diagonal`, cyclic order-three symmetry of the Albert coordinate rotation, and explicit quadratic polarization definition.

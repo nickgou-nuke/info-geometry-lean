@@ -71,12 +71,19 @@ def gaugeAnomalyJordanBlockAtMinusHalf : Prop :=
 
 private theorem minusHalfEigenvector_kernel :
     gaugeAnomalyMinusHalfMatrix.mulVec gaugeAnomalyMinusHalfEigenvector = 0 := by
-  decide
+  ext i
+  fin_cases i <;>
+    simp [gaugeAnomalyMinusHalfMatrix, gaugeAnomalyMinusHalfEigenvector,
+      Matrix.mulVec, dotProduct, Fin.sum_univ_four] <;> norm_num
 
 private theorem minusHalfGeneralizedVector_chain :
     gaugeAnomalyMinusHalfMatrix.mulVec gaugeAnomalyMinusHalfGeneralizedVector =
       gaugeAnomalyMinusHalfEigenvector := by
-  decide
+  ext i
+  fin_cases i <;>
+    simp [gaugeAnomalyMinusHalfMatrix, gaugeAnomalyMinusHalfGeneralizedVector,
+      gaugeAnomalyMinusHalfEigenvector, Matrix.mulVec, dotProduct,
+      Fin.sum_univ_four] <;> norm_num
 
 private theorem minusHalfEigenspace_line (x : Fin 4 → ℚ)
     (hx : gaugeAnomalyMinusHalfMatrix.mulVec x = 0) :
@@ -159,7 +166,11 @@ private theorem gaugeAnomalyJordanSpectralMatrixIdentity :
         (3 / 4 : ℚ) • gaugeAnomalyJordanParryKernel ^ 2 -
           (1 / 8 : ℚ) • gaugeAnomalyJordanParryKernel -
             (1 / 8 : ℚ) • (1 : Matrix (Fin 4) (Fin 4) ℚ) := by
-  decide
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [gaugeAnomalyJordanParryKernel, Matrix.mul_apply,
+      Matrix.one_apply, Fin.sum_univ_four, pow_succ,
+      Matrix.cons_val_two, Matrix.cons_val_three]
 
 /-- Paper-facing wrapper exposing the explicit Parry kernel, its row-stochasticity, and the
 stationarity of the closed-form distribution `π = (4/9, 2/9, 2/9, 1/9)`. -/

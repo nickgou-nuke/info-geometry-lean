@@ -7,8 +7,9 @@ open InfoGeometry.Physics.AmplituhedronBostConnes
 
 set_option linter.unusedVariables false
 
-/-- Faithful Automath Omega: Bost-Connes KMS states at inverse temperature β evaluate to the Riemann zeta function -/
-theorem omega_bost_connes_kms (β : ℂ) :
-    all_loop_integrand_bost_connes_kms_state β = riemannZeta β := rfl
+/-- The direct zeta readout unfolds to `riemannZeta`; it is not a KMS-state
+evaluation theorem. -/
+theorem omega_riemann_zeta_readout (β : ℂ) :
+    riemannZetaReadout β = riemannZeta β := rfl
 
 end Automath.Generated

@@ -62,11 +62,38 @@ def pom_microcanonical_fold_posterior_count_and_prob_statement : Prop :=
     pom_microcanonical_fold_posterior_count_and_prob_completion_count_falling = 30 ∧
     pom_microcanonical_fold_posterior_count_and_prob_trajectory_probability = (3 : ℚ) / 56
 
+private lemma choose_five_two : Nat.choose 5 2 = 10 := by
+  rw [Nat.choose_two_right]
+
+private lemma choose_eight_three : Nat.choose 8 3 = 56 := by
+  norm_num [Nat.choose]
+
 /-- The posterior count is the multinomial number of residual completions after fixing the trace,
 and dividing by the total class count yields the trajectory probability.
     thm:pom-microcanonical-fold-posterior-count-and-prob -/
 theorem paper_pom_microcanonical_fold_posterior_count_and_prob :
     pom_microcanonical_fold_posterior_count_and_prob_statement := by
-  refine ⟨by decide, by decide, by decide, by decide⟩
+  unfold pom_microcanonical_fold_posterior_count_and_prob_statement
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · norm_num [pom_microcanonical_fold_posterior_count_and_prob_completion_count,
+      pom_microcanonical_fold_posterior_count_and_prob_total_microstates,
+      pom_microcanonical_fold_posterior_count_and_prob_trace_length,
+      pom_microcanonical_fold_posterior_count_and_prob_residual_capacity_a,
+      pom_microcanonical_fold_posterior_count_and_prob_residual_capacity_b,
+      pom_microcanonical_fold_posterior_count_and_prob_residual_capacity_c,
+      choose_five_two]
+  · norm_num [pom_microcanonical_fold_posterior_count_and_prob_total_class_count,
+      pom_microcanonical_fold_posterior_count_and_prob_total_microstates,
+      choose_five_two, choose_eight_three]
+  · norm_num [pom_microcanonical_fold_posterior_count_and_prob_completion_count_falling]
+  · norm_num [pom_microcanonical_fold_posterior_count_and_prob_trajectory_probability,
+      pom_microcanonical_fold_posterior_count_and_prob_completion_count,
+      pom_microcanonical_fold_posterior_count_and_prob_total_class_count,
+      pom_microcanonical_fold_posterior_count_and_prob_total_microstates,
+      pom_microcanonical_fold_posterior_count_and_prob_trace_length,
+      pom_microcanonical_fold_posterior_count_and_prob_residual_capacity_a,
+      pom_microcanonical_fold_posterior_count_and_prob_residual_capacity_b,
+      pom_microcanonical_fold_posterior_count_and_prob_residual_capacity_c,
+      choose_five_two, choose_eight_three]
 
 end Omega.POM

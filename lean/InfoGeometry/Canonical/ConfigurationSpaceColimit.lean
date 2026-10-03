@@ -50,10 +50,10 @@ def configurationSpaceTower
   limit_readout := limit_arnold_readout
 
 /-- 
-THE FADELL-NEUWIRTH STABILIZATION THEOREM: 
-The Arnold mixed relations (which define the BCFW on-shell boundary operators) 
-are preserved under the injective pullback of the Fadell-Neuwirth fibrations. 
-This theorem proves they stabilize safely in the infinite-particle limit.
+Finite-stage preservation of the supplied Arnold mixed relation under the
+specified transition maps. The typeclass and compatibility fields encode the
+needed hypotheses; this statement alone is not a BCFW or analytic infinite-limit
+theorem.
 -/
 theorem configuration_space_homotopical_stabilization
     (CohomologyRing_n : ℕ → Type u)

@@ -3,8 +3,6 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoBooleanNormalizer
 import Mathlib.Tactic
 
-set_option maxHeartbeats 2000000
-
 namespace InfoGeometry.Algebra.Zorn.G2TwoOuterGenerators
 
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
@@ -76,19 +74,28 @@ lemma F2_bit_sq (x : Bool) :
     bitToF2 x * bitToF2 x = bitToF2 x := by
   cases x <;> simp [bitToF2]
 
+lemma bitToF2_add2 (a b : Bool) :
+    bitToF2 (add2 a b) = bitToF2 a + bitToF2 b := by
+  cases a <;> cases b <;> rfl
+
 theorem g2Fun_mul (X Y : SplitOctF2) :
     g2Fun (mul X Y) = mul (g2Fun X) (g2Fun Y) := by
   rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
   rcases Y with ⟨a', b', x0', x1', x2', y0', y1', y2'⟩
-  revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-  decide
+  ext <;> rw [← bitToF2_eq_iff] <;>
+    simp only [g2Fun, mul, mul2, dot3, cross0, cross1, cross2,
+      bitToF2_add2, bitToF2_xor, bitToF2_and] <;>
+    ring_nf <;>
+    simp only [F2_mul_two, F2_mul_three, F2_mul_four] <;> ring
 
 theorem g4Fun_mul (X Y : SplitOctF2) :
     g4Fun (mul X Y) = mul (g4Fun X) (g4Fun Y) := by
   rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
   rcases Y with ⟨a', b', x0', x1', x2', y0', y1', y2'⟩
-  revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-  decide
+  ext <;> rw [← bitToF2_eq_iff] <;>
+    simp only [g4Fun, mul, mul2, dot3, cross0, cross1, cross2,
+      bitToF2_add2, bitToF2_xor, bitToF2_and] <;>
+    ring_nf <;> simp only [F2_mul_two] <;> ring
 
 def g2Equiv : SplitOctF2 ≃ SplitOctF2 where
   toFun := g2Fun

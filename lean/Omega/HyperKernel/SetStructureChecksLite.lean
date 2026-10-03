@@ -1,6 +1,7 @@
 import Omega.HyperKernel.SetStructure
 import Omega.HyperKernel.Enum
 import Omega.HyperKernel.AutoSeed
+import Omega.HyperKernel.SeedCore
 
 namespace Omega.HyperKernel
 namespace SetStructureChecksLite
@@ -37,7 +38,17 @@ def signatureCurve_seed_n4 : Option (List (Prod Nat Nat)) :=
 /-- every length has a prefix count entry -/
 theorem signatureCurve_seed_n4_has8 :
     (signatureCurve_seed_n4).map List.length = some 8 := by
-  decide
+  have hseed : seedClosure_n4.isSome := by
+    unfold seedClosure_n4
+    cases h : AutoSeed.findMinGenerators 4 3 with
+    | none =>
+        have hfound := SeedCore.autoSeedFound_n4
+        simp [h] at hfound
+    | some result => rfl
+  unfold signatureCurve_seed_n4
+  cases h : seedClosure_n4 with
+  | none => simp [h] at hseed
+  | some dict => simp [h, SetStructure.signatureCountCurve]
 
 end SetStructureChecksLite
 end Omega.HyperKernel

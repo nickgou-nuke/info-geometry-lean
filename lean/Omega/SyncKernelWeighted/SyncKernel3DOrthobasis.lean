@@ -47,6 +47,9 @@ theorem paper_sync_kernel_3d_orthobasis :
       sync_kernel_3d_orthobasis_qform
         sync_kernel_3d_orthobasis_phi2
         sync_kernel_3d_orthobasis_phi2 = 2 / 9 := by
-  decide
+  norm_num [sync_kernel_3d_orthobasis_qform, sync_kernel_3d_orthobasis_eta,
+    sync_kernel_3d_orthobasis_psi, sync_kernel_3d_orthobasis_psiprime,
+    sync_kernel_3d_orthobasis_phi2, syncKernel3DHessianMatrix,
+    Fin.sum_univ_succ]
 
 end Omega.SyncKernelWeighted

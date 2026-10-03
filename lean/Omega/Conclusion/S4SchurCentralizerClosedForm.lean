@@ -34,6 +34,23 @@ abbrev conclusion_s4_schur_centralizer_closed_form_block_decomposition :=
   Σ ρ : conclusion_s4_schur_centralizer_closed_form_irrep,
     conclusion_s4_schur_centralizer_closed_form_block ρ
 
+private theorem conclusion_s4_schur_centralizer_closed_form_block_card_formula :
+    Fintype.card conclusion_s4_schur_centralizer_closed_form_block_decomposition =
+      ∑ ρ : conclusion_s4_schur_centralizer_closed_form_irrep,
+        conclusion_s4_schur_centralizer_closed_form_multiplicity ρ ^ 2 := by
+  simp [conclusion_s4_schur_centralizer_closed_form_block_decomposition,
+    conclusion_s4_schur_centralizer_closed_form_block,
+    conclusion_s4_schur_centralizer_closed_form_multiplicity, pow_two]
+
+private theorem conclusion_s4_schur_centralizer_closed_form_dimension_sum :
+    (∑ ρ : conclusion_s4_schur_centralizer_closed_form_irrep,
+      conclusion_s4_schur_centralizer_closed_form_multiplicity ρ ^ 2) = 131 := by
+  have h_univ : (Finset.univ : Finset conclusion_s4_schur_centralizer_closed_form_irrep) =
+      {.sgn, .v2, .v3, .v3prime} := by decide
+  rw [h_univ]
+  simp [Finset.sum_insert, Finset.sum_singleton,
+    conclusion_s4_schur_centralizer_closed_form_multiplicity]
+
 /-- Concrete statement package for the closed-form `S₄` Schur centralizer. -/
 def conclusion_s4_schur_centralizer_closed_form_statement : Prop :=
   conclusion_s4_hodge_determines_fixedpoint_counts_statement ∧
@@ -71,7 +88,8 @@ theorem paper_conclusion_s4_schur_centralizer_closed_form :
         conclusion_s4_hodge_determines_fixedpoint_counts_v2_character,
         conclusion_s4_hodge_determines_fixedpoint_counts_v3_character,
         conclusion_s4_hodge_determines_fixedpoint_counts_v3prime_character]
-  · decide
-  · decide
+  · exact conclusion_s4_schur_centralizer_closed_form_block_card_formula
+  · rw [conclusion_s4_schur_centralizer_closed_form_block_card_formula]
+    exact conclusion_s4_schur_centralizer_closed_form_dimension_sum
 
 end Omega.Conclusion

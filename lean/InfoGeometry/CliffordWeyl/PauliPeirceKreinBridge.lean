@@ -2,6 +2,7 @@ import InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution
 import InfoGeometry.CliffordWeyl.ChiralIdeals
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Krein.RealPlaneMatrixBridge
+import InfoGeometry.Canonical.Cl11SplitQuaternionMobiusBridge
 
 /-!
 # InfoGeometry.CliffordWeyl.PauliPeirceKreinBridge
@@ -10,7 +11,8 @@ Genuine closure of the join between three previously disconnected lanes:
 
 1. **Split Clifford / DeWitt-split lane.** `InfoGeometry.Clifford.Cl11Matrix` realizes
    `Cl(1,1)` as `Mat₂(ℝ)` by the real Pauli matrices
-   `Eplus = σ₃` (squares to `+1`), `Eminus = iσ₂` (squares to `-1`),
+   `Eplus = σ₃` (squares to `+1`), `Eminus = ε` (the real elliptic generator,
+   squares to `-1`),
    `J1 = σ₁ = Eplus * Eminus`.
 
 2. **Peirce / projector lane.** `InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution`
@@ -40,6 +42,7 @@ namespace InfoGeometry.CliffordWeyl.PauliPeirceKreinBridge
 open InfoGeometry.Clifford.Cl11Matrix
 open InfoGeometry.OperatorAlgebra
 open InfoGeometry.CliffordWeyl
+open InfoGeometry.Canonical.Cl11SplitQuaternionMobiusBridge
 
 /-! ## 1. The Pauli generator is a chiral involution -/
 
@@ -71,6 +74,39 @@ theorem pauliChiral_Pright :
     simp [ChiralInvolution.Pright, pauliChiral, Eplus, Matrix.smul_apply,
       Matrix.sub_apply]; ring
 
+/-! ## 2a. The split product blade is the existing Peirce involution -/
+
+/-- The real split product `splitIL = splitI * splitL` is the Pauli involution
+`Eplus`.  This transports the product of the elliptic and hyperbolic matrix roots
+to the already-owned Peirce grading; it does not introduce a scalar imaginary
+unit or a second projector construction. -/
+theorem splitIL_eq_Eplus : splitIL = Eplus := by
+  rw [splitIL_eq_sigma3]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Eplus, BottPeriodicityReconciliation.sigma3,
+      BottPeriodicityReconciliation.sigma3R]
+
+/-- The product blade's involution is literally the chiral operator already
+feeding the Peirce projectors. -/
+theorem splitIL_eq_pauliChiral_chi : splitIL = pauliChiral.chi := by
+  rw [splitIL_eq_Eplus, pauliChiral_chi]
+
+/-- The normalized `+` operator root of `splitIL` is the existing left Peirce
+projector.  Both terms are real `2 × 2` matrices; the identity is the matrix
+identity and multiplication is matrix multiplication. -/
+theorem splitIL_leftPeirce_eq_pauliChiral_Pleft :
+    (1 / 2 : ℝ) • ((1 : Mat2) + splitIL) = pauliChiral.Pleft := by
+  rw [splitIL_eq_pauliChiral_chi]
+  rfl
+
+/-- The normalized `−` operator root of `splitIL` is the existing right Peirce
+projector. -/
+theorem splitIL_rightPeirce_eq_pauliChiral_Pright :
+    (1 / 2 : ℝ) • ((1 : Mat2) - splitIL) = pauliChiral.Pright := by
+  rw [splitIL_eq_pauliChiral_chi]
+  rfl
+
 /-- Reading off the two projections: the `+1` sheet projector keeps the top row. -/
 @[simp] theorem pauliChiral_Pleft_apply (M : Mat2) :
     pauliChiral.Pleft * M = !![M 0 0, M 0 1; 0, 0] := by
@@ -85,7 +121,7 @@ theorem pauliChiral_Pright :
 
 /-! ## 3. Oddness of the two remaining Pauli generators -/
 
-/-- The negative Pauli generator `Eminus = iσ₂` anticommutes with the chiral involution. -/
+/-- The real elliptic generator `Eminus` anticommutes with the chiral involution. -/
 theorem Eminus_anticommutes_chi :
     Eminus * pauliChiral.chi = -(pauliChiral.chi * Eminus) := by
   ext i j; fin_cases i <;> fin_cases j <;>

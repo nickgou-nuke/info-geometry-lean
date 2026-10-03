@@ -11,7 +11,7 @@ natural-cone vocabulary.
 This file proves only finite algebra on abstract zeta-like readouts
 `ZetaCenteredChart → ℂ`:
 
-* the antiunitary `J` action induced by the critical mirror;
+* the conjugate-linear involution `J` induced by the critical mirror;
 * the `J`-even and `J`-odd projectors;
 * a `J`-even completed readout has `P⁺ ξ = ξ` and `P⁻ ξ = 0`;
 * a nonzero odd part of an uncompleted readout is exactly a nonzero supplied
@@ -48,10 +48,10 @@ open ZetaCenteredChart
 abbrev ZetaReadout : Type :=
   ZetaCenteredChart → ℂ
 
-/-! ## Antiunitary critical-mirror action and projectors -/
+/-! ## Conjugate-linear critical-mirror action and projectors -/
 
 /--
-Antiunitary critical-mirror action on a zeta-like readout.
+Conjugate-linear critical-mirror action on a zeta-like readout.
 
 In centered coordinates this is
 `(J ⋅ F)(u,v) = star (F (-u,v))`.
@@ -59,21 +59,25 @@ In centered coordinates this is
 def JAction (F : ZetaReadout) : ZetaReadout :=
   fun x => star (F (criticalMirror x))
 
-/-- A readout is `J`-even when it is fixed by the antiunitary critical mirror. -/
+/-- A readout is `J`-even when it is fixed by the conjugate-linear critical mirror. -/
 def IsJEven (F : ZetaReadout) : Prop :=
   JAction F = F
 
-/-- A readout is `J`-odd when the antiunitary critical mirror negates it. -/
+/-- A readout is `J`-odd when the conjugate-linear critical mirror negates it. -/
 def IsJOdd (F : ZetaReadout) : Prop :=
   JAction F = -F
 
-/-- The `+1` Cartan projector for the antiunitary critical mirror. -/
+/-- The `+1` projector for the conjugate-linear critical mirror. -/
 def JPlusProjector (F : ZetaReadout) : ZetaReadout :=
   fun x => (1 / 2 : ℂ) * (F x + JAction F x)
 
-/-- The `-1` Cartan projector for the antiunitary critical mirror. -/
+/-- The `-1` projector for the conjugate-linear critical mirror. -/
 def JMinusProjector (F : ZetaReadout) : ZetaReadout :=
   fun x => (1 / 2 : ℂ) * (F x - JAction F x)
+
+/-! These are projectors on the underlying real vector space of complex-valued
+readouts. `JAction` is conjugate-linear over `ℂ`, so the eigenspaces need not be
+complex subspaces; the real scalar `1/2` is essential to the real-linear split. -/
 
 @[simp] theorem JAction_involutive (F : ZetaReadout) :
     JAction (JAction F) = F := by
@@ -120,11 +124,50 @@ theorem JMinus_isJOdd (F : ZetaReadout) :
   simp [JAction, JMinusProjector, criticalMirror]
   ring
 
+/-- A `J`-odd readout is entirely in the negative projector sector. -/
+theorem JMinus_eq_self_of_JOdd
+    {F : ZetaReadout} (hF : IsJOdd F) :
+    JMinusProjector F = F := by
+  funext x
+  have hx : JAction F x = -F x := by
+    exact congrFun hF x
+  simp [JMinusProjector, hx]
+  ring
+
+/-- A `J`-odd readout has zero positive projector. -/
+theorem JPlus_eq_zero_of_JOdd
+    {F : ZetaReadout} (hF : IsJOdd F) :
+    JPlusProjector F = 0 := by
+  funext x
+  have hx : JAction F x = -F x := by
+    exact congrFun hF x
+  simp [JPlusProjector, hx]
+
+/-- The two mirror projectors are idempotent as real-linear maps. -/
+theorem JPlus_idempotent (F : ZetaReadout) :
+    JPlusProjector (JPlusProjector F) = JPlusProjector F :=
+  JPlus_eq_self_of_JEven (JPlus_isJEven F)
+
+/-- The negative mirror projector is idempotent. -/
+theorem JMinus_idempotent (F : ZetaReadout) :
+    JMinusProjector (JMinusProjector F) = JMinusProjector F :=
+  JMinus_eq_self_of_JOdd (JMinus_isJOdd F)
+
+/-- The two mirror projector sectors annihilate in this order. -/
+theorem JPlus_after_JMinus_eq_zero (F : ZetaReadout) :
+    JPlusProjector (JMinusProjector F) = 0 := by
+  exact JPlus_eq_zero_of_JOdd (JMinus_isJOdd F)
+
+/-- The two mirror projector sectors annihilate in the reverse order. -/
+theorem JMinus_after_JPlus_eq_zero (F : ZetaReadout) :
+    JMinusProjector (JPlusProjector F) = 0 :=
+  JMinus_eq_zero_of_JEven (JPlus_isJEven F)
+
 /-! ## Completed xi and uncompleted zeta readout predicates -/
 
 /--
 Explicit premise saying an abstract completed xi readout satisfies the
-antiunitary critical-mirror symmetry.
+conjugate-linear critical-mirror symmetry.
 
 Analytically, this would be supplied from Schwarz reflection plus the completed
 functional equation.  This file does not prove those analytic facts.

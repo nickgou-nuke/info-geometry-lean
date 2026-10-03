@@ -53,7 +53,8 @@ def ratLift (A : M8Z) : M8Q :=
 @[simp] theorem ratLift_zsmul (n : ℤ) (A : M8Z) :
     ratLift (n • A) = (n : ℚ) • ratLift A := by
   ext i j
-  simp [ratLift]
+  change ((n • A i j : ℤ) : ℚ) = (n : ℚ) * (A i j : ℚ)
+  simp
 
 def braid12Q : M8Q := ratLift braid12
 def braid23Q : M8Q := ratLift braid23
@@ -63,23 +64,23 @@ def braid23InvQ : M8Q := (1 / 2 : ℚ) • ratLift braid23InvNumerator
 
 theorem braid12Q_mul_inv :
     braid12Q * braid12InvQ = 1 := by
-  rw [braid12Q, braid12InvQ, ← Matrix.mul_smul]
+  rw [braid12Q, braid12InvQ, Matrix.mul_smul]
   rw [← ratLift_mul, majorana_projective_inverses.1, ratLift_zsmul, ratLift_one]
-  norm_num
+  norm_num [smul_smul]
 
 theorem braid23Q_mul_inv :
     braid23Q * braid23InvQ = 1 := by
-  rw [braid23Q, braid23InvQ, ← Matrix.mul_smul]
+  rw [braid23Q, braid23InvQ, Matrix.mul_smul]
   rw [← ratLift_mul, majorana_projective_inverses.2, ratLift_zsmul, ratLift_one]
-  norm_num
+  norm_num [smul_smul]
 
 theorem braid12InvQ_mul :
     braid12InvQ * braid12Q = 1 := by
-  native_decide
+  exact mul_eq_one_comm.mp braid12Q_mul_inv
 
 theorem braid23InvQ_mul :
     braid23InvQ * braid23Q = 1 := by
-  native_decide
+  exact mul_eq_one_comm.mp braid23Q_mul_inv
 
 /-- Genuine rational unit lifting the first finite Majorana braid generator. -/
 def braid12Unit : Units M8Q where
@@ -116,12 +117,12 @@ def majoranaArtinSystem :
   gen i := if i = 0 then braid12Unit else braid23Unit
   adjacent i j hij := by
     fin_cases i <;> fin_cases j
-    · omega
+    · norm_num at hij
     · simpa using majoranaUnit_adjacent_artin
-    · omega
-    · omega
+    · norm_num at hij
+    · norm_num at hij
   farCommute i j hij := by
-    fin_cases i <;> fin_cases j <;> omega
+    fin_cases i <;> fin_cases j <;> norm_num at hij
 
 /-- Canonical universal Majorana representation of B₃. -/
 def majoranaB3Hom :
@@ -130,16 +131,14 @@ def majoranaB3Hom :
 
 @[simp] theorem majoranaB3Hom_sigma0 :
     majoranaB3Hom (σ' 2 (0 : Fin 2)) = braid12Unit := by
-  simpa [majoranaB3Hom, majoranaArtinSystem] using
-    ArtinBraidSystem.toGroupHom_generator majoranaArtinSystem (0 : Fin 2)
+  simp [majoranaB3Hom, ArtinBraidSystem.toGroupHom_generator, majoranaArtinSystem]
 
 @[simp] theorem majoranaB3Hom_sigma1 :
     majoranaB3Hom (σ' 2 (1 : Fin 2)) = braid23Unit := by
-  simpa [majoranaB3Hom, majoranaArtinSystem] using
-    ArtinBraidSystem.toGroupHom_generator majoranaArtinSystem (1 : Fin 2)
+  simp [majoranaB3Hom, ArtinBraidSystem.toGroupHom_generator, majoranaArtinSystem]
 
 /-- Deduplication principle: any legacy B₃ homomorphism with the same two
-Majorana generator images is definitionally forced to equal the universal one. -/
+Majorana generator images equals the universal one by its universal property. -/
 theorem majoranaB3Hom_unique
     (legacy : braid_group 3 →* Units M8Q)
     (h0 : legacy (σ' 2 (0 : Fin 2)) = braid12Unit)

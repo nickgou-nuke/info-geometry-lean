@@ -39,6 +39,10 @@ open InfoGeometry.Canonical.UHFTomitaTakesakiColimitBridge
 open InfoGeometry.Algebra.CuntzTensorQuotient
 open CStarStateColimit.Native
 open InfoGeometry.Canonical.CuntzStarInductiveSystem
+open InfoGeometry.Canonical.CuntzGNSFilteredSystem
+open CStarStateColimit.Native.FilteredGNSTomitaClosability
+open CStarStateColimit.Native.FilteredGNSTomitaClosedOperator
+open CStarStateColimit.Native.FilteredGNSTomitaClosedTransport
 
 /-! ## 1. Native finite Cuntz left/right commutant -/
 
@@ -133,17 +137,5 @@ theorem tomita_form_transition
     Stage T ω hclos hij x y
 
 end GNS
-
-/-! ## 4. Explicit classification boundary -/
-
-/-- Conditional readout for any downstream von Neumann-factor classification.
-
-The bridge does not derive Type III_1.  A downstream theorem may supply that
-classification and use this socket without changing the finite/UHF/GNS layer. -/
-theorem typeIII1_of_supplied_classification
-    (P : Prop)
-    (hP : P) :
-    P :=
-  hP
 
 end InfoGeometry.Canonical.BipartiteCuntzUHFBridge

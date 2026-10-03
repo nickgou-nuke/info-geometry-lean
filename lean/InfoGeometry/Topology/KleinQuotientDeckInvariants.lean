@@ -139,6 +139,36 @@ def deckA (p : PlanePoint) : PlanePoint :=
 def deckB (p : PlanePoint) : PlanePoint :=
   (-p.1, p.2 + 1)
 
+/-- The half-translation glide suggested by the log-coordinate model. -/
+def halfShiftGlide (p : PlanePoint) : PlanePoint :=
+  (-p.1, p.2 + 1 / 2)
+
+/-- Rescale the vertical coordinate so that a half-shift becomes one deck step. -/
+def halfShiftScale (p : PlanePoint) : PlanePoint :=
+  (p.1, 2 * p.2)
+
+/-- After doubling the vertical coordinate, the half-shift glide is exactly the
+existing Klein deck generator `deckB`; this identifies the two conventions. -/
+theorem halfShiftScale_glide (p : PlanePoint) :
+    halfShiftScale (halfShiftGlide p) = deckB (halfShiftScale p) := by
+  rcases p with ⟨x, y⟩
+  simp [halfShiftScale, halfShiftGlide, deckB]
+  ring
+
+/-- In the unscaled coordinates, two half-shift glides give one unit of vertical
+translation. -/
+theorem halfShiftGlide_sq (p : PlanePoint) :
+    halfShiftGlide (halfShiftGlide p) = (p.1, p.2 + 1) := by
+  rcases p with ⟨x, y⟩
+  simp [halfShiftGlide]
+  ring
+
+/-- The standard integer deck generator squares to translation by two units. -/
+theorem deckB_sq (p : PlanePoint) : deckB (deckB p) = (p.1, p.2 + 2) := by
+  rcases p with ⟨x, y⟩
+  simp [deckB]
+  ring
+
 /-- Action of an arbitrary deck element on the plane. -/
 def deckAction (g : KleinDeckGroup) (p : PlanePoint) : PlanePoint :=
   (signR g.n * p.1 + g.m, p.2 + g.n)

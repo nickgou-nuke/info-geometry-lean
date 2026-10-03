@@ -148,8 +148,8 @@ trace identity. -/
 theorem eight_state_ratio_packet :
     InfoGeometry.Physics.EightStateTraceRatio.traceT3Sq /
         InfoGeometry.Physics.EightStateTraceRatio.traceQSq =
-      (3 : ℚ) / 8 :=
-  InfoGeometry.Physics.EightStateTraceRatio.trace_ratio_eq_three_eighths
+      (3 : ℚ) / 4 :=
+  InfoGeometry.Physics.EightStateTraceRatio.trace_ratio_eq_three_fourths
 
 /-- Exact plabic count identity and cluster-move invariance packet. -/
 theorem cluster_count_index_packet

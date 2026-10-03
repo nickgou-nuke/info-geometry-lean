@@ -37,6 +37,7 @@ open InfoGeometry.Topology
 open InfoGeometry.Topology.CuntzO2Carrier
 open InfoGeometry.Canonical.CuntzKMSCriticalTemperatureBridge
 open InfoGeometry.Canonical.CantorBoundaryCuntzShift
+open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
 variable (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op)
@@ -142,15 +143,5 @@ theorem dyadicWeight_succ (k : ℕ) :
   unfold dyadicWeight
   rw [pow_succ]
   ring
-
-/-! ## 4. Normalization-convention bridge -/
-
-/-- The two standard O_2 KMS conventions agree on the dimensionless product
-beta * energy = log 2. -/
-theorem kms_normalization_product
-    (beta energy : ℝ)
-    (h : beta * energy = Real.log 2) :
-    beta * energy = Real.log 2 :=
-  h
 
 end InfoGeometry.Canonical.CantorCuntzFractalBridge

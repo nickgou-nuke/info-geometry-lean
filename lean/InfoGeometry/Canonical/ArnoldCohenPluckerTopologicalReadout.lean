@@ -3,12 +3,12 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Basic
 
 /-!
-# Topological readout of the Arnold--Cohen Klein boundary
+# Topological readout of the Plücker Klein-null locus
 
 The algebraic owner supplies the six real Plücker coordinates and the Klein
 quadratic polynomial.  This file equips that finite carrier with the induced
 product topology, proves continuity of the polynomial readout, and identifies
-the on-shell boundary as its closed zero locus.  No analytic `d log` model or
+the Klein-null locus as its closed zero locus.  No analytic `d log` model or
 BCFW recursion theorem is asserted here.
 -/
 
@@ -50,8 +50,8 @@ theorem continuous_kleinQuadric :
   simpa [kleinQuadric] using
     ((hp12.mul hp34).sub (hp13.mul hp24)).add (hp14.mul hp23)
 
-theorem isClosed_isOnShellBoundary :
-    IsClosed {p : PluckerCoordinates ℝ | IsOnShellBoundary p} := by
+theorem isClosed_kleinNullLocus :
+    IsClosed {p : PluckerCoordinates ℝ | IsKleinNull p} := by
   change IsClosed (kleinQuadric ⁻¹' ({0} : Set ℝ))
   exact isClosed_singleton.preimage continuous_kleinQuadric
 

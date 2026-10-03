@@ -188,20 +188,20 @@ theorem shortRoot_projection :
     project shortRoot = ![Real.sqrt 2, 0] := by
   funext i
   fin_cases i
-  · simp [project, shortRoot, projection, dotProduct, Fin.sum_univ_three]
+  · simp [project, shortRoot, projection]
     field_simp [show Real.sqrt 2 ≠ 0 by positivity]
     nlinarith [sqrt_two_sq]
-  · simp [project, shortRoot, projection, dotProduct, Fin.sum_univ_three]
+  · simp [project, shortRoot, projection]
 
 theorem longRoot_projection :
     project longRoot =
       ![(3 : ℝ) / Real.sqrt 2, (3 : ℝ) / Real.sqrt 6] := by
   funext i
   fin_cases i
-  · simp [project, longRoot, projection, dotProduct, Fin.sum_univ_three]
+  · simp [project, longRoot, projection]
     field_simp [show Real.sqrt 2 ≠ 0 by positivity]
     ring
-  · simp [project, longRoot, projection, dotProduct, Fin.sum_univ_three]
+  · simp [project, longRoot, projection]
     field_simp [show Real.sqrt 6 ≠ 0 by positivity]
     ring
 
@@ -209,7 +209,7 @@ theorem shortRoot_projection_norm_sq :
     (project shortRoot 0) ^ 2 + (project shortRoot 1) ^ 2 = 2 := by
   rw [shortRoot_projection]
   change (Real.sqrt 2) ^ 2 + 0 ^ 2 = 2
-  simpa using sqrt_two_sq
+  simp
 
 theorem longRoot_projection_norm_sq :
     (project longRoot 0) ^ 2 + (project longRoot 1) ^ 2 = 6 := by
@@ -233,7 +233,7 @@ theorem projection_radius_sq_ratio :
 theorem shortHexagonPoint_squared_norm (i : Fin 6) :
     ∑ j : Fin 2, shortHexagonPoint i j * shortHexagonPoint i j = 2 := by
   fin_cases i <;>
-    simp [shortHexagonPoint, Fin.sum_univ_two, pow_two]
+    simp [shortHexagonPoint, Fin.sum_univ_two]
   all_goals field_simp [show Real.sqrt 2 ≠ 0 by positivity,
     show Real.sqrt 6 ≠ 0 by positivity]
   all_goals nlinarith [sqrt_two_sq, sqrt_six_sq]
@@ -241,7 +241,7 @@ theorem shortHexagonPoint_squared_norm (i : Fin 6) :
 theorem longHexagonPoint_squared_norm (i : Fin 6) :
     ∑ j : Fin 2, longHexagonPoint i j * longHexagonPoint i j = 6 := by
   fin_cases i <;>
-    simp [longHexagonPoint, Fin.sum_univ_two, pow_two]
+    simp [longHexagonPoint, Fin.sum_univ_two]
   all_goals field_simp [show Real.sqrt 2 ≠ 0 by positivity,
     show Real.sqrt 6 ≠ 0 by positivity]
   all_goals nlinarith [sqrt_two_sq, sqrt_six_sq]

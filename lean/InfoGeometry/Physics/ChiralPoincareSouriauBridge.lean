@@ -142,6 +142,46 @@ theorem det_spinorOuter_zero (lam mu : Fin 2 → ℂ) :
   simp [spinorOuter, Matrix.det_fin_two]
   ring
 
+/--
+A complex `2 × 2` matrix has zero determinant exactly when it is a spinor
+outer product.  This is the rank-at-most-one factorization used by the
+spinor-helicity carrier; no Hermitian or positivity condition is asserted.
+-/
+theorem det_eq_zero_iff_spinorOuter (A : M2C) :
+    A.det = 0 ↔ ∃ lam mu : Fin 2 → ℂ, A = spinorOuter lam mu := by
+  constructor
+  · intro hA
+    have hdet : A 0 0 * A 1 1 - A 0 1 * A 1 0 = 0 := by
+      simpa [Matrix.det_fin_two] using hA
+    by_cases h00 : A 0 0 = 0
+    · by_cases h01 : A 0 1 = 0
+      · refine ⟨![0, 1], (fun j => A 1 j), ?_⟩
+        ext i j
+        fin_cases i <;> fin_cases j <;>
+          simp [spinorOuter, h00, h01]
+      · have hprod : A 0 1 * A 1 0 = 0 := by
+          simpa [h00] using hdet
+        have h10 : A 1 0 = 0 := (mul_eq_zero.mp hprod).resolve_left h01
+        refine ⟨(fun i => A i 1), ![0, 1], ?_⟩
+        ext i j
+        fin_cases i <;> fin_cases j <;>
+          simp [spinorOuter, h00, h10]
+    · refine ⟨(fun i => A i 0), (fun j => A 0 j / A 0 0), ?_⟩
+      ext i j
+      fin_cases i <;> fin_cases j
+      · simp [spinorOuter, h00]
+      · simp [spinorOuter]
+        field_simp [h00]
+      · simp [spinorOuter, h00]
+      · simp [spinorOuter]
+        field_simp [h00]
+        calc
+          A 1 1 * A 0 0 = A 0 0 * A 1 1 := mul_comm _ _
+          _ = A 0 1 * A 1 0 := sub_eq_zero.mp hdet
+          _ = A 1 0 * A 0 1 := mul_comm _ _
+  · rintro ⟨lam, mu, rfl⟩
+    exact det_spinorOuter_zero lam mu
+
 /-! ## Souriau beta vector -/
 
 /-- Complexified Souriau inverse-temperature four-vector. -/

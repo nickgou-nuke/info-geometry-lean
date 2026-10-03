@@ -49,13 +49,13 @@ def fibonacciArtinSystem
   gen i := if i = 0 then rLinearEquiv q else bLinearEquiv q τ s hs hτ
   adjacent i j hij := by
     fin_cases i <;> fin_cases j
-    · omega
+    · norm_num at hij
     · simpa using
         fusionTree_artin_equiv q τ s hq_inv hq_pow3 hq5 h_poly hτq hs hτ
-    · omega
-    · omega
+    · norm_num at hij
+    · norm_num at hij
   farCommute i j hij := by
-    fin_cases i <;> fin_cases j <;> omega
+    fin_cases i <;> fin_cases j <;> norm_num at hij
 
 /-- Universal Fibonacci representation on the canonical `Braid.braid_group 3`. -/
 def fibonacciUniversalB3Hom

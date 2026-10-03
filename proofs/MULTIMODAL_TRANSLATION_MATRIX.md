@@ -142,27 +142,25 @@ Key Results:
    ✓ Exactly 3 mass sectors (no others possible)
 ```
 
-### 2.5 Groebner Basis Result
+### 2.5 Reported Groebner-Basis Calculation
 
-The Groebner basis computation shows:
+The accompanying calculation reports the elimination relation
+`t³ - t = 0`, which factors as `t(t - 1)(t + 1)` and therefore restricts a
+scalar solution `t` to `{-1, 0, +1}`.  This algebraic root statement does not,
+by itself, establish the number of irreducible components of the full
+tripotent variety or assign physical mass sectors.  A CAS computation is
+supporting evidence until its exact ideal, coefficient field, and certificate
+are independently checked; it is not a Lean theorem.
 
-**Elimination ideal:** I ∩ ℚ[t] contains t³ - t
+### 2.6 Determinant Strata
 
-**Factorization:** t³ - t = t(t-1)(t+1)
-
-**Roots:** t ∈ {-1, 0, +1}
-
-**Physical meaning:** Exactly 3 mass sectors!
-
-### 2.6 Primary Decomposition
-
-The tripotent variety has **3 irreducible components**:
-
-1. **det = +1 component:** Unitary sector (particles)
-2. **det = -1 component:** Anti-unitary sector (antiparticles)
-3. **det = 0 component:** Nilpotent sector (massless)
-
-**No other components exist!** (proved by Macaulay2)
+The stated tripotent determinant calculation gives the three scalar values
+`det(T) ∈ {-1, 0, +1}`.  This is an algebraic classification of determinant
+values only.  Assigning the `±1` strata to particles/antiparticles, or the
+zero-determinant stratum to massless particles, requires additional structures
+and is not a consequence of tripotency or determinant vanishing.  In
+particular, “nilpotent sector” here may describe a chosen matrix/operator model;
+it does not identify physical particles with nilpotent elements.
 
 ### 2.7 Translation to Lean
 

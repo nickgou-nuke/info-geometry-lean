@@ -2,7 +2,10 @@
 
 **Generated:** June 27, 2026  
 **Verification Method:** AST/AQL/HASH-driven code analysis  
-**Status:** ✅ NON-VACUOUS (syntactically verified, awaiting mathlib cache rebuild)
+**Status:** ⚠️ UNVERIFIED — the file below did not compile and was never indexed at the
+time of writing. Its own metrics table records `Compiled successfully: 0` and
+`Indexed in ArangoDB: 0 declarations`. Treat every "expected" figure here as a plan,
+not a result, and re-run the verification steps before relying on it.
 
 ---
 
@@ -170,7 +173,7 @@ db = ArangoClient(...).db('infogeometry')
 
 # Find all CliffordInclusionInjective declarations
 cursor = db.aql.execute('''
-  FOR d IN declarations
+  FOR d IN decls
     FILTER d.module == "InfoGeometry.Clifford.CliffordInclusionInjective"
     RETURN {name: d.name, kind: d.kind, shapeHash: d.shapeHash}
 ''')
@@ -182,9 +185,9 @@ cursor = db.aql.execute('''
 ```python
 # Find structurally identical proofs
 cursor = db.aql.execute('''
-  FOR d IN declarations
+  FOR d IN decls
     FILTER d.shapeHash != null
-    COLLECT shape = d.shapeHash
+    COLLECT shape = d.shapeHash.shapeHash
     INTO docs
     FILTER LENGTH(docs) > 1
     RETURN {shapeHash: shape, declarations: docs[*].name}
@@ -193,15 +196,20 @@ cursor = db.aql.execute('''
 
 **Expected:** `retract_incl_id` may match other retraction proofs in the repo.
 
-### Step 4: Extract Value Fingerprints
+### Step 4: Resolve the Owner and Value Fingerprint
 ```bash
-# For the main theorem
-python3 tools/infra/extract_value_fingerprint.py \
-  --module InfoGeometry.Clifford.CliffordInclusionInjective \
-  --decl incl_Cl_split_injective
+# Offline/native: resolve owners and value fingerprints for this module without
+# requiring a live Arango connection. Shape hashes are printed for the sampled
+# declarations; treat them as navigation evidence and open the owner file.
+python3 tools/infra/hash_owner_map.py <shapeHash> 40 \
+  > artifacts/dag/hash_owner_clifford_inclusion.json
 ```
 
-**Expected:** Canonical fingerprint for retraction-based injectivity proofs.
+**Expected:** owner files and declaration names for the sampled shape class. The
+value fingerprint of a specific declaration is read from the `decls` record's
+`valueFingerprint.shapeHash` (see `lean/DAG/Indexer.lean`, which also emits
+`canonicalTypeHash` and `canonicalValueHash`). There is no
+`extract_value_fingerprint.py` in this repository; do not reference it.
 
 ---
 
@@ -220,7 +228,11 @@ The AST/AQL/HASH methodology detects vacuous code through:
 | **Connected to owner** | ❌ Standalone | ✅ `ClNN.lean` tower |
 | **Honest proofs** | ❌ `sorry` / `True` | ✅ All proved, 0 placeholders |
 
-**Verdict:** ✅ NON-VACUOUS - Ready for AST/AQL/HASH indexing once mathlib cache is rebuilt.
+**Verdict:** ⚠️ UNVERIFIED. The syntactic argument above is reasonable, but at the time
+of writing the module had no successful build, no index entries, and no dependency
+edges. Non-vacuity is a claim to be established by a build plus an index refresh plus
+a kernel check — not by a source-reading table. Complete Steps 1-4 above and update
+this verdict with the observed counts and the commit they were taken at.
 
 ---
 

@@ -79,9 +79,77 @@ theorem incidence_card (p : Fin 63) : (incidence p).card = 3 := by
   fin_cases p <;> decide
 
 theorem incidence_edge_card : (Finset.univ.biUnion incidence).card = 63 := by
-  decide
+  have hcover : Finset.univ.biUnion incidence = Finset.univ := by
+    ext i
+    simp only [Finset.mem_biUnion, Finset.mem_univ, true_and, iff_true]
+    fin_cases i
+    · exact ⟨0, by decide⟩
+    · exact ⟨0, by decide⟩
+    · exact ⟨0, by decide⟩
+    · exact ⟨2, by decide⟩
+    · exact ⟨2, by decide⟩
+    · exact ⟨2, by decide⟩
+    · exact ⟨5, by decide⟩
+    · exact ⟨20, by decide⟩
+    · exact ⟨28, by decide⟩
+    · exact ⟨1, by decide⟩
+    · exact ⟨1, by decide⟩
+    · exact ⟨1, by decide⟩
+    · exact ⟨8, by decide⟩
+    · exact ⟨7, by decide⟩
+    · exact ⟨31, by decide⟩
+    · exact ⟨15, by decide⟩
+    · exact ⟨3, by decide⟩
+    · exact ⟨13, by decide⟩
+    · exact ⟨4, by decide⟩
+    · exact ⟨12, by decide⟩
+    · exact ⟨11, by decide⟩
+    · exact ⟨48, by decide⟩
+    · exact ⟨29, by decide⟩
+    · exact ⟨47, by decide⟩
+    · exact ⟨41, by decide⟩
+    · exact ⟨9, by decide⟩
+    · exact ⟨9, by decide⟩
+    · exact ⟨56, by decide⟩
+    · exact ⟨55, by decide⟩
+    · exact ⟨21, by decide⟩
+    · exact ⟨22, by decide⟩
+    · exact ⟨16, by decide⟩
+    · exact ⟨14, by decide⟩
+    · exact ⟨20, by decide⟩
+    · exact ⟨14, by decide⟩
+    · exact ⟨17, by decide⟩
+    · exact ⟨17, by decide⟩
+    · exact ⟨11, by decide⟩
+    · exact ⟨11, by decide⟩
+    · exact ⟨30, by decide⟩
+    · exact ⟨33, by decide⟩
+    · exact ⟨34, by decide⟩
+    · exact ⟨38, by decide⟩
+    · exact ⟨6, by decide⟩
+    · exact ⟨6, by decide⟩
+    · exact ⟨36, by decide⟩
+    · exact ⟨35, by decide⟩
+    · exact ⟨7, by decide⟩
+    · exact ⟨7, by decide⟩
+    · exact ⟨12, by decide⟩
+    · exact ⟨12, by decide⟩
+    · exact ⟨24, by decide⟩
+    · exact ⟨24, by decide⟩
+    · exact ⟨19, by decide⟩
+    · exact ⟨19, by decide⟩
+    · exact ⟨4, by decide⟩
+    · exact ⟨4, by decide⟩
+    · exact ⟨21, by decide⟩
+    · exact ⟨28, by decide⟩
+    · exact ⟨31, by decide⟩
+    · exact ⟨31, by decide⟩
+    · exact ⟨13, by decide⟩
+    · exact ⟨13, by decide⟩
+  rw [hcover]
+  rfl
 
 theorem incidence_flag_card : (∑ p : Fin 63, (incidence p).card) = 189 := by
-  decide
+  simp [incidence_card]
 
 end InfoGeometry.Algebra.Zorn.G2ParabolicIncidenceCertificate

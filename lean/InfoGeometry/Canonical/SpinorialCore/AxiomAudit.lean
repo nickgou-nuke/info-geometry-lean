@@ -10,6 +10,7 @@ import InfoGeometry.Canonical.SpinorialCore.All
 #print axioms InfoGeometry.Canonical.SpinorialCore.dual_flow_closed_form
 #print axioms InfoGeometry.Canonical.SpinorialCore.phase_conjugate_current
 #print axioms InfoGeometry.Canonical.SpinorialCore.G2.smith_certificate
+#print axioms InfoGeometry.Canonical.SpinorialCore.G2.relation_det
 #print axioms InfoGeometry.Canonical.SpinorialCore.G2.cokernelEquiv
 #print axioms InfoGeometry.Canonical.SpinorialCore.G2.relation_kernel_zero
 #print axioms InfoGeometry.Canonical.SpinorialCore.G2.primaryDecomposition

@@ -47,7 +47,11 @@ theorem compositeDirac_sq_expansion (DL : StageOne) (betaR DR : Atom) :
       (1 : StageOne) ⊗ₖ (DR * DR) := by
   unfold compositeDirac
   rw [add_mul, mul_add, mul_add]
-  simp only [Matrix.mul_kronecker_mul, Matrix.one_mul, Matrix.mul_one]
+  rw [← Matrix.mul_kronecker_mul DL DL betaR betaR,
+    ← Matrix.mul_kronecker_mul DL (1 : StageOne) betaR DR,
+    ← Matrix.mul_kronecker_mul (1 : StageOne) DL DR betaR,
+    ← Matrix.mul_kronecker_mul (1 : StageOne) (1 : StageOne) DR DR]
+  simp only [Matrix.one_mul, Matrix.mul_one]
   rw [Matrix.kronecker_add]
   abel
 
@@ -87,8 +91,7 @@ theorem offDiagonalDirac_anticomm_kreinBeta (v w : ℝ) :
       offDiagonalDirac v w * kreinBeta = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [kreinBeta, Eplus, offDiagonalDirac,
-      Matrix.mul_apply, Fin.sum_univ_two]
+    simp [kreinBeta, Eplus, offDiagonalDirac]
 
 /-- Concrete decoupling for the native off-diagonal right Dirac sector. -/
 theorem compositeDirac_chiral_decoupled
@@ -110,7 +113,8 @@ def totalBeta (betaL : StageOne) (betaR : Atom) : StageTwo :=
 theorem compositeDirac_transpose (DL : StageOne) (betaR DR : Atom) :
     (compositeDirac DL betaR DR)ᵀ =
       DLᵀ ⊗ₖ betaRᵀ + (1 : StageOne) ⊗ₖ DRᵀ := by
-  simp [compositeDirac, TowerMatrix.transpose_kronecker]
+  rw [compositeDirac, Matrix.transpose_add, transpose_kronecker,
+    transpose_kronecker, Matrix.transpose_one]
 
 /-- Finite Krein-adjoint compatibility of the composite operator. -/
 theorem compositeDirac_krein_self_adjoint
@@ -124,9 +128,8 @@ theorem compositeDirac_krein_self_adjoint
   rw [compositeDirac_transpose]
   unfold totalBeta compositeDirac
   rw [Matrix.mul_add, Matrix.add_mul]
-  simp only [Matrix.mul_kronecker_mul, Matrix.one_mul, Matrix.mul_one]
+  simp only [← Matrix.mul_kronecker_mul, Matrix.one_mul, Matrix.mul_one]
   rw [hSymmR, hAdjL, hAdjR, hSqR]
-  simp
 
 /-! ## Tensor-factor reflection -/
 
@@ -159,12 +162,14 @@ theorem tensorSwap_kronecker (A : StageOne) (B : Atom) :
   ext x y
   rcases x with ⟨⟨ux, ix⟩, jx⟩
   rcases y with ⟨⟨uy, iy⟩, jy⟩
-  have hux : ux = uy := Subsingleton.elim _ _
+  have hux : ux = (0 : Fin 1) := Subsingleton.elim _ _
+  have huy : uy = (0 : Fin 1) := Subsingleton.elim _ _
+  subst ux
   subst uy
   simp [tensorSwap, swapStageTwoIndexEquiv, swapStageTwoIndex,
     atomToStageOne, stageOneToAtom, stageOneIndexEquiv,
     Matrix.reindexAlgEquiv_apply, Matrix.reindex_apply,
-    Matrix.kroneckerMap_apply]
+    Matrix.kroneckerMap_apply, mul_comm]
 
 /-- Tensor swap is involutive. -/
 theorem tensorSwap_involutive :

@@ -23,6 +23,19 @@ open scoped BigOperators
 
 variable {R : Type*} [Semiring R]
 
+/-- For two square-zero elements in a ring, their sum is square-zero exactly
+when the two cross terms cancel.  This is the precise algebraic condition;
+square-zero of the summands alone does not imply square-zero of their sum. -/
+theorem add_sq_eq_zero_iff_cross_terms_cancel
+    {R : Type*} [Ring R] (A B : R)
+    (hA : A * A = 0) (hB : B * B = 0) :
+    (A + B) * (A + B) = 0 ↔ A * B + B * A = 0 := by
+  have hexpand :
+      (A + B) * (A + B) = A * A + (A * B + B * A) + B * B := by
+    noncomm_ring
+  rw [hexpand, hA, hB]
+  simp only [zero_add, add_zero]
+
 /-- A power above a vanishing power also vanishes. -/
 theorem pow_eq_zero_of_pow_eq_zero_of_le
     (A : R) {m k : ℕ} (hm : A ^ m = 0) (hmk : m ≤ k) :
@@ -57,4 +70,3 @@ theorem add_pow_eq_zero_of_commute_of_pow_eq_zero
     simp [hpB]
 
 end InfoGeometry.Algebra.CommutingNilpotentSum
-

@@ -25,32 +25,30 @@ projection pair attached to an involution,
   are its `±1` projectors — the repo already documents them as *"(I + J)/2"* and
   *"(I − J)/2)"*.
 
-- In `ZetaChiralConeAlgebra` the involution is the antiunitary `JAction` on zeta
+- In `ZetaChiralConeAlgebra` the involution is the conjugate-linear `JAction` on zeta
   readouts, with `JPlusProjector = ½(F + J F)` and `JMinusProjector = ½(F − J F)`.
 
-So the *throat* `Re(s) = ½` of the zeta critical line and the *sheets* of the double
-real Krein space are governed by one and the same projector algebra. This module
-proves that identification rather than asserting it.
+These are distinct carriers, not literally one operator or one eigenspace. This
+module records their shared normalized-involution construction and proves an
+explicit injective coordinate map from the centered zeta plane into the diagonal
+Pauli matrices. It does not identify the full zeta readout space with the Krein space.
 
 ## What is proved here
 
-1. The critical-mirror projectors **resolve the identity** (this was missing from
-   `ZetaCoordinateSymmetry`, which had only the two halves).
-2. They obey the **Peirce corner laws**: the two corners annihilate each other, each is
-   idempotent, and the mirror fixes one and negates the other.
-3. They are the **same construction** as `pauliChiral.Pleft/Pright`, transported along
-   `criticalMirror ↦ Eplus`: the generic `(I ± χ)/2` corner calculus applies to both.
-4. Consequently the Krein eigensheet dichotomy and the critical-line dichotomy are the
-   *same* dichotomy, on the same footing as the Peirce grading.
+1. The source owner `ZetaCoordinateSymmetry` supplies the critical-mirror projector
+   algebra; this file reuses that API rather than duplicating those laws.
+3. A concrete coordinate map identifies the critical tangent/normal components with
+   left multiplication by the two Pauli Peirce projectors on diagonal matrices.
+4. The map is injective by its explicit left inverse; no identification of ambient
+   operators or analytic meanings is asserted.
 
 ## What is NOT claimed
 
 This module does **not** prove the Riemann functional equation, Schwarz reflection, or
 the Riemann Hypothesis; it does not construct the completed `ξ` function, nor the
 dilation operator `−i(x ∂ₓ + ½)`. Following the discipline of
-`ZetaChiralConeAlgebra`, any such analytic input is exposed as an explicit premise
-(`CriticalLineSymmetry`) and never assumed silently. The conditional consequence is
-stated explicitly at the end.
+`ZetaChiralConeAlgebra`, analytic claims are not inferred from these finite
+coordinate identities.
 
 All proofs are native Lean 4 over Mathlib: no `sorry`, no axioms, no certificates, no
 structure fields carrying the theorem.
@@ -59,161 +57,98 @@ structure fields carrying the theorem.
 import InfoGeometry.CliffordWeyl.PauliPeirceKreinBridge
 import InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 import InfoGeometry.Canonical.ZetaChiralConeAlgebra
+import InfoGeometry.Physics.DilationMetaplecticOperator
 
 noncomputable section
 
 namespace InfoGeometry.CliffordWeyl.PeirceCriticalMirrorBridge
 
 open InfoGeometry.Krein.RealPlaneMatrixBridge
+open InfoGeometry.CliffordWeyl.PauliPeirceKreinBridge
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart.ZetaCenteredChart
 
-/-! ## 1. The critical-mirror projectors resolve the identity
+/-! ## 1. Coordinate transport to the diagonal Pauli carrier
 
-`ZetaCoordinateSymmetry` proves `criticalTangent_eq_half_sum` and
-`criticalNormal_eq_half_difference`, i.e. that the two projectors are `(I ± J)/2`. It
-does **not** prove that they sum to the identity. That is the first closure. -/
+The zeta coordinate plane embeds into the diagonal subalgebra of `Mat₂(ℝ)` as a real
+coordinate carrier. The order `(v,u)` makes the critical tangent projection
+correspond to the `+1` Pauli corner and the normal projection to the `-1` corner.
+This is an explicit transport theorem, not an identification of ambient operators. -/
 
-/-- The critical-mirror projectors resolve a centered coordinate: `P₊ + P₋ = id`. -/
-theorem criticalTangent_add_criticalNormal (x : ZetaCenteredChart) :
-    add (criticalTangentProjector x) (criticalNormalProjector x) = x := by
-  apply ZetaCenteredChart.ext <;>
-    simp [add, criticalTangentProjector, criticalNormalProjector]
+abbrev CriticalPeirceMatrix := Matrix (Fin 2) (Fin 2) ℝ
 
-/-- Hence every centered coordinate splits into its critical-line and scale parts. -/
-theorem critical_decomposition (x : ZetaCenteredChart) :
-    x = add (criticalTangentProjector x) (criticalNormalProjector x) :=
-  (criticalTangent_add_criticalNormal x).symm
+/-- Encode tangent coordinate `v` in the positive Pauli corner and normal coordinate
+`u` in the negative corner. -/
+def criticalToPeirceDiagonal (x : ZetaCenteredChart) : CriticalPeirceMatrix :=
+  !![x.v, 0; 0, x.u]
 
-/-! ## 2. The Peirce corner laws for the critical mirror
+/-- Read diagonal Peirce coordinates back as centered coordinates `(u,v)`. -/
+def peirceDiagonalToCritical (M : CriticalPeirceMatrix) : ZetaCenteredChart :=
+  ⟨M 1 1, M 0 0⟩
 
-These are the exact laws that `ChiralInvolution` proves for `P±` in the Pauli cluster,
-proved here independently on the zeta side. -/
+/-- The coordinate encoding has the displayed inverse. -/
+theorem peirceDiagonalToCritical_criticalToPeirceDiagonal (x : ZetaCenteredChart) :
+    peirceDiagonalToCritical (criticalToPeirceDiagonal x) = x := by
+  cases x
+  rfl
 
-/-- The mirror fixes its `+1` corner (already in `ZetaCoordinateSymmetry`, restated as
-a corner law for symmetry of form). -/
-theorem corner_fixes_tangent (x : ZetaCenteredChart) :
-    criticalMirror (criticalTangentProjector x) = criticalTangentProjector x :=
-  criticalMirror_fixes_tangent x
+/-- The tangent projector transports to left multiplication by the positive Peirce
+projector. -/
+theorem criticalTangent_transports_to_Pleft (x : ZetaCenteredChart) :
+    criticalToPeirceDiagonal (criticalTangentProjector x) =
+      pauliChiral.Pleft * criticalToPeirceDiagonal x := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [criticalToPeirceDiagonal, criticalTangentProjector,
+      pauliChiral_Pleft, Matrix.mul_apply, Fin.sum_univ_two]
 
-/-- The mirror negates its `-1` corner. -/
-theorem corner_negates_normal (x : ZetaCenteredChart) :
-    criticalMirror (criticalNormalProjector x) = neg (criticalNormalProjector x) :=
-  criticalMirror_negates_normal x
+/-- The normal projector transports to left multiplication by the negative Peirce
+projector. -/
+theorem criticalNormal_transports_to_Pright (x : ZetaCenteredChart) :
+    criticalToPeirceDiagonal (criticalNormalProjector x) =
+      pauliChiral.Pright * criticalToPeirceDiagonal x := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [criticalToPeirceDiagonal, criticalNormalProjector,
+      pauliChiral_Pright, Matrix.mul_apply, Fin.sum_univ_two]
 
-/-- **Cross-corner annihilation**: applying the `-1` projector to the `+1` corner
-gives zero. This is the statement `P₋ P₊ = 0`. -/
-theorem minus_of_tangent (x : ZetaCenteredChart) :
-    criticalNormalProjector (criticalTangentProjector x) = ZetaCenteredChart.zero := by
-  apply ZetaCenteredChart.ext <;>
-    simp [criticalNormalProjector, criticalTangentProjector, ZetaCenteredChart.zero]
+/-! ## 2. Functional duality and the critical mirror are distinct coordinate maps
 
-/-- And symmetrically `P₊ P₋ = 0`. -/
-theorem plus_of_normal (x : ZetaCenteredChart) :
-    criticalTangentProjector (criticalNormalProjector x) = ZetaCenteredChart.zero := by
-  apply ZetaCenteredChart.ext <;>
-    simp [criticalTangentProjector, criticalNormalProjector, ZetaCenteredChart.zero]
-
-/-- Each corner is idempotent: `P₊² = P₊`. -/
-theorem tangent_idem (x : ZetaCenteredChart) :
-    criticalTangentProjector (criticalTangentProjector x) = criticalTangentProjector x := by
-  apply ZetaCenteredChart.ext <;>
-    simp [criticalTangentProjector]
-
-/-- And `P₋² = P₋`. -/
-theorem normal_idem (x : ZetaCenteredChart) :
-    criticalNormalProjector (criticalNormalProjector x) = criticalNormalProjector x := by
-  apply ZetaCenteredChart.ext <;>
-    simp [criticalNormalProjector]
-
-/-- The mirror's two corners are disjoint away from the origin. -/
-theorem corners_inter_eq_zero (x : ZetaCenteredChart) :
-    criticalTangentProjector x = ZetaCenteredChart.zero ∧
-      criticalNormalProjector x = ZetaCenteredChart.zero →
-    x = ZetaCenteredChart.zero := by
-  rintro ⟨hu, hv⟩
-  rw [critical_decomposition x, hu, hv]
-  apply ZetaCenteredChart.ext <;>
-    simp [add, ZetaCenteredChart.zero]
-
-/-! ## 3. The two clusters are the same `(I ± χ)/2` construction
-
-`PauliPeirceKreinBridge` builds `pauliChiral.Pleft = (1 + Eplus)/2`. Here the critical
-mirror plays the role of `Eplus`. Both satisfy `χ² = 1`, and both projector pairs obey
-the corner laws proved above. The generic statement is `ChiralInvolution`'s; what we
-add is that the zeta mirror instantiates it. -/
-
-/-- The critical mirror is an involution on centered coordinates. -/
-theorem criticalMirror_sq (x : ZetaCenteredChart) :
-    criticalMirror (criticalMirror x) = x :=
-  criticalMirror_involutive x
-
-/--
-The critical-mirror `+1` projector is *exactly* the `(I + χ)/2` construction, i.e. the
-same formula as `ChiralInvolution.Pleft`.
-
-This is the identification: the zeta critical line's projector and the split-Clifford
-Peirce projector are one formula evaluated at two involutions.
+In centered coordinates functional duality is `(u,v) ↦ (-u,-v)`, whereas the
+critical-mirror coordinate reflection is `(u,v) ↦ (-u,v)`. They agree only on
+the real `u` coordinate; conflating the full maps loses the imaginary-coordinate sign.
 -/
-theorem tangent_is_half_sum_formula (x : ZetaCenteredChart) :
-    criticalTangentProjector x = scale (1 / 2 : ℝ) (add x (criticalMirror x)) :=
-  criticalTangent_eq_half_sum x
-
-/-- And the `-1` projector is `(I − χ)/2`, exactly `ChiralInvolution.Pright`. -/
-theorem normal_is_half_difference_formula (x : ZetaCenteredChart) :
-    criticalNormalProjector x = scale (1 / 2 : ℝ) (sub x (criticalMirror x)) :=
-  criticalNormal_eq_half_difference x
-
-/-! ## 4. The functional dual is the `-1` eigendirection
-
-In centered coordinates the zeta functional equation `s ↦ 1 − s` becomes `σ ↦ −σ`,
-i.e. exactly `criticalMirror` on the `u`-coordinate. This is the precise sense in
-which the critical line is the fixed seam of the reflection. -/
-
-/-- In affine coordinates the functional equation acts as `(σ, τ) ↦ (1 − σ, −τ)`. -/
-theorem chartFunctionalDual_fixes_half (z : ZetaAffineChart) :
-    (chartFunctionalDual z).sigma = 1 - z.sigma := rfl
-
 /-- The functional dual therefore **fixes the critical line**: `σ = ½` is the seam. -/
 theorem criticalLine_fixed_by_functionalDual {z : ZetaAffineChart}
     (hz : chartCriticalLine z) : chartCriticalLine (chartFunctionalDual z) := by
   rw [chartCriticalLine] at hz ⊢
-  rw [chartFunctionalDual_fixes_half, hz]
+  rw [chartFunctionalDual, hz]
   ring
 
-/-- The critical mirror flips the centered `u`-coordinate and fixes `v`. -/
-theorem criticalMirror_flips_u (x : ZetaCenteredChart) :
-    (criticalMirror x).u = -(x.u) := rfl
+/-! ## 3. Unconditional coordinate symmetry of the critical line -/
 
-theorem criticalMirror_fixes_v (x : ZetaCenteredChart) :
-    (criticalMirror x).v = x.v := rfl
+/-- Conjugation preserves the real coordinate, hence preserves the critical line. -/
+theorem criticalLine_invariant_under_conjugation {z : ZetaAffineChart}
+    (hz : chartCriticalLine z) : chartCriticalLine (chartConjugation z) := by
+  simpa [chartCriticalLine, chartConjugation] using hz
 
-/-! ## 5. Conditional: the critical line as the nonzero-`+1` locus
+/-! ## 4. The algebraic dilation shadow
 
-The dilation picture says the critical line is where the reflection acts trivially.
-On the `ZetaChiralConeAlgebra` side that is the `J`-even condition. We state the
-consequence under an explicit premise, exactly as that module does, and do **not**
-assert the premise. -/
-
-/--
-**Explicit premise.** Analytically this would be supplied by Schwarz reflection plus
-the completed functional equation. This module does not prove it, and does not assume
-it in any unconditional theorem above.
+The operator-level owner already proves the exact eigenvalue equation for the
+Mellin mode.  This bridge only transports its real-eigenvalue consequence; it
+adds no analytic premise and makes no claim about the distribution of zeta
+zeros.
 -/
-def CriticalLineSymmetry : Prop :=
-  ∀ z : ZetaAffineChart, chartCriticalLine z → chartCriticalLine (chartConjugation z)
 
-/--
-**Conditional theorem.** Under the explicit symmetry premise, the critical-line locus
-is carried to itself by conjugation, hence is a union of `J`-eigensheets.
-
-This is the honest form of "the throat is the invariant seam": it is a *conditional*
-statement on an explicitly supplied analytic input, not a proof of that input.
--/
-theorem criticalLine_invariant (h : CriticalLineSymmetry) {z : ZetaAffineChart}
-    (hz : chartCriticalLine z) : chartCriticalLine (chartConjugation z) :=
-  h z hz
+/-- A real dilation eigenvalue forces the centered spectral parameter to lie on
+`Re(s) = 1/2`. -/
+theorem dilation_real_eigenvalue_forces_critical
+    (s : ℂ) (E : ℝ)
+    (hE : InfoGeometry.Physics.DilationMetaplectic.eigenvalue s = (E : ℂ)) :
+    s.re = 1 / 2 := by
+  apply (InfoGeometry.Physics.DilationMetaplectic.eigenvalue_im_eq_zero_iff s).mp
+  simpa using congrArg Complex.im hE
 
 end InfoGeometry.CliffordWeyl.PeirceCriticalMirrorBridge
 

@@ -26,7 +26,7 @@ This SOP is subordinate to and must be used together with:
 - `docs/GOAL_LOOP_SOP.md`
 - `docs/MISSION_LOOP_SOP.md`
 - `FORMALIZATION_PROTOCOL.md`
-- `ASTAQLHASH-HOWTO.md`
+- `docs/ASTAQLHASH-HOWTO.md`
 
 If this SOP conflicts with current Lean code, kernel-checked owner files, or repo safety policy, those higher authorities win.
 

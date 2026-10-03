@@ -6033,7 +6033,6 @@ import InfoGeometry.Canonical.SuperBracketInvolutionParity
 import InfoGeometry.Canonical.SuperHolographicEffectiveActionBridge
 import InfoGeometry.Canonical.SuperInference
 import InfoGeometry.Canonical.SuperJordanLie
-import InfoGeometry.Canonical.SuperKMS_Equilibrium
 import InfoGeometry.Canonical.SuperKaehlerGromovWittenBridge
 import InfoGeometry.Canonical.SuperKahlerModularSpinors
 import InfoGeometry.Canonical.SuperKahlerTwistorFockBridge
@@ -6642,7 +6641,6 @@ import InfoGeometry.Carrier.Bridge
 import InfoGeometry.Carrier.CliffordAction
 import InfoGeometry.Carrier.HestenesKrein
 import InfoGeometry.Carrier.SuperLieAlgebra
-import InfoGeometry.Carrier.SupergradedHopping
 import InfoGeometry.Carrier.TripleAlgebra
 import InfoGeometry.Cartan
 import InfoGeometry.Cartan.Involution
@@ -6845,6 +6843,7 @@ import InfoGeometry.Clifford.Arxiv210801858Cl3SplitBiquaternion
 import InfoGeometry.Clifford.B45R10CommutingLoxodromicBridge
 import InfoGeometry.Clifford.Biquaternion
 import InfoGeometry.Clifford.BivectorPairConditionalClosure
+import InfoGeometry.Clifford.BivectorProjectorCorrection
 import InfoGeometry.Clifford.BottFromCl44
 import InfoGeometry.Clifford.BottPeriodicity
 import InfoGeometry.Clifford.BottSupergradedCartanBridge
@@ -7291,6 +7290,7 @@ import InfoGeometry.Clifford.TwistedChiralLinking
 import InfoGeometry.Clifford.TwistedChiralProjectionAlgebra
 import InfoGeometry.Clifford.UniversalCoverLog
 import InfoGeometry.CliffordWeyl.PeirceCriticalMirrorBridge
+import InfoGeometry.CliffordWeyl.PeirceCriticalMirrorBridgeAudit
 import InfoGeometry.CliffordWeyl.PeirceToCircularBridge
 import InfoGeometry.Cocycle.ActionCocycle
 import InfoGeometry.Cocycle.AlternativeAssociator

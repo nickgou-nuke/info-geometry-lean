@@ -8,7 +8,6 @@ Krein infrastructure.
 import InfoGeometry.Krein.InvolutiveSelfDualCarrier
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Carrier.TripleAlgebra
-import InfoGeometry.Carrier.SupergradedHopping
 import InfoGeometry.Carrier.HestenesKrein
 
 namespace InfoGeometry.Carrier
@@ -42,12 +41,6 @@ theorem BogoliubovTilt.preserves_krein_form {V : Type*}
     HestenesKreinSpace.krein_form (Θ.toLinearMap u) (Θ.toLinearMap v) =
       HestenesKreinSpace.krein_form u v := by
   exact Θ.preserves_krein u v
-
-/-- A nilpotent carrier transition has grade one in the `SupergradedHopping` interface. -/
-theorem triple_nilpotent_grade_one {A : Type*} [Ring A]
-    (T : TripleAlgebra A) [SupergradedHopping A] :
-    SupergradedHopping.grade T.N = 1 := by
-  exact SupergradedHopping.nilpotent_is_odd T.is_nilpotent
 
 /-- The `TripleAlgebra` null-channel pairing is zero by the structure law. -/
 theorem triple_pairing_null {A : Type*} [Ring A]

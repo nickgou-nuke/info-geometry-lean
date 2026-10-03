@@ -46,6 +46,37 @@ theorem paper_conclusion_elliptic_t5_linear_factor_conditional_density_mod5
     (D : conclusion_elliptic_t5_linear_factor_conditional_density_mod5_data) :
     conclusion_elliptic_t5_linear_factor_conditional_density_mod5_statement D := by
   dsimp [conclusion_elliptic_t5_linear_factor_conditional_density_mod5_statement]
-  decide
+  refine ⟨rfl, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · rfl
+  · rfl
+  · norm_num
+  · norm_num
+  · norm_num
+  · norm_num
+  · norm_num
+  · norm_num
+  · norm_num
+  · intro r hr hfixed
+    simp only [conclusion_elliptic_t5_linear_factor_conditional_density_mod5_rows,
+      List.mem_cons, List.not_mem_nil, or_false] at hr
+    rcases hr with h | h | h | h | h | h | h | h | h
+    · cases h
+      rfl
+    · cases h
+      norm_num at hfixed
+    · cases h
+      norm_num at hfixed
+    · cases h
+      norm_num at hfixed
+    · cases h
+      norm_num at hfixed
+    · cases h
+      norm_num at hfixed
+    · cases h
+      norm_num at hfixed
+    · cases h
+      norm_num at hfixed
+    · cases h
+      norm_num at hfixed
 
 end Omega.Conclusion

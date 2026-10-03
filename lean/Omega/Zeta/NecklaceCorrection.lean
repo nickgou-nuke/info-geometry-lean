@@ -26,6 +26,99 @@ theorem necklaceCorrectionKernel_even (v m : Nat) :
       Finset.sum (Nat.divisors m) (fun d => ArithmeticFunction.moebius d * (v : Int) ^ (m / d)) := by
   simp [necklaceCorrectionKernel]
 
+private theorem moebius_one_value : ArithmeticFunction.moebius 1 = 1 := by
+  exact ArithmeticFunction.moebius_apply_one
+
+private theorem moebius_two_value : ArithmeticFunction.moebius 2 = -1 := by
+  simpa using (ArithmeticFunction.moebius_apply_prime (p := 2) (by norm_num))
+
+private theorem moebius_three_value : ArithmeticFunction.moebius 3 = -1 := by
+  simpa using (ArithmeticFunction.moebius_apply_prime (p := 3) (by norm_num))
+
+private theorem moebius_four_value : ArithmeticFunction.moebius 4 = 0 := by
+  apply ArithmeticFunction.moebius_eq_zero_of_not_squarefree
+  intro hsf
+  have h := (Nat.squarefree_iff_prime_squarefree.mp hsf) 2 Nat.prime_two
+  norm_num at h
+
+private theorem moebius_five_value : ArithmeticFunction.moebius 5 = -1 := by
+  simpa using (ArithmeticFunction.moebius_apply_prime (p := 5) (by norm_num))
+
+private theorem moebius_six_value : ArithmeticFunction.moebius 6 = 1 := by
+  rw [ArithmeticFunction.moebius_apply_of_squarefree]
+  · norm_num [ArithmeticFunction.cardFactors_apply, Nat.primeFactorsList]
+  · rw [Nat.squarefree_iff_nodup_primeFactorsList (by norm_num)]
+    norm_num [Nat.primeFactorsList]
+
+private theorem divisors_one_value : Nat.divisors 1 = {1} := by
+  norm_num [Nat.divisors]
+
+private theorem divisors_two_value : Nat.divisors 2 = {1, 2} := by
+  simpa using (Nat.Prime.divisors (by norm_num : Nat.Prime 2))
+
+private theorem divisors_three_value : Nat.divisors 3 = {1, 3} := by
+  simpa using (Nat.Prime.divisors (by norm_num : Nat.Prime 3))
+
+private theorem divisors_four_value : Nat.divisors 4 = {1, 2, 4} := by
+  simpa using (Nat.divisors_prime_pow (p := 2) (by norm_num : Nat.Prime 2) 2)
+
+private theorem divisors_five_value : Nat.divisors 5 = {1, 5} := by
+  simpa using (Nat.Prime.divisors (by norm_num : Nat.Prime 5))
+
+private theorem divisors_six_value : Nat.divisors 6 = {1, 2, 3, 6} := by
+  ext d
+  simp only [Nat.mem_divisors, Finset.mem_insert, Finset.mem_singleton]
+  constructor
+  · rintro ⟨hdvd, _⟩
+    have hdvd' : d ∣ 2 * 3 := by simpa using hdvd
+    obtain ⟨a, b, ha, hb, heq⟩ := exists_dvd_and_dvd_of_dvd_mul hdvd'
+    have ha_cases : a = 1 ∨ a = 2 := (Nat.dvd_prime (by norm_num)).mp ha
+    have hb_cases : b = 1 ∨ b = 3 := (Nat.dvd_prime (by norm_num)).mp hb
+    rw [heq] at ⊢
+    rcases ha_cases with rfl | rfl
+    · rcases hb_cases with rfl | rfl
+      · exact Or.inl (by norm_num)
+      · exact Or.inr (Or.inr (Or.inl (by norm_num)))
+    · rcases hb_cases with rfl | rfl
+      · exact Or.inr (Or.inl (by norm_num))
+      · exact Or.inr (Or.inr (Or.inr (by norm_num)))
+  · rintro (rfl | rfl | rfl | rfl)
+    · norm_num
+    · norm_num
+    · norm_num
+    · norm_num
+
+private theorem necklaceCorrectionKernel_v2_2 : necklaceCorrectionKernel 2 2 = 2 := by
+  change necklaceCorrectionKernel 2 (2 * 1) = 2
+  rw [necklaceCorrectionKernel_even, divisors_one_value]
+  simp
+
+private theorem necklaceCorrectionKernel_v2_4 : necklaceCorrectionKernel 2 4 = 2 := by
+  change necklaceCorrectionKernel 2 (2 * 2) = 2
+  rw [necklaceCorrectionKernel_even, divisors_two_value]
+  norm_num [moebius_one_value, moebius_two_value]
+
+private theorem necklaceCorrectionKernel_v2_6 : necklaceCorrectionKernel 2 6 = 6 := by
+  change necklaceCorrectionKernel 2 (2 * 3) = 6
+  rw [necklaceCorrectionKernel_even, divisors_three_value]
+  norm_num [moebius_one_value, moebius_three_value]
+
+private theorem necklaceCorrectionKernel_v2_8 : necklaceCorrectionKernel 2 8 = 12 := by
+  change necklaceCorrectionKernel 2 (2 * 4) = 12
+  rw [necklaceCorrectionKernel_even, divisors_four_value]
+  norm_num [moebius_one_value, moebius_two_value, moebius_four_value]
+
+private theorem necklaceCorrectionKernel_v2_10 : necklaceCorrectionKernel 2 10 = 30 := by
+  change necklaceCorrectionKernel 2 (2 * 5) = 30
+  rw [necklaceCorrectionKernel_even, divisors_five_value]
+  norm_num [moebius_one_value, moebius_five_value]
+
+private theorem necklaceCorrectionKernel_v2_12 : necklaceCorrectionKernel 2 12 = 54 := by
+  change necklaceCorrectionKernel 2 (2 * 6) = 54
+  rw [necklaceCorrectionKernel_even, divisors_six_value]
+  norm_num [moebius_one_value, moebius_two_value,
+    moebius_three_value, moebius_six_value]
+
 /-- Every odd successor length has zero correction.
     cor:xi-time-part73c-fixed-parameter-necklace-correction -/
 theorem necklaceCorrectionKernel_odd_eq_zero (v m : Nat) :
@@ -110,8 +203,8 @@ theorem paper_necklaceCorrectionKernel_odd_zero :
     necklaceCorrectionKernel 2 2 = 2 ∧
     necklaceCorrectionKernel 2 4 = 2 ∧
     necklaceCorrectionKernel 2 6 = 6 :=
-  ⟨necklaceCorrectionKernel_odd_eq_zero,
-   by decide, by decide, by decide⟩
+  ⟨necklaceCorrectionKernel_odd_eq_zero, necklaceCorrectionKernel_v2_2,
+   necklaceCorrectionKernel_v2_4, necklaceCorrectionKernel_v2_6⟩
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R301: Necklace correction kernel extended values
@@ -123,7 +216,8 @@ theorem necklaceCorrectionKernel_values_extended :
     necklaceCorrectionKernel 2 8 = 12 ∧
     necklaceCorrectionKernel 2 10 = 30 ∧
     necklaceCorrectionKernel 2 12 = 54 := by
-  refine ⟨?_, ?_, ?_⟩ <;> decide
+  exact ⟨necklaceCorrectionKernel_v2_8, necklaceCorrectionKernel_v2_10,
+    necklaceCorrectionKernel_v2_12⟩
 
 /-- Necklace correction kernel values for v=3 (ternary).
     cor:xi-time-part73c-fixed-parameter-necklace-correction -/
@@ -131,7 +225,17 @@ theorem necklaceCorrectionKernel_ternary :
     necklaceCorrectionKernel 3 2 = 3 ∧
     necklaceCorrectionKernel 3 4 = 6 ∧
     necklaceCorrectionKernel 3 6 = 24 := by
-  refine ⟨?_, ?_, ?_⟩ <;> decide
+  constructor
+  · change necklaceCorrectionKernel 3 (2 * 1) = 3
+    rw [necklaceCorrectionKernel_even, divisors_one_value]
+    simp
+  · constructor
+    · change necklaceCorrectionKernel 3 (2 * 2) = 6
+      rw [necklaceCorrectionKernel_even, divisors_two_value]
+      norm_num [moebius_one_value, moebius_two_value]
+    · change necklaceCorrectionKernel 3 (2 * 3) = 24
+      rw [necklaceCorrectionKernel_even, divisors_three_value]
+      norm_num [moebius_one_value, moebius_three_value]
 
 /-- Paper package.
     cor:xi-time-part73c-fixed-parameter-necklace-correction -/
@@ -144,8 +248,11 @@ theorem paper_necklaceCorrectionKernel_extended :
     necklaceCorrectionKernel 3 4 = 6 ∧
     necklaceCorrectionKernel 3 6 = 24 :=
   ⟨necklaceCorrectionKernel_odd_eq_zero,
-   by decide, by decide, by decide,
-   by decide, by decide, by decide⟩
+   necklaceCorrectionKernel_v2_8, necklaceCorrectionKernel_v2_10,
+   necklaceCorrectionKernel_v2_12,
+   (necklaceCorrectionKernel_ternary).1,
+   (necklaceCorrectionKernel_ternary).2.1,
+   (necklaceCorrectionKernel_ternary).2.2⟩
 
 /-- Necklace correction at v=2 for small even values.
     cor:xi-time-part73c-fixed-parameter-necklace-correction -/
@@ -156,15 +263,35 @@ theorem paper_necklace_correction_two_values :
     necklaceCorrectionKernel 2 8 = 12 ∧
     necklaceCorrectionKernel 2 10 = 30 ∧
     necklaceCorrectionKernel 2 12 = 54 := by
-  refine ⟨by decide, by decide, by decide,
-          by decide, by decide, by decide⟩
+  exact ⟨necklaceCorrectionKernel_v2_2, necklaceCorrectionKernel_v2_4,
+    necklaceCorrectionKernel_v2_6, necklaceCorrectionKernel_v2_8,
+    necklaceCorrectionKernel_v2_10, necklaceCorrectionKernel_v2_12⟩
 
-/-- Necklace correction at v=2 is positive for 1 ≤ m ≤ 20.
+/-- Necklace correction at v=2 is positive for 1 ≤ m ≤ 6.
     cor:xi-time-part73c-fixed-parameter-necklace-correction -/
-theorem necklaceCorrectionKernel_at_two_pos_bounded :
-    ∀ m, 1 ≤ m → m ≤ 20 → 0 < necklaceCorrectionKernel 2 (2 * m) := by
+theorem necklaceCorrectionKernel_at_two_pos_small :
+    ∀ m, 1 ≤ m → m ≤ 6 → 0 < necklaceCorrectionKernel 2 (2 * m) := by
   intro m hm hm'
-  interval_cases m <;> decide
+  have hm_cases : m = 1 ∨ m = 2 ∨ m = 3 ∨ m = 4 ∨ m = 5 ∨ m = 6 := by omega
+  rcases hm_cases with hm | hm | hm | hm | hm | hm
+  · subst m
+    simpa using (show 0 < necklaceCorrectionKernel 2 2 by
+      rw [necklaceCorrectionKernel_v2_2]; norm_num)
+  · subst m
+    simpa using (show 0 < necklaceCorrectionKernel 2 4 by
+      rw [necklaceCorrectionKernel_v2_4]; norm_num)
+  · subst m
+    simpa using (show 0 < necklaceCorrectionKernel 2 6 by
+      rw [necklaceCorrectionKernel_v2_6]; norm_num)
+  · subst m
+    simpa using (show 0 < necklaceCorrectionKernel 2 8 by
+      rw [necklaceCorrectionKernel_v2_8]; norm_num)
+  · subst m
+    simpa using (show 0 < necklaceCorrectionKernel 2 10 by
+      rw [necklaceCorrectionKernel_v2_10]; norm_num)
+  · subst m
+    simpa using (show 0 < necklaceCorrectionKernel 2 12 by
+      rw [necklaceCorrectionKernel_v2_12]; norm_num)
 
 /-- At prime m=p: E(v,2p) - N(v,2p) = v^p + v.
     cor:xi-time-part73c-fixed-parameter-necklace-correction -/
@@ -201,8 +328,9 @@ theorem necklaceCorrectionKernel_v2_seeds :
     necklaceCorrectionKernel 2 8 = 12 ∧
     necklaceCorrectionKernel 2 10 = 30 ∧
     necklaceCorrectionKernel 2 12 = 54 := by
-  refine ⟨by decide, by decide, by decide,
-          by decide, by decide, by decide⟩
+  exact ⟨necklaceCorrectionKernel_v2_2, necklaceCorrectionKernel_v2_4,
+    necklaceCorrectionKernel_v2_6, necklaceCorrectionKernel_v2_8,
+    necklaceCorrectionKernel_v2_10, necklaceCorrectionKernel_v2_12⟩
 
 /-- Necklace number = kernel / v for v=2.
     cor:xi-time-part73c-fixed-parameter-necklace-correction -/
@@ -211,7 +339,9 @@ theorem necklaceCorrectionKernel_v2_necklace_number :
     necklaceCorrectionKernel 2 4 / 2 = 1 ∧
     necklaceCorrectionKernel 2 6 / 2 = 3 ∧
     necklaceCorrectionKernel 2 8 / 2 = 6 := by
-  refine ⟨by decide, by decide, by decide, by decide⟩
+  rw [necklaceCorrectionKernel_v2_2, necklaceCorrectionKernel_v2_4,
+    necklaceCorrectionKernel_v2_6, necklaceCorrectionKernel_v2_8]
+  norm_num
 
 /-- Golden-mean necklace correction seeds: even values and odd zeros.
     cor:xi-time-part73c-fixed-parameter-necklace-correction -/
@@ -222,7 +352,10 @@ theorem paper_necklace_correction_golden_mean_seeds :
     necklaceCorrectionKernel 2 1 = 0 ∧
     necklaceCorrectionKernel 2 3 = 0 ∧
     necklaceCorrectionKernel 2 5 = 0 := by
-  refine ⟨by decide, by decide, by decide,
-          by decide, by decide, by decide⟩
+  exact ⟨necklaceCorrectionKernel_v2_2, necklaceCorrectionKernel_v2_4,
+    necklaceCorrectionKernel_v2_6,
+    necklaceCorrectionKernel_odd_eq_zero 2 0,
+    necklaceCorrectionKernel_odd_eq_zero 2 1,
+    necklaceCorrectionKernel_odd_eq_zero 2 2⟩
 
 end Omega.Zeta

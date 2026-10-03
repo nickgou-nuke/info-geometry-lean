@@ -100,7 +100,7 @@ Operators and agents must read the relevant documents before task execution:
 - `docs/MISSION_LOOP_SOP.md` — native closure-debt mission loop.
 - `docs/CATEGORICAL_INFRASTRUCTURE_MAP.md` — categorical/Grothendieck owner surfaces; matrix files are instances, not replacements.
 - `docs/InductionSystematics.md` — finite-stage induction, algebraic direct limits, and the rule that categorical colimits require actual carriers and maps.
-- `ASTAQLHASH-HOWTO.md` — AST/AQL/hash/DAG navigation and proof-boundary discipline.
+- `docs/ASTAQLHASH-HOWTO.md` — AST/AQL/hash/DAG navigation and proof-boundary discipline.
 - `docs/aubert-plymen-multisystem-sop.md` — worked multi-system formalization pattern.
 
 If this SOP conflicts with a kernel-checked owner theorem, the owner theorem wins. If it conflicts with repo safety policy, the safety policy wins.

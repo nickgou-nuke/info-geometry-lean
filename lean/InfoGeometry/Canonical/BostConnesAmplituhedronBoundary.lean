@@ -82,18 +82,6 @@ theorem bcfw_relation_vanishes (R : Type u) [CommRing R] :
   exact map_zero (RingQuot.mkAlgHom R (BCFWRel R))
 
 /-!
-## 2. On-Shell Factorization (Klein Quadric)
-
-The on-shell boundary is governed by nilpotent chiral Cuntz generators (S_±² = 0).
--/
-
-structure ChiralQuadricBoundary (R : Type u) [CommRing R] where
-  S_plus : R
-  S_minus : R
-  nil_plus : S_plus * S_plus = 0
-  nil_minus : S_minus * S_minus = 0
-
-/-!
 ## 3. The All-Loop Amplituhedron Volume and Riemann Zeta
 
 The all-loop integrand evaluates exactly to the Riemann Zeta partition function 

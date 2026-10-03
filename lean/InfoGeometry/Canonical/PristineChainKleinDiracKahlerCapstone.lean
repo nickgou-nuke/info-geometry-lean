@@ -39,8 +39,11 @@ import InfoGeometry.Canonical.BraidYangBaxterZornCapstoneBridge
 /-!
 # Pristine Chain: Klein Bottle Holonomy, Split Cayley-Dickson, & Dirac-Kähler Capstone
 
-This capstone module formally assembles and unifies the complete 16-stratum causal chain of
-mathematical archetypes recovered from the relativistic quantum physics stream:
+This packet collects theorem statements from several existing owners. Its fields
+do not by themselves identify the separate algebraic, geometric, and analytic
+models as one causal chain. In particular, finite matrix identities below do
+not assert manifold-level Dirac operators, geometric Pin structures, or a
+holonomy action unless those data are explicit in the theorem statement.
 
 1. **The Character Pipeline**:
    - Universal determinant homomorphism: $\det : \operatorname{GL}(V) \to \mathbb{R}^\times \cong \mathbb{R}^+ \times \mathbb{Z}_2$.
@@ -65,28 +68,28 @@ mathematical archetypes recovered from the relativistic quantum physics stream:
    - Complex phase duality $H = I \cdot K \iff K = -I \cdot H$.
    - Lorentz bivector spin action: $[S(u, v), w] = 2(c_v u - c_u v)$.
 
-5. **Split Cayley-Dickson Hierarchy ($\gamma = +1$)**:
-   - Sequence $\mathbb{R} \to \mathbb{D} \to \mathbb{H}' \to \mathbb{O}'$.
+5. **Split algebra fragments**:
+   - The included split-complex identities and split-quaternion matrix identities.
+   - The full Cayley-Dickson iteration through split octonions belongs to separate owners.
    - Hyperbolic unit $\tau^2 = 1$, zero divisors on the null cone $(1+\tau)(1-\tau) = 0$.
    - Real split Peirce projectors $P_\pm = \frac{1 \pm J}{2}$ forming an orthogonal resolution of unity.
 
 6. **Coquaternions $\mathbb{H}' \cong \mathrm{Mat}_2(\mathbb{R})$ Matrix Algebra**:
    - Matrix units satisfying $I^2 = -1, J^2 = 1, K^2 = 1, IJ = -JI = K$.
 
-7. **The Dirac-Kähler Operator on Para-Hyperkähler Manifolds**:
-   - Module of differential forms $\Omega^\bullet(M) \cong \mathcal{C}\ell(TM)$.
-   - Chiral anticommutation $\{D, J\} = 0$ annihilating diagonal blocks: $P_\pm D P_\pm = 0$.
-   - Decoupling into an off-diagonal hyperbolic Dirac system: $D = P_+ D P_- + P_- D P_+$.
+7. **Abstract Peirce off-diagonal identity**:
+   - In a ring, an involution $J$ and an element $D$ satisfying $DJ+JD=0$ give
+     $D=P_+DP_-+P_-DP_+$. This statement does not define a Dirac-Kähler operator.
 
-8. **The Global Topological Gauge Bridge & Four $\mathrm{Pin}^\pm$ Structures**:
+8. **Affine Klein relator and sign representations**:
    - Crystallographic fundamental group $\pi_1(K) \cong \mathbb{Z} \rtimes_\sigma \mathbb{Z} = \langle a, b \mid a b a^{-1} = b^{-1} \rangle$.
    - Affine model $T_a, T_b$ on $\mathbb{R}^2$ with linear part determinant $\det(T_a) = -1$.
-   - Four distinct $\mathrm{Pin}$ boundary structures: $\operatorname{Hom}(\pi_1(K), \{\pm 1\}) \cong \mathbb{Z}_2 \times \mathbb{Z}_2$.
+   - Four sign homomorphisms from the presented Klein group to `Units ℤ` are
+     represented by the four choices of generator signs; they are not Pin structures.
 
-9. **The Intertwining Master Loop**:
-   - Non-orientable parallel transport flips the paracomplex structure: $J \mapsto -J$.
-   - Pullback dynamically transposes the lightcone projectors: $T_a^*(P_\pm) = P_\mp$.
-   - Double traversal restores them: $(T_a^2)^*(P_\pm) = P_\pm$.
+9. **Conditional projector transport**:
+   - An algebra automorphism assumed to send $J$ to $-J$ swaps the projectors.
+   - The affine glide's determinant sign alone does not imply this hypothesis.
 
 10. **$\mathrm{GL}_2(\mathbb{R})$ Iwasawa $KAN$ Factorization & Peirce Flow**:
     - Trace localization: $\operatorname{tr}(X) = \operatorname{tr}(X_\mathfrak{a})$.
@@ -118,7 +121,9 @@ mathematical archetypes recovered from the relativistic quantum physics stream:
 15. **Amplituhedron BCFW Arnold-Cohen & Bost-Connes KMS Synthesis**:
     - 3-term rational Arnold-Cohen syzygy on configuration space $\operatorname{Conf}_n(\mathbb{C})$.
     - Exterior BCFW mixed 3-term syzygy $\omega_{12}\wedge\omega_{23} + \dots = 0$.
-    - On-shell Klein quadric nilpotent Cuntz boundary $S_\pm^2 = 0$.
+    - Square-zero operator equations $S_\pm^2 = 0$ in the finite algebraic
+      packet; these equations alone do not encode Klein-quadric geometry,
+      on-shell factorization, or Cuntz relations.
     - Quadratic Plücker Grassmannian syzygy $\Delta_{ab}\Delta_{cd} - \dots = 0$.
     - Bost-Connes thermal KMS partition function $Z(\beta) = \zeta(\beta)$.
 
@@ -248,19 +253,19 @@ structure PristineChainMasterPacket where
       (hJ : J * J = 1) (h_chiral : D * J + J * D = 0),
       D = peircePlus J * D * peirceMinus J + peirceMinus J * D * peircePlus J
 
-  -- Stratum 7: Global Klein Topology & Four Pin Structures
+  -- Stratum 7: Affine Klein relation and sign relator
   klein_semidirect :
     affineTa.trans (affineTb.trans affineTa.symm) = affineTb.symm
   linear_ta_det :
     linearTa.det = -1
-  pin_characters_all :
-    ∀ signA signB : Units ℤ, isKleinCharacter signA signB
+  klein_sign_relator_all :
+    ∀ signA signB : Units ℤ, kleinSignRelatorCondition signA signB
 
-  -- Stratum 8: Intertwining Master Loop
-  holonomy_swap_plus :
+  -- Conditional algebra-automorphism action on the projectors
+  automorphism_swaps_plus :
     ∀ {A : Type*} [Ring A] [Algebra ℝ A] (J : A) (σ : A ≃ₐ[ℝ] A) (h_J : σ J = -J),
       σ (peircePlus J) = peirceMinus J
-  holonomy_restore_plus :
+  automorphism_double_swap_plus :
     ∀ {A : Type*} [Ring A] [Algebra ℝ A] (J : A) (σ : A ≃ₐ[ℝ] A) (h_J : σ J = -J),
       σ (σ (peircePlus J)) = peircePlus J
 
@@ -411,9 +416,9 @@ def makePristineChainMasterPacket : PristineChainMasterPacket where
   dirac_off_diagonal := dirac_off_diagonal_split
   klein_semidirect := affine_klein_relation
   linear_ta_det := linearTa_det
-  pin_characters_all := klein_character_all
-  holonomy_swap_plus := orientation_swap_plus
-  holonomy_restore_plus := orientation_double_swap_plus
+  klein_sign_relator_all := klein_sign_relator_all
+  automorphism_swaps_plus := orientation_swap_plus
+  automorphism_double_swap_plus := orientation_double_swap_plus
   kan_packet := InfoGeometry.Canonical.KANIwasawaSplitPeirceDirac.makeKANIwasawaSplitPeirceDiracPacket
   kan_triad_packet := InfoGeometry.Canonical.KANDiracKahlerTriadArchitecture.makeKANDiracKahlerTriadPacket
   kantor_tduality_packet := InfoGeometry.Canonical.KantorFiveGradedTDuality.makeKantorFiveGradedTDualityPacket

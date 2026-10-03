@@ -19,6 +19,7 @@ namespace InfoGeometry.Canonical.V4D4WeylEmbedding
 
 open InfoGeometry.Canonical.WallpaperKleinBottleCartan
 open InfoGeometry.Canonical.WallpaperPin55RootCrossSection
+open InfoGeometry.Canonical.HolographicSouriauReconstruction
 
 noncomputable section
 
@@ -42,7 +43,29 @@ of the 2D wallpaper point symmetries.
 -/
 theorem wallpaperD4_is_homomorphism (a b : Fin 8) :
     wallpaperD4 a * wallpaperD4 b = wallpaperD4 (d4_comp a b) := by
-  fin_cases a <;> fin_cases b <;> decide
+  have hGRG : brillouinGlide2 * (brillouinTwist2 * brillouinGlide2) =
+      -brillouinTwist2 := by
+    calc
+      brillouinGlide2 * (brillouinTwist2 * brillouinGlide2) =
+          (brillouinGlide2 * brillouinTwist2) * brillouinGlide2 := by
+            rw [← mul_assoc]
+      _ = (-brillouinTwist2 * brillouinGlide2) * brillouinGlide2 := by
+            rw [brillouinGlide2_anticommutes_twist]
+      _ = -brillouinTwist2 := by
+            rw [mul_assoc, brillouinGlide2_sq]
+            simp
+  have hRGRG : (brillouinTwist2 * brillouinGlide2) *
+      (brillouinTwist2 * brillouinGlide2) = 1 := by
+    rw [mul_assoc, hGRG, mul_neg, brillouinTwist2_sq]
+    simp
+  have hRRG : brillouinTwist2 * (brillouinTwist2 * brillouinGlide2) =
+      -brillouinGlide2 := by
+    rw [← mul_assoc, brillouinTwist2_sq]
+    simp
+  fin_cases a <;> fin_cases b <;>
+    simp [wallpaperD4, d4_comp, mul_assoc, brillouinTwist2_sq,
+      brillouinGlide2_sq, brillouinGlide2_anticommutes_twist,
+      hGRG, hRGRG, hRRG]
 
 /-- 
 THEOREM: The `D₅` cross-section lift is a precise subgroup embedding. 

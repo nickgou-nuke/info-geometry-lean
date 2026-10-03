@@ -50,28 +50,24 @@ theorem adjacentSwap_braid
     (hij : i.val + 1 = j.val) :
     adjacentSwap m i * adjacentSwap m j * adjacentSwap m i =
       adjacentSwap m j * adjacentSwap m i * adjacentSwap m j := by
-  apply Equiv.ext
-  intro x
-  simp only [adjacentSwap, Equiv.Perm.mul_apply]
-  by_cases hxi : x = i.castSucc
-  · subst x
-    simp
-    apply Fin.ext
+  have hijFin : i.succ = j.castSucc := Fin.ext hij
+  have hab : i.castSucc ≠ i.succ := by
+    simp [Fin.ext_iff]
+  have hac : i.castSucc ≠ j.succ := by
+    simp only [ne_eq, Fin.ext_iff, Fin.val_castSucc, Fin.val_succ]
     omega
-  · by_cases hxip : x = i.succ
-    · subst x
-      simp
-      apply Fin.ext
-      omega
-    · by_cases hxj : x = j.succ
-      · subst x
-        simp
-        apply Fin.ext
-        omega
-      · have hijFin : i.succ = j.castSucc := by
-          apply Fin.ext
-          exact hij
-        simp [hxi, hxip, hxj, hijFin]
+  have hcb : j.succ ≠ i.succ := by
+    simp only [ne_eq, Fin.ext_iff, Fin.val_succ]
+    omega
+  dsimp [adjacentSwap]
+  rw [← hijFin]
+  calc
+    _ = Equiv.swap i.castSucc j.succ := by
+      simpa only [Equiv.swap_comm] using
+        (Equiv.swap_mul_swap_mul_swap (y := i.succ) hcb hac.symm)
+    _ = _ := by
+      simpa only [Equiv.swap_comm] using
+        (Equiv.swap_mul_swap_mul_swap hab hac).symm
 
 /-- Far adjacent transpositions have disjoint supports and commute. -/
 theorem adjacentSwap_far_commute
@@ -79,58 +75,22 @@ theorem adjacentSwap_far_commute
     (hfar : i.val + 2 ≤ j.val) :
     adjacentSwap m i * adjacentSwap m j =
       adjacentSwap m j * adjacentSwap m i := by
-  apply Equiv.ext
-  intro x
-  simp only [adjacentSwap, Equiv.Perm.mul_apply]
-  by_cases hxi : x = i.castSucc
-  · subst x
-    have hne1 : i.succ ≠ j.castSucc := by
-      intro h
-      have := congrArg Fin.val h
-      omega
-    have hne2 : i.succ ≠ j.succ := by
-      intro h
-      have := congrArg Fin.val h
-      omega
-    simp [hne1, hne2]
-  · by_cases hxip : x = i.succ
-    · subst x
-      have hne0 : i.succ ≠ j.castSucc := by
-        intro h
-        have := congrArg Fin.val h
-        omega
-      have hne1 : i.castSucc ≠ j.castSucc := by
-        intro h
-        have := congrArg Fin.val h
-        omega
-      have hne2 : i.castSucc ≠ j.succ := by
-        intro h
-        have := congrArg Fin.val h
-        omega
-      simp [hne0, hne1, hne2]
-    · by_cases hxj : x = j.castSucc
-      · subst x
-        have hne0 : j.castSucc ≠ i.castSucc := by
-          intro h
-          have := congrArg Fin.val h
-          omega
-        have hne1 : j.castSucc ≠ i.succ := by
-          intro h
-          have := congrArg Fin.val h
-          omega
-        simp [hne0, hne1]
-      · by_cases hxjp : x = j.succ
-        · subst x
-          have hne0 : j.succ ≠ i.castSucc := by
-            intro h
-            have := congrArg Fin.val h
-            omega
-          have hne1 : j.succ ≠ i.succ := by
-            intro h
-            have := congrArg Fin.val h
-            omega
-          simp [hne0, hne1]
-        · simp [hxi, hxip, hxj, hxjp]
+  have h00 : j.castSucc ≠ i.castSucc := by
+    simp only [ne_eq, Fin.ext_iff, Fin.val_castSucc]
+    omega
+  have h01 : j.castSucc ≠ i.succ := by
+    simp only [ne_eq, Fin.ext_iff, Fin.val_castSucc, Fin.val_succ]
+    omega
+  have h10 : j.succ ≠ i.castSucc := by
+    simp only [ne_eq, Fin.ext_iff, Fin.val_castSucc, Fin.val_succ]
+    omega
+  have h11 : j.succ ≠ i.succ := by
+    simp only [ne_eq, Fin.ext_iff, Fin.val_succ]
+    omega
+  dsimp [adjacentSwap]
+  rw [Equiv.mul_swap_eq_swap_mul,
+    Equiv.swap_apply_of_ne_of_ne h00 h01,
+    Equiv.swap_apply_of_ne_of_ne h10 h11]
 
 /-- Adjacent transpositions form an Artin braid system. -/
 def permutationArtinSystem (m : ℕ) :
@@ -151,7 +111,7 @@ def braidToPerm (m : ℕ) :
 /-- The canonical finite braid-to-permutation map is surjective. -/
 theorem braidToPerm_surjective (m : ℕ) :
     Function.Surjective (braidToPerm m) := by
-  apply MonoidHom.range_eq_top.mp
+  apply MonoidHom.mrange_eq_top.mp
   apply top_unique
   rw [← Equiv.Perm.mclosure_swap_castSucc_succ m]
   apply Submonoid.closure_le.2
@@ -168,7 +128,7 @@ theorem generatorSquare_mem_kernel
     (σ' m i) ^ 2 ∈ (braidToPerm m).ker := by
   change braidToPerm m ((σ' m i) ^ 2) = 1
   rw [map_pow, braidToPerm_generator]
-  simpa [pow_two] using adjacentSwap_sq m i
+  simp [pow_two]
 
 /-- The normal closure of generator squares is contained in the kernel of the
 canonical permutation quotient. -/
@@ -180,9 +140,6 @@ theorem normalClosure_generatorSquares_le_kernel
   intro x hx
   rcases hx with ⟨i, rfl⟩
   exact generatorSquare_mem_kernel m i
-
-end InfoGeometry.Categorical.BraidPermutationQuotient
-
 
 /-! ## Pure braid kernel readout -/
 
@@ -209,6 +166,8 @@ theorem conjugate_generatorSquare_mem_pureBraidSubgroup
   change braidToPerm m (w * (σ' m i) ^ 2 * w⁻¹) = 1
   simp only [map_mul, map_pow, map_inv, braidToPerm_generator]
   have hs : adjacentSwap m i ^ 2 = 1 := by
-    simpa [pow_two] using adjacentSwap_sq m i
+    simp [pow_two]
   rw [hs]
   simp
+
+end InfoGeometry.Categorical.BraidPermutationQuotient

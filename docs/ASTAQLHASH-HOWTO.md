@@ -1,6 +1,6 @@
 # Complete ArangoDB + AST/AQL Hash-Based Search Methodology
 
-## Live-code audit status (2026-07-04)
+## Live-code audit status (2026-10-03)
 
 This HOWTO is grounded against the live repository implementation, not against
 prose memory of the toolchain.  The authoritative implementation surfaces are:
@@ -26,11 +26,11 @@ Important boundary:
 - Shape/value hashes are structural navigation evidence, not mathematical proof.
 - A shape cluster may identify duplicated proof shape, vacuous sockets, or a
   useful owner corridor; it does not by itself prove a theorem.
-- Do not use legacy scripts with hard-coded credentials or collection names as
-  authority.  In particular, `tools/shapehash_bridge.py` and
-  `tools/infra/shapehash_to_lean_bridge.py` are legacy/proposal generators and
-  still contain hard-coded Arango settings; prefer the repo env loader and
-  `hash_owner_map.py` / direct AQL snippets below.
+- Before using any older bridge/helper script, inspect its current source for
+  credential handling, database/collection defaults, and write behavior. Do
+  not treat a generated bridge result as proof. Prefer the repository env
+  loader and the read-only-by-default query interface below; record the exact
+  tool and source revision used.
 
 ### Typed semantic-edge metadata
 
@@ -93,21 +93,51 @@ provenance for every cone row, and reports nodes reached from multiple apices
 as `shared_nodes`. It is the cross-concept bridge for identifying shared Lean
 prerequisites and missing connecting declarations.
 
-## Strict execution order: refresh, stream, then query by hash
+## Strict execution order: source search, read-only query, optional refresh
 
-For ASTAQLHASH clone or sorry-equivalence work, do not query a stale database.
+For ASTAQLHASH clone or sorry-equivalence work, freshness matters, but a graph
+refresh is destructive and is not a prerequisite for beginning investigation.
 Run the stages in this order and stop when a prerequisite fails:
 
-1. Verify the current Lean cache. Use an existing `dagIndexer` executable when
-   present; otherwise use the direct Lean runner. Do not trigger an unrelated
-   native dependency rebuild merely to create the convenience executable.
-2. Refresh the declaration graph with the streaming path.
-3. Verify that the streamed `decls` and `edges` collections are populated.
-4. Query Arango through `arango_causal_memory.py query`.
-5. Group candidate sorry-equivalents by `valueFingerprint.shapeHash` (not by a
-   textual grep or a linter label).
-6. Open the owner files for the returned class and run kernel checks before
-   making any closure or promotion claim.
+1. Establish the source scope and search all relevant source roots recursively.
+   The graph never substitutes for this step.
+2. Inspect local/live graph metadata and query existing data read-only through
+   `arango_causal_memory.py query`. Label freshness unknown unless metadata
+   connects the graph generation to the current source/olean state.
+3. Use fingerprints, attrs, edges, and causal-cone packets to prioritize owner
+   inspection; do not call a hash cluster an equivalence class or sorry proof.
+4. Open owner files and inspect imports/dependents. Use the Lean kernel or
+   locked build to validate claims.
+5. Refresh only if stale/missing graph data materially blocks the work, and
+   only under the explicit live-replacement authorization and recovery process
+   in “Phase 2” below.
+
+### Refresh is destructive
+
+`refresh_decl_graph.py --stream` **truncates the live collections before it writes
+any data.** In `tools/infra/refresh_decl_graph.py` the collection loop does
+
+```python
+if not db.has_collection(coll_name):
+    db.create_collection(coll_name, edge=is_edge)
+else:
+    db.collection(coll_name).truncate()
+```
+
+and the batch importer documents itself as *"Append one stream batch to a collection
+truncated before this run."*
+
+Consequences that must be respected:
+
+- The live `decls` and `edges` collections are **emptied at the start of the run**.
+  A non-empty graph does not survive a failed or interrupted refresh.
+- If the stream fails after the truncate, the graph is left empty or partial. There
+  is no rollback in this tool.
+- Any index built by a narrower import root, a different namespace, or a bounded run
+  will *replace* the full graph rather than add to it.
+- Therefore: treat refresh as **maintenance with explicit pre-authorization**, never
+  as a routine prelude to a search. Prefer `hash_owner_map.py` and
+  `arango_causal_memory.py local-search` for read-only work.
 
 Full-graph invariant:
 
@@ -123,11 +153,12 @@ The pinned repository workflow does not run `lake update` as part of this
 sequence. Dependency and toolchain pins are compatibility state; refresh only
 the declaration graph and generated graph artifacts.
 
-Canonical streaming refresh:
+Canonical streaming refresh command (destructive; execute only after the
+authorization and recovery checks in Phase 2):
 
 ```bash
-# Prefer the existing executable; if it is absent, refresh_decl_graph.py
-# falls back to `lake env lean --run` without rebuilding native packages.
+# Requires the existing executable and imported oleans. This command truncates
+# the selected graph collections before streaming replacement data.
 python3 tools/infra/refresh_decl_graph.py \\
   --stream \\
   --run-mode exe \\
@@ -206,19 +237,21 @@ print('Collections:', [c['name'] for c in db.collections() if not c['name'].star
 ## Phase 2: Verify & Stream the Full Declaration Graph to ArangoDB
 
 ```bash
-# 2.1 Verify that no competing Lean/Lake process is active.
-# Use the repository task manager when available; these exact-process probes are
-# the non-mutating fallback.
+# 2.1 Confirm explicit authorization to replace decls and edges in the exact
+#    target database; confirm backup/recovery and maintenance window first.
+# 2.2 Inspect worktree state and active compiler/refresh processes. Do not
+#    overlap builds, graph refreshes, or kill another running task.
+git status --short
 pgrep -a -x lake || true
 pgrep -a -x lean || true
+pgrep -af 'refresh_decl_graph|dagIndexer' || true
 
-# 2.2 Verify the existing indexer.  Do not run `lake update`, fetch a new cache,
-# or rebuild dependencies as part of graph refresh.
+# 2.3 Confirm exact Arango endpoint/database via the repo env loader without
+#    printing credential values. Confirm the existing executable and cache.
 test -x .lake/build/bin/dagIndexer
 
-# 2.3 Stream the FULL declaration graph to ArangoDB (constant memory).
-# `InfoGeometry.All` and namespace `InfoGeometry` are intentional: do not replace
-# them with a smaller import root, namespace, sampled file list, or bounded graph.
+# 2.4 Only after the authorization gate above, stream the complete declared
+#    InfoGeometry export. The stream path replaces the live collections.
 python3 tools/infra/refresh_decl_graph.py \
   --stream \
   --run-mode exe \
@@ -251,9 +284,12 @@ nonempty, every retained edge must resolve both endpoints in `decls`, and the
 streamer must report the complete emitted/orphaned/retained edge counts.  Counts
 change with the checkout.
 
-Reference full refresh on 2026-08-08 (`InfoGeometry.All`, namespace
-`InfoGeometry`): 130772 declarations, 5077300 emitted dependency edges, 849775
-retained endpoint-valid edges, and 0 orphan edges after validation.
+Historical reference only — not a current expected count: a refresh on
+2026-08-08 (`InfoGeometry.All`, namespace `InfoGeometry`) reported 130772
+declarations, 5077300 emitted dependency edges, 849775 retained
+endpoint-valid edges, and 0 orphan edges after validation. Counts vary by
+revision, filters, and exporter configuration; validate against the output of
+the exact run being audited.
 
 ---
 
@@ -275,7 +311,7 @@ for the sampled declarations.  Treat the output as navigation evidence: open
 the cited owner files and verify the actual theorem bodies before editing or
 claiming closure.
 
-### 3.1 Find Equivalence Classes by ShapeHash (Structural Identity)
+### 3.1 Find Candidate Groups by ShapeHash (Coarse Structure)
 
 ```python
 from arango import ArangoClient
@@ -292,8 +328,8 @@ load_repo_arango_env(Path('.').resolve())
 client = ArangoClient(hosts=arango_endpoint())
 db = client.db(arango_database(), username=arango_username(), password=arango_password())
 
-# Find ALL equivalence classes by shapeHash (structural AST identity)
-# Note: shapeHash is stored as STRING in ArangoDB
+# Find candidate groups by coarse shape fingerprint; this does not establish
+# structural identity. Inspect the JSON type emitted by this graph generation.
 q = '''
 FOR d IN decls
   COLLECT hash = d.shapeHash.shapeHash WITH COUNT INTO c
@@ -305,22 +341,23 @@ FOR d IN decls
 for row in db.aql.execute(q):
     print(f'{row["hash"]}: {row["count"]} decls')
 
-# Get declarations in a specific equivalence class
-# Note: hash values are STRINGS in ArangoDB
-target_hash = "3892707284033108221"  # largest class (43 decls)
-q2 = f'''
+# Query one candidate group using a bind variable; historical hash values and
+# group sizes are not stable declaration identifiers.
+target_hash = "<hash returned by the query>"
+q2 = '''
 FOR d IN decls
-  FILTER d.shapeHash.shapeHash == "{target_hash}"
+  FILTER d.shapeHash.shapeHash == @targetHash
   RETURN {{name: d.name, kind: d.kind, module: d.module, attrs: d.attrs}}
 '''
-for doc in db.aql.execute(q2):
+for doc in db.aql.execute(q2, bind_vars={"targetHash": target_hash}):
     print(f'{doc["name"]} ({doc["kind"]}) - {doc["module"]} | attrs: {doc["attrs"]}')
 ```
 
-### 3.2 Find Equivalence Classes by ValueFingerprint (Proof Identity)
+### 3.2 Find Candidate Groups by ValueFingerprint (Not Proof Identity)
 
 ```python
-# Find ALL equivalence classes by valueFingerprint (proof identity)
+# Find candidate value-fingerprint groups. A finite hash match is not proof
+# identity, theorem equivalence, or evidence that either declaration is hollow.
 q = '''
 FOR d IN decls
   FILTER d.valueFingerprint != null
@@ -333,13 +370,15 @@ FOR d IN decls
 for row in db.aql.execute(q):
     print(f'{row["hash"]}: {row["count"]} decls')
 
-# Get declarations in a specific value equivalence class
+# Query declarations in one candidate group using a bind variable.
+target_value_hash = "<hash returned by the query>"
 q2 = '''
 FOR d IN decls
-  FILTER d.valueFingerprint != null AND d.valueFingerprint.shapeHash == "10538156713300787596"
+  FILTER d.valueFingerprint != null
+  FILTER d.valueFingerprint.shapeHash == @targetHash
   RETURN {name: d.name, kind: d.kind, module: d.module, attrs: d.attrs}
 '''
-for doc in db.aql.execute(q2):
+for doc in db.aql.execute(q2, bind_vars={"targetHash": target_value_hash}):
     print(f'{doc["name"]} ({doc["kind"]}) - {doc["module"]}')
 ```
 
@@ -366,23 +405,35 @@ FOR d IN decls
 ### 3.4 Search by Dependency Edges (Call Graph) — CORRECTED
 
 ```python
-# Find all callers of a specific declaration
-# Use _from/_to (NOT from/to). Edge documents use _from/_to fields.
-target_key = "d_<hash_of_target>"  # e.g., "d_3892707284033108221"
-q = f'''
-FOR e IN edges
-  FILTER e._to == "decls/{target_key}"
-  LET src = DOCUMENT(e._from)
-  RETURN {{caller: src.name, kind: src.kind, module: src.module}}
-'''
+# Resolve exact declaration identity first; never derive a declaration key from
+# its expression hash. Edge documents use Arango _from/_to fields.
+target_name = "<fully qualified Lean declaration>"
+target_id = next(db.aql.execute(
+    'FOR d IN decls FILTER d.name == @name RETURN d._id',
+    bind_vars={"name": target_name}), None)
+if target_id is None:
+    raise LookupError("declaration is absent from this graph generation")
 
-# Find all callees of a specific declaration
-q2 = f'''
+# Incoming edges (confirm orientation in Indexer.lean before calling these
+# callers/dependents).
+q = '''
 FOR e IN edges
-  FILTER e._from == "decls/{target_key}"
-  LET dst = DOCUMENT(e._to)
-  RETURN {{callee: dst.name, kind: dst.kind, module: dst.module}}
+  FILTER e._to == @targetId
+  LET src = DOCUMENT(e._from)
+  FILTER src != null
+  RETURN {caller: src.name, kind: src.kind, module: src.module}
 '''
+incoming = db.aql.execute(q, bind_vars={"targetId": target_id})
+
+# Outgoing edges in the opposite direction.
+q2 = '''
+FOR e IN edges
+  FILTER e._from == @targetId
+  LET dst = DOCUMENT(e._to)
+  FILTER dst != null
+  RETURN {callee: dst.name, kind: dst.kind, module: dst.module}
+'''
+outgoing = db.aql.execute(q2, bind_vars={"targetId": target_id})
 ```
 
 ### 3.5 Search by Module/Kind Filters
@@ -434,23 +485,32 @@ FOR scc IN scc_nodes
 '''
 ```
 
-### 4.2 Find Paths Between Two Declarations
+### 4.2 Find Bounded Paths Between Two Declarations
 
 ```python
 # Requires graph definition or Pregel. Use edge traversal for simple cases.
 from_decl = "InfoGeometry.Core.GrandCanonical.partitionGC"
 to_decl = "InfoGeometry.Core.GrandCanonical.responseMatrix"
 
-# Get _key for from/to declarations first
-from_key = db.aql.execute(f'FOR d IN decls FILTER d.name == "{from_decl}" RETURN d._key').next()
-to_key = db.aql.execute(f'FOR d IN decls FILTER d.name == "{to_decl}" RETURN d._key').next()
+# Resolve document ids via bind variables and fail explicitly when either
+# declaration is absent from this graph generation.
+from_id = next(db.aql.execute(
+    'FOR d IN decls FILTER d.name == @name RETURN d._id',
+    bind_vars={"name": from_decl}), None)
+to_id = next(db.aql.execute(
+    'FOR d IN decls FILTER d.name == @name RETURN d._id',
+    bind_vars={"name": to_decl}), None)
+if from_id is None or to_id is None:
+    raise LookupError("one or both declarations are absent from this graph")
 
-# Simple edge traversal (not true shortest path without graph)
-q2 = f'''
-FOR v, e IN 1..5 OUTBOUND "decls/{from_key}" edges
-  FILTER v._key == "{to_key}"
-  RETURN {{vertex: v.name, edge: e.kind}}
+# A bounded traversal is not a shortest-path query and does not imply graph
+# completeness.
+q2 = '''
+FOR v, e IN 1..5 OUTBOUND @startId edges
+  FILTER v._id == @targetId
+  RETURN {vertex: v.name, edge: e.kind}
 '''
+paths = db.aql.execute(q2, bind_vars={"startId": from_id, "targetId": to_id})
 ```
 
 ### 4.3 Dominators (Only if hydrate step ran)
@@ -483,6 +543,14 @@ fi
 echo "=== Phase 2: Verify existing indexer ==="
 test -x .lake/build/bin/dagIndexer
 
+echo "The stream refresh truncates decls and edges in the target database."
+echo "Confirm explicit authorization, exact target, and recovery plan first."
+read -r -p "Type infogeometry to authorize this target: " approved_db
+if [[ "$approved_db" != "infogeometry" ]]; then
+  echo "Target not confirmed; refusing refresh." >&2
+  exit 2
+fi
+
 echo "=== Phase 3: Stream FULL InfoGeometry declaration graph ==="
 python3 tools/infra/refresh_decl_graph.py \
   --stream \
@@ -512,7 +580,7 @@ print("=== DECLARATION STATS ===")
 print(f"Decls: {db.collection('decls').count()}")
 print(f"Edges: {db.collection('edges').count()}")
 
-print("\n=== TOP 10 SHAPE HASH EQUIVALENCE CLASSES ===")
+print("\n=== TOP 10 COARSE SHAPE-FINGERPRINT GROUPS (CANDIDATES) ===")
 for row in db.aql.execute('''
   FOR d IN decls
     COLLECT hash = d.shapeHash.shapeHash WITH COUNT INTO c
@@ -523,7 +591,7 @@ for row in db.aql.execute('''
 '''):
     print(f'  {row["hash"]}: {row["count"]}')
 
-print("\n=== TOP 10 VALUE FINGERPRINT CLASSES ===")
+print("\n=== TOP 10 VALUE-FINGERPRINT GROUPS (CANDIDATES) ===")
 for row in db.aql.execute('''
   FOR d IN decls
     FILTER d.valueFingerprint != null
@@ -668,19 +736,56 @@ jobs:
 
 ---
 
-This methodology gives you **constant-memory** declaration graph indexing with **hash-based structural search** capability.  ### Audit Report of the Staged Changes
+This methodology gives you **constant-memory** declaration graph indexing with
+**hash-based structural search** capability.
 
-  We ran the complete suite of local audit and semantic validation scripts on the workspace:
+---
 
-  1. Axiom and Sorry Audit (tools/infra/axiom_audit.py):
-      • Total open gaps (sorry/axiom/admit) is verified at 257 (down from the baseline).
-      • Verified that the edited files contain no new sorries/admit statements and compile cleanly under lake env lean.
-  2. Structural Vacuity Audit (tools/infra/arango_structural_vacuity_audit.py):
-      • Result: 0 findings.
-      • Details: Verified that the newly introduced tactic-based proofs do not share AST footprints with vacuous, empty, or boilerplate definitions.
-  3. Semantic Fidelity Auditor / Pauli Auditor (tools/infra/check_hollow_theorems.py):
-      • Result: 0 findings of hollow candidates or severe defects.
-      • Details: Verified that the constructive derivations use explicit, substantive mathematical steps matching Mathlib conventions rather than hollow proxy objects.
+## Audit record
 
+Audit results are **only valid for the checkout they were run against**, and must be
+re-run rather than copied forward. A count quoted without its commit, its command,
+and its scope is not evidence.
 
-  All audits are completely clean. All modifications are verified and staged in Git.
+### What this document does *not* assert
+
+- It does not assert that any named audit currently passes. The numbers below are
+  historical records tied to a specific checkout, retained for provenance.
+- It does not assert that the live graph matches the working tree. Graph freshness
+  must be established from metadata at query time; a populated `decls` collection
+  proves only that *some* refresh ran, not that it matches HEAD.
+- `hash_owner_map.py` output, AQL clusters, and structural-vacuity results are
+  **navigation evidence**. They never establish a theorem, an equivalence, or a
+  closure.
+
+### Reproducing an audit
+
+Run the tools against the current checkout and record commit + date + scope:
+
+```bash
+git rev-parse HEAD
+python3 tools/infra/axiom_audit.py
+python3 tools/infra/arango_structural_vacuity_audit.py
+python3 tools/infra/check_hollow_theorems.py
+```
+
+Note that `axiom_audit.py` counts `sorry`/`admit`/`axiom` **declarations**. It does
+not detect the separate failure mode where a theorem is stated as a field of a
+`structure` and then "proved" by `rw [thatField]` — that is an assumption, not a gap,
+and it is invisible to a token count. For that, group by
+`valueFingerprint.shapeHash` per the strict execution order above and read the owner
+files.
+
+### Historical record (2026-07-04 checkout)
+
+Recorded for provenance only; superseded by any later run.
+
+| Audit | Reported result |
+|---|---|
+| `axiom_audit.py` | 257 open gaps reported for that checkout |
+| `arango_structural_vacuity_audit.py` | 0 findings |
+| `check_hollow_theorems.py` | 0 findings |
+
+Treat "0 findings" from the latter two as *absence of detected instances*, not as a
+proof of soundness: both tools detect specific structural signatures and cannot see
+an assumption smuggled in through a `Prop`-valued structure field.

@@ -21,4 +21,13 @@ class HestenesKreinSpace (V : Type*) [AddCommGroup V] [Module ℝ V] where
   -/
   induced_hilbert_identity : ∀ v : V, v ≠ 0 → 0 < (krein_form v (J v))
 
+/-- A linear tilt preserving the chosen indefinite Krein form. This is a
+Krein-isometry datum; it carries no supergrading assumption. -/
+structure BogoliubovTilt (V : Type*) [AddCommGroup V] [Module ℝ V]
+    [HestenesKreinSpace V] where
+  tilt : V →ₗ[ℝ] V
+  preserves_krein : ∀ u v : V,
+    HestenesKreinSpace.krein_form (tilt u) (tilt v) =
+      HestenesKreinSpace.krein_form u v
+
 end InfoGeometry.Carrier

@@ -45,6 +45,42 @@ def sync10OutputOneProb : ℚ :=
 def sync10ConditionalOutputOne (d : Nat) : ℚ :=
   sync10JointInputOutput d 1 / (1 / 3 : ℚ)
 
+private theorem sync10_joint_00 : sync10JointInputOutputFin 0 0 = (5 / 24 : ℚ) := by
+  simp [sync10JointInputOutputFin, sync10State_univ, sync10OutputBit,
+    sync10UniformStationaryVector]
+  norm_num
+
+private theorem sync10_joint_01 : sync10JointInputOutputFin 0 1 = (1 / 8 : ℚ) := by
+  simp [sync10JointInputOutputFin, sync10State_univ, sync10OutputBit,
+    sync10UniformStationaryVector]
+  norm_num
+
+private theorem sync10_joint_10 : sync10JointInputOutputFin 1 0 = (1 / 6 : ℚ) := by
+  simp [sync10JointInputOutputFin, sync10State_univ, sync10OutputBit,
+    sync10UniformStationaryVector]
+  norm_num
+
+private theorem sync10_joint_11 : sync10JointInputOutputFin 1 1 = (1 / 6 : ℚ) := by
+  simp [sync10JointInputOutputFin, sync10State_univ, sync10OutputBit,
+    sync10UniformStationaryVector]
+  norm_num
+
+private theorem sync10_joint_20 : sync10JointInputOutputFin 2 0 = (1 / 8 : ℚ) := by
+  simp [sync10JointInputOutputFin, sync10State_univ, sync10OutputBit,
+    sync10UniformStationaryVector]
+  norm_num
+
+private theorem sync10_joint_21 : sync10JointInputOutputFin 2 1 = (5 / 24 : ℚ) := by
+  simp [sync10JointInputOutputFin, sync10State_univ, sync10OutputBit,
+    sync10UniformStationaryVector]
+  norm_num
+
+private theorem sync10_jointNat_20 : sync10JointInputOutput 2 0 = (1 / 8 : ℚ) := by
+  simp [sync10JointInputOutput, sync10_joint_20]
+
+private theorem sync10_jointNat_21 : sync10JointInputOutput 2 1 = (5 / 24 : ℚ) := by
+  simp [sync10JointInputOutput, sync10_joint_21]
+
 /-- Exact joint input/output law for the 10-state sync kernel under uniform input.
     prop:sync10-uniform-de -/
 theorem paper_sync10_uniform_de :
@@ -56,10 +92,22 @@ theorem paper_sync10_uniform_de :
               sync10JointInputOutput 2 1 = 5 / 24 ∧
                 sync10OutputOneProb = 1 / 2 ∧
                   sync10ConditionalOutputOne 0 = 3 / 8 ∧
-                    sync10ConditionalOutputOne 1 = 1 / 2 ∧
-                      sync10ConditionalOutputOne 2 = 5 / 8 := by
-  unfold sync10JointInputOutput sync10JointInputOutputFin sync10OutputOneProb
-  unfold sync10ConditionalOutputOne sync10OutputBit sync10UniformStationaryVector
-  decide
+                sync10ConditionalOutputOne 1 = 1 / 2 ∧
+                    sync10ConditionalOutputOne 2 = 5 / 8 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · norm_num [sync10JointInputOutput, sync10_joint_00]
+  · norm_num [sync10JointInputOutput, sync10_joint_01]
+  · norm_num [sync10JointInputOutput, sync10_joint_10]
+  · norm_num [sync10JointInputOutput, sync10_joint_11]
+  · exact sync10_jointNat_20
+  · exact sync10_jointNat_21
+  · norm_num [sync10OutputOneProb, Fin.sum_univ_succ,
+      sync10_joint_01, sync10_joint_11, sync10_joint_21]
+  · norm_num [sync10ConditionalOutputOne, sync10JointInputOutput,
+      sync10_joint_01]
+  · norm_num [sync10ConditionalOutputOne, sync10JointInputOutput,
+      sync10_joint_11]
+  · rw [sync10ConditionalOutputOne, sync10_jointNat_21]
+    norm_num
 
 end Omega.EA

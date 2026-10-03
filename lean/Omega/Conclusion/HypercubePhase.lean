@@ -25,7 +25,8 @@ theorem hypercube_phase_d6_product_surj :
 /-- cor:conclusion-hypercube-phase-d6-only-sqrt2-sqrt5 -/
 theorem hypercube_phase_d6_sqrt_classification :
     (8 : ℕ) = 2 * 2 ^ 2 ∧ Nat.sqrt 9 = 3 ∧ ¬ ∃ d : ℕ, 1 < d ∧ d ^ 2 ∣ 5 := by
-  refine ⟨by norm_num, by decide, ?_⟩
+  refine ⟨by norm_num, ?_, ?_⟩
+  · exact (Nat.eq_sqrt'.2 (by norm_num : 3 ^ 2 ≤ 9 ∧ 9 < (3 + 1) ^ 2)).symm
   rintro ⟨d, hd, hdiv⟩
   have hle : d ^ 2 ≤ 5 := Nat.le_of_dvd (by norm_num) hdiv
   have hd2 : d ≤ 2 := by nlinarith [sq_nonneg d]

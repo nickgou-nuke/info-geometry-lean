@@ -61,6 +61,21 @@ theorem boolToZMod_xor (a b : Bool) :
     boolToZMod (a ^^ b) = boolToZMod a + boolToZMod b := by
   cases a <;> cases b <;> rfl
 
+theorem boolToZMod_mul2 (a b : Bool) :
+    boolToZMod (InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.mul2 a b) =
+      boolToZMod a * boolToZMod b := by
+  cases a <;> cases b <;> rfl
+
+private theorem boolToZMod_dot3 (x0 x1 x2 y0 y1 y2 : Bool) :
+    boolToZMod (InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.dot3
+      x0 x1 x2 y0 y1 y2) =
+      boolToZMod x0 * boolToZMod y0 +
+        boolToZMod x1 * boolToZMod y1 +
+        boolToZMod x2 * boolToZMod y2 := by
+  simp [InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.dot3,
+    boolToZMod_add2, boolToZMod_mul2]
+  ring
+
 def imaginaryAdd (A B : Imaginary) : Imaginary :=
   ⟨InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add A.1 B.1, by
     dsimp [InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add,
@@ -73,32 +88,25 @@ theorem imaginaryToOctIm_imaginaryAdd (A B : Imaginary) :
   funext i
   fin_cases i
   · simp only [imaginaryToOctIm, imaginaryAdd,
-      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add,
-      Matrix.cons_val_zero, Matrix.cons_val_one]
+      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add]
     simpa [imaginaryToOctIm] using boolToZMod_xor _ _
   · simp only [imaginaryToOctIm, imaginaryAdd,
-      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add,
-      Matrix.cons_val_zero, Matrix.cons_val_one]
+      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add]
     simpa [imaginaryToOctIm] using boolToZMod_xor _ _
   · simp only [imaginaryToOctIm, imaginaryAdd,
-      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add,
-      Matrix.cons_val_zero, Matrix.cons_val_one]
+      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add]
     simpa [imaginaryToOctIm] using boolToZMod_xor _ _
   · simp only [imaginaryToOctIm, imaginaryAdd,
-      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add,
-      Matrix.cons_val_zero, Matrix.cons_val_one]
+      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add]
     simpa [imaginaryToOctIm] using boolToZMod_xor _ _
   · simp only [imaginaryToOctIm, imaginaryAdd,
-      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add,
-      Matrix.cons_val_zero, Matrix.cons_val_one]
+      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add]
     simpa [imaginaryToOctIm] using boolToZMod_xor _ _
   · simp only [imaginaryToOctIm, imaginaryAdd,
-      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add,
-      Matrix.cons_val_zero, Matrix.cons_val_one]
+      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add]
     simpa [imaginaryToOctIm] using boolToZMod_xor _ _
   · simp only [imaginaryToOctIm, imaginaryAdd,
-      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add,
-      Matrix.cons_val_zero, Matrix.cons_val_one]
+      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add]
     simpa [imaginaryToOctIm] using boolToZMod_xor _ _
 
 theorem actImaginary_imaginaryAdd (f : SplitOctF2Aut) (A B : Imaginary) :
@@ -135,14 +143,18 @@ def imaginaryOctImEquiv : Imaginary ≃ OctImF2 where
 theorem splitQuad_imaginary (X : Imaginary) :
     splitQuad (imaginaryToOctIm X) =
       boolToZMod (zornNorm X.1) := by
-  dsimp [imaginaryToOctIm, splitQuad, zornNorm, boolToZMod]
-  decide +revert
+  rcases X with ⟨⟨a, b, x0, x1, x2, y0, y1, y2⟩, htrace⟩
+  change a = b at htrace
+  subst b
+  simp only [imaginaryToOctIm, splitQuad, zornNorm,
+    boolToZMod_xor, boolToZMod_mul2, boolToZMod_dot3]
+  ring
 
 theorem isotropic_iff_splitQuad_zero (X : Imaginary) :
     Isotropic X.1 ↔ splitQuad (imaginaryToOctIm X) = 0 := by
   rw [splitQuad_imaginary]
-  dsimp [Isotropic, zornNorm, boolToZMod]
-  decide +revert
+  change zornNorm X.1 = false ↔ boolToZMod (zornNorm X.1) = 0
+  cases zornNorm X.1 <;> simp [boolToZMod]
 
 /-! The native automorphism action can now be transported to the seven
 coordinates used by the finite Peirce geometry. -/

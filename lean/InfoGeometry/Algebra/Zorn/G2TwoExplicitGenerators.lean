@@ -17,6 +17,10 @@ set_option linter.unnecessarySimpa false
 
 namespace InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 
+private theorem add2_function_eq_xor : add2 = Bool.xor := by
+  funext x y
+  cases x <;> cases y <;> rfl
+
 def swap01Fun : SplitOctF2 → SplitOctF2
   | ⟨a, b, x0, x1, x2, y0, y1, y2⟩ =>
       ⟨a, b, x1, x0, x2, y1, y0, y2⟩
@@ -37,8 +41,10 @@ theorem swap01_mul (X Y : SplitOctF2) :
     swap01Fun (mul X Y) = mul (swap01Fun X) (swap01Fun Y) := by
   rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
   rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
-  revert a1 b1 x01 x11 x21 y01 y11 y21 a2 b2 x02 x12 x22 y02 y12 y22
-  decide
+  ext <;> dsimp [swap01Fun, mul, dot3, cross0, cross1, cross2, mul2]
+  all_goals simp only [add2_function_eq_xor]
+  all_goals simp [Bool.and_xor_distrib_left, Bool.and_xor_distrib_right,
+    Bool.xor_comm, Bool.xor_left_comm]
 
 noncomputable def swap01Aut : SplitOctF2Aut :=
   ⟨swap01Equiv, by
@@ -89,8 +95,10 @@ theorem cycle012_mul (X Y : SplitOctF2) :
     cycle012Fun (mul X Y) = mul (cycle012Fun X) (cycle012Fun Y) := by
   rcases X with ⟨a1, b1, x01, x11, x21, y01, y11, y21⟩
   rcases Y with ⟨a2, b2, x02, x12, x22, y02, y12, y22⟩
-  revert a1 b1 x01 x11 x21 y01 y11 y21 a2 b2 x02 x12 x22 y02 y12 y22
-  decide
+  ext <;> dsimp [cycle012Fun, mul, dot3, cross0, cross1, cross2, mul2]
+  all_goals simp only [add2_function_eq_xor]
+  all_goals simp [Bool.and_xor_distrib_left, Bool.and_xor_distrib_right,
+    Bool.xor_comm, Bool.xor_left_comm]
 
 noncomputable def cycle012Aut : SplitOctF2Aut :=
   ⟨cycle012Equiv, by

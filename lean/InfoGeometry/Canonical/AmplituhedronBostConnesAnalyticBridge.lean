@@ -68,9 +68,10 @@ theorem bcfw_anomaly_vanishes_on_boundary (n : ℕ) :
   exact map_zero (finiteZeroTempState n)
 
 /-!
-### 3. On-Shell Factorization (Klein Quadric) Evaluation
-The on-shell boundary is governed by nilpotent chiral Cuntz generators.
-We show that their square strictly vanishes under the volume trace.
+### 3. Evaluation under explicit square-zero equations
+The following conditional statement uses only the displayed equations. It
+does not derive them from Klein-nullity, construct Cuntz generators, or identify
+the scalar algebra with a mass shell.
 -/
 
 variable (quadricToDiag : ∀ n : ℕ, ℂ →ₗ[ℂ] DiagAlg n)
@@ -80,21 +81,20 @@ def quadricVolumeEval (n : ℕ) (x : ℂ) : ℂ :=
   colimitZeroTempState n (quadricToDiag n x)
 
 /-- 
-**Theorem: On-Shell Factorization Evaluation**
-The squares of the nilpotent on-shell chiral generators vanish 
-identically when projected onto the Bost-Connes boundary.
+**Evaluation of the supplied square-zero equations**
 -/
-theorem on_shell_factorization_vanishes (n : ℕ) (Q : ChiralQuadricBoundary ℂ) :
-    quadricVolumeEval quadricToDiag n (Q.S_plus * Q.S_plus) = 0 ∧
-    quadricVolumeEval quadricToDiag n (Q.S_minus * Q.S_minus) = 0 := by
+theorem square_zero_pair_evaluates_to_zero (n : ℕ) (S_plus S_minus : ℂ)
+    (h_plus : S_plus * S_plus = 0) (h_minus : S_minus * S_minus = 0) :
+    quadricVolumeEval quadricToDiag n (S_plus * S_plus) = 0 ∧
+    quadricVolumeEval quadricToDiag n (S_minus * S_minus) = 0 := by
   constructor
   · dsimp [quadricVolumeEval]
-    rw [Q.nil_plus]
+    rw [h_plus]
     rw [map_zero]
     rw [phase_space_shattering_to_cantor_boundary]
     exact map_zero (finiteZeroTempState n)
   · dsimp [quadricVolumeEval]
-    rw [Q.nil_minus]
+    rw [h_minus]
     rw [map_zero]
     rw [phase_space_shattering_to_cantor_boundary]
     exact map_zero (finiteZeroTempState n)

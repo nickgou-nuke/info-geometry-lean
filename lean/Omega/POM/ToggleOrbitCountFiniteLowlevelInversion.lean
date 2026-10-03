@@ -19,25 +19,48 @@ def pomToggleOrbitCount3 (r m₁ : Nat) : Nat :=
 def pomToggleOrbitCount4 (r m₁ m₂ : Nat) : Nat :=
   8 ^ m₁ * 14 ^ m₂ * 15 ^ (r - m₁ - m₂)
 
+private theorem factorization_four_at_five : (Nat.factorization 4) 5 = 0 := by
+  apply Nat.factorization_eq_zero_of_not_dvd
+  norm_num
+
+private theorem factorization_five_at_five : (Nat.factorization 5) 5 = 1 := by
+  exact Nat.Prime.factorization_self Nat.prime_five
+
+private theorem factorization_eight_at_seven : (Nat.factorization 8) 7 = 0 := by
+  apply Nat.factorization_eq_zero_of_not_dvd
+  norm_num
+
+private theorem factorization_fourteen_at_seven : (Nat.factorization 14) 7 = 1 := by
+  rw [show 14 = 2 * 7 by norm_num,
+    Nat.factorization_mul (by norm_num : 2 ≠ 0) (by norm_num : 7 ≠ 0),
+    Finsupp.add_apply,
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 7 ∣ 2),
+    Nat.Prime.factorization_self (by norm_num : Nat.Prime 7)]
+
+private theorem factorization_fifteen_at_seven : (Nat.factorization 15) 7 = 0 := by
+  apply Nat.factorization_eq_zero_of_not_dvd
+  norm_num
+
 /-- The `5`-adic exponent of `O₃` recovers the complement of `m₁`. -/
 theorem pomToggleOrbitCount3_factorization_five (r m₁ : Nat) :
     (pomToggleOrbitCount3 r m₁).factorization 5 = r - m₁ := by
   unfold pomToggleOrbitCount3
-  rw [Nat.factorization_mul (pow_ne_zero _ (by decide)) (pow_ne_zero _ (by decide))]
-  simp [Nat.factorization_pow, show (Nat.factorization 4) 5 = 0 by decide,
-    show (Nat.factorization 5) 5 = 1 by decide]
+  rw [Nat.factorization_mul (pow_ne_zero _ (by positivity))
+    (pow_ne_zero _ (by positivity))]
+  simp [Nat.factorization_pow, factorization_four_at_five, factorization_five_at_five]
 
 /-- The `7`-adic exponent of `O₄` recovers `m₂`. -/
 theorem pomToggleOrbitCount4_factorization_seven (r m₁ m₂ : Nat) :
     (pomToggleOrbitCount4 r m₁ m₂).factorization 7 = m₂ := by
   unfold pomToggleOrbitCount4
   show (((8 ^ m₁) * (14 ^ m₂)) * 15 ^ (r - m₁ - m₂)).factorization 7 = m₂
-  rw [Nat.factorization_mul (mul_ne_zero (pow_ne_zero _ (by decide)) (pow_ne_zero _ (by decide)))
-    (pow_ne_zero _ (by decide))]
-  rw [Nat.factorization_mul (pow_ne_zero _ (by decide)) (pow_ne_zero _ (by decide))]
-  simp [Nat.factorization_pow, show (Nat.factorization 8) 7 = 0 by decide,
-    show (Nat.factorization 14) 7 = 1 by decide,
-    show (Nat.factorization 15) 7 = 0 by decide]
+  rw [Nat.factorization_mul
+    (mul_ne_zero (pow_ne_zero _ (by positivity)) (pow_ne_zero _ (by positivity)))
+    (pow_ne_zero _ (by positivity))]
+  rw [Nat.factorization_mul (pow_ne_zero _ (by positivity))
+    (pow_ne_zero _ (by positivity))]
+  simp [Nat.factorization_pow, factorization_eight_at_seven,
+    factorization_fourteen_at_seven, factorization_fifteen_at_seven]
 
 set_option maxHeartbeats 400000 in
 /-- Paper-facing low-level inversion package for the finite Bell orbit counts: the third and fourth

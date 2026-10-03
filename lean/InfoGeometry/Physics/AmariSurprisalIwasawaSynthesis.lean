@@ -10,6 +10,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.Complex.Trigonometric
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Tactic
+import InfoGeometry.Algebra.IwasawaRealKAN
 
 open scoped BigOperators Complex
 
@@ -234,26 +235,23 @@ end PositiveDist
 
 /-! ### Part V: The Iwasawa $KAN$ Decomposition on the Probability Manifold -/
 
-/-- Certified representation of the Iwasawa $KAN$ triad on $\mathrm{SL}(D, \mathbb{R})$. -/
-structure IwasawaDecompositionData where
-  det_K : ℝ
-  det_A : ℝ
-  det_N : ℝ
-  h_K_det : det_K = 1
-  h_A_det : det_A = 1
-  h_N_det : det_N = 1
+/-- The Iwasawa $KAN$ triad on $\mathrm{SL}(2, \mathbb{R})$, now with genuine
+matrix factors.  The sector certificates, the derived unipotent determinant and
+the explicit canonical witnesses live in
+`InfoGeometry.Algebra.IwasawaRealKAN`. -/
+abbrev IwasawaDecompositionData := InfoGeometry.Algebra.IwasawaRealKAN.IwasawaKAN2
 
-namespace IwasawaDecompositionData
+/-- **Theorem 12 (Unimodular $KAN$ product on $\mathrm{SL}(2,\mathbb{R})$)**:
+    the product $K \cdot A \cdot N$ has determinant one:
+    $\det(K \cdot A \cdot N) = 1$.
 
-/-- **Theorem 12 (Unimodular SL(D, ℝ) Product)**:
-    The total Iwasawa product matrix has unit determinant:
-    $\det(M) = \det(K) \cdot \det(A) \cdot \det(N) = 1$. -/
-theorem unimodular_product (decomp : IwasawaDecompositionData) :
-    decomp.det_K * decomp.det_A * decomp.det_N = 1 := by
-  rw [decomp.h_K_det, decomp.h_A_det, decomp.h_N_det]
-  ring
-
-end IwasawaDecompositionData
+This was previously `det_K * det_A * det_N = 1` for three real numbers `det_K`,
+`det_A`, `det_N` that were *assumed* to equal `1`, so the theorem proved
+`1 * 1 * 1 = 1` and no group was involved.  The product statement is now derived
+from the matrices by `Matrix.det_mul`. -/
+theorem IwasawaDecompositionData.unimodular_product
+    (decomp : IwasawaDecompositionData) : (decomp.product).det = 1 :=
+  decomp.product_det
 
 /-- Master certified synthesis uniting all 5 dimensions of Amari-Surprisal-Iwasawa geometry. -/
 theorem amari_surprisal_iwasawa_synthesis
@@ -270,7 +268,7 @@ theorem amari_surprisal_iwasawa_synthesis
     (amariCurvature 0 = 1 / 4) ∧
     (amariCurvature 1 = 0 ∧ amariCurvature (-1) = 0) ∧
     (∑ k, (c_abs (complexAmplitude P phi k)) ^ 2 = 1) ∧
-    (decomp.det_K * decomp.det_A * decomp.det_N = 1) := by
+    ((decomp.product).det = 1) := by
   have h_ref_zero : P.naturalParam ref ref = 0 := by
     dsimp [PositiveDist.naturalParam]
     ring
@@ -282,7 +280,7 @@ theorem amari_surprisal_iwasawa_synthesis
          amari_curvature_round_sphere,
          amari_curvature_flat_limits,
          P.complex_quadric_sum phi,
-         decomp.unimodular_product⟩
+         IwasawaDecompositionData.unimodular_product decomp⟩
 
 /-- Certified wrapper certifying Section 5.87 / 5.96. -/
 structure CertifiedAmariSurprisalIwasawaSynthesis (D : ℕ) where
@@ -297,7 +295,7 @@ structure CertifiedAmariSurprisalIwasawaSynthesis (D : ℕ) where
       (amariCurvature 0 = 1 / 4) ∧
       (amariCurvature 1 = 0 ∧ amariCurvature (-1) = 0) ∧
       (∑ k, (c_abs (complexAmplitude P phi k)) ^ 2 = 1) ∧
-      (decomp.det_K * decomp.det_A * decomp.det_N = 1)
+      ((decomp.product).det = 1)
 
 /-- Canonical witness constructor. -/
 def makeCertifiedAmariSurprisalIwasawaSynthesis (D : ℕ) : CertifiedAmariSurprisalIwasawaSynthesis D where

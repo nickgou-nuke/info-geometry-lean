@@ -1,0 +1,21 @@
+{
+  "annihilator_inside_tangent": true,
+  "chosen_null_norm": 0,
+  "chosen_null_square_zero": true,
+  "chosen_null_vector": "U0",
+  "field": "QQ",
+  "flat_model_symmetry_dimension_evidence": 14,
+  "imaginary_dimension": 7,
+  "imaginary_norm_signature_unordered": [
+    3,
+    4
+  ],
+  "left_annihilator_contains_null_line": true,
+  "left_annihilator_dimension_in_imaginary": 3,
+  "left_annihilator_matrix_rank": 4,
+  "projective_null_quadric_dimension": 5,
+  "projective_tangent_dimension": 5,
+  "projectivized_distribution_rank": 2,
+  "status": "exact local algebraic evidence for split-octonion flat (2,3,5) model; not a global Cartan-geometry proof",
+  "zorn_carrier_dimension": 8
+}

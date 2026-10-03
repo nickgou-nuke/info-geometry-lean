@@ -119,6 +119,17 @@ theorem exp_two_pi_eq_neg_id (K : Bivector E) :
   rw [hhalf, Real.cos_pi, Real.sin_pi]
   ext <;> simp
 
+/-- Two full turns return the spinorial transport operator to the identity. -/
+theorem exp_four_pi_eq_id (K : Bivector E) :
+    (modularFlow K (4 * Real.pi)).exp =
+      (ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  unfold Rotor.exp Rotor.modularFlow
+  have hhalf : ((4 * Real.pi : ℝ) / 2) = 2 * Real.pi := by ring
+  rw [hhalf, Real.cos_two_pi, Real.sin_two_pi]
+  simp
+
 end Rotor
 
 end InfoGeometry.Clifford

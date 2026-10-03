@@ -76,7 +76,7 @@ set_option linter.unusedSimpArgs false
   ∀ (U : UnipotentUpperTriangular3), U.det = 1)
 
 #check (sl3_unimodular_product :
-  ∀ (I : IwasawaFactorization3), I.det_K * I.det_A * I.det_N = 1)
+  ∀ (I : IwasawaFactorization3), (I.product).det = 1)
 
 #check (sl_information_bundle_iwasawa_synthesis :
   ∀ {D : ℕ} (hD : 0 < D) [NeZero D]
@@ -90,7 +90,7 @@ set_option linter.unusedSimpArgs false
     (amariSectionalCurvature 1 = 0) ∧
     (amariSectionalCurvature (-1) = 0) ∧
     (∑ i, ‖Z.z i‖ ^ 2 = 1) ∧
-    (I.det_K * I.det_A * I.det_N = 1))
+    ((I.product).det = 1))
 
 -- 2. Axiom Footprint Verification
 #print axioms PositiveRay.project_sum_eq_one

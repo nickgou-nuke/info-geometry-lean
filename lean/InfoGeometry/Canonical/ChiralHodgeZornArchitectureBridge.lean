@@ -26,8 +26,10 @@ This module establishes the canonical mathematical bridge uniting:
    - Negative coexact subspace $C_-(v) = (0, 0, 0, v)$ is totally isotropic: $\mathcal{N}(C_-(v)) = 0$
    - They form a dual Lagrangian polar pair with pairing $\langle C_+(u), C_-(v) \rangle = u \cdot v$.
 
-3. **On-Shell Factorization & Chiral CAR Algebra**:
-   - Nilpotent chiral generators on the Klein quadric boundary: $C_+(u)^2 = 0$ and $C_-(v)^2 = 0$
+3. **Square-Zero Chiral Channels & Mixed Products**:
+   - The specified Zorn-coordinate elements satisfy $C_+(u)^2 = 0$ and
+     $C_-(v)^2 = 0$.  These are identities in that carrier, not a
+     Klein-quadric or Minkowski mass-shell characterization.
    - Anticommutator: $\{C_+(u), C_-(v)\} = (u \cdot v) \cdot \mathbb{I}$
    - Commutator: $[C_+(u), C_-(v)] = \mathrm{weylDilaton}(u \cdot v)$, proving that the commutator
      of transverse chiral matter currents generates the irrotational exact gauge mode.
@@ -164,14 +166,14 @@ theorem coexact_krein_pairing (u v : Vec3) :
 
 end KreinLagrangianIsotropy
 
-section OnShellFactorizationAndCAR
+section SquareZeroChannelsAndCAR
 
-/-- On-shell factorization: positive chiral generators are nilpotent ($S_+^2 = 0$). -/
+/-- The positive chiral Zorn-coordinate element is square-zero. -/
 theorem coexactUpper_sq_zero (u : Vec3) :
     zornMul (coexactUpper u) (coexactUpper u) = 0 :=
   upperVectorZorn_square_zero u
 
-/-- On-shell factorization: negative chiral generators are nilpotent ($S_-^2 = 0$). -/
+/-- The negative chiral Zorn-coordinate element is square-zero. -/
 theorem coexactLower_sq_zero (v : Vec3) :
     zornMul (coexactLower v) (coexactLower v) = 0 :=
   lowerVectorZorn_square_zero v
@@ -202,7 +204,7 @@ theorem coexact_commutator (u v : Vec3) :
   rw [upperVectorZorn_mul_lowerVectorZorn, lowerVectorZorn_mul_upperVectorZorn]
   ext <;> simp [weylDilaton, zornMk]
 
-end OnShellFactorizationAndCAR
+end SquareZeroChannelsAndCAR
 
 section VorticityAndGrading
 

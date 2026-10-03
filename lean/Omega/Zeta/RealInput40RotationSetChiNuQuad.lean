@@ -49,7 +49,16 @@ quadrilateral vertices together with two non-extreme points already lying on the
     cor:real-input-40-rotation-set-chi-nu-quad -/
 theorem paper_real_input_40_rotation_set_chi_nu_quad : RealInput40RotationSetChiNuQuad := by
   let _ := paper_real_input_40_rotation_polytope_6v
-  refine ⟨by decide, ?_, by norm_num [realInput40ChiNuEdgePoint], by norm_num [realInput40ChiNuInteriorPoint]⟩
+  refine ⟨?_, ?_, by norm_num [realInput40ChiNuEdgePoint],
+    by norm_num [realInput40ChiNuInteriorPoint]⟩
+  · ext ⟨chi, nu⟩
+    simp [realInput40ChiNuProjectedVertices, realInput40RotationVerticesChi,
+      realInput40ChiNuProjection, realInput40ChiNuProjectedSupport,
+      realInput40ChiNuQuadVertices, realInput40ChiNuEdgePoint,
+      realInput40ChiNuInteriorPoint, realInput40ChiVertex0, realInput40ChiVertex1,
+      realInput40ChiVertex2, realInput40ChiVertex3, realInput40ChiVertex4,
+      realInput40ChiVertex5]
+    tauto
   intro p hp
   simp [realInput40ChiNuProjectedSupport, realInput40ChiNuQuadVertices, realInput40ChiNuEdgePoint,
     realInput40ChiNuInteriorPoint, realInput40ChiNuRegion] at hp ⊢

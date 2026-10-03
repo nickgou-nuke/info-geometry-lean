@@ -11,9 +11,10 @@ variable {R V W : Type*} [CommRing R] [AddCommGroup V] [Module R V] [AddCommGrou
 
 open ExteriorAlgebra
 
-/-- **Theorem**: Native Mathlib 5-Blade Plücker Quadric Nilpotency identity for Gr(5,n) & Cl(5,5).
-    Proves natively in Mathlib that for any 5 vectors v1 v2 v3 v4 v5 ∈ V,
-    the 5-blade K5 = ι(v1) ∧ ι(v2) ∧ ι(v3) ∧ ι(v4) ∧ ι(v5) satisfies K5 ∧ K5 = 0. -/
+/-- The square of a decomposable exterior 5-vector vanishes by alternation
+    and repeated generators.  The arbitrary module `V` here carries no
+    specified Clifford form; this theorem therefore asserts neither a
+    `Gr(5,n)` Plücker relation nor a `Cl(5,5)` kinematic result. -/
 theorem native_plucker_five_blade_nilpotent (v1 v2 v3 v4 v5 : V) :
     (ι R v1 * ι R v2 * ι R v3 * ι R v4 * ι R v5) * (ι R v1 * ι R v2 * ι R v3 * ι R v4 * ι R v5) = 0 := by
   have h_anti : ∀ a b : V, (ι R a : ExteriorAlgebra R V) * ι R b = - (ι R b * ι R a) := by
@@ -49,11 +50,10 @@ theorem native_plucker_five_blade_linear_map_conservation (f : V →ₗ[R] W) (v
     (map f (ι R v1 * ι R v2 * ι R v3 * ι R v4 * ι R v5)) * (map f (ι R v1 * ι R v2 * ι R v3 * ι R v4 * ι R v5)) = 0 := by
   rw [← _root_.map_mul, native_plucker_five_blade_nilpotent, _root_.map_zero]
 
-/-- **Theorem**: Master Split Clifford Cl(5,5), O(5,5) & 5-Blade Plücker Hierarchy Synthesis.
-    Unifies:
-    1. 5-blade Plücker quadric nilpotency identity (v1 ∧ v2 ∧ v3 ∧ v4 ∧ v5)² = 0.
-    2. Linear map pushforward conservation (map f K5)² = 0.
-    3. Extension from C4 twistor space to C5 / O(5,5) split Clifford Cl(5,5) kinematics. -/
+/-- Collects the exterior square-zero identity for a decomposable 5-vector and
+    its transport under the exterior-algebra map induced by `f`.  No Clifford
+    signature, orthogonal group, twistor extension, or Plücker classification
+    is part of this statement. -/
 theorem master_split_clifford_five_blade_synthesis
     (f : V →ₗ[R] W) (v1 v2 v3 v4 v5 : V) :
     ((ι R v1 * ι R v2 * ι R v3 * ι R v4 * ι R v5) * (ι R v1 * ι R v2 * ι R v3 * ι R v4 * ι R v5) = 0) ∧

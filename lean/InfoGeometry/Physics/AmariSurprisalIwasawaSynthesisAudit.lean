@@ -64,7 +64,7 @@ variable {D : ℕ}
     ∑ k, (c_abs (complexAmplitude P phi k)) ^ 2 = 1)
 
 #check (IwasawaDecompositionData.unimodular_product :
-  ∀ (decomp : IwasawaDecompositionData), decomp.det_K * decomp.det_A * decomp.det_N = 1)
+  ∀ (decomp : IwasawaDecompositionData), (decomp.product).det = 1)
 
 #check (amari_surprisal_iwasawa_synthesis :
   ∀ (P : PositiveDist D) (hD : 0 < D) (ref : Fin D) (phi : Fin D → ℝ)
@@ -77,7 +77,7 @@ variable {D : ℕ}
     (amariCurvature 0 = 1 / 4) ∧
     (amariCurvature 1 = 0 ∧ amariCurvature (-1) = 0) ∧
     (∑ k, (c_abs (complexAmplitude P phi k)) ^ 2 = 1) ∧
-    (decomp.det_K * decomp.det_A * decomp.det_N = 1))
+    ((decomp.product).det = 1))
 
 -- 2. Axiom Footprint Verification
 #print axioms PositiveDist.shannon_entropy_eq_neg_sum_p_log

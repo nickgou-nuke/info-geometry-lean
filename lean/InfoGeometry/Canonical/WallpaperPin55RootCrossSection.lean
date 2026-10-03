@@ -31,6 +31,7 @@ this module supplies the exact finite algebraic cross-section used by them.
 namespace InfoGeometry.Canonical.WallpaperPin55RootCrossSection
 
 open InfoGeometry.Canonical.WallpaperKleinBottleCartan
+open InfoGeometry.Canonical.HolographicSouriauReconstruction
 
 noncomputable section
 
@@ -163,7 +164,11 @@ def wallpaperB2Action : Fin 8 → Fin 8 → Fin 8
 theorem wallpaperD4_action_on_b2_root (g r : Fin 8) :
     matVec2 (wallpaperD4 g) (wallpaperB2Root r) =
       wallpaperB2Root (wallpaperB2Action g r) := by
-  fin_cases g <;> fin_cases r <;> decide
+  ext k
+  fin_cases g <;> fin_cases r <;> fin_cases k <;>
+    norm_num [matVec2, wallpaperD4, wallpaperB2Root, wallpaperB2Action,
+      brillouinTwist2, brillouinGlide2, Matrix.mulVec, dotProduct,
+      Matrix.one_apply, Fin.sum_univ_two]
 
 /-- The Klein-compatible wallpaper point group preserves the `B₂/C₂` roots. -/
 theorem wallpaperD4_preserves_b2_roots (g r : Fin 8) :
@@ -227,13 +232,15 @@ def projectWeyl2 (M : Mat5Q) : Mat2Q :=
 /-- The `D₅` cross-section projects exactly to the wallpaper `D₄` matrices. -/
 theorem weylD5CrossSection_projects_wallpaper (g : Fin 8) :
     projectWeyl2 (weylD5CrossSection g) = wallpaperD4 g := by
-  fin_cases g <;> decide
+  ext i j
+  fin_cases g <;> fin_cases i <;> fin_cases j <;>
+    norm_num [projectWeyl2, weylD5CrossSection, wallpaperD4,
+      brillouinTwist2, brillouinGlide2, Matrix.one_apply]
 
 /-- The cross-section representatives are signed orthogonal matrices. -/
 theorem weylD5CrossSection_orthogonal (g : Fin 8) :
     (weylD5CrossSection g).transpose * weylD5CrossSection g = 1 := by
-  ext i j
-  fin_cases g <;> fin_cases i <;> fin_cases j <;> decide
+  fin_cases g <;> native_decide
 
 /--
 The lifted `D₅` action projects to the same action as the wallpaper matrix on
@@ -242,7 +249,7 @@ the projected `B₂/C₂` root.
 theorem weylD5CrossSection_action_projects_wallpaper (g r : Fin 8) :
     projectRoot2 (matVec5 (weylD5CrossSection g) (pin55LiftOfWallpaperRoot r)) =
       matVec2 (wallpaperD4 g) (wallpaperB2Root r) := by
-  fin_cases g <;> fin_cases r <;> decide
+  fin_cases g <;> fin_cases r <;> native_decide
 
 /-- Explicit `D₅` root witness data for the lifted `D₄` action. -/
 structure D5RootData where
@@ -328,7 +335,7 @@ theorem weylD5CrossSection_action_root_eq (g r : Fin 8) :
     matVec5 (weylD5CrossSection g) (pin55LiftOfWallpaperRoot r) =
       d5RootOf (d5ActionWitness g r).i (d5ActionWitness g r).j
         (d5ActionWitness g r).si (d5ActionWitness g r).sj := by
-  fin_cases g <;> fin_cases r <;> decide
+  fin_cases g <;> fin_cases r <;> native_decide
 
 /-- The lifted cross-section action preserves the finite `D₅` root system. -/
 theorem weylD5CrossSection_preserves_lifted_d5_roots (g r : Fin 8) :
@@ -355,7 +362,7 @@ def o55BlockLift (P : Mat5Q) : MatSplit55Q :=
 theorem weylD5CrossSection_preserves_splitMetric55 (g : Fin 8) :
     (o55BlockLift (weylD5CrossSection g)).transpose * splitMetric55 *
         o55BlockLift (weylD5CrossSection g) = splitMetric55 := by
-  fin_cases g <;> decide
+  fin_cases g <;> native_decide
 
 /-- Compact packet collecting the finite wallpaper/root/metric cross-section. -/
 theorem wallpaper_pin55_root_cross_section_packet (g r : Fin 8) :

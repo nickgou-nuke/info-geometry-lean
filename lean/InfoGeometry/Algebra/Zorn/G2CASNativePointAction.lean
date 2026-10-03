@@ -487,13 +487,28 @@ def casPointPermRaw : Fin 7 → Fin 63 → Fin 63
     | 62 => 58
     | _ => 0
   | _ => fun _ => 0
+private theorem casPointPermRaw_surjective (k : Fin 7) :
+    Function.Surjective (casPointPermRaw k) := by
+  have himage : Finset.univ.image (casPointPermRaw k) = Finset.univ := by
+    fin_cases k <;> decide
+  intro y
+  have hy : y ∈ Finset.univ.image (casPointPermRaw k) := by
+    rw [himage]
+    exact Finset.mem_univ y
+  obtain ⟨x, hx, hxy⟩ := Finset.mem_image.mp hy
+  exact ⟨x, hxy⟩
+
+private theorem casPointPermRaw_bijective_cert (k : Fin 7) :
+    Function.Bijective (casPointPermRaw k) := by
+  have hsurj := casPointPermRaw_surjective k
+  exact ⟨Finite.injective_iff_surjective.mpr hsurj, hsurj⟩
+
 noncomputable def casPointPerm (k : Fin 7) : Equiv.Perm (Fin 63) :=
-  Equiv.ofBijective (casPointPermRaw k) (by
-    fin_cases k <;> decide)
+  Equiv.ofBijective (casPointPermRaw k) (casPointPermRaw_bijective_cert k)
 
 theorem casPointPerm_raw_bijective (k : Fin 7) :
-    Function.Bijective (casPointPermRaw k) := by
-  fin_cases k <;> decide
+    Function.Bijective (casPointPermRaw k) :=
+  casPointPermRaw_bijective_cert k
 
 theorem casPoint_pc_action (k : Fin 6) (i : Fin 63) :
     casPoint (casPointPermRaw ⟨k, by omega⟩ i) =
@@ -530,8 +545,24 @@ def correctedTPointPermRaw : Fin 63 → Fin 63 := fun i => match i with
   | 54 => 19 | 55 => 61 | 56 => 9 | 57 => 47 | 58 => 58 | 59 => 35
   | 60 => 60 | 61 => 55 | 62 => 25 | _ => 0
 
+private theorem correctedTPointPermRaw_surjective :
+    Function.Surjective correctedTPointPermRaw := by
+  have himage : Finset.univ.image correctedTPointPermRaw = Finset.univ := by
+    decide
+  intro y
+  have hy : y ∈ Finset.univ.image correctedTPointPermRaw := by
+    rw [himage]
+    exact Finset.mem_univ y
+  obtain ⟨x, hx, hxy⟩ := Finset.mem_image.mp hy
+  exact ⟨x, hxy⟩
+
+private theorem correctedTPointPermRaw_bijective :
+    Function.Bijective correctedTPointPermRaw := by
+  have hsurj := correctedTPointPermRaw_surjective
+  exact ⟨Finite.injective_iff_surjective.mpr hsurj, hsurj⟩
+
 noncomputable def correctedTPointPerm : Equiv.Perm (Fin 63) :=
-  Equiv.ofBijective correctedTPointPermRaw (by decide)
+  Equiv.ofBijective correctedTPointPermRaw correctedTPointPermRaw_bijective
 
 theorem correctedTPointPerm_intertwines (i : Fin 63) :
     casPoint (correctedTPointPermRaw i) =

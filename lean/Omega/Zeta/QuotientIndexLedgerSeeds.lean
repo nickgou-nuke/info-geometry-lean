@@ -63,27 +63,46 @@ v_p(n) gives the largest power of p dividing n. -/
 
 /-- v_2(12) = 2 (12 = 2² · 3).
     thm:xi-localized-quotient-index-ledger -/
-theorem val2_12 : Nat.factorization 12 2 = 2 := by decide
+theorem val2_12 : Nat.factorization 12 2 = 2 := by
+  rw [show (12 : ℕ) = 4 * 3 by norm_num,
+    Nat.factorization_mul_apply_of_coprime (by norm_num : Nat.Coprime 4 3)]
+  rw [show (4 : ℕ) = 2 ^ 2 by norm_num,
+    Nat.factorization_pow_self (by norm_num : Nat.Prime 2),
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 2 ∣ 3)]
 
 /-- v_3(12) = 1 (12 = 2² · 3).
     thm:xi-localized-quotient-index-ledger -/
-theorem val3_12 : Nat.factorization 12 3 = 1 := by decide
+theorem val3_12 : Nat.factorization 12 3 = 1 := by
+  rw [show (12 : ℕ) = 4 * 3 by norm_num,
+    Nat.factorization_mul_apply_of_coprime (by norm_num : Nat.Coprime 4 3)]
+  rw [Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 3 ∣ 4),
+    Nat.Prime.factorization_self (by norm_num : Nat.Prime 3)]
 
 /-- v_2(30) = 1 (30 = 2 · 3 · 5).
     thm:xi-localized-quotient-index-ledger -/
-theorem val2_30 : Nat.factorization 30 2 = 1 := by decide
+theorem val2_30 : Nat.factorization 30 2 = 1 := by
+  rw [show (30 : ℕ) = 2 * 15 by norm_num,
+    Nat.factorization_mul_apply_of_coprime (by norm_num : Nat.Coprime 2 15),
+    Nat.Prime.factorization_self (by norm_num : Nat.Prime 2),
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 2 ∣ 15)]
 
 /-- v_3(30) = 1 (30 = 2 · 3 · 5).
     thm:xi-localized-quotient-index-ledger -/
-theorem val3_30 : Nat.factorization 30 3 = 1 := by decide
+theorem val3_30 : Nat.factorization 30 3 = 1 := by
+  rw [show (30 : ℕ) = 3 * 10 by norm_num,
+    Nat.factorization_mul_apply_of_coprime (by norm_num : Nat.Coprime 3 10),
+    Nat.Prime.factorization_self (by norm_num : Nat.Prime 3),
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 3 ∣ 10)]
 
 /-- v_2(7) = 0 (7 is odd prime).
     thm:xi-localized-quotient-index-ledger -/
-theorem val2_7 : Nat.factorization 7 2 = 0 := by decide
+theorem val2_7 : Nat.factorization 7 2 = 0 :=
+  Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 2 ∣ 7)
 
 /-- v_3(7) = 0 (7 not divisible by 3).
     thm:xi-localized-quotient-index-ledger -/
-theorem val3_7 : Nat.factorization 7 3 = 0 := by decide
+theorem val3_7 : Nat.factorization 7 3 = 0 :=
+  Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 3 ∣ 7)
 
 /-! ## Euler totient of stripped values
 
@@ -92,23 +111,29 @@ all prime factors of n are outside S. -/
 
 /-- φ(1) = 1.
     thm:xi-localized-quotient-index-ledger -/
-theorem totient_1 : Nat.totient 1 = 1 := by decide
+theorem totient_1 : Nat.totient 1 = 1 := by simp
 
 /-- φ(5) = 4.
     thm:xi-localized-quotient-index-ledger -/
-theorem totient_5 : Nat.totient 5 = 4 := by decide
+theorem totient_5 : Nat.totient 5 = 4 := by
+  rw [Nat.totient_prime (by norm_num : Nat.Prime 5)]
 
 /-- φ(7) = 6.
     thm:xi-localized-quotient-index-ledger -/
-theorem totient_7 : Nat.totient 7 = 6 := by decide
+theorem totient_7 : Nat.totient 7 = 6 := by
+  rw [Nat.totient_prime (by norm_num : Nat.Prime 7)]
 
 /-- φ(35) = 24 = φ(5)·φ(7) = 4·6 (multiplicativity for coprime arguments).
     thm:xi-localized-quotient-index-ledger -/
-theorem totient_35 : Nat.totient 35 = 24 := by decide
+theorem totient_35 : Nat.totient 35 = 24 := by
+  rw [show (35 : ℕ) = 5 * 7 by norm_num,
+    Nat.totient_mul (by norm_num : Nat.Coprime 5 7), totient_5, totient_7]
 
 /-- Totient multiplicativity seed: φ(35) = φ(5) · φ(7).
     thm:xi-localized-quotient-index-ledger -/
-theorem totient_mult_5_7 : Nat.totient 35 = Nat.totient 5 * Nat.totient 7 := by decide
+theorem totient_mult_5_7 : Nat.totient 35 = Nat.totient 5 * Nat.totient 7 := by
+  rw [show (35 : ℕ) = 5 * 7 by norm_num,
+    Nat.totient_mul (by norm_num : Nat.Coprime 5 7)]
 
 /-! ## Cyclic realization criterion seeds
 
@@ -117,23 +142,26 @@ i.e., m is coprime to every prime in S. For S={2,3}: m coprime to 6. -/
 
 /-- Coprimality seed: gcd(5, 6) = 1 (5 realizable in G_{2,3}).
     thm:xi-localized-quotient-index-ledger -/
-theorem coprime_5_6 : Nat.gcd 5 6 = 1 := by decide
+theorem coprime_5_6 : Nat.gcd 5 6 = 1 :=
+  (Nat.Coprime.gcd_eq_one (by norm_num : Nat.Coprime 5 6)).symm
 
 /-- Coprimality seed: gcd(7, 6) = 1 (7 realizable in G_{2,3}).
     thm:xi-localized-quotient-index-ledger -/
-theorem coprime_7_6 : Nat.gcd 7 6 = 1 := by decide
+theorem coprime_7_6 : Nat.gcd 7 6 = 1 :=
+  (Nat.Coprime.gcd_eq_one (by norm_num : Nat.Coprime 7 6)).symm
 
 /-- Coprimality seed: gcd(35, 6) = 1 (35 realizable in G_{2,3}).
     thm:xi-localized-quotient-index-ledger -/
-theorem coprime_35_6 : Nat.gcd 35 6 = 1 := by decide
+theorem coprime_35_6 : Nat.gcd 35 6 = 1 :=
+  (Nat.Coprime.gcd_eq_one (by norm_num : Nat.Coprime 35 6)).symm
 
 /-- Non-coprimality seed: gcd(4, 6) = 2 ≠ 1 (4 not realizable in G_{2,3}).
     thm:xi-localized-quotient-index-ledger -/
-theorem not_coprime_4_6 : Nat.gcd 4 6 = 2 := by decide
+theorem not_coprime_4_6 : Nat.gcd 4 6 = 2 := by norm_num
 
 /-- Non-coprimality seed: gcd(9, 6) = 3 ≠ 1 (9 not realizable in G_{2,3}).
     thm:xi-localized-quotient-index-ledger -/
-theorem not_coprime_9_6 : Nat.gcd 9 6 = 3 := by decide
+theorem not_coprime_9_6 : Nat.gcd 9 6 = 3 := by norm_num
 
 /-- Paper wrapper: Localized quotient index ledger seeds for S={2,3}.
     n_{S⊥} stripping + totient + cyclic realization criterion.

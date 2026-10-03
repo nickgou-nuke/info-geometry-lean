@@ -88,12 +88,8 @@ theorem e_de_e_zero :
     P.e * P.de D * P.e = 0 := by
   have h := P.de_projection_leibniz D
   have hmul := congrArg (fun x : A => P.e * x) h
-  simp only [mul_add, mul_assoc, P.idem] at hmul
-  have hx :
-      P.e * P.de D * P.e + P.e * P.de D =
-        P.e * P.de D := by
-    simpa [mul_assoc] using hmul
-  exact add_right_eq_self.mp hx
+  simp only [mul_add, ← mul_assoc, P.idem] at hmul
+  exact add_right_cancel (hmul.trans (zero_add _).symm)
 
 /-- The differential also has zero complementary diagonal block. -/
 theorem one_sub_e_de_one_sub_e_zero :
@@ -219,17 +215,9 @@ def chern4Pairing : R :=
 /-- Cyclicity permits moving the reflection through the fourth differential
 power inside a genuine tracial functional. -/
 theorem chern4Pairing_cyclic :
-    P.chern4Pairing τ D =
+    chern4Pairing τ D P =
       τ (P.de4 D * P.reflection) := by
   unfold chern4Pairing ChiralProjection.chern4
   exact τ.cyclic _ _
-
-/-- Any proposed geometric/topological readout remains an explicit
-identification hypothesis. -/
-theorem chern4Pairing_eq_of_identification
-    (q : R)
-    (h : P.chern4Pairing τ D = q) :
-    P.chern4Pairing τ D = q :=
-  h
 
 end InfoGeometry.Canonical.CyclicChernProjectionBridge

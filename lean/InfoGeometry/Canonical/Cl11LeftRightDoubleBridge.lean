@@ -76,7 +76,7 @@ theorem rightAction_injective :
 /-- Concrete identification `Idx 1 = Fin 1 × Fin 2 ≃ Fin 2`. -/
 def stageOneIndexEquiv : InfoGeometry.Clifford.TowerMatrix.Idx 1 ≃ Fin 2 where
   toFun x := x.2
-  invFun i := (0, i)
+  invFun i := ((0 : Fin 1), i)
   left_inv x := by
     rcases x with ⟨u, i⟩
     have hu : u = (0 : Fin 1) := Subsingleton.elim _ _
@@ -110,19 +110,22 @@ def rightStageTwo (B : Atom) : StageTwo :=
 
 @[simp] theorem leftStageTwo_one :
     leftStageTwo (1 : Atom) = (1 : StageTwo) := by
-  simp [leftStageTwo, atomToStageOne, Matrix.one_kronecker_one]
+  simp [leftStageTwo, atomToStageOne]
 
 @[simp] theorem rightStageTwo_one :
     rightStageTwo (1 : Atom) = (1 : StageTwo) := by
-  simp [rightStageTwo, Matrix.one_kronecker_one]
+  simp [rightStageTwo]
 
 @[simp] theorem leftStageTwo_mul (A B : Atom) :
     leftStageTwo (A * B) = leftStageTwo A * leftStageTwo B := by
-  simp [leftStageTwo, ← Matrix.mul_kronecker_mul]
+  simpa only [leftStageTwo, map_mul, mul_one] using
+    Matrix.mul_kronecker_mul (atomToStageOne A) (atomToStageOne B)
+      (1 : Atom) (1 : Atom)
 
 @[simp] theorem rightStageTwo_mul (A B : Atom) :
     rightStageTwo (A * B) = rightStageTwo A * rightStageTwo B := by
-  simp [rightStageTwo, ← Matrix.mul_kronecker_mul]
+  simpa only [rightStageTwo, mul_one] using
+    Matrix.mul_kronecker_mul (1 : StageOne) (1 : StageOne) A B
 
 theorem leftStageTwo_rightStageTwo_commute (A B : Atom) :
     leftStageTwo A * rightStageTwo B =

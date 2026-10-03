@@ -10,6 +10,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.Complex.Trigonometric
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Tactic
+import InfoGeometry.Algebra.IwasawaRealKAN
 
 open scoped BigOperators Complex
 
@@ -353,21 +354,19 @@ end UnipotentUpperTriangular3
 
 /-! ### Part V: Master Iwasawa Triad Architecture on SL(D, ℝ) -/
 
-/-- The Iwasawa decomposition triad K · A · N in SL(3, ℝ). -/
-structure IwasawaFactorization3 where
-  det_K : ℝ
-  det_A : ℝ
-  det_N : ℝ
-  h_K : det_K = 1
-  h_A : det_A = 1
-  h_N : det_N = 1
+/-- The Iwasawa $KAN$ triad, now with genuine matrix factors.  The sector
+certificates, the derived unipotent determinant and the explicit canonical
+witnesses live in `InfoGeometry.Algebra.IwasawaRealKAN`. -/
+abbrev IwasawaFactorization3 := InfoGeometry.Algebra.IwasawaRealKAN.IwasawaKAN2
 
-/-- **Theorem 14 (Unimodular Product on SL(3, ℝ))**:
-    det(K) · det(A) · det(N) = 1. -/
-theorem sl3_unimodular_product (I : IwasawaFactorization3) :
-    I.det_K * I.det_A * I.det_N = 1 := by
-  rw [I.h_K, I.h_A, I.h_N]
-  norm_num
+/-- **Theorem 14 (Unimodular Product on $\mathrm{SL}(2,\mathbb{R})$)**:
+    the product $K \cdot A \cdot N$ has determinant one.
+
+This was previously `det_K * det_A * det_N = 1` for three real numbers that were
+*assumed* to equal `1`, so it proved `1 * 1 * 1 = 1`.  The product statement is
+now derived from the matrices by `Matrix.det_mul`. -/
+theorem sl3_unimodular_product (I : IwasawaFactorization3) : (I.product).det = 1 :=
+  I.product_det
 
 /-- **Master Theorem 15 (SL(D, ℝ) Information-Geometric Master Bundle & Iwasawa Triad Synthesis)**:
     Unifies:
@@ -388,7 +387,7 @@ theorem sl_information_bundle_iwasawa_synthesis
     (amariSectionalCurvature 1 = 0) ∧
     (amariSectionalCurvature (-1) = 0) ∧
     (∑ i, ‖Z.z i‖ ^ 2 = 1) ∧
-    (I.det_K * I.det_A * I.det_N = 1) := by
+    ((I.product).det = 1) := by
   refine ⟨X.project_sum_eq_one,
           P.sum_clr_zero hD,
           amari_curvature_round_sphere,

@@ -32,7 +32,11 @@ private lemma lucas_two_pow_gt_one (k : ℕ) : 1 < Omega.lucasNum (2 ^ (k + 2)) 
 
 private theorem fib_two_pow_primeFactors_card_lower :
     ∀ k, k + 1 ≤ (Nat.fib (2 ^ (k + 2))).primeFactors.card
-  | 0 => by decide
+  | 0 => by
+      change 1 ≤ (Nat.fib 4).primeFactors.card
+      rw [show Nat.fib 4 = 3 by norm_num [Nat.fib],
+        Nat.Prime.primeFactors (by norm_num : Nat.Prime 3)]
+      simp
   | k + 1 => by
       let a := Nat.fib (2 ^ (k + 2))
       let b := Nat.fib (2 ^ (k + 3))

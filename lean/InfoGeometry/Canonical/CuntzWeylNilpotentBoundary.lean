@@ -3,15 +3,16 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzWeylUHFBridge
 
 /-!
-# Cuntz-Weyl Nilpotent Boundary and Trace Evaluations
+# Square-Zero Weyl Data and Trace Evaluations
 
-This module bridges the nilpotency boundary constraints (from the Klein 
-quadric on-shell factorization) natively into the Cuntz/Weyl traces, and 
-establishes the formal evaluation identities.
+This module packages square-zero equations for the two operators in a
+`CuntzWeylSystem`-shaped carrier and derives their linear trace readouts.
+Square-zero equations alone do not encode a Klein quadric, Plücker relation,
+on-shell factorization, or Cuntz relations.
 
-Per the Categorical Synthesis Dictionary:
-- On-Shell Factorization = The Klein quadric boundary (Q = 0) represented 
-  by nilpotent chiral Cuntz generators (S_±² = 0).
+The base `CuntzWeylSystem` in the imported owner contains reflection data; this
+extension adds square-zero hypotheses and does not assert that they follow from
+that reflection data.
 -/
 
 noncomputable section
@@ -23,56 +24,53 @@ open InfoGeometry.Canonical.CuntzWeylUHFBridge
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
 
 /-!
-## 1. Nilpotent Boundary Constraints (Chiral Cuntz Generators)
+## 1. Square-Zero Operator Data
 
-We define the chiral generators `S_plus` and `S_minus` from the Weyl/Cuntz 
-system grading, and enforce the nilpotent Klein quadric constraint natively.
+We extend the Weyl reflection data with explicit square-zero hypotheses.
 -/
 
 /-- 
-The nilpotent boundary constraint explicitly enforces the on-shell 
-factorization geometry `S_±² = 0` on a given operator. 
+The square-zero property of an operator. It has no geometric interpretation
+without additional structure connecting this operator to a geometric carrier.
 -/
-def IsNilpotentBoundary (S : H →L[ℂ] H) : Prop :=
+def IsSquareZeroOperator (S : H →L[ℂ] H) : Prop :=
   S ∘L S = 0
 
 /-- 
-A Cuntz/Weyl system upgraded with strict chiral nilpotency constraints 
-on its primary shift generator (interpreted as the chiral operator).
+A Weyl reflection system equipped with square-zero hypotheses on its two
+distinguished operators.
 -/
-structure NilpotentCuntzWeylSystem (H : Type*) [NormedAddCommGroup H] 
+structure SquareZeroWeylSystem (H : Type*) [NormedAddCommGroup H]
     [InnerProductSpace ℂ H] [CompleteSpace H] extends CuntzWeylSystem H where
-  nilpotent_SL : IsNilpotentBoundary S_L
-  nilpotent_SR : IsNilpotentBoundary S_R
+  square_zero_SL : IsSquareZeroOperator S_L
+  square_zero_SR : IsSquareZeroOperator S_R
 
-variable (ncws : NilpotentCuntzWeylSystem H)
+variable (ncws : SquareZeroWeylSystem H)
 
 /-!
-## 2. Bridging Nilpotency into the Cuntz/Weyl Traces
+## 2. Linear Trace Readouts
 
-Since `S_L^2 = 0`, the trace of any operator containing this boundary 
-constraint evaluates strictly to zero.
+Linearity sends each square-zero operator equation to a zero trace.
 -/
 
 variable (trace : (H →L[ℂ] H) →ₗ[ℂ] ℂ)
 
 /-- 
-The trace evaluation of the unperturbed chiral generator squared is 
-strictly null due to the Klein quadric boundary constraint.
+The trace of the square of the left distinguished operator is zero by its
+square-zero hypothesis.
 -/
-theorem trace_nilpotent_boundary_SL_sq :
+theorem trace_square_zero_left_sq :
     trace (ncws.S_L ∘L ncws.S_L) = 0 := by
-  have h : ncws.S_L ∘L ncws.S_L = 0 := ncws.nilpotent_SL
+  have h : ncws.S_L ∘L ncws.S_L = 0 := ncws.square_zero_SL
   rw [h]
   exact map_zero trace
 
 /-- 
-The trace evaluation of the dual chiral generator squared is also 
-strictly null.
+The corresponding trace statement for the right distinguished operator.
 -/
-theorem trace_nilpotent_boundary_SR_sq :
+theorem trace_square_zero_right_sq :
     trace (ncws.S_R ∘L ncws.S_R) = 0 := by
-  have h : ncws.S_R ∘L ncws.S_R = 0 := ncws.nilpotent_SR
+  have h : ncws.S_R ∘L ncws.S_R = 0 := ncws.square_zero_SR
   rw [h]
   exact map_zero trace
 
@@ -84,14 +82,14 @@ the trace of the squared combined operator evaluates to zero.
 -/
 
 /-- 
-The trace of the Weyl-reflection generator squared evaluates to zero natively, 
-because the chiral shift operator itself is nilpotent.
+The trace of the square of the conjugated left operator equals the trace of
+the square of the right operator, by the supplied reflection identity.
 -/
-theorem weyl_cuntz_formal_evaluation_identity :
+theorem reflected_square_trace_identity :
     trace ((ncws.cell.e_plus ∘L ncws.S_L ∘L ncws.cell.e_plus) ∘L 
            (ncws.cell.e_plus ∘L ncws.S_L ∘L ncws.cell.e_plus)) = 0 := by
   have h_SR : ncws.cell.e_plus ∘L ncws.S_L ∘L ncws.cell.e_plus = ncws.S_R := ncws.J_swap
   rw [h_SR]
-  exact trace_nilpotent_boundary_SR_sq ncws trace
+  exact trace_square_zero_right_sq ncws trace
 
 end InfoGeometry.Canonical.CuntzWeylNilpotentBoundary

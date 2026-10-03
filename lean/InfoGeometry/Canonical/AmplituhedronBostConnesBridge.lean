@@ -17,38 +17,17 @@ theorem arnold_cohen_cyclic_vanishing (w : ℝ) :
   dsimp [arnoldCohenRelation]
   ring
 
-/-- **Definition**: On-Shell Klein Quadric Nilpotent Boundary Generators (S+² = 0, S-² = 0). -/
-structure KleinQuadricGenerators (R : Type*) [Ring R] where
-  Splus : R
-  Sminus : R
-  nilpotent_plus : Splus * Splus = 0
-  nilpotent_minus : Sminus * Sminus = 0
-
-namespace KleinQuadricGenerators
-
-variable {R : Type*} [Ring R] (g : KleinQuadricGenerators R)
-
-/-- **Theorem**: Nilpotent Boundary Product Vanishing. -/
-theorem boundary_vanishing :
-    g.Splus * g.Splus = 0 ∧ g.Sminus * g.Sminus = 0 := ⟨
-  g.nilpotent_plus,
-  g.nilpotent_minus
-⟩
-
-end KleinQuadricGenerators
-
-/-- **Theorem**: Master Amplituhedron Cohomology & Bost-Connes Synthesis.
-    Unifies:
-    1. BCFW Arnold-Cohen mixed form relation.
-    2. On-shell Klein quadric nilpotent boundary generators (S±² = 0). -/
-theorem master_amplituhedron_bost_connes_synthesis
-    {R : Type*} [Ring R] (g : KleinQuadricGenerators R) (w : ℝ) :
-    (g.Splus * g.Splus = 0) ∧
-    (g.Sminus * g.Sminus = 0) ∧
-    (arnoldCohenRelation w (-w) 0 = - (w^2)) := ⟨
-  g.nilpotent_plus,
-  g.nilpotent_minus,
-  by dsimp [arnoldCohenRelation]; ring
-⟩
+/-- Over the real scalar carrier, this specialization of the cyclic polynomial
+vanishes only at the zero input; unlike noncommutative operator rings, `ℝ`
+has no nonzero square-zero elements. -/
+theorem arnold_cohen_cyclic_zero_iff (w : ℝ) :
+    arnoldCohenRelation w (-w) 0 = 0 ↔ w = 0 := by
+  rw [arnold_cohen_cyclic_vanishing]
+  constructor
+  · intro h
+    have hsquare : w ^ 2 = 0 := by linarith
+    nlinarith
+  · rintro rfl
+    simp
 
 end InfoGeometry.Canonical.AmplituhedronBostConnesBridge

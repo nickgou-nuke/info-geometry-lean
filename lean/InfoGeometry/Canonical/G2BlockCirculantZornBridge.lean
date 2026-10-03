@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Mathlib.LinearAlgebra.Matrix
+import Mathlib.Data.Matrix.Basic
 
 import InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge
 import InfoGeometry.Lie.ZornPeirceDerivationStabilizer

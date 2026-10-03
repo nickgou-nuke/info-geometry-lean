@@ -53,7 +53,8 @@ theorem paper_pom_lucas_nu_p_criterion (p k : ℕ) (hp : p ∈ [3, 5, 7, 11, 13]
         norm_num [Omega.POM.LucasPrimeCongruence.wieferichFingerprint, lucas, Nat.fib_add_two]
       simpa [hfp, Omega.POM.PrimitivePrimeLucas.primitiveOrbitCount, lucas, Nat.fib_add_two] using
         (pow_dvd_iff_succ_le_one_of_padicValNat_zero (p := 3) (n := 4) (k := k)
-          (by decide) (by decide) (by decide))
+          (by decide) (by decide)
+          (padicValNat.eq_zero_of_not_dvd (by norm_num : ¬ 3 ∣ 4)))
   · refine ⟨?_, ?_⟩
     · have hleft :
           padicValNat 5 (Omega.POM.PrimitivePrimeLucas.primitiveOrbitCount 5) = 0 := by
@@ -71,7 +72,8 @@ theorem paper_pom_lucas_nu_p_criterion (p k : ℕ) (hp : p ∈ [3, 5, 7, 11, 13]
             (by decide) (by norm_num) (by norm_num))
       simpa [hfp, Omega.POM.PrimitivePrimeLucas.primitiveOrbitCount, lucas, Nat.fib_add_two] using
         (pow_dvd_iff_succ_le_one_of_padicValNat_zero (p := 5) (n := 22) (k := k)
-          (by decide) (by decide) (by decide))
+          (by decide) (by decide)
+          (padicValNat.eq_zero_of_not_dvd (by norm_num : ¬ 5 ∣ 22)))
   · refine ⟨?_, ?_⟩
     · have hleft :
           padicValNat 7 (Omega.POM.PrimitivePrimeLucas.primitiveOrbitCount 7) = 0 := by
@@ -89,7 +91,8 @@ theorem paper_pom_lucas_nu_p_criterion (p k : ℕ) (hp : p ∈ [3, 5, 7, 11, 13]
             (by decide) (by norm_num) (by norm_num))
       simpa [hfp, Omega.POM.PrimitivePrimeLucas.primitiveOrbitCount, lucas, Nat.fib_add_two] using
         (pow_dvd_iff_succ_le_one_of_padicValNat_zero (p := 7) (n := 116) (k := k)
-          (by decide) (by decide) (by decide))
+          (by decide) (by decide)
+          (padicValNat.eq_zero_of_not_dvd (by norm_num : ¬ 7 ∣ 116)))
   · refine ⟨?_, ?_⟩
     · have hleft :
           padicValNat 11 (Omega.POM.PrimitivePrimeLucas.primitiveOrbitCount 11) = 0 := by
@@ -107,7 +110,8 @@ theorem paper_pom_lucas_nu_p_criterion (p k : ℕ) (hp : p ∈ [3, 5, 7, 11, 13]
             (by decide) (by norm_num) (by norm_num))
       simpa [hfp, Omega.POM.PrimitivePrimeLucas.primitiveOrbitCount, lucas, Nat.fib_add_two] using
         (pow_dvd_iff_succ_le_one_of_padicValNat_zero (p := 11) (n := 3582) (k := k)
-          (by decide) (by decide) (by decide))
+          (by decide) (by decide)
+          (padicValNat.eq_zero_of_not_dvd (by norm_num : ¬ 11 ∣ 3582)))
   · refine ⟨?_, ?_⟩
     · have hleft :
           padicValNat 13 (Omega.POM.PrimitivePrimeLucas.primitiveOrbitCount 13) = 0 := by
@@ -125,6 +129,7 @@ theorem paper_pom_lucas_nu_p_criterion (p k : ℕ) (hp : p ∈ [3, 5, 7, 11, 13]
             (by decide) (by norm_num) (by norm_num))
       simpa [hfp, Omega.POM.PrimitivePrimeLucas.primitiveOrbitCount, lucas, Nat.fib_add_two] using
         (pow_dvd_iff_succ_le_one_of_padicValNat_zero (p := 13) (n := 20840) (k := k)
-          (by decide) (by decide) (by decide))
+          (by decide) (by decide)
+          (padicValNat.eq_zero_of_not_dvd (by norm_num : ¬ 13 ∣ 20840)))
 
 end Omega.POM

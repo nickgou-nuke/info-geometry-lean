@@ -185,7 +185,15 @@ private theorem pow_apply_eigenvector {V : Type*} [AddCommGroup V] [Module ℂ V
   induction n with
   | zero => simp
   | succ n ih =>
-      rw [pow_succ, Module.End.mul_apply, heig, map_smul, ih, smul_smul, ← pow_succ]
+      calc
+        (T ^ (n + 1)) v = (T ^ n) (T v) := by
+          rw [pow_succ, Module.End.mul_apply]
+        _ = (T ^ n) (z • v) := by rw [heig]
+        _ = z • ((T ^ n) v) := by rw [map_smul]
+        _ = z • (z ^ n • v) := by rw [ih]
+        _ = z ^ (n + 1) • v := by
+          rw [smul_smul, pow_succ]
+          rw [mul_comm]
 
 /-- A nonzero eigenvector of an `n`-potent endomorphism has an `n`-potent
 eigenvalue.  This is the operator-level direction from the polynomial hull to

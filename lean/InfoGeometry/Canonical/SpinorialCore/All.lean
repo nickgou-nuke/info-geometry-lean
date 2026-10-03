@@ -6,6 +6,7 @@ import InfoGeometry.Canonical.SpinorialCore.FiniteSupertrace
 import InfoGeometry.Canonical.SpinorialCore.DualFlow
 import InfoGeometry.Canonical.SpinorialCore.BoundaryCurrent
 import InfoGeometry.Canonical.SpinorialCore.G2Certificate
+import InfoGeometry.Canonical.SpinorialCore.G2Determinant
 import InfoGeometry.Canonical.SpinorialCore.G2Cokernel
 import InfoGeometry.Canonical.SpinorialCore.BilinearDerivations
 import InfoGeometry.Canonical.SpinorialCore.KreinAdjoint

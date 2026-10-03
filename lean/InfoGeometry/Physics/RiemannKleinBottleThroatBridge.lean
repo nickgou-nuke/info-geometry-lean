@@ -1,42 +1,31 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Real.Basic
+import Mathlib.Data.Matrix.Basic
+import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
 
 /-!
-# Riemann Klein Bottle Throat & Self-Dual Bi-Wave Horizon
+# Algebraic Riemann-parameter reflection
 
-This module formalizes:
-1. **The Critical Strip $\mathcal{S}$ & Functional Involution**:
-   The critical strip $\mathcal{S} = \{ s = \sigma + it \in \mathbb{C} \mid 0 \le \sigma \le 1 \}$
-   is invariant under the functional involution $\mathcal{I}(s) = 1 - s$, satisfying $\mathcal{I}^2 = \mathrm{id}$.
-2. **The Klein Bottle Glide Reflection Geometry**:
-   In Cartesian coordinates $(\sigma, t)$, $\mathcal{I}$ acts as the orientation-reversing glide reflection
-   $(\sigma, t) \mapsto (1 - \sigma, -t)$.
-   The spatial midline $\sigma = 1/2$ is the unique fixed locus of the spatial reflection $\sigma \mapsto 1 - \sigma$.
-   Under $\mathcal{I}$, the critical line $s = 1/2 + it$ is invariant, mapping to $1/2 - it$.
-3. **Iwasawa Root Half-Sum $\rho = 1/2$ and Laplace-Beltrami Spectrum**:
-   The quadratic Casimir / Laplace-Beltrami eigenvalue $\lambda(s) = s(1 - s)$ is invariant under $\mathcal{I}$.
-   On the critical line $s = 1/2 + it$, the eigenvalue is strictly real: $\lambda(1/2 + it) = 1/4 + t^2$.
-   For any $t \neq 0$, $\lambda(\sigma + it)$ is real **if and only if** $\sigma = 1/2$ (the critical line).
-   The ground state energy at $t = 0$ is $\lambda(1/2) = \rho^2 = 1/4$, where $\rho = 1/2$ is the Iwasawa Weyl half-sum.
-4. **Unitarity Horizon & Self-Dual Reality**:
-   On the critical line, functional involution matches complex conjugation: $\mathcal{I}(1/2 + it) = (1/2 + it)^*$.
-   The scattering matrix ratio $\mathcal{S} = z / z^*$ is strictly unitary ($\|\mathcal{S}\| = 1$) on the critical line.
-   Any self-dual function satisfying $f(1 - s) = f(s)$ and $f(s^*) = (f(s))^*$ is strictly real on the critical line:
-   $f(1/2 + it) = (f(1/2 + it))^*$.
-5. **Bi-Wave Destructive Interference & Weak Value Singularity**:
-   Destructive interference between forward wave $\psi$ and backward wave $\phi$ ($\psi + \phi = 0$)
-   forces equal moduli $\|\psi\| = \|\phi\|$, which is geometrically guaranteed along the self-dual midline throat.
-   Under complete destructive interference, the overlap denominator collapses to $-\|\psi\|^2$, creating the
-   weak value amplification singularity $\Omega_w \to \infty$.
+This module proves algebraic consequences of `s ↦ 1-s`: critical-strip invariance,
+reflection symmetry of the polynomial `s(1-s)`, and conjugation identities on the
+critical line. On real coordinates the map is `(σ,t) ↦ (1-σ,-t)`; its linear
+part is `-I` and has determinant `+1`. Thus it is an orientation-preserving
+half-turn, not an orientation-reversing glide and not a Klein-bottle construction.
+
+The polynomial `s(1-s)` is formalized only as a polynomial: no Laplace operator,
+Iwasawa root datum, or spectral realization is defined here. The scalar
+cancellation identities do not establish a weak-value singularity or a theorem
+about zeta zeros.
 -/
 
 open Complex
 
 noncomputable section
 
-namespace InfoGeometry.Physics.RiemannKleinBottleThroatBridge
+namespace InfoGeometry.Physics.RiemannParameterReflection
 
 /-! ## 1. Critical Strip & Functional Involution -/
 
@@ -62,17 +51,25 @@ theorem involution_preserves_strip (s : ℂ) (hs : inCriticalStrip s) :
   · simp; linarith [hs.2]
   · simp; linarith [hs.1]
 
-/-! ## 2. Klein Bottle Glide Reflection & Midline Throat -/
+/-! ## 2. Plane action of the functional reflection -/
 
-/-- Cartesian glide action $(\sigma, t) \mapsto (1 - \sigma, -t)$. -/
-def glideAction (p : ℝ × ℝ) : ℝ × ℝ :=
+/- The affine coordinate action is a half-turn about `(1/2, 0)`. -/
+def functionalReflectionPlane (p : ℝ × ℝ) : ℝ × ℝ :=
   (1 - p.1, -p.2)
 
-/-- 🏆 THEOREM: The glide action is an involution. -/
-theorem glideAction_involutive (p : ℝ × ℝ) :
-    glideAction (glideAction p) = p := by
-  dsimp [glideAction]
+/-- The coordinate reflection is involutive. -/
+theorem functionalReflectionPlane_involutive (p : ℝ × ℝ) :
+    functionalReflectionPlane (functionalReflectionPlane p) = p := by
+  dsimp [functionalReflectionPlane]
   ext <;> ring
+
+/-- The linear part of the coordinate reflection is `-I₂`. -/
+def functionalReflectionLinear : Matrix (Fin 2) (Fin 2) ℝ :=
+  !![(-1 : ℝ), 0; 0, -1]
+
+/-- The positive determinant confirms preservation of plane orientation. -/
+theorem functionalReflectionLinear_det : Matrix.det functionalReflectionLinear = 1 := by
+  simp [functionalReflectionLinear, Matrix.det_fin_two]
 
 /-- 🏆 THEOREM: Fixed locus of spatial reflection $\sigma \mapsto 1 - \sigma$ is the unique midline $\sigma = 1/2$. -/
 theorem spatial_reflection_fixed_iff (σ : ℝ) :
@@ -94,26 +91,25 @@ theorem critical_line_re_invariant (t : ℝ) :
   rw [critical_line_functional_involution]
   simp
 
-/-! ## 3. Iwasawa Root Half-Sum and Laplace-Beltrami Spectrum -/
+/-! ## 3. Reflection-invariant polynomial -/
 
-/-- Iwasawa root half-sum $\rho = 1/2$ for $\mathrm{SL}(2, \mathbb{R})$. -/
-def iwasawaRho : ℝ := 1 / 2
+/-- Fixed real coordinate of the map `σ ↦ 1-σ`. -/
+def reflectionCenter : ℝ := 1 / 2
 
-/-- Laplace-Beltrami / quadratic Casimir eigenvalue $\lambda(s) = s(1 - s)$. -/
-def laplaceBeltramiEigenvalue (s : ℂ) : ℂ :=
+/-- The quadratic polynomial `s(1-s)`, with no spectral-operator interpretation. -/
+def reflectionPolynomial (s : ℂ) : ℂ :=
   s * (1 - s)
 
-/-- 🏆 THEOREM: Invariance of the Laplace-Beltrami eigenvalue under the functional involution. -/
-theorem laplaceBeltrami_involution_invariant (s : ℂ) :
-    laplaceBeltramiEigenvalue (functionalInvolution s) = laplaceBeltramiEigenvalue s := by
-  dsimp [laplaceBeltramiEigenvalue, functionalInvolution]
+/-- The polynomial is invariant under `s ↦ 1-s`. -/
+theorem reflectionPolynomial_invariant (s : ℂ) :
+    reflectionPolynomial (functionalInvolution s) = reflectionPolynomial s := by
+  dsimp [reflectionPolynomial, functionalInvolution]
   ring
 
-/-- 🏆 THEOREM: On the critical line $s = 1/2 + it$, the eigenvalue is strictly real:
-    $\lambda(1/2 + it) = 1/4 + t^2$. -/
-theorem laplaceBeltrami_on_critical_line (t : ℝ) :
-    laplaceBeltramiEigenvalue (1 / 2 + (t : ℂ) * Complex.I) = ((1 / 4 + t ^ 2 : ℝ) : ℂ) := by
-  dsimp [laplaceBeltramiEigenvalue]
+/-- On the critical line the polynomial has real value `1/4+t²`. -/
+theorem reflectionPolynomial_on_critical_line (t : ℝ) :
+    reflectionPolynomial (1 / 2 + (t : ℂ) * Complex.I) = ((1 / 4 + t ^ 2 : ℝ) : ℂ) := by
+  dsimp [reflectionPolynomial]
   rw [sq]
   apply Complex.ext
   · simp
@@ -121,19 +117,18 @@ theorem laplaceBeltrami_on_critical_line (t : ℝ) :
   · simp
     ring
 
-/-- 🏆 THEOREM: The imaginary part of the Laplace-Beltrami eigenvalue:
+/-- Imaginary part of the polynomial at `σ+it`:
     $\operatorname{Im}(s(1 - s)) = t(1 - 2\sigma)$ for $s = \sigma + it$. -/
-theorem laplaceBeltrami_im_formula (σ t : ℝ) :
-    (laplaceBeltramiEigenvalue ((σ : ℂ) + (t : ℂ) * Complex.I)).im = t * (1 - 2 * σ) := by
-  dsimp [laplaceBeltramiEigenvalue]
+theorem reflectionPolynomial_im_formula (σ t : ℝ) :
+    (reflectionPolynomial ((σ : ℂ) + (t : ℂ) * Complex.I)).im = t * (1 - 2 * σ) := by
+  dsimp [reflectionPolynomial]
   simp
   ring
 
-/-- 🏆 THEOREM: For non-zero frequency $t \neq 0$, the Laplace-Beltrami eigenvalue is real
-    IF AND ONLY IF $s$ lies on the critical line $\sigma = 1/2$. -/
-theorem laplaceBeltrami_is_real_iff (σ t : ℝ) (ht : t ≠ 0) :
-    (laplaceBeltramiEigenvalue ((σ : ℂ) + (t : ℂ) * Complex.I)).im = 0 ↔ σ = 1 / 2 := by
-  rw [laplaceBeltrami_im_formula]
+/-- For nonzero `t`, the polynomial at `σ+it` is real exactly when `σ=1/2`. -/
+theorem reflectionPolynomial_is_real_iff (σ t : ℝ) (ht : t ≠ 0) :
+    (reflectionPolynomial ((σ : ℂ) + (t : ℂ) * Complex.I)).im = 0 ↔ σ = 1 / 2 := by
+  rw [reflectionPolynomial_im_formula]
   constructor
   · intro h
     have h1 : 1 - 2 * σ = 0 := by
@@ -145,19 +140,19 @@ theorem laplaceBeltrami_is_real_iff (σ t : ℝ) (ht : t ≠ 0) :
     rw [h]
     linarith
 
-/-- 🏆 THEOREM: Spectral gap / ground state bound: $\lambda(1/2 + it) \ge 1/4 = \rho^2$. -/
-theorem laplaceBeltrami_critical_ge_quarter (t : ℝ) :
+/-- The real polynomial value on the critical line is at least `1/4`. -/
+theorem reflectionPolynomial_critical_ge_quarter (t : ℝ) :
     (1 / 4 : ℝ) ≤ 1 / 4 + t ^ 2 := by
   have ht2 : 0 ≤ t ^ 2 := sq_nonneg t
   linarith
 
-/-- 🏆 THEOREM: Ground state at $t = 0$ achieves the Iwasawa root square $\rho^2 = 1/4$. -/
-theorem laplaceBeltrami_ground_state :
-    laplaceBeltramiEigenvalue (1 / 2 : ℂ) = ((iwasawaRho ^ 2 : ℝ) : ℂ) := by
-  dsimp [laplaceBeltramiEigenvalue, iwasawaRho]
+/-- The polynomial at the reflection center is the square of that center. -/
+theorem reflectionPolynomial_at_center :
+    reflectionPolynomial (reflectionCenter : ℂ) = ((reflectionCenter ^ 2 : ℝ) : ℂ) := by
+  dsimp [reflectionPolynomial, reflectionCenter]
   norm_num
 
-/-! ## 4. Unitarity Horizon and Complex Conjugation -/
+/-! ## 4. Complex conjugation on the critical line -/
 
 /-- 🏆 THEOREM: Complex conjugate of $1/2 + it$ is $1/2 - it$. -/
 theorem star_critical_line (t : ℝ) :
@@ -170,9 +165,8 @@ theorem functional_involution_eq_star_on_critical_line (t : ℝ) :
     functionalInvolution (1 / 2 + (t : ℂ) * Complex.I) = star (1 / 2 + (t : ℂ) * Complex.I) := by
   rw [critical_line_functional_involution, star_critical_line]
 
-/-- 🏆 THEOREM: Unitarity of the scattering matrix on the critical line:
-    $\|z / z^*\| = 1$ for any nonzero complex number $z \neq 0$. -/
-theorem scattering_matrix_unitary {z : ℂ} (hz : z ≠ 0) :
+/-- A nonzero complex number divided by its conjugate has unit modulus. -/
+theorem quotient_by_conjugate_unit_modulus {z : ℂ} (hz : z ≠ 0) :
     ‖z / star z‖ = 1 := by
   rw [norm_div, norm_star, div_self]
   exact norm_ne_zero_iff.mpr hz
@@ -198,16 +192,15 @@ theorem self_dual_modulus_eq (f : ℂ → ℂ) (h_func : ∀ s, f (1 - s) = f s)
   dsimp [functionalInvolution]
   rw [h_func]
 
-/-! ## 5. Bi-Wave Destructive Interference & Weak Value Singularity -/
+/-! ## 5. Scalar cancellation identities -/
 
-/-- 🏆 THEOREM: Destructive interference between forward and backward waves
-    $\psi + \phi = 0$ forces equal moduli $\|\psi\| = \|\phi\|$. -/
+/-- If two complex scalars sum to zero, they have equal norm. -/
 theorem destructive_interference_equal_modulus (psi phi : ℂ) (h : psi + phi = 0) :
     ‖psi‖ = ‖phi‖ := by
   have hphi : phi = -psi := eq_neg_of_add_eq_zero_right h
   rw [hphi, norm_neg]
 
-/-- 🏆 THEOREM: Weak value denominator collapse under destructive interference. -/
+/-- Under scalar cancellation, the conjugate product is the negative squared norm. -/
 theorem destructive_overlap_annihilation (psi phi : ℂ) (h : psi + phi = 0) :
     star phi * psi = - ((‖psi‖ ^ 2 : ℝ) : ℂ) := by
   have hphi : phi = -psi := eq_neg_of_add_eq_zero_right h
@@ -217,24 +210,4 @@ theorem destructive_overlap_annihilation (psi phi : ℂ) (h : psi + phi = 0) :
     rw [← h_normSq, Complex.normSq_eq_norm_sq]
   rw [h_prod]
 
-/-! ## 6. Master Synthesis -/
-
-/-- 🏆 MASTER SYNTHESIS: Riemann Klein Bottle Throat & Self-Dual Spectrum. -/
-theorem certified_riemann_klein_bottle_throat_synthesis (t : ℝ) (ht : t ≠ 0) :
-    (functionalInvolution (functionalInvolution (1 / 2 + (t : ℂ) * Complex.I)) = 1 / 2 + (t : ℂ) * Complex.I) ∧
-    ((functionalInvolution (1 / 2 + (t : ℂ) * Complex.I)).re = 1 / 2) ∧
-    (1 - (1 / 2 : ℝ) = 1 / 2) ∧
-    (functionalInvolution (1 / 2 + (t : ℂ) * Complex.I) = star (1 / 2 + (t : ℂ) * Complex.I)) ∧
-    (laplaceBeltramiEigenvalue (functionalInvolution (1 / 2 + (t : ℂ) * Complex.I)) =
-     laplaceBeltramiEigenvalue (1 / 2 + (t : ℂ) * Complex.I)) ∧
-    ((laplaceBeltramiEigenvalue ((1 / 2 : ℝ) + (t : ℂ) * Complex.I)).im = 0) ∧
-    ((1 / 4 : ℝ) ≤ 1 / 4 + t ^ 2) :=
-  ⟨involution_involutive _,
-   critical_line_re_invariant t,
-   by norm_num,
-   functional_involution_eq_star_on_critical_line t,
-   laplaceBeltrami_involution_invariant _,
-   (laplaceBeltrami_is_real_iff (1 / 2) t ht).mpr rfl,
-   laplaceBeltrami_critical_ge_quarter t⟩
-
-end InfoGeometry.Physics.RiemannKleinBottleThroatBridge
+end InfoGeometry.Physics.RiemannParameterReflection

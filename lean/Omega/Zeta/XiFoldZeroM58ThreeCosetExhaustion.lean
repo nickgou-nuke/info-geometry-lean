@@ -95,6 +95,11 @@ theorem paper_xi_fold_zero_m58_three_coset_exhaustion :
           rw [Finset.card_union_of_disjoint
             xi_fold_zero_m58_three_coset_exhaustion_disjoint_15_20]
     _ = xi_fold_zero_m58_three_coset_exhaustion_auditedCard := by
-          decide
+          simp [xi_fold_zero_m58_three_coset_exhaustion_block15,
+            xi_fold_zero_m58_three_coset_exhaustion_block20,
+            xi_fold_zero_m58_three_coset_exhaustion_block30,
+            xi_fold_zero_m58_three_coset_exhaustion_auditedCard,
+            Nat.card_Ico]
+          norm_num [Nat.fib]
 
 end Omega.Zeta

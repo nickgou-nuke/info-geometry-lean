@@ -54,7 +54,7 @@ theorem braid_group.braid {n : ℕ} (i : Fin (n + 1)) :
   apply Subgroup.subset_normalClosure
   left
   use i
-  simp [braid_rels, braid_rel, mul_assoc]
+  simp [braid_rel, mul_assoc]
 
 theorem braid_group_inf.braid (i : ℕ) :
     σi i * σi i.succ * σi i = σi i.succ * σi i * σi i.succ := by
@@ -64,7 +64,7 @@ theorem braid_group_inf.braid (i : ℕ) :
   apply Subgroup.subset_normalClosure
   left
   use i
-  simp [braid_rels, braid_rel, mul_assoc]
+  simp [mul_assoc]
 
 theorem braid_group.comm {n : ℕ} {i j : Fin n} (h : i ≤ j) :
     σ' (n + 2) i.castSucc.castSucc * σ j.succ.succ =
@@ -77,7 +77,7 @@ theorem braid_group.comm {n : ℕ} {i j : Fin n} (h : i ≤ j) :
   · exact i.elim0
   · right
     use i, j, h
-    simp [braid_rels, comm_rel, mul_assoc]
+    simp [comm_rel, mul_assoc]
 
 theorem braid_group_inf.comm {i j : ℕ} (h : i + 2 ≤ j) :
     σi i * σi j = σi j * σi i := by
@@ -88,6 +88,6 @@ theorem braid_group_inf.comm {i j : ℕ} (h : i + 2 ≤ j) :
   right
   simp
   use i, j, h
-  simp [comm_rel, mul_assoc]
+  simp [mul_assoc]
 
 end Braid

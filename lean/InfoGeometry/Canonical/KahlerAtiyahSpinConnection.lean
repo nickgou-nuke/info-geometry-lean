@@ -50,6 +50,11 @@ theorem endCommutator_skew
   dsimp [endCommutator]
   abel
 
+theorem endCommutator_smul_left (r : ℝ) (A B : FormEnd V) :
+    endCommutator (r • A) B = r • endCommutator A B := by
+  ext α
+  simp [endCommutator, Module.End.mul_apply, smul_sub]
+
 /-- Normalized Clifford bivector generator
 `Σ(v,u) = 1/4 [c(v),c(u)]`. -/
 def spinBivector
@@ -65,9 +70,9 @@ theorem spinBivector_skew
     (g : LinearMap.BilinForm ℝ V)
     (v u : V) :
     spinBivector g v u = -spinBivector g u v := by
-  simp only [spinBivector, endCommutator_skew]
-  rw [smul_neg]
-  rfl
+  unfold spinBivector
+  rw [endCommutator_skew (cartanCliffordAction g v) (cartanCliffordAction g u),
+    smul_neg]
 
 @[simp] theorem spinBivector_self
     (g : LinearMap.BilinForm ℝ V)
@@ -117,7 +122,8 @@ theorem clifford_double_commutator
           B * (A * C + C * A) +
           (B * C + C * B) * A := by
     dsimp [endCommutator]
-    noncomm_ring
+    simp only [sub_mul, mul_sub, add_mul, mul_add, mul_assoc]
+    abel
 
   rw [hrearrange, hBC, hAC]
   simp only [mul_smul_comm, smul_mul_assoc, mul_one, one_mul]
@@ -143,16 +149,7 @@ theorem spinBivector_comm_cartanCliffordAction
       (g u w) • cartanCliffordAction g v -
         (g v w) • cartanCliffordAction g u := by
   unfold spinBivector
-  unfold endCommutator
-  rw [smul_mul_assoc, mul_smul_comm, ← smul_sub]
-  change
-    (1 / 4 : ℝ) •
-        endCommutator
-          (endCommutator
-            (cartanCliffordAction g v)
-            (cartanCliffordAction g u))
-          (cartanCliffordAction g w) =
-      _
+  rw [endCommutator_smul_left]
   rw [clifford_double_commutator g hg v u w]
   apply LinearMap.ext
   intro α

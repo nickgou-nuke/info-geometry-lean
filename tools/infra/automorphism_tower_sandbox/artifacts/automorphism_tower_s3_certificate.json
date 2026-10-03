@@ -1,0 +1,16 @@
+{
+  "all_automorphisms_inner": true,
+  "automorphism_count": 6,
+  "bounded_tower_cardinals": [
+    6,
+    6,
+    6
+  ],
+  "center_count": 1,
+  "center_trivial": true,
+  "claim_boundary": "Finite S3 complete-group sandbox only; no general/transfinite automorphism-tower theorem claimed.",
+  "complete_group_certificate_bounded": true,
+  "group": "S3 = Equiv.Perm(Fin 3)",
+  "inner_automorphism_count": 6,
+  "order": 6
+}

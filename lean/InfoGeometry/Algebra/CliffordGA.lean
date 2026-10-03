@@ -21,6 +21,56 @@ theorem clifford_square_eq_quadratic_form (m : M) :
     (ι Q m) * (ι Q m) = algebraMap R (CliffordAlgebra Q) (Q m) := by
   exact ι_sq_scalar Q m
 
+/-- Orthogonal generators anticommute in the Clifford algebra. -/
+theorem clifford_orthogonal_vectors_anticommute
+    (u v : M) (horth : QuadraticMap.polar Q u v = 0) :
+    ι Q v * ι Q u = -(ι Q u * ι Q v) := by
+  have h : ι Q v * ι Q u =
+      algebraMap R (CliffordAlgebra Q) (QuadraticMap.polar Q v u) -
+        ι Q u * ι Q v := ι_mul_ι_comm v u
+  rw [QuadraticMap.polar_comm, horth, map_zero, zero_sub] at h
+  exact h
+
+/-- In an orthonormal pair of positive unit vectors, the Clifford product
+`ι(u) * ι(v)` squares to `-1`. This is the algebraic unit-bivector identity;
+it does not identify the bivector with an external scalar imaginary unit. -/
+theorem clifford_product_sq_eq_neg_one_of_orthonormal
+    (u v : M) (hu : Q u = 1) (hv : Q v = 1)
+    (horth : QuadraticMap.polar Q u v = 0) :
+    (ι Q u * ι Q v) ^ 2 = -1 := by
+  have hcomm := clifford_orthogonal_vectors_anticommute Q u v horth
+  have huSq : ι Q u * ι Q u = (1 : CliffordAlgebra Q) := by
+    rw [ι_sq_scalar, hu, map_one]
+  have hvSq : ι Q v * ι Q v = (1 : CliffordAlgebra Q) := by
+    rw [ι_sq_scalar, hv, map_one]
+  calc
+    (ι Q u * ι Q v) ^ 2 = ι Q u * (ι Q v * ι Q u) * ι Q v := by
+      simp only [pow_two, mul_assoc]
+    _ = ι Q u * (-(ι Q u * ι Q v)) * ι Q v := by rw [hcomm]
+    _ = -((ι Q u * ι Q u) * (ι Q v * ι Q v)) := by noncomm_ring
+    _ = -(1 * 1) := by rw [huSq, hvSq]
+    _ = -1 := by simp
+
+/-- Multiplication by a positive unit generator twice recovers the other
+orthogonal unit generator; this is the first oriented-plane quarter-turn law. -/
+theorem clifford_left_unit_vector_mul_bivector
+    (u v : M) (hu : Q u = 1) :
+    ι Q u * (ι Q u * ι Q v) = ι Q v := by
+  rw [← mul_assoc, ι_sq_scalar, hu, map_one, one_mul]
+
+/-- The other basis vector is sent to the negative first vector by left
+multiplication by the oriented product `ι(u) * ι(v)`. -/
+theorem clifford_right_unit_vector_mul_bivector
+    (u v : M) (hv : Q v = 1)
+    (horth : QuadraticMap.polar Q u v = 0) :
+    ι Q v * (ι Q u * ι Q v) = -(ι Q u) := by
+  have hcomm := clifford_orthogonal_vectors_anticommute Q u v horth
+  calc
+    ι Q v * (ι Q u * ι Q v) = (ι Q v * ι Q u) * ι Q v := by rw [mul_assoc]
+    _ = -(ι Q u * ι Q v) * ι Q v := by rw [hcomm]
+    _ = -(ι Q u) := by
+      rw [neg_mul, mul_assoc, ι_sq_scalar, hv, map_one, mul_one]
+
 /-- Symmetric part of the product of two elements in a ring. -/
 def symPart {A : Type*} [Ring A] [Invertible (2 : A)] (x y : A) : A :=
   ⅟(2 : A) * (x * y + y * x)

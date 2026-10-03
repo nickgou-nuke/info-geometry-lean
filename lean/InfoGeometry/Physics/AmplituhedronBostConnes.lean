@@ -20,26 +20,20 @@ abbrev ExtAlg (R ι : Type*) [CommRing R] [DecidableEq ι] :=
 noncomputable def gen (i j : ι) : ExtAlg R ι :=
   ExteriorAlgebra.ι R (ω i j)
 
--- 4. BCFW Recursion mapped to Arnold-Cohen relations
--- ω_12 ∧ ω_23 + ω_23 ∧ ω_31 + ω_31 ∧ ω_12 = 0
+-- The cyclic exterior-algebra expression associated with three indices.
+-- Its vanishing requires an Arnold relation; it is not asserted for arbitrary indices.
 noncomputable def bcfw_recursion_arnold_cohen (i j k : ι) : ExtAlg R ι :=
   (gen i j * gen j k) + (gen j k * gen k i) + (gen k i * gen i j)
 
--- 5. On-Shell Factorization mapped to Klein quadric chiral Cuntz generators (S_±^2 = 0)
-noncomputable def S_plus (i : ι) : ExtAlg R ι := gen i i
-noncomputable def S_minus (i : ι) : ExtAlg R ι := gen i i
+/-
+ExteriorAlgebra.ι_sq_zero is the canonical square-zero law for `gen`. This
+exterior-algebra fact is not a Klein Plücker equation, a pair of chiral Cuntz
+generators, or a physical mass-shell condition; no second alias API is declared.
+-/
 
-lemma on_shell_factorization_klein_quadric_plus (i : ι) :
-    S_plus i * S_plus i = (0 : ExtAlg R ι) := by
-  exact ExteriorAlgebra.ι_sq_zero (ω i i)
-
-lemma on_shell_factorization_klein_quadric_minus (i : ι) :
-    S_minus i * S_minus i = (0 : ExtAlg R ι) := by
-  exact ExteriorAlgebra.ι_sq_zero (ω i i)
-
--- 6. All-Loop Integrand mapped to Riemann Zeta partition evaluated by Bost-Connes KMS state
--- Evaluated on ℂ for the KMS state at inverse temperature β
-noncomputable def all_loop_integrand_bost_connes_kms_state (β : ℂ) : ℂ :=
+/- A direct zeta-value readout. This definition alone is not a Bost--Connes
+partition function or a KMS-state construction. -/
+noncomputable def riemannZetaReadout (β : ℂ) : ℂ :=
   riemannZeta β
 
 end InfoGeometry.Physics.AmplituhedronBostConnes

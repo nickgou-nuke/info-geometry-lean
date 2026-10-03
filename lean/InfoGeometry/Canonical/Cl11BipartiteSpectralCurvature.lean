@@ -49,6 +49,8 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.Cl11BipartiteSpectralCurvature
 
+open scoped Kronecker
+
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Canonical.Cl11BipartiteDiracBridge
 open InfoGeometry.Canonical.Cl11BipartiteOrderOneCondition
@@ -108,9 +110,7 @@ theorem covariantSquare_gauge_covariant
     (u : Units StageOne) (D A : StageOne) :
     covariantSquare D (gaugeTransform u D A) =
       unitConjugate u (covariantSquare D A) := by
-  rw [covariantSquare, covariantDirac_gauge_law,
-    unitConjugate_mul]
-  rfl
+  simp only [covariantSquare, covariantDirac_gauge_law, unitConjugate_mul]
 
 /-- Fixed-background square-defect curvature. -/
 def curvatureDefect (D A : StageOne) : StageOne :=
@@ -147,7 +147,7 @@ theorem curvatureDefect_gauge_correction
         (unitConjugate u (D * D) - D * D) := by
   unfold curvatureDefect
   rw [covariantSquare_gauge_covariant]
-  rw [← unitConjugate_sub]
+  rw [unitConjugate_sub]
   abel
 
 /-- Strict homogeneous curvature covariance under the necessary invariance of
@@ -196,7 +196,8 @@ theorem spectralTrace_unitConjugate
   calc
     Matrix.trace ((u : StageOne) * X * (↑u⁻¹ : StageOne))
         = Matrix.trace ((X * (↑u⁻¹ : StageOne)) * (u : StageOne)) := by
-            rw [Matrix.trace_mul_comm]
+            simpa only [mul_assoc] using
+              Matrix.trace_mul_comm (u : StageOne) (X * (↑u⁻¹ : StageOne))
     _ = Matrix.trace (X * ((↑u⁻¹ : StageOne) * (u : StageOne))) := by
             rw [Matrix.mul_assoc]
     _ = Matrix.trace X := by simp

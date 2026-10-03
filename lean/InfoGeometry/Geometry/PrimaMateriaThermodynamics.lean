@@ -5,6 +5,7 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.RingTheory.GradedAlgebra.Basic
 
 namespace InfoGeometry.Geometry
 
@@ -164,38 +165,27 @@ def fermionic : SuperParity := 1
 
 end SuperParity
 
-/--
-A strict multiplicative `ℤ/2` grading.
+/-- A genuinely internally `ℤ/2`-graded supercommutative complex algebra.
 
-The grading law is owned by `MonoidHom.map_mul`; it is not repeated as an
-evidence field.
--/
-abbrev SupergradedAlgebra (A : Type*) [Ring A] :=
-  A →* Multiplicative (ZMod 2)
+`components` and `graded` use Mathlib's direct-sum decomposition, so arbitrary
+elements need not be homogeneous. `supercommute` states the Koszul sign only
+for elements in specified homogeneous components. -/
+structure SupergradedAlgebra (A : Type*) [Ring A] [Algebra ℂ A] where
+  components : SuperParity → Submodule ℂ A
+  graded : GradedAlgebra components
+  supercommute : ∀ (p q : SuperParity)
+      (a : components p) (b : components q),
+      (a : A) * (b : A) =
+        (if p = SuperParity.fermionic ∧ q = SuperParity.fermionic
+          then (-1 : A) else 1) * ((b : A) * (a : A))
 
 namespace SupergradedAlgebra
 
-/-- Additive `ZMod 2` readout of the native multiplicative grading. -/
-def parity
-    {A : Type*} [Ring A]
-    (SA : SupergradedAlgebra A) (a : A) : SuperParity :=
-  (SA a).toAdd
-
-/-- The unit is even. -/
-@[simp]
-theorem parity_one
-    {A : Type*} [Ring A]
-    (SA : SupergradedAlgebra A) :
-    SA.parity 1 = SuperParity.bosonic := by
-  simp [parity, SuperParity.bosonic]
-
-/-- Product parity is addition in `ZMod 2`. -/
-@[simp]
-theorem parity_mul
-    {A : Type*} [Ring A]
-    (SA : SupergradedAlgebra A) (x y : A) :
-    SA.parity (x * y) = SA.parity x + SA.parity y := by
-  simp [parity]
+/-- Homogeneity is membership in a component of the native grading. -/
+def IsHomogeneous
+    {A : Type*} [Ring A] [Algebra ℂ A]
+    (SA : SupergradedAlgebra A) (p : SuperParity) (a : A) : Prop :=
+  a ∈ SA.components p
 
 end SupergradedAlgebra
 
@@ -237,20 +227,8 @@ theorem σ_add
 end SuperBostConnesEvolution
 
 /-- Koszul sign appearing at the upper super-KMS boundary. -/
-def superKMSSign {A : Type*} [Ring A]
-    (SA : SupergradedAlgebra A) (x y : A) : ℂ :=
-  if SA.parity x = SuperParity.fermionic ∧
-      SA.parity y = SuperParity.fermionic then -1 else 1
-
-/-- Two odd observables acquire the Koszul sign at the upper KMS boundary. -/
-@[simp]
-theorem superKMSSign_of_fermionic
-    {A : Type*} [Ring A]
-    (SA : SupergradedAlgebra A) (x y : A)
-    (hx : SA.parity x = SuperParity.fermionic)
-    (hy : SA.parity y = SuperParity.fermionic) :
-    superKMSSign SA x y = -1 := by
-  simp [superKMSSign, hx, hy]
+def superKMSSign (p q : SuperParity) : ℂ :=
+  if p = SuperParity.fermionic ∧ q = SuperParity.fermionic then -1 else 1
 
 /--
 Analytic graded KMS condition for a complex-linear state.
@@ -271,9 +249,11 @@ def IsSuperKMSState
       (∀ a b, DifferentiableOn ℂ (F a b) (kmsOpenStrip β)) ∧
       (∀ (a b : A) (t : ℝ),
         F a b (t : ℂ) = ω (a * E.σ t b)) ∧
-      (∀ (a b : A) (t : ℝ),
-        F a b ((t : ℂ) + Complex.I * (β : ℂ)) =
-          superKMSSign SA a b * ω (E.σ t b * a))
+      (∀ (p q : SuperParity) (a b : A),
+        SA.IsHomogeneous p a → SA.IsHomogeneous q b →
+        ∀ (t : ℝ),
+          F a b ((t : ℂ) + Complex.I * (β : ℂ)) =
+            superKMSSign p q * ω (E.σ t b * a))
 
 /-- The linear equalizer of two complex-valued functionals. -/
 def stateEqualizer

@@ -59,7 +59,19 @@ theorem lineSet_add_nativeBasePoint (y : OctImF2) :
         (_root_.add_assoc nativeBasePoint nativeBasePoint y).symm
       _ = 0 + y := by rw [nativeBasePoint_add_self]
       _ = y := _root_.zero_add y]
-  tauto
+  simp [or_comm, or_left_comm]
+
+private theorem nativeBase_mul_add (y : OctImF2) :
+    mul (embed nativeBasePoint)
+        (add (embed nativeBasePoint) (embed y)) =
+      add (mul (embed nativeBasePoint) (embed nativeBasePoint))
+        (mul (embed nativeBasePoint) (embed y)) := by
+  ext <;>
+    simp [mul, add, InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add2,
+      dot3, cross0, cross1, cross2, mul2, embed,
+      nativeBasePoint, G2NativePointFoundation.nativeBasePoint,
+      G2ParabolicLineCarrier.canonicalBasePoint,
+      octImToImaginary, zModToBool]
 
 theorem candidate_translate_mem {y : OctImF2} (hy : y ∈ candidates) :
     nativeBasePoint + y ∈ candidates := by
@@ -104,7 +116,11 @@ theorem candidate_translate_mem {y : OctImF2} (hy : y ∈ candidates) :
       rw [hembed]
       change mul (embed nativeBasePoint)
           (add (embed nativeBasePoint) (embed y)) = zero
-      decide +revert
+      rw [nativeBase_mul_add]
+      have hbase : mul (embed nativeBasePoint) (embed nativeBasePoint) = zero := by
+        ext <;> rfl
+      rw [hbase, hmul]
+      rfl
   simpa [candidates, kernelCandidate] using htranslated
 
 theorem lineSet_eq_lineSet_iff
@@ -325,7 +341,25 @@ theorem nativeBaseLine_card : Fintype.card NativeLine = 3 := by
 
 theorem lineSet_card (y : OctImF2) (hy : y ∈ candidates) :
     (lineSet y).card = 3 := by
-  decide +revert
+  have hy' : nativeCandidateAt nativeBasePoint y := by
+    simpa [candidates, kernelCandidate] using hy
+  have hbase_ne_y : nativeBasePoint ≠ y := by
+    intro h
+    exact hy'.2.1 h.symm
+  have hy_ne_sum : y ≠ nativeBasePoint + y := by
+    intro h
+    have h' : y + nativeBasePoint = y + 0 := by simpa [add_comm] using h
+    exact nativeBasePoint_nonzero (add_left_cancel h')
+  have hsum_ne_base : nativeBasePoint + y ≠ nativeBasePoint := by
+    intro h
+    have h' : nativeBasePoint + y = nativeBasePoint + 0 := by simpa using h
+    exact hy'.1 (add_left_cancel h')
+  have hbase_not_mem : nativeBasePoint ∉ ({y, nativeBasePoint + y} : Finset OctImF2) := by
+    simp only [Finset.mem_insert, Finset.mem_singleton, not_or]
+    exact ⟨hbase_ne_y, hsum_ne_base.symm⟩
+  have hy_not_mem : y ∉ ({nativeBasePoint + y} : Finset OctImF2) := by
+    simp [hy_ne_sum]
+  simp [lineSet, nativeLineSetAt, hbase_not_mem, hy_not_mem]
 
 theorem lineSet_mem_nativeLines (y : OctImF2) (hy : y ∈ candidates) :
     lineSet y ∈ nativeLines := by

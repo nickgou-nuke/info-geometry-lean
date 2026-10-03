@@ -2,19 +2,18 @@ import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
-set_option maxHeartbeats 2000000
-
-set_option linter.unusedSectionVars false
-set_option linter.unusedSimpArgs false
-set_option linter.unusedVariables false
-
 namespace InfoGeometry.Algebra.Zorn.G2Unipotent
 
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 
+private theorem add2_function_eq_xor : add2 = Bool.xor := by
+  funext x y
+  cases x <;> cases y <;> rfl
+
 lemma xor_swap (x0 y0 x1 y1 : Bool) :
     add2 (add2 x0 y0) (add2 x1 y1) = add2 (add2 x0 x1) (add2 y0 y1) := by
-  revert x0 y0 x1 y1; decide
+  simp only [add2_function_eq_xor]
+  simp [Bool.xor_comm, Bool.xor_left_comm]
 
 def unipotentShort (t : Bool) (X : SplitOctF2) : SplitOctF2 :=
   if t then
@@ -28,9 +27,9 @@ theorem unipotentShort_involutive (t : Bool) (X : SplitOctF2) :
     unipotentShort t (unipotentShort t X) = X := by
   cases t
   · rfl
-  · rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
-    revert a b x0 x1 x2 y0 y1 y2
-    decide
+  · ext <;> dsimp [unipotentShort]
+    all_goals simp only [add2_function_eq_xor]
+    all_goals simp
 
 def unipotentShortEquiv (t : Bool) : SplitOctF2 ≃ SplitOctF2 where
   toFun := unipotentShort t
@@ -45,30 +44,22 @@ theorem unipotentShort_add (t : Bool) (X Y : SplitOctF2) :
     unipotentShort t (add X Y) = add (unipotentShort t X) (unipotentShort t Y) := by
   cases t
   · rfl
-  · rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
-    rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-    revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-    decide
+  · ext <;> dsimp [unipotentShort, add]
+    all_goals simp only [add2_function_eq_xor]
+    all_goals simp [Bool.xor_comm, Bool.xor_left_comm]
 
 theorem unipotentShort_mul (t : Bool) (X Y : SplitOctF2) :
     unipotentShort t (mul X Y) = mul (unipotentShort t X) (unipotentShort t Y) := by
   cases t
   · rfl
-  · rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
-    rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-    revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-    decide
+  · ext <;> dsimp [unipotentShort, mul, dot3, cross0, cross1, cross2, mul2]
+    all_goals simp only [add2_function_eq_xor]
+    all_goals simp [Bool.and_xor_distrib_left, Bool.and_xor_distrib_right,
+      Bool.xor_comm, Bool.xor_left_comm]
 
 def unipotentShortAut (t : Bool) : SplitOctF2Aut where
   val := unipotentShortEquiv t
-  property := ⟨unipotentShort_one t, by
-    intro X Y
-    rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
-    rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-    cases t
-    · rfl
-    · revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-      decide, unipotentShort_mul t⟩
+  property := ⟨unipotentShort_one t, unipotentShort_add t, unipotentShort_mul t⟩
 
 theorem unipotentShortAut_order (t : Bool) :
     unipotentShortAut t * unipotentShortAut t = 1 := by
@@ -89,9 +80,9 @@ theorem unipotentLong_involutive (t : Bool) (X : SplitOctF2) :
     unipotentLong t (unipotentLong t X) = X := by
   cases t
   · rfl
-  · rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
-    revert a b x0 x1 x2 y0 y1 y2
-    decide
+  · ext <;> dsimp [unipotentLong]
+    all_goals simp only [add2_function_eq_xor]
+    all_goals simp
 
 def unipotentLongEquiv (t : Bool) : SplitOctF2 ≃ SplitOctF2 where
   toFun := unipotentLong t
@@ -106,30 +97,22 @@ theorem unipotentLong_add (t : Bool) (X Y : SplitOctF2) :
     unipotentLong t (add X Y) = add (unipotentLong t X) (unipotentLong t Y) := by
   cases t
   · rfl
-  · rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
-    rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-    revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-    decide
+  · ext <;> dsimp [unipotentLong, add]
+    all_goals simp only [add2_function_eq_xor]
+    all_goals simp [Bool.xor_comm, Bool.xor_left_comm]
 
 theorem unipotentLong_mul (t : Bool) (X Y : SplitOctF2) :
     unipotentLong t (mul X Y) = mul (unipotentLong t X) (unipotentLong t Y) := by
   cases t
   · rfl
-  · rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
-    rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-    revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-    decide
+  · ext <;> dsimp [unipotentLong, mul, dot3, cross0, cross1, cross2, mul2]
+    all_goals simp only [add2_function_eq_xor]
+    all_goals simp [Bool.and_xor_distrib_left, Bool.and_xor_distrib_right,
+      Bool.xor_comm, Bool.xor_left_comm]
 
 def unipotentLongAut (t : Bool) : SplitOctF2Aut where
   val := unipotentLongEquiv t
-  property := ⟨unipotentLong_one t, by
-    intro X Y
-    rcases X with ⟨a,b,x0,x1,x2,y0,y1,y2⟩
-    rcases Y with ⟨a',b',x0',x1',x2',y0',y1',y2'⟩
-    cases t
-    · rfl
-    · revert a b x0 x1 x2 y0 y1 y2 a' b' x0' x1' x2' y0' y1' y2'
-      decide, unipotentLong_mul t⟩
+  property := ⟨unipotentLong_one t, unipotentLong_add t, unipotentLong_mul t⟩
 
 theorem unipotentLongAut_order (t : Bool) :
     unipotentLongAut t * unipotentLongAut t = 1 := by

@@ -410,7 +410,10 @@ theorem congruence_unitgroup_order12_bounded (m : Nat) (hm : 1 ≤ m) (hm_le : m
 theorem congruence_unitgroup_order12_extended (m : Nat) (hm : 1 ≤ m) (hm_le : m ≤ 20)
     (h : Nat.totient (Nat.fib (m + 2)) = 12) :
     m = 5 ∨ m = 6 := by
-  interval_cases m <;> revert h <;> decide
+  by_cases hm10 : m ≤ 10
+  · exact congruence_unitgroup_order12_bounded m hm hm10 h
+  · have hm11 : 11 ≤ m := by omega
+    interval_cases m <;> norm_num [Nat.fib] at h
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 199: Idempotents and Z/2-characters in ZMod
@@ -641,21 +644,70 @@ theorem paper_resolution_shift4_fib_matrix_law (m : ℕ) (hm : 2 ≤ m) :
 -- Phase R36: Zeckendorf no-carry additivity (concrete instances)
 -- ══════════════════════════════════════════════════════════════
 
+private theorem zeckendorfRep_pair_of_gap (i j : Nat) (hi : 2 ≤ i)
+    (hgap : i + 2 ≤ j) : ([j, i] : List Nat).IsZeckendorfRep := by
+  let R : Nat → Nat → Prop := fun a b => b + 2 ≤ a
+  have h0 : ([0] : List Nat).IsChain R := by simp [R]
+  have hi0 : ([i, 0] : List Nat).IsChain R := by
+    apply List.IsChain.cons h0
+    intro a ha
+    simp only [List.head?_cons, Option.mem_some_iff] at ha
+    subst a
+    exact hi
+  change ([j, i, 0] : List Nat).IsChain R
+  apply List.IsChain.cons hi0
+  intro a ha
+  simp only [List.head?_cons, Option.mem_some_iff] at ha
+  subst a
+  exact hgap
+
+private theorem zeckendorf_pair_of_gap (i j : Nat) (hi : 2 ≤ i)
+    (hgap : i + 2 ≤ j) :
+    Nat.zeckendorf (Nat.fib i + Nat.fib j) = [j, i] := by
+  have hrep := zeckendorfRep_pair_of_gap i j hi hgap
+  have hsum : (([j, i] : List Nat).map Nat.fib).sum = Nat.fib i + Nat.fib j := by
+    simp [Nat.add_comm]
+  rw [← hsum]
+  exact Nat.zeckendorf_sum_fib hrep
+
+private theorem zeckendorf_triple_of_gaps (i j k : Nat) (hi : 2 ≤ i)
+    (hij : i + 2 ≤ j) (hjk : j + 2 ≤ k) :
+    Nat.zeckendorf (Nat.fib i + Nat.fib j + Nat.fib k) = [k, j, i] := by
+  let R : Nat → Nat → Prop := fun a b => b + 2 ≤ a
+  have hpair := zeckendorfRep_pair_of_gap i j hi hij
+  have htail : ([j, i, 0] : List Nat).IsChain R := by
+    simpa [List.IsZeckendorfRep, R] using hpair
+  have hrep : ([k, j, i] : List Nat).IsZeckendorfRep := by
+    change ([k, j, i, 0] : List Nat).IsChain R
+    apply List.IsChain.cons htail
+    intro a ha
+    simp only [List.head?_cons, Option.mem_some_iff] at ha
+    subst a
+    exact hjk
+  have hsum : (([k, j, i] : List Nat).map Nat.fib).sum =
+      Nat.fib i + Nat.fib j + Nat.fib k := by
+    simp [Nat.add_comm, Nat.add_assoc]
+  rw [← hsum]
+  exact Nat.zeckendorf_sum_fib hrep
+
 /-- Zeckendorf no-carry additivity: F(2) + F(4) has Zeckendorf rep [4, 2]
     (no carry because gap ≥ 2).
     thm:zeckendorf-no-carry-additivity -/
 theorem zeckendorf_no_carry_pair_2_4 :
-    Nat.zeckendorf (Nat.fib 2 + Nat.fib 4) = [4, 2] := by decide
+    Nat.zeckendorf (Nat.fib 2 + Nat.fib 4) = [4, 2] := by
+  exact zeckendorf_pair_of_gap 2 4 (by omega) (by omega)
 
 /-- Zeckendorf no-carry: F(2) + F(4) + F(6) = 12, and zeckendorf 12 = [6, 4, 2].
     thm:zeckendorf-no-carry-additivity -/
 theorem zeckendorf_no_carry_triple_2_4_6 :
-    Nat.zeckendorf (Nat.fib 2 + Nat.fib 4 + Nat.fib 6) = [6, 4, 2] := by decide
+    Nat.zeckendorf (Nat.fib 2 + Nat.fib 4 + Nat.fib 6) = [6, 4, 2] := by
+  exact zeckendorf_triple_of_gaps 2 4 6 (by omega) (by omega) (by omega)
 
 /-- Zeckendorf no-carry: F(4) + F(6) + F(9) = 45, and zeckendorf 45 = [9, 6, 4].
     thm:zeckendorf-no-carry-additivity -/
 theorem zeckendorf_no_carry_triple_4_6_9 :
-    Nat.zeckendorf (Nat.fib 4 + Nat.fib 6 + Nat.fib 9) = [9, 6, 4] := by decide
+    Nat.zeckendorf (Nat.fib 4 + Nat.fib 6 + Nat.fib 9) = [9, 6, 4] := by
+  exact zeckendorf_triple_of_gaps 4 6 9 (by omega) (by omega) (by omega)
 
 /-- No-carry additivity principle for two non-adjacent Fibonacci numbers:
     when gap(i, j) ≥ 2, the Zeckendorf representation of F(i) + F(j) is [j, i].
@@ -667,7 +719,13 @@ theorem zeckendorf_no_carry_gap2_instances :
     Nat.zeckendorf (Nat.fib 4 + Nat.fib 6) = [6, 4] ∧
     Nat.zeckendorf (Nat.fib 5 + Nat.fib 7) = [7, 5] ∧
     Nat.zeckendorf (Nat.fib 2 + Nat.fib 5) = [5, 2] ∧
-    Nat.zeckendorf (Nat.fib 3 + Nat.fib 6) = [6, 3] := by decide
+    Nat.zeckendorf (Nat.fib 3 + Nat.fib 6) = [6, 3] := by
+  exact ⟨zeckendorf_pair_of_gap 2 4 (by omega) (by omega),
+    zeckendorf_pair_of_gap 3 5 (by omega) (by omega),
+    zeckendorf_pair_of_gap 4 6 (by omega) (by omega),
+    zeckendorf_pair_of_gap 5 7 (by omega) (by omega),
+    zeckendorf_pair_of_gap 2 5 (by omega) (by omega),
+    zeckendorf_pair_of_gap 3 6 (by omega) (by omega)⟩
 
 /-- Fibonacci carry identity: F_{n+2} + 2·F_n + F_{n-3} = F_{n+3} + F_{n-1} for n ≥ 5.
     lem:pom-fib-15to16-carry -/
@@ -841,7 +899,15 @@ theorem nap_so10_minimality :
     45 = Nat.fib 9 + Nat.fib 6 + Nat.fib 4 ∧
     (∀ d ∈ [3, 8, 10, 14, 15, 21, 24, 28, 35, 36],
      Nat.zeckendorf d ≠ Nat.zeckendorf 45) := by
-  constructor <;> decide
+  refine ⟨by norm_num [Nat.fib], ?_⟩
+  intro d hd hrep
+  have hsum := congrArg (fun l : List Nat => (l.map Nat.fib).sum) hrep
+  have hd45 : d = 45 := by
+    simpa only [Nat.sum_zeckendorf_fib] using hsum
+  have hd_cases : d = 3 ∨ d = 8 ∨ d = 10 ∨ d = 14 ∨ d = 15 ∨
+      d = 21 ∨ d = 24 ∨ d = 28 ∨ d = 35 ∨ d = 36 := by
+    simpa using hd
+  rcases hd_cases with h | h | h | h | h | h | h | h | h | h <;> omega
 
 /-- Zeckendorf carry absorption at m=9: F(6) + F(7) = F(8), i.e. 8 + 13 = 21.
     prop:pom-zeckendorf-carry-absorption-m9 -/

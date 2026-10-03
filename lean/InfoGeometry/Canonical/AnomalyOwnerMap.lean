@@ -2,7 +2,6 @@ import InfoGeometry.Canonical.AnomalyGauge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.DrazinPenroseDilationKKT
-import InfoGeometry.Canonical.SuperKMS_Equilibrium
 import InfoGeometry.Canonical.WeylCharacterEquivalence
 import InfoGeometry.Canonical.ProjectorNoncommutativityDilationClosure
 
@@ -13,7 +12,7 @@ This bridge packages the repo's anomaly corridor as explicit owner-backed
 proof surfaces:
 
 - Drazin / Moore-Penrose / dilation / projector mismatch
-- chiral anomaly / KMS stimulated-emission interpretation
+- chiral anomaly / projector mismatch
 - Weyl / parity-supertrace corridor
 - conformal projector-obstruction and scalar readout
 
@@ -25,7 +24,6 @@ namespace InfoGeometry.Canonical.AnomalyOwnerMap
 
 open InfoGeometry.Canonical.AnomalyGauge
 open InfoGeometry.Canonical.DrazinPenroseDilationKKT
-open InfoGeometry.Canonical.SuperKMS_Equilibrium
 open InfoGeometry.Canonical.WeylCharacterEquivalence
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.ProjectorNoncommutativityDilationClosure
@@ -67,7 +65,6 @@ This is a theorem-carrying summary rather than a new theorem source.
 theorem anomaly_owner_packet
     (K : CertifiedInverseKernel E)
     (CI : ConformalInference E)
-    (S : SuperKMSEquilibriumState)
     (_P : ParityTraceWitness) :
     (K.drazinProjector * K.geometricCartanGenerator
         - K.geometricCartanGenerator * K.drazinProjector
@@ -78,15 +75,12 @@ theorem anomaly_owner_packet
       ∧
     (CI.projectorObstruction =
       CI.spectralChiralProjector * CI.metricChiralProjector
-        - CI.metricChiralProjector * CI.spectralChiralProjector)
-      ∧
-    (S.absorption = S.spontaneousEmission + S.stimulatedEmission) := by
-  refine ⟨?_, ?_, ?_, ?_⟩
+        - CI.metricChiralProjector * CI.spectralChiralProjector) := by
+  refine ⟨?_, ?_, ?_⟩
   · exact drazin_dilation_anomaly_corridor (E := E) K
   · exact chiral_anomaly_is_skew_adjoint (E := E) K
   · simpa [ConformalInference.projectorObstruction] using
       CI.projectorObstruction_eq_commutator
-  · exact S.detailedBalance
 
 /--
 Constructive de-dup packet for the projector/noncommutativity corridor.

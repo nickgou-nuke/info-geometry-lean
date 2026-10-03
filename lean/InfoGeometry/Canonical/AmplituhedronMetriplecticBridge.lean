@@ -46,15 +46,15 @@ structure KinematicPluckerPoint (R : Type*) where
 def kleinQuadricEval (p : KinematicPluckerPoint R) : R :=
   p.p12 * p.p34 - p.p13 * p.p24 + p.p14 * p.p23
 
-/-- An on-shell kinematic point satisfies the Klein quadric boundary relation -/
-def IsOnShellKinematic (p : KinematicPluckerPoint R) : Prop :=
+/-- A Plücker-coordinate point is Klein-null when the Klein form vanishes. -/
+def IsKleinNull (p : KinematicPluckerPoint R) : Prop :=
   kleinQuadricEval p = 0
 
-/-- 🏆 THEOREM 1: On-shell kinematic boundary identity -/
-theorem on_shell_plucker_zero (p : KinematicPluckerPoint R)
+/-- Klein-nullity follows from the equivalent coordinate factorization equation. -/
+theorem klein_null_of_factorization (p : KinematicPluckerPoint R)
     (h : p.p12 * p.p34 = p.p13 * p.p24 - p.p14 * p.p23) :
-    IsOnShellKinematic p := by
-  dsimp [IsOnShellKinematic, kleinQuadricEval]
+    IsKleinNull p := by
+  dsimp [IsKleinNull, kleinQuadricEval]
   rw [h]
   ring
 

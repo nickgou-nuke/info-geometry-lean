@@ -180,37 +180,39 @@ noncomputable def tensorLeftColimitIso
       (colimit.isColimit (F := F ⋙ CategoryTheory.MonoidalCategory.tensorLeft A))
 
 /-!
-## On-shell nilpotent seeds at the categorical colimit boundary
+## Square-zero seeds at the categorical colimit boundary
 
 Following the Colimit Continuum Mandate, this section projects finite
-square-zero seed elements into the `ModuleCat` colimit.  The result is stated
-relative to a `CompatibleBilinearMultiplication` witness; it does not install an
-unproved global nonassociative algebra instance on the colimit.
+seed elements into the `ModuleCat` colimit.  The result is stated relative to a
+`CompatibleBilinearMultiplication` witness and a finite-stage square-zero
+hypothesis; it asserts no Cuntz relation, Klein-quadric condition, or physical
+on-shell interpretation, and installs no global nonassociative algebra
+instance on the colimit.
 -/
 
 variable [HasColimit ZornSequence]
 variable (M : CompatibleBilinearMultiplication R ZornSequence)
 
--- A sequence of finite-stage on-shell/nilpotent seed generators.
-variable (zornCuntzGenerator : ∀ j, ZornSequence.obj j)
+-- A chosen sequence of elements in the finite stages; no generator relations
+-- are built into this assignment.
+variable (zornSeed : ∀ j, ZornSequence.obj j)
 
 /--
-The colimit image of a finite nilpotent seed.  The name records the intended
-Cuntz/on-shell use case, while the theorem below only asserts the proved
-square-zero algebraic fact supplied by the witness `M`.
+The colimit image of a chosen finite-stage seed.  Its algebraic properties
+come only from explicit hypotheses about the witnessed multiplication.
 -/
-noncomputable def continuumCuntzGenerator (j : J) : ↑(zornContinuumModule R ZornSequence) :=
-  colimit.ι ZornSequence j (zornCuntzGenerator j)
+noncomputable def continuumSeed (j : J) : ↑(zornContinuumModule R ZornSequence) :=
+  colimit.ι ZornSequence j (zornSeed j)
 
 /--
-A finite square-zero seed remains square-zero after insertion into the
+A finite-stage square-zero seed remains square-zero after insertion into the
 categorical `ModuleCat` colimit under the witnessed descended multiplication.
 -/
-theorem continuumCuntz_sq_zero (j : J)
-    (h : M.stageMul j (zornCuntzGenerator j) (zornCuntzGenerator j) = 0) :
+theorem continuumSeed_sq_zero_of_stage (j : J)
+    (h : M.stageMul j (zornSeed j) (zornSeed j) = 0) :
     M.colimitMul
-        (continuumCuntzGenerator R ZornSequence zornCuntzGenerator j)
-        (continuumCuntzGenerator R ZornSequence zornCuntzGenerator j) = 0 := by
+        (continuumSeed R ZornSequence zornSeed j)
+        (continuumSeed R ZornSequence zornSeed j) = 0 := by
   exact CompatibleBilinearMultiplication.colimit_square_zero_of_stage
     (R := R) (ZornSequence := ZornSequence) M h
 

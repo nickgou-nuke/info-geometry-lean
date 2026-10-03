@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.DifferentialForm.Basic
+import Mathlib.Analysis.Matrix.Normed
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
@@ -64,21 +65,21 @@ theorem kleinQuadric_arnoldCoordinatesOfPlucker6
     kleinQuadric (arnoldCoordinatesOfPlucker6 P) = kleinQ P := by
   rfl
 
-/-- A canonical Plucker vector on the Klein quadric is on-shell in the Arnold convention. -/
-theorem isOnShellBoundary_of_kleinQ_zero
+/-- A canonical Plücker vector with zero Klein form is Klein-null in the Arnold convention. -/
+theorem isKleinNull_of_kleinQ_zero
     (P : Plucker6 R)
     (hP : kleinQ P = 0) :
-    IsOnShellBoundary (arnoldCoordinatesOfPlucker6 P) := by
-  unfold IsOnShellBoundary
+    IsKleinNull (arnoldCoordinatesOfPlucker6 P) := by
+  unfold IsKleinNull
   rw [kleinQuadric_arnoldCoordinatesOfPlucker6]
   exact hP
 
-/-- Every decomposable bivector `X wedge Y` lands on the Arnold Klein boundary. -/
-theorem pluckerLine_isOnShellBoundary
+/-- Every decomposable bivector `X wedge Y` is Klein-null. -/
+theorem pluckerLine_isKleinNull
     (X Y : Vec4 R) :
-    IsOnShellBoundary
+    IsKleinNull
       (arnoldCoordinatesOfPlucker6 (pluckerLine X Y)) := by
-  exact isOnShellBoundary_of_kleinQ_zero
+  exact isKleinNull_of_kleinQ_zero
     (pluckerLine X Y) (kleinQ_pluckerLine X Y)
 
 /-! ## 2. Matrix-chart Grassmannian minors -> canonical Plucker six-vector -/
@@ -125,12 +126,12 @@ theorem kleinQ_plucker6OfMatrix
   simpa [plucker6OfMatrix, kleinQ] using
     (plucker_syzygy C (0 : Fin 4) (1 : Fin 4) (2 : Fin 4) (3 : Fin 4))
 
-/-- Matrix-chart Plucker coordinates therefore land on the Arnold on-shell boundary. -/
-theorem matrixChart_isOnShellBoundary
+/-- Matrix-chart Plücker coordinates lie on the Klein quadric. -/
+theorem matrixChart_isKleinNull
     (C : Matrix (Fin 2) (Fin 4) ℝ) :
-    IsOnShellBoundary
+    IsKleinNull
       (arnoldCoordinatesOfPlucker6 (plucker6OfMatrix C)) := by
-  exact isOnShellBoundary_of_kleinQ_zero
+  exact isKleinNull_of_kleinQ_zero
     (plucker6OfMatrix C) (kleinQ_plucker6OfMatrix C)
 
 /--
@@ -145,14 +146,14 @@ theorem plucker6OfMatrix_left_mul_det_one
   rw [plucker6OfMatrix_left_mul, hA]
   apply Plucker6.ext <;> simp [Plucker6.scale]
 
-/-! ## 3. Twistor decomposability -> the same on-shell Plucker owner -/
+/-! ## 3. Twistor decomposability -> the same Klein-null Plücker owner -/
 
-/-- The existing two-twistor Plucker construction lands in the Arnold Klein boundary. -/
-theorem twistorPair_isOnShellBoundary
+/-- The existing two-twistor Plücker construction lands on the Klein quadric. -/
+theorem twistorPair_isKleinNull
     (Z₁ Z₂ : Twistor4) :
-    IsOnShellBoundary
+    IsKleinNull
       (arnoldCoordinatesOfPlucker6 (twistorPairPlucker Z₁ Z₂)) := by
-  exact isOnShellBoundary_of_kleinQ_zero
+  exact isKleinNull_of_kleinQ_zero
     (twistorPairPlucker Z₁ Z₂)
     (twistorPairPlucker_on_klein Z₁ Z₂)
 
@@ -186,6 +187,8 @@ theorem symmetricPair_stabilizer_origin
   exact S.fix_eq g
 
 /-! ## 5. Genuine Mathlib differential forms on the Grassmannian matrix chart -/
+
+open scoped Matrix.Norms.Elementwise
 
 /-- The finite `2 x 4` matrix chart used by the Grassmannian lane. -/
 abbrev GrassmannianMatrixChart :=

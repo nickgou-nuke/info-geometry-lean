@@ -1899,7 +1899,6 @@ import InfoGeometry.Canonical.SuperchargeRoleBridge
 import InfoGeometry.Canonical.SuperchargeTransportBridge
 import InfoGeometry.Canonical.SuperInference
 import InfoGeometry.Canonical.SuperJordanLie
-import InfoGeometry.Canonical.SuperKMS_Equilibrium
 import InfoGeometry.Canonical.SuperSouriauFermionGasBridge
 import InfoGeometry.Canonical.SuperUnified
 import InfoGeometry.Canonical.SYKKitaevGuardrails

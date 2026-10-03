@@ -65,7 +65,8 @@ def stabilizerLieSubalgebra : LieSubalgebra ℝ Der where
     intro D E hD hE
     change (⁅D, E⁆ : Der).1 canonicalE11 = 0
     change D.1 (E.1 canonicalE11) - E.1 (D.1 canonicalE11) = 0
-    rw [mem_stabilizerSubmodule_iff] at hD hE
+    change D.1 canonicalE11 = 0 at hD
+    change E.1 canonicalE11 = 0 at hE
     rw [hD, hE]
     simp
 

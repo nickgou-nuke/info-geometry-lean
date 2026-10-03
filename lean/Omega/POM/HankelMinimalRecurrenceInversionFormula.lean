@@ -31,7 +31,12 @@ theorem paper_xi_hankel_minimal_recurrence_inversion_formula :
   refine ⟨?_, ?_, ?_⟩
   · intro n
     simp [xiMinimalRecurrenceSequence, pow_succ, mul_comm]
-  · decide
-  · decide
+  · rw [Matrix.det_fin_one]
+    simp [xiMinimalRecurrenceHankelBlock]
+  · rw [xiMinimalRecurrenceHankelInverse, Matrix.one_mulVec]
+    ext i
+    fin_cases i
+    norm_num [xiMinimalRecurrenceRhs, xiMinimalRecurrenceCoeffs,
+      xiMinimalRecurrenceSequence]
 
 end Omega.POM

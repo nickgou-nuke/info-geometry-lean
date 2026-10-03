@@ -327,7 +327,6 @@ import InfoGeometry.Capstone.UnifiedMatrixBasis
 import InfoGeometry.Capstone.ZornOrderCapstone
 import InfoGeometry.Carrier.Bridge
 import InfoGeometry.Carrier.SuperLieAlgebra
-import InfoGeometry.Carrier.SupergradedHopping
 import InfoGeometry.Carrier.TripleAlgebra
 import InfoGeometry.Categorical.CelikZ3BraidedTensorBridge
 -- Excluded: duplicate-owner lane for `InfoGeometry.Categorical.Gromov.*`.

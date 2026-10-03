@@ -1,7 +1,8 @@
 import Mathlib.Tactic
-import Mathlib.LinearAlgebra.Matrix
+import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.RootSystem.G2CoxeterPlaneProjection
+import InfoGeometry.Canonical.SpinorialCore.G2Determinant
 
 /-!
 # Scalar-separated G2 Cuntz--Krieger bridge
@@ -307,6 +308,10 @@ def concreteG2TransitionDatum : G2TransitionDatum where
 def A_G2_int : Matrix G2Vertex G2Vertex ℤ :=
   concreteG2TransitionDatum.adjacency
 
+/-- The Boolean transition rule agrees with the integral certificate's basis. -/
+theorem A_G2_int_eq_certificate :
+    A_G2_int = InfoGeometry.Canonical.SpinorialCore.G2.adjacency := by decide
+
 theorem A_G2_row_sum_three (i : G2Vertex) :
     ∑ j : G2Vertex, A_G2_int i j = 3 :=
   G2TransitionDatum.adjacency_row_sum_three concreteG2TransitionDatum i
@@ -329,7 +334,12 @@ def G2BoundaryMatrix : Matrix G2Vertex G2Vertex ℤ :=
 /-- Exact determinant of the concrete G2 boundary matrix. -/
 theorem G2BoundaryMatrix_det :
     G2BoundaryMatrix.det = -1456 := by
-  native_decide
+  have hboundary : G2BoundaryMatrix =
+      InfoGeometry.Canonical.SpinorialCore.G2.relation.transpose := by
+    simp only [G2BoundaryMatrix, InfoGeometry.Canonical.SpinorialCore.G2.relation,
+      Matrix.transpose_sub, Matrix.transpose_one, A_G2_int_eq_certificate]
+  rw [hboundary, Matrix.det_transpose]
+  exact InfoGeometry.Canonical.SpinorialCore.G2.relation_det
 
 /-! ## 5. Short/long aggregate projections in a concrete realization -/
 
@@ -354,7 +364,7 @@ def Plong : A :=
 
 /-- The short-root and long-root aggregate range projections are orthogonal. -/
 theorem chiral_sheets_orthogonal :
-    X.Pshort * X.Plong = 0 := by
+    Pshort X * Plong X = 0 := by
   unfold Pshort Plong
   rw [Finset.sum_mul]
   apply Finset.sum_eq_zero
@@ -378,7 +388,7 @@ theorem transition_formula (i : G2Vertex) :
       ∑ j : G2Vertex,
         (if A_G2_bool i j then (1 : R) else 0) •
           X.ck.rangeProjection j :=
-  X.ck_transition_formula i
+  G2TransitionDatum.Realization.ck_transition_formula concreteG2TransitionDatum X i
 
 end ConcreteRealization
 

@@ -83,30 +83,84 @@ def stripPrime (p n : ℕ) : ℕ :=
 def sCoprimePart23 (n : ℕ) : ℕ :=
   n / (2 ^ n.factorization 2 * 3 ^ n.factorization 3)
 
+private theorem factorization_twelve_two : (12 : ℕ).factorization 2 = 2 := by
+  rw [show (12 : ℕ) = 4 * 3 by norm_num,
+    Nat.factorization_mul_apply_of_coprime (by norm_num : Nat.Coprime 4 3)]
+  have h4 : (4 : ℕ).factorization 2 = 2 := by
+    rw [show (4 : ℕ) = 2 ^ 2 by norm_num,
+      Nat.factorization_pow_self (by norm_num : Nat.Prime 2)]
+  have h3 : (3 : ℕ).factorization 2 = 0 :=
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 2 ∣ 3)
+  rw [h4, h3]
+
+private theorem factorization_twelve_three : (12 : ℕ).factorization 3 = 1 := by
+  rw [show (12 : ℕ) = 4 * 3 by norm_num,
+    Nat.factorization_mul_apply_of_coprime (by norm_num : Nat.Coprime 4 3)]
+  have h4 : (4 : ℕ).factorization 3 = 0 :=
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 3 ∣ 4)
+  have h3 : (3 : ℕ).factorization 3 = 1 :=
+    Nat.Prime.factorization_self (by norm_num : Nat.Prime 3)
+  rw [h4, h3]
+
+private theorem factorization_thirty_two : (30 : ℕ).factorization 2 = 1 := by
+  rw [show (30 : ℕ) = 2 * 15 by norm_num,
+    Nat.factorization_mul_apply_of_coprime (by norm_num : Nat.Coprime 2 15)]
+  rw [Nat.Prime.factorization_self (by norm_num : Nat.Prime 2),
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 2 ∣ 15)]
+
+private theorem factorization_thirty_three : (30 : ℕ).factorization 3 = 1 := by
+  rw [show (30 : ℕ) = 3 * 10 by norm_num,
+    Nat.factorization_mul_apply_of_coprime (by norm_num : Nat.Coprime 3 10)]
+  rw [Nat.Prime.factorization_self (by norm_num : Nat.Prime 3),
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 3 ∣ 10)]
+
 /-- S-coprime part seed: 12_{S⊥} = 1 for S = {2,3}.
     12 = 2² · 3, so 12_{S⊥} = 12/12 = 1.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem sCoprime_12 : sCoprimePart23 12 = 1 := by decide
+theorem sCoprime_12 : sCoprimePart23 12 = 1 := by
+  simp [sCoprimePart23, factorization_twelve_two, factorization_twelve_three]
 
 /-- S-coprime part seed: 30_{S⊥} = 5 for S = {2,3}.
     30 = 2 · 3 · 5, so 30_{S⊥} = 30/6 = 5.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem sCoprime_30 : sCoprimePart23 30 = 5 := by decide
+theorem sCoprime_30 : sCoprimePart23 30 = 5 := by
+  norm_num [sCoprimePart23, factorization_thirty_two, factorization_thirty_three]
 
 /-- S-coprime part seed: 7_{S⊥} = 7 for S = {2,3}.
     7 is coprime to both 2 and 3.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem sCoprime_7 : sCoprimePart23 7 = 7 := by decide
+theorem sCoprime_7 : sCoprimePart23 7 = 7 := by
+  have h2 : (7 : ℕ).factorization 2 = 0 :=
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 2 ∣ 7)
+  have h3 : (7 : ℕ).factorization 3 = 0 :=
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 3 ∣ 7)
+  norm_num [sCoprimePart23, h2, h3]
 
 /-- S-coprime part seed: 60_{S⊥} = 5 for S = {2,3}.
     60 = 2² · 3 · 5, so 60_{S⊥} = 60/12 = 5.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem sCoprime_60 : sCoprimePart23 60 = 5 := by decide
+theorem sCoprime_60 : sCoprimePart23 60 = 5 := by
+  have h2 : (60 : ℕ).factorization 2 = 2 := by
+    rw [show (60 : ℕ) = 12 * 5 by norm_num,
+      Nat.factorization_mul_apply_of_coprime (by norm_num : Nat.Coprime 12 5),
+      factorization_twelve_two,
+      Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 2 ∣ 5)]
+  have h3 : (60 : ℕ).factorization 3 = 1 := by
+    rw [show (60 : ℕ) = 12 * 5 by norm_num,
+      Nat.factorization_mul_apply_of_coprime (by norm_num : Nat.Coprime 12 5),
+      factorization_twelve_three,
+      Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 3 ∣ 5)]
+  norm_num [sCoprimePart23, h2, h3]
 
 /-- S-coprime part seed: 35_{S⊥} = 35 for S = {2,3}.
     35 = 5 · 7, coprime to both 2 and 3.
     thm:xi-localized-torsion-exact-order-ledger -/
-theorem sCoprime_35 : sCoprimePart23 35 = 35 := by decide
+theorem sCoprime_35 : sCoprimePart23 35 = 35 := by
+  have h2 : (35 : ℕ).factorization 2 = 0 :=
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 2 ∣ 35)
+  have h3 : (35 : ℕ).factorization 3 = 0 :=
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 3 ∣ 35)
+  norm_num [sCoprimePart23, h2, h3]
 
 /-! ## Euler factor seeds for the exact-order Dirichlet series
 

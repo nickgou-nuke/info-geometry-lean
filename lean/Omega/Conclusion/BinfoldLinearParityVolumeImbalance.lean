@@ -38,24 +38,54 @@ theorem paper_conclusion_binfold_linear_parity_volume_imbalance :
   have h12 :=
     Omega.Zeta.paper_xi_time_part65_binfold_gauge_center_abelianization_exact
       (m := Nat.fib 14) (fiber := N 12)
+  have hN8 : ∀ w : Fin (Nat.fib 10), 2 < N 8 w := by
+    intro w
+    dsimp [N, Omega.Zeta.auditedEvenFirstKink]
+    split_ifs <;> norm_num [Nat.fib]
+  have hN10 : ∀ w : Fin (Nat.fib 12), 2 < N 10 w := by
+    intro w
+    dsimp [N, Omega.Zeta.auditedEvenFirstKink]
+    split_ifs <;> norm_num [Nat.fib]
+  have hN12 : ∀ w : Fin (Nat.fib 14), 2 < N 12 w := by
+    intro w
+    dsimp [N, Omega.Zeta.auditedEvenFirstKink]
+    split_ifs <;> norm_num [Nat.fib]
   have h8_ge2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 10) => 2 ≤ N 8 w).card = Nat.fib 10 := by
-    decide
+    rw [Finset.filter_eq_self.mpr (by
+      intro w hw
+      exact le_of_lt (hN8 w))]
+    simp
   have h10_ge2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 12) => 2 ≤ N 10 w).card = Nat.fib 12 := by
-    decide
+    rw [Finset.filter_eq_self.mpr (by
+      intro w hw
+      exact le_of_lt (hN10 w))]
+    simp
   have h12_ge2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 14) => 2 ≤ N 12 w).card = Nat.fib 14 := by
-    decide
+    rw [Finset.filter_eq_self.mpr (by
+      intro w hw
+      exact le_of_lt (hN12 w))]
+    simp
   have h8_eq2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 10) => N 8 w = 2).card = 0 := by
-    decide
+    rw [Finset.filter_eq_empty_iff.mpr (by
+      intro w hw
+      exact ne_of_gt (hN8 w))]
+    simp
   have h10_eq2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 12) => N 10 w = 2).card = 0 := by
-    decide
+    rw [Finset.filter_eq_empty_iff.mpr (by
+      intro w hw
+      exact ne_of_gt (hN10 w))]
+    simp
   have h12_eq2 :
       (Finset.univ.filter fun w : Fin (Nat.fib 14) => N 12 w = 2).card = 0 := by
-    decide
+    rw [Finset.filter_eq_empty_iff.mpr (by
+      intro w hw
+      exact ne_of_gt (hN12 w))]
+    simp
   have hAb8 :
       Omega.OperatorAlgebra.foldGaugeAbelianizationOrder (N 8) = 2 ^ Nat.fib 10 := by
     simpa [h8_ge2] using h8.2
@@ -79,9 +109,9 @@ theorem paper_conclusion_binfold_linear_parity_volume_imbalance :
   have hFib10 : Nat.fib 10 < 2 ^ 8 := by
     exact hDist.2.2.2.2.2.1
   have hFib12 : Nat.fib 12 < 2 ^ 10 := by
-    decide
+    norm_num [Nat.fib]
   have hFib14 : Nat.fib 14 < 2 ^ 12 := by
-    decide
+    norm_num [Nat.fib]
   simpa [N] using
     (show (∃ m0, ∀ m ≥ m0, ∀ z : binfoldGaugeCenter m, z = 1) ∧
         Omega.OperatorAlgebra.foldGaugeAbelianizationOrder (N 8) = 2 ^ Nat.fib 10 ∧

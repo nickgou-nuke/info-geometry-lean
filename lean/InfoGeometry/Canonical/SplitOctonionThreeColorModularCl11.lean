@@ -57,27 +57,45 @@ def colourSplitQuaternionCore (c : SplitOctonionColour) : Set StandardRationalSp
 
 theorem modularJ_eq_colourLUnit (c : SplitOctonionColour) :
     modularJ c = colourLUnit c := by
-  cases c <;> decide
+  cases c <;>
+    funext b <;> fin_cases b <;>
+    simp [modularJ, colourLUnit, fundamentalSymmetry, colourUnit, rationalBasis,
+      splitOctonionMulQ, splitQuaternionOfQ, splitQuaternionLPartQ,
+      splitQuaternionAddQ, splitQuaternionMulQ, splitQuaternionConjQ,
+      splitOctonionOfQuaternionPairQ, Pi.single]
 
 @[simp] theorem fundamentalSymmetry_sq :
     splitOctonionMulQ fundamentalSymmetry fundamentalSymmetry =
       rationalBasis .one := by
-  decide
+  funext b
+  fin_cases b <;>
+    simp [fundamentalSymmetry, rationalBasis, splitOctonionMulQ,
+      splitQuaternionOfQ, splitQuaternionLPartQ, splitQuaternionAddQ,
+      splitQuaternionMulQ, splitQuaternionConjQ,
+      splitOctonionOfQuaternionPairQ, Pi.single]
 
 @[simp] theorem colourUnit_sq (c : SplitOctonionColour) :
     splitOctonionMulQ (colourUnit c) (colourUnit c) =
       -(rationalBasis .one) := by
-  cases c <;> decide
+  cases c <;>
+    funext b <;> fin_cases b <;>
+    simp [colourUnit, rationalBasis, splitOctonionMulQ, splitQuaternionOfQ,
+      splitQuaternionLPartQ, splitQuaternionAddQ, splitQuaternionMulQ,
+      splitQuaternionConjQ, splitOctonionOfQuaternionPairQ, Pi.single]
 
 @[simp] theorem colourLUnit_sq (c : SplitOctonionColour) :
     splitOctonionMulQ (colourLUnit c) (colourLUnit c) =
       rationalBasis .one := by
-  cases c <;> decide
+  cases c <;>
+    funext b <;> fin_cases b <;>
+    simp [colourLUnit, rationalBasis, splitOctonionMulQ, splitQuaternionOfQ,
+      splitQuaternionLPartQ, splitQuaternionAddQ, splitQuaternionMulQ,
+      splitQuaternionConjQ, splitOctonionOfQuaternionPairQ, Pi.single]
 
 @[simp] theorem modularJ_sq (c : SplitOctonionColour) :
     splitOctonionMulQ (modularJ c) (modularJ c) =
       rationalBasis .one := by
-  cases c <;> decide
+  rw [modularJ_eq_colourLUnit, colourLUnit_sq]
 
 @[simp] theorem phaseAxis_sq (c : SplitOctonionColour) :
     splitOctonionMulQ (phaseAxis c) (phaseAxis c) =
@@ -86,11 +104,23 @@ theorem modularJ_eq_colourLUnit (c : SplitOctonionColour) :
 
 theorem modularJ_mul_fundamentalSymmetry (c : SplitOctonionColour) :
     splitOctonionMulQ (modularJ c) fundamentalSymmetry = phaseAxis c := by
-  cases c <;> decide
+  rw [modularJ_eq_colourLUnit]
+  cases c <;>
+    funext b <;> fin_cases b <;>
+    simp [colourLUnit, phaseAxis, colourUnit, fundamentalSymmetry,
+      rationalBasis, splitOctonionMulQ, splitQuaternionOfQ,
+      splitQuaternionLPartQ, splitQuaternionAddQ, splitQuaternionMulQ,
+      splitQuaternionConjQ, splitOctonionOfQuaternionPairQ, Pi.single]
 
 theorem fundamentalSymmetry_mul_modularJ (c : SplitOctonionColour) :
     splitOctonionMulQ fundamentalSymmetry (modularJ c) = -(phaseAxis c) := by
-  cases c <;> decide
+  rw [modularJ_eq_colourLUnit]
+  cases c <;>
+    funext b <;> fin_cases b <;>
+    simp [colourLUnit, phaseAxis, colourUnit, fundamentalSymmetry,
+      rationalBasis, splitOctonionMulQ, splitQuaternionOfQ,
+      splitQuaternionLPartQ, splitQuaternionAddQ, splitQuaternionMulQ,
+      splitQuaternionConjQ, splitOctonionOfQuaternionPairQ, Pi.single]
 
 theorem modularJ_anticommutes_fundamentalSymmetry
     (c : SplitOctonionColour) :
@@ -128,7 +158,7 @@ theorem colourSplitQuaternionCore_contains_colour_plane
     colourPlane c ⊆ colourSplitQuaternionCore c := by
   intro x hx
   rcases hx with ⟨a, b, rfl⟩
-  exact ⟨0, 0, a, b, by simp [add_assoc, add_left_comm, add_comm]⟩
+  exact ⟨0, 0, a, b, by simp⟩
 
 end
 

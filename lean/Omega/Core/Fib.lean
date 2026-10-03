@@ -1,6 +1,7 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic.Linarith
 import Mathlib.Data.Nat.Prime.Defs
+import Mathlib.NumberTheory.LucasPrimality
 
 /-! ### Convenience lemmas for `Nat.fib`
 
@@ -1262,8 +1263,134 @@ theorem fenceDet_nine : fenceDet 9 = 4181 := by rw [fenceDet_eq_fib]; decide
 /-- cor:pom-Lk-t1-fibonacci-det-green -/
 theorem fenceDet_ten : fenceDet 10 = 10946 := by rw [fenceDet_eq_fib]; decide
 
+private theorem zmod11_pow2 : (11 : ZMod 1597) ^ 2 = 121 := by
+  change ((11 ^ 2 : ℕ) : ZMod 1597) = (121 : ℕ)
+  apply (ZMod.natCast_eq_natCast_iff' (11 ^ 2) 121 1597).2
+  norm_num
+
+private theorem zmod11_pow4 : (11 : ZMod 1597) ^ 4 = 268 := by
+  rw [show (4 : ℕ) = 2 * 2 by norm_num, pow_mul, zmod11_pow2]
+  apply ZMod.val_injective
+  norm_num [pow_two, ZMod.val_mul, ZMod.val_ofNat]
+
+private theorem zmod11_pow8 : (11 : ZMod 1597) ^ 8 = 1556 := by
+  rw [show (8 : ℕ) = 4 * 2 by norm_num, pow_mul, zmod11_pow4]
+  apply ZMod.val_injective
+  norm_num [pow_two, ZMod.val_mul, ZMod.val_ofNat]
+
+private theorem zmod11_pow16 : (11 : ZMod 1597) ^ 16 = 84 := by
+  rw [show (16 : ℕ) = 8 * 2 by norm_num, pow_mul, zmod11_pow8]
+  apply ZMod.val_injective
+  norm_num [pow_two, ZMod.val_mul, ZMod.val_ofNat]
+
+private theorem zmod11_pow32 : (11 : ZMod 1597) ^ 32 = 668 := by
+  rw [show (32 : ℕ) = 16 * 2 by norm_num, pow_mul, zmod11_pow16]
+  apply ZMod.val_injective
+  norm_num [pow_two, ZMod.val_mul, ZMod.val_ofNat]
+
+private theorem zmod11_pow64 : (11 : ZMod 1597) ^ 64 = 661 := by
+  rw [show (64 : ℕ) = 32 * 2 by norm_num, pow_mul, zmod11_pow32]
+  apply ZMod.val_injective
+  norm_num [pow_two, ZMod.val_mul, ZMod.val_ofNat]
+
+private theorem zmod11_pow128 : (11 : ZMod 1597) ^ 128 = 940 := by
+  rw [show (128 : ℕ) = 64 * 2 by norm_num, pow_mul, zmod11_pow64]
+  apply ZMod.val_injective
+  norm_num [pow_two, ZMod.val_mul, ZMod.val_ofNat]
+
+private theorem zmod11_pow256 : (11 : ZMod 1597) ^ 256 = 459 := by
+  rw [show (256 : ℕ) = 128 * 2 by norm_num, pow_mul, zmod11_pow128]
+  apply ZMod.val_injective
+  norm_num [pow_two, ZMod.val_mul, ZMod.val_ofNat]
+
+private theorem zmod11_pow512 : (11 : ZMod 1597) ^ 512 = 1474 := by
+  rw [show (512 : ℕ) = 256 * 2 by norm_num, pow_mul, zmod11_pow256]
+  apply ZMod.val_injective
+  norm_num [pow_two, ZMod.val_mul, ZMod.val_ofNat]
+
+private theorem zmod11_pow1024 : (11 : ZMod 1597) ^ 1024 = 756 := by
+  rw [show (1024 : ℕ) = 512 * 2 by norm_num, pow_mul, zmod11_pow512]
+  apply ZMod.val_injective
+  norm_num [pow_two, ZMod.val_mul, ZMod.val_ofNat]
+
+private theorem zmod11_pow1596 : (11 : ZMod 1597) ^ 1596 = 1 := by
+  rw [show (1596 : ℕ) = 1024 + 512 + 32 + 16 + 8 + 4 by norm_num]
+  rw [pow_add, pow_add, pow_add, pow_add, pow_add]
+  rw [zmod11_pow1024, zmod11_pow512, zmod11_pow32, zmod11_pow16, zmod11_pow8,
+    zmod11_pow4]
+  change ((756 * 1474 * 668 * 84 * 1556 * 268 : ℕ) : ZMod 1597) = (1 : ℕ)
+  apply (ZMod.natCast_eq_natCast_iff' _ _ _).2
+  norm_num
+
+private theorem zmod11_pow798 : (11 : ZMod 1597) ^ 798 = 1596 := by
+  rw [show (798 : ℕ) = 512 + 256 + 16 + 8 + 4 + 2 by norm_num]
+  rw [pow_add, pow_add, pow_add, pow_add, pow_add]
+  rw [zmod11_pow512, zmod11_pow256, zmod11_pow16, zmod11_pow8, zmod11_pow4,
+    zmod11_pow2]
+  change ((1474 * 459 * 84 * 1556 * 268 * 121 : ℕ) : ZMod 1597) = (1596 : ℕ)
+  apply (ZMod.natCast_eq_natCast_iff' _ _ _).2
+  norm_num
+
+private theorem zmod11_pow532 : (11 : ZMod 1597) ^ 532 = 222 := by
+  rw [show (532 : ℕ) = 512 + 16 + 4 by norm_num]
+  rw [pow_add, pow_add]
+  rw [zmod11_pow512, zmod11_pow16, zmod11_pow4]
+  change ((1474 * 84 * 268 : ℕ) : ZMod 1597) = (222 : ℕ)
+  apply (ZMod.natCast_eq_natCast_iff' _ _ _).2
+  norm_num
+
+private theorem zmod11_pow228 : (11 : ZMod 1597) ^ 228 = 1150 := by
+  rw [show (228 : ℕ) = 128 + 64 + 32 + 4 by norm_num]
+  rw [pow_add, pow_add, pow_add]
+  rw [zmod11_pow128, zmod11_pow64, zmod11_pow32, zmod11_pow4]
+  change ((940 * 661 * 668 * 268 : ℕ) : ZMod 1597) = (1150 : ℕ)
+  apply (ZMod.natCast_eq_natCast_iff' _ _ _).2
+  norm_num
+
+private theorem zmod11_pow84 : (11 : ZMod 1597) ^ 84 = 1183 := by
+  rw [show (84 : ℕ) = 64 + 16 + 4 by norm_num]
+  rw [pow_add, pow_add]
+  rw [zmod11_pow64, zmod11_pow16, zmod11_pow4]
+  change ((661 * 84 * 268 : ℕ) : ZMod 1597) = (1183 : ℕ)
+  apply (ZMod.natCast_eq_natCast_iff' _ _ _).2
+  norm_num
+
 /-- 1597 = F(17) is prime. cor:pom-Lk-t1-fibonacci-det-green -/
-theorem prime_1597 : Nat.Prime 1597 := by decide
+theorem prime_1597 : Nat.Prime 1597 := by
+  apply lucas_primality 1597 (11 : ZMod 1597)
+  · exact zmod11_pow1596
+  · intro q hq hqdiv
+    have hqprod : q ∣ 2 ^ 2 * (3 * (7 * 19)) := by
+      rw [show 2 ^ 2 * (3 * (7 * 19)) = 1596 by norm_num]
+      exact hqdiv
+    rcases hq.dvd_mul.mp hqprod with hq2 | hqrest
+    · have hqTwo : q ∣ 2 := hq.dvd_of_dvd_pow hq2
+      have hqEq : q = 2 := (Nat.prime_dvd_prime_iff_eq hq Nat.prime_two).mp hqTwo
+      subst q
+      rw [zmod11_pow798]
+      intro h
+      have hmod := (ZMod.natCast_eq_natCast_iff' 1596 1 1597).mp h
+      norm_num at hmod
+    rcases hq.dvd_mul.mp hqrest with hq3 | hqrest
+    · have hqEq : q = 3 := (Nat.prime_dvd_prime_iff_eq hq Nat.prime_three).mp hq3
+      subst q
+      rw [zmod11_pow532]
+      intro h
+      have hmod := (ZMod.natCast_eq_natCast_iff' 222 1 1597).mp h
+      norm_num at hmod
+    rcases hq.dvd_mul.mp hqrest with hq7 | hq19
+    · have hqEq : q = 7 := (Nat.prime_dvd_prime_iff_eq hq Nat.prime_seven).mp hq7
+      subst q
+      rw [zmod11_pow228]
+      intro h
+      have hmod := (ZMod.natCast_eq_natCast_iff' 1150 1 1597).mp h
+      norm_num at hmod
+    · have hqEq : q = 19 := (Nat.prime_dvd_prime_iff_eq hq (by decide : Nat.Prime 19)).mp hq19
+      subst q
+      rw [zmod11_pow84]
+      intro h
+      have hmod := (ZMod.natCast_eq_natCast_iff' 1183 1 1597).mp h
+      norm_num at hmod
 
 /-- Paper package. cor:pom-Lk-t1-fibonacci-det-green -/
 theorem paper_fenceDet_values_extended :

@@ -42,23 +42,22 @@ open InfoGeometry.Projective.PenroseDAGAmplituhedronRosetta
 variable {v e : Type*}
 variable [Fintype v] [Fintype e] [DecidableEq v] [DecidableEq e]
 
-abbrev Cochain := InfoGeometry.Streaming.BipartiteGraphDirac.Cochain v e
-abbrev EndCochain := Module.End ℝ Cochain
+abbrev EndCochain (v e : Type*) := Module.End ℝ (Cochain v e)
 
 /-- Chiral raising step, using the repository-owned graph differential. -/
-def Dplus (B : Matrix e v ℝ) : EndCochain :=
+def Dplus (B : Matrix e v ℝ) : EndCochain v e :=
   differential B
 
 /-- Chiral lowering step, using the repository-owned graph codifferential. -/
-def Dminus (B : Matrix e v ℝ) : EndCochain :=
+def Dminus (B : Matrix e v ℝ) : EndCochain v e :=
   codifferential B
 
 /-- Total network Dirac-Hodge operator. -/
-def Dnet (B : Matrix e v ℝ) : EndCochain :=
+def Dnet (B : Matrix e v ℝ) : EndCochain v e :=
   Dplus B + Dminus B
 
 /-- Cross-sheet anticommutator / Hodge Laplacian. -/
-def networkLaplacian (B : Matrix e v ℝ) : EndCochain :=
+def networkLaplacian (B : Matrix e v ℝ) : EndCochain v e :=
   Dplus B * Dminus B + Dminus B * Dplus B
 
 @[simp] theorem Dplus_sq_zero (B : Matrix e v ℝ) :
@@ -81,7 +80,7 @@ theorem Dnet_sq_eq_networkLaplacian (B : Matrix e v ℝ) :
 
 /-- Pointwise form of the two Laplacian blocks B^T B and B B^T. -/
 theorem Dnet_square_blocks
-    (B : Matrix e v ℝ) (x : Cochain) :
+    (B : Matrix e v ℝ) (x : Cochain v e) :
     (Dnet B * Dnet B) x =
       (B.transpose.mulVec (B.mulVec x.1),
         B.mulVec (B.transpose.mulVec x.2)) := by

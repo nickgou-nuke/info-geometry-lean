@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.CyclotomicExplicitMatrixBridge
 
 /-!
 # Concrete cyclotomic matrix witnesses
@@ -37,9 +38,12 @@ theorem phi24Companion_polynomial :
   decide
 
 theorem phi24Companion_pow_twenty_four : phi24Companion ^ 24 = 1 := by
-  decide
+  change InfoGeometry.Canonical.CyclotomicExplicitMatrixBridge.phi24Companion ^ 24 = 1
+  exact InfoGeometry.Canonical.CyclotomicExplicitMatrixBridge.phi24Companion_order
 
 theorem phi24Companion_master25 : phi24Companion ^ 25 = phi24Companion := by
-  decide
+  rw [show (25 : ℕ) = 24 + 1 by norm_num, pow_add, pow_one,
+    phi24Companion_pow_twenty_four]
+  simp
 
 end InfoGeometry.Canonical.CyclotomicExplicitMatrixRealizations

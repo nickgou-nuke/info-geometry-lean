@@ -181,8 +181,7 @@ def cartanCliffordActionMap
           CliffordAlgebra.contractLeft (g v) α) +
         (ExteriorAlgebra.ι ℝ u * α +
           CliffordAlgebra.contractLeft (g u) α)
-    rw [map_add, add_mul, map_add]
-    simp only [LinearMap.add_apply]
+    simp only [map_add, add_mul, LinearMap.add_apply]
     abel
   map_smul' c v := by
     apply LinearMap.ext
@@ -192,8 +191,7 @@ def cartanCliffordActionMap
           CliffordAlgebra.contractLeft (g (c • v)) α =
         c • (ExteriorAlgebra.ι ℝ v * α +
           CliffordAlgebra.contractLeft (g v) α)
-    rw [map_smul, smul_mul_assoc, map_smul]
-    simp only [LinearMap.smul_apply, smul_add]
+    simp only [map_smul, smul_mul_assoc, LinearMap.smul_apply, smul_add]
 
 @[simp] theorem cartanCliffordActionMap_apply
     (g : LinearMap.BilinForm ℝ V) (v : V) :
@@ -217,7 +215,7 @@ theorem cartanCliffordAction_anticommutator
           wedgeOperator v * contractionOperator (g u)) +
         (contractionOperator (g v) * contractionOperator (g u) +
           contractionOperator (g u) * contractionOperator (g v)) := by
-            simp only [cartanCliffordAction, add_mul, mul_add]
+            simp only [cartanCliffordAction, metricFlat, add_mul, mul_add]
             abel
     _ = (g v u + g u v) • (1 : FormEnd V) := by
       rw [wedgeOperator_anticommutator_zero]
@@ -251,9 +249,10 @@ theorem cartanCliffordAction_sq
     cartanCliffordAction g v * cartanCliffordAction g v =
         wedgeOperator v * contractionOperator (g v) +
           contractionOperator (g v) * wedgeOperator v := by
-      simp only [cartanCliffordAction, add_mul, mul_add,
+      simp only [cartanCliffordAction, metricFlat, add_mul, mul_add,
         wedgeOperator_sq_zero, contractionOperator_sq_zero,
         zero_add, add_zero]
+      exact add_comm _ _
     _ = (g v v) • (1 : FormEnd V) := by
       rw [add_comm, contraction_wedge_CAR]
 
@@ -292,6 +291,13 @@ def cliffordExteriorEquiv
       (1 : Forms V) := by
   simp [cliffordExteriorEquiv]
 
+/-- The inverse change-of-form map also preserves the scalar unit. -/
+@[simp] theorem cliffordExteriorEquiv_symm_one
+    (g : LinearMap.BilinForm ℝ V) :
+    (cliffordExteriorEquiv g).symm (1 : Forms V) = 1 := by
+  apply (cliffordExteriorEquiv g).injective
+  rw [LinearEquiv.apply_symm_apply, cliffordExteriorEquiv_one]
+
 /-- The Kähler--Atiyah product on forms, obtained by transporting Clifford
 multiplication through Mathlib's `CliffordAlgebra.equivExterior`.
 
@@ -321,14 +327,14 @@ theorem kahlerAtiyahProduct_one_left
     (α : Forms V) :
     kahlerAtiyahProduct g 1 α = α := by
   apply (cliffordExteriorEquiv g).symm.injective
-  simp [kahlerAtiyahProduct, cliffordExteriorEquiv]
+  simp [kahlerAtiyahProduct]
 
 theorem kahlerAtiyahProduct_one_right
     (g : LinearMap.BilinForm ℝ V)
     (α : Forms V) :
     kahlerAtiyahProduct g α 1 = α := by
   apply (cliffordExteriorEquiv g).symm.injective
-  simp [kahlerAtiyahProduct, cliffordExteriorEquiv]
+  simp [kahlerAtiyahProduct]
 
 /-- The transported product is additive in the left argument. -/
 theorem kahlerAtiyahProduct_add_left

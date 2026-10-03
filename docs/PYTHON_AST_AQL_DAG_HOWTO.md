@@ -2,7 +2,7 @@
 
 ## 1. Architectural Status & Purpose
 
-This HOWTO documents the repository-owned **Python Code Property Graph (CPG) and Discrete Graph Operator Analysis System** in ArangoDB, serving as the static code analysis counterpart to Lean's `ASTAQLHASH-HOWTO.md` and `InfoTree` framework.
+This HOWTO documents the repository-owned **Python Code Property Graph (CPG) and Discrete Graph Operator Analysis System** in ArangoDB, serving as the static code analysis counterpart to Lean's [`ASTAQLHASH-HOWTO.md`](ASTAQLHASH-HOWTO.md) and `InfoTree` framework.
 
 The authoritative implementation surfaces are:
 - `tools/infra/python_ast_dag_ingest.py`: CPython ASDL AST extraction, de Bruijn $\alpha$-hash and $\pi_{\text{shape}}$ factorization, dynamic dispatch annotation, and bulk streaming into ArangoDB.

@@ -29,7 +29,7 @@ finite algebra multiplication.  This is the key fact needed before an
 automorphism action can be restricted to the seven-dimensional carrier. -/
 
 private theorem add_self (X : SplitOctF2) : add X X = zero := by
-  decide +revert
+  exact InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.add_self X
 
 private theorem map_zero (f : SplitOctF2Aut) : f.1 zero = zero := by
   calc
@@ -40,10 +40,80 @@ private theorem map_zero (f : SplitOctF2Aut) : f.1 zero = zero := by
 private def SquareScalar (X : SplitOctF2) : Prop :=
   mul X X = zero ∨ mul X X = one
 
+private theorem dot3_swap (x0 x1 x2 y0 y1 y2 : Bool) :
+    dot3 x0 x1 x2 y0 y1 y2 = dot3 y0 y1 y2 x0 x1 x2 := by
+  simp [dot3, mul2, Bool.and_comm]
+
+private theorem add2_is_xor (x y : Bool) : add2 x y = Bool.xor x y := by
+  cases x <;> cases y <;> rfl
+
+private theorem add2_self_false (x : Bool) : add2 x x = false := by
+  cases x <;> rfl
+
+private theorem mul2_comm (x y : Bool) : mul2 x y = mul2 y x := by
+  simp [mul2, Bool.and_comm]
+
+private theorem cross0_diagonal (x y : Bool) : cross0 x y x y = false := by
+  unfold cross0
+  rw [mul2_comm y x, add2_self_false]
+
+private theorem cross1_diagonal (x y : Bool) : cross1 x y x y = false := by
+  unfold cross1
+  rw [mul2_comm y x, add2_self_false]
+
+private theorem cross2_diagonal (x y : Bool) : cross2 x y x y = false := by
+  unfold cross2
+  rw [mul2_comm y x, add2_self_false]
+
+private theorem mul_self_scalar_coordinates (X : SplitOctF2) (c : Bool)
+    (h : mul X X = ⟨c, c, false, false, false, false, false, false⟩) :
+    X.a = X.b := by
+  rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
+  have ha := congrArg SplitOctF2.a h
+  have hb := congrArg SplitOctF2.b h
+  simp [mul, mul2] at ha hb
+  rw [dot3_swap] at hb
+  cases a <;> cases b <;> cases hq : dot3 x0 x1 x2 y0 y1 y2 <;>
+    cases c <;> simp_all [add2]
+
+private theorem mul_self_traceZero (X : SplitOctF2) (h : TraceZero X) :
+    mul X X = ⟨zornNorm X, zornNorm X, false, false, false, false, false, false⟩ := by
+  rcases X with ⟨a, b, x0, x1, x2, y0, y1, y2⟩
+  change a = b at h
+  subst b
+  apply SplitOctF2.ext
+  · change add2 (mul2 a a) (dot3 x0 x1 x2 y0 y1 y2) =
+      Bool.xor (mul2 a a) (dot3 x0 x1 x2 y0 y1 y2)
+    rw [add2_is_xor]
+  · change add2 (mul2 a a) (dot3 y0 y1 y2 x0 x1 x2) =
+      Bool.xor (mul2 a a) (dot3 x0 x1 x2 y0 y1 y2)
+    rw [dot3_swap, add2_is_xor]
+  · change add2 (add2 (mul2 a x0) (mul2 a x0)) (cross0 y1 y2 y1 y2) = false
+    rw [add2_self_false, cross0_diagonal, add2_self_false]
+  · change add2 (add2 (mul2 a x1) (mul2 a x1)) (cross1 y0 y2 y0 y2) = false
+    rw [add2_self_false, cross1_diagonal, add2_self_false]
+  · change add2 (add2 (mul2 a x2) (mul2 a x2)) (cross2 y0 y1 y0 y1) = false
+    rw [add2_self_false, cross2_diagonal, add2_self_false]
+  · change add2 (add2 (mul2 a y0) (mul2 a y0)) (cross0 x1 x2 x1 x2) = false
+    rw [add2_self_false, cross0_diagonal, add2_self_false]
+  · change add2 (add2 (mul2 a y1) (mul2 a y1)) (cross1 x0 x2 x0 x2) = false
+    rw [add2_self_false, cross1_diagonal, add2_self_false]
+  · change add2 (add2 (mul2 a y2) (mul2 a y2)) (cross2 x0 x1 x0 x1) = false
+    rw [add2_self_false, cross2_diagonal, add2_self_false]
+
 theorem traceZero_iff_squareScalar (X : SplitOctF2) :
     TraceZero X ↔ SquareScalar X := by
-  dsimp [TraceZero, SquareScalar]
-  decide +revert
+  change TraceZero X ↔ mul X X = zero ∨ mul X X = one
+  constructor
+  · intro h
+    rw [mul_self_traceZero X h]
+    cases hz : zornNorm X <;> simp [zero, one]
+  · intro h
+    rcases h with hzero | hone
+    · have hab := mul_self_scalar_coordinates X false (by simpa [zero] using hzero)
+      exact hab
+    · have hab := mul_self_scalar_coordinates X true (by simpa [one] using hone)
+      exact hab
 
 theorem automorphism_map_traceZero (f : SplitOctF2Aut) (X : SplitOctF2)
     (hX : TraceZero X) : TraceZero (f.1 X) := by
@@ -56,8 +126,9 @@ theorem automorphism_map_traceZero (f : SplitOctF2Aut) (X : SplitOctF2)
 
 theorem isotropic_iff_square_zero (X : SplitOctF2) (hX : TraceZero X) :
     Isotropic X ↔ mul X X = zero := by
-  dsimp [Isotropic, zornNorm, TraceZero] at hX ⊢
-  decide +revert
+  change zornNorm X = false ↔ mul X X = zero
+  rw [mul_self_traceZero X hX]
+  simp [zero]
 
 theorem automorphism_map_isotropic (f : SplitOctF2Aut) (X : SplitOctF2)
     (hX : TraceZero X) (hiso : Isotropic X) :

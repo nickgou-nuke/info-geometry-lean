@@ -79,6 +79,20 @@ private theorem near1_alpha_minpoly_splitting_d4_radicand_nonneg :
   have hsqrt_nonneg : 0 ≤ (Real.sqrt 5 : ℝ) := Real.sqrt_nonneg 5
   nlinarith
 
+private theorem near1_alpha_minpoly_splitting_d4_no_quadratic_factor
+    (A B D : ℤ)
+    (hprod : B * D = -16)
+    (hmixed : A * (D - B) = 0)
+    (hsum : B + D - A ^ 2 = 4) : False := by
+  rcases mul_eq_zero.mp hmixed with hA | hDB
+  · have hsum' : B + D = 4 := by nlinarith [hA]
+    have hdiff_sq : (B - D) ^ 2 = 80 := by nlinarith [hprod, hA, hsum']
+    have hlow : -9 ≤ B - D := by nlinarith [sq_nonneg (B - D + 9)]
+    have hhigh : B - D ≤ 9 := by nlinarith [sq_nonneg (B - D - 9)]
+    interval_cases hval : B - D <;> norm_num at hdiff_sq
+  · have hsq : B * B = -16 := by nlinarith [hprod, hDB]
+    nlinarith [sq_nonneg (B : ℤ)]
+
 theorem near1_alpha_minpoly_splitting_d4_alpha_sq :
     near1_alpha_minpoly_splitting_d4_alpha ^ 2 = -2 + 2 * Real.sqrt 5 := by
   rw [near1_alpha_minpoly_splitting_d4_alpha, Real.sq_sqrt
@@ -97,8 +111,22 @@ theorem near1_alpha_minpoly_splitting_d4_quartic_vanishes :
 theorem near1_alpha_minpoly_splitting_d4_quadratic_factor_comparison :
     near1_alpha_minpoly_splitting_d4_quadratic_factor_comparison_certificate := by
   unfold near1_alpha_minpoly_splitting_d4_quadratic_factor_comparison_certificate
-    near1_alpha_minpoly_splitting_d4_quadratic_factor_comparison_test
-  decide
+  apply Finset.card_eq_zero.mpr
+  ext t
+  simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+  constructor
+  · intro ht
+    dsimp [near1_alpha_minpoly_splitting_d4_quadratic_factor_comparison_test] at ht
+    have hconstraints :
+        ((t.2.1 : ℤ) - 16) * ((t.2.2 : ℤ) - 16) = -16 ∧
+          ((t.1 : ℤ) - 16) * (((t.2.2 : ℤ) - 16) - ((t.2.1 : ℤ) - 16)) = 0 ∧
+          ((t.2.1 : ℤ) - 16) + ((t.2.2 : ℤ) - 16) - ((t.1 : ℤ) - 16) ^ 2 = 4 := by
+      exact not_not.mp (of_decide_eq_false ht)
+    exact False.elim (near1_alpha_minpoly_splitting_d4_no_quadratic_factor
+      ((t.1 : ℤ) - 16) ((t.2.1 : ℤ) - 16) ((t.2.2 : ℤ) - 16)
+      hconstraints.1 hconstraints.2.1 hconstraints.2.2)
+  · intro hempty
+    simp at hempty
 
 theorem near1_alpha_minpoly_splitting_d4_dihedral_relations :
     near1_alpha_minpoly_splitting_d4_dihedral_certificate := by

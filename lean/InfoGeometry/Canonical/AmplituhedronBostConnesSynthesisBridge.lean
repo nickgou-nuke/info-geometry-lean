@@ -8,33 +8,28 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
 
 /-!
-# Amplituhedron, BCFW Arnold-Cohen Relations, and Bost-Connes KMS Synthesis
+# Finite Arnold, Exterior-Generator, and Plücker Identities
 
-This module formalizes the exact mathematical realization of the Amplituhedron–Bost-Connes
-synthesis dictionary in native Mathlib:
+This module contains separate algebraic statements, with their carriers kept
+distinct:
 
-1. **BCFW Recursion $\equiv$ Mixed Arnold-Cohen Relations**:
-   - The rational logarithmic 1-form syzygy:
-     $$\frac{1}{z_1 - z_2}\frac{1}{z_2 - z_3} + \frac{1}{z_2 - z_3}\frac{1}{z_3 - z_1} + \frac{1}{z_3 - z_1}\frac{1}{z_1 - z_2} = 0$$
-   - The canonical exterior algebra edge module generator:
-     $$\omega(i, j) = \iota(Finsupp.single (i, j) (1 : R))$$
-   - The 3-term BCFW mixed Arnold-Cohen boundary element:
-     $$\omega_{ij} \wedge \omega_{jk} + \omega_{jk} \wedge \omega_{ki} + \omega_{ki} \wedge \omega_{ij}$$
+1. A rational identity for three real variables and a three-term expression
+   on generators of a free exterior algebra.  The latter is defined here, but
+   no BCFW recursion theorem is asserted for it.
+2. The values named `SPlus` and `SMinus` are both the same diagonal edge
+   generator `omegaGen R i i`; their square-zero proofs are instances of
+   `ExteriorAlgebra.ι_sq_zero`.  They are not distinct chiral channels,
+   Cuntz generators, or a Klein-boundary factorization.
+3. The stated syzygy, antisymmetry, and diagonal-zero identities for explicit
+   minors of a `2 × n` real matrix.
+4. `bostConnesPartition` is, by definition, the complex Riemann-zeta function.
+   This declaration is only a zeta readout; it does not construct a Bost–Connes
+   algebra, a KMS state, a trace, or a partition-function theorem.
 
-2. **On-Shell Factorization $\equiv$ Klein Quadric Nilpotent Cuntz Generators**:
-   - Chiral boundary generators $S_+ = \omega(i, i)$ and $S_- = \omega(i, i)$
-   - Exact nilpotence on the Klein quadric:
-     $$S_+^2 = 0, \qquad S_-^2 = 0$$
-
-3. **Plücker Syzygies on the Momentum Twistor Grassmannian $\operatorname{Gr}(2, n)$**:
-   - Minors $\Delta_{ij} = C_{0i} C_{1j} - C_{0j} C_{1i}$ satisfy:
-     $$\Delta_{ab} \Delta_{cd} - \Delta_{ac} \Delta_{bd} + \Delta_{ad} \Delta_{bc} = 0$$
-   - Antisymmetry $\Delta_{ba} = -\Delta_{ab}$ and diagonal vanishing $\Delta_{aa} = 0$.
-
-4. **All-Loop Integrand $\equiv$ Bost-Connes KMS State Partition Function**:
-   - Evaluated as the Riemann zeta partition function $Z(\beta) = \zeta(\beta)$ on $\mathbb{C}$.
-
-All theorems are proved constructively in Lean 4 / Mathlib with zero debt.
+The aggregate packet below records selected algebraic propositions for an
+existing dependent interface.  Its existence does not identify these separate
+facts as a physical synthesis; replacing that packet requires coordinated
+repair of its capstone consumer.
 -/
 
 noncomputable section
@@ -93,21 +88,22 @@ noncomputable def bcfwArnoldMixed (R : Type*) [CommRing R] (i j k : ι) :
   omegaGen R j k * omegaGen R k i +
   omegaGen R k i * omegaGen R i j
 
-/-! ### Stratum 3: On-Shell Factorization & Klein Quadric Nilpotent Cuntz Generators -/
+/-! ### Exterior-generator square-zero examples (not Cuntz or on-shell data) -/
 
-/-- Positive chiral Klein quadric boundary generator: $S_+ = \omega(i, i)$. -/
+/-- A named copy of the diagonal exterior edge generator `omegaGen R i i`. -/
 noncomputable def SPlus (R : Type*) [CommRing R] (i : ι) :
     ExteriorAlgebra R ((ι × ι) →₀ R) :=
   omegaGen R i i
 
-/-- Negative chiral Klein quadric boundary generator: $S_- = \omega(i, i)$. -/
+/-- The second name denotes the same diagonal exterior edge generator as
+    `SPlus`; it is not an independent negative-chirality element. -/
 noncomputable def SMinus (R : Type*) [CommRing R] (i : ι) :
     ExteriorAlgebra R ((ι × ι) →₀ R) :=
   omegaGen R i i
 
 /--
-On-shell factorization: The positive chiral Cuntz generator is square-zero on the Klein quadric:
-$S_+^2 = 0$.
+The square of `SPlus` vanishes because it is an injected exterior-algebra
+generator.  This does not state an on-shell or Cuntz relation.
 -/
 theorem SPlus_sq {R : Type*} [CommRing R] {ι : Type*} (i : ι) :
     SPlus R i * SPlus R i = 0 := by
@@ -115,8 +111,8 @@ theorem SPlus_sq {R : Type*} [CommRing R] {ι : Type*} (i : ι) :
   exact ExteriorAlgebra.ι_sq_zero (edgeSingle R i i)
 
 /--
-On-shell factorization: The negative chiral Cuntz generator is square-zero on the Klein quadric:
-$S_-^2 = 0$.
+The same exterior-generator square-zero fact holds for `SMinus`, which is
+definitionally the same element as `SPlus`.
 -/
 theorem SMinus_sq {R : Type*} [CommRing R] {ι : Type*} (i : ι) :
     SMinus R i * SMinus R i = 0 := by
@@ -155,9 +151,8 @@ theorem plucker_syzygy {n : ℕ} (C : Matrix (Fin 2) (Fin n) ℝ) (a b c d : Fin
 /-! ### Stratum 5: All-Loop Integrand as Bost-Connes KMS Partition Function -/
 
 /--
-The All-Loop Amplituhedron Integrand evaluated by the Bost-Connes KMS state
-at inverse temperature $\beta \in \mathbb{C}$:
-$Z(\beta) = \zeta(\beta)$.
+The complex zeta readout named `bostConnesPartition`.  No thermal trace or KMS
+interpretation is part of this definition.
 -/
 noncomputable def bostConnesPartition (β : ℂ) : ℂ :=
   riemannZeta β
@@ -165,9 +160,10 @@ noncomputable def bostConnesPartition (β : ℂ) : ℂ :=
 /-! ### Stratum 6: Master Amplituhedron-Bost-Connes Synthesis Packet -/
 
 /--
-Master machine-verified packet uniting BCFW Arnold-Cohen relations,
-Klein quadric on-shell nilpotent factorization, Plücker Grassmannian syzygies,
-and the Bost-Connes KMS partition state.
+Aggregate carrier for the explicitly listed rational, exterior-generator,
+and minor identities.  It is a proof packet retained for the dependent
+capstone interface, not a theorem identifying BCFW recursion, Klein geometry,
+or a Bost–Connes KMS state.
 -/
 structure AmplituhedronBostConnesSynthesisPacket where
   -- Stratum 1: Rational Arnold-Cohen Syzygy
@@ -175,7 +171,8 @@ structure AmplituhedronBostConnesSynthesisPacket where
     ∀ (z1 z2 z3 : ℝ) (h12 : z1 ≠ z2) (h23 : z2 ≠ z3) (h31 : z3 ≠ z1),
       arnoldCocycle (logForm z1 z2) (logForm z2 z3) (logForm z3 z1) = 0
 
-  -- Stratum 2: On-Shell Factorization & Nilpotent Cuntz Generators
+  -- Stratum 2: Square-zero elements in the stated associative carrier.
+  -- These relations alone are not Plücker, Klein, or mass-shell data.
   splus_nilpotent :
     ∀ {R : Type*} [CommRing R] {ι : Type*} (i : ι),
       SPlus R i * SPlus R i = 0
@@ -197,7 +194,9 @@ structure AmplituhedronBostConnesSynthesisPacket where
       pluckerMinor C i i = 0
 
 /--
-Constructor for the Amplituhedron-Bost-Connes Synthesis Packet.
+Constructor supplying the listed algebraic facts to the legacy dependent
+packet interface.  Its construction does not promote that interface to a
+physical or analytic synthesis theorem.
 -/
 def makeAmplituhedronBostConnesSynthesisPacket : AmplituhedronBostConnesSynthesisPacket where
   arnold_rat_syzygy := arnold_cohen_rational_syzygy

@@ -117,12 +117,30 @@ theorem paper_xi_time_part9ze_negative_zero_temp_boundary_interior_splitting :
       (∑ w ∈ xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_boundaryShell,
           xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_zeroTempMass w) =
         3 / 8 := by
-    decide
+    calc
+      _ = ∑ _w ∈ xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_boundaryShell,
+          (1 / 8 : ℚ) := by
+        apply Finset.sum_congr rfl
+        intro w hw
+        simp [xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_zeroTempMass,
+          xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_minimalShell]
+      _ = (xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_boundaryShell.card : ℚ) *
+          (1 / 8 : ℚ) := by simp
+      _ = 3 / 8 := by rw [hBoundaryCard]; norm_num
   have hInteriorMass :
       (∑ w ∈ xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_interiorShell,
           xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_zeroTempMass w) =
         5 / 8 := by
-    decide
+    calc
+      _ = ∑ _w ∈ xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_interiorShell,
+          (1 / 8 : ℚ) := by
+        apply Finset.sum_congr rfl
+        intro w hw
+        simp [xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_zeroTempMass,
+          xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_minimalShell]
+      _ = (xi_time_part9ze_negative_zero_temp_boundary_interior_splitting_interiorShell.card : ℚ) *
+          (1 / 8 : ℚ) := by simp
+      _ = 5 / 8 := by rw [hInteriorCard]; norm_num
   exact ⟨hMinimalCard, hBoundaryCard, hInteriorCard, hDisjoint, hUnion, hDefect, hFreeze,
     hBoundaryMass, hInteriorMass⟩
 

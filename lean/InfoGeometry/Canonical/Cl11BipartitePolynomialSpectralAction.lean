@@ -55,7 +55,7 @@ def stageTwoConjugate (U : Units StageTwo) (X : StageTwo) : StageTwo :=
 
 @[simp] theorem stageTwoConjugate_one (U : Units StageTwo) :
     stageTwoConjugate U 1 = 1 := by
-  simp [stageTwoConjugate, mul_assoc]
+  simp [stageTwoConjugate]
 
 @[simp] theorem stageTwoConjugate_add
     (U : Units StageTwo) (X Y : StageTwo) :
@@ -67,7 +67,7 @@ def stageTwoConjugate (U : Units StageTwo) (X : StageTwo) : StageTwo :=
     (U : Units StageTwo) (r : ℝ) (X : StageTwo) :
     stageTwoConjugate U (r • X) =
       r • stageTwoConjugate U X := by
-  simp [stageTwoConjugate, Matrix.mul_smul, Matrix.smul_mul]
+  simp [stageTwoConjugate]
 
 @[simp] theorem stageTwoConjugate_mul
     (U : Units StageTwo) (X Y : StageTwo) :
@@ -90,7 +90,8 @@ theorem trace_stageTwoConjugate
   calc
     Matrix.trace ((U : StageTwo) * X * (↑U⁻¹ : StageTwo))
         = Matrix.trace ((X * (↑U⁻¹ : StageTwo)) * (U : StageTwo)) := by
-            rw [Matrix.trace_mul_comm]
+            simpa only [mul_assoc] using
+              Matrix.trace_mul_comm (U : StageTwo) (X * (↑U⁻¹ : StageTwo))
     _ = Matrix.trace (X * ((↑U⁻¹ : StageTwo) * (U : StageTwo))) := by
             rw [Matrix.mul_assoc]
     _ = Matrix.trace X := by simp
@@ -118,7 +119,7 @@ theorem tensorSum_sq (DeltaL : StageOne) (DeltaR : Atom) :
       (1 : StageOne) ⊗ₖ (DeltaR * DeltaR) := by
   unfold tensorSum
   rw [add_mul, mul_add, mul_add]
-  repeat rw [Matrix.mul_kronecker_mul]
+  repeat rw [← Matrix.mul_kronecker_mul]
   simp only [Matrix.mul_one, Matrix.one_mul]
   module
 
@@ -159,6 +160,7 @@ theorem trace_tensorSum_sq (DeltaL : StageOne) (DeltaR : Atom) :
   rw [Matrix.trace_add, Matrix.trace_add, Matrix.trace_smul,
     Matrix.trace_kronecker, Matrix.trace_kronecker, Matrix.trace_kronecker,
     trace_atom_one, trace_stageOne_one]
+  simp only [smul_eq_mul]
   ring
 
 /-- Exact finite polynomial spectral-action decomposition on the tensor sum. -/
@@ -175,6 +177,7 @@ theorem polynomialSpectralAction_tensorSum
   rw [Matrix.trace_add, Matrix.trace_add, Matrix.trace_smul,
     Matrix.trace_smul, Matrix.trace_smul, trace_stageTwo_one,
     trace_tensorSum, trace_tensorSum_sq]
+  simp only [smul_eq_mul]
   ring
 
 /-- The mixed quadratic contribution is exactly
@@ -184,6 +187,7 @@ theorem mixed_quadratic_trace_term
     2 * c2 * (Matrix.trace DeltaL * Matrix.trace DeltaR) =
       c2 * Matrix.trace ((2 : ℝ) • (DeltaL ⊗ₖ DeltaR)) := by
   rw [Matrix.trace_smul, Matrix.trace_kronecker]
+  simp only [smul_eq_mul]
   ring
 
 end InfoGeometry.Canonical.Cl11BipartitePolynomialSpectralAction

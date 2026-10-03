@@ -24,7 +24,7 @@ lemma ambiguityShellTraceInvisible (n : ℕ) :
 
 lemma ambiguityShellDetInvisible :
     (((1 : Matrix (Fin 1) (Fin 1) ℚ) - ambiguityShellNilpotent).det = 1) := by
-  decide
+  simp [ambiguityShellNilpotent_eq_zero]
 
 lemma ambiguityShellSyncBudgetExact (m : ℕ) (hm : 3 ≤ m) :
     ambiguityShellSyncBudget m = m - 1 ∧ ambiguityShellSyncBudget m < m := by

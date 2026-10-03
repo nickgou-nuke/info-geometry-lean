@@ -59,6 +59,11 @@ theorem paper_conclusion_window6_samelabel_edgeless_oddmixed_longrange :
   unfold conclusion_window6_samelabel_edgeless_oddmixed_longrange_pair_total
   unfold conclusion_window6_samelabel_edgeless_oddmixed_longrange_distance_total
   unfold conclusion_window6_samelabel_edgeless_oddmixed_longrange_average_distance
-  decide
+  norm_num [conclusion_window6_samelabel_edgeless_oddmixed_longrange_ordered_count,
+    conclusion_window6_samelabel_edgeless_oddmixed_longrange_edge_count,
+    conclusion_window6_samelabel_edgeless_oddmixed_longrange_pair_total,
+    conclusion_window6_samelabel_edgeless_oddmixed_longrange_distance_total,
+    conclusion_window6_samelabel_edgeless_oddmixed_longrange_average_distance,
+    Finset.sum_Icc_succ_top]
 
 end Omega.Conclusion

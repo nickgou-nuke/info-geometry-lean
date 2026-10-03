@@ -1,4 +1,4 @@
-import Mathlib.Data.Rat.Basic
+import Mathlib.Algebra.Field.Rat
 import Mathlib.Data.Fin.Basic
 import Mathlib.Tactic
 
@@ -22,7 +22,7 @@ the finite sums satisfy
 
   Σ T₃² = 2,
   Σ Q² = 8/3,
-  (Σ T₃²)/(Σ Q²) = 3/8.
+  (Σ T₃²)/(Σ Q²) = 3/4.
 
 This is a finite rational identity.  The module does not identify this ratio
 with the physical electroweak weak-mixing angle without an additional theorem
@@ -80,8 +80,8 @@ theorem traceQSq_eq_eight_thirds :
   norm_num [traceQSq, sumColor, electricQ]
 
 /-- Exact finite eight-state trace ratio. -/
-theorem trace_ratio_eq_three_eighths :
-    traceT3Sq / traceQSq = 3 / 8 := by
+theorem trace_ratio_eq_three_fourths :
+    traceT3Sq / traceQSq = 3 / 4 := by
   rw [traceT3Sq_eq_two, traceQSq_eq_eight_thirds]
   norm_num
 
@@ -89,8 +89,8 @@ theorem trace_ratio_eq_three_eighths :
 theorem eight_state_trace_packet :
     traceT3Sq = 2 ∧
     traceQSq = 8 / 3 ∧
-    traceT3Sq / traceQSq = 3 / 8 := by
+    traceT3Sq / traceQSq = 3 / 4 := by
   exact ⟨traceT3Sq_eq_two, traceQSq_eq_eight_thirds,
-    trace_ratio_eq_three_eighths⟩
+    trace_ratio_eq_three_fourths⟩
 
 end InfoGeometry.Physics.EightStateTraceRatio

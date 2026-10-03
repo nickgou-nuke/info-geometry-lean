@@ -165,7 +165,7 @@ The PHOAS layer is what makes the "chiral Hodge operators on the lambda calculus
 | `src/infogeometry/lean/DAG/ingest.py` | Part of the DAG subsystem, triggers ingestion after each `lake build`. |
 | `src/infogeometry/lean/DAG/docker-compose.yml` | Spins up ArangoDB on port `8530`. |
 | `src/infogeometry/lean/scripts/DAG/Exploration/` | Explorer agents (NaturalityPromoter, SquarePromoter, Betti, etc.) that query the live ArangoDB instance. |
-| `ASTAQLHASH-HOWTO.md` | Canonical reference for hash-based search: `materialize_lossless_infotree.py` projects raw InfoTree nodes as enriched overlays. |
+| `docs/ASTAQLHASH-HOWTO.md` | Current AST/AQL/hash workflow, source-scope boundaries, and read-only-first graph search. |
 
 **The Hive Memory**: ArangoDB runs on port `8540` (database `hive_memory`, credentials `root` / `hive_brain`). Collections `Thoughts` (Document) and `CausalLinks` (Edge) store the complete JSONL transcript DAG of all past agent thoughts, generated code, and reasoning steps. This is the persistent memory layer that allows agents to recover context after local state is lost.
 
@@ -224,7 +224,7 @@ The `DAG/` subsystem is subordinate to the Lean source but provides the **memory
 | **PHOAS Layer** | `lean/DAG/PHOASExpressionLayer.lean` | Higher-order abstract syntax for lambda calculus subgraph of declarations. |
 | **ArangoDB** | `scratch/populate_arangodb.py` | Streaming ingestion into graph database. |
 | **Hive Memory** | ArangoDB `:8540` | Persistent agent memory (`Thoughts` + `CausalLinks` collections). |
-| **ASTAQLHASH** | `ASTAQLHASH-HOWTO.md` | Hash-based search methodology for lossless InfoTree projection. |
+| **ASTAQLHASH** | `docs/ASTAQLHASH-HOWTO.md` | Hash-based declaration navigation; hashes and graph edges are not proof authority. |
 
 ---
 

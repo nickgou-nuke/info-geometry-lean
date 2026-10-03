@@ -47,13 +47,6 @@ open InfoGeometry.Algebra.SupergradedSUSY
 open InfoGeometry.Canonical.ErlangenColimitResolution
 open InfoGeometry.Canonical.ErlangenInductiveClosure
 
-/-- Amplituhedron boundary on-shell factorization. -/
-theorem amplituhedron_on_shell_factorization {R : Type*} [CommRing R] {ι : Type*} [DecidableEq ι] (i : ι) :
-    let S := S_plus (R := R) (ι := ι) i
-    S * S = 0 := by
-  intro S
-  exact on_shell_factorization_klein_quadric_plus i
-
 /-- Cuntz super-Poincare translation relation. -/
 theorem Cuntz_poincare_translation_relation (n : ℕ) (i : Fin n) :
     cuntzSuperMomentum n i = superMomentum (cuntzMajoranaSupercharge n i) := by

@@ -107,15 +107,54 @@ theorem paper_xi_time_part9ze_positive_zero_temp_geometric_splitting :
             simp [hMaxCard]
   have hTotalMass :
       (∑ w, xi_time_part9ze_positive_zero_temp_geometric_splitting_zeroTempMass w) = 1 := by
-    decide
+    calc
+      _ = ∑ w,
+          if w ∈ xi_time_part9ze_positive_zero_temp_geometric_splitting_maxShell then
+            (1 / 9 : ℚ) else 0 := by
+        simp only [xi_time_part9ze_positive_zero_temp_geometric_splitting_zeroTempMass]
+      _ = ∑ w ∈ xi_time_part9ze_positive_zero_temp_geometric_splitting_maxShell,
+          (1 / 9 : ℚ) := by rw [Finset.sum_ite_mem_eq]
+      _ = (xi_time_part9ze_positive_zero_temp_geometric_splitting_maxShell.card : ℚ) *
+          (1 / 9 : ℚ) := by simp
+      _ = 1 := by rw [hMaxCard]; norm_num
   have hLongMass :
       (∑ w ∈ xi_time_part9ze_positive_zero_temp_geometric_splitting_longShell,
           xi_time_part9ze_positive_zero_temp_geometric_splitting_zeroTempMass w) = 4 / 9 := by
-    decide
+    calc
+      _ = ∑ _w ∈ xi_time_part9ze_positive_zero_temp_geometric_splitting_longShell,
+          (1 / 9 : ℚ) := by
+        apply Finset.sum_congr rfl
+        intro w hw
+        have hwval : w.val < 4 := by
+          simpa [xi_time_part9ze_positive_zero_temp_geometric_splitting_longShell] using hw
+        have hwmax :
+            w ∈ xi_time_part9ze_positive_zero_temp_geometric_splitting_maxShell := by
+          simp only [xi_time_part9ze_positive_zero_temp_geometric_splitting_maxShell,
+            Finset.mem_filter, Finset.mem_univ, true_and]
+          exact Nat.lt_trans hwval (by norm_num)
+        simp [xi_time_part9ze_positive_zero_temp_geometric_splitting_zeroTempMass, hwmax]
+      _ = (xi_time_part9ze_positive_zero_temp_geometric_splitting_longShell.card : ℚ) *
+          (1 / 9 : ℚ) := by simp
+      _ = 4 / 9 := by rw [hLongCard]; norm_num
   have hShortMass :
       (∑ w ∈ xi_time_part9ze_positive_zero_temp_geometric_splitting_shortShell,
           xi_time_part9ze_positive_zero_temp_geometric_splitting_zeroTempMass w) = 5 / 9 := by
-    decide
+    calc
+      _ = ∑ _w ∈ xi_time_part9ze_positive_zero_temp_geometric_splitting_shortShell,
+          (1 / 9 : ℚ) := by
+        apply Finset.sum_congr rfl
+        intro w hw
+        have hwval : 4 ≤ w.val ∧ w.val < 9 := by
+          simpa [xi_time_part9ze_positive_zero_temp_geometric_splitting_shortShell] using hw
+        have hwmax :
+            w ∈ xi_time_part9ze_positive_zero_temp_geometric_splitting_maxShell := by
+          simp only [xi_time_part9ze_positive_zero_temp_geometric_splitting_maxShell,
+            Finset.mem_filter, Finset.mem_univ, true_and]
+          exact hwval.2
+        simp [xi_time_part9ze_positive_zero_temp_geometric_splitting_zeroTempMass, hwmax]
+      _ = (xi_time_part9ze_positive_zero_temp_geometric_splitting_shortShell.card : ℚ) *
+          (1 / 9 : ℚ) := by simp
+      _ = 5 / 9 := by rw [hShortCard]; norm_num
   exact ⟨hMaxCard, hLongCard, hShortCard, hDisjoint, hUnion, hMaxMultiplicity, hOffMax,
     hPower, hTotalMass, hLongMass, hShortMass⟩
 

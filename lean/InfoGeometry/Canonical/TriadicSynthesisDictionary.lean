@@ -12,6 +12,7 @@ import Mathlib.Tactic
 
 import InfoGeometry.Canonical.CantorBernoulliKMSBridge
 import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
+import InfoGeometry.Canonical.ArnoldCohenPluckerBridge
 import InfoGeometry.Arithmetic.BostConnesNativeZetaPartition
 import InfoGeometry.QuantumGeometry.Projective.QGT
 import InfoGeometry.QuantumGeometry.Projective.Quotient
@@ -35,50 +36,12 @@ local notation "EndH" => H →L[ℂ] H
 
 /-!
 =============================================================================
-POLE 1: Scattering Amplitudes & The Amplituhedron (Grassmannian & BCFW)
+POLE 1: Plücker Klein-nullity (not a Minkowski mass-shell condition)
 =============================================================================
+The Plücker carrier, Klein form, and decomposability theorem have one owner in
+`ArnoldCohenPluckerBridge` and its exterior-power implementation. This module
+uses that carrier rather than defining a duplicate coordinate API.
 -/
-
-/-- Plücker coordinates for the Grassmannian Gr(2,4) ↪ ℙ⁵(R). -/
-structure PluckerCoordinates (R : Type*) [CommRing R] where
-  p12 : R
-  p13 : R
-  p14 : R
-  p23 : R
-  p24 : R
-  p34 : R
-
-/-- The Klein Quadric polynomial Q(p) = p₁₂ p₃₄ - p₁₃ p₂₄ + p₁₄ p₂₃. -/
-def kleinQuadric (p : PluckerCoordinates R) : R :=
-  p.p12 * p.p34 - p.p13 * p.p24 + p.p14 * p.p23
-
-/-- An on-shell Plücker configuration lies on the Klein quadric boundary Q(p) = 0. -/
-def IsOnShellBoundary (p : PluckerCoordinates R) : Prop :=
-  kleinQuadric p = 0
-
-/-- THEOREM 1 (On-Shell Factorization): The Klein quadric factors on-shell poles. -/
-theorem on_shell_factorization (p : PluckerCoordinates R) (h : IsOnShellBoundary p) :
-    p.p12 * p.p34 = p.p13 * p.p24 - p.p14 * p.p23 := by
-  dsimp [IsOnShellBoundary, kleinQuadric] at h
-  linear_combination h
-
-/-- Chiral Cuntz boundary generators with quadratic nilpotency S₊² = 0 and S₋² = 0. -/
-structure ChiralCuntzBoundary (A : Type*) [Ring A] where
-  Splus : A
-  Sminus : A
-  nilpotent_plus : Splus * Splus = 0
-  nilpotent_minus : Sminus * Sminus = 0
-
-/-- THEOREM 2 (Chiral Boundary Nilpotency): On-shell locus as a quadratic zero-mode. -/
-theorem chiral_boundary_total_nilpotency {A : Type*} [Ring A] (c : ChiralCuntzBoundary A)
-    (h_anticomm : c.Splus * c.Sminus + c.Sminus * c.Splus = 0) :
-    (c.Splus + c.Sminus) * (c.Splus + c.Sminus) = 0 := by
-  calc
-    (c.Splus + c.Sminus) * (c.Splus + c.Sminus) =
-      c.Splus * c.Splus + (c.Splus * c.Sminus + c.Sminus * c.Splus) + c.Sminus * c.Sminus := by
-        noncomm_ring
-    _ = 0 + 0 + 0 := by rw [c.nilpotent_plus, h_anticomm, c.nilpotent_minus]
-    _ = 0 := by simp
 
 /-- Cyclic sum of coordinate differences vanishes identically. -/
 theorem cyclic_diff_sum_zero (z1 z2 z3 : R) :
@@ -138,8 +101,8 @@ POLE 3: Projective Quantum Information Geometry & The Uncertainty Triad
 /-- Bundled Triadic Synthesis Datum connecting Amplitudes, KMS, and Projective QGT. -/
 structure TriadicSynthesisDatum (R : Type*) [CommRing R] (H : Type*)
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] where
-  plucker : PluckerCoordinates R
-  on_shell : IsOnShellBoundary plucker
+  plucker : InfoGeometry.Canonical.ArnoldCohenPluckerBridge.PluckerCoordinates R
+  klein_null : InfoGeometry.Canonical.ArnoldCohenPluckerBridge.IsKleinNull plucker
   state : NormalizedState H
   genX : EndH
   genY : EndH
@@ -148,7 +111,7 @@ structure TriadicSynthesisDatum (R : Type*) [CommRing R] (H : Type*)
 
 /-- 🏆 THE MASTER TRIADIC SYNTHESIS THEOREM:
     Unites the 3 fundamental poles into an unbroken, kernel-checked theorem chain:
-    1. On-shell factorization on the Klein Quadric: p₁₂p₃₄ = p₁₃p₂₄ - p₁₄p₂₃
+    1. Klein-null factorization: p₁₂p₃₄ = p₁₃p₂₄ - p₁₄p₂₃
     2. Bost-Connes KMS state normalization: ∑_{w ∈ Fin(2ⁿ)} 2⁻ⁿ = 1 and e^(-β_c) = 1/2
     3. Full Robertson-Schrödinger Uncertainty: g_ψ(X,X) g_ψ(Y,Y) ≥ g_ψ(X,Y)² + (1/4) Ω_ψ(X,Y)²
     4. Exact Berry Commutator Identity: Ω_ψ(X, Y) i = ⟪ψ, [X, Y] ψ⟫ -/
@@ -167,7 +130,8 @@ theorem master_triadic_synthesis_theorem
       (1 / 4 : ℝ) * (berryCurvature datum.state datum.genX datum.genY) ^ 2) ∧
     ((berryCurvature datum.state datum.genX datum.genY : ℂ) * Complex.I =
       inner (𝕜 := ℂ) datum.state.vec (opCommutator datum.genX datum.genY datum.state.vec)) := by
-  refine ⟨on_shell_factorization datum.plucker datum.on_shell,
+  refine ⟨InfoGeometry.Canonical.ArnoldCohenPluckerBridge.kleinQuadric_factorization
+            datum.plucker datum.klein_null,
           bost_connes_binary_tree_partition n,
           bost_connes_critical_weight_eval,
           robertson_schrodinger_full datum.state datum.genX datum.genY,

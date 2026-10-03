@@ -5,11 +5,11 @@ import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 
 /-!
-# Hadjiivanov Monodromy to Bost-Connes Partition Function
+# Hadjiivanov Monodromy and Zeta Readout
 
-Evaluates the Bost-Connes KMS partition function over the logarithmic monodromy
-block. By tracking the anomalous dimensions, we evaluate the thermodynamic
-trace of the chiral nilpotent operators.
+Records an algebraic relation between the logarithmic-block trace and the
+Riemann zeta readout. This file does not construct a Bost--Connes algebra,
+dynamics, or KMS state.
 -/
 
 namespace InfoGeometry.Physics.Hadjiivanov
@@ -37,10 +37,10 @@ to the Bost-Connes KMS partition function.
 By tracking the anomalous dimensions, the total partition function separates
 into the chiral nilpotent anomaly (which vanishes) and the zeta function.
 -/
-theorem hadjiivanov_bostConnes_bridge (β : ℂ) :
-    AmplituhedronBostConnes.all_loop_integrand_bost_connes_kms_state β =
+theorem hadjiivanov_log_block_zeta_readout (β : ℂ) :
+    AmplituhedronBostConnes.riemannZetaReadout β =
     logBlockPartitionFunction ℂ + riemannZeta β := by
-  rw [AmplituhedronBostConnes.all_loop_integrand_bost_connes_kms_state]
+  rw [AmplituhedronBostConnes.riemannZetaReadout]
   have h : logBlockPartitionFunction ℂ = 0 := logBlockPartitionFunction_vanishes ℂ
   rw [h]
   simp

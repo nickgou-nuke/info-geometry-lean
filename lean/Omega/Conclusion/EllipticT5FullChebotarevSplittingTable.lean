@@ -62,6 +62,11 @@ theorem paper_conclusion_elliptic_t5_full_chebotarev_splitting_table
     (D : conclusion_elliptic_t5_full_chebotarev_splitting_table_data) :
     conclusion_elliptic_t5_full_chebotarev_splitting_table_statement D := by
   dsimp [conclusion_elliptic_t5_full_chebotarev_splitting_table_statement]
-  decide
+  refine ⟨rfl, ?_, ?_⟩
+  · norm_num [conclusion_elliptic_t5_full_chebotarev_splitting_table_rows,
+      conclusion_elliptic_t5_full_chebotarev_splitting_table_denominator]
+  · norm_num [conclusion_elliptic_t5_full_chebotarev_splitting_table_densities,
+      conclusion_elliptic_t5_full_chebotarev_splitting_table_rows,
+      conclusion_elliptic_t5_full_chebotarev_splitting_table_denominator]
 
 end Omega.Conclusion

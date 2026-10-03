@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Algebra.ColeFuryQuadrantMatrixUnits
 
 /-!
 # Cole-Fury 32-dimensional ideal quadrant laws
@@ -53,6 +54,109 @@ def g0Core : Spin32Matrix := horizonDown * horizonUp - horizonUp * horizonDown
 /-- Explicit diagonal `diag(-I₁₆,+I₁₆)` target for the commutator closure. -/
 def expectedG0Core : Spin32Matrix := -upperLeft + lowerRight
 
+private def splitIndex : Fin 32 ≃ Fin 16 ⊕ Fin 16 :=
+  (finSumFinEquiv (m := 16) (n := 16)).symm
+
+private abbrev blockReindex :
+    Spin32Matrix ≃ₐ[ℤ]
+      Matrix (Fin 16 ⊕ Fin 16) (Fin 16 ⊕ Fin 16) ℤ :=
+  Matrix.reindexAlgEquiv ℤ ℤ splitIndex
+
+private theorem upperLeft_reindex :
+    blockReindex upperLeft =
+      InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16) := by
+  ext i j
+  cases i <;> cases j <;>
+    simp [blockReindex, splitIndex, upperLeft,
+      InfoGeometry.Algebra.ColeFury.upperLeft, Matrix.fromBlocks,
+      finSumFinEquiv, Fin.ext_iff, Fin.val_castAdd,
+      Matrix.one_apply] <;> omega
+
+private theorem lowerRight_reindex :
+    blockReindex lowerRight =
+      InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16) := by
+  ext i j
+  cases i <;> cases j <;>
+    simp [blockReindex, splitIndex, lowerRight,
+      InfoGeometry.Algebra.ColeFury.lowerRight, Matrix.fromBlocks,
+      finSumFinEquiv, Fin.ext_iff, Fin.val_castAdd,
+      Matrix.one_apply] <;> omega
+
+private theorem horizonUp_reindex :
+    blockReindex horizonUp =
+      InfoGeometry.Algebra.ColeFury.horizonUp (R := ℤ) (n := 16) := by
+  ext i j
+  cases i <;> cases j <;>
+    simp [blockReindex, splitIndex, horizonUp,
+      InfoGeometry.Algebra.ColeFury.horizonUp, Matrix.fromBlocks,
+      finSumFinEquiv, Fin.ext_iff, Fin.val_castAdd,
+      Matrix.one_apply] <;> omega
+
+private theorem horizonDown_reindex :
+    blockReindex horizonDown =
+      InfoGeometry.Algebra.ColeFury.horizonDown (R := ℤ) (n := 16) := by
+  ext i j
+  cases i <;> cases j <;>
+    simp [blockReindex, splitIndex, horizonDown,
+      InfoGeometry.Algebra.ColeFury.horizonDown, Matrix.fromBlocks,
+      finSumFinEquiv, Fin.ext_iff, Fin.val_castAdd,
+      Matrix.one_apply] <;> omega
+
+private theorem expectedG0Core_reindex :
+    blockReindex expectedG0Core =
+      -InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16) +
+        InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16) := by
+  simp only [expectedG0Core, map_add, map_neg, lowerRight_reindex,
+    upperLeft_reindex]
+
+private theorem blockCore_horizonUp_weight :
+    (InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16) -
+        InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16)) *
+        InfoGeometry.Algebra.ColeFury.horizonUp (R := ℤ) (n := 16) -
+      InfoGeometry.Algebra.ColeFury.horizonUp (R := ℤ) (n := 16) *
+        (InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16) -
+          InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16)) =
+      (-2 : ℤ) • InfoGeometry.Algebra.ColeFury.horizonUp (R := ℤ) (n := 16) := by
+  have hcore :
+      InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16) -
+          InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16) =
+        Matrix.fromBlocks (-1 : Matrix (Fin 16) (Fin 16) ℤ) 0 0 1 := by
+    simp only [InfoGeometry.Algebra.ColeFury.lowerRight,
+      InfoGeometry.Algebra.ColeFury.upperLeft, sub_eq_add_neg,
+      Matrix.fromBlocks_neg, Matrix.fromBlocks_add]
+    simp
+  rw [hcore, InfoGeometry.Algebra.ColeFury.horizonUp,
+    Matrix.fromBlocks_multiply, Matrix.fromBlocks_multiply,
+    Matrix.fromBlocks_smul]
+  ext i j
+  cases i <;> cases j
+  all_goals simp [Matrix.fromBlocks, Matrix.one_apply]
+  all_goals split_ifs <;> norm_num [Matrix.ofNat_apply, Matrix.neg_apply] <;> assumption
+
+private theorem blockCore_horizonDown_weight :
+    (InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16) -
+        InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16)) *
+        InfoGeometry.Algebra.ColeFury.horizonDown (R := ℤ) (n := 16) -
+      InfoGeometry.Algebra.ColeFury.horizonDown (R := ℤ) (n := 16) *
+        (InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16) -
+          InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16)) =
+      (2 : ℤ) • InfoGeometry.Algebra.ColeFury.horizonDown (R := ℤ) (n := 16) := by
+  have hcore :
+      InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16) -
+          InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16) =
+        Matrix.fromBlocks (-1 : Matrix (Fin 16) (Fin 16) ℤ) 0 0 1 := by
+    simp only [InfoGeometry.Algebra.ColeFury.lowerRight,
+      InfoGeometry.Algebra.ColeFury.upperLeft, sub_eq_add_neg,
+      Matrix.fromBlocks_neg, Matrix.fromBlocks_add]
+    simp
+  rw [hcore, InfoGeometry.Algebra.ColeFury.horizonDown,
+    Matrix.fromBlocks_multiply, Matrix.fromBlocks_multiply,
+    Matrix.fromBlocks_smul]
+  ext i j
+  cases i <;> cases j
+  all_goals simp [Matrix.fromBlocks, Matrix.one_apply]
+  all_goals split_ifs <;> norm_num [Matrix.ofNat_apply, Matrix.neg_apply] <;> assumption
+
 /-- Structure packaging the quadrant splitting laws. -/
 structure ColeFurySplit where
   horizonUp : Spin32Matrix
@@ -66,19 +170,43 @@ def concreteSplit : ColeFurySplit where
   horizonUp := horizonUp
   horizonDown := horizonDown
   h_nilpotent := by
-    unfold horizonUp
-    decide
+    ext i j
+    simp only [Matrix.mul_apply, Matrix.zero_apply]
+    apply Finset.sum_eq_zero
+    intro k hk
+    by_cases hi : i.val < 16
+    · by_cases hki : k.val = i.val + 16
+      · simp [horizonUp, hi, hki]
+      · simp [horizonUp, hi, hki]
+    · simp [horizonUp, hi]
   h_dag_nilpotent := by
     unfold horizonDown
     decide
   h_commutator := by
-    unfold horizonUp horizonDown expectedG0Core upperLeft lowerRight
-    decide
+    apply blockReindex.injective
+    calc
+      blockReindex (horizonDown * horizonUp - horizonUp * horizonDown) =
+          InfoGeometry.Algebra.ColeFury.horizonDown (R := ℤ) (n := 16) *
+              InfoGeometry.Algebra.ColeFury.horizonUp (R := ℤ) (n := 16) -
+            InfoGeometry.Algebra.ColeFury.horizonUp (R := ℤ) (n := 16) *
+              InfoGeometry.Algebra.ColeFury.horizonDown (R := ℤ) (n := 16) := by
+        simp only [map_sub, map_mul, horizonDown_reindex, horizonUp_reindex]
+      _ = InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16) -
+            InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16) :=
+        InfoGeometry.Algebra.ColeFury.quadrant_commutator
+      _ = blockReindex expectedG0Core := by
+        simp only [expectedG0Core, map_add, map_neg, lowerRight_reindex,
+          upperLeft_reindex]
+        abel
 
 /-- Upper-left quadrant is an idempotent projector. -/
 theorem upperLeft_idempotent : upperLeft * upperLeft = upperLeft := by
-  unfold upperLeft
-  decide
+  ext i j
+  rw [Matrix.mul_apply, Finset.sum_eq_single i]
+  · by_cases hi : i.val < 16 <;> simp [upperLeft, hi]
+  · intro x _ hxi
+    simp [upperLeft, hxi]
+  · simp
 
 /-- Lower-right quadrant is an idempotent projector. -/
 theorem lowerRight_idempotent : lowerRight * lowerRight = lowerRight := by
@@ -134,18 +262,64 @@ theorem g0Core_eq_expected : g0Core = expectedG0Core := by
 
 /-- The diagonal grading core is an involution. -/
 theorem g0Core_sq : g0Core * g0Core = 1 := by
-  unfold g0Core horizonUp horizonDown
-  decide
+  rw [g0Core_eq_expected]
+  have hcore : expectedG0Core = lowerRight - upperLeft := by
+    dsimp [expectedG0Core]
+    abel
+  rw [hcore]
+  simp only [sub_mul, mul_sub, lowerRight_idempotent,
+    lowerRight_upperLeft_zero, upperLeft_lowerRight_zero, upperLeft_idempotent]
+  simpa [add_comm] using diagonal_quadrants_sum
 
 /-- The diagonal grading core acts on the upper-right horizon with weight `-2`. -/
 theorem g0Core_horizonUp_weight : g0Core * horizonUp - horizonUp * g0Core = (-2 : ℤ) • horizonUp := by
-  unfold g0Core horizonUp horizonDown
-  decide
+  rw [g0Core_eq_expected]
+  apply blockReindex.injective
+  calc
+    blockReindex (expectedG0Core * horizonUp - horizonUp * expectedG0Core) =
+        (-InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16) +
+          InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16)) *
+          InfoGeometry.Algebra.ColeFury.horizonUp (R := ℤ) (n := 16) -
+        InfoGeometry.Algebra.ColeFury.horizonUp (R := ℤ) (n := 16) *
+          (-InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16) +
+            InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16)) := by
+      simp only [map_sub, map_mul, expectedG0Core_reindex, horizonUp_reindex]
+    _ = (-2 : ℤ) • InfoGeometry.Algebra.ColeFury.horizonUp (R := ℤ) (n := 16) := by
+      have horder :
+          -InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16) +
+              InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16) =
+            InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16) -
+              InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16) := by
+        abel
+      rw [horder]
+      exact blockCore_horizonUp_weight
+    _ = blockReindex ((-2 : ℤ) • horizonUp) := by
+      simp only [map_smul, horizonUp_reindex]
 
 /-- The diagonal grading core acts on the lower-left horizon with weight `+2`. -/
 theorem g0Core_horizonDown_weight : g0Core * horizonDown - horizonDown * g0Core = (2 : ℤ) • horizonDown := by
-  unfold g0Core horizonUp horizonDown
-  decide
+  rw [g0Core_eq_expected]
+  apply blockReindex.injective
+  calc
+    blockReindex (expectedG0Core * horizonDown - horizonDown * expectedG0Core) =
+        (-InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16) +
+          InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16)) *
+          InfoGeometry.Algebra.ColeFury.horizonDown (R := ℤ) (n := 16) -
+        InfoGeometry.Algebra.ColeFury.horizonDown (R := ℤ) (n := 16) *
+          (-InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16) +
+            InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16)) := by
+      simp only [map_sub, map_mul, expectedG0Core_reindex, horizonDown_reindex]
+    _ = (2 : ℤ) • InfoGeometry.Algebra.ColeFury.horizonDown (R := ℤ) (n := 16) := by
+      have horder :
+          -InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16) +
+              InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16) =
+            InfoGeometry.Algebra.ColeFury.lowerRight (R := ℤ) (n := 16) -
+              InfoGeometry.Algebra.ColeFury.upperLeft (R := ℤ) (n := 16) := by
+        abel
+      rw [horder]
+      exact blockCore_horizonDown_weight
+    _ = blockReindex ((2 : ℤ) • horizonDown) := by
+      simp only [map_smul, horizonDown_reindex]
 
 /-- Finite kernel-checked packet for the 32-dimensional quadrant ideal laws. -/
 theorem coleFury_ideal_packet :

@@ -3,6 +3,21 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Finsupp.Basic
 import Mathlib.Tactic.NoncommRing
 
+/-!
+# Exterior-algebra generators and decomposable blades
+
+The owner-level facts here are alternation of the universal exterior
+generators, square-zero of decomposable positive-grade blades, naturality
+under linear maps, and a typed `Finsupp.single` evaluation. These algebraic
+facts do not identify an exterior square-zero equation with a Klein
+decomposability condition, a Minkowski mass shell, or an amplituhedron.
+
+An earlier conjunction called a master amplituhedron synthesis merely
+collected these unrelated facts. Its intended useful content remains in the
+individual theorems below; no theorem connecting those separate carriers is
+asserted.
+-/
+
 noncomputable section
 
 namespace InfoGeometry.Canonical.NativeMathlibAmplituhedronBridge
@@ -25,9 +40,12 @@ theorem native_exterior_algebra_anti_commute (v1 v2 : V) :
   rw [map_add, add_mul, mul_add, mul_add, h1, h2, add_zero, zero_add] at h_sum
   exact eq_neg_of_add_eq_zero_left h_sum
 
-/-- **Theorem**: Native Mathlib 2-Blade Plücker Quadric Nilpotency ((v1 ∧ v2)^2 = 0).
-    Proves natively in Mathlib that for any 2-blade P = ι(v1) * ι(v2) in ExteriorAlgebra R V,
-    P * P = 0 identically on the Klein quadric Gr(2,4). -/
+/-- The square of a decomposable exterior 2-vector vanishes.  The proof uses
+    the repeated exterior generators and their alternating product.  When the
+    carrier is four-dimensional, this identity reads as the Klein/Plücker
+    equation under the coordinate identification; this theorem itself is an
+    exterior-algebra statement for arbitrary `V`, not a momentum mass-shell
+    assertion. -/
 theorem native_plucker_two_blade_nilpotent (v1 v2 : V) :
     (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2) * (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2) = 0 := by
   have h_anti := native_exterior_algebra_anti_commute (R := R) v2 v1
@@ -38,9 +56,10 @@ theorem native_plucker_two_blade_nilpotent (v1 v2 : V) :
     _ = - ((ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v1) * (ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v2)) := by noncomm_ring
     _ = 0 := by rw [h1, zero_mul, neg_zero]
 
-/-- **Theorem**: Native Mathlib 3-Blade Plücker Quadric Nilpotency ((v1 ∧ v2 ∧ v3)^2 = 0).
-    Proves natively in Mathlib that for any 3-blade B = ι(v1) * ι(v2) * ι(v3) in ExteriorAlgebra R V,
-    B * B = 0 identically on the Grassmannian Gr(3,n). -/
+/-- The square of a decomposable exterior 3-vector vanishes, by alternation
+    and the repeated generators.  This is not the Klein quadric equation (which
+    is a degree-two Plücker relation for 2-vectors), nor an octonion
+    associator identity. -/
 theorem native_plucker_three_blade_nilpotent (v1 v2 v3 : V) :
     (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3) *
     (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3) = 0 := by
@@ -62,35 +81,34 @@ theorem native_plucker_three_blade_nilpotent (v1 v2 v3 : V) :
     _ = 0 * (ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * (ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3)) := by rw [h1]
     _ = 0 := by noncomm_ring
 
-/-- **Theorem**: Native Mathlib 4-Blade Plücker Quadric Nilpotency ((v1 ∧ v2 ∧ v3 ∧ v4)^2 = 0).
-    Proves natively in Mathlib that for any 4-blade K = ι(v1) * ι(v2) * ι(v3) * ι(v4) in ExteriorAlgebra R V
-    (representing Gr(4,n) Amplituhedron kinematics), K * K = 0 identically. -/
-theorem native_plucker_four_blade_nilpotent (v1 v2 v3 v4 : V) :
-    (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4) *
-    (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4) = 0 := by
-  have h1 := ExteriorAlgebra.ι_sq_zero (R := R) v1
-  have h_anti12 := native_exterior_algebra_anti_commute (R := R) v2 v1
-  have h_anti13 := native_exterior_algebra_anti_commute (R := R) v3 v1
-  have h_anti14 := native_exterior_algebra_anti_commute (R := R) v4 v1
-  calc (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4) *
-        (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4)
-    _ = ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * (ExteriorAlgebra.ι R v4 * ExteriorAlgebra.ι R v1) *
-        (ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4) := by noncomm_ring
-    _ = ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * (- (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v4)) *
-        (ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4) := by rw [h_anti14]
-    _ = - (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * (ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v1) * ExteriorAlgebra.ι R v4 *
-        (ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4)) := by noncomm_ring
-    _ = - (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * (- (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v3)) * ExteriorAlgebra.ι R v4 *
-        (ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4)) := by rw [h_anti13]
-    _ = (ExteriorAlgebra.ι R v1 * (ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v1) * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4 *
-        (ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4)) := by noncomm_ring
-    _ = (ExteriorAlgebra.ι R v1 * (- (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2)) * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4 *
-        (ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4)) := by rw [h_anti12]
-    _ = - ((ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v1) * (ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4 *
-        (ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4))) := by noncomm_ring
-    _ = - (0 * (ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4 *
-        (ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4))) := by rw [h1]
-    _ = 0 := by noncomm_ring
+/-- Every positive-grade decomposable element generated by `ιMulti` has
+    square zero in the exterior algebra. This is a uniform finite-grade
+    exterior-product theorem; it does not say that arbitrary bivectors square
+    to zero, nor does it identify the exterior square with a Minkowski shell. -/
+theorem native_decomposable_exterior_blade_square_zero
+    (n : ℕ) (v : Fin (n + 1) → V) :
+    ExteriorAlgebra.ιMulti R (n + 1) v * ExteriorAlgebra.ιMulti R (n + 1) v = 0 := by
+  let doubled : Fin ((n + 1) + (n + 1)) → V := Fin.append v v
+  have hzero : ExteriorAlgebra.ιMulti R ((n + 1) + (n + 1)) doubled = 0 := by
+    apply AlternatingMap.map_eq_zero_of_eq
+        (ExteriorAlgebra.ιMulti R ((n + 1) + (n + 1))) doubled
+        (i := Fin.castAdd (n + 1) (0 : Fin (n + 1)))
+        (j := Fin.natAdd (n + 1) (0 : Fin (n + 1)))
+    · simp only [doubled, Fin.append_left, Fin.append_right]
+    · intro h
+      have hv := congrArg Fin.val h
+      simp at hv
+  have hprod : ExteriorAlgebra.ιMulti R ((n + 1) + (n + 1)) doubled =
+      ExteriorAlgebra.ιMulti R (n + 1) v * ExteriorAlgebra.ιMulti R (n + 1) v := by
+    calc
+      _ = (List.ofFn fun i => ExteriorAlgebra.ι R (doubled i)).prod :=
+        ExteriorAlgebra.ιMulti_apply doubled
+      _ = (List.ofFn fun i => ExteriorAlgebra.ι R (v i)).prod *
+          (List.ofFn fun i => ExteriorAlgebra.ι R (v i)).prod := by
+        rw [List.ofFn_add, List.prod_append]
+        simp only [doubled, Fin.append_left', Fin.append_right]
+      _ = _ := by rfl
+  rw [← hprod, hzero]
 
 /-- **Theorem**: Native Mathlib 2-Blade Linear Map Pushforward Conservation.
     Proves natively in Mathlib that for any linear map f : V →ₗ[R] W and 2-blade P = ι(v1) * ι(v2),
@@ -101,50 +119,10 @@ theorem native_plucker_linear_map_conservation (f : V →ₗ[R] W) (v1 v2 : V) :
   rw [map_mul, ExteriorAlgebra.map_apply_ι, ExteriorAlgebra.map_apply_ι]
   exact native_plucker_two_blade_nilpotent (f v1) (f v2)
 
-/-- **Theorem**: Native Mathlib 4-Blade Linear Map Pushforward Conservation of Gr(4,n) Amplituhedron Quadric.
-    Proves natively in Mathlib that for any linear map f : V →ₗ[R] W and 4-blade K = ι(v1) * ι(v2) * ι(v3) * ι(v4),
-    the mapped 4-blade (map f K)^2 = 0 identically in ExteriorAlgebra R W. -/
-theorem native_plucker_four_blade_linear_map_conservation (f : V →ₗ[R] W) (v1 v2 v3 v4 : V) :
-    (ExteriorAlgebra.map f (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4)) *
-    (ExteriorAlgebra.map f (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4)) = 0 := by
-  rw [map_mul, map_mul, map_mul, ExteriorAlgebra.map_apply_ι, ExteriorAlgebra.map_apply_ι, ExteriorAlgebra.map_apply_ι, ExteriorAlgebra.map_apply_ι]
-  exact native_plucker_four_blade_nilpotent (f v1) (f v2) (f v3) (f v4)
-
 /-- **Theorem**: Native Mathlib Finsupp Base Ring Generator Explicit Typing.
     Uses explicit (1 : R) to prevent type inference traps on free module generators. -/
 theorem native_finsupp_single_one_typed (i j : ℕ) :
     (Finsupp.single (i, j) (1 : R)) (i, j) = 1 :=
   Finsupp.single_eq_same
-
-/-- **Theorem**: Master Native Mathlib Amplituhedron & Exterior Algebra Synthesis.
-    Unifies:
-    1. Exterior algebra generator wedge nilpotency ι(v)^2 = 0.
-    2. Plücker 2-blade quadric nilpotency (v1 ∧ v2)^2 = 0.
-    3. Plücker 3-blade quadric nilpotency (v1 ∧ v2 ∧ v3)^2 = 0.
-    4. Plücker 4-blade quadric nilpotency (v1 ∧ v2 ∧ v3 ∧ v4)^2 = 0 for Gr(4,n).
-    5. 2-blade linear map pushforward conservation.
-    6. 4-blade linear map pushforward conservation for Gr(4,n) Amplituhedron kinematics.
-    7. Explicit base-ring typed Finsupp generator evaluation. -/
-theorem master_native_mathlib_amplituhedron_synthesis
-    (f : V →ₗ[R] W) (v v1 v2 v3 v4 : V) (i j : ℕ) :
-    (ExteriorAlgebra.ι R v * ExteriorAlgebra.ι R v = 0) ∧
-    ((ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2) * (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2) = 0) ∧
-    ((ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3) *
-      (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3) = 0) ∧
-    ((ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4) *
-      (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4) = 0) ∧
-    ((ExteriorAlgebra.map f (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2)) *
-      (ExteriorAlgebra.map f (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2)) = 0) ∧
-    ((ExteriorAlgebra.map f (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4)) *
-      (ExteriorAlgebra.map f (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4)) = 0) ∧
-    ((Finsupp.single (i, j) (1 : R)) (i, j) = 1) := ⟨
-  native_exterior_algebra_wedge_nilpotent v,
-  native_plucker_two_blade_nilpotent v1 v2,
-  native_plucker_three_blade_nilpotent v1 v2 v3,
-  native_plucker_four_blade_nilpotent v1 v2 v3 v4,
-  native_plucker_linear_map_conservation f v1 v2,
-  native_plucker_four_blade_linear_map_conservation f v1 v2 v3 v4,
-  native_finsupp_single_one_typed i j
-⟩
 
 end InfoGeometry.Canonical.NativeMathlibAmplituhedronBridge

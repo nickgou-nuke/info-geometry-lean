@@ -16,15 +16,16 @@ missing operator level: the Weyl-symmetric dilation operator
 
     H f x = -i * (x * deriv f x + (1/2) * f x)
 
-the power-law eigenfunctions `psi s x = exp (-s * log x)`, the conjugation of the
-dilation generator `x d/dx` to log-space translation `d/du`, and the
+the power-law eigenfunctions `psi s x = exp (-s * log x)`, the pointwise
+intertwining of their dilation and logarithmic derivatives, and the
 energy-independence of the eigenfunction modulus on the critical line.
 
 ## What is proved here, precisely
 
-* `hasDerivAt_phi` — on the log-coordinate plane waves `exp (−s u)` the dilation
-  generator is pure translation: `d/du (e^(−su)) = −s e^(−su)`.  This is the
-  "scaling is momentum" statement.
+* `hasDerivAt_phi` — on the log-coordinate plane waves `exp (−s u)`,
+  `d/du (e^(−su)) = −s e^(−su)`.
+* `dilationGen_psi_eq_deriv_phi` — at `x = exp u`, both pointwise generators
+  have the same action on the corresponding Mellin mode.
 * `Hd_psi` — the eigenfunction equation `H ψ_s = i (s − 1/2) ψ_s`, obtained from
   the chain rule and the derivative of `exp`.
 * `Hd_psi_shift_split` — `H ψ_s = (−i x d/dx) ψ_s − (i/2) ψ_s`, isolating the
@@ -54,13 +55,21 @@ noncomputable def psi (s : ℂ) (x : ℝ) : ℂ := Complex.exp (-s * Complex.ofR
 /-- The same function in log coordinates: `ψ_s(u) = exp(−s u)`. -/
 noncomputable def phi (s : ℂ) (u : ℝ) : ℂ := Complex.exp (-s * u)
 
+/-- The half-density change of coordinates from the positive half-line to log
+coordinates. The factor `exp (u / 2)` is the square root of the Jacobian
+`dx/du = exp u`. This is the unitary-coordinate candidate at the level of
+functions; no `L²` space or operator-domain assertion is made here. -/
+noncomputable def halfDensityLog (f : ℝ → ℂ) (u : ℝ) : ℂ :=
+  (Real.exp (u / 2) : ℂ) * f (Real.exp u)
+
 /-- The dilation operator `H = −i (x d/dx + 1/2)`, the Weyl symmetrization of
 `x d/dx`.  The `1/2` is the half-density (metaplectic) shift. -/
 noncomputable def Hd (f : ℝ → ℂ) (x : ℝ) : ℂ :=
   -Complex.I * (x * deriv f x + (1 / 2) * f x)
 
-/-- The shift-free dilation generator `x d/dx`. -/
-noncomputable def dilationGen (f : ℝ → ℝ) (x : ℝ) : ℝ := x * deriv f x
+/-- The shift-free dilation generator `x d/dx` on complex-valued functions. -/
+noncomputable def dilationGen (f : ℝ → ℂ) (x : ℝ) : ℂ :=
+  (x : ℂ) * deriv f x
 
 /-- The eigenvalue of `ψ_s`: `i (s − 1/2)`. -/
 noncomputable def eigenvalue (s : ℂ) : ℂ := Complex.I * (s - 1 / 2)
@@ -82,6 +91,76 @@ theorem hasDerivAt_phi (s : ℂ) (u : ℝ) :
 theorem deriv_phi (s : ℂ) (u : ℝ) : deriv (phi s) u = -s * phi s u :=
   (hasDerivAt_phi s u).deriv
 
+/-- Differentiating the half-density log-coordinate transform gives the
+Jacobian-weighted sum of the original dilation derivative and its half-density
+correction. -/
+theorem deriv_halfDensityLog (f : ℝ → ℂ) (u : ℝ) (f' : ℂ)
+    (hf : HasDerivAt f f' (Real.exp u)) :
+    deriv (halfDensityLog f) u =
+      (Real.exp (u / 2) : ℂ) *
+        (f' * (Real.exp u : ℂ) + (1 / 2 : ℂ) * f (Real.exp u)) := by
+  have hweightR : HasDerivAt (fun v : ℝ => Real.exp (v / 2))
+      (Real.exp (u / 2) / 2) u := by
+    convert (Real.hasDerivAt_exp (u / 2)).comp u
+      ((hasDerivAt_id u).div_const 2) using 1
+    ring
+  have hweight : HasDerivAt (fun v : ℝ => (Real.exp (v / 2) : ℂ))
+      ((Real.exp (u / 2) / 2 : ℝ) : ℂ) u := hweightR.ofReal_comp
+  have harg : HasDerivAt (fun v : ℝ => Real.exp v) (Real.exp u) u :=
+    Real.hasDerivAt_exp u
+  have hcompose : HasDerivAt (fun v : ℝ => f (Real.exp v))
+      (Real.exp u • f') u := hf.scomp u harg
+  have hproduct := hweight.mul hcompose
+  have hderiv := hproduct.deriv
+  unfold halfDensityLog
+  change deriv ((fun v : ℝ => (Real.exp (v / 2) : ℂ)) *
+      (fun v => f (Real.exp v))) u = _
+  rw [hderiv]
+  rw [Complex.real_smul]
+  push_cast
+  ring
+
+/-- The half-density log-coordinate transform intertwines the Weyl-symmetric
+dilation generator `−i(x∂ₓ + 1/2)` with the translation generator `−i∂ᵤ`.
+This is the corrected differential identity: plain composition with `exp` alone
+does retain a `−i/2` term, while the Jacobian half-density cancels it. -/
+theorem halfDensityLog_intertwines_H (f : ℝ → ℂ) (u : ℝ) (f' : ℂ)
+    (hf : HasDerivAt f f' (Real.exp u)) :
+    -Complex.I * deriv (halfDensityLog f) u =
+      (Real.exp (u / 2) : ℂ) * Hd f (Real.exp u) := by
+  rw [deriv_halfDensityLog f u f' hf]
+  simp only [Hd, hf.deriv]
+  push_cast
+  ring
+
+/-- Exponentiating the logarithmic coordinate recovers the positive-half-line
+power mode. -/
+theorem psi_exp_log (s : ℂ) (u : ℝ) : psi s (Real.exp u) = phi s u := by
+  simp [psi, phi]
+
+/-- The pointwise dilation generator acts on `ψ_s(x) = x^{-s}` by `−s`. -/
+theorem dilationGen_psi (s : ℂ) :
+    ∀ x, 0 < x → dilationGen (psi s) x = -s * psi s x := by
+  intro x hx
+  have hlog : HasDerivAt (Real.log : ℝ → ℝ) x⁻¹ x :=
+    Real.hasDerivAt_log (ne_of_gt hx)
+  have hlogC : HasDerivAt (fun y : ℝ => (Real.log y : ℂ)) ((x : ℂ)⁻¹) x := by
+    convert hlog.ofReal_comp using 1; simp
+  have hc := hlogC.const_mul (-s)
+  have he := (Complex.hasDerivAt_exp (x := -s * (Real.log x : ℂ))).comp x hc
+  have hpsi : HasDerivAt (psi s) ((-s * x⁻¹) * psi s x) x := by
+    change HasDerivAt (fun y : ℝ => Complex.exp (-s * (Real.log y : ℂ))) _ _
+    simpa [psi, Function.comp_def, div_eq_mul_inv, mul_comm, mul_left_comm,
+      mul_assoc] using he
+  rw [dilationGen, hpsi.deriv, Complex.ofReal_inv]
+  field_simp [ne_of_gt hx]
+
+/-- In logarithmic coordinates `x = exp u`, the dilation derivative on the
+Mellin mode agrees pointwise with the derivative of its log-coordinate form. -/
+theorem dilationGen_psi_eq_deriv_phi (s : ℂ) (u : ℝ) :
+    dilationGen (psi s) (Real.exp u) = deriv (phi s) u := by
+  rw [dilationGen_psi s (Real.exp u) (Real.exp_pos u), deriv_phi, psi_exp_log]
+
 /-! ### The eigenvalue equation -/
 
 /-- **The eigenvalue equation for the dilation operator.**  For every `s` and every
@@ -89,19 +168,10 @@ theorem deriv_phi (s : ℂ) (u : ℝ) : deriv (phi s) u = -s * phi s u :=
 theorem Hd_psi (s : ℂ) :
     ∀ x, 0 < x → Hd (psi s) x = eigenvalue s * psi s x := by
   intro x hx
-  have hlog : HasDerivAt (Real.log : ℝ → ℝ) x⁻¹ x := Real.hasDerivAt_log (ne_of_gt hx)
-  have hpsi : HasDerivAt (psi s) ((-s * x⁻¹) * psi s x) x := by
-    have hlogC : HasDerivAt (fun y : ℝ => (Real.log y : ℂ)) ((x : ℂ)⁻¹) x := by
-      convert hlog.ofReal_comp using 1; simp
-    have hc := hlogC.const_mul (-s)
-    have he := (Complex.hasDerivAt_exp (x := -s * (Real.log x : ℂ))).comp x hc
-    change HasDerivAt (fun y : ℝ => Complex.exp (-s * (Real.log y : ℂ))) _ _
-    simpa [psi, Function.comp_def, div_eq_mul_inv, mul_comm, mul_left_comm,
-      mul_assoc] using he
-  simp only [Hd, eigenvalue]
-  rw [hpsi.deriv]
-  rw [Complex.ofReal_inv]
-  field_simp [ne_of_gt hx]
+  rw [show Hd (psi s) x = -Complex.I *
+      (dilationGen (psi s) x + (1 / 2) * psi s x) by rfl,
+    dilationGen_psi s x hx]
+  simp only [eigenvalue]
   ring
 
 /-- **The metaplectic correction, isolated.**  `H` is the shift-free dilation

@@ -8,15 +8,18 @@ def minimalPeriod (q : ℚ) : ℕ := q.den
 
 /-- Half has period 2.
     prop:cdim-arithmetic-singular-ring-fiber-phase-quantization -/
-theorem minimalPeriod_half : minimalPeriod (1 / 2) = 2 := by decide
+theorem minimalPeriod_half : minimalPeriod (1 / 2) = 2 := by
+  norm_num [minimalPeriod]
 
 /-- Third has period 3.
     prop:cdim-arithmetic-singular-ring-fiber-phase-quantization -/
-theorem minimalPeriod_third : minimalPeriod (1 / 3) = 3 := by decide
+theorem minimalPeriod_third : minimalPeriod (1 / 3) = 3 := by
+  norm_num [minimalPeriod]
 
 /-- Sixth has period 6.
     prop:cdim-arithmetic-singular-ring-fiber-phase-quantization -/
-theorem minimalPeriod_sixth : minimalPeriod (1 / 6) = 6 := by decide
+theorem minimalPeriod_sixth : minimalPeriod (1 / 6) = 6 := by
+  norm_num [minimalPeriod]
 
 /-- lcm(2, 3) = 6.
     prop:cdim-arithmetic-singular-ring-fiber-phase-quantization -/
@@ -58,11 +61,13 @@ theorem euler_totient_seeds :
 
 /-- Minimal period of 1/5 is 5.
     thm:cdim-finite-probe-extraction -/
-theorem minimalPeriod_fifth : minimalPeriod (1 / 5) = 5 := by decide
+theorem minimalPeriod_fifth : minimalPeriod (1 / 5) = 5 := by
+  norm_num [minimalPeriod]
 
 /-- Minimal period of 1/30 is 30.
     thm:cdim-finite-probe-extraction -/
-theorem minimalPeriod_thirtieth : minimalPeriod (1 / 30) = 30 := by decide
+theorem minimalPeriod_thirtieth : minimalPeriod (1 / 30) = 30 := by
+  norm_num [minimalPeriod]
 
 /-- Paper package: finite probe extraction seeds.
     thm:cdim-finite-probe-extraction -/

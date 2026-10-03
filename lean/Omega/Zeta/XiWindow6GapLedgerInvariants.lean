@@ -48,6 +48,11 @@ theorem paper_xi_window6_gap_ledger_invariants :
             12 * xi_window6_gap_ledger_invariants_gapCard : ℚ) /
           xi_window6_gap_ledger_invariants_gapCard =
         722 / 3) := by
-  decide
+  norm_num [xi_window6_gap_ledger_invariants_gapCard,
+    xi_window6_gap_ledger_invariants_gapWeight,
+    xi_window6_gap_ledger_invariants_g,
+    xi_window6_gap_ledger_invariants_w,
+    xi_window6_gap_ledger_invariants_binom2,
+    Fin.sum_univ_succ]
 
 end Omega.Zeta

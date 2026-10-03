@@ -7290,6 +7290,8 @@ import InfoGeometry.Clifford.TwistedBivectorInteraction
 import InfoGeometry.Clifford.TwistedChiralLinking
 import InfoGeometry.Clifford.TwistedChiralProjectionAlgebra
 import InfoGeometry.Clifford.UniversalCoverLog
+import InfoGeometry.CliffordWeyl.PeirceCriticalMirrorBridge
+import InfoGeometry.CliffordWeyl.PeirceToCircularBridge
 import InfoGeometry.Cocycle.ActionCocycle
 import InfoGeometry.Cocycle.AlternativeAssociator
 import InfoGeometry.Cocycle.GroupoidCocycle

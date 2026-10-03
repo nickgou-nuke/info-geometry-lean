@@ -15,12 +15,12 @@ import InfoGeometry.Quantum.PauliSoldering
 
 This owner establishes the finite-stage representation of $M_2(\mathbb{C})$ and $SL_2(\mathbb{C})$:
 
-1. **KAN / Iwasawa Decomposition Data:**
-   Every $g \in SL_2(\mathbb{C})$ in the standard Iwasawa patch decomposes into:
-   - $K \in SU(2)$ (compact / elliptic rotation / phase)
-   - $A \in \text{Boost}$ (hyperbolic / dilation: $\mathrm{diag}(e^t, e^{-t})$)
-   - $N \in \text{Unipotent}$ (parabolic / nilpotent shear: !![1, z; 0, 1])
-   such that $g = K \cdot A \cdot N$ and $\det(g) = 1$.
+1. **Supplied KAN Factorization Data:**
+   `KANData g` packages matrices $K \in SU(2)$, $A=\mathrm{diag}(e^t,e^{-t})$,
+   and $N=!![1,z;0,1]$, together with the factorization equation
+   $g=K A N$. The owner proves consequences of such supplied data, including
+   $\det(g)=1$; it does not prove existence of this factorization for every
+   $g \in SL_2(\mathbb{C})$.
 
 2. **Hermitian Minkowski Soldering:**
    Hermitian $2 \times 2$ matrices $X = X^\dagger$ solder to real 4-vectors $(t, x, y, z) \in \mathbb{R}^{1,3}$
@@ -55,7 +55,7 @@ open InfoGeometry.Canonical.GenuineMatrixStageMorphism
 open InfoGeometry.Krein
 open InfoGeometry.Krein.DoubledSpaceMatrixClockBridge
 
-/-! ## 1. SL₂(ℂ), SU(2), and KAN Factorization Data -/
+/-! ## 1. SL₂(ℂ), SU(2), and supplied KAN factorization data -/
 
 /-- Predicate for $SL_2(\mathbb{C})$ matrices (unit determinant). -/
 def isSL2C (g : Matrix (Fin 2) (Fin 2) ℂ) : Prop :=
@@ -133,7 +133,9 @@ theorem compactK_isSU2 (θ : ℝ) : isSU2 (compactK θ) := by
       have : (Complex.I * (θ : ℂ)) + -Complex.I * (θ : ℂ) = 0 := by ring
       rw [this, Complex.exp_zero]
 
-/-- Explicit KAN Iwasawa decomposition structure for $g \in SL_2(\mathbb{C})$. -/
+/-- A supplied K/A/N factorization of `g`, with structural conditions on its
+three factors. This record does not assert that such data exist for every
+special-linear matrix. -/
 structure KANData (g : Matrix (Fin 2) (Fin 2) ℂ) where
   K : Matrix (Fin 2) (Fin 2) ℂ
   A : Matrix (Fin 2) (Fin 2) ℂ

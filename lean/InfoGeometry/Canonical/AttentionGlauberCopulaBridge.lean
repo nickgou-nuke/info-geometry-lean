@@ -21,6 +21,7 @@ variable {N M : ℕ} [NeZero N] [NeZero M]
 noncomputable def partitionZ (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) : ℝ :=
   ∑ j : Fin M, Real.exp (S i j)
 
+omit [NeZero N] in
 /-- The partition function is strictly positive because exp > 0. -/
 lemma partitionZ_pos (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) :
     0 < partitionZ S i := by
@@ -136,6 +137,88 @@ theorem attentionDependenceRatio_pos
     0 < attentionDependenceRatio S i j := by
   rw [attentionDependenceRatio_eq_weight_div_colMarginal]
   exact div_pos (attention_pos S i j) (colMarginal_pos S j)
+
+/-! ### 4. Shannon information for the finite attention law -/
+
+/-- Shannon entropy of the key marginal. -/
+noncomputable def keyEntropy (S : Matrix (Fin N) (Fin M) ℝ) : ℝ :=
+  - ∑ j : Fin M, colMarginal S j * Real.log (colMarginal S j)
+
+/-- Conditional entropy of the key given a query, using the softmax row as the
+conditional key law. -/
+noncomputable def conditionalKeyEntropy (S : Matrix (Fin N) (Fin M) ℝ) : ℝ :=
+  - ∑ i : Fin N, ∑ j : Fin M,
+    jointDistribution S i j * Real.log (attentionMatrix S i j)
+
+/-- Shannon mutual information for this finite model, in the entropy-difference
+form `H(K) - H(K | Q)`. -/
+noncomputable def attentionMutualInformation
+    (S : Matrix (Fin N) (Fin M) ℝ) : ℝ :=
+  keyEntropy S - conditionalKeyEntropy S
+
+/-- Expected log of the marginal-normalized attention ratio under the joint
+law. -/
+noncomputable def expectedLogDependenceRatio
+    (S : Matrix (Fin N) (Fin M) ℝ) : ℝ :=
+  ∑ i : Fin N, ∑ j : Fin M,
+    jointDistribution S i j * Real.log (attentionDependenceRatio S i j)
+
+/-- The log of the dependence ratio is the log softmax weight minus the log
+key marginal. -/
+theorem log_attentionDependenceRatio
+    (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) (j : Fin M) :
+    Real.log (attentionDependenceRatio S i j) =
+      Real.log (attentionMatrix S i j) - Real.log (colMarginal S j) := by
+  rw [attentionDependenceRatio_eq_weight_div_colMarginal]
+  exact Real.log_div (ne_of_gt (attention_pos S i j))
+    (ne_of_gt (colMarginal_pos S j))
+
+omit [NeZero N] [NeZero M] in
+/-- Finite marginal contraction for the logarithm of the key marginal. -/
+theorem sum_joint_mul_log_colMarginal
+    (S : Matrix (Fin N) (Fin M) ℝ) :
+    (∑ i : Fin N, ∑ j : Fin M,
+      jointDistribution S i j * Real.log (colMarginal S j)) =
+      ∑ j : Fin M, colMarginal S j * Real.log (colMarginal S j) := by
+  rw [Finset.sum_comm]
+  apply Finset.sum_congr rfl
+  intro j _
+  rw [← Finset.sum_mul]
+  rfl
+
+/-- The expected log dependence ratio equals Shannon mutual information. -/
+theorem attentionMutualInformation_eq_expectedLogDependenceRatio
+    (S : Matrix (Fin N) (Fin M) ℝ) :
+    attentionMutualInformation S = expectedLogDependenceRatio S := by
+  unfold attentionMutualInformation expectedLogDependenceRatio
+  simp_rw [log_attentionDependenceRatio, mul_sub, Finset.sum_sub_distrib]
+  rw [sum_joint_mul_log_colMarginal]
+  unfold keyEntropy conditionalKeyEntropy
+  ring
+
+/-- Query-independent attention has dependence ratio one at every pair. -/
+theorem attentionDependenceRatio_eq_one_of_query_independent
+    (S : Matrix (Fin N) (Fin M) ℝ)
+    (h : ∀ i j, attentionMatrix S i j = colMarginal S j)
+    (i : Fin N) (j : Fin M) :
+    attentionDependenceRatio S i j = 1 := by
+  rw [attentionDependenceRatio_eq_weight_div_colMarginal, h i j]
+  exact div_self (ne_of_gt (colMarginal_pos S j))
+
+/-- Query-independent attention has zero mutual information in the finite
+model. -/
+theorem attentionMutualInformation_eq_zero_of_query_independent
+    (S : Matrix (Fin N) (Fin M) ℝ)
+    (h : ∀ i j, attentionMatrix S i j = colMarginal S j) :
+    attentionMutualInformation S = 0 := by
+  rw [attentionMutualInformation_eq_expectedLogDependenceRatio]
+  unfold expectedLogDependenceRatio
+  apply Finset.sum_eq_zero
+  intro i _
+  apply Finset.sum_eq_zero
+  intro j _
+  rw [attentionDependenceRatio_eq_one_of_query_independent S h i j]
+  simp
 
 /-! ### 4. Finite cumulative tables -/
 

@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.AttentionEntropyDecomposition
 import InfoGeometry.Canonical.ClusterMutationIndexBridge
 import InfoGeometry.Canonical.AttentionGlauberMutualInformation
 import InfoGeometry.Canonical.ZornNavierStokesHydrodynamicBridge

@@ -8,11 +8,11 @@ open Matrix
 
 local notation "RealMat" => Matrix (Fin 2) (Fin 2) ℝ
 
--- The KAN Generators for sl(2, R)
+-- The K, A, N Matrix Generators for sl(2, R)
 def matOne : RealMat := !![1, 0; 0, 1]
-def matI_R : RealMat := !![0, -1; 1, 0]  -- Generator K
-def matJ_R : RealMat := !![1, 0; 0, -1]  -- Generator A
-def matN_R : RealMat := !![0, 1; 0, 0]   -- Generator N
+def matI_R : RealMat := !![0, -1; 1, 0]
+def matJ_R : RealMat := !![1, 0; 0, -1]
+def matN_R : RealMat := !![0, 1; 0, 0]
 
 noncomputable def P_plus : RealMat := (1/2 : ℝ) • (matOne + matJ_R)
 noncomputable def P_minus : RealMat := (1/2 : ℝ) • (matOne - matJ_R)
@@ -21,7 +21,7 @@ lemma mat_mul_expand (A B : RealMat) (i j : Fin 2) :
   (A * B) i j = A i 0 * B 0 j + A i 1 * B 1 j := by
   rw [Matrix.mul_apply, Fin.sum_univ_two]
 
--- 1. Local nilpotency of the N operator
+-- 1. Nilpotency of the N matrix
 theorem matN_R_sq : matN_R * matN_R = 0 := by
   ext i j
   fin_cases i <;> fin_cases j
@@ -31,7 +31,7 @@ theorem matN_R_sq : matN_R * matN_R = 0 := by
     ring
   }
 
--- 2. The Iwasawa Decomposition of Traceless Matrices
+-- 2. The Algebraic Iwasawa Decomposition of Traceless Matrices
 theorem iwasawa_decomposition (a b c : ℝ) :
   !![a, b; c, -a] = c • matI_R + a • matJ_R + (b + c) • matN_R := by
   ext i j
@@ -41,7 +41,7 @@ theorem iwasawa_decomposition (a b c : ℝ) :
     ring
   }
 
--- 3. Spectral expansion over split projectors
+-- 3. Spectral expansion over projectors
 theorem scale_peirce_spectrum (a : ℝ) :
   a • matJ_R = a • P_plus - a • P_minus := by
   ext i j
@@ -51,7 +51,7 @@ theorem scale_peirce_spectrum (a : ℝ) :
     ring
   }
 
--- 4. Nilpotent shear mapping over projectors
+-- 4. Nilpotent action over projectors
 theorem N_shear_P_minus : matN_R * P_minus = matN_R := by
   ext i j
   fin_cases i <;> fin_cases j

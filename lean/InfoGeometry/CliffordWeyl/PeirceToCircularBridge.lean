@@ -99,39 +99,39 @@ normalized `±1` projection onto an eigenspace of the grading. -/
 theorem PleftC_eq_half_I_plus_sigma3 :
     PleftC = (1 / 2 : ℂ) • ((1 : Mat2C) + sigma3) := by
   funext i j; fin_cases i <;> fin_cases j <;>
-    simp [PleftC, sigma3, Matrix.add_apply, Matrix.one_apply, Matrix.smul_apply,
-      Complex.ext_iff, Complex.I_mul_I]
-  <;> ring
+    simp [PleftC, sigma3, Matrix.add_apply, Matrix.smul_apply,
+      Complex.ext_iff]
+  ; ring
 
 theorem PrightC_eq_half_I_minus_sigma3 :
     PrightC = (1 / 2 : ℂ) • ((1 : Mat2C) - sigma3) := by
   funext i j; fin_cases i <;> fin_cases j <;>
-    simp [PrightC, sigma3, Matrix.sub_apply, Matrix.one_apply, Matrix.smul_apply,
-      Complex.ext_iff, Complex.I_mul_I]
-  <;> ring
+    simp [PrightC, sigma3, Matrix.sub_apply, Matrix.smul_apply,
+      Complex.ext_iff]
+  ; ring
 
 theorem clockwise_eq_half_I_plus_sigma2 :
     clockwiseProjector = (1 / 2 : ℂ) • ((1 : Mat2C) + sigma2) := by
   rw [clockwiseProjector_eq_matrix]
   funext i j; fin_cases i <;> fin_cases j <;>
-    simp [sigma2, Matrix.add_apply, Matrix.one_apply, Matrix.smul_apply,
-      Complex.ext_iff, Complex.I_mul_I]
-  <;> ring
+    simp [sigma2, Matrix.add_apply, Matrix.smul_apply,
+      Complex.ext_iff]
+  ; ring
 
 theorem counterclockwise_eq_half_I_minus_sigma2 :
     counterclockwiseProjector = (1 / 2 : ℂ) • ((1 : Mat2C) - sigma2) := by
   rw [counterclockwiseProjector_eq_matrix]
   funext i j; fin_cases i <;> fin_cases j <;>
-    simp [sigma2, Matrix.sub_apply, Matrix.one_apply, Matrix.smul_apply,
-      Complex.ext_iff, Complex.I_mul_I]
-  <;> ring
+    simp [sigma2, Matrix.sub_apply, Matrix.smul_apply,
+      Complex.ext_iff]
+  ; ring
 
 /-- The two circular projectors are complementary. -/
 theorem circularProjectors_sum_identity :
     clockwiseProjector + counterclockwiseProjector = (1 : Mat2C) := by
   rw [clockwiseProjector_eq_matrix, counterclockwiseProjector_eq_matrix]
   funext i j; fin_cases i <;> fin_cases j <;>
-    simp [Matrix.add_apply, Complex.ext_iff, Complex.I_mul_I] <;> ring
+    simp [Matrix.add_apply, Complex.ext_iff] <;> ring
 
 /-! ## 3. The elliptic generator: the draft's false `EminusC_eq_sigma2`, corrected
 
@@ -174,9 +174,9 @@ theorem clockwiseProjector_as_Peirce_combo :
       = (1 / 2 : ℂ) • (PleftC + PrightC : Mat2C) - (Complex.I / 2 : ℂ) • EminusC := by
   rw [clockwiseProjector_eq_matrix]
   funext i j; fin_cases i <;> fin_cases j <;>
-    simp [PleftC, PrightC, EminusC, Matrix.add_apply, Matrix.smul_apply,
-      Complex.ext_iff, Complex.I_mul_I]
-  <;> ring
+    simp [PleftC, PrightC, EminusC,
+      Complex.ext_iff]
+  ; ring
 
 /-- Dually the counterclockwise projector `Π_cw = (I - σ₂)/2` adds the term. -/
 theorem counterclockwiseProjector_as_Peirce_combo :
@@ -184,9 +184,9 @@ theorem counterclockwiseProjector_as_Peirce_combo :
       = (1 / 2 : ℂ) • (PleftC + PrightC : Mat2C) + (Complex.I / 2 : ℂ) • EminusC := by
   rw [counterclockwiseProjector_eq_matrix]
   funext i j; fin_cases i <;> fin_cases j <;>
-    simp [PleftC, PrightC, EminusC, Matrix.add_apply, Matrix.smul_apply,
-      Complex.ext_iff, Complex.I_mul_I]
-  <;> ring
+    simp [PleftC, PrightC, EminusC, Matrix.add_apply,
+      Complex.ext_iff]
+  ; ring
 
 /-! ## 5. Conjugation by the quarter-wave plate, in the correct orientation
 
@@ -223,10 +223,9 @@ theorem peirceCircular_chirality_relation_inv :
       funext a b; fin_cases a <;> fin_cases b <;> rfl]
   funext a b; fin_cases a <;> fin_cases b <;>
     simp [Uqwp, Matrix.conjTranspose_apply, Matrix.mul_apply,
-      Fin.sum_univ_two, conj_s2, Complex.conj_I, s2_sq]
+      Fin.sum_univ_two, conj_s2, Complex.conj_I]
   all_goals ring_nf
   all_goals norm_num [Complex.I_sq, s2_sq]
-  all_goals ring
 
 /--
 **The orientation the draft asserted, correctly evaluated.**
@@ -252,7 +251,7 @@ theorem peirce_negated_by_plate :
         simp [neg_apply, sigma2, Matrix.neg_apply]]
   funext a b; fin_cases a <;> fin_cases b <;>
     simp [Uqwp, Matrix.conjTranspose_apply, Matrix.mul_apply,
-      Fin.sum_univ_two, conj_s2, Complex.conj_I, s2_sq]
+      Fin.sum_univ_two, conj_s2, Complex.conj_I]
   all_goals ring_nf
   all_goals norm_num [Complex.I_sq, s2_sq]
   all_goals ring

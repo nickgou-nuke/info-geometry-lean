@@ -20,8 +20,7 @@ The concrete K/A/N dictionary in `M₂(ℂ)`:
   volume.
 * `NPart z` is the unipotent boundary block.
 * `NPart z - I` is nilpotent and has zero determinant.
-* The whole KAN product has determinant one, hence is an algebraic analytic
-  flow in the determinant sense.
+* The product of these three blocks has determinant one.
 -/
 theorem complex_split_torus_boundary_determinants (θ β : ℝ) (z : ℂ) :
     (KPart θ).det = 1 ∧

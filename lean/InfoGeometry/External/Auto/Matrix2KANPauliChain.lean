@@ -67,7 +67,7 @@ def APart (α : ℝ) : M2R := !![Real.exp α, 0; 0, Real.exp (-α)]
 /-- Nilpotent N/shear factor. -/
 def NPart (n : ℝ) : M2R := !![1, n; 0, 1]
 
-/-- KAN normal form block. -/
+/-- Product of the displayed K, A, and N blocks. -/
 def KANMatrix (θ α n : ℝ) : M2R :=
   KPart θ * APart α * NPart n
 

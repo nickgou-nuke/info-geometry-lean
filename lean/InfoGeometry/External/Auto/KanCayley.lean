@@ -4,20 +4,24 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 open Complex Matrix
 
 /-!
-# Iwasawa (KAN) decomposition witness for `M₂(ℂ)`
+# Determinant-one K/A/N-shaped matrix family in `M₂(ℂ)`
 
-This file records the group-theoretic skeleton:
-* `K(θ)`: compact phase/rotation,
+This file defines and checks a parameterized product of three matrix blocks:
+* `K(θ)`: a diagonal unitary phase block,
 * `A(β)`: split-Cartan boost with reciprocal diagonal factors,
 * `N(z)`: nilpotent shear/unipotent shift.
+
+The determinant identities below show that each block and their product have
+determinant one. They do not establish a global Iwasawa factorization; in
+particular, this one-parameter `K` block is not the full maximal compact
+subgroup of `SL(2,ℂ)`.
 
 It also includes the Cayley compactification map
 `W(s) = (s - 1/2)/(s + 1/2)`.
 
 Tiny bridge note:
-The determinant signatures here `(det K = 1, det A = 1, det N = 1)` and boundary sector `det (N - I) = 0`
-mirror the `DeterminantSupergrading` package's parity/sign table: unit determinants for the
-compact–split-Cartan KAN core and grade boundary at zero determinant for the nilpotent channel.
+The determinant identities `(det K = 1, det A = 1, det N = 1)` and boundary
+identity `det (N - I) = 0` give the corresponding finite matrix calculations.
 -/
 
 noncomputable section

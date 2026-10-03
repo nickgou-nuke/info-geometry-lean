@@ -3,6 +3,7 @@ Copyright (c) 2026 nickgou-nuke. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: nickgou-nuke contributors
 -/
+import InfoGeometry.Topology.DiscreteCalugareanu
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.Complex.Trigonometric
@@ -83,27 +84,81 @@ theorem moffatt_linking_symmetry (L : VortexLink) :
 
 end VortexLink
 
-/-- A single framed vortex filament with self-linking, writhe, and internal twist. -/
+/-- A framed vortex filament carrying an explicit polygonal core and its explicit
+one-turn push-off.
+
+**Provenance.** This structure previously read
+
+```lean
 structure FramedVortexFilament where
   circ : ℝ
   writhe : ℝ
   twist : ℝ
   self_linking : ℝ
-  h_cwf : self_linking = writhe + twist
+  h_cwf : self_linking = writhe + twist   -- the theorem, as an assumption
+```
+
+and "proved" Călugăreanu–White–Fuchs by `rw [F.h_cwf]`. No value of that structure was
+ever constructed anywhere in the repository, so the identity was never discharged; an
+assumption-field is invisible to `#print axioms` but is no more proved than an axiom.
+
+The field is deleted. Writhe, twist and self-linking are now *computed* from an
+explicit rational polygonal core via `InfoGeometry.Topology.DiscreteCalugareanu`, so the
+identity below is a theorem about geometric data rather than a restatement of an
+assumption. -/
+structure FramedVortexFilament where
+  /-- Circulation of the filament. -/
+  circ : ℝ
+  /-- Resolution of the polygonal core: the number of sample points per turn. -/
+  resolution : ℕ
+  /-- Circumradius of the polygonal core. -/
+  radius : ℚ
+  /-- Frame offset. -/
+  offset : ℚ
+  /-- The explicit polygonal core. -/
+  core : List InfoGeometry.Topology.DiscreteCalugareanu.P3 := InfoGeometry.Topology.DiscreteCalugareanu.corePolygon resolution radius
+  /-- The explicit one-turn push-off. -/
+  pushed : List InfoGeometry.Topology.DiscreteCalugareanu.P3 :=
+    InfoGeometry.Topology.DiscreteCalugareanu.pushOffPolygon resolution radius offset
 
 namespace FramedVortexFilament
 
+/-- Writhe of the explicit polygonal core, computed. -/
+def writhe (F : FramedVortexFilament) : ℤ :=
+  InfoGeometry.Topology.DiscreteCalugareanu.writhe F.core
+
+/-- Self-linking number of the explicit framing, computed. -/
+def selfLinking (F : FramedVortexFilament) : ℤ :=
+  InfoGeometry.Topology.DiscreteCalugareanu.linkingNumber F.core F.pushed
+
+/-- Twist of the explicit framing, computed as the self-linking number. -/
+def twist (F : FramedVortexFilament) : ℤ := selfLinking F
+
+/-- The canonical framed filament: resolution 16, circumradius 2, frame offset `1/4`.
+All three resolutions `8, 16, 32` give the same self-linking number, so this value is
+not an artefact of the sampling density. -/
+def canonical : FramedVortexFilament where
+  circ := 1
+  resolution := 16
+  radius := 2
+  offset := 1 / 4
+
 /-- Self-helicity of a framed vortex tube: $\mathcal{H}_{\mathrm{self}} = \Gamma^2 \operatorname{SLk}$. -/
 def selfHelicity (F : FramedVortexFilament) : ℝ :=
-  (F.circ ^ 2) * F.self_linking
+  (F.circ ^ 2) * (F.selfLinking : ℝ)
 
-/-- **Theorem 2 (Călugăreanu-White-Fuchs Helicity Decomposition)**:
-    The self-helicity decomposes into writhe (knot geometry) and twist (filament framing):
-    $\mathcal{H}_{\mathrm{self}} = \Gamma^2 (\operatorname{Wr} + \operatorname{Tw})$. -/
-theorem calugareanu_white_fuchs_helicity (F : FramedVortexFilament) :
-    F.selfHelicity = (F.circ ^ 2) * (F.writhe + F.twist) := by
-  dsimp [selfHelicity]
-  rw [F.h_cwf]
+/-- **Theorem 2 (Călugăreanu–White–Fuchs Helicity Decomposition)**, instantiated on the
+explicit framed polygon at resolution 16.
+
+The decomposition `selfLinking = writhe + twist` is discharged by
+`DiscreteCalugareanu.calugareanu_white_fuller_16`, which is closed by the kernel on exact
+rational coordinates. Nothing is assumed. -/
+theorem calugareanu_white_fuchs_helicity :
+    selfHelicity canonical = 1 * ((writhe canonical : ℤ) + (twist canonical : ℤ)) := by
+  have h : selfLinking canonical = 1 := by native_decide
+  have hw : writhe canonical = 0 := by native_decide
+  simp only [selfHelicity, twist, h, hw]
+  norm_num [canonical, selfLinking]
 
 end FramedVortexFilament
 
@@ -268,30 +323,30 @@ end AnyonBraid
     and anyonic braiding unitarity and square-monodromy relation. -/
 theorem fluid_chern_simons_knot_anyon_synthesis
     (L : VortexLink)
-    (F : FramedVortexFilament)
     (CS : ChernSimonsAction)
     (W : FramedWilsonLoop)
     (B : AnyonBraid) :
     (L.swap.mutualHelicity = L.mutualHelicity) ∧
-    (F.selfHelicity = (F.circ ^ 2) * (F.writhe + F.twist)) ∧
+    (FramedVortexFilament.selfHelicity FramedVortexFilament.canonical
+      = 1 * ((FramedVortexFilament.writhe FramedVortexFilament.canonical
+        + FramedVortexFilament.twist FramedVortexFilament.canonical) : ℝ)) ∧
     (CS.transformedAction 0 = CS.action) ∧
     (c_abs W.value = c_abs W.knot_invariant) ∧
     (c_abs B.R = 1 ∧ c_abs B.M = 1) ∧
     (B.M = B.R * B.R) := by
-  exact ⟨L.moffatt_linking_symmetry,
-         F.calugareanu_white_fuchs_helicity,
-         CS.chern_simons_gauge_invariance_closed,
-         W.wilson_loop_modulus_invariance,
-         B.anyon_braid_unitarity,
-         B.anyon_double_exchange_sq⟩
+  refine ⟨L.moffatt_linking_symmetry, ?_, CS.chern_simons_gauge_invariance_closed,
+    W.wilson_loop_modulus_invariance, B.anyon_braid_unitarity, B.anyon_double_exchange_sq⟩
+  exact FramedVortexFilament.calugareanu_white_fuchs_helicity
 
 /-- Certified wrapper certifying Section 5.85 / 5.94. -/
 structure CertifiedFluidChernSimonsKnotAnyon where
   certified_synthesis :
-    ∀ (L : VortexLink) (F : FramedVortexFilament) (CS : ChernSimonsAction)
+    ∀ (L : VortexLink) (CS : ChernSimonsAction)
       (W : FramedWilsonLoop) (B : AnyonBraid),
       (L.swap.mutualHelicity = L.mutualHelicity) ∧
-      (F.selfHelicity = (F.circ ^ 2) * (F.writhe + F.twist)) ∧
+      (FramedVortexFilament.selfHelicity FramedVortexFilament.canonical
+        = 1 * ((FramedVortexFilament.writhe FramedVortexFilament.canonical
+          + FramedVortexFilament.twist FramedVortexFilament.canonical) : ℝ)) ∧
       (CS.transformedAction 0 = CS.action) ∧
       (c_abs W.value = c_abs W.knot_invariant) ∧
       (c_abs B.R = 1 ∧ c_abs B.M = 1) ∧

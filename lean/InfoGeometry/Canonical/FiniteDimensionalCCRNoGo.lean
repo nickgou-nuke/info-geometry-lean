@@ -26,11 +26,13 @@ theorem commutator_ne_scalar_smul_one
   have hscalar :
       LinearMap.trace K V (c • (1 : Module.End K V)) =
         c * (Module.finrank K V : K) := by
-    rw [map_smul, LinearMap.trace_id]
+    rw [map_smul, Module.End.one_eq_id, LinearMap.trace_id]
     simp
   rw [hcomm, hscalar] at htrace
   have hdim : (Module.finrank K V : K) ≠ 0 := by
-    exact_mod_cast (Module.finrank_pos (R := K) (M := V))
+    have hfin : Module.finrank K V ≠ 0 :=
+      Nat.ne_of_gt (Module.finrank_pos (R := K) (M := V))
+    exact_mod_cast hfin
   exact (mul_ne_zero hc hdim) htrace.symm
 
 /-- In particular, an exact scalar commutation relation on a nonzero

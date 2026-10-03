@@ -23,7 +23,10 @@ instance splitSpace_finiteDimensional : (stages : ℕ) →
 theorem splitSpace_finrank (stages : ℕ) :
     Module.finrank ℝ (SplitSpace stages) = 2 * stages := by
   induction stages with
-  | zero => simp [SplitSpace]
+  | zero =>
+      change Module.finrank ℝ (Fin 0 → ℝ × ℝ) = 0
+      rw [Module.finrank_pi_fintype]
+      simp
   | succ stages induction_hypothesis =>
       change Module.finrank ℝ ((ℝ × ℝ) × SplitSpace stages) = 2 * (stages + 1)
       rw [Module.finrank_prod, Module.finrank_prod, induction_hypothesis]

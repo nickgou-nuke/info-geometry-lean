@@ -86,9 +86,32 @@ uniqueness of a global `KAN` factorization, nor does it define a geometric
 Dirac–Kähler operator. Its theorem `kan_trace_supported_on_a` is scoped to the
 specific matrices shown in the theorem.
 
+### `GrandUnification/MoebiusTomitaPacket.lean`
+
+The previous source had a compile error in the commutant closure proof: its
+Unicode-subscript binders were referenced by different, undefined ASCII names.
+The proof now uses consistently bound variables and builds. Its former comments
+claimed a Tomita–Takesaki/AQFT and Klein/Möbius phase-separation result, while
+the code only supplied algebraic hypotheses. The source now states that scope
+explicitly, names the reflection conditions by their actual commutant laws,
+and defines a Krein symmetry as an involutive isometry of a supplied bilinear
+form. This does not assert nondegeneracy, indefiniteness, completeness, or a
+geometric origin.
+
 ## Verification boundary
 
 The matrix and pair-operation claims must be verified with their own narrow
 Lean builds. A build cannot promote them to the stronger geometric and
-functorial claims listed above. No claim of a repository-wide build or
-independent audit is made here.
+functorial claims listed above.
+
+The targeted locked builds passed for
+`InfoGeometry.GrandUnification.IwasawaDiracDecomposition`,
+`InfoGeometry.GrandUnification.IwasawaCayleyArchetypeDictionary`,
+`InfoGeometry.GrandUnification.MoebiusTomitaPacket`, and
+`InfoGeometry.Canonical.PristineChainKleinDiracKahlerCapstone`. The broader
+`InfoGeometry` umbrella build exited with code 1 on unrelated modules, including
+unknown `Y1`/`Y2` identifiers in the former version of
+`MoebiusTomitaPacket`, missing imports in `InfoGeometry.Topological.All`, a
+rewrite failure in `Canonical/FiniteDimensionalCCRNoGo.lean`, and other proof
+or resource failures. The repository-wide baseline is therefore not verified
+clean by this run. This is a source audit, not an independent QMS acceptance.

@@ -2,18 +2,31 @@ import Mathlib.LinearAlgebra.BilinearForm.Basic
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.LinearAlgebra.Matrix.ToLin
 
+/-!
+# Conditional commutant and modular-reflection identities
+
+This file defines a commutant for a supplied submodule of endomorphisms and
+packages explicit algebraic hypotheses for a supplied involution. It does not
+construct a von Neumann algebra, prove the Tomita–Takesaki theorem, or derive
+the involution from Klein-bottle or Möbius topology. The mathematical thread
+retained here is the relation between an algebra, its commutant, and a chosen
+conjugation-like map, with each required identity stated as a premise.
+-/
+
 namespace InfoGeometry.GrandUnification.MoebiusTomitaPacket
 
 open LinearMap
 
-variable {R M : Type*} [CommRing R] [Invertible (2 : R)] [AddCommGroup M] [Module R M]
+variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
 
-/-! ### 1. Krein Space and Indefinite Metric -/
+/-! ### 1. A bilinear form and its isometric involution -/
 
-variable (KreinMetric : LinearMap.BilinForm R M)
-
-structure KreinSymmetry (𝒥 : Module.End R M) : Prop where
-  is_involution : 𝒥 * 𝒥 = 1
+/-- An involutive linear isometry of a supplied bilinear form. This predicate
+does not assert nondegeneracy, indefiniteness, or completeness of the form. -/
+structure KreinSymmetry
+    (Q : LinearMap.BilinForm R M) (J : Module.End R M) : Prop where
+  involutive : J * J = 1
+  preserves_form : ∀ x y : M, Q (J x) (J y) = Q x y
 
 /-! ### 2. The Commutant (The Dual Reality) -/
 
@@ -21,7 +34,7 @@ variable (ℳ : Submodule R (Module.End R M))
 
 def Commutant (ℳ : Submodule R (Module.End R M)) : Submodule R (Module.End R M) where
   carrier := { Y | ∀ X ∈ ℳ, X * Y = Y * X }
-  add_mem' {Y₁ Y₂} hY1 hY2 X hX := by
+  add_mem' {Y1 Y2} hY1 hY2 X hX := by
     calc X * (Y1 + Y2) = X * Y1 + X * Y2 := mul_add X Y1 Y2
          _ = Y1 * X + Y2 * X := by rw [hY1 X hX, hY2 X hX]
          _ = (Y1 + Y2) * X := (add_mul Y1 Y2 X).symm
@@ -32,14 +45,15 @@ def Commutant (ℳ : Submodule R (Module.End R M)) : Submodule R (Module.End R M
          _ = c • (Y * X) := by rw [hY X hX]
          _ = (c • Y) * X := (smul_mul_assoc c Y X).symm
 
-/-! ### 3. Tomita-Takesaki Modular Reflection -/
+/-! ### 3. Conditional algebraic reflection laws -/
 
-structure ModularReflection (J_Δ : Module.End R M) (ℳ : Submodule R (Module.End R M)) : Prop where
-  is_involution : J_Δ * J_Δ = 1
-  tomita_theorem : ∀ X ∈ ℳ, (J_Δ * X * J_Δ) ∈ Commutant ℳ
-  tomita_surjective : ∀ Y ∈ Commutant ℳ, ∃ X ∈ ℳ, Y = J_Δ * X * J_Δ
+structure InvolutiveCommutantReflection
+    (J : Module.End R M) (A : Submodule R (Module.End R M)) : Prop where
+  involutive : J * J = 1
+  maps_into_commutant : ∀ X ∈ A, (J * X * J) ∈ Commutant A
+  surjective_onto_commutant : ∀ Y ∈ Commutant A, ∃ X ∈ A, Y = J * X * J
 
-/-! ### 4. The Machian Equivalence Lifted to AQFT -/
+/-! ### 4. A scalar-submodule commutant lemma -/
 
 theorem commutant_maximal_of_algebra_trivial
     (h_trivial : ∀ X ∈ ℳ, ∃ c : R, X = c • (1 : Module.End R M)) :
@@ -52,17 +66,19 @@ theorem commutant_maximal_of_algebra_trivial
        _ = Y * (c • 1) := (mul_smul_comm c Y 1).symm
 
 /--
-The Unification Packet: Tomita-Takesaki Phase Separation.
-Когато възникне аномалия, Мьобиусовото усукване на Бутилката на Клайн заключва
-алгебрата ℳ (Ego) и комутанта ℳ' (Anima) в глобално преплетена нетривиална структура.
+This structure packages a supplied endomorphism, submodule, and the displayed
+reflection/nontriviality hypotheses. It does not prove that such data exist or
+that they arise from a geometric parity twist.
 -/
-structure TomitaPhaseSeparationPacket where
-  ℳ : Submodule R (Module.End R M)
-  J_Δ : Module.End R M
-  reflection_props : ModularReflection J_Δ ℳ
-  is_non_trivial : ∃ X ∈ ℳ, ∀ c : R, X ≠ c • (1 : Module.End R M)
-  /-- Мьобиусов паритетен Twist, породен от неориентируемостта. -/
-  𝒯 : Module.End R M
-  klein_twist_anticommute : J_Δ * 𝒯 = - (𝒯 * J_Δ)
+structure CommutantReflectionData where
+  algebra : Submodule R (Module.End R M)
+  kreinForm : LinearMap.BilinForm R M
+  involution : Module.End R M
+  krein_symmetry : KreinSymmetry kreinForm involution
+  reflection : InvolutiveCommutantReflection involution algebra
+  nontrivial_algebra : ∃ X ∈ algebra, ∀ c : R, X ≠ c • (1 : Module.End R M)
+  operator : Module.End R M
+  operator_anticommutes_with_involution :
+    involution * operator = - (operator * involution)
 
 end InfoGeometry.GrandUnification.MoebiusTomitaPacket

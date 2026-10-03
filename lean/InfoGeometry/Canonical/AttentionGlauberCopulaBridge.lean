@@ -55,6 +55,15 @@ noncomputable def jointDistribution (S : Matrix (Fin N) (Fin M) ℝ) :
     Matrix (Fin N) (Fin M) ℝ :=
   fun i j => (1 / (N : ℝ)) * attentionMatrix S i j
 
+/-- Every entry of the finite joint law is strictly positive. -/
+theorem jointDistribution_pos (S : Matrix (Fin N) (Fin M) ℝ)
+    (i : Fin N) (j : Fin M) :
+    0 < jointDistribution S i j := by
+  dsimp [jointDistribution]
+  have hN : 0 < (1 / (N : ℝ)) :=
+    one_div_pos.mpr (Nat.cast_pos.mpr (NeZero.pos N))
+  exact mul_pos hN (attention_pos S i j)
+
 /-- The joint distribution sums to 1 across the bipartite space Fin N × Fin M. -/
 theorem joint_total_sum (S : Matrix (Fin N) (Fin M) ℝ) :
     (∑ i : Fin N, ∑ j : Fin M, jointDistribution S i j) = 1 := by
@@ -80,6 +89,19 @@ theorem rowMarginal_eq_uniform (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) :
 /-- Key marginal distribution q(j) = ∑_i P(i, j). -/
 noncomputable def colMarginal (S : Matrix (Fin N) (Fin M) ℝ) (j : Fin M) : ℝ :=
   ∑ i : Fin N, jointDistribution S i j
+
+/-- Every key marginal is strictly positive because the query type is
+nonempty and every joint mass is positive. -/
+theorem colMarginal_pos (S : Matrix (Fin N) (Fin M) ℝ) (j : Fin M) :
+    0 < colMarginal S j := by
+  dsimp [colMarginal]
+  apply Finset.sum_pos
+  · intro i _
+    exact jointDistribution_pos S i j
+  · exact Finset.univ_nonempty
+
+theorem colMarginal_ne_zero (S : Matrix (Fin N) (Fin M) ℝ) (j : Fin M) :
+    colMarginal S j ≠ 0 := ne_of_gt (colMarginal_pos S j)
 
 /-- The key marginal sums to 1. -/
 theorem colMarginal_sum (S : Matrix (Fin N) (Fin M) ℝ) :
@@ -107,6 +129,13 @@ theorem attentionDependenceRatio_eq_weight_div_colMarginal
       attentionMatrix S i j / colMarginal S j := by
     rw [mul_div_mul_left (attentionMatrix S i j) (colMarginal S j) hN]
   exact h_alg
+
+/-- The marginal-normalized attention ratio is strictly positive. -/
+theorem attentionDependenceRatio_pos
+    (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) (j : Fin M) :
+    0 < attentionDependenceRatio S i j := by
+  rw [attentionDependenceRatio_eq_weight_div_colMarginal]
+  exact div_pos (attention_pos S i j) (colMarginal_pos S j)
 
 /-! ### 4. Finite cumulative tables -/
 

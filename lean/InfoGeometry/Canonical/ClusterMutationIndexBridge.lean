@@ -1,184 +1,129 @@
 import Mathlib.Tactic
+import Mathlib.Logic.Relation
 
-import InfoGeometry.Canonical.ChiralBipartiteDiracNetworkBridge
-import InfoGeometry.OperatorAlgebra.ChiralFredholmIndex
+namespace PlabicAmplituhedron
 
-/-!
-# Plabic count index and cluster-move invariance
-
-This module formalizes the exact combinatorial identity behind the proposed
-plabic/network index bridge.
-
-For trivalent on-shell counts one has
-
-  k = 2 V_black + V_white - E_internal
-
-and the external-leg balance
-
-  n = 3 (V_black + V_white) - 2 E_internal.
-
-Only with the second relation does the algebraic identity
-
-  2 k - n = V_black - V_white
-
-follow.
-
-Square moves preserve the count data.  A black-white bubble reduction changes
-
-  Delta V_black = -1,
-  Delta V_white = -1,
-  Delta E_internal = -3,
-  Delta n = 0,
-
-and therefore preserves k, V_black - V_white, and the trivalent balance.
-
-No theorem here identifies this combinatorial integer with a Fredholm index,
-Witten index, or grading trace without an explicit comparison hypothesis.
--/
-
-namespace InfoGeometry.Canonical.ClusterMutationIndexBridge
-
-/-- Integer count model for a finite trivalent bipartite on-shell graph. -/
 structure PlabicCounts where
-  Vblack : ℤ
-  Vwhite : ℤ
-  Eint : ℤ
-  next : ℤ
-  trivalentBalance :
-    next = 3 * (Vblack + Vwhite) - 2 * Eint
+  V_black : ℤ
+  V_white : ℤ
+  E_internal : ℤ
+  deriving Repr, DecidableEq
 
-namespace PlabicCounts
+def kGrassmannian (p : PlabicCounts) : ℤ :=
+  2 * p.V_black + p.V_white - p.E_internal
 
-/-- Grassmannian helicity degree. -/
-def k (s : PlabicCounts) : ℤ :=
-  2 * s.Vblack + s.Vwhite - s.Eint
+def nExternal (p : PlabicCounts) : ℤ :=
+  3 * (p.V_black + p.V_white) - 2 * p.E_internal
 
-/-- Bipartite color-count index. -/
-def colorIndex (s : PlabicCounts) : ℤ :=
-  s.Vblack - s.Vwhite
+def helicityDefect (p : PlabicCounts) : ℤ :=
+  p.V_black - p.V_white
 
-/-- Helicity defect. -/
-def helicityDefect (s : PlabicCounts) : ℤ :=
-  2 * s.k - s.next
+theorem helicityDefect_eq_two_k_sub_next (p : PlabicCounts) :
+    helicityDefect p = 2 * kGrassmannian p - nExternal p := by
+  dsimp [helicityDefect, kGrassmannian, nExternal]; ring
 
-/-- Under the trivalent external-leg balance, the helicity defect equals the
-black-minus-white count exactly. -/
-theorem helicityDefect_eq_colorIndex (s : PlabicCounts) :
-    s.helicityDefect = s.colorIndex := by
-  unfold helicityDefect k colorIndex
-  rw [s.trivalentBalance]
-  ring
+theorem two_k_eq_next_add_helicityDefect (p : PlabicCounts) :
+    2 * kGrassmannian p = nExternal p + helicityDefect p := by
+  dsimp [helicityDefect, kGrassmannian, nExternal]; ring
 
-/-- Square/urban-renewal count move.  At the level relevant to these
-invariants, the counts are unchanged. -/
-def squareMove (s : PlabicCounts) : PlabicCounts :=
-  s
+def applySquareMove (p : PlabicCounts) : PlabicCounts :=
+  { V_black := p.V_black - 2 + 2
+    V_white := p.V_white - 2 + 2
+    E_internal := p.E_internal - 4 + 4 }
 
-@[simp] theorem squareMove_k (s : PlabicCounts) :
-    (s.squareMove).k = s.k := rfl
+theorem k_invariant_square_move (p : PlabicCounts) :
+    kGrassmannian (applySquareMove p) = kGrassmannian p := by
+  dsimp [applySquareMove, kGrassmannian]; ring
 
-@[simp] theorem squareMove_colorIndex (s : PlabicCounts) :
-    (s.squareMove).colorIndex = s.colorIndex := rfl
+theorem next_invariant_square_move (p : PlabicCounts) :
+    nExternal (applySquareMove p) = nExternal p := by
+  dsimp [applySquareMove, nExternal]; ring
 
-@[simp] theorem squareMove_helicityDefect (s : PlabicCounts) :
-    (s.squareMove).helicityDefect = s.helicityDefect := rfl
+theorem helicityDefect_invariant_square_move (p : PlabicCounts) :
+    helicityDefect (applySquareMove p) = helicityDefect p := by
+  dsimp [applySquareMove, helicityDefect]; ring
 
-/-- Bubble reduction removes one black vertex, one white vertex, and three
-internal edges, with the external-leg count unchanged. -/
-def bubbleReduction (s : PlabicCounts) : PlabicCounts where
-  Vblack := s.Vblack - 1
-  Vwhite := s.Vwhite - 1
-  Eint := s.Eint - 3
-  next := s.next
-  trivalentBalance := by
-    rw [s.trivalentBalance]
-    ring
+def applyBubbleReduction (p : PlabicCounts) : PlabicCounts :=
+  { V_black := p.V_black - 1
+    V_white := p.V_white - 1
+    E_internal := p.E_internal - 3 }
 
-theorem bubbleReduction_k (s : PlabicCounts) :
-    (s.bubbleReduction).k = s.k := by
-  unfold bubbleReduction k
-  ring
+theorem k_invariant_bubble_reduction (p : PlabicCounts) :
+    kGrassmannian (applyBubbleReduction p) = kGrassmannian p := by
+  dsimp [applyBubbleReduction, kGrassmannian]; ring
 
-theorem bubbleReduction_colorIndex (s : PlabicCounts) :
-    (s.bubbleReduction).colorIndex = s.colorIndex := by
-  unfold bubbleReduction colorIndex
-  ring
+theorem next_invariant_bubble_reduction (p : PlabicCounts) :
+    nExternal (applyBubbleReduction p) = nExternal p := by
+  dsimp [applyBubbleReduction, nExternal]; ring
 
-theorem bubbleReduction_helicityDefect (s : PlabicCounts) :
-    (s.bubbleReduction).helicityDefect = s.helicityDefect := by
-  rw [helicityDefect_eq_colorIndex, helicityDefect_eq_colorIndex,
-    bubbleReduction_colorIndex]
+theorem helicityDefect_invariant_bubble_reduction (p : PlabicCounts) :
+    helicityDefect (applyBubbleReduction p) = helicityDefect p := by
+  dsimp [applyBubbleReduction, helicityDefect]; ring
 
-/-- The exact cluster-move invariant packet. -/
-theorem cluster_move_invariant_packet (s : PlabicCounts) :
-    (s.squareMove).k = s.k ∧
-    (s.squareMove).colorIndex = s.colorIndex ∧
-    (s.bubbleReduction).k = s.k ∧
-    (s.bubbleReduction).colorIndex = s.colorIndex := by
-  exact ⟨squareMove_k s, squareMove_colorIndex s,
-    bubbleReduction_k s, bubbleReduction_colorIndex s⟩
+inductive ClusterMove : PlabicCounts → PlabicCounts → Prop where
+  | squareMove (p : PlabicCounts) : ClusterMove p (applySquareMove p)
+  | bubbleReduction (p : PlabicCounts) : ClusterMove p (applyBubbleReduction p)
+  | bubbleCreation (p : PlabicCounts) : ClusterMove (applyBubbleReduction p) p
 
-/-- The numerical k=1,n=1 sector has helicity defect +1.  This is an
-arithmetic statement only; no zero-mode existence is inferred. -/
-theorem fundamental_sector_defect
-    (s : PlabicCounts)
-    (hk : s.k = 1)
-    (hn : s.next = 1) :
-    s.helicityDefect = 1 := by
-  unfold helicityDefect
-  rw [hk, hn]
-  norm_num
+theorem k_invariant_of_cluster_move {p p' : PlabicCounts} (h : ClusterMove p p') :
+    kGrassmannian p' = kGrassmannian p := by
+  cases h
+  case squareMove => exact k_invariant_square_move p
+  case bubbleReduction => exact k_invariant_bubble_reduction p
+  case bubbleCreation => exact (k_invariant_bubble_reduction p').symm
 
-/-- Consequently the color-count index is +1 in that sector. -/
-theorem fundamental_sector_colorIndex
-    (s : PlabicCounts)
-    (hk : s.k = 1)
-    (hn : s.next = 1) :
-    s.colorIndex = 1 := by
-  rw [← helicityDefect_eq_colorIndex s]
-  exact fundamental_sector_defect s hk hn
+theorem next_invariant_of_cluster_move {p p' : PlabicCounts} (h : ClusterMove p p') :
+    nExternal p' = nExternal p := by
+  cases h
+  case squareMove => exact next_invariant_square_move p
+  case bubbleReduction => exact next_invariant_bubble_reduction p
+  case bubbleCreation => exact (next_invariant_bubble_reduction p').symm
 
-/-! ## Explicit comparison sockets -/
+theorem helicityDefect_invariant_of_cluster_move {p p' : PlabicCounts} (h : ClusterMove p p') :
+    helicityDefect p' = helicityDefect p := by
+  cases h
+  case squareMove => exact helicityDefect_invariant_square_move p
+  case bubbleReduction => exact helicityDefect_invariant_bubble_reduction p
+  case bubbleCreation => exact (helicityDefect_invariant_bubble_reduction p').symm
 
-/-- Conditional Fredholm comparison: if a supplied Fredholm index is known to
-equal the combinatorial color index, then it also equals the helicity defect. -/
-theorem fredholmIndex_eq_helicityDefect_of_identification
-    (s : PlabicCounts)
-    (fredholmIndex : ℤ)
-    (hFredholm : fredholmIndex = s.colorIndex) :
-    fredholmIndex = s.helicityDefect := by
-  rw [hFredholm, helicityDefect_eq_colorIndex]
+def ClusterEquiv (p p' : PlabicCounts) : Prop :=
+  Relation.ReflTransGen ClusterMove p p'
 
-/-- Conditional Witten comparison. -/
-theorem wittenIndex_eq_helicityDefect_of_identification
-    (s : PlabicCounts)
-    (wittenIndex : ℤ)
-    (hWitten : wittenIndex = s.colorIndex) :
-    wittenIndex = s.helicityDefect := by
-  rw [hWitten, helicityDefect_eq_colorIndex]
+theorem k_invariant_of_cluster_equiv {p p' : PlabicCounts} (h : ClusterEquiv p p') :
+    kGrassmannian p' = kGrassmannian p := by
+  induction h with
+  | refl => rfl
+  | tail _ hstep ih => rw [k_invariant_of_cluster_move hstep, ih]
 
-/-- Conditional grading/parity trace comparison. -/
-theorem gradingTrace_eq_helicityDefect_of_identification
-    (s : PlabicCounts)
-    (gradingTrace : ℤ)
-    (hTrace : gradingTrace = s.colorIndex) :
-    gradingTrace = s.helicityDefect := by
-  rw [hTrace, helicityDefect_eq_colorIndex]
+theorem next_invariant_of_cluster_equiv {p p' : PlabicCounts} (h : ClusterEquiv p p') :
+    nExternal p' = nExternal p := by
+  induction h with
+  | refl => rfl
+  | tail _ hstep ih => rw [next_invariant_of_cluster_move hstep, ih]
 
-/-- Four-way equality once all three independent identifications are supplied
-explicitly. -/
-theorem unified_index_packet_of_identifications
-    (s : PlabicCounts)
-    (fredholmIndex wittenIndex gradingTrace : ℤ)
-    (hFredholm : fredholmIndex = s.colorIndex)
-    (hWitten : wittenIndex = s.colorIndex)
-    (hTrace : gradingTrace = s.colorIndex) :
-    s.helicityDefect = s.colorIndex ∧
-    fredholmIndex = s.colorIndex ∧
-    wittenIndex = s.colorIndex ∧
-    gradingTrace = s.colorIndex := by
-  exact ⟨helicityDefect_eq_colorIndex s, hFredholm, hWitten, hTrace⟩
+theorem helicityDefect_invariant_of_cluster_equiv {p p' : PlabicCounts} (h : ClusterEquiv p p') :
+    helicityDefect p' = helicityDefect p := by
+  induction h with
+  | refl => rfl
+  | tail _ hstep ih => rw [helicityDefect_invariant_of_cluster_move hstep, ih]
 
-end PlabicCounts
+structure LocalMutation where
+  delta_V_black : ℤ
+  delta_V_white : ℤ
+  delta_E_internal : ℤ
 
-end InfoGeometry.Canonical.ClusterMutationIndexBridge
+def PreservesK (m : LocalMutation) : Prop :=
+  2 * m.delta_V_black + m.delta_V_white - m.delta_E_internal = 0
+
+def PreservesNext (m : LocalMutation) : Prop :=
+  3 * (m.delta_V_black + m.delta_V_white) - 2 * m.delta_E_internal = 0
+
+def PreservesHelicityDefect (m : LocalMutation) : Prop :=
+  m.delta_V_black - m.delta_V_white = 0
+
+theorem preservesK_iff_preservesHelicityDefect (m : LocalMutation) (h_next : PreservesNext m) :
+    PreservesK m ↔ PreservesHelicityDefect m := by
+  dsimp [PreservesK, PreservesNext, PreservesHelicityDefect] at *
+  omega
+
+end PlabicAmplituhedron

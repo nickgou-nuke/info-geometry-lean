@@ -1,3 +1,5 @@
+import InfoGeometry.Canonical.ClusterMutationIndexBridge
+import InfoGeometry.Canonical.AttentionGlauberMutualInformation
 import InfoGeometry.Canonical.ZornNavierStokesHydrodynamicBridge
 import InfoGeometry.Canonical.Archetypes.FiniteMaximum
 import InfoGeometry.Canonical.Archetypes.ConvexBound
@@ -2301,7 +2303,6 @@ import InfoGeometry.Canonical.Cl11BipartitePolynomialSpectralAction
 import InfoGeometry.Canonical.CartanBladePolynomialSpectralAction
 import InfoGeometry.Canonical.ChiralBipartiteDiracNetworkBridge
 import InfoGeometry.Canonical.NonlinearTwinWaveOpticsBridge
-import InfoGeometry.Canonical.ClusterMutationIndexBridge
 import InfoGeometry.Canonical.BipartiteCuntzUHFBridge
 import InfoGeometry.Canonical.CantorCuntzFractalBridge
 import InfoGeometry.Canonical.G2CuntzKriegerScalarSeparatedBridge

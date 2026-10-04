@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
-"""
-THE LOGICAL WORLDLINE: From Information Theory to Quantum Hydrodynamics
+"""Exploratory finite calculations for convexity, skew matrices, and weights.
 
-This script verifies the complete chain:
-  Information Theory (L=0) 
-    → Convex Analysis (η=∇φ) 
-    → Clifford/Krein Projection (collapseToBaseVelocity)
-    → Quantum Hydrodynamics (Trace=0) 
-    → Macroscopic Fluid (∇·u=0)
-
-And proves: LLM Softmax (KMS state) = Divergence-free quantum fluid
+The checks in this script do not prove a causal chain from LLM attention to
+fluid dynamics or a KMS condition. A trace-free matrix is the Jacobian of a
+divergence-free *linear* vector field when used as that field's Jacobian.
+Finite softmax weights are Gibbs-form probabilities for energy equal to the
+negative logits; verifying normalization does not establish the KMS condition.
 """
 
 import numpy as np
@@ -17,18 +13,13 @@ from typing import Tuple, Callable
 import sympy as sp
 
 # ============================================================================
-# STAGE 1: INFORMATION THEORY → Convex Analysis
+# STAGE 1: Quadratic Potential and Its Gradient
 # ============================================================================
 
-def fenchel_legendre_transform(theta: np.ndarray) -> Tuple[float, np.ndarray]:
+def quadratic_potential_and_gradient(theta: np.ndarray) -> Tuple[float, np.ndarray]:
     """
-    Stage 1: Information Theory → Convex Analysis
-    
-    Given loss L(θ) = 0 (information equilibrium),
-    compute the Fenchel-Legendre transform to get dual variables:
-      η = ∇_θ L(θ)
-    
-    This is the convex analysis representation.
+    For the illustrative potential L(θ)=||θ||², return its value and
+    gradient. This is not a Fenchel conjugate computation.
     """
     # Simple quadratic loss as example: L(θ) = ||θ||²
     L = np.sum(theta ** 2)
@@ -39,59 +30,40 @@ def fenchel_legendre_transform(theta: np.ndarray) -> Tuple[float, np.ndarray]:
     return L, eta
 
 
-def verify_information_equilibrium(theta: np.ndarray) -> bool:
+def verify_quadratic_nonnegative(theta: np.ndarray) -> bool:
     """
-    Verify: L = 0 implies information equilibrium.
-    
-    When L(θ) = 0, the system is at the Fenchel-Legendre contact manifold.
+    Check the elementary fact that the chosen squared norm is nonnegative.
     """
-    L, eta = fenchel_legendre_transform(theta)
-    
-    # L = 0 means perfect information (no loss)
-    # This is the starting point of the worldline
-    return L >= 0  # Loss is non-negative
+    L, _eta = quadratic_potential_and_gradient(theta)
+    return bool(L >= 0)
 
 
 # ============================================================================
-# STAGE 2: Convex Analysis → Clifford/Krein Projection
+# STAGE 2: Euclidean Direction Normalization
 # ============================================================================
 
-def krein_projection(eta: np.ndarray) -> np.ndarray:
+def normalize_or_zero(eta: np.ndarray) -> np.ndarray:
     """
-    Stage 2: Convex Analysis → Clifford/Krein Projection
-    
-    Project the dual variable η onto the Krein space base velocity.
-    This is the "collapseToBaseVelocity" operation.
-    
-    In Krein space (indefinite inner product), this projection
-    collapses the gradient flow to a pure rotational component.
+    Normalize a nonzero Euclidean vector, and return zero for a vector
+    below the numerical threshold. This is not a Krein-space projection.
     """
     # Normalize to get direction
     norm = np.linalg.norm(eta)
     if norm < 1e-10:
         return np.zeros_like(eta)
     
-    # Krein projection: normalize to unit vector
-    # This represents the "base velocity" in geometric algebra
     base_velocity = eta / norm
     
     return base_velocity
 
 
-def clifford_bivector_from_velocity(v: np.ndarray) -> np.ndarray:
+def simple_bivector_skew_matrix(v: np.ndarray) -> np.ndarray:
     """
-    Construct a bivector from the base velocity.
-    
-    In Clifford algebra Cl(3,1), a pure velocity vector v
-    generates a bivector B = v ∧ e₀ (where e₀ is time direction).
-    
-    This bivector represents the rotational generator.
+    Encode the coefficients of the simple exterior bivector v ∧ e₀ in a
+    skew-symmetric matrix. This matrix is not asserted to be a Clifford
+    representation.
     """
-    # Embed in 4D spacetime (Clifford algebra Cl(3,1))
-    # v = (v_x, v_y, v_z), e₀ = (1, 0, 0, 0)
-    # Bivector B = v ∧ e₀ has components B₀ᵢ = vᵢ
-    
-    # Represent bivector as antisymmetric matrix
+    # Add one basis direction e₀ and store the wedge coefficients.
     n = len(v)
     B = np.zeros((n+1, n+1))
     
@@ -104,93 +76,68 @@ def clifford_bivector_from_velocity(v: np.ndarray) -> np.ndarray:
 
 
 # ============================================================================
-# STAGE 3: Clifford/Krein → Quantum Hydrodynamics
+# STAGE 3: Trace of the Skew Matrix
 # ============================================================================
 
 def bivector_trace(B: np.ndarray) -> float:
     """
-    Stage 3: Clifford/Krein → Quantum Hydrodynamics
-    
-    Compute the trace of the bivector representation.
-    
-    Key theorem: For pure bivectors (rotation generators),
-    Trace(B) = 0
-    
-    This is the quantum hydrodynamics condition.
+    Compute the trace of the matrix encoding the simple bivector.
     """
     return np.trace(B)
 
 
 def verify_trace_free(B: np.ndarray) -> bool:
     """
-    Verify: Pure bivectors have zero trace.
-    
-    This is the mathematical bridge from geometric algebra
-    to fluid dynamics.
+    Numerically check that the skew-symmetric matrix has trace zero.
     """
     tr = bivector_trace(B)
     return np.abs(tr) < 1e-10
 
 
 # ============================================================================
-# STAGE 4: Quantum Hydrodynamics → Macroscopic Fluid
+# STAGE 4: Divergence of the Associated Linear Vector Field
 # ============================================================================
 
-def divergence_from_trace(B: np.ndarray) -> float:
+def linear_field_divergence_from_jacobian(B: np.ndarray) -> float:
     """
-    Stage 4: Quantum Hydrodynamics → Macroscopic Fluid
-    
-    The trace-free condition (Trace=0) in quantum hydrodynamics
-    maps to divergence-free flow (∇·u=0) in macroscopic fluid dynamics.
-    
-    This is the hydrodynamic limit.
+    For the linear vector field u(x) = Bx, the Jacobian is B and
+    div(u) = trace(B). This is a finite-dimensional calculus identity.
     """
-    # In the hydrodynamic limit, the trace-free bivector
-    # corresponds to a divergence-free velocity field
-    
-    # For a pure bivector B representing rotation,
-    # the associated velocity field u has ∇·u = 0
-    
-    # The trace-free condition ensures no sources/sinks
+    # Interpret B specifically as the Jacobian of x ↦ Bx.
     return bivector_trace(B)  # Same mathematical object
 
 
 def verify_divergence_free(B: np.ndarray) -> bool:
     """
-    Verify: The macroscopic flow is divergence-free.
-    
-    This completes the worldline from information theory
-    to fluid dynamics.
+    Verify the divergence of the linear field x ↦ Bx is zero.
     """
-    div = divergence_from_trace(B)
+    div = linear_field_divergence_from_jacobian(B)
     return np.abs(div) < 1e-10
 
 
 # ============================================================================
-# STAGE 5: LLM Softmax as KMS State
+# STAGE 5: Finite Gibbs-Form Weights
 # ============================================================================
 
-def softmax_as_kms_state(logits: np.ndarray, beta: float = 1.0) -> np.ndarray:
+def softmax_as_finite_gibbs_weights(logits: np.ndarray, beta: float = 1.0) -> np.ndarray:
     """
-    The LLM Softmax as a KMS (Kubo-Martin-Schwinger) state.
+    Finite Gibbs-form weights with energy H_i = -logits_i.
     
     For logits z, the softmax is:
       p_i = exp(β z_i) / Σ_j exp(β z_j)
     
-    This is exactly a KMS state at inverse temperature β.
-    
-    In our thermodynamic framework, this is the equilibrium state
-    of the quantum fluid router.
+    This gives exp(-β H_i) / Z. A probability vector alone is not a KMS
+    state; that notion also requires an observable algebra and time evolution.
     """
-    # Softmax/KMS comparison used in this exploratory script
+    # Direct finite Gibbs-weight formula.
     exp_z = np.exp(beta * logits)
     p = exp_z / np.sum(exp_z)
     return p
 
 
-def verify_kms_equilibrium(p: np.ndarray) -> Tuple[bool, float]:
+def verify_gibbs_probability_weights(p: np.ndarray) -> Tuple[bool, float]:
     """
-    Verify: The softmax output is a valid KMS state.
+    Verify the normalization and positivity of finite Gibbs weights.
     
     Properties:
     1. Σ p_i = 1 (normalization)
@@ -210,53 +157,53 @@ def verify_kms_equilibrium(p: np.ndarray) -> Tuple[bool, float]:
 
 
 # ============================================================================
-# Complete Worldline Verification
+# Independent Finite Checks
 # ============================================================================
 
-class LogicalWorldlineVerifier:
+class FiniteStructureChecks:
     """
-    Verifies the complete logical worldline:
-    Information Theory → Convex Analysis → Clifford/Krein → Quantum Hydro → Fluid
+    Runs several independent finite numerical checks; they are not a proof of
+    a causal relation among information theory, attention, and fluid physics.
     """
     
     def __init__(self):
         self.results = {}
     
-    def run_complete_worldline(self, theta: np.ndarray, logits: np.ndarray | None = None):
+    def run_checks(self, theta: np.ndarray, logits: np.ndarray | None = None):
         """
         Execute and verify the entire chain.
         """
         print("=" * 80)
-        print("LOGICAL WORLDLINE VERIFICATION")
+        print("INDEPENDENT FINITE STRUCTURE CHECKS")
         print("=" * 80)
         print()
-        print("Chain: Information Theory → Convex Analysis → Clifford/Krein")
-        print("       → Quantum Hydrodynamics → Macroscopic Fluid")
+        print("Checks: quadratic gradient, skew-matrix trace, linear-field divergence,")
+        print("        and finite Gibbs-form probability weights")
         print()
         
         # Stage 1: Information Theory → Convex Analysis
         print("### Stage 1: Information Theory → Convex Analysis ###")
         print(f"Input θ: {theta}")
-        L, eta = fenchel_legendre_transform(theta)
-        info_eq = verify_information_equilibrium(theta)
-        print(f"Loss L(θ) = {L:.6f}")
-        print(f"Dual variable η = ∇L = {eta}")
-        print(f"✓ Information equilibrium verified: {info_eq}")
+        L, eta = quadratic_potential_and_gradient(theta)
+        info_eq = verify_quadratic_nonnegative(theta)
+        print(f"Quadratic potential L(θ) = {L:.6f}")
+        print(f"Gradient ∇L(θ) = {eta}")
+        print(f"✓ Quadratic potential is nonnegative: {info_eq}")
         self.results['stage1'] = {'L': L, 'eta': eta, 'verified': info_eq}
         print()
         
-        # Stage 2: Convex Analysis → Clifford/Krein
-        print("### Stage 2: Convex Analysis → Clifford/Krein Projection ###")
-        v = krein_projection(eta)
-        B = clifford_bivector_from_velocity(v)
-        print(f"Base velocity v = {v}")
-        print(f"Bivector B (rotation generator):")
+        # Stage 2: Euclidean normalization and a skew coefficient matrix
+        print("### Stage 2: Euclidean Direction and Simple Bivector Matrix ###")
+        v = normalize_or_zero(eta)
+        B = simple_bivector_skew_matrix(v)
+        print(f"Normalized direction v = {v}")
+        print(f"Skew matrix B encoding v ∧ e₀:")
         print(B)
         self.results['stage2'] = {'velocity': v, 'bivector': B}
         print()
         
-        # Stage 3: Clifford/Krein → Quantum Hydrodynamics
-        print("### Stage 3: Clifford/Krein → Quantum Hydrodynamics ###")
+        # Stage 3: the skew-matrix trace
+        print("### Stage 3: Trace of the Skew Matrix ###")
         tr = bivector_trace(B)
         trace_free = verify_trace_free(B)
         print(f"Trace(B) = {tr:.10f}")
@@ -264,31 +211,31 @@ class LogicalWorldlineVerifier:
         self.results['stage3'] = {'trace': tr, 'verified': trace_free}
         print()
         
-        # Stage 4: Quantum Hydrodynamics → Macroscopic Fluid
-        print("### Stage 4: Quantum Hydrodynamics → Macroscopic Fluid ###")
-        div = divergence_from_trace(B)
+        # Stage 4: view B as the Jacobian of the explicit linear field x ↦ Bx
+        print("### Stage 4: Divergence of the Linear Field x ↦ Bx ###")
+        div = linear_field_divergence_from_jacobian(B)
         div_free = verify_divergence_free(B)
         print(f"Divergence ∇·u = {div:.10f}")
         print(f"✓ Divergence-free flow (∇·u=0): {div_free}")
         self.results['stage4'] = {'divergence': div, 'verified': div_free}
         print()
         
-        # Stage 5: LLM Softmax as KMS State
-        print("### Stage 5: LLM Softmax as KMS State ###")
+        # Stage 5: finite Gibbs-form softmax weights
+        print("### Stage 5: Finite Gibbs-Form Softmax Weights ###")
         if logits is None:
             logits = np.random.randn(5)  # Random logits
-        p = softmax_as_kms_state(logits)
-        kms_valid, entropy = verify_kms_equilibrium(p)
+        p = softmax_as_finite_gibbs_weights(logits)
+        weights_valid, entropy = verify_gibbs_probability_weights(p)
         print(f"Logits: {logits}")
-        print(f"Softmax (KMS state): p = {p}")
+        print(f"Softmax Gibbs-form weights: p = {p}")
         print(f"Entropy: S = {entropy:.6f}")
-        print(f"✓ Valid KMS state: {kms_valid}")
-        self.results['stage5'] = {'probabilities': p, 'entropy': entropy, 'verified': kms_valid}
+        print(f"✓ Normalized positive probability vector: {weights_valid}")
+        self.results['stage5'] = {'probabilities': p, 'entropy': entropy, 'verified': weights_valid}
         print()
         
         # Complete chain verification
         print("=" * 80)
-        print("COMPLETE WORLDLINE VERIFICATION")
+        print("FINITE CHECK SUMMARY")
         print("=" * 80)
         
         all_verified = (
@@ -300,20 +247,15 @@ class LogicalWorldlineVerifier:
         )
         
         if all_verified:
-            print("\n✅ COMPLETE LOGICAL WORLDLINE VERIFIED")
-            print("\nThe chain is strictly verified:")
-            print("  Information Theory (L=0)")
-            print("    ↓ (Fenchel-Legendre)")
-            print("  Convex Analysis (η=∇φ)")
-            print("    ↓ (Krein projection)")
-            print("  Clifford/Krein (collapseToBaseVelocity)")
-            print("    ↓ (Bivector construction)")
-            print("  Quantum Hydrodynamics (Trace=0)")
-            print("    ↓ (Hydrodynamic limit)")
-            print("  Macroscopic Fluid (∇·u=0)")
+            print("\n✅ LOCAL SCRIPTED CHECKS PASSED")
+            print("\nThe configured checks establish these separate facts:")
+            print("  The selected quadratic potential is nonnegative.")
+            print("  The constructed skew matrix has trace zero.")
+            print("  Interpreting that matrix as the Jacobian of u(x)=Bx gives")
+            print("  a linear vector field with zero divergence.")
             print()
             print("Additional local script output:")
-            print("  - Softmax/KMS comparison was part of this exploratory script")
+            print("  - Softmax weights have finite Gibbs form and are normalized")
             print()
             print("Status:")
             print("  The script's staged checks passed for this test configuration.")
@@ -335,26 +277,26 @@ class LogicalWorldlineVerifier:
 # ============================================================================
 
 def main():
-    """Run complete logical worldline verification."""
+    """Run the illustrative finite checks."""
     print("\n" + "=" * 80)
-    print("FROM INFORMATION THEORY TO QUANTUM HYDRODYNAMICS")
-    print("Exploratory logical-worldline script")
+    print("FINITE CONVEXITY, MATRIX, AND PROBABILITY CHECKS")
+    print("Exploratory calculations; no cross-domain theorem is claimed")
     print("=" * 80 + "\n")
     
     # Test case 1: Simple gradient
     theta = np.array([1.0, 2.0, 3.0])
     logits = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
     
-    verifier = LogicalWorldlineVerifier()
-    result = verifier.run_complete_worldline(theta, logits)
+    verifier = FiniteStructureChecks()
+    result = verifier.run_checks(theta, logits)
     
-    # Test case 2: Zero loss (information equilibrium)
+    # Test case 2: the quadratic potential is small near the zero vector.
     print("\n\n" + "=" * 80)
-    print("TEST CASE 2: Information Equilibrium (θ ≈ 0)")
+    print("TEST CASE 2: Quadratic Potential Near Zero")
     print("=" * 80 + "\n")
     
     theta_eq = np.array([1e-6, 1e-6, 1e-6])
-    result_eq = verifier.run_complete_worldline(theta_eq, logits)
+    result_eq = verifier.run_checks(theta_eq, logits)
     
     # Summary
     print("\n" + "=" * 80)
@@ -363,14 +305,13 @@ def main():
     print()
     
     if result and result_eq:
-        print("✅ ALL WORLDLINES VERIFIED")
+        print("✅ ALL CONFIGURED FINITE CHECKS PASSED")
         print()
         print("Mathematical content:")
-        print("  ✓ Information Theory → Convex Analysis (Fenchel-Legendre)")
-        print("  ✓ Convex Analysis → Clifford/Krein (projection)")
-        print("  ✓ Clifford/Krein → Quantum Hydro (trace-free)")
-        print("  ✓ Quantum Hydro → Fluid Dynamics (divergence-free)")
-        print("  ✓ LLM softmax / KMS comparison")
+        print("  ✓ Quadratic gradient was calculated.")
+        print("  ✓ The constructed skew matrix has trace zero.")
+        print("  ✓ The associated linear vector field has zero divergence.")
+        print("  ✓ Softmax gives normalized positive finite Gibbs-form weights.")
         print()
         print("Interpretive status:")
         print("  The local scripted checks succeeded for the configured examples.")

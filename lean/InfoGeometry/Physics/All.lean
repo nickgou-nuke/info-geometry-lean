@@ -5,6 +5,7 @@ import InfoGeometry.Physics.BoundaryMajoranaMassGap
 import InfoGeometry.Physics.FisherKreinLorentz
 import InfoGeometry.Physics.FermionicAndreevReflection
 import InfoGeometry.Physics.ChiralMatrixRepresentation
+import InfoGeometry.Physics.EightStateTraceRatio
 import InfoGeometry.Physics.FreeEntropyCalibrationVariationPacket
 import InfoGeometry.Physics.FreeEntropyDiffusionFunctional
 import InfoGeometry.Physics.FreeEntropySouriauBridge
@@ -210,4 +211,3 @@ Massieu-Planck functionals.
 namespace InfoGeometry.Physics
 
 end InfoGeometry.Physics
-import InfoGeometry.Physics.EightStateTraceRatio

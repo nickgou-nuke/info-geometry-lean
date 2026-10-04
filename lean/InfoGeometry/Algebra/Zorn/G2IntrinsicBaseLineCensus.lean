@@ -19,24 +19,24 @@ open InfoGeometry.Algebra.Zorn.G2NativeOnePointStabilizer
 open InfoGeometry.Algebra.Zorn.G2IntrinsicBaseFiberBounds
 open InfoGeometry.Algebra.Zorn.G2IntrinsicLineFiberTransport
 
-abbrev Point :=
-  InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.OctImIsotropicPoint
-
-def admissiblePair (s : Finset Point) : Prop :=
+def admissiblePair
+    (s : Finset InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.OctImIsotropicPoint) : Prop :=
   s.card = 2 ∧
     s ⊆ zornZeroNeighborSet nativeBaseIsotropicPoint ∧
-    ∀ ⦃u v : Point⦄, u ∈ s → v ∈ s → u ≠ v → ZornZeroRelated u v
+    ∀ ⦃u v : InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.OctImIsotropicPoint⦄,
+      u ∈ s → v ∈ s → u ≠ v → ZornZeroRelated u v
 
 instance : DecidablePred admissiblePair := by
   intro s
   unfold admissiblePair
   infer_instance
 
-def admissiblePairs : Finset (Finset Point) :=
+def admissiblePairs : Finset (Finset
+    InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.OctImIsotropicPoint) :=
   (zornZeroNeighborSet nativeBaseIsotropicPoint).powerset.filter admissiblePair
 
 theorem admissiblePairs_card : admissiblePairs.card = 3 := by
-  decide
+  native_decide
 
 theorem intrinsicLine_erase_mem_admissiblePairs
     (L : IntrinsicLine nativeBaseIsotropicPoint) :
@@ -49,7 +49,8 @@ theorem intrinsicLine_erase_mem_admissiblePairs
     ((Finset.mem_erase.mp hv).2) huv
 
 def admissiblePairToLine
-    (s : {s : Finset Point // s ∈ admissiblePairs}) :
+    (s : {s : Finset InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.OctImIsotropicPoint //
+      s ∈ admissiblePairs}) :
     IntrinsicLine nativeBaseIsotropicPoint := by
   have hs := (Finset.mem_filter.mp s.2).2
   have hsub : s.1 ⊆ zornZeroNeighborSet nativeBaseIsotropicPoint :=
@@ -76,7 +77,8 @@ def admissiblePairToLine
 
 def intrinsicLineToAdmissiblePair :
     IntrinsicLine nativeBaseIsotropicPoint ≃
-      {s : Finset Point // s ∈ admissiblePairs} where
+      {s : Finset InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.OctImIsotropicPoint //
+        s ∈ admissiblePairs} where
   toFun L := ⟨L.1.erase nativeBaseIsotropicPoint,
     intrinsicLine_erase_mem_admissiblePairs L⟩
   invFun := admissiblePairToLine
@@ -99,7 +101,7 @@ theorem intrinsicLine_base_card :
   simpa only [Fintype.card_coe] using admissiblePairs_card
 
 theorem intrinsicLineFiber_card_eq_three
-    (p : Point) :
+    (p : InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.OctImIsotropicPoint) :
     Fintype.card (IntrinsicLine p) = 3 := by
   rw [intrinsicLineFiber_card_eq_base_of_point_transitive p]
   exact intrinsicLine_base_card

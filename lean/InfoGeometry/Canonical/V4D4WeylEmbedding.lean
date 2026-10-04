@@ -74,7 +74,7 @@ that the wallpaper group is a formal subgroup of the bulk W(D₅) projection.
 -/
 theorem weylD5CrossSection_is_homomorphism (a b : Fin 8) :
     weylD5CrossSection a * weylD5CrossSection b = weylD5CrossSection (d4_comp a b) := by
-  fin_cases a <;> fin_cases b <;> decide
+  fin_cases a <;> fin_cases b <;> native_decide
 
 /-- 
 The finite subgroup embedding packet. 

@@ -152,6 +152,29 @@ lemma logSumExp_sum_pos
         exact mul_pos (hw i) (Real.exp_pos _))
       Finset.univ_nonempty)
 
+/-- Multiplying every unnormalized weight by the same positive scalar adds the
+logarithm of that scalar to the log-sum-exp potential. -/
+lemma logSumExp_weight_scale
+    {ι : Type _} [Fintype ι] [Nonempty ι]
+    (w a : ι → ℝ) (hw : ∀ i, 0 < w i)
+    (c : ℝ) (hc : 0 < c) (θ : ℝ) :
+    logSumExp (fun i => c * w i) a θ = Real.log c + logSumExp w a θ := by
+  have hpartition :
+      logSumExpPartition (fun i => c * w i) a θ =
+        c * logSumExpPartition w a θ := by
+    unfold logSumExpPartition
+    calc
+      (∑ i, c * w i * Real.exp (θ * a i)) =
+          ∑ i, c * (w i * Real.exp (θ * a i)) := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        ring
+      _ = c * ∑ i, w i * Real.exp (θ * a i) := by
+        rw [Finset.mul_sum]
+  have hZ : 0 < logSumExpPartition w a θ := logSumExp_sum_pos w a hw θ
+  unfold logSumExp
+  rw [hpartition, Real.log_mul hc.ne' hZ.ne']
+
 lemma logSumExpScaledPartition_pos
     {ι : Type _} [Fintype ι] [Nonempty ι]
     (w a : ι → ℝ) (ε : ℝ)
@@ -340,13 +363,10 @@ lemma logSumExpVariance_eq_centered
     rw [← Finset.sum_mul, hp]
     ring
   have hcenter :
-      ∑ i, p i * (a i - m) ^ (2 : ℕ) =
+    ∑ i, p i * (a i - m) ^ (2 : ℕ) =
         (∑ i, p i * (a i) ^ (2 : ℕ)) - m ^ (2 : ℕ) := by
     simp only [sub_sq, mul_sub, mul_add]
-    have hterm (i : ι) :
-        p i * a i ^ 2 - p i * (2 * a i * m) + p i * m ^ 2 =
-          (p i * a i ^ 2 - p i * (2 * a i * m)) + p i * m ^ 2 := by ring
-    simp only [hterm, Finset.sum_add_distrib, Finset.sum_sub_distrib]
+    simp only [Finset.sum_add_distrib, Finset.sum_sub_distrib]
     have hcross : ∑ i, p i * (2 * a i * m) = 2 * m ^ 2 := by
       calc
         _ = ∑ i, (2 * m) * (p i * a i) := by
@@ -438,11 +458,49 @@ lemma logSumExp_secondDeriv_eq_variance
     (hw : ∀ i, 0 < w i)
     (θ : ℝ) :
     deriv (fun t => deriv (logSumExp w a) t) θ = logSumExpVariance w a θ := by
-  rw [logSumExpVariance, logSumExpSecondMoment, logSumExpMean]
-  rw [logSumExp_secondDeriv_eq_ratio (w := w) (a := a) hw θ]
-  have hZne : logSumExpPartition w a θ ≠ 0 :=
+    rw [logSumExpVariance, logSumExpSecondMoment, logSumExpMean]
+    rw [logSumExp_secondDeriv_eq_ratio (w := w) (a := a) hw θ]
+    have hZne : logSumExpPartition w a θ ≠ 0 :=
+      (logSumExp_sum_pos w a hw θ).ne'
+    field_simp [hZne]
+
+/-- The finite log-sum-exp potential has a genuine derivative with value its
+weighted mean slope. -/
+lemma hasDerivAt_logSumExp
+    {ι : Type _} [Fintype ι] [Nonempty ι]
+    (w a : ι → ℝ)
+    (hw : ∀ i, 0 < w i)
+    (θ : ℝ) :
+    HasDerivAt (logSumExp w a) (logSumExpMean w a θ) θ := by
+  have hpart := hasDerivAt_logSumExpPartition (w := w) (a := a) (θ := θ)
+  have hlog := hpart.log (ne_of_gt (logSumExp_sum_pos w a hw θ))
+  simpa [logSumExp, logSumExpMean] using hlog
+
+/-- The derivative of a normalized finite Gibbs weight is its weight times
+the centered slope. -/
+lemma logSumExpWeight_deriv
+    {ι : Type _} [Fintype ι] [Nonempty ι]
+    (w a : ι → ℝ)
+    (hw : ∀ i, 0 < w i)
+    (θ : ℝ) (i : ι) :
+    deriv (logSumExpWeight w a · i) θ =
+      logSumExpWeight w a θ i * (a i - logSumExpMean w a θ) := by
+  have hnum := hasDerivAt_logSumExpPartition_term
+    (w := w) (a := a) (i := i) (θ := θ)
+  have hden := hasDerivAt_logSumExpPartition (w := w) (a := a) (θ := θ)
+  have hZ : logSumExpPartition w a θ ≠ 0 :=
     (logSumExp_sum_pos w a hw θ).ne'
-  field_simp [hZne]
+  have hquot : HasDerivAt
+      (fun t => w i * Real.exp (t * a i) / logSumExpPartition w a t)
+      ((w i * (a i * Real.exp (θ * a i)) * logSumExpPartition w a θ -
+        w i * Real.exp (θ * a i) * logSumExpMoment1 w a θ) /
+        (logSumExpPartition w a θ) ^ (2 : ℕ)) θ := by
+    exact hnum.div hden hZ
+  change deriv
+    (fun t => w i * Real.exp (t * a i) / logSumExpPartition w a t) θ = _
+  rw [hquot.deriv]
+  unfold logSumExpWeight logSumExpMean logSumExpMoment1
+  field_simp [hZ]
 
 lemma logSumExpScaledMean_eq_eps_mul_mean
     {ι : Type _} [Fintype ι] [Nonempty ι]

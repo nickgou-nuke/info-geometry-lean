@@ -109,6 +109,57 @@ lemma Pminus_comp_Pplus (hθ : IsCartanInvolution θ) : (Pminus θ) * (Pplus θ)
     abel_nf
   rw [h_expand, hθ, sub_self, smul_zero]
 
+/-- The involution acts as `+1` after projection to its positive eigenspace. -/
+lemma involution_comp_Pplus (hθ : IsCartanInvolution θ) :
+    θ * Pplus θ = Pplus θ := by
+  dsimp [Pplus]
+  rw [mul_smul_comm]
+  congr 1
+  calc
+    θ * (1 + θ) = θ * 1 + θ * θ := by rw [mul_add]
+    _ = θ + 1 := by rw [mul_one, hθ]
+    _ = 1 + θ := by rw [add_comm]
+
+/-- The involution acts as `-1` after projection to its negative eigenspace. -/
+lemma involution_comp_Pminus (hθ : IsCartanInvolution θ) :
+    θ * Pminus θ = -Pminus θ := by
+  dsimp [Pminus]
+  rw [mul_smul_comm, ← smul_neg]
+  congr 1
+  calc
+    θ * (1 - θ) = θ * 1 - θ * θ := by rw [mul_sub]
+    _ = θ - 1 := by rw [mul_one, hθ]
+    _ = -(1 - θ) := by rw [neg_sub]
+
+/-- An endomorphism anticommuting with `θ` sends the positive projector
+channel into the negative channel. The statement only uses the displayed
+anticommutation law; involutivity is needed separately for the projectors to
+be idempotent eigenspace projections. -/
+lemma anticommutingEnd_comp_Pplus (T : Module.End 𝕜 E)
+    (hT : T * θ = -(θ * T)) :
+    T * Pplus θ = Pminus θ * T := by
+  dsimp [Pplus, Pminus]
+  rw [mul_smul_comm, smul_mul_assoc]
+  congr 1
+  calc
+    T * (1 + θ) = T * 1 + T * θ := by rw [mul_add]
+    _ = T + -(θ * T) := by rw [mul_one, hT]
+    _ = T - θ * T := by abel
+    _ = (1 - θ) * T := by rw [sub_mul, one_mul]
+
+/-- An endomorphism anticommuting with `θ` sends the negative projector
+channel into the positive channel. -/
+lemma anticommutingEnd_comp_Pminus (T : Module.End 𝕜 E)
+    (hT : T * θ = -(θ * T)) :
+    T * Pminus θ = Pplus θ * T := by
+  dsimp [Pplus, Pminus]
+  rw [mul_smul_comm, smul_mul_assoc]
+  congr 1
+  calc
+    T * (1 - θ) = T * 1 - T * θ := by rw [mul_sub]
+    _ = T + θ * T := by rw [mul_one, hT, sub_neg_eq_add]
+    _ = (1 + θ) * T := by rw [add_mul, one_mul]
+
 /-! ### Vector Bridge Lemmas (Pointwise Descent) -/
 
 lemma Pplus_apply (x : E) : (Pplus θ) x = (⅟(2 : 𝕜)) • (x + θ x) := by

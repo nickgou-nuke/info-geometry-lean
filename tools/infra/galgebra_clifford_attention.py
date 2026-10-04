@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Attention = Quantum Fluid: GAlgebra + Clifford Verification
+"""Check a small Euclidean Clifford-algebra bivector identity.
+
+This example is independent of transformer attention and fluid dynamics.
 """
 
 try:
@@ -16,7 +17,7 @@ except ImportError:
     from sympy import symbols, simplify
 
 print("="*70)
-print("ATTENTION = QUANTUM FLUID: GEOMETRIC ALGEBRA VERIFICATION")
+print("GEOMETRIC ALGEBRA: INDEPENDENT BIVECTOR IDENTITIES")
 print("="*70)
 
 # Create 2D geometric algebra
@@ -31,7 +32,7 @@ print(f"Bivector J = {J}")
 J_rev = J.rev()
 print(f"Reversal of J: J~ = {J_rev}")
 assert J_rev == -J, "Bivector reversal (skew-adjointness) check failed!"
-print("✓ Skew-adjointness analogue verified: J~ = -J")
+print("✓ Reversal identity in this Clifford algebra: J~ = -J")
 
 # Inner product of any vector v with J*v vanishes
 v = symbols('v1') * e1 + symbols('v2') * e2
@@ -40,8 +41,8 @@ g_v_Jv = (v * Jv).grade(0)
 g_val = g_v_Jv.obj
 print(f"g(v, Jv) = {simplify(g_val)}")
 assert simplify(g_val) == 0, "Kahler check failed!"
-print("✓ Orthogonality of flow verified: g(v, Jv) = 0")
+print("✓ Scalar part of v*(J*v) vanishes in this example")
 
 print("\n" + "="*70)
-print("GEOMETRIC ALGEBRA VERIFICATION COMPLETE")
+print("INDEPENDENT GEOMETRIC ALGEBRA CHECK COMPLETE")
 print("="*70)

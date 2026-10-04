@@ -5,6 +5,7 @@ import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Tactic
 
 import InfoGeometry.Probability.DetectorFoundationalCopula
+import InfoGeometry.Inference.FiniteRelativeEntropyEquality
 
 open Matrix
 open scoped BigOperators
@@ -36,6 +37,7 @@ noncomputable def attentionMatrix (S : Matrix (Fin N) (Fin M) ℝ) :
     Matrix (Fin N) (Fin M) ℝ :=
   fun i j => Real.exp (S i j) / partitionZ S i
 
+omit [NeZero N] in
 /-- Each row of the attention matrix sums to 1. -/
 theorem attention_row_sum (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) :
     (∑ j : Fin M, attentionMatrix S i j) = 1 := by
@@ -44,6 +46,7 @@ theorem attention_row_sum (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) :
   have hZ : partitionZ S i ≠ 0 := ne_of_gt (partitionZ_pos S i)
   exact div_self hZ
 
+omit [NeZero N] in
 /-- Attention weights are strictly positive. -/
 theorem attention_pos (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) (j : Fin M) :
     0 < attentionMatrix S i j :=
@@ -82,6 +85,7 @@ theorem joint_total_sum (S : Matrix (Fin N) (Fin M) ℝ) :
 noncomputable def rowMarginal (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) : ℝ :=
   ∑ j : Fin M, jointDistribution S i j
 
+omit [NeZero N] in
 theorem rowMarginal_eq_uniform (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) :
     rowMarginal S i = 1 / (N : ℝ) := by
   dsimp [rowMarginal, jointDistribution]
@@ -109,6 +113,12 @@ theorem colMarginal_sum (S : Matrix (Fin N) (Fin M) ℝ) :
     (∑ j : Fin M, colMarginal S j) = 1 := by
   dsimp [colMarginal]
   rw [Finset.sum_comm]
+  exact joint_total_sum S
+
+/-- The query marginal is normalized. -/
+theorem rowMarginal_sum (S : Matrix (Fin N) (Fin M) ℝ) :
+    (∑ i : Fin N, rowMarginal S i) = 1 := by
+  dsimp [rowMarginal]
   exact joint_total_sum S
 
 /-! ### 3. Marginal-normalized attention weights -/
@@ -149,6 +159,41 @@ conditional key law. -/
 noncomputable def conditionalKeyEntropy (S : Matrix (Fin N) (Fin M) ℝ) : ℝ :=
   - ∑ i : Fin N, ∑ j : Fin M,
     jointDistribution S i j * Real.log (attentionMatrix S i j)
+
+/-- Conditional key entropy for a fixed query row. -/
+noncomputable def conditionalKeyEntropyAt
+    (S : Matrix (Fin N) (Fin M) ℝ) (i : Fin N) : ℝ :=
+  - ∑ j : Fin M, attentionMatrix S i j * Real.log (attentionMatrix S i j)
+
+omit [NeZero N] in
+/-- The joint-law conditional entropy is the row-marginal-weighted average
+of the conditional entropies of each attention row. -/
+theorem conditionalKeyEntropy_eq_expected_rowEntropy
+    (S : Matrix (Fin N) (Fin M) ℝ) :
+    conditionalKeyEntropy S =
+      ∑ i : Fin N, rowMarginal S i * conditionalKeyEntropyAt S i := by
+  dsimp [conditionalKeyEntropy, conditionalKeyEntropyAt, jointDistribution]
+  simp_rw [rowMarginal_eq_uniform S]
+  have h_inner : ∀ i : Fin N,
+      (∑ j : Fin M, (1 / (N : ℝ)) * attentionMatrix S i j *
+        Real.log (attentionMatrix S i j)) =
+        (1 / (N : ℝ)) *
+          (∑ j : Fin M, attentionMatrix S i j * Real.log (attentionMatrix S i j)) := by
+    intro i
+    have h_assoc : ∀ j : Fin M,
+        (1 / (N : ℝ)) * attentionMatrix S i j *
+          Real.log (attentionMatrix S i j) =
+          (1 / (N : ℝ)) *
+            (attentionMatrix S i j * Real.log (attentionMatrix S i j)) := by
+      intro j
+      ring
+    simp_rw [h_assoc]
+    rw [← Finset.mul_sum]
+  simp_rw [h_inner]
+  rw [← Finset.sum_neg_distrib]
+  apply Finset.sum_congr rfl
+  intro i _
+  ring
 
 /-- Shannon mutual information for this finite model, in the entropy-difference
 form `H(K) - H(K | Q)`. -/
@@ -196,6 +241,84 @@ theorem attentionMutualInformation_eq_expectedLogDependenceRatio
   unfold keyEntropy conditionalKeyEntropy
   ring
 
+/-! ### 5. Mutual information as relative entropy -/
+
+/-- The product of query and key marginals, viewed as a law on the finite
+product type. -/
+noncomputable def productMarginalJoint
+    (S : Matrix (Fin N) (Fin M) ℝ) (x : Fin N × Fin M) : ℝ :=
+  rowMarginal S x.1 * colMarginal S x.2
+
+/-- The product marginal is strictly positive at every pair. -/
+theorem productMarginalJoint_pos (S : Matrix (Fin N) (Fin M) ℝ)
+    (x : Fin N × Fin M) : 0 < productMarginalJoint S x := by
+  exact mul_pos (rowMarginal_eq_uniform S x.1 ▸
+    one_div_pos.mpr (Nat.cast_pos.mpr (NeZero.pos N))) (colMarginal_pos S x.2)
+
+/-- The product marginal law has total mass one. -/
+theorem productMarginalJoint_sum (S : Matrix (Fin N) (Fin M) ℝ) :
+    (∑ x : Fin N × Fin M, productMarginalJoint S x) = 1 := by
+  rw [Fintype.sum_prod_type]
+  simp only [productMarginalJoint]
+  rw [← Finset.sum_mul_sum, rowMarginal_sum, colMarginal_sum]
+  norm_num
+
+/-- Shannon mutual information is the ordinary finite KL divergence between
+the joint law and the product of its marginals. -/
+theorem attentionMutualInformation_eq_finiteRelativeEntropy
+    (S : Matrix (Fin N) (Fin M) ℝ) :
+    InfoGeometry.Inference.finiteRelativeEntropy
+      (fun x : Fin N × Fin M => jointDistribution S x.1 x.2)
+      (productMarginalJoint S) = attentionMutualInformation S := by
+  rw [attentionMutualInformation_eq_expectedLogDependenceRatio]
+  unfold InfoGeometry.Inference.finiteRelativeEntropy
+    expectedLogDependenceRatio productMarginalJoint attentionDependenceRatio
+  rw [Fintype.sum_prod_type]
+
+/-- Finite attention mutual information is nonnegative. -/
+theorem attentionMutualInformation_nonneg (S : Matrix (Fin N) (Fin M) ℝ) :
+    0 ≤ attentionMutualInformation S := by
+  rw [← attentionMutualInformation_eq_finiteRelativeEntropy]
+  exact InfoGeometry.Inference.finiteRelativeEntropy_nonneg
+    (fun x : Fin N × Fin M => jointDistribution S x.1 x.2)
+    (productMarginalJoint S)
+    (fun x => jointDistribution_pos S x.1 x.2)
+    (productMarginalJoint_pos S)
+    (by simpa only [Fintype.sum_prod_type] using joint_total_sum S)
+    (productMarginalJoint_sum S)
+
+/-- Zero mutual information is equivalent to independence of query and key
+under the finite attention law. Since the query marginal is uniform and
+strictly positive, independence is exactly equality of every attention row
+with the key marginal. -/
+theorem attentionMutualInformation_eq_zero_iff_query_independent
+    (S : Matrix (Fin N) (Fin M) ℝ) :
+    attentionMutualInformation S = 0 ↔
+      ∀ i j, attentionMatrix S i j = colMarginal S j := by
+  rw [← attentionMutualInformation_eq_finiteRelativeEntropy]
+  rw [InfoGeometry.Inference.finiteRelativeEntropy_eq_zero_iff]
+  · constructor
+    · intro h i j
+      have hentry := congrFun h (i, j)
+      change jointDistribution S i j =
+        rowMarginal S i * colMarginal S j at hentry
+      rw [rowMarginal_eq_uniform S i] at hentry
+      dsimp [jointDistribution] at hentry
+      exact (mul_left_cancel₀ (one_div_ne_zero
+        (Nat.cast_ne_zero.mpr (NeZero.ne N))) hentry)
+    · intro h
+      funext x
+      rcases x with ⟨i, j⟩
+      change jointDistribution S i j = rowMarginal S i * colMarginal S j
+      rw [rowMarginal_eq_uniform S i]
+      dsimp [jointDistribution]
+      rw [h i j]
+  · intro x
+    exact jointDistribution_pos S x.1 x.2
+  · exact productMarginalJoint_pos S
+  · simpa only [Fintype.sum_prod_type] using joint_total_sum S
+  · exact productMarginalJoint_sum S
+
 /-- Query-independent attention has dependence ratio one at every pair. -/
 theorem attentionDependenceRatio_eq_one_of_query_independent
     (S : Matrix (Fin N) (Fin M) ℝ)
@@ -220,6 +343,15 @@ theorem attentionMutualInformation_eq_zero_of_query_independent
   rw [attentionDependenceRatio_eq_one_of_query_independent S h i j]
   simp
 
+/-- Under query independence, the conditional key entropy equals the key
+marginal entropy. -/
+theorem conditionalKeyEntropy_eq_keyEntropy_of_query_independent
+    (S : Matrix (Fin N) (Fin M) ℝ)
+    (h : ∀ i j, attentionMatrix S i j = colMarginal S j) :
+    conditionalKeyEntropy S = keyEntropy S := by
+  have hzero := attentionMutualInformation_eq_zero_of_query_independent S h
+  exact (sub_eq_zero.mp (show keyEntropy S - conditionalKeyEntropy S = 0 from hzero)).symm
+
 /-! ### 4. Finite cumulative tables -/
 
 /-- Joint cumulative distribution function (CDF) H(i, j) = ∑_{a ≤ i, b ≤ j} P(a, b). -/
@@ -239,6 +371,7 @@ noncomputable def colCDF (S : Matrix (Fin N) (Fin M) ℝ) (j : Fin M) : ℝ :=
 /- If every query row equals the key marginal, the finite joint CDF factors as
 the product of its marginal CDFs. This is an independence result for this
 finite probability model, not an identity with a quantum-optics correlator. -/
+omit [NeZero N] in
 theorem query_independent_attention_cdf_factorization
     (S : Matrix (Fin N) (Fin M) ℝ)
     (h_unentangled : ∀ (i : Fin N) (j : Fin M), attentionMatrix S i j = colMarginal S j)

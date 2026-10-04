@@ -5,10 +5,11 @@
 > Note: Re-audit against current code before using for policy, design claims, or status.
 > See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
 
-This document describes runtime conformance checks for the finite thermo lane:
+This document describes runtime conformance checks for finite Gibbs and
+router thermodynamic identities:
 
-- `InfoGeometry.LLM.KMSSoftmaxBridge`
 - `InfoGeometry.LLM.RouterFreeEnergyBridge`
+- `InfoGeometry.Thermo.FiniteDiagonal`
 - `InfoGeometry.LLM.PromptDefectRegularization`
 
 Tool:
@@ -23,7 +24,7 @@ Given JSONL trace rows extracted from an open-weights run, the checker computes
 numerical residuals for theorem-shaped identities, including:
 
 - softmax simplex normalization (`sum(weights)=1`)
-- Gibbs/KMS consistency (`weights ≈ softmax(-beta*energies)`)
+- finite Gibbs consistency (`weights ≈ softmax(-beta*energies)`)
 - log-partition consistency (`massieu ≈ log(partition)`)
 - entropy/free-energy identities
 - defect quarantine checks (`defect_output_norm ≈ 0`, `defect_weight_sum ≈ 0`)
@@ -78,3 +79,6 @@ Exit code:
 - This checker is an empirical witness lane, not a replacement for Lean proofs.
 - It is designed to validate runtime traces against already-proved finite
   theorem surfaces.
+- Matching weights to a finite Gibbs formula does not by itself test the KMS
+  boundary condition; that requires a separately specified observable algebra
+  and time evolution.

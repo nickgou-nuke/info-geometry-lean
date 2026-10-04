@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Attention = Quantum Fluid: SymPy Verification
+"""Symbolically check finite log-sum-exp moments and a skew-matrix trace.
+
+These independent identities do not establish a physical identification
+between attention and fluid dynamics.
 """
 
 from sympy import symbols, exp, log, diff, simplify, Matrix, trace
 
 print("="*70)
-print("SYMPY: ATTENTION = QUANTUM FLUID VERIFICATION")
+print("SYMPY: FINITE LOG-SUM-EXP AND TRACE CHECKS")
 print("="*70)
 
 # 1. Log-Sum-Exp and Softmax Expectation
@@ -33,7 +35,7 @@ E_a = p0 * a0 + p1 * a1 + p2 * a2
 diff_1 = simplify(dF - E_a)
 print(f"First derivative gap (dF/dθ - E[a]): {diff_1}")
 assert diff_1 == 0, "First derivative check failed!"
-print("✓ First derivative verified: dF/dθ = E_softmax[a]")
+print("✓ Symbolic identity: dF/dθ = E_softmax[a]")
 
 # 2. Second Derivative = Variance
 print("\n=== 2. Second Derivative = Variance ===")
@@ -44,7 +46,7 @@ Var_a = E_a2 - E_a**2
 diff_2 = simplify(d2F - Var_a)
 print(f"Second derivative gap (d²F/dθ² - Var[a]): {diff_2}")
 assert diff_2 == 0, "Second derivative check failed!"
-print("✓ Second derivative verified: d²F/dθ² = Var_softmax[a]")
+print("✓ Symbolic identity: d²F/dθ² = Var_softmax[a]")
 
 # 3. Skew-Symmetric (Bivector) Trace Zero
 print("\n=== 3. Skew-Symmetric (Bivector) Trace Zero ===")
@@ -58,5 +60,5 @@ assert tr_K == 0, "Skew-symmetric matrix trace was not zero!"
 print("✓ trace(K) = 0 verified")
 
 print("\n" + "="*70)
-print("SYMPY VERIFICATION COMPLETE")
+print("INDEPENDENT SYMBOLIC CHECKS COMPLETE (not a cross-domain theorem)")
 print("="*70)

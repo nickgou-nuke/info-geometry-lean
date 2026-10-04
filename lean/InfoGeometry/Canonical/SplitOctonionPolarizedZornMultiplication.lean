@@ -218,35 +218,61 @@ The matrix below has rows in chiral order and columns in standard order.
 It is the transpose of `chiralSolderingMatrix`; the signs follow the native
 definitions `σ₊ = (ℓu - u)/2` and `σ₋ = (ℓu + u)/2`.
 -/
-def chiralBasisChangeMatrix : Matrix (Fin 8) (Fin 8) ℚ := fun r =>
-  match r with
-  | 0 => ![1 / 2, 1 / 2, 0, 0, 0, 0, 0, 0]
-  | 1 => ![0, 0, -1 / 2, 1 / 2, 0, 0, 0, 0]
-  | 2 => ![0, 0, 0, 0, -1 / 2, 1 / 2, 0, 0]
-  | 3 => ![0, 0, 0, 0, 0, 0, -1 / 2, 1 / 2]
-  | 4 => ![1 / 2, -1 / 2, 0, 0, 0, 0, 0, 0]
-  | 5 => ![0, 0, 1 / 2, 1 / 2, 0, 0, 0, 0]
-  | 6 => ![0, 0, 0, 0, 1 / 2, 1 / 2, 0, 0]
-  | 7 => ![0, 0, 0, 0, 0, 0, 1 / 2, 1 / 2]
+def chiralBasisChangeMatrix : Matrix (Fin 8) (Fin 8) ℚ := fun r c =>
+  match r.val, c.val with
+  | 0, 0 => 1 / 2
+  | 0, 1 => 1 / 2
+  | 1, 2 => -(1 / 2)
+  | 1, 3 => 1 / 2
+  | 2, 4 => -(1 / 2)
+  | 2, 5 => 1 / 2
+  | 3, 6 => -(1 / 2)
+  | 3, 7 => 1 / 2
+  | 4, 0 => 1 / 2
+  | 4, 1 => -(1 / 2)
+  | 5, 2 => 1 / 2
+  | 5, 3 => 1 / 2
+  | 6, 4 => 1 / 2
+  | 6, 5 => 1 / 2
+  | 7, 6 => 1 / 2
+  | 7, 7 => 1 / 2
+  | _, _ => 0
 
-def chiralBasisChangeMatrixInv : Matrix (Fin 8) (Fin 8) ℚ := fun r =>
-  match r with
-  | 0 => ![1, 0, 0, 0, 1, 0, 0, 0]
-  | 1 => ![1, 0, 0, 0, -1, 0, 0, 0]
-  | 2 => ![0, -1, 0, 0, 0, 1, 0, 0]
-  | 3 => ![0, 1, 0, 0, 0, 1, 0, 0]
-  | 4 => ![0, 0, -1, 0, 0, 0, 1, 0]
-  | 5 => ![0, 0, 1, 0, 0, 0, 1, 0]
-  | 6 => ![0, 0, 0, -1, 0, 0, 0, 1]
-  | 7 => ![0, 0, 0, 1, 0, 0, 0, 1]
+def chiralBasisChangeMatrixInv : Matrix (Fin 8) (Fin 8) ℚ := fun r c =>
+  match r.val, c.val with
+  | 0, 0 => 1
+  | 0, 4 => 1
+  | 1, 0 => 1
+  | 1, 4 => -1
+  | 2, 1 => -1
+  | 2, 5 => 1
+  | 3, 1 => 1
+  | 3, 5 => 1
+  | 4, 2 => -1
+  | 4, 6 => 1
+  | 5, 2 => 1
+  | 5, 6 => 1
+  | 6, 3 => -1
+  | 6, 7 => 1
+  | 7, 3 => 1
+  | 7, 7 => 1
+  | _, _ => 0
 
+set_option maxHeartbeats 1000000 in
 theorem chiralBasisChangeMatrixInv_mul :
     chiralBasisChangeMatrixInv * chiralBasisChangeMatrix = 1 := by
-  decide
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, chiralBasisChangeMatrixInv,
+      chiralBasisChangeMatrix, Fin.sum_univ_succ] <;> norm_num
 
+set_option maxHeartbeats 1000000 in
 theorem chiralBasisChangeMatrix_mul_Inv :
     chiralBasisChangeMatrix * chiralBasisChangeMatrixInv = 1 := by
-  decide
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, chiralBasisChangeMatrixInv,
+      chiralBasisChangeMatrix, Fin.sum_univ_succ] <;> norm_num
 
 @[simp] theorem toNative_eq_chiralSolderingMatrix_mul_coordinates
     (X : PolarizedZorn) (b : IntegralSplitBasis) :
@@ -307,11 +333,15 @@ noncomputable def toNativeEquiv :
 
 @[simp] theorem toNative_polarizedNPlus :
     toNative polarizedNPlus = modularNPlus := by
-  decide
+  funext b
+  cases b <;> simp [toNative, polarizedNPlus, polarizedGenerator,
+    modularNPlus, fundamentalSymmetry, rationalBasis] <;> norm_num
 
 @[simp] theorem toNative_polarizedNMinus :
     toNative polarizedNMinus = modularNMinus := by
-  decide
+  funext b
+  cases b <;> simp [toNative, polarizedNMinus, polarizedGenerator,
+    modularNMinus, fundamentalSymmetry, rationalBasis] <;> norm_num
 
 @[simp] theorem toNative_polarizedZornNPlus :
     toNative polarizedZornNPlus = modularNPlus :=
@@ -323,27 +353,45 @@ noncomputable def toNativeEquiv :
 
 @[simp] theorem toNative_polarizedSigmaRedPlus :
     toNative polarizedSigmaRedPlus = modularSigmaPlus .red := by
-  decide
+  funext b
+  cases b <;> simp [toNative, polarizedSigmaRedPlus, polarizedGenerator,
+    modularSigmaPlus, modularJ_eq_colourLUnit, phaseAxis, colourUnit, colourLUnit,
+    rationalBasis, Pi.single_apply] <;> norm_num
 
 @[simp] theorem toNative_polarizedSigmaGreenPlus :
     toNative polarizedSigmaGreenPlus = modularSigmaPlus .green := by
-  decide
+  funext b
+  cases b <;> simp [toNative, polarizedSigmaGreenPlus, polarizedGenerator,
+    modularSigmaPlus, modularJ_eq_colourLUnit, phaseAxis, colourUnit, colourLUnit,
+    rationalBasis, Pi.single_apply] <;> norm_num
 
 @[simp] theorem toNative_polarizedSigmaBluePlus :
     toNative polarizedSigmaBluePlus = modularSigmaPlus .blue := by
-  decide
+  funext b
+  cases b <;> simp [toNative, polarizedSigmaBluePlus, polarizedGenerator,
+    modularSigmaPlus, modularJ_eq_colourLUnit, phaseAxis, colourUnit, colourLUnit,
+    rationalBasis, Pi.single_apply] <;> norm_num
 
 @[simp] theorem toNative_polarizedSigmaRedMinus :
     toNative polarizedSigmaRedMinus = modularSigmaMinus .red := by
-  decide
+  funext b
+  cases b <;> simp [toNative, polarizedSigmaRedMinus, polarizedGenerator,
+    modularSigmaMinus, modularJ_eq_colourLUnit, phaseAxis, colourUnit, colourLUnit,
+    rationalBasis, Pi.single_apply] <;> norm_num
 
 @[simp] theorem toNative_polarizedSigmaGreenMinus :
     toNative polarizedSigmaGreenMinus = modularSigmaMinus .green := by
-  decide
+  funext b
+  cases b <;> simp [toNative, polarizedSigmaGreenMinus, polarizedGenerator,
+    modularSigmaMinus, modularJ_eq_colourLUnit, phaseAxis, colourUnit, colourLUnit,
+    rationalBasis, Pi.single_apply] <;> norm_num
 
 @[simp] theorem toNative_polarizedSigmaBlueMinus :
     toNative polarizedSigmaBlueMinus = modularSigmaMinus .blue := by
-  decide
+  funext b
+  cases b <;> simp [toNative, polarizedSigmaBlueMinus, polarizedGenerator,
+    modularSigmaMinus, modularJ_eq_colourLUnit, phaseAxis, colourUnit, colourLUnit,
+    rationalBasis, Pi.single_apply] <;> norm_num
 
 @[simp] theorem toNative_polarizedZornSigmaPlus
     (c : SplitOctonionColour) :

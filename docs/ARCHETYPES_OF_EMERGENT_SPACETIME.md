@@ -1163,12 +1163,11 @@ Formalizing the non-ballistic quantum field representation of gamma emissions on
 * **Master Synthesis:** Certified master conjunction in Mathlib 4 (`certified_nuclear_information_correlator_synthesis`).
   In Lean 4: [`NuclearInformationCorrelator.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/NuclearInformationCorrelator.lean) and [`NuclearInformationCorrelatorAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/NuclearInformationCorrelatorAudit.lean).
 
-### 5.86 Terence Tao Fluid Computation & Spinorial Attention Decoupling
-Formalizing the algebraic carrier for hydrodynamic computing ("Can a fluid compute?") and chiral spinorial attention decoupling:
-* **Cartan Involution & Peirce Resolution:** The chiral Pauli involution $\sigma_x^2 = \operatorname{id}$ generates idempotent and mutually orthogonal Peirce projectors $P_\pm = \frac{1}{2}(\operatorname{id} \pm \sigma_x)$ resolving identity: $P_+ + P_- = \operatorname{id}$ (`peirce_sum_eq_id`, `peirce_decomposition`, `P_plus_idempotent`, `P_plus_comp_P_minus`).
-* **Tao Attention Decoupling:** The hyperbolic boost / strain operator $H_{\mathrm{boost}}$ anticommuting with $\sigma_x$ acts as an exact chiral intertwiner: $H_{\mathrm{boost}} \circ P_+ = P_- \circ H_{\mathrm{boost}}$ and $H_{\mathrm{boost}} \circ P_- = P_+ \circ H_{\mathrm{boost}}$ (`fluid_attention_decoupling_plus`, `fluid_attention_decoupling_minus`).
-* **Master Synthesis:** Certified master conjunction in Mathlib 4 (`certified_fluid_spinorial_latent_space_synthesis`).
-  In Lean 4: [`FluidSpinorialLatentSpace.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/FluidSpinorialLatentSpace.lean) and [`FluidSpinorialLatentSpaceAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Physics/FluidSpinorialLatentSpaceAudit.lean).
+### 5.86 Split Involutions and Operator Channel Switching
+For a linear involution $\theta^2 = 1$ over a field in which $2$ is invertible, the canonical Peirce operators $P_\pm = \frac{1}{2}(1 \pm \theta)$ are complementary projections. If an endomorphism $T$ anticommutes with $\theta$, it exchanges the two projected channels:
+* **Projector identities:** `Pplus_add_Pminus_eq_id`, `Pplus_idempotent`, `Pminus_idempotent`, and `Pplus_comp_Pminus` in [`Involution.lean`](../lean/InfoGeometry/Cartan/Involution.lean).
+* **Channel exchange:** `anticommutingEnd_comp_Pplus` and `anticommutingEnd_comp_Pminus` prove $T P_+ = P_- T$ and $T P_- = P_+ T$ from the algebraic anticommutation hypothesis.
+These are general module-theoretic identities. They do not, by themselves, establish a fluid model, an attention mechanism, a spinorial realization, or a hydrodynamic interpretation.
 
 ### 5.87 BRST-Invariant Quantum Fluid Operator & Gauge Decoupling
 Formalizing the Batalin-Vilkovisky / BRST gauge decoupling of fluid incompressibility constraints:
@@ -1373,7 +1372,7 @@ Formalizing the grand geometric bridge between surprisal, Aitchison compositiona
 | **Glauber Tensor Copula Invariance** | Product Integration $\mathcal{I}_2$ / Fubini Factorization / Copula Cross-Ratio | `certified_glauber_tensor_copula_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Quantum Fisher Null Cone Retrodiction** | Associative Quantum Algebra / SLD Bundle / QFIM Metric / Sachs Optical Scaling | `certified_quantum_fisher_null_cone_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Quantum Gamma Field & Lightcone Correlator** | Advanced Wave Retraction / Logarithmic Activity Invariant / Energy Non-Negativity | `time_space_lightcone_equivalence`, `nuclear_invariant_log_reconstruction`, `certified_nuclear_information_correlator_synthesis` | **Kernel-Checked (0 gaps)** |
-| **Tao Fluid Computation & Spinorial Attention** | Spinorial Latent Space / Cartan Involution / Peirce Projectors / Boost Intertwiner | `peirce_sum_eq_id`, `fluid_attention_decoupling_plus`, `certified_fluid_spinorial_latent_space_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Split Involution Channel Switching** | Cartan involution / Peirce projections / anticommuting endomorphism | `Pplus_add_Pminus_eq_id`, `anticommutingEnd_comp_Pplus`, `anticommutingEnd_comp_Pminus` | **Kernel-checked algebraic identities** |
 | **Fluid BRST Gauge Decoupling** | Batalin-Vilkovisky Complex / Faddeev-Popov Quartet / Nilpotence $s^2=0$ / Solenoidal Flow | `ghost_variation_zero`, `brst_nilpotent`, `solenoidal_flow_is_physical`, `certified_fluid_brst_gauge_decoupling_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Arnold Coadjoint Orbits & KKS Symplectic Geometry** | Coadjoint Action $\operatorname{ad}_x^* \omega$ / KKS 2-Form $\Omega_{\mathrm{KKS}}$ / Jacobi Closedness $d\Omega = 0$ / Casimir Helicity | `kks_form_self`, `kks_form_antisymm`, `kks_form_closed`, `coadjoint_lie_hom`, `certified_arnold_coadjoint_orbits_chern_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Arnold-Souriau Momentum Prequantization** | Particle Relabeling Symmetry / Kelvin-Noether Theorem / Souriau 2-Cocycle / Bott-Virasoro Jacobi / Onsager-Feynman Vortex Quantization | `souriau_kelvin_circulation_conserved`, `souriau_cocycle_jacobi_closed`, `souriau_arnold_vortex_quantization`, `arnold_souriau_prequantization_synthesis` | **Kernel-Checked (0 gaps)** |

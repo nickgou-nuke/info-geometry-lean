@@ -78,6 +78,12 @@ theorem height_add (a b : RootLattice) : height (a + b) = height a + height b :=
 def HeightCutoff (N : ℕ) : Submodule ℚ SerreAlgebra :=
   ⨆ (a : RootLattice) (_ : |height a| ≤ N), SerreHomogeneousSubmodule a
 
+theorem HeightCutoff_mono {N M : ℕ} (h : N ≤ M) : HeightCutoff N ≤ HeightCutoff M := by
+  unfold HeightCutoff
+  refine iSup_le fun a => iSup_le fun ha => ?_
+  exact le_iSup_of_le a
+    (le_iSup_of_le (le_trans ha (by exact_mod_cast h)) le_rfl)
+
 theorem cutoff_bracket (N M : ℕ) (u v : SerreAlgebra)
     (hu : u ∈ HeightCutoff N) (hv : v ∈ HeightCutoff M) :
     ⁅u, v⁆ ∈ HeightCutoff (N + M) := by
@@ -89,7 +95,7 @@ theorem cutoff_bracket (N M : ℕ) (u v : SerreAlgebra)
 
 def HeightSystem : ℕ ⥤ ModuleCat ℚ where
   obj N := ModuleCat.of ℚ (HeightCutoff N)
-  map {N M} h := ModuleCat.ofHom (Submodule.inclusion (by sorry))
+  map {N M} h := ModuleCat.ofHom (Submodule.inclusion (HeightCutoff_mono h.down.down))
   map_id := by sorry
   map_comp := by sorry
 

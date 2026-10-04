@@ -45,9 +45,11 @@ and their exact correspondence with Chern-Simons gauge theory and anyonic statis
    - Bosonic ($\theta = 0 \implies M = 1$), fermionic ($\theta = \pi \implies M = 1$), and fractional anyonic ($M \neq 1$) limits.
 
 5. **Master Synthesis**:
-   - Certified conjunction `fluid_chern_simons_knot_anyon_synthesis`.
+   - The theorem `fluid_chern_simons_knot_anyon_synthesis` packages the explicit algebraic identities proved above.
 
-Zero debt, 0 sorry, 0 admit, kernel-checked in Lean 4.
+This file formalizes finite algebraic models and one explicit polygonal framing. It does not
+prove the analytic continuum formulas stated in the motivating discussion. Several finite
+computations use `native_decide`, whose axiom footprint is reported by the audit module.
 -/
 
 namespace InfoGeometry.Physics.FluidChernSimonsKnotAnyon
@@ -335,23 +337,5 @@ theorem fluid_chern_simons_knot_anyon_synthesis
   refine ⟨L.moffatt_linking_symmetry, ?_, CS.chern_simons_gauge_invariance_closed,
     W.wilson_loop_modulus_invariance, B.anyon_braid_unitarity, B.anyon_double_exchange_sq⟩
   exact FramedVortexFilament.calugareanu_white_fuchs_helicity
-
-/-- Certified wrapper certifying Section 5.85 / 5.94. -/
-structure CertifiedFluidChernSimonsKnotAnyon where
-  certified_synthesis :
-    ∀ (L : VortexLink) (CS : ChernSimonsAction)
-      (W : FramedWilsonLoop) (B : AnyonBraid),
-      (L.swap.mutualHelicity = L.mutualHelicity) ∧
-      (FramedVortexFilament.selfHelicity FramedVortexFilament.canonical
-        = 1 * ((FramedVortexFilament.writhe FramedVortexFilament.canonical
-          + FramedVortexFilament.twist FramedVortexFilament.canonical) : ℝ)) ∧
-      (CS.transformedAction 0 = CS.action) ∧
-      (c_abs W.value = c_abs W.knot_invariant) ∧
-      (c_abs B.R = 1 ∧ c_abs B.M = 1) ∧
-      (B.M = B.R * B.R)
-
-/-- Canonical witness constructor. -/
-def makeCertifiedFluidChernSimonsKnotAnyon : CertifiedFluidChernSimonsKnotAnyon where
-  certified_synthesis := fluid_chern_simons_knot_anyon_synthesis
 
 end InfoGeometry.Physics.FluidChernSimonsKnotAnyon

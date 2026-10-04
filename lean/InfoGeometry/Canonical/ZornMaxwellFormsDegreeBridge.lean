@@ -77,27 +77,10 @@ theorem cliffordFormRepresentation_generator_square_comp
     (ρ.rho (CliffordAlgebra.ι Q v)).comp
         (ρ.rho (CliffordAlgebra.ι Q v)) =
       (Algebra.lsmul R R (ExteriorAlgebra R V)) (Q v) := by
-  ext ω
-  change ρ.rho (CliffordAlgebra.ι Q v) (
-      ρ.rho (CliffordAlgebra.ι Q v) ω) = _
-  calc
-    ρ.rho (CliffordAlgebra.ι Q v) (
-        ρ.rho (CliffordAlgebra.ι Q v) ω) =
-        ρ.rho (algebraMap R (CliffordAlgebra Q) (Q v)) ω := by
-      change (ρ.rho (CliffordAlgebra.ι Q v) *
-          ρ.rho (CliffordAlgebra.ι Q v)) ω = _
-      calc
-        (ρ.rho (CliffordAlgebra.ι Q v) *
-            ρ.rho (CliffordAlgebra.ι Q v)) ω =
-            ρ.rho ((CliffordAlgebra.ι Q v) *
-              (CliffordAlgebra.ι Q v)) ω := by
-          exact congrArg (fun T : Module.End R (ExteriorAlgebra R V) => T ω)
-            (ρ.rho.map_mul _ _).symm
-        _ = ρ.rho (algebraMap R (CliffordAlgebra Q) (Q v)) ω := by
-          rw [CliffordAlgebra.ι_sq_scalar]
-    _ = Q v • ω := by
-      rw [ρ.rho.commutes]
-      rfl
+  change ρ.rho (CliffordAlgebra.ι Q v) *
+      ρ.rho (CliffordAlgebra.ι Q v) = _
+  rw [cliffordFormRepresentation_generator_square, ρ.rho.commutes]
+  rfl
 
 def operatorAnticommutator
     (S T : Module.End R (ExteriorAlgebra R V)) :

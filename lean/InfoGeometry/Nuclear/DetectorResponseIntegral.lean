@@ -39,6 +39,9 @@ theorem response_eq_existing_flux_integral (μ d R L : ℝ) (hd : 0 < d)
           collisionDensity μ (materialPath d p)) * κ p := by
   apply setIntegral_congr_fun (measurableSet_cylinder R L)
   intro p hp
+  change firstCollisionKernel μ d p * κ p =
+    (ApollonianBipolarField.fluxDensity 1 (sourceRange d p) Real.pi *
+      collisionDensity μ (materialPath d p)) * κ p
   rw [firstCollisionKernel_eq_existing_flux hd hp.2.1]
 
 /-- On the axis, the existing separation d + z is the radius of EACH local

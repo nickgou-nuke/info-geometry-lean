@@ -11,11 +11,11 @@ import InfoGeometry.Physics.FluidChernSimonsKnotAnyon
 Automated kernel verification of Section 5.85 / 5.94:
 - Zero debt: 0 sorry, 0 admit.
 - Checks Moffatt mutual helicity linking symmetry.
-- Checks Călugăreanu-White-Fuchs self-linking helicity decomposition.
+- Checks the Călugăreanu-White-Fuchs identity for the explicitly defined canonical framed square.
 - Verifies Chern-Simons 3-form gauge invariance on closed boundaries.
 - Verifies Witten's framing anomaly modulus invariance and shift relation.
 - Verifies anyonic braiding unitarity and double-exchange monodromy square relation.
-- Certified Axiom Footprint: standard foundational axioms only [propext, Classical.choice, Quot.sound].
+- Reports the exact axiom footprint; finite geometric computations currently use `native_decide`.
 -/
 
 namespace InfoGeometry.Physics.FluidChernSimonsKnotAnyonAudit
@@ -31,7 +31,9 @@ set_option linter.unusedSimpArgs false
   ∀ (L : VortexLink), L.swap.mutualHelicity = L.mutualHelicity)
 
 #check (FramedVortexFilament.calugareanu_white_fuchs_helicity :
-  ∀ (F : FramedVortexFilament), F.selfHelicity = (F.circ ^ 2) * (F.writhe + F.twist))
+  FramedVortexFilament.selfHelicity FramedVortexFilament.canonical =
+    1 * ((FramedVortexFilament.writhe FramedVortexFilament.canonical : ℤ) +
+      FramedVortexFilament.twist FramedVortexFilament.canonical))
 
 #check (ChernSimonsAction.chern_simons_gauge_invariance_closed :
   ∀ (CS : ChernSimonsAction), CS.transformedAction 0 = CS.action)
@@ -53,10 +55,12 @@ set_option linter.unusedSimpArgs false
   ∀ (B : AnyonBraid), B.M = B.R * B.R)
 
 #check (fluid_chern_simons_knot_anyon_synthesis :
-  ∀ (L : VortexLink) (F : FramedVortexFilament) (CS : ChernSimonsAction)
+  ∀ (L : VortexLink) (CS : ChernSimonsAction)
     (W : FramedWilsonLoop) (B : AnyonBraid),
     (L.swap.mutualHelicity = L.mutualHelicity) ∧
-    (F.selfHelicity = (F.circ ^ 2) * (F.writhe + F.twist)) ∧
+    (FramedVortexFilament.selfHelicity FramedVortexFilament.canonical =
+      1 * ((FramedVortexFilament.writhe FramedVortexFilament.canonical : ℝ) +
+        (FramedVortexFilament.twist FramedVortexFilament.canonical : ℝ))) ∧
     (CS.transformedAction 0 = CS.action) ∧
     (c_abs W.value = c_abs W.knot_invariant) ∧
     (c_abs B.R = 1 ∧ c_abs B.M = 1) ∧

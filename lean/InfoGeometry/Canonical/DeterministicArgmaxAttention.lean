@@ -3,20 +3,45 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Tactic
+import InfoGeometry.Routing.FiniteSoftmax
 
 open Matrix
+open Topology
 open scoped BigOperators
 
 namespace DeterministicArgmaxAttention
 
 variable {N M : ℕ} [NeZero N] [NeZero M]
 
-/-! ### 1. Deterministic Attention Matrix -/
+/-! ### 1. Finite Deterministic Routing -/
 
-/-- The zero-temperature argmax attention matrix A*_{i, j} = δ_{j, σ(i)}. -/
+/-- The deterministic routing matrix `Aᵢⱼ = 1` exactly at the selected key
+`σ i`, and zero elsewhere. -/
 def deterministicAttention (σ : Fin N → Fin M) : Matrix (Fin N) (Fin M) ℝ :=
   fun i j => if j = σ i then 1 else 0
 
+omit [NeZero N] in
+/-- In inverse-temperature coordinates, rowwise softmax converges in the
+finite matrix topology to deterministic routing when each row has a unique
+strict maximum. The parameter `β` tends to `+∞`, corresponding to temperature
+`1 / β` tending to zero through positive values. -/
+theorem softmaxMatrix_tendsto_deterministic_of_unique_max
+    (scores : Fin N → Fin M → ℝ) (σ : Fin N → Fin M)
+    (hmax : ∀ i j, j ≠ σ i → scores i j < scores i (σ i)) :
+    Filter.Tendsto
+      (fun β : ℝ => fun i j =>
+        InfoGeometry.Routing.FiniteSoftmax.weight (scores i) (1 / β) j)
+      Filter.atTop (𝓝 (deterministicAttention σ)) := by
+  classical
+  apply tendsto_pi_nhds.2
+  intro i
+  apply tendsto_pi_nhds.2
+  intro j
+  simpa [deterministicAttention] using
+    (InfoGeometry.Routing.FiniteSoftmax.weight_tendsto_indicator_of_unique_max
+      (scores i) (σ i) (fun j hj => hmax i j hj) j)
+
+omit [NeZero N] [NeZero M] in
 /-- Each row of the deterministic attention matrix sums to 1. -/
 theorem deterministic_attention_row_sum (σ : Fin N → Fin M) (i : Fin N) :
     (∑ j : Fin M, deterministicAttention σ i j) = 1 := by
@@ -37,6 +62,7 @@ noncomputable def jointDistribution (σ : Fin N → Fin M) : Matrix (Fin N) (Fin
 noncomputable def rowMarginal (σ : Fin N → Fin M) (i : Fin N) : ℝ :=
   ∑ j : Fin M, jointDistribution σ i j
 
+omit [NeZero N] [NeZero M] in
 theorem rowMarginal_eq_uniform (σ : Fin N → Fin M) (i : Fin N) :
     rowMarginal σ i = 1 / (N : ℝ) := by
   dsimp [rowMarginal, jointDistribution]
@@ -66,6 +92,7 @@ noncomputable def mutualInformation (σ : Fin N → Fin M) : ℝ :=
 
 /-! ### 3. Vanishing Conditional Entropy (H(K | Q) = 0) -/
 
+omit [NeZero N] [NeZero M] in
 /-- Pointwise indicator vanishing: For x ∈ {0, 1}, x * ln(x) = 0. -/
 lemma deterministic_entry_mul_log (σ : Fin N → Fin M) (i : Fin N) (j : Fin M) :
     deterministicAttention σ i j * Real.log (deterministicAttention σ i j) = 0 := by
@@ -74,7 +101,9 @@ lemma deterministic_entry_mul_log (σ : Fin N → Fin M) (i : Fin N) (j : Fin M)
   · rw [Real.log_one, mul_zero]
   · rw [zero_mul]
 
-/-- At zero temperature, the conditional entropy at any query node i vanishes: H(K | Q = i) = 0. -/
+omit [NeZero N] [NeZero M] in
+/-- For deterministic routing, the conditional entropy at any query node
+vanishes: H(K | Q = i) = 0. -/
 theorem conditionalEntropyAt_zero (σ : Fin N → Fin M) (i : Fin N) :
     conditionalEntropyAt σ i = 0 := by
   dsimp [conditionalEntropyAt]
@@ -84,7 +113,8 @@ theorem conditionalEntropyAt_zero (σ : Fin N → Fin M) (i : Fin N) :
     exact deterministic_entry_mul_log σ i j
   rw [h_sum, neg_zero]
 
-/-- Master Identity: Total Conditional Entropy vanishes identically for deterministic attention. -/
+omit [NeZero N] [NeZero M] in
+/-- Total conditional entropy vanishes for deterministic routing. -/
 theorem conditionalEntropy_zero (σ : Fin N → Fin M) :
     conditionalEntropy σ = 0 := by
   dsimp [conditionalEntropy, jointDistribution]
@@ -109,9 +139,9 @@ theorem conditionalEntropy_zero (σ : Fin N → Fin M) :
 
 /-! ### 4. Mutual Information Saturation (I(Q; K) = H(K)) -/
 
-/-- Channel Capacity Theorem: In the zero-temperature argmax limit,
-    the mutual information saturates the entire entropy of the context keys:
-    I(Q; K) = H(K). -/
+omit [NeZero N] [NeZero M] in
+/-- For deterministic routing, mutual information equals the entropy of the
+key marginal because conditional key entropy vanishes. -/
 theorem mutualInformation_eq_entropyKey (σ : Fin N → Fin M) :
     mutualInformation σ = entropyKey σ := by
   dsimp [mutualInformation]
@@ -119,7 +149,8 @@ theorem mutualInformation_eq_entropyKey (σ : Fin N → Fin M) :
 
 /-! ### 5. Bijective Routing: Maximum Entropic Capacity -/
 
-/-- For a bijective routing permutation σ (with N = M), the key marginals are uniform: q(j) = 1 / N. -/
+omit [NeZero N] in
+/-- For bijective routing, the key marginals are uniform: q(j) = 1 / N. -/
 theorem colMarginal_bijective_uniform (e : Fin N ≃ Fin N) (j : Fin N) :
     colMarginal (N := N) (M := N) e j = 1 / (N : ℝ) := by
   dsimp [colMarginal, jointDistribution, deterministicAttention]
@@ -180,9 +211,9 @@ lemma min_div_right_real (a b c : ℝ) (hc : 0 ≤ c) : min (a / c) (b / c) = (m
     rw [min_eq_right h.le, min_eq_right]
     exact div_le_div_of_nonneg_right h.le hc
 
-/-- Comonotonicity Theorem: When attention implements identity routing (σ(i) = i),
-    the joint distribution saturates the Upper Fréchet-Hoeffding Copula Bound:
-    H(i, j) = min(F(i), G(j)). -/
+omit [NeZero N] in
+/-- Under identity routing, the discrete joint CDF at grid thresholds equals
+the minimum of the two discrete marginal CDF values. -/
 theorem identity_attention_is_frechet_hoeffding_upper (i j : Fin N) :
     jointCDF (N := N) (M := N) id i j = frechetHoeffdingUpper (rowCDF i) (colCDF j) := by
   dsimp [jointCDF, frechetHoeffdingUpper, rowCDF, colCDF, jointDistribution, deterministicAttention, id]

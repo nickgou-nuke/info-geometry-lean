@@ -3,7 +3,7 @@
 
 This script audits runtime trace rows against the finite owner lane identities:
 - softmax simplex normalization
-- softmax = Gibbs/KMS weights (when energies are present)
+- softmax = finite Gibbs weights (when energies are present)
 - log-partition / Massieu consistency
 - entropy/free-energy identities
 - defect-lane quarantine checks (when defect metrics are present)
@@ -182,9 +182,9 @@ def main() -> int:
             "softmaxWeight_nonneg",
             "InfoGeometry.LLM.ThermodynamicSwitching.maskedNormalizedWeight_nonneg (all-top specialization)",
         ),
-        "softmaxWeight_eq_kmsWeight": CheckAccumulator(
-            "softmaxWeight_eq_kmsWeight",
-            "InfoGeometry.LLM.KMSSoftmaxBridge.softmaxWeight_eq_kmsWeight",
+        "softmaxWeight_eq_finiteGibbsWeight": CheckAccumulator(
+            "softmaxWeight_eq_finiteGibbsWeight",
+            "InfoGeometry.LLM.RouterFreeEnergyBridge.normalizedWeights_eq_finite_gibbsWeight",
         ),
         "softmaxWeight_eq_logitsSoftmax": CheckAccumulator(
             "softmaxWeight_eq_logitsSoftmax",
@@ -194,9 +194,9 @@ def main() -> int:
             "partition_eq_sum_exp_logit",
             "InfoGeometry.LLM.ThermodynamicSwitching.routerPartition_eq_exp_logSumExp",
         ),
-        "kmsLogPartition_eq_logSumExpRouter": CheckAccumulator(
-            "kmsLogPartition_eq_logSumExpRouter",
-            "InfoGeometry.LLM.KMSSoftmaxBridge.kmsLogPartition_eq_logSumExpRouter",
+        "routerMassieu_eq_logSumExpRouter": CheckAccumulator(
+            "routerMassieu_eq_logSumExpRouter",
+            "InfoGeometry.LLM.RouterFreeEnergyBridge.routerMassieu_eq_logSumExpRouter",
         ),
         "internalEnergy_weighted_sum": CheckAccumulator(
             "internalEnergy_weighted_sum",
@@ -206,17 +206,17 @@ def main() -> int:
             "entropy_from_weights",
             "InfoGeometry.Thermo.FiniteDiagonal.entropy",
         ),
-        "kmsEntropy_eq_beta_internal_plus_logPartition": CheckAccumulator(
-            "kmsEntropy_eq_beta_internal_plus_logPartition",
-            "InfoGeometry.LLM.KMSSoftmaxBridge.kmsEntropy_eq_beta_internal_plus_logPartition",
+        "routerEntropy_eq_beta_internal_plus_massieu": CheckAccumulator(
+            "routerEntropy_eq_beta_internal_plus_massieu",
+            "InfoGeometry.LLM.RouterFreeEnergyBridge.routerEntropy_eq_beta_internal_plus_massieu",
         ),
-        "beta_mul_routerFreeEnergy_eq_neg_kmsLogPartition": CheckAccumulator(
-            "beta_mul_routerFreeEnergy_eq_neg_kmsLogPartition",
-            "InfoGeometry.LLM.KMSSoftmaxBridge.beta_mul_routerFreeEnergy_eq_neg_kmsLogPartition",
+        "beta_mul_routerFreeEnergy_eq_neg_routerMassieu": CheckAccumulator(
+            "beta_mul_routerFreeEnergy_eq_neg_routerMassieu",
+            "InfoGeometry.LLM.RouterFreeEnergyBridge.beta_mul_routerFreeEnergy_eq_neg_routerMassieu",
         ),
-        "routerFreeEnergyEps_eq_neg_eps_kmsLogPartition": CheckAccumulator(
-            "routerFreeEnergyEps_eq_neg_eps_kmsLogPartition",
-            "InfoGeometry.LLM.KMSSoftmaxBridge.routerFreeEnergyEps_eq_neg_eps_kmsLogPartition",
+        "routerFreeEnergyEps_eq_neg_eps_logSumExpRouter": CheckAccumulator(
+            "routerFreeEnergyEps_eq_neg_eps_logSumExpRouter",
+            "InfoGeometry.LLM.RouterFreeEnergyBridge.routerFreeEnergyEps_eq_neg_eps_logSumExpRouter",
         ),
         "defect_quarantined_on_mixed_input": CheckAccumulator(
             "defect_quarantined_on_mixed_input",
@@ -337,10 +337,10 @@ def main() -> int:
             max_diff = max(abs(a - b) for a, b in zip(gibbs_hat, weights)) if weights else 0.0
             tol = args.abs_tol + args.rel_tol
             ok = max_diff <= tol
-            checks["softmaxWeight_eq_kmsWeight"].add(max_diff, ok)
+            checks["softmaxWeight_eq_finiteGibbsWeight"].add(max_diff, ok)
             if not ok:
                 report_failure(
-                    "softmaxWeight_eq_kmsWeight",
+                    "softmaxWeight_eq_finiteGibbsWeight",
                     max_diff,
                     tol,
                     "weights != Gibbs(beta, energies)",
@@ -349,10 +349,10 @@ def main() -> int:
         if massieu is not None and partition is not None and partition > 0:
             massieu_hat = math.log(partition)
             ok, residual, tol = close(massieu_hat, massieu, args.abs_tol, args.rel_tol)
-            checks["kmsLogPartition_eq_logSumExpRouter"].add(residual, ok)
+            checks["routerMassieu_eq_logSumExpRouter"].add(residual, ok)
             if not ok:
                 report_failure(
-                    "kmsLogPartition_eq_logSumExpRouter",
+                    "routerMassieu_eq_logSumExpRouter",
                     residual,
                     tol,
                     f"log(partition)={massieu_hat}, massieu={massieu}",
@@ -386,10 +386,10 @@ def main() -> int:
         if entropy is not None and beta is not None and internal_energy is not None and massieu is not None:
             rhs = beta * internal_energy + massieu
             ok, residual, tol = close(entropy, rhs, args.abs_tol, args.rel_tol)
-            checks["kmsEntropy_eq_beta_internal_plus_logPartition"].add(residual, ok)
+            checks["routerEntropy_eq_beta_internal_plus_massieu"].add(residual, ok)
             if not ok:
                 report_failure(
-                    "kmsEntropy_eq_beta_internal_plus_logPartition",
+                    "routerEntropy_eq_beta_internal_plus_massieu",
                     residual,
                     tol,
                     f"entropy={entropy}, beta*U+psi={rhs}",
@@ -399,10 +399,10 @@ def main() -> int:
             lhs = beta * free_energy
             rhs = -massieu
             ok, residual, tol = close(lhs, rhs, args.abs_tol, args.rel_tol)
-            checks["beta_mul_routerFreeEnergy_eq_neg_kmsLogPartition"].add(residual, ok)
+            checks["beta_mul_routerFreeEnergy_eq_neg_routerMassieu"].add(residual, ok)
             if not ok:
                 report_failure(
-                    "beta_mul_routerFreeEnergy_eq_neg_kmsLogPartition",
+                    "beta_mul_routerFreeEnergy_eq_neg_routerMassieu",
                     residual,
                     tol,
                     f"beta*F={lhs}, -psi={rhs}",
@@ -412,10 +412,10 @@ def main() -> int:
             lhs = free_energy_eps
             rhs = -epsilon * kms_log_partition
             ok, residual, tol = close(lhs, rhs, args.abs_tol, args.rel_tol)
-            checks["routerFreeEnergyEps_eq_neg_eps_kmsLogPartition"].add(residual, ok)
+            checks["routerFreeEnergyEps_eq_neg_eps_logSumExpRouter"].add(residual, ok)
             if not ok:
                 report_failure(
-                    "routerFreeEnergyEps_eq_neg_eps_kmsLogPartition",
+                    "routerFreeEnergyEps_eq_neg_eps_logSumExpRouter",
                     residual,
                     tol,
                     f"F_eps={lhs}, -eps*psi={rhs}",

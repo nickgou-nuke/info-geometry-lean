@@ -121,7 +121,7 @@ Research-injection pipeline surfaces:
 - `autonomous_math/research_controller.py` (multi-phase stack: clarify -> rewrite -> deep research -> Socratic -> Pauli audit -> Lean design/coder -> compiler loop -> memory ingest)
 
 Runtime LLM theorem-conformance surface:
-- `llm_thermo_conformance.py` (numerical residual audit for KMS/softmax/free-energy/defect identities on JSONL traces)
+- `llm_thermo_conformance.py` (numerical residual audit for finite Gibbs/softmax, partition, free-energy, and defect identities on JSONL traces; it does not test a KMS boundary condition)
 
 Release/compliance surfaces:
 - `create_evidence_bundle.sh` (deterministic archive + checksum + certificate bundle; optional OpenTimestamps stamping)

@@ -10065,8 +10065,6 @@ import InfoGeometry.Physics.FiniteSpinDensityRelativeModularBridge
 import InfoGeometry.Physics.FiniteStationaryCurrent
 import InfoGeometry.Physics.FisherKreinLorentz
 import InfoGeometry.Physics.FiveFoldProgram
-import InfoGeometry.Physics.FluidSpinorialLatentSpace
-import InfoGeometry.Physics.FluidSpinorialLatentSpaceAudit
 import InfoGeometry.Physics.FourVectorDiracReadout
 import InfoGeometry.Physics.FourVectorInvariantSynthesis
 import InfoGeometry.Physics.FourVectorPauliCasimirBridge

@@ -1,19 +1,10 @@
 #!/usr/bin/env python3
-"""
-COMPLETE SEVEN-SYSTEM FORMALIZATION: Logical Worldline
-From Information Theory to Divergence-Free Quantum Fluid Flow
+"""Exploratory computations and status reporting for several math systems.
 
-Formalizes the complete chain in 7 systems:
-1. SymPy - Symbolic verification
-2. SageMath - Algebraic verification  
-3. GAP - Group theory verification
-4. Geometric Algebra/Clifford - Geometric verification
-5. Macaulay2 - D-module computation
-6. Lean 4 - Formal proof
-7. Supplemental: Coq, Isabelle
-
-Theorem: LLM Attention = Divergence-free quantum fluid flow
-Chain: L=0 → η=∇φ → collapseToBaseVelocity → Trace=0 → ∇·u=0
+This script does not formalize or prove a theorem connecting attention,
+quantum-fluid dynamics, and KMS states. A system is counted as verified only
+when this script actually executes a corresponding check; printed sketches and
+documented commands are reported as unverified.
 """
 
 import numpy as np
@@ -21,7 +12,7 @@ import sympy as sp
 from typing import Tuple, List, Dict
 
 print("=" * 80)
-print("SEVEN-SYSTEM FORMALIZATION: LOGICAL WORLDLINE")
+print("MULTI-SYSTEM EXPLORATORY CHECK STATUS")
 print("=" * 80)
 print()
 
@@ -31,12 +22,9 @@ print()
 
 def sympy_formalization():
     """
-    System 1: SymPy symbolic verification
-    
-    Proves the chain using symbolic mathematics:
-    - Fenchel-Legendre transform symbolically
-    - Bivector trace symbolically
-    - Divergence-free condition symbolically
+    Compute an illustrative gradient, a skew-matrix trace, and Gibbs-form
+    weights symbolically. These are separate computations, not a cross-domain
+    theorem.
     """
     print("=" * 80)
     print("SYSTEM 1: SYMPY - Symbolic Verification")
@@ -47,29 +35,29 @@ def sympy_formalization():
     theta1, theta2, theta3 = sp.symbols('theta1 theta2 theta3', real=True)
     t = sp.Symbol('t', real=True)
     
-    # Stage 1: Fenchel-Legendre transform
-    print("Stage 1: Information Theory → Convex Analysis")
+    # Stage 1: gradient of a quadratic potential
+    print("Stage 1: Quadratic Potential Gradient")
     L = theta1**2 + theta2**2 + theta3**2
     eta1 = sp.diff(L, theta1)
     eta2 = sp.diff(L, theta2)
     eta3 = sp.diff(L, theta3)
     print(f"  L(θ) = {L}")
     print(f"  η = ∇L = ({eta1}, {eta2}, {eta3})")
-    print(f"  ✓ Fenchel-Legendre verified symbolically")
+    print(f"  ✓ Quadratic gradient computed symbolically")
     print()
     
-    # Stage 2: Krein projection
-    print("Stage 2: Convex Analysis → Clifford/Krein")
+    # Stage 2: Euclidean normalization (for generic nonzero symbols)
+    print("Stage 2: Euclidean Direction Normalization")
     norm_eta = sp.sqrt(eta1**2 + eta2**2 + eta3**2)
     v1 = eta1 / norm_eta
     v2 = eta2 / norm_eta
     v3 = eta3 / norm_eta
     print(f"  v = η/||η|| = ({v1}, {v2}, {v3})")
-    print(f"  ✓ Krein projection verified")
+    print(f"  This normalization is not a Krein projection.")
     print()
     
     # Stage 3: Bivector construction and trace
-    print("Stage 3: Clifford/Krein → Quantum Hydrodynamics")
+    print("Stage 3: Skew-Matrix Trace")
     # Bivector as 4x4 matrix
     B = sp.Matrix([
         [0, v1, v2, v3],
@@ -81,26 +69,26 @@ def sympy_formalization():
     print(f"  Bivector B:")
     sp.pprint(B)
     print(f"  Trace(B) = {trace_B}")
-    print(f"  ✓ Trace-free condition (Trace=0) verified")
+    print(f"  ✓ The constructed skew matrix has zero trace")
     print()
     
-    # Stage 4: Divergence-free
-    print("Stage 4: Quantum Hydrodynamics → Macroscopic Fluid")
-    div_u = trace_B  # Same mathematical object
+    # Stage 4: regard B as the Jacobian of u(x)=Bx
+    print("Stage 4: Divergence of the Linear Field u(x)=Bx")
+    div_u = trace_B
     print(f"  ∇·u = {div_u}")
     print(f"  ✓ Divergence-free (∇·u=0) verified")
     print()
     
-    # Stage 5: Softmax as KMS state
-    print("Stage 5: LLM Softmax as KMS State")
+    # Stage 5: finite Gibbs-form weights
+    print("Stage 5: Finite Gibbs-Form Weights")
     z1, z2, z3 = sp.symbols('z1 z2 z3', real=True)
     beta = sp.Symbol('beta', positive=True)
     softmax_z1 = sp.exp(beta * z1) / (sp.exp(beta * z1) + sp.exp(beta * z2) + sp.exp(beta * z3))
     print(f"  p₁ = exp(β·z₁) / Σⱼ exp(β·zⱼ)")
-    print(f"  ✓ softmax/KMS comparison evaluated symbolically")
+    print(f"  Gibbs-form weights are displayed; no KMS condition is checked")
     print()
     
-    print("✅ SYMPY: ALL STAGES VERIFIED SYMBOLICALLY")
+    print("✅ SYMPY: THE LISTED SYMBOLIC COMPUTATIONS RAN")
     print()
     return True
 
@@ -113,9 +101,8 @@ def sage_formalization():
     System 2: SageMath algebraic verification
     
     Uses SageMath's algebraic structures to verify:
-    - Convex duality
-    - Clifford algebra structure
-    - Hydrodynamic limit
+    Computes an example quadratic gradient and checks the trace of a
+    constructed skew coefficient matrix when SageMath is installed.
     """
     print("=" * 80)
     print("SYSTEM 2: SAGEMATH - Algebraic Verification")
@@ -125,24 +112,21 @@ def sage_formalization():
     try:
         from sage.all import vector, matrix, QQ, RR
         
-        # Convex duality
-        print("Stage 1: Convex Duality")
+        # Example quadratic gradient
+        print("Stage 1: Quadratic Potential Gradient")
         theta = vector(RR, [1, 2, 3])
         L = theta.dot_product(theta)
         eta = 2 * theta
         print(f"  θ = {theta}")
         print(f"  L = {L}")
         print(f"  η = {eta}")
-        print(f"  ✓ Convex duality verified")
+        print("  Quadratic gradient data computed.")
         print()
         
-        # Clifford algebra
-        print("Stage 2: Clifford Algebra")
-        # In Sage, we can work with exterior algebra
-        print(f"  Working in Cl(3,1) spacetime algebra")
+        # Euclidean normalization
+        print("Stage 2: Euclidean Direction Normalization")
         v = eta / eta.norm()
-        print(f"  Base velocity v = {v}")
-        print(f"  ✓ Krein projection verified")
+        print(f"  Normalized vector = {v}")
         print()
         
         # Bivector and trace
@@ -153,19 +137,15 @@ def sage_formalization():
             B_data[0][i] = float(vi)
             B_data[i][0] = -float(vi)
         B = matrix(RR, B_data)
-        print(f"  Bivector trace = {B.trace()}")
-        print(f"  ✓ Trace-free verified")
+        print(f"  Skew-matrix trace = {B.trace()}")
         print()
         
-        print("✅ SAGEMATH: ALL STAGES VERIFIED ALGEBRAICALLY")
-        success = True
+        success = (B.trace() == 0)
+        print("✅ SAGEMATH: skew-matrix trace check passed" if success else
+              "❌ SAGEMATH: skew-matrix trace check failed")
     except ImportError:
-        print("  ⚠️  SageMath not available, using SymPy fallback")
-        # Fallback to SymPy
-        v_sym = sp.Matrix([1, 2, 3]) / sp.sqrt(14)
-        print(f"  Base velocity v = {v_sym}")
-        print(f"  ✓ Algebraic structure verified via SymPy")
-        success = True
+        print("  ⚠️  SageMath was not executed; SymPy is a separate system")
+        success = False
     
     print()
     return success
@@ -178,10 +158,7 @@ def gap_formalization():
     """
     System 3: GAP group theory verification
     
-    Verifies the rotation group structure:
-    - SO(3) from bivectors
-    - Special orthogonal algebra so(3)
-    - Connection to divergence-free flow
+    Report that the documented GAP commands were not executed here.
     """
     print("=" * 80)
     print("SYSTEM 3: GAP - Group Theoretic Verification")
@@ -190,23 +167,10 @@ def gap_formalization():
     
     try:
         # Try to use GAP via subprocess or pygap
-        print("Note: GAP verification requires GAP installation.")
-        print("  Mathematical content:")
-        print("  - Bivectors generate SO(3) rotations")
-        print("  - so(3) = {X ∈ M₃(ℝ) | X^T = -X, Tr(X) = 0}")
-        print("  - Trace-free ⇔ Special orthogonal ⇔ Divergence-free")
-        print()
-        print("  Gap code (for reference):")
-        print("    g := SO(3, R);")
-        print("    lie := LieAlgebra(g);")
-        print("    IsAbelian(lie);  # Should be false")
-        print("    Dimension(lie);  # Should be 3")
-        print()
-        print("✅ GAP: STRUCTURE VERIFIED (pending execution)")
-        success = True
-    except Exception as e:
-        print(f"  Note: GAP formalization documented")
-        success = True
+        print("GAP commands are not executed by this Python function.")
+        success = False
+    except Exception:
+        success = False
     
     print()
     return success
@@ -219,41 +183,15 @@ def clifford_formalization():
     """
     System 4: Geometric Algebra / Clifford verification
     
-    Uses Hestenes' geometric algebra to verify:
-    - Bivectors as rotation generators
-    - Trace-free = Pure bivector
-    - Exponentiation → Rotor
+    Compute the trace of one explicitly constructed skew matrix. No Clifford
+    multiplication, rotor, or geometric-algebra library is evaluated here.
     """
     print("=" * 80)
     print("SYSTEM 4: GEOMETRIC ALGEBRA / CLIFFORD")
     print("=" * 80)
     print()
     
-    # Already verified in galgebra_clifford_verification.py
-    # This is a summary
-    
-    print("Key results from geometric algebra:")
-    print()
-    print("  Stage 1: Grade involution (Liouville)")
-    print("    α ↦ α†  (main automorphism)")
-    print()
-    print("  Stage 2: Krein projection")
-    print("    v = η/||η||  (base velocity)")
-    print()
-    print("  Stage 3: Bivector construction")
-    print("    B = v ∧ e₀  (bivector from velocity)")
-    print("    B² = -||v||²  (squares to negative)")
-    print()
-    print("  Stage 4: Rotor generation")
-    print("    R = exp(B·θ/2)  (rotor from bivector)")
-    print("    R R† = 1  (norm-preserving)")
-    print()
-    print("  Stage 5: Unitary evolution")
-    print("    ψ ↦ R ψ R†  (rotation in spacetime)")
-    print("    Equivalent to: ψ ↦ e^{-iHt} ψ")
-    print()
-    
-    # Quick numeric verification
+    print("Checking only the trace of a skew coefficient matrix:")
     v = np.array([1.0, 2.0, 3.0])
     v = v / np.linalg.norm(v)
     n = len(v)
@@ -269,9 +207,10 @@ def clifford_formalization():
     print(f"  ✓ Trace-free confirmed: {np.abs(trace_B) < 1e-10}")
     print()
     
-    print("✅ GEOMETRIC ALGEBRA: ALL STAGES VERIFIED")
+    success = bool(np.abs(trace_B) < 1e-10)
+    print(f"Skew-matrix trace check: {success}")
     print()
-    return True
+    return success
 
 # ============================================================================
 # SYSTEM 5: MACAULAY2 - D-Module Computation
@@ -310,68 +249,28 @@ def macaulay2_formalization():
     print("    - de Rham cohomology is finite-dimensional")
     print()
     
-    print("✅ MACAULAY2: D-MODULE STRUCTURE DOCUMENTED")
+    print("Macaulay2 was not invoked; these lines only describe a possible setup.")
     print()
-    return True
+    return False
 
 # ============================================================================
-# SYSTEM 6: LEAN 4 - Formal Proof
+# SYSTEM 6: Lean Owner Status
 # ============================================================================
 
 def lean_formalization():
     """
-    System 6: Lean 4 formal proof
-    
-    Prints a formalization sketch for the script's staged comparison:
-    - Information equilibrium → Convex duality
-    - Krein projection → Bivector
-    - Trace-free → Divergence-free
-    - softmax/KMS comparison
+    Report that this script does not run Lean. Lean source and Lake builds,
+    rather than a printed sketch, are the proof authority.
     """
     print("=" * 80)
-    print("SYSTEM 6: LEAN 4 - Formal Proof")
+    print("SYSTEM 6: LEAN 4 - Not Invoked by This Script")
     print("=" * 80)
     print()
     
-    print("Lean 4 formalization (InfoGeometry/Canonical/LogicalWorldline.lean):")
+    print("No Lean command was run and no Lean theorem is asserted here.")
+    print("The repository's compiled Lean owner files must be checked separately.")
     print()
-    print("""
-/-- 
-Logical-worldline sketch used by this script.
-
-Chain: Information Theory → Convex Analysis → Clifford/Krein 
-       → Quantum Hydrodynamics → Macroscopic Fluid
-
-Formal statement:
-  Given loss function L: Θ → ℝ with L(θ) = 0 (information equilibrium),
-  let η = ∇L (convex duality).
-  Let v = η/||η|| (Krein projection to base velocity).
-  Let B = v ∧ e₀ (bivector in Cl(3,1)).
-  Then:
-    1. Trace(B) = 0 (quantum hydrodynamics)
-    2. ∇·u = 0 (divergence-free macroscopic flow)
-    3. Softmax is a KMS state at inverse temperature β
-  
-  Script-level readout: the displayed staged properties are grouped together.
--/
-
-theorem logical_worldline_theorem 
-  {Θ : Type*} [NormedAddCommGroup Θ] [InnerProductSpace ℝ Θ]
-  (L : Θ → ℝ) (hL : Differentiable ℝ L)
-  (θ : Θ) (h_eq : L θ = 0) :
-  let η := fderiv ℝ L θ
-  let v := η / ‖η‖
-  let B := bivector_from_velocity v
-  -- Conclusion
-  Trace B = 0 ∧ 
-  (∀ (softmax_output : ProbabilitySimplex), 
-    IsKMSState softmax_output) := by
-  sorry
-""")
-    print()
-    print("✅ LEAN 4: FORMAL STATEMENT COMPLETE")
-    print()
-    return True
+    return False
 
 # ============================================================================
 # SYSTEM 7: COQ & ISABELLE - Supplemental Formalizations
@@ -381,60 +280,25 @@ def supplemental_formalization():
     """
     System 7: Coq and Isabelle supplemental formalizations
     
-    Provides alternative formal proofs in:
-    - Coq (constructive type theory)
-    - Isabelle/HOL (higher-order logic)
+    Report that no Coq or Isabelle prover is invoked here.
     """
     print("=" * 80)
     print("SYSTEM 7: COQ & ISABELLE - Supplemental Formalizations")
     print("=" * 80)
     print()
     
-    print("### Coq Formalization ###")
+    print("No Coq or Isabelle source is compiled by this Python function.")
     print()
-    print("```coq")
-    print("Theorem logical_worldline_coq :")
-    print("  ∀ (θ : vector) (L : vector → R),")
-    print("    L θ = 0 →")
-    print("    let η := gradient L θ in")
-    print("    let v := normalize η in")
-    print("    let B := bivector v in")
-    print("    trace B = 0 ∧ divergence_free u.")
-    print("Proof.")
-    print("  (* Fenchel-Legendre, Krein projection, trace-free *)")
-    print("  sorry.")
-    print("Qed.")
-    print("```")
-    print()
-    
-    print("### Isabelle/HOL Formalization ###")
-    print()
-    print("```isabelle")
-    print("theorem logical_worldline_isabelle:")
-    print("  assumes \"L θ = 0\"")
-    print("  defines \"η ≡ gradient L θ\"")
-    print("  defines \"v ≡ η / norm η\"")
-    print("  defines \"B ≡ bivector_from_velocity v\"")
-    print("  shows \"trace B = 0\" and \"divergence_free u\"")
-    print("proof -")
-    print("  (* Information equilibrium → convex duality → Clifford *)")
-    print("  sorry")
-    print("qed")
-    print("```")
-    print()
-    
-    print("✅ COQ & ISABELLE: SUPPLEMENTAL FORMALIZATIONS COMPLETE")
-    print()
-    return True
+    return False
 
 # ============================================================================
 # MASTER EXECUTION
 # ============================================================================
 
 def main():
-    """Execute all 7 systems."""
+    """Run available calculations and report uninvoked prover lanes honestly."""
     print()
-    print("🚀 EXECUTING SEVEN-SYSTEM FORMALIZATION")
+    print("🚀 RUNNING AVAILABLE EXPLORATORY CALCULATIONS")
     print()
     
     results = {
@@ -449,40 +313,23 @@ def main():
     
     # Summary
     print("=" * 80)
-    print("COMPLETE SEVEN-SYSTEM FORMALIZATION SUMMARY")
+    print("EXPLORATORY MULTI-SYSTEM STATUS SUMMARY")
     print("=" * 80)
     print()
     
     all_passed = all(results.values())
     
     for system, passed in results.items():
-        status = "✅ PASS" if passed else "❌ FAIL"
+        status = "✅ CHECKED" if passed else "⚠️ NOT VERIFIED HERE"
         print(f"  {system:20s} {status}")
     
     print()
     
     if all_passed:
-        print("Exploratory multi-script run complete")
-        print()
-        print("Script status across the configured lanes:")
-        print("  the staged checks passed in this run")
-        print()
-        print("Logical worldline verified:")
-        print("  Information Theory (L=0)")
-        print("    ↓ Fenchel-Legendre")
-        print("  Convex Analysis (η=∇φ)")
-        print("    ↓ Krein Projection")  
-        print("  Clifford/Krein (collapseToBaseVelocity)")
-        print("    ↓ Bivector Construction")
-        print("  Quantum Hydrodynamics (Trace=0)")
-        print("    ↓ Hydrodynamic Limit")
-        print("  Macroscopic Fluid (∇·u=0)")
-        print()
-        print("Interpretive status:")
-        print("  any broader AI/ML or physics conclusions remain outside")
-        print("  the verified scope of this aggregated script run")
+        print("All configured executable checks passed. This does not imply a")
+        print("cross-domain theorem connecting the separately computed objects.")
     else:
-        print("⚠️  SOME SYSTEMS FAILED")
+        print("⚠️ Some lanes were not executed; no all-system verification is claimed.")
     
     print()
     print("=" * 80)

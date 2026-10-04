@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 #
-# Master Test Runner: Attention = Quantum Fluid Simplified Verification
+# Exploratory multi-tool command runner for finite attention-related examples
 #
-# This script runs the verification suite for the simplified attention quantum fluid theorem.
+# A successful command exit only records that the configured tool invocation
+# completed. This runner does not prove that attention is a physical fluid,
+# nor does it certify KMS, hydrodynamic-limit, or cross-domain claims.
 
 set -euo pipefail
 
@@ -16,7 +18,7 @@ mkdir -p "$RESULTS_DIR"
 export PATH="/home/goutev/.opam/coq-switch/bin:/home/goutev/Isabelle2025-2/bin:$PATH"
 
 echo "================================================================================"
-echo "Attention = Quantum Fluid Simplified Verification"
+echo "Exploratory finite calculations (no attention=fluid theorem is claimed)"
 echo "Repository: $REPO_ROOT"
 echo "Results: $RESULTS_DIR"
 echo "================================================================================"
@@ -165,7 +167,7 @@ TOTAL_TESTS=$((TOTAL_TESTS + 1))
 
 # Summary
 echo -e "\n================================================================================"
-echo "ATTENTION = QUANTUM FLUID VERIFICATION SUMMARY"
+echo "EXPLORATORY COMMAND EXECUTION SUMMARY"
 echo "================================================================================"
 for engine in sympy lean4 sage gap galgebra macaulay2 coq isabelle; do
     printf "  %-15s %s\n" "$engine:" "${RESULTS[$engine]}"
@@ -173,7 +175,7 @@ done
 echo -e "\nPassed: $PASSED_TESTS / $TOTAL_TESTS"
 
 if [ $PASSED_TESTS -eq $TOTAL_TESTS ]; then
-    echo -e "\n🎉 ALL 8 SYSTEMS VERIFIED SUCCESSFULLY!"
+    echo -e "\nAll configured commands exited successfully. This is not a theorem verification."
     exit 0
 else
     echo -e "\n✗ Some verification steps failed."

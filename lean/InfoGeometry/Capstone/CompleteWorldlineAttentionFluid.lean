@@ -1,19 +1,10 @@
 /-
-The Complete Worldline: Commutant-Möbius-Fenchel → Divergence-Free Flow
-========================================================================
+Finite algebraic bridges for Legendre contact, skew-adjoint operators,
+linear velocity readouts, and finite Gibbs weights.
 
-This file formalizes the strict logical chain:
-
-  Information Theory (L = 0)
-    → Convex Analysis (η = ∇φ)
-    → Clifford/Krein Projection (collapseToBaseVelocity)
-    → Quantum Hydrodynamics (Trace = 0)
-    → Macroscopic Fluid Dynamics (∇·u = 0)
-
-AND: Llama-4's softmax as the KMS state of the thermodynamic router.
-
-Main Theorem: An LLM's attention mechanism at thermodynamic equilibrium
-stabilizes into a divergence-free quantum fluid flow.
+These declarations do not prove that transformer attention is a physical fluid
+or that a finite probability vector alone satisfies the KMS condition for a
+specified algebra and time evolution.
 -/
 
 import InfoGeometry.Capstone.NavierStokesLegendre
@@ -32,7 +23,7 @@ open InfoGeometry.Krein
 
 noncomputable section
 
-namespace InfoGeometry.CompleteWorldline
+namespace InfoGeometry.Capstone.FiniteLegendreFluidReadout
 
 variable {E : Type _}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -57,13 +48,9 @@ theorem information_loss_vanishes (L : LegendreModel) (θ η : ℝ)
   rw [fenchelGap_eq_zero_iff_contact L θ η hd]
   exact h_eq
 
-/--
-### STAGE 2: Convex Analysis (η = ∇φ)
-
-Legendre duality: the dual coordinate equals the gradient of the primal potential.
-For attention mechanisms: logits ↔ probabilities via softmax = ∇logZ.
--/
-theorem legendre_duality_attention (L : LegendreModel) (θ : ℝ) :
+/- At the Legendre contact point, the Fenchel gap vanishes. This is a scalar
+convex-duality statement, with no attention interpretation assumed. -/
+theorem legendre_contact_exists (L : LegendreModel) (θ : ℝ) :
   ∃ η : ℝ, η = L.grad θ ∧
     L.L.ψ θ + L.φ η - θ * η = 0 := by
   use L.grad θ
@@ -99,12 +86,7 @@ lemma inner_projBase_right (v : ArnoldMajoranaCarrier E) (x : E) :
   rw [inner_projBase_left]
   rw [real_inner_comm]
 
-/--
-### STAGE 3: Clifford/Krein Projection
-
-collapseToBaseVelocity projects the modular Hamiltonian K onto the macroscopic
-velocity field. For bivector K (antisymmetric), trace vanishes.
--/
+/-- A skew-adjoint operator has zero trace after the specified base projection. -/
 theorem collapse_trace_zero_for_bivector
   (K : EndH) (h_bivector : star K = -K) :
   LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0 := by
@@ -121,12 +103,9 @@ theorem collapse_trace_zero_for_bivector
     exact h_zero i
   exact h_sum
 
-/--
-### STAGE 4: Quantum Hydrodynamics (Trace = 0)
-
-The trace-free condition on modular Hamiltonian implies divergence-free
-Madelung fluid velocity.
--/
+/-- In this finite model, divergence-free means that the linear velocity
+Jacobian has trace zero. The stated equivalence follows from the explicit
+velocity formula of `madelungFluidState`. -/
 theorem trace_free_implies_divergence_free
   (β : ℝ) (K : EndH)
   (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
@@ -136,40 +115,10 @@ theorem trace_free_implies_divergence_free
   rw [madelung_divergence_free_iff]
   exact Or.inr h_trace
 
-/--
-### STAGE 5: Macroscopic Fluid Dynamics (∇·u = 0)
-
-The complete synthesis: information-theoretic equilibrium implies
-divergence-free macroscopic flow.
--/
-theorem complete_worldline_divergence_free_attention
-  (L : LegendreModel) (θ η : ℝ) (β : ℝ) (K : EndH)
-  (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
-  (hSmooth : IsThermodynamicallySmoothed β K)
-  (_hd : HasDerivAt L.L.ψ (L.grad θ) θ)
-  (_h_eq : η = L.grad θ)
-  (h_bivector : star K = -K)
-  (_h_contact : η = L.grad θ ↔
-    LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0) :
-  IsDivergenceFree (madelungFluidState β K vac ω hSmooth).u := by
-  -- Stage 3 → 4: Bivector K has trace zero
-  have h_trace_zero : LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0 :=
-    collapse_trace_zero_for_bivector K h_bivector
-
-  -- Stage 4 → 5: Trace zero implies divergence-free
-  exact trace_free_implies_divergence_free β K vac ω hSmooth h_trace_zero
-
-/--
-## THE LLAMA-4 SOFTMAX THEOREM
-
-Softmax attention is the Gibbs state of modular flow.
-At inverse temperature β, the attention probabilities are:
-  ρ = softmax(θ) = exp(θ) / Σexp(θ)
-
-This is the Gibbs state: ρ = exp(-β·H) / Z
-where H = -θ (modular Hamiltonian = negative logits).
--/
-theorem llama4_softmax_is_kms_state {n : ℕ} [Nonempty (Fin n)]
+/- Finite softmax weights are Gibbs weights for the explicitly chosen energy
+`H i = -theta i`. The theorem below proves the weight identity, normalization,
+and positivity. It does not state a KMS condition. -/
+theorem finite_softmax_eq_gibbs_weights {n : ℕ} [Nonempty (Fin n)]
     (theta : Fin n → ℝ) (beta : ℝ) :
   let Z := ∑ i, Real.exp (beta * theta i)
   let rho : Fin n → ℝ := fun i => Real.exp (beta * theta i) / Z
@@ -202,15 +151,10 @@ theorem llama4_softmax_is_kms_state {n : ℕ} [Nonempty (Fin n)]
         exact Real.exp_pos _
       · exact Finset.univ_nonempty
 
-/--
-A skew-adjoint generator has trace-zero collapsed velocity, hence the declared
-Madelung velocity is divergence-free in this finite model.
-
-This theorem is only the displayed finite linear-algebra readout; it does not
-identify machine-learning attention with a physical quantum fluid.
--/
-theorem skew_adjoint_madelung_velocity_divergence_free {n : ℕ}
-    (_L : LegendreModel) (_theta _eta : Fin n → ℝ) (β : ℝ) (K : EndH)
+/- A skew-adjoint generator has trace-zero collapsed velocity, hence the
+declared linear velocity readout is divergence-free in this finite model. -/
+theorem skew_adjoint_madelung_velocity_divergence_free
+    (β : ℝ) (K : EndH)
     (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
     (hSmooth : IsThermodynamicallySmoothed β K)
     (h_bivector : star K = -K) :
@@ -219,4 +163,4 @@ theorem skew_adjoint_madelung_velocity_divergence_free {n : ℕ}
     collapse_trace_zero_for_bivector K h_bivector
   exact trace_free_implies_divergence_free β K vac ω hSmooth h_trace_zero
 
-end InfoGeometry.CompleteWorldline
+end InfoGeometry.Capstone.FiniteLegendreFluidReadout

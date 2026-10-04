@@ -102,12 +102,51 @@ theorem conductor_dvd_terminal (s : PrimeStage) :
   apply conductor_dvd_of_rank_le
   cases s <;> norm_num [rank]
 
-/-- The exact Euler-totient/Galois-degree ledger.  `decide` merely
-recomputes these closed arithmetic propositions inside Lean; it does not
-import a CAS theorem. -/
+/-- The first cyclotomic degree is Euler's totient of the first conductor. -/
+theorem totient_conductor_p2 : Nat.totient (conductor .p2) = galoisDegree .p2 := by
+  norm_num [conductor, galoisDegree, Nat.totient_prime Nat.prime_two]
+
+/-- The next degree follows from multiplicativity of Euler's totient on coprime factors. -/
+theorem totient_conductor_p3 : Nat.totient (conductor .p3) = galoisDegree .p3 := by
+  rw [conductor_successor_3,
+    Nat.totient_mul (by norm_num [Nat.Coprime, conductor, stagePrime])]
+  norm_num [conductor, stagePrime, galoisDegree, Nat.totient_prime]
+
+theorem totient_conductor_p5 : Nat.totient (conductor .p5) = galoisDegree .p5 := by
+  rw [conductor_successor_5,
+    Nat.totient_mul (by norm_num [Nat.Coprime, conductor, stagePrime]),
+    totient_conductor_p3]
+  norm_num [stagePrime, galoisDegree, Nat.totient_prime]
+
+theorem totient_conductor_p7 : Nat.totient (conductor .p7) = galoisDegree .p7 := by
+  rw [conductor_successor_7,
+    Nat.totient_mul (by norm_num [Nat.Coprime, conductor, stagePrime]),
+    totient_conductor_p5]
+  norm_num [stagePrime, galoisDegree, Nat.totient_prime]
+
+theorem totient_conductor_p11 : Nat.totient (conductor .p11) = galoisDegree .p11 := by
+  rw [conductor_successor_11,
+    Nat.totient_mul (by norm_num [Nat.Coprime, conductor, stagePrime]),
+    totient_conductor_p7]
+  norm_num [stagePrime, galoisDegree, Nat.totient_prime]
+
+theorem totient_conductor_p13 : Nat.totient (conductor .p13) = galoisDegree .p13 := by
+  rw [conductor_successor_13,
+    Nat.totient_mul (by norm_num [Nat.Coprime, conductor, stagePrime]),
+    totient_conductor_p11]
+  norm_num [stagePrime, galoisDegree, Nat.totient_prime]
+
+/-- The exact Euler-totient/Galois-degree ledger, proved using native
+multiplicativity rather than evaluating the largest totient by reduction. -/
 theorem totient_conductor (s : PrimeStage) :
     Nat.totient (conductor s) = galoisDegree s := by
-  cases s <;> decide
+  cases s with
+  | p2 => exact totient_conductor_p2
+  | p3 => exact totient_conductor_p3
+  | p5 => exact totient_conductor_p5
+  | p7 => exact totient_conductor_p7
+  | p11 => exact totient_conductor_p11
+  | p13 => exact totient_conductor_p13
 
 /-- The final six-prime primorial conductor. -/
 theorem terminal_conductor : conductor .p13 = 30030 := rfl

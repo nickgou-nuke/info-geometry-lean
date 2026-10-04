@@ -9,15 +9,15 @@ open Matrix
 
 namespace InfoGeometry.Canonical.BipartiteKreinTraceBridge
 
-open InfoGeometry.Canonical.ClusterMutationIndexBridge
+open PlabicAmplituhedron
 
 /-!
 # Finite Grading Trace and Encoded Bipartite Counts
 
 This module proves a finite-dimensional trace identity for a diagonal
 involution with `Vwhite` positive and `Vblack` negative coordinates. It then
-encodes those same two natural numbers as fields of `PlabicCounts` and rewrites
-the trace as the negative of the resulting count index.
+encodes those same counts as a `PlabicCounts` value and rewrites the trace as
+the negative of its algebraically defined `helicityDefect`.
 
 No map from a Clifford Dirac eigenspace to an on-shell graph is defined here.
 The equalities below do not establish a topological index theorem, mutation
@@ -42,37 +42,20 @@ theorem trace_kreinInvolution (Vwhite Vblack : ℕ) :
   rw [Fintype.sum_sum_type]
   simp; ring
 
-/-- Plabic count fields filled from the same cardinalities and edge data.
-    This is an encoding function; it does not construct a graph or a state
-    space map. -/
-def stateSpaceCounts (Vwhite Vblack Eint next : ℕ)
-    (hbal : (next : ℤ) = 3 * ((Vblack : ℤ) + (Vwhite : ℤ)) - 2 * (Eint : ℤ)) :
-    PlabicCounts where
-  Vblack := (Vblack : ℤ)
-  Vwhite := (Vwhite : ℤ)
-  Eint := (Eint : ℤ)
-  next := (next : ℤ)
-  trivalentBalance := hbal
+/-- Plabic count fields filled from natural counts. This encoding does not
+construct a graph or a map from an eigenspace to a graph. -/
+def stateSpaceCounts (Vwhite Vblack Eint : ℕ) : PlabicCounts where
+  V_black := (Vblack : ℤ)
+  V_white := (Vwhite : ℤ)
+  E_internal := (Eint : ℤ)
 
-/-- After the cardinalities are encoded as count fields, the diagonal trace is
-    the negative of their `colorIndex`. -/
-theorem trace_krein_eq_neg_colorIndex (Vwhite Vblack Eint next : ℕ)
-    (hbal : (next : ℤ) = 3 * ((Vblack : ℤ) + (Vwhite : ℤ)) - 2 * (Eint : ℤ)) :
-    Matrix.trace (kreinInvolution (R := ℤ) Vwhite Vblack) =
-      - (stateSpaceCounts Vwhite Vblack Eint next hbal).colorIndex := by
+/-- The diagonal grading trace is the negative of the count structure's
+algebraically defined `helicityDefect`. -/
+theorem trace_krein_eq_neg_helicityDefect (Vwhite Vblack Eint : ℕ) :
+  Matrix.trace (kreinInvolution (R := ℤ) Vwhite Vblack) =
+      - PlabicAmplituhedron.helicityDefect (stateSpaceCounts Vwhite Vblack Eint) := by
   rw [trace_kreinInvolution]
-  dsimp [stateSpaceCounts, PlabicCounts.colorIndex]
+  dsimp [stateSpaceCounts, PlabicAmplituhedron.helicityDefect]
   ring
-
-/-- The encoded `helicityDefect` equals the encoded `colorIndex` by the count
-    identity in `ClusterMutationIndexBridge`, so the same trace has this
-    numerical expression. No physical helicity is defined here. -/
-theorem trace_krein_eq_neg_helicityDefect (Vwhite Vblack Eint next : ℕ)
-    (hbal : (next : ℤ) = 3 * ((Vblack : ℤ) + (Vwhite : ℤ)) - 2 * (Eint : ℤ)) :
-    Matrix.trace (kreinInvolution (R := ℤ) Vwhite Vblack) =
-      - (stateSpaceCounts Vwhite Vblack Eint next hbal).helicityDefect := by
-  rw [trace_krein_eq_neg_colorIndex]
-  have h_eq := PlabicCounts.helicityDefect_eq_colorIndex (stateSpaceCounts Vwhite Vblack Eint next hbal)
-  rw [h_eq]
 
 end InfoGeometry.Canonical.BipartiteKreinTraceBridge

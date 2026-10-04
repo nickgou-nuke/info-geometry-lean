@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates
 import InfoGeometry.Arithmetic.PrimeCyclotomicGaloisEvidence
 import InfoGeometry.Topology.ChiralDirectedGraphHomotopy
 
@@ -21,33 +22,27 @@ namespace InfoGeometry.Arithmetic.PrimeCyclotomicGaloisDirectedClosure
 
 open InfoGeometry.Arithmetic.PrimeCyclotomicGaloisEvidence
 open InfoGeometry.Topology
+open InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates
 
-/-- Native prime sequence underlying the external evidence. -/
-def primeAt : Fin 6 → ℕ
-  | 0 => 2
-  | 1 => 3
-  | 2 => 5
-  | 3 => 7
-  | 4 => 11
-  | 5 => 13
+/-- Translate the external table's zero-based row index to its canonical stage. -/
+def primeStageAt : Fin 6 → PrimeStage
+  | 0 => .p2
+  | 1 => .p3
+  | 2 => .p5
+  | 3 => .p7
+  | 4 => .p11
+  | 5 => .p13
 
-/-- Running squarefree conductor sequence. -/
-def conductorAt : Fin 6 → ℕ
-  | 0 => 2
-  | 1 => 6
-  | 2 => 30
-  | 3 => 210
-  | 4 => 2310
-  | 5 => 30030
+/-- Native prime sequence underlying the external evidence, read from the
+canonical finite stage table. -/
+def primeAt (i : Fin 6) : ℕ := stagePrime (primeStageAt i)
 
-/-- Expected cyclotomic degrees `phi(conductorAt i)`. -/
-def degreeAt : Fin 6 → ℕ
-  | 0 => 1
-  | 1 => 2
-  | 2 => 8
-  | 3 => 48
-  | 4 => 480
-  | 5 => 5760
+/-- Running squarefree conductors, read from the canonical finite stage table. -/
+def conductorAt (i : Fin 6) : ℕ :=
+  InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.conductor (primeStageAt i)
+
+/-- Cyclotomic degrees, read from the canonical finite stage table. -/
+def degreeAt (i : Fin 6) : ℕ := galoisDegree (primeStageAt i)
 
 /-- The external rows agree exactly with the independently specified native table. -/
 theorem casRow_eq_native (i : Fin 6) :
@@ -56,26 +51,56 @@ theorem casRow_eq_native (i : Fin 6) :
 
 /-- Every listed stage prime is genuinely prime. -/
 theorem primeAt_isPrime (i : Fin 6) : Nat.Prime (primeAt i) := by
-  fin_cases i <;> decide
+  exact stagePrime_prime (primeStageAt i)
 
 /-- Lean recomputes every reported Euler-totient degree. -/
 theorem totient_conductorAt (i : Fin 6) :
     Nat.totient (conductorAt i) = degreeAt i := by
-  fin_cases i <;> decide
+  exact totient_conductor (primeStageAt i)
 
 /-- Exact cumulative-prime recursion at the five nonterminal edges. -/
-theorem conductor_step_01 : conductorAt 1 = conductorAt 0 * primeAt 1 := by norm_num [conductorAt, primeAt]
-theorem conductor_step_12 : conductorAt 2 = conductorAt 1 * primeAt 2 := by norm_num [conductorAt, primeAt]
-theorem conductor_step_23 : conductorAt 3 = conductorAt 2 * primeAt 3 := by norm_num [conductorAt, primeAt]
-theorem conductor_step_34 : conductorAt 4 = conductorAt 3 * primeAt 4 := by norm_num [conductorAt, primeAt]
-theorem conductor_step_45 : conductorAt 5 = conductorAt 4 * primeAt 5 := by norm_num [conductorAt, primeAt]
+theorem conductor_step_01 : conductorAt 1 = conductorAt 0 * primeAt 1 := by
+  simpa [conductorAt, primeAt, primeStageAt,
+    InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.conductor,
+    stagePrime] using conductor_successor_3
+theorem conductor_step_12 : conductorAt 2 = conductorAt 1 * primeAt 2 := by
+  simpa [conductorAt, primeAt, primeStageAt,
+    InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.conductor,
+    stagePrime] using conductor_successor_5
+theorem conductor_step_23 : conductorAt 3 = conductorAt 2 * primeAt 3 := by
+  simpa [conductorAt, primeAt, primeStageAt,
+    InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.conductor,
+    stagePrime] using conductor_successor_7
+theorem conductor_step_34 : conductorAt 4 = conductorAt 3 * primeAt 4 := by
+  simpa [conductorAt, primeAt, primeStageAt,
+    InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.conductor,
+    stagePrime] using conductor_successor_11
+theorem conductor_step_45 : conductorAt 5 = conductorAt 4 * primeAt 5 := by
+  simpa [conductorAt, primeAt, primeStageAt,
+    InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.conductor,
+    stagePrime] using conductor_successor_13
 
 /-- Consecutive conductors form a genuine divisibility tower. -/
-theorem conductor_dvd_01 : conductorAt 0 ∣ conductorAt 1 := by norm_num [conductorAt]
-theorem conductor_dvd_12 : conductorAt 1 ∣ conductorAt 2 := by norm_num [conductorAt]
-theorem conductor_dvd_23 : conductorAt 2 ∣ conductorAt 3 := by norm_num [conductorAt]
-theorem conductor_dvd_34 : conductorAt 3 ∣ conductorAt 4 := by norm_num [conductorAt]
-theorem conductor_dvd_45 : conductorAt 4 ∣ conductorAt 5 := by norm_num [conductorAt]
+theorem conductor_dvd_01 : conductorAt 0 ∣ conductorAt 1 := by
+  simpa [conductorAt, primeStageAt,
+    InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.conductor] using
+      (conductor_dvd_of_rank_le (a := .p2) (b := .p3) (by norm_num [rank]))
+theorem conductor_dvd_12 : conductorAt 1 ∣ conductorAt 2 := by
+  simpa [conductorAt, primeStageAt,
+    InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.conductor] using
+      (conductor_dvd_of_rank_le (a := .p3) (b := .p5) (by norm_num [rank]))
+theorem conductor_dvd_23 : conductorAt 2 ∣ conductorAt 3 := by
+  simpa [conductorAt, primeStageAt,
+    InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.conductor] using
+      (conductor_dvd_of_rank_le (a := .p5) (b := .p7) (by norm_num [rank]))
+theorem conductor_dvd_34 : conductorAt 3 ∣ conductorAt 4 := by
+  simpa [conductorAt, primeStageAt,
+    InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.conductor] using
+      (conductor_dvd_of_rank_le (a := .p7) (b := .p11) (by norm_num [rank]))
+theorem conductor_dvd_45 : conductorAt 4 ∣ conductorAt 5 := by
+  simpa [conductorAt, primeStageAt,
+    InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.conductor] using
+      (conductor_dvd_of_rank_le (a := .p11) (b := .p13) (by norm_num [rank]))
 
 /-- Stage adjacency for the fixed directed tower. -/
 def PrimeTowerEdge (i j : Fin 6) : Prop := i.1 + 1 = j.1

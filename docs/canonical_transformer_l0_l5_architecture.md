@@ -31,7 +31,7 @@ A transformer-shaped component is accepted only when:
 |---|---|---|---|---|
 | Token support/mass carriers | `InfoGeometry.PositiveMeasure`, `InfoGeometry.Canonical.PositiveRayCore` | `count` | Raw occupancy/support and positive mass representatives | Input substrate for routing and attention weights |
 | Normalized relational weights | `InfoGeometry.LLM.ThermodynamicSwitching`, `InfoGeometry.LLM.ScalarThermoBridge` | `projective` | Gauge-invariant normalization of relational scores | Produces stable attention/router probabilities |
-| KMS/softmax thermodynamic identification | `InfoGeometry.LLM.KMSSoftmaxBridge` | `thermo` | Softmax as finite KMS/Gibbs weighting | Converts scores into thermal selection law |
+| Finite Gibbs/softmax identification | `InfoGeometry.LLM.RouterFreeEnergyBridge`, `InfoGeometry.Thermo.FiniteDiagonal` | `thermo` | Normalized softmax weights equal finite Gibbs weights for the explicitly defined router energy | Converts scores into a finite thermal selection law |
 | Attention + residual recomposition cell | `InfoGeometry.LLM.TransformerBlock`, `InfoGeometry.LLM.TransformerArchitecture.DecoderLayer` | `operator` | Operatorial coupling and additive recomposition | Canonical update cell |
 | Split channels and conjugate structure | `InfoGeometry.LLM.SpectralToken`, `InfoGeometry.LLM.PinCPTBridge` | `krein` | Dual/split channel structure, odd/even symmetry action | Signed/chiral lane semantics |
 | Transport-constrained layer evolution | `InfoGeometry.LLM.SpinPinTransformerLayer`, `InfoGeometry.LLM.Llama4SpinSpec` | `transport` | Equivariance and constrained propagation through flow | Time/context transport consistency |
@@ -51,7 +51,7 @@ The stack already has direct witnesses for the objective:
 - `selectedMask_of_nope`
 - `selectedMask_of_local`
 - `selectedMask_of_missing_local`
-- `softmaxWeight_eq_kmsWeight`
+- `normalizedWeights_eq_finite_gibbsWeight`
 - `routerEntropy_eq_beta_internal_plus_massieu`
 - `bayes_router_update_preserves_simplex`
 - `defect_quarantined_on_mixed_input`

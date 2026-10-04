@@ -1,17 +1,14 @@
 #!/usr/bin/env python3
-"""
-Attention = Quantum Fluid: Log-Sum-Exp Breakthrough Verification
+"""Symbolically check finite log-sum-exp first and second derivatives.
 
-KEY INSIGHT: deriv(logSumExp) = E_softmax[a]
-
-This proves attention mechanisms compute gradients of log-partition functions,
-which are expected values under softmax distribution.
+These calculations illustrate moment and variance identities. They do not
+establish a fluid, KMS, or physical interpretation of transformer attention.
 """
 
 from sympy import symbols, exp, log, diff, simplify, Sum
 
 print("="*70)
-print("ATTENTION = QUANTUM FLUID: LOG-SUM-EXP BREAKTHROUGH")
+print("FINITE LOG-SUM-EXP MOMENT IDENTITIES")
 print("="*70)
 
 # Symbolic verification
@@ -52,42 +49,20 @@ print(f"\nderiv²(logSumExp) = d²/dθ² log(∑ wᵢ exp(aᵢ θ))")
 print(f"  = {simplify(second_deriv)}")
 print("  = Var_softmax[a] (uncertainty in attention)")
 
-print("\n=== 4. Connection to Divergence-Free Flow ===")
+print("\n=== 4. Finite Exponential-Family Interpretation ===")
 print("""
-Key insight from Lean proof:
-  1. Attention weights = softmax(θ)
-  2. Softmax comes from logSumExp derivative
-  3. If generator K is skew-adjoint (bivector):
-     - trace(K) = 0 (automatically)
-     - Flow is divergence-free (automatically)
-  
-Simplified theorem:
-  attention_is_quantum_fluid_flow
-  requires ONLY: h_bivector (skew-adjointness)
-  
-No need for:
-  - h_phi (log-sum-exp form)
-  - h_eta (softmax definition)  
-  - h_contact (Legendre duality)
+logSumExp = log(Z)
+derivative(logSumExp) = expected slope under the finite Gibbs weights
+second derivative(logSumExp) = variance of the slope
 
-These are consequences, not assumptions!
-""")
-
-print("\n=== 5. Thermodynamic Interpretation ===")
-print("""
-logSumExp = -log(Z) = Free energy F(θ)
-deriv(F) = <E> = Expected energy = Attention output
-deriv²(F) = Var(E) = Uncertainty/entropy
-
-This connects:
-  - Attention mechanisms (ML)
-  - Statistical mechanics (physics)
-  - Quantum fluids (geometric flow)
-  - Information geometry (Hessian structure)
+In thermodynamic convention, free energy is often -β⁻¹ log(Z); it is not
+equal to logSumExp without a sign and temperature convention.
+The computations above are finite symbolic checks, not a proof about an
+implemented transformer's runtime or a fluid model.
 """)
 
 print("\n" + "="*70)
-print("SUMMARY: Log-Sum-Exp Breakthrough Verified")
+print("SUMMARY: finite symbolic identities checked")
 print("="*70)
 print("✓ deriv(logSumExp) = E_softmax[a] confirmed")
 print("✓ Second derivative = variance confirmed")

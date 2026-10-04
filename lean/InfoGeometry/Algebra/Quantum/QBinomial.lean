@@ -7,6 +7,7 @@ LICENSE file in the root directory of this source tree.
 -/
 
 import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+import Mathlib.RingTheory.TensorProduct.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.GroupWithZero.Finset
 import Mathlib.Tactic
@@ -246,6 +247,68 @@ theorem q_binomial_expansion (q : k) (a b : A) (hcomm : b * a = algebraMap k A q
     rw [hsub1, hsub2, ← add_mul, ← map_add]
     congr 1
     ring_nf
+
+/-- Powers of a pure tensor factor componentwise in the tensor-product algebra. -/
+lemma tensor_mul_pow (x y : A) : ∀ n : ℕ,
+    (x ⊗ₜ[k] y : A ⊗[k] A) ^ n = (x ^ n) ⊗ₜ[k] (y ^ n)
+  | 0 => by
+      simp only [pow_zero]
+      exact Algebra.TensorProduct.one_def.symm
+  | n + 1 => by
+      rw [pow_succ, tensor_mul_pow x y n,
+        Algebra.TensorProduct.tmul_mul_tmul, ← pow_succ, ← pow_succ]
+
+/-- The skew-primitive tensor summands have the same q-commutation relation
+as the generators: `d K = q K d` implies `(d ⊗ 1)(K ⊗ d) = q (K ⊗ d)(d ⊗ 1)`. -/
+lemma tensor_skewPrimitive_qcomm (q : k) (K d : A)
+    (hcomm : d * K = algebraMap k A q * (K * d)) :
+    (d ⊗ₜ[k] (1 : A) : A ⊗[k] A) * (K ⊗ₜ[k] d) =
+      algebraMap k (A ⊗[k] A) q * ((K ⊗ₜ[k] d) * (d ⊗ₜ[k] (1 : A))) := by
+  calc
+    (d ⊗ₜ[k] (1 : A)) * (K ⊗ₜ[k] d) = (d * K) ⊗ₜ[k] d := by
+      rw [Algebra.TensorProduct.tmul_mul_tmul, one_mul]
+    _ = (algebraMap k A q * (K * d)) ⊗ₜ[k] d := by rw [hcomm]
+    _ = algebraMap k (A ⊗[k] A) q * ((K * d) ⊗ₜ[k] d) := by
+      simp only [Algebra.smul_def, TensorProduct.smul_tmul']
+    _ = algebraMap k (A ⊗[k] A) q *
+          ((K ⊗ₜ[k] d) * (d ⊗ₜ[k] (1 : A))) := by
+      rw [Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul]
+
+/-- Ordered coproduct monomials factor into the expected tensor components. -/
+lemma tensor_skewPrimitive_monomial (K d : A) (n m : ℕ) :
+    ((K ⊗ₜ[k] d : A ⊗[k] A) ^ (n - m)) *
+        ((d ⊗ₜ[k] (1 : A) : A ⊗[k] A) ^ m) =
+      (K ^ (n - m) * d ^ m) ⊗ₜ[k] (d ^ (n - m)) := by
+  rw [tensor_mul_pow, tensor_mul_pow,
+    Algebra.TensorProduct.tmul_mul_tmul, mul_one]
+
+/-- Quantum-binomial expansion for a skew-primitive tensor sum.
+
+This theorem is an algebraic statement about the displayed tensor-product
+element. It does not assert that the assignment extends to an algebra
+homomorphism or coalgebra coproduct; that requires compatibility data for the
+generators and relations of the source algebra. -/
+theorem q_binomial_skewPrimitive_tensor_expansion (q : k) (K d : A)
+    (hcomm : d * K = algebraMap k A q * (K * d)) (n : ℕ) :
+    (d ⊗ₜ[k] (1 : A) + K ⊗ₜ[k] d : A ⊗[k] A) ^ n =
+      ∑ m ∈ Finset.range (n + 1),
+        algebraMap k (A ⊗[k] A) (qBinomial q n m) *
+          ((K ^ (n - m) * d ^ m) ⊗ₜ[k] (d ^ (n - m))) := by
+  have h_tensor_comm := tensor_skewPrimitive_qcomm q K d hcomm
+  calc
+    (d ⊗ₜ[k] (1 : A) + K ⊗ₜ[k] d : A ⊗[k] A) ^ n =
+        ((K ⊗ₜ[k] d) + (d ⊗ₜ[k] (1 : A))) ^ n := by rw [add_comm]
+    _ = ∑ m ∈ Finset.range (n + 1),
+          algebraMap k (A ⊗[k] A) (qBinomial q n m) *
+            (((K ⊗ₜ[k] d : A ⊗[k] A) ^ (n - m)) *
+              ((d ⊗ₜ[k] (1 : A) : A ⊗[k] A) ^ m)) :=
+        q_binomial_expansion q (K ⊗ₜ[k] d) (d ⊗ₜ[k] (1 : A)) h_tensor_comm n
+    _ = ∑ m ∈ Finset.range (n + 1),
+          algebraMap k (A ⊗[k] A) (qBinomial q n m) *
+            ((K ^ (n - m) * d ^ m) ⊗ₜ[k] (d ^ (n - m))) := by
+        refine Finset.sum_congr rfl ?_
+        intro m hm
+        rw [tensor_skewPrimitive_monomial]
 
 /-- Frobenius-type identity at a primitive root of unity: if `q` is a primitive
 `n`-th root of unity (`n > 1`) and `ba = q · ab` in `A`, then `(a + b)^n = a^n + b^n`. -/

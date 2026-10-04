@@ -57,7 +57,7 @@ theorem iwasawa_n_sector_nilpotent (h : L) [IsFiveGraded h] (x1 x2 y1 y2 z1 z2 :
     (hx1 : InGrade h 1 x1) (hx2 : InGrade h 2 x2) (hy1 : InGrade h 1 y1) (hy2 : InGrade h 2 y2) (hz1 : InGrade h 1 z1) (hz2 : InGrade h 2 z2) :
     ⁅⁅x1 + x2, y1 + y2⁆, z1 + z2⁆ = 0 := by
   calc ⁅⁅x1 + x2, y1 + y2⁆, z1 + z2⁆
-    _ = ⁅⁅x1, y1⁆ + ⁅x1, y2⁆ + ⁅x2, y1⁆ + ⁅x2, y2⁆, z1 + z2⁆ := by rw [add_lie, lie_add, lie_add, add_assoc]
+    _ = ⁅⁅x1, y1⁆ + ⁅x1, y2⁆ + ⁅x2, y1⁆ + ⁅x2, y2⁆, z1 + z2⁆ := by simp only [add_lie, lie_add, add_assoc, add_comm, add_left_comm]
     _ = ⁅⁅x1, y1⁆ + 0 + 0 + 0, z1 + z2⁆ := by
       have h12 : ⁅x1, y2⁆ = 0 := iwasawa_g1_g2_zero h x1 y2 hx1 hy2
       have h21 : ⁅x2, y1⁆ = 0 := by rw [← lie_skew, iwasawa_g1_g2_zero h y1 x2 hy1 hx2, neg_zero]

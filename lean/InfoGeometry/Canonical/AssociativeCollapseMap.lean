@@ -6,11 +6,11 @@ namespace InfoGeometry.Canonical
 
 open Module
 
-abbrev OctonionSpace := ℝ × ℝ × ℝ × ℝ × ℝ × ℝ × ℝ × ℝ
+abbrev SplitOctonionSpace := ℝ × ℝ × ℝ × ℝ × ℝ × ℝ × ℝ × ℝ
 
 abbrev AlbertSpace := 
   ℝ × ℝ × ℝ × 
-  OctonionSpace × OctonionSpace × OctonionSpace
+  SplitOctonionSpace × SplitOctonionSpace × SplitOctonionSpace
 
 abbrev RealSymmetricSpace := 
   ℝ × ℝ × ℝ × ℝ × ℝ × ℝ
@@ -26,7 +26,7 @@ def associativeCollapseMap : AlbertSpace →ₗ[ℝ] RealSymmetricSpace where
   map_add' := by intros x y; ext <;> simp
   map_smul' := by intros c x; ext <;> simp
 
-theorem finrank_octonion_eq_eight : finrank ℝ OctonionSpace = 8 := by
+theorem finrank_octonion_eq_eight : finrank ℝ SplitOctonionSpace = 8 := by
   simp [finrank_prod]
 
 theorem finrank_albert_eq_27 : finrank ℝ AlbertSpace = 27 := by

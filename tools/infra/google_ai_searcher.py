@@ -55,9 +55,10 @@ async def search_google_ai(query: str, cdp_url: str = "http://127.0.0.1:9222") -
 
         try:
             proc = subprocess.run(
-                ["browser-harness", "-c", f"exec(open('{GOOGLE_SCRIPT}').read())"],
+                ["browser-harness"],
                 cwd=str(_REPO),
                 env=env,
+                input=f"exec(open({str(GOOGLE_SCRIPT)!r}, encoding='utf-8').read())\n",
                 capture_output=True,
                 text=True,
                 timeout=timeout + 60,

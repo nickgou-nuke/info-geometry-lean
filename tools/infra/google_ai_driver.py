@@ -3,7 +3,9 @@
 
 Usage:
     GOOGLE_AI_PROMPT_FILE=/tmp/prompt.txt GOOGLE_AI_RESULT_JSON=/tmp/result.json \\
-    browser-harness -c "exec(open('tools/infra/google_ai_driver.py').read())"
+    browser-harness <<'PY'
+    exec(open('tools/infra/google_ai_driver.py').read())
+    PY
 """
 from pathlib import Path
 import json, os, time
@@ -48,20 +50,17 @@ js(f"""
 time.sleep(0.5)
 
 # Click send
-js("""
-  var btn = document.querySelector('button[aria-label*="Send"]');
-  if (!btn) {
-    var all = document.querySelectorAll('button');
-    for (var i = 0; i < all.length; i++) {
-      if (/Send|Submit/i.test(all[i].getAttribute('aria-label') || '')) { btn = all[i]; break; }
-    }
-  }
-  if (btn) btn.click();
-  else {
-    var el = document.querySelector('textarea');
-    if (el) el.dispatchEvent(new KeyboardEvent('keydown', {key:'Enter', code:'Enter', keyCode:13, bubbles:true}));
-  }
+sent = js("""
+  var buttons = Array.from(document.querySelectorAll('button'));
+  var btn = buttons.find(function(b) {
+    return /Send|Submit/i.test(b.getAttribute('aria-label') || '') && !b.disabled;
+  });
+  if (!btn) return 'no-enabled-send-button';
+  btn.click();
+  return 'sent';
 """)
+if sent != "sent":
+    raise RuntimeError("Google AI Mode has no enabled Send/Submit button")
 
 # Wait for response
 def _is_intermediate(text: str) -> bool:

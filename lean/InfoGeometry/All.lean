@@ -41,3 +41,4 @@ import InfoGeometry.Canonical.Grassmannian3PluckerSyzygy
 import InfoGeometry.Canonical.Grassmannian3Positivity
 import InfoGeometry.Canonical.DecomposableBivector
 import InfoGeometry.Algebra.FiveGradedIwasawaNilpotency
+import InfoGeometry.Canonical.MTheoryTDualitySynthesis

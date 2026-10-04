@@ -39,8 +39,13 @@ printf '%s' "$PROMPT" > "$prompt_file"
 
 if GOOGLE_AI_PROMPT_FILE="$prompt_file" \
    GOOGLE_AI_RESULT_JSON="$result_file" \
+   GOOGLE_AI_DRIVER_FILE="$PROJECT_DIR/tools/infra/google_ai_driver.py" \
    GOOGLE_AI_TIMEOUT_SECONDS="$TIMEOUT" \
-   browser-harness -c "exec(open('$PROJECT_DIR/tools/infra/google_ai_driver.py').read())"; then
+   browser-harness <<'PY'
+import os
+exec(open(os.environ["GOOGLE_AI_DRIVER_FILE"], encoding="utf-8").read())
+PY
+then
     python3 "$PROJECT_DIR/tools/infra/agent_message_ledger.py" \
         --source-tool "google-ai-search.sh" \
         --source-file "scripts/google-ai-search.sh" \

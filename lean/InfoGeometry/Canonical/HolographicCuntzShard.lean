@@ -111,22 +111,22 @@ def finiteComplementSourceProjection : Mat2Q :=
 /-- Finite shard source identity: `S* S` is the selected source projection. -/
 theorem finiteShard_source :
     star finiteShard * finiteShard = finiteSourceProjection := by
-  decide
+  native_decide
 
 /-- Finite shard aperture identity: `S S*` is the observed aperture projection. -/
 theorem finiteShard_aperture :
     finiteShard * star finiteShard = finiteApertureProjection := by
-  decide
+  native_decide
 
 /-- Complementary shard source identity. -/
 theorem finiteComplementShard_source :
     star finiteComplementShard * finiteComplementShard = finiteComplementSourceProjection := by
-  decide
+  native_decide
 
 /-- The two finite source sectors partition the signal plane. -/
 theorem finite_source_partition :
     finiteSourceProjection + finiteComplementSourceProjection = 1 := by
-  decide
+  native_decide
 
 /-- Finite source-sector reconstruction: the shard recovers exactly the selected component. -/
 theorem finiteShard_reconstructs_source (x : Fin 2 → ℚ) :
@@ -137,12 +137,12 @@ theorem finiteShard_reconstructs_source (x : Fin 2 → ℚ) :
 /-- Finite aperture projection is idempotent. -/
 theorem finiteAperture_idempotent :
     finiteApertureProjection * finiteApertureProjection = finiteApertureProjection := by
-  decide
+  native_decide
 
 /-- Finite source projection is idempotent. -/
 theorem finiteSource_idempotent :
     finiteSourceProjection * finiteSourceProjection = finiteSourceProjection := by
-  decide
+  native_decide
 
 /-- The aperture is genuinely smaller than the full plane. -/
 theorem finiteAperture_not_identity :
@@ -155,7 +155,7 @@ theorem finiteAperture_not_identity :
 /-- Finite shard partial-isometry identity. -/
 theorem finiteShard_partial_isometry :
     finiteShard * star finiteShard * finiteShard = finiteShard := by
-  decide
+  native_decide
 
 /-- Compact packet joining the finite shard algebraic identities. -/
 theorem finite_holographic_shard_packet (x : Fin 2 → ℚ) :

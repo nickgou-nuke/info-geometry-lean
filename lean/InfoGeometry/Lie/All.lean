@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionImaginaryAction
+import InfoGeometry.Lie.KantorTKKFiveGrading
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionAnnihilatorDimension
 import InfoGeometry.Lie.SplitOctonionCliffordAction

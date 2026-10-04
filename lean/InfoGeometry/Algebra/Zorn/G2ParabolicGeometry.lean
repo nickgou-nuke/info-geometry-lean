@@ -41,10 +41,11 @@ theorem point_degree (p : Point) : (incidence p).card = 3 :=
   incidence_card p
 
 theorem line_degree (ℓ : Line) : (pointsOn ℓ).card = 3 := by
-  fin_cases ℓ <;> decide
+  revert ℓ
+  native_decide
 
 theorem flag_card : flags.card = 189 := by
-  decide
+  native_decide
 
 theorem flags_nonempty : flags.Nonempty := by
   exact Finset.card_pos.mp (by rw [flag_card]; decide)

@@ -11,6 +11,8 @@ Information integration across doubled-space Clifford variables.
 
 open InfoGeometry.Krein
 open InfoGeometry.Quantum
+open InfoGeometry.Canonical.RicciMongeAmpere
+open InfoGeometry.Canonical.KaehlerGeometry
 
 namespace InfoGeometry.Canonical.SUSYBayes
 

@@ -106,7 +106,11 @@ theorem rightNestedBianchi_eq_zero_iff_leakage_balance_eq_zero
           associatorLeakage inclusion readout (C.form p Z₁) (C.form p Y) (C.form p X) +
           associatorLeakage inclusion readout (C.form p X) (C.form p Z₁) (C.form p Y))) = 0 := by
   rw [rightNestedBianchi_eq_neg_leakage_sum]
-  simp
+  constructor
+  · intro h
+    exact neg_eq_zero.mp h
+  · intro h
+    simpa using congrArg (fun x : Z => -x) h
 
 /-- If the included shadow is closed under the ambient product and `readout`
 is a left inverse to `inclusion`, then the projected product is associative.
@@ -127,11 +131,28 @@ theorem shadowAssociator_eq_zero_of_mul_closed_image
       _ = inclusion (readout (inclusion w)) := by rw [hw]
       _ = inclusion w := by rw [hsection]
       _ = inclusion a * inclusion b := hw.symm
-  unfold shadowAssociator shadowMul
-  rw [← map_sub]
-  congr 1
-  rw [hmul x y, hmul y z]
-  simp [mul_assoc]
+  have hleft :
+      inclusion (shadowMul inclusion readout (shadowMul inclusion readout x y) z) =
+        (inclusion x * inclusion y) * inclusion z := by
+    rw [hmul, hmul]
+  have hright :
+      inclusion (shadowMul inclusion readout x (shadowMul inclusion readout y z)) =
+        inclusion x * (inclusion y * inclusion z) := by
+    rw [hmul, hmul]
+  have hassoc :
+      inclusion (shadowMul inclusion readout (shadowMul inclusion readout x y) z -
+        shadowMul inclusion readout x (shadowMul inclusion readout y z)) = 0 := by
+    rw [map_sub, hleft, hright]
+    simp [mul_assoc]
+  calc
+    shadowAssociator inclusion readout x y z =
+        readout (inclusion (shadowAssociator inclusion readout x y z)) := by
+          symm
+          exact hsection _
+    _ = 0 := by
+      rw [show inclusion (shadowAssociator inclusion readout x y z) = 0 from by
+        exact hassoc]
+      simp
 
 /-- Under multiplicative closure of the included shadow, the projected
 right-nested commutator Bianchi expression vanishes. This does not assert the

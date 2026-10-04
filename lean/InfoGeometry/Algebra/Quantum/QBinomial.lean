@@ -12,6 +12,8 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.GroupWithZero.Finset
 import Mathlib.Tactic
 
+open scoped TensorProduct
+
 set_option maxHeartbeats 400000
 
 variable {k : Type*} [Field k]
@@ -269,10 +271,10 @@ lemma tensor_skewPrimitive_qcomm (q : k) (K d : A)
       rw [Algebra.TensorProduct.tmul_mul_tmul, one_mul]
     _ = (algebraMap k A q * (K * d)) ⊗ₜ[k] d := by rw [hcomm]
     _ = algebraMap k (A ⊗[k] A) q * ((K * d) ⊗ₜ[k] d) := by
-      simp only [Algebra.smul_def, TensorProduct.smul_tmul']
+      rfl
     _ = algebraMap k (A ⊗[k] A) q *
           ((K ⊗ₜ[k] d) * (d ⊗ₜ[k] (1 : A))) := by
-      rw [Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul]
+      rfl
 
 /-- Ordered coproduct monomials factor into the expected tensor components. -/
 lemma tensor_skewPrimitive_monomial (K d : A) (n m : ℕ) :
@@ -280,7 +282,8 @@ lemma tensor_skewPrimitive_monomial (K d : A) (n m : ℕ) :
         ((d ⊗ₜ[k] (1 : A) : A ⊗[k] A) ^ m) =
       (K ^ (n - m) * d ^ m) ⊗ₜ[k] (d ^ (n - m)) := by
   rw [tensor_mul_pow, tensor_mul_pow,
-    Algebra.TensorProduct.tmul_mul_tmul, mul_one]
+    Algebra.TensorProduct.tmul_mul_tmul]
+  simp
 
 /-- Quantum-binomial expansion for a skew-primitive tensor sum.
 

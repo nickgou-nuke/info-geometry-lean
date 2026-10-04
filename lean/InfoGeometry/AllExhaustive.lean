@@ -11493,7 +11493,6 @@ import InfoGeometry.Topology.AttentionLatentSimplexInteriorTopological
 import InfoGeometry.Topology.AttentionLatentSimplexTopological
 import InfoGeometry.Topology.BCFWMeromorphicTopological
 import InfoGeometry.Topology.BCFWOnShellShiftTopological
-import InfoGeometry.Topology.BCFWResidueFactorizationTopologicalBridge
 import InfoGeometry.Topology.BCFWShiftTopological
 import InfoGeometry.Topology.BayesianDiracHodgeBridge
 import InfoGeometry.Topology.BenderZetaHamiltonian

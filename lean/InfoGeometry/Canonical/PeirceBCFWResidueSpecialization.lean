@@ -35,8 +35,7 @@ theorem peirce_bcfw_algebraic_residue_identity
     (c : I → ℂ)
     (data : I → PeirceBCFWShiftParameters)
     (PI : I → PeirceKinematicMomentum)
-    (hslopes : ∀ i, 2 * peirceKinematicInner (PI i) (data i).q ≠ 0)
-    (hpoles_nonzero : ∀ i, peirceChannelPole (data i) (PI i) ≠ 0) :
+    (hslopes : ∀ i, 2 * peirceKinematicInner (PI i) (data i).q ≠ 0) :
     (algebraicAmplitude c
         (fun i => peirceChannelPole (data i) (PI i)) 0 =
       - ∑ i, algebraicResidueOverZ c
@@ -48,7 +47,7 @@ theorem peirce_bcfw_algebraic_residue_identity
           (peirceChannelPole (data i) (PI i))) = 0) := by
   constructor
   · exact algebraic_residue_identity c
-      (fun i => peirceChannelPole (data i) (PI i)) hpoles_nonzero
+      (fun i => peirceChannelPole (data i) (PI i))
   · intro i
     exact peirceChannelPole_isOnShell (data i) (PI i) (hslopes i)
 

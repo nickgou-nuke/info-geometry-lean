@@ -47,8 +47,12 @@ theorem level1_3_cyclic_invariant {A : Type*} [Ring A] (E : Fin 3 → A)
     calc
       E 1 + E 2 = -E 0 + (E 0 + E 1 + E 2) := by abel
       _ = -E 0 := by rw [h]; simp
+  have hlast : E 2 = -E 0 - E 1 := by
+    calc
+      E 2 = (E 1 + E 2) - E 1 := by abel
+      _ = -E 0 - E 1 := by rw [htail]
   dsimp [level1_3, cyclicShift3, lieBracket]
-  rw [htail]
+  rw [hlast]
   noncomm_ring
 
 /-- The four-cycle on the ordered labels `0,1,2,3`. -/

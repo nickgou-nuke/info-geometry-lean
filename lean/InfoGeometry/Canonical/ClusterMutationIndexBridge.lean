@@ -1,6 +1,16 @@
 import Mathlib.Tactic
 import Mathlib.Logic.Relation
 
+/-!
+# Integer count identities for bipartite graph data
+
+`PlabicCounts` contains only three integers. The update functions below are
+count-level models and do not carry or transform a plabic graph. Their proofs
+establish arithmetic invariance of the stated expressions under those updates;
+they do not prove mutation invariance of an actual graph invariant or identify
+`helicityDefect` with a physical helicity or a Dirac index.
+-/
+
 namespace PlabicAmplituhedron
 
 structure PlabicCounts where

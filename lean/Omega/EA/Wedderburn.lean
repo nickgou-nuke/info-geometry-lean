@@ -174,7 +174,7 @@ theorem momentSum_two_nine_factored : momentSum 2 9 = 8 * 419 := by
   rw [momentSum_two_nine_rec]
 
 /-- prop:fold-groupoid-wedderburn -/
-theorem prime_419 : Nat.Prime 419 := by decide
+theorem prime_419 : Nat.Prime 419 := by norm_num [Nat.Prime]
 
 /-- Paper package. prop:fold-groupoid-wedderburn -/
 theorem paper_ea_s2_factorization :

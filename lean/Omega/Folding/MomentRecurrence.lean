@@ -1068,7 +1068,7 @@ theorem momentSum_q_mono_instances :
     cMomentSum 1 6 < cMomentSum 2 6 ∧
     cMomentSum 1 7 < cMomentSum 2 7 ∧
     cMomentSum 1 8 < cMomentSum 2 8 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> decide
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
 
 /-- S_2(m) < S_3(m) for m=4..7. prop:pom-sq-lower -/
 theorem momentSum_q2_lt_q3_instances :
@@ -1076,14 +1076,14 @@ theorem momentSum_q2_lt_q3_instances :
     cMomentSum 2 5 < cMomentSum 3 5 ∧
     cMomentSum 2 6 < cMomentSum 3 6 ∧
     cMomentSum 2 7 < cMomentSum 3 7 := by
-  refine ⟨?_, ?_, ?_, ?_⟩ <;> decide
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> native_decide
 
 /-- Paper package. prop:pom-sq-lower -/
 theorem paper_momentSum_q_mono :
     cMomentSum 1 6 < cMomentSum 2 6 ∧
     cMomentSum 2 6 < cMomentSum 3 6 ∧
     cMomentSum 3 6 < cMomentSum 4 6 := by
-  refine ⟨?_, ?_, ?_⟩ <;> decide
+  refine ⟨?_, ?_, ?_⟩ <;> native_decide
 
 /-- S_2(m) growth audit: strict mono, evenness, 4-divisibility.
     prop:fold-groupoid-wedderburn -/

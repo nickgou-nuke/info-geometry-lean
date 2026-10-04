@@ -32,8 +32,8 @@ def bost_connes_zeta : BostConnesPartitionData ℂ :=
   fun _ => riemannZeta (2 : ℂ)
 
 /-- The explicit comparison premise linking loops L to inverse temperature β. 
-    This is an open closure debt: we must formally compute the integration over 
-    the PositiveAmplituhedronIntegration bounds to yield the zeta value.
+    The comparison with an amplituhedron integral is an open closure debt; the
+    repository does not currently define such an integral or integration bounds.
     
     Resolution path:
     1. At β=2, L=2: use Basel problem ζ(2) = π²/6

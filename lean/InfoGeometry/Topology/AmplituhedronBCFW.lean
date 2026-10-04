@@ -7,9 +7,16 @@ namespace InfoGeometry.AmplituhedronBCFW
 
 variable {F : Type*} [Field F]
 
-/-! ### 1. Physical Facets & Spurious Chord -/
+/-! ### Scalar model for BCFW-style denominator cancellation
 
-/-- The five cyclic physical boundary brackets P_i = ⟨Y Z_i Z_{i+1}⟩ of the 5-point Amplituhedron. -/
+The declarations below are identities in a field for freely supplied scalar
+data.  They do not construct external twistors, a positive cell, or a BCFW
+map.  In particular, `BCFWMatchingCondition` is an explicit premise; it is
+not derived here from the Plücker relation.  The names `residueCellA` and
+`residueCellB` denote rational coefficients only, not analytic residues. -/
+
+/-- Five scalar slots that may be assigned boundary-bracket values by a
+separate geometric construction. -/
 structure PhysicalFacets (F : Type*) where
   P₁ : F  -- ⟨Y Z₁ Z₂⟩
   P₂ : F  -- ⟨Y Z₂ Z₃⟩
@@ -27,44 +34,38 @@ structure PhysicalFacetsNonzero (p : PhysicalFacets F) : Prop where
 
 /-! ### 2. The Two BCFW Cell Densities -/
 
-/-- Rational form density of BCFW Cell A:
-    Ω_A = N_A / (P₁ P₂ P₅ S).
-    Contains physical poles P₁, P₂, P₅ and spurious chord S = ⟨Y Z₁ Z₃⟩. -/
+/-- Rational scalar assigned to the first denominator pattern. -/
 def cellA (p : PhysicalFacets F) (S : F) (N_A : F) : F :=
   N_A / (p.P₁ * p.P₂ * p.P₅ * S)
 
-/-- Rational form density of BCFW Cell B:
-    Ω_B = N_B / (P₃ P₄ P₅ S).
-    Contains physical poles P₃, P₄, P₅ and spurious chord S = ⟨Y Z₁ Z₃⟩. -/
+/-- Rational scalar assigned to the second denominator pattern. -/
 def cellB (p : PhysicalFacets F) (S : F) (N_B : F) : F :=
   N_B / (p.P₃ * p.P₄ * p.P₅ * S)
 
-/-- The canonical 5-point Amplituhedron rational form:
-    Ω₅ = N₅ / (P₁ P₂ P₃ P₄ P₅).
-    Manifestly pole-free at S = 0; exhibits only the five cyclic physical poles. -/
+/-- Rational scalar with the product of the five supplied scalar slots as
+denominator.  No canonical form or pole classification is defined here. -/
 def globalAmplituhedronForm (p : PhysicalFacets F) (N₅ : F) : F :=
   N₅ / (p.P₁ * p.P₂ * p.P₃ * p.P₄ * p.P₅)
 
 /-! ### 3. The Grassmann-Plücker Matching Relation -/
 
-/-- The 3-term Grassmann-Plücker relation producing the factor of S:
-    Δ₁₂ Δ₃₄ + Δ₂₃ Δ₁₄ = Δ₁₃ Δ₂₄.
-    Identifies the spurious chord S = Δ₁₃ as the common factor. -/
+/-- A rearrangement of the supplied three-term Plücker equation.  This does
+not identify any of the independent scalar slots above with Plücker minors. -/
 theorem plucker_spurious_factor (Δ₁₂ Δ₃₄ Δ₂₃ Δ₁₄ Δ₁₃ Δ₂₄ : F)
     (h_plucker : Δ₁₂ * Δ₃₄ - Δ₁₃ * Δ₂₄ + Δ₁₄ * Δ₂₃ = 0) :
     Δ₁₂ * Δ₃₄ + Δ₂₃ * Δ₁₄ = Δ₁₃ * Δ₂₄ := by
   linear_combination h_plucker
 
-/-- The BCFW Matching Condition:
-    N_A * (P₃ * P₄) + N_B * (P₁ * P₂) = S * N₅.
-    Arises from contracting the Plücker identity with kinematic twistor data. -/
+/-- The additional numerator relation required by the scalar cancellation
+theorem below.  Its geometric derivation is not part of this module. -/
 def BCFWMatchingCondition (p : PhysicalFacets F) (S : F) (N_A N_B N₅ : F) : Prop :=
   N_A * (p.P₃ * p.P₄) + N_B * (p.P₁ * p.P₂) = S * N₅
 
 /-! ### 4. Core Theorem: Algebraic Spurious Pole Cancellation -/
 
-/-- Master Theorem: The sum of the two BCFW cells Ω_A + Ω_B identically cancels
-    the spurious internal bracket S, reproducing the global 5-point Amplituhedron form Ω₅. -/
+/-- Conditional rational identity: under nonzero denominator assumptions and
+the supplied matching equation, the two scalar fractions sum to the stated
+third fraction. -/
 theorem bcfw_spurious_pole_cancellation
     (p : PhysicalFacets F) (S : F) (N_A N_B N₅ : F)
     (hp : PhysicalFacetsNonzero p)
@@ -113,17 +114,18 @@ theorem bcfw_spurious_pole_cancellation
 
 /-! ### 5. Spurious Residue Cancellation -/
 
-/-- Poincaré residue of Cell A at the spurious pole S → 0. -/
+/-- Rational coefficient left after omitting the scalar factor `S` from the
+first denominator.  It is not defined as a limit or differential-form residue. -/
 def residueCellA (p : PhysicalFacets F) (N_A : F) : F :=
   N_A / (p.P₁ * p.P₂ * p.P₅)
 
-/-- Poincaré residue of Cell B at the spurious pole S → 0. -/
+/-- Rational coefficient left after omitting the scalar factor `S` from the
+second denominator.  It is not defined as a limit or differential-form residue. -/
 def residueCellB (p : PhysicalFacets F) (N_B : F) : F :=
   N_B / (p.P₃ * p.P₄ * p.P₅)
 
-/-- Spurious Residue Cancellation Theorem:
-    On the spurious locus S = 0, the BCFW matching condition forces the
-    residues of the two cells to be exact opposites, ensuring zero net residue. -/
+/-- At `S = 0`, the supplied matching equation makes the two rational
+coefficients sum to zero after common-denominator algebra. -/
 theorem spurious_residue_cancellation
     (p : PhysicalFacets F) (N_A N_B N₅ : F)
     (hp : PhysicalFacetsNonzero p)
@@ -154,10 +156,9 @@ theorem spurious_residue_cancellation
 
 /-! ### 6. Smoothness & Positivity in the Amplituhedron Interior -/
 
-/-- Positivity Theorem:
-    Even though individual BCFW cells Ω_A and Ω_B diverge as S → 0,
-    the physical amplitude Ω₅ is strictly positive throughout the entire interior
-    of the Amplituhedron (P_i > 0, N₅ > 0), regardless of the sign or vanishing of S. -/
+/-- Positivity of the defined rational scalar when all five denominator slots
+and its numerator are positive.  This is not a positivity theorem for a
+geometrically constructed amplituhedron. -/
 theorem amplituhedron_interior_positivity
     (p : PhysicalFacets ℝ) (N₅ : ℝ)
     (hP₁ : 0 < p.P₁) (hP₂ : 0 < p.P₂) (hP₃ : 0 < p.P₃)

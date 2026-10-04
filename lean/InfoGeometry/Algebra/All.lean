@@ -1,5 +1,6 @@
 import InfoGeometry.Algebra.PrimeA1RootSystem
 import InfoGeometry.Algebra.IwasawaParabolicDiracDecomposition
+import InfoGeometry.Algebra.GrassmannianCartanTower
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.WeylDenominatorPrimeCutoff
 import InfoGeometry.Algebra.ZornVectorMatrix

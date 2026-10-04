@@ -1,98 +1,14 @@
 
-import Mathlib.Logic.Relation
 import Mathlib.Tactic
 
-open Relation
+/-! This legacy import path retains only the field-valued Zamolodchikov
+pentagon recurrence. The finite integer count expressions and their count
+updates have a single owner in `InfoGeometry.Canonical.ClusterMutationIndexBridge`;
+neither module constructs plabic graphs or derives a graph mutation theorem. -/
 
 namespace PlabicPureBraidMapping
 
-/-! This module proves invariance of the displayed integer count formulas under
-the declared count updates, and a field-valued pentagon recurrence. It does not
-construct plabic graphs, a cluster mutation action, or a pure braid
-representation; those geometric inputs remain a separate development target. -/
-
-/-! ### 1. Integer count expressions -/
-
-/-- A triple of integer counts. No graph or incidence structure is carried. -/
-structure PlabicCounts where
-  V_black : ℤ
-  V_white : ℤ
-  E_internal : ℤ
-  deriving Repr, DecidableEq
-
-/-- The integer expression conventionally assigned to `k`. -/
-def kGrassmannian (p : PlabicCounts) : ℤ :=
-  2 * p.V_black + p.V_white - p.E_internal
-
-/-- The integer expression conventionally assigned to the external count. -/
-def nExternal (p : PlabicCounts) : ℤ :=
-  3 * (p.V_black + p.V_white) - 2 * p.E_internal
-
-/-- The difference between the two vertex-count coordinates. -/
-def helicityDefect (p : PlabicCounts) : ℤ :=
-  p.V_black - p.V_white
-
-/-! ### 2. Count-level transformations -/
-
-/-- Count update named for a square move; no graph move is constructed. -/
-def applySquareMove (p : PlabicCounts) : PlabicCounts :=
-  { V_black := p.V_black - 2 + 2
-    V_white := p.V_white - 2 + 2
-    E_internal := p.E_internal - 4 + 4 }
-
-/-- Count update named for bubble reduction; no graph move is constructed. -/
-def applyBubbleRed (p : PlabicCounts) : PlabicCounts :=
-  { V_black := p.V_black - 1
-    V_white := p.V_white - 1
-    E_internal := p.E_internal - 3 }
-
-/-- Count update named for bubble creation; no graph move is constructed. -/
-def applyBubbleCre (p : PlabicCounts) : PlabicCounts :=
-  { V_black := p.V_black + 1
-    V_white := p.V_white + 1
-    E_internal := p.E_internal + 3 }
-
-/-- One of the declared count updates. -/
-inductive AtomicClusterMove : PlabicCounts → PlabicCounts → Prop where
-  | square (p : PlabicCounts) : AtomicClusterMove p (applySquareMove p)
-  | bubbleRed (p : PlabicCounts) : AtomicClusterMove p (applyBubbleRed p)
-  | bubbleCre (p : PlabicCounts) : AtomicClusterMove p (applyBubbleCre p)
-
-/-- Reflexive-transitive closure of the declared count updates. -/
-def ClusterEquiv (p p' : PlabicCounts) : Prop :=
-  ReflTransGen AtomicClusterMove p p'
-
-/-! ### 3. Invariance of count expressions under count updates -/
-
-theorem k_invariant_of_atomic {p p' : PlabicCounts} (h : AtomicClusterMove p p') :
-    kGrassmannian p' = kGrassmannian p := by
-  cases h <;> { dsimp [applySquareMove, applyBubbleRed, applyBubbleCre, kGrassmannian]; ring }
-
-theorem next_invariant_of_atomic {p p' : PlabicCounts} (h : AtomicClusterMove p p') :
-    nExternal p' = nExternal p := by
-  cases h <;> { dsimp [applySquareMove, applyBubbleRed, applyBubbleCre, nExternal]; ring }
-
-theorem helicityDefect_invariant_of_atomic {p p' : PlabicCounts} (h : AtomicClusterMove p p') :
-    helicityDefect p' = helicityDefect p := by
-  cases h <;> { dsimp [applySquareMove, applyBubbleRed, applyBubbleCre, helicityDefect]; ring }
-
-theorem clusterEquiv_preserves_k {p p' : PlabicCounts} (h : ClusterEquiv p p') :
-    kGrassmannian p' = kGrassmannian p := by
-  induction h with
-  | refl => rfl
-  | tail _ hstep ih => rw [k_invariant_of_atomic hstep, ih]
-
-theorem clusterEquiv_preserves_next {p p' : PlabicCounts} (h : ClusterEquiv p p') :
-    nExternal p' = nExternal p := by
-  induction h with
-  | refl => rfl
-  | tail _ hstep ih => rw [next_invariant_of_atomic hstep, ih]
-
-theorem clusterEquiv_preserves_helicityDefect {p p' : PlabicCounts} (h : ClusterEquiv p p') :
-    helicityDefect p' = helicityDefect p := by
-  induction h with
-  | refl => rfl
-  | tail _ hstep ih => rw [helicityDefect_invariant_of_atomic hstep, ih]
+/-! ### Field-valued pentagon recurrence -/
 
 theorem zamolodchikov_cluster_pentagon_period {F : Type*} [Field F]
     (x₀ x₁ : F)

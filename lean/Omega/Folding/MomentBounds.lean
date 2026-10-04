@@ -735,13 +735,13 @@ theorem momentSum_crossq_from_base (q m : Nat) (hq : 1 ≤ q) :
 -- ══════════════════════════════════════════════════════════════
 
 theorem momentSum_four_seven : momentSum 4 7 = 12208 := by
-  rw [← cMomentSum_eq]; decide
+  rw [← cMomentSum_eq]; native_decide
 theorem momentSum_four_eight : momentSum 4 8 = 47480 := by
-  rw [← cMomentSum_eq]; decide
+  rw [← cMomentSum_eq]; native_decide
 theorem momentSum_four_nine : momentSum 4 9 = 181576 := by
-  rw [← cMomentSum_eq]; decide
+  rw [← cMomentSum_eq]; native_decide
 theorem momentSum_four_ten : momentSum 4 10 = 700384 := by
-  rw [← cMomentSum_eq]; decide
+  rw [← cMomentSum_eq]; native_decide
 
 /-- S_4 is strictly increasing for 2 ≤ m ≤ 9. prop:pom-s4-recurrence -/
 theorem momentSum_four_strict_mono (m : Nat) (hm : 2 ≤ m) (hm' : m ≤ 9) :

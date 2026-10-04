@@ -24,8 +24,7 @@ private theorem cached_cBinFiberHist_6_values :
     cBinFiberHist 6 2 = 8 ∧
     cBinFiberHist 6 3 = 4 ∧
     cBinFiberHist 6 4 = 9 ∧
-    cBinFiberHist 6 5 = 0 := by
-  decide
+    cBinFiberHist 6 5 = 0 := by native_decide
 
 private theorem cached_cBinFiberHist_7_values :
     cBinFiberHist 7 0 = 0 ∧
@@ -33,14 +32,12 @@ private theorem cached_cBinFiberHist_7_values :
     cBinFiberHist 7 2 = 0 ∧
     cBinFiberHist 7 3 = 13 ∧
     cBinFiberHist 7 4 = 16 ∧
-    cBinFiberHist 7 5 = 5 := by
-  decide
+    cBinFiberHist 7 5 = 5 := by native_decide
 
 private theorem cached_cBinFiberHist_8_values :
     cBinFiberHist 8 3 = 21 ∧
     cBinFiberHist 8 5 = 11 ∧
-    cBinFiberHist 8 6 = 23 := by
-  decide
+    cBinFiberHist 8 6 = 23 := by native_decide
 
 /-! ### m = 6 BinFold histogram -/
 
@@ -152,13 +149,13 @@ theorem window8_collision_dimension :
     thm:terminal-foldbin6-cube-edge-separation -/
 theorem binFold6_edge_separation :
     ∀ N : Fin 64, ∀ k : Fin 6,
-      cBinFold 6 N.val ≠ cBinFold 6 (N.val ^^^ (2 ^ k.val)) := by decide
+      cBinFold 6 N.val ≠ cBinFold 6 (N.val ^^^ (2 ^ k.val)) := by native_decide
 
 /-! ### Linear kernel obstacle -/
 
 /-- There exists a stable word with BinFold multiplicity 3 (not a power of 2).
     cor:terminal-foldbin6-mult-three-exists -/
-theorem binFold6_mult_three_exists : cBinFiberMult 6 (X.ofNat 6 9) = 3 := by decide
+theorem binFold6_mult_three_exists : cBinFiberMult 6 (X.ofNat 6 9) = 3 := by native_decide
 
 /-- Not all BinFold fiber multiplicities are equal (some are 2, some 3, some 4).
     cor:terminal-foldbin6-no-uniform-fibers -/
@@ -191,7 +188,7 @@ private theorem cached_cBinFiberMinHammingHist_6_values :
     cBinFiberMinHammingHist 6 2 = 13 ∧
     cBinFiberMinHammingHist 6 3 = 6 ∧
     cBinFiberMinHammingHist 6 5 = 2 := by
-  decide
+  native_decide
 
 /-- At m = 6, intra-fiber min Hamming distances take values 2, 3, 5.
     thm:terminal-foldbin6-fiber-hamming-three-valued-2 -/
@@ -227,7 +224,7 @@ def cAffineFlatCount (m : Nat) : Nat :=
 
 /-- At m = 6, exactly 11 fibers are affine flats.
     thm:terminal-foldbin6-fiber-affine-geometry -/
-theorem cAffineFlatCount_six : cAffineFlatCount 6 = 11 := by decide
+theorem cAffineFlatCount_six : cAffineFlatCount 6 = 11 := by native_decide
 
 /-- The non-affine fibers at m = 6: 21 - 11 = 10 fibers are non-affine.
     cor:terminal-foldbin6-non-affine-fiber-count -/
@@ -241,8 +238,7 @@ theorem nonAffineFiber_count_six : 21 - cAffineFlatCount 6 = 10 := by
     cor:terminal-foldbin6-geo-stabilizer-trivial -/
 theorem geoStabilizer_trivial :
     (Finset.range 64).filter (fun δ =>
-      ∀ N : Fin 64, cBinFold 6 N.val = cBinFold 6 (N.val ^^^ δ)) = {0} := by
-  decide
+      ∀ N : Fin 64, cBinFold 6 N.val = cBinFold 6 (N.val ^^^ δ)) = {0} := by native_decide
 
 /-- The geometric stabilizer has order 1 (trivial).
     cor:terminal-foldbin6-geo-stabilizer-order -/
@@ -272,7 +268,7 @@ def cTypeAdjCount (m : Nat) (x y : X m) : Nat :=
 theorem cTypeAdjCount_symm_six :
     ∀ i j : Fin 21,
       cTypeAdjCount 6 (X.ofNat 6 i) (X.ofNat 6 j) =
-        cTypeAdjCount 6 (X.ofNat 6 j) (X.ofNat 6 i) := by decide
+        cTypeAdjCount 6 (X.ofNat 6 j) (X.ofNat 6 i) := by native_decide
 
 /-- Row sum of type adjacency equals 6 · d(x) at m = 6.
     thm:terminal-foldbin6-pushforward-markov-rowsum -/
@@ -280,12 +276,12 @@ theorem cTypeAdjCount_row_sum_six :
     ∀ i : Fin 21,
       (Finset.univ : Finset (Fin 21)).sum (fun j =>
         cTypeAdjCount 6 (X.ofNat 6 i) (X.ofNat 6 j)) =
-        6 * cBinFiberMult 6 (X.ofNat 6 i) := by decide
+        6 * cBinFiberMult 6 (X.ofNat 6 i) := by native_decide
 
 /-- The type adjacency graph is nondegenerate: there exist adjacent type pairs.
     thm:terminal-foldbin6-pushforward-markov-nonzero -/
 theorem cTypeAdjCount_nonzero_exists :
-    cTypeAdjCount 6 (X.ofNat 6 0) (X.ofNat 6 1) > 0 := by decide
+    cTypeAdjCount 6 (X.ofNat 6 0) (X.ofNat 6 1) > 0 := by native_decide
 
 /-! ### Local/global separation -/
 
@@ -301,16 +297,13 @@ def cBinFiberMax (m : Nat) : Nat :=
     (fun x => cBinFiberMult m x)
 
 private theorem cached_cBinFiberExtrema_six :
-    cBinFiberMin 6 = 2 ∧ cBinFiberMax 6 = 4 := by
-  decide
+    cBinFiberMin 6 = 2 ∧ cBinFiberMax 6 = 4 := by native_decide
 
 private theorem cached_cBinFiberExtrema_seven :
-    cBinFiberMin 7 = 3 ∧ cBinFiberMax 7 = 5 := by
-  decide
+    cBinFiberMin 7 = 3 ∧ cBinFiberMax 7 = 5 := by native_decide
 
 private theorem cached_cBinFiberExtrema_eight :
-    cBinFiberMin 8 = 3 ∧ cBinFiberMax 8 = 6 := by
-  decide
+    cBinFiberMin 8 = 3 ∧ cBinFiberMax 8 = 6 := by native_decide
 
 /-- Minimum BinFold multiplicity at m = 6 is 2.
     thm:conclusion-window6-local-index-global-compression-separation -/
@@ -555,7 +548,7 @@ theorem paper_geoStabilizer_mask_34 (ω : Fin 6 → Bool) :
 theorem typeAdj_total_edges_six :
     (Finset.univ : Finset (Fin 21)).sum (fun i =>
       (Finset.univ : Finset (Fin 21)).sum (fun j =>
-        cTypeAdjCount 6 (X.ofNat 6 i) (X.ofNat 6 j))) = 384 := by decide
+        cTypeAdjCount 6 (X.ofNat 6 i) (X.ofNat 6 j))) = 384 := by native_decide
 
 /-- Paper: thm:terminal-window6-edge-flux-skeleton -/
 theorem paper_typeAdj_total_edges_six :
@@ -577,7 +570,7 @@ theorem word_001001_period_three :
     let w : Word 6 := fun i => i.val = 2 ∨ i.val = 5
     cyclicRotate6 (cyclicRotate6 (cyclicRotate6 w)) = w ∧
     cyclicRotate6 w ≠ w ∧
-    cyclicRotate6 (cyclicRotate6 w) ≠ w := by decide
+    cyclicRotate6 (cyclicRotate6 w) ≠ w := by native_decide
 
 /-- Paper: par:bdry-tower-global-sheet-z6 -/
 theorem paper_word_001001_period_three :
@@ -597,7 +590,7 @@ theorem paper_word_001001_period_three :
 theorem boundary_words_six_distinct :
     cBinFold 6 33 ≠ cBinFold 6 37 ∧
     cBinFold 6 33 ≠ cBinFold 6 41 ∧
-    cBinFold 6 37 ≠ cBinFold 6 41 := by decide
+    cBinFold 6 37 ≠ cBinFold 6 41 := by native_decide
 
 /-- Each boundary word at m=6 has bin-fold fiber size exactly 2.
     Uses cBinFiberMult for the pre-verified multiplicity.
@@ -605,7 +598,7 @@ theorem boundary_words_six_distinct :
 theorem boundary_fiber_sizes_six :
     cBinFiberMult 6 (cBinFold 6 33) = 3 ∧
     cBinFiberMult 6 (cBinFold 6 37) = 4 ∧
-    cBinFiberMult 6 (cBinFold 6 41) = 4 := by decide
+    cBinFiberMult 6 (cBinFold 6 41) = 4 := by native_decide
 
 /-- Paper: subsec:bdry-tower-zeck-gut-part1 -/
 theorem paper_boundary_fiber_sizes_six :

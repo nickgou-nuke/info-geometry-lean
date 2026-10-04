@@ -5,26 +5,13 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic
 
 /-!
-# Positroid Canonical Form Volume Forms, Wedge Algebra, and Poincaré Boundary Residues
+# Scalar dlog Weights and Finite-Dimensional Wedge Algebra
 
-This module formalizes:
-1. The logarithmic coordinate weight / dlog differential form density: dlog α = dα / α.
-2. The total volume form density of a d-dimensional positroid cell:
-     Ω = ∏_{j=1}^d (dα_j / α_j).
-3. The Poincaré Residue Operator on canonical dlog forms:
-     Res_{α_i = 0} Ω = ∏_{j ≠ i} (dα_j / α_j) = Ω_{∂_i C}.
-4. THEOREM 1 (Poincaré Residue Isolation Formula):
-     α_i * Ω(α) = Res_{α_i = 0} Ω.
-5. THEOREM 2 (Commutativity of Iterated Poincaré Residues / ∂² = 0 Symmetry):
-     Res_j (Res_i Ω) = Res_i (Res_j Ω) on codimension-2 stratum boundaries.
-6. THEOREM 3 (Differential 2-Forms and Interior Contraction):
-     (α ∧ β)(u, v) = α(u)β(v) - α(v)β(u) and (ι_X (α ∧ β))(v) = (α ∧ β)(X, v).
-7. THEOREM 4 (Poincaré Residue via Tangent Contraction):
-     When α(X) = 1 and β(X) = 0: ι_X (α ∧ β) = β.
-8. MASTER THEOREM (BCFW Arnold–Cohen Mixed 3-Term Relation):
-     (α ∧ β) + (β ∧ γ) + (γ ∧ α) = (α - β) ∧ (β - γ).
-
-All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+This module proves identities about scalar reciprocal-coordinate weights, products
+with one factor erased, linear functionals, and an explicitly defined wedge
+evaluation. It does not define differential forms, a positroid cell, an
+analytic Poincaré residue, or a BCFW amplitude. The `poincareResidue*` names
+below are historical labels for the corresponding scalar factorization only.
 -/
 
 noncomputable section
@@ -36,7 +23,7 @@ namespace InfoGeometry.Canonical.AmplituhedronResidue
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
-/-- The logarithmic coordinate weight / dlog density: 1 / α. -/
+/-- The scalar reciprocal weight associated to a nonzero coordinate. -/
 def dlogDensity (α : ℝ) : ℝ := α⁻¹
 
 /-- Positivity of dlog density for interior positive coordinates. -/
@@ -57,8 +44,8 @@ theorem cellVolumeDensity_pos {d : ℕ} (α : Fin d → ℝ) (hα : ∀ i, 0 < �
   exact dlogDensity_pos (hα i)
 
 /-- 
-  The Poincaré Residue Operator on canonical dlog forms:
-  Res_{α_i = 0}( ∏_{j=1}^d dlog α_j ) = ∏_{j ≠ i} dlog α_j.
+  Product of reciprocal weights with coordinate `i` omitted. This is an
+  algebraic product, not an analytic residue at `α i = 0`.
 -/
 def poincareResidueDensity {d : ℕ} (α : Fin d → ℝ) (i : Fin d) : ℝ :=
   ∏ j ∈ Finset.univ.erase i, dlogDensity (α j)
@@ -73,10 +60,8 @@ theorem cell_density_residue_factorization {d : ℕ} (α : Fin d → ℝ) (i : F
   exact (Finset.mul_prod_erase univ (fun j => dlogDensity (α j)) (mem_univ i)).symm
 
 /-- 
-  MASTER THEOREM 1 (BCFW Poincaré Boundary Residue Formula):
-  Multiplying the cell volume density by α_i isolates the exact lower-dimensional
-  boundary canonical form volume density:
-    α_i * cellVolumeDensity(α) = Res_{α_i = 0} Ω = ∏_{j ≠ i} (1 / α_j).
+  Multiplying the full reciprocal-coordinate product by `α i` cancels its
+  `i`-th factor whenever that coordinate is nonzero.
 -/
 theorem bcfw_boundary_residue_cancellation
     {d : ℕ} (α : Fin d → ℝ) (i : Fin d) (hαi : α i ≠ 0) :
@@ -86,16 +71,13 @@ theorem bcfw_boundary_residue_cancellation
   rw [← mul_assoc, mul_inv_cancel₀ hαi, one_mul]
 
 /-- 
-  Iterated Second-Boundary Residues on adjacent facets:
-  Res_{α_j = 0} ( Res_{α_i = 0} Ω ) = ∏_{k ∉ {i, j}} dlog α_k.
+  Product with coordinates `i` and `j` erased.
 -/
 def iteratedBoundaryResidueDensity {d : ℕ} (α : Fin d → ℝ) (i j : Fin d) : ℝ :=
   ∏ k ∈ (Finset.univ.erase i).erase j, dlogDensity (α k)
 
 /-- 
-  MASTER THEOREM 2 (Commutativity of Iterated Poincaré Residues / ∂² = 0 Symmetry):
-  The iterated residues commute on codimension-2 stratum boundaries:
-    Res_j (Res_i Ω) = Res_i (Res_j Ω).
+  Erasing two coordinates from a finite product is independent of order.
 -/
 theorem iterated_poincare_residues_commute
     {d : ℕ} (α : Fin d → ℝ) (i j : Fin d) :
@@ -145,8 +127,7 @@ def interiorContraction (X : V) (α β : V →ₗ[ℝ] ℝ) : V →ₗ[ℝ] ℝ 
     ring
 
 /-- 
-  MASTER THEOREM 3: Poincaré Residue Isolation via Interior Contraction.
-  When α(X) = 1 and β(X) = 0 (contraction along the transverse boundary vector):
+  For the explicitly defined wedge evaluation, if α(X) = 1 and β(X) = 0:
     ι_X (α ∧ β) = β.
 -/
 theorem poincare_residue_contraction
@@ -159,7 +140,7 @@ theorem poincare_residue_contraction
   ring
 
 /-- 
-  MASTER THEOREM 4: The Arnold–Cohen Mixed 3-Term BCFW Relation.
+  An algebraic identity for the explicitly defined wedge evaluation:
   (α ∧ β) + (β ∧ γ) + (γ ∧ α) = (α - β) ∧ (β - γ).
 -/
 theorem arnold_cohen_relation (α β γ : V →ₗ[ℝ] ℝ) (u v : V) :

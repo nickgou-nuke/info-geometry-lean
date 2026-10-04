@@ -108,7 +108,7 @@ def cNontrivialFiberCount (m : Nat) : Nat :=
   (@Finset.univ (X m) (fintypeX m)).filter (fun x => cFiberMult x ≥ 2) |>.card
 
 /-- At resolution 6, exactly 19 stable words have nontrivial fibers. -/
-theorem cNontrivialFiberCount_six : cNontrivialFiberCount 6 = 19 := by decide
+theorem cNontrivialFiberCount_six : cNontrivialFiberCount 6 = 19 := by native_decide
 
 /-- The trivial fiber count at resolution 6: exactly 2 words have multiplicity 1. -/
 theorem cTrivialFiberCount_six : cFiberHist 6 1 = 2 := cFiberHist_6_1
@@ -354,7 +354,7 @@ theorem sector_sum_six_q5 :
 
 /-- The genus recurrence order at m = 6: 5 distinct fiber multiplicities.
     prop:conclusion-tqft-genus-generating-function-rational-genus -/
-theorem genus_recurrence_order_six : (cFiberSpectrum 6).length = 5 := by decide
+theorem genus_recurrence_order_six : (cFiberSpectrum 6).length = 5 := by native_decide
 
 /-- Distinct fiber multiplicity squares.
     prop:conclusion-tqft-genus-generating-function-rational-sq -/
@@ -574,11 +574,11 @@ theorem s4_basic_counts :
 
 /-- Successor branch: adjacent stable values map to distinct stable words at m=6.
     thm:terminal-succ-unique-branch-merge-branch -/
-theorem succ_branch_at_b6 : X.ofNat 6 12 ≠ X.ofNat 6 13 := by decide
+theorem succ_branch_at_b6 : X.ofNat 6 12 ≠ X.ofNat 6 13 := by native_decide
 
 /-- Zero is the merge point: stableValue of ofNat 6 0 is 0.
     thm:terminal-succ-unique-branch-merge-zero -/
-theorem zero_is_merge_point : stableValue (X.ofNat 6 0) = 0 := by decide
+theorem zero_is_merge_point : stableValue (X.ofNat 6 0) = 0 := by native_decide
 
 /-- thm:conclusion-pom-curvature-ledger-parenthesization-invariance:
     XOR on Word m is associative and commutative. -/
@@ -744,7 +744,7 @@ theorem conclusion_window6_three_distinct_multiplicities :
     cBinFiberHist 6 2 > 0 ∧ cBinFiberHist 6 3 > 0 ∧ cBinFiberHist 6 4 > 0 ∧
     cBinFiberHist 6 0 = 0 ∧ cBinFiberHist 6 1 = 0 ∧ cBinFiberHist 6 5 = 0 :=
   ⟨by rw [cBinFiberHist_6_2]; omega, by rw [cBinFiberHist_6_3]; omega,
-    by rw [cBinFiberHist_6_4]; omega, cBinFiberHist_6_0, cBinFiberHist_6_1, by decide⟩
+    by rw [cBinFiberHist_6_4]; omega, cBinFiberHist_6_0, cBinFiberHist_6_1, by native_decide⟩
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 186

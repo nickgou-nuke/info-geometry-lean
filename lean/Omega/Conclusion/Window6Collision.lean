@@ -459,7 +459,7 @@ theorem window10_basic_consistency :
 /-- Window-10 S_2 value: S_2(10) = 8320.
     thm:conclusion-window10-groupoid-collision-dimension-identity -/
 theorem window10_S2 : momentSum 2 10 = 8320 := by
-  rw [← cMomentSum_eq]; decide
+  rw [← cMomentSum_eq]; native_decide
 
 /-- Window-6 visible CRT arithmetic phase space certificate.
     thm:conclusion-window6-visible-crt-arithmetic-phase-space -/
@@ -591,7 +591,7 @@ theorem window6_S4_from_histogram :
 theorem window6_histogram_cross_validation :
     cMomentSum 1 6 = 64 ∧ cMomentSum 2 6 = 220 ∧
     cMomentSum 3 6 = 820 ∧ cMomentSum 4 6 = 3244 := by
-  refine ⟨?_, ?_, ?_, ?_⟩ <;> decide
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> native_decide
 
 /-- Paper package. prop:fold-groupoid-wedderburn -/
 theorem paper_window6_moment_hierarchy :
@@ -600,7 +600,7 @@ theorem paper_window6_moment_hierarchy :
     (2 * 1 + 4 * 8 + 8 * 27 + 5 * 64 + 2 * 125 = 820) ∧
     (2 * 1 + 4 * 16 + 8 * 81 + 5 * 256 + 2 * 625 = 3244) ∧
     cMomentSum 3 6 = 820 ∧ cMomentSum 4 6 = 3244 := by
-  refine ⟨by omega, by omega, by omega, by omega, ?_, ?_⟩ <;> decide
+  refine ⟨by omega, by omega, by omega, by omega, ?_, ?_⟩ <;> native_decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R310: S_2 coprimality certificates

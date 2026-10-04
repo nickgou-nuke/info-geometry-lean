@@ -9,7 +9,7 @@ namespace Omega
 theorem momentSum_two_ratio_bounds (m : Nat) (hm : 2 ≤ m) (hm' : m ≤ 6) :
     2 * momentSum 2 m ≤ momentSum 2 (m + 1) ∧
     momentSum 2 (m + 1) ≤ 3 * momentSum 2 m := by
-  interval_cases m <;> (simp only [← cMomentSum_eq]; decide)
+  interval_cases m <;> (simp only [← cMomentSum_eq]; native_decide)
 
 /-! ### Sector decomposition extensions -/
 
@@ -52,13 +52,13 @@ theorem cross_q_consistency_m4 :
     momentSum 2 4 ≤ momentSum 3 4 ∧ momentSum 3 4 ≤ momentSum 4 4 ∧
     momentSum 4 4 ≤ momentSum 5 4 ∧ momentSum 5 4 ≤ momentSum 6 4 ∧
     momentSum 6 4 ≤ momentSum 7 4 ∧ momentSum 7 4 ≤ momentSum 8 4 := by
-  simp only [← cMomentSum_eq]; decide
+  simp only [← cMomentSum_eq]; native_decide
 
 /-- S_q is monotone in q at m = 3. -/
 theorem cross_q_consistency_m3 :
     momentSum 2 3 ≤ momentSum 3 3 ∧ momentSum 3 3 ≤ momentSum 4 3 ∧
     momentSum 4 3 ≤ momentSum 5 3 ∧ momentSum 5 3 ≤ momentSum 6 3 := by
-  simp only [← cMomentSum_eq]; decide
+  simp only [← cMomentSum_eq]; native_decide
 
 /-- Cauchy-Schwarz instance: S_3(4)² ≤ S_2(4)·S_4(4). (88² = 7744 ≤ 36·228 = 8208.) -/
 theorem cauchy_schwarz_instance_q3_m4 :
@@ -422,7 +422,7 @@ theorem nonlumpable_by_nonuniform_fibers :
 theorem succ_unique_branch_partial :
     stableValue (X.ofNat 6 12) = 12 ∧ X.ofNat 6 13 ≠ X.ofNat 6 0 ∧
     stableValue (X.ofNat 6 0) = 0 := by
-  refine ⟨by decide, by decide, by decide⟩
+  refine ⟨by native_decide, by native_decide, by native_decide⟩
 
 /-- thm:terminal-window6-edge-flux-skeleton -/
 theorem edge_flux_skeleton_totals :
@@ -480,7 +480,7 @@ theorem momentSum_strict_mono_q_six :
     momentSum 3 6 < momentSum 4 6 ∧
     momentSum 4 6 < momentSum 5 6 ∧
     momentSum 5 6 < momentSum 6 6 := by
-  simp only [← cMomentSum_eq]; decide
+  simp only [← cMomentSum_eq]; native_decide
 
 /-- Paper: prop:pom-coarsegraining-collision-moment-strict-monotonicity -/
 theorem paper_momentSum_strict_mono_q_six :
@@ -535,7 +535,7 @@ theorem paper_fiber_resolvent_rational_m5 :
     momentSum 0 5 = 13 ∧
     momentSum 1 5 = 32 ∧
     momentSum 0 5 * momentSum 2 5 ≥ momentSum 1 5 ^ 2 := by
-  simp only [← cMomentSum_eq]; decide
+  simp only [← cMomentSum_eq]; native_decide
 
 /-- Nielsen class cardinality for the S_4 passport (4)(2)^5.
     cor:cdim-s4-abs-nielsen-cardinality-degree -/
@@ -565,7 +565,7 @@ theorem paper_fold_gauge_entropy_defect_witness :
     momentSum 2 5 * momentSum 0 5 > momentSum 1 5 ^ 2 ∧
     momentSum 0 6 = Nat.fib 8 ∧
     momentSum 1 6 = 2 ^ 6 := by
-  simp only [← cMomentSum_eq]; decide
+  simp only [← cMomentSum_eq]; native_decide
 
 /-- Power-sum moment log-convexity concrete instances.
     cor:pom-crossq-logconvex-chain -/
@@ -573,7 +573,7 @@ theorem paper_momentSum_log_convex_chain :
     momentSum 1 6 ^ 2 ≤ momentSum 0 6 * momentSum 2 6 ∧
     momentSum 2 6 ^ 2 ≤ momentSum 1 6 * momentSum 3 6 ∧
     momentSum 1 7 ^ 2 ≤ momentSum 0 7 * momentSum 2 7 := by
-  simp only [← cMomentSum_eq]; decide
+  simp only [← cMomentSum_eq]; native_decide
 
 /-- Fold fundamental properties.
     thm:fold-suite -/
@@ -603,7 +603,7 @@ theorem paper_wedderburn_central_idempotent_package :
     Fintype.card (X 6) = 21 ∧
     momentSum 0 6 = 21 ∧ momentSum 1 6 = 64 ∧
     momentSum 1 6 ^ 2 ≤ momentSum 0 6 * momentSum 2 6 := by
-  simp only [← cMomentSum_eq, X.card_eq_fib]; decide
+  simp only [← cMomentSum_eq, X.card_eq_fib]; native_decide
 
 /-- Moment sum spectrum at m=7.
     prop:pom-power-sum-hankel-psd -/
@@ -613,7 +613,7 @@ theorem paper_momentSum_spectrum_m7 :
     momentSum 0 7 = Nat.fib 9 ∧
     momentSum 1 7 = 2 ^ 7 ∧
     momentSum 1 7 ^ 2 ≤ momentSum 0 7 * momentSum 2 7 := by
-  simp only [← cMomentSum_eq]; decide
+  simp only [← cMomentSum_eq]; native_decide
 
 /-- Global defect theory Fibonacci audit.
     prop:fold-defect-cocycle -/

@@ -44,7 +44,7 @@ def cMinStableHammingDist (m : Nat) : Nat :=
 /-- Minimum Hamming distance between distinct stable words at small resolutions. -/
 theorem cMinStableHammingDist_two : cMinStableHammingDist 2 = 1 := by decide
 theorem cMinStableHammingDist_three : cMinStableHammingDist 3 = 1 := by decide
-theorem cMinStableHammingDist_four : cMinStableHammingDist 4 = 1 := by decide
+theorem cMinStableHammingDist_four : cMinStableHammingDist 4 = 1 := by native_decide
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 207: Hamming metric properties
@@ -351,19 +351,19 @@ theorem paper_X6_hammingWeight_distribution :
 
 /-- cMinStableHammingDist 5 = 1.
     def:min-stable-hamming-dist -/
-theorem cMinStableHammingDist_five : cMinStableHammingDist 5 = 1 := by decide
+theorem cMinStableHammingDist_five : cMinStableHammingDist 5 = 1 := by native_decide
 
 /-- cMinStableHammingDist 6 = 1.
     def:min-stable-hamming-dist -/
-theorem cMinStableHammingDist_six : cMinStableHammingDist 6 = 1 := by decide
+theorem cMinStableHammingDist_six : cMinStableHammingDist 6 = 1 := by native_decide
 
 /-- cMinStableHammingDist 7 = 1.
     def:min-stable-hamming-dist -/
-theorem cMinStableHammingDist_seven : cMinStableHammingDist 7 = 1 := by decide
+theorem cMinStableHammingDist_seven : cMinStableHammingDist 7 = 1 := by native_decide
 
 /-- cMinStableHammingDist 8 = 1.
     def:min-stable-hamming-dist -/
-theorem cMinStableHammingDist_eight : cMinStableHammingDist 8 = 1 := by decide
+theorem cMinStableHammingDist_eight : cMinStableHammingDist 8 = 1 := by native_decide
 
 /-- Paper package: minimum stable Hamming distance is constant 1 for m = 2..8.
     def:min-stable-hamming-dist -/

@@ -3821,6 +3821,7 @@ import InfoGeometry.Canonical.GraphDiracPresentation
 import InfoGeometry.Canonical.GrassmannAlbertBodySoulBridge
 import InfoGeometry.Canonical.GrassmannianGrothendieckRing
 import InfoGeometry.Canonical.GravitationalSolderingTracelessBridge
+import InfoGeometry.Canonical.KantorFiveGradedTDualityBridge
 import InfoGeometry.Canonical.GrevilleSouriauFrameDrazin
 import InfoGeometry.Canonical.GromovWittenPrepotential
 import InfoGeometry.Canonical.GromovWittenPrepotentialGaugeQuotient
@@ -4243,7 +4244,6 @@ import InfoGeometry.Canonical.KZRoPEMonodromyComparison
 import InfoGeometry.Canonical.KacMoodyCurrentAlgebraBridge
 import InfoGeometry.Canonical.KadisonSingerStateExtension
 import InfoGeometry.Canonical.KaehlerGeometry
-import InfoGeometry.Canonical.KantorFiveGradedTDualityBridge
 import InfoGeometry.Canonical.KantorPeirceFiveGrading
 import InfoGeometry.Canonical.KapranovZetaSeries
 import InfoGeometry.Canonical.KapustinWitten4DTopologicalTwistCapstone

@@ -440,6 +440,17 @@ theorem linearTa_preserves_matJ_peircePlus :
   fin_cases i <;> fin_cases j <;>
     norm_num [linearTa, matJ, matPeircePlusJ, Matrix.mul_apply, Fin.sum_univ_two]
 
+/-- Conjugation by the affine glide's linear part also preserves the negative
+Peirce projector for `matJ`. Thus this affine reflection fixes both eigenspaces
+of `matJ`; its negative determinant does not exchange them. -/
+theorem linearTa_preserves_matJ_peirceMinus :
+    linearTa * peirceMinus (matJ (R := ℝ)) * linearTa =
+      peirceMinus (matJ (R := ℝ)) := by
+  rw [peirceMinus_matJ_eq]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [linearTa, matJ, matPeirceMinusJ, Matrix.mul_apply, Fin.sum_univ_two]
+
 /-- Conjugation by the other determinant-negative reflection swaps the
 positive and negative `matJ` Peirce projectors. -/
 theorem matK_swaps_matJ_peircePlus :

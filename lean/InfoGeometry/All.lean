@@ -1,5 +1,6 @@
 import InfoGeometry.AllExhaustive
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.SplitOctonionTwistorDiracKahlerBridge
 
 import InfoGeometry.Canonical.KreinSeamEvolution
 import InfoGeometry.Canonical.WeakValueCylinderTransport
@@ -42,4 +43,3 @@ import InfoGeometry.Canonical.Grassmannian3Positivity
 import InfoGeometry.Canonical.DecomposableBivector
 import InfoGeometry.Algebra.FiveGradedIwasawaNilpotency
 import InfoGeometry.Canonical.MTheoryTDualitySynthesis
-import InfoGeometry.Canonical.SplitOctonionTwistorDiracKahlerBridge

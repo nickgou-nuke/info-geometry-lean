@@ -6,7 +6,6 @@ import Mathlib.Tactic
 
 import InfoGeometry.Canonical.GaugedZornDiracKahlerConnection
 import InfoGeometry.Canonical.GravitationalSolderingTracelessBridge
-import InfoGeometry.Canonical.KantorFiveGradedTDualityBridge
 
 /-!
 # Stratum 34: Unimodular Zorn Gauge Algebra SL(2, O'), Chiral Anomaly Cancellation, & E₆₍₆₎ Closure

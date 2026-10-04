@@ -118,6 +118,25 @@ theorem graphDirac_apply (B : Matrix e v ℝ) (x : Cochain v e) :
     graphDirac B x = (B.transpose.mulVec x.2, B.mulVec x.1) := by
   simp [graphDirac, diracHodge, differential, codifferential]
 
+/-- The coordinate pairing is symmetric. -/
+theorem cochainPair_symm (x y : Cochain v e) :
+    cochainPair x y = cochainPair y x := by
+  simp only [cochainPair]
+  congr 1 <;> apply Finset.sum_congr rfl <;> intro i hi <;> ring
+
+/-- The graph Dirac operator is self-adjoint for the positive coordinate
+pairing: the two off-diagonal blocks are transposes of one another. -/
+theorem graphDirac_adjoint (B : Matrix e v ℝ) (x y : Cochain v e) :
+    cochainPair (graphDirac B x) y = cochainPair x (graphDirac B y) := by
+  have hxy := differential_adjoint B (x.1, 0) (0, y.2)
+  have hyx := differential_adjoint B (y.1, 0) (0, x.2)
+  rw [graphDirac_apply, graphDirac_apply]
+  dsimp [cochainPair, differential, codifferential] at hxy hyx ⊢
+  simp only [Matrix.mulVec, dotProduct, Matrix.transpose_apply,
+    Finset.sum_const_zero, zero_add, add_zero] at hxy hyx ⊢
+  rw [← hxy, ← hyx]
+  congr 1 <;> apply Finset.sum_congr rfl <;> intro i hi <;> ring
+
 theorem grading_sq : (grading (v := v) (e := e)) * grading = 1 := by
   apply LinearMap.ext
   intro x
@@ -129,6 +148,31 @@ theorem graphDirac_odd (B : Matrix e v ℝ) :
   intro x
   ext <;> simp [graphDirac_apply, grading, Module.End.mul_apply,
     Matrix.mulVec, dotProduct, Finset.sum_neg_distrib]
+
+/-- The grading is self-adjoint for the positive coordinate pairing. -/
+theorem grading_adjoint (x y : Cochain v e) :
+    cochainPair (grading x) y = cochainPair x (grading y) := by
+  simp only [grading, cochainPair]
+  simp only [neg_mul, mul_neg, Finset.sum_neg_distrib]
+  ring
+
+/-- The indefinite pairing induced by the bipartite grading.
+
+On vertex coordinates it is positive and on edge coordinates negative. This
+definition records the grading signature; it does not identify an arbitrary
+plabic graph with a particular Kasteleyn orientation. -/
+def kreinPair (x y : Cochain v e) : ℝ :=
+  cochainPair x (grading y)
+
+/-- The graph Dirac operator is Krein-skew-adjoint: it is self-adjoint for the
+positive coordinate pairing and odd with respect to the fundamental symmetry. -/
+theorem graphDirac_krein_skew_adjoint (B : Matrix e v ℝ) (x y : Cochain v e) :
+    kreinPair (graphDirac B x) y = -kreinPair x (graphDirac B y) := by
+  rw [kreinPair, graphDirac_adjoint B x (grading y)]
+  have hodd := congrFun (congrArg DFunLike.coe (graphDirac_odd B)) y
+  change graphDirac B (grading y) = -grading (graphDirac B y) at hodd
+  rw [hodd]
+  simp [kreinPair, cochainPair, grading, neg_mul, Finset.sum_neg_distrib]
 
 /-- The two Laplacian blocks are actual compositions B transpose B and B B transpose. -/
 theorem graphDirac_square_blocks (B : Matrix e v ℝ) (x : Cochain v e) :

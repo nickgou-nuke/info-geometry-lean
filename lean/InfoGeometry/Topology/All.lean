@@ -48,6 +48,7 @@ import InfoGeometry.Topology.KleinCompatibleWallpaperClassification
 import InfoGeometry.Topology.ProjectiveKleinCompactification
 import InfoGeometry.Topology.KleinMonodromyRepresentation
 import InfoGeometry.Topology.KleinQuotientDeckInvariants
+import InfoGeometry.Topology.KleinBottleTangentHolonomy
 import InfoGeometry.Topology.KleinParityDeck
 import InfoGeometry.Topology.Q8MonodromySpinorCover
 import InfoGeometry.Topology.Q8ModularFlowBridge

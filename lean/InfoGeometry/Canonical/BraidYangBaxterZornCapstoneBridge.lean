@@ -12,7 +12,6 @@ import InfoGeometry.Canonical.AmplituhedronBCFWContinuumBridge
 import InfoGeometry.Canonical.AmplituhedronBCFWContinuumAudit
 import InfoGeometry.Canonical.GravitationalSolderingTracelessBridge
 import InfoGeometry.Canonical.AssociatorGellMannOctetBridge
-import InfoGeometry.Canonical.KantorFiveGradedTDualityBridge
 
 /-!
 # Stratum 35: Braid Group B₃, Yang-Baxter q-Swap, & Zorn Split-Octonion Grand Unification

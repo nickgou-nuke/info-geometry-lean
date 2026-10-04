@@ -165,4 +165,17 @@ noncomputable def determinantScaleParityHom {V : Type*}
     (V ≃ₗ[ℝ] V) →* Units.posSubgroup ℝ × Multiplicative (ZMod 2) :=
   realUnitScaleParityEquiv.toMonoidHom.comp Base.VolumeHom
 
+/-- The determinant scale/sign character has precisely the determinant-one
+automorphisms as its kernel. Thus the two output coordinates together retain
+exactly the information in the real volume character. -/
+theorem determinantScaleParityHom_eq_one_iff {V : Type*}
+    [AddCommGroup V] [Module ℝ V] (f : V ≃ₗ[ℝ] V) :
+    determinantScaleParityHom f = 1 ↔ Base.VolumeHom f = 1 := by
+  constructor
+  · intro h
+    apply realUnitScaleParityEquiv.injective
+    simpa [determinantScaleParityHom] using h
+  · intro h
+    simp [determinantScaleParityHom, h]
+
 end InfoGeometry.Volume.RealUnitScaleParity

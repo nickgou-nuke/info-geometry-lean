@@ -48,12 +48,33 @@ theorem clifford_relations (A B : Fin 10) :
         2 * cl55Matrix A B := by
     dsimp [cl55Metric, Matrix.toQuadraticMap']
     rw [LinearMap.BilinMap.polar_toQuadraticMap]
-    simp [cl55Metric, cl55Matrix, Matrix.toQuadraticMap',
-      Matrix.toLinearMap₂'_apply, dotProduct, Matrix.mulVec, Pi.single_apply]
+    simp [cl55Matrix, Matrix.toLinearMap₂'_apply, Pi.single_apply]
     fin_cases A <;> fin_cases B <;>
-      norm_num [Matrix.toLinearMap₂'_apply, dotProduct, Matrix.mulVec,
-        Pi.single_apply]
+      norm_num [Matrix.toLinearMap₂'_apply, Pi.single_apply]
   rw [hpolar]
+
+/-- Each generator squares to the diagonal metric coefficient prescribed by
+the native quadratic form: positive in the first five coordinates and
+negative in the last five. -/
+theorem gamma_sq (A : Fin 10) :
+    Gamma A * Gamma A =
+      algebraMap ℝ Cl55 (if A.val < 5 then (1 : ℝ) else -1) := by
+  have h := clifford_relations A A
+  have hdiag : cl55Matrix A A = if A.val < 5 then (1 : ℝ) else -1 := by
+    simp [cl55Matrix, Matrix.diagonal]
+  rw [hdiag] at h
+  calc
+    Gamma A * Gamma A = (1 / 2 : ℝ) •
+        (Gamma A * Gamma A + Gamma A * Gamma A) := by
+          rw [← two_smul ℝ (Gamma A * Gamma A)]
+          rw [smul_smul]
+          norm_num
+    _ = (1 / 2 : ℝ) •
+        algebraMap ℝ Cl55 (2 * (if A.val < 5 then (1 : ℝ) else -1)) := by rw [h]
+    _ = algebraMap ℝ Cl55 (if A.val < 5 then (1 : ℝ) else -1) := by
+          rw [Algebra.smul_def, ← map_mul]
+          congr 1
+          ring
 
 /- **6. Chirality Operator Γⁱ¹⋯Γ¹⁰ = Γ¹ ⋯ Γ¹⁰** -/
 def ChiralityOperator : Cl55 :=
@@ -83,7 +104,7 @@ theorem diracKahlerSymbol_add (D E : DiracKahlerOperator) :
 
 theorem diracKahlerSymbol_smul (r : ℝ) (D : DiracKahlerOperator) :
     diracKahlerSymbol (r • D) = r • diracKahlerSymbol D := by
-  simp [diracKahlerSymbol, Finset.smul_sum, mul_smul_comm]
+  simp [diracKahlerSymbol, Finset.smul_sum]
 
 /- **8. Algebraic Dirac-Kähler square.**
 

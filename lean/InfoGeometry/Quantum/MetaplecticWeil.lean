@@ -165,6 +165,22 @@ theorem chirpMatrix_mul_inv (ω ω_inv : R) (h_inv : ω * ω_inv = 1) (κ : ℕ)
     rw [← mul_pow, h_inv, one_pow]
   · rfl
 
+/-- Right inverse: the inverse-root chirp also multiplies back to the identity.
+
+Together with `chirpMatrix_mul_inv`, this records a two-sided algebraic
+inverse. It does not by itself assert unitarity, which requires a star
+structure and a compatibility condition between `ω_inv` and `star ω`. -/
+theorem chirpMatrixInv_mul (ω ω_inv : R) (h_inv : ω * ω_inv = 1) (κ : ℕ) :
+    chirpMatrixInv (n := n) ω_inv κ * chirpMatrix (n := n) ω κ = 1 := by
+  have h_inv' : ω_inv * ω = 1 := by rw [mul_comm, h_inv]
+  ext i j
+  dsimp [chirpMatrix, chirpMatrixInv, Matrix.mul_apply, Matrix.of_apply, Matrix.one_apply]
+  simp only [ite_mul, mul_ite, zero_mul, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  split_ifs with h
+  · subst h
+    rw [← mul_pow, h_inv', one_pow]
+  · rfl
+
 /-! ### 6. Metaplectic Covariance Theorems -/
 
 /-- The Metaplectic Adjoint Action Ad_U(M) = U * M * U_inv. -/

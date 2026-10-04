@@ -1,69 +1,68 @@
 
-import Mathlib.Algebra.Group.Basic
-import Mathlib.Data.Matrix.Basic
 import Mathlib.Logic.Relation
-import Mathlib.Tactic.Group
 import Mathlib.Tactic
 
 open Relation
 
 namespace PlabicPureBraidMapping
 
-/-! ### 1. Plabic Graph Invariants & Combinatorial Structure -/
+/-! This module proves invariance of the displayed integer count formulas under
+the declared count updates, and a field-valued pentagon recurrence. It does not
+construct plabic graphs, a cluster mutation action, or a pure braid
+representation; those geometric inputs remain a separate development target. -/
 
-/-- Combinatorial parameters of an on-shell plabic graph:
-    - `V_black`: Number of trivalent MHV_3 vertices (k = 2)
-    - `V_white`: Number of trivalent MHVbar_3 vertices (k = 1)
-    - `E_internal`: Number of internal on-shell phase space propagators -/
+/-! ### 1. Integer count expressions -/
+
+/-- A triple of integer counts. No graph or incidence structure is carried. -/
 structure PlabicCounts where
   V_black : ℤ
   V_white : ℤ
   E_internal : ℤ
   deriving Repr, DecidableEq
 
-/-- The Grassmannian helicity degree k = 2 * V_black + V_white - E_internal. -/
+/-- The integer expression conventionally assigned to `k`. -/
 def kGrassmannian (p : PlabicCounts) : ℤ :=
   2 * p.V_black + p.V_white - p.E_internal
 
-/-- The number of external legs n_ext = 3 * (V_black + V_white) - 2 * E_internal. -/
+/-- The integer expression conventionally assigned to the external count. -/
 def nExternal (p : PlabicCounts) : ℤ :=
   3 * (p.V_black + p.V_white) - 2 * p.E_internal
 
-/-- The quantum chiral / helicity defect Δh = V_black - V_white. -/
+/-- The difference between the two vertex-count coordinates. -/
 def helicityDefect (p : PlabicCounts) : ℤ :=
   p.V_black - p.V_white
 
-/-! ### 2. Atomic Cluster Moves and Graph Equivalence -/
+/-! ### 2. Count-level transformations -/
 
-/-- Square Move (Urban Renewal on an alternating 4-face). -/
+/-- Count update named for a square move; no graph move is constructed. -/
 def applySquareMove (p : PlabicCounts) : PlabicCounts :=
   { V_black := p.V_black - 2 + 2
     V_white := p.V_white - 2 + 2
     E_internal := p.E_internal - 4 + 4 }
 
-/-- Bubble Reduction: collapse of a 2-cycle dipole. -/
+/-- Count update named for bubble reduction; no graph move is constructed. -/
 def applyBubbleRed (p : PlabicCounts) : PlabicCounts :=
   { V_black := p.V_black - 1
     V_white := p.V_white - 1
     E_internal := p.E_internal - 3 }
 
-/-- Bubble Creation: expansion of a 2-cycle dipole. -/
+/-- Count update named for bubble creation; no graph move is constructed. -/
 def applyBubbleCre (p : PlabicCounts) : PlabicCounts :=
   { V_black := p.V_black + 1
     V_white := p.V_white + 1
     E_internal := p.E_internal + 3 }
 
-/-- Inductive step for atomic cluster moves on plabic graphs. -/
+/-- One of the declared count updates. -/
 inductive AtomicClusterMove : PlabicCounts → PlabicCounts → Prop where
   | square (p : PlabicCounts) : AtomicClusterMove p (applySquareMove p)
   | bubbleRed (p : PlabicCounts) : AtomicClusterMove p (applyBubbleRed p)
   | bubbleCre (p : PlabicCounts) : AtomicClusterMove p (applyBubbleCre p)
 
-/-- Equivalence of plabic graphs under finite sequences of cluster mutations. -/
+/-- Reflexive-transitive closure of the declared count updates. -/
 def ClusterEquiv (p p' : PlabicCounts) : Prop :=
   ReflTransGen AtomicClusterMove p p'
 
-/-! ### 3. Invariance of Topological Indices under Cluster Sequences -/
+/-! ### 3. Invariance of count expressions under count updates -/
 
 theorem k_invariant_of_atomic {p p' : PlabicCounts} (h : AtomicClusterMove p p') :
     kGrassmannian p' = kGrassmannian p := by
@@ -95,101 +94,6 @@ theorem clusterEquiv_preserves_helicityDefect {p p' : PlabicCounts} (h : Cluster
   | refl => rfl
   | tail _ hstep ih => rw [helicityDefect_invariant_of_atomic hstep, ih]
 
-/-! ### 4. Pure Braid Representation on Cluster Mutation Groups -/
-
-structure ClusterBraidRep (G : Type*) [Group G] (n : ℕ) where
-  mu : Fin n → Fin n → G
-  disjoint_comm : ∀ i j k l : Fin n,
-    i ≠ k ∧ i ≠ l ∧ j ≠ k ∧ j ≠ l →
-    mu i j * mu k l = mu k l * mu i j
-  cyclic_one : ∀ i j k : Fin n,
-    i < j → j < k →
-    mu i j * mu i k * mu j k = mu i k * mu j k * mu i j
-  cyclic_two : ∀ i j k : Fin n,
-    i < j → j < k →
-    mu i k * mu j k * mu i j = mu j k * mu i j * mu i k
-
-namespace ClusterBraidRep
-
-variable {G : Type*} [Group G] {n : ℕ} (rep : ClusterBraidRep G n)
-
-theorem cyclic_three {i j k : Fin n} (hij : i < j) (hjk : j < k) :
-    rep.mu j k * rep.mu i j * rep.mu i k = rep.mu i j * rep.mu i k * rep.mu j k := by
-  rw [rep.cyclic_one i j k hij hjk, rep.cyclic_two i j k hij hjk]
-
-theorem comm_mu_ij_prod {i j k : Fin n} (hij : i < j) (hjk : j < k) :
-    rep.mu i j * (rep.mu i k * rep.mu j k) = (rep.mu i k * rep.mu j k) * rep.mu i j := by
-  have h := rep.cyclic_one i j k hij hjk
-  calc rep.mu i j * (rep.mu i k * rep.mu j k)
-      = rep.mu i j * rep.mu i k * rep.mu j k := by group
-    _ = rep.mu i k * rep.mu j k * rep.mu i j := h
-    _ = (rep.mu i k * rep.mu j k) * rep.mu i j := by group
-
-theorem comm_mu_ik_prod {i j k : Fin n} (hij : i < j) (hjk : j < k) :
-    rep.mu i k * (rep.mu j k * rep.mu i j) = (rep.mu j k * rep.mu i j) * rep.mu i k := by
-  have h := rep.cyclic_two i j k hij hjk
-  calc rep.mu i k * (rep.mu j k * rep.mu i j)
-      = rep.mu i k * rep.mu j k * rep.mu i j := by group
-    _ = rep.mu j k * rep.mu i j * rep.mu i k := h
-    _ = (rep.mu j k * rep.mu i j) * rep.mu i k := by group
-
-theorem artin_crossing_cluster_Y {i j k : Fin n} (hij : i < j) (hjk : j < k) :
-    rep.mu i j * rep.mu i k * (rep.mu i j)⁻¹ =
-      (rep.mu j k)⁻¹ * rep.mu i k * rep.mu j k := by
-  have h_comm := rep.comm_mu_ik_prod hij hjk
-  calc rep.mu i j * rep.mu i k * (rep.mu i j)⁻¹
-      = (rep.mu j k)⁻¹ * ((rep.mu j k * rep.mu i j) * rep.mu i k) * (rep.mu i j)⁻¹ := by group
-    _ = (rep.mu j k)⁻¹ * (rep.mu i k * (rep.mu j k * rep.mu i j)) * (rep.mu i j)⁻¹ := by rw [← h_comm]
-    _ = (rep.mu j k)⁻¹ * rep.mu i k * rep.mu j k := by group
-
-theorem artin_crossing_cluster_Y_factored {i j k : Fin n} (hij : i < j) (hjk : j < k) :
-    rep.mu i j * rep.mu i k * (rep.mu i j)⁻¹ =
-      (rep.mu i k * rep.mu j k)⁻¹ * rep.mu i k * (rep.mu i k * rep.mu j k) := by
-  have h_group : ∀ (Y Z : G), (Y * Z)⁻¹ * Y * (Y * Z) = Z⁻¹ * Y * Z := by
-    intro Y Z; group
-  rw [h_group]
-  exact rep.artin_crossing_cluster_Y hij hjk
-
-theorem artin_crossing_cluster_Z {i j k : Fin n} (hij : i < j) (hjk : j < k) :
-    (rep.mu i j)⁻¹ * rep.mu j k * rep.mu i j =
-      rep.mu i k * rep.mu j k * (rep.mu i k)⁻¹ := by
-  have h_cyc3 := rep.cyclic_three hij hjk
-  have h_comm : rep.mu j k * (rep.mu i j * rep.mu i k) =
-      (rep.mu i j * rep.mu i k) * rep.mu j k := by
-    calc rep.mu j k * (rep.mu i j * rep.mu i k)
-        = rep.mu j k * rep.mu i j * rep.mu i k := by group
-      _ = rep.mu i j * rep.mu i k * rep.mu j k := h_cyc3
-      _ = (rep.mu i j * rep.mu i k) * rep.mu j k := by group
-  calc (rep.mu i j)⁻¹ * rep.mu j k * rep.mu i j
-      = (rep.mu i j)⁻¹ * (rep.mu j k * (rep.mu i j * rep.mu i k)) * (rep.mu i k)⁻¹ := by group
-    _ = (rep.mu i j)⁻¹ * ((rep.mu i j * rep.mu i k) * rep.mu j k) * (rep.mu i k)⁻¹ := by rw [h_comm]
-    _ = rep.mu i k * rep.mu j k * (rep.mu i k)⁻¹ := by group
-
-end ClusterBraidRep
-
-structure PlabicClusterAction (G : Type*) [Group G] where
-  act : G → PlabicCounts → PlabicCounts
-  act_one : ∀ p, act 1 p = p
-  act_mul : ∀ g h p, act (g * h) p = act g (act h p)
-  act_equiv : ∀ g p, ClusterEquiv p (act g p)
-
-theorem crossing_plabic_action_eq {G : Type*} [Group G] {n : ℕ}
-    (rep : ClusterBraidRep G n) (action : PlabicClusterAction G)
-    {i j k : Fin n} (hij : i < j) (hjk : j < k) (p : PlabicCounts) :
-    action.act (rep.mu i j * rep.mu i k * (rep.mu i j)⁻¹) p =
-    action.act ((rep.mu j k)⁻¹ * rep.mu i k * rep.mu j k) p := by
-  rw [rep.artin_crossing_cluster_Y hij hjk]
-
-theorem pure_braid_preserves_plabic_invariants {G : Type*} [Group G]
-    (action : PlabicClusterAction G) (g : G) (p : PlabicCounts) :
-    kGrassmannian (action.act g p) = kGrassmannian p ∧
-    nExternal (action.act g p) = nExternal p ∧
-    helicityDefect (action.act g p) = helicityDefect p := by
-  have h_equiv := action.act_equiv g p
-  exact ⟨clusterEquiv_preserves_k h_equiv,
-         clusterEquiv_preserves_next h_equiv,
-         clusterEquiv_preserves_helicityDefect h_equiv⟩
-
 theorem zamolodchikov_cluster_pentagon_period {F : Type*} [Field F]
     (x₀ x₁ : F)
     (h₀ : x₀ ≠ 0) (h₁ : x₁ ≠ 0)
@@ -202,11 +106,33 @@ theorem zamolodchikov_cluster_pentagon_period {F : Type*} [Field F]
     let x₅ := (1 + x₄) / x₃
     let x₆ := (1 + x₅) / x₄
     x₅ = x₀ ∧ x₆ = x₁ := by
-  dsimp
-  constructor
-  · field_simp [h₀, h₁, h_x₀_add, h_x₁_add, h_sum]
-    <;> ring_nf
-  · field_simp [h₀, h₁, h_x₀_add, h_x₁_add, h_sum]
-    <;> ring_nf
+  let x2 := (1 + x₁) / x₀
+  let x3 := (1 + x2) / x₁
+  let x4 := (1 + x3) / x2
+  let x5 := (1 + x4) / x3
+  let x6 := (1 + x5) / x4
+  change x5 = x₀ ∧ x6 = x₁
+  have hsum' : 1 + x₁ + x₀ ≠ 0 := by
+    convert h_sum using 1
+    ring
+  have hx3 : x3 = (1 + x₀ + x₁) / (x₀ * x₁) := by
+    change (1 + (1 + x₁) / x₀) / x₁ = _
+    field_simp [h₀, h₁]
+    ring
+  have hx4 : x4 = (1 + x₀) / x₁ := by
+    change (1 + x3) / ((1 + x₁) / x₀) = _
+    rw [hx3]
+    field_simp [h₀, h₁, h_x₁_add]
+    ring
+  have hx5 : x5 = x₀ := by
+    change (1 + x4) / x3 = _
+    rw [hx4, hx3]
+    field_simp [h₀, h₁, hsum']
+    ring
+  have hx6 : x6 = x₁ := by
+    change (1 + x5) / x4 = _
+    rw [hx5, hx4]
+    field_simp [h₀, h₁, h_x₀_add]
+  exact ⟨hx5, hx6⟩
 
 end PlabicPureBraidMapping

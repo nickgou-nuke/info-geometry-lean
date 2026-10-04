@@ -66,6 +66,35 @@ theorem comm_Z_XY
     Z * (X * Y) = (X * Y) * Z := by
   simpa [mul_assoc] using cyclic_three X Y Z h₁ h₂
 
+/-- The common cyclic product `X * Y * Z` commutes with each of its three
+factors. Thus the cyclic identities make it central in the subgroup generated
+by `X`, `Y`, and `Z`. -/
+theorem cyclic_product_centralizes
+    (h₁ : X * Y * Z = Y * Z * X)
+    (h₂ : Y * Z * X = Z * X * Y) :
+    (X * Y * Z) * X = X * (X * Y * Z) ∧
+    (X * Y * Z) * Y = Y * (X * Y * Z) ∧
+    (X * Y * Z) * Z = Z * (X * Y * Z) := by
+  have hX := comm_X_YZ X Y Z h₁
+  have hY := comm_Y_ZX X Y Z h₂
+  have hZ := comm_Z_XY X Y Z h₁ h₂
+  constructor
+  · calc
+      (X * Y * Z) * X = X * ((Y * Z) * X) := by group
+      _ = X * (X * (Y * Z)) := by rw [← hX]
+      _ = X * (X * Y * Z) := by group
+  constructor
+  · calc
+      (X * Y * Z) * Y = (Y * Z * X) * Y := by rw [h₁]
+      _ = Y * ((Z * X) * Y) := by group
+      _ = Y * (Y * (Z * X)) := by rw [← hY]
+      _ = Y * (X * Y * Z) := by rw [h₁]; group
+  · calc
+      (X * Y * Z) * Z = (Z * X * Y) * Z := by rw [h₁, h₂]
+      _ = Z * ((X * Y) * Z) := by group
+      _ = Z * (Z * (X * Y)) := by rw [← hZ]
+      _ = Z * (X * Y * Z) := by rw [h₁, h₂]; group
+
 /-- The cyclic equalities are equivalent to the three product-commutation
 identities. -/
 theorem cyclic_iff_product_commutation :

@@ -10717,8 +10717,6 @@ import InfoGeometry.Projective.QuaternionicDoubledKrein
 import InfoGeometry.Projective.QuaternionicKreinForm
 import InfoGeometry.Projective.QuaternionicMobius
 import InfoGeometry.Projective.Rays
-import InfoGeometry.Projective.RohozhkinDelaunayBraiding
-import InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge
 import InfoGeometry.Projective.RokhlinBraidInvariant
 import InfoGeometry.Projective.Sandbox.BCFWShift
 import InfoGeometry.Projective.Sandbox.NicaAmplituhedronIntegrand
@@ -11862,7 +11860,6 @@ import InfoGeometry.Topology.RohozhkinMatrix
 import InfoGeometry.Topology.RohozhkinPBGL
 import InfoGeometry.Topology.RohozhkinPentagonMatrix
 import InfoGeometry.Topology.RohozhkinProjectiveCrossRatio
-import InfoGeometry.Topology.RohozhkinRepresentation
 import InfoGeometry.Topology.SandboxMobiusSouriauThermodynamicFlowTest
 import InfoGeometry.Topology.SandboxThermodynamicSL2MobiusFlowTest
 import InfoGeometry.Topology.SinkhornScalingTopological

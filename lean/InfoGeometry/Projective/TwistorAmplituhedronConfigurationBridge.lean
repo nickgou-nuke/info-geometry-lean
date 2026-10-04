@@ -1,7 +1,6 @@
 import InfoGeometry.Projective.KleinQuadricIncidence
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.NonIsoConf3RankIngestion
-import InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge
 import InfoGeometry.Projective.Twistor.Incidence
 import InfoGeometry.Projective.KuzminCuntzPath
 import InfoGeometry.Topology.AmplituhedronBoundary
@@ -18,7 +17,6 @@ Closed here:
 * readbacks from the existing Penrose twistor and Klein incidence owners;
 * a rank-32 budget only from explicit external Betti data plus the existing
   spin-tiling multiplicity;
-* Rohozhkin pure-braid descent only from a completed `RohozhkinDelaunayBraidingSpec`;
 * BCFW/amplituhedron/plabic claims only as explicit interfaces.
 
 Not closed here:
@@ -35,11 +33,8 @@ open InfoGeometry.Projective.KleinQuadric
 open InfoGeometry.Projective.KleinQuadricIncidence
 open InfoGeometry.Projective.NonIsoConf3RankIngestion
 open InfoGeometry.Projective.PenroseSpinTiling
-open InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge
 open InfoGeometry.Projective.Twistor
 open InfoGeometry.Topology.Delaunay
-open InfoGeometry.Topology.PureBraid
-open InfoGeometry.Topology.RohozhkinBoundary
 open InfoGeometry.Projective.KuzminCuntzPath
 open InfoGeometry.Topology.AmplituhedronBoundary
 
@@ -146,51 +141,22 @@ theorem spin_tiled_rank_matches_stateBudget
       spin_tiled_rank_from_external_data R.data R.ambient R.consistent R.localRank_eq
     _ = R.stateBudget := R.stateBudget_eq.symm
 
-/-! ## Rohozhkin / plabic interface -/
-
-/--
-Interface from a completed Rohozhkin pure-braid representation to a chosen
-plabic/on-shell move model.
-
-The comparison to plabic moves is explicit data, not a theorem in this file.
--/
-structure RohozhkinPlabicInterface (moving : ℕ) where
-  packet : RohozhkinProjectiveBraidPacket moving
-  PlabicMove : Type
-  moveOfGenerator :
-    PureBraidGenerator (rohozhkinTotalPoints moving) → PlabicMove
-
-/-- The Rohozhkin component of a plabic interface descends to the presented pure braid group. -/
-theorem rohozhkin_plabic_descent_packet {moving : ℕ}
-    (P : RohozhkinPlabicInterface moving) :
-    ∃ ρ : RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving,
-      ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving),
-        ρ (of g) = InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge.rohozhkinProjectiveBraidPacketGen P.packet g :=
-  rohozhkin_projective_braid_descent_packet P.packet
-
 /--
 Combined theorem-safe packet for the twistor/amplituhedron configuration lane.
 -/
-structure TwistorAmplituhedronBridgeDatum (moving : ℕ) where
+structure TwistorAmplituhedronBridgeDatum where
   lines : Plucker6.KleinLineConfig3
   boundary : AmplituhedronBoundaryInterface lines
   arnoldBCFW : ArnoldBCFWInterface
   rank : Rank32ScatteringInterface
-  rohozhkin : RohozhkinPlabicInterface moving
 
-/-- Combined readback: one selected line is Klein, the rank budget matches `32`,
-and the supplied Rohozhkin spec descends to the presented pure braid group. -/
-theorem twistor_amplituhedron_bridge_packet {moving : ℕ}
-    (D : TwistorAmplituhedronBridgeDatum moving)
+/-- Combined readback: one selected line is Klein and the rank budget matches `32`. -/
+theorem twistor_amplituhedron_bridge_packet
+    (D : TwistorAmplituhedronBridgeDatum)
     (i : Fin 3) :
     InfoGeometry.Projective.KleinQuadric.Plucker6.IsKlein (D.lines.line i) ∧
-      D.rank.data.totalRank * spinTilingMultiplicity = D.rank.stateBudget ∧
-      ∃ ρ : RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving,
-        ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving),
-          ρ (of g) = InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge.rohozhkinProjectiveBraidPacketGen D.rohozhkin.packet g := by
-  exact ⟨D.lines.line_isKlein i,
-    spin_tiled_rank_matches_stateBudget D.rank,
-    rohozhkin_plabic_descent_packet D.rohozhkin⟩
+      D.rank.data.totalRank * spinTilingMultiplicity = D.rank.stateBudget := by
+  exact ⟨D.lines.line_isKlein i, spin_tiled_rank_matches_stateBudget D.rank⟩
 
 /-- The concrete Penrose projective null twistor space from the twistor owner is inhabited. -/
 theorem penrose_projective_null_twistor_nonempty_readback :
@@ -255,13 +221,13 @@ theorem q0_readout_of_stability (S : QDeformationStabilityInterface) (h0 : S.qPa
 /--
 The q-deformation datum can be attached to an amplituhedron bridge packet.
 -/
-structure TwistorAmplituhedronQDeformationBridgeDatum (moving : ℕ) where
-  bridge : TwistorAmplituhedronBridgeDatum moving
+structure TwistorAmplituhedronQDeformationBridgeDatum where
+  bridge : TwistorAmplituhedronBridgeDatum
   deformation : QDeformationStabilityInterface
 
 /-- Combined readout with explicit q-stable rank preservation. -/
-theorem twistor_amplituhedron_q_deformation_packet {moving : ℕ}
-    (D : TwistorAmplituhedronQDeformationBridgeDatum moving) :
+theorem twistor_amplituhedron_q_deformation_packet
+    (D : TwistorAmplituhedronQDeformationBridgeDatum) :
     D.deformation.amplituhedronBoundaryRank = 32 :=
   q_deformation_stability_keeps_rank D.deformation
 

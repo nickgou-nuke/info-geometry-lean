@@ -16,7 +16,6 @@ import InfoGeometry.Projective.Dynamics
 import InfoGeometry.Projective.FaithfulKL
 import InfoGeometry.Projective.KasparovKreinDIIIBridge
 import InfoGeometry.Projective.HorizonInformationScrambling
-import InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge
 import InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge
 import InfoGeometry.Projective.QDeformedTwistorAmplituhedronBridge
 import InfoGeometry.Projective.QuantumGrassmannian

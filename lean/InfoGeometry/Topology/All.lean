@@ -1,7 +1,9 @@
 import InfoGeometry.Topology.PureBraidRepresentation
+import InfoGeometry.Topology.AmplituhedronTwistorProjection
 import InfoGeometry.Topology.PlabicBoundaryMeasurement
 import InfoGeometry.Topology.PlabicPureBraidMapping
 import InfoGeometry.Topology.PureBraidGroup
+import InfoGeometry.Topology.PureBraidThreeStrandBridge
 import InfoGeometry.Topology.AharonovBohmVortices
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.AmplituhedronBoundary
@@ -90,7 +92,6 @@ import InfoGeometry.Topology.DelaunayAdjacentStructures
 import InfoGeometry.Topology.DrazinEntropyGraph
 import InfoGeometry.Topology.RohozhkinPentagonMatrix
 import InfoGeometry.Topology.RohozhkinPBGL
-import InfoGeometry.Topology.RohozhkinRepresentation
 import InfoGeometry.Topology.RohozhkinDelaunayBraiding
 import InfoGeometry.Topology.PureBraidGroup
 import InfoGeometry.Topology.DelaunayPureBraidInvariant

@@ -416,6 +416,7 @@ Files:
 - `lean/InfoGeometry/Topology/RohozhkinPentagonMatrix.lean`
 - `lean/InfoGeometry/Topology/DelaunayPureBraidInvariant.lean`
 - `lean/InfoGeometry/Topology/PureBraidGroup.lean`
+- `lean/InfoGeometry/Topology/PureBraidThreeStrandBridge.lean`
 - `lean/InfoGeometry/Topology/DelaunayFlipMatrixEmbeddings.lean`
 - `lean/InfoGeometry/Topology/DelaunayPureBraidRepresentation.lean`
 - `tools/sympy/rohozhkin_pentagon_matrices.py`
@@ -434,22 +435,29 @@ Closed finite target:
   flip-word replacement invariance theorems;
 - `DelaunayEquiv` and `rohozhkinQuotientMatrix`, a quotient-level matrix
   readout for words modulo the generated move relation;
-- `PureBraid.PureBraidGenerator`, `PureBraid.pureBraidRelations`, and
-  `PureBraid.PB`, an explicit mathlib `PresentedGroup` boundary for pure
-  braids with noninterleaving far-commutativity, three-index, and four-index
-  relator families;
-- `trivialPureBraidGeneratorAssignment` and `trivial_pure_braid_representation`,
-  a deliberately trivial descent socket for testing `PresentedGroup.lift`, not
-  the Rohozhkin monodromy representation.
+- `Topology/PureBraidGroup.lean`, generic consequences of assumed cyclic
+  identities in an arbitrary group, including centrality of the cyclic
+  product; it does not define a pure-braid presentation;
+- `Topology/PureBraidThreeStrandBridge.lean`, standard pure words in the
+  canonical three-strand braid group, their cyclic product, the full-twist
+  identification, and its commutation with both Artin generators;
+- `Categorical/BraidPermutationQuotient.lean`, the genuine finite braid group
+  and its pure subgroup as the kernel of the canonical permutation quotient.
 
 Open target:
+- `DelaunayPureBraidInvariant.lean` now binds `RohozhkinSourcePB` to the
+  canonical permutation kernel and builds, but the downstream
+  `DelaunayPureBraidRepresentation.lean` still refers to the undefined
+  `PureBraidGenerator`, `respectsPureBraidRelations`, `lift`, and `of` API;
+- connecting the existing Delaunay flip-word quotient to the canonical pure
+  braid kernel, with a concrete generator map and relator proofs;
 - deriving the Appendix A matrices from a general `2n+1` triangle-basis
   insertion map;
-- constructing the nontrivial Rohozhkin generator assignment into
+- constructing a nontrivial Rohozhkin generator assignment into
   `Units (Matrix (Fin (2n+1)) (Fin (2n+1)) ℚ)`;
-- proving that this nontrivial assignment kills every explicit
-  `PureBraid.pureBraidRelations` relator;
-- the nontrivial pure-braid homomorphism `PB_n → GL_{2n+1}(ℚ)` with
+- proving that this assignment descends to a homomorphism from the canonical
+  pure-braid kernel;
+- the resulting nontrivial pure-braid homomorphism to `GL_{2n+1}(ℚ)` with
   invertibility in the target group;
 - knot invariants from braid closure and Markov moves.
 
@@ -515,13 +523,21 @@ Files:
 ### Packet B: Rohozhkin/Delaunay Pure-Braid Layer — **SCOPED MATRIX BOUNDARY**
 
 Files:
-- `Topology/PureBraidGroup.lean` — presented group boundary (explicit relators, 0 sorry)
+- `Topology/PureBraidGroup.lean` — generic cyclic-relation consequences; not a
+  presented pure braid group
+- `Categorical/BraidPermutationQuotient.lean` — canonical pure braid kernel
 - `Topology/DelaunayPureBraidInvariant.lean` — local Delaunay move-invariance theorems
 - `Topology/DelaunayPureBraidRepresentation.lean` — quotient readout / GL target boundary
 - `Topology/RohozhkinMatrix.lean` — concrete generator-matrix data
 
 Mathematical status:
-- Rohozhkin/Delaunay data support a finite pure-braid matrix boundary.
+- `DelaunayPureBraidInvariant.lean` builds with `RohozhkinSourcePB` defined as
+  `pureBraidSubgroup (moving + 2)`, the actual kernel on `moving + 3` strands.
+- The targeted build of `InfoGeometry.Topology.DelaunayPureBraidRepresentation`
+  and `InfoGeometry.Topology.DelaunayFlipMatrixEmbeddings` still fails because
+  their claimed `PureBraidGenerator` / relator / lift API is undefined.
+- The finite rational Delaunay move algebra is distinct from a pure braid group
+  until a homomorphism to the canonical kernel is constructed.
 - This layer is not a physical five-graded globality theorem and does not feed Packet C automatically.
 - A closed nontrivial `PB → GL` homomorphism still requires the generator assignment and all relator checks to be kernel-proved.
 

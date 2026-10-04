@@ -103,12 +103,11 @@ def commutantSubgroup {G : Type*} [Group G] (z : G) : Subgroup G where
       _ = (x * y) * z := by simp only [mul_assoc]
   inv_mem' := by
     intro x hx
-    apply (mul_right_cancel₀ x)
+    have h := congrArg (fun y : G => x⁻¹ * y * x⁻¹) hx.symm
     calc
-      (z * x⁻¹) * x = z := by simp [mul_assoc]
-      _ = x⁻¹ * (x * z) := by simp
-      _ = x⁻¹ * (z * x) := by rw [hx]
-      _ = (x⁻¹ * z) * x := by simp only [mul_assoc]
+      z * x⁻¹ = x⁻¹ * (x * z) * x⁻¹ := by group
+      _ = x⁻¹ * (z * x) * x⁻¹ := h
+      _ = x⁻¹ * z := by group
 
 /-- The square of the B₃ Garside element commutes with every braid. -/
 theorem b3_garside_sq_central (g : BraidGroup3) :
@@ -141,48 +140,64 @@ theorem garside_comm_sigmaZero :
     garside * sigmaZero = sigmaZero * garside := by
   calc
     garside * sigmaZero =
-        (sigmaZero * sigmaOne * sigmaZero * sigmaOne * sigmaZero * sigmaOne) *
+        (sigmaZero * InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne * sigmaZero *
+          InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne * sigmaZero *
+          InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne) *
           sigmaZero := by rfl
     _ = sigmaZero *
-        (sigmaOne * sigmaZero * sigmaOne * sigmaZero * sigmaOne * sigmaZero) := by
-      simp only [mul_assoc]
+        (InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne * sigmaZero *
+          InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne * sigmaZero *
+          InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne * sigmaZero) := by
+      group
     _ = sigmaZero * garside := by
-      rw [garside_eq_reverse]
+      exact (congrArg (fun x => sigmaZero * x) garside_eq_reverse).symm
 
 /-- For I₂(6), the length-six Garside element commutes with the second generator. -/
 theorem garside_comm_sigmaOne :
-    garside * sigmaOne = sigmaOne * garside := by
+    garside * InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne =
+      InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne * garside := by
   calc
-    garside * sigmaOne =
-        (sigmaOne * sigmaZero * sigmaOne * sigmaZero * sigmaOne * sigmaZero) *
-          sigmaOne := by
+    garside * InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne =
+        (InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne * sigmaZero *
+          InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne * sigmaZero *
+          InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne * sigmaZero) *
+          InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne := by
       rw [garside_eq_reverse]
-    _ = sigmaOne *
-        (sigmaZero * sigmaOne * sigmaZero * sigmaOne * sigmaZero * sigmaOne) := by
-      simp only [mul_assoc]
-    _ = sigmaOne * garside := by rfl
+      simp only [sigmaZero, InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne]
+    _ = InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne *
+        (sigmaZero * InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne * sigmaZero *
+          InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne * sigmaZero *
+          InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne) := by
+      simp only [sigmaZero, InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne]
+      group
+    _ = InfoGeometry.Exceptional.G2ArtinPresentation.sigmaOne * garside := by rfl
 
 /-- The G₂/I₂(6) Garside element commutes with every Artin-group element. -/
 theorem garside_central (g : ArtinG2) :
     garside * g = g * garside := by
   let H : Subgroup ArtinG2 :=
     InfoGeometry.Categorical.ArtinGarsideCenterBridge.commutantSubgroup garside
-  have hgen : ∀ j : Generator, PresentedGroup.of j ∈ H := by
+  have hgen : ∀ j : InfoGeometry.Exceptional.G2ArtinPresentation.Generator,
+      PresentedGroup.of j ∈ H := by
     intro j
     fin_cases j
     · exact garside_comm_sigmaZero
     · exact garside_comm_sigmaOne
-  exact PresentedGroup.generated_by relations H hgen g
+  exact PresentedGroup.generated_by
+    InfoGeometry.Exceptional.G2ArtinPresentation.relations H hgen g
 
 /-- Consequently Δ² also commutes with every element, although Δ already does. -/
 theorem garside_sq_central (g : ArtinG2) :
     garside ^ 2 * g = g * garside ^ 2 := by
   calc
-    garside ^ 2 * g = garside * (garside * g) := by simp [pow_two, mul_assoc]
-    _ = garside * (g * garside) := by rw [garside_central]
-    _ = (garside * g) * garside := by simp only [mul_assoc]
-    _ = (g * garside) * garside := by rw [garside_central]
-    _ = g * garside ^ 2 := by simp [pow_two, mul_assoc]
+    garside ^ 2 * g = (garside * garside) * g := by rw [pow_two]
+    _ = garside * (garside * g) := by exact mul_assoc _ _ _
+    _ = garside * (g * garside) :=
+      congrArg (fun x => garside * x) (garside_central g)
+    _ = (garside * g) * garside := by exact (mul_assoc _ _ _).symm
+    _ = (g * garside) * garside :=
+      congrArg (fun x => x * garside) (garside_central g)
+    _ = g * garside ^ 2 := by rw [pow_two]; exact mul_assoc _ _ _
 
 end G2
 
@@ -200,7 +215,7 @@ theorem one_add_nilpotent_sq
     (1 + N) * (1 + N)
         = 1 + N + N + N * N := by noncomm_ring
     _ = 1 + N + N := by rw [hN, add_zero]
-    _ = 1 + (2 : ℤ) • N := by simp [two_zsmul]
+    _ = 1 + (2 : ℤ) • N := by rw [two_smul, add_assoc]
 
 end NilpotentShear
 

@@ -1,0 +1,251 @@
+import InfoGeometry.Topology.PureBraidGroup
+import InfoGeometry.Categorical.BraidPermutationQuotient
+
+/-!
+# Three-strand pure braid calculations in the canonical Artin braid group
+
+The pure braid group is the kernel of the canonical permutation quotient. This
+file records the three standard pure words inside the actual three-strand
+Artin braid group and proves their cyclic relation from its defining braid
+relation. It does not assert a general presentation for the pure braid group.
+-/
+
+namespace InfoGeometry.Topology.PureBraidThreeStrandBridge
+
+open Braid
+open InfoGeometry.Categorical.BraidPermutationQuotient
+
+abbrev B3 := Braid.braid_group 3
+
+/-- The two Artin generators of the repository's three-strand braid group. -/
+def sigmaOne : B3 := Braid.σ' 2 0
+
+def sigmaTwo : B3 := Braid.σ' 2 1
+
+/-- The Garside half twist word in the three-strand braid group. -/
+def delta : B3 := sigmaOne * sigmaTwo * sigmaOne
+
+/-- The three-strand full twist, represented as the square of the half twist. -/
+def fullTwist : B3 := delta ^ 2
+
+/-- The defining length-three Artin relation in `B₃`. -/
+theorem sigmaOne_braid_sigmaTwo :
+    sigmaOne * sigmaTwo * sigmaOne = sigmaTwo * sigmaOne * sigmaTwo := by
+  have h := Braid.braid_group.braid (n := 0) (i := (0 : Fin 1))
+  simpa [sigmaOne, sigmaTwo] using h
+
+/-- The pure generator on strands 1 and 2. -/
+def pureA12 : B3 := sigmaOne ^ 2
+
+/-- The pure generator on strands 1 and 3 in the chosen Artin convention. -/
+def pureA13 : B3 := sigmaOne⁻¹ * sigmaTwo ^ 2 * sigmaOne
+
+/-- The pure generator on strands 2 and 3. -/
+def pureA23 : B3 := sigmaTwo ^ 2
+
+/-- The adjacent-square word on strands 1 and 2 lies in the canonical pure
+braid kernel. -/
+theorem pureA12_mem : pureA12 ∈ pureBraidSubgroup 2 := by
+  simpa [pureA12, sigmaOne] using generatorSquare_mem_pureBraidSubgroup 2 (0 : Fin 2)
+
+/-- The conjugate-square word on strands 1 and 3 lies in the canonical pure
+braid kernel. -/
+theorem pureA13_mem : pureA13 ∈ pureBraidSubgroup 2 := by
+  simpa [pureA13, sigmaOne, sigmaTwo] using
+    conjugate_generatorSquare_mem_pureBraidSubgroup 2 (sigmaOne⁻¹) (1 : Fin 2)
+
+/-- The adjacent-square word on strands 2 and 3 lies in the canonical pure
+braid kernel. -/
+theorem pureA23_mem : pureA23 ∈ pureBraidSubgroup 2 := by
+  simpa [pureA23, sigmaTwo] using generatorSquare_mem_pureBraidSubgroup 2 (1 : Fin 2)
+
+private theorem yx_cube_eq_xy_cube :
+    sigmaTwo * sigmaOne * sigmaTwo * sigmaOne * sigmaTwo * sigmaOne =
+      sigmaOne * sigmaTwo * sigmaOne * sigmaTwo * sigmaOne * sigmaTwo := by
+  have h := sigmaOne_braid_sigmaTwo
+  calc
+    sigmaTwo * sigmaOne * sigmaTwo * sigmaOne * sigmaTwo * sigmaOne =
+        sigmaOne * sigmaTwo * sigmaOne * sigmaOne * sigmaTwo * sigmaOne := by
+          rw [h.symm]
+    _ = (sigmaOne * sigmaTwo * sigmaOne) * (sigmaOne * sigmaTwo * sigmaOne) := by group
+    _ = (sigmaOne * sigmaTwo * sigmaOne) * (sigmaTwo * sigmaOne * sigmaTwo) :=
+          congrArg (fun z => (sigmaOne * sigmaTwo * sigmaOne) * z) h
+    _ = sigmaOne * sigmaTwo * sigmaOne * sigmaTwo * sigmaOne * sigmaTwo := by group
+
+private theorem pureA13_alt :
+    sigmaOne⁻¹ * sigmaTwo ^ 2 * sigmaOne =
+      sigmaTwo * sigmaOne ^ 2 * sigmaTwo⁻¹ := by
+  have h := sigmaOne_braid_sigmaTwo
+  have hm : sigmaOne * (sigmaOne⁻¹ * sigmaTwo ^ 2 * sigmaOne) * sigmaTwo =
+      sigmaOne * (sigmaTwo * sigmaOne ^ 2 * sigmaTwo⁻¹) * sigmaTwo := by
+    calc
+      sigmaOne * (sigmaOne⁻¹ * sigmaTwo ^ 2 * sigmaOne) * sigmaTwo =
+          sigmaTwo * (sigmaTwo * sigmaOne * sigmaTwo) := by
+            simp only [pow_two]
+            group
+      _ = sigmaTwo * (sigmaOne * sigmaTwo * sigmaOne) :=
+        congrArg (fun z => sigmaTwo * z) h.symm
+      _ = (sigmaOne * sigmaTwo * sigmaOne) * sigmaOne := by
+        calc
+          sigmaTwo * (sigmaOne * sigmaTwo * sigmaOne) =
+              (sigmaTwo * sigmaOne * sigmaTwo) * sigmaOne := by group
+          _ = (sigmaOne * sigmaTwo * sigmaOne) * sigmaOne := by
+            exact congrArg (fun z => z * sigmaOne) h.symm
+      _ = sigmaOne * (sigmaTwo * sigmaOne ^ 2 * sigmaTwo⁻¹) * sigmaTwo := by
+        simp only [pow_two]
+        group
+  calc
+    sigmaOne⁻¹ * sigmaTwo ^ 2 * sigmaOne =
+        sigmaOne⁻¹ * (sigmaOne * (sigmaOne⁻¹ * sigmaTwo ^ 2 * sigmaOne) * sigmaTwo) * sigmaTwo⁻¹ := by group
+    _ = sigmaOne⁻¹ * (sigmaOne * (sigmaTwo * sigmaOne ^ 2 * sigmaTwo⁻¹) * sigmaTwo) * sigmaTwo⁻¹ := by rw [hm]
+    _ = sigmaTwo * sigmaOne ^ 2 * sigmaTwo⁻¹ := by group
+
+private theorem pureA123_eq_fullTwist :
+    pureA12 * pureA13 * pureA23 =
+      sigmaOne * sigmaTwo * sigmaOne * sigmaTwo * sigmaOne * sigmaTwo := by
+  dsimp [pureA12, pureA13, pureA23]
+  simp only [pow_two]
+  have h := sigmaOne_braid_sigmaTwo
+  calc
+    sigmaOne ^ 2 * (sigmaOne⁻¹ * sigmaTwo ^ 2 * sigmaOne) * sigmaTwo ^ 2 =
+        sigmaOne * sigmaTwo * (sigmaTwo * sigmaOne * sigmaTwo) * sigmaTwo := by
+          simp only [pow_two]
+          group
+    _ = sigmaOne * sigmaTwo * (sigmaOne * sigmaTwo * sigmaOne) * sigmaTwo :=
+      congrArg (fun z => sigmaOne * sigmaTwo * z * sigmaTwo) h.symm
+    _ = sigmaOne * sigmaTwo * sigmaOne * sigmaTwo * sigmaOne * sigmaTwo := by group
+
+private theorem pureA132_eq_fullTwist :
+    pureA13 * pureA23 * pureA12 =
+      sigmaOne * sigmaTwo * sigmaOne * sigmaTwo * sigmaOne * sigmaTwo := by
+  dsimp [pureA13]
+  rw [pureA13_alt]
+  dsimp [pureA12, pureA23]
+  simp only [pow_two]
+  have h := sigmaOne_braid_sigmaTwo
+  calc
+    sigmaTwo * sigmaOne ^ 2 * sigmaTwo⁻¹ * sigmaTwo ^ 2 * sigmaOne ^ 2 =
+        sigmaTwo * sigmaOne * (sigmaOne * sigmaTwo * sigmaOne) * sigmaOne := by
+          simp only [pow_two]
+          group
+    _ = sigmaTwo * sigmaOne * (sigmaTwo * sigmaOne * sigmaTwo) * sigmaOne :=
+      congrArg (fun z => sigmaTwo * sigmaOne * z * sigmaOne) h
+    _ = sigmaTwo * sigmaOne * sigmaTwo * sigmaOne * sigmaTwo * sigmaOne := by group
+    _ = sigmaOne * sigmaTwo * sigmaOne * sigmaTwo * sigmaOne * sigmaTwo :=
+      yx_cube_eq_xy_cube
+
+private theorem pureA231_eq_fullTwist :
+    pureA23 * pureA12 * pureA13 =
+      sigmaOne * sigmaTwo * sigmaOne * sigmaTwo * sigmaOne * sigmaTwo := by
+  dsimp [pureA12, pureA13, pureA23]
+  simp only [pow_two]
+  have h := sigmaOne_braid_sigmaTwo
+  calc
+    sigmaTwo ^ 2 * sigmaOne ^ 2 * (sigmaOne⁻¹ * sigmaTwo ^ 2 * sigmaOne) =
+        sigmaTwo ^ 2 * sigmaOne * sigmaTwo ^ 2 * sigmaOne := by group
+    _ = sigmaTwo * (sigmaTwo * sigmaOne * sigmaTwo) * sigmaTwo * sigmaOne := by
+      simp only [pow_two]
+      group
+    _ = sigmaTwo * (sigmaOne * sigmaTwo * sigmaOne) * sigmaTwo * sigmaOne :=
+      congrArg (fun z => sigmaTwo * z * sigmaTwo * sigmaOne) h.symm
+    _ = sigmaTwo * sigmaOne * sigmaTwo * sigmaOne * sigmaTwo * sigmaOne := by group
+    _ = sigmaOne * sigmaTwo * sigmaOne * sigmaTwo * sigmaOne * sigmaTwo :=
+      yx_cube_eq_xy_cube
+
+/-- First cyclic equality for the standard three-strand pure words. -/
+theorem pureA_cyclic_one :
+    pureA12 * pureA13 * pureA23 = pureA13 * pureA23 * pureA12 := by
+  rw [pureA123_eq_fullTwist, pureA132_eq_fullTwist]
+
+/-- Second cyclic equality for the standard three-strand pure words. -/
+theorem pureA_cyclic_two :
+    pureA13 * pureA23 * pureA12 = pureA23 * pureA12 * pureA13 := by
+  rw [pureA132_eq_fullTwist, pureA231_eq_fullTwist]
+
+/-- The common cyclic product (the full twist in this convention) commutes
+with each standard pure word. -/
+theorem pureA_fullTwist_centralizes_generators :
+    (pureA12 * pureA13 * pureA23) * pureA12 =
+        pureA12 * (pureA12 * pureA13 * pureA23) ∧
+    (pureA12 * pureA13 * pureA23) * pureA13 =
+        pureA13 * (pureA12 * pureA13 * pureA23) ∧
+    (pureA12 * pureA13 * pureA23) * pureA23 =
+        pureA23 * (pureA12 * pureA13 * pureA23) := by
+  exact ArtinPureBraid.cyclic_product_centralizes
+    pureA12 pureA13 pureA23 pureA_cyclic_one pureA_cyclic_two
+
+/-- The common product of the three pure words is the standard full twist. -/
+theorem pureA_product_eq_fullTwist :
+    pureA12 * pureA13 * pureA23 = fullTwist := by
+  rw [pureA123_eq_fullTwist]
+  dsimp [fullTwist, delta]
+  have h := sigmaOne_braid_sigmaTwo
+  calc
+    sigmaOne * sigmaTwo * sigmaOne * sigmaTwo * sigmaOne * sigmaTwo =
+        (sigmaOne * sigmaTwo * sigmaOne) *
+          (sigmaTwo * sigmaOne * sigmaTwo) := by group
+    _ = (sigmaOne * sigmaTwo * sigmaOne) *
+          (sigmaOne * sigmaTwo * sigmaOne) := by rw [← h]
+
+/-- The full twist commutes with the first Artin generator. -/
+theorem fullTwist_commutes_sigmaOne :
+    fullTwist * sigmaOne = sigmaOne * fullTwist := by
+  have h₁ : delta * sigmaOne = sigmaTwo * delta := by
+    change (sigmaOne * sigmaTwo * sigmaOne) * sigmaOne =
+      sigmaTwo * (sigmaOne * sigmaTwo * sigmaOne)
+    calc
+      (sigmaOne * sigmaTwo * sigmaOne) * sigmaOne =
+          (sigmaTwo * sigmaOne * sigmaTwo) * sigmaOne :=
+            congrArg (fun x => x * sigmaOne) sigmaOne_braid_sigmaTwo
+      _ = sigmaTwo * (sigmaOne * sigmaTwo * sigmaOne) := by group
+  have h₂ : delta * sigmaTwo = sigmaOne * delta := by
+    change (sigmaOne * sigmaTwo * sigmaOne) * sigmaTwo =
+      sigmaOne * (sigmaOne * sigmaTwo * sigmaOne)
+    calc
+      (sigmaOne * sigmaTwo * sigmaOne) * sigmaTwo =
+          sigmaOne * (sigmaTwo * sigmaOne * sigmaTwo) := by group
+      _ = sigmaOne * (sigmaOne * sigmaTwo * sigmaOne) :=
+        congrArg (fun x => sigmaOne * x) sigmaOne_braid_sigmaTwo.symm
+  dsimp [fullTwist]
+  rw [pow_two]
+  calc
+    delta * delta * sigmaOne = delta * (delta * sigmaOne) := by group
+    _ = delta * (sigmaTwo * delta) := by rw [h₁]
+    _ = (delta * sigmaTwo) * delta := by group
+    _ = (sigmaOne * delta) * delta := by rw [h₂]
+    _ = sigmaOne * (delta * delta) := by group
+
+/-- The full twist commutes with the second Artin generator. -/
+theorem fullTwist_commutes_sigmaTwo :
+    fullTwist * sigmaTwo = sigmaTwo * fullTwist := by
+  have h₁ : delta * sigmaOne = sigmaTwo * delta := by
+    change (sigmaOne * sigmaTwo * sigmaOne) * sigmaOne =
+      sigmaTwo * (sigmaOne * sigmaTwo * sigmaOne)
+    calc
+      (sigmaOne * sigmaTwo * sigmaOne) * sigmaOne =
+          (sigmaTwo * sigmaOne * sigmaTwo) * sigmaOne :=
+            congrArg (fun x => x * sigmaOne) sigmaOne_braid_sigmaTwo
+      _ = sigmaTwo * (sigmaOne * sigmaTwo * sigmaOne) := by group
+  have h₂ : delta * sigmaTwo = sigmaOne * delta := by
+    change (sigmaOne * sigmaTwo * sigmaOne) * sigmaTwo =
+      sigmaOne * (sigmaOne * sigmaTwo * sigmaOne)
+    calc
+      (sigmaOne * sigmaTwo * sigmaOne) * sigmaTwo =
+          sigmaOne * (sigmaTwo * sigmaOne * sigmaTwo) := by group
+      _ = sigmaOne * (sigmaOne * sigmaTwo * sigmaOne) :=
+        congrArg (fun x => sigmaOne * x) sigmaOne_braid_sigmaTwo.symm
+  dsimp [fullTwist]
+  rw [pow_two]
+  calc
+    delta * delta * sigmaTwo = delta * (delta * sigmaTwo) := by group
+    _ = delta * (sigmaOne * delta) := by rw [h₂]
+    _ = (delta * sigmaOne) * delta := by group
+    _ = (sigmaTwo * delta) * delta := by rw [h₁]
+    _ = sigmaTwo * (delta * delta) := by group
+
+/-- The generic cyclic crossing theorem now applies to the concrete `B₃` words. -/
+theorem pureA_crossing_middle :
+    pureA12 * pureA13 * pureA12⁻¹ = pureA23⁻¹ * pureA13 * pureA23 := by
+  exact ArtinPureBraid.crossing_Y pureA12 pureA13 pureA23 pureA_cyclic_two
+
+end InfoGeometry.Topology.PureBraidThreeStrandBridge

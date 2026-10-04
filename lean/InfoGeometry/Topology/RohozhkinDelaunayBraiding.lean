@@ -1,6 +1,5 @@
 import InfoGeometry.Topology.RohozhkinPentagonMatrix
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Topology.RohozhkinRepresentation
 
 /-!
 # Rohozhkin Delaunay Braiding
@@ -16,9 +15,6 @@ or a nontrivial global generator assignment.
 namespace InfoGeometry.Topology.RohozhkinDelaunayBraiding
 
 open InfoGeometry.Topology.Delaunay
-open InfoGeometry.Topology.PureBraid
-open InfoGeometry.Topology.RohozhkinBoundary
-open RohozhkinRepresentation
 
 /-- The Appendix A five-flip word in the `n = 1` Delaunay presentation layer. -/
 noncomputable def appendixPentagonWord

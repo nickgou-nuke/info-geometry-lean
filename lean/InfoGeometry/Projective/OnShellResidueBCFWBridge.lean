@@ -132,17 +132,14 @@ theorem diagram_compression_difference
 Combined finite packet for the q-stable twistor/residue lane.
 The BCFW readout is now native.
 -/
-structure OnShellQResidueComputationDatum {Op : Type*} [Ring Op] [Star Op] [Algebra ℝ Op]
-    (moving : ℕ) (jewel : QuantumJewel Op)
-    (trace : Op →ₗ[ℝ] ℝ) extends
-    QDeformedTwistorAmplituhedronDatum moving where
+structure OnShellQResidueComputationDatum extends
+    QDeformedTwistorAmplituhedronDatum where
   compression : DiagramCompressionDatum
 
 /-- Combined readback for the finite q-stable on-shell/residue interface. -/
-theorem on_shell_q_residue_packet {Op : Type*} [Ring Op] [Star Op] [Algebra ℝ Op]
-    {moving : ℕ} {jewel : QuantumJewel Op}
-    {trace : Op →ₗ[ℝ] ℝ}
-    (D : OnShellQResidueComputationDatum moving jewel trace)
+theorem on_shell_q_residue_packet {Op : Type*} [Ring Op] [Star Op]
+    (D : OnShellQResidueComputationDatum)
+    (jewel : QuantumJewel Op)
     (i : Fin 3) :
     InKuzminOpenWindow D.qStable.q ∧
       Nonempty (D.qStable.qCarrier ≃ D.qStable.toeplitzCarrier) ∧
@@ -155,23 +152,5 @@ theorem on_shell_q_residue_packet {Op : Type*} [Ring Op] [Star Op] [Algebra ℝ 
     diagram_compression_count D.compression,
     residue_bcfw jewel,
     D.base.lines.line_isKlein i⟩
-
-/--
-Package an on-shell residue packet into BCFW + curvature readouts.
-This helper keeps the Option-B interface explicit.
--/
-def on_shell_q_residue_to_bost_connes_certificate
-    {Op : Type*} [Ring Op] [Star Op] [Algebra ℝ Op]
-    {moving : ℕ} {jewel : QuantumJewel Op}
-    {trace : Op →ₗ[ℝ] ℝ}
-    (_D : OnShellQResidueComputationDatum moving jewel trace)
-    (path : List Op)
-    (zetaValue : ℝ)
-    (h_holonomy : trace (finite_wilson_loop path) = zetaValue)
-    (h_curvature :
-      trace (thermodynamic_curvature jewel.thermodynamic_flow) = zetaValue) :
-    trace (finite_wilson_loop path) = zetaValue ∧
-    trace (thermodynamic_curvature jewel.thermodynamic_flow) = zetaValue :=
-  ⟨h_holonomy, h_curvature⟩
 
 end InfoGeometry.Projective.OnShellResidueBCFWBridge

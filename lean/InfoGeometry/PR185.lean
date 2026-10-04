@@ -151,16 +151,24 @@ theorem eight_state_ratio_packet :
       (3 : ℚ) / 4 :=
   InfoGeometry.Physics.EightStateTraceRatio.trace_ratio_eq_three_fourths
 
-/-- Exact plabic count identity and cluster-move invariance packet. -/
+/-- The count identity and the algebraic invariance under the two count moves
+recorded by the Plabic owner. The owner does not define a separate
+`colorIndex` or a graph-level cluster mutation. -/
 theorem cluster_count_index_packet
-    (s : InfoGeometry.Canonical.ClusterMutationIndexBridge.PlabicCounts) :
-    s.helicityDefect = s.colorIndex ∧
-    (s.squareMove).colorIndex = s.colorIndex ∧
-    (s.bubbleReduction).colorIndex = s.colorIndex := by
+    (s : PlabicAmplituhedron.PlabicCounts) :
+    PlabicAmplituhedron.helicityDefect s =
+        2 * PlabicAmplituhedron.kGrassmannian s -
+          PlabicAmplituhedron.nExternal s ∧
+      PlabicAmplituhedron.helicityDefect
+          (PlabicAmplituhedron.applySquareMove s) =
+        PlabicAmplituhedron.helicityDefect s ∧
+      PlabicAmplituhedron.helicityDefect
+          (PlabicAmplituhedron.applyBubbleReduction s) =
+        PlabicAmplituhedron.helicityDefect s := by
   exact ⟨
-    InfoGeometry.Canonical.ClusterMutationIndexBridge.PlabicCounts.helicityDefect_eq_colorIndex s,
-    InfoGeometry.Canonical.ClusterMutationIndexBridge.PlabicCounts.squareMove_colorIndex s,
-    InfoGeometry.Canonical.ClusterMutationIndexBridge.PlabicCounts.bubbleReduction_colorIndex s
+    PlabicAmplituhedron.helicityDefect_eq_two_k_sub_next s,
+    PlabicAmplituhedron.helicityDefect_invariant_square_move s,
+    PlabicAmplituhedron.helicityDefect_invariant_bubble_reduction s
   ⟩
 
 /-- Native Cuntz/UHF interoperability packet: left/right commutation and

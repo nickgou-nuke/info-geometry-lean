@@ -126,38 +126,26 @@ theorem penrose_klein_glide_readback (x y : ℝ) :
   InfoGeometry.Geometry.PenroseKlein.penrose_klein_defect_localization x y
 
 /-- Klein-quadric lane readback from the twistor/amplituhedron configuration owner. -/
-theorem klein_quadric_line_readback {moving : ℕ}
-    (D : TwistorAmplituhedronBridgeDatum moving) (i : Fin 3) :
+theorem klein_quadric_line_readback
+    (D : TwistorAmplituhedronBridgeDatum) (i : Fin 3) :
     InfoGeometry.Projective.KleinQuadric.Plucker6.IsKlein (D.lines.line i) :=
   D.lines.line_isKlein i
 
 /-- Amplituhedron-interface lane readback: the supplied rank budget matches the spin tiling. -/
-theorem amplituhedron_rank_budget_readback {moving : ℕ}
-    (D : TwistorAmplituhedronBridgeDatum moving) :
+theorem amplituhedron_rank_budget_readback
+    (D : TwistorAmplituhedronBridgeDatum) :
     D.rank.data.totalRank *
       InfoGeometry.Projective.PenroseSpinTiling.spinTilingMultiplicity =
         D.rank.stateBudget :=
   spin_tiled_rank_matches_stateBudget D.rank
 
-/-- Delaunay lane readback: a completed Rohozhkin packet descends to a pure-braid representation. -/
-theorem delaunay_pure_braid_descent_readback {moving : ℕ}
-    (D : TwistorAmplituhedronBridgeDatum moving) :
-    ∃ ρ :
-      InfoGeometry.Topology.RohozhkinBoundary.RohozhkinPureBraidGroup moving →*
-        InfoGeometry.Topology.RohozhkinBoundary.RohozhkinMatrixUnits moving,
-      ∀ g :
-        InfoGeometry.Topology.PureBraid.PureBraidGenerator
-          (InfoGeometry.Topology.Delaunay.rohozhkinTotalPoints moving),
-        ρ (InfoGeometry.Topology.PureBraid.of g) = InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge.rohozhkinProjectiveBraidPacketGen D.rohozhkin.packet g :=
-  rohozhkin_plabic_descent_packet D.rohozhkin
-
 /--
 Compact packet: the carrier supplies the cross-lane identification; the owner
 files supply the currently closed readbacks.
 -/
-theorem rosetta_owner_readback_packet {moving : ℕ}
+theorem rosetta_owner_readback_packet
     (R : RosettaCarrier)
-    (D : TwistorAmplituhedronBridgeDatum moving)
+    (D : TwistorAmplituhedronBridgeDatum)
     (i : Fin 3) :
     Nonempty (R.Carrier RosettaLane.dagGraph ≃ R.Carrier RosettaLane.amplituhedron) ∧
     Nonempty
@@ -166,20 +154,12 @@ theorem rosetta_owner_readback_packet {moving : ℕ}
     InfoGeometry.Geometry.PenroseKlein.KleinBottleRel ((0 : ℝ), (0 : ℝ)) (0, 1) ∧
     InfoGeometry.Projective.KleinQuadric.Plucker6.IsKlein (D.lines.line i) ∧
     D.rank.data.totalRank *
-      InfoGeometry.Projective.PenroseSpinTiling.spinTilingMultiplicity =
-        D.rank.stateBudget ∧
-    ∃ ρ :
-      InfoGeometry.Topology.RohozhkinBoundary.RohozhkinPureBraidGroup moving →*
-        InfoGeometry.Topology.RohozhkinBoundary.RohozhkinMatrixUnits moving,
-      ∀ g :
-        InfoGeometry.Topology.PureBraid.PureBraidGenerator
-          (InfoGeometry.Topology.Delaunay.rohozhkinTotalPoints moving),
-        ρ (InfoGeometry.Topology.PureBraid.of g) = InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge.rohozhkinProjectiveBraidPacketGen D.rohozhkin.packet g := by
+    InfoGeometry.Projective.PenroseSpinTiling.spinTilingMultiplicity =
+        D.rank.stateBudget := by
   refine ⟨⟨R.laneEquiv RosettaLane.dagGraph RosettaLane.amplituhedron⟩,
     split_quaternion_matrix_equiv_readback,
     ?_, klein_quadric_line_readback D i,
-    amplituhedron_rank_budget_readback D,
-    delaunay_pure_braid_descent_readback D⟩
+    amplituhedron_rank_budget_readback D⟩
   simpa using penrose_klein_glide_readback (0 : ℝ) (0 : ℝ)
 
 end InfoGeometry.Projective.PenroseDAGAmplituhedronRosetta

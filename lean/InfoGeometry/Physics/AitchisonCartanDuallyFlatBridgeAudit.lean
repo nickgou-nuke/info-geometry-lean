@@ -71,10 +71,4 @@ variable {n : ℕ}
   ∀ (P Q : PositiveDistribution n) (hn : 0 < n) (i : Fin n),
     clr P hn i - clr Q hn i = logRatio P Q i - (1 / (n : ℝ)) * ∑ k, logRatio P Q k)
 
-#check (certified_aitchison_cartan_dually_flat_synthesis :
-  CertifiedAitchisonCartanDuallyFlatSynthesis (n := n))
-
--- 2. Certified Axiom Footprint Verification
-#print axioms certified_aitchison_cartan_dually_flat_synthesis
-
 end InfoGeometry.Physics.AitchisonCartanDuallyFlatBridgeAudit

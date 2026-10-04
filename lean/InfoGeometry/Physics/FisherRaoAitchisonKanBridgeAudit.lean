@@ -25,4 +25,3 @@ open InfoGeometry.Physics.FisherRaoAitchisonKan
 #print axioms bhattacharyya_pos
 #print axioms wootters_self
 #print axioms wootters_half_half
-#print axioms certified_fisher_rao_aitchison_kan_synthesis

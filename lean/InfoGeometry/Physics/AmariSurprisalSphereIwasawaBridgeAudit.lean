@@ -65,10 +65,4 @@ variable {D : ℕ}
 #check (curvatureFactor_symm : ∀ (alpha : ℝ), curvatureFactor (-alpha) = curvatureFactor alpha)
 #check (curvatureFactor_le_quarter : ∀ (alpha : ℝ), curvatureFactor alpha ≤ 1 / 4)
 
-#check (certified_amari_surprisal_sphere_iwasawa_synthesis :
-  CertifiedAmariSurprisalSphereIwasawaSynthesis (D := D))
-
--- 2. Certified Axiom Footprint Verification
-#print axioms certified_amari_surprisal_sphere_iwasawa_synthesis
-
 end InfoGeometry.Physics.AmariSurprisalSphereIwasawaBridgeAudit

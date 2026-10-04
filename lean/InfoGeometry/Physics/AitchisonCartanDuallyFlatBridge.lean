@@ -332,41 +332,5 @@ theorem binary_clr_eq_half_logit (p : ℝ) (hp0 : 0 < p) (hp1 : p < 1) :
     rw [h_log_div]
     ring
 
-/-! ## 7. Master Conjunction -/
-
-/-- Certified structural synthesis of the Aitchison Cartan Dually Flat Bridge. -/
-structure CertifiedAitchisonCartanDuallyFlatSynthesis : Prop where
-  h_cartan_zero : ∀ (x : Fin n → ℝ) (hn : 0 < n), ∑ i, cartanProj x hn i = 0
-  h_cartan_idemp : ∀ (x : Fin n → ℝ) (hn : 0 < n), cartanProj (cartanProj x hn) hn = cartanProj x hn
-  h_clr_cartan : ∀ (P : PositiveDistribution n) (hn : 0 < n), clr P hn = cartanProj (fun i => Real.log (P.p i)) hn
-  h_clr_inv : ∀ (u : Fin n → ℝ) (hn : 0 < n), (∑ i, u i = 0) → clr (softmaxDist u hn) hn = u
-  h_legendre : ∀ (u : Fin n → ℝ) (hn : 0 < n),
-    primalPotential u + dualPotential (softmaxDist u hn) = ∑ i, u i * (softmaxDist u hn).p i
-  h_dual_bregman_kl : ∀ (P Q : PositiveDistribution n), dualBregmanDiv P Q = klDivergence P Q
-  h_primal_bregman_kl : ∀ (u w : Fin n → ℝ) (hn : 0 < n),
-    primalBregmanDiv u w hn = klDivergence (softmaxDist w hn) (softmaxDist u hn)
-  h_pythagorean : ∀ (P Q R : PositiveDistribution n),
-    (∑ i, (P.p i - Q.p i) * (Real.log (R.p i) - Real.log (Q.p i)) = 0) →
-    klDivergence P R = klDivergence P Q + klDivergence Q R
-  h_jaynesian_entropy : ∀ (hn : 0 < n), shannonEntropy (jaynesianDistribution n hn) = Real.log (n : ℝ)
-  h_kl_jaynesian : ∀ (P : PositiveDistribution n) (hn : 0 < n),
-    klDivergence P (jaynesianDistribution n hn) = Real.log (n : ℝ) - shannonEntropy P
-  h_centered_logRatio : ∀ (P Q : PositiveDistribution n) (hn : 0 < n) (i : Fin n),
-    clr P hn i - clr Q hn i = logRatio P Q i - (1 / (n : ℝ)) * ∑ k, logRatio P Q k
-
-/-- 🏆 MASTER CONJUNCTION: Certified Aitchison Cartan Dually Flat Synthesis. -/
-theorem certified_aitchison_cartan_dually_flat_synthesis :
-    CertifiedAitchisonCartanDuallyFlatSynthesis (n := n) :=
-  ⟨sum_cartanProj_zero,
-   cartanProj_idempotent,
-   clr_eq_cartanProj_log,
-   clr_softmax_inversion,
-   legendre_fenchel_equality,
-   dualBregman_eq_kl,
-   primalBregman_eq_kl,
-   kl_pythagorean_orthogonal,
-   shannon_entropy_jaynesian,
-   kl_to_jaynesian,
-   clr_sub_clr_eq_centered_logRatio⟩
 
 end InfoGeometry.Physics.AitchisonCartanDuallyFlat

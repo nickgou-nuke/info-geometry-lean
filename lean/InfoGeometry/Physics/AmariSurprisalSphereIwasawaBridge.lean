@@ -21,6 +21,14 @@ set_option linter.unusedVariables false
 
 noncomputable section
 
+/-!
+Finite probability identities for surprisal, log-ratio coordinates, square-root
+amplitudes, Bhattacharyya inner products, and the explicitly defined polynomial
+`curvatureFactor`. The curvature-factor lemmas are algebraic facts about that
+polynomial; this module does not define an Amari connection or prove a geometric
+curvature formula, nor does it formalize an Iwasawa decomposition.
+-/
+
 namespace InfoGeometry.Physics.AmariSurprisalSphereIwasawa
 
 variable {D : ℕ}
@@ -137,39 +145,35 @@ theorem bhattacharyyaInner_pos (P Q : PositiveDistribution D) (hD : 0 < D) :
   exact Finset.sum_pos' (fun i _ => le_of_lt (mul_pos (amplitude_pos P i) (amplitude_pos Q i)))
     ⟨⟨0, hD⟩, h_elem, h_pos_zero⟩
 
-/-! ## 3. Amari Curvature Contraction & Inönü-Wigner Factor -/
+/-! ## 3. An explicitly defined quadratic scalar function -/
 
-/-- The Amari sectional curvature factor: $K(\alpha) = \frac{1 - \alpha^2}{4}$. -/
+/-- The scalar function `((1 - alpha ^ 2) / 4)`. No geometric curvature is defined here. -/
 def curvatureFactor (alpha : ℝ) : ℝ :=
   (1 - alpha ^ 2) / 4
 
-/-- 🏆 THEOREM 11: At $\alpha = 0$ (Fisher-Rao Levi-Civita connection on the sphere),
-    the curvature is $+1/4$. -/
+/-- The scalar function has value `1 / 4` at zero. -/
 theorem curvatureFactor_zero : curvatureFactor 0 = 1 / 4 := by
   unfold curvatureFactor
   ring
 
-/-- 🏆 THEOREM 12: At $\alpha = +1$ (Exponential connection $\nabla^{(1)}$, e-flat),
-    the curvature vanishes identically: $R^{(1)} = 0$. -/
+/-- The scalar function vanishes at `1`. -/
 theorem curvatureFactor_one : curvatureFactor 1 = 0 := by
   unfold curvatureFactor
   ring
 
-/-- 🏆 THEOREM 13: At $\alpha = -1$ (Mixture connection $\nabla^{(-1)}$, m-flat),
-    the curvature vanishes identically: $R^{(-1)} = 0$. -/
+/-- The scalar function vanishes at `-1`. -/
 theorem curvatureFactor_neg_one : curvatureFactor (-1) = 0 := by
   unfold curvatureFactor
   ring
 
-/-- 🏆 THEOREM 14: Parity reflection symmetry of the curvature contraction factor:
-    $K(-\alpha) = K(\alpha)$. -/
+/-- The scalar function is even. -/
 theorem curvatureFactor_symm (alpha : ℝ) :
     curvatureFactor (-alpha) = curvatureFactor alpha := by
   unfold curvatureFactor
   have : (-alpha) ^ 2 = alpha ^ 2 := neg_sq alpha
   rw [this]
 
-/-- 🏆 THEOREM 15: The Fisher-Rao sphere achieves maximal curvature: $K(\alpha) \le 1/4$ for all $\alpha$. -/
+/-- The scalar function is bounded above by `1 / 4`. -/
 theorem curvatureFactor_le_quarter (alpha : ℝ) :
     curvatureFactor alpha ≤ 1 / 4 := by
   unfold curvatureFactor
@@ -177,50 +181,5 @@ theorem curvatureFactor_le_quarter (alpha : ℝ) :
   have : 1 - alpha ^ 2 ≤ 1 := by linarith
   linarith
 
-/-! ## 4. Master Conjunction -/
-
-/-- Certified structural synthesis of the Amari Surprisal Sphere Iwasawa Bridge. -/
-structure CertifiedAmariSurprisalSphereIwasawaSynthesis : Prop where
-  h_entropy_expected_surprisal : ∀ (P : PositiveDistribution D),
-    shannonEntropy P = ∑ i, P.p i * surprisal P i
-  h_clr_surprisal : ∀ (P : PositiveDistribution D) (hD : 0 < D) (i : Fin D),
-    clr P hD i = - surprisal P i + (1 / (D : ℝ)) * ∑ k, surprisal P k
-  h_alr_log_ratio : ∀ (P : PositiveDistribution D) (d_ref : Fin D) (i : Fin D),
-    alr P d_ref i = Real.log (P.p i / P.p d_ref)
-  h_log_sum_exp_surprisal : ∀ (P : PositiveDistribution D) (d_ref : Fin D),
-    Real.log (∑ i, Real.exp (alr P d_ref i)) = surprisal P d_ref
-  h_amplitude_sq : ∀ (P : PositiveDistribution D) (i : Fin D),
-    (amplitude P i) ^ 2 = P.p i
-  h_sphere_normalization : ∀ (P : PositiveDistribution D),
-    ∑ i, (amplitude P i) ^ 2 = 1
-  h_inner_self : ∀ (P : PositiveDistribution D),
-    bhattacharyyaInner P P = 1
-  h_inner_symm : ∀ (P Q : PositiveDistribution D),
-    bhattacharyyaInner P Q = bhattacharyyaInner Q P
-  h_inner_pos : ∀ (P Q : PositiveDistribution D) (hD : 0 < D),
-    0 < bhattacharyyaInner P Q
-  h_curv_zero : curvatureFactor 0 = 1 / 4
-  h_curv_one : curvatureFactor 1 = 0
-  h_curv_neg_one : curvatureFactor (-1) = 0
-  h_curv_symm : ∀ (alpha : ℝ), curvatureFactor (-alpha) = curvatureFactor alpha
-  h_curv_bound : ∀ (alpha : ℝ), curvatureFactor alpha ≤ 1 / 4
-
-/-- 🏆 MASTER CONJUNCTION: Certified Amari Surprisal Sphere Iwasawa Synthesis. -/
-theorem certified_amari_surprisal_sphere_iwasawa_synthesis :
-    CertifiedAmariSurprisalSphereIwasawaSynthesis (D := D) :=
-  ⟨entropy_eq_expected_surprisal,
-   clr_eq_neg_centered_surprisal,
-   alr_eq_log_ratio,
-   log_sum_exp_alr_eq_ref_surprisal,
-   amplitude_sq_eq_prob,
-   sum_amplitude_sq_one,
-   bhattacharyyaInner_self,
-   bhattacharyyaInner_symm,
-   bhattacharyyaInner_pos,
-   curvatureFactor_zero,
-   curvatureFactor_one,
-   curvatureFactor_neg_one,
-   curvatureFactor_symm,
-   curvatureFactor_le_quarter⟩
 
 end InfoGeometry.Physics.AmariSurprisalSphereIwasawa

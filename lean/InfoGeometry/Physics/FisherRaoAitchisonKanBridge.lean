@@ -13,38 +13,15 @@ noncomputable section
 namespace InfoGeometry.Physics.FisherRaoAitchisonKan
 
 /-!
-# Fisher-Rao Spherical Embedding, Aitchison CLR & Iwasawa KAN Duality Bridge
+# Binary Probability Metric Formulas
 
-This module formalizes the exact statistical-information counterpart to the split
-Iwasawa  = KAN$ geometry developed along the Riemann Klein bottle throat:
-
-1. **The Compact hBcSector: Spherical Fisher-Rao Geometry**:
-   Under the square-root map $\xi_i = \sqrt{p_i}$, the probability simplex $\Delta^{D-1}$
-   embeds into the positive orthant of the compact unit sphere ^{D-1}$ ($\sum \xi_i^2 = 1$).
-   On the binary simplex $\Delta^1$ parameterized by  \in (0, 1)$, the Fisher-Rao metric is:
-   1875036g_{\mathrm{FR}}(p) = \frac{1}{p(1-p)}1875036
-   achieving its global minimum {\mathrm{FR}}(1/2) = 4$ at the Jaynesian maximum entropy prior.
-
-2. **The Non-Compact hBcSector: Hyperbolic Aitchison Metric**:
-   Under the centered log-ratio (clr) map, the simplex projects onto the traceless Cartan
-   subalgebra $\mathfrak{a} \subset \mathfrak{sl}(2, \mathbb{R})$.
-   On $\Delta^1$, the Aitchison metric is:
-   1875036g_A(p) = \frac{1}{2 p^2 (1-p)^2}1875036
-   achieving its global minimum (1/2) = 8$ at the Jaynesian prior.
-
-3. **The Dikin Barrier Hessian & Triad Decomposition**:
-   The self-concordant Dikin log-barrier Hessian decomposes into the Aitchison and Fisher-Rao metrics:
-   1875036b''(p) = \frac{1}{p^2} + \frac{1}{(1-p)^2} = 2 g_A(p) - 2 g_{\mathrm{FR}}(p)1875036
-
-4. **Throat Ground State & Wigner-Smith Delay Resonance**:
-   At the Klein bottle throat ground state  = 0$, the Fisher-Rao metric matches the Wigner-Smith
-   scattering time delay:
-   1875036g_{\mathrm{FR}}(1/2) = \tau(0) = 41875036
-   with reciprocal Harish-Chandra Casimir coupling {\mathrm{FR}}(1/2) \cdot \lambda(0) = 4 \cdot (1/4) = 1$.
-
-5. **Quantum Fidelity & Wootters Pure-State Distance**:
-   The classical Bhattacharyya fidelity (p, q) = \sqrt{pq} + \sqrt{(1-p)(1-q)}$ satisfies
-   (p, p) = 1$, generating the compact hBcsector Wootters distance (p, p) = \arccos(1) = 0$.
+This file proves elementary identities for explicitly defined scalar functions on
+real probabilities. In particular, it verifies their values and bounds on the
+binary simplex, along with elementary Bhattacharyya and Wootters identities.
+The names `timeDelay` and `casimirEigenvalue` are definitions of reciprocal
+quadratic functions; their numerical relation to `fisherRaoMetric` does not
+establish a scattering model, a Casimir representation, or an Iwasawa/KAN
+decomposition. The file contains no such geometric structures.
 -/
 
 /-- Fisher-Rao metric on the open binary simplex (0, 1). -/
@@ -59,11 +36,11 @@ def aitchisonMetric (p : ℝ) : ℝ :=
 def dikinHessian (p : ℝ) : ℝ :=
   1 / p ^ 2 + 1 / (1 - p) ^ 2
 
-/-- Wigner-Smith scattering time delay on the boundary channel. -/
+/-- Reciprocal quadratic scalar function used in the stated numerical identity. -/
 def timeDelay (t : ℝ) : ℝ :=
   1 / (1 / 4 + t ^ 2)
 
-/-- Harish-Chandra Casimir eigenvalue along the critical line. -/
+/-- Quadratic scalar function reciprocal to `timeDelay`. -/
 def casimirEigenvalue (t : ℝ) : ℝ :=
   1 / 4 + t ^ 2
 
@@ -189,35 +166,30 @@ theorem dikin_half : dikinHessian (1 / 2) = 8 := by
   unfold dikinHessian
   norm_num
 
-/-! ## 4. Throat Ground State & Wigner-Smith Delay Resonance -/
+/-! ## 4. Values of the explicitly defined reciprocal quadratic functions -/
 
-/-- 🏆 THEOREM 12: The Fisher-Rao metric at the Jaynesian prior matches the Wigner-Smith
-    scattering time delay at the Klein bottle throat ground state  = 0$:
-    1875036g_{\mathrm{FR}}(1/2) = \tau(0) = 41875036 -/
+/-- At the midpoint, `fisherRaoMetric` equals `timeDelay` at zero. -/
 theorem fisherRao_half_eq_timeDelay_zero :
     fisherRaoMetric (1 / 2) = timeDelay 0 := by
   unfold timeDelay
   rw [fisherRao_half]
   norm_num
 
-/-- 🏆 THEOREM 13: The Aitchison metric at the Jaynesian prior is twice the throat delay:
-    1875036g_A(1/2) = 2 \tau(0) = 81875036 -/
+/-- At the midpoint, `aitchisonMetric` is twice `timeDelay` at zero. -/
 theorem aitchison_half_eq_two_timeDelay_zero :
     aitchisonMetric (1 / 2) = 2 * timeDelay 0 := by
   unfold timeDelay
   rw [aitchison_half]
   norm_num
 
-/-- 🏆 THEOREM 14: Reciprocal Harish-Chandra Casimir coupling at the throat:
-    1875036g_{\mathrm{FR}}(1/2) \cdot \lambda(0) = 11875036 -/
+/-- The midpoint Fisher-Rao value times `casimirEigenvalue` at zero is one. -/
 theorem fisherRao_half_mul_casimir_zero :
     fisherRaoMetric (1 / 2) * casimirEigenvalue 0 = 1 := by
   rw [fisherRao_half]
   unfold casimirEigenvalue
   norm_num
 
-/-- 🏆 THEOREM 15: Reciprocal Harish-Chandra Casimir coupling of Aitchison metric:
-    1875036g_A(1/2) \cdot \lambda(0) = 21875036 -/
+/-- The midpoint Aitchison value times `casimirEigenvalue` at zero is two. -/
 theorem aitchison_half_mul_casimir_zero :
     aitchisonMetric (1 / 2) * casimirEigenvalue 0 = 2 := by
   rw [aitchison_half]
@@ -268,27 +240,5 @@ theorem wootters_half_half :
   unfold woottersDistance
   rw [bhattacharyya_half_half, Real.arccos_one]
 
-/-! ## 6. Master Synthesis -/
-
-/-- Certified structural synthesis of the Fisher-Rao Aitchison KAN bridge. -/
-structure CertifiedFisherRaoAitchisonKanSynthesis : Prop where
-  h_fisherRao_half : fisherRaoMetric (1 / 2) = 4
-  h_aitchison_half : aitchisonMetric (1 / 2) = 8
-  h_dikin_half : dikinHessian (1 / 2) = 8
-  h_throat_match : fisherRaoMetric (1 / 2) = timeDelay 0
-  h_casimir_coupling : fisherRaoMetric (1 / 2) * casimirEigenvalue 0 = 1
-  h_bhattacharyya_half : bhattacharyyaFidelity (1 / 2) (1 / 2) = 1
-  h_wootters_half : woottersDistance (1 / 2) (1 / 2) = 0
-
-/-- 🏆 MASTER CONJUNCTION: Certified Fisher-Rao Aitchison KAN Synthesis. -/
-theorem certified_fisher_rao_aitchison_kan_synthesis :
-    CertifiedFisherRaoAitchisonKanSynthesis :=
-  ⟨fisherRao_half,
-   aitchison_half,
-   dikin_half,
-   fisherRao_half_eq_timeDelay_zero,
-   fisherRao_half_mul_casimir_zero,
-   bhattacharyya_half_half,
-   wootters_half_half⟩
 
 end InfoGeometry.Physics.FisherRaoAitchisonKan

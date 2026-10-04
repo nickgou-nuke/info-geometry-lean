@@ -29,3 +29,5 @@ import InfoGeometry.Krein.TransitionWeakValueExamples
 import InfoGeometry.Meta.FiniteTemperleyLiebTrace
 import InfoGeometry.GrandUnification.KantorIwasawaArchetypeDictionary
 import InfoGeometry.Probability.AdditiveGluing
+import InfoGeometry.GrandUnification.LatticeCantorPercolationApollonianDictionary
+import InfoGeometry.GrandUnification.LatticeCantorPercolationApollonianDictionary

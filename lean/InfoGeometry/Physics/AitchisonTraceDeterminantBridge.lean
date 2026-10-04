@@ -16,10 +16,12 @@ noncomputable section
 namespace InfoGeometry.Physics.AitchisonTraceDeterminant
 
 /-!
-# Aitchison Simplex Geometry, Trace-Free Projection & Determinant Bridge
+# Aitchison Simplex Geometry and Centered Log-Ratio Identities
 
-This module formalizes the exact algebraic and metric structure of the open hBcdimensional
-probability simplex $\Delta^{D-1}$ under the Aitchison centered log-ratio (clr) transformation:
+This module proves finite centered-log-ratio and Aitchison-distance identities for positive
+probability distributions. The motivating geometric-mean/log-determinant formula is not
+formalized here; clr coordinates are identified with diagonal trace-zero matrices only after
+choosing that representation.
 
 1. **The Positive Simplex and Logarithmic Mean**:
    For $\mathbf{p} = (p_1, \dots, p_D)$ with  > 0$ and $\sum p_i = 1$, the geometric mean
@@ -158,28 +160,5 @@ theorem aitchisonDistSq_from_jaynesian (P : PositiveDistribution n) (hn : 0 < n)
     intro i
     rw [h_j i, sub_zero]
   simp_rw [this]
-
-/-! ## 5. Master Conjunction -/
-
-/-- Certified structural synthesis of the Aitchison trace-determinant bridge. -/
-structure CertifiedAitchisonTraceDeterminantSynthesis : Prop where
-  h_traceless : ∀ (P : PositiveDistribution n) (hn : 0 < n), ∑ i, clr P hn i = 0
-  h_jaynesian_origin : ∀ (hn : 0 < n) (i : Fin n), clr (jaynesianDistribution n hn) hn i = 0
-  h_double_sum : ∀ (hn : 0 < n) (u : Fin n → ℝ), (∑ i, u i = 0) →
-    (1 / (2 * (n : ℝ))) * (∑ i, ∑ j, (u i - u j) ^ 2) = ∑ i, (u i) ^ 2
-  h_dist_self : ∀ (P : PositiveDistribution n) (hn : 0 < n), aitchisonDistSq P P hn = 0
-  h_dist_symm : ∀ (P Q : PositiveDistribution n) (hn : 0 < n), aitchisonDistSq P Q hn = aitchisonDistSq Q P hn
-  h_dist_jaynesian : ∀ (P : PositiveDistribution n) (hn : 0 < n),
-    aitchisonDistSq P (jaynesianDistribution n hn) hn = ∑ i, (clr P hn i) ^ 2
-
-/-- 🏆 MASTER CONJUNCTION: Certified Aitchison Trace-Determinant Synthesis. -/
-theorem certified_aitchison_trace_determinant_synthesis :
-    CertifiedAitchisonTraceDeterminantSynthesis (n := n) :=
-  ⟨sum_clr_zero,
-   jaynesian_clr_zero,
-   aitchison_double_sum_eq_norm_sq,
-   aitchisonDistSq_self,
-   aitchisonDistSq_symm,
-   aitchisonDistSq_from_jaynesian⟩
 
 end InfoGeometry.Physics.AitchisonTraceDeterminant

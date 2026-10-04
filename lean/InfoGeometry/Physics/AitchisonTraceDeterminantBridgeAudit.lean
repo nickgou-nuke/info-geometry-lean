@@ -12,4 +12,3 @@ open InfoGeometry.Physics.AitchisonTraceDeterminant
 #print axioms aitchisonDistSq_self
 #print axioms aitchisonDistSq_symm
 #print axioms aitchisonDistSq_from_jaynesian
-#print axioms certified_aitchison_trace_determinant_synthesis

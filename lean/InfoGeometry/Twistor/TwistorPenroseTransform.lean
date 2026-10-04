@@ -159,29 +159,4 @@ theorem incidence_homogeneous (x : Fin 2 → Fin 2 → ℂ) (pi : Fin 2 → ℂ)
 
 /-! ### 6. Master Certified Synthesis -/
 
-/-- Master proposition certifying the Penrose Transform and Self-Dual Maxwell Curvature. -/
-structure CertifiedTwistorPenroseTransformSynthesis : Prop where
-  epsilon_antisymmetric : ∀ i j : Fin 2, epsilon j i = - epsilon i j
-  contract_symm_zero : ∀ (T : Fin 2 → Fin 2 → ℂ), (∀ i j, T i j = T j i) →
-    (∑ i : Fin 2, ∑ j : Fin 2, epsilon i j * T i j) = 0
-  zrm_equation : ∀ (P : TwistorMaxwellCohomology) (x : Fin 2 → Fin 2 → ℂ) (A C' : Fin 2),
-    (∑ A' : Fin 2, ∑ B' : Fin 2, epsilon A' B' * P.grad x A A' B' C') = 0
-  maxwell_antisymmetric : ∀ (P : TwistorMaxwellCohomology) (x : Fin 2 → Fin 2 → ℂ) (A A' B B' : Fin 2),
-    P.maxwellCurvature x B B' A A' = - P.maxwellCurvature x A A' B B'
-  anti_self_dual_vanishes : ∀ (P : TwistorMaxwellCohomology) (x : Fin 2 → Fin 2 → ℂ) (A B : Fin 2),
-    (∑ A' : Fin 2, ∑ B' : Fin 2, epsilon A' B' * P.maxwellCurvature x A A' B B') = 0
-  incidence_homog : ∀ (x : Fin 2 → Fin 2 → ℂ) (pi : Fin 2 → ℂ) (c : ℂ),
-    twistorIncidence x (c • pi) = c • twistorIncidence x pi
-
-/-- 🏆 MASTER SYNTHESIS THEOREM:
-    Certifies the complete Penrose transform for zero-rest-mass fields. -/
-theorem certified_twistor_penrose_transform_synthesis :
-    CertifiedTwistorPenroseTransformSynthesis where
-  epsilon_antisymmetric := epsilon_antisymm
-  contract_symm_zero := contract_epsilon_symm
-  zrm_equation := fun P x A C' => P.zero_rest_mass_equation x A C'
-  maxwell_antisymmetric := fun P x A A' B B' => P.maxwell_antisymmetry x A A' B B'
-  anti_self_dual_vanishes := fun P x A B => P.maxwell_anti_self_dual_part_vanishes x A B
-  incidence_homog := incidence_homogeneous
-
 end InfoGeometry.Twistor.TwistorPenroseTransform

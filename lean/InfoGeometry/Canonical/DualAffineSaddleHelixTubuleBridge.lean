@@ -177,33 +177,4 @@ theorem tubule_seamless_closure (w twoPi_R cosPhi : R)
 
 end TubuleClosure
 
-/-!
-### 6. Master Synthesis Packet for Stratum 19
--/
-
-structure DualAffineSaddleHelixTubulePacket (R : Type*) [CommRing R] where
-  affine_diff_zero : ∀ A1 A2 : Matrix (Fin 2) (Fin 2) R, connectionDiff2x2 A1 A2 = 0 ↔ A1 = A2
-  helicoid_min : ∀ k1 k2 half : R, k1 + k2 = 0 → meanCurvature k1 k2 half = 0
-  helicoid_saddle : ∀ k1 k2 : R, k2 = -k1 → gaussianCurvature k1 k2 = -(k1 * k1)
-  cylinder_dev : ∀ k1 : R, gaussianCurvature k1 0 = 0
-  buckling_root : ∀ Cs Cb w : R, Cs * (w * w * w * w) = Cb → bucklingEnergyDiff Cs Cb w = 0
-  buckling_factored : ∀ Cs Cb w : R, bucklingEnergyDiff Cs Cb w = Cs * (w * w * w * w * w) - Cb * w
-  bent_core_chiral : ∀ P m : Fin 2 → R, P 0 = 0 → P 1 = 1 → m 0 = 1 → m 1 = 0 → crossProduct2D P m = -1
-  bent_core_achiral : ∀ (P m : Fin 2 → R) (c : R), m = (fun i => c * P i) → crossProduct2D P m = 0
-  cross_anticomm : ∀ P m : Fin 2 → R, crossProduct2D P m = - crossProduct2D m P
-  tubule_close : ∀ w twoPi_R cosPhi : R, w = twoPi_R * cosPhi → tubuleClosureGap w twoPi_R cosPhi = 0
-
-def makeDualAffineSaddleHelixTubulePacket (R : Type*) [CommRing R] :
-    DualAffineSaddleHelixTubulePacket R where
-  affine_diff_zero := connection_diff_zero_iff
-  helicoid_min := helicoid_minimal
-  helicoid_saddle := helicoid_gaussian_saddle
-  cylinder_dev := cylinder_developable_gaussian
-  buckling_root := buckling_threshold_root
-  buckling_factored := buckling_energy_factored
-  bent_core_chiral := bent_core_chiral_selection_nonzero
-  bent_core_achiral := bent_core_achiral_parallel
-  cross_anticomm := crossProduct2D_anticomm
-  tubule_close := tubule_seamless_closure
-
 end InfoGeometry.Canonical.DualAffineSaddleHelixTubule

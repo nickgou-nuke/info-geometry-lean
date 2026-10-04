@@ -297,34 +297,4 @@ theorem dirac_zorn_square_decomposition
 
 end GaugedDiracLichnerowicz
 
-/--
-Master Synthesis Packet for Stratum 25: Gauged Zorn Dirac-Kähler Connection.
-Bundles cross-product self-nilpotency, quark/antiquark nilpotency,
-matter-gauge 4-vector decomposition, and quark-antiquark current CAR.
--/
-structure GaugedZornDiracKahlerPacket (R : Type*) [CommRing R] where
-  cross_self : ∀ u : Vec3 R, cross3 u u = 0
-  q_sq_zero : ∀ (Z : Zorn4Vector R) (μ : Fin 4),
-    ZornMatrix.zornMul (Zorn4Vector.quarkField Z μ) (Zorn4Vector.quarkField Z μ) = ZornMatrix.zero
-  q_bar_sq_zero : ∀ (Z : Zorn4Vector R) (μ : Fin 4),
-    ZornMatrix.zornMul (Zorn4Vector.antiquarkField Z μ) (Zorn4Vector.antiquarkField Z μ) = ZornMatrix.zero
-  decomp : ∀ (Z : Zorn4Vector R) (μ : Fin 4),
-    ZornMatrix.add
-      (ZornMatrix.add (Zorn4Vector.leptonConnection Z μ) (Zorn4Vector.antileptonConnection Z μ))
-      (ZornMatrix.add (Zorn4Vector.quarkField Z μ) (Zorn4Vector.antiquarkField Z μ)) = Z μ
-  current_car : ∀ (Z : Zorn4Vector R) (μ ν : Fin 4),
-    ZornMatrix.add
-      (ZornMatrix.zornMul (Zorn4Vector.quarkField Z μ) (Zorn4Vector.antiquarkField Z ν))
-      (ZornMatrix.zornMul (Zorn4Vector.antiquarkField Z ν) (Zorn4Vector.quarkField Z μ)) =
-    ZornMatrix.smul (dot3 (Z μ).u (Z ν).v) ZornMatrix.one
-
-/-- Constructor for the Gauged Zorn Dirac-Kähler Packet. -/
-def makeGaugedZornDiracKahlerPacket (R : Type*) [CommRing R] :
-    GaugedZornDiracKahlerPacket R where
-  cross_self := cross3_self
-  q_sq_zero := Zorn4Vector.quarkField_sq_zero
-  q_bar_sq_zero := Zorn4Vector.antiquarkField_sq_zero
-  decomp := Zorn4Vector.matter_gauge_4vector_decomposition
-  current_car := Zorn4Vector.quark_current_car
-
 end InfoGeometry.Canonical.GaugedZornDiracKahler

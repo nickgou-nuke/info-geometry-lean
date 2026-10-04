@@ -112,23 +112,4 @@ end InterSheetMediator
 ### Stratum 21.4: Master Synthesis Packet for Stratum 21
 -/
 
-/-- Master synthesis packet for Stratum 21. -/
-structure DualSheetedKreinActionFiberPacket (R : Type*) [CommRing R] where
-  volume_scale : ∀ c a0 h : R, discreteCellVolume a0 (c * h) = c * discreteCellVolume a0 h
-  monopole_diff : ∀ f : R, discreteFiberDiff f f = 0
-  dipole_diff : ∀ f : R, discreteFiberDiff f (-f) = (1 + 1) * f
-  mediator_anticomm : ∀ phi : R, mediatorAnticommutator phi = 0
-  proj_plus_zero : ∀ half phi : R, projPlusMediatorPlus half phi = 0
-  proj_minus_zero : ∀ half phi : R, projMinusMediatorMinus half phi = 0
-
-/-- Zero-debt constructor for Stratum 21 packet. -/
-def makeDualSheetedKreinActionFiberPacket (R : Type*) [CommRing R] :
-    DualSheetedKreinActionFiberPacket R where
-  volume_scale := discreteCellVolume_scale
-  monopole_diff := discreteFiberDiff_monopole
-  dipole_diff := discreteFiberDiff_dipole
-  mediator_anticomm := mediator_anticommutes_J
-  proj_plus_zero := projPlusMediatorPlus_zero
-  proj_minus_zero := projMinusMediatorMinus_zero
-
 end InfoGeometry.Canonical.DualSheetedKreinActionFiber

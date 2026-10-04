@@ -333,42 +333,6 @@ theorem maurer_cartan_matter_matter_curvature_full (P1 P2 : DiracMatrix)
 ### 5. Master Synthesis Packet
 -/
 
-/-- Master synthesis packet binding the Krein metric, all-gamma self-adjointness,
-    Lorentz Krein unitarity, Cartan involution, and Maurer-Cartan symmetric space structure. -/
-structure DiracKreinMaurerCartanPacket where
-  eta_sq : kreinEta * kreinEta = 1
-  gamma_all_krein_self_adjoint : ∀ mu : Fin 4, kreinAdjoint (gamma mu) = gamma mu
-  adjoint_involutive : ∀ A : DiracMatrix, kreinAdjoint (kreinAdjoint A) = A
-  lorentz_unitary : ∀ (Lambda Lambda_inv : DiracMatrix),
-    Lambda_inv * Lambda = 1 → gamma0 * Lambdaᴴ * gamma0 = Lambda_inv → isKreinUnitary Lambda
-  cartan_involutive : ∀ X : DiracMatrix, cartanInvolution (cartanInvolution X) = X
-  bracket_kk : ∀ (K1 K2 : DiracMatrix), isKreinEven K1 → isKreinEven K2 → isKreinEven (diracBracket K1 K2)
-  bracket_kp : ∀ (K P : DiracMatrix), isKreinEven K → isKreinOdd P → isKreinOdd (diracBracket K P)
-  bracket_pp : ∀ (P1 P2 : DiracMatrix), isKreinOdd P1 → isKreinOdd P2 → isKreinEven (diracBracket P1 P2)
-  cartan_sum : ∀ X : DiracMatrix, cartanEvenProj X + cartanOddProj X = X
-  torsion_free : ∀ (P1 P2 : DiracMatrix), isKreinOdd P1 → isKreinOdd P2 →
-    cartanOddProj (diracBracket P1 P2) = 0
-  curvature_full : ∀ (P1 P2 : DiracMatrix), isKreinOdd P1 → isKreinOdd P2 →
-    cartanEvenProj (diracBracket P1 P2) = diracBracket P1 P2
-
-/-- Canonical instantiation of the Dirac-Krein Maurer-Cartan packet. -/
-def makeDiracKreinMaurerCartanPacket : DiracKreinMaurerCartanPacket where
-  eta_sq := kreinEta_sq
-  gamma_all_krein_self_adjoint := dirac_gamma_all_krein_self_adjoint
-  adjoint_involutive := kreinAdjoint_involutive
-  lorentz_unitary := lorentz_is_krein_unitary
-  cartan_involutive := cartanInvolution_involutive
-  bracket_kk := symmetric_space_bracket_kk
-  bracket_kp := symmetric_space_bracket_kp
-  bracket_pp := symmetric_space_bracket_pp
-  cartan_sum := cartan_decomposition_sum
-  torsion_free := maurer_cartan_matter_matter_torsion_free
-  curvature_full := maurer_cartan_matter_matter_curvature_full
-
-/-- Definitional kernel certification of the Dirac-Krein Maurer-Cartan packet. -/
-theorem dirac_krein_maurer_cartan_certified :
-    (makeDiracKreinMaurerCartanPacket).eta_sq = gamma0_mul_self := rfl
-
 end
 
 end InfoGeometry.Canonical.DiracKreinMaurerCartan

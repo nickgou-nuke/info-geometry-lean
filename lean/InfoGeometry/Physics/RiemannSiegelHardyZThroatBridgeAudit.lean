@@ -17,4 +17,3 @@ open InfoGeometry.Physics.RiemannSiegelHardyZThroat
 #print axioms biwave_destructive_overlap
 #print axioms biwave_zero_overlap
 #print axioms timeDelay_mul_casimir
-#print axioms certified_hardy_z_throat_synthesis

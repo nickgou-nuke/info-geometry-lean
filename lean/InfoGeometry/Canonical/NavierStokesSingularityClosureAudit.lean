@@ -22,4 +22,3 @@ open InfoGeometry.Canonical.NavierStokesSingularity
 #print axioms euler_breakdown_of_asymptotic_blowup
 #print axioms navier_stokes_breakdown_R3_of_asymptotic_blowup
 #print axioms navier_stokes_breakdown_periodic_of_asymptotic_blowup
-#print axioms certified_navier_stokes_singularity_closure

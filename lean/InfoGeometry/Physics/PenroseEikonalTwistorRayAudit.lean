@@ -20,4 +20,3 @@ open InfoGeometry.Physics.PenroseEikonalTwistorRay
 #print axioms sachs_ray_focusing
 #print axioms information_flux_conservation
 #print axioms conformal_null_invariance
-#print axioms certified_penrose_eikonal_twistor_synthesis

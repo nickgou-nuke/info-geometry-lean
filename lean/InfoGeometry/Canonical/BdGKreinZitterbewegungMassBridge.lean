@@ -270,24 +270,4 @@ end Zitterbewegung
 ### Stratum 36.5: Master Synthesis Packet for Stratum 36
 -/
 
-/-- Master synthesis packet for Stratum 36. -/
-structure BdGKreinZitterbewegungPacket (R : Type*) [CommRing R] where
-  bdg_tr_zero : ∀ D : R, bdgTrace D = 0
-  bdg_det_eq : ∀ D Δ : R, bdgDet D Δ = - (D * D + Δ * Δ)
-  dispersion : ∀ E p m : R, E * E - p * p - m * m = 0 → E * E = p * p + m * m
-  massless_lim : ∀ E p : R, E * E = p * p + 0 → E * E = p * p
-  krein_ortho : ∀ x y : Fin 2 → R,
-    let x_plus : Fin 2 → R := ![x 0, 0]
-    let y_minus : Fin 2 → R := ![0, y 1]
-    kreinMetric x_plus y_minus = 0
-
-/-- Zero-debt constructor for Stratum 36 packet. -/
-def makeBdGKreinZitterbewegungPacket (R : Type*) [CommRing R] :
-    BdGKreinZitterbewegungPacket R where
-  bdg_tr_zero := bdg_trace_zero
-  bdg_det_eq := bdg_det_mass_formula
-  dispersion := bdg_dispersion_relation
-  massless_lim := bdg_massless_lightcone
-  krein_ortho := krein_subspace_orthogonality
-
 end InfoGeometry.Canonical.BdGKreinZitterbewegungMass

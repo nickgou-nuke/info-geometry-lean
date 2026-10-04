@@ -89,18 +89,4 @@ theorem zornBdG_symmetric_secular (D Delta E : R) :
   rw [h_sq]
   exact sub_eq_zero
 
-/-- Master synthesis packet for Stratum 38. -/
-structure ZornBdGHamiltonianPacket (R : Type*) [CommRing R] where
-  traceless : ∀ D Delta1 Delta2 : R, Matrix.trace (zornBdG D Delta1 Delta2) = 0
-  pairing_anticommutes : ∀ Delta1 Delta2 : R, eta * zornPairing (R := R) Delta1 Delta2 + zornPairing Delta1 Delta2 * eta = 0
-  dirac_commutes : ∀ D : R, eta * zornChiralDirac (R := R) D - zornChiralDirac D * eta = 0
-  secular_energy_spectrum : ∀ D Delta E : R, det (zornBdG D Delta Delta - E • 1) = 0 ↔ E ^ 2 = D ^ 2 + Delta ^ 2
-
-/-- Zero-debt constructor for Stratum 38 packet. -/
-def makeZornBdGHamiltonianPacket (R : Type*) [CommRing R] : ZornBdGHamiltonianPacket R where
-  traceless := zornBdG_trace_zero
-  pairing_anticommutes := eta_pairing_anticomm
-  dirac_commutes := eta_chiralDirac_comm
-  secular_energy_spectrum := zornBdG_symmetric_secular
-
 end InfoGeometry.Canonical.ZornBdGHamiltonianChiral

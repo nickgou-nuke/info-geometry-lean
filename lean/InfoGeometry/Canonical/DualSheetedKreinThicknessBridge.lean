@@ -183,42 +183,4 @@ theorem krein_neutral_symmetric_state (x : Fin 2 → R) (h_eq : x 0 = x 1) :
 
 end IndefiniteBilayerPairing
 
-/-!
-### 4. Master Synthesis Packet for Stratum 21
--/
-
-structure DualSheetedKreinThicknessPacket (R : Type*) [CommRing R] where
-  proj_sum : ∀ half J : R, half + half = 1 →
-    kreinPPlus half J + kreinPMinus half J = 1
-  proj_ortho : ∀ half J : R, (∀ x, half * x = x * half) → J * J = 1 →
-    kreinPPlus half J * kreinPMinus half J = 0
-  proj_plus_sq : ∀ half J : R, half + half = 1 → (∀ x, half * x = x * half) → J * J = 1 →
-    kreinPPlus half J * kreinPPlus half J = kreinPPlus half J
-  proj_minus_sq : ∀ half J : R, half + half = 1 → (∀ x, half * x = x * half) → J * J = 1 →
-    kreinPMinus half J * kreinPMinus half J = kreinPMinus half J
-  moment_sq : ∀ half J h : R, J * J = 1 →
-    transverseMoment half J h * transverseMoment half J h = (half * h * (half * h))
-  sheet_ortho : ∀ x y : Fin 2 → R,
-    let x_plus : Fin 2 → R := ![x 0, 0]
-    let y_minus : Fin 2 → R := ![0, y 1]
-    kreinPairing x_plus y_minus = 0
-  neutral_symm : ∀ x : Fin 2 → R, x 0 = x 1 → kreinPairing x x = 0
-
-def makeDualSheetedKreinThicknessPacket (R : Type*) [CommRing R] :
-    DualSheetedKreinThicknessPacket R where
-  proj_sum := fun half J h_add =>
-    krein_resolution_of_identity half J h_add
-  proj_ortho := fun half J h_comm hJ =>
-    krein_projector_ortho half J h_comm hJ
-  proj_plus_sq := fun half J h_add h_comm hJ =>
-    kreinPPlus_sq half J h_add h_comm hJ
-  proj_minus_sq := fun half J h_add h_comm hJ =>
-    kreinPMinus_sq half J h_add h_comm hJ
-  moment_sq := fun half J h hJ =>
-    transverse_moment_sq half J h hJ
-  sheet_ortho := fun x y =>
-    krein_sheet_orthogonality x y
-  neutral_symm := fun x h_eq =>
-    krein_neutral_symmetric_state x h_eq
-
 end InfoGeometry.Canonical.DualSheetedKreinThickness

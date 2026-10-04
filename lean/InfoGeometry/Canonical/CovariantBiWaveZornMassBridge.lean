@@ -183,33 +183,4 @@ end KreinCurrentTrace
 ### Stratum 37.6: Master Synthesis Packet for Stratum 37
 -/
 
-/-- Master synthesis packet for Stratum 37. -/
-structure CovariantBiWaveMassPacket (R : Type*) [CommRing R] where
-  forward_action : ∀ (A psi_field psi_dag : R) (Ψ : BiWaveDoublet R),
-    (zornBiWaveAction A psi_field psi_dag Ψ).psi = A * Ψ.psi + psi_field * Ψ.phi_dag
-  backward_action : ∀ (A psi_field psi_dag : R) (Ψ : BiWaveDoublet R),
-    (zornBiWaveAction A psi_field psi_dag Ψ).phi_dag = psi_dag * Ψ.psi - A * Ψ.phi_dag
-  offdiag_upper_cancel : ∀ (A1 A2 psi1 psi2 : R),
-    zornOffDiagUpper A1 A2 psi1 psi2 + zornOffDiagUpper A2 A1 psi2 psi1 = 0
-  offdiag_lower_cancel : ∀ (A1 A2 psi_dag1 psi_dag2 : R),
-    zornOffDiagLower A1 A2 psi_dag1 psi_dag2 + zornOffDiagLower A2 A1 psi_dag2 psi_dag1 = 0
-  zigzag_norm : ∀ (k_sq1 k_sq2 k1_dot_k2 m_sq : R),
-    k_sq1 = 0 → k_sq2 = 0 → (1 + 1) * k1_dot_k2 = - ((1 + 1) * (1 + 1) * m_sq) →
-    minkowskiNormSq k_sq1 k_sq2 k1_dot_k2 = - ((1 + 1) * (1 + 1) * m_sq)
-  unit_timelike : ∀ (norm_P_sq four_m_sq four_m_sq_inv : R),
-    norm_P_sq = - four_m_sq → four_m_sq * four_m_sq_inv = 1 →
-    norm_P_sq * four_m_sq_inv = -1
-  krein_current : ∀ (A : R), kreinSigma3Trace A = (1 + 1) * A
-
-/-- Zero-debt constructor for Stratum 37 packet. -/
-def makeCovariantBiWaveMassPacket (R : Type*) [CommRing R] :
-    CovariantBiWaveMassPacket R where
-  forward_action := zorn_action_forward_component
-  backward_action := zorn_action_backward_component
-  offdiag_upper_cancel := symmetrized_offdiag_upper_vanishes
-  offdiag_lower_cancel := symmetrized_offdiag_lower_vanishes
-  zigzag_norm := timelike_zigzag_composite_norm
-  unit_timelike := normalized_timelike_velocity
-  krein_current := krein_current_trace_eq
-
 end InfoGeometry.Canonical.CovariantBiWaveMass

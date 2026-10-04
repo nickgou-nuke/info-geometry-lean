@@ -78,20 +78,6 @@ theorem velocity_massless_luminal (p c : ℝ) (hp : p ≠ 0) :
   have hp2 : p ^ 2 ≠ 0 := pow_ne_zero 2 hp
   simp [hp2]
 
-/-- Master synthesis packet for Stratum 39. -/
-structure ZitterbewegungMassEmergencePacket where
-  rest_gap : ∀ m c : ℝ, (m * c ^ 2) - (- (m * c ^ 2)) = restEnergyGap m c
-  compton_omega : ∀ m c hbar : ℝ, comptonFrequency m c hbar = 2 * m * c ^ 2 / hbar
-  subluminal_inertia : ∀ (p m c : ℝ), m ≠ 0 → c ≠ 0 → velocityRatioSq p m c < 1
-  luminal_massless : ∀ (p c : ℝ), p ≠ 0 → velocityRatioSq p 0 c = 1
-
-/-- Zero-debt constructor for Stratum 39 packet. -/
-def makeZitterbewegungMassEmergencePacket : ZitterbewegungMassEmergencePacket where
-  rest_gap := restEnergyGap_eval
-  compton_omega := comptonFrequency_eq
-  subluminal_inertia := velocity_strictly_subluminal
-  luminal_massless := velocity_massless_luminal
-
 end
 
 end InfoGeometry.Canonical.ZitterbewegungMassEmergence

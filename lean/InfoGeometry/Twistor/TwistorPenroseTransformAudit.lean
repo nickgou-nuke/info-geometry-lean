@@ -16,4 +16,3 @@ open InfoGeometry.Twistor.TwistorPenroseTransform
 #print axioms TwistorMaxwellCohomology.maxwell_anti_self_dual_part_vanishes
 #print axioms TwistorMaxwellCohomology.maxwell_source_free_divergence
 #print axioms incidence_homogeneous
-#print axioms certified_twistor_penrose_transform_synthesis

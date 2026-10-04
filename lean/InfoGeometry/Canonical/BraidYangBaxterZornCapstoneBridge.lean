@@ -39,7 +39,6 @@ This module unites the deep algebraic precedents discovered across the repositor
      with vanishing Witten index $16 - 16 = 0$.
 
 5. **Master Synthesis Packet**:
-   - `BraidYangBaxterZornPacket` and `makeBraidYangBaxterZornPacket`.
 -/
 
 namespace InfoGeometry.Canonical.BraidYangBaxterZorn
@@ -139,31 +138,5 @@ end SO55Varlamov
 /-!
 ### Stratum 35.5: Master Synthesis Packet for Stratum 35
 -/
-
-/--
-Master packet bundling the Braid group B₃, Arnold–Orlik–Solomon configuration relations,
-Unimodular RG scaling invariance, SO(5,5) partition, and Varlamov 32-spinor decomposition.
--/
-structure BraidYangBaxterZornPacket (R : Type*) [CommRing R] where
-  aos_relation : ∀ (a12 a23 a13 : R), a23 * a13 = a12 * a13 - a12 * a23 →
-    arnoldOrlikSolomon3 a12 a23 a13 = 0
-  artin_square : ∀ (s1 s2 : Matrix (Fin 2) (Fin 2) R),
-    s1 * s2 * s1 = s2 * s1 * s2 →
-    (s1 * s2 * s1) * (s2 * s1 * s2) = (s1 * s2 * s1) * (s1 * s2 * s1)
-  unimodular_pairing : ∀ (alpha alpha_inv u v : R), alpha * alpha_inv = 1 →
-    (unimodularDiagScaleU alpha u) * (unimodularDiagScaleV alpha_inv v) = u * v
-  so55_partition : so55DimTotal = su5PartitionSum
-  spinor_32 : varlamovTotalSpinorDim = 32
-  witten_zero : wittenMoebiusIndex = 0
-
-/-- Canonical constructor for the Braid Yang-Baxter Zorn packet. -/
-def makeBraidYangBaxterZornPacket (R : Type*) [CommRing R] :
-    BraidYangBaxterZornPacket R where
-  aos_relation := arnold_orlik_solomon_identity
-  artin_square := artin_braid_square_invertible
-  unimodular_pairing := unimodular_scale_pairing
-  so55_partition := so55_su5_partition_match
-  spinor_32 := varlamov_spinor_total_is_32
-  witten_zero := witten_index_vanishes
 
 end InfoGeometry.Canonical.BraidYangBaxterZorn

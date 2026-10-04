@@ -171,37 +171,4 @@ end ScaleFreeDictionary
 ### Stratum 33.3: Master Synthesis Packet for Stratum 33
 -/
 
-/--
-Master packet bundling the mathematical identities of Stratum 33:
-Emergent Coordinate Expectation, Cosmic Iwasawa Dilatation, Macroscopic Associator/Jacobiator Decoupling,
-and the Scale-Free Topological Dictionary.
--/
-structure ScaleFreeTopologicalSpacetimePacket (R : Type*) [CommRing R] where
-  exp_zero : ∀ (st : StateExpectation R), st.exp ZornMatrix.zero = 0
-  cosmic_exp : ∀ (st : StateExpectation R) (a_t : R) (X_mu : ZornMatrix R),
-    st.exp (ZornMatrix.smul a_t X_mu) = a_t * classicalCoord st X_mu
-  assoc_zero : ∀ (st : StateExpectation R) (a₁ b₁ a₂ b₂ a₃ b₃ : R),
-    st.exp (ZornMatrix.associator ⟨a₁, b₁, 0, 0⟩ ⟨a₂, b₂, 0, 0⟩ ⟨a₃, b₃, 0, 0⟩) = 0
-  jacob_zero : ∀ (st : StateExpectation R) (a₁ b₁ a₂ b₂ a₃ b₃ : R),
-    st.exp (jacobiator ⟨a₁, b₁, 0, 0⟩ ⟨a₂, b₂, 0, 0⟩ ⟨a₃, b₃, 0, 0⟩) = 0
-  incomp_zero : ∀ (A₁ A₂ : R), A₁ - A₂ = 0 ↔ A₁ = A₂
-  higgs_vanish : ∀ (phi J P_plus P_minus half : R),
-    phi * J + J * phi = 0 →
-    P_plus = half * (1 + J) →
-    P_minus = half * (1 - J) →
-    P_plus * phi * P_plus - P_minus * phi * P_minus = 0
-  action_linear : ∀ (c p_z h : R),
-    scaleFreeTransverseAction (c * p_z) h = c * scaleFreeTransverseAction p_z h
-
-/-- Canonical constructor for the Scale-Free Topological Spacetime packet. -/
-def makeScaleFreeTopologicalSpacetimePacket (R : Type*) [CommRing R] :
-    ScaleFreeTopologicalSpacetimePacket R where
-  exp_zero := exp_zero_eq_zero
-  cosmic_exp := cosmic_iwasawa_expansion
-  assoc_zero := macroscopic_associator_expectation_zero
-  jacob_zero := macroscopic_jacobiator_expectation_zero
-  incomp_zero := scale_free_incompatibility_zero
-  higgs_vanish := scale_free_higgs_peirce_vanish
-  action_linear := scaleFreeTransverseAction_linear
-
 end InfoGeometry.Canonical.ScaleFreeTopologicalSpacetime

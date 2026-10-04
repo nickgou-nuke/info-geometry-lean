@@ -282,40 +282,4 @@ theorem bdg_energy_gap_bound (xi delta : ℝ) :
   have h_sq : 0 ≤ xi * xi := mul_self_nonneg xi
   linarith
 
-/-! ## 6. Grand Synthesis Packet -/
-
-structure IwasawaMaurerCartanBdGPacket (R : Type*) [CommRing R] where
-  maurer_cartan_nilpotent_sq : ∀ dx : R, mat_dN dx * mat_dN dx = 0
-  maurer_cartan_nilpotent_tr : ∀ dx : R, Matrix.trace (mat_dN dx) = 0
-  maurer_cartan_abelian_tr : ∀ a1_inv a2_inv da1 da2 : R,
-    Matrix.trace (matA_inv a1_inv a2_inv * mat_dA da1 da2) = a1_inv * da1 + a2_inv * da2
-  krein_boost_lie_condition : ∀ b : R,
-    (matBoost_gen b)ᵀ * etaKrein + etaKrein * (matBoost_gen b) = 0
-  euclidean_rot_skew : ∀ w : R,
-    (matK_gen w)ᵀ + matK_gen w = 0
-  bdg_tr_zero : ∀ xi delta : R, Matrix.trace (matBdG xi delta) = 0
-  bdg_sq_gap : ∀ xi delta : R,
-    matBdG xi delta * matBdG xi delta = (xi * xi + delta * delta) • (1 : Matrix (Fin 2) (Fin 2) R)
-  bdg_det_gap : ∀ xi delta : R,
-    (matBdG xi delta).det = - (xi * xi + delta * delta)
-  zitterbewegung_comm : ∀ xi delta : R,
-    sigmaZ * matBdG xi delta - matBdG xi delta * sigmaZ =
-      (delta + delta) • !![0, 1; -1, 0]
-
-def makeIwasawaMaurerCartanBdGPacket (R : Type*) [CommRing R] :
-    IwasawaMaurerCartanBdGPacket R where
-  maurer_cartan_nilpotent_sq := matN_maurer_cartan_sq
-  maurer_cartan_nilpotent_tr := matN_maurer_cartan_trace
-  maurer_cartan_abelian_tr := matA_maurer_cartan_trace
-  krein_boost_lie_condition := matBoost_krein_lie_condition
-  euclidean_rot_skew := matK_euclidean_skew
-  bdg_tr_zero := matBdG_trace
-  bdg_sq_gap := matBdG_sq
-  bdg_det_gap := matBdG_det
-  zitterbewegung_comm := zitterbewegung_bdg_commutator
-
-theorem iwasawa_maurer_cartan_bdg_certified :
-    Matrix.trace (matBdG (1 : ℝ) 2) = 0 :=
-  (makeIwasawaMaurerCartanBdGPacket ℝ).bdg_tr_zero 1 2
-
 end InfoGeometry.Canonical.IwasawaMaurerCartanBdG

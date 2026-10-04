@@ -110,24 +110,4 @@ end HelicalScrew
 ### Stratum 40.4: Master Synthesis Packet for Stratum 40
 -/
 
-/-- Master synthesis packet for Stratum 40. -/
-structure CartanMovingFrameSE3Packet (R : Type*) [CommRing R] where
-  triaxial_tr : ∀ lambda0 lambda1 lambda2 : R, lambda0 + lambda1 + lambda2 = 0 →
-    quadrupoleTrace lambda0 lambda1 lambda2 = 0
-  biaxial_zero : ∀ lambda1 lambda2 : R, biaxialityParameter lambda1 lambda2 = 0 ↔ lambda1 = lambda2
-  spin_skew : ∀ omega_ab : R, spinConnSkew omega_ab (-omega_ab) = 0
-  pitch_rel : ∀ Omega P two_pi_v : R, Omega * P = two_pi_v →
-    pitchRelationDefect Omega P two_pi_v = 0
-  screw_comm : ∀ P_z J_z : R, P_z * J_z = J_z * P_z →
-    (P_z + J_z) * (P_z + J_z) = P_z * P_z + (1 + 1) * (P_z * J_z) + J_z * J_z
-
-/-- Zero-debt constructor for Stratum 40 packet. -/
-def makeCartanMovingFrameSE3Packet (R : Type*) [CommRing R] :
-    CartanMovingFrameSE3Packet R where
-  triaxial_tr := triaxial_trace_zero
-  biaxial_zero := biaxiality_zero_iff
-  spin_skew := spin_conn_skew_zero
-  pitch_rel := pitch_relation_zero
-  screw_comm := axial_generators_commute
-
 end InfoGeometry.Canonical.CartanMovingFrameSE3Helical

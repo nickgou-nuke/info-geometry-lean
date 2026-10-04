@@ -138,24 +138,4 @@ end AkivisIdentity
 ### Stratum 38.5: Master Synthesis Packet for Stratum 38
 -/
 
-/-- Master synthesis packet for Stratum 38. -/
-structure NonAssociativePlanckFoamMetricPacket (R : Type*) [CommRing R] where
-  metric_symm : ∀ half exp_12 exp_21 exp_1 exp_2 : R,
-    quantumCovarianceMetric half exp_12 exp_21 exp_1 exp_2 =
-    quantumCovarianceMetric half exp_21 exp_12 exp_2 exp_1
-  metric_diag : ∀ half exp_sq exp_val : R, half + half = 1 →
-    quantumCovarianceMetric half exp_sq exp_sq exp_val exp_val = exp_sq - exp_val * exp_val
-  dyad_null : ∀ u v : Fin 2 → R, Matrix.det (dyadMatrix u v) = 0
-  ricci_zero : ∀ kappa : R, ricciScalarFromTrace kappa 0 = 0
-  lichnerowicz_zero : ∀ quarter : R, lichnerowiczScalarShift quarter 0 = 0
-
-/-- Zero-debt constructor for Stratum 38 packet. -/
-def makeNonAssociativePlanckFoamMetricPacket (R : Type*) [CommRing R] :
-    NonAssociativePlanckFoamMetricPacket R where
-  metric_symm := quantum_metric_symmetric
-  metric_diag := quantum_metric_diagonal
-  dyad_null := dyad_det_zero
-  ricci_zero := ricci_scalar_vanishes
-  lichnerowicz_zero := lichnerowicz_scalar_shift_vanishes
-
 end InfoGeometry.Canonical.NonAssociativePlanckFoamMetric

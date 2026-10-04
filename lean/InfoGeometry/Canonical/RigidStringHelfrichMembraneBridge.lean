@@ -129,29 +129,4 @@ end CylindricalTubule
 ### Stratum 39.4: Master Synthesis Packet for Stratum 39
 -/
 
-/-- Master synthesis packet for Stratum 39. -/
-structure RigidStringHelfrichPacket (R : Type*) [CommRing R] where
-  extrinsic_id : ∀ k1 k2 : R,
-    extrinsicCurvatureSq k1 k2 =
-    twoMeanCurvature k1 k2 * twoMeanCurvature k1 k2 - (1 + 1) * gaussianCurvature k1 k2
-  action_iso : ∀ mu0 sigma alpha kappa_b half k1 k2 : R,
-    mu0 = sigma → alpha = kappa_b →
-    rigidStringLagrangian mu0 alpha half (extrinsicCurvatureSq k1 k2) =
-    helfrichLagrangian sigma kappa_b alpha half (twoMeanCurvature k1 k2) (gaussianCurvature k1 k2)
-  cyl_K_zero : ∀ kappa : R, gaussianCurvature 0 kappa = 0
-  cyl_2H_eq : ∀ kappa : R, twoMeanCurvature 0 kappa = kappa
-  equilibrium_radius : ∀ sigma kappa_b kappa R : R,
-    kappa_b * (kappa * kappa) = (1 + 1) * sigma →
-    kappa * R = 1 →
-    (1 + 1) * sigma * (R * R) = kappa_b
-
-/-- Zero-debt constructor for Stratum 39 packet. -/
-def makeRigidStringHelfrichPacket (R : Type*) [CommRing R] :
-    RigidStringHelfrichPacket R where
-  extrinsic_id := extrinsic_curvature_identity
-  action_iso := action_density_isomorphism
-  cyl_K_zero := cylinder_gaussian_curvature_zero
-  cyl_2H_eq := cylinder_two_mean_curvature_eq
-  equilibrium_radius := tubule_radius_equilibrium
-
 end InfoGeometry.Canonical.RigidStringHelfrichMembrane

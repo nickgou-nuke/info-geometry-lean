@@ -182,32 +182,4 @@ end LieClosure
 ### Stratum 34.5: Master Synthesis Packet for Stratum 34
 -/
 
-/--
-Master packet bundling the mathematical formalization of:
-Unimodular Zorn restriction to SL(2, O'), Vector-Axial Anomaly Cancellation,
-Quark Weight Pairing, and Exceptional E₆₍₆₎ Closure.
--/
-structure UnimodularZornE6Packet (R : Type*) [CommRing R] where
-  unimodular_iff : ∀ (A B : R), zornTrace A B = 0 ↔ B = -A
-  vector_zero : ∀ (A B half : R), B = -A → vectorConnection A B half = 0
-  axial_pure : ∀ (A B half : R), half + half = 1 → B = -A → axialConnection A B half = A
-  anomaly_zero : ∀ (c A B : R), B = -A → chiralAnomalyCoeff c A B = 0
-  chiral_weights : ∀ (a u v : R),
-    zornDiagCommUpper a (-a) u = (a + a) * u ∧
-    zornDiagCommLower a (-a) v = -((a + a) * v)
-  comm_tr_zero : ∀ (X Y : Matrix (Fin 2) (Fin 2) R),
-    matrixTrace2x2 (X * Y - Y * X) = 0
-  central_zero : ∀ (c half : R), half + half = 1 → centralTrace c = 0 → c = 0
-
-/-- Canonical constructor for the Unimodular Zorn E₆₍₆₎ packet. -/
-def makeUnimodularZornE6Packet (R : Type*) [CommRing R] :
-    UnimodularZornE6Packet R where
-  unimodular_iff := unimodular_iff_B_neg_A
-  vector_zero := vector_connection_vanishes_of_unimodular
-  axial_pure := axial_connection_pure_of_unimodular
-  anomaly_zero := chiral_anomaly_vanishes_of_unimodular
-  chiral_weights := unimodular_chiral_eigenvalues
-  comm_tr_zero := matrix_commutator_trace_zero
-  central_zero := central_scalar_zero_of_unimodular
-
 end InfoGeometry.Canonical.UnimodularZornE6

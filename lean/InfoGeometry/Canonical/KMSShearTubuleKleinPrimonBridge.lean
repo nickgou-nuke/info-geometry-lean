@@ -154,39 +154,4 @@ theorem atomCPT_sq : atomCPT * atomCPT = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [atomCPT, atomEps, atomJ]
 
-/-! ## 6. Grand Synthesis Packet -/
-
-structure KMSShearTubuleKleinPrimonPacket where
-  glide_sigma_invol : ∀ σ : ℝ, 1 - (1 - σ) = σ
-  glide_midline_fix : ∀ σ : ℝ, 1 - σ = σ ↔ σ = 1 / 2
-  glide_double : ∀ L : ℝ, ∀ p : ℝ × ℝ, glideReflection L (glideReflection L p) = (p.1, p.2 + L)
-  helical_rad : ∀ R omega alpha σ t : ℝ,
-    let x := R * Real.cos (shearedAngle omega alpha σ t)
-    let y := R * Real.sin (shearedAngle omega alpha σ t)
-    x * x + y * y = R * R
-  primon_additive : ∀ m n : ℝ, 0 < m → 0 < n → primonEnergy (m * n) = primonEnergy m + primonEnergy n
-  primon_caliper : ∀ k : ℤ, Real.cos ((k : ℝ) * (2 * Real.pi)) = 1
-  cayley_circle : ∀ t : ℝ, Complex.normSq (cayleyCritical t) = 1
-  cpt_eps_sq : atomEps * atomEps = 1
-  cpt_j_sq : atomJ * atomJ = (-1 : ℝ) • (1 : M2R)
-  cpt_anticomm : atomEps * atomJ + atomJ * atomEps = 0
-  cpt_sq : atomCPT * atomCPT = 1
-
-def makeKMSShearTubuleKleinPrimonPacket : KMSShearTubuleKleinPrimonPacket where
-  glide_sigma_invol := glide_sigma_involution
-  glide_midline_fix := glide_fixed_iff_midline
-  glide_double := glide_squared
-  helical_rad := helical_radius_sq
-  primon_additive := primon_energy_add
-  primon_caliper := primon_caliper_period
-  cayley_circle := cayley_critical_normSq
-  cpt_eps_sq := atomEps_sq
-  cpt_j_sq := atomJ_sq
-  cpt_anticomm := atomEps_J_anticomm
-  cpt_sq := atomCPT_sq
-
-theorem kms_shear_tubule_klein_primon_certified :
-    atomCPT * atomCPT = 1 :=
-  makeKMSShearTubuleKleinPrimonPacket.cpt_sq
-
 end InfoGeometry.Canonical.KMSShearTubuleKleinPrimon

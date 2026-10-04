@@ -273,36 +273,4 @@ end TwistorDyad
 ### Stratum 31 & 32 Synthesis: Master Hadronic Confinement & Metric Packet
 -/
 
-/--
-Master packet unifying Hadronic Color Confinement (Stratum 31) and
-Emergent Quantum Expectation Metric with Twistor Dyad Null Geometry (Stratum 32).
--/
-structure ZornColorConfinementBaryonPacket (R : Type*) [CommRing R] where
-  baryon_singlet : ∀ u v w : Vec3 R,
-    (baryonState u v w).u = 0 ∧ (baryonState u v w).v = 0
-  meson_singlet : ∀ u v : Vec3 R,
-    (mesonState u v).u = 0 ∧ (mesonState u v).v = 0
-  hadron_associator : ∀ a₁ b₁ a₂ b₂ a₃ b₃ : R,
-    ZornMatrix.associator ⟨a₁, b₁, 0, 0⟩ ⟨a₂, b₂, 0, 0⟩ ⟨a₃, b₃, 0, 0⟩ = zero
-  hadron_jacobiator : ∀ a₁ b₁ a₂ b₂ a₃ b₃ : R,
-    jacobiator ⟨a₁, b₁, 0, 0⟩ ⟨a₂, b₂, 0, 0⟩ ⟨a₃, b₃, 0, 0⟩ = zero
-  metric_symm : ∀ half exp_AB exp_BA exp_A exp_B : R,
-    quantumCovarianceMetric half exp_AB exp_BA exp_A exp_B =
-    quantumCovarianceMetric half exp_BA exp_AB exp_B exp_A
-  var_diag : ∀ (half exp_A2 exp_A : R), half + half = 1 →
-    quantumCovarianceMetric half exp_A2 exp_A2 exp_A exp_A = exp_A2 - exp_A * exp_A
-  dyad_null : ∀ u v : Fin 2 → R,
-    Matrix.det (fun i j => u i * v j) = 0
-
-/-- Canonical constructor for the Zorn Color Confinement & Quantum Metric packet. -/
-def makeZornColorConfinementBaryonPacket (R : Type*) [CommRing R] :
-    ZornColorConfinementBaryonPacket R where
-  baryon_singlet := baryonState_colorless
-  meson_singlet := mesonState_colorless
-  hadron_associator := diagonal_singlet_associator
-  hadron_jacobiator := diagonal_jacobiator_zero
-  metric_symm := quantumCovarianceMetric_symmetric
-  var_diag := quantumVariance_diagonal
-  dyad_null := dyad_det_zero
-
 end InfoGeometry.Canonical.ZornColorConfinementBaryon

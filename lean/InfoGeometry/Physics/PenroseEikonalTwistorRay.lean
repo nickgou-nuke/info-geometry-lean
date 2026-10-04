@@ -260,34 +260,4 @@ theorem conformal_null_invariance (k_norm_sq omega_factor : ℝ) (h_pos : 0 < om
 
 /-! ### 6. Master Certified Synthesis -/
 
-/-- Complete structural conjunction certifying the Penrose Eikonal Twistor Ray Information Geometry. -/
-structure CertifiedPenroseEikonalTwistorSynthesis where
-  pauli_det_eq_minkowski : ∀ k : MinkowskiVector, (pauliSoldering k).det = (minkowskiNorm k : ℂ)
-  null_iff_det_zero : ∀ k : MinkowskiVector, IsMinkowskiNull k ↔ (pauliSoldering k).det = 0
-  weyl_dyad_det_zero : ∀ π : WeylSpinor, (weylDyad π).det = 0
-  spinor_is_null : ∀ π : WeylSpinor, IsMinkowskiNull (spinorToMinkowski π)
-  spinor_energy_nonneg : ∀ π : WeylSpinor, 0 ≤ (spinorToMinkowski π).k0
-  incident_twistor_null : ∀ X π, IsNullPenroseTwistor (incidentTwistor X π)
-  sachs_trace_eq : ∀ S, Matrix.trace (sachsMatrix S) = 2 * S.theta
-  eikonal_vorticity_zero : ∀ S, S.omega = 0 → (sachsMatrix S) 0 1 = (sachsMatrix S) 1 0
-  flux_conservation : ∀ (rho area theta : ℝ), (-2 * theta * rho) * area + rho * (2 * theta * area) = 0
-  conformal_invariance : ∀ (k_norm_sq omega_factor : ℝ), 0 < omega_factor → (omega_factor ^ 2 * k_norm_sq = 0 ↔ k_norm_sq = 0)
-
-/-- 🏆 MASTER SYNTHESIS THEOREM:
-    Certifies the complete ontological unification of eikonal wave packets,
-    Weyl spinor factorization, Penrose twistor incidence, Sachs ray focusing,
-    and conserved information flux. -/
-theorem certified_penrose_eikonal_twistor_synthesis :
-    CertifiedPenroseEikonalTwistorSynthesis where
-  pauli_det_eq_minkowski := det_pauliSoldering_eq_minkowskiNorm
-  null_iff_det_zero := null_iff_det_pauliSoldering_zero
-  weyl_dyad_det_zero := det_weylDyad_zero
-  spinor_is_null := spinor_generates_null_vector
-  spinor_energy_nonneg := spinor_energy_nonneg
-  incident_twistor_null := incident_twistor_is_null
-  sachs_trace_eq := sachs_trace_expansion
-  eikonal_vorticity_zero := eikonal_vorticity_annihilation
-  flux_conservation := information_flux_conservation
-  conformal_invariance := conformal_null_invariance
-
 end InfoGeometry.Physics.PenroseEikonalTwistorRay

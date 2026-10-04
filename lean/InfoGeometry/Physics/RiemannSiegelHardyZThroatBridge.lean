@@ -209,21 +209,4 @@ theorem timeDelay_mul_casimir (t : ℝ) :
 
 /-! ## 5. Master Conjunction -/
 
-/-- Certified structural synthesis of the Riemann-Siegel Hardy Z throat bridge. -/
-structure CertifiedHardyZThroatSynthesis : Prop where
-  h_phase_norm : ∀ θ, ‖phaseRotation θ‖ = 1
-  h_smatrix_norm : ∀ θ, ‖sMatrix θ‖ = 1
-  h_smatrix_zero : sMatrix 0 = 1
-  h_phase_hom : ∀ θ1 θ2, phaseRotation θ1 * phaseRotation θ2 = phaseRotation (θ1 + θ2)
-  h_timeDelay_casimir : ∀ t, timeDelay t * casimirEigenvalue t = 1
-
-/-- 🏆 MASTER CONJUNCTION: Certified Riemann-Siegel Hardy Z Throat Synthesis. -/
-theorem certified_hardy_z_throat_synthesis :
-    CertifiedHardyZThroatSynthesis :=
-  ⟨phaseRotation_norm,
-   sMatrix_norm,
-   sMatrix_zero,
-   phaseRotation_add,
-   timeDelay_mul_casimir⟩
-
 end InfoGeometry.Physics.RiemannSiegelHardyZThroat

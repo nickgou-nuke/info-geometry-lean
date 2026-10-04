@@ -220,34 +220,5 @@ end AssociatorVectorAction
 ### Stratum 30.5: Master Synthesis Packet for Stratum 30
 -/
 
-/--
-Unified packet bundling all core mathematical results of Stratum 30:
-Associator Matrix, Trace Evaluation, Gell-Mann Color Octet, Traceless Duality Theorem,
-Double Cross Product Vector Action, and Antisymmetrized SO(3) Adjoint Action.
--/
-structure AssociatorGellMannOctetPacket (R : Type*) [CommRing R] where
-  tr_assoc : ∀ u v : Vec3 R, trace3x3 (associatorMatrix3 u v) = dot3 u v + dot3 u v
-  tr_octet : ∀ (third : R), third + third + third = 1 → ∀ u v : Vec3 R,
-    trace3x3 (gellMannOctetTensor third u v) = 0
-  equiv_neg : ∀ (third : R), third + third + third = 1 → ∀ u v : Vec3 R,
-    associatorTraceless third u v = - gellMannOctetTensor third u v
-  action_bac_cab : ∀ u v w : Vec3 R,
-    mulVec3 (associatorMatrix3 u v) w = fun i => - (cross3 v (cross3 u w) i)
-  antisymm_ad : ∀ u v w : Vec3 R,
-    (fun i => mulVec3 (associatorMatrix3 u v) w i - mulVec3 (associatorMatrix3 v u) w i) =
-    cross3 (cross3 u v) w
-  antisymm_tr : ∀ u v : Vec3 R,
-    trace3x3 (associatorMatrix3 u v) - trace3x3 (associatorMatrix3 v u) = 0
-
-/-- Canonical constructor for the Associator Gell-Mann Octet packet. -/
-def makeAssociatorGellMannOctetPacket (R : Type*) [CommRing R] :
-    AssociatorGellMannOctetPacket R where
-  tr_assoc := trace_associatorMatrix3
-  tr_octet := gellMannOctet_traceless
-  equiv_neg := associator_traceless_eq_neg_gellMann
-  action_bac_cab := associator_action_eq_neg_double_cross
-  antisymm_ad := antisymm_associator_eq_ad_cross
-  antisymm_tr := antisymm_associator_tr_zero
-
 end InfoGeometry.Canonical.AssociatorGellMannOctet
 

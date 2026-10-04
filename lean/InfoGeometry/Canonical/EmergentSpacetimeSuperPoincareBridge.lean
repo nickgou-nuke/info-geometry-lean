@@ -228,26 +228,4 @@ end CPTMonodromy
 ### Master Synthesis Packet for Emergent Spacetime
 -/
 
-/--
-Unified packet bundling all core mathematical results of Stratum 28:
-Emergent Spacetime, Super-Poincaré Lift, Three-Quark Associator Foam, and CPT Monodromy.
--/
-structure EmergentSpacetimeSuperPoincarePacket (R : Type*) [CommRing R] where
-  cyclic_trip : ∀ u v w : Vec3 R, dot3 u (cross3 v w) = dot3 (cross3 u v) w
-  associator_foam : ∀ u v w : Vec3 R,
-    ZornMatrix.associator (quark u) (quark v) (quark w) =
-    smul (-(dot3 u (cross3 v w))) ZornMatrix.splitCartanEll
-  vacuum_assoc : ∀ a b c : R,
-    ZornMatrix.associator ⟨a, 0, 0, 0⟩ ⟨b, 0, 0, 0⟩ ⟨c, 0, 0, 0⟩ = zero
-  homothety : ∀ a_scale X c : R,
-    iwasawaScaleCoordinate a_scale (c * X) = c * iwasawaScaleCoordinate a_scale X
-
-/-- Canonical constructor for the Emergent Spacetime packet. -/
-def makeEmergentSpacetimeSuperPoincarePacket (R : Type*) [CommRing R] :
-    EmergentSpacetimeSuperPoincarePacket R where
-  cyclic_trip := scalar_triple_product_cyclic
-  associator_foam := ZornMatrix.three_quark_associator
-  vacuum_assoc := ZornMatrix.lepton_vacuum_associator
-  homothety := cosmological_homothety
-
 end InfoGeometry.Canonical.EmergentSpacetimeSuperPoincare

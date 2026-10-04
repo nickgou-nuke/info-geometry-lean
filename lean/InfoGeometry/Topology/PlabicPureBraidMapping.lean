@@ -202,6 +202,11 @@ theorem zamolodchikov_cluster_pentagon_period {F : Type*} [Field F]
     let x₅ := (1 + x₄) / x₃
     let x₆ := (1 + x₅) / x₄
     x₅ = x₀ ∧ x₆ = x₁ := by
-  sorry
+  dsimp
+  constructor
+  · field_simp [h₀, h₁, h_x₀_add, h_x₁_add, h_sum]
+    <;> ring_nf
+  · field_simp [h₀, h₁, h_x₀_add, h_x₁_add, h_sum]
+    <;> ring_nf
 
 end PlabicPureBraidMapping

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.PureBraidRepresentation
+import InfoGeometry.Topology.PlabicBoundaryMeasurement
 import InfoGeometry.Topology.PlabicPureBraidMapping
 import InfoGeometry.Topology.PureBraidGroup
 import InfoGeometry.Topology.AharonovBohmVortices

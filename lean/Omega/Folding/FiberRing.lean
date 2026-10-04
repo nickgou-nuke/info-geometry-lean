@@ -270,7 +270,7 @@ noncomputable instance instField_X9 : Field (X 9) :=
 /-- X_11 ≅ GF(233) is a field (F_13 = 233 is prime).
     cor:field-phase-fib-prime-instField-X11 -/
 noncomputable instance instField_X11 : Field (X 11) :=
-  instFieldOfPrime (by decide)
+  instFieldOfPrime (by norm_num)
 
 /-! ### CRT decomposition when F_{m+2} = p * q with coprime factors -/
 

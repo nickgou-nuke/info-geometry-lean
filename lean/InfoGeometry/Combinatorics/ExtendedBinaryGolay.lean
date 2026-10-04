@@ -403,7 +403,7 @@ def basisDotMatrix : Matrix (Fin 12) (Fin 12) F₂ :=
 
 /-- The 12x12 basis Gram matrix is identically zero (fast 144-entry computation via VM). -/
 theorem basisDotMatrix_zero : basisDotMatrix = 0 := by
-  decide
+  native_decide
 
 private theorem basis_dot_zero (i j : Fin 12) :
     dot (basisWord i) (basisWord j) = 0 := by

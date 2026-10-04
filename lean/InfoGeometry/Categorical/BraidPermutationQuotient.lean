@@ -339,7 +339,7 @@ private theorem product_cube_eq_one_of_artin_involutions
     (x * y) ^ 3 = 1 := by
   calc
     (x * y) ^ 3 = (x * y * x) * (y * x * y) := by
-      simp only [pow_succ, pow_two]
+      simp only [pow_succ]
       group
     _ = (y * x * y) * (y * x * y) := by rw [hxyx]
     _ = y * x * (y * y) * x * y := by group
@@ -361,8 +361,8 @@ private theorem adjacentSwap_cubed_eq_one
     (adjacentSwap m i * adjacentSwap m j) ^ 3 = 1 := by
   apply product_cube_eq_one_of_artin_involutions
     (adjacentSwap m i) (adjacentSwap m j)
-  · simpa [pow_two] using adjacentSwap_sq m i
-  · simpa [pow_two] using adjacentSwap_sq m j
+  · exact adjacentSwap_sq m i
+  · exact adjacentSwap_sq m j
   · exact adjacentSwap_braid m i j hij
 
 /-- The adjacent transpositions satisfy the Coxeter relations of type A. -/
@@ -373,7 +373,7 @@ private def typeACoxeterLiftable (m : ℕ) :
     (CoxeterMatrix.Aₙ m) i j = 1
   by_cases hij : i = j
   · subst j
-    simp [pow_one, adjacentSwap_sq]
+    simp [adjacentSwap_sq]
   · by_cases hforward : i.val + 1 = j.val
     · have hentry : (CoxeterMatrix.Aₙ m) i j = 3 := by
         simp [CoxeterMatrix.Aₙ, hij, hforward]
@@ -386,8 +386,8 @@ private def typeACoxeterLiftable (m : ℕ) :
         have hArtin := adjacentSwap_braid m j i hbackward
         exact product_cube_eq_one_of_artin_involutions
           (adjacentSwap m i) (adjacentSwap m j)
-          (by simpa [pow_two] using adjacentSwap_sq m i)
-          (by simpa [pow_two] using adjacentSwap_sq m j)
+          (adjacentSwap_sq m i)
+          (adjacentSwap_sq m j)
           hArtin.symm
       · have hentry : (CoxeterMatrix.Aₙ m) i j = 2 := by
           simp [CoxeterMatrix.Aₙ, hij, hforward, hbackward]
@@ -396,13 +396,13 @@ private def typeACoxeterLiftable (m : ℕ) :
         rcases hfar with h | h
         · exact product_square_eq_one_of_commuting_involutions
             (adjacentSwap m i) (adjacentSwap m j)
-            (by simpa [pow_two] using adjacentSwap_sq m i)
-            (by simpa [pow_two] using adjacentSwap_sq m j)
+            (adjacentSwap_sq m i)
+            (adjacentSwap_sq m j)
             (adjacentSwap_far_commute m i j h)
         · exact product_square_eq_one_of_commuting_involutions
             (adjacentSwap m i) (adjacentSwap m j)
-            (by simpa [pow_two] using adjacentSwap_sq m i)
-            (by simpa [pow_two] using adjacentSwap_sq m j)
+            (adjacentSwap_sq m i)
+            (adjacentSwap_sq m j)
             ((adjacentSwap_far_commute m j i h).symm)
 
 /-- The adjacent transpositions satisfy the Coxeter relations of type A.

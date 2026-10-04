@@ -9,7 +9,14 @@ import InfoGeometry.Algebra.SplitCayleyF2CarrierAlignment
 
 namespace InfoGeometry.Algebra.SplitCayleyF2
 
-theorem cayley_card : Fintype.card Cayley = 256 := by decide
+theorem cayley_card : Fintype.card Cayley = 256 := by
+  let e : Cayley ≃ Scalar × Vec3 × Vec3 × Scalar :=
+    { toFun := fun x => (x.α, x.u, x.v, x.β)
+      invFun := fun x => ⟨x.1, x.2.1, x.2.2.1, x.2.2.2⟩
+      left_inv := by intro x; cases x; rfl
+      right_inv := by rintro ⟨a, u, v, b⟩; rfl }
+  rw [Fintype.card_congr e]
+  simp [Scalar, Vec3]
 
 theorem splitOctF2_card :
     Fintype.card InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.SplitOctF2 = 256 := by

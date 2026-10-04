@@ -14,7 +14,7 @@ namespace Omega
 
 private theorem cached_cMaxFiberMult_values :
     cMaxFiberMult 8 = 8 ∧ cMaxFiberMult 9 = 10 ∧ cMaxFiberMult 10 = 13 := by
-  decide
+  native_decide
 
 @[simp] theorem cached_cMaxFiberMult_8 : cMaxFiberMult 8 = 8 :=
   cached_cMaxFiberMult_values.1
@@ -67,7 +67,7 @@ theorem maxFiberMultiplicity_even_parity_ext (k : Nat) (hk : 1 ≤ k) (hk' : k �
   interval_cases k <;> simp_all only [show 2 * 1 = 2 from rfl, show 2 * 2 = 4 from rfl,
     show 2 * 3 = 6 from rfl, show 2 * 4 = 8 from rfl, show 2 * 5 = 10 from rfl,
     maxFiberMultiplicity_two, maxFiberMultiplicity_four, maxFiberMultiplicity_six,
-    maxFiberMultiplicity_eight, maxFiberMultiplicity_ten] <;> decide
+    maxFiberMultiplicity_eight, maxFiberMultiplicity_ten] <;> native_decide
 
 end X
 end Omega

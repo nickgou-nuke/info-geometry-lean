@@ -2,41 +2,16 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.Ring.Basic
+import InfoGeometry.Topology.AmplituhedronGeneralTwistorExpansion
 import Mathlib.Tactic
 
 open Matrix
 open scoped Matrix
+open InfoGeometry.Amplituhedron
 
 namespace PlabicBoundaryMeasurement
 
 variable {n : ℕ} {R : Type*} [CommRing R]
-
-/-! ### 1. 2x2 Plücker Minors and Fundamental Symmetries -/
-
-/-- The 2x2 Plücker coordinate of columns a and b of a 2 x n matrix C:
-    Δ_{a, b}(C) = C_{0, a} C_{1, b} - C_{1, a} C_{0, b}. -/
-def minor2 (C : Matrix (Fin 2) (Fin n) R) (a b : Fin n) : R :=
-  C 0 a * C 1 b - C 1 a * C 0 b
-
-/-- Skew-symmetry of Plücker coordinates: Δ_{b, a} = - Δ_{a, b}. -/
-theorem minor2_skew (C : Matrix (Fin 2) (Fin n) R) (a b : Fin n) :
-    minor2 C b a = - minor2 C a b := by
-  dsimp [minor2]
-  ring
-
-/-- Diagonal vanishing: Δ_{a, a} = 0. -/
-theorem minor2_self (C : Matrix (Fin 2) (Fin n) R) (a : Fin n) :
-    minor2 C a a = 0 := by
-  dsimp [minor2]
-  ring
-
-/-- The Universal 3-Term Grassmann-Plücker Relation in Gr(2, n):
-    Δ_{a, c} Δ_{b, d} = Δ_{a, b} Δ_{c, d} + Δ_{a, d} Δ_{b, c}. -/
-theorem plucker_relation_general (C : Matrix (Fin 2) (Fin n) R) (a b c d : Fin n) :
-    minor2 C a c * minor2 C b d =
-      minor2 C a b * minor2 C c d + minor2 C a d * minor2 C b c := by
-  dsimp [minor2]
-  ring
 
 /-! ### 2. Boundary Bridge Addition (Elementary Unipotent Shears) -/
 
@@ -83,15 +58,20 @@ theorem minor2_addBridge_right_nonneg (C : Matrix (Fin 2) (Fin n) ℝ) (i j a : 
   have : 0 ≤ t * minor2 C a j := mul_nonneg ht h_aj
   linarith
 
-/-! ### 3. Canonical Postnikov Boundary Measurement Matrix for Gr(2, 4) -/
+/-! ### 3. An Explicit Positive Matrix Family in Gr(2, 4)
 
-/-- Postnikov's canonical boundary measurement matrix in Gr(2, 4)
-    parameterized by positive face/edge weights (t₁, t₂, t₃, t₄) > 0. -/
+This file specifies a four-parameter matrix family and proves positivity of
+its ordered maximal minors.  No planar network or graph measurement map is
+specified here, so the family is not identified with a particular plabic
+network's boundary measurement.
+-/
+
+/-- An explicit `2 × 4` matrix family parameterized by four real numbers. -/
 def boundaryMeasurementMatrix (t₁ t₂ t₃ t₄ : ℝ) : Matrix (Fin 2) (Fin 4) ℝ :=
   !![1, t₁, 0, -t₄;
      0, t₂, 1,  t₃]
 
-/-! ### 4. Exact Evaluation of All Plücker Coordinates -/
+/-! ### 4. Exact Evaluation of Its Plücker Coordinates -/
 
 theorem plucker_01 (t₁ t₂ t₃ t₄ : ℝ) :
     minor2 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) 0 1 = t₂ := by
@@ -123,20 +103,8 @@ theorem plucker_23 (t₁ t₂ t₃ t₄ : ℝ) :
   dsimp [minor2, boundaryMeasurementMatrix]
   ring
 
-/-! ### 5. Total Positivity of the Amplituhedron Cell -/
-
-/-- Predicate for strict total positivity in Gr(2, 4):
-    Every Plücker coordinate of an increasing pair of indices is strictly positive. -/
-def IsTotallyPositive24 (C : Matrix (Fin 2) (Fin 4) ℝ) : Prop :=
-  0 < minor2 C 0 1 ∧
-  0 < minor2 C 0 2 ∧
-  0 < minor2 C 0 3 ∧
-  0 < minor2 C 1 2 ∧
-  0 < minor2 C 1 3 ∧
-  0 < minor2 C 2 3
-
-/-- Master Theorem: The Boundary Measurement Map sends any positive network weights
-    (t₁, t₂, t₃, t₄) > 0 to a strictly totally positive matrix in Gr_{>0}(2, 4). -/
+/-- Positive parameters make all six ordered maximal minors of this matrix
+    family strictly positive. -/
 theorem boundaryMeasurement_totally_positive {t₁ t₂ t₃ t₄ : ℝ}
     (h1 : 0 < t₁) (h2 : 0 < t₂) (h3 : 0 < t₃) (h4 : 0 < t₄) :
     IsTotallyPositive24 (boundaryMeasurementMatrix t₁ t₂ t₃ t₄) := by
@@ -147,7 +115,7 @@ theorem boundaryMeasurement_totally_positive {t₁ t₂ t₃ t₄ : ℝ}
   have h24 : 0 < t₂ * t₄ := mul_pos h2 h4
   exact add_pos h13 h24
 
-/-! ### 6. Cluster Mutation Exchange on the Boundary Measurement Cell -/
+/-! ### 6. The Plücker Relation for This Matrix Family -/
 
 /-- The 3-term Grassmann-Plücker identity satisfied by the boundary measurement matrix:
     Δ₀₂ * Δ₁₃ = Δ₀₁ * Δ₂₃ + Δ₀₃ * Δ₁₂. -/
@@ -161,8 +129,8 @@ theorem boundaryMeasurement_plucker_relation (t₁ t₂ t₃ t₄ : ℝ) :
   rw [plucker_02, plucker_13, plucker_01, plucker_23, plucker_03, plucker_12]
   ring
 
-/-- Cluster Mutation of a Plücker coordinate via the exchange relation:
-    Δ'_mut = (Δ_a * Δ_b + Δ_c * Δ_d) / Δ_orig. -/
+/-- The rational exchange expression associated with the three-term Plücker
+    relation.  This definition alone does not assert a cluster mutation. -/
 noncomputable def mutatePlucker (Δ_a Δ_b Δ_c Δ_d Δ_orig : ℝ) : ℝ :=
   (Δ_a * Δ_b + Δ_c * Δ_d) / Δ_orig
 

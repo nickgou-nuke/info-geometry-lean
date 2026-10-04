@@ -246,7 +246,7 @@ private theorem threeColorCoreGenerator_assoc
       splitOctonionMulQ (threeColorCoreGenerator c p)
         (splitOctonionMulQ (threeColorCoreGenerator c q)
           (threeColorCoreGenerator c r)) := by
-  fin_cases c <;> fin_cases p <;> fin_cases q <;> fin_cases r <;> decide
+  fin_cases c <;> fin_cases p <;> fin_cases q <;> fin_cases r <;> native_decide
 
 private theorem threeColorCore_mul_zero_left (x : ThreeColorCoreCarrier) :
     splitOctonionMulQ 0 x = 0 := by

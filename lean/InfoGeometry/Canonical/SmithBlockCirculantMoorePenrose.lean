@@ -131,36 +131,36 @@ def smithAMP : Mat6 ℚ :=
 /-- The witness is block-circulant, expressed as commutation with `Q ⊗ I₂`. -/
 theorem smithA_commutes_shift :
     smithA * smithShift6 = smithShift6 * smithA := by
-  decide
+  native_decide
 
 /-- Smith's conclusion in the concrete rational witness: the MP inverse commutes too. -/
 theorem smithAMP_commutes_shift :
     smithAMP * smithShift6 = smithShift6 * smithAMP := by
-  decide
+  native_decide
 
 /-- Exact left inverse certificate. -/
 theorem smithAMP_mul_smithA :
     smithAMP * smithA = 1 := by
-  decide
+  native_decide
 
 /-- Exact right inverse certificate. -/
 theorem smithA_mul_smithAMP :
     smithA * smithAMP = 1 := by
-  decide
+  native_decide
 
 /-- Determinant sanity check for the exact rational witness. -/
 theorem smithA_det_eq :
     Matrix.det smithA = (18 : ℚ) := by
-  decide
+  native_decide
 
 /-- The exact inverse is the Moore-Penrose inverse in the existing repo predicate. -/
 theorem smithAMP_isMoorePenrose :
     MoorePenrose.IsMoorePenroseInverse smithA smithAMP := by
   refine MoorePenrose.IsMoorePenroseInverse.mk ?_ ?_ ?_ ?_
-  · decide
-  · decide
-  · decide
-  · decide
+  · native_decide
+  · native_decide
+  · native_decide
+  · native_decide
 
 end
 

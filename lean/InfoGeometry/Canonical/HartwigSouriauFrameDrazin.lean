@@ -199,16 +199,16 @@ def hartwigExpectedGroupInverse : Mat3 ℚ :=
 /-- The finite Souriau--Frame coefficient formula produces the expected group inverse. -/
 theorem hartwig_formula_candidate_eq_expected :
     hartwigFormulaCandidate = hartwigExpectedGroupInverse := by
-  decide
+  native_decide
 
 /-- Hartwig's formula satisfies the group inverse equations for the packet. -/
 theorem hartwig_formula_candidate_isGroupInverse :
     IsGroupInverse hartwigA hartwigFormulaCandidate := by
   constructor
-  · decide
+  · native_decide
   constructor
-  · decide
-  · decide
+  · native_decide
+  · native_decide
 
 /-- Therefore the same formula is the index-one Drazin inverse. -/
 theorem hartwig_formula_candidate_isDrazinInverse :
@@ -221,7 +221,7 @@ theorem hartwig_regular_idempotent_readout :
       !![0, 0, 0;
          0, 1, 0;
          0, 0, 1] := by
-  decide
+  native_decide
 
 /-- The principal idempotent `Z = I - A A#` selects the zero-root lane. -/
 theorem hartwig_principal_idempotent_readout :
@@ -229,17 +229,17 @@ theorem hartwig_principal_idempotent_readout :
       !![1, 0, 0;
          0, 0, 0;
          0, 0, 0] := by
-  decide
+  native_decide
 
 /-- The zero-root principal idempotent is killed by `A` on the left. -/
 theorem hartwig_mul_principal_idempotent_eq_zero :
     hartwigA * principalIdempotent hartwigA hartwigFormulaCandidate = 0 := by
-  decide
+  native_decide
 
 /-- The zero-root principal idempotent is killed by `A` on the right. -/
 theorem hartwig_principal_idempotent_mul_eq_zero :
     principalIdempotent hartwigA hartwigFormulaCandidate * hartwigA = 0 := by
-  decide
+  native_decide
 
 end RationalSouriauFramePacket
 

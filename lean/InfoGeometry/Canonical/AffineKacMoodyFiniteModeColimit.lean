@@ -2,7 +2,6 @@ import Mathlib.Algebra.Category.ModuleCat.FilteredColimits
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.ConcreteCategory.Basic
 import InfoGeometry.External.Virasoro.AffineKacMoody
-import Mathlib.Algebra.Lie.Equiv
 
 /-!
 # Finite-mode filtered colimit for affine Kac--Moody currents
@@ -16,8 +15,11 @@ current generators `J_n(x)` with `Int.natAbs n <= N`.  The stages are nested,
 so they form a functor `ℕ ⥤ ModuleCat 𝕜`.  Its categorical colimit has a
 canonical comparison map to the full affine Kac--Moody carrier.
 
-The QMS Blueprint explicitly proves this colimit is linearly equivalent to the 
-full carrier and transports the exact `.colimitBracket` structurally.
+The comparison map lands in the full affine carrier. Its image is the union of
+the finite-mode stages; identifying that union with the full carrier is a
+separate spanning theorem. This module therefore records the stage diagram and
+comparison map without transporting a Lie structure across an unproved
+equivalence.
 -/
 
 noncomputable section
@@ -120,37 +122,6 @@ theorem affineFiniteModeColimitMap_stage (N : ℕ) :
         affineFiniteModeColimitMap Φ hΦ hΦs =
       (affineFiniteModeCocone Φ hΦ hΦs).ι.app N := by
   exact colimit.ι_desc _ _
-
-/-- QMS Blueprint Part 1: The comparison map is a strict linear equivalence. -/
-noncomputable def affineFiniteModeColimitEquiv :
-    (affineFiniteModeColimit Φ hΦ hΦs : Type u) ≃ₗ[𝕜] (KM Φ hΦ hΦs) :=
-  LinearEquiv.ofBijective (affineFiniteModeColimitMap Φ hΦ hΦs).hom
-    ⟨by sorry, by sorry⟩
-
-/-- QMS Blueprint Part 2: Transport the Lie bracket back to the categorical colimit. -/
-instance : LieRing (affineFiniteModeColimit Φ hΦ hΦs) where
-  bracket x y := (affineFiniteModeColimitEquiv Φ hΦ hΦs).symm 
-    ⁅(affineFiniteModeColimitEquiv Φ hΦ hΦs) x, (affineFiniteModeColimitEquiv Φ hΦ hΦs) y⁆
-  add_lie x y z := by
-    dsimp
-    rw [map_add, add_lie, map_add]
-  lie_add x y z := by
-    dsimp
-    rw [map_add, lie_add, map_add]
-  lie_self x := by
-    dsimp
-    rw [lie_self, map_zero]
-  leibniz_lie x y z := by
-    dsimp
-    rw [leibniz_lie, map_add]
-    congr 2
-    · rw [LinearEquiv.apply_symm_apply]
-    · rw [LinearEquiv.apply_symm_apply]
-
-instance : LieAlgebra 𝕜 (affineFiniteModeColimit Φ hΦ hΦs) where
-  lie_smul c x y := by
-    dsimp
-    rw [map_smul, lie_smul, map_smul]
 
 /-- Canonical colimit representative of the affine current `J_n(x)`. -/
 noncomputable def affineCurrentColimitMode (n : ℤ) (x : 𝓰) :

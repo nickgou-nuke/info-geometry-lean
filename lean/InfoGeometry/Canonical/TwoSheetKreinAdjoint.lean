@@ -94,28 +94,33 @@ lemma sheetFlip_conjugate_identity :
     sheetFlip * star sheetIdentity * sheetFlip = sheetIdentity := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [sheetFlip, sheetIdentity, Matrix.star_apply, Matrix.mul_apply,
-      Fin.sum_univ_two]
+    simp [sheetFlip, sheetIdentity, Matrix.star_eq_conjTranspose,
+      Matrix.conjTranspose_apply, Matrix.mul_apply,
+      Matrix.vecMul, dotProduct, Fin.sum_univ_two]
 
 lemma sheetFlip_conjugate_parity :
     sheetFlip * star sheetParity * sheetFlip = -sheetParity := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [sheetFlip, sheetParity, Matrix.star_apply, Matrix.mul_apply,
-      Fin.sum_univ_two]
+    simp [sheetFlip, sheetParity, Matrix.star_eq_conjTranspose,
+      Matrix.conjTranspose_apply, Matrix.mul_apply,
+      Matrix.vecMul, dotProduct, Fin.sum_univ_two]
 
 lemma sheetFlip_conjugate_flip :
     sheetFlip * star sheetFlip * sheetFlip = sheetFlip := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [sheetFlip, Matrix.star_apply, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [sheetFlip, Matrix.star_eq_conjTranspose,
+      Matrix.conjTranspose_apply, Matrix.mul_apply, Matrix.vecMul,
+      dotProduct, Fin.sum_univ_two]
 
 lemma sheetFlip_conjugate_phase :
     sheetFlip * star sheetPhase * sheetFlip = -sheetPhase := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [sheetFlip, sheetPhase, Matrix.star_apply, Matrix.mul_apply,
-      Fin.sum_univ_two] <;> ring
+    norm_num [sheetFlip, sheetPhase, Matrix.star_eq_conjTranspose,
+      Matrix.conjTranspose_apply, Matrix.mul_apply,
+      Matrix.vecMul, dotProduct, Fin.sum_univ_two]
 
 theorem kreinAdjoint_stokes (q : StokesQuad) :
     operatorStokesLinearEquiv
@@ -130,7 +135,6 @@ theorem kreinAdjoint_stokes (q : StokesQuad) :
       sheetFlip_conjugate_flip, sheetFlip_conjugate_phase]
     ext s t
     simp [sheetTensor]
-    ring
   have hcoords (r : StokesQuad) : operatorStokesLinearEquiv (assembleStokes r) = r := by
     change blocksToStokes (blockLinearMap (blockLinearMapInv (stokesToBlocks r))) = r
     rw [blockLinearMap_blockLinearMapInv, blocksToStokes_stokesToBlocks]

@@ -347,7 +347,9 @@ theorem card_X_twelve : Fintype.card (X 12) = 377 := by
   rw [X.card_eq_fib]; rfl
 
 /-- F_12 = 233 is prime. -/
-theorem F12_is_prime : Nat.Prime (Nat.fib 13) := by decide
+theorem F12_is_prime : Nat.Prime (Nat.fib 13) := by
+  change Nat.Prime 233
+  norm_num
 
 /-- |X_13| = 610. -/
 theorem card_X_thirteen : Fintype.card (X 13) = 610 := by
@@ -514,7 +516,8 @@ theorem paper_fold_order_independent :
     prop:pom-truncation-not-commute -/
 theorem paper_truncation_not_commute :
     ∃ (w : Word 3), Fold (truncate w) ≠ X.restrict (Fold w) := by
-  decide
+  refine ⟨![false, true, true], ?_⟩
+  native_decide
 
 end X
 
@@ -987,7 +990,7 @@ theorem paper_ea_ring_char_small :
     Nat.fib 11 = 89 ∧ Nat.Prime 89 ∧
     Nat.fib 12 = 144 ∧ 144 = 2 ^ 4 * 3 ^ 2 ∧
     Nat.fib 13 = 233 ∧ Nat.Prime 233 := by
-  refine ⟨by decide, by decide, by decide,
-          by omega, by decide, by decide⟩
+  refine ⟨by decide, by norm_num, by decide,
+          by norm_num, by decide, by norm_num⟩
 
 end Omega

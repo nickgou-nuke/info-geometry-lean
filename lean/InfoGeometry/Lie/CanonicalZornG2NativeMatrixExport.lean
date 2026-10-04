@@ -168,7 +168,7 @@ theorem rootDerivationRationalTable_matrix (k : Fin 14) :
     rootDerivationRationalTable k = rationalCircularOperatorMatrix k := by
   fin_cases k <;>
     rw [rationalCircularOperatorMatrix, rationalCircularFrameMatrix_inv] <;>
-    decide
+    native_decide
 
 theorem rootDerivationRationalTable_entry (k : Fin 14) (i j : Fin 8) :
     rootDerivationRationalTable k i j = rationalCircularOperatorMatrix k i j := by
@@ -380,4 +380,3 @@ theorem nativeParameterMatrix_eq_zero_iff (i : Fin 14) :
 end
 
 end InfoGeometry.Lie.CanonicalZornG2NativeMatrixExport
-

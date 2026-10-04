@@ -163,6 +163,7 @@ theorem q_plus_qinv_equals_phi_at_fibonacci :
   rw [hcos]
   -- 2 * ((1 + √5)/4) = (1 + √5)/2 = φ
   unfold phi InfoGeometryCore.phiC
+  push_cast
   ring
 
 /--
@@ -181,6 +182,7 @@ theorem fibonacci_fusion_from_quantum_group : phi * phi = phi + 1 := by
   have h5sq : (Real.sqrt 5 : ℂ) ^ 2 = (5 : ℂ) := by
     norm_cast
     exact Real.sq_sqrt (show 0 ≤ 5 by norm_num)
+  push_cast
   ring_nf
   rw [h5sq]
   ring_nf

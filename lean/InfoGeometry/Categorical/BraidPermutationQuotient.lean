@@ -343,7 +343,7 @@ private theorem product_cube_eq_one_of_artin_involutions
       group
     _ = (y * x * y) * (y * x * y) := by rw [hxyx]
     _ = y * x * (y * y) * x * y := by group
-    _ = 1 := by rw [hy, hx]; simp
+    _ = 1 := by simp [mul_assoc, hx, hy]
 
 private theorem product_square_eq_one_of_commuting_involutions
     {G : Type*} [Group G] (x y : G)
@@ -365,21 +365,6 @@ private theorem adjacentSwap_cubed_eq_one
   · simpa [pow_two] using adjacentSwap_sq m j
   · exact adjacentSwap_braid m i j hij
 
-private theorem adjacentSwap_cubed_eq_one_of_reverse
-    (m : ℕ) (i j : Fin m) (hij : j.val + 1 = i.val) :
-    (adjacentSwap m i * adjacentSwap m j) ^ 3 = 1 := by
-  have hrev := adjacentSwap_cubed_eq_one m j i hij
-  have hi : adjacentSwap m i * adjacentSwap m i = 1 := by
-    simpa [pow_two] using adjacentSwap_sq m i
-  have hj : adjacentSwap m j * adjacentSwap m j = 1 := by
-    simpa [pow_two] using adjacentSwap_sq m j
-  calc
-    (adjacentSwap m i * adjacentSwap m j) ^ 3 =
-        adjacentSwap m j * ((adjacentSwap m j * adjacentSwap m i) ^ 3) *
-          adjacentSwap m j := by
-            simp [pow_succ, pow_two, mul_assoc, hi, hj]
-    _ = 1 := by rw [hrev, hj]; simp
-
 /-- The adjacent transpositions satisfy the Coxeter relations of type A. -/
 private def typeACoxeterLiftable (m : ℕ) :
     CoxeterMatrix.IsLiftable (CoxeterMatrix.Aₙ m) (adjacentSwap m) := by
@@ -398,7 +383,12 @@ private def typeACoxeterLiftable (m : ℕ) :
       · have hentry : (CoxeterMatrix.Aₙ m) i j = 3 := by
           simp [CoxeterMatrix.Aₙ, hij, hforward, hbackward]
         rw [hentry]
-        exact adjacentSwap_cubed_eq_one_of_reverse m i j hbackward
+        have hArtin := adjacentSwap_braid m j i hbackward
+        exact product_cube_eq_one_of_artin_involutions
+          (adjacentSwap m i) (adjacentSwap m j)
+          (by simpa [pow_two] using adjacentSwap_sq m i)
+          (by simpa [pow_two] using adjacentSwap_sq m j)
+          hArtin.symm
       · have hentry : (CoxeterMatrix.Aₙ m) i j = 2 := by
           simp [CoxeterMatrix.Aₙ, hij, hforward, hbackward]
         rw [hentry]
@@ -447,7 +437,8 @@ theorem braidToPerm_eq_typeACoxeter_comp (m : ℕ) :
   symm
   apply ArtinBraidSystem.toGroupHom_unique (permutationArtinSystem m)
   intro i
-  simp [braidToPerm_generator, braidToTypeACoxeter_generator,
+  rw [MonoidHom.comp_apply, braidToTypeACoxeter_generator,
     typeACoxeterToPerm_simple]
+  rfl
 
 end InfoGeometry.Categorical.BraidPermutationQuotient

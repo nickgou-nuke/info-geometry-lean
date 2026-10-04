@@ -9,9 +9,9 @@ open Matrix
 variable {k n m : ℕ}
 
 /-- 
-An abstract representation of the Plücker coordinates (k x k minors) of a k x n matrix.
-For formalization simplicity at this layer, we postulat3 a minor extraction map. 
-In a full matrix library, this is `Matrix.det` of a submatrix.
+The determinant of the `k × k` submatrix selected by `I`. When `I` is
+strictly monotone, this is the corresponding ordered maximal minor (Plücker
+coordinate) of `C`.
 -/
 def extractMinor (C : Matrix (Fin k) (Fin n) ℝ) (I : Fin k → Fin n) : ℝ :=
   (C.submatrix id I).det
@@ -39,40 +39,33 @@ def bcfwCellMap (Z : Matrix (Fin (k + m)) (Fin n) ℝ) (C : Matrix (Fin k) (Fin 
   C * Z.transpose
 
 /--
-The Tree Amplituhedron 𝒜_{n,k,m}(Z) is the image of the Totally Non-Negative 
-Grassmannian under the Amplituhedron map Φ_Z.
+The image of the totally nonnegative representative matrices under the
+linear map `C ↦ C * Zᵀ`. This definition is available for arbitrary `Z`;
+it does not require `IsTotallyPositiveData Z`, so it does not by itself
+establish the usual positive-kinematics amplituhedron hypotheses.
 -/
 def TreeAmplituhedron (Z : Matrix (Fin (k + m)) (Fin n) ℝ) : Set (Matrix (Fin k) (Fin (k + m)) ℝ) :=
   { Y | ∃ C, IsTotallyNonnegative C ∧ Y = bcfwCellMap Z C }
 
-/--
-A BCFW cell is a specific subset of the Totally Non-Negative Grassmannian 
-(a positroid cell) defined by setting certain Plücker coordinates to zero.
-We represent a cell abstractly by the set of matrices satisfying a positivity condition
-and a specific affine structure.
--/
-structure BCFWCell (Z : Matrix (Fin (k + m)) (Fin n) ℝ) where
-  cell_matrices : Set (Matrix (Fin k) (Fin n) ℝ)
-  is_subset_tnn : ∀ C ∈ cell_matrices, IsTotallyNonnegative C
+/-- Image of a set of representative matrices under the map `C ↦ C * Zᵀ`. -/
+def cellImage (Z : Matrix (Fin (k + m)) (Fin n) ℝ)
+    (cell : Set (Matrix (Fin k) (Fin n) ℝ)) :
+    Set (Matrix (Fin k) (Fin (k + m)) ℝ) :=
+  {Y | ∃ C ∈ cell, Y = bcfwCellMap Z C}
 
-/-- 
-The image of a BCFW cell under the Amplituhedron map.
--/
-def cellImage (Z : Matrix (Fin (k + m)) (Fin n) ℝ) (cell : BCFWCell Z) : Set (Matrix (Fin k) (Fin (k + m)) ℝ) :=
-  { Y | ∃ C ∈ cell.cell_matrices, Y = bcfwCellMap Z C }
-
-/--
-A fundamental property: The image of any BCFW cell is contained within the Tree Amplituhedron.
-This is a mathematically honest theorem derived directly from the definitions.
--/
-theorem cell_image_subset_amplituhedron (Z : Matrix (Fin (k + m)) (Fin n) ℝ) (cell : BCFWCell Z) :
+/-- The image of a set contained in the TNN matrices lies in the image of all
+TNN matrices under the same linear map. -/
+theorem cell_image_subset_amplituhedron
+    (Z : Matrix (Fin (k + m)) (Fin n) ℝ)
+    (cell : Set (Matrix (Fin k) (Fin n) ℝ))
+    (hcell : ∀ C ∈ cell, IsTotallyNonnegative C) :
     cellImage Z cell ⊆ TreeAmplituhedron Z := by
   intro Y hY
   rcases hY with ⟨C, hC_in_cell, hY_eq⟩
   unfold TreeAmplituhedron
   use C
   constructor
-  · exact cell.is_subset_tnn C hC_in_cell
+  · exact hcell C hC_in_cell
   · exact hY_eq
 
 end InfoGeometry.Canonical

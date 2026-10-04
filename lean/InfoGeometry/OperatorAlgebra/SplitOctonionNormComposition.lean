@@ -31,6 +31,15 @@ theorem detZ_mulZ (X Y : SplitOct) : detZ (mulZ X Y) = detZ X * detZ Y := by
 theorem diagonal_idempotents_split_null : detZ ePlus = 0 ∧ detZ eMinus = 0 := by
   constructor <;> rfl
 
+/-- The first upper Zorn basis vector is nonzero and has square zero. -/
+theorem up0_nonzero_square_zero : up0 ≠ zeroZ ∧ mulZ up0 up0 = zeroZ := by
+  constructor <;> decide
+
+/-- The concrete split-octonion carrier has a nonzero square-zero element. -/
+theorem exists_nonzero_square_zero :
+    ∃ x : SplitOct, x ≠ zeroZ ∧ mulZ x x = zeroZ :=
+  ⟨up0, up0_nonzero_square_zero.1, up0_nonzero_square_zero.2⟩
+
 /-- Multiplying by a basis vector slot preserves the zero-norm readback predicted by composition. -/
 theorem upper_lower_norm_composition_zero (i : Fin 3) :
     detZ (mulZ (up i) (down i)) = detZ (up i) * detZ (down i) ∧

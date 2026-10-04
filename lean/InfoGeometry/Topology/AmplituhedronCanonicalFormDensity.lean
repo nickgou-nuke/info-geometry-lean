@@ -52,40 +52,41 @@ theorem HasProjectiveWeight_mul {f g : Matrix (Fin 2) (Fin 4) ℝ → ℝ} {w1 w
   rw [hf Λ Y, hg Λ Y, pow_add]
   ring
 
-/-! ### 2. Global Rational Form Density Structure -/
+/-! ### 2. Homogeneity of the cyclic denominator
 
-/-- The pristine algebraic structure of the n-point canonical form on the Grassmannian.
-Instead of a naive product of 1-forms (which vanishes for n > 4 due to dY ∧ dY = 0),
-the exact geometric carrier is a rational top-form density over Gr(2, 4) with
-projective weight 0. -/
-structure AmplituhedronRationalForm (n : ℕ) [NeZero n] where
-  Z : Matrix (Fin n) (Fin 4) ℝ
-  /-- The polynomial numerator N(Y; Z). -/
-  numerator : Matrix (Fin 2) (Fin 4) ℝ → ℝ
-  /-- The polynomial denominator, which must be the cyclic twistor brackets. -/
-  denominator : Matrix (Fin 2) (Fin 4) ℝ → ℝ
-  /-- The denominator must equal the product of cyclic twistor brackets. -/
-  denominator_eq : denominator = fun Y => cyclicTwistorDenominator Y Z
-  /-- The numerator must have projective weight exactly (n - 4) to balance the 
-      denominator (weight n) and the measure d^4 Y (weight 4). 
-      (We assume n ≥ 4 so n - 4 is well-defined). -/
-  numerator_weight : HasProjectiveWeight numerator (n - 4)
-  /-- The denominator has projective weight n. -/
-  denominator_weight : HasProjectiveWeight denominator n
+The bracket product has projective weight `n`.  This is a property of the
+explicit algebraic denominator, and does not by itself construct a canonical
+form or a Poincaré residue. -/
 
-/-! ### 3. Factorization Residues (Physical Unitarity) -/
+theorem cyclicTwistorDenominator_weight (Z : Matrix (Fin n) (Fin 4) ℝ) :
+    HasProjectiveWeight (fun Y => cyclicTwistorDenominator Y Z) n := by
+  intro Λ Y
+  let detΛ : ℝ := Λ 0 0 * Λ 1 1 - Λ 0 1 * Λ 1 0
+  have hbr (i : Fin n) :
+      twistorBracket (Λ * Y) Z i (cyclicNext i) =
+        detΛ * twistorBracket Y Z i (cyclicNext i) := by
+    exact (twistorBracket_weight Z i (cyclicNext i) Λ Y).trans
+      (by simp [HasProjectiveWeight, detΛ, pow_one])
+  change (∏ i : Fin n, twistorBracket (Λ * Y) Z i (cyclicNext i)) =
+      detΛ ^ n * ∏ i : Fin n, twistorBracket Y Z i (cyclicNext i)
+  calc
+    _ = ∏ i : Fin n, detΛ * twistorBracket Y Z i (cyclicNext i) := by
+      apply Finset.prod_congr rfl
+      intro i hi
+      exact hbr i
+    _ = (∏ _i : Fin n, detΛ) *
+        ∏ i : Fin n, twistorBracket Y Z i (cyclicNext i) := by
+      rw [Finset.prod_mul_distrib]
+    _ = detΛ ^ n *
+        ∏ i : Fin n, twistorBracket Y Z i (cyclicNext i) := by
+      simp [detΛ]
 
-/-- An abstract structure mapping an n-point form to its boundary facets.
-Taking the Poincaré residue along any physical cyclic facet ⟨Y Z_i Z_{i+1}⟩ = 0
-recovers the (n-1)-point form density. -/
-structure FactorizationResidue (n : ℕ) [NeZero n] [NeZero (n-1)] where
-  /-- The n-point form. -/
-  omega_n : AmplituhedronRationalForm n
-  /-- The (n-1)-point form. -/
-  omega_n_minus_1 : AmplituhedronRationalForm (n - 1)
-  /-- The abstract Poincaré residue operator taking forms on Gr(2, 4) to their facet residues. -/
-  poincare_residue : AmplituhedronRationalForm n → Fin n → AmplituhedronRationalForm (n - 1)
-  /-- The physical collinear/soft limit factorization. -/
-  residue_eq : ∀ (i : Fin n), poincare_residue omega_n i = omega_n_minus_1
+/-! ### Development frontier
+
+A genuine canonical form requires specifying the positive cell, its rational
+numerator, and the differential form or density transformation law.  Boundary
+factorization further requires a defined residue operation and a theorem about
+that operation.  Those data are not consequences of denominator homogeneity,
+so this module leaves both constructions open. -/
 
 end InfoGeometry.Amplituhedron

@@ -1,5 +1,6 @@
 import InfoGeometry.Topology.PureBraidRepresentation
 import InfoGeometry.Topology.AmplituhedronCanonicalFormDensity
+import InfoGeometry.Topology.AmplituhedronBCFW
 import InfoGeometry.Topology.AmplituhedronGeneralTwistorExpansion
 import InfoGeometry.Topology.AmplituhedronVolumeForm
 import InfoGeometry.Topology.AmplituhedronTwistorProjection

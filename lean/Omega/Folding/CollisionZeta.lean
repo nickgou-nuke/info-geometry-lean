@@ -255,7 +255,7 @@ theorem collisionKernel3_det_pow_general (n : ℕ) :
 
 /-- det(A_4^n) = det(A_4)^n = (-2)^n for n = 2.
     def:pom-collision-kernel-det-pow-a4-2 -/
-theorem collisionKernel4_det_pow_2 : (collisionKernel4 ^ 2).det = 4 := by decide
+theorem collisionKernel4_det_pow_2 : (collisionKernel4 ^ 2).det = 4 := by native_decide
 
 /-- det(M₄^n) = (-2)^n for the S_4 collision kernel.
     prop:collision-kernel-det-pow -/
@@ -584,7 +584,7 @@ theorem dfa_linear_recurrence_instances :
 
 /-- S_5(6) base value.
     prop:pom-moment-five-six -/
-theorem momentSum_five_six : momentSum 5 6 = 13444 := by rw [← cMomentSum_eq]; decide
+theorem momentSum_five_six : momentSum 5 6 = 13444 := by rw [← cMomentSum_eq]; native_decide
 
 /-- Moment sum hierarchy at m=6: S_1 < S_2 < S_3 < S_4 < S_5.
     prop:pom-coarsegraining-collision-moment-strict-monotonicity -/
@@ -604,7 +604,7 @@ theorem paper_collision_moment_hierarchy_m7 :
     momentSum 2 7 < momentSum 3 7 ∧
     momentSum 3 7 < momentSum 4 7 ∧
     momentSum 4 7 < momentSum 5 7 := by
-  have h4 : momentSum 4 7 = 12208 := by rw [← cMomentSum_eq]; decide
+  have h4 : momentSum 4 7 = 12208 := by rw [← cMomentSum_eq]; native_decide
   have h5 : momentSum 5 7 = 62168 := momentSum_five_seven
   rw [momentSum_one, momentSum_two_seven, momentSum_three_seven, h4, h5]
   omega
@@ -737,7 +737,7 @@ theorem collision_pairs_count_verified :
     cCollisionPairsCount 0 = 1 ∧ cCollisionPairsCount 1 = 2 ∧
     cCollisionPairsCount 2 = 6 ∧ cCollisionPairsCount 3 = 14 ∧
     cCollisionPairsCount 4 = 36 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> decide
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
 
 /-- Paper theorem: all collision kernels have determinant -2.
     prop:pom-collision-det -/

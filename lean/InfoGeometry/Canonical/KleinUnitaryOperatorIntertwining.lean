@@ -1,6 +1,5 @@
 import proofs.KleinOperatorAlgebraBundleCore
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Topology.KleinSixStateVectorBundleCore
 
 /-!
 # Vector/operator intertwining for the Klein six-state bundle

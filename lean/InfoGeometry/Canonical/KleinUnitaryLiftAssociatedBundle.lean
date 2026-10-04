@@ -39,8 +39,9 @@ theorem thetaU6_sq (omega : ℂ) (homega : omega ^ 2 + omega + 1 = 0) :
   apply Subtype.ext
   change reindexSix KleinSixStateBundle.theta *
       reindexSix KleinSixStateBundle.theta = 1
-  rw [← map_mul, theta_sq omega homega]
-  exact map_one reindexSix
+  have htheta : KleinSixStateBundle.theta * KleinSixStateBundle.theta = 1 := by
+    rw [← pow_two, KleinSixStateBundle.theta_sq]
+  rw [← map_mul reindexSix, htheta, map_one reindexSix]
 
 theorem deckLiftUnit_add (omega : ℂ)
     (homega : omega ^ 2 + omega + 1 = 0) (g h : Deck2) :

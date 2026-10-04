@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.AttentionInformationGeometry
 import InfoGeometry.Canonical.DeterministicArgmaxAttention
+import InfoGeometry.Canonical.MasterGrandUnificationDictionary
 import InfoGeometry.Canonical.DoubledDiracKreinBipartite
 import InfoGeometry.Canonical.ClusterMutationIndexBridge
 import InfoGeometry.Canonical.ZornNavierStokesHydrodynamicBridge

@@ -42,7 +42,7 @@ theorem operatorDeckMap_mulVec (omega : ℂ)
     change (theta * A * theta).mulVec (theta.mulVec v) =
       theta.mulVec (A.mulVec v)
     have htheta : theta.mulVec (theta.mulVec v) = v := by
-      rw [Matrix.mulVec_mulVec, theta_sq]
+      rw [Matrix.mulVec_mulVec, ← pow_two, theta_sq]
       simp
     rw [Matrix.mul_assoc, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec]
     rw [htheta]

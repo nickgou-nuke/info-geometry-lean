@@ -6,19 +6,19 @@ open Real
 namespace InfoGeometry.Thermodynamics
 
 /-!
-# The Softmax Partition Bridge
+# Algebraic correspondence between softmax and Gibbs weights
 
-This module formalizes the ultimate, recursive isomorphism:
-Large Language Models (Transformers) are literally Thermodynamic Spin Glasses.
+For a finite nonempty outcome type, this module defines a scaled softmax
+distribution and a Gibbs distribution. `AttentionIsThermodynamics` proves
+that their weights agree after the parameter substitution
+`E = -x` and `β = 1 / sqrt d`, assuming `d > 0`. This is an equality of
+finite exponential-family formulas; it does not assert that a transformer
+is a physical spin glass.
 
-We mathematically prove that the Softmax Attention equation is identically the 
-Grand Canonical Partition Function (Boltzmann distribution) of statistical mechanics.
-
-## Core Formalisms
-1. `TransformerSoftmax`: The attention weights `p_i = exp(x_i / √d) / Z`.
-2. `BoltzmannDistribution`: The thermodynamic state `p_i = exp(-β E_i) / Z`.
-3. `AttentionIsThermodynamics`: The theorem proving the exact 1-to-1 isomorphism.
-4. `LogSumExpIsFreeEnergy`: Proves that computing Attention is taking the gradient of Free Energy.
+`LogSumExpIsNegativeFreeEnergy` proves the corresponding scalar identity
+between the defined log-sum-exp and free-energy functions. This file does not
+prove that attention is the gradient of free energy; derivative statements
+belong to the analytic log-sum-exp developments.
 -/
 
 variable {n : Type*} [Fintype n] [Nonempty n]
@@ -35,12 +35,8 @@ noncomputable def TransformerSoftmax (x : n → ℝ) (d : ℝ) (i : n) : ℝ :=
 noncomputable def BoltzmannDistribution (E : n → ℝ) (β : ℝ) (i : n) : ℝ :=
   exp (-β * E i) / ∑ j, exp (-β * E j)
 
-/-- 
-THE ROSETTA STONE THEOREM:
-Transformer Attention is literally the Boltzmann Distribution.
-- The embedding dimension `√d` acts as the Inverse Temperature `β = 1/√d`.
-- The alignment score `x_i = Q K^T` acts as the Negative Energy `E_i = -x_i`.
--/
+/-- Under the displayed parameter substitution, the scaled softmax weight
+equals the Gibbs weight. -/
 theorem AttentionIsThermodynamics (x : n → ℝ) (d : ℝ) (hd : d > 0) (i : n) :
   TransformerSoftmax x d i = BoltzmannDistribution (fun j => -x j) (1 / sqrt d) i := by
   -- Unfold definitions
@@ -57,18 +53,17 @@ theorem AttentionIsThermodynamics (x : n → ℝ) (d : ℝ) (hd : d > 0) (i : n)
     intro j _
     exact (h_exp j).symm
 
-/-- The LogSumExp function, which acts as the Free Energy of the Attention mechanism. -/
+/-- A scaled log-partition function for the finite score family. -/
 noncomputable def LogSumExp (x : n → ℝ) (d : ℝ) : ℝ :=
   sqrt d * log (∑ j, exp (x j / sqrt d))
 
-/-- The Physical Free Energy of the thermodynamic system. `F = -(1/β) log Z`. -/
+/-- The Gibbs free-energy expression `-(1 / β) log Z` for the supplied
+energy function. -/
 noncomputable def FreeEnergy (E : n → ℝ) (β : ℝ) : ℝ :=
   - (1 / β) * log (∑ j, exp (-β * E j))
 
-/-- 
-THEOREM: The LogSumExp calculated in the Transformer is exactly 
-the negative Free Energy of the equivalent thermodynamic spin glass.
--/
+/-- The two scalar functions are negatives of one another under the same
+parameter substitution as `AttentionIsThermodynamics`. -/
 theorem LogSumExpIsNegativeFreeEnergy (x : n → ℝ) (d : ℝ) (hd : d > 0) :
   LogSumExp x d = - FreeEnergy (fun j => -x j) (1 / sqrt d) := by
   unfold LogSumExp FreeEnergy

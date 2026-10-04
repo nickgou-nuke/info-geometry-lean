@@ -47,11 +47,15 @@ positive diagonal subgroup. It is not in `SO(2)` and is not in the centralizer
 def matR : Matrix (Fin 2) (Fin 2) ℝ :=
   !![0, 1; 1, 0]
 
-/-- Split abelian torus $A$ (pure Weyl scale dilatations). -/
+/-- Diagonal matrix with entries `a₁` and `a₂`.  It is invertible only when
+both entries are nonzero; within `SL(2, ℝ)`, the diagonal subgroup additionally
+satisfies `a₁ * a₂ = 1`. -/
 def matA (a₁ a₂ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   !![a₁, 0; 0, a₂]
 
-/-- One-parameter hyperbolic boost subgroup $A(t) = \operatorname{diag}(e^t, e^{-t})$. -/
+/-- One-parameter split torus in `SL(2, ℝ)`, with opposite coordinate
+weights.  Its determinant is one, so this boost is a relative dilation rather
+than a volume homothety. -/
 def matA_boost (t : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   matA (Real.exp t) (Real.exp (-t))
 
@@ -111,12 +115,9 @@ theorem kanProduct_det (k a n : Matrix (Fin 2) (Fin 2) ℝ) :
   dsimp [kanProduct]
   rw [Matrix.det_mul, Matrix.det_mul]
 
-/-- 
-Trifactor Determinant Law:
-Because $N$ is identically unimodular ($\det(N) = 1$), the volume determinant
-is strictly the product of the compact phase/parity factor $\det(k)$ and the Weyl scale $\det(a)$:
-$\det(k \cdot a \cdot n) = \det(k) \det(a)$.
--/
+/-- Determinant multiplicativity when the right factor is the displayed
+unipotent matrix `N(x)`.  This is a matrix identity, not a scale/parity/phase
+decomposition of a frame group. -/
 theorem kanProduct_det_of_unipotent (k a : Matrix (Fin 2) (Fin 2) ℝ) (x : ℝ) :
     (kanProduct k a (matN x)).det = k.det * a.det := by
   rw [kanProduct_det, matN_det, mul_one]
@@ -151,6 +152,13 @@ theorem mat_n_gen_trace (x : ℝ) : (mat_n_gen x).trace = 0 := by
 /-- The trace of $\mathfrak{a}$ is the sum of the scale weights: $\operatorname{tr}(X_\mathfrak{a}) = t_1 + t_2$. -/
 theorem mat_a_gen_trace (t₁ t₂ : ℝ) : (mat_a_gen t₁ t₂).trace = t₁ + t₂ := by
   simp [mat_a_gen, Matrix.trace, Fin.sum_univ_two]
+
+/-- The diagonal generator in the determinant-one split Cartan direction is
+traceless. -/
+theorem mat_a_gen_trace_opposite (t : ℝ) :
+    (mat_a_gen t (-t)).trace = 0 := by
+  rw [mat_a_gen_trace]
+  ring
 
 /-- 
 For the displayed $2 \times 2$ matrices, the trace of the sum equals the
@@ -306,77 +314,5 @@ theorem matDirac_off_diagonal (d₁ d₂ : ℝ) :
     matDirac d₁ d₂ = P_plus * matDirac d₁ d₂ * P_minus + P_minus * matDirac d₁ d₂ * P_plus := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [P_plus, P_minus, matDirac]
-
-/-! ### Finite matrix identity bundle -/
-
-/--
-Bundle of the finite matrix identities proved above. This structure is a
-collection of propositions; it is not a KAN factorization or a Klein bottle
-holonomy model.
--/
-structure KANIwasawaSplitPeirceDiracPacket where
-  -- Stratum 1: Finite matrix determinants and KAN-coordinate identities
-  k_rot_det : ∀ θ : ℝ, (matK_rot θ).det = 1
-  r_det : matR.det = -1
-  r_sq : matR * matR = 1
-  a_boost_det : ∀ t : ℝ, (matA_boost t).det = 1
-  n_det : ∀ x : ℝ, (matN x).det = 1
-  kan_unipotent_det : ∀ (k a : Matrix (Fin 2) (Fin 2) ℝ) (x : ℝ),
-    (kanProduct k a (matN x)).det = k.det * a.det
-
-  -- Stratum 2: Trace Localization on a
-  k_trace_zero : ∀ ω : ℝ, (mat_k_gen ω).trace = 0
-  n_trace_zero : ∀ x : ℝ, (mat_n_gen x).trace = 0
-  n_nilpotent : ∀ x : ℝ, mat_n_gen x * mat_n_gen x = 0
-  trace_localized : ∀ ω t₁ t₂ x : ℝ,
-    (mat_k_gen ω + mat_a_gen t₁ t₂ + mat_n_gen x).trace = (mat_a_gen t₁ t₂).trace
-
-  -- Stratum 3: Peirce Projectors & N-Transition
-  peirce_plus_sq : P_plus * P_plus = P_plus
-  peirce_minus_sq : P_minus * P_minus = P_minus
-  peirce_orthog : P_plus * P_minus = 0
-  peirce_resolv : P_plus + P_minus = 1
-  n_peirce_transition : ∀ x : ℝ, P_plus * matN x * P_minus = x • e_plus
-  n_peirce_no_backwards : ∀ x : ℝ, P_minus * matN x * P_plus = 0
-
-  -- Finite Weyl-normalizer inversion and projector swapping identities
-  r_inverts_boost : ∀ t : ℝ, matR * matA_boost t * matR = matA_boost (-t)
-  r_swaps_plus : matR * P_plus * matR = P_minus
-  r_swaps_minus : matR * P_minus * matR = P_plus
-  r_restores_plus : matR * (matR * P_plus * matR) * matR = P_plus
-
-  -- Finite off-diagonal matrix identities
-  dirac_plus_zero : ∀ d₁ d₂ : ℝ, P_plus * matDirac d₁ d₂ * P_plus = 0
-  dirac_minus_zero : ∀ d₁ d₂ : ℝ, P_minus * matDirac d₁ d₂ * P_minus = 0
-  dirac_off_diag : ∀ d₁ d₂ : ℝ,
-    matDirac d₁ d₂ = P_plus * matDirac d₁ d₂ * P_minus + P_minus * matDirac d₁ d₂ * P_plus
-
-/--
-Constructor for the KAN Iwasawa Split Peirce Dirac Packet.
--/
-def makeKANIwasawaSplitPeirceDiracPacket : KANIwasawaSplitPeirceDiracPacket where
-  k_rot_det := matK_rot_det
-  r_det := matR_det
-  r_sq := matR_sq
-  a_boost_det := matA_boost_det
-  n_det := matN_det
-  kan_unipotent_det := kanProduct_det_of_unipotent
-  k_trace_zero := mat_k_gen_trace
-  n_trace_zero := mat_n_gen_trace
-  n_nilpotent := mat_n_gen_sq
-  trace_localized := kan_trace_supported_on_a
-  peirce_plus_sq := P_plus_sq
-  peirce_minus_sq := P_minus_sq
-  peirce_orthog := P_plus_mul_minus
-  peirce_resolv := P_plus_add_minus
-  n_peirce_transition := P_plus_matN_P_minus
-  n_peirce_no_backwards := P_minus_matN_P_plus
-  r_inverts_boost := matR_conjugates_boost
-  r_swaps_plus := matR_swaps_peirce_plus
-  r_swaps_minus := matR_swaps_peirce_minus
-  r_restores_plus := matR_restores_peirce_plus
-  dirac_plus_zero := matDirac_peirce_plus_zero
-  dirac_minus_zero := matDirac_peirce_minus_zero
-  dirac_off_diag := matDirac_off_diagonal
 
 end InfoGeometry.Canonical.KANIwasawaSplitPeirceDirac

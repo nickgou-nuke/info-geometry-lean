@@ -2,18 +2,19 @@ import Mathlib.Tactic
 import Mathlib.Data.Matrix.Basic
 
 /-!
-# Authentic Grassmann-Plücker Syzygies for Gr(3, n)
+# A Grassmann–Plücker Relation for 3-by-n Matrices
 
-This module formalizes the exact algebraic relations cutting out the Grassmannian 
-Gr(3, n) under its Plücker embedding. These are genuine mathematical theorems 
-with fully constructive proofs, serving as the rigorous foundation for the 
-6D Associahedron and tree-level amplitudes, free from vacuum physics terminology.
+This module defines the 3-by-3 minors of a matrix with three rows and proves
+one standard four-term Grassmann–Plücker relation among them. The theorem is a
+polynomial identity over a commutative ring. This file does not formalize an
+associahedron or scattering amplitudes, nor does it claim to give a complete
+presentation of the Plücker ideal.
 
 1. **Plücker 3-Minors (`pluckerMinor3`)**:
    Explicit expansion of the 3x3 determinants of a 3xN matrix.
 
-2. **Grassmann-Plücker Relation**:
-   The quadratic syzygy for 3-blades:
+2. **A Grassmann–Plücker Relation**:
+   For fixed indices `a, b` and `c, d, e, f`, the quadratic identity:
    `Δ(a,b,c)Δ(d,e,f) - Δ(a,b,d)Δ(c,e,f) + Δ(a,b,e)Δ(c,d,f) - Δ(a,b,f)Δ(c,d,e) = 0`.
 -/
 
@@ -30,26 +31,24 @@ def pluckerMinor3 (C : Matrix (Fin 3) (Fin n) R) (i j k : Fin n) : R :=
   C 0 j * (C 1 i * C 2 k - C 1 k * C 2 i) +
   C 0 k * (C 1 i * C 2 j - C 1 j * C 2 i)
 
-/-- 🏆 THEOREM: Alternating sign under swap of first two indices. -/
+/-- Swapping the first two indices negates the minor. -/
 theorem pluckerMinor3_antisymm12 (C : Matrix (Fin 3) (Fin n) R) (i j k : Fin n) :
     pluckerMinor3 C j i k = - pluckerMinor3 C i j k := by
   unfold pluckerMinor3; ring
 
-/-- 🏆 THEOREM: Alternating sign under swap of last two indices. -/
+/-- Swapping the last two indices negates the minor. -/
 theorem pluckerMinor3_antisymm23 (C : Matrix (Fin 3) (Fin n) R) (i j k : Fin n) :
     pluckerMinor3 C i k j = - pluckerMinor3 C i j k := by
   unfold pluckerMinor3; ring
 
-/-- 🏆 THEOREM: Minor vanishes if two indices are equal (i = j). -/
+/-- The minor vanishes when its first two indices agree. -/
 theorem pluckerMinor3_self12 (C : Matrix (Fin 3) (Fin n) R) (i k : Fin n) :
     pluckerMinor3 C i i k = 0 := by
   unfold pluckerMinor3; ring
 
 /--
-🏆 THEOREM (The Fundamental Grassmann-Plücker Syzygy for Gr(3, n)):
-For any 3xN matrix, the 3x3 minors identically satisfy the 4-term 
-quadratic Grassmann-Plücker relation. This is the authentic mathematical 
-generator for the Plücker ideal of Gr(3, n).
+For any matrix with three rows, its 3-by-3 minors satisfy this four-term
+Grassmann–Plücker relation. This is one relation in the Plücker family.
 -/
 theorem plucker3_syzygy (C : Matrix (Fin 3) (Fin n) R) (a b c d e f : Fin n) :
     pluckerMinor3 C a b c * pluckerMinor3 C d e f -

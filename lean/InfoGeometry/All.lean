@@ -38,3 +38,4 @@ import InfoGeometry.GrandUnification.ConformalTwistorSymmetryDictionary
 import InfoGeometry.GrandUnification.TwistorCoordinateShear
 import InfoGeometry.GrandUnification.HigherDimensionalEmbeddingStabilityBridge
 import InfoGeometry.Canonical.Grassmannian3PluckerSyzygy
+import InfoGeometry.Canonical.Grassmannian3Positivity

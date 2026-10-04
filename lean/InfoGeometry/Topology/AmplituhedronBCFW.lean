@@ -2,6 +2,7 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.Field.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic
+import InfoGeometry.Canonical.AmplituhedronGrassmannianBCFWCapstone
 
 namespace InfoGeometry.AmplituhedronBCFW
 
@@ -47,14 +48,23 @@ denominator.  No canonical form or pole classification is defined here. -/
 def globalAmplituhedronForm (p : PhysicalFacets F) (N₅ : F) : F :=
   N₅ / (p.P₁ * p.P₂ * p.P₃ * p.P₄ * p.P₅)
 
-/-! ### 3. The Grassmann-Plücker Matching Relation -/
+/-! ### 3. Matrix Minor Syzygy and the Remaining BCFW Match -/
 
-/-- A rearrangement of the supplied three-term Plücker equation.  This does
-not identify any of the independent scalar slots above with Plücker minors. -/
-theorem plucker_spurious_factor (Δ₁₂ Δ₃₄ Δ₂₃ Δ₁₄ Δ₁₃ Δ₂₄ : F)
-    (h_plucker : Δ₁₂ * Δ₃₄ - Δ₁₃ * Δ₂₄ + Δ₁₄ * Δ₂₃ = 0) :
-    Δ₁₂ * Δ₃₄ + Δ₂₃ * Δ₁₄ = Δ₁₃ * Δ₂₄ := by
-  linear_combination h_plucker
+/-- Four actual ordered minors of a two-row matrix satisfy the
+three-term Grassmann--Plücker relation in the rearranged sign convention.
+This establishes the matrix-minor identity; identifying its minors with the
+five scalar facet slots and deriving `BCFWMatchingCondition` remains a separate
+geometric step. -/
+theorem plucker_spurious_factor (C : Matrix (Fin 2) (Fin 4) ℝ) :
+    InfoGeometry.Canonical.AmplituhedronBCFW.pluckerMinor C 0 1 *
+        InfoGeometry.Canonical.AmplituhedronBCFW.pluckerMinor C 2 3 +
+      InfoGeometry.Canonical.AmplituhedronBCFW.pluckerMinor C 1 2 *
+        InfoGeometry.Canonical.AmplituhedronBCFW.pluckerMinor C 0 3 =
+      InfoGeometry.Canonical.AmplituhedronBCFW.pluckerMinor C 0 2 *
+        InfoGeometry.Canonical.AmplituhedronBCFW.pluckerMinor C 1 3 := by
+  have h := InfoGeometry.Canonical.AmplituhedronBCFW.plucker_syzygy
+    C (0 : Fin 4) 1 2 3
+  linear_combination h
 
 /-- The additional numerator relation required by the scalar cancellation
 theorem below.  Its geometric derivation is not part of this module. -/

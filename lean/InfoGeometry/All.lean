@@ -27,3 +27,4 @@ import InfoGeometry.Geometry.AssociativeGaugeConnection
 import InfoGeometry.Krein.TransitionWeakValue
 import InfoGeometry.Krein.TransitionWeakValueExamples
 import InfoGeometry.Meta.FiniteTemperleyLiebTrace
+import InfoGeometry.GrandUnification.KantorIwasawaArchetypeDictionary

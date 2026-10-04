@@ -41,3 +41,4 @@ import InfoGeometry.Canonical.Grassmannian3PluckerSyzygy
 import InfoGeometry.Canonical.Grassmannian3Positivity
 import InfoGeometry.Canonical.AssociativeCollapseMap
 import InfoGeometry.Canonical.E8RootDecomposition
+import InfoGeometry.Canonical.TopologicalDiamondStabilizer

@@ -39,5 +39,4 @@ import InfoGeometry.GrandUnification.TwistorCoordinateShear
 import InfoGeometry.GrandUnification.HigherDimensionalEmbeddingStabilityBridge
 import InfoGeometry.Canonical.Grassmannian3PluckerSyzygy
 import InfoGeometry.Canonical.Grassmannian3Positivity
-import InfoGeometry.SplitOctonions.GradedBlades
-import InfoGeometry.Algebra.SplitOctonionIsotropicAnnihilator
+import InfoGeometry.Canonical.DecomposableBivector

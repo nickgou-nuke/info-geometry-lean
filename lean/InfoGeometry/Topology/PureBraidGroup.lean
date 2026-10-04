@@ -1,120 +1,152 @@
-import Mathlib.GroupTheory.PresentedGroup
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.GroupTheory.FreeGroup.Basic
 
-/-!
-# Pure braid presented-group boundary
+import Mathlib.Algebra.Group.Basic
+import Mathlib.Data.Matrix.Basic
+import Mathlib.Tactic.Group
+import Mathlib.Tactic
+import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
 
-This file installs a mathlib `PresentedGroup` boundary for the pure-braid
-source used by the Rohozhkin layer. The relation set is explicit and staged
-from the standard pure-braid
-presentation families used by Rohozhkin--Staic:
+namespace ArtinPureBraid
 
-* far commutativity for noninterleaving ordered pairs;
-* the three-index relation
-  `bᵢⱼ bᵢₖ bⱼₖ = bⱼₖ bᵢⱼ bᵢₖ = bᵢₖ bⱼₖ bᵢⱼ`;
-* the four-index relation
-  `bⱼₗ bₖₗ bᵢₖ bⱼₖ = bₖₗ bᵢₖ bⱼₖ bⱼₗ`.
+variable {G : Type*} [Group G]
 
-This is a presented-group boundary. It does not yet prove that Rohozhkin's
-Delaunay generator matrices satisfy these relators; that is the next descent
-obligation before a closed `PBₙ → GL` theorem.
--/
+/-! ### 1. Universal Group Inversion & Conjugation Lemmas -/
 
-namespace InfoGeometry.Topology.PureBraid
+/-- Core Group Identity:
+    (Y * Z)⁻¹ * Y * (Y * Z) collapses identically to Z⁻¹ * Y * Z. -/
+theorem conj_by_mul_self (Y Z : G) :
+    (Y * Z)⁻¹ * Y * (Y * Z) = Z⁻¹ * Y * Z := by
+  group
 
-/--
-Generator labels for the pure braid group on `n` strands.
-The standard presentation uses labels `bᵢⱼ` for `i < j`.
--/
-structure PureBraidGenerator (n : ℕ) where
-  i : Fin n
-  j : Fin n
-  lt : i < j
-  deriving DecidableEq
+/-- Commutative inversion lemma:
+    If a and b commute, then b and a⁻¹ commute. -/
+lemma comm_inv_of_comm {a b : G} (h : a * b = b * a) :
+    b * a⁻¹ = a⁻¹ * b := by
+  have h1 : a⁻¹ * (a * b) * a⁻¹ = a⁻¹ * (b * a) * a⁻¹ := by rw [h]
+  calc b * a⁻¹ = a⁻¹ * (a * b) * a⁻¹ := by group
+  _ = a⁻¹ * (b * a) * a⁻¹ := h1
+  _ = a⁻¹ * b := by group
 
-/-- The free-group word corresponding to a pure-braid generator `bᵢⱼ`. -/
-def b {n : ℕ} (i j : Fin n) (hij : i < j) : FreeGroup (PureBraidGenerator n) :=
-  FreeGroup.of { i := i, j := j, lt := hij }
+/-! ### 2. The Artin Pure Braid Triple Structure -/
 
-/-- Relator encoding equality `lhs = rhs` as `lhs * rhs⁻¹ = 1`. -/
-def relatorEq {α : Type*} (lhs rhs : FreeGroup α) : FreeGroup α :=
-  lhs * rhs⁻¹
+/-- An Artin Pure Braid Triple (A_{i, j}, A_{i, k}, A_{j, k}) in a group G,
+    representing three strands i < j < k. -/
+structure PureBraidTriple (G : Type*) [Group G] where
+  A_ij : G
+  A_ik : G
+  A_jk : G
+  cyclic_one : A_ij * A_ik * A_jk = A_ik * A_jk * A_ij
+  cyclic_two : A_ik * A_jk * A_ij = A_jk * A_ij * A_ik
 
-/-- Far-commutativity relator for noninterleaving ordered pairs.
+namespace PureBraidTriple
 
-The membership condition in `pureBraidRelations` supplies either
-`i < j < k < l` or `i < k < l < j`.  The relator itself only needs the two
-valid generator labels `i < j` and `k < l`. -/
-def farCommRelator {n : ℕ} (i j k l : Fin n)
-    (hij : i < j) (hkl : k < l) :
-    FreeGroup (PureBraidGenerator n) :=
-  relatorEq ((b i j hij) * (b k l hkl)) ((b k l hkl) * (b i j hij))
+variable (t : PureBraidTriple G)
 
-/-- First three-index relator: `bᵢⱼ bᵢₖ bⱼₖ = bⱼₖ bᵢⱼ bᵢₖ`. -/
-def tripleRelatorLeft {n : ℕ} (i j k : Fin n)
-    (hij : i < j) (hjk : j < k) :
-    FreeGroup (PureBraidGenerator n) :=
-  have hik : i < k := by exact Nat.lt_trans hij hjk
-  relatorEq ((b i j hij) * (b i k hik) * (b j k hjk))
-    ((b j k hjk) * (b i j hij) * (b i k hik))
+/-- Third cyclic branch: Z * X * Y = X * Y * Z. -/
+theorem cyclic_three :
+    t.A_jk * t.A_ij * t.A_ik = t.A_ij * t.A_ik * t.A_jk := by
+  rw [t.cyclic_one, t.cyclic_two]
 
-/-- Second three-index relator: `bⱼₖ bᵢⱼ bᵢₖ = bᵢₖ bⱼₖ bᵢⱼ`. -/
-def tripleRelatorRight {n : ℕ} (i j k : Fin n)
-    (hij : i < j) (hjk : j < k) :
-    FreeGroup (PureBraidGenerator n) :=
-  have hik : i < k := by exact Nat.lt_trans hij hjk
-  relatorEq ((b j k hjk) * (b i j hij) * (b i k hik))
-    ((b i k hik) * (b j k hjk) * (b i j hij))
+/-- Commutation of A_{i, j} with the product (A_{i, k} * A_{j, k}). -/
+theorem comm_ij_ik_jk :
+    t.A_ij * (t.A_ik * t.A_jk) = (t.A_ik * t.A_jk) * t.A_ij := by
+  have h := t.cyclic_one
+  calc t.A_ij * (t.A_ik * t.A_jk) = t.A_ij * t.A_ik * t.A_jk := by group
+  _ = t.A_ik * t.A_jk * t.A_ij := h
+  _ = (t.A_ik * t.A_jk) * t.A_ij := by group
 
-/-- Four-index relator: `bⱼₗ bₖₗ bᵢₖ bⱼₖ = bₖₗ bᵢₖ bⱼₖ bⱼₗ`. -/
-def quadrupleRelator {n : ℕ} (i j k l : Fin n)
-    (hij : i < j) (hjk : j < k) (hkl : k < l) :
-    FreeGroup (PureBraidGenerator n) :=
-  have hik : i < k := by exact Nat.lt_trans hij hjk
-  have hjl : j < l := by exact Nat.lt_trans hjk hkl
-  relatorEq ((b j l hjl) * (b k l hkl) * (b i k hik) * (b j k hjk))
-    ((b k l hkl) * (b i k hik) * (b j k hjk) * (b j l hjl))
+/-- Commutation of A_{j, k} with the product (A_{i, j} * A_{i, k}). -/
+theorem comm_jk_ij_ik :
+    t.A_jk * (t.A_ij * t.A_ik) = (t.A_ij * t.A_ik) * t.A_jk := by
+  have h := t.cyclic_three
+  calc t.A_jk * (t.A_ij * t.A_ik) = t.A_jk * t.A_ij * t.A_ik := by group
+  _ = t.A_ij * t.A_ik * t.A_jk := h
+  _ = (t.A_ij * t.A_ik) * t.A_jk := by group
 
-/-- Explicit staged relator set for the pure braid presentation boundary. -/
-def pureBraidRelations (n : ℕ) : Set (FreeGroup (PureBraidGenerator n)) :=
-  { r |
-    (∃ (i j k l : Fin n) (hij : i < j) (hkl : k < l),
-      ((j < k ∧ k < l) ∨ (i < k ∧ l < j)) ∧
-        r = farCommRelator i j k l hij hkl) ∨
-    (∃ (i j k : Fin n) (hij : i < j) (hjk : j < k),
-      r = tripleRelatorLeft i j k hij hjk) ∨
-    (∃ (i j k : Fin n) (hij : i < j) (hjk : j < k),
-      r = tripleRelatorRight i j k hij hjk) ∨
-    (∃ (i j k l : Fin n) (hij : i < j) (hjk : j < k) (hkl : k < l),
-      r = quadrupleRelator i j k l hij hjk hkl) }
+/-- Commutation of A_{i, k} with the product (t.A_jk * t.A_ij). -/
+theorem comm_ik_jk_ij :
+    t.A_ik * (t.A_jk * t.A_ij) = (t.A_jk * t.A_ij) * t.A_ik := by
+  have h := t.cyclic_two
+  calc t.A_ik * (t.A_jk * t.A_ij) = t.A_ik * t.A_jk * t.A_ij := by group
+  _ = t.A_jk * t.A_ij * t.A_ik := h
+  _ = (t.A_jk * t.A_ij) * t.A_ik := by group
 
-/-- The staged pure braid group as a mathlib presented group. -/
-def PB (n : ℕ) : Type :=
-  PresentedGroup (pureBraidRelations n)
+/-! ### 3. The Non-Linear Artin Crossing Relations -/
 
-instance (n : ℕ) : Group (PB n) := by
-  dsimp [PB]
-  infer_instance
+/-- Primary Non-Linear Crossing Relation (Artin Form):
+    A_{i, j} * A_{i, k} * A_{i, j}⁻¹ = A_{j, k}⁻¹ * A_{i, k} * A_{j, k}. -/
+theorem artin_crossing_Y :
+    t.A_ij * t.A_ik * t.A_ij⁻¹ = t.A_jk⁻¹ * t.A_ik * t.A_jk := by
+  have h_comm := t.comm_ik_jk_ij
+  calc t.A_ij * t.A_ik * t.A_ij⁻¹
+      = t.A_jk⁻¹ * ((t.A_jk * t.A_ij) * t.A_ik) * t.A_ij⁻¹ := by group
+    _ = t.A_jk⁻¹ * (t.A_ik * (t.A_jk * t.A_ij)) * t.A_ij⁻¹ := by rw [← h_comm]
+    _ = t.A_jk⁻¹ * t.A_ik * t.A_jk := by group
 
-/-- Canonical image of a generator in the presented group. -/
-def of {n : ℕ} (g : PureBraidGenerator n) : PB n :=
-  PresentedGroup.of g
+/-- Factored Associator Form (Birman Form):
+    A_{i, j} * A_{i, k} * A_{i, j}⁻¹ = (A_{i, k} * A_{j, k})⁻¹ * A_{i, k} * (A_{i, k} * A_{j, k}). -/
+theorem artin_crossing_Y_factored :
+    t.A_ij * t.A_ik * t.A_ij⁻¹ =
+      (t.A_ik * t.A_jk)⁻¹ * t.A_ik * (t.A_ik * t.A_jk) := by
+  rw [conj_by_mul_self]
+  exact t.artin_crossing_Y
 
-/-- Boundary obligation for descending a generator assignment through `PB n`. -/
-def respectsPureBraidRelations {n : ℕ} {G : Type*} [Group G]
-    (f : PureBraidGenerator n → G) : Prop :=
-  ∀ r ∈ pureBraidRelations n, FreeGroup.lift f r = 1
+/-- Inverted Conjugation Form:
+    A_{i, j}⁻¹ * A_{i, k} * A_{i, j} = (A_{i, k} * A_{j, k}) * A_{i, k} * (A_{i, k} * A_{j, k})⁻¹. -/
+theorem artin_crossing_Y_inv :
+    t.A_ij⁻¹ * t.A_ik * t.A_ij =
+      (t.A_ik * t.A_jk) * t.A_ik * (t.A_ik * t.A_jk)⁻¹ := by
+  set W := t.A_ik * t.A_jk
+  have h_comm : t.A_ij * W = W * t.A_ij := t.comm_ij_ik_jk
+  have h_inv : W * t.A_ij⁻¹ = t.A_ij⁻¹ * W := comm_inv_of_comm h_comm
+  have h_inv2 : t.A_ij * W⁻¹ = W⁻¹ * t.A_ij := comm_inv_of_comm h_comm.symm
+  have h_cross : t.A_ij * t.A_ik * t.A_ij⁻¹ = W⁻¹ * t.A_ik * W := t.artin_crossing_Y_factored
+  calc t.A_ij⁻¹ * t.A_ik * t.A_ij
+      = t.A_ij⁻¹ * W * W⁻¹ * t.A_ik * W * W⁻¹ * t.A_ij := by group
+    _ = W * t.A_ij⁻¹ * W⁻¹ * t.A_ik * W * W⁻¹ * t.A_ij := by rw [← h_inv]
+    _ = W * t.A_ij⁻¹ * (W⁻¹ * t.A_ik * W) * (W⁻¹ * t.A_ij) := by group
+    _ = W * t.A_ij⁻¹ * (W⁻¹ * t.A_ik * W) * (t.A_ij * W⁻¹) := by rw [← h_inv2]
+    _ = W * (t.A_ij⁻¹ * (W⁻¹ * t.A_ik * W) * t.A_ij) * W⁻¹ := by group
+    _ = W * (t.A_ij⁻¹ * (t.A_ij * t.A_ik * t.A_ij⁻¹) * t.A_ij) * W⁻¹ := by rw [← h_cross]
+    _ = W * t.A_ik * W⁻¹ := by group
 
-/-- Universal map out of the presented pure braid boundary once relators are verified. -/
-def lift {n : ℕ} {G : Type*} [Group G] (f : PureBraidGenerator n → G)
-    (h : respectsPureBraidRelations f) : PB n →* G :=
-  PresentedGroup.toGroup h
+/-- Complementary Crossing Relation on A_{j, k}:
+    A_{i, j}⁻¹ * A_{j, k} * A_{i, j} = A_{i, k} * A_{j, k} * A_{i, k}⁻¹. -/
+theorem artin_crossing_Z :
+    t.A_ij⁻¹ * t.A_jk * t.A_ij = t.A_ik * t.A_jk * t.A_ik⁻¹ := by
+  have h_comm := t.comm_jk_ij_ik
+  calc t.A_ij⁻¹ * t.A_jk * t.A_ij
+      = t.A_ij⁻¹ * (t.A_jk * (t.A_ij * t.A_ik)) * t.A_ik⁻¹ := by group
+    _ = t.A_ij⁻¹ * ((t.A_ij * t.A_ik) * t.A_jk) * t.A_ik⁻¹ := by rw [h_comm]
+    _ = t.A_ik * t.A_jk * t.A_ik⁻¹ := by group
 
-@[simp]
-theorem lift_of {n : ℕ} {G : Type*} [Group G] (f : PureBraidGenerator n → G)
-    (h : respectsPureBraidRelations f) (g : PureBraidGenerator n) :
-    lift f h (of g) = f g :=
-  PresentedGroup.toGroup.of h
+/-- Complementary Crossing Relation on A_{i, j}:
+    A_{i, k}⁻¹ * A_{i, j} * A_{i, k} = A_{j, k} * A_{i, j} * A_{j, k}⁻¹. -/
+theorem artin_crossing_X :
+    t.A_ik⁻¹ * t.A_ij * t.A_ik = t.A_jk * t.A_ij * t.A_jk⁻¹ := by
+  have h_comm := t.comm_ij_ik_jk
+  calc t.A_ik⁻¹ * t.A_ij * t.A_ik
+      = t.A_ik⁻¹ * (t.A_ij * (t.A_ik * t.A_jk)) * t.A_jk⁻¹ := by group
+    _ = t.A_ik⁻¹ * ((t.A_ik * t.A_jk) * t.A_ij) * t.A_jk⁻¹ := by rw [h_comm]
+    _ = t.A_jk * t.A_ij * t.A_jk⁻¹ := by group
 
-end InfoGeometry.Topology.PureBraid
+end PureBraidTriple
+
+/-! ### 4. Specialization to Matrix Representations GL(d, R) -/
+
+variable {d : ℕ} {R : Type*} [CommRing R]
+
+/-- Any representation ρ : PB_n → GL(d, R) satisfies the non-linear crossing relations. -/
+theorem matrix_pure_braid_crossing
+    (M_ij M_ik M_jk : Matrix.GeneralLinearGroup (Fin d) R)
+    (h1 : M_ij * M_ik * M_jk = M_ik * M_jk * M_ij)
+    (h2 : M_ik * M_jk * M_ij = M_jk * M_ij * M_ik) :
+    M_ij * M_ik * M_ij⁻¹ = M_jk⁻¹ * M_ik * M_jk := by
+  let t : PureBraidTriple (Matrix.GeneralLinearGroup (Fin d) R) :=
+    { A_ij := M_ij
+      A_ik := M_ik
+      A_jk := M_jk
+      cyclic_one := h1
+      cyclic_two := h2 }
+  exact t.artin_crossing_Y
+
+end ArtinPureBraid

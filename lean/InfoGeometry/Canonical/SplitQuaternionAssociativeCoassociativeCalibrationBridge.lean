@@ -75,19 +75,11 @@ theorem associativeVolumeForm_restriction
 
 theorem standard_associative_three_form_value :
     canonicalSplitG2ThreeFormValue imagI imagJ imagK = 1 := by
-  simp [canonicalSplitG2ThreeFormValue, canonicalThreeForm, splitInner,
-    coordinateSplitNorm, splitOctonionMulQ, splitQuaternionOfQ,
-    splitQuaternionLPartQ, splitQuaternionConjQ, splitQuaternionAddQ,
-    splitQuaternionMulQ, splitOctonionOfQuaternionPairQ, imagI, imagJ,
-    imagK, Pi.single, Function.update_apply]
+  decide
 
 theorem standard_coassociative_three_form_value :
     canonicalSplitG2ThreeFormValue imagIL imagJL imagKL = 0 := by
-  simp [canonicalSplitG2ThreeFormValue, canonicalThreeForm, splitInner,
-    coordinateSplitNorm, splitOctonionMulQ, splitQuaternionOfQ,
-    splitQuaternionLPartQ, splitQuaternionConjQ, splitQuaternionAddQ,
-    splitQuaternionMulQ, splitOctonionOfQuaternionPairQ,
-    imagIL, imagJL, imagKL, Pi.single, Function.update_apply]
+  decide
 
 /-- The four named generators of the native standard coassociative plane. -/
 def standardCoassociativeFrame : Fin 4 → imaginarySplitOctonion
@@ -113,13 +105,7 @@ theorem standard_coassociative_generator_three_form_zero
       (standardCoassociativeFrame i)
       (standardCoassociativeFrame j)
       (standardCoassociativeFrame k) = 0 := by
-  fin_cases i <;> fin_cases j <;> fin_cases k <;>
-    simp [standardCoassociativeFrame, canonicalSplitG2ThreeFormValue,
-      canonicalThreeForm, splitInner, coordinateSplitNorm, splitOctonionMulQ,
-      splitQuaternionOfQ, splitQuaternionLPartQ, splitQuaternionConjQ,
-      splitQuaternionAddQ, splitQuaternionMulQ,
-      splitOctonionOfQuaternionPairQ, Pi.single, Function.update_apply]
-  <;> norm_num
+  fin_cases i <;> fin_cases j <;> fin_cases k <;> decide
 
 lemma splitOctonionMulQ_add_left
     (x y z : StandardRationalSplitOctonion) :
@@ -289,12 +275,7 @@ lemma standard_coassociative_generator_zero
   rcases hx with rfl | rfl | rfl | rfl <;>
     rcases hy with rfl | rfl | rfl | rfl <;>
     rcases hz with rfl | rfl | rfl | rfl <;>
-        simp [canonicalSplitG2ThreeFormValue, canonicalThreeForm,
-          splitInner, coordinateSplitNorm, splitOctonionMulQ,
-          splitQuaternionOfQ, splitQuaternionLPartQ, splitQuaternionConjQ,
-          splitQuaternionAddQ, splitQuaternionMulQ,
-          splitOctonionOfQuaternionPairQ, imagIL, imagJL, imagKL, Pi.single,
-          Function.update_apply] <;> norm_num
+        decide
 
 /-- The metric orthogonal complement of an intrinsic associative plane.
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.PureBraidRepresentation
+import InfoGeometry.Topology.PureBraidGroup
 import InfoGeometry.Topology.AharonovBohmVortices
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.AmplituhedronBoundary

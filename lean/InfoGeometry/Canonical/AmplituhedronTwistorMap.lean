@@ -74,3 +74,73 @@ theorem grassmannianEmbedding_zero_ext {k n : ℕ} (C : Matrix (Fin k) (Fin n) �
   simp [h_not_lt]
 
 end InfoGeometry.Canonical.Amplituhedron
+
+/-! ### 5. Super-Twistor Yangian Implementation -/
+open scoped BigOperators
+
+variable {R : Type*} [CommRing R]
+
+/-- Кинематична твисторна частица: 4 бозонни и 4 фермионни координати. -/
+structure SuperTwistor (R : Type*) where
+  Z : Fin 4 → R
+  Θ : Fin 4 → R
+
+/-- Масив от n супертвистора за n-частично разсейване. -/
+abbrev TwistorArray (n : ℕ) (R : Type*) := Fin n → SuperTwistor R
+
+/-- Билокален клин между твистори i и j:
+    W_{a, b}(i, j) = Z_i^a * Z_j^b - Z_j^a * Z_i^b. -/
+def twistorWedge {n : ℕ} (particles : TwistorArray n R) (i j : Fin n) (a b : Fin 4) : R :=
+  (particles i).Z a * (particles j).Z b - (particles j).Z a * (particles i).Z b
+
+@[simp] theorem twistorWedge_self {n : ℕ} (particles : TwistorArray n R) (i : Fin n) (a b : Fin 4) :
+    twistorWedge particles i i a b = 0 := by
+  dsimp [twistorWedge]
+  ring
+
+/-- Диференциално действие на Ниво-0 суперзаряд върху фермионен билинеар:
+    δ_Q(Θ_i^A Θ_j^B) = Z_i^c Θ_j^B + Z_j^c Θ_i^A. -/
+def superchargeVariation {n : ℕ} (particles : TwistorArray n R) (i j : Fin n) (c : Fin 4) (A B : Fin 4) : R :=
+  (particles i).Z c * (particles j).Θ B + (particles j).Z c * (particles i).Θ A
+
+/-- Билокален комутатор [J^{(1)}_{a, b; A, B}, Q_c] -/
+def yangianSuperchargeCommutator {n : ℕ} (particles : TwistorArray n R) (a b c : Fin 4) (A B : Fin 4) : R :=
+  ∑ i : Fin n, ∑ j : Fin n,
+    if i < j then
+      twistorWedge particles i j a b * superchargeVariation particles i j c A B
+    else
+      0
+
+theorem collinear_level1_annihilation {n : ℕ}
+    (particles : TwistorArray n R) (i j : Fin n) (a b : Fin 4) (_A _B : Fin 4)
+    (c_lambda : R) (h_collinear : ∀ k : Fin 4, (particles j).Z k = c_lambda * (particles i).Z k) :
+    twistorWedge particles i j a b = 0 := by
+  dsimp [twistorWedge]
+  rw [h_collinear a, h_collinear b]
+  ring
+
+def IsYangianSuperInvariant {n : ℕ} (Ω : TwistorArray n R → R) : Prop :=
+  ∀ (particles : TwistorArray n R) (a b c : Fin 4) (A B : Fin 4),
+    yangianSuperchargeCommutator particles a b c A B * Ω particles = 0
+
+theorem trivial_collinear_invariance {n : ℕ} (Ω : TwistorArray n R → R)
+    (h_vanish : ∀ (p : TwistorArray n R) (a b : Fin 4) (i j : Fin n), twistorWedge p i j a b = 0) :
+    IsYangianSuperInvariant Ω := by
+  intro p a b c A B
+  dsimp [yangianSuperchargeCommutator]
+  have h_terms : ∀ i j : Fin n,
+      (if i < j then twistorWedge p i j a b * superchargeVariation p i j c A B else 0) = 0 := by
+    intro i j
+    split_ifs with h_lt
+    · rw [h_vanish p a b i j, zero_mul]
+    · rfl
+  have h_inner : ∀ i : Fin n, (∑ j : Fin n, if i < j then twistorWedge p i j a b * superchargeVariation p i j c A B else 0) = 0 := by
+    intro i
+    have : (fun j => if i < j then twistorWedge p i j a b * superchargeVariation p i j c A B else 0) = fun _ => 0 := by
+      ext j; exact h_terms i j
+    rw [this, Finset.sum_const_zero]
+  have h_outer : (∑ i : Fin n, ∑ j : Fin n, if i < j then twistorWedge p i j a b * superchargeVariation p i j c A B else 0) = 0 := by
+    have : (fun i => ∑ j : Fin n, if i < j then twistorWedge p i j a b * superchargeVariation p i j c A B else 0) = fun _ => 0 := by
+      ext i; exact h_inner i
+    rw [this, Finset.sum_const_zero]
+  rw [h_outer, zero_mul]

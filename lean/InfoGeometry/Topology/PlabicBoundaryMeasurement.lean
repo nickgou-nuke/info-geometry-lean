@@ -147,3 +147,177 @@ theorem mutatePlucker_pos {Δ_a Δ_b Δ_c Δ_d Δ_orig : ℝ}
   exact div_pos h_sum h_orig
 
 end PlabicBoundaryMeasurement
+
+/-! ### 7. Lie Bracket and Commutator Algebra -/
+
+/-- The Lie bracket [x, y] = x * y - y * x in an associative ring A. -/
+def lieBracket {A : Type*} [Ring A] (x y : A) : A :=
+  x * y - y * x
+
+@[simp] theorem lieBracket_self {A : Type*} [Ring A] (x : A) :
+    lieBracket x x = 0 := by
+  dsimp [lieBracket]
+  abel
+
+theorem lieBracket_antisymm {A : Type*} [Ring A] (x y : A) :
+    lieBracket x y = - lieBracket y x := by
+  dsimp [lieBracket]
+  abel
+
+theorem lieBracket_add_left {A : Type*} [Ring A] (x y z : A) :
+    lieBracket (x + y) z = lieBracket x z + lieBracket y z := by
+  dsimp [lieBracket]
+  rw [add_mul, mul_add]
+  abel
+
+theorem lieBracket_add_right {A : Type*} [Ring A] (x y z : A) :
+    lieBracket x (y + z) = lieBracket x y + lieBracket x z := by
+  dsimp [lieBracket]
+  rw [mul_add, add_mul]
+  abel
+
+/-! ### 8. Elementary Plabic Strand Crossing -/
+
+/-- An elementary 2-strand crossing inside a plabic graph.
+    Two incoming strands with charges inA, inB cross and exit as outA, outB. -/
+structure StrandCrossing (A : Type*) [Ring A] where
+  inA : A
+  inB : A
+  outA : A
+  outB : A
+  h_perm_A : outA = inB
+  h_perm_B : outB = inA
+
+/-- Master Theorem 1A (Local Level-0 Conservation across Crossing):
+    Total flux is conserved at the strand crossing: inA + inB = outA + outB. -/
+theorem strand_crossing_level0 {A : Type*} [Ring A] (c : StrandCrossing A) :
+    c.inA + c.inB = c.outA + c.outB := by
+  rw [c.h_perm_A, c.h_perm_B]
+  abel
+
+/-- Master Theorem 1B (Local Level-1 Invariance across Crossing):
+    The Lie commutator is preserved up to topological orientation swap. -/
+theorem strand_crossing_level1 {A : Type*} [Ring A] (c : StrandCrossing A) :
+    lieBracket c.outA c.outB = - lieBracket c.inA c.inB := by
+  rw [c.h_perm_A, c.h_perm_B]
+  exact lieBracket_antisymm c.inB c.inA
+
+/-! ### 9. 3-Point Boundary Strand Flow (The Triangle Face) -/
+
+/-- Cyclic shift on 3 boundary strands: 0 ↦ 1, 1 ↦ 2, 2 ↦ 0. -/
+def cyclicShift3 (i : Fin 3) : Fin 3 :=
+  match i with
+  | 0 => 1
+  | 1 => 2
+  | 2 => 0
+
+/-- Level-0 total charge for 3 boundary strands. -/
+def level0_3 {A : Type*} [Ring A] (E : Fin 3 → A) : A :=
+  E 0 + E 1 + E 2
+
+/-- Level-1 bilocal Yangian charge for 3 boundary strands:
+    J^{(1)} = [E₀, E₁] + [E₀, E₂] + [E₁, E₂]. -/
+def level1_3 {A : Type*} [Ring A] (E : Fin 3 → A) : A :=
+  lieBracket (E 0) (E 1) + lieBracket (E 0) (E 2) + lieBracket (E 1) (E 2)
+
+/-- Master Theorem 2 (Cyclic Invariance of 3-Point Yangian Level-1):
+    On the Level-0 shell (level0_3 E = 0), the Level-1 Yangian charge is
+    strictly invariant under the cyclic flow of boundary strands. -/
+theorem yangian_level1_cyclic_invariance_3 {A : Type*} [Ring A] (E : Fin 3 → A)
+    (h_onShell : level0_3 E = 0) :
+    level1_3 (E ∘ cyclicShift3) = level1_3 E := by
+  dsimp [level1_3, cyclicShift3, level0_3, lieBracket] at *
+  have h_sub : E 1 + E 2 = - E 0 := by
+    calc E 1 + E 2 = - E 0 + (E 0 + E 1 + E 2) := by abel
+      _ = - E 0 + 0 := by rw [h_onShell]
+      _ = - E 0 := add_zero (- E 0)
+  have h_dist : (E 1 + E 2) * E 0 - E 0 * (E 1 + E 2) = 0 := by
+    rw [h_sub, neg_mul, mul_neg]
+    abel
+  have h_exp :
+      (E 1 * E 2 - E 2 * E 1 + (E 1 * E 0 - E 0 * E 1) + (E 2 * E 0 - E 0 * E 2)) -
+      (E 0 * E 1 - E 1 * E 0 + (E 0 * E 2 - E 2 * E 0) + (E 1 * E 2 - E 2 * E 1)) =
+      ((E 1 + E 2) * E 0 - E 0 * (E 1 + E 2)) + ((E 1 + E 2) * E 0 - E 0 * (E 1 + E 2)) := by
+    rw [add_mul, mul_add]
+    abel
+  rw [h_dist, add_zero] at h_exp
+  exact sub_eq_zero.mp h_exp
+
+/-! ### 10. 4-Point Boundary Strand Flow (The Amplituhedron Plabic Square Face) -/
+
+/-- Cyclic shift on 4 boundary strands: 0 ↦ 1, 1 ↦ 2, 2 ↦ 3, 3 ↦ 0. -/
+def cyclicShift4 (i : Fin 4) : Fin 4 :=
+  match i with
+  | 0 => 1
+  | 1 => 2
+  | 2 => 3
+  | 3 => 0
+
+/-- Level-0 total charge for 4 boundary strands. -/
+def level0_4 {A : Type*} [Ring A] (E : Fin 4 → A) : A :=
+  E 0 + E 1 + E 2 + E 3
+
+/-- Level-1 bilocal Yangian charge for 4 boundary strands:
+    J^{(1)} = ∑_{0 ≤ i < j ≤ 3} [E_i, E_j]. -/
+def level1_4 {A : Type*} [Ring A] (E : Fin 4 → A) : A :=
+  lieBracket (E 0) (E 1) + lieBracket (E 0) (E 2) + lieBracket (E 0) (E 3) +
+  lieBracket (E 1) (E 2) + lieBracket (E 1) (E 3) +
+  lieBracket (E 2) (E 3)
+
+/-- Master Theorem 3 (Cyclic Invariance of 4-Point Yangian Level-1):
+    On the 4-point on-shell quadric (level0_4 E = 0), the bilocal Yangian generator
+    is invariant under cyclic strand flow around the plabic square. -/
+theorem yangian_level1_cyclic_invariance_4 {A : Type*} [Ring A] (E : Fin 4 → A)
+    (h_onShell : level0_4 E = 0) :
+    level1_4 (E ∘ cyclicShift4) = level1_4 E := by
+  dsimp [level1_4, cyclicShift4, level0_4, lieBracket] at *
+  have h_sub : E 1 + E 2 + E 3 = - E 0 := by
+    calc E 1 + E 2 + E 3 = - E 0 + (E 0 + E 1 + E 2 + E 3) := by abel
+      _ = - E 0 + 0 := by rw [h_onShell]
+      _ = - E 0 := add_zero (- E 0)
+  have h_dist : (E 1 + E 2 + E 3) * E 0 - E 0 * (E 1 + E 2 + E 3) = 0 := by
+    rw [h_sub, neg_mul, mul_neg]
+    abel
+  have h_exp :
+      (E 1 * E 2 - E 2 * E 1 + (E 1 * E 3 - E 3 * E 1) + (E 1 * E 0 - E 0 * E 1) + (E 2 * E 3 - E 3 * E 2) + (E 2 * E 0 - E 0 * E 2) + (E 3 * E 0 - E 0 * E 3)) -
+      (E 0 * E 1 - E 1 * E 0 + (E 0 * E 2 - E 2 * E 0) + (E 0 * E 3 - E 3 * E 0) + (E 1 * E 2 - E 2 * E 1) + (E 1 * E 3 - E 3 * E 1) + (E 2 * E 3 - E 3 * E 2)) =
+      ((E 1 + E 2 + E 3) * E 0 - E 0 * (E 1 + E 2 + E 3)) + ((E 1 + E 2 + E 3) * E 0 - E 0 * (E 1 + E 2 + E 3)) := by
+    rw [add_mul, add_mul, mul_add, mul_add]
+    abel
+  rw [h_dist, add_zero] at h_exp
+  exact sub_eq_zero.mp h_exp
+
+/-! ### 11. Cyclic Nearest-Neighbor Boundary Flux -/
+
+/-- Cyclic nearest-neighbor boundary flux on 4 strands:
+    F_{cyclic} = [E₀, E₁] + [E₁, E₂] + [E₂, E₃] + [E₃, E₀]. -/
+def cyclicFlux4 {A : Type*} [Ring A] (E : Fin 4 → A) : A :=
+  lieBracket (E 0) (E 1) + lieBracket (E 1) (E 2) +
+  lieBracket (E 2) (E 3) + lieBracket (E 3) (E 0)
+
+/-- Master Theorem 4 (Unconditional Cyclic Invariance of Nearest-Neighbor Boundary Flux):
+    The cyclic boundary contour flux is manifestly invariant under cyclic shift
+    for any choice of strand charges, even off-shell. -/
+theorem cyclicFlux4_shift_invariant {A : Type*} [Ring A] (E : Fin 4 → A) :
+    cyclicFlux4 (E ∘ cyclicShift4) = cyclicFlux4 E := by
+  dsimp [cyclicFlux4, cyclicShift4]
+  abel
+
+/-! ### 12. Plabic Square Move (Urban Renewal) -/
+
+/-- A Plabic Square Move (Urban Renewal):
+    Mutates a 4-face in the plabic network, rearranging the 4 internal strands
+    while preserving the total Level-0 flux. -/
+structure PlabicSquareMove (A : Type*) [Ring A] where
+  inCharges : Fin 4 → A
+  outCharges : Fin 4 → A
+  h_conservation : level0_4 inCharges = level0_4 outCharges
+
+/-- Theorem 5: If the incoming strand configuration is on-shell (level0 = 0),
+    the outgoing mutated strand configuration is also on-shell. -/
+theorem square_move_preserves_on_shell {A : Type*} [Ring A]
+    (m : PlabicSquareMove A) (h_in : level0_4 m.inCharges = 0) :
+    level0_4 m.outCharges = 0 := by
+  rw [← m.h_conservation]
+  exact h_in
+

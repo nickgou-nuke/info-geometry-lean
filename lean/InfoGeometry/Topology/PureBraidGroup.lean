@@ -1,152 +1,137 @@
-
 import Mathlib.Algebra.Group.Basic
-import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic.Group
-import Mathlib.Tactic
-import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
+
+/-!
+# Consequences of the three-strand pure-braid cyclic relation
+
+This file records group-theoretic consequences of the cyclic relations on
+three elements. It does not construct a presentation of the pure braid group
+or assert that arbitrary triples in a group are pure braid generators.
+-/
 
 namespace ArtinPureBraid
 
 variable {G : Type*} [Group G]
 
-/-! ### 1. Universal Group Inversion & Conjugation Lemmas -/
-
-/-- Core Group Identity:
-    (Y * Z)⁻¹ * Y * (Y * Z) collapses identically to Z⁻¹ * Y * Z. -/
+/-- Conjugation by a product, simplified using the group axioms. -/
 theorem conj_by_mul_self (Y Z : G) :
     (Y * Z)⁻¹ * Y * (Y * Z) = Z⁻¹ * Y * Z := by
   group
 
-/-- Commutative inversion lemma:
-    If a and b commute, then b and a⁻¹ commute. -/
+/-- If `a` and `b` commute, then `b` commutes with `a⁻¹`. -/
 lemma comm_inv_of_comm {a b : G} (h : a * b = b * a) :
     b * a⁻¹ = a⁻¹ * b := by
-  have h1 : a⁻¹ * (a * b) * a⁻¹ = a⁻¹ * (b * a) * a⁻¹ := by rw [h]
-  calc b * a⁻¹ = a⁻¹ * (a * b) * a⁻¹ := by group
-  _ = a⁻¹ * (b * a) * a⁻¹ := h1
-  _ = a⁻¹ * b := by group
+  calc
+    b * a⁻¹ = a⁻¹ * (a * b) * a⁻¹ := by group
+    _ = a⁻¹ * (b * a) * a⁻¹ := by rw [h]
+    _ = a⁻¹ * b := by group
 
-/-! ### 2. The Artin Pure Braid Triple Structure -/
+/-- Conjugations by commuting elements commute as automorphisms. -/
+lemma conjugate_conjugate_of_comm (a b x : G) (h : a * b = b * a) :
+    a⁻¹ * (b⁻¹ * x * b) * a = b⁻¹ * (a⁻¹ * x * a) * b := by
+  have hinv : a⁻¹ * b⁻¹ = b⁻¹ * a⁻¹ := by
+    simpa only [mul_inv_rev] using congrArg (fun q : G => q⁻¹) h.symm
+  calc
+    a⁻¹ * (b⁻¹ * x * b) * a = (a⁻¹ * b⁻¹) * x * (b * a) := by group
+    _ = (b⁻¹ * a⁻¹) * x * (a * b) := by rw [hinv, h.symm]
+    _ = b⁻¹ * (a⁻¹ * x * a) * b := by group
 
-/-- An Artin Pure Braid Triple (A_{i, j}, A_{i, k}, A_{j, k}) in a group G,
-    representing three strands i < j < k. -/
-structure PureBraidTriple (G : Type*) [Group G] where
-  A_ij : G
-  A_ik : G
-  A_jk : G
-  cyclic_one : A_ij * A_ik * A_jk = A_ik * A_jk * A_ij
-  cyclic_two : A_ik * A_jk * A_ij = A_jk * A_ij * A_ik
+variable (X Y Z : G)
 
-namespace PureBraidTriple
+/-- The third cyclic equality follows from the first two. -/
+theorem cyclic_three
+    (h₁ : X * Y * Z = Y * Z * X)
+    (h₂ : Y * Z * X = Z * X * Y) :
+    Z * X * Y = X * Y * Z := by
+  calc
+    Z * X * Y = Y * Z * X := h₂.symm
+    _ = X * Y * Z := h₁.symm
 
-variable (t : PureBraidTriple G)
+/-- In the cyclic triple, `X` commutes with `Y * Z`. -/
+theorem comm_X_YZ
+    (h₁ : X * Y * Z = Y * Z * X) :
+    X * (Y * Z) = (Y * Z) * X := by
+  simpa [mul_assoc] using h₁
 
-/-- Third cyclic branch: Z * X * Y = X * Y * Z. -/
-theorem cyclic_three :
-    t.A_jk * t.A_ij * t.A_ik = t.A_ij * t.A_ik * t.A_jk := by
-  rw [t.cyclic_one, t.cyclic_two]
+/-- In the cyclic triple, `Y` commutes with `Z * X`. -/
+theorem comm_Y_ZX
+    (h₂ : Y * Z * X = Z * X * Y) :
+    Y * (Z * X) = (Z * X) * Y := by
+  simpa [mul_assoc] using h₂
 
-/-- Commutation of A_{i, j} with the product (A_{i, k} * A_{j, k}). -/
-theorem comm_ij_ik_jk :
-    t.A_ij * (t.A_ik * t.A_jk) = (t.A_ik * t.A_jk) * t.A_ij := by
-  have h := t.cyclic_one
-  calc t.A_ij * (t.A_ik * t.A_jk) = t.A_ij * t.A_ik * t.A_jk := by group
-  _ = t.A_ik * t.A_jk * t.A_ij := h
-  _ = (t.A_ik * t.A_jk) * t.A_ij := by group
+/-- In the cyclic triple, `Z` commutes with `X * Y`. -/
+theorem comm_Z_XY
+    (h₁ : X * Y * Z = Y * Z * X)
+    (h₂ : Y * Z * X = Z * X * Y) :
+    Z * (X * Y) = (X * Y) * Z := by
+  simpa [mul_assoc] using cyclic_three X Y Z h₁ h₂
 
-/-- Commutation of A_{j, k} with the product (A_{i, j} * A_{i, k}). -/
-theorem comm_jk_ij_ik :
-    t.A_jk * (t.A_ij * t.A_ik) = (t.A_ij * t.A_ik) * t.A_jk := by
-  have h := t.cyclic_three
-  calc t.A_jk * (t.A_ij * t.A_ik) = t.A_jk * t.A_ij * t.A_ik := by group
-  _ = t.A_ij * t.A_ik * t.A_jk := h
-  _ = (t.A_ij * t.A_ik) * t.A_jk := by group
+/-- The cyclic equalities are equivalent to the three product-commutation
+identities. -/
+theorem cyclic_iff_product_commutation :
+    (X * Y * Z = Y * Z * X ∧ Y * Z * X = Z * X * Y) ↔
+      (X * (Y * Z) = (Y * Z) * X ∧
+       Y * (Z * X) = (Z * X) * Y ∧
+       Z * (X * Y) = (X * Y) * Z) := by
+  constructor
+  · rintro ⟨h₁, h₂⟩
+    exact ⟨comm_X_YZ X Y Z h₁, comm_Y_ZX X Y Z h₂,
+      comm_Z_XY X Y Z h₁ h₂⟩
+  · rintro ⟨h₁, h₂, _h₃⟩
+    exact ⟨by simpa [mul_assoc] using h₁,
+      by simpa [mul_assoc] using h₂⟩
 
-/-- Commutation of A_{i, k} with the product (t.A_jk * t.A_ij). -/
-theorem comm_ik_jk_ij :
-    t.A_ik * (t.A_jk * t.A_ij) = (t.A_jk * t.A_ij) * t.A_ik := by
-  have h := t.cyclic_two
-  calc t.A_ik * (t.A_jk * t.A_ij) = t.A_ik * t.A_jk * t.A_ij := by group
-  _ = t.A_jk * t.A_ij * t.A_ik := h
-  _ = (t.A_jk * t.A_ij) * t.A_ik := by group
+/-- Reduced nonlinear crossing relation for the middle generator. -/
+theorem crossing_Y
+    (h₂ : Y * Z * X = Z * X * Y) :
+    X * Y * X⁻¹ = Z⁻¹ * Y * Z := by
+  have hcomm := comm_Y_ZX X Y Z h₂
+  calc
+    X * Y * X⁻¹ = Z⁻¹ * ((Z * X) * Y) * X⁻¹ := by group
+    _ = Z⁻¹ * (Y * (Z * X)) * X⁻¹ := by rw [← hcomm]
+    _ = Z⁻¹ * Y * Z := by group
 
-/-! ### 3. The Non-Linear Artin Crossing Relations -/
-
-/-- Primary Non-Linear Crossing Relation (Artin Form):
-    A_{i, j} * A_{i, k} * A_{i, j}⁻¹ = A_{j, k}⁻¹ * A_{i, k} * A_{j, k}. -/
-theorem artin_crossing_Y :
-    t.A_ij * t.A_ik * t.A_ij⁻¹ = t.A_jk⁻¹ * t.A_ik * t.A_jk := by
-  have h_comm := t.comm_ik_jk_ij
-  calc t.A_ij * t.A_ik * t.A_ij⁻¹
-      = t.A_jk⁻¹ * ((t.A_jk * t.A_ij) * t.A_ik) * t.A_ij⁻¹ := by group
-    _ = t.A_jk⁻¹ * (t.A_ik * (t.A_jk * t.A_ij)) * t.A_ij⁻¹ := by rw [← h_comm]
-    _ = t.A_jk⁻¹ * t.A_ik * t.A_jk := by group
-
-/-- Factored Associator Form (Birman Form):
-    A_{i, j} * A_{i, k} * A_{i, j}⁻¹ = (A_{i, k} * A_{j, k})⁻¹ * A_{i, k} * (A_{i, k} * A_{j, k}). -/
-theorem artin_crossing_Y_factored :
-    t.A_ij * t.A_ik * t.A_ij⁻¹ =
-      (t.A_ik * t.A_jk)⁻¹ * t.A_ik * (t.A_ik * t.A_jk) := by
+/-- Product-conjugation form of `crossing_Y`. -/
+theorem crossing_Y_factored
+    (h₂ : Y * Z * X = Z * X * Y) :
+    X * Y * X⁻¹ = (Y * Z)⁻¹ * Y * (Y * Z) := by
   rw [conj_by_mul_self]
-  exact t.artin_crossing_Y
+  exact crossing_Y X Y Z h₂
 
-/-- Inverted Conjugation Form:
-    A_{i, j}⁻¹ * A_{i, k} * A_{i, j} = (A_{i, k} * A_{j, k}) * A_{i, k} * (A_{i, k} * A_{j, k})⁻¹. -/
-theorem artin_crossing_Y_inv :
-    t.A_ij⁻¹ * t.A_ik * t.A_ij =
-      (t.A_ik * t.A_jk) * t.A_ik * (t.A_ik * t.A_jk)⁻¹ := by
-  set W := t.A_ik * t.A_jk
-  have h_comm : t.A_ij * W = W * t.A_ij := t.comm_ij_ik_jk
-  have h_inv : W * t.A_ij⁻¹ = t.A_ij⁻¹ * W := comm_inv_of_comm h_comm
-  have h_inv2 : t.A_ij * W⁻¹ = W⁻¹ * t.A_ij := comm_inv_of_comm h_comm.symm
-  have h_cross : t.A_ij * t.A_ik * t.A_ij⁻¹ = W⁻¹ * t.A_ik * W := t.artin_crossing_Y_factored
-  calc t.A_ij⁻¹ * t.A_ik * t.A_ij
-      = t.A_ij⁻¹ * W * W⁻¹ * t.A_ik * W * W⁻¹ * t.A_ij := by group
-    _ = W * t.A_ij⁻¹ * W⁻¹ * t.A_ik * W * W⁻¹ * t.A_ij := by rw [← h_inv]
-    _ = W * t.A_ij⁻¹ * (W⁻¹ * t.A_ik * W) * (W⁻¹ * t.A_ij) := by group
-    _ = W * t.A_ij⁻¹ * (W⁻¹ * t.A_ik * W) * (t.A_ij * W⁻¹) := by rw [← h_inv2]
-    _ = W * (t.A_ij⁻¹ * (W⁻¹ * t.A_ik * W) * t.A_ij) * W⁻¹ := by group
-    _ = W * (t.A_ij⁻¹ * (t.A_ij * t.A_ik * t.A_ij⁻¹) * t.A_ij) * W⁻¹ := by rw [← h_cross]
-    _ = W * t.A_ik * W⁻¹ := by group
+/-- Inverse-conjugation form of the middle crossing relation. -/
+theorem crossing_Y_inv
+    (h₁ : X * Y * Z = Y * Z * X)
+    (h₂ : Y * Z * X = Z * X * Y) :
+    X⁻¹ * Y * X = (Y * Z) * Y * (Y * Z)⁻¹ := by
+  have hcomm : X * (Y * Z) = (Y * Z) * X := comm_X_YZ X Y Z h₁
+  have hcross : X * Y * X⁻¹ = (Y * Z)⁻¹ * Y * (Y * Z) :=
+    crossing_Y_factored X Y Z h₂
+  have hconj := conjugate_conjugate_of_comm X (Y * Z) Y hcomm
+  calc
+    X⁻¹ * Y * X = (Y * Z) * ((Y * Z)⁻¹ * (X⁻¹ * Y * X) * (Y * Z)) * (Y * Z)⁻¹ := by group
+    _ = (Y * Z) * (X⁻¹ * ((Y * Z)⁻¹ * Y * (Y * Z)) * X) * (Y * Z)⁻¹ := by rw [← hconj]
+    _ = (Y * Z) * (X⁻¹ * (X * Y * X⁻¹) * X) * (Y * Z)⁻¹ := by rw [hcross]
+    _ = (Y * Z) * Y * (Y * Z)⁻¹ := by group
 
-/-- Complementary Crossing Relation on A_{j, k}:
-    A_{i, j}⁻¹ * A_{j, k} * A_{i, j} = A_{i, k} * A_{j, k} * A_{i, k}⁻¹. -/
-theorem artin_crossing_Z :
-    t.A_ij⁻¹ * t.A_jk * t.A_ij = t.A_ik * t.A_jk * t.A_ik⁻¹ := by
-  have h_comm := t.comm_jk_ij_ik
-  calc t.A_ij⁻¹ * t.A_jk * t.A_ij
-      = t.A_ij⁻¹ * (t.A_jk * (t.A_ij * t.A_ik)) * t.A_ik⁻¹ := by group
-    _ = t.A_ij⁻¹ * ((t.A_ij * t.A_ik) * t.A_jk) * t.A_ik⁻¹ := by rw [h_comm]
-    _ = t.A_ik * t.A_jk * t.A_ik⁻¹ := by group
+/-- The crossing relation for `Z`, derived from its commutation with `X * Y`. -/
+theorem crossing_Z
+    (h₁ : X * Y * Z = Y * Z * X)
+    (h₂ : Y * Z * X = Z * X * Y) :
+    X⁻¹ * Z * X = Y * Z * Y⁻¹ := by
+  have hcomm := comm_Z_XY X Y Z h₁ h₂
+  calc
+    X⁻¹ * Z * X = X⁻¹ * (Z * (X * Y)) * Y⁻¹ := by group
+    _ = X⁻¹ * ((X * Y) * Z) * Y⁻¹ := by rw [hcomm]
+    _ = Y * Z * Y⁻¹ := by group
 
-/-- Complementary Crossing Relation on A_{i, j}:
-    A_{i, k}⁻¹ * A_{i, j} * A_{i, k} = A_{j, k} * A_{i, j} * A_{j, k}⁻¹. -/
-theorem artin_crossing_X :
-    t.A_ik⁻¹ * t.A_ij * t.A_ik = t.A_jk * t.A_ij * t.A_jk⁻¹ := by
-  have h_comm := t.comm_ij_ik_jk
-  calc t.A_ik⁻¹ * t.A_ij * t.A_ik
-      = t.A_ik⁻¹ * (t.A_ij * (t.A_ik * t.A_jk)) * t.A_jk⁻¹ := by group
-    _ = t.A_ik⁻¹ * ((t.A_ik * t.A_jk) * t.A_ij) * t.A_jk⁻¹ := by rw [h_comm]
-    _ = t.A_jk * t.A_ij * t.A_jk⁻¹ := by group
-
-end PureBraidTriple
-
-/-! ### 4. Specialization to Matrix Representations GL(d, R) -/
-
-variable {d : ℕ} {R : Type*} [CommRing R]
-
-/-- Any representation ρ : PB_n → GL(d, R) satisfies the non-linear crossing relations. -/
-theorem matrix_pure_braid_crossing
-    (M_ij M_ik M_jk : Matrix.GeneralLinearGroup (Fin d) R)
-    (h1 : M_ij * M_ik * M_jk = M_ik * M_jk * M_ij)
-    (h2 : M_ik * M_jk * M_ij = M_jk * M_ij * M_ik) :
-    M_ij * M_ik * M_ij⁻¹ = M_jk⁻¹ * M_ik * M_jk := by
-  let t : PureBraidTriple (Matrix.GeneralLinearGroup (Fin d) R) :=
-    { A_ij := M_ij
-      A_ik := M_ik
-      A_jk := M_jk
-      cyclic_one := h1
-      cyclic_two := h2 }
-  exact t.artin_crossing_Y
+/-- The crossing relation for `X`, derived from its commutation with `Y * Z`. -/
+theorem crossing_X
+    (h₁ : X * Y * Z = Y * Z * X) :
+    Y⁻¹ * X * Y = Z * X * Z⁻¹ := by
+  have hcomm := comm_X_YZ X Y Z h₁
+  calc
+    Y⁻¹ * X * Y = Y⁻¹ * (X * (Y * Z)) * Z⁻¹ := by group
+    _ = Y⁻¹ * ((Y * Z) * X) * Z⁻¹ := by rw [hcomm]
+    _ = Z * X * Z⁻¹ := by group
 
 end ArtinPureBraid

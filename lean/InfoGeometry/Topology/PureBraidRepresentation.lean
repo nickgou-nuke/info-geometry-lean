@@ -8,7 +8,7 @@ open scoped Matrix
 
 namespace PureBraidRepresentation
 
-variable {d : ℕ} [NeZero d]
+variable {d : ℕ}
 
 def bracket {n : Type*} [Fintype n] [DecidableEq n] (X Y : Matrix n n ℚ) : Matrix n n ℚ :=
   X * Y - Y * X
@@ -19,7 +19,26 @@ def singleEntry (i j : Fin d) : Matrix (Fin d) (Fin d) ℚ :=
 theorem singleEntry_mul (i j k l : Fin d) :
     singleEntry i j * singleEntry k l =
       if j = k then singleEntry (d := d) i l else 0 := by
-  sorry -- Standard elementary matrix multiplication logic
+  classical
+  ext r c
+  simp only [Matrix.mul_apply]
+  by_cases hjk : j = k
+  · subst k
+    by_cases hri : r = i
+    · subst r
+      by_cases hcl : c = l
+      · subst c
+        simp [singleEntry]
+      · simp [singleEntry, hcl]
+    · simp [singleEntry, hri]
+  · rw [if_neg hjk]
+    simp only [singleEntry]
+    apply Finset.sum_eq_zero
+    intro x hx
+    by_cases hxk : x = k
+    · subst x
+      simp [Ne.symm hjk]
+    · simp [hxk]
 
 def pureBraidMatrix (i j : Fin d) (q : ℚ) : Matrix (Fin d) (Fin d) ℚ :=
   1 + q • singleEntry i j
@@ -73,7 +92,7 @@ theorem singleEntry_bracket_adjacent (t : AdjacentBraidTriple d) :
   rw [if_neg t.hik.symm]
   rw [sub_zero]
 
-theorem linearized_pentagon_relator (t : AdjacentBraidTriple d) (q : ℚ) :
+theorem adjacent_singleEntry_bracket_sub (t : AdjacentBraidTriple d) :
     bracket (singleEntry t.i t.j) (singleEntry t.j t.k) - singleEntry t.i t.k = 0 := by
   rw [singleEntry_bracket_adjacent t, sub_self]
 

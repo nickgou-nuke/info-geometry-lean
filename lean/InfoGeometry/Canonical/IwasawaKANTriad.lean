@@ -29,9 +29,18 @@ def K_grp (c s : R) : Matrix (Fin 2) (Fin 2) R := ![![c, -s], ![s, c]]
 def A_grp (t₁ t₂ : R) : Matrix (Fin 2) (Fin 2) R := ![![t₁, 0], ![0, t₂]]
 def N_grp (x : R) : Matrix (Fin 2) (Fin 2) R := ![![1, x], ![0, 1]]
 
-theorem N_grp_det_one (x : R) : (N_grp R x).det = 1 := by simp [N_grp, Matrix.det_fin_two]
-theorem A_grp_det (t₁ t₂ : R) : (A_grp R t₁ t₂).det = t₁ * t₂ := by simp [A_grp, Matrix.det_fin_two]
-theorem K_grp_det (c s : R) : (K_grp R c s).det = c^2 + s^2 := by simp [K_grp, Matrix.det_fin_two]; try ring
+theorem N_grp_det_one (x : R) : (N_grp R x).det = 1 := by
+  rw [Matrix.det_fin_two]
+  simp [N_grp]
+
+theorem A_grp_det (t₁ t₂ : R) : (A_grp R t₁ t₂).det = t₁ * t₂ := by
+  rw [Matrix.det_fin_two]
+  simp [A_grp]
+
+theorem K_grp_det (c s : R) : (K_grp R c s).det = c^2 + s^2 := by
+  rw [Matrix.det_fin_two]
+  simp [K_grp]
+  ring
 theorem kan_det_factorization (c s t₁ t₂ x : R) :
     (K_grp R c s * A_grp R t₁ t₂ * N_grp R x).det = (K_grp R c s).det * (A_grp R t₁ t₂).det * (N_grp R x).det := by
   rw [Matrix.det_mul, Matrix.det_mul]
@@ -115,4 +124,3 @@ theorem e_plus_sq : e_plus R * e_plus R = (0 : Matrix (Fin 2) (Fin 2) R) := by
 
 theorem N_mediates_peirce_polarization (x : R) : N_grp R x * P_minus R = P_minus R + x • e_plus R := by
   ext i j; fin_cases i <;> fin_cases j <;> { simp [N_grp, P_minus, e_plus, Matrix.mul_apply, Fin.sum_univ_two, Matrix.add_apply]; try ring }
-

@@ -18,7 +18,7 @@ This module formalizes:
 2. **Compile-Time Discharge**: Zero-cost extraction that is syntactically uncallable unless `status = .proved`.
 3. **Kernel Axiom Auditor**: Deep transitive dependency scan detecting `sorryAx` and tracking axioms.
 4. **Persistent Environment Extension**: $O(1)$ amortized lookups avoiding global $O(N)$ environment sweeps.
-5. **Attribute & Commands**: `@[archetype]` registration attribute, `#audit_archetype`, and `#search_typed_archetypes`.
+5. **Registration & Commands**: `#register_archetype`, `#audit_archetype`, and an environment-wide `#search_typed_archetypes`.
 -/
 
 -- ============================================================================
@@ -250,26 +250,31 @@ elab "#audit_archetype " id:ident : command => do
       msg := msg ++ m!"• Non-standard Axioms: {res.unapprovedAxioms}\n"
     logInfo msg
 
-/-- Display all indexed archetypes currently registered in the environment extension. -/
+/-- Search the current Lean environment and audit every declaration whose type
+reduces to a `TypedArchetype`. The persistent registry remains useful for batch
+promotion, but it is not treated as a complete inventory: declarations need not
+have been explicitly registered to be found here. -/
 elab "#search_typed_archetypes" : command => do
   Command.liftTermElabM do
-    let env ← getEnv
-    let registered := getRegisteredArchetypes env
-
+    let found ← deepSearchEnvironmentArchetypes
     let mut provedCount := 0
     let mut candidateCount := 0
     let mut validatedCount := 0
-
-    let mut report := m!"--- Registered Typed Archetypes ({registered.size}) ---\n"
-    for entry in registered do
-      let mark := if entry.isSound then "✓" else "✗"
-      match entry.status with
+    let mut report := m!"--- Environment Typed Archetype Search ({found.size}) ---\n"
+    for (declName, status) in found do
+      let audit ← auditArchetype declName
+      let mark := if audit.isSound then "✓" else "✗"
+      match status with
       | .proved    => provedCount := provedCount + 1
       | .validated => validatedCount := validatedCount + 1
       | .candidate => candidateCount := candidateCount + 1
-      report := report ++ m!"[{mark}] {entry.declName} | Status: {repr entry.status} | Axioms: {entry.axioms}\n"
+      report := report ++ m!"[{mark}] {declName} | Status: {repr status} | Axioms: {audit.transitiveAxioms}\n"
+      if audit.hasSorryAx then
+        report := report ++ m!"  REJECT: transitive dependency on `sorryAx`\n"
+      if !audit.unapprovedAxioms.isEmpty then
+        report := report ++ m!"  Unapproved axioms: {audit.unapprovedAxioms}\n"
 
-    report := report ++ m!"\nSummary: {provedCount} proved, {validatedCount} validated, {candidateCount} candidates."
+    report := report ++ m!"\nSummary: {provedCount} proved, {validatedCount} validated, {candidateCount} candidates in the current Lean environment."
     logInfo report
 
 end InfoGeometry.MetaCompiler

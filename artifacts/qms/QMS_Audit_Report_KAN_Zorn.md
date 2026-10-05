@@ -5,27 +5,28 @@
   - `lean/InfoGeometry/Canonical/IwasawaKANTriad.lean`
   - `lean/InfoGeometry/Canonical/ZornChiralAssociatorDemodulation.lean`
 - **Disposition**: `ACCEPTED`
-- **Primary Goal**: Formalize the Iwasawa $KAN$ decomposition triad, its trace localization, determinant factorization, and Peirce projector shifting, as well as formalize the Zorn Chiral Associator Demodulator theorem connecting the Zorn vacuum associator to the T-odd scalar triple product.
-- **Verification Status**: Both modules achieved a 0-gap `lake build` with no `sorry` gaps, no unchecked warnings, and fully strictly-typed Lean 4 matrices.
+- **Primary Goal**: Formalize matrix factor laws and trace localization for the displayed $K$, $A$, and $N$ families, together with the Peirce-projector shift identity; and prove the Zorn associator identity for the specified three quark inputs.
+- **Verification Status**: Both modules compiled in the locked build reported below. The audit distinguishes these algebraic identities from a general Iwasawa existence/uniqueness theorem or a physical prediction.
 
 ## 2. Decisive Evidence
 - **Build Checks**:
-  - `lake build InfoGeometry.Canonical.IwasawaKANTriad` completed with 0 errors.
-  - `lake build InfoGeometry.Canonical.ZornChiralAssociatorDemodulation` completed with 0 errors.
+  - Locked command: `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Canonical.IwasawaKANTriad InfoGeometry.Canonical.ZornChiralAssociatorDemodulation InfoGeometry.Algebra.ArchetypeInstances`.
+  - Result: completed successfully (8043 jobs, exit code 0).
+  - After expanding the determinant proofs to clear the semantic-vacuity warnings, `InfoGeometry.Canonical.IwasawaKANTriad` was rebuilt separately under the same lock (3103 jobs, exit code 0).
 - **Mathematical Integrity**:
-  - The $KAN$ decomposition triad is fully specified using abstract $2 \times 2$ matrices over an arbitrary `CommRing R`. 
-  - Determinant multiplicative properties and trace localization properties were proven natively using exact matrix simplification (`simp`, `ring`).
-  - The chiral demodulation theorem evaluates the non-associative `zornAssociator` on three quark states $(S, p, \epsilon)$ and strictly verifies it evaluates to a diagonal matrix with components `(-T, T)` where `T` is the scalar triple product $S \cdot (p \times \epsilon)$. The proof uses `congr 1` to explode the matrix structure into 4 independent polynomial identities, solved globally and safely by `ring`.
+  - `IwasawaKANTriad.lean` proves multiplication laws for the chosen matrix families, an explicit product formula, determinant identities, trace identities, and a conditional Peirce shift over a commutative ring. Its parameters are not constrained throughout to the usual real Lie subgroups, and the file does not prove a global Iwasawa factorization or uniqueness theorem.
+  - The Zorn theorem proves the exact stated equality `T • PMinus - T • PPlus` for the defined Zorn product and quark elements, where `T = dot3 S (cross3 p eps)`. This is an algebraic associator evaluation. It does not establish a detector signal or a time-reversal-odd observable.
+  - The repository's separate symmetry audit states `nativeScalarTriple_timeReversal_even`: under its declared transformation, spin and momentum reverse while polarization is fixed, and the scalar triple product is unchanged. The report therefore does not label that observable T-odd.
 
 ## 3. Scope Fidelity
-- The theorem scope perfectly matches the required physical and mathematical boundaries outlined by the user constraints.
-- No `sorry` gaps, no assumed axioms, and no hidden analytical continuations.
+- The source-level conclusions are limited to the checked Lean propositions above; no physical interpretation is inferred from the algebraic identities alone.
+- The named source files contain no `sorry`, `admit`, or custom `axiom` declarations. The archetype build reported the standard Lean dependencies `[propext, Quot.sound, Classical.choice]`.
 - Strict matrix literal typing (`(0 : R)`, `(1 : R)`) was enforced throughout the $KAN$ Triad to avoid typeclass resolution metavariable failure (`CommRing ?m`).
-- A `try ring` linter warning was resolved cleanly by enabling the tactic in the file explicitly rather than ignoring errors.
+- The locked build emitted warnings in replayed dependencies, including an unused-variable warning in `Meta/ArchetypeDischarge.lean`; it completed without errors. Thus “no warnings” is not claimed.
 
 ## 4. Open Debt / Next Steps
-- None for these specific modules.
-- The KAN triad now forms the baseline algebraic blueprint for extending the para-hyperkähler frame groups in continuous geometry.
+- Extending the algebraic $KAN$ factor laws to a genuine Iwasawa theorem requires an appropriate group and parameter hypotheses, with existence and uniqueness statements.
+- Any physical claim relating the Zorn identity to measured polarization requires a separately specified observable and a supported measurement model.
 
 ## 5. Formal Disposition
 **VERDICT: ACCEPTED**

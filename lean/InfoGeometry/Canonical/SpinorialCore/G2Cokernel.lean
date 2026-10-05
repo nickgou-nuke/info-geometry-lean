@@ -17,6 +17,7 @@ abbrev Lattice := Fin 12 → ℤ
 abbrev SmithGroup := ZMod 2 × ZMod 2 × ZMod 364
 abbrev TwoPrimary := ZMod 2 × ZMod 2 × ZMod 4
 abbrev Cokernel := Lattice ⧸ LinearMap.range relation.toLin'
+abbrev TransposeCokernel := Lattice ⧸ LinearMap.range relation.transpose.toLin'
 
 /-- Reduction of the three non-unit Smith coordinates. -/
 def coordinateResidue : Lattice →ₗ[ℤ] SmithGroup where
@@ -113,6 +114,88 @@ def cokernelEquiv : Cokernel ≃ₗ[ℤ] SmithGroup := by
   change (Lattice ⧸ LinearMap.range relation.toLin') ≃ₗ[ℤ] SmithGroup
   rw [← graphResidue_exact]
   exact graphResidue.quotKerEquivOfSurjective graphResidue_surjective
+
+/-! ## The transposed presentation used by the graph boundary matrix
+
+The Cuntz--Krieger boundary map is `I - Aᵀ`, while `relation` above is
+`I - A`. Transposing the integral equivalence swaps the two unimodular
+coordinate changes. This gives the actual cokernel of the boundary map,
+not merely the determinant or the cokernel of a different orientation.
+-/
+
+theorem transpose_smith_certificate :
+    V.transpose * relation.transpose * U.transpose = smithDiagonal := by
+  have h := congrArg Matrix.transpose smith_certificate
+  simpa only [Matrix.transpose_mul, Matrix.diagonal_transpose] using h
+
+theorem UTranspose_mul_UInvTranspose :
+    U.transpose * UInv.transpose = 1 := by
+  have h := congrArg Matrix.transpose UInv_mul_U
+  simpa only [Matrix.transpose_mul] using h
+
+theorem UInvTranspose_mul_UTranspose :
+    UInv.transpose * U.transpose = 1 := by
+  have h := congrArg Matrix.transpose U_mul_UInv
+  simpa only [Matrix.transpose_mul] using h
+
+theorem VTranspose_mul_VInvTranspose :
+    V.transpose * VInv.transpose = 1 := by
+  have h := congrArg Matrix.transpose VInv_mul_V
+  simpa only [Matrix.transpose_mul] using h
+
+theorem VInvTranspose_mul_VTranspose :
+    VInv.transpose * V.transpose = 1 := by
+  have h := congrArg Matrix.transpose V_mul_VInv
+  simpa only [Matrix.transpose_mul] using h
+
+theorem transpose_image_smith_iff (x : Lattice) :
+    (∃ z : Lattice, relation.transpose *ᵥ z = x) ↔
+      ∃ w : Lattice, smithDiagonal *ᵥ w = V.transpose *ᵥ x := by
+  constructor
+  · rintro ⟨z, rfl⟩
+    refine ⟨UInv.transpose *ᵥ z, ?_⟩
+    rw [← transpose_smith_certificate]
+    simp only [Matrix.mulVec_mulVec, mul_assoc,
+      UTranspose_mul_UInvTranspose, mul_one]
+  · rintro ⟨w, hw⟩
+    refine ⟨U.transpose *ᵥ w, ?_⟩
+    have h := congrArg (fun y : Lattice => VInv.transpose *ᵥ y) hw
+    rw [← transpose_smith_certificate] at h
+    simpa only [Matrix.mulVec_mulVec, ← mul_assoc,
+      VInvTranspose_mul_VTranspose, one_mul, Matrix.one_mulVec] using h
+
+def transposeGraphResidue : Lattice →ₗ[ℤ] SmithGroup :=
+  coordinateResidue.comp V.transpose.toLin'
+
+theorem transposeGraphResidue_surjective :
+    Function.Surjective transposeGraphResidue := by
+  intro y
+  obtain ⟨x, hx⟩ := coordinateResidue_surjective y
+  refine ⟨VInv.transpose *ᵥ x, ?_⟩
+  change coordinateResidue (V.transpose *ᵥ (VInv.transpose *ᵥ x)) = y
+  rw [Matrix.mulVec_mulVec, VTranspose_mul_VInvTranspose,
+    Matrix.one_mulVec]
+  exact hx
+
+theorem transposeGraphResidue_exact :
+    LinearMap.ker transposeGraphResidue =
+      LinearMap.range relation.transpose.toLin' := by
+  apply Submodule.ext
+  intro x
+  simp only [LinearMap.mem_ker, LinearMap.mem_range]
+  change coordinateResidue (V.transpose *ᵥ x) = 0 ↔
+    ∃ z : Lattice, relation.transpose *ᵥ z = x
+  exact (coordinateResidue_zero_iff _).trans
+    (transpose_image_smith_iff x).symm
+
+/-- The cokernel of the oriented graph boundary map has the certified Smith
+group. This is an integer-module result; it does not assert a
+Cuntz--Krieger K-theory classification. -/
+def transposeCokernelEquiv : TransposeCokernel ≃ₗ[ℤ] SmithGroup := by
+  change (Lattice ⧸ LinearMap.range relation.transpose.toLin') ≃ₗ[ℤ] SmithGroup
+  rw [← transposeGraphResidue_exact]
+  exact transposeGraphResidue.quotKerEquivOfSurjective
+    transposeGraphResidue_surjective
 
 theorem smithGroup_card : Fintype.card SmithGroup = 1456 := by
   norm_num [SmithGroup, Fintype.card_prod, ZMod.card]

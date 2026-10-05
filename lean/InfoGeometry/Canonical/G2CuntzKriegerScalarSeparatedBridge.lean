@@ -3,6 +3,7 @@ import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.RootSystem.G2CoxeterPlaneProjection
 import InfoGeometry.Canonical.SpinorialCore.G2Determinant
+import InfoGeometry.Canonical.SpinorialCore.G2Cokernel
 
 /-!
 # Scalar-separated G2 Cuntz--Krieger bridge
@@ -340,6 +341,28 @@ theorem G2BoundaryMatrix_det :
       Matrix.transpose_sub, Matrix.transpose_one, A_G2_int_eq_certificate]
   rw [hboundary, Matrix.det_transpose]
   exact InfoGeometry.Canonical.SpinorialCore.G2.relation_det
+
+/-- Integer cokernel of the concrete oriented graph boundary operator
+`I - Aᵀ`. -/
+abbrev G2BoundaryCokernel :=
+  (G2Vertex → ℤ) ⧸ LinearMap.range G2BoundaryMatrix.toLin'
+
+/-- The graph boundary cokernel is the certified Smith group. This identifies
+the cokernel of the actual transpose boundary matrix, rather than inferring a
+group structure from its determinant. -/
+def G2BoundaryCokernel.equivSmithGroup :
+    G2BoundaryCokernel ≃ₗ[ℤ]
+      InfoGeometry.Canonical.SpinorialCore.G2.SmithGroup := by
+  change ((G2Vertex → ℤ) ⧸
+      LinearMap.range G2BoundaryMatrix.toLin') ≃ₗ[ℤ]
+    InfoGeometry.Canonical.SpinorialCore.G2.SmithGroup
+  have hboundary : G2BoundaryMatrix =
+      InfoGeometry.Canonical.SpinorialCore.G2.relation.transpose := by
+    simp only [G2BoundaryMatrix,
+      InfoGeometry.Canonical.SpinorialCore.G2.relation,
+      Matrix.transpose_sub, Matrix.transpose_one, A_G2_int_eq_certificate]
+  rw [hboundary]
+  exact InfoGeometry.Canonical.SpinorialCore.G2.transposeCokernelEquiv
 
 /-! ## 5. Short/long aggregate projections in a concrete realization -/
 

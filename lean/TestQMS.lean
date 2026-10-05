@@ -1,0 +1,8 @@
+import InfoGeometry.Meta.ArchetypePipeline
+import InfoGeometry.Meta.ArchetypeDischarge
+import InfoGeometry.Algebra.ArchetypeInstances
+
+#check InfoGeometry.Bridge.zornAssociatorDefectProved
+#check InfoGeometry.Bridge.iwasawaKANReconstructProved
+#print axioms InfoGeometry.Bridge.zornAssociatorDefectProved
+#print axioms InfoGeometry.Bridge.iwasawaKANReconstructProved

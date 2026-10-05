@@ -132,8 +132,10 @@ def conjugate (M : ZornMatrix) : ZornMatrix :=
 
 theorem norm_conjugate (M : ZornMatrix) :
     norm (conjugate M) = norm M := by
-  simpa [norm, conjugate, dotProduct] using
-    (InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm_conj (M.a, M.b, M.x, M.y))
+  change InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm
+      (InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornConj (M.a, M.b, M.x, M.y)) =
+    InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm (M.a, M.b, M.x, M.y)
+  exact InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm_conj (M.a, M.b, M.x, M.y)
 
 theorem norm_mul (M N : ZornMatrix) :
     norm (M * N) = norm M * norm N := by

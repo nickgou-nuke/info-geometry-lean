@@ -150,6 +150,7 @@ namespace InfoGeometry.Krein.NeutralSpace
 def IsInfinitesimalIsometry (A : NeutralSpace E →L[ℝ] NeutralSpace E) : Prop :=
   KreinSpace.IsKreinSkewAdjoint (H := NeutralSpace E) A
 
+local instance : LieRing (NeutralSpace E →L[ℝ] NeutralSpace E) := LieRing.ofAssociativeRing
 /-- The Lie subalgebra of infinitesimal isometries for the neutral metric. -/
 noncomputable def neutralLieSubalgebra :
     LieSubalgebra ℝ (NeutralSpace E →L[ℝ] NeutralSpace E) where

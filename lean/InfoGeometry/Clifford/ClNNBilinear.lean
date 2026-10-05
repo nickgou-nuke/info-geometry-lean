@@ -109,7 +109,7 @@ noncomputable def Bsplit : (n : ℕ) → SplitSpace n →ₗ[ℝ] SplitSpace n �
     (n : ℕ) (x : ℝ × ℝ) (xs : HyperbolicSpace n) :
     hyperbolicQuadratic (n + 1) (x, xs)
       = splitQ11 x + hyperbolicQuadratic n xs := by
-  simp [hyperbolicQuadratic, Q11]
+  rw [Qsplit_succ_apply]
 
 @[rep_depth krein, simp] theorem hyperbolicBilinear_succ_apply
     (n : ℕ) (x y : ℝ × ℝ) (xs ys : HyperbolicSpace n) :
@@ -128,8 +128,12 @@ theorem Bsplit_symm
   | succ n ih =>
       rcases x with ⟨x, xs⟩
       rcases y with ⟨y, ys⟩
-      simp [Bsplit_succ_apply, ih xs ys]
-      ring
+      change splitB11 x y + Bsplit n xs ys = splitB11 y x + Bsplit n ys xs
+      rw [ih xs ys]
+      have h : splitB11 x y = splitB11 y x := by
+        simp [splitB11_apply]
+        ring
+      rw [h]
 
 /-- The recursive quadratic form is the diagonal of the recursive bilinear form. -/
 @[rep_depth krein]
@@ -141,7 +145,9 @@ theorem Qsplit_eq_Bsplit_diag
       rfl
   | succ n ih =>
       rcases x with ⟨x, xs⟩
-      simp [Qsplit_succ_apply, Bsplit_succ_apply, ih xs, Q11]
+      change splitQ11 x + Qsplit n xs = splitB11 x x + Bsplit n xs xs
+      rw [ih xs]
+      simp [splitQ11, splitB11_apply]
 
 /-- The hyperbolic quadratic form is the diagonal of the hyperbolic bilinear form. -/
 @[rep_depth krein]
@@ -189,7 +195,8 @@ theorem hyperbolic_polar_eq_two_bilinear
 @[rep_depth krein, simp] theorem Bsplit_headPair_tailLift
     (n : ℕ) (x : ℝ × ℝ) (xs : SplitSpace n) :
     Bsplit (n + 1) (headPair n x) (tailLift n xs) = 0 := by
-  simp [headPair, tailLift]
+  change splitB11 x (0, 0) + Bsplit n 0 xs = 0
+  simp [splitB11_apply]
 
 @[rep_depth krein, simp] theorem Bsplit_tailLift_headPair
     (n : ℕ) (xs : SplitSpace n) (x : ℝ × ℝ) :
@@ -200,12 +207,14 @@ theorem hyperbolic_polar_eq_two_bilinear
 @[rep_depth krein, simp] theorem Bsplit_headPair_headPair
     (n : ℕ) (x y : ℝ × ℝ) :
     Bsplit (n + 1) (headPair n x) (headPair n y) = splitB11 x y := by
-  simp [headPair]
+  change splitB11 x y + Bsplit n 0 0 = splitB11 x y
+  simp [splitB11_apply]
 
 @[rep_depth krein, simp] theorem Bsplit_tailLift_tailLift
     (n : ℕ) (xs ys : SplitSpace n) :
     Bsplit (n + 1) (tailLift n xs) (tailLift n ys) = Bsplit n xs ys := by
-  simp [tailLift]
+  change splitB11 (0, 0) (0, 0) + Bsplit n xs ys = Bsplit n xs ys
+  simp [splitB11_apply]
 
 /--
 The split `Cl(1,1)` head tensored with the split `Cl(n,n)` tail is the next
@@ -238,8 +247,10 @@ theorem clifford_head_tail_anticommute
       + CliffordAlgebra.ι (Qsplit (n + 1)) (tailLift n xs)
         * CliffordAlgebra.ι (Qsplit (n + 1)) (headPair n x)
         = 0 := by
-  simpa using
-    (clifford_ι_mul_ι_add_swap_eq_bilinear (n + 1) (headPair n x) (tailLift n xs))
+  have h := clifford_ι_mul_ι_add_swap_eq_bilinear (n + 1) (headPair n x) (tailLift n xs)
+  rw [Bsplit_headPair_tailLift] at h
+  simp at h
+  exact h
 
 @[rep_depth krein, simp] theorem hyperbolic_headNullMinus_isotropic
     (n : ℕ) :
@@ -295,6 +306,7 @@ theorem gammaHeadNullMinus_mul_gammaHeadNullPlus_add_swap_from_hyperbolic_pairin
     gammaHeadNullMinus n * gammaHeadNullPlus n
       + gammaHeadNullPlus n * gammaHeadNullMinus n = 1 := by
   rw [gammaHeadNullMinus_mul_gammaHeadNullPlus_add_swap_eq_hyperbolic_pairing]
-  simp [hyperbolic_headNullMinus_headNullPlus_pairing]
+  rw [hyperbolic_headNullMinus_headNullPlus_pairing]
+  simp
 
 end InfoGeometry.Clifford.ClNNBilinear

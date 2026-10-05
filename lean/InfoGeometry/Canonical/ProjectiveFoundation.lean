@@ -18,7 +18,7 @@ import Mathlib.Algebra.Group.End
 import Mathlib.GroupTheory.QuotientGroup.Defs
 import Mathlib.GroupTheory.GroupAction.Defs
 import Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.LinearAlgebra.Projectivization.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 
@@ -227,7 +227,7 @@ theorem multiplierClass_eq_zero_iff_isMulCoboundary₂ (P : ProjectiveRepresenta
       hm
   · intro h
     refine (multiplierClass_eq_zero_iff_mem_coboundaries₂ (P := P)).mpr ?_
-    simpa [multiplierToCocycles₂] using
+    exact
       (groupCohomology.coboundariesOfIsMulCoboundary₂
         (f := fun p : G × G => (P.multiplier p.1 p.2 : Kˣ)) h).2
 
@@ -332,7 +332,7 @@ theorem projectivizationMap_mul (P : ProjectiveRepresentation K G V)
 def projectivizationAction (P : ProjectiveRepresentation K G V) : G →* Function.End (ℙ K V) where
   toFun := P.projectivizationMap
   map_one' := by
-    simpa [Function.End.one_def] using P.projectivizationMap_one
+    exact P.projectivizationMap_one
   map_mul' := P.projectivizationMap_mul
 
 end ProjectivizationAction
@@ -489,7 +489,10 @@ def ofLinearHomSection (ρ : G →* (V ≃ₗ[K] V)) :
   map_one' := rfl
   map_mul' := by
     intro g h
-    ext <;> simp [ofLinearHom]
+    apply centralExtension.ext
+    · rfl
+    · change (1 : Kˣ) = 1 * 1 * 1
+      simp
 
 @[simp] theorem ofLinearHomSection_apply (ρ : G →* (V ≃ₗ[K] V)) (g : G) :
     ofLinearHomSection (G := G) (V := V) ρ g = ⟨g, 1⟩ :=
@@ -504,7 +507,8 @@ def ofLinearHomSection (ρ : G →* (V ≃ₗ[K] V)) :
     centralExtension.liftToCentralExtension (P := ofLinearHom (k := K) (G := G) (V := V) ρ)
       (ofLinearHomSection (G := G) (V := V) ρ g) = ρ g := by
   ext v
-  simp [ofLinearHomSection, centralExtension.liftToCentralExtension, ofLinearHom]
+  change (1 : Kˣ)⁻¹ • ρ g v = ρ g v
+  simp
 
 /-- The multiplier class vanishes when the cocycle extension admits a splitting section. -/
 theorem multiplierClass_eq_zero_exists_splitSection
@@ -717,10 +721,9 @@ theorem pglAction_comp (e f : V ≃ₗ[K] V) :
   funext p
   refine Quotient.inductionOn p ?_
   intro v
-  simpa [Function.comp] using
-    congrArg (fun q => q ⟦v⟧)
-      (Projectivization.map_comp (f := e.toLinearMap) (hf := e.injective)
-        (g := f.toLinearMap) (hg := f.injective))
+  exact congrArg (fun q => q ⟦v⟧)
+    (Projectivization.map_comp (f := e.toLinearMap) (hf := e.injective)
+      (g := f.toLinearMap) (hg := f.injective))
 
 /-- Honest linear equivalences act on projective space through their `PGL` image. -/
 theorem pglAction_toPGLHom (e : V ≃ₗ[K] V) :

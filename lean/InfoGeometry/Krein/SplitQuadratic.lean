@@ -141,35 +141,36 @@ lemma spectral_epsilon_selfAdj (u v : H₂) :
 omit [CompleteSpace E] in
 lemma hasFDerivAt_grad (u : H₂) :
     HasFDerivAt (fun x : H₂ => grad (E := E) x) (metricOp (E := E) u) u := by
-  simpa [grad, metricOp] using (spectral_epsilon (E := E)).hasFDerivAt
+  exact (spectral_epsilon (E := E)).hasFDerivAt
 
 /-- The split quadratic potential differentiates to the fundamental symmetry action. -/
 lemma hasFDerivAt_potential (u : H₂) :
     HasFDerivAt (potential (E := E))
       (InnerProductSpace.toDual ℝ H₂ (grad (E := E) u)) u := by
   unfold potential
-  have h_id : HasFDerivAt (fun x : H₂ => x) (1 : H₂ →L[ℝ] H₂) u := by
-    simpa using (hasFDerivAt_id u)
+  have h_id : HasFDerivAt (fun x : H₂ => x) (ContinuousLinearMap.id ℝ H₂) u := by
+    exact hasFDerivAt_id u
   have h_grad :
       HasFDerivAt (fun x : H₂ => grad (E := E) x) (metricOp (E := E) u) u :=
     hasFDerivAt_grad (E := E) u
   have h_inner :
       HasFDerivAt (fun x : H₂ => inner ℝ (grad (E := E) x) x)
         ((fderivInnerCLM ℝ (grad (E := E) u, u)).comp
-          ((metricOp (E := E) u).prod (1 : H₂ →L[ℝ] H₂))) u :=
+          ((metricOp (E := E) u).prod (ContinuousLinearMap.id ℝ H₂))) u :=
     h_grad.inner ℝ h_id
   convert h_inner.const_smul (1 / 2 : ℝ) using 1
-  ext v
-  rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
-    ContinuousLinearMap.prod_apply, fderivInnerCLM_apply]
-  have hsymm :
-      inner ℝ (metricOp (E := E) u v) u = inner ℝ (grad (E := E) u) v := by
-    change inner ℝ (spectral_epsilon (E := E) v) u = inner ℝ (spectral_epsilon (E := E) u) v
-    rw [spectral_epsilon_selfAdj]
-    rw [real_inner_comm]
-  rw [hsymm]
-  simp [grad, InnerProductSpace.toDual_apply_apply]
-  ring
+  · rfl
+  · ext v
+    rw [smul_apply, ContinuousLinearMap.comp_apply,
+      ContinuousLinearMap.prod_apply, fderivInnerCLM_apply]
+    have hsymm :
+        inner ℝ (metricOp (E := E) u v) u = inner ℝ (grad (E := E) u) v := by
+      change inner ℝ (spectral_epsilon (E := E) v) u = inner ℝ (spectral_epsilon (E := E) u) v
+      rw [spectral_epsilon_selfAdj]
+      rw [real_inner_comm]
+    rw [hsymm]
+    simp [grad, InnerProductSpace.toDual_apply_apply]
+    ring
 
 /-- Signed quadratic divergence induced by the split/Krein potential. -/
 noncomputable def divergence (x y : H₂) : ℝ :=

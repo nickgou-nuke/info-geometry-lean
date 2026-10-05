@@ -45,11 +45,11 @@ noncomputable def twistorMap : Vec22 →ₗ[ℝ] ((ℝ × ℝ) →ₗ[ℝ] (ℝ 
   map_add' X Y := by
     apply LinearMap.ext
     intro π
-    ext <;> (dsimp [pointAction, soldering]; ring)
+    ext <;> (simp [pointAction, soldering, Pi.add_apply, Matrix.add_apply]; ring)
   map_smul' a X := by
     apply LinearMap.ext
     intro π
-    ext <;> (dsimp [pointAction, soldering]; ring)
+    ext <;> (simp [pointAction, soldering, Pi.smul_apply, Matrix.smul_apply]; ring)
 
 /-- 
 Incidence relation: A twistor $Z = (\omega, \pi)$ is incident with point $X$ 

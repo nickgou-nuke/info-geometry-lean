@@ -271,12 +271,12 @@ lemma mem_even_iff (S : SymmetricLieAlgebra L) {x : L} :
 /-- The even part is convex as a submodule. -/
 lemma even_convex (S : SymmetricLieAlgebra L) :
     Convex ℝ (S.evenLieSubalgebra : Set L) := by
-  simpa using (Submodule.convex S.evenLieSubalgebra.toSubmodule)
+  exact Submodule.convex S.evenLieSubalgebra.toSubmodule
 
 /-- The odd part is convex as a submodule. -/
 lemma odd_convex (S : SymmetricLieAlgebra L) :
     Convex ℝ (S.oddSubmodule : Set L) := by
-  simpa using (Submodule.convex S.oddSubmodule)
+  exact Submodule.convex S.oddSubmodule
 
 lemma segment_subset_even (S : SymmetricLieAlgebra L) {x y : L}
     (hx : x ∈ S.evenLieSubalgebra) (hy : y ∈ S.evenLieSubalgebra) :
@@ -813,6 +813,8 @@ end SymmetricLieAlgebra
 section Endomorphism
 
 variable {V : Type _} [NormedAddCommGroup V] [NormedSpace ℝ V]
+
+local instance : LieRing (V →L[ℝ] V) := LieRing.ofAssociativeRing
 
 /-- Conjugation by an involutive endomorphism as an abstract symmetric Lie algebra. -/
 noncomputable def endoSymmetricLieAlgebra

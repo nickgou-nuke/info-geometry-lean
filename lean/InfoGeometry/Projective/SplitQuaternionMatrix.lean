@@ -200,17 +200,32 @@ noncomputable def splitQuaternionEquivMatrix :
   left_inv := matrixToSplitQuaternion_splitQuaternionToMatrixQ
   right_inv := splitQuaternionToMatrixQ_matrixToSplitQuaternion
 
+noncomputable def splitQuaternionAddEquivMatrix :
+    SplitQuaternion ≃+ Matrix (Fin 2) (Fin 2) ℝ :=
+  { splitQuaternionEquivMatrix with
+    map_add' := fun x y => rfl }
+
 noncomputable instance : AddCommGroup SplitQuaternion :=
   Equiv.addCommGroup splitQuaternionEquivMatrix
 
 noncomputable instance : Module ℝ SplitQuaternion :=
-  Equiv.module ℝ splitQuaternionEquivMatrix
+  AddEquiv.module ℝ splitQuaternionAddEquivMatrix
+
+noncomputable def splitQuaternionRingEquivMatrix :
+    SplitQuaternion ≃+* Matrix (Fin 2) (Fin 2) ℝ :=
+  { splitQuaternionAddEquivMatrix with
+    map_mul' := fun x y => rfl }
 
 noncomputable instance : Ring SplitQuaternion :=
-  Equiv.ring splitQuaternionEquivMatrix
+  RingEquiv.ring splitQuaternionRingEquivMatrix
+
+noncomputable def splitQuaternionAlgEquivMatrix :
+    SplitQuaternion ≃ₐ[ℝ] Matrix (Fin 2) (Fin 2) ℝ :=
+  { splitQuaternionRingEquivMatrix with
+    commutes' := fun r => rfl }
 
 noncomputable instance : Algebra ℝ SplitQuaternion :=
-  Equiv.algebra ℝ splitQuaternionEquivMatrix
+  AlgEquiv.algebra splitQuaternionAlgEquivMatrix
 
 /--
 The fundamental equivalence $\mathbb{H}_s \cong M_2(\mathbb{R})$.
@@ -219,36 +234,7 @@ With the exact mapping provided, this equivalence is structurally fixed.
 -/
 noncomputable def splitQuaternionMatrixEquiv :
     SplitQuaternion ≃ₐ[ℝ] Matrix (Fin 2) (Fin 2) ℝ :=
-  { toFun := splitQuaternionToMatrixQ
-    invFun := matrixToSplitQuaternion
-    left_inv := matrixToSplitQuaternion_splitQuaternionToMatrixQ
-    right_inv := splitQuaternionToMatrixQ_matrixToSplitQuaternion
-    map_mul' := by
-      intro a b
-      change
-        splitQuaternionEquivMatrix
-            (splitQuaternionEquivMatrix.symm
-              (splitQuaternionEquivMatrix a * splitQuaternionEquivMatrix b))
-          =
-        splitQuaternionEquivMatrix a * splitQuaternionEquivMatrix b
-      simp
-    map_add' := by
-      intro a b
-      change
-        splitQuaternionEquivMatrix
-            (splitQuaternionEquivMatrix.symm
-              (splitQuaternionEquivMatrix a + splitQuaternionEquivMatrix b))
-          =
-        splitQuaternionEquivMatrix a + splitQuaternionEquivMatrix b
-      simp
-    commutes' := by
-      intro r
-      change
-        splitQuaternionEquivMatrix
-            (splitQuaternionEquivMatrix.symm
-              (algebraMap ℝ (Matrix (Fin 2) (Fin 2) ℝ) r))
-          =
-        algebraMap ℝ (Matrix (Fin 2) (Fin 2) ℝ) r
-      simp }
+  splitQuaternionAlgEquivMatrix
+
 
 end InfoGeometry.Projective

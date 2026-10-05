@@ -79,7 +79,7 @@ theorem source_weight
     FiveGrade.weight (P.gradeCarrier.gradeOf x) = 2 := by
   have hxgrade :
       P.closure.inversion.grade x = ConformalGrade.posTwo := by
-    simpa [FiveGradeBoundaryCurrentPacket.sourceSet] using hx
+    exact hx
   rw [P.gradeCompat x, hxgrade]
   simp [toWeylGrade, FiveGrade.weight]
 
@@ -91,7 +91,7 @@ theorem sink_weight
     FiveGrade.weight (P.gradeCarrier.gradeOf x) = -2 := by
   have hxgrade :
       P.closure.inversion.grade x = ConformalGrade.negTwo := by
-    simpa [FiveGradeBoundaryCurrentPacket.sinkSet] using hx
+    exact hx
   rw [P.gradeCompat x, hxgrade]
   simp [toWeylGrade, FiveGrade.weight]
 
@@ -103,7 +103,7 @@ theorem incoming_weight
     FiveGrade.weight (P.gradeCarrier.gradeOf x) = -1 := by
   have hxgrade :
       P.closure.inversion.grade x = ConformalGrade.negOne := by
-    simpa [FiveGradedConformalInversion.incomingSet] using hx
+    exact hx
   rw [P.gradeCompat x, hxgrade]
   simp [toWeylGrade, FiveGrade.weight]
 
@@ -115,7 +115,7 @@ theorem outgoing_weight
     FiveGrade.weight (P.gradeCarrier.gradeOf x) = 1 := by
   have hxgrade :
       P.closure.inversion.grade x = ConformalGrade.posOne := by
-    simpa [FiveGradedConformalInversion.outgoingSet] using hx
+    exact hx
   rw [P.gradeCompat x, hxgrade]
   simp [toWeylGrade, FiveGrade.weight]
 
@@ -127,7 +127,7 @@ theorem center_weight
     FiveGrade.weight (P.gradeCarrier.gradeOf x) = 0 := by
   have hxgrade :
       P.closure.inversion.grade x = ConformalGrade.zero := by
-    simpa [FiveGradeBoundaryCurrentPacket.centerSet] using hx
+    exact hx
   rw [P.gradeCompat x, hxgrade]
   simp [toWeylGrade, FiveGrade.weight]
 

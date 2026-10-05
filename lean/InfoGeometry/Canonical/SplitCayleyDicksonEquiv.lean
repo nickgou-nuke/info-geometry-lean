@@ -52,7 +52,7 @@ def splitQuaternionEquivMatrix : SplitQuaternion ≃ₐ[ℝ] Matrix (Fin 2) (Fin
   map_add' x y := by
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [splitQuaternionToMatrix] <;>
+      simp [splitQuaternionToMatrix, Pi.add_apply] <;>
       ring
   commutes' r := by
     ext i j

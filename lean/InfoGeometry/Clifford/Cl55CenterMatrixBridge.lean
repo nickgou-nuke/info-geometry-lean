@@ -25,7 +25,8 @@ theorem center_scalar_of_algEquiv_matrix
     · intro y
       obtain ⟨z, rfl⟩ := e.surjective y
       have hz := (Subalgebra.mem_center_iff.mp hx) z
-      simpa only [map_mul] using (congrArg e hz).symm
+      change e x * e z = e z * e x
+      rw [← map_mul, ← map_mul, hz]
     · intro b c
       simp only [mul_assoc]
     · intro a b

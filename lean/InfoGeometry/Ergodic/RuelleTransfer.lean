@@ -40,7 +40,7 @@ theorem shift_extend_word {n : ℕ} (b : Bool) (x : BitWord n) :
     shiftWord (extendWord b x) = x := by
   funext i
   unfold shiftWord extendWord
-  rw [Fin.cases_succ]
+  rfl
 
 /-- Ruelle transfer operator ℒ_φ acting on an observable `f` (level n+1),
     weighted by potential `φ`. Returns an observable on level n. -/

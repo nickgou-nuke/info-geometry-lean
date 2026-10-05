@@ -9,4 +9,5 @@ lemma isBarrierKernel_not_inv_eq :
   rw [h1] at h
   have h2 : (2 : ℝ) - 1 = 1 := by norm_num
   have h3 : (1 / 2 : ℝ) - 1 = - 1 / 2 := by norm_num
+  have h_log : Real.log 2 < 3/4 := by linarith [Real.log_two_lt_d9]
   linarith

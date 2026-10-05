@@ -35,8 +35,8 @@ private def decapitalizeFirst (s : String) : String :=
 /-- Audit all bridge targets in the current environment. -/
 def checkBridgeTargets : CoreM Unit := do
   let env ← getEnv
-  let mut total := 0
-  let mut proved := 0
+  let mut total : Nat := 0
+  let mut proved : Nat := 0
   let mut debt : Array Name := #[]
   for (declName, _) in env.constants do
     if bridgeTargetTagAttr.hasTag env declName then

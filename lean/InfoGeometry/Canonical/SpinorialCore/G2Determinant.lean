@@ -59,11 +59,11 @@ theorem elimination_mul_relation :
     elimination * relation.submatrix (Equiv.swap 5 6) id = triangularRelation := by decide
 
 theorem elimination_det : elimination.det = 51392 := by
-  rw [Matrix.det_of_lowerTriangular elimination elimination_lower]
+  rw [Matrix.det_of_isLowerTriangular elimination elimination_lower]
   norm_num [elimination, Fin.prod_univ_succ]
 
 theorem triangularRelation_det : triangularRelation.det = 74826752 := by
-  rw [Matrix.det_of_upperTriangular triangularRelation_upper]
+  rw [Matrix.det_of_isUpperTriangular triangularRelation_upper]
   norm_num [triangularRelation, Fin.prod_univ_succ]
 
 /-- The sign comes from the single row swap, not just the Smith factors. -/

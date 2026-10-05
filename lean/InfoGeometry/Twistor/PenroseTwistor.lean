@@ -251,7 +251,7 @@ abbrev RealNullTwistorSpace : Type _ :=
   InfoGeometry.Twistor.TwistorSpace twistorRealQuadraticForm
 
 /-- A nonzero null vector defines a projective null twistor. -/
-def twistorMk (z : TwistorCarrier) (hz : z ≠ 0) (hnull : helicity z = 0) :
+noncomputable def twistorMk (z : TwistorCarrier) (hz : z ≠ 0) (hnull : helicity z = 0) :
     NullTwistorSpace :=
   ⟨Projectivization.mk ℂ z hz, by
     simpa [IsProjectiveNull] using hnull⟩
@@ -332,13 +332,13 @@ theorem projective_twistor_sign_trichotomy (p : ProjectiveTwistorSpace) :
   refine Quotient.inductionOn p ?_
   intro z
   by_cases hpos : 0 < helicity z.1
-  · exact Or.inl (by simpa [IsProjectivePositive] using hpos)
+  · exact Or.inl (by change 0 < helicity z.1; exact hpos)
   · by_cases hneg : helicity z.1 < 0
-    · exact Or.inr (Or.inl (by simpa [IsProjectiveNegative] using hneg))
+    · exact Or.inr (Or.inl (by change helicity z.1 < 0; exact hneg))
     · have hzero : helicity z.1 = 0 := by
         have hle : helicity z.1 ≤ 0 := le_of_not_gt hpos
         have hge : 0 ≤ helicity z.1 := le_of_not_gt hneg
         linarith
-      exact Or.inr (Or.inr (by simpa [IsProjectiveNull] using hzero))
+      exact Or.inr (Or.inr (by change helicity z.1 = 0; exact hzero))
 
 end InfoGeometry.Twistor.PenroseTwistor

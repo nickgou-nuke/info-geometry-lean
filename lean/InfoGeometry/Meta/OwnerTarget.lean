@@ -67,8 +67,8 @@ private def decapitalizeFirst (s : String) : String :=
 /-- Audit all owner targets in the current environment. -/
 def checkOwnerTargets : CoreM Unit := do
   let env ← getEnv
-  let mut total := 0
-  let mut proved := 0
+  let mut total : Nat := 0
+  let mut proved : Nat := 0
   let mut debtDecls : Array Name := #[]
   for (declName, _) in env.constants do
     if ownerTargetTagAttr.hasTag env declName then

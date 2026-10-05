@@ -2,6 +2,7 @@ import InfoGeometry.Core.Involution
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.SymmetricLieGeneric
 import InfoGeometry.Architecture.SymmetricSpace
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # Unified Geometry Core
@@ -146,6 +147,10 @@ structure CartanLieStructure (L : Type _)
 section Endomorphism
 
 variable {V : Type _} [NormedAddCommGroup V] [NormedSpace ℝ V]
+
+-- Mathlib 4.34 keeps the commutator Lie structure on associative rings
+-- reducible and local to avoid an instance diamond with `Ring.bracket`.
+local instance : LieRing (V →L[ℝ] V) := LieRing.ofAssociativeRing
 
 /-- Conjugation linear endomorphism on `End(V)` induced by `J`. -/
 noncomputable def conjugationMap
@@ -339,7 +344,7 @@ lemma conjugation_bracket_even_even_mem_even
         = ⁅conjugationMap J A, conjugationMap J B⁆ :=
           conjugationMap_bracket J hJ A B
     _ = ⁅(1 : ℝ) • A, (1 : ℝ) • B⁆ := by rw [hA, hB]
-    _ = (1 : ℝ) • ⁅A, B⁆ := by simp
+    _ = (1 : ℝ) • ⁅A, B⁆ := by simp [lie_smul, smul_lie]
 
 /-- Bracket closure `[𝔨, 𝔭] ⊆ 𝔭` for the conjugation eigenspace decomposition. -/
 lemma conjugation_bracket_even_odd_mem_odd
@@ -356,7 +361,7 @@ lemma conjugation_bracket_even_odd_mem_odd
         = ⁅conjugationMap J A, conjugationMap J B⁆ :=
           conjugationMap_bracket J hJ A B
     _ = ⁅(1 : ℝ) • A, (-1 : ℝ) • B⁆ := by rw [hA, hB]
-    _ = (-1 : ℝ) • ⁅A, B⁆ := by simp
+    _ = (-1 : ℝ) • ⁅A, B⁆ := by simp [lie_smul, smul_lie]
 
 /-- Bracket closure `[𝔭, 𝔭] ⊆ 𝔨` for the conjugation eigenspace decomposition. -/
 lemma conjugation_bracket_odd_odd_mem_even
@@ -373,7 +378,7 @@ lemma conjugation_bracket_odd_odd_mem_even
         = ⁅conjugationMap J A, conjugationMap J B⁆ :=
           conjugationMap_bracket J hJ A B
     _ = ⁅(-1 : ℝ) • A, (-1 : ℝ) • B⁆ := by rw [hA, hB]
-    _ = (1 : ℝ) • ⁅A, B⁆ := by simp
+    _ = (1 : ℝ) • ⁅A, B⁆ := by simp [lie_smul, smul_lie]
 
 /-- The `+1` conjugation eigenspace is a Lie subalgebra. -/
 noncomputable def conjugationEvenLieSubalgebra

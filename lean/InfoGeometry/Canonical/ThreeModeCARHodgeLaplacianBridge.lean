@@ -4,6 +4,7 @@ import Mathlib.Tactic
 
 set_option maxHeartbeats 2000000
 set_option linter.unusedTactic false
+set_option linter.unusedSimpArgs false
 
 /-!
 # Three-Mode CAR Algebra and Master Hodge-de Rham Laplacian Bridge
@@ -116,63 +117,129 @@ def iota2 : Mat8 :=
 
 -- 1. Nilpotency Theorems
 theorem eps0_sq : eps0 * eps0 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, eps0, Fin.sum_univ_eight]
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps0]
+    simp
+  }
 
 theorem eps1_sq : eps1 * eps1 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, eps1, Fin.sum_univ_eight]
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps1]
+    simp
+  }
 
 theorem eps2_sq : eps2 * eps2 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, eps2, Fin.sum_univ_eight]
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps2]
+    simp
+  }
 
 theorem iota0_sq : iota0 * iota0 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, iota0, Fin.sum_univ_eight]
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [iota0]
+    simp
+  }
 
 theorem iota1_sq : iota1 * iota1 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, iota1, Fin.sum_univ_eight]
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [iota1]
+    simp
+  }
 
 theorem iota2_sq : iota2 * iota2 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, iota2, Fin.sum_univ_eight]
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [iota2]
+    simp
+  }
 
 -- 2. Mutual Anticommutativity of Creation and Annihilation
 theorem eps0_eps1_anticomm : eps0 * eps1 + eps1 * eps0 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Matrix.add_apply, eps0, eps1, Fin.sum_univ_eight]
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps0, eps1]
+    simp
+  }
 
 theorem eps1_eps2_anticomm : eps1 * eps2 + eps2 * eps1 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Matrix.add_apply, eps1, eps2, Fin.sum_univ_eight]
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps1, eps2]
+    simp
+  }
 
 theorem eps2_eps0_anticomm : eps2 * eps0 + eps0 * eps2 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Matrix.add_apply, eps2, eps0, Fin.sum_univ_eight]
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps2, eps0]
+    simp
+  }
 
 -- 3. Canonical Anticommutation Relations (CAR)
 theorem car00 : eps0 * iota0 + iota0 * eps0 = 1 := by
-  ext i j; fin_cases i <;> fin_cases j <;> (
-    first
-    | (simp [Matrix.mul_apply, Matrix.add_apply, eps0, iota0, Fin.sum_univ_eight]; norm_num)
-    | simp [Matrix.mul_apply, Matrix.add_apply, eps0, iota0, Fin.sum_univ_eight]
-  )
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps0, iota0]
+    simp
+  }
+
 
 theorem car11 : eps1 * iota1 + iota1 * eps1 = 1 := by
-  ext i j; fin_cases i <;> fin_cases j <;> (
-    first
-    | (simp [Matrix.mul_apply, Matrix.add_apply, eps1, iota1, Fin.sum_univ_eight]; norm_num)
-    | simp [Matrix.mul_apply, Matrix.add_apply, eps1, iota1, Fin.sum_univ_eight]
-  )
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps1, iota1]
+    simp
+  }
+
 
 theorem car22 : eps2 * iota2 + iota2 * eps2 = 1 := by
-  ext i j; fin_cases i <;> fin_cases j <;> (
-    first
-    | (simp [Matrix.mul_apply, Matrix.add_apply, eps2, iota2, Fin.sum_univ_eight]; norm_num)
-    | simp [Matrix.mul_apply, Matrix.add_apply, eps2, iota2, Fin.sum_univ_eight]
-  )
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps2, iota2]
+    simp
+  }
+
 
 theorem car01 : eps0 * iota1 + iota1 * eps0 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Matrix.add_apply, eps0, iota1, Fin.sum_univ_eight]
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps0, iota1]
+    simp
+  }
 
 theorem car12 : eps1 * iota2 + iota2 * eps1 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Matrix.add_apply, eps1, iota2, Fin.sum_univ_eight]
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps1, iota2]
+    simp
+  }
 
 theorem car20 : eps2 * iota0 + iota0 * eps2 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Matrix.add_apply, eps2, iota0, Fin.sum_univ_eight]
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps2, iota0]
+    simp
+  }
 
 -- 4. Single-mode Clifford generators gamma_k = eps_k + iota_k
 def gam0 : Mat8 := eps0 + iota0
@@ -180,34 +247,61 @@ def gam1 : Mat8 := eps1 + iota1
 def gam2 : Mat8 := eps2 + iota2
 
 theorem gam0_sq : gam0 * gam0 = 1 := by
-  ext i j; fin_cases i <;> fin_cases j <;> (
-    first
-    | (simp [Matrix.mul_apply, gam0, eps0, iota0, Fin.sum_univ_eight]; norm_num)
-    | simp [Matrix.mul_apply, gam0, eps0, iota0, Fin.sum_univ_eight]
-  )
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [gam0]
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps0, iota0]
+    simp
+  }
+
 
 theorem gam1_sq : gam1 * gam1 = 1 := by
-  ext i j; fin_cases i <;> fin_cases j <;> (
-    first
-    | (simp [Matrix.mul_apply, gam1, eps1, iota1, Fin.sum_univ_eight]; norm_num)
-    | simp [Matrix.mul_apply, gam1, eps1, iota1, Fin.sum_univ_eight]
-  )
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [gam1]
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps1, iota1]
+    simp
+  }
+
 
 theorem gam2_sq : gam2 * gam2 = 1 := by
-  ext i j; fin_cases i <;> fin_cases j <;> (
-    first
-    | (simp [Matrix.mul_apply, gam2, eps2, iota2, Fin.sum_univ_eight]; norm_num)
-    | simp [Matrix.mul_apply, gam2, eps2, iota2, Fin.sum_univ_eight]
-  )
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [gam2]
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps2, iota2]
+    simp
+  }
+
 
 theorem gam0_gam1_anticomm : gam0 * gam1 + gam1 * gam0 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Matrix.add_apply, gam0, gam1, eps0, eps1, iota0, iota1, Fin.sum_univ_eight]
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [gam0, gam1]
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps0, eps1, iota0, iota1]
+    simp
+  }
 
 theorem gam1_gam2_anticomm : gam1 * gam2 + gam2 * gam1 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Matrix.add_apply, gam1, gam2, eps1, eps2, iota1, iota2, Fin.sum_univ_eight]
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [gam1, gam2]
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps1, eps2, iota1, iota2]
+    simp
+  }
 
 theorem gam2_gam0_anticomm : gam2 * gam0 + gam0 * gam2 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Matrix.add_apply, gam2, gam0, eps2, eps0, iota2, iota0, Fin.sum_univ_eight]
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [gam2, gam0]
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps2, eps0, iota2, iota0]
+    simp
+  }
 
 -- 5. The Master Hodge-de Rham Dirac Operator
 def deRhamDirac : Mat8 := gam0 + gam1 + gam2
@@ -239,11 +333,11 @@ theorem deRhamDirac_sq : deRhamDirac * deRhamDirac = (3 : ℝ) • (1 : Mat8) :=
     _ = (3 : ℝ) • (1 : Mat8) := by
         simp only [add_zero]
         rw [show (1 + 1 + 1 : Mat8) = (3 : ℝ) • (1 : Mat8) by
-          ext i j; fin_cases i <;> fin_cases j <;> (
-            first
-            | (simp [Matrix.add_apply, Matrix.smul_apply]; norm_num)
-            | simp [Matrix.add_apply, Matrix.smul_apply]
-          )]
+          ext i j; fin_cases i <;> fin_cases j
+          all_goals {
+            simp only [Matrix.add_apply, Matrix.mul_apply, Matrix.smul_apply, Matrix.sub_apply, Matrix.one_apply]
+            try norm_num
+          }]
 
 -- 6. Fermion Parity and Anticommutation
 def fermionParity : Mat8 :=
@@ -258,7 +352,16 @@ def fermionParity : Mat8 :=
 
 theorem fermionParity_anticomm_deRhamDirac :
     fermionParity * deRhamDirac + deRhamDirac * fermionParity = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Matrix.add_apply, fermionParity, deRhamDirac, gam0, gam1, gam2, eps0, eps1, eps2, iota0, iota1, iota2, Fin.sum_univ_eight]
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals {
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply]
+    simp only [fermionParity, deRhamDirac]
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply]
+    simp only [gam0, gam1, gam2]
+    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Fin.sum_univ_eight]
+    simp only [eps0, eps1, eps2, iota0, iota1, iota2]
+    simp
+  }
 
 /-- 🏆 THEOREM: Invertibility of the master de Rham Dirac operator on $\bigwedge^\bullet \mathbb{R}^3$.
     Its inverse is $\frac{1}{3} D$, proving that the kernel is trivial: $\ker D = 0$. -/

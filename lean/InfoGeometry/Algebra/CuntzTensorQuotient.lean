@@ -185,14 +185,14 @@ theorem toeplitz_orthogonality (n : ℕ) (i j : Fin n) :
     toeplitzSdag n i * toeplitzS n j = if i = j then 1 else 0 := by
   change toeplitzMk n (Sdag n i) * toeplitzMk n (S n j) = _
   rw [← map_mul]
-  simpa using RingQuot.mkAlgHom_rel ℂ (CuntzToeplitzRel.orth i j)
+  simpa [toeplitzMk] using RingQuot.mkAlgHom_rel ℂ (CuntzToeplitzRel.orth i j)
 
 /-- The Cuntz quotient satisfies `Sᵢ† Sⱼ = δᵢⱼ`. -/
 theorem cuntz_orthogonality (n : ℕ) (i j : Fin n) :
     cuntzSdag n i * cuntzS n j = if i = j then 1 else 0 := by
   change cuntzMk n (Sdag n i) * cuntzMk n (S n j) = _
   rw [← map_mul]
-  simpa using RingQuot.mkAlgHom_rel ℂ (CuntzRel.orth i j)
+  simpa [cuntzMk] using RingQuot.mkAlgHom_rel ℂ (CuntzRel.orth i j)
 
 /-- The finite Cuntz quotient satisfies `Σᵢ Sᵢ Sᵢ† = 1`. -/
 theorem cuntz_ranges_sum_one (n : ℕ) :
@@ -200,7 +200,7 @@ theorem cuntz_ranges_sum_one (n : ℕ) :
   change (∑ i : Fin n, cuntzMk n (S n i) * cuntzMk n (Sdag n i)) = 1
   simp_rw [← map_mul]
   rw [← map_sum]
-  simpa using RingQuot.mkAlgHom_rel ℂ (CuntzRel.ranges_sum_one (n := n))
+  simpa [cuntzMk] using RingQuot.mkAlgHom_rel ℂ (CuntzRel.ranges_sum_one (n := n))
 
 /-- Each Cuntz generator is an algebraic isometry in the quotient. -/
 theorem cuntz_isometry (n : ℕ) (i : Fin n) :

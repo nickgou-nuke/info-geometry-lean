@@ -9,7 +9,9 @@ import Mathlib.Tactic
 This file's `blade3` is a product in Mathlib's associative exterior algebra.
 Its alternating identities are wedge-product identities, not identities for
 the nonassociative split-octonion associator. The quadratic-form cone and the
-exterior-algebra blades are separate carriers here.
+exterior-algebra blades are separate carriers here. Associativity is inherited
+from the exterior-algebra multiplication (`mul_assoc`); no local associator
+wrapper is needed or used as a split-octonion law.
 -/
 
 namespace InfoGeometry.SplitOctonions
@@ -54,7 +56,7 @@ lemma blade1_swap_neg (u v : V) :
 def blade2 (u v : V) : ExteriorAlgebra R V :=
   blade1 R V u * blade1 R V v
 
-theorem plucker_on_shell_quadric (u v : V) :
+theorem decomposable_blade2_wedge_square_zero (u v : V) :
     blade2 R V u v * blade2 R V u v = 0 := by
   dsimp [blade2]
   have h_swap : blade1 R V v * blade1 R V u = - (blade1 R V u * blade1 R V v) := blade1_swap_neg R V v u
@@ -66,11 +68,6 @@ theorem plucker_on_shell_quadric (u v : V) :
 
 def blade3 (u v w : V) : ExteriorAlgebra R V :=
   blade1 R V u * blade1 R V v * blade1 R V w
-
-theorem exteriorAlgebra_associator_eq_zero
-    (A B C : ExteriorAlgebra R V) :
-    (A * B) * C - A * (B * C) = 0 := by
-  rw [mul_assoc, sub_self]
 
 theorem blade3_left_alternating (u v : V) :
     blade3 R V u u v = 0 := by

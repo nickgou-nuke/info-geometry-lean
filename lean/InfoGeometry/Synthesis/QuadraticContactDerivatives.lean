@@ -1,4 +1,6 @@
 import InfoGeometry.Synthesis.ImpedanceMatchingDuality
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.Deriv.Pow
 
 noncomputable section
@@ -37,13 +39,15 @@ theorem capacity_second_deriv (coupling efficiency : ℝ) :
   have hderiv : HasDerivAt (fun value : ℝ => coupling - 2 * coupling ^ 2 * value)
       (-2 * coupling ^ 2) efficiency := by
     convert ((hasDerivAt_id efficiency).const_mul (2 * coupling ^ 2)).const_sub coupling using 1
-    ring
+    · funext value
+      rfl
+    · ring_nf
   simpa only [funext (capacity_deriv coupling)] using hderiv.deriv
 
 theorem criticalValue_second_deriv (momentum : ℝ) :
     deriv (deriv criticalValue) momentum = 2 := by
-  simpa only [funext criticalValue_deriv, mul_one] using
-    ((hasDerivAt_id momentum).const_mul 2).deriv
+  rw [funext criticalValue_deriv]
+  exact deriv_const_mul_id 2
 
 theorem stationary_capacity_iff (coupling efficiency : ℝ) (hnonzero : coupling ≠ 0) :
     deriv (fisher_capacity coupling) efficiency = 0 ↔ efficiency = 1 / (2 * coupling) := by
@@ -70,7 +74,9 @@ theorem action_efficiency_hasDerivAt (coupling efficiency momentum : ℝ) :
     HasDerivAt (fun value => action coupling value momentum)
       (2 * coupling ^ 2 * efficiency - coupling) efficiency := by
   convert (capacity_hasDerivAt coupling efficiency).const_sub (criticalValue momentum) using 1
-  ring
+  · funext value
+    rfl
+  · ring_nf
 
 theorem action_momentum_hasDerivAt (coupling efficiency momentum : ℝ) :
     HasDerivAt (action coupling efficiency) (2 * momentum) momentum :=

@@ -70,7 +70,8 @@ def skewCoordinates : Skew8 →ₗ[ℝ] (Index → ℝ) where
 theorem skewCoordinates_skewCoordinateMap (c : Index → ℝ) :
     skewCoordinates (skewCoordinateMap c) = c := by
   funext p
-  simp [skewCoordinates, skewCoordinateMap, skewMatrix, p.2]
+  change (skewMatrix c) p.1.1 p.1.2 = c p
+  simp [skewMatrix, p.2]
 
 theorem skewCoordinateMap_skewCoordinates (A : Skew8) :
     skewCoordinateMap (skewCoordinates A) = A := by
@@ -78,14 +79,16 @@ theorem skewCoordinateMap_skewCoordinates (A : Skew8) :
   ext i j
   by_cases hij : i < j
   · have hji : ¬ j < i := by omega
-    simp [skewCoordinateMap, skewCoordinates, skewMatrix, hij]
+    change skewMatrix (fun p => A.1 p.1.1 p.1.2) i j = A.1 i j
+    simp [skewMatrix, hij]
   · by_cases hji : j < i
     · have h' : ¬ i < j := by omega
       have hA := (mem_skewAdjointMatricesSubmodule (1 : Matrix8) A.1).mp A.2
       have hA' : A.1ᵀ = -A.1 := by
         simpa [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair] using hA
       have hs := congrFun (congrFun hA' i) j
-      simp [skewCoordinateMap, skewCoordinates, skewMatrix, h', hji] at hs ⊢
+      change skewMatrix (fun p => A.1 p.1.1 p.1.2) i j = A.1 i j
+      simp [skewMatrix, h', hji] at hs ⊢
       linarith
     · have heq : i = j := by omega
       subst heq
@@ -93,7 +96,8 @@ theorem skewCoordinateMap_skewCoordinates (A : Skew8) :
       have hA' : A.1ᵀ = -A.1 := by
         simpa [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair] using hA
       have hs := congrFun (congrFun hA' i) i
-      simp [skewCoordinateMap, skewCoordinates, skewMatrix] at hs ⊢
+      change skewMatrix (fun p => A.1 p.1.1 p.1.2) i i = A.1 i i
+      simp [skewMatrix] at hs ⊢
       linarith
 
 noncomputable def skewCoordinateEquiv : (Index → ℝ) ≃ₗ[ℝ] Skew8 :=

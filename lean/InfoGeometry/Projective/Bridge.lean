@@ -97,7 +97,8 @@ noncomputable def positiveMeasureEquivInterior :
   invFun := interiorToPositiveMeasure (α := α)
   left_inv μ := by
     ext i
-    simp [positiveMeasureToInterior, positiveMeasureToEuclidean]
+    simp [positiveMeasureToInterior, interiorToPositiveMeasure,
+      positiveMeasureToEuclidean, WithLp.ofLp_toLp]
   right_inv x := by
     ext i
     simp [positiveMeasureToInterior, interiorToPositiveMeasure, positiveMeasureToEuclidean]
@@ -173,7 +174,11 @@ lemma positiveMeasureToConeInteriorRay_sameRay
         Projectivization.mk ℝ
           (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c.1 c.2 μ))
           (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c.1 c.2 μ)) := hmkScaled.symm
-  simpa [v] using hmkGoal
+  change Projectivization.mk ℝ v hv0 =
+    Projectivization.mk ℝ
+      (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c.1 c.2 μ))
+      (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c.1 c.2 μ))
+  exact hmkGoal
 
 /--
 Bridge map from the legacy positive-measure ray quotient to cone-interior projective states.
@@ -213,7 +218,7 @@ lemma projectiveClassToConeInteriorStateSpace_injective :
   obtain ⟨i⟩ := ‹Nonempty α›
   have hcoord : (u : ℝ) * ν i = μ i := by
     have := congrArg (fun x => x i) hu
-    simpa [positiveMeasureToEuclidean_apply] using this
+    simpa [positiveMeasureToEuclidean_apply, Units.smul_def, smul_eq_mul] using this
   have hmul : 0 < ν i * (u : ℝ) := by
     have hmul' : 0 < (u : ℝ) * ν i := by simpa [hcoord] using μ.pos i
     simpa [mul_comm] using hmul'
@@ -222,11 +227,12 @@ lemma projectiveClassToConeInteriorStateSpace_injective :
   ext a
   have hcoordA : (u : ℝ) * ν a = μ a := by
     have := congrArg (fun x => x a) hu
-    simpa [positiveMeasureToEuclidean_apply] using this
+    simpa [positiveMeasureToEuclidean_apply, Units.smul_def, smul_eq_mul] using this
   have hsolve' : (u : ℝ)⁻¹ * μ a = ν a :=
     (inv_mul_eq_iff_eq_mul₀ (Units.ne_zero u)).2 hcoordA.symm
   have hsolve : ν a = (u : ℝ)⁻¹ * μ a := hsolve'.symm
-  simpa [PositiveMeasure.scale_apply] using hsolve.symm
+  change (u : ℝ)⁻¹ * μ a = ν a
+  exact hsolve.symm
 
 lemma projectiveClassToConeInteriorStateSpace_surjective :
     Function.Surjective (projectiveClassToConeInteriorStateSpace (α := α)) := by

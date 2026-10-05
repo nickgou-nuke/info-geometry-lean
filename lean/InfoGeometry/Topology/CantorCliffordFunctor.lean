@@ -87,6 +87,7 @@ def CliffordTowerFunctor : J ⥤ AlgCat ℝ where
               if hln : i.1 < 2 * l then v ⟨i.1, hln⟩ else 0
           simp [hi, him]
     rw [Cl_bonding_map_mn, Cl_bonding_map_mn, Cl_bonding_map_mn, ← h_comp,
-      CliffordAlgebra.map_comp_map]
+      ← CliffordAlgebra.map_comp_map]
+    rfl
 
 end InfoGeometry.Topology

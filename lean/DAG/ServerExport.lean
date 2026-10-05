@@ -348,7 +348,7 @@ def semanticBlocksPayload (ex : Export) : Json :=
 
 private def exportCurrentDocFromSnapshots (doc : FileWorker.EditableDocument) (withText : Bool) :
     RequestM (RequestTask (Export × Array Bool)) := do
-  let t := IO.AsyncList.waitAll doc.cmdSnaps
+  let t := Lean.AsyncList.waitAll doc.cmdSnaps
   RequestM.mapTaskCostly t fun (snapsList, term?) => do
     match term? with
     | some err => throw (RequestError.ofIoError err)

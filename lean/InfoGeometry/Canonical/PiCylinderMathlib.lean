@@ -65,7 +65,8 @@ theorem pure_mem_finsetCanonicalCylinder_iff (f g : ι → Bool) (s : Finset ι)
 theorem nhds_hasBasis_canonicalCylinder (f : ι → Bool) :
     (𝓝 f).HasBasis Set.Finite (canonicalCylinder f) := by
   rw [nhds_pi]
-  simpa [nhds_discrete Bool] using Filter.hasBasis_pi_pure f
+  simp_rw [nhds_discrete Bool]
+  exact Filter.hasBasis_pi_pure f
 
 /-- Finset-indexed form of the same product-topology cylinder basis. -/
 theorem nhds_hasBasis_finsetCanonicalCylinder (f : ι → Bool) :

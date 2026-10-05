@@ -79,8 +79,7 @@ lemma SameRay.symm {μ ν : PositiveMeasure α ℝ} (h : SameRay μ ν) : SameRa
   rcases h with ⟨c, hc⟩
   refine ⟨⟨c.1⁻¹, inv_pos.mpr c.2⟩, ?_⟩
   ext a
-  have hc' : c.1 * μ a = ν a := by
-    simpa [SMul.smul, PositiveMeasure.scale] using congrArg (fun m => m a) hc
+  have hc' : c.1 * μ a = ν a := by rw [←hc]; rfl
   calc
     c.1⁻¹ * ν a = c.1⁻¹ * (c.1 * μ a) := by rw [hc']
     _ = μ a := by field_simp [c.2.ne']
@@ -91,10 +90,8 @@ lemma SameRay.trans {μ ν κ : PositiveMeasure α ℝ}
   rcases h₂ with ⟨d, hd⟩
   refine ⟨⟨d.1 * c.1, mul_pos d.2 c.2⟩, ?_⟩
   ext a
-  have hc' : c.1 * μ a = ν a := by
-    simpa [SMul.smul, PositiveMeasure.scale] using congrArg (fun m => m a) hc
-  have hd' : d.1 * ν a = κ a := by
-    simpa [SMul.smul, PositiveMeasure.scale] using congrArg (fun m => m a) hd
+  have hc' : c.1 * μ a = ν a := by rw [←hc]; rfl
+  have hd' : d.1 * ν a = κ a := by rw [←hd]; rfl
   calc
     (d.1 * c.1) * μ a = d.1 * (c.1 * μ a) := by ring
     _ = d.1 * ν a := by rw [hc']

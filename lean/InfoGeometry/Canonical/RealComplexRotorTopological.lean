@@ -16,6 +16,7 @@ theorem continuous_realRotorAction
   exact ((Real.continuous_cos.comp continuous_fst).smul continuous_snd).add
     ((Real.continuous_sin.comp continuous_fst).smul (hI_cont.comp continuous_snd))
 
+set_option maxHeartbeats 1000000
 def realRotorHomeomorph
     (I : V →ₗ[ℝ] V) (hI : IsRealComplexStructure I)
     (hI_cont : Continuous I) (θ : ℝ) : V ≃ₜ V :=

@@ -63,6 +63,7 @@ def rootAt : Fin 24 → Euclidean4
   | 23 => ![0, 0, -1, -1]
   | _ => ![0, 0, 0, 0]
 
+set_option maxHeartbeats 1000000
 theorem rootAt_injective : Function.Injective rootAt := by
   intro i j h
   fin_cases i <;> fin_cases j <;>

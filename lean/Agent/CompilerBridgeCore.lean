@@ -499,7 +499,9 @@ private def semanticLocalHeadMetaMap (goal : Widget.InteractiveGoal) : IO (Std.H
 
 private def readInteractiveDiagnostics (doc : FileWorker.EditableDocument) :
     IO (Array Widget.InteractiveDiagnostic) :=
-  doc.diagnosticsRef.get
+  ((doc.diagnosticsMutex.atomically do
+    let state : FileWorker.DiagnosticsState ← get
+    return state.diags.toArray) : BaseIO (Array Widget.InteractiveDiagnostic)).toIO
 
 private def toPlainDiagnostic (diag : Widget.InteractiveDiagnostic) : Lsp.Diagnostic :=
   Widget.InteractiveDiagnostic.toDiagnostic diag
@@ -650,7 +652,7 @@ def proofStateTaskAt (doc : FileWorker.EditableDocument) (posLine posCharacter :
 
 def finalSnapshotTask (doc : FileWorker.EditableDocument) :
     RequestM (RequestTask Snapshots.Snapshot) := do
-  let waitTask := IO.AsyncList.waitAll doc.cmdSnaps
+  let waitTask := Lean.AsyncList.waitAll doc.cmdSnaps
   RequestM.mapTaskCostly waitTask fun (snapsList, term?) => do
     match term? with
     | some err => throw (RequestError.ofIoError err)

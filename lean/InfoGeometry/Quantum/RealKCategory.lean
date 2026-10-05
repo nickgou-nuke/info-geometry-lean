@@ -213,10 +213,11 @@ noncomputable def unitIsoComplexRealK :
           left_inv := by intro x; rfl
           right_inv := by intro x; rfl
           map_add' := by intro x y; rfl
-          map_smul' := ?_ }
-      intro z x
-      simpa [complexSMul, complexToRealK] using
-        (complex_smul_eq_re_im_I_smul (V := W) z x))
+          map_smul' := by
+            intro z x
+            rw [RingHom.id_apply]
+            change z • x = z.re • x + z.im • Complex.I • x
+            exact complex_smul_eq_re_im_I_smul z x })
     (by
       intro X Y f
       ext x
@@ -237,6 +238,7 @@ private lemma roundTrip_smul_eq_smulRoundTrip (X : RealKVect) (r : ℝ) (x : Rou
 private lemma smulRoundTrip_eq_smulOrig (X : RealKVect) (r : ℝ) (x : RoundTripObj X) :
     ((smulRoundTrip X r x : RoundTripObj X) : X) = smulOrig X r (x : X) := by
   simp [smulRoundTrip, smulOrig, complexSMul]
+  rfl
 
 /--
 Counit natural isomorphism for the real/complex bridge:
@@ -258,8 +260,10 @@ noncomputable def counitIsoComplexRealK :
                 exact smulRoundTrip_eq_smulOrig X r x }
           comm := by
             ext x
-            change complexSMul X Complex.I x = X.K x
-            simp [complexSMul] }
+            let x' : X := x
+            change complexSMul X Complex.I x' = X.K x'
+            dsimp [complexSMul]
+            rw [zero_smul, one_smul, zero_add] }
       let invX : X ⟶ (realKToComplex ⋙ complexToRealK).obj X :=
         { hom :=
             { toFun := fun x => x
@@ -272,8 +276,10 @@ noncomputable def counitIsoComplexRealK :
                 exact (smulRoundTrip_eq_smulOrig X r (x : RoundTripObj X)).symm }
           comm := by
             ext x
-            change X.K x = complexSMul X Complex.I x
-            simp [complexSMul] }
+            let x' : X := x
+            change X.K x' = complexSMul X Complex.I x'
+            dsimp [complexSMul]
+            rw [zero_smul, one_smul, zero_add] }
       refine
         { hom := homX
           inv := invX
@@ -303,6 +309,7 @@ noncomputable def moduleCatComplexEquivRealKVect : ModuleCat ℂ ≌ RealKVect w
   functor_unitIso_comp X := by
     apply RealKVect.Hom.ext
     ext x
+    change x = x
     rfl
 
 end RealKVect
@@ -469,8 +476,7 @@ theorem monodromy_power_binomial (X : RealKVect) (h : ℝ) (N : NilpotentHom X) 
     have hRN : (rotor X (-2 * Real.pi * h)).hom.comp N.toHom.hom =
         N.toHom.hom.comp (rotor X (-2 * Real.pi * h)).hom :=
       rotor_comp_nilpotent X (-2 * Real.pi * h) N
-    have hRNc : Commute (rotor X (-2 * Real.pi * h)).hom N.toHom.hom := by
-      simpa [Commute] using hRN
+    have hRNc : Commute (rotor X (-2 * Real.pi * h)).hom N.toHom.hom := hRN
     exact (Commute.one_right _).add_right (hRNc.smul_right (-2 * Real.pi))
   change ((rotor X (-2 * Real.pi * h)).hom.comp
     (LinearMap.id + (-2 * Real.pi : ℝ) • N.toHom.hom)) ^ n =

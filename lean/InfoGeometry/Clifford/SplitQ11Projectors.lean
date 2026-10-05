@@ -105,7 +105,6 @@ noncomputable def epsPlusProjector : Alg :=
     epsMinusProjector * epsPlusProjector = 0 := by
   rw [epsMinusProjector_eq_half_one_sub_eps, epsPlusProjector_eq_half_one_add_eps]
   simp [sub_eq_add_neg, add_mul, mul_add, smul_add, epsGen_sq]
-  module
 
 /-- The two `ε`-projectors annihilate in the other order as well. -/
 @[rep_depth krein, simp] theorem epsPlusProjector_mul_epsMinusProjector :

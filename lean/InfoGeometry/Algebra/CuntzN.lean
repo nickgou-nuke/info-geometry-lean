@@ -17,6 +17,8 @@ Uses the same abstract star-ring approach as `CuntzCantorSpectralTriple.lean`.
 
 namespace InfoGeometry.Algebra.Cuntz
 
+noncomputable section
+
 variable {N : ℕ}
 
 /--
@@ -126,9 +128,8 @@ inductive CuntzTensorRel (R : Type*) [CommRing R] (N : ℕ) :
         (∑ i : Fin N, cuntzTensorGenerator (R := R) i * cuntzTensorAdjoint (R := R) i)
         1
 
-def CuntzTensorQuotient (R : Type*) [CommRing R] (N : ℕ) : Type _ :=
+abbrev CuntzTensorQuotient (R : Type*) [CommRing R] (N : ℕ) : Type _ :=
   RingQuot (CuntzTensorRel R N)
-deriving Inhabited, Ring, Algebra R
 
 noncomputable def cuntzQuotientMap {R : Type*} [CommRing R] {N : ℕ} :
     CuntzTensorAlgebra R N →ₐ[R] CuntzTensorQuotient R N :=
@@ -146,14 +147,16 @@ noncomputable def cuntzQuotientAdjoint {R : Type*} [CommRing R] {N : ℕ} (i : F
 theorem cuntzQuotient_isometry {R : Type*} [CommRing R] {N : ℕ} (i j : Fin N) :
     cuntzQuotientAdjoint (R := R) i * cuntzQuotientGenerator (R := R) j =
       if i = j then (1 : CuntzTensorQuotient R N) else 0 := by
-  simpa [cuntzQuotientAdjoint, cuntzQuotientGenerator, cuntzQuotientMap]
+  simpa [CuntzTensorQuotient, cuntzQuotientAdjoint, cuntzQuotientGenerator,
+    cuntzQuotientMap]
     using RingQuot.mkAlgHom_rel R (CuntzTensorRel.isometry (R := R) (N := N) i j)
 
 @[simp]
 theorem cuntzQuotient_range_sum {R : Type*} [CommRing R] (N : ℕ) :
     ∑ i : Fin N, cuntzQuotientGenerator (R := R) i * cuntzQuotientAdjoint (R := R) i =
       1 := by
-  simpa [cuntzQuotientGenerator, cuntzQuotientAdjoint, cuntzQuotientMap]
+  simpa [CuntzTensorQuotient, cuntzQuotientGenerator, cuntzQuotientAdjoint,
+    cuntzQuotientMap]
     using RingQuot.mkAlgHom_rel R (CuntzTensorRel.range_sum (R := R) (N := N))
 
 structure AlgebraicCuntzNPresentation (R : Type*) [CommSemiring R] (N : ℕ)
@@ -264,5 +267,7 @@ noncomputable def cuntzTensorQuotientPresentation (R : Type*) [CommRing R] (N : 
   T := cuntzQuotientAdjoint (R := R)
   isometry := cuntzQuotient_isometry (R := R)
   range_sum := cuntzQuotient_range_sum (R := R) N
+
+end
 
 end InfoGeometry.Algebra.Cuntz

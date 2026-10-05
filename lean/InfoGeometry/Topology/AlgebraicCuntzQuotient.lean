@@ -3,6 +3,8 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Opposite
 import Mathlib.Algebra.Star.StarAlgHom
 import Mathlib.LinearAlgebra.TensorAlgebra.Basic
+import Mathlib.Algebra.RingQuot
+import Mathlib.Algebra.Star.RingQuot
 
 /-!
 # Algebraic Cuntz quotient via the tensor algebra
@@ -89,21 +91,27 @@ def S (i : ι) : CuntzAlg R ι := mk (R := R) (S₀ (R := R) i)
 def T (i : ι) : CuntzAlg R ι := mk (R := R) (T₀ (R := R) i)
 
 /-- In the quotient, `Tᵢ Sⱼ = δᵢⱼ`. -/
-theorem T_mul_S (i j : ι) : T (R := R) i * S (R := R) j = if i = j then 1 else 0 := by
-  change mk (R := R) (T₀ (R := R) i) * mk (R := R) (S₀ (R := R) j) = _
-  rw [← map_mul]
-  simpa using RingQuot.mkAlgHom_rel R (Rel.ortho (R := R) i j)
+theorem T_mul_S (i j : ι) : (T i : CuntzAlg R ι) * (S j : CuntzAlg R ι) = if i = j then 1 else 0 := by
+  calc
+    (T i : CuntzAlg R ι) * (S j : CuntzAlg R ι) = mk (R := R) (T₀ (R := R) i * S₀ (R := R) j) := by
+      exact (map_mul (mk (R := R)) (T₀ (R := R) i) (S₀ (R := R) j)).symm
+    _ = mk (R := R) (if i = j then 1 else 0) := by
+      exact RingQuot.mkAlgHom_rel R (Rel.ortho (R := R) i j)
+    _ = if i = j then 1 else 0 := by
+      split_ifs <;> simp
 
 /-- In the quotient, the range projections sum to one. -/
-theorem partition_one : (∑ i : ι, S (R := R) i * T (R := R) i) = 1 := by
+theorem partition_one : (∑ i : ι, (S i : CuntzAlg R ι) * (T i : CuntzAlg R ι)) = 1 := by
   calc
-    (∑ i : ι, S (R := R) i * T (R := R) i) =
+    (∑ i : ι, (S i : CuntzAlg R ι) * (T i : CuntzAlg R ι)) =
         ∑ i : ι, mk (R := R) (S₀ (R := R) i * T₀ (R := R) i) := by
-      simp [S, T]
+      simp [S, T, ← map_mul]
     _ = mk (R := R) (∑ i : ι, S₀ (R := R) i * T₀ (R := R) i) := by
       exact (map_sum (mk (R := R)) (fun i : ι => S₀ (R := R) i * T₀ (R := R) i) Finset.univ).symm
+    _ = mk (R := R) 1 := by
+      exact RingQuot.mkAlgHom_rel R (Rel.partition (R := R) (ι := ι))
     _ = 1 := by
-      simpa using RingQuot.mkAlgHom_rel R (Rel.partition (R := R) (ι := ι))
+      simp
 
 variable [Semiring A] [Algebra R A]
 
@@ -125,7 +133,7 @@ omit [Fintype ι] [DecidableEq ι] in
   simp [evalGen, letter]
 
 /-- The tensor-algebra lift respects the Cuntz relation constructors. -/
-def liftCondition (s t : ι → A)
+theorem liftCondition (s t : ι → A)
     (h_ortho : ∀ i j, t i * s j = if i = j then 1 else 0)
     (h_partition : (∑ i : ι, s i * t i) = 1) :
     ∀ ⦃x y : TAlg R ι⦄, Rel x y →
@@ -151,9 +159,9 @@ def lift (s t : ι → A)
 theorem lift_S (s t : ι → A)
     (h_ortho : ∀ i j, t i * s j = if i = j then 1 else 0)
     (h_partition : (∑ i : ι, s i * t i) = 1) (i : ι) :
-    lift (R := R) s t h_ortho h_partition (S (R := R) i) = s i := by
+    lift (R := R) s t h_ortho h_partition ((S i : CuntzAlg R ι)) = s i := by
   calc
-    lift (R := R) s t h_ortho h_partition (S (R := R) i)
+    lift (R := R) s t h_ortho h_partition ((S i : CuntzAlg R ι))
         = (TensorAlgebra.lift R (evalGen (R := R) s t)) (S₀ (R := R) i) := by
       change ((RingQuot.liftAlgHom R)
           ⟨TensorAlgebra.lift R (evalGen (R := R) s t),
@@ -171,9 +179,9 @@ theorem lift_S (s t : ι → A)
 theorem lift_T (s t : ι → A)
     (h_ortho : ∀ i j, t i * s j = if i = j then 1 else 0)
     (h_partition : (∑ i : ι, s i * t i) = 1) (i : ι) :
-    lift (R := R) s t h_ortho h_partition (T (R := R) i) = t i := by
+    lift (R := R) s t h_ortho h_partition ((T i : CuntzAlg R ι)) = t i := by
   calc
-    lift (R := R) s t h_ortho h_partition (T (R := R) i)
+    lift (R := R) s t h_ortho h_partition ((T i : CuntzAlg R ι))
         = (TensorAlgebra.lift R (evalGen (R := R) s t)) (T₀ (R := R) i) := by
       change ((RingQuot.liftAlgHom R)
           ⟨TensorAlgebra.lift R (evalGen (R := R) s t),
@@ -197,8 +205,8 @@ It sends the formal Cuntz generator `Sᵢ` to `op Tᵢ` and `Tᵢ` to `op Sᵢ`,
 so multiplication order is reversed by the target opposite algebra. -/
 def starOp : CuntzAlg R ι →ₐ[R] (CuntzAlg R ι)ᵐᵒᵖ :=
   lift (R := R) (A := (CuntzAlg R ι)ᵐᵒᵖ)
-    (fun i => op (T (R := R) i))
-    (fun i => op (S (R := R) i))
+    (fun i => op ((T i : CuntzAlg R ι)))
+    (fun i => op ((S i : CuntzAlg R ι)))
     (by
       intro i j
       apply unop_injective
@@ -212,10 +220,10 @@ def starOp : CuntzAlg R ι →ₐ[R] (CuntzAlg R ι)ᵐᵒᵖ :=
       simp [partition_one])
 
 @[simp] theorem starOp_S (i : ι) :
-    starOp (R := R) (AlgebraicCuntzQuotient.S (R := R) i) = op (T (R := R) i) := by
-  exact lift_S (R := R) (A := (CuntzAlg R ι)ᵐᵒᵖ)
-    (fun i => op (T (R := R) i))
-    (fun i => op (S (R := R) i))
+    starOp (R := R) (S i : CuntzAlg R ι) = op ((T i : CuntzAlg R ι)) := by
+  exact lift_S (A := (CuntzAlg R ι)ᵐᵒᵖ)
+    (fun i => op ((T i : CuntzAlg R ι)))
+    (fun i => op ((S i : CuntzAlg R ι)))
     (by
       intro i j
       apply unop_injective
@@ -230,10 +238,10 @@ def starOp : CuntzAlg R ι →ₐ[R] (CuntzAlg R ι)ᵐᵒᵖ :=
     i
 
 @[simp] theorem starOp_T (i : ι) :
-    starOp (R := R) (AlgebraicCuntzQuotient.T (R := R) i) = op (S (R := R) i) := by
-  exact lift_T (R := R) (A := (CuntzAlg R ι)ᵐᵒᵖ)
-    (fun i => op (T (R := R) i))
-    (fun i => op (S (R := R) i))
+    starOp (R := R) (T i : CuntzAlg R ι) = op ((S i : CuntzAlg R ι)) := by
+  exact lift_T (A := (CuntzAlg R ι)ᵐᵒᵖ)
+    (fun i => op ((T i : CuntzAlg R ι)))
+    (fun i => op ((S i : CuntzAlg R ι)))
     (by
       intro i j
       apply unop_injective
@@ -274,9 +282,9 @@ theorem starOp_mk_ι (x : Gen R ι) :
           calc
             starOp (R := R) (mk (R := R)
                 (TensorAlgebra.ι R (r • letter (R := R) (CuntzLetter.s i)))) =
-                r • starOp (R := R) (S (R := R) i) := by
+                r • starOp (R := R) ((S i : CuntzAlg R ι)) := by
               simp [S, S₀]
-            _ = r • op (T (R := R) i) := by
+            _ = r • op ((T i : CuntzAlg R ι)) := by
               rw [starOp_S]
             _ = op (mk (R := R)
                 (TensorAlgebra.ι R (starGen (R := R) (r • letter (R := R) (CuntzLetter.s i))))) := by
@@ -286,9 +294,9 @@ theorem starOp_mk_ι (x : Gen R ι) :
           calc
             starOp (R := R) (mk (R := R)
                 (TensorAlgebra.ι R (r • letter (R := R) (CuntzLetter.t i)))) =
-                r • starOp (R := R) (T (R := R) i) := by
+                r • starOp (R := R) ((T i : CuntzAlg R ι)) := by
               simp [T, T₀]
-            _ = r • op (S (R := R) i) := by
+            _ = r • op ((S i : CuntzAlg R ι)) := by
               rw [starOp_T]
             _ = op (mk (R := R)
                 (TensorAlgebra.ι R (starGen (R := R) (r • letter (R := R) (CuntzLetter.t i))))) := by
@@ -300,9 +308,11 @@ omit [Fintype ι] [DecidableEq ι] in
   change Finsupp.mapDomain (letterSwap (ι := ι))
       (Finsupp.mapDomain (letterSwap (ι := ι)) x) = x
   rw [← Finsupp.mapDomain_comp]
-  convert Finsupp.mapDomain_id (v := x) using 2
-  ext a
-  cases a <;> rfl
+  have h_id : (⇑(letterSwap (ι := ι)) ∘ ⇑(letterSwap (ι := ι))) = id := by
+    funext a
+    cases a <;> rfl
+  rw [h_id]
+  exact Finsupp.mapDomain_id (v := x)
 
 /-- The algebraic Cuntz quotient carries the formal adjoint operation
 `Sᵢ ↦ Tᵢ`, `Tᵢ ↦ Sᵢ`. -/
@@ -316,10 +326,10 @@ instance instStar : Star (CuntzAlg R ι) where
   rw [starOp_mk_ι]
   rfl
 
-@[simp] theorem star_S (i : ι) : star (S (R := R) i) = T (R := R) i := by
+@[simp] theorem star_S (i : ι) : star ((S i : CuntzAlg R ι)) = (T i : CuntzAlg R ι) := by
   simp [Star.star]
 
-@[simp] theorem star_T (i : ι) : star (T (R := R) i) = S (R := R) i := by
+@[simp] theorem star_T (i : ι) : star ((T i : CuntzAlg R ι)) = (S i : CuntzAlg R ι) := by
   simp [Star.star]
 
 @[simp] theorem star_mk (x : TAlg R ι) :

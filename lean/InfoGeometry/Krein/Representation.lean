@@ -107,13 +107,29 @@ lemma cl11Rep_ι_one_zero_sq :
     cl11Rep (E := E) (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0))
       * cl11Rep (E := E) (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0))
       = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
-  simpa [InfoGeometry.Clifford.splitQ11_apply] using (cl11RepLin_sq (E := E) (1, 0))
+  rw [cl11Rep_ι_apply]
+  calc
+    cl11RepLin (E := E) (1, 0) * cl11RepLin (E := E) (1, 0)
+        = algebraMap ℝ (DoubledSpace E →L[ℝ] DoubledSpace E)
+            (InfoGeometry.Clifford.splitQ11 (1, 0)) := cl11RepLin_sq (E := E) (1, 0)
+    _ = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+      apply ContinuousLinearMap.ext
+      intro x
+      simp [InfoGeometry.Clifford.splitQ11_apply]
 
 lemma cl11Rep_ι_zero_one_sq :
     cl11Rep (E := E) (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1))
       * cl11Rep (E := E) (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1))
       = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
-  simpa [InfoGeometry.Clifford.splitQ11_apply] using (cl11RepLin_sq (E := E) (0, 1))
+  rw [cl11Rep_ι_apply]
+  calc
+    cl11RepLin (E := E) (0, 1) * cl11RepLin (E := E) (0, 1)
+        = algebraMap ℝ (DoubledSpace E →L[ℝ] DoubledSpace E)
+            (InfoGeometry.Clifford.splitQ11 (0, 1)) := cl11RepLin_sq (E := E) (0, 1)
+    _ = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+      apply ContinuousLinearMap.ext
+      intro x
+      simp [InfoGeometry.Clifford.splitQ11_apply]
 
 lemma cl11Rep_ι_one_zero_anticommute_ι_zero_one :
     cl11Rep (E := E) (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0))

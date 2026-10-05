@@ -671,7 +671,6 @@ theorem Pright_comp_Pleft :
   have hχχ : M.chi (M.chi v) = v :=
     M.chi_square_apply v
   simp [Pleft, Pright, hχχ, sub_eq_add_neg]
-  module
 
 /-! ### Chiral charge readout -/
 

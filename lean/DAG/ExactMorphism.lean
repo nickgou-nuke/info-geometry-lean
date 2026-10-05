@@ -302,7 +302,7 @@ def indexMorphismCache (env : Environment) (ns? : Option Name := none) :
     MetaM Environment := do
   let mut currentEnv := env
   let existingState := getMorphismState env
-  let mut newCount := 0
+  let mut newCount : ℕ := 0
   for (name, ci) in env.constants do
     if let some ns := ns? then
       if !ns.isPrefixOf name then continue

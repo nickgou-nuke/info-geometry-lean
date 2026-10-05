@@ -7,7 +7,8 @@ import Mathlib.LinearAlgebra.BilinearForm.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Algebra.Lie.Basic
-import Mathlib.Topology.Algebra.Module.StrongTopology
+import Mathlib.Topology.Algebra.Module.Spaces.ContinuousLinearMap
+import Mathlib.Topology.Algebra.Module.Spaces.CompactConvergenceCLM
 import Mathlib.Tactic.Abel
 
 /-!
@@ -147,7 +148,7 @@ lemma kreinInner_kreinAdjoint (A : H →L[ℝ] H) (u v : H) :
 
 @[simp] lemma kreinAdjoint_id :
     kreinAdjoint (H := H) (ContinuousLinearMap.id ℝ H) = ContinuousLinearMap.id ℝ H := by
-  simp [kreinAdjoint]
+  simp [kreinAdjoint, ContinuousLinearMap.adjoint_id]
 
 @[simp] lemma kreinAdjoint_zero :
     kreinAdjoint (H := H) (0 : H →L[ℝ] H) = 0 := by
@@ -184,7 +185,9 @@ lemma kreinAdjoint_lie (A B : H →L[ℝ] H) :
 lemma kreinAdjoint_lie_neg (A B : H →L[ℝ] H) :
     kreinAdjoint (H := H) ⁅A, B⁆
       = - ⁅kreinAdjoint (H := H) A, kreinAdjoint (H := H) B⁆ := by
-  simpa [lie_skew] using (kreinAdjoint_lie (H := H) A B)
+  rw [kreinAdjoint_lie]
+  rw [Ring.lie_def, Ring.lie_def]
+  noncomm_ring
 
 
 
@@ -284,7 +287,7 @@ lemma isKreinSkewAdjoint_iff (A : H →L[ℝ] H) :
   constructor
   · intro h u v
     rw [kreinInner_kreinAdjoint, h]
-    simp [kreinInner_def, inner_neg_right, ContinuousLinearMap.neg_apply]
+    simp [kreinInner_def, inner_neg_right]
   · intro h
     ext v; apply ext_inner_left ℝ; intro u
     calc ⟪u, (kreinAdjoint A) v⟫_ℝ
@@ -297,7 +300,7 @@ lemma isKreinSkewAdjoint_iff (A : H →L[ℝ] H) :
       _ = -⟪(J : H ≃ₗᵢ[ℝ] H) ((J : H ≃ₗᵢ[ℝ] H) u), A v⟫_ℝ := rfl
       _ = -⟪u, A v⟫_ℝ := by rw [KreinSpace.J_invol]
       _ = ⟪u, (-A) v⟫_ℝ := by
-            simp only [ContinuousLinearMap.neg_apply, inner_neg_right]
+            simp only [neg_apply, inner_neg_right]
 
 /-- `U` is a **Krein isometry** if `[Uu, Uv]_J = [u,v]_J` for all `u, v`. -/
 def IsKreinIsometry (U : H →L[ℝ] H) : Prop :=
@@ -348,7 +351,9 @@ noncomputable def kreinQuad : QuadraticMap ℝ H ℝ :=
 
 @[simp] lemma kreinQuad_apply (v : H) :
     kreinQuad (H := H) v = kreinInner (H := H) v v := by
-  simp [kreinQuad, kreinBilin]
+  change (kreinBilin (H := H)).toQuadraticMap v = _
+  rw [LinearMap.BilinMap.toQuadraticMap_apply]
+  rfl
 
 @[simp] lemma kreinQuad_smul (c : ℝ) (v : H) :
     kreinQuad (H := H) (c • v) = c^2 * kreinQuad (H := H) v := by
@@ -422,7 +427,7 @@ private lemma signFlipMap_selfAdj (u v : WithLp 2 (E × E)) :
 /-- The sign-flip `(x,y) ↦ (x,-y)` as a **linear isometric equivalence**
 on `WithLp 2 (E × E)`. Fundamental symmetry for the diagonal `(n, n)` Krein space. -/
 noncomputable def signFlipLIE : WithLp 2 (E × E) ≃ₗᵢ[ℝ] WithLp 2 (E × E) where
-  toLinearEquiv := LinearEquiv.ofLinear (signFlipMap (E:=E)) (signFlipMap (E:=E))
+  toLinearEquiv := LinearEquiv.ofLinearMap (signFlipMap (E:=E)) (signFlipMap (E:=E))
     (LinearMap.ext signFlipMap_invol)
     (LinearMap.ext signFlipMap_invol)
   norm_map' := signFlipMap_norm
@@ -447,8 +452,10 @@ lemma krein_inner_prod_l2 (u v : WithLp 2 (E × E)) :
     ⟪(WithLp.ofLp u).2, (WithLp.ofLp v).2⟫_ℝ := by
   rcases u with ⟨x, ξ⟩
   rcases v with ⟨y, η⟩
-  simp [KreinSpace.kreinInner_def, instKreinSpaceProdL2, signFlipLIE_apply,
-        signFlipMap_apply, WithLp.prod_inner_apply, sub_eq_add_neg]
+  change ⟪WithLp.toLp 2 (x, -ξ), WithLp.toLp 2 (y, η)⟫_ℝ =
+    ⟪x, y⟫_ℝ - ⟪ξ, η⟫_ℝ
+  rw [WithLp.prod_inner_apply]
+  simp [sub_eq_add_neg]
 
 namespace DoubleHilbert
 /-- Explicit alias for `WithLp 2 (E × E)` as a `KreinSpace`. -/

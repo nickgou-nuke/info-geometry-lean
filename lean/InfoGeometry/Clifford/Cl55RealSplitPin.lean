@@ -14,12 +14,12 @@ or `-1`.  This is the generator-level correction; the orthogonal covering
 theorems are deliberately separate.
 -/
 
-def normalizedVectorUnitSet : Set Cl55ˣ :=
+noncomputable def normalizedVectorUnitSet : Set Cl55ˣ :=
   {u | ∃ v : V55,
       (Q55 v = 1 ∨ Q55 v = -1) ∧
         ι55 v = (u : Cl55)}
 
-def realSplitPin55 : Subgroup Cl55ˣ :=
+noncomputable def realSplitPin55 : Subgroup Cl55ˣ :=
   Subgroup.closure normalizedVectorUnitSet
 
 theorem normalizedVector_mem_lipschitz

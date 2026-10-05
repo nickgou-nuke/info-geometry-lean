@@ -61,15 +61,17 @@ theorem chiralStar_coordinates_eq
           c₀ c₁ c₂ c₃ d₀ d₁ d₂ d₃ 7) := by
   apply Matrix.ext
   intro i j
-  fin_cases i <;> fin_cases j <;>
+  fin_cases i <;> fin_cases j
+  all_goals
     simp [chiralStar, chiralCoordinates,
       chiralZornProductCoordinates, half, uPlus, uMinus, uOne, uTwo, uThree,
       vOne, vTwo, vThree, rhoPlus, rhoMinus, entryOne, entryZero,
-      entryI, entryJ, entryK] <;>
-    apply Quaternion.ext <;>
-      simp [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
-        Quaternion.imK_mul] <;>
-        ring
+      entryI, entryJ, entryK]
+    try apply Quaternion.ext
+    try simp [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
+        Quaternion.imK_mul]
+    repeat' constructor
+    all_goals try ring
 
 def chiralCayleyConjCoordinates (c : Fin 8 → ℝ) : Fin 8 → ℝ :=
   ![c 4, -(c 1), -(c 2), -(c 3), c 0, -(c 5), -(c 6), -(c 7)]
@@ -88,8 +90,12 @@ theorem chiralStar_coordinate_conj_eq_scalar
         (a₀ * b₀ + a₁ * b₁ + a₂ * b₂ + a₃ * b₃)
         0 0 0 := by
   rw [chiralStar_coordinates_eq]
-  simp [chiralZornProductCoordinates]
-  ring
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals
+    simp [chiralCoordinates, chiralZornProductCoordinates, entryOne]
+    try apply Quaternion.ext
+    repeat' constructor
+    all_goals try ring
 
 theorem chiralStar_coordinate_conj_eq_scalar_right
     (a₀ a₁ a₂ a₃ b₀ b₁ b₂ b₃ : ℝ) :
@@ -101,8 +107,12 @@ theorem chiralStar_coordinate_conj_eq_scalar_right
         (a₀ * b₀ + a₁ * b₁ + a₂ * b₂ + a₃ * b₃)
         0 0 0 := by
   rw [chiralStar_coordinates_eq]
-  simp [chiralZornProductCoordinates]
-  ring
+  ext i j; fin_cases i <;> fin_cases j
+  all_goals
+    simp [chiralCoordinates, chiralZornProductCoordinates, entryOne]
+    try apply Quaternion.ext
+    repeat' constructor
+    all_goals try ring
 
 noncomputable def chiralQuadratic : QuadraticForm ℝ (Fin 8 → ℝ) :=
   QuadraticMap.ofPolar
@@ -113,11 +123,11 @@ noncomputable def chiralQuadratic : QuadraticForm ℝ (Fin 8 → ℝ) :=
       ring)
     (by
       intro c d e
-      dsimp [QuadraticMap.polar]
+      dsimp [QuadraticMap.polar, entryOne]
       ring)
     (by
       intro a c d
-      dsimp [QuadraticMap.polar]
+      dsimp [QuadraticMap.polar, entryOne]
       ring)
 
 @[simp] theorem chiralQuadratic_apply (c : Fin 8 → ℝ) :
@@ -158,7 +168,7 @@ theorem chiralCoordinateProduct_add_right (x y z : Fin 8 → ℝ) :
   funext i
   fin_cases i <;>
     simp [chiralCoordinateProduct, chiralZornProductCoordinates,
-      add_mul, mul_add, sub_mul, mul_sub] <;> ring
+      add_mul, mul_add, sub_mul, mul_sub, entryOne] <;> ring
 
 theorem chiralCoordinateProduct_smul_right (a : ℝ) (x y : Fin 8 → ℝ) :
     chiralCoordinateProduct x (a • y) =
@@ -166,7 +176,7 @@ theorem chiralCoordinateProduct_smul_right (a : ℝ) (x y : Fin 8 → ℝ) :
   funext i
   fin_cases i <;>
     simp [chiralCoordinateProduct, chiralZornProductCoordinates,
-      smul_eq_mul, add_mul, mul_add, sub_mul, mul_sub] <;> ring
+      smul_eq_mul, add_mul, mul_add, sub_mul, mul_sub, entryOne] <;> ring
 
 theorem chiralCoordinateProduct_add_left (x y z : Fin 8 → ℝ) :
     chiralCoordinateProduct (x + y) z =
@@ -174,7 +184,7 @@ theorem chiralCoordinateProduct_add_left (x y z : Fin 8 → ℝ) :
   funext i
   fin_cases i <;>
     simp [chiralCoordinateProduct, chiralZornProductCoordinates,
-      add_mul, mul_add, sub_mul, mul_sub] <;> ring
+      add_mul, mul_add, sub_mul, mul_sub, entryOne] <;> ring
 
 theorem chiralCoordinateProduct_smul_left (a : ℝ) (x y : Fin 8 → ℝ) :
     chiralCoordinateProduct (a • x) y =
@@ -182,26 +192,26 @@ theorem chiralCoordinateProduct_smul_left (a : ℝ) (x y : Fin 8 → ℝ) :
   funext i
   fin_cases i <;>
     simp [chiralCoordinateProduct, chiralZornProductCoordinates,
-      smul_eq_mul, add_mul, mul_add, sub_mul, mul_sub] <;> ring
+      smul_eq_mul, add_mul, mul_add, sub_mul, mul_sub, entryOne] <;> ring
 
 def chiralCoordinateConj : (Fin 8 → ℝ) →ₗ[ℝ] (Fin 8 → ℝ) where
   toFun := chiralCayleyConjCoordinates
   map_add' x y := by
     funext i
-    fin_cases i <;> simp [chiralCayleyConjCoordinates] <;> ring
+    fin_cases i <;> simp [chiralCayleyConjCoordinates, entryOne] <;> ring
   map_smul' a x := by
     funext i
-    fin_cases i <;> simp [chiralCayleyConjCoordinates]
+    fin_cases i <;> simp [chiralCayleyConjCoordinates, entryOne]
 
 @[simp] theorem chiralCoordinateConj_involutive (x : Fin 8 → ℝ) :
     chiralCoordinateConj (chiralCoordinateConj x) = x := by
   funext i
-  fin_cases i <;> simp [chiralCoordinateConj, chiralCayleyConjCoordinates]
+  fin_cases i <;> simp [chiralCoordinateConj, chiralCayleyConjCoordinates, entryOne]
 
 theorem chiralCoordinateConj_preserves_quadratic (c : Fin 8 → ℝ) :
     chiralQuadratic (chiralCoordinateConj c) = chiralQuadratic c := by
   simp [chiralQuadratic_apply, chiralCoordinateConj,
-    chiralCayleyConjCoordinates]
+    chiralCayleyConjCoordinates, entryOne]
   ring
 
 theorem chiralCoordinateConj_preserves_polar
@@ -224,7 +234,7 @@ theorem chiralCoordinateConj_product (x y : Fin 8 → ℝ) :
   funext i
   fin_cases i <;>
     simp [chiralCoordinateConj, chiralCoordinateProduct,
-      chiralCayleyConjCoordinates, chiralZornProductCoordinates] <;>
+      chiralCayleyConjCoordinates, chiralZornProductCoordinates, entryOne] <;>
     ring
 
 def chiralCoordinateLeft (x : Fin 8 → ℝ) :
@@ -247,9 +257,9 @@ theorem chiralCoordinateConj_left_right (x y : Fin 8 → ℝ) :
     chiralCoordinateConj (chiralCoordinateLeft x
       (chiralCoordinateConj y)) =
       chiralCoordinateRight (chiralCoordinateConj x) y := by
-  simpa only [chiralCoordinateLeft, chiralCoordinateRight,
-    chiralCoordinateConj_involutive] using
-    chiralCoordinateConj_product x (chiralCoordinateConj y)
+  change chiralCoordinateConj (chiralCoordinateProduct x (chiralCoordinateConj y)) =
+      chiralCoordinateProduct y (chiralCoordinateConj x)
+  rw [chiralCoordinateConj_product, chiralCoordinateConj_involutive]
 
 def chiralCoordinateGamma :
     (Fin 8 → ℝ) →ₗ[ℝ]
@@ -322,14 +332,14 @@ theorem chiralCoordinateGamma_square (x : Fin 8 → ℝ) :
       simp [chiralCoordinateGamma, chiralCoordinateLeft,
         chiralCoordinateProduct, chiralCoordinateConj,
         chiralCayleyConjCoordinates, chiralZornProductCoordinates,
-        chiralQuadratic] <;>
+        chiralQuadratic, entryOne] <;>
       ring
   · funext i
     fin_cases i <;>
       simp [chiralCoordinateGamma, chiralCoordinateLeft,
         chiralCoordinateProduct, chiralCoordinateConj,
         chiralCayleyConjCoordinates, chiralZornProductCoordinates,
-        chiralQuadratic] <;>
+        chiralQuadratic, entryOne] <;>
       ring
 
 noncomputable def chiralCliffordRepresentation :
@@ -425,7 +435,7 @@ def chiralCayleyConjugateAction
         (chiralCayleyConjugateAction T) = T := by
   apply LinearMap.ext
   intro x
-  simp [chiralCayleyConjugateAction, LinearMap.comp_apply]
+  simp [chiralCayleyConjugateAction, LinearMap.comp_apply, entryOne]
 
 theorem chiralCayleyConjugateAction_comp
     (S T : Module.End ℝ ChiralCayley) :
@@ -434,7 +444,7 @@ theorem chiralCayleyConjugateAction_comp
         (chiralCayleyConjugateAction T) := by
   apply LinearMap.ext
   intro x
-  simp [chiralCayleyConjugateAction, LinearMap.comp_apply]
+  simp [chiralCayleyConjugateAction, LinearMap.comp_apply, entryOne]
 
 theorem chiralCayleyConjugateAction_add
     (C D : Module.End ℝ ChiralCayley) :
@@ -442,7 +452,7 @@ theorem chiralCayleyConjugateAction_add
       chiralCayleyConjugateAction C + chiralCayleyConjugateAction D := by
   apply LinearMap.ext
   intro x
-  simp [chiralCayleyConjugateAction, LinearMap.comp_apply]
+  simp [chiralCayleyConjugateAction, LinearMap.comp_apply, entryOne]
 
 theorem chiralCayleyConjugateAction_algebraMap (r : ℝ) :
     chiralCayleyConjugateAction
@@ -451,7 +461,7 @@ theorem chiralCayleyConjugateAction_algebraMap (r : ℝ) :
   apply LinearMap.ext
   intro x
   simp [chiralCayleyConjugateAction, LinearMap.comp_apply,
-    Algebra.smul_def]
+    Algebra.smul_def, entryOne]
 
 noncomputable def chiralCayleyConjugateActionRingEquiv :
     Module.End ℝ ChiralCayley ≃+* Module.End ℝ ChiralCayley where
@@ -634,9 +644,9 @@ def chiralCayleyGamma (x : ChiralCayley) :
       (chiralCoordinateGamma (chiralCoordinatesEquiv.symm x)
         (chiralCayleyPairEquiv.symm p))
   map_add' p q := by
-    simp [chiralCayleyPairEquiv]
+    simp
   map_smul' a p := by
-    simp [chiralCayleyPairEquiv]
+    simp
 
 def chiralCayleyGammaLinear :
     ChiralCayley →ₗ[ℝ]
@@ -678,7 +688,7 @@ theorem chiralCayleyGamma_square (x : ChiralCayley) :
   apply LinearMap.ext
   intro p
   simp only [LinearMap.comp_apply, LinearMap.smul_apply, LinearMap.id_apply]
-  dsimp [chiralCayleyGamma]
+  dsimp [chiralCayleyGamma, entryOne]
   rw [chiralCayleyPairEquiv.symm_apply_apply]
   change chiralCayleyPairEquiv
       (chiralCoordinateGamma (chiralCoordinatesEquiv.symm x)
@@ -728,7 +738,7 @@ theorem chiralCayleyChirality_square :
       LinearMap.id := by
   apply LinearMap.ext
   rintro ⟨u, v⟩
-  simp [chiralCayleyChirality]
+  simp [chiralCayleyChirality, entryOne]
 
 theorem chiralCayleyChirality_anticommutes
     (x : ChiralCayley) :
@@ -747,11 +757,11 @@ theorem chiralCayleyChirality_anticommutes
     congr 1
     funext i
     fin_cases i <;>
-      simp [chiralCoordinateProduct, chiralZornProductCoordinates] <;>
+      simp [chiralCoordinateProduct, chiralZornProductCoordinates, entryOne] <;>
       ring
   · simp [chiralCayleyChirality, chiralCayleyGamma,
       chiralCayleyPairEquiv, LinearEquiv.prodCongr,
-      chiralCoordinateGamma, chiralCoordinateLeft, chiralCoordinateConj]
+      chiralCoordinateGamma, chiralCoordinateLeft, chiralCoordinateConj, entryOne]
     rfl
 
 /-- Left multiplication by a chiral element, viewed as an operator on the
@@ -801,7 +811,7 @@ theorem leftChiralStar_add_right (X Y Z : ChiralMatrix) :
   apply Matrix.ext
   intro i j
   fin_cases i <;> fin_cases j <;>
-    simp [leftChiralStar, chiralStar, half, add_mul, mul_add, sub_mul, mul_sub] <;>
+    simp [leftChiralStar, chiralStar, half, add_mul, mul_add, sub_mul, mul_sub, entryOne] <;>
       abel
 
 theorem leftChiralStar_smul_right (a : ℝ) (X Y : ChiralMatrix) :
@@ -810,7 +820,7 @@ theorem leftChiralStar_smul_right (a : ℝ) (X Y : ChiralMatrix) :
   intro i j
   fin_cases i <;> fin_cases j <;>
     simp [leftChiralStar, chiralStar, half, smul_eq_mul, mul_add, add_mul, sub_mul, mul_sub,
-      smul_add, smul_sub, smul_smul] <;>
+      smul_add, smul_sub, smul_smul, entryOne] <;>
       module
 
 theorem chiralStar_add_right (X Y Z : ChiralMatrix) :
@@ -851,7 +861,7 @@ theorem leftChiralStar_add_left (X Y Z : ChiralMatrix) :
   apply Matrix.ext
   intro i j
   fin_cases i <;> fin_cases j <;>
-    simp [leftChiralStar, chiralStar, half, add_mul, mul_add, sub_mul, mul_sub] <;>
+    simp [leftChiralStar, chiralStar, half, add_mul, mul_add, sub_mul, mul_sub, entryOne] <;>
       abel
 
 theorem leftChiralStar_smul_left (a : ℝ) (X Y : ChiralMatrix) :
@@ -860,7 +870,7 @@ theorem leftChiralStar_smul_left (a : ℝ) (X Y : ChiralMatrix) :
   intro i j
   fin_cases i <;> fin_cases j <;>
     simp [leftChiralStar, chiralStar, half, smul_eq_mul, mul_add, add_mul, sub_mul, mul_sub,
-      smul_add, smul_sub, smul_smul] <;>
+      smul_add, smul_sub, smul_smul, entryOne] <;>
       module
 
 theorem chiralStar_add_left (X Y Z : ChiralMatrix) :
@@ -876,9 +886,9 @@ def rightChiralStarLinear (Y : ChiralMatrix) :
   toFun := rightChiralStar Y
   map_add' := by
     intro X Z
-    simpa [rightChiralStar] using leftChiralStar_add_left X Z Y
+    exact chiralStar_add_left X Z Y
   map_smul' a X := by
-    simpa [rightChiralStar] using leftChiralStar_smul_left a X Y
+    exact chiralStar_smul_left a X Y
 
 @[simp] theorem rightChiralStarLinear_apply (X Y : ChiralMatrix) :
     rightChiralStarLinear Y X = rightChiralStar Y X := by
@@ -891,7 +901,7 @@ def conjChiral (X : ChiralMatrix) : ChiralMatrix := star X
 
 @[simp] theorem conjChiral_involutive (X : ChiralMatrix) :
     conjChiral (conjChiral X) = X := by
-  simp [conjChiral]
+  simp [conjChiral, entryOne]
 
 def chiralGamma (X : ChiralMatrix) :
     (ChiralMatrix × ChiralMatrix) →ₗ[ℝ]
@@ -902,14 +912,14 @@ def chiralGamma (X : ChiralMatrix) :
     apply Prod.ext
     · simp [leftChiralStar_add_right, QuaternionAlgebra.re_star,
         QuaternionAlgebra.imI_star, QuaternionAlgebra.imJ_star,
-        QuaternionAlgebra.imK_star]
+        QuaternionAlgebra.imK_star, entryOne]
     · simp [leftChiralStar_add_right, QuaternionAlgebra.re_star,
         QuaternionAlgebra.imI_star, QuaternionAlgebra.imJ_star,
-        QuaternionAlgebra.imK_star]
+        QuaternionAlgebra.imK_star, entryOne]
   map_smul' a p := by
     apply Prod.ext
-    · simp [leftChiralStar_smul_right]
-    · simp [leftChiralStar_smul_right]
+    · simp [leftChiralStar_smul_right, entryOne]
+    · simp [leftChiralStar_smul_right, entryOne]
 
 @[simp] theorem chiralGamma_apply (X : ChiralMatrix)
     (u v : ChiralMatrix) :
@@ -935,7 +945,7 @@ theorem chiralGamma_smul (r : ℝ) (X : ChiralMatrix) :
     have hstar : star (r • X) = r • star X := by
       apply Matrix.ext
       intro i j
-      simp [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_apply]
+      simp [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_apply, entryOne]
     rw [hstar]
     exact leftChiralStar_smul_left r (star X) u
 
@@ -971,7 +981,7 @@ theorem chiralGamma_square
   apply LinearMap.ext
   rintro ⟨u, v⟩
   rw [chiralGamma_square_apply, hleft u, hright v]
-  simp [LinearMap.id_apply]
+  simp [LinearMap.id_apply, entryOne]
 
 theorem no_chiralNorm_left_conjChiral :
     ¬ ∃ n : ℝ, ∀ u : ChiralMatrix,
@@ -982,9 +992,9 @@ theorem no_chiralNorm_left_conjChiral :
   have hm := congrArg (fun M : ChiralMatrix => M 1 1) (h uMinus)
   simp [leftChiralStar, conjChiral, chiralStar, uPlus, uMinus,
     rhoPlus, rhoMinus, entryZero, entryOne] at hp hm
-  have hp_re := congrArg (fun q : ChiralEntry => q.re) hp
-  have hm_re := congrArg (fun q : ChiralEntry => q.re) hm
-  simp at hp_re hm_re
+  -- hp is `1 = n` (Real eq), hm is `0 = { re := n, ... }` (Quaternion eq)
+  have hm_re := congrArg (fun (q : Quaternion ℝ) => q.re) hm
+  change 0 = n at hm_re
   linarith
 
 theorem rightChiralStar_apply (X Y : ChiralMatrix) :
@@ -999,7 +1009,7 @@ theorem leftRightCommutatorDefect_eq_neg_chiralAssociator
     (X Y Z : ChiralMatrix) :
     leftRightCommutatorDefect X Y Z = -chiralAssociator X Z Y := by
   simp [leftRightCommutatorDefect, rightChiralStar, leftChiralStar,
-    chiralAssociator, sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
+    chiralAssociator, sub_eq_add_neg, add_comm, add_left_comm, add_assoc, entryOne]
 
 /- The defect is a genuine linear operator in the acted-on variable. -/
 def leftRightCommutatorDefectLinear (X Y : ChiralMatrix) :
@@ -1040,73 +1050,79 @@ theorem sheetCommutantDefect_apply (a b : Fin 4) (Z : ChiralMatrix) :
   apply Matrix.ext
   intro i j
   fin_cases i <;> fin_cases j <;>
-    simp [chiralStar, half]
+    simp [chiralStar, half, entryOne]
 
 @[simp] theorem chiralStar_zero_right (X : ChiralMatrix) :
     chiralStar X 0 = 0 := by
   apply Matrix.ext
   intro i j
   fin_cases i <;> fin_cases j <;>
-    simp [chiralStar, half]
+    simp [chiralStar, half, entryOne]
 
 theorem chiralStar_uOne_uTwo : chiralStar uOne uTwo = vThree := by
   apply Matrix.ext
   intro i j
-  fin_cases i <;> fin_cases j <;>
+  fin_cases i <;> fin_cases j
+  all_goals
     simp [chiralStar, half, uOne, uTwo, vThree, entryZero, entryI, entryJ,
-      entryK] <;>
-    apply Quaternion.ext <;>
-      norm_num [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
+      entryK, entryOne]
+    try apply Quaternion.ext
+    try norm_num [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
         Quaternion.imK_mul, entryOne]
 
 theorem chiralStar_uTwo_uThree : chiralStar uTwo uThree = vOne := by
   apply Matrix.ext
   intro i j
-  fin_cases i <;> fin_cases j <;>
+  fin_cases i <;> fin_cases j
+  all_goals
     simp [chiralStar, half, uTwo, uThree, vOne, entryZero, entryI, entryJ,
-      entryK] <;>
-    apply Quaternion.ext <;>
-      norm_num [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
+      entryK, entryOne]
+    try apply Quaternion.ext
+    try norm_num [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
         Quaternion.imK_mul, entryOne]
 
 theorem chiralStar_uThree_uOne : chiralStar uThree uOne = vTwo := by
   apply Matrix.ext
   intro i j
-  fin_cases i <;> fin_cases j <;>
+  fin_cases i <;> fin_cases j
+  all_goals
     simp [chiralStar, half, uThree, uOne, vTwo, entryZero, entryI, entryJ,
-      entryK] <;>
-    apply Quaternion.ext <;>
-      norm_num [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
+      entryK, entryOne]
+    try apply Quaternion.ext
+    try norm_num [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
         Quaternion.imK_mul, entryOne]
 
 theorem chiralStar_uTwo_uOne : chiralStar uTwo uOne = -vThree := by
   apply Matrix.ext
   intro i j
-  fin_cases i <;> fin_cases j <;>
+  fin_cases i <;> fin_cases j
+  all_goals
     simp [chiralStar, half, uTwo, uOne, vThree, entryZero, entryI, entryJ,
-      entryK] <;>
-    apply Quaternion.ext <;>
-      norm_num [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
+      entryK, entryOne]
+    try apply Quaternion.ext
+    try norm_num [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
         Quaternion.imK_mul, entryOne]
 
 theorem chiralStar_uThree_uTwo : chiralStar uThree uTwo = -vOne := by
   apply Matrix.ext
   intro i j
-  fin_cases i <;> fin_cases j <;>
+  fin_cases i <;> fin_cases j
+  all_goals
     simp [chiralStar, half, uThree, uTwo, vOne, entryZero, entryI, entryJ,
-      entryK] <;>
-    apply Quaternion.ext <;>
-      norm_num [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
+      entryK, entryOne]
+    try apply Quaternion.ext
+    try norm_num [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
         Quaternion.imK_mul, entryOne]
 
 theorem chiralStar_uOne_uThree : chiralStar uOne uThree = -vTwo := by
   apply Matrix.ext
   intro i j
-  fin_cases i <;> fin_cases j <;>
+  fin_cases i <;> fin_cases j
+  all_goals
     simp [chiralStar, half, uOne, uThree, vTwo, entryZero, entryI, entryJ,
-      entryK] <;>
-    apply Quaternion.ext <;>
-      norm_num [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
+      entryK, entryOne]
+    try apply Quaternion.ext
+    try norm_num [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
         Quaternion.imK_mul, entryOne]
 
 theorem chiralStar_uOne_uTwo_commutator :
@@ -1142,25 +1158,26 @@ theorem chiralStar_uThree_uOne_anticommutator :
 theorem chiralStar_uOne_vOne : chiralStar uOne vOne = -rhoPlus := by
   apply Matrix.ext
   intro i j
-  fin_cases i <;> fin_cases j <;>
-    simp [chiralStar, half, uOne, vOne, rhoPlus, entryZero, entryOne, entryI] <;>
-    apply Quaternion.ext <;>
-      norm_num [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
-        Quaternion.imK_mul]
+  fin_cases i <;> fin_cases j
+  all_goals
+    simp [chiralStar, half, uOne, vOne, rhoPlus, entryZero, entryOne, entryI]
+    try apply Quaternion.ext
+    try norm_num [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul]
 
 theorem chiralStar_vOne_uOne : chiralStar vOne uOne = -rhoMinus := by
   apply Matrix.ext
   intro i j
-  fin_cases i <;> fin_cases j <;>
-    simp [chiralStar, half, uOne, vOne, rhoMinus, entryZero, entryOne, entryI] <;>
-    apply Quaternion.ext <;>
-      norm_num [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
-        Quaternion.imK_mul]
+  fin_cases i <;> fin_cases j
+  all_goals
+    simp [chiralStar, half, uOne, vOne, rhoMinus, entryZero, entryOne, entryI]
+    try apply Quaternion.ext
+    try norm_num [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
+      Quaternion.imK_mul]
 
 theorem chiralStar_uOne_vOne_anticommutator :
     chiralStar uOne vOne + chiralStar vOne uOne = -chiralOne := by
   rw [chiralStar_uOne_vOne, chiralStar_vOne_uOne]
-  simp [chiralOne, uPlus, uMinus]
+  simp [chiralOne, uPlus, uMinus, entryOne]
   module
 
 theorem chiralStar_uOne_vOne_commutator :

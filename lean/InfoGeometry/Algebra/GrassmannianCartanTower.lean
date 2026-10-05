@@ -1,6 +1,18 @@
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import Mathlib.Tactic
 
+/-!
+# Alternating exterior blades
+
+This file works in Mathlib's associative exterior algebra over an arbitrary
+commutative ring. Its products are exterior products of vector generators:
+they are not Clifford products, split-octonion products, or nonassociative
+associators. In particular, the square-zero result below is the forward
+identity for a decomposable bivector; it is not a Minkowski mass-shell
+condition. The four-dimensional converse to decomposability is owned by
+`InfoGeometry.Projective.ExteriorPowerPluckerBridge`, and the Minkowski
+mass-shell readout by `InfoGeometry.Physics.FourVectorDiracReadout`.
+-/
 namespace InfoGeometry.GrassmannianTower
 
 variable (R : Type*) [CommRing R]
@@ -31,7 +43,7 @@ lemma blade_one_swap_neg (u v : V) :
 def blade_two (u v : V) : ExteriorAlgebra R V :=
   blade_one R u * blade_one R v
 
-theorem plucker_on_shell_condition (u v : V) :
+theorem decomposable_bivector_wedge_square_zero (u v : V) :
     blade_two R u v * blade_two R u v = 0 := by
   dsimp [blade_two]
   have h1 : blade_one R u * blade_one R v * (blade_one R u * blade_one R v) =
@@ -49,19 +61,19 @@ theorem plucker_on_shell_condition (u v : V) :
 def blade_three (u v w : V) : ExteriorAlgebra R V :=
   blade_one R u * blade_one R v * blade_one R w
 
-theorem associator_left_alt (u v : V) :
+theorem blade_three_repeated_first_generator_zero (u v : V) :
     blade_three R u u v = 0 := by
   dsimp [blade_three]
   have h : blade_one R u * blade_one R u * blade_one R v =
       (blade_one R u * blade_one R u) * blade_one R v := by simp only [mul_assoc]
   rw [h, blade_one_sq_zero R u, zero_mul]
 
-theorem associator_right_alt (u v : V) :
+theorem blade_three_repeated_last_generator_zero (u v : V) :
     blade_three R u v v = 0 := by
   dsimp [blade_three]
   rw [mul_assoc, blade_one_sq_zero R v, mul_zero]
 
-theorem associator_swap_12 (u v w : V) :
+theorem blade_three_swap_first_two (u v w : V) :
     blade_three R u v w = - blade_three R v u w := by
   dsimp [blade_three]
   have h : blade_one R u * blade_one R v * blade_one R w =
@@ -71,7 +83,7 @@ theorem associator_swap_12 (u v w : V) :
 def blade_four (u v w z : V) : ExteriorAlgebra R V :=
   blade_three R u v w * blade_one R z
 
-theorem topological_volume_collapse (u v w : V) :
+theorem blade_four_repeated_generator_zero (u v w : V) :
     blade_four R u v w w = 0 := by
   dsimp [blade_four, blade_three]
   have h : blade_one R u * blade_one R v * blade_one R w * blade_one R w =

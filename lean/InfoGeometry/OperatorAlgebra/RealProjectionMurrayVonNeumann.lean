@@ -19,8 +19,10 @@ def MurrayVonNeumannEquivalent (p q : A) : Prop :=
 theorem mvn_refl {p : A} (hp : IsIdempotentElem p ∧ star p = p) :
     MurrayVonNeumannEquivalent p p := by
   refine ⟨p, ?_, ?_⟩
-  · simpa [hp.2] using hp.1
-  · simpa [hp.2] using hp.1
+  · rw [hp.right]
+    exact hp.left
+  · rw [hp.right]
+    exact hp.left
 
 theorem mvn_symm {p q : A}
     (h : MurrayVonNeumannEquivalent p q) :

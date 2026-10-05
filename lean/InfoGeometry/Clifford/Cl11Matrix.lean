@@ -33,7 +33,7 @@ noncomputable def q11 : QuadraticForm ℝ Vec11 :=
   CliffordAlgebraQuaternion.Q (1 : ℝ) (-1 : ℝ)
 
 @[simp] lemma q11_apply (v : Vec11) : q11 v = v.1 ^ 2 - v.2 ^ 2 := by
-  dsimp [q11, CliffordAlgebraQuaternion.Q]
+  rw [q11, CliffordAlgebraQuaternion.Q_apply]
   ring
 
 -- Real Pauli matrices
@@ -190,6 +190,10 @@ theorem cl11EquivMat_iota_pos_neg_anticomm :
         cl11EquivMat (CliffordAlgebra.ι q11 (0, 1)) +
       cl11EquivMat (CliffordAlgebra.ι q11 (0, 1)) *
         cl11EquivMat (CliffordAlgebra.ι q11 (1, 0)) = 0 := by
-  simpa [cl11EquivMat] using cl11ToMat_iota_pos_neg_anticomm
+  change cl11ToMat (CliffordAlgebra.ι q11 (1, 0)) *
+      cl11ToMat (CliffordAlgebra.ι q11 (0, 1)) +
+    cl11ToMat (CliffordAlgebra.ι q11 (0, 1)) *
+      cl11ToMat (CliffordAlgebra.ι q11 (1, 0)) = 0
+  exact cl11ToMat_iota_pos_neg_anticomm
 
 end InfoGeometry.Clifford.Cl11Matrix

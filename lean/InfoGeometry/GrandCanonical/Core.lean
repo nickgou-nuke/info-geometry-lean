@@ -1,3 +1,9 @@
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Inv
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -121,8 +127,8 @@ lemma hasDerivAt_exp_neg_mul_energy
   have hlin : HasDerivAt (fun t : ℝ => -t * params.energy x) (-(params.energy x)) β := by
     simpa [mul_comm, mul_left_comm, mul_assoc] using
       ((hasDerivAt_id' β).const_mul (-(params.energy x)))
-  simpa [mul_comm, mul_left_comm, mul_assoc] using
-    (Real.hasDerivAt_exp (-β * params.energy x)).comp β hlin
+  convert (Real.hasDerivAt_exp (-β * params.energy x)).comp β hlin using 1
+  all_goals first | (funext t; congr 1) | ring
 
 /-- Derivative kernel for the partition function. -/
 noncomputable def partitionDerivFun
@@ -370,9 +376,8 @@ lemma hessian_eq_secondMoment_sub_mean_sq
         (deriv (partitionDerivFun params) β * partition params β
           - partitionDerivFun params β * deriv (partition params) β) /
           (partition params β) ^ (2 : ℕ) := by
-    simpa using
-      (deriv_div (c := partitionDerivFun params) (d := partition params)
-        (x := β) hnumDiff hdenDiff hZne)
+    convert (deriv_div (c := partitionDerivFun params) (d := partition params)
+      (x := β) hnumDiff hdenDiff hZne) using 1
   rw [hquot]
   rw [deriv_partitionDerivFun, deriv_partition]
   set Z := partition params β
@@ -605,8 +610,8 @@ lemma hasDerivAt_exp_neg_mul_shiftedEnergy_beta
       (-(shiftedEnergy params μ x)) β := by
     simpa [mul_comm, mul_left_comm, mul_assoc] using
       ((hasDerivAt_id' β).const_mul (-(shiftedEnergy params μ x)))
-  simpa [mul_comm, mul_left_comm, mul_assoc] using
-    (Real.hasDerivAt_exp (-β * shiftedEnergy params μ x)).comp β hlin
+  convert (Real.hasDerivAt_exp (-β * shiftedEnergy params μ x)).comp β hlin using 1
+  all_goals first | (funext t; congr 1) | ring
 
 /-- Derivative kernel `∂β Z(β, μ)`. -/
 noncomputable def partitionGCDerivBetaFun
@@ -702,8 +707,8 @@ lemma hasDerivAt_exp_neg_mul_shiftedEnergy_mu
       (β * params.number x)
       μ := by
     simpa [mul_comm, mul_left_comm, mul_assoc] using (hshift.const_mul (-β))
-  simpa [mul_comm, mul_left_comm, mul_assoc] using
-    (Real.hasDerivAt_exp (-β * shiftedEnergy params μ x)).comp μ hlin
+  convert (Real.hasDerivAt_exp (-β * shiftedEnergy params μ x)).comp μ hlin using 1
+  all_goals first | (funext t; congr 1) | ring
 
 /-- Derivative kernel `∂μ Z(β, μ)`. -/
 noncomputable def partitionGCDerivMuFun
@@ -1122,8 +1127,8 @@ lemma hasDerivAt_firstShiftUnnormalized_mu_term
       hmul.const_sub (params.energy x)
   have hExp := hasDerivAt_exp_neg_mul_shiftedEnergy_mu params β μ x
   have hprod := hshift.mul hExp
-  simpa [mul_comm, mul_left_comm, mul_assoc, sub_eq_add_neg,
-    add_comm, add_left_comm, add_assoc] using hprod
+  convert hprod using 1
+  ring_nf
 
 omit [Nonempty α] in
 lemma hasDerivAt_firstShiftUnnormalized_mu
@@ -1171,10 +1176,9 @@ lemma deriv_meanShift_beta
       (deriv (fun t : ℝ => firstShiftUnnormalized params t μ) β * partitionGC params β μ
         - firstShiftUnnormalized params β μ * deriv (fun t : ℝ => partitionGC params t μ) β) /
         (partitionGC params β μ) ^ (2 : ℕ) := by
-    simpa using
-      (deriv_div (c := fun t : ℝ => firstShiftUnnormalized params t μ)
-        (d := fun t : ℝ => partitionGC params t μ) (x := β)
-        hnumDiff hdenDiff hZne)
+    convert (deriv_div (c := fun t : ℝ => firstShiftUnnormalized params t μ)
+      (d := fun t : ℝ => partitionGC params t μ) (x := β)
+      hnumDiff hdenDiff hZne) using 1
   rw [hquot]
   rw [deriv_firstShiftUnnormalized_beta, (hasDerivAt_partitionGC_beta params β μ).deriv]
   rw [partitionGCDerivBetaFun_eq_neg_firstShift]
@@ -1214,10 +1218,9 @@ lemma deriv_meanNumber_mu
       (deriv (fun t : ℝ => firstNumberUnnormalized params β t) μ * partitionGC params β μ
         - firstNumberUnnormalized params β μ * deriv (fun t : ℝ => partitionGC params β t) μ) /
         (partitionGC params β μ) ^ (2 : ℕ) := by
-    simpa using
-      (deriv_div (c := fun t : ℝ => firstNumberUnnormalized params β t)
-        (d := fun t : ℝ => partitionGC params β t) (x := μ)
-        hnumDiff hdenDiff hZne)
+    convert (deriv_div (c := fun t : ℝ => firstNumberUnnormalized params β t)
+      (d := fun t : ℝ => partitionGC params β t) (x := μ)
+      hnumDiff hdenDiff hZne) using 1
   rw [hquot]
   rw [deriv_firstNumberUnnormalized_mu, (hasDerivAt_partitionGC_mu params β μ).deriv]
   rw [partitionGCDerivMuFun_eq_beta_mul_firstNumber]
@@ -1256,10 +1259,9 @@ lemma deriv_meanNumber_beta
       (deriv (fun t : ℝ => firstNumberUnnormalized params t μ) β * partitionGC params β μ
         - firstNumberUnnormalized params β μ * deriv (fun t : ℝ => partitionGC params t μ) β) /
         (partitionGC params β μ) ^ (2 : ℕ) := by
-    simpa using
-      (deriv_div (c := fun t : ℝ => firstNumberUnnormalized params t μ)
-        (d := fun t : ℝ => partitionGC params t μ) (x := β)
-        hnumDiff hdenDiff hZne)
+    convert (deriv_div (c := fun t : ℝ => firstNumberUnnormalized params t μ)
+      (d := fun t : ℝ => partitionGC params t μ) (x := β)
+      hnumDiff hdenDiff hZne) using 1
   rw [hquot]
   rw [deriv_firstNumberUnnormalized_beta, (hasDerivAt_partitionGC_beta params β μ).deriv]
   rw [partitionGCDerivBetaFun_eq_neg_firstShift]
@@ -1301,10 +1303,9 @@ lemma deriv_meanShift_mu
       (deriv (fun t : ℝ => firstShiftUnnormalized params β t) μ * partitionGC params β μ
         - firstShiftUnnormalized params β μ * deriv (fun t : ℝ => partitionGC params β t) μ) /
         (partitionGC params β μ) ^ (2 : ℕ) := by
-    simpa using
-      (deriv_div (c := fun t : ℝ => firstShiftUnnormalized params β t)
-        (d := fun t : ℝ => partitionGC params β t) (x := μ)
-        hnumDiff hdenDiff hZne)
+    convert (deriv_div (c := fun t : ℝ => firstShiftUnnormalized params β t)
+      (d := fun t : ℝ => partitionGC params β t) (x := μ)
+      hnumDiff hdenDiff hZne) using 1
   rw [hquot]
   rw [deriv_firstShiftUnnormalized_mu, (hasDerivAt_partitionGC_mu params β μ).deriv]
   rw [partitionGCDerivMuFun_eq_beta_mul_firstNumber]

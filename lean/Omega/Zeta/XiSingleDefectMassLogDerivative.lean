@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Omega.Zeta.XiSingleDefectIntegratedClosedForm
 
@@ -25,8 +26,11 @@ theorem paper_xi_single_defect_mass_log_derivative (ρ δ : ℝ) :
             (fun _ : ℝ => (1 : ℝ)) x =
         2 * singleDefectSupportRadius ρ δ := by
   constructor
-  · simpa [xi_single_defect_mass_log_derivative_mass, mul_comm, mul_left_comm, mul_assoc] using
-      (hasDerivAt_id (x := Real.log ρ)).mul_const (2 * singleDefectSupportRadius ρ δ)
+  · convert
+      (hasDerivAt_id (x := Real.log ρ)).mul_const (2 * singleDefectSupportRadius ρ δ) using 1
+    · change (fun logρ : ℝ => logρ * (2 * singleDefectSupportRadius ρ δ)) = _
+      rfl
+    · simp
   · let X := singleDefectSupportRadius ρ δ
     have hX : 0 ≤ X := by
       simp [X, singleDefectSupportRadius]

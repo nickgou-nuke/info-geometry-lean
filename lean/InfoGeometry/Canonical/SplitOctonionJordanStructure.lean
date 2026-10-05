@@ -1,3 +1,5 @@
+import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.Algebra.Lie.Matrix
 import InfoGeometry.Canonical.SplitOctonionJordanCore
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionSkew28
@@ -403,6 +405,9 @@ theorem structureActionLinear_bracket (p q : StructureCarrier) :
     change (D.1 * E.1 - E.1 * D.1).mulVec u =
       D.1.mulVec (E.1.mulVec u) - E.1.mulVec (D.1.mulVec u)
     rw [Matrix.sub_mulVec, Matrix.mulVec_mulVec, Matrix.mulVec_mulVec]
+
+local instance : LieRing (Module.End ℝ Carrier) := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ (Module.End ℝ Carrier) := LieAlgebra.ofAssociativeAlgebra
 
 noncomputable def structureActionLieSubalgebra :
     LieSubalgebra ℝ (Module.End ℝ Carrier) :=

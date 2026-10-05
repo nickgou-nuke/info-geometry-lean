@@ -52,18 +52,10 @@ noncomputable instance : InnerProductSpace ℝ (HilbertDoubled E) where
         (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))))
   add_left := by
     intro u v w
-    simpa using
-      (inner_add_left
-        (((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
-        (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
-        (((w : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))))
+    exact inner_add_left u.down v.down w.down
   smul_left := by
     intro u v r
-    simpa using
-      (real_inner_smul_left
-        (((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
-        (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
-        r)
+    exact real_inner_smul_left u.down v.down r
 
 noncomputable instance : KreinSpace (HilbertDoubled E) where
   J :=
@@ -94,10 +86,7 @@ noncomputable instance : KreinSpace (HilbertDoubled E) where
     simpa using (KreinSpace.J_invol (H := DoubledSpace E) (u : DoubledSpace E))
   J_selfAdj := by
     intro u v
-    simpa using
-      (KreinSpace.J_selfAdj (H := DoubledSpace E)
-        ((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))
-        (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))))
+    exact KreinSpace.J_selfAdj (H := DoubledSpace E) u.down v.down
 
 abbrev val (u : HilbertDoubled E) : WithLp (2 : ENNReal) (E × E) := (u : DoubledSpace E)
 abbrev ofLp (u : HilbertDoubled E) : E × E := WithLp.ofLp (u : DoubledSpace E)
@@ -208,18 +197,10 @@ noncomputable instance : InnerProductSpace ℝ (NeutralSpace E) where
         (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))))
   add_left := by
     intro u v w
-    simpa using
-      (inner_add_left
-        (((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
-        (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
-        (((w : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))))
+    exact inner_add_left u.down v.down w.down
   smul_left := by
     intro u v r
-    simpa using
-      (real_inner_smul_left
-        (((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
-        (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
-        r)
+    exact real_inner_smul_left u.down v.down r
 
 noncomputable instance : KreinSpace (NeutralSpace E) where
   J :=
@@ -250,10 +231,7 @@ noncomputable instance : KreinSpace (NeutralSpace E) where
     simpa using (KreinSpace.J_invol (H := DoubledSpace E) (u : DoubledSpace E))
   J_selfAdj := by
     intro u v
-    simpa using
-      (KreinSpace.J_selfAdj (H := DoubledSpace E)
-        ((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))
-        (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))))
+    exact (KreinSpace.J_selfAdj (H := DoubledSpace E) u.down v.down)
 
 abbrev val (u : NeutralSpace E) : WithLp (2 : ENNReal) (E × E) := (u : DoubledSpace E)
 abbrev ofLp (u : NeutralSpace E) : E × E := WithLp.ofLp (u : DoubledSpace E)

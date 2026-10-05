@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""Consolidate duplicate Lake mathlib package checkouts.
+"""Audit duplicate Lake mathlib checkouts without changing them.
 
-Lake packages are tied to exact git revisions and Lean toolchains.  This tool
-therefore deduplicates by mathlib commit, not by package name alone.
+Lake checkouts may contain compiled oleans, untracked cache data, or local
+work.  Moving or deleting one and replacing it with a symlink can therefore
+break an otherwise valid project.  This command is deliberately read-only;
+share a checkout through an explicit Lake path dependency instead.
 """
 
 from __future__ import annotations
 
 import argparse
 import os
-import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -74,58 +75,6 @@ def checkout_info(path: Path) -> MathlibCheckout | None:
     return MathlibCheckout(path=path, rev=rev, size_bytes=size, dirty=dirty, is_symlink=path.is_symlink())
 
 
-def relink(source: Path, target: Path, *, dry_run: bool, force: bool) -> None:
-    if source.resolve() == target.resolve():
-        print(f"keep    {source} -> shared target")
-        return
-    if source.is_symlink():
-        print(f"link    {source} -> {target}")
-        if not dry_run:
-            source.unlink()
-            source.symlink_to(target, target_is_directory=True)
-        return
-    if not force:
-        info = checkout_info(source)
-        if info and info.dirty:
-            raise RuntimeError(f"refusing dirty mathlib checkout without --force: {source}")
-    print(f"delete  {source}")
-    print(f"link    {source} -> {target}")
-    if not dry_run:
-        shutil.rmtree(source)
-        source.symlink_to(target, target_is_directory=True)
-
-
-def ensure_shared_target(
-    checkouts: list[MathlibCheckout],
-    shared_root: Path,
-    *,
-    dry_run: bool,
-    force: bool,
-) -> tuple[Path, Path | None]:
-    rev = checkouts[0].rev
-    target = shared_root / rev
-    if target.exists():
-        target_info = checkout_info(target)
-        if target_info is None or target_info.rev != rev:
-            raise RuntimeError(f"shared target exists but is not mathlib rev {rev}: {target}")
-        print(f"target  {target} already exists")
-        return target, None
-
-    canonical = max((c for c in checkouts if not c.is_symlink), key=lambda c: c.size_bytes, default=None)
-    if canonical is None:
-        raise RuntimeError(f"no physical checkout available for rev {rev}")
-    if canonical.dirty and not force:
-        raise RuntimeError(f"refusing dirty canonical checkout without --force: {canonical.path}")
-
-    print(f"move    {canonical.path} -> {target}")
-    print(f"link    {canonical.path} -> {target}")
-    if not dry_run:
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.move(str(canonical.path), str(target))
-        canonical.path.symlink_to(target, target_is_directory=True)
-    return target, canonical.path
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -135,14 +84,6 @@ def main() -> int:
         default=[Path("/home/goutev/repos")],
         help="roots to scan for .lake/packages/mathlib",
     )
-    parser.add_argument(
-        "--shared-root",
-        type=Path,
-        default=Path.home() / ".cache" / "lake-shared" / "mathlib",
-        help="central storage root, keyed by mathlib git commit",
-    )
-    parser.add_argument("--apply", action="store_true", help="perform changes; default is dry-run")
-    parser.add_argument("--force", action="store_true", help="allow tracked local modifications in mathlib")
     args = parser.parse_args()
 
     checkouts = [info for path in discover_mathlibs(args.roots) if (info := checkout_info(path)) is not None]
@@ -150,10 +91,8 @@ def main() -> int:
     for checkout in checkouts:
         by_rev.setdefault(checkout.rev, []).append(checkout)
 
-    dry_run = not args.apply
-    mode = "apply" if args.apply else "dry-run"
-    print(f"mode={mode}")
-    print(f"shared_root={args.shared_root}")
+    print("mode=read-only-audit")
+    print("policy=preserve-checkouts-and-build-artifacts; create-no-symlinks")
     print(f"timestamp={datetime.now(timezone.utc).isoformat()}")
 
     for rev, group in sorted(by_rev.items()):
@@ -168,13 +107,9 @@ def main() -> int:
                 markers.append("symlink")
             suffix = f" ({', '.join(markers)})" if markers else ""
             print(f"  {size_gib:7.2f} GiB  {checkout.path}{suffix}")
-        if len(group) <= 1 and not args.apply:
+        if len(group) <= 1:
             continue
-        target, moved_canonical = ensure_shared_target(group, args.shared_root, dry_run=dry_run, force=args.force)
-        for checkout in group:
-            if moved_canonical is not None and checkout.path == moved_canonical:
-                continue
-            relink(checkout.path, target, dry_run=dry_run, force=args.force)
+        print("  action  none (use an explicit Lake path dependency if sharing is intended)")
 
     return 0
 

@@ -64,12 +64,16 @@ noncomputable def headNullPlus (n : ℕ) : Carrier (n + 1) :=
 @[rep_depth krein, simp] theorem quad_headPair
     (n : ℕ) (x : ℝ × ℝ) :
     Quad (n + 1) (headPair n x) = Q11 x := by
-  simp [Quad, headPair, Qsplit_succ_apply]
+  change Qsplit (n + 1) (x, (0 : Carrier n)) = Q11 x
+  rw [Qsplit_succ_apply]
+  simp [Q11]
 
 @[rep_depth krein, simp] theorem quad_tailLift
     (n : ℕ) (xs : Carrier n) :
     Quad (n + 1) (tailLift n xs) = Quad n xs := by
-  simp [Quad, tailLift, Qsplit_succ_apply]
+  change Qsplit (n + 1) ((0, 0), xs) = Qsplit n xs
+  rw [Qsplit_succ_apply]
+  simp
 
 @[rep_depth krein] theorem head_tail_decompose
     (n : ℕ) (x : ℝ × ℝ) (xs : Carrier n) :
@@ -84,17 +88,20 @@ noncomputable def headNullPlus (n : ℕ) : Carrier (n + 1) :=
     QuadraticMap.polar (Quad (n + 1)) (headPair n x) (tailLift n xs) = 0 := by
   have hsum : headPair n x + tailLift n xs = (x, xs) := (head_tail_decompose n x xs).symm
   rw [QuadraticMap.polar, hsum]
-  simp [Quad, headPair, tailLift, Qsplit_succ_apply]
+  rw [Qsplit_succ_apply, quad_headPair, quad_tailLift]
+  simp
 
 @[rep_depth krein, simp] theorem headNullMinus_isotropic
     (n : ℕ) :
     Quad (n + 1) (headNullMinus n) = 0 := by
-  simp [headNullMinus, headPair, Quad, Qsplit_succ_apply]
+  rw [headNullMinus, quad_headPair]
+  simp [Q11]
 
 @[rep_depth krein, simp] theorem headNullPlus_isotropic
     (n : ℕ) :
     Quad (n + 1) (headNullPlus n) = 0 := by
-  simp [headNullPlus, headPair, Quad, Qsplit_succ_apply]
+  rw [headNullPlus, quad_headPair]
+  simp [Q11]
 
 @[rep_depth krein, simp] theorem polar_headNullMinus_headNullPlus
     (n : ℕ) :
@@ -107,7 +114,8 @@ noncomputable def headNullPlus (n : ℕ) : Carrier (n + 1) :=
     simp
     norm_num
   rw [QuadraticMap.polar, hsum, headNullMinus_isotropic, headNullPlus_isotropic]
-  simp [quad_headPair]
+  rw [quad_headPair]
+  norm_num [Q11]
 
 @[rep_depth krein]
 noncomputable def gammaHeadNullMinus (n : ℕ) : Alg (n + 1) :=
@@ -125,13 +133,13 @@ noncomputable def gammaTail (n : ℕ) (xs : Carrier n) : Alg (n + 1) :=
     (n : ℕ) :
     gammaHeadNullMinus n * gammaHeadNullMinus n = 0 := by
   rw [gammaHeadNullMinus, CliffordAlgebra.ι_sq_scalar]
-  simp [headNullMinus_isotropic]
+  rw [headNullMinus_isotropic, map_zero]
 
 @[rep_depth krein, simp] theorem gammaHeadNullPlus_sq
     (n : ℕ) :
     gammaHeadNullPlus n * gammaHeadNullPlus n = 0 := by
   rw [gammaHeadNullPlus, CliffordAlgebra.ι_sq_scalar]
-  simp [headNullPlus_isotropic]
+  rw [headNullPlus_isotropic, map_zero]
 
 @[rep_depth krein, simp] theorem gammaHeadNullMinus_mul_gammaHeadNullPlus_add_swap
     (n : ℕ) :
@@ -140,7 +148,8 @@ noncomputable def gammaTail (n : ℕ) (xs : Carrier n) : Alg (n + 1) :=
   have h :=
     CliffordAlgebra.ι_mul_ι_add_swap
       (Q := Quad (n + 1)) (headNullMinus n) (headNullPlus n)
-  simpa [gammaHeadNullMinus, gammaHeadNullPlus, polar_headNullMinus_headNullPlus] using h
+  rw [polar_headNullMinus_headNullPlus, map_one] at h
+  exact h
 
 @[rep_depth krein, simp] theorem gammaHeadNullPlus_mul_gammaHeadNullMinus_add_swap
     (n : ℕ) :
@@ -152,16 +161,20 @@ noncomputable def gammaTail (n : ℕ) (xs : Carrier n) : Alg (n + 1) :=
     (n : ℕ) (xs : Carrier n) :
     gammaHeadNullMinus n * gammaTail n xs
       + gammaTail n xs * gammaHeadNullMinus n = 0 := by
-  simpa [gammaHeadNullMinus, gammaTail, polar_headPair_tailLift, headNullMinus] using
-    (CliffordAlgebra.ι_mul_ι_add_swap
-      (Q := Quad (n + 1)) (headNullMinus n) (tailLift n xs))
+  rw [gammaHeadNullMinus, gammaTail, CliffordAlgebra.ι_mul_ι_add_swap]
+  change algebraMap ℝ (CliffordAlgebra (Quad (n + 1)))
+      (QuadraticMap.polar (Quad (n + 1))
+        (headPair n ((1 / 2 : ℝ), (1 / 2 : ℝ))) (tailLift n xs)) = 0
+  rw [polar_headPair_tailLift, map_zero]
 
 @[rep_depth krein, simp] theorem gammaHeadNullPlus_mul_gammaTail_add_swap
     (n : ℕ) (xs : Carrier n) :
     gammaHeadNullPlus n * gammaTail n xs
       + gammaTail n xs * gammaHeadNullPlus n = 0 := by
-  simpa [gammaHeadNullPlus, gammaTail, polar_headPair_tailLift, headNullPlus] using
-    (CliffordAlgebra.ι_mul_ι_add_swap
-      (Q := Quad (n + 1)) (headNullPlus n) (tailLift n xs))
+  rw [gammaHeadNullPlus, gammaTail, CliffordAlgebra.ι_mul_ι_add_swap]
+  change algebraMap ℝ (CliffordAlgebra (Quad (n + 1)))
+      (QuadraticMap.polar (Quad (n + 1))
+        (headPair n ((1 / 2 : ℝ), (-(1 / 2 : ℝ)))) (tailLift n xs)) = 0
+  rw [polar_headPair_tailLift, map_zero]
 
 end InfoGeometry.Clifford.ClNN

@@ -45,7 +45,7 @@ This repository is not a sanitized textbook. It is the raw, authentic record of 
    - Verified source edits are the source of truth
 
 3. **Build & Verify Locally:**
-   - Lean toolchain is pinned in `lean-toolchain` (`leanprover/lean4:v4.28.1`)
+   - Lean toolchain is pinned in `lean-toolchain` (`leanprover/lean4:v4.34.1`)
    - Compile with:
      ```bash
      lake build InfoGeometry.All

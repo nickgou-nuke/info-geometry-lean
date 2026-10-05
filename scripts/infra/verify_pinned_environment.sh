@@ -14,8 +14,8 @@ for required in lean-toolchain lakefile.lean lake-manifest.json; do
   fi
 done
 
-expected_toolchain='leanprover/lean4:v4.28.1'
-EXPECTED_MATHLIB_REV='1f9fffd5ff0b854b8a1f1f69adc11c61f05f2515'
+expected_toolchain='leanprover/lean4:v4.34.1'
+EXPECTED_MATHLIB_REV='d13f23b723b8a846827a245b89c10fc7d3f11612'
 actual_toolchain="$(tr -d '\r' < lean-toolchain)"
 if [[ "$actual_toolchain" != "$expected_toolchain" ]]; then
   echo "[pin-check] expected $expected_toolchain, found $actual_toolchain" >&2
@@ -50,7 +50,7 @@ for package in packages:
 expected_mathlib_rev = os.environ["EXPECTED_MATHLIB_REV"]
 if len(mathlib_entries) != 1:
     raise SystemExit("[pin-check] expected exactly one root mathlib manifest entry")
-mathlib_rev = mathlib_entries[0].get("inputRev") or mathlib_entries[0].get("rev")
+mathlib_rev = mathlib_entries[0].get("rev")
 if mathlib_rev != expected_mathlib_rev:
     raise SystemExit(
         f"[pin-check] expected root mathlib {expected_mathlib_rev}, found {mathlib_rev!r}"

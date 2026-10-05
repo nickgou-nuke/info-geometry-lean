@@ -6,7 +6,7 @@ This package implements the corrected mathematical core of the Spinorial Prima M
 
 ## Reproducible isolated build
 
-Lean is pinned to `leanprover/lean4:v4.28.1`. Mathlib is pinned to `1f9fffd5ff0b854b8a1f1f69adc11c61f05f2515`, matching the parent repository's inspected manifest.
+Lean is pinned to `leanprover/lean4:v4.34.1`. Mathlib is pinned to `d13f23b723b8a846827a245b89c10fc7d3f11612`, matching the parent repository's inspected manifest.
 
 From the repository or extracted bundle root:
 

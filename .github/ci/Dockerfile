@@ -20,8 +20,8 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 RUN curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none \
-  && elan toolchain install leanprover/lean4:v4.28.1 \
-  && elan default leanprover/lean4:v4.28.1 \
+  && elan toolchain install leanprover/lean4:v4.34.1 \
+  && elan default leanprover/lean4:v4.34.1 \
   && lean --version | grep -E '^Lean \(version 4\.28\.1'
 
 WORKDIR /workspace

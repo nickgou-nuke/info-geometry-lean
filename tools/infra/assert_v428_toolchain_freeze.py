@@ -7,12 +7,12 @@ import json
 import subprocess
 import sys
 
-EXPECTED = "leanprover/lean4:v4.28.1"
-EXPECTED_MATHLIB_REV = "1f9fffd5ff0b854b8a1f1f69adc11c61f05f2515"
+EXPECTED = "leanprover/lean4:v4.34.1"
+EXPECTED_MATHLIB_REV = "d13f23b723b8a846827a245b89c10fc7d3f11612"
 EXPECTED_PACKAGE_REVISIONS = {
     "mathlib": EXPECTED_MATHLIB_REV,
-    "Qq": "b8f98e9087e02c8553945a2c5abf07cec8e798c3",
-    "plausible": "55c8532eb21ec9f6d565d51d96b8ca50bd1fbef3",
+    "Qq": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+    "plausible": "118aa17ee84656b8bd727fef7c458ee8c833385c",
 }
 ROOT = Path(__file__).resolve().parents[2]
 MATHLIB = ROOT / ".lake" / "packages" / "mathlib"

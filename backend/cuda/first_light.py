@@ -5,13 +5,13 @@ import os
 
 try:
     import ctypes
-    ctypes.CDLL("/home/goutev/.elan/toolchains/leanprover--lean4---v4.28.1/lib/lean/libleanshared.so", mode=ctypes.RTLD_GLOBAL)
+    ctypes.CDLL("/home/goutev/.elan/toolchains/leanprover--lean4---v4.34.1/lib/lean/libleanshared.so", mode=ctypes.RTLD_GLOBAL)
     import zorn_cuda
 except ImportError:
     import sys
     sys.path.append('./build')
     import ctypes
-    ctypes.CDLL("/home/goutev/.elan/toolchains/leanprover--lean4---v4.28.1/lib/lean/libleanshared.so", mode=ctypes.RTLD_GLOBAL)
+    ctypes.CDLL("/home/goutev/.elan/toolchains/leanprover--lean4---v4.34.1/lib/lean/libleanshared.so", mode=ctypes.RTLD_GLOBAL)
     import zorn_cuda
 
 print("========================================")

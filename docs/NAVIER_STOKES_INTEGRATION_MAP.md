@@ -30,9 +30,11 @@ While OpenAI approaches singularity formation via classical nonlinear PDE analys
 - **Vector potentials** map to split-octonionic **Zorn matrix potentials** $Z(A, \phi)$.
 - **Incompressibility** is the exact algebraic kernel of the **Zorn curl readout** $\operatorname{div}_{	ext{Zorn}} (\operatorname{curl}_{	ext{Zorn}} A) = 0$.
 - **Reynolds stress** momentum fluxes $
-abla \cdot \langle w \otimes w angle$ correspond to the symmetric quadratic Jordan product $Z(w, 0)^2$ and the positive cone of the $2 	imes 2$ Peirce block in the Albert algebra $J_3(\mathbb{O}_s)$.
+abla \cdot \langle w \otimes w 
+angle$ correspond to the symmetric quadratic Jordan product $Z(w, 0)^2$ and the positive cone of the $2 	imes 2$ Peirce block in the Albert algebra $J_3(\mathbb{O}_s)$.
 - **Auxiliary torus phase mixing** under $J_g = egin{pmatrix} 3 & 1 \ 1 & 5 \end{pmatrix}$ corresponds to the ergodic flow of the Tomita–Takesaki modular automorphism $\Delta^{it}$.
-- **Beale–Kato–Majda vorticity breakdown** ($\int_0^{T^*} \|\omega\|_{L^\infty} dt = \infty$) is the singular classical limit ($\hbar 	o 0$ or $ho 	o 0$) of the skew-adjoint **Madelung quantum torque** $\Gamma = rac{1}{2}(u - u^*)$ and the diverging Fisher–Rao information density at the horizon boundary.
+- **Beale–Kato–Majda vorticity breakdown** ($\int_0^{T^*} \|\omega\|_{L^\infty} dt = \infty$) is the singular classical limit ($\hbar 	o 0$ or $
+ho 	o 0$) of the skew-adjoint **Madelung quantum torque** $\Gamma = rac{1}{2}(u - u^*)$ and the diverging Fisher–Rao information density at the horizon boundary.
 
 ---
 
@@ -48,9 +50,9 @@ abla \cdot \langle w \otimes w angle$ correspond to the symmetric quadratic Jor
   - `NavierStokes/PeriodicBlowup.lean`: Corollary 10.6 — Finite-time blowup of smooth solutions to the periodic Navier–Stokes equations on $\mathbb{T}^3$.
 
 ### Structural Dependency Lockdown Discipline
-Per repository law (`AGENTS.md`), `.lake/packages/` remains strictly read-only and `info-geometry-lean` is pinned to `leanprover/lean4:v4.28.1`. 
+Per repository law (`AGENTS.md`), `.lake/packages/` remains strictly read-only and `info-geometry-lean` is pinned to `leanprover/lean4:v4.34.1`. 
 - `external_refs/NavierStokesAndEuler` is integrated as an upstream evidence submodule (`.gitmodules`) with `ignore = dirty`.
-- All operational proofs in `info-geometry-lean` live natively in `lean/InfoGeometry/Canonical/ZornNavierStokesHydrodynamicBridge.lean` and compile against the repository's pinned Mathlib `v4.28.1` baseline.
+- All operational proofs in `info-geometry-lean` live natively in `lean/InfoGeometry/Canonical/ZornNavierStokesHydrodynamicBridge.lean` and compile against the repository's pinned Mathlib `v4.34.1` baseline.
 
 ---
 
@@ -62,7 +64,8 @@ Per repository law (`AGENTS.md`), `.lake/packages/` remains strictly read-only a
 | **Solenoidal Velocity** $ec{w}$ | `Euler/TransversePacketJoin.lean` | `Canonical/ZornNavierStokesHydrodynamicBridge.lean` (`solenoidalVelocity`) |
 | **Incompressibility** $
 abla \cdot ec{w} = 0$ | `Euler/PacketPiolaAlgebra.lean` | `Canonical/ZornFiniteVectorCalculus.lean` (`divergence_curl`) |
-| **Reynolds Stress** $\langle ec{w} \otimes ec{w} angle$ | `NavierStokes/ConeAlgebra.lean` (eq. 11) | `Canonical/ZornNavierStokesHydrodynamicBridge.lean` (`zorn_pure_vector_square`) |
+| **Reynolds Stress** $\langle ec{w} \otimes ec{w} 
+angle$ | `NavierStokes/ConeAlgebra.lean` (eq. 11) | `Canonical/ZornNavierStokesHydrodynamicBridge.lean` (`zorn_pure_vector_square`) |
 | **Admissible Stress Cone** | `NavierStokes/ConeAlgebra.lean` (Lemma 3.5, 4.5) | `Canonical/ZornNavierStokesHydrodynamicBridge.lean` (`stressBoundaryPoly`) |
 | **Peirce $2 	imes 2$ Block** | `NavierStokes/OutgoingEntranceCone.lean` | `Canonical/ZornNavierStokesHydrodynamicBridge.lean` (`jordanStressMatrix`) |
 | **Anosov Torus Matrix** $J_g$ | `NavierStokes/TorusAverages.lean` (`covering`) | `Canonical/ZornNavierStokesHydrodynamicBridge.lean` (`J_g`, $\det = 14$) |
@@ -148,7 +151,8 @@ In our non-commutative quantum fluid:
       (u : VelocityField E) (hSkew : ContinuousLinearMap.adjoint u = -u) :
       vorticityClosureResidual u = 0
   ```
-- Pointwise, the Bohm quantum potential expectation density $ho Q = -rac{1}{2} f 
+- Pointwise, the Bohm quantum potential expectation density $
+ho Q = -rac{1}{2} f 
 abla^2 f$ couples directly to the Fisher–Rao metric density $I_F = 4 \|
 abla f\|^2$:
   ```lean
@@ -156,8 +160,11 @@ abla f\|^2$:
       FisherDensity dρ ρ x = 4 * ‖df x‖^2 ∧
       expectationDensity ρ d2f f x = - (1 / 2) * f x * d2f x
   ```
-- At the quantum horizon seam $ho(x) 	o 0$, both the Bohm potential $Q = -rac{\hbar^2}{2m} rac{
-abla^2 \sqrt{ho}}{\sqrt{ho}}$ and the Fisher information density explode to infinity. The classical finite-time blowup constructed in OpenAI's paper is the zero-viscosity classical shadow of this horizon seam.
+- At the quantum horizon seam $
+ho(x) 	o 0$, both the Bohm potential $Q = -rac{\hbar^2}{2m} rac{
+abla^2 \sqrt{
+ho}}{\sqrt{
+ho}}$ and the Fisher information density explode to infinity. The classical finite-time blowup constructed in OpenAI's paper is the zero-viscosity classical shadow of this horizon seam.
 
 ### 4.6. Piola Curl Adjugate Transformation & Admissible Stress Cone Equivalence
 

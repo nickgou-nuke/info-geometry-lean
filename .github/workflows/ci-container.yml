@@ -27,7 +27,7 @@ jobs:
         with:
           images: ghcr.io/nickgou-nuke/info-geometry-lean-ci
           tags: |
-            type=raw,value=lean4-v4.28.1
+            type=raw,value=lean4-v4.34.1
             type=sha,prefix=sha-
       - name: Build container image (no push)
         uses: docker/build-push-action@v6
@@ -60,7 +60,7 @@ jobs:
         with:
           images: ghcr.io/nickgou-nuke/info-geometry-lean-ci
           tags: |
-            type=raw,value=lean4-v4.28.1
+            type=raw,value=lean4-v4.34.1
             type=sha,prefix=sha-
             type=raw,value=main,enable={{is_default_branch}}
       - name: Build and publish container image

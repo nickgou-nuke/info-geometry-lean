@@ -1,7 +1,7 @@
 # Expert Completion Guide (Living Artifact)
 
 > **Purpose:** Practical guide for domain experts to ungate hypothesis bundles into fully constructive, kernel-checked native Lean 4 proofs.  
-> **Toolchain:** Lean 4 `v4.28.1` + Mathlib 4  
+> **Toolchain:** Lean 4 `v4.34.1` + Mathlib 4  
 > **Current Codebase State:** 20,855 verified modules, 0 `sorry`, 0 custom axioms.  
 > **Target:** Replace gated assumption structures (`Witness`, `Certificate`, `Packet`) with explicit Mathlib constructions and proofs.
 

@@ -1,7 +1,7 @@
 # Socket & Gated Assumption Debt Ledger (Living Artifact)
 
 > **Status:** Live Codebase Audit  
-> **Toolchain:** Lean 4 `v4.28.1` + Mathlib 4  
+> **Toolchain:** Lean 4 `v4.34.1` + Mathlib 4  
 > **Audit Date:** August 2026  
 > **Kernel Verification:** 100% Kernel-Checked (0 `sorry`, 0 custom axioms across all 20,855 files)  
 > **Utmost Mandate:** Native Lean proof closure over witness/certificate assumption scaffolding.

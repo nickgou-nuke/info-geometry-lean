@@ -20,7 +20,7 @@ jobs:
       - name: Probe published CI container image
         id: probe
         run: |
-          image_ref="ghcr.io/nickgou-nuke/info-geometry-lean-ci:lean4-v4.28.1"
+          image_ref="ghcr.io/nickgou-nuke/info-geometry-lean-ci:lean4-v4.34.1"
           echo "reference=${image_ref}" >> "$GITHUB_OUTPUT"
           if docker manifest inspect "${image_ref}" >/dev/null 2>&1; then
             echo "available=true" >> "$GITHUB_OUTPUT"
@@ -60,8 +60,8 @@ jobs:
               exit 1
             fi
           done
-          if [ "$(tr -d '\r\n' < lean-toolchain)" != "leanprover/lean4:v4.28.1" ]; then
-            echo "::error title=Unsupported toolchain::lean-toolchain must be exactly leanprover/lean4:v4.28.1"
+          if [ "$(tr -d '\r\n' < lean-toolchain)" != "leanprover/lean4:v4.34.1" ]; then
+            echo "::error title=Unsupported toolchain::lean-toolchain must be exactly leanprover/lean4:v4.34.1"
             exit 1
           fi
           python3 - <<'PY'
@@ -74,7 +74,7 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.28.1
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
 
       - name: Verify installed Lean version
         run: |
@@ -82,7 +82,7 @@ jobs:
           actual="$(lean --version | head -n 1)"
           echo "[ci] ${actual}"
           if ! printf '%s\n' "${actual}" | grep -Eq '^Lean \(version 4\.28\.1'; then
-            echo "::error title=Lean version mismatch::expected Lean v4.28.1"
+            echo "::error title=Lean version mismatch::expected Lean v4.34.1"
             exit 1
           fi
 
@@ -163,7 +163,7 @@ jobs:
             ~/.elan
             .lake/packages
             .lake/build
-          key: ${{ runner.os }}-lean4281-lake-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+          key: ${{ runner.os }}-lean4341-lake-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
 
       - name: Verify pinned Lake environment
         run: bash scripts/infra/verify_pinned_environment.sh
@@ -681,4 +681,4 @@ jobs:
             ~/.elan
             .lake/packages
             .lake/build
-          key: ${{ runner.os }}-lean4281-lake-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+          key: ${{ runner.os }}-lean4341-lake-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}

@@ -22,7 +22,7 @@ All test execution complies with the repository commandments defined in `AGENTS.
 The test runner `tools/e2e_cas_o1_suite.sh` implements a 4-tier verification pipeline:
 
 ### Tier 1: Feature Coverage (Locked Lake Builds)
-- **Objective**: Validate that both primary target modules compile successfully in the Lean 4.28.1 environment under the repository build lock.
+- **Objective**: Validate that both primary target modules compile successfully in the Lean 4.34.1 environment under the repository build lock.
 - **Target 1**: `DAG.DiracLaplacian` (`lean/DAG/DiracLaplacian.lean`)
   - Command: `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock DAG.DiracLaplacian`
   - Success Criterion: Exit code 0, clean compiler termination, valid olean artifact generation.

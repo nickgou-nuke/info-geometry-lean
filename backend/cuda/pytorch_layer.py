@@ -4,12 +4,12 @@ import ctypes
 
 try:
     # Зареждаме Lean 4 споделената библиотека, както при First Light
-    ctypes.CDLL("/home/goutev/.elan/toolchains/leanprover--lean4---v4.28.1/lib/lean/libleanshared.so", mode=ctypes.RTLD_GLOBAL)
+    ctypes.CDLL("/home/goutev/.elan/toolchains/leanprover--lean4---v4.34.1/lib/lean/libleanshared.so", mode=ctypes.RTLD_GLOBAL)
     import zorn_cuda
 except ImportError:
     import sys
     sys.path.append('./build')
-    ctypes.CDLL("/home/goutev/.elan/toolchains/leanprover--lean4---v4.28.1/lib/lean/libleanshared.so", mode=ctypes.RTLD_GLOBAL)
+    ctypes.CDLL("/home/goutev/.elan/toolchains/leanprover--lean4---v4.34.1/lib/lean/libleanshared.so", mode=ctypes.RTLD_GLOBAL)
     import zorn_cuda
 
 class TwistorModularFlowFunction(torch.autograd.Function):

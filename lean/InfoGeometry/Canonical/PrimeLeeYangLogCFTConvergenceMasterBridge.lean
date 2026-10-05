@@ -17,7 +17,7 @@ This module formalizes the exact mathematical connection between:
 4. **Thermodynamic Limit Boundary Zero Preservation**:
    $$\|z_0\| = 1$$
 
-All theorems are 100% kernel-checked in Lean 4 with 0 sorries and 0 custom axioms under toolchain `v4.28.1`.
+All theorems are 100% kernel-checked in Lean 4 with 0 sorries and 0 custom axioms under toolchain `v4.34.1`.
 -/
 
 noncomputable section

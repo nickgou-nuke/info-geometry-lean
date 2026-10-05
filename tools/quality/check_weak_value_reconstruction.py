@@ -34,14 +34,14 @@ def main() -> None:
         raise RuntimeError("The repository must have an exact Git Mathlib pin")
     toolchain = (ROOT / "lean-toolchain").read_text()
     work = Path(tempfile.mkdtemp(prefix="weak-value-lean-", dir=os.environ.get("RUNNER_TEMP")))
-    # The immutable Mathlib pin advertises 4.28.0; the repository requests 4.28.1.
+    # The immutable Mathlib pin advertises 4.34.1; the repository requests 4.34.1.
     # Check source proofs with the cache-compatible compiler first, and then
     # probe the repository compiler separately. Neither result substitutes for
     # the other. Root pins and dependency artifacts remain unchanged.
     cache_toolchain = toolchain
-    if (mathlib["rev"] == "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
-            and toolchain.strip() == "leanprover/lean4:v4.28.1"):
-        cache_toolchain = "leanprover/lean4:v4.28.0\n"
+    if (mathlib["rev"] == "d13f23b723b8a846827a245b89c10fc7d3f11612"
+            and toolchain.strip() == "leanprover/lean4:v4.34.1"):
+        cache_toolchain = "leanprover/lean4:v4.34.1\n"
     (work / "lean-toolchain").write_text(cache_toolchain)
     (work / "lakefile.toml").write_text(
         'name = "weak_value_narrow"\n'

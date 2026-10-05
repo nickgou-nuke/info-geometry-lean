@@ -154,7 +154,7 @@ their generated artifacts, lock files, and intermediate outputs.
   require explicit human approval. Agents shall NOT blindly run `lake update` or
   change pinned dependency revisions. This does not prohibit ordinary build writes.
 - **Enforcement**: Never make `.lake/packages/` read-only as a repository-wide
-  safeguard. If a dependency build is broken, work within the pinned `v4.28.1`
+  safeguard. If a dependency build is broken, work within the pinned `v4.34.1`
   environment and repair only the affected target without changing the manifest or
   toolchain.
 

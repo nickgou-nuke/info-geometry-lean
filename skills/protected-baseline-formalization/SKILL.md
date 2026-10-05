@@ -48,7 +48,7 @@ Check every gate before each build-related command:
 - **NEVER run `lake clean`.** NEVER delete `.lake/build`, `.lake/packages`, or `.lake`. Nuking the cache destroys precompiled oleans and forces long recompilation loops. Use targeted compiler commands or rebuild specific files only.
 - **No concurrent builds.** Before any `lake build`, `lake test`, `lake env lean`, `pytest`, or similar, verify that no compiler task is active.
 - **Never kill a running `lake task** without explicitly asking the user and receiving approval.
-- **`.lake/packages/` is read-only** (`chmod -R a-w`). Never run `lake update`, never edit `lakefile.lean` or `lake-manifest.json` without explicit human approval, never touch vendored dependency toolchains. If an import breaks, work within the pinned Mathlib cache (`v4.28.1`).
+- **`.lake/packages/` is read-only** (`chmod -R a-w`). Never run `lake update`, never edit `lakefile.lean` or `lake-manifest.json` without explicit human approval, never touch vendored dependency toolchains. If an import breaks, work within the pinned Mathlib cache (`v4.34.1`).
 - **Continuous tracking:** after creating or modifying any file, immediately run `git add -A`. Staged work is protected from rogue `git restore`.
 - **Do not edit dirty external submodules.**
 - **Subagent sandbox:** never delegate file repairs/rewrites to a subagent on the live owner file. Give subagents only new-file tasks in a sandbox, supplying sufficient mathematical context extracted from the old file.

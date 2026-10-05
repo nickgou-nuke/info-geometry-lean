@@ -47,7 +47,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: leanprover-community/mathlib4
-          ref: 1f9fffd5ff0b854b8a1f1f69adc11c61f05f2515
+          ref: d13f23b723b8a846827a245b89c10fc7d3f11612
           path: pinned-mathlib
           persist-credentials: false
       - uses: actions/cache/restore@v4
@@ -56,9 +56,9 @@ jobs:
           path: |
             ~/.elan
             pinned-mathlib/.lake
-          key: reviewed-prs-lean4281-mathlib-1f9fffd5-v1
+          key: reviewed-prs-lean4341-mathlib-1f9fffd5-v1
           restore-keys: |
-            cuntz-clifford-lean4281-mathlib-1f9fffd5-v1
+            cuntz-clifford-lean4341-mathlib-1f9fffd5-v1
       - name: Install pinned Lean
         shell: bash
         run: |
@@ -71,9 +71,9 @@ jobs:
         id: native-cache
         with:
           path: reviewed-native-cache
-          key: reviewed-native-lean4281-1f9fffd5-v1-${{ github.sha }}
+          key: reviewed-native-lean4341-1f9fffd5-v1-${{ github.sha }}
           restore-keys: |
-            reviewed-native-lean4281-1f9fffd5-v1-
+            reviewed-native-lean4341-1f9fffd5-v1-
       - name: Compile reviewed union and audit every declaration
         run: |
           python3 project/tools/quality/check_reviewed_prs.py \
@@ -84,14 +84,14 @@ jobs:
         if: always() && steps.native-cache.outputs.cache-hit != 'true'
         with:
           path: reviewed-native-cache
-          key: reviewed-native-lean4281-1f9fffd5-v1-${{ github.sha }}
+          key: reviewed-native-lean4341-1f9fffd5-v1-${{ github.sha }}
       - uses: actions/cache/save@v4
         if: always() && steps.cache.outputs.cache-hit != 'true'
         with:
           path: |
             ~/.elan
             pinned-mathlib/.lake
-          key: reviewed-prs-lean4281-mathlib-1f9fffd5-v1
+          key: reviewed-prs-lean4341-mathlib-1f9fffd5-v1
       - uses: actions/upload-artifact@v4
         if: always()
         with:

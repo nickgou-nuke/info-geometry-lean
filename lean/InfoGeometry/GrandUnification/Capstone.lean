@@ -1,6 +1,5 @@
 import InfoGeometry.GrandUnification.BulkBoundaryCorrespondence
 import InfoGeometry.GrandUnification.AnomalyInflow
-import InfoGeometry.GrandUnification.MachianPhaseSeparation
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesComplexTranslation

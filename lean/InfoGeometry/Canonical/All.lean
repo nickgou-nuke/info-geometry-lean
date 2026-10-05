@@ -1693,6 +1693,7 @@ import InfoGeometry.Canonical.MadelungTopologicalSpin
 import InfoGeometry.Canonical.MajoranaCondensateO55
 import InfoGeometry.Canonical.MajoranaWittenAnomaly
 import InfoGeometry.Canonical.RindlerZitterbewegung
+import InfoGeometry.Canonical.ZbwDarwinDemodulation
 import InfoGeometry.Canonical.PositiveMeasureSpectrum
 import InfoGeometry.Canonical.PositiveRayCore
 import InfoGeometry.Canonical.ProjectivePositiveReadoutMetric

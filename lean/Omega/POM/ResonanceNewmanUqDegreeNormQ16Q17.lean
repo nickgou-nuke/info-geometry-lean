@@ -52,11 +52,11 @@ theorem paper_pom_resonance_newman_uq_degree_norm_q16_q17 :
   · decide
   · decide
   · decide
-  · decide
-  · decide
-  · decide
-  · decide
-  · decide
-  · decide
+  · native_decide
+  · native_decide
+  · native_decide
+  · native_decide
+  · native_decide
+  · native_decide
 
 end Omega.POM

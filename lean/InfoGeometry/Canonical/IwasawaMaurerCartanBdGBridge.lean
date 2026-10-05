@@ -259,13 +259,14 @@ theorem matBdG_det (xi delta : R) :
   simp [matBdG, Matrix.det_fin_two]
   ring
 
-/-- Pauli velocity operator along z: σ_z = !![1, 0; 0, -1]. -/
+/-- BdG grading (pseudospin) operator `σ_z`; it is not identified here with a
+physical Dirac velocity operator. -/
 def sigmaZ : Matrix (Fin 2) (Fin 2) R :=
   !![1, 0; 0, -1]
 
-/-- 🏆 THEOREM: Zitterbewegung Commutator:
-    The commutator [σ_z, H_BdG] = 2Δ !![0, 1; -1, 0] is non-zero whenever Δ ≠ 0. -/
-theorem zitterbewegung_bdg_commutator (xi delta : R) :
+/-- Exact matrix commutator of the BdG grading with its Hamiltonian. This
+identity alone does not assert time evolution or Zitterbewegung. -/
+theorem sigmaZ_bdg_hamiltonian_commutator (xi delta : R) :
     sigmaZ * matBdG xi delta - matBdG xi delta * sigmaZ =
       (delta + delta) • !![0, 1; -1, 0] := by
   ext i j

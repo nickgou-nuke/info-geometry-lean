@@ -2,7 +2,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.RingTheory.Spectrum.Prime.Topology
 import InfoGeometry.Algebra.PrimonColimitAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Algebra.BigOperators.Group.Finset
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 noncomputable section
 
@@ -10,6 +10,7 @@ namespace InfoGeometry.Sandbox.GrandUnifiedTheorem
 
 open Matrix
 open InfoGeometry.Algebra.PrimonColimitAlgebra
+open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 
 /-!
 # The Grand Unified Theorem: Information Geometry to Algebraic Geometry
@@ -25,7 +26,7 @@ We extract the Maximal Abelian Subalgebra (MASA) of the Primon Matrix Stage.
 Instead of raw matrices, we natively use Mathlib's Pi-algebra (BitWord n → ℝ),
 which is intrinsically a CommRing, and map it into the matrix algebra via Matrix.diagonal. -/
 def PrimonDiagonalMASA (n : ℕ) : (BitWord n → ℝ) →ₐ[ℝ] MatrixStage n :=
-  Matrix.diagonalAlgHom ℝ (BitWord n)
+  Matrix.diagonalAlgHom ℝ
 
 /-- Because (BitWord n → ℝ) is natively a Commutative Ring, it is trivially eligible
 for Mathlib's Algebraic Geometry Prime Spectrum. -/

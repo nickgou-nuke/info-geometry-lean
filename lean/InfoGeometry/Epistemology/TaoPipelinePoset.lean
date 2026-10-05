@@ -78,6 +78,10 @@ instance : PartialOrder TaoEpistemicArchetype :=
 instance : DecidableRel (α := TaoEpistemicArchetype) (· ≤ ·) :=
   fun left right => inferInstanceAs (Decidable (causalPrerequisites left ⊆ causalPrerequisites right))
 
+/-- Strict-order decision procedure induced by the finite causal poset. -/
+instance : DecidableLT TaoEpistemicArchetype := fun left right =>
+  decidable_of_iff (left ≤ right ∧ ¬ right ≤ left) lt_iff_le_not_ge.symm
+
 /-- **Theorem 2 (The Open Problem Lighthouse Precedes All Pipeline Stages)**:
     Every stage of mathematical synthesis causally emerges from the initial curiosity problem. -/
 theorem curiosity_precedes_all (a : TaoEpistemicArchetype) :

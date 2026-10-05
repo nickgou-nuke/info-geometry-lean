@@ -18,7 +18,8 @@ Closed here:
 * symmetric two-sheet nonlinear density energy;
 * exact XPM term g_cross n_plus n_minus and sheet-swap invariance;
 * forward/backward frequency difference omega - (-omega) = 2 omega;
-* connection to the existing two-level Zitterbewegung 2*Delta gap identity;
+* the formal equality between the forward/backward frequency difference and
+  the generic two-sector `2*Delta` energy-gap expression;
 * existing Jones birefringence readout;
 * existing phase-conjugate aberration cancellation;
 * existing Klein/CPT two-cycle readouts;
@@ -105,13 +106,14 @@ theorem forward_backward_frequency_difference (omega : ℝ) :
     omega - (-omega) = 2 * omega := by
   ring
 
-/-- The same factor two is the algebraic gap of the existing two-level
-chiral/Zitterbewegung Hamiltonian when Delta = omega. -/
-theorem frequency_difference_eq_zitter_gap
+/-- The forward/backward frequency difference equals the generic two-sector
+energy-gap expression with coupling `omega`. This is an algebraic equality,
+not a physical identification of the optical system with Dirac dynamics. -/
+theorem frequency_difference_eq_two_sector_gap
     (E0 omega : ℝ) :
     omega - (-omega) =
       (E0 + omega) - (E0 - omega) := by
-  have hgap := universal_zitterbewegung_mass_gap E0 omega
+  have hgap := universal_two_sector_energy_gap E0 omega
   dsimp at hgap
   rw [forward_backward_frequency_difference, hgap]
 

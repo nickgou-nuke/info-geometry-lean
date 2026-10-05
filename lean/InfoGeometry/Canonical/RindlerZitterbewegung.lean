@@ -4,21 +4,25 @@ import InfoGeometry.Canonical.CantorChirality
 import InfoGeometry.Canonical.CantorDiracPropagation
 
 /-!
-# Anyonic Braiding and Zitterbewegung at the Rindler Horizon
+# Algebraic Majorana identities in a Rindler-oriented model
 
-This module formalizes Anyonic Braiding and Zitterbewegung of Majorana modes at the Rindler thermal boundary.
+This module records two finite algebraic identities for the repository's
+Majorana and chirality operators. It does not construct a braid-group action,
+derive a time-evolution law, or establish anyonic statistics at a horizon.
 
 We define:
-1. **The Velocity Operator & Zitterbewegung:**
+1. **A chirality commutator identity:**
    The velocity operator is the commutator of the Hamiltonian (Dirac operator) and the chirality operator:
    `VelocityOp = DiracOp * ChiralityOp - ChiralityOp * DiracOp`.
-   We prove `zitterbewegung_oscillation` showing that the velocity operator is strictly twice the product
-   `2 * (DiracOp * ChiralityOp)`, generating rapid oscillation.
-2. **The Anyonic Majorana Exchange (Braiding):**
-   We prove that the exchange operator `BraidingOp ψ_L ψ_R = c • (1 + ψ_L * ψ_R)` (where `c² = 1/2`)
-   squares exactly to `ψ_L * ψ_R` for any two anticommuting Majorana operators squaring to 1:
+   We prove `zitterbewegung_oscillation`, the algebraic consequence of the stated
+   anticommutation relation. This identity alone does not establish oscillatory
+   dynamics.
+2. **A normalized Majorana-product square:**
+   The operator `BraidingOp ψ_L ψ_R = c • (1 + ψ_L * ψ_R)` (where `c² = 1/2`)
+   squares exactly to `ψ_L * ψ_R` for two anticommuting involutions:
    `BraidingOp * BraidingOp = ψ_L * ψ_R`.
-   This mathematically demonstrates that the Rindler boundary supports anyonic statistics.
+   This is an algebraic identity only; a braid representation and its exchange
+   statistics require additional structure not defined here.
 -/
 
 noncomputable section
@@ -33,9 +37,8 @@ open InfoGeometry.Canonical.CantorDiracPropagation
 def VelocityOp (D Γ : CantorOp) : CantorOp :=
   D * Γ - Γ * D
 
-/-- The Trembling Motion (Zitterbewegung) Theorem.
-    Because {D, Γ} = 0, the velocity operator does not commute with the Dirac energy,
-    causing the state to perpetually oscillate. -/
+/-- The commutator of anticommuting `D` and `Γ` equals `2 D Γ`.
+    This algebraic identity alone makes no claim about time evolution. -/
 theorem zitterbewegung_oscillation :
     VelocityOp DiracOp ChiralityOp = (2 : ℂ) • (DiracOp * ChiralityOp) := by
   dsimp [VelocityOp]
@@ -52,8 +55,9 @@ theorem zitterbewegung_oscillation :
 def BraidingOp (c : ℂ) (ψ_L ψ_R : CantorOp) : CantorOp :=
   c • (1 + ψ_L * ψ_R)
 
-/-- The Non-Abelian Majorana Exchange (Braiding) Theorem.
-    Exchanging the Majoranas twice yields a topological phase, proving they are Anyons. -/
+/-- Under the displayed involution and anticommutation hypotheses, the square
+    of this normalized Majorana-product operator is `ψ_L * ψ_R`. This identity
+    by itself does not assert a topological phase or anyonic statistics. -/
 theorem majorana_anyon_exchange (ψ_L ψ_R : CantorOp)
     (hL_sq : ψ_L * ψ_L = 1)
     (hR_sq : ψ_R * ψ_R = 1)

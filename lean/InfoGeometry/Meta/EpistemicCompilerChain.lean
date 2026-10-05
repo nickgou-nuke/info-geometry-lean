@@ -116,27 +116,74 @@ structure CertifiedTheorem where
   kernelTerm : claim
   owner : String
 
+/-- A typed archetype is a theorem schema indexed by actual Lean inputs.
+
+Unlike a string label, it records the proposition that must hold at each input,
+the pipeline phase and epistemic status of the schema, its source owner, and
+evidence that can only be used after the status is `proved`. -/
+structure TypedArchetype (Input : Type*) where
+  claim : Input → Prop
+  phase : Phase
+  status : Status
+  owner : String
+  evidence : ∀ input, status = Status.proved → claim input
+
+namespace TypedArchetype
+
+/-- Discharge a typed archetype into a family of Lean proofs only after its
+status is proved. The returned function has the archetype's original input
+type and proposition family. -/
+def discharge {Input : Type*} (archetype : TypedArchetype Input) :
+    Option (∀ input, PLift (archetype.claim input)) :=
+  if h : archetype.status = Status.proved then
+    some (fun input => ⟨archetype.evidence input h⟩)
+  else
+    none
+
+theorem discharge_rejects_unproved {Input : Type*}
+    (archetype : TypedArchetype Input)
+    (status : archetype.status ≠ Status.proved) :
+    archetype.discharge = none := by
+  simp [discharge, status]
+
+theorem discharge_proved {Input : Type*}
+    (archetype : TypedArchetype Input)
+    (status : archetype.status = Status.proved) :
+    ∃ proofs : ∀ input, PLift (archetype.claim input),
+      archetype.discharge = some proofs := by
+  use (fun input => ⟨archetype.evidence input status⟩)
+  simp [discharge, status]
+
+theorem discharged_proof {Input : Type*}
+    (archetype : TypedArchetype Input)
+    (discharged : ∃ proofs : ∀ input, PLift (archetype.claim input),
+      archetype.discharge = some proofs)
+    (input : Input) :
+    archetype.claim input := by
+  rcases discharged with ⟨proofs, _⟩
+  exact (proofs input).down
+
+end TypedArchetype
+
 /-- Kernel promotion rejects every status except `proved`. -/
 def promote (candidate : Candidate) : Option CertifiedTheorem :=
-  match h : candidate.status with
-  | Status.proved =>
+  if h : candidate.status = Status.proved then
       some {
         claim := candidate.claim
         kernelTerm := candidate.evidence h
         owner := candidate.owner
       }
-  | _ => none
+  else
+    none
 
 theorem promote_raw_rejects (candidate : Candidate)
     (status : candidate.status ≠ Status.proved) :
     promote candidate = none := by
-  cases h : candidate.status <;> simp_all [promote]
+  simp [promote, status]
 
 theorem promote_proved_accepts (candidate : Candidate)
     (status : candidate.status = Status.proved) :
     ∃ certified, promote candidate = some certified ∧ certified.claim = candidate.claim := by
-  cases candidate with
-  | mk claim phase candidateStatus owner evidence =>
-      cases candidateStatus <;> simp_all [promote]
+  simp [promote, status]
 
 end InfoGeometry.MetaCompiler

@@ -11,6 +11,7 @@ example : raisingTensor 3 ≠ 0 := raisingTensor_ne_zero 3
 
 example : Fintype.card (Idx 3) = 8 := by
   rw [idx_card_pow_two]
+  norm_num
 
 example : raisingTensor 3 * raisingTensor 3 = 0 :=
   raisingTensor_succ_square_zero 2

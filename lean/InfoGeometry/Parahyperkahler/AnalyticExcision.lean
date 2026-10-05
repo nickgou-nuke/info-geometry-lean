@@ -31,7 +31,11 @@ theorem dikin_affine_scaling (x y r a : ℝ) (ha : a ≠ 0) :
   have h2 : r^2 * (a * x)^2 = a^2 * (r^2 * x^2) := by ring
   rw [h1, h2]
   have ha2 : 0 < a^2 := sq_pos_of_ne_zero ha
-  exact mul_le_mul_left ha2
+  constructor
+  · intro h
+    exact le_of_mul_le_mul_left h ha2
+  · intro h
+    exact mul_le_mul_of_nonneg_left h (sq_nonneg a)
 
 /-!
 # Archetype 703: The Hestenes-Krein Algebraic Boundary

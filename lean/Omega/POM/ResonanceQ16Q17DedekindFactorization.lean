@@ -85,7 +85,7 @@ theorem paper_pom_resonance_q16_q17_dedekind_factorization :
   · rfl
   · rfl
   · norm_num [pom_resonance_q16_q17_dedekind_factorization_prime16]
-  · decide
+  · norm_num [pom_resonance_q16_q17_dedekind_factorization_prime17]
   · rfl
   · rfl
   · intro vField indexVal h

@@ -4,6 +4,8 @@ import Mathlib.Tactic
 
 namespace InfoGeometry.Spectrometry.GeometricPolarization
 
+noncomputable section
+
 open Real
 
 section Factorization
@@ -31,15 +33,14 @@ noncomputable def polarizedTransport (ε₁ ε₂ ω : ℝ) : ℝ :=
 
 theorem ruler_decoupling
     (A P12 ε₁ ε₂ ω W₀ : ℝ)
-    (hN : 0 ≤ A * P12 * W₀)
-    (hT : 0 ≤ ε₁ * ε₂ * ω) :
+    (hN : 0 ≤ A * P12 * W₀) :
     Real.sqrt (polarizedCoincidence A P12 ε₁ ε₂ ω W₀) =
       nuclearCore A P12 W₀ * polarizedTransport ε₁ ε₂ ω := by
   dsimp [polarizedCoincidence, nuclearCore, polarizedTransport]
   have h : A * P12 * ε₁ * ε₂ * (ω * W₀) =
       (A * P12 * W₀) * (ε₁ * ε₂ * ω) := by ring
   rw [h]
-  exact Real.sqrt_mul hN
+  exact Real.sqrt_mul hN _
 
 end Ruler
 
@@ -62,7 +63,6 @@ theorem pointwise_slope_modulation
   have h₂ : P12 * W₀ * ω ≠ 0 := by
     exact mul_ne_zero (mul_ne_zero hP12 hW₀) hω
   field_simp [h₁, h₂]
-  ring
 
 end PointwiseSlope
 
@@ -82,26 +82,9 @@ theorem activity_recovery_from_reference_slope
     A = H * (P12 * W₀) / (P₁ * P₂) := by
   rw [hH]
   field_simp [hP₁, hP₂, hP12, hW₀]
-  ring
 
 end AsymptoticReference
 
-section CausalOrder
-
-def causal (a b : ℕ) : Prop := a ≤ b
-
-theorem archetype_chain :
-    causal 210 211 ∧ causal 211 212 ∧ causal 212 213 := by
-  norm_num [causal]
-
-theorem causal_refl (a : ℕ) : causal a a := le_rfl
-
-theorem causal_trans {a b c : ℕ} : causal a b → causal b c → causal a c :=
-  le_trans
-
-theorem causal_antisymm {a b : ℕ} : causal a b → causal b a → a = b :=
-  le_antisymm
-
-end CausalOrder
+end
 
 end InfoGeometry.Spectrometry.GeometricPolarization

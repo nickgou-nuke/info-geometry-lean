@@ -69,7 +69,8 @@ theorem mellin_logPullback_map (transport : Source →L[ℂ] Target)
   change mellin (fun time : ℝ => transport (field (-Real.log time))) spectral = _
   rw [mellin_logPullback_eq_laplaceTransform
     (f := fun parameter => transport (field parameter))]
-  rw [← laplaceIntegral_map transport converges]
-  exact laplaceIntegral_map transport converges
+  rw [mellin_logPullback_eq_laplaceTransform (f := field)]
+  simpa [LaplaceTransform.laplaceTransform] using
+    laplaceIntegral_map (measure := volume) transport converges
 
 end InfoGeometry.Analysis.LaplaceOperatorTransport

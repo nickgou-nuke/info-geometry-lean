@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.TwoSheetThreeColorWeylFinite
 import proofs.TwelveFoldOrderHierarchy
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 

@@ -41,13 +41,8 @@ def is_majorana_mode (psi : Fin 2 → ℝ) : Prop :=
 -/
 theorem majorana_emergence_at_pi_over_4 : 
     is_majorana_mode (mulVec (andreev_s_matrix (Real.pi / 4)) pure_electron) := by
-  dsimp [is_majorana_mode, andreev_s_matrix, pure_electron, mulVec, dotProduct]
-  have h1 : (∑ i : Fin 2, !![Real.cos (Real.pi / 4), -Real.sin (Real.pi / 4)] 0 i * ![1, 0] i) = Real.cos (Real.pi / 4) := by
-    rw [Fin.sum_univ_two]
-    simp
-  have h2 : (∑ i : Fin 2, !![Real.cos (Real.pi / 4), -Real.sin (Real.pi / 4); Real.sin (Real.pi / 4), Real.cos (Real.pi / 4)] 1 i * ![1, 0] i) = Real.sin (Real.pi / 4) := by
-    rw [Fin.sum_univ_two]
-    simp
-  rw [h1, h2, Real.sin_pi_div_four, Real.cos_pi_div_four]
+  simp [is_majorana_mode, andreev_s_matrix, pure_electron,
+    Matrix.mulVec, dotProduct, Fin.sum_univ_two,
+    Real.sin_pi_div_four, Real.cos_pi_div_four]
 
 end InfoGeometry.Nuclear.AndreevMajoranaBridge

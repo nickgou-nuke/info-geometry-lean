@@ -81,9 +81,9 @@ def causalPrerequisites : MetriplecticArchetype → Finset ℕ
   | tetradPairwiseOrthogonality       => {0, 1, 2, 3, 6, 12, 13, 14, 15, 16}
   | polylogOne                        => {0, 4, 17}
   | oddsRatioDeriv                    => {0, 4, 17, 18}
-  | motivicNilpotent                  => {0, 2, 5, 17, 18}
-  | dilogarithmSeam                   => {0, 2, 5, 17, 18, 19}
-  | carnotShannonUnification          => {0, 2, 5, 17, 18, 19, 20}
+  | motivicNilpotent                  => {0, 2, 4, 5, 17, 18}
+  | dilogarithmSeam                   => {0, 2, 4, 5, 17, 18, 19}
+  | carnotShannonUnification          => {0, 2, 4, 5, 17, 18, 19, 20}
 
 /-- Master Theorem 1 (Prerequisites Faithfulness):
     The causal prerequisite map is strictly injective. -/

@@ -39,7 +39,7 @@ structure GlideOp {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M] where
 /-- The canonical `glide` operator on `Split55`. -/
 @[simp, reducible]
 def glideOp {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
-    [hJ : ModularConjugation R M] : GlideOp :=
+    [hJ : ModularConjugation R M] : GlideOp (R := R) (M := M) :=
   { J_apply := hJ.J_Δ,
     glide_apply := glide }
 
@@ -53,42 +53,26 @@ theorem glide_square (x : Split55) :
 @[simp]
 theorem glide_translate_comm (a : ℝ) (x : Split55) :
     glide (translateP a x) = translateP a (glide x) :=
-  pinReflection_translateP_comm a x
+  by
+    unfold glide
+    rw [pinReflection_translateP_comm, translateP_add, translateP_add, add_comm]
 
 /-- Repeated gliding four times yields a double translation.
     Using `glide_square` twice we obtain
     `glide⁴ x = translateP 2 x`. -/
 theorem glide_four_eq_double_translation (x : Split55) :
     (glide^[4]) x = translateP 2 x := by
-  -- unfold the four‑fold iteration
-  simp [Function.iterate_succ, Function.iterate_zero] at *
-  -- first two glides give a translation by 1
-  have h1 : glide (glide x) = translateP 1 x := glide_square x
-  -- apply glide twice more
-  have h2 : glide (glide (translateP 1 x)) = translateP 1 (translateP 1 x) := by
-    simpa [glide_square (translateP 1 x)] using rfl
-  -- combine the two equalities
   calc
     (glide^[4]) x
         = glide (glide (glide (glide x))) := rfl
-    _ = glide (glide (translateP 1 x)) := by simpa [h1]
-    _ = translateP 1 (translateP 1 x) := by
-          simpa [glide_square (translateP 1 x)]
-    _ = translateP (1 + 1) x := by
-          simpa [translateP_add 1 1 x] using rfl
-    _ = translateP 2 x := by norm_num
+    _ = glide (glide (translateP 1 x)) := by
+          exact congrArg (fun y => glide (glide y)) (glide_square x)
+    _ = translateP 1 (translateP 1 x) := glide_square (translateP 1 x)
+    _ = translateP 2 x := by rw [translateP_add]; norm_num
 
-/-- A short description of the physical interpretation. -/
-/--
--- *`J`* – the modular conjugation (`ModularConjugation.J_Δ`) implements the
--- Krein symmetry that exchanges the algebra of observables (the *Ego*) with its
--- commutant (the *Anima*).
---
--- *`T`* – the half‑translation `glide` (reflection + half‑step) implements the
--- spatial cycle of the Schwinger‑Keldysh contour.
---
--- Their composition `𝓜 = J ∘ T` is the *spacetime glide reflection* that
--- produces a non‑orientable Klein‑bottle topology.
---/
+/-! The two components in `GlideOp` act on distinct carriers: modular
+conjugation is an endomorphism of `M`, while the geometric glide acts on
+`Split55`. This file proves the geometric iterate law only; it does not
+identify the two actions as a single composed operator or infer a topology. -/
 
 end InfoGeometry.Physics.SpacetimeGlide

@@ -144,18 +144,22 @@ private theorem depth_q100 : sync10ResetDepth Sync10State.q100 = 5 := by
 private theorem depth_q101 : sync10ResetDepth Sync10State.q101 = 5 := by
   decide
 
+set_option maxRecDepth 10000 in
 private theorem depth_q0m12 : sync10ResetDepth Sync10State.q0m12 = 6 := by
   decide
 
+set_option maxRecDepth 10000 in
 private theorem depth_q1m12 : sync10ResetDepth Sync10State.q1m12 = 5 := by
   decide
 
 private theorem depth_q01m1 : sync10ResetDepth Sync10State.q01m1 = 5 := by
   decide
 
+set_option maxRecDepth 10000 in
 private theorem depth_q11m1 : sync10ResetDepth Sync10State.q11m1 = 6 := by
   decide
 
+set_option maxRecDepth 10000 in
 private theorem depth_exceptional_targets :
     (Finset.univ.filter fun t : Sync10State => sync10ResetDepth t = 6) =
       {Sync10State.q0m12, Sync10State.q11m1} := by

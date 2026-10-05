@@ -109,7 +109,7 @@ import InfoGeometry.Canonical.CanonicalZornUnifiedClosure
 import proofs.ZornKleinGlideBridge
 import proofs.SouriauMoebiusCoupling
 import proofs.SouriauBiquaternionGaussian
-import proofs.SouriauHestenesKrein
+import InfoGeometry.External.Auto.SouriauHestenesKrein
 import proofs.ExceptionalBraidTopology
 import proofs.ExceptionalPointCollapse
 import proofs.MobiusWittenIndex

@@ -4,6 +4,8 @@ import Mathlib.Tactic
 
 namespace InfoGeometry.Spectrometry.NormalizedAngularCoordinate
 
+noncomputable section
+
 open Real
 
 section Normalization
@@ -22,19 +24,26 @@ theorem normalized_coincidence_factorization
     normalizedCoincidence A P12 ε₁ ε₂ W W₀ =
       (A * P12 * ε₁ * ε₂) * normalizedAngularFactor W W₀ := by
   dsimp [normalizedCoincidence, coincidenceRate, normalizedAngularFactor]
-  field_simp
-  ring
+  field_simp [hW₀]
 
-theorem normalized_root_coordinate
+theorem normalized_coincidence_nonneg
     (A P12 ε₁ ε₂ W W₀ : ℝ)
     (hW₀ : 0 < W₀)
     (hbase : 0 ≤ A * P12 * ε₁ * ε₂)
     (hfactor : 0 ≤ normalizedAngularFactor W W₀) :
+    0 ≤ normalizedCoincidence A P12 ε₁ ε₂ W W₀ := by
+  rw [normalized_coincidence_factorization _ _ _ _ _ _ hW₀.ne']
+  exact mul_nonneg hbase hfactor
+
+theorem normalized_root_coordinate
+    (A P12 ε₁ ε₂ W W₀ : ℝ)
+    (hW₀ : 0 < W₀)
+    (hbase : 0 ≤ A * P12 * ε₁ * ε₂) :
     Real.sqrt (normalizedCoincidence A P12 ε₁ ε₂ W W₀) =
       Real.sqrt (A * P12 * ε₁ * ε₂) *
         Real.sqrt (normalizedAngularFactor W W₀) := by
   rw [normalized_coincidence_factorization _ _ _ _ _ _ (ne_of_gt hW₀)]
-  exact Real.sqrt_mul hbase
+  exact Real.sqrt_mul hbase _
 
 end Normalization
 
@@ -60,22 +69,6 @@ theorem normalized_coordinate_preserves_shared_scale
 
 end RestoredParabola
 
-section CausalOrder
-
-def causal (a b : ℕ) : Prop := a ≤ b
-
-theorem archetype_chain :
-    causal 209 210 ∧ causal 210 211 ∧ causal 211 212 := by
-  norm_num [causal]
-
-theorem causal_refl (a : ℕ) : causal a a := le_rfl
-
-theorem causal_trans {a b c : ℕ} : causal a b → causal b c → causal a c :=
-  le_trans
-
-theorem causal_antisymm {a b : ℕ} : causal a b → causal b a → a = b :=
-  le_antisymm
-
-end CausalOrder
+end
 
 end InfoGeometry.Spectrometry.NormalizedAngularCoordinate

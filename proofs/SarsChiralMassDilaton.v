@@ -1,4 +1,4 @@
-From Coq Require Import ZArith List String Lia.
+From Coq Require Import ZArith List String Lia Ring.
 Import ListNotations.
 Open Scope Z_scope.
 Open Scope string_scope.
@@ -20,19 +20,7 @@ Definition offBlock A := mkM 0 (a01 A) (a10 A) 0.
 Definition springPotential2 (m lam : Z) := m*m*lam*lam.
 Definition restoringForce (m lam : Z) := - m*m*lam.
 Definition entropyQuadratic2 (x : Z) := x*x.
-
-Inductive Concept := Left_Weyl_Sheet | Right_Weyl_Sheet | Tomita_Modular_Swap | Dirac_Mass_Coupling | Zitterbewegung | Dilaton_Weyl_Scale | Conformal_Spring | Orthogonal_Entropy_Transport.
-Inductive Edge := swapped_by | couples_to | generates | breaks_weyl_scale_by | realizes_as | drives_orthogonal_transport.
-Definition edgeHolds a e b :=
-  match a,e,b with
-  | Left_Weyl_Sheet, swapped_by, Tomita_Modular_Swap => true
-  | Left_Weyl_Sheet, couples_to, Right_Weyl_Sheet => true
-  | Dirac_Mass_Coupling, generates, Zitterbewegung => true
-  | Dirac_Mass_Coupling, breaks_weyl_scale_by, Dilaton_Weyl_Scale => true
-  | Dilaton_Weyl_Scale, realizes_as, Conformal_Spring => true
-  | Conformal_Spring, drives_orthogonal_transport, Orthogonal_Entropy_Transport => true
-  | _,_,_ => false
-  end.
+Definition det2 (A : M2Z) := a00 A * a11 A - a01 A * a10 A.
 
 Theorem matrix_kernel :
   mmul PR PL = zeroM /\ madd PR PL = I2 /\ mmul (mmul Jmod PL) Jmod = PR /\
@@ -43,6 +31,12 @@ Proof.
   repeat split; intros; unfold PR, PL, I2, Jmod, zeroM, diracMassCoupling, smul, diagBlock, offBlock, mmul, madd; simpl; try lia; reflexivity.
 Qed.
 
+(* The mass matrix determines a rest-energy splitting; it does not alone
+   assert time-dependent Zitterbewegung. *)
+Theorem dirac_mass_characteristic : forall m E,
+  det2 (madd (diracMassCoupling m) (smul (-E) I2)) = (E-m)*(E+m).
+Proof. intros; unfold det2, madd, diracMassCoupling, smul, I2, Jmod; simpl; ring. Qed.
+
 Theorem spring_entropy_kernel :
   (forall m lam, 0 <= springPotential2 m lam) /\
   (forall m, springPotential2 m 0 = 0) /\
@@ -51,12 +45,3 @@ Theorem spring_entropy_kernel :
 Proof.
   repeat split; intros; unfold springPotential2, entropyQuadratic2; try nia; reflexivity.
 Qed.
-
-Theorem graph_kernel :
-  edgeHolds Left_Weyl_Sheet swapped_by Tomita_Modular_Swap = true /\
-  edgeHolds Left_Weyl_Sheet couples_to Right_Weyl_Sheet = true /\
-  edgeHolds Dirac_Mass_Coupling generates Zitterbewegung = true /\
-  edgeHolds Dirac_Mass_Coupling breaks_weyl_scale_by Dilaton_Weyl_Scale = true /\
-  edgeHolds Dilaton_Weyl_Scale realizes_as Conformal_Spring = true /\
-  edgeHolds Conformal_Spring drives_orthogonal_transport Orthogonal_Entropy_Transport = true.
-Proof. compute; repeat split; reflexivity. Qed.

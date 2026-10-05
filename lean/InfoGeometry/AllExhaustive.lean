@@ -5592,6 +5592,7 @@ import InfoGeometry.Canonical.SouriauDiracHodgePrimonZeroTemperatureCapstone
 import InfoGeometry.Canonical.SouriauDiracHodgeStandaloneCapstone
 import InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
 import InfoGeometry.Canonical.SouriauFisherCovariance
+import InfoGeometry.Canonical.EmergentFisherMetric
 import InfoGeometry.Canonical.SouriauFisherRaoMetric
 import InfoGeometry.Canonical.SouriauFlowCliffordBridge
 import InfoGeometry.Canonical.SouriauGWCountOTBridge

@@ -154,7 +154,7 @@ assuming the recurrence holds universally. -/
     thm:pom-rank-exact-s2-strict-mono -/
 theorem momentSum_two_strict_mono_verified (m : Nat) (hm : m ≤ 6) :
     momentSum 2 m < momentSum 2 (m + 1) := by
-  interval_cases m <;> (simp only [← cMomentSum_eq]; decide)
+  interval_cases m <;> (simp only [← cMomentSum_eq]; native_decide)
 
 /-- S_2 is monotone on verified resolutions: S_2(m) ≤ S_2(m+1) for m ≤ 6.
     prop:pom-s2-recurrence-mono-verified -/
@@ -166,7 +166,7 @@ theorem momentSum_two_mono_verified (m : Nat) (hm : m ≤ 6) :
     thm:pom-rank-exact-s3-strict-mono -/
 theorem momentSum_three_strict_mono_verified (m : Nat) (hm : m ≤ 6) :
     momentSum 3 m < momentSum 3 (m + 1) := by
-  interval_cases m <;> (simp only [← cMomentSum_eq]; decide)
+  interval_cases m <;> (simp only [← cMomentSum_eq]; native_decide)
 
 /-- S_3 is monotone on verified resolutions: S_3(m) ≤ S_3(m+1) for m ≤ 6.
     prop:pom-s3-recurrence-mono-verified -/
@@ -193,8 +193,8 @@ theorem momentSum_two_mono_of_recurrence
   induction m with
   | zero =>
     constructor
-    · simp only [← cMomentSum_eq]; decide
-    · simp only [← cMomentSum_eq]; decide
+    · simp only [← cMomentSum_eq]; native_decide
+    · simp only [← cMomentSum_eq]; native_decide
   | succ n ih =>
     have ih1 := ih.1  -- S(n) ≤ S(n+1)
     have ih2 := ih.2  -- S(n+1) ≤ S(n+2)
@@ -222,8 +222,8 @@ theorem momentSum_three_mono_of_recurrence
   induction m with
   | zero =>
     constructor
-    · simp only [← cMomentSum_eq]; decide
-    · simp only [← cMomentSum_eq]; decide
+    · simp only [← cMomentSum_eq]; native_decide
+    · simp only [← cMomentSum_eq]; native_decide
   | succ n ih =>
     have ih1 := ih.1
     have ih2 := ih.2

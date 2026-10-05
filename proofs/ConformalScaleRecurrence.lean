@@ -2,8 +2,6 @@ import proofs.MetamaterialQuasicrystalBloch
 import proofs.TwistedTorusVacuumMachine
 import proofs.BuresFisherAndreevGeodesicFlow
 
-open KleinBottle
-
 /-!
 # Conformal scale recurrence on the Klein--Cartan interface
 
@@ -75,8 +73,12 @@ theorem conformal_scale_recurrence_synthesis
     scaleFlip ScaleEndpoint.IR = ScaleEndpoint.UV ∧
     (∀ s : ScaleEndpoint, scaleFlip (scaleFlip s) = s) ∧
     conformalPairProduct Ω = 1 ∧
-    (∀ z : ℂ, G (T z) = T_inv (G z)) ∧
-    (∀ z : ℂ, G (G z) = z + 2) ∧
+    (∀ z : ℂ, InfoGeometry.External.Auto.KleinBottle.G
+      (InfoGeometry.External.Auto.KleinBottle.T z) =
+      InfoGeometry.External.Auto.KleinBottle.T_inv
+        (InfoGeometry.External.Auto.KleinBottle.G z)) ∧
+    (∀ z : ℂ, InfoGeometry.External.Auto.KleinBottle.G
+      (InfoGeometry.External.Auto.KleinBottle.G z) = z + 2) ∧
     O55CartanPhononReduction.o55CartanRank = 5 ∧
     O55CartanPhononReduction.cartanQuantumNumberCount = 5 ∧
     TorusKleinO55Bridge.doubledCartanCarrierDimension = 10 ∧

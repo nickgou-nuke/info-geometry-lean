@@ -3,6 +3,8 @@ import Mathlib.Tactic
 
 namespace InfoGeometry.InformationGeometry.FisherMetric
 
+noncomputable section
+
 /-!
 # The Causal Poset of the Fisher Information Metric
 This file synthesizes the Information Geometry foundation of the repository.
@@ -11,41 +13,52 @@ Hessian bounds, defining the Fisher Metric algebraically from the log-likelihood
 -/
 
 /-!
-# Archetype 901 & 902: The Algebraic Fisher Information
-Instead of relying on integration over sample spaces, we define the 
-Fisher Information purely algebraically as the Hessian of the negative 
-log-likelihood barrier: d²(-ln p)/dp² = 1/p².
+# Reciprocal-square information coefficient
+This scalar function is useful as the curvature of the one-dimensional
+negative-log barrier on the positive half-line. It is not, by itself, the
+Fisher information of an arbitrary statistical model: that notion depends on
+a likelihood and an expectation.
 -/
 
 /-- The algebraic Fisher Information component in one dimension. -/
 def FisherInformation (p : ℝ) : ℝ := 1 / (p * p)
 
-/-!
-# Archetype 903: The Cramér-Rao Information Bound
-The Fisher metric provides a strict algebraic lower bound on estimation variance.
-Because it is the inverse of the Fisher Information, it scales as the square 
-of the state coordinate.
--/
+/-! The reciprocal quantity below is the algebraic inverse of the defined
+coefficient. Calling it a Cramér–Rao bound requires additional statistical
+hypotheses, so the results here assert only the reciprocal identity. -/
 
 /-- The algebraic Cramér-Rao lower bound. -/
 def CramerRaoLowerBound (p : ℝ) : ℝ := 1 / FisherInformation p
 
-/-- Master Theorem 1: Cramér-Rao Inversion.
-    The Cramér-Rao lower bound evaluates strictly to the squared coordinate.
-    As the state p approaches the singular boundary (p = 0), the Fisher 
-    Information blows up, forcing the bounding ellipsoid (the uncertainty) to 
-    collapse to zero, creating an impenetrable geometric shield. -/
-theorem cramer_rao_inversion (p : ℝ) (hp : p ≠ 0) :
+/-- For nonzero `p`, the reciprocal-square coefficient is strictly positive. -/
+theorem fisherInformation_pos (p : ℝ) (hp : p ≠ 0) :
+    0 < FisherInformation p := by
+  dsimp [FisherInformation]
+  apply one_div_pos.mpr
+  exact mul_self_pos.mpr hp
+
+/-- The reciprocal-square coefficient has reciprocal `p²` away from its
+singular point. -/
+theorem cramer_rao_inversion (p : ℝ) :
     CramerRaoLowerBound p = p * p := by
   dsimp [CramerRaoLowerBound, FisherInformation]
   rw [one_div, one_div, inv_inv]
 
-/-- Master Theorem 2: Non-Negativity of the Fisher Bound.
-    The algebraic Cramér-Rao bound is intrinsically non-negative, 
-    forming a valid geometric radius for the Dikin ellipsoid. -/
-theorem cramer_rao_nonneg (p : ℝ) (hp : p ≠ 0) :
+/-- The coefficient and its reciprocal multiply to one off the singular
+point. -/
+theorem fisherInformation_mul_reciprocal_eq_one (p : ℝ) (hp : p ≠ 0) :
+    FisherInformation p * CramerRaoLowerBound p = 1 := by
+  rw [cramer_rao_inversion p]
+  dsimp [FisherInformation]
+  field_simp [hp]
+
+/-- The reciprocal-square coefficient is nonnegative, including at its
+defined value zero on the singular boundary. -/
+theorem cramer_rao_nonneg (p : ℝ) :
     0 ≤ CramerRaoLowerBound p := by
-  rw [cramer_rao_inversion p hp]
+  rw [cramer_rao_inversion p]
   exact mul_self_nonneg p
+
+end
 
 end InfoGeometry.InformationGeometry.FisherMetric

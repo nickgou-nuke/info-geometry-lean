@@ -214,6 +214,12 @@ def signatureCountCurve
   (maxLen : Nat) : List (Nat × Nat) :=
   (List.range (maxLen + 1)).map (fun l => (l, (signaturesInClosureByBudget n dict l).length))
 
+/-- The signature count curve has one entry for each budget from zero through
+`maxLen`; its size does not depend on the closure computation. -/
+theorem signatureCountCurve_length (n : Nat) (dict : Dict n) (maxLen : Nat) :
+    (signatureCountCurve n dict maxLen).length = maxLen + 1 := by
+  simp [signatureCountCurve]
+
 def signaturesInClosureByBudgetWithBot
   (n : Nat)
   (dict : Dict n)

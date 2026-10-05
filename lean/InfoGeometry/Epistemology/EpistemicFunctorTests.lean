@@ -41,9 +41,9 @@ example : compile ∅ [CompilationArchetype.kernelCertifiedAdmission,
                      CompilationArchetype.causalPrerequisiteOrder,
                      CompilationArchetype.rawStreamToken] =
     some [CompilationArchetype.rawStreamToken,
+          CompilationArchetype.proofEvidence,
           CompilationArchetype.causalPrerequisiteOrder,
           CompilationArchetype.topologicalSchedule,
-          CompilationArchetype.proofEvidence,
           CompilationArchetype.kernelCertifiedAdmission] := by
   decide
 

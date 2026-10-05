@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.TwoSheetThreeColorWeylFinite
 import proofs.KleinSixStateAssociatedQuotient
 import proofs.A2SixStateSpectralIntertwiner
 

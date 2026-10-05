@@ -35,7 +35,6 @@ theorem mellin_kernel_translation (s u Δu : ℝ) :
   dsimp [mellin_kernel]
   have h_exp : -s * (u + Δu) = -s * Δu + -s * u := by ring
   rw [h_exp, Real.exp_add]
-  ring
 
 /-! The abstract logarithmic kernel agrees with the repository's arithmetic
     Mellin kernel at logarithmic energy levels. -/
@@ -78,23 +77,19 @@ def matrix_pencil (t : ℝ) : Mat2R :=
   (1 : Mat2R) - t • J_mat
 
 /-- The candidate inverse matrix resolvent: R(t) = (1 / (1 + t²)) • (I + t * J). -/
-def resolvent_candidate (t : ℝ) : Mat2R :=
+noncomputable def resolvent_candidate (t : ℝ) : Mat2R :=
   (1 / (1 + t ^ 2)) • ((1 : Mat2R) + t • J_mat)
 
 /-- Master Theorem 1: Exact Inversion of the Matrix Pencil.
     (I - t * J) * R(t) = I identically in Mat₂(ℝ). -/
 theorem matrix_pencil_inverse (t : ℝ) :
     matrix_pencil t * resolvent_candidate t = 1 := by
-  dsimp [matrix_pencil, resolvent_candidate, J_mat]
   ext i j
-  fin_cases i <;> fin_cases j <;> {
-    simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.sub_apply,
-               Matrix.smul_apply, Matrix.one_apply_eq, Matrix.one_apply_ne,
-               Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons]
-    have h_denom : 1 + t ^ 2 ≠ 0 := by positivity
-    field_simp
-    ring
-  }
+  fin_cases i <;> fin_cases j <;>
+    norm_num [matrix_pencil, resolvent_candidate, J_mat, Matrix.mul_apply,
+      Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply,
+      Fin.sum_univ_two] <;>
+    field_simp <;> ring
 
 /-- Master Theorem 2: The Zagier Trace Projection.
     Taking the matrix trace of the non-commutative resolvent projects it

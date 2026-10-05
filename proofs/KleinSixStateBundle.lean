@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.TwoSheetThreeColorWeylFinite
 import proofs.KleinBottleSixfoldCyclotomic
 import Mathlib.Data.ZMod.Basic
 

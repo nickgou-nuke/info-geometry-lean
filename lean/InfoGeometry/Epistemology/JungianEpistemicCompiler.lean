@@ -65,6 +65,10 @@ instance : PartialOrder UnconsciousArchetype :=
 instance : DecidableRel (α := UnconsciousArchetype) (· ≤ ·) :=
   fun left right => inferInstanceAs (Decidable (archetypePrerequisites left ⊆ archetypePrerequisites right))
 
+/-- Strict-order decision procedure induced by the finite archetype poset. -/
+instance : DecidableLT UnconsciousArchetype := fun left right =>
+  decidable_of_iff (left ≤ right ∧ ¬ right ≤ left) lt_iff_le_not_ge.symm
+
 /-- **Theorem 2 (Prima Materia Precedes All Cognition)**:
     The chaotic stream of consciousness (nigredo) is the necessary root of all downstream structure. -/
 theorem primaMateria_precedes_all (a : UnconsciousArchetype) :
@@ -104,8 +108,8 @@ def chiralSwapToken (tok : TheoryToken) : TheoryToken where
   polarity := -tok.polarity
   h_chiral := by
     rcases tok.h_chiral with h1 | h2
-    · right; rw [h1]; decide
-    · left; rw [h2]; decide
+    · simp [h1]
+    · simp [h2]
 
 /-- **Theorem 5 (Involution of Chiral Token Swap)**:
     Swapping the chiral polarity twice restores the original token state identically. -/

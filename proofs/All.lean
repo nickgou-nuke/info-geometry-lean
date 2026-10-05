@@ -71,7 +71,7 @@ import proofs.ChiralAffineBogoliubovWeld
 import proofs.ChiralB3PresentedBridge
 import InfoGeometry.Canonical.ChiralCausalCone
 import proofs.ChiralConeAlgebraFinality
-import InfoGeometry.Canonical.ChiralCausalConeTKKBridge
+import proofs.ChiralCausalConeTKKBridge
 import proofs.ChiralCuntzInductive
 import proofs.ChiralIsospinEOMSU2
 import proofs.ChiralPoincareSouriauBridge

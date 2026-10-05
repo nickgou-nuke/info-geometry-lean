@@ -22,7 +22,7 @@ To completely close the causal loop, we prove that the entire state space
 components (Ego and Anima). 
 
 Since we already proved Ego ⊓ Anima = ⊥, proving Ego ⊔ Anima = ⊤ guarantees 
-the space is a strict direct sum M = WeylLeft ⊕ WeylRight.
+the space is the strict direct sum of the `+1` and `-1` eigenspaces of `Γ`.
 -/
 
 /-- 
@@ -52,12 +52,12 @@ theorem ego_sup_anima_eq_top (Γ : Module.End R M) (h_krein : IsKreinSymmetry Γ
   -- 2. Prove that the Left projection is strictly in the Ego space
   have h_in_ego : x_ego ∈ Ego Γ := by
     dsimp [Ego]
-    simp only [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.one_apply]
+    simp only [LinearMap.mem_ker, LinearMap.sub_apply, Module.End.one_apply]
     dsimp [x_ego]
     rw [map_smul, map_add]
     unfold IsKreinSymmetry at h_krein
     have h_gamma_sq : Γ (Γ x) = x := by
-      have h1 : (Γ * Γ) x = x := by rw [h_krein, LinearMap.one_apply]
+      have h1 : (Γ * Γ) x = x := by rw [h_krein, Module.End.one_apply]
       exact h1
     rw [h_gamma_sq]
     have h_comm : Γ x + x = x + Γ x := add_comm _ _
@@ -66,12 +66,12 @@ theorem ego_sup_anima_eq_top (Γ : Module.End R M) (h_krein : IsKreinSymmetry Γ
   -- 3. Prove that the Right projection is strictly in the Anima space
   have h_in_anima : x_anima ∈ Anima Γ := by
     dsimp [Anima]
-    simp only [LinearMap.mem_ker, LinearMap.add_apply, LinearMap.one_apply]
+    simp only [LinearMap.mem_ker, LinearMap.add_apply, Module.End.one_apply]
     dsimp [x_anima]
     rw [map_smul, map_sub]
     unfold IsKreinSymmetry at h_krein
     have h_gamma_sq : Γ (Γ x) = x := by
-      have h1 : (Γ * Γ) x = x := by rw [h_krein, LinearMap.one_apply]
+      have h1 : (Γ * Γ) x = x := by rw [h_krein, Module.End.one_apply]
       exact h1
     rw [h_gamma_sq]
     rw [← smul_add]

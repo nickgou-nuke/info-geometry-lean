@@ -19,12 +19,14 @@ example (state : NambuGorkovCarrier ℝ) :
 example (order : ℕ) :
     regularHamiltonian (meanFieldState 1 1 1 ![1, 0, 0]) ^ (2 * order) = 1 := by
   rw [regularHamiltonian_pow_even, bogoliubovEnergy_sq, nambu_gorkov_zornNorm]
-  norm_num [meanFieldState, effectiveMass, Vec3.dot]
+  norm_num [meanFieldState, effectiveMass, Vec3.dot,
+    Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two]
 
 example : 1 - (1 : ℝ) ^ 2 *
     (bogoliubovEnergy (meanFieldState 1 1 1 ![1, 0, 0])) ^ 2 = 0 := by
   rw [bogoliubovEnergy_sq, nambu_gorkov_zornNorm]
-  norm_num [meanFieldState, effectiveMass, Vec3.dot]
+  norm_num [meanFieldState, effectiveMass, Vec3.dot,
+    Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two]
 
 example (state : NambuGorkovCarrier ℝ) (parameter : ℝ)
     (nonresonant : 1 - parameter ^ 2 * (bogoliubovEnergy state) ^ 2 ≠ 0) :

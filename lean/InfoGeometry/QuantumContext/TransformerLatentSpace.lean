@@ -34,9 +34,14 @@ theorem softmaxAttention_not_off_diagonal (scores : Mat2) :
     leftProjection * softmaxAttention scores * leftProjection ≠ 0 := by
   intro vanishes
   have entry := congrArg (fun matrix : Mat2 => matrix 0 0) vanishes
-  have zero_entry : softmaxAttention scores 0 0 = 0 := by
-    simpa [leftProjection, Matrix.mul_apply, Fin.sum_univ_two] using entry
-  exact (softmaxAttention_pos scores 0 0).ne' zero_entry
+  change (leftProjection * softmaxAttention scores * leftProjection) 0 0 = 0 at entry
+  have corner :
+      (leftProjection * softmaxAttention scores * leftProjection) 0 0 =
+        softmaxAttention scores 0 0 := by
+    norm_num [leftProjection, Matrix.mul_apply, Matrix.vecMul, dotProduct,
+      Fin.sum_univ_two]
+  rw [corner] at entry
+  exact (softmaxAttention_pos scores 0 0).ne' entry
 
 theorem softmaxAttention_not_swap (scores : Mat2) :
     leftProjection * softmaxAttention scores ≠

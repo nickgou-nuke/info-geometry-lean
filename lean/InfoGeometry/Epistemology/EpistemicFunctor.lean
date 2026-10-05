@@ -145,25 +145,13 @@ theorem totalDissipation_cons (head : StepTelemetry) (tail : List StepTelemetry)
   dsimp [totalDissipation]
   exact Nat.le_add_left _ _
 
-/-! ### Part III: Master Epistemic Compilation -/
+/-! ### Part III: Certified compilation owner
 
-/-- Master synthesis proposition for epistemic compilation:
-    Given any finite collection of archetypes and proof rules,
-    the certified compiler outputs an executable, provably sound schedule
-    that completely proves all goals without structural debt. -/
-theorem master_epistemic_compilation_soundness
-    {Node : Type*} [PartialOrder Node] [DecidableEq Node] [Fintype Node] [DecidableLT Node]
-    (statement : Node → Prop) (rules : ProofRules statement)
-    (pending : List Node) (distinct : pending.Nodup)
-    (coverage : pending.toFinset = Finset.univ) :
-    ∃ schedule : List Node,
-      InfoGeometry.Causal.FiniteDependencyCompiler.compile ∅ pending = some schedule ∧
-      ValidSchedule ∅ schedule ∧
-      schedule.Pairwise (fun earlier later => ¬ later ≤ earlier) ∧
-      (∀ target, statement target) := by
-  obtain ⟨schedule, computed, valid, pairwise, _, _, proofs⟩ :=
-    InfoGeometry.MetaCompiler.executable_certified_compilation
-      statement rules pending distinct coverage
-  exact ⟨schedule, computed, valid, pairwise, proofs⟩
+The generic theorem for compiling a finite proof-carrying dependency system is
+owned by `InfoGeometry.MetaCompiler.executable_certified_compilation` in
+`InfoGeometry.Meta.MetaEpistemicCompiler`. This finite archetype module keeps
+its own poset and scheduling results above instead of exporting a forwarding
+theorem with a weaker conclusion.
+-/
 
 end InfoGeometry.Epistemology.EpistemicFunctor

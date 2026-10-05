@@ -22,17 +22,21 @@ def raisingTensor (factors : ℕ) : Mat factors :=
   kronPow wittCreationBase factors
 
 def zeroIndex : (factors : ℕ) → Idx factors
-  | 0 => 0
+  | 0 => ⟨0, by omega⟩
   | factors + 1 => (zeroIndex factors, 0)
 
 def oneIndex : (factors : ℕ) → Idx factors
-  | 0 => 0
+  | 0 => ⟨0, by omega⟩
   | factors + 1 => (oneIndex factors, 1)
 
 theorem raisingTensor_corner (factors : ℕ) :
     raisingTensor factors (zeroIndex factors) (oneIndex factors) = 1 := by
   induction factors with
-  | zero => simp [raisingTensor, kronPow, zeroIndex, oneIndex]
+  | zero =>
+      have hidx : zeroIndex 0 = oneIndex 0 := Subsingleton.elim _ _
+      change (1 : Matrix (Idx 0) (Idx 0) ℝ)
+        (zeroIndex 0) (oneIndex 0) = 1
+      simp [Matrix.one_apply, hidx]
   | succ factors induction_hypothesis =>
       change raisingTensor factors (zeroIndex factors) (oneIndex factors) *
         wittCreationBase 0 1 = 1
@@ -43,6 +47,7 @@ theorem raisingTensor_ne_zero (factors : ℕ) : raisingTensor factors ≠ 0 := b
   intro vanishes
   have corner := congrArg
     (fun operator : Mat factors => operator (zeroIndex factors) (oneIndex factors)) vanishes
+  change raisingTensor factors (zeroIndex factors) (oneIndex factors) = 0 at corner
   rw [raisingTensor_corner] at corner
   norm_num at corner
 

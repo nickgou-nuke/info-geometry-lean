@@ -504,11 +504,13 @@ theorem boundary_gap_nine : Fintype.card (X 9) - cBoundaryCount 9 = 76 := by
 theorem boundary_gap_ten : Fintype.card (X 10) - cBoundaryCount 10 = 123 := by
   rw [X.card_eq_fib, cBoundaryCount_ten]; decide
 
+set_option maxRecDepth 10000 in
 set_option maxHeartbeats 1600000 in
 /-- Boundary count at m=11: b(11) = 34 = F(9).
     prop:bdry-fib-square-identity -/
 theorem cBoundaryCount_eleven : cBoundaryCount 11 = 34 := by decide
 
+set_option maxRecDepth 10000 in
 set_option maxHeartbeats 3200000 in
 /-- Boundary count at m=12: b(12) = 55 = F(10).
     prop:bdry-fib-square-identity -/
@@ -1021,6 +1023,7 @@ theorem cBoundaryCount_square_identity_general' (m : Nat) (hm : 2 ≤ m) :
     prop:bdry-fib-square-identity -/
 theorem cBoundaryCount_eq_fib_extended_twelve (m : Nat) (hm1 : 3 ≤ m) (hm : m ≤ 12) :
     cBoundaryCount m = Nat.fib (m - 2) := by
+  set_option maxRecDepth 10000 in
   by_cases h : m ≤ 10
   · exact cBoundaryCount_eq_fib_extended m hm1 h
   · push_neg at h
@@ -1036,7 +1039,8 @@ theorem cBoundaryCount_square_identity_m5 :
 
 /-- prop:bdry-fib-square-identity -/
 theorem cBoundaryCount_square_identity_m6 :
-    cBoundaryCount 11 = cBoundaryCount 6 ^ 2 + cBoundaryCount 7 ^ 2 := by decide
+    cBoundaryCount 11 = cBoundaryCount 6 ^ 2 + cBoundaryCount 7 ^ 2 := by
+  set_option maxRecDepth 10000 in decide
 
 /-- Paper package. prop:bdry-fib-square-identity -/
 theorem paper_cBoundaryCount_extended :

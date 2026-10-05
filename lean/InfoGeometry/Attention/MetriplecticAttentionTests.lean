@@ -19,6 +19,8 @@ open InfoGeometry.Attention.MultiHeadSymplecticReduction
 open InfoGeometry.Attention.AttentionMetriplecticPoset
 open InfoGeometry.Motivic.PolylogarithmicUnipotentMotive
 
+abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
+
 /-- Concrete test matrix representing a normalized softmax attention head. -/
 def testSoftmaxMatrix : Mat2R :=
   !![0.6, 0.4;
@@ -26,22 +28,26 @@ def testSoftmaxMatrix : Mat2R :=
 
 /-- Test 1: Metriplectic splitting on concrete matrix. -/
 theorem test_metriplectic_split :
-    testSoftmaxMatrix = diag_core testSoftmaxMatrix + chiral_bipolar testSoftmaxMatrix := by
+    testSoftmaxMatrix = MetriplecticAttentionDynamics.diag_core testSoftmaxMatrix +
+      MetriplecticAttentionDynamics.chiral_bipolar testSoftmaxMatrix := by
   exact metriplectic_operator_split testSoftmaxMatrix
 
 /-- Test 2: Frobenius orthogonality on concrete matrix. -/
 theorem test_frobenius_orthogonality :
-    frobenius_inner (diag_core testSoftmaxMatrix) (chiral_bipolar testSoftmaxMatrix) = 0 := by
+    MetriplecticAttentionDynamics.frobenius_inner
+      (MetriplecticAttentionDynamics.diag_core testSoftmaxMatrix)
+      (MetriplecticAttentionDynamics.chiral_bipolar testSoftmaxMatrix) = 0 := by
   exact dissipative_chiral_orthogonal testSoftmaxMatrix
 
 /-- Test 3: Casimir trace invariance on concrete matrix. -/
 theorem test_casimir_invariance :
-    Matrix.trace (G_grading * chiral_bipolar testSoftmaxMatrix) = 0 := by
+    Matrix.trace (MetriplecticAttentionDynamics.G_grading *
+      MetriplecticAttentionDynamics.chiral_bipolar testSoftmaxMatrix) = 0 := by
   exact chiral_transport_casimir_invariant testSoftmaxMatrix
 
 /-- Test 4: Positive entropy trace for softmax. -/
 theorem test_positive_entropy_trace :
-    0 < Matrix.trace (diag_core testSoftmaxMatrix) := by
+    0 < Matrix.trace (MetriplecticAttentionDynamics.diag_core testSoftmaxMatrix) := by
   apply softmax_trace_strictly_positive
   · norm_num [testSoftmaxMatrix]
   · norm_num [testSoftmaxMatrix]
@@ -52,8 +58,11 @@ def testMatrix2 : Mat2R :=
      0.8, 0.5]
 
 theorem test_curvature_commutator :
-    bracket (chiral_bipolar testSoftmaxMatrix) (chiral_bipolar testMatrix2) =
-    (CurvatureHolonomyLieBracket.symplectic_area testSoftmaxMatrix testMatrix2) • G_grading := by
+    CurvatureHolonomyLieBracket.bracket
+      (MetriplecticAttentionDynamics.chiral_bipolar testSoftmaxMatrix)
+      (MetriplecticAttentionDynamics.chiral_bipolar testMatrix2) =
+    (CurvatureHolonomyLieBracket.symplectic_area testSoftmaxMatrix testMatrix2) •
+      MetriplecticAttentionDynamics.G_grading := by
   exact bipolar_commutator_eq_symplectic_area_grading testSoftmaxMatrix testMatrix2
 
 /-- Test 6: Symplectic structure squaring to -1. -/
@@ -62,8 +71,9 @@ theorem test_J_symp_sq : J_symp * J_symp = - 1 :=
 
 /-- Test 7: Causal root theorem for the poset. -/
 theorem test_metriplectic_root :
-    metriplecticSplit ≤ MetriplecticArchetype.multiHeadSymplecticReduction := by
-  exact metriplecticSplit_is_root _
+    AttentionMetriplecticPoset.MetriplecticArchetype.metriplecticSplit ≤
+      AttentionMetriplecticPoset.MetriplecticArchetype.multiHeadSymplecticReduction := by
+  exact AttentionMetriplecticPoset.metriplecticSplit_is_root _
 
 /-- Test 8: Residual step represented by propagator multiplication. -/
 theorem test_residual_step (x : Fin 2 → ℝ) :
@@ -103,12 +113,8 @@ def x_test : Fin 2 → ℝ := ![3.0, 4.0]
 /-- Test 11: Verification of Pure Diagonal Linear Energy Flux. -/
 theorem test_linear_energy_flux_evaluation :
     ResidualMetriplecticFlow.dot_product x_test (M_test_skew *ᵥ x_test) = -9.3 := by
-  have h_skew : M_test_skew 0 1 = - M_test_skew 1 0 := by
-    dsimp [M_test_skew]
-    ring
-  rw [ResidualMetriplecticFlow.linear_energy_flux_is_purely_diagonal M_test_skew x_test h_skew]
-  dsimp [M_test_skew, x_test]
-  ring
+  norm_num [ResidualMetriplecticFlow.dot_product, M_test_skew, x_test,
+    Matrix.mulVec, dotProduct, Fin.sum_univ_two]
 
 /-- Test 12: Verification of Exact Total Energy Change (ΔE = 2⟨x, Mx⟩ + ‖Mx‖²). -/
 theorem test_residual_energy_change_exact_evaluation :
@@ -120,7 +126,8 @@ theorem test_residual_energy_change_exact_evaluation :
 /-- Test 13: Verification of the Propagator Trace Casimir Invariance.
     tr(G · T(M)) = M₀₀ - M₁₁ = -0.5 - (-0.3) = -0.2. -/
 theorem test_propagator_casimir_trace_evaluation :
-    Matrix.trace (G_grading * ResidualMetriplecticFlow.layer_propagator M_test_skew) = -0.2 := by
+    Matrix.trace (ResidualMetriplecticFlow.G_grading *
+      ResidualMetriplecticFlow.layer_propagator M_test_skew) = -0.2 := by
   rw [ResidualMetriplecticFlow.residual_propagator_casimir_trace M_test_skew]
   dsimp [M_test_skew]
   ring
@@ -130,8 +137,7 @@ theorem test_propagator_casimir_trace_evaluation :
 theorem test_chiral_transport_work_free :
     ResidualMetriplecticFlow.dot_product x_test (ResidualMetriplecticFlow.chiral_bipolar M_test_skew *ᵥ x_test) = 0 := by
   have h_skew : M_test_skew 0 1 = - M_test_skew 1 0 := by
-    dsimp [M_test_skew]
-    ring
+    norm_num [M_test_skew]
   exact ResidualMetriplecticFlow.chiral_transport_orthogonal_to_state M_test_skew x_test h_skew
 
 /-- Test 15: Continuous Lyapunov strictly negative decay rate. -/
@@ -144,20 +150,28 @@ theorem test_continuous_lyapunov_strictly_negative :
   ContinuousLyapunovFlow.continuous_lyapunov_strictly_negative
 
 theorem test_motivic_causal_chain :
-    polylogOne ≤ oddsRatioDeriv ∧
-    oddsRatioDeriv ≤ motivicNilpotent ∧
-    motivicNilpotent ≤ dilogarithmSeam ∧
-    dilogarithmSeam ≤ carnotShannonUnification := by
-  exact motivic_chain
+    AttentionMetriplecticPoset.MetriplecticArchetype.polylogOne ≤
+      AttentionMetriplecticPoset.MetriplecticArchetype.oddsRatioDeriv ∧
+    AttentionMetriplecticPoset.MetriplecticArchetype.oddsRatioDeriv ≤
+      AttentionMetriplecticPoset.MetriplecticArchetype.motivicNilpotent ∧
+    AttentionMetriplecticPoset.MetriplecticArchetype.motivicNilpotent ≤
+      AttentionMetriplecticPoset.MetriplecticArchetype.dilogarithmSeam ∧
+    AttentionMetriplecticPoset.MetriplecticArchetype.dilogarithmSeam ≤
+      AttentionMetriplecticPoset.MetriplecticArchetype.carnotShannonUnification := by
+  exact AttentionMetriplecticPoset.motivic_chain
 
 theorem test_motivic_connection_cubed_zero (ω₀ ω₁ : ℝ) :
-    (PolylogarithmicUnipotentMotive.connection ω₀ ω₁) ^ 3 = 0 := by
-  exact PolylogarithmicUnipotentMotive.connection_cubed_zero ω₀ ω₁
+    InfoGeometry.Motivic.PolylogarithmicUnipotentMotive.A_connection ω₀ ω₁ *
+      InfoGeometry.Motivic.PolylogarithmicUnipotentMotive.A_connection ω₀ ω₁ *
+      InfoGeometry.Motivic.PolylogarithmicUnipotentMotive.A_connection ω₀ ω₁ = 0 := by
+  exact InfoGeometry.Motivic.PolylogarithmicUnipotentMotive.A_connection_cubed_zero ω₀ ω₁
 
 theorem test_motivic_seam_identity :
-    PolylogarithmicUnipotentMotive.seamValue =
-      (Real.pi ^ 2 / 2) * (1 / 6) - (1 / 2) * (Real.log 2) ^ 2 := by
-  exact PolylogarithmicUnipotentMotive.seam_value_as_carnot_shannon
+    InfoGeometry.Motivic.PolylogarithmicUnipotentMotive.li2_half_value =
+      (Real.pi ^ 2 / 2) *
+        InfoGeometry.Motivic.PolylogarithmicUnipotentMotive.W_carnot_invariant -
+        (1 / 2) * (InfoGeometry.Motivic.PolylogarithmicUnipotentMotive.H_shannon_bit) ^ 2 := by
+  exact InfoGeometry.Motivic.PolylogarithmicUnipotentMotive.dilogarithm_carnot_shannon_unification
 
 /-!
 # Regression Tests: Symplectic Defect Invariance, Gross-Zagier Mass & Zagier Mellin Matrix
@@ -194,11 +208,10 @@ theorem test_tetrad_decomposition_numeric :
   dsimp [A_test, c0, c1, c2, c3, SymplecticDefectInvariance.I_2,
          SymplecticDefectInvariance.G_grading, SymplecticDefectInvariance.C_symm,
          SymplecticDefectInvariance.J_symp]
-  ext i j; fin_cases i <;> fin_cases j <;> {
-    simp only [Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply_eq, Matrix.one_apply_ne,
-               cons_val_zero, cons_val_one, head_cons]
-    ring
-  }
+  ext i j; fin_cases i <;> fin_cases j <;>
+    norm_num [A_test, SymplecticDefectInvariance.I_2,
+      SymplecticDefectInvariance.G_grading, SymplecticDefectInvariance.C_symm,
+      SymplecticDefectInvariance.J_symp]
 
 -- Test 19: Gross-Zagier odd functional equation central vanishing
 theorem test_gross_zagier_central_zero (Λ : ℝ → ℝ)

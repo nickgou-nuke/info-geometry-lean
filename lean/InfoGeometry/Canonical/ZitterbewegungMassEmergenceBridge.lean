@@ -5,12 +5,14 @@ import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
 
 /-!
-# Stratum 39: Zitterbewegung, Compton Angular Frequency, and Macroscopic Inertial Drag
+# Rest-energy gap, Compton frequency, and an algebraic velocity ratio
 
-This module formalizes the kinematics of mass generation via Zitterbewegung ("trembling motion"):
+This module records scalar formulas associated with the Dirac rest-energy gap.
+It does not derive mass generation from Zitterbewegung, derive the dispersion
+relation from a Zorn BdG operator, or establish a macroscopic dynamical drag law.
 
 1. **Relativistic Dispersion Relation:**
-   $E^2 = p^2 c^2 + m^2 c^4$, arising directly from the secular determinant of the Zorn BdG operator.
+   $E^2 = p^2 c^2 + m^2 c^4$, represented here by a scalar expression.
 2. **Rest-Energy Mass Gap:**
    $\Delta E = E_+ - E_- = mc^2 - (-mc^2) = 2mc^2$.
 3. **Compton Zitterbewegung Angular Frequency:**
@@ -19,8 +21,7 @@ This module formalizes the kinematics of mass generation via Zitterbewegung ("tr
    The effective velocity ratio squared is:
    $$\left(\frac{v}{c}\right)^2 = \frac{p^2}{p^2 + m^2 c^2}$$
    For any non-zero mass $m \neq 0$ and speed of light $c \neq 0$, $(v/c)^2 < 1$,
-   proving that the off-diagonal Zorn coupling drags the effective propagation velocity
-   strictly below the speed of light.
+   an algebraic property of the defined ratio, not a derived propagation law.
 5. **Massless Luminal Limit:**
    When $m = 0$ (and $p \neq 0$), $(v/c)^2 = 1$, restoring lightcone propagation.
 -/
@@ -55,8 +56,7 @@ theorem comptonFrequency_eq (m c hbar : ℝ) :
 def velocityRatioSq (p m c : ℝ) : ℝ :=
   p ^ 2 / (p ^ 2 + m ^ 2 * c ^ 2)
 
-/-- When mass m ≠ 0 and c ≠ 0, the velocity ratio squared is strictly less than 1:
-    (v/c)² < 1, proving macroscopic deceleration below the speed of light. -/
+/-- For nonzero m and c, the defined algebraic velocity ratio is strictly less than 1. -/
 theorem velocity_strictly_subluminal (p m c : ℝ) (hm : m ≠ 0) (hc : c ≠ 0) :
     velocityRatioSq p m c < 1 := by
   dsimp [velocityRatioSq]

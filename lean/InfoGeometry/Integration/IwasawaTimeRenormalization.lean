@@ -1,73 +1,62 @@
 import Mathlib.Algebra.Ring.Basic
-import Mathlib.Algebra.Group.Units
+import Mathlib.Algebra.Group.Units.Basic
 import Mathlib.Tactic
 
 namespace InfoGeometry.Integration.IwasawaTimeRenormalization
 
 variable {R : Type*} [Ring R]
 
-/-!
-# Archetype 337: The Iwasawa KAN Decomposition
-The Lie group of the negatively curved universe decomposes into:
-K: Compact / Unitary (Unbroken Gauge)
-A: Abelian / Scaling (The Dilaton / Partition Function)
-N: Nilpotent / Unipotent (The Arrow of Time)
--/
+/-! # Algebraic scale normalization
 
-structure IwasawaOperators (R : Type*) [Ring R] where
-  K : R      
-  A : Rˣ     
-  N : R      
-  hN : (N - 1) * (N - 1) = 0
+The carrier below is only a ring-level triple: a scalar prefactor, an
+invertible scale, and a unipotent component. It does not assert a Lie-group
+Iwasawa decomposition. The normalization theorem states precisely the
+commutation hypothesis needed to cancel the scale and its inverse. -/
 
-/-!
-# Archetype 338 & 339: Renormalization (Eating the Dilaton)
-The universe enforces unitarity by dividing out the partition function A⁻¹.
-This continuous gauge projection isolates the time arrow.
--/
+structure RenormalizationData (R : Type*) [Ring R] where
+  prefactor : R
+  scale : Rˣ
+  unipotent : R
 
-theorem renormalize_state (Ops : IwasawaOperators R) :
-    Ops.K * (Ops.A : R) * Ops.N * (↑Ops.A⁻¹ : R) = 
-    Ops.K * ((Ops.A : R) * Ops.N * (↑Ops.A⁻¹ : R)) := by
-  rw [mul_assoc, mul_assoc]
+/-- The unipotent deviation from the multiplicative identity. -/
+def ghost (Ops : RenormalizationData R) : R := Ops.unipotent - 1
 
-/-- If the expansion commutes with the topological defect, the renormalization 
-    perfectly consumes the dilaton, leaving only the Unitary body and the Time Arrow. -/
-theorem isotropic_time_step (Ops : IwasawaOperators R) 
-    (h_iso : (Ops.A : R) * Ops.N = Ops.N * (Ops.A : R)) :
-    Ops.K * (Ops.A : R) * Ops.N * (↑Ops.A⁻¹ : R) = Ops.K * Ops.N := by
-  calc
-    Ops.K * (Ops.A : R) * Ops.N * (↑Ops.A⁻¹ : R)
-      = Ops.K * (Ops.N * (Ops.A : R)) * (↑Ops.A⁻¹ : R) := by rw [h_iso]
-    _ = Ops.K * Ops.N * ((Ops.A : R) * (↑Ops.A⁻¹ : R)) := by simp only [mul_assoc]
-    _ = Ops.K * Ops.N * 1 := by rw [Units.mul_inv]
-    _ = Ops.K * Ops.N := by rw [mul_one]
-
-/-!
-# Archetype 340 & 341: Time as a Renormalization Group (RG) Flow
-Because the renormalized state leaves the Unipotent operator N,
-repeated applications (ticks of the clock) accumulate polynomially,
-strictly enforcing the Arrow of Time and preventing Poincaré recurrence.
--/
-
-def ghost (Ops : IwasawaOperators R) : R := Ops.N - 1
-
-theorem ghost_nilpotent (Ops : IwasawaOperators R) :
-    ghost Ops * ghost Ops = 0 := Ops.hN
-
-/-- The RG flow accumulation: N² = I + 2*Ghost. 
-    Time builds linearly inside the nilpotent trace. -/
-theorem unipotent_time_accumulation (Ops : IwasawaOperators R) :
-    Ops.N * Ops.N = 1 + 2 * ghost Ops := by
-  have hN : Ops.N = 1 + ghost Ops := by
+/-- A vanishing-square deviation gives the corresponding quadratic
+accumulation formula. -/
+theorem unipotent_time_accumulation (Ops : RenormalizationData R)
+    (hN : ghost Ops * ghost Ops = 0) :
+    Ops.unipotent * Ops.unipotent = 1 + 2 * ghost Ops := by
+  have hNrep : Ops.unipotent = 1 + ghost Ops := by
     dsimp [ghost]
-    exact (sub_add_cancel Ops.N 1).symm
-  rw [hN]
+    noncomm_ring
+  rw [hNrep]
   calc
-    (1 + ghost Ops) * (1 + ghost Ops)
-      = 1 * 1 + 1 * ghost Ops + ghost Ops * 1 + ghost Ops * ghost Ops := by ring
-    _ = 1 + 2 * ghost Ops + ghost Ops * ghost Ops := by ring
-    _ = 1 + 2 * ghost Ops + 0 := by rw [ghost_nilpotent Ops]
-    _ = 1 + 2 * ghost Ops := by ring
+    (1 + ghost Ops) * (1 + ghost Ops) =
+        1 + 2 * ghost Ops + ghost Ops * ghost Ops := by noncomm_ring
+    _ = 1 + 2 * ghost Ops := by rw [hN]; noncomm_ring
+
+/-- Conjugation of the unipotent component by the invertible scale. -/
+def normalizedStep (Ops : RenormalizationData R) : R :=
+  (Ops.scale : R) * Ops.unipotent * (↑Ops.scale⁻¹ : R)
+
+/-- The scale cancels when it commutes with the unipotent component. -/
+theorem normalizedStep_eq_unipotent (Ops : RenormalizationData R)
+    (hcomm : (Ops.scale : R) * Ops.unipotent =
+      Ops.unipotent * (Ops.scale : R)) :
+    normalizedStep Ops = Ops.unipotent := by
+  unfold normalizedStep
+  calc
+    (Ops.scale : R) * Ops.unipotent * (↑Ops.scale⁻¹ : R) =
+        (Ops.unipotent * (Ops.scale : R)) * (↑Ops.scale⁻¹ : R) := by rw [hcomm]
+    _ = Ops.unipotent * ((Ops.scale : R) * (↑Ops.scale⁻¹ : R)) := by rw [mul_assoc]
+    _ = Ops.unipotent := by rw [Units.mul_inv, mul_one]
+
+/-- The prefactor times the normalized step reduces to the prefactor times
+the unipotent component under the same commutation condition. -/
+theorem renormalizedState_eq_prefactor_mul_unipotent (Ops : RenormalizationData R)
+    (hcomm : (Ops.scale : R) * Ops.unipotent =
+      Ops.unipotent * (Ops.scale : R)) :
+    Ops.prefactor * normalizedStep Ops = Ops.prefactor * Ops.unipotent := by
+  rw [normalizedStep_eq_unipotent Ops hcomm]
 
 end InfoGeometry.Integration.IwasawaTimeRenormalization

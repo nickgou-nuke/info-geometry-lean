@@ -28,13 +28,14 @@ open InfoGeometry.Krein.FiniteGramFactorization
 
 /-! ## KAN `A` factor -/
 
-theorem positiveA_diagonal (λ : ℝ) :
-    0 < componentAReal λ 0 0 ∧ 0 < componentAReal λ 1 1 := by
-  exact componentAReal_diagonal_positive λ
+theorem positiveA_diagonal (rapidity : ℝ) :
+    0 < componentAReal rapidity 0 0 ∧ 0 < componentAReal rapidity 1 1 := by
+  exact componentAReal_diagonal_positive rapidity
 
-theorem positiveA_group_law (λ₁ λ₂ : ℝ) :
-    componentAReal λ₁ * componentAReal λ₂ = componentAReal (λ₁ + λ₂) := by
-  exact rapidity_additive_composition λ₁ λ₂
+theorem positiveA_group_law (rapidity₁ rapidity₂ : ℝ) :
+    componentAReal rapidity₁ * componentAReal rapidity₂ =
+      componentAReal (rapidity₁ + rapidity₂) := by
+  exact rapidity_additive_composition rapidity₁ rapidity₂
 
 /-! ## Gram factorisation -/
 
@@ -55,23 +56,24 @@ theorem gram_quadratic_nonnegative
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-abbrev BornState := HilbertDoubled E
+abbrev BornState (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] := HilbertDoubled E
 
-def bornWeight (final initial : BornState) : ℝ :=
+def bornWeight (final initial : BornState E) : ℝ :=
   kreinAdaptedProbability final initial
 
-theorem bornWeight_nonnegative (final initial : BornState) :
+theorem bornWeight_nonnegative (final initial : BornState E) :
     0 ≤ bornWeight final initial := by
   exact kreinAdaptedProbability_nonnegative final initial
 
 theorem bornWeight_le_one
-    (final initial : BornState)
+    (final initial : BornState E)
     (hfinal : final ≠ 0) (hinitial : initial ≠ 0) :
     bornWeight final initial ≤ 1 := by
   exact kreinAdaptedProbability_le_one final initial hfinal hinitial
 
 theorem bornWeight_mem_unitInterval
-    (final initial : BornState)
+    (final initial : BornState E)
     (hfinal : final ≠ 0) (hinitial : initial ≠ 0) :
     bornWeight final initial ∈ Set.Icc (0 : ℝ) 1 := by
   exact kreinAdaptedProbability_mem_unitInterval final initial hfinal hinitial

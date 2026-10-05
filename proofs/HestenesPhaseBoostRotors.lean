@@ -1,4 +1,5 @@
-import InfoGeometry.Canonical.HestenesCircularSheetCAR
+import InfoGeometry.Canonical.TwoSheetThreeColorWeylFinite
+import InfoGeometry.Canonical.HestenesCircularSheetCARFinite
 
 /-!
 # Hestenes phase, boost, and rotation rotor normal forms

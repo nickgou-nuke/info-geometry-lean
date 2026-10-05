@@ -38,13 +38,15 @@ def IsOscillatoryMode (f_osc : ℝ → ℝ) : Prop :=
     annihilating the fluctuating cuspidal modes. -/
 theorem cusp_zero_mode_projection (a₀ : ℝ) (f_osc : ℝ → ℝ) (h_osc : IsOscillatoryMode avg f_osc) :
     avg.integrate (fun θ => a₀ + f_osc θ) = a₀ := by
-  have h_split : (fun θ => a₀ + f_osc θ) = (fun _ => a₀) + f_osc := by ext; ring
+  have h_split : (fun θ => a₀ + f_osc θ) = (fun _ => a₀) + f_osc := by
+    funext θ
+    rfl
   rw [h_split, LinearMap.map_add]
   have h_const_mul : (fun _ : ℝ => a₀) = a₀ • (fun _ : ℝ => (1 : ℝ)) := by ext; simp
   rw [h_const_mul, LinearMap.map_smul, avg.h_const]
   dsimp [IsOscillatoryMode] at h_osc
   rw [h_osc]
-  ring
+  simp
 
 /-- Master Theorem 2: Rankin-Selberg / Metriplectic Orthogonality.
     The constant background mode a₀ and the oscillatory mode f_osc are strictly
@@ -54,7 +56,8 @@ theorem rankin_selberg_cusp_orthogonality (a₀ : ℝ) (f_osc : ℝ → ℝ) (h_
   have h_smul : (fun θ => a₀ * f_osc θ) = a₀ • f_osc := by ext; simp
   rw [h_smul, LinearMap.map_smul]
   dsimp [IsOscillatoryMode] at h_osc
-  rw [h_osc, mul_zero]
+  rw [h_osc]
+  exact smul_zero _
 
 end CuspDecomposition
 
@@ -103,12 +106,9 @@ theorem gross_zagier_dirac_mass_shell (p m : ℝ) :
     (p • G_grading + chiral_mass_channel m) * (p • G_grading + chiral_mass_channel m) =
     (p ^ 2 + m ^ 2) • (1 : Mat2R) := by
   ext i j
-  fin_cases i <;> fin_cases j <;> {
-    dsimp [G_grading, chiral_mass_channel, Matrix.mul_apply]
-    simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons,
-               Matrix.one_apply_eq, Matrix.one_apply_ne, smul_apply, add_apply]
-    ring
-  }
+  fin_cases i <;> fin_cases j <;>
+    simp [G_grading, chiral_mass_channel, Matrix.mul_apply,
+      Fin.sum_univ_two] <;> ring
 
 end GrossZagierMass
 

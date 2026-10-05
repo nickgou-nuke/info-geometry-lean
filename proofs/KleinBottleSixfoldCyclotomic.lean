@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.TwoSheetThreeColorWeylFinite
 import proofs.TitsBruhatBrillouinKlein
 import proofs.TwoSheetThreeColorWeyl
 

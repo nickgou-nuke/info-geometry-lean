@@ -222,9 +222,12 @@ theorem crosscap_e_reflects_nbar_to_neg_n :
 conjugates the torus translation to its inverse and has square a translation in
 the orientable double cover. -/
 theorem mandatory_glide_relation :
-    (∀ z : ℂ, KleinBottle.G (KleinBottle.T z) =
-      KleinBottle.T_inv (KleinBottle.G z)) ∧
-    (∀ z : ℂ, KleinBottle.G (KleinBottle.G z) = z + 2) :=
+    (∀ z : ℂ, InfoGeometry.External.Auto.KleinBottle.G
+      (InfoGeometry.External.Auto.KleinBottle.T z) =
+      InfoGeometry.External.Auto.KleinBottle.T_inv
+        (InfoGeometry.External.Auto.KleinBottle.G z)) ∧
+    (∀ z : ℂ, InfoGeometry.External.Auto.KleinBottle.G
+      (InfoGeometry.External.Auto.KleinBottle.G z) = z + 2) :=
   ⟨TorusKleinO55Bridge.klein_glide_twists_torus_translation,
     TorusKleinO55Bridge.klein_glide_square_is_translation⟩
 
@@ -256,9 +259,12 @@ theorem pin_o55_glide_reflection_kernel :
       -ι55 (nbar_pair crosscapIndex) ∧
     twisted_adj crosscapReflectionPin55 (nbar_pair crosscapIndex) =
       -ι55 (n_pair crosscapIndex) ∧
-    (∀ z : ℂ, KleinBottle.G (KleinBottle.T z) =
-      KleinBottle.T_inv (KleinBottle.G z)) ∧
-    (∀ z : ℂ, KleinBottle.G (KleinBottle.G z) = z + 2) ∧
+    (∀ z : ℂ, InfoGeometry.External.Auto.KleinBottle.G
+      (InfoGeometry.External.Auto.KleinBottle.T z) =
+      InfoGeometry.External.Auto.KleinBottle.T_inv
+        (InfoGeometry.External.Auto.KleinBottle.G z)) ∧
+    (∀ z : ℂ, InfoGeometry.External.Auto.KleinBottle.G
+      (InfoGeometry.External.Auto.KleinBottle.G z) = z + 2) ∧
     (∀ m2 J Tiso v t : Q,
       CasimirIsospinHamiltonian.mirrorDifference
         (fun Tz =>

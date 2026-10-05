@@ -64,7 +64,7 @@ theorem chiral_commutator_eq_symplectic_grading (M₁ M₂ : Mat2R) :
     dsimp [commutator, chiral_bipolar, G_grading, symplectic_area, Matrix.mul_apply]
     simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons]
     simp [Matrix.smul_apply]
-    ring
+    <;> ring
   }
 
 /-- Master Theorem 3: Vanishing Trace of the Latent Curvature.
@@ -96,12 +96,8 @@ theorem chiral_curvature_sq_scalar (M₁ M₂ : Mat2R) :
   rw [h_smul]
   have h_G_sq : G_grading * G_grading = 1 := by
     ext i j
-    fin_cases i <;> fin_cases j <;> {
-      dsimp [G_grading, Matrix.mul_apply]
-      simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons]
-      simp [Matrix.one_apply]
-      ring
-    }
+    fin_cases i <;> fin_cases j <;>
+      norm_num [G_grading, Matrix.mul_apply, Fin.sum_univ_two]
   rw [h_G_sq]
   congr 1
   ring
@@ -179,6 +175,5 @@ theorem full_attention_commutator_split (M₁ M₂ : Mat2R) :
       (symplectic_area M₁ M₂) • G_grading :=
     chiral_commutator_eq_symplectic_grading M₁ M₂
   rw [h_chiral_comm]
-  rfl
 
 end InfoGeometry.Attention.AttentionCurvatureHolonomy

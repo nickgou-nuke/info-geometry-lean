@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.TwoSheetThreeColorWeylFinite
 import proofs.KleinBrillouinBase
 import proofs.KleinSixStateProjectiveMonodromy
 import Mathlib.Topology.Constructions

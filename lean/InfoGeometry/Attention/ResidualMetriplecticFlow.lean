@@ -54,11 +54,8 @@ theorem propagator_metriplectic_split (M : Mat2R) :
     layer_propagator M = ((1 : Mat2R) + diag_core M) + chiral_bipolar M := by
   dsimp [layer_propagator, diag_core, chiral_bipolar]
   ext i j
-  fin_cases i <;> fin_cases j <;> {
-    simp only [Matrix.add_apply, Matrix.one_apply_eq, Matrix.one_apply_ne,
-               cons_val_zero, cons_val_one, head_cons]
-    ring
-  }
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.add_apply, Matrix.one_apply, diag_core, chiral_bipolar]
 
 /-!
 # Archetype 910: Reversible Kinetic Energy Conservation under C(M)
@@ -81,10 +78,8 @@ theorem chiral_transport_orthogonal_to_state (M : Mat2R) (x : Vec2R)
     (h_skew : M 0 1 = - M 1 0) :
     dot_product x (chiral_bipolar M *ᵥ x) = 0 := by
   dsimp [dot_product, chiral_bipolar, mulVec, dotProduct]
-  simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons]
-  have h_alg : x 0 * (M 0 1 * x 1) + x 1 * (M 1 0 * x 0) =
-               (M 0 1 + M 1 0) * (x 0 * x 1) := by ring
-  rw [h_alg, h_skew]
+  simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one]
+  rw [h_skew]
   ring
 
 /-!
@@ -106,7 +101,7 @@ def energy_change (M : Mat2R) (x : Vec2R) : ℝ :=
 theorem residual_energy_change_exact (M : Mat2R) (x : Vec2R) :
     energy_change M x = 2 * dot_product x (M *ᵥ x) + norm_sq (M *ᵥ x) := by
   dsimp [energy_change, residual_step, norm_sq, dot_product, mulVec, dotProduct]
-  simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons]
+  simp only [Fin.sum_univ_two]
   ring
 
 /-- Master Theorem 5: Separation of Dissipative and Chiral Energy Fluxes.
@@ -130,7 +125,8 @@ theorem linear_energy_flux_is_purely_diagonal (M : Mat2R) (x : Vec2R)
   rw [h_dot_add]
   rw [chiral_transport_orthogonal_to_state M x h_skew, add_zero]
   dsimp [dot_product, diag_core, mulVec, dotProduct]
-  simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons]
+  simp only [Fin.sum_univ_two]
+  simp [chiral_bipolar]
   ring
 
 /-- Master Theorem 6: Casimir Invariance of the Residual Propagator Trace.
@@ -139,9 +135,8 @@ theorem linear_energy_flux_is_purely_diagonal (M : Mat2R) (x : Vec2R)
       tr(G * T(M)) = M₀₀ - M₁₁. -/
 theorem residual_propagator_casimir_trace (M : Mat2R) :
     Matrix.trace (G_grading * layer_propagator M) = M 0 0 - M 1 1 := by
-  dsimp [G_grading, layer_propagator, Matrix.trace]
-  simp only [Fin.sum_univ_two, Matrix.mul_apply, Matrix.add_apply, Matrix.one_apply_eq, Matrix.one_apply_ne]
-  simp only [cons_val_zero, cons_val_one, head_cons]
+  norm_num [G_grading, layer_propagator, Matrix.trace, Matrix.mul_apply,
+    Matrix.add_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two]
   ring
 
 end InfoGeometry.Attention.ResidualMetriplecticFlow

@@ -1,5 +1,6 @@
+import InfoGeometry.Canonical.TwoSheetThreeColorWeylFinite
 import proofs.TwelveFoldSheetColorOmega
-import InfoGeometry.Canonical.HestenesCircularSheetCAR
+import InfoGeometry.Canonical.HestenesCircularSheetCARFinite
 
 /-!
 # Quartic phase action on the circular CAR basis

@@ -1,108 +1,47 @@
-import Mathlib.Tactic
-import InfoGeometry.Canonical.SouriauLieThermoKKTBridge
-import InfoGeometry.Canonical.MadelungNavierStokesClosure
+import Mathlib.Data.Real.Basic
 
-noncomputable section
+/-!
+# Scalar cancellation for a temperature-style equation
+
+The identities connecting a dissipation, a heat-transfer quantity, and an
+entropy rate are hypotheses of a concrete model. This file states those
+identities explicitly and proves only their algebraic consequences; it does
+not package them as a physical witness structure or derive them from a fluid
+or gravitational theory.
+-/
 
 namespace InfoGeometry.Physics
 
-open InfoGeometry.Canonical
-open InfoGeometry.Canonical.SouriauLieThermoKKTBridge
-open InfoGeometry.Canonical.MadelungHydrodynamic
-open scoped InnerProductSpace
+/-- If a common nonzero rate multiplies two scalar parameters to the same
+value, those parameters are equal. -/
+theorem scalar_parameter_eq_of_common_nonzero_factor
+    (x y rate : ℝ) (hrate : rate ≠ 0)
+    (h : x * rate = y * rate) : x = y := by
+  exact (mul_right_inj' hrate).mp (by simpa [mul_comm] using h)
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable {G Gdual Orbit : Type*}
+/-- Conditional temperature/gap cancellation from the three scalar model
+equations. `totalRate_eq_rate` records that the rate in the equation of state
+is the same nonzero rate used by the dissipation factorization. -/
+theorem jacobson_temperature_eq_mass_gap
+    (gap rate dissipation heat temperature totalRate : ℝ)
+    (hrate : rate ≠ 0)
+    (h_dissipation : dissipation = gap * rate)
+    (h_eos : heat = temperature * totalRate)
+    (h_identification : dissipation = heat)
+    (h_totalRate : totalRate = rate) :
+    temperature = gap := by
+  have h_product : gap * rate = temperature * rate := by
+    calc
+      gap * rate = dissipation := h_dissipation.symm
+      _ = heat := h_identification
+      _ = temperature * rate := by rw [h_totalRate] at h_eos; exact h_eos
+  exact (mul_right_inj' hrate).mp (by simpa [mul_comm] using h_product.symm)
 
-/--
-Entropic Gravity Bridge Context.
-
-Formalizes the equivalence between Navier-Stokes viscous dissipation 
-(leakage across split-octonionic sheets) and Jacobson's non-equilibrium 
-thermodynamic heat transfer (dQ = T dS).
--/
-structure EntropicGravityBridge 
-    (G Gdual Orbit E : Type*) 
-    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
-  /-- Souriau-Lie group thermodynamics context -/
-  souriauContext : FullCoadjointOrbitMetriplecticContext G Gdual Orbit
-  
-  /-- Macroscopic emergent fluid velocity field over the split-octonionic sheets -/
-  fluidVelocity : Orbit → VelocityField E
-  
-  /-- Zitterbewegung mass gap acting as fluid viscosity -/
-  zitterbewegungMassGap : ℝ
-  
-  /-- Navier-Stokes Viscous Dissipation functional -/
-  viscousDissipation : Orbit → ℝ
-  
-  /-- Jacobson's Heat Transfer (dQ) -/
-  jacobsonHeatTransfer : Orbit → ℝ
-  
-  /-- Effective Spacetime Temperature (T) -/
-  jacobsonTemperature : Orbit → ℝ
-  
-  /-- Axiom 1: Viscous dissipation is structurally driven by the mass gap 
-      times the Souriau dissipative entropy rate. -/
-  viscous_dissipation_eq : ∀ x : Orbit, 
-    viscousDissipation x = zitterbewegungMassGap * souriauContext.dissipativeEntropyRate x
-    
-  /-- Axiom 2: Jacobson's equation of state for spacetime (dQ = T dS).
-      The entropy variation dS is the Souriau total entropy production. -/
-  jacobson_eos : ∀ x : Orbit,
-    jacobsonHeatTransfer x = jacobsonTemperature x * souriauContext.totalEntropyProduction x
-    
-  /-- Axiom 3: The Navier-Stokes viscous dissipation is mathematically isomorphic 
-      to Jacobson's non-equilibrium heat transfer. -/
-  dissipation_isomorphic_heat : ∀ x : Orbit,
-    viscousDissipation x = jacobsonHeatTransfer x
-
-/--
-Theorem: Entropic Gravity Closure.
-
-If the emergent spacetime fluid undergoes non-equilibrium dissipation, 
-then the effective Jacobson temperature is exactly the Zitterbewegung mass gap.
-This rigorously links the Madelung-Navier-Stokes fluid anomalies to 
-the Souriau-Lie group entropy variation.
--/
-theorem jacobson_temperature_eq_mass_gap 
-    (bridge : EntropicGravityBridge G Gdual Orbit E)
-    (x : Orbit)
-    (h_dissipative : bridge.souriauContext.dissipativeEntropyRate x ≠ 0) :
-    bridge.jacobsonTemperature x = bridge.zitterbewegungMassGap := by
-  have h1 := bridge.viscous_dissipation_eq x
-  have h2 := bridge.jacobson_eos x
-  have h3 := bridge.dissipation_isomorphic_heat x
-  have h4 : bridge.souriauContext.totalEntropyProduction x = 
-      bridge.souriauContext.dissipativeEntropyRate x := by
-    rw [bridge.souriauContext.totalEntropyProduction_eq_sum x]
-    rw [bridge.souriauContext.reversibleEntropyRate_eq_zero x]
-    exact zero_add _
-  rw [h4] at h2
-  have h5 : bridge.zitterbewegungMassGap * bridge.souriauContext.dissipativeEntropyRate x = 
-            bridge.jacobsonTemperature x * bridge.souriauContext.dissipativeEntropyRate x := by
-    calc bridge.zitterbewegungMassGap * bridge.souriauContext.dissipativeEntropyRate x 
-      _ = bridge.viscousDissipation x := h1.symm
-      _ = bridge.jacobsonHeatTransfer x := h3
-      _ = bridge.jacobsonTemperature x * bridge.souriauContext.dissipativeEntropyRate x := h2
-  exact (mul_right_inj' h_dissipative).mp h5.symm
-
-/--
-Theorem: Madelung-Jacobson Equilibrium.
-
-If the fluid velocity field acts strictly as the non-commutative Madelung torque 
-(skew-adjoint generator of isometric modular flow, `IsMadelungDrivenTorque`), 
-and if this enforces zero viscous dissipation, then either the mass gap is zero 
-or the system is at equilibrium (zero entropy production).
--/
-theorem madelung_equilibrium_of_zero_dissipation
-    (bridge : EntropicGravityBridge G Gdual Orbit E)
-    (x : Orbit)
-    (h_madelung : IsMadelungDrivenTorque (bridge.fluidVelocity x))
-    (h_zero_viscosity : bridge.viscousDissipation x = 0) :
-    bridge.zitterbewegungMassGap = 0 ∨ bridge.souriauContext.dissipativeEntropyRate x = 0 := by
-  have h1 := bridge.viscous_dissipation_eq x
-  rw [h_zero_viscosity] at h1
-  exact mul_eq_zero.mp h1.symm
+/-- If the model's factored dissipation vanishes, one of its two factors is
+zero. No geometric or thermodynamic interpretation is inferred from this
+algebraic disjunction. -/
+theorem gap_or_rate_zero_of_zero_dissipation
+    (gap rate : ℝ) (h : gap * rate = 0) : gap = 0 ∨ rate = 0 :=
+  mul_eq_zero.mp h
 
 end InfoGeometry.Physics

@@ -96,9 +96,12 @@ theorem metamaterial_quasicrystal_bloch_finite_package
     NonPeriodicPrimeSpacings ∧
     (kleinBlochTwist m).momentum = -m.momentum ∧
     TorusKleinO55Bridge.generatorOrientationSign (kleinBlochTwist m).chirality = -1 ∧
-    (∀ z : ℂ, KleinBottle.G (KleinBottle.T z) =
-      KleinBottle.T_inv (KleinBottle.G z)) ∧
-    (∀ z : ℂ, KleinBottle.G (KleinBottle.G z) = z + 2) ∧
+    (∀ z : ℂ, InfoGeometry.External.Auto.KleinBottle.G
+      (InfoGeometry.External.Auto.KleinBottle.T z) =
+      InfoGeometry.External.Auto.KleinBottle.T_inv
+        (InfoGeometry.External.Auto.KleinBottle.G z)) ∧
+    (∀ z : ℂ, InfoGeometry.External.Auto.KleinBottle.G
+      (InfoGeometry.External.Auto.KleinBottle.G z) = z + 2) ∧
     O55CartanPhononReduction.o55CartanRank = 5 ∧
     TorusKleinO55Bridge.doubledCartanCarrierDimension = 10 ∧
     O55GradedGeneratorBasis.activeGradedGeneratorCount = 15 ∧
@@ -112,10 +115,13 @@ theorem metamaterial_quasicrystal_bloch_finite_package
     StimulatedScatteringAmplituhedron.fourWaveMixingCount = 4 := by
   rcases finite_quasicrystal_prime_arithmetic with ⟨hlen, hordered, hnonperiodic⟩
   rcases klein_bloch_twist_kernel m with ⟨hmomentum, horientation, hrank, hdim⟩
-  have hglide : ∀ z : ℂ, KleinBottle.G (KleinBottle.T z) =
-      KleinBottle.T_inv (KleinBottle.G z) := fun z =>
+  have hglide : ∀ z : ℂ, InfoGeometry.External.Auto.KleinBottle.G
+      (InfoGeometry.External.Auto.KleinBottle.T z) =
+      InfoGeometry.External.Auto.KleinBottle.T_inv
+        (InfoGeometry.External.Auto.KleinBottle.G z) := fun z =>
     TorusKleinO55Bridge.klein_glide_twists_torus_translation z
-  have hsquare : ∀ z : ℂ, KleinBottle.G (KleinBottle.G z) = z + 2 := fun z =>
+  have hsquare : ∀ z : ℂ, InfoGeometry.External.Auto.KleinBottle.G
+      (InfoGeometry.External.Auto.KleinBottle.G z) = z + 2 := fun z =>
     TorusKleinO55Bridge.klein_glide_square_is_translation z
   have hactive_rank : O55GradedGeneratorBasis.activeGradedGeneratorCount = 15 :=
     O55GradedGeneratorBasis.active_graded_generator_count_eq

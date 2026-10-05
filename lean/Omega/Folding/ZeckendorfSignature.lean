@@ -407,13 +407,18 @@ theorem congruence_unitgroup_order12_bounded (m : Nat) (hm : 1 ≤ m) (hm_le : m
 
 /-- φ(F_{m+2}) = 12 iff m ∈ {5,6}, extended to m ≤ 20.
     thm:congruence-unitgroup-order12-m56 -/
+private theorem fibTotient_ne_twelve_on_Icc_11_20 :
+    ∀ m ∈ Finset.Icc 11 20, Nat.totient (Nat.fib (m + 2)) ≠ 12 := by
+  native_decide
+
 theorem congruence_unitgroup_order12_extended (m : Nat) (hm : 1 ≤ m) (hm_le : m ≤ 20)
     (h : Nat.totient (Nat.fib (m + 2)) = 12) :
     m = 5 ∨ m = 6 := by
   by_cases hm10 : m ≤ 10
   · exact congruence_unitgroup_order12_bounded m hm hm10 h
   · have hm11 : 11 ≤ m := by omega
-    interval_cases m <;> norm_num [Nat.fib] at h
+    exact (fibTotient_ne_twelve_on_Icc_11_20 m
+      (Finset.mem_Icc.mpr ⟨hm11, hm_le⟩) h).elim
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 199: Idempotents and Z/2-characters in ZMod

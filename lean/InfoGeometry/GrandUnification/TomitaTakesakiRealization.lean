@@ -3,6 +3,7 @@ import Mathlib.Algebra.Module.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Data.Set.Basic
 import InfoGeometry.GrandUnification.MachianCosmology
+import InfoGeometry.GrandUnification.Commutant
 
 namespace InfoGeometry.GrandUnification.TomitaTakesakiRealization
 
@@ -10,20 +11,6 @@ open InfoGeometry.GrandUnification.MachianCosmology
 open LinearMap
 
 variable {R M : Type*} [CommRing R] [Invertible (2 : R)] [AddCommGroup M] [Module R M]
-
-/-!
-### 1. The Commutant (Von Neumann Anima)
-In Algebraic Quantum Field Theory (AQFT), the local algebra of observables 
-(Ego) is fundamentally dual to its Commutant (Anima).
--/
-
-/-- 
-The Commutant of an algebra of observables. 
-If `A` represents the Ego (the accessible region in the right Rindler wedge), 
-the commutant represents the Anima (the causally separated hidden region). 
--/
-def Commutant (A : Set (Module.End R M)) : Set (Module.End R M) :=
-  { y | ∀ x ∈ A, x * y = y * x }
 
 /-- 
 Lemma: The Bicommutant trivially includes the original Algebra.

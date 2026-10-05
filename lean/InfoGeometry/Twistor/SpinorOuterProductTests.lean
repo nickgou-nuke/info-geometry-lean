@@ -38,8 +38,6 @@ example (left right : Fin 2 → ℂ) :
 #print axioms bilinear_scaling
 #print axioms hermitian_outer_scaling
 #print axioms outer_phase_invariant
-#print axioms self_outer_hermitian
-#print axioms mixed_outer_hermitian_iff
 #print axioms det_sum_self_outer
 #print axioms det_sum_self_outer_eq_zero_iff
 #print axioms complex_outer_scaling

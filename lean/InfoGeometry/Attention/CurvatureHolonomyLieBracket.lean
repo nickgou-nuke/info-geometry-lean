@@ -67,25 +67,18 @@ theorem bipolar_commutator_antisymmetric (M1 M2 : Mat2R) :
     bracket (chiral_bipolar M2) (chiral_bipolar M1) =
     - bracket (chiral_bipolar M1) (chiral_bipolar M2) := by
   dsimp [bracket]
-  ext i j
-  fin_cases i <;> fin_cases j <;> ring
+  noncomm_ring
 
 /-- Master Theorem 4: Vanishing of Self-Curvature. -/
 theorem bipolar_commutator_self_zero (M : Mat2R) :
     bracket (chiral_bipolar M) (chiral_bipolar M) = 0 := by
-  dsimp [bracket]
-  ext i j
-  fin_cases i <;> fin_cases j <;> ring
+  simp [bracket]
 
 /-- Master Theorem 5: The Jacobi Identity for Latent Curvature Brackets.
     [[A, B], C] + [[B, C], A] + [[C, A], B] = 0. -/
 theorem latent_curvature_jacobi (A B C : Mat2R) :
     bracket (bracket A B) C + bracket (bracket B C) A + bracket (bracket C A) B = 0 := by
   dsimp [bracket]
-  ext i j
-  fin_cases i <;> fin_cases j <;> {
-    simp only [Matrix.sub_apply, Matrix.add_apply, Matrix.mul_apply, Fin.sum_univ_two]
-    ring
-  }
+  noncomm_ring
 
 end InfoGeometry.Attention.CurvatureHolonomyLieBracket

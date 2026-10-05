@@ -4,9 +4,9 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
 
 /-!
-# Stratum 36: Bogoliubov-de Gennes (BdG) Krein Mass, Projectors, and Zitterbewegung
+# Stratum 36: Finite BdG, Krein Projector, and Dispersion Identities
 
-This module formalizes the dynamic emergence of inertial mass from Krein-Peirce geometry:
+This module formalizes finite algebraic identities for Krein projectors and a BdG-type matrix:
 1. **Fundamental Krein Symmetry & Projectors:**
    In an associative ring with central invertible 2, an involution $\eta$ ($\eta^2 = 1$)
    generates orthogonal idempotent projectors $P_\pm = \frac{1 \pm \eta}{2}$.
@@ -18,11 +18,10 @@ This module formalizes the dynamic emergence of inertial mass from Krein-Peirce 
 4. **Relativistic Dispersion & Mass Gap:**
    Equivalence of the algebraic mass-shell condition $E^2 - p^2 - m^2 = 0 \iff E^2 = p^2 + m^2$
    and the massless lightcone limit $E^2 = p^2$.
-5. **Zitterbewegung Velocity Commutator:**
-   Rigorous derivation that the Dirac velocity operator $\alpha$ does not commute with the
-   Hamiltonian $H = \alpha p + \beta m$ in the presence of mass:
-   $$[\alpha, \alpha p + \beta m] = 2 m (\alpha \beta)$$
-   driving high-frequency oscillation at the Compton scale.
+5. **Abstract generator commutator:**
+   For anticommuting involutions $\alpha,\beta$ and central parameters, the formal identity is
+   $[\alpha, \alpha p + \beta m] = 2 m (\alpha \beta)$. It proves noncommutation only when
+   the right-hand side is nonzero and does not establish time evolution or a Compton frequency.
 -/
 
 namespace InfoGeometry.Canonical.BdGKreinZitterbewegungMass
@@ -206,13 +205,14 @@ theorem bdg_massless_lightcone (E p : R)
 end BdGHamiltonian
 
 /-!
-### Stratum 36.4: The Zitterbewegung Velocity Commutator
-Let α be the velocity operator and β be the mass matrix, with α² = 1, β² = 1,
-and {α, β} = αβ + βα = 0. If p and m are central, the commutator of velocity
-with the Hamiltonian H = α*p + β*m is [α, H] = 2 * m * (αβ).
+### Stratum 36.4: An Abstract Generator Commutator
+Let α and β be abstract anticommuting involutions. If p and m commute with
+the generators, then `[α, α*p + β*m] = 2*m*(α*β)`. Further analytic and
+representation data would be required to interpret this as a physical velocity
+or infer oscillatory time evolution.
 -/
 
-section Zitterbewegung
+section AbstractGeneratorCommutator
 
 variable {A : Type*} [Ring A]
 
@@ -220,10 +220,9 @@ variable {A : Type*} [Ring A]
 def ringComm (X Y : A) : A :=
   X * Y - Y * X
 
-/-- Non-vanishing velocity commutator: [α, α p + β m] = 2m (αβ).
-    Demonstrates that velocity does not commute with energy in the presence of mass,
-    forcing microscopic Zitterbewegung oscillation. -/
-theorem zitterbewegung_velocity_commutator
+/-- Abstract commutator identity for anticommuting involutions and central
+parameters. -/
+theorem involution_linear_hamiltonian_commutator
     (α β p m : A)
     (hα : α * α = 1)
     (h_anticomm : α * β + β * α = 0)
@@ -264,7 +263,7 @@ theorem zitterbewegung_velocity_commutator
   rw [h_sub]
   simp only [add_mul, one_mul]
 
-end Zitterbewegung
+end AbstractGeneratorCommutator
 
 /-!
 ### Stratum 36.5: Master Synthesis Packet for Stratum 36

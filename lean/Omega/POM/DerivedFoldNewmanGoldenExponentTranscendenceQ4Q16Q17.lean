@@ -36,9 +36,15 @@ local notation "DerivedFoldNewmanGoldenExponentTranscendenceQ4Q16Q17Statement" =
 /-- Paper label: `thm:derived-fold-newman-golden-exponent-transcendence-q4-q16-q17`. -/
 theorem paper_derived_fold_newman_golden_exponent_transcendence_q4_q16_q17 :
     DerivedFoldNewmanGoldenExponentTranscendenceQ4Q16Q17Statement := by
-  refine ⟨?_, by decide, by decide, by decide, by decide,
-    by decide, by decide, by decide, by decide, by decide⟩
-  intro a b hb
-  simpa using (paper_derived_fold_golden_rational_power_unit_obstruction a b hb).2
+  rcases paper_derived_fold_renyi_dimension_transcendence_q4_q5_q16_q17 with
+    ⟨hParity, _, _, _, _, h4, h4one, h4negone, _, _, _,
+      h16, h16one, h16negone, h17one, h17negone⟩
+  refine ⟨hParity, ?_, h4one, h4negone, ?_, h16one, h16negone,
+    ?_, h17one, h17negone⟩
+  · simpa [derived_fold_newman_golden_exponent_transcendence_q4_q16_q17_u4_norm,
+      derived_fold_renyi_dimension_transcendence_q4_q5_q16_q17_u4_norm] using h4
+  · simpa [derived_fold_newman_golden_exponent_transcendence_q4_q16_q17_u16_norm,
+      derived_fold_renyi_dimension_transcendence_q4_q5_q16_q17_u16_norm] using h16
+  · rfl
 
 end Omega.POM

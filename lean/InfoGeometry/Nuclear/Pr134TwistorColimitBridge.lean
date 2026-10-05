@@ -18,8 +18,11 @@ open Complex
 
 /-- QMS Mandatory: Map the Twistor Incidence topological condition back down to the nuclear state.
     Instead of toy duplication, we natively call the exact Soldering form from the Quantum algebra. -/
-def incidence_state (Z : Twistor4) (v : Vec3) : Prop :=
-  is_incident Z (solder (0, v 0, v 1, v 2))
+def incidence_state
+    (Z : InfoGeometry.Twistor.PenroseIncidence.Twistor4)
+    (v : InfoGeometry.Nuclear.Praseodymium134.Vec3) : Prop :=
+  InfoGeometry.Nuclear.TwistorMassGapSupergeometry.is_incident Z
+    (solder (0, v 0, v 1, v 2))
 
 /-- Bridge the Pr134 state into the finite Amplituhedron algebraic stage n=3. -/
 def pr134_amplituhedron_kinematics (S : EmergentSpacetime) : AmplituhedronAlgebra 3 :=

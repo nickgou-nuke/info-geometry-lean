@@ -76,9 +76,9 @@ def ModularCommutant (A : Module.End R M) : Submodule R (Module.End R M) where
   smul_mem' := by
     intro c X hX; dsimp at *
     ext v
-    simp only [LinearMap.mul_apply, LinearMap.smul_apply, LinearMap.map_smul]
+    simp only [Module.End.mul_apply, LinearMap.smul_apply, LinearMap.map_smul]
     have h_eval : (X * A) v = (A * X) v := by rw [hX]
-    simp only [LinearMap.mul_apply] at h_eval
+    simp only [Module.End.mul_apply] at h_eval
     rw [h_eval]
 
 /-! ### 4. The Modular Phase Separation Theorem -/
@@ -111,36 +111,5 @@ theorem modular_phase_separation
       have h_str_zero : supertrace Γ (0 : Module.End R M) = 0 := by
         unfold supertrace; rw [mul_zero, map_zero]
       exact h_anomaly h_str_zero
-
-/-! ### 5. Grand Unification Modular Packet -/
-
-/-- The Tomita-Takesaki-inspired Unification Packet structurally binding 
-    the Krein spatial grading to the generation of the Algebra and Commutant sheets. -/
-structure TomitaModularSeparationPacket (R M : Type*) [CommRing R] [Invertible (2 : R)] 
-    [AddCommGroup M] [Module R M] [Module.Free R M] [Module.Finite R M] where
-  /-- The Fundamental Krein Chiral Symmetry (The Grading operator). -/
-  KreinSymmetry : Module.End R M
-  
-  /-- The Local Physical Algebra Generator (Ego Component). -/
-  EgoOperator : Module.End R M
-  
-  /-- The Hidden Mirror Sector Operator (Anima Component). -/
-  AnimaOperator : Module.End R M
-  
-  /-- Witness that the Krein framework is structurally sound (is an involution). -/
-  krein_is_symmetry : IsKreinSymmetry KreinSymmetry
-  
-  /-- Witness that the local physical generator acts as a vortex anomaly (is odd). -/
-  ego_is_odd : IsOddOperator KreinSymmetry EgoOperator
-  
-  /-- The Spinning Instability Trigger (The Non-Zero Commutation Supertrace). -/
-  spinning_instability : supertrace KreinSymmetry (EgoOperator * AnimaOperator - AnimaOperator * EgoOperator) ≠ 0
-
-/-- Standard validation lemma confirming that any valid Tomita packet guarantees 
-    non-trivial separation of the spatial algebra sheets. -/
-lemma validate_packet_separation (P : TomitaModularSeparationPacket R M) :
-    P.KreinSymmetry ≠ 1 ∧ P.KreinSymmetry ≠ -1 := by
-  have h := modular_phase_separation P.KreinSymmetry P.EgoOperator P.AnimaOperator P.ego_is_odd P.spinning_instability
-  exact ⟨h.1, h.2.1⟩
 
 end InfoGeometry.GrandUnification.ModularPhaseSeparation

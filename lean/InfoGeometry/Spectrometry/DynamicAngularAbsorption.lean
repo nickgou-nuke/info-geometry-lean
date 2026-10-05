@@ -4,6 +4,8 @@ import Mathlib.Tactic
 
 namespace InfoGeometry.Spectrometry.DynamicAngularAbsorption
 
+noncomputable section
+
 open Real
 
 /-!
@@ -22,7 +24,7 @@ noncomputable def internalRuler (A P12 ε₁ ε₂ W : ℝ) : ℝ :=
 
 theorem ruler_factorization
     (A P12 ε₁ ε₂ W : ℝ)
-    (h₁ : 0 ≤ A * P12 * W) (h₂ : 0 ≤ ε₁ * ε₂) :
+    (h₁ : 0 ≤ A * P12 * W) :
     internalRuler A P12 ε₁ ε₂ W =
       Real.sqrt (A * P12 * W) * Real.sqrt (ε₁ * ε₂) := by
   dsimp [internalRuler, coincidenceChannel]
@@ -54,9 +56,11 @@ theorem coefficient_ratio
     coefficient₁ A P₁ P12 ε (k * ε) W /
         coefficient₂ A P₂ P12 ε (k * ε) W = P₁ / (k * P₂) := by
   dsimp [coefficient₁, coefficient₂, single₁, single₂]
+  have hX' : internalRuler A P12 ε (ε * k) W ≠ 0 := by
+    rw [mul_comm ε k]
+    exact hX
   have hcancel : A * ε ≠ 0 := mul_ne_zero hA hε
-  field_simp [hX, hP₂, hk, hcancel]
-  ring
+  field_simp [hX', hP₂, hk, hcancel]
 
 end RelativeTransport
 
@@ -74,20 +78,23 @@ theorem product_slope_efficiency_cancellation
     (hε₁ : ε₁ ≠ 0) (hε₂ : ε₂ ≠ 0) (hW : W ≠ 0) :
     productSlope A P₁ P₂ P12 ε₁ ε₂ W =
       A * (P₁ * P₂) / (P12 * W) := by
-  dsimp [productSlope, coefficient₁, coefficient₂, single₁, single₂,
-    internalRuler, coincidenceChannel]
+  let r := internalRuler A P12 ε₁ ε₂ W
+  have hrSq : r ^ 2 = A * P12 * ε₁ * ε₂ * W := by
+    dsimp [r, internalRuler, coincidenceChannel]
+    exact Real.sq_sqrt hQ
   have hQne : A * P12 * ε₁ * ε₂ * W ≠ 0 := by
-    repeat' apply mul_ne_zero
-    exact hA
-    exact hP12
-    exact hε₁
-    exact hε₂
-    exact hW
-  have hsqrt : Real.sqrt (A * P12 * ε₁ * ε₂ * W) ^ 2 =
-      A * P12 * ε₁ * ε₂ * W := Real.sq_sqrt hQ
-  rw [div_eq_mul_inv, div_eq_mul_inv, ← mul_assoc]
-  field_simp [hQne, hsqrt]
-  ring
+    exact mul_ne_zero (mul_ne_zero (mul_ne_zero (mul_ne_zero hA hP12) hε₁) hε₂) hW
+  have hr : r ≠ 0 := by
+    intro hz
+    apply hQne
+    have hzero : r ^ 2 = 0 := by simp [hz]
+    rw [← hrSq, hzero]
+  dsimp [productSlope, coefficient₁, coefficient₂, single₁, single₂]
+  field_simp [hr, hP12, hW, hA, hε₁, hε₂]
+  have hrSq' : (internalRuler A P12 ε₁ ε₂ W) ^ 2 =
+      A * P12 * ε₁ * ε₂ * W := hrSq
+  rw [hrSq']
+  field_simp [hQne]
 
 theorem activity_recovery_of_angular_normalization
     (H A P₁ P₂ P12 W : ℝ)
@@ -97,7 +104,6 @@ theorem activity_recovery_of_angular_normalization
     A = H * (P12 * W) / (P₁ * P₂) := by
   rw [hH]
   field_simp [hP₁, hP₂, hP12, hW]
-  ring
 
 theorem activity_recovery_at_reference_factor
     (H A P₁ P₂ P12 W₀ : ℝ)
@@ -111,23 +117,6 @@ theorem activity_recovery_at_reference_factor
 
 end ProductSlope
 
-section CausalOrder
-
-def causal (a b : ℕ) : Prop := a ≤ b
-
-theorem archetype_chain :
-    causal 205 206 ∧ causal 206 207 ∧ causal 207 208 := by
-  norm_num [causal]
-
-theorem causal_refl (a : ℕ) : causal a a := by
-  exact le_rfl
-
-theorem causal_trans {a b c : ℕ} : causal a b → causal b c → causal a c := by
-  exact le_trans
-
-theorem causal_antisymm {a b : ℕ} : causal a b → causal b a → a = b := by
-  exact le_antisymm
-
-end CausalOrder
+end
 
 end InfoGeometry.Spectrometry.DynamicAngularAbsorption

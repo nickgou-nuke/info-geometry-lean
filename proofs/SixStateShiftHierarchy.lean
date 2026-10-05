@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.TwoSheetThreeColorWeylFinite
 import Mathlib
 import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 import proofs.SixStateGeneralizedPauliBasis

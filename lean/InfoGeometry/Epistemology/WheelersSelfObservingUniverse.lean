@@ -7,24 +7,25 @@ namespace InfoGeometry.Epistemology.WheelersSelfObservingUniverse
 section Module
 
 variable {Scalar Space : Type*} [Ring Scalar] [AddCommGroup Space] [Module Scalar Space]
-variable (projection : Module.End Scalar Space) (idempotent : IsIdempotentElem projection)
+variable (projection : Module.End Scalar Space)
 
-theorem projected_is_fixed (state : Space) :
+theorem projected_is_fixed (idempotent : IsIdempotentElem projection) (state : Space) :
     projection (projection state) = projection state := by
-  exact congrArg (fun operator : Module.End Scalar Space => operator state) idempotent.eq
+  have hcompose : projection * projection = projection := idempotent
+  exact congrArg (fun operator : Module.End Scalar Space => operator state) hcompose
 
-theorem range_iff_fixed (state : Space) :
+theorem range_iff_fixed (idempotent : IsIdempotentElem projection) (state : Space) :
     state ∈ LinearMap.range projection ↔ projection state = state :=
-  idempotent.mem_range_iff
+  LinearMap.IsIdempotentElem.mem_range_iff idempotent
 
-theorem remainder_mem_kernel (state : Space) :
+theorem remainder_mem_kernel (idempotent : IsIdempotentElem projection) (state : Space) :
     state - projection state ∈ LinearMap.ker projection := by
   change projection (state - projection state) = 0
   rw [map_sub, projected_is_fixed projection idempotent, sub_self]
 
-theorem range_kernel_complementary :
+theorem range_kernel_complementary (idempotent : IsIdempotentElem projection) :
     IsCompl (LinearMap.range projection) (LinearMap.ker projection) :=
-  idempotent.isCompl
+  LinearMap.IsIdempotentElem.isCompl idempotent
 
 theorem decomposition (state : Space) :
     projection state + (state - projection state) = state := by abel
@@ -39,7 +40,7 @@ theorem decomposition_components_unique (state observed hidden : Space)
   rw [← observed_eq, ← reconstruct]
   abel
 
-theorem exists_unique_decomposition (state : Space) :
+theorem exists_unique_decomposition (idempotent : IsIdempotentElem projection) (state : Space) :
     ∃! components : Space × Space,
       projection components.1 = components.1 ∧ projection components.2 = 0 ∧
         components.1 + components.2 = state := by

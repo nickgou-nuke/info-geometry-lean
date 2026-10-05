@@ -16,6 +16,7 @@ theorem efficiency_at_critical (K : ℝ) (hK : K ≠ 0) :
     efficiency K (criticalEfficiency K) = 0 := by
   simp only [efficiency, criticalEfficiency]
   field_simp [hK]
+  ring
 
 end CarnotEfficiency
 
@@ -73,7 +74,7 @@ theorem endpoint_power_at_critical (N₀ K : ℝ) (hK : K ≠ 0) :
     informationPower N₀ K (criticalEfficiency K) = 0 := by
   simp only [informationPower]
   rw [efficiency_at_critical K hK]
-  ring
+  simp
 
 end Equipartition
 

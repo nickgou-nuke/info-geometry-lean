@@ -45,7 +45,7 @@ theorem transpose_mul_J_add_J_mul (X : Mat2R) :
   ext i j
   fin_cases i <;> fin_cases j <;> {
     dsimp [J_symp, Matrix.trace, Matrix.mul_apply, transpose_apply]
-    simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons, smul_apply]
+    simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one]
     ring
   }
 
@@ -63,7 +63,7 @@ theorem traceless_iff_infinitesimal_symplectic (X : Mat2R) :
   constructor
   · intro h
     have h01 := congrFun (congrFun h 0) 1
-    simp only [J_symp, smul_apply, cons_val_zero, cons_val_one, head_cons, mul_one] at h01
+    simp only [J_symp, smul_apply] at h01
     simpa using h01
   · intro h
     rw [h, zero_smul]
@@ -82,9 +82,7 @@ theorem traceless_proj_is_symplectic (X : Mat2R) :
     (traceless_proj X)ᵀ * J_symp + J_symp * (traceless_proj X) = 0 := by
   rw [traceless_iff_infinitesimal_symplectic]
   dsimp [Matrix.trace, traceless_proj, I_2]
-  simp only [Fin.sum_univ_two, Matrix.sub_apply, Matrix.smul_apply,
-             Matrix.one_apply_eq, Matrix.one_apply_ne,
-             cons_val_zero, cons_val_one, head_cons]
+  simp only [Fin.sum_univ_two, Matrix.one_apply_eq]
   ring
 
 /-!
@@ -107,10 +105,8 @@ theorem operator_tetrad_decomposition (M : Mat2R) :
     M = c0 • I_2 + c1 • G_grading + c2 • C_symm + c3 • J_symp := by
   intro c0 c1 c2 c3
   ext i j
-  fin_cases i <;> fin_cases j <;> {
-    dsimp [c0, c1, c2, c3, I_2, G_grading, C_symm, J_symp]
-    ring
-  }
+  fin_cases i <;> fin_cases j <;>
+    norm_num [c0, c1, c2, c3, I_2, G_grading, C_symm, J_symp] <;> ring
 
 /-!
 # Archetype 917: Complete Frobenius Orthogonality of the Tetrad
@@ -126,13 +122,8 @@ theorem tetrad_pairwise_orthogonal :
     frobenius_inner G_grading C_symm = 0 ∧
     frobenius_inner G_grading J_symp = 0 ∧
     frobenius_inner C_symm J_symp = 0 := by
-  dsimp [frobenius_inner, I_2, G_grading, C_symm, J_symp, Matrix.trace]
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> {
-    simp only [Fin.sum_univ_two, Matrix.mul_apply, transpose_apply,
-               Matrix.one_apply_eq, Matrix.one_apply_ne,
-               cons_val_zero, cons_val_one, head_cons]
-    ring
-  }
+  norm_num [frobenius_inner, I_2, G_grading, C_symm, J_symp, Matrix.trace,
+    Matrix.mul_apply, transpose_apply, Fin.sum_univ_two]
 
 /-- Master Theorem 6: The Norms of the Tetrad Elements.
     ⟨𝕀₂, 𝕀₂⟩ = 2, ⟨G, G⟩ = 2, ⟨C_sym, C_sym⟩ = 2, ⟨J, J⟩ = 2. -/
@@ -141,12 +132,7 @@ theorem tetrad_norms_squared :
     frobenius_inner G_grading G_grading = 2 ∧
     frobenius_inner C_symm C_symm = 2 ∧
     frobenius_inner J_symp J_symp = 2 := by
-  dsimp [frobenius_inner, I_2, G_grading, C_symm, J_symp, Matrix.trace]
-  refine ⟨?_, ?_, ?_, ?_⟩ <;> {
-    simp only [Fin.sum_univ_two, Matrix.mul_apply, transpose_apply,
-               Matrix.one_apply_eq, Matrix.one_apply_ne,
-               cons_val_zero, cons_val_one, head_cons]
-    ring
-  }
+  norm_num [frobenius_inner, I_2, G_grading, C_symm, J_symp, Matrix.trace,
+    Matrix.mul_apply, transpose_apply, Fin.sum_univ_two]
 
 end InfoGeometry.Attention.SymplecticDefectInvariance

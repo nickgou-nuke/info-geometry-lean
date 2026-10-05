@@ -44,7 +44,9 @@ theorem diracMassCoupling_matrix (m : ℝ) :
 def dilaton (lam : ℝ) : ℝ := Real.exp lam
 def localMass (m0 lam : ℝ) : ℝ := m0 * dilaton lam
 def comptonScale (hbar c m : ℝ) : ℝ := hbar / (m * c)
-def zitterFrequency (hbar c m : ℝ) : ℝ := 2 * m * c^2 / hbar
+/- The rest-gap frequency scale is owned by
+`InfoGeometry.Canonical.ZitterbewegungMassEmergence.comptonFrequency`.
+This local module does not identify a gap with an observable oscillation. -/
 
 theorem localMass_zero_base (lam : ℝ) : localMass 0 lam = 0 := by simp [localMass]
 
@@ -73,44 +75,16 @@ theorem localEntropyQuadratic_nonneg (x : ℝ) : 0 ≤ localEntropyQuadratic x :
 theorem localEntropyQuadratic_zero : localEntropyQuadratic 0 = 0 := by
   norm_num [localEntropyQuadratic]
 
-inductive ChiralMassConcept where
-  | Left_Weyl_Sheet
-  | Right_Weyl_Sheet
-  | Tomita_Modular_Swap
-  | Dirac_Mass_Coupling
-  | Zitterbewegung
-  | Dilaton_Weyl_Scale
-  | Conformal_Spring
-  | Orthogonal_Entropy_Transport
-  deriving DecidableEq, Repr
+/-! The former Boolean edge table conflated a rest-energy splitting with
+observable Zitterbewegung. The valid finite-dimensional statement is the
+characteristic polynomial below; velocity dynamics is formalized separately
+in `InfoGeometry.Physics.DiracRest`. -/
 
-inductive ChiralMassEdge where
-  | swapped_by
-  | couples_to
-  | generates
-  | breaks_weyl_scale_by
-  | realizes_as
-  | drives_orthogonal_transport
-  deriving DecidableEq, Repr
-
-def edgeHolds : ChiralMassConcept → ChiralMassEdge → ChiralMassConcept → Bool
-  | ChiralMassConcept.Left_Weyl_Sheet, ChiralMassEdge.swapped_by, ChiralMassConcept.Tomita_Modular_Swap => true
-  | ChiralMassConcept.Right_Weyl_Sheet, ChiralMassEdge.swapped_by, ChiralMassConcept.Tomita_Modular_Swap => true
-  | ChiralMassConcept.Left_Weyl_Sheet, ChiralMassEdge.couples_to, ChiralMassConcept.Right_Weyl_Sheet => true
-  | ChiralMassConcept.Dirac_Mass_Coupling, ChiralMassEdge.generates, ChiralMassConcept.Zitterbewegung => true
-  | ChiralMassConcept.Dirac_Mass_Coupling, ChiralMassEdge.breaks_weyl_scale_by, ChiralMassConcept.Dilaton_Weyl_Scale => true
-  | ChiralMassConcept.Dilaton_Weyl_Scale, ChiralMassEdge.realizes_as, ChiralMassConcept.Conformal_Spring => true
-  | ChiralMassConcept.Conformal_Spring, ChiralMassEdge.drives_orthogonal_transport, ChiralMassConcept.Orthogonal_Entropy_Transport => true
-  | _, _, _ => false
-
-theorem chiral_mass_graph_kernel :
-    edgeHolds ChiralMassConcept.Left_Weyl_Sheet ChiralMassEdge.swapped_by ChiralMassConcept.Tomita_Modular_Swap = true ∧
-    edgeHolds ChiralMassConcept.Left_Weyl_Sheet ChiralMassEdge.couples_to ChiralMassConcept.Right_Weyl_Sheet = true ∧
-    edgeHolds ChiralMassConcept.Dirac_Mass_Coupling ChiralMassEdge.generates ChiralMassConcept.Zitterbewegung = true ∧
-    edgeHolds ChiralMassConcept.Dirac_Mass_Coupling ChiralMassEdge.breaks_weyl_scale_by ChiralMassConcept.Dilaton_Weyl_Scale = true ∧
-    edgeHolds ChiralMassConcept.Dilaton_Weyl_Scale ChiralMassEdge.realizes_as ChiralMassConcept.Conformal_Spring = true ∧
-    edgeHolds ChiralMassConcept.Conformal_Spring ChiralMassEdge.drives_orthogonal_transport ChiralMassConcept.Orthogonal_Entropy_Transport = true := by
-  decide
+theorem diracMassCoupling_characteristic_polynomial (m E : ℝ) :
+    Matrix.det (diracMassCoupling m - E • I2) = (E - m) * (E + m) := by
+  rw [diracMassCoupling_matrix]
+  simp [I2, Matrix.det_fin_two]
+  ring
 
 theorem chiral_mass_dilaton_kernel :
     PR * PL = 0 ∧

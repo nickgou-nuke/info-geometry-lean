@@ -23,27 +23,24 @@ open Omega
     over stable words in X_m.
     prop:foldbin-groupoid-aut0-pi1-torsion-exponent -/
 def torsionExponent (m : Nat) : Nat :=
-  (@Finset.univ (X m) (fintypeX m)).sup' (@Finset.univ_nonempty _ (fintypeX m) (X.instNonempty m))
-    (fun x => (Finset.range (2 ^ m)).filter (fun N => cBinFold m N = x) |>.card)
-  |> fun _ =>
   (@Finset.univ (X m) (fintypeX m)).val.map (fun x => cBinFiberMult m x)
     |>.foldl Nat.lcm 1
 
 /-- The torsion exponent at m = 4 equals 6.
     eq:foldbin4_groupoid_aut_pi1_torsion_exponent -/
-theorem torsionExponent_four : torsionExponent 4 = 6 := by decide
+theorem torsionExponent_four : torsionExponent 4 = 6 := by native_decide
 
 /-- BinFold fiber histogram at m = 4: 3 words with multiplicity 1.
     eq:foldbin4_groupoid_aut_pi1_torsion_exponent -/
-theorem cBinFiberHist_4_1 : cBinFiberHist 4 1 = 3 := by decide
+theorem cBinFiberHist_4_1 : cBinFiberHist 4 1 = 3 := by native_decide
 
 /-- BinFold fiber histogram at m = 4: 2 words with multiplicity 2.
     eq:foldbin4_groupoid_aut_pi1_torsion_exponent -/
-theorem cBinFiberHist_4_2 : cBinFiberHist 4 2 = 2 := by decide
+theorem cBinFiberHist_4_2 : cBinFiberHist 4 2 = 2 := by native_decide
 
 /-- BinFold fiber histogram at m = 4: 3 words with multiplicity 3.
     eq:foldbin4_groupoid_aut_pi1_torsion_exponent -/
-theorem cBinFiberHist_4_3 : cBinFiberHist 4 3 = 3 := by decide
+theorem cBinFiberHist_4_3 : cBinFiberHist 4 3 = 3 := by native_decide
 
 /-- Total stable words at m = 4: |X_4| = F_6 = 8. -/
 theorem window4_count : cBinFiberHist 4 1 + cBinFiberHist 4 2 + cBinFiberHist 4 3 = 8 := by
@@ -53,14 +50,6 @@ theorem window4_count : cBinFiberHist 4 1 + cBinFiberHist 4 2 + cBinFiberHist 4 
 theorem window4_fiber_sum :
     cBinFiberHist 4 1 * 1 + cBinFiberHist 4 2 * 2 + cBinFiberHist 4 3 * 3 = 16 := by
   rw [cBinFiberHist_4_1, cBinFiberHist_4_2, cBinFiberHist_4_3]
-
-/-! ## Cyclic injection criterion -/
-
-/-- If Z/nZ injects into π₁(G_m), then n divides the torsion exponent at m.
-    This is the divisibility criterion from
-    cor:foldbin-groupoid-aut0-cyclic-injection-criterion -/
-theorem cyclic_injection_dvd_torsionExponent (m n : Nat) (hn : n ∣ torsionExponent m) :
-    n ∣ torsionExponent m := hn
 
 /-! ## Main theorem: SM signature common cyclic identification divides 6 -/
 

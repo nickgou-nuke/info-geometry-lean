@@ -99,14 +99,14 @@ lemma signed_companion_lucas_certificate_det6 :
         signed_companion_lucas_certificate_signed_companion
           signed_companion_lucas_certificate_coeffs6).det =
       signed_companion_lucas_certificate_signedDet 6 := by
-  decide
+  native_decide
 
 lemma signed_companion_lucas_certificate_det7 :
     ((1 : Matrix (Fin 7) (Fin 7) ℤ) -
         signed_companion_lucas_certificate_signed_companion
           signed_companion_lucas_certificate_coeffs7).det =
       signed_companion_lucas_certificate_signedDet 7 := by
-  decide
+  native_decide
 
 theorem signed_companion_lucas_certificate_audited_q2_q23 :
     signed_companion_lucas_certificate_statement := by

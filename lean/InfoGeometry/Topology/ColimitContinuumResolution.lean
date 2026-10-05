@@ -1,5 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
-import Mathlib.RingTheory.DirectLimit
+import Mathlib.Algebra.Colimit.Ring
 import Mathlib.Tactic
 
 namespace InfoGeometry.Topology.ColimitContinuumResolution
@@ -24,7 +24,7 @@ the conformal infinity purely algebraically using the categorical direct limit.
 -/
 
 /-- The Colimit Continuum is natively the algebraic direct limit. -/
-def ContinuumLimit := Ring.DirectLimit G (fun i j h => f i j h)
+abbrev ContinuumLimit := Ring.DirectLimit G (fun i j h => f i j h)
 
 /-!
 # Archetype 1003: Nondestructive Projection
@@ -35,7 +35,7 @@ without requiring any topological limit operation or measure theory.
 /-- Master Theorem 1: The Canonical Projection into the Continuum.
     Any observable at finite stage  projects exactly into the colimit boundary
     as a well-defined structural homomorphism. -/
-def embed_stage (i : ι) : G i →+* ContinuumLimit G f :=
+noncomputable def embed_stage (i : ι) : G i →+* ContinuumLimit G f :=
   Ring.DirectLimit.of G (fun i j h => f i j h) i
 
 /-- Master Theorem 2: Functorial Compatibility of the Boundary.
@@ -43,7 +43,6 @@ def embed_stage (i : ι) : G i →+* ContinuumLimit G f :=
     ensuring that the limit is topologically sound and consistent. -/
 theorem continuum_compatibility (i j : ι) (h : i ≤ j) (x : G i) :
     embed_stage G f j (f i j h x) = embed_stage G f i x := by
-  dsimp [embed_stage, ContinuumLimit]
-  exact (Ring.DirectLimit.of_f h x).symm
+  simpa [embed_stage, ContinuumLimit] using (Ring.DirectLimit.of_f (G := G) (f := fun i j h => f i j h) h x).symm
 
 end InfoGeometry.Topology.ColimitContinuumResolution

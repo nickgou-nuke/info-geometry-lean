@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.TwoSheetThreeColorWeylFinite
 import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 import proofs.TwelveFoldArithmetic
 import proofs.TwelveFoldSheetColorOmega

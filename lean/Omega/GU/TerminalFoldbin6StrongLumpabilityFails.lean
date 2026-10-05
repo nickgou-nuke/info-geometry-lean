@@ -13,8 +13,8 @@ theorem paper_terminal_foldbin6_strong_lumpability_fails :
       ∃ y : X 6,
         ((Finset.range 6).filter (fun k => cBinFold 6 (0 ^^^ (2 ^ k)) = y)).card ≠
           ((Finset.range 6).filter (fun k => cBinFold 6 (21 ^^^ (2 ^ k)) = y)).card := by
-  refine ⟨by decide, ?_⟩
+  refine ⟨by native_decide, ?_⟩
   refine ⟨X.ofNat 6 1, ?_⟩
-  decide
+  native_decide
 
 end Omega.GU

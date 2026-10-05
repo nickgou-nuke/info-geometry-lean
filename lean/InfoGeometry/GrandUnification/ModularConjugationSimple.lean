@@ -3,13 +3,14 @@ import Mathlib.Algebra.Module.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic
 import Mathlib.Data.Set.Basic
+import InfoGeometry.GrandUnification.Commutant
 
 /-!
-# Simple Modular Conjugation
+# Modular conjugation using the shared commutant owner
 
-A minimal definition of the `ModularConjugation` class used by the
-`SpacetimeGlide` module. It avoids importing the full `TomitaTakesakiRealization`
-file, which currently depends on `MachianCosmology` and does not compile.
+The class used by the `SpacetimeGlide` development is stated against the
+shared algebraic commutant, so it does not duplicate the commutant definition
+or depend on the broader Tomita–Takesaki realization module.
 -/
 
 namespace InfoGeometry.GrandUnification

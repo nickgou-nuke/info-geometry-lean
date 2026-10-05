@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.TwoSheetThreeColorWeylFinite
 import InfoGeometry.Canonical.HestenesEvenPauliEquiv
 import proofs.CircularCARQuarticCapstone
 

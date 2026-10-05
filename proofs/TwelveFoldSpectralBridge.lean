@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.TwoSheetThreeColorWeylFinite
 import proofs.TwelveFoldSheetColorOmega
 import proofs.SixStateCharacteristicPolynomial
 import Mathlib.GroupTheory.OrderOfElement

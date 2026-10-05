@@ -39,6 +39,7 @@ instance instIsTopologicalAddGroup : IsTopologicalAddGroup (ComplexTorus V L) :=
   inferInstanceAs (IsTopologicalAddGroup (V ⧸ L.toAddSubgroup))
 
 instance instT2Space : T2Space (ComplexTorus V L) := by
+  letI : DiscreteTopology L.toAddSubgroup := (inferInstance : DiscreteTopology L)
   letI : IsClosed (L.toAddSubgroup : Set V) :=
     AddSubgroup.isClosed_of_discrete (H := L.toAddSubgroup)
   letI : T1Space (V ⧸ L.toAddSubgroup) :=

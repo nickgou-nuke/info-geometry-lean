@@ -53,10 +53,8 @@ def frobenius_inner (A B : Mat2R) : ℝ :=
     orthogonal in the operator algebra: ⟨diag_core(M), chiral_bipolar(M)⟩ = 0. -/
 theorem dissipative_chiral_orthogonal (M : Mat2R) :
     frobenius_inner (diag_core M) (chiral_bipolar M) = 0 := by
-  dsimp [frobenius_inner, diag_core, chiral_bipolar, Matrix.trace]
-  simp only [Fin.sum_univ_two, Matrix.mul_apply, transpose_apply]
-  simp only [cons_val_zero, cons_val_one, head_cons]
-  ring
+  simp [frobenius_inner, diag_core, chiral_bipolar, Matrix.trace,
+    Matrix.mul_apply, transpose_apply, Fin.sum_univ_two]
 
 /-!
 # Archetype 903: Casimir Degeneracy Condition of the Dirac Grading
@@ -76,10 +74,7 @@ def G_grading : Mat2R :=
     The chiral transport operator has vanishing trace pairing with the grading operator. -/
 theorem chiral_transport_casimir_invariant (M : Mat2R) :
     Matrix.trace (G_grading * chiral_bipolar M) = 0 := by
-  dsimp [G_grading, chiral_bipolar, Matrix.trace]
-  simp only [Fin.sum_univ_two, Matrix.mul_apply]
-  simp only [cons_val_zero, cons_val_one, head_cons]
-  ring
+  simp [G_grading, chiral_bipolar, Matrix.trace, Fin.sum_univ_two]
 
 /-!
 # Archetype 904: Relativistic Mass Dispersion of the Chiral Channel
@@ -93,12 +88,8 @@ theorem chiral_bipolar_sq (M : Mat2R) :
     (chiral_bipolar M) * (chiral_bipolar M) =
     (M 0 1 * M 1 0) • (1 : Mat2R) := by
   ext i j
-  fin_cases i <;> fin_cases j <;> {
-    dsimp [chiral_bipolar, Matrix.mul_apply]
-    simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons]
-    simp [Matrix.one_apply]
-    ring
-  }
+  fin_cases i <;> fin_cases j <;>
+    (norm_num [chiral_bipolar, Matrix.mul_apply, Fin.sum_univ_two] <;> ring)
 
 /-- Master Theorem 5: Anticommutation of G and C(M). -/
 theorem G_anticommutes_chiral (M : Mat2R) :
@@ -106,7 +97,7 @@ theorem G_anticommutes_chiral (M : Mat2R) :
   ext i j
   fin_cases i <;> fin_cases j <;> {
     dsimp [G_grading, chiral_bipolar, Matrix.mul_apply]
-    simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons]
+    simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one]
     ring
   }
 
@@ -124,12 +115,8 @@ theorem metriplectic_dirac_dispersion (M : Mat2R) (p m : ℝ)
       _ = 0 := smul_zero p
   have h_G_sq : G_grading * G_grading = 1 := by
     ext i j
-    fin_cases i <;> fin_cases j <;> {
-      dsimp [G_grading, Matrix.mul_apply]
-      simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons]
-      simp [Matrix.one_apply]
-      ring
-    }
+    fin_cases i <;> fin_cases j <;>
+      norm_num [G_grading, Matrix.mul_apply, Fin.sum_univ_two]
   calc (p • G_grading + chiral_bipolar M) * (p • G_grading + chiral_bipolar M)
       = (p • G_grading) * (p • G_grading) +
         ((p • G_grading) * chiral_bipolar M + chiral_bipolar M * (p • G_grading)) +
@@ -164,13 +151,10 @@ def chiral_obstruction (M : Mat2R) : Mat2R :=
     diag(M₀₀, -M₁₁). -/
 theorem chiral_obstruction_eq_diagonal_leak (M : Mat2R) :
     chiral_obstruction M = !![M 0 0, 0; 0, -M 1 1] := by
-  dsimp [chiral_obstruction, Matrix.mul_apply]
   ext i j
-  fin_cases i <;> fin_cases j <;> {
-    simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons]
-    simp [Matrix.one_apply]
-    ring
-  }
+  fin_cases i <;> fin_cases j <;>
+    norm_num [chiral_obstruction, Matrix.mul_apply, Matrix.vecMul, dotProduct,
+      Fin.sum_univ_two, Matrix.one_apply]
 
 /-- Master Theorem 8: Non-Vanishing Trace of the Obstruction for Positive Diagonal.
     If M has strictly positive diagonal entries (the universal property of Softmax),
@@ -180,7 +164,7 @@ theorem softmax_trace_strictly_positive (M : Mat2R)
     (h00 : 0 < M 0 0) (h11 : 0 < M 1 1) :
     0 < Matrix.trace (diag_core M) := by
   dsimp [Matrix.trace, diag_core]
-  simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons]
+  simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one]
   linarith
 
 end InfoGeometry.Attention.MetriplecticAttentionDynamics

@@ -43,8 +43,8 @@ theorem paper_sync10_uniform_output_corr :
       sync10FlipProb = 137 / 216 ∧ sync10OutputCorr 1 = -29 / 108 ∧
       sync10OutputCorr 2 = -1 / 81 ∧ sync10OutputCorr 3 = -1 / 972 ∧
       sync10OutputCorr 4 = -5 / 1458 := by
-  unfold sync10OutputPairProb sync10FlipProb sync10OutputCorr sync10OutputLagPairProb
-  unfold sync10OutputBit sync10UniformStationaryVector
-  decide
+  set_option maxRecDepth 10000 in
+  set_option maxHeartbeats 0 in
+  native_decide
 
 end Omega.EA

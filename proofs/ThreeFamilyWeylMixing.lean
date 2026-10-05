@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Canonical.TwoSheetThreeColorWeylFinite
 import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 
 /-!

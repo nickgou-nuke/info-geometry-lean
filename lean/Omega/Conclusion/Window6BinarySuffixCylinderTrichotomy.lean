@@ -59,6 +59,6 @@ theorem paper_conclusion_window6_binary_suffix_cylinder_trichotomy :
       window6BinaryLayer 4 = window6X4Suffix00 ∪ {window6ExceptionalWord} ∧
       Disjoint window6X5Suffix0 window6X4Suffix01 ∧
       window6X5Suffix0 ∪ window6X4Suffix01 = window6All := by
-  decide
+  native_decide
 
 end Omega.Conclusion

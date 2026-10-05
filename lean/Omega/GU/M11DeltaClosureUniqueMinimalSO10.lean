@@ -23,6 +23,15 @@ theorem paper_m11_delta_closure_unique_minimal_so10 :
   · intro m hm h
     exact Omega.ZeckSig.bdry_delta34_m11_uniqueness m hm h
   · simp [cBoundaryCount_six, cBoundaryCount_eight, cBoundaryCount_eleven]
-  · decide
+  · intro d hd hsig
+    have hrepr_injective : ∀ {a b : Nat}, Nat.zeckendorf a = Nat.zeckendorf b → a = b := by
+      intro a b hab
+      have hsum := congrArg (fun l : List Nat => (l.map Nat.fib).sum) hab
+      simpa using hsum
+    have hd_ne : d ≠ 45 := by
+      intro h
+      subst d
+      norm_num at hd
+    exact hd_ne (hrepr_injective hsig)
 
 end Omega.GU

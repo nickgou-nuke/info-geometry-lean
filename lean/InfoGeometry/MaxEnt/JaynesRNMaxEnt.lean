@@ -109,7 +109,7 @@ omit [IsProbabilityMeasure μ₀] in theorem aemeasurable_potential (lam : ι �
   classical
   have hmeas : Measurable (potential (C := C) lam) := by
     unfold potential
-    simpa using
+    exact
       ((Finset.measurable_fun_sum (s := (Finset.univ : Finset ι))
         (f := fun i : ι => fun x : Ω => (lam i) * C.f i x)
         (by

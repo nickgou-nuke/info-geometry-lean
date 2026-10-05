@@ -16,21 +16,29 @@ namespace InfoGeometry.MetaCompiler
 -- 1. Automated Solver Engine
 -- ============================================================================
 
+/-- Execute a tactic block with an isolated heartbeat budget. -/
+def runWithHeartbeats (mvarId : MVarId) (maxHB : Nat) (tac : Syntax) : TermElabM (List MVarId) := do
+  withTheReader Core.Context (fun ctx => { ctx with maxHeartbeats := maxHB * 1000 }) do
+    Tactic.run mvarId (evalTactic tac)
+
+/-- Hardened cascade that isolates solver stages and handles resource limits cleanly. -/
 def autoDischargeCascade (mvarId : MVarId) : TermElabM Unit := do
-  let autoTac ← `(tactic| first
-    | intros; rfl
-    | intros; decide
-    | intros; simp_all
-    | intros; omega)
-  try
-    let remaining ← Tactic.run mvarId do
-      evalTactic autoTac
-    if !remaining.isEmpty then
-      throwError "Discharge cascade left {remaining.length} unsolved goal(s)."
-  catch ex =>
-    throwError m!"Automated discharge cascade failed to close the goal.\n\
-                  Portfolio attempted: [rfl, decide, simp_all, omega].\n\
-                  Details: {ex.toMessageData}"
+  let solvers : List (String × Syntax) ← [
+    ("rfl",      (← `(tactic| intros; rfl)).raw),
+    ("decide",   (← `(tactic| intros; decide)).raw),
+    ("simp_all", (← `(tactic| intros; simp_all)).raw),
+    ("omega",    (← `(tactic| intros; omega)).raw)
+  ].mapM fun (n, t) => pure (n, t)
+
+  for (name, tac) in solvers do
+    try
+      let remaining ← runWithHeartbeats mvarId 20 tac
+      if remaining.isEmpty then
+        return ()
+    catch _ =>
+      continue
+
+  throwError "Automated discharge cascade exhausted portfolio [rfl, decide, simp_all, omega] without closing goal."
 
 -- ============================================================================
 -- 2. Promotion Synthesis Core

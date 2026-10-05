@@ -68,30 +68,3 @@ theorem zorn_associator_three_quarks_demodulation (S p eps : Vec3 R) :
   · ext i; fin_cases i <;> { dsimp [cross3, dot3]; ring }
   · ext i; fin_cases i <;> { dsimp [cross3, dot3]; ring }
 
-open InfoGeometry.MetaCompiler
-
-/-- Register the verified chiral associator coordinate identity as an active archetype. -/
-
-def chiralAssociatorIdentityArch : TypedArchetype (Vec3 R × Vec3 R × Vec3 R) .proved where
-
-  name     := `chiralAssociatorIdentityArch
-
-  phase    := 1
-
-  claim    := fun (S, p, eps) =>
-
-    let T := dot3 S (cross3 p eps)
-
-    zornAssociator (ZornMatrix.quark S) (ZornMatrix.quark p) (ZornMatrix.quark eps) =
-
-    ZornMatrix.sub (ZornMatrix.smul T ZornMatrix.PMinus) (ZornMatrix.smul T ZornMatrix.PPlus)
-
-  evidence := fun (S, p, eps) => zorn_associator_three_quarks_demodulation S p eps
-
-
-
-#register_archetype chiralAssociatorIdentityArch
-
-end InfoGeometry.Canonical.ZornChiralAssociatorDemodulation
-
-

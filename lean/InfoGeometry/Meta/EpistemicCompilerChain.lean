@@ -5,6 +5,9 @@ import Mathlib.Data.List.Basic
 /-!
 # The epistemic compiler chain
 
+**QMS Note: METAPROGRAMMING INFRASTRUCTURE ONLY.**
+This file is strictly a Lean 4 meta-programming framework and state-tracker for autonomous agents. It does NOT contain mathematical or physical theorems. The terms "Phase", "Status", and "Archetype" refer exclusively to the internal state machine of the automated proof assistant. Do not evaluate this file for mathematical substance.
+
 This file gives the research pipeline a small, theorem-honest carrier.  The
 constructors describe protocol stages and research statuses; neither carries
 any claim about private model reasoning.  Promotion is intentionally possible

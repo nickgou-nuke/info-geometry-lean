@@ -39,23 +39,26 @@ theorem kan_det_factorization (c s t₁ t₂ x : R) :
 theorem N_grp_mul (x y : R) :
     N_grp R x * N_grp R y = N_grp R (x + y) := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [N_grp, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  fin_cases i <;> fin_cases j
+  all_goals simp [N_grp, Matrix.mul_apply, Fin.sum_univ_two]
+  all_goals ring
 
 /-- Composition of diagonal factors is componentwise multiplication. -/
 theorem A_grp_mul (t₁ t₂ u₁ u₂ : R) :
     A_grp R t₁ t₂ * A_grp R u₁ u₂ = A_grp R (t₁ * u₁) (t₂ * u₂) := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [A_grp, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  fin_cases i <;> fin_cases j
+  all_goals simp [A_grp, Matrix.mul_apply, Fin.sum_univ_two]
+  all_goals ring
 
 /-- The compact-factor parameters compose by the angle-addition polynomial law. -/
 theorem K_grp_mul (c s c' s' : R) :
     K_grp R c s * K_grp R c' s' =
       K_grp R (c * c' - s * s') (s * c' + c * s') := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [K_grp, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  fin_cases i <;> fin_cases j
+  all_goals simp [K_grp, Matrix.mul_apply, Fin.sum_univ_two]
+  all_goals ring
 
 /-- The product `K(c,s) A(t₁,t₂) N(x)` in explicit matrix coordinates. -/
 theorem kan_product_entries (c s t₁ t₂ x : R) :
@@ -63,8 +66,9 @@ theorem kan_product_entries (c s t₁ t₂ x : R) :
       ![![c * t₁, c * t₁ * x - s * t₂],
         ![s * t₁, s * t₁ * x + c * t₂]] := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [K_grp, A_grp, N_grp, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  fin_cases i <;> fin_cases j
+  all_goals simp [K_grp, A_grp, N_grp, Matrix.mul_apply, Fin.sum_univ_two]
+  all_goals ring
 
 /-- The compact factor has determinant one when its parameters lie on the unit circle. -/
 theorem K_grp_det_one_of_circle (c s : R) (h : c ^ 2 + s ^ 2 = 1) :

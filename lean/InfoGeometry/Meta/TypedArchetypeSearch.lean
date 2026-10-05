@@ -1,6 +1,12 @@
 import Lean
 import InfoGeometry.Meta.EpistemicCompilerChain
 
+
+/-!
+# Typed Archetype Search
+**QMS Note: METAPROGRAMMING INFRASTRUCTURE ONLY.**
+This file provides a Lean 4 compiler macro (`#search_typed_archetypes`) to query the environment. It is pure tooling without mathematical substance.
+-/
 namespace InfoGeometry.MetaCompiler.Search
 
 open Lean Meta Elab Command

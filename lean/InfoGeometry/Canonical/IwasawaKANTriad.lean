@@ -4,6 +4,7 @@ import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
 
+import InfoGeometry.Meta.ArchetypePipeline
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 set_option linter.unusedSimpArgs false
@@ -115,4 +116,24 @@ theorem e_plus_sq : e_plus R * e_plus R = (0 : Matrix (Fin 2) (Fin 2) R) := by
 theorem N_mediates_peirce_polarization (x : R) : N_grp R x * P_minus R = P_minus R + x • e_plus R := by
   ext i j; fin_cases i <;> fin_cases j <;> { simp [N_grp, P_minus, e_plus, Matrix.mul_apply, Fin.sum_univ_two, Matrix.add_apply]; try ring }
 
+open InfoGeometry.MetaCompiler
+
+/-- Register the verified N_grp translation as an active archetype. -/
+
+def kanTriadArch : TypedArchetype (R) .proved where
+
+  name     := `kanTriadArch
+
+  phase    := 2
+
+  claim    := fun x => N_grp R x * P_minus R = P_minus R + x • e_plus R
+
+  evidence := fun x => N_mediates_peirce_polarization R x
+
+
+
+#register_archetype kanTriadArch
+
 end InfoGeometry.Canonical.IwasawaKANTriad
+
+

@@ -24,6 +24,30 @@ theorem scalar_triple_product_cyclic (u v w : Vec3 R) :
   dsimp [dot3, cross3]
   ring
 
+/-- Swapping the first two vectors reverses the scalar triple product. -/
+theorem scalar_triple_product_swap (u v w : Vec3 R) :
+    dot3 v (cross3 u w) = - dot3 u (cross3 v w) := by
+  dsimp [dot3, cross3]
+  ring
+
+/-- Reversing the orientation of the cross-product inputs reverses the scalar. -/
+theorem scalar_triple_product_orientation_reversal (u v w : Vec3 R) :
+    dot3 u (cross3 w v) = - dot3 u (cross3 v w) := by
+  dsimp [dot3, cross3]
+  ring
+
+/-- A scalar triple product with a repeated vector in the first two slots vanishes. -/
+theorem scalar_triple_product_repeated (u w : Vec3 R) :
+    dot3 u (cross3 u w) = 0 := by
+  dsimp [dot3, cross3]
+  ring
+
+/-- A scalar triple product vanishes when the two cross-product inputs agree. -/
+theorem scalar_triple_product_repeated_last (u v : Vec3 R) :
+    dot3 u (cross3 v v) = 0 := by
+  dsimp [dot3, cross3]
+  ring
+
 /--
 **Algebraic Identity**:
 Evaluating the associator on three quark states (S, p, ε)

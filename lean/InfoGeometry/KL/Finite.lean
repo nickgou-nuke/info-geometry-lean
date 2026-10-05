@@ -50,7 +50,7 @@ noncomputable def divergence {α : Type*} [MeasurableSpace α]
 /-- Technical nonnegativity on the `ℝ≥0∞` finite-KL slice. -/
 theorem divergence_nonneg {α : Type*} [MeasurableSpace α]
     (p q : FinProb α) : 0 ≤ divergence p q :=
-  zero_le _
+  zero_le
 
 end InfoGeometry.KL
 

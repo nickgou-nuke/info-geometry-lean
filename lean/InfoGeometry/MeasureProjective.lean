@@ -71,7 +71,7 @@ noncomputable def logPotential (μ ν : Measure α) : α → ℝ :=
 def AEAddConst (μ : Measure α) (f g : α → ℝ) : Prop :=
   ∃ c : ℝ, f =ᶠ[ae μ] fun x => g x + c
 
-instance aeAddConstSetoid (μ : Measure α) : Setoid (α → ℝ) where
+def aeAddConstSetoid (μ : Measure α) : Setoid (α → ℝ) where
   r := AEAddConst μ
   iseqv := by
     refine ⟨?_, ?_, ?_⟩

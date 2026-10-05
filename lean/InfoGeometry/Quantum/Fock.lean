@@ -68,13 +68,15 @@ noncomputable abbrev cliffordGenF : DoubledSpace E →L[ℝ] DoubledSpace E :=
 theorem commutator_I_J :
     commutator (complex_i (E := E)) (modular_j (E := E))
       = (-2 : ℝ) • (spectral_epsilon (E := E)) := by
-  simpa [commutator] using InfoGeometry.Krein.clmComm_complex_i_modular_j (E := E)
+  change InfoGeometry.Krein.clmComm (complex_i (E := E)) (modular_j (E := E)) = _
+  exact InfoGeometry.Krein.clmComm_complex_i_modular_j (E := E)
 
 /-- Compatibility alias for `[J, ε] = 2I`. -/
 theorem commutator_J_epsilon_eq_two_I :
     commutator (modular_j (E := E)) (spectral_epsilon (E := E))
       = (2 : ℝ) • (complex_i (E := E)) := by
-  simpa [commutator] using InfoGeometry.Krein.clmComm_modular_j_spectral_epsilon (E := E)
+  change InfoGeometry.Krein.clmComm (modular_j (E := E)) (spectral_epsilon (E := E)) = _
+  exact InfoGeometry.Krein.clmComm_modular_j_spectral_epsilon (E := E)
 
 /-- The annihilation channel kills the vacuum vector `0`. -/
 theorem annihilation_kills_vacuum_vector :

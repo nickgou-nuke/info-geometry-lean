@@ -118,8 +118,8 @@ noncomputable def doubledSpaceCl11Action :
     (doubledSpaceCl11Action (E := E)).K
       = InfoGeometry.Krein.cl11Rep (E := E)
           (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)) := by
-  simpa [RealSplitCl11Action.K, doubledSpaceCl11Action] using
-    (InfoGeometry.Krein.cl11Rep_ι_zero_one (E := E)).symm
+  rw [doubledSpaceCl11Action_K]
+  exact (InfoGeometry.Krein.cl11Rep_ι_zero_one (E := E)).symm
 
 /-- The split pseudoscalar on doubled space is the fundamental symmetry `ε`. -/
 @[simp] theorem doubledSpaceCl11Action_eps_eq_cl11Rep_pseudoscalar :
@@ -127,7 +127,8 @@ noncomputable def doubledSpaceCl11Action :
       = InfoGeometry.Krein.cl11Rep (E := E)
           (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0)
             * CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)) := by
-  simpa [doubledSpaceCl11Action] using (InfoGeometry.Krein.cl11Rep_pseudoscalar (E := E)).symm
+  rw [doubledSpaceCl11Action_eps]
+  exact (InfoGeometry.Krein.cl11Rep_pseudoscalar (E := E)).symm
 
 end DoubledSpaceSeed
 

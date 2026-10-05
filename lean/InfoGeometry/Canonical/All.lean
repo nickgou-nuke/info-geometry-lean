@@ -746,6 +746,7 @@ import InfoGeometry.Canonical.DiscreteGaussBonnetKleinBridge
 import InfoGeometry.Canonical.KasparovKHomologyProductBridge
 import InfoGeometry.Canonical.E8ExceptionalLieAlgebraTriality
 import InfoGeometry.Canonical.E8RootDecomposition
+import InfoGeometry.Canonical.E8RootPairing
 import InfoGeometry.Canonical.TopologicalModularFormsEllipticGenera
 import InfoGeometry.Canonical.QuantumHallSkyrmionTopologicalCharge
 import InfoGeometry.Canonical.KitaevChainTopologicalZ2Invariant

@@ -148,6 +148,8 @@ theorem mutatePlucker_pos {Δ_a Δ_b Δ_c Δ_d Δ_orig : ℝ}
 
 end PlabicBoundaryMeasurement
 
+namespace PlabicBoundaryMeasurement
+
 /-! ### 7. Lie Bracket and Commutator Algebra -/
 
 /-- The Lie bracket [x, y] = x * y - y * x in an associative ring A. -/
@@ -321,3 +323,4 @@ theorem square_move_preserves_on_shell {A : Type*} [Ring A]
   rw [← m.h_conservation]
   exact h_in
 
+end PlabicBoundaryMeasurement

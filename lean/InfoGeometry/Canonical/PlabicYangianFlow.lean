@@ -1,114 +1,81 @@
 import Mathlib
+import InfoGeometry.Topology.PlabicBoundaryMeasurement
 
 /-!
-# Finite bilocal commutator identities under cyclic reordering
+# Arbitrary-length bilocal boundary flow
 
-This file formalizes the algebraic part of the proposed boundary-flow
-calculation.  It proves cyclic invariance of the ordered bilocal commutator
-sum for three and four charges on the zero-total-charge locus.  The result is
-about elements of an associative ring; it does not model plabic embeddings,
-Yangian differential operators, or urban-renewal moves.
+The finite three- and four-charge cases live in
+`Topology.PlabicBoundaryMeasurement`.  This file extends that owner with the
+exact boundary-term formula for lists of arbitrary length.  It is an identity
+for commutators in an associative ring, not a model of a graph mutation or a
+full Yangian representation.
 -/
 
-namespace InfoGeometry.PlabicYangian
+namespace PlabicBoundaryMeasurement
 
-/-- The commutator in an associative ring. -/
-def lieBracket {A : Type*} [Ring A] (x y : A) : A := x * y - y * x
+variable {A : Type*} [Ring A]
 
-@[simp] theorem lieBracket_self {A : Type*} [Ring A] (x : A) :
-    lieBracket x x = 0 := by
-  simp [lieBracket]
+/-- Total charge of a finite ordered list. -/
+def chargeSum : List A → A
+  | [] => 0
+  | x :: xs => x + chargeSum xs
 
-theorem lieBracket_antisymm {A : Type*} [Ring A] (x y : A) :
-    lieBracket x y = - lieBracket y x := by
-  simp [lieBracket]
+/-- Ordered bilocal commutator sum for a finite list of charges. -/
+def bilocalList : List A → A
+  | [] => 0
+  | x :: xs => bilocalList xs + lieBracket x (chargeSum xs)
 
-/-- The three-cycle on the ordered labels `0,1,2`. -/
-def cyclicShift3 (i : Fin 3) : Fin 3 :=
-  match i with
-  | 0 => 1
-  | 1 => 2
-  | 2 => 0
+@[simp] theorem chargeSum_append (xs ys : List A) :
+    chargeSum (xs ++ ys) = chargeSum xs + chargeSum ys := by
+  induction xs with
+  | nil => simp [chargeSum]
+  | cons x xs ih => simp [chargeSum, ih, add_assoc]
 
-def level0_3 {A : Type*} [Ring A] (E : Fin 3 → A) : A :=
-  E 0 + E 1 + E 2
+/-- Concatenating two ordered blocks adds their internal bilocal sums and
+the commutator of their total charges. -/
+theorem bilocalList_append (xs ys : List A) :
+    bilocalList (xs ++ ys) =
+      bilocalList xs + bilocalList ys +
+        lieBracket (chargeSum xs) (chargeSum ys) := by
+  induction xs with
+  | nil => simp [bilocalList, chargeSum, lieBracket]
+  | cons x xs ih =>
+      change bilocalList (xs ++ ys) +
+          lieBracket x (chargeSum (xs ++ ys)) =
+        (bilocalList xs + lieBracket x (chargeSum xs)) + bilocalList ys +
+          lieBracket (x + chargeSum xs) (chargeSum ys)
+      rw [ih, chargeSum_append]
+      dsimp [lieBracket]
+      noncomm_ring
 
-/-- The ordered bilocal commutator sum on three charges. -/
-def level1_3 {A : Type*} [Ring A] (E : Fin 3 → A) : A :=
-  lieBracket (E 0) (E 1) + lieBracket (E 0) (E 2) + lieBracket (E 1) (E 2)
-
-/-- On zero total charge, the three-charge bilocal commutator is invariant
-under cyclic reordering. -/
-theorem level1_3_cyclic_invariant {A : Type*} [Ring A] (E : Fin 3 → A)
-    (h : level0_3 E = 0) :
-    level1_3 (E ∘ cyclicShift3) = level1_3 E := by
-  have htail : E 1 + E 2 = -E 0 := by
-    dsimp [level0_3] at h
-    calc
-      E 1 + E 2 = -E 0 + (E 0 + E 1 + E 2) := by abel
-      _ = -E 0 := by rw [h]; simp
-  have hlast : E 2 = -E 0 - E 1 := by
-    calc
-      E 2 = (E 1 + E 2) - E 1 := by abel
-      _ = -E 0 - E 1 := by rw [htail]
-  dsimp [level1_3, cyclicShift3, lieBracket]
-  rw [hlast]
+/-- Moving the first charge to the end changes the ordered bilocal sum by
+exactly twice the boundary commutator. -/
+theorem bilocalList_cyclic_difference (x : A) (xs : List A) :
+    bilocalList (xs ++ [x]) - bilocalList (x :: xs) =
+      2 * lieBracket (chargeSum xs) x := by
+  rw [bilocalList_append]
+  simp [bilocalList, chargeSum, lieBracket]
   noncomm_ring
 
-/-- The four-cycle on the ordered labels `0,1,2,3`. -/
-def cyclicShift4 (i : Fin 4) : Fin 4 :=
-  match i with
-  | 0 => 1
-  | 1 => 2
-  | 2 => 3
-  | 3 => 0
-
-def level0_4 {A : Type*} [Ring A] (E : Fin 4 → A) : A :=
-  E 0 + E 1 + E 2 + E 3
-
-/-- The ordered bilocal commutator sum on four charges. -/
-def level1_4 {A : Type*} [Ring A] (E : Fin 4 → A) : A :=
-  lieBracket (E 0) (E 1) + lieBracket (E 0) (E 2) +
-  lieBracket (E 0) (E 3) + lieBracket (E 1) (E 2) +
-  lieBracket (E 1) (E 3) + lieBracket (E 2) (E 3)
-
-/-- Exact change in the four-charge bilocal sum under cyclic reordering.
-This identity records the boundary terms before imposing zero total charge. -/
-theorem level1_4_cyclic_difference {A : Type*} [Ring A] (E : Fin 4 → A) :
-    level1_4 (E ∘ cyclicShift4) - level1_4 E =
-      2 * lieBracket (E 1 + E 2 + E 3) (E 0) := by
-  dsimp [level1_4, cyclicShift4, lieBracket]
-  noncomm_ring
-
-/-- The ordered four-charge bilocal commutator is cyclically invariant when
-the total charge vanishes. -/
-theorem level1_4_cyclic_invariant {A : Type*} [Ring A] (E : Fin 4 → A)
-    (h : level0_4 E = 0) :
-    level1_4 (E ∘ cyclicShift4) = level1_4 E := by
-  have htail : E 1 + E 2 + E 3 = -E 0 := by
-    dsimp [level0_4] at h
+/-- On the zero-total-charge locus, moving the first charge to the end leaves
+the bilocal commutator sum unchanged. -/
+theorem bilocalList_cyclic_invariant (x : A) (xs : List A)
+    (h : chargeSum (x :: xs) = 0) :
+    bilocalList (xs ++ [x]) = bilocalList (x :: xs) := by
+  have htail : chargeSum xs = -x := by
+    dsimp [chargeSum] at h
+    have h' : chargeSum xs + x = 0 := by simpa [add_comm] using h
+    exact eq_neg_of_add_eq_zero_left h'
+  have hdiff := bilocalList_cyclic_difference x xs
+  rw [htail] at hdiff
+  have hzero : 2 * lieBracket (-x) x = 0 := by
+    dsimp [lieBracket]
+    noncomm_ring
+  have hEq : bilocalList (xs ++ [x]) - bilocalList (x :: xs) = 0 := by
     calc
-      E 1 + E 2 + E 3 = -E 0 + (E 0 + E 1 + E 2 + E 3) := by abel
-      _ = -E 0 := by rw [h]; simp
-  have hchange := level1_4_cyclic_difference E
-  rw [htail] at hchange
-  have hzero : 2 * lieBracket (-E 0) (E 0) = 0 := by
-    simp [lieBracket]
-  have hchangezero : level1_4 (E ∘ cyclicShift4) - level1_4 E = 0 := by
-    calc
-      level1_4 (E ∘ cyclicShift4) - level1_4 E =
-          2 * lieBracket (-E 0) (E 0) := hchange
+      bilocalList (xs ++ [x]) - bilocalList (x :: xs) =
+          2 * lieBracket (-x) x := hdiff
       _ = 0 := hzero
-  exact sub_eq_zero.mp hchangezero
+  exact sub_eq_zero.mp hEq
 
-/-- The nearest-neighbor cyclic commutator contour is invariant off shell. -/
-def cyclicFlux4 {A : Type*} [Ring A] (E : Fin 4 → A) : A :=
-  lieBracket (E 0) (E 1) + lieBracket (E 1) (E 2) +
-  lieBracket (E 2) (E 3) + lieBracket (E 3) (E 0)
-
-theorem cyclicFlux4_shift_invariant {A : Type*} [Ring A] (E : Fin 4 → A) :
-    cyclicFlux4 (E ∘ cyclicShift4) = cyclicFlux4 E := by
-  dsimp [cyclicFlux4, cyclicShift4]
-  abel
-
-end InfoGeometry.PlabicYangian
+end PlabicBoundaryMeasurement

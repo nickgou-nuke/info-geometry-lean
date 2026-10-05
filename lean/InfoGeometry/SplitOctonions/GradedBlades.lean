@@ -3,6 +3,15 @@ import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic
 
+/-!
+# Exterior-algebra blades and split-signature quadratic forms
+
+This file's `blade3` is a product in Mathlib's associative exterior algebra.
+Its alternating identities are wedge-product identities, not identities for
+the nonassociative split-octonion associator. The quadratic-form cone and the
+exterior-algebra blades are separate carriers here.
+-/
+
 namespace InfoGeometry.SplitOctonions
 
 variable (R : Type*) [CommRing R]
@@ -25,44 +34,25 @@ def gradedBracket (degA degB : ℕ) (A B : ExteriorAlgebra R V) : ExteriorAlgebr
 def blade1 (v : V) : ExteriorAlgebra R V :=
   ι R v
 
-lemma gradedSign_one_one : (gradedSign R 1 1) = -1 := by rfl
-
-theorem gradedBracket_grade1 (u v : V) :
-    gradedBracket R V 1 1 (blade1 R V u) (blade1 R V v) = blade1 R V u * blade1 R V v + blade1 R V v * blade1 R V u := by
-  dsimp [gradedBracket]
-  rw [gradedSign_one_one]
-  simp only [neg_smul, one_smul, sub_neg_eq_add]
-
 theorem blade1_sq_zero (k : V) :
     blade1 R V k * blade1 R V k = 0 :=
   ι_sq_zero k
 
 theorem blade1_gradedBracket_self_zero (u v : V) :
     gradedBracket R V 1 1 (blade1 R V u) (blade1 R V v) = 0 := by
-  rw [gradedBracket_grade1]
-  dsimp [blade1]
-  have h_sq : ι R (u + v) * ι R (u + v) = 0 := ι_sq_zero (u + v)
-  rw [map_add, add_mul, mul_add, mul_add] at h_sq
-  rw [ι_sq_zero u, ι_sq_zero v] at h_sq
-  simp only [zero_add, add_zero] at h_sq
-  exact h_sq
+  simpa [gradedBracket, gradedSign, blade1, sub_eq_add_neg] using
+    (ExteriorAlgebra.ι_add_mul_swap (R := R) u v)
 
 lemma blade1_swap_neg (u v : V) :
     blade1 R V u * blade1 R V v = - (blade1 R V v * blade1 R V u) := by
   have h := blade1_gradedBracket_self_zero R V u v
-  rw [gradedBracket_grade1] at h
-  exact eq_neg_of_add_eq_zero_left h
+  simpa [gradedBracket, gradedSign, blade1, sub_eq_add_neg] using
+    (eq_neg_of_add_eq_zero_left
+      (show blade1 R V u * blade1 R V v + blade1 R V v * blade1 R V u = 0 by
+        simpa [gradedBracket, gradedSign, blade1, sub_eq_add_neg] using h))
 
 def blade2 (u v : V) : ExteriorAlgebra R V :=
   blade1 R V u * blade1 R V v
-
-lemma gradedSign_two_two : (gradedSign R 2 2) = 1 := by rfl
-
-theorem gradedBracket_grade2 (P Q : ExteriorAlgebra R V) :
-    gradedBracket R V 2 2 P Q = P * Q - Q * P := by
-  dsimp [gradedBracket]
-  rw [gradedSign_two_two]
-  simp only [one_smul]
 
 theorem plucker_on_shell_quadric (u v : V) :
     blade2 R V u v * blade2 R V u v = 0 := by
@@ -77,7 +67,12 @@ theorem plucker_on_shell_quadric (u v : V) :
 def blade3 (u v w : V) : ExteriorAlgebra R V :=
   blade1 R V u * blade1 R V v * blade1 R V w
 
-theorem associator_left_alternating (u v : V) :
+theorem exteriorAlgebra_associator_eq_zero
+    (A B C : ExteriorAlgebra R V) :
+    (A * B) * C - A * (B * C) = 0 := by
+  rw [mul_assoc, sub_self]
+
+theorem blade3_left_alternating (u v : V) :
     blade3 R V u u v = 0 := by
   dsimp [blade3]
   calc blade1 R V u * blade1 R V u * blade1 R V v
@@ -85,7 +80,7 @@ theorem associator_left_alternating (u v : V) :
     _ = 0 * blade1 R V v := by rw [blade1_sq_zero R V u]
     _ = 0 := by simp
 
-theorem associator_right_alternating (u v : V) :
+theorem blade3_right_alternating (u v : V) :
     blade3 R V u v v = 0 := by
   dsimp [blade3]
   calc blade1 R V u * blade1 R V v * blade1 R V v
@@ -93,7 +88,7 @@ theorem associator_right_alternating (u v : V) :
     _ = blade1 R V u * 0 := by rw [blade1_sq_zero R V v]
     _ = 0 := by simp
 
-theorem associator_swap_adjacent (u v w : V) :
+theorem blade3_swap_first_two (u v w : V) :
     blade3 R V u v w = - blade3 R V v u w := by
   dsimp [blade3]
   have h_swap : blade1 R V u * blade1 R V v = - (blade1 R V v * blade1 R V u) := blade1_swap_neg R V u v
@@ -102,7 +97,7 @@ theorem associator_swap_adjacent (u v w : V) :
     _ = -(blade1 R V v * blade1 R V u) * blade1 R V w := by rw [h_swap]
     _ = -(blade1 R V v * blade1 R V u * blade1 R V w) := by simp [mul_assoc]
 
-theorem associator_swap_cyclic (u v w : V) :
+theorem blade3_swap_last_two (u v w : V) :
     blade3 R V u v w = - blade3 R V u w v := by
   dsimp [blade3]
   have h_swap : blade1 R V v * blade1 R V w = - (blade1 R V w * blade1 R V v) := blade1_swap_neg R V v w
@@ -116,7 +111,7 @@ theorem gradedBracket_grade1_grade2 (v : V) (P : ExteriorAlgebra R V) :
   dsimp [gradedBracket, gradedSign]
   simp only [one_smul]
 
-theorem kkt_truncation_right (u v : V) :
+theorem blade2_mul_repeated_right_zero (u v : V) :
     blade2 R V u v * blade1 R V v = 0 := by
   dsimp [blade2]
   calc blade1 R V u * blade1 R V v * blade1 R V v
@@ -124,7 +119,7 @@ theorem kkt_truncation_right (u v : V) :
     _ = blade1 R V u * 0 := by rw [blade1_sq_zero R V v]
     _ = 0 := by simp
 
-theorem kkt_truncation_left (u v : V) :
+theorem blade2_mul_repeated_left_zero (u v : V) :
     blade1 R V u * blade2 R V u v = 0 := by
   dsimp [blade2]
   calc blade1 R V u * (blade1 R V u * blade1 R V v)

@@ -271,10 +271,11 @@ lemma tensor_skewPrimitive_qcomm (q : k) (K d : A)
       rw [Algebra.TensorProduct.tmul_mul_tmul, one_mul]
     _ = (algebraMap k A q * (K * d)) ⊗ₜ[k] d := by rw [hcomm]
     _ = algebraMap k (A ⊗[k] A) q * ((K * d) ⊗ₜ[k] d) := by
-      rfl
+      rw [Algebra.TensorProduct.algebraMap_apply,
+        Algebra.TensorProduct.tmul_mul_tmul, one_mul]
     _ = algebraMap k (A ⊗[k] A) q *
           ((K ⊗ₜ[k] d) * (d ⊗ₜ[k] (1 : A))) := by
-      rfl
+      rw [Algebra.TensorProduct.tmul_mul_tmul, mul_one]
 
 /-- Ordered coproduct monomials factor into the expected tensor components. -/
 lemma tensor_skewPrimitive_monomial (K d : A) (n m : ℕ) :

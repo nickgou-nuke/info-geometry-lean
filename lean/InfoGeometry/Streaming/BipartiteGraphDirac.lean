@@ -124,18 +124,59 @@ theorem cochainPair_symm (x y : Cochain v e) :
   simp only [cochainPair]
   congr 1 <;> apply Finset.sum_congr rfl <;> intro i hi <;> ring
 
+/-- Pairing a matrix-vector product with a vector equals pairing with the
+transpose matrix-vector product. -/
+theorem transpose_mulVec_pairing (B : Matrix e v ℝ) (x : v → ℝ) (y : e → ℝ) :
+    (∑ i, (B.transpose.mulVec y) i * x i) =
+      ∑ a, y a * (B.mulVec x) a := by
+  classical
+  simp only [Matrix.mulVec, dotProduct, Matrix.transpose_apply]
+  calc
+    (∑ i, (∑ a, B a i * y a) * x i) =
+        ∑ i, ∑ a, (B a i * y a) * x i := by
+          apply Finset.sum_congr rfl
+          intro i hi
+          rw [Finset.sum_mul]
+    _ = ∑ a, ∑ i, (B a i * y a) * x i := Finset.sum_comm
+    _ = ∑ a, y a * (∑ i, B a i * x i) := by
+          apply Finset.sum_congr rfl
+          intro a ha
+          rw [Finset.mul_sum]
+          apply Finset.sum_congr rfl
+          intro i hi
+          ring
+
 /-- The graph Dirac operator is self-adjoint for the positive coordinate
 pairing: the two off-diagonal blocks are transposes of one another. -/
 theorem graphDirac_adjoint (B : Matrix e v ℝ) (x y : Cochain v e) :
     cochainPair (graphDirac B x) y = cochainPair x (graphDirac B y) := by
-  have hxy := differential_adjoint B (x.1, 0) (0, y.2)
-  have hyx := differential_adjoint B (y.1, 0) (0, x.2)
   rw [graphDirac_apply, graphDirac_apply]
-  dsimp [cochainPair, differential, codifferential] at hxy hyx ⊢
-  simp only [Matrix.mulVec, dotProduct, Matrix.transpose_apply,
-    Finset.sum_const_zero, zero_add, add_zero] at hxy hyx ⊢
-  rw [← hxy, ← hyx]
-  congr 1 <;> apply Finset.sum_congr rfl <;> intro i hi <;> ring
+  simp only [cochainPair]
+  have h₁ := transpose_mulVec_pairing B y.1 x.2
+  have h₂ := transpose_mulVec_pairing B x.1 y.2
+  have h₂' :
+      (∑ a, (B.mulVec x.1) a * y.2 a) =
+        ∑ i, x.1 i * (B.transpose.mulVec y.2) i := by
+    calc
+      (∑ a, (B.mulVec x.1) a * y.2 a) =
+          ∑ a, y.2 a * (B.mulVec x.1) a := by
+            apply Finset.sum_congr rfl
+            intro a ha
+            ring
+      _ = ∑ i, (B.transpose.mulVec y.2) i * x.1 i := h₂.symm
+      _ = ∑ i, x.1 i * (B.transpose.mulVec y.2) i := by
+            apply Finset.sum_congr rfl
+            intro i hi
+            ring
+  calc
+    (∑ i, (B.transpose.mulVec x.2) i * y.1 i) +
+        ∑ a, (B.mulVec x.1) a * y.2 a =
+      (∑ a, x.2 a * (B.mulVec y.1) a) +
+        ∑ a, (B.mulVec x.1) a * y.2 a := by rw [h₁]
+    _ = (∑ i, x.1 i * (B.transpose.mulVec y.2) i) +
+        ∑ a, x.2 a * (B.mulVec y.1) a := by
+      rw [h₂']
+      rw [add_comm]
 
 theorem grading_sq : (grading (v := v) (e := e)) * grading = 1 := by
   apply LinearMap.ext
@@ -152,8 +193,10 @@ theorem graphDirac_odd (B : Matrix e v ℝ) :
 /-- The grading is self-adjoint for the positive coordinate pairing. -/
 theorem grading_adjoint (x y : Cochain v e) :
     cochainPair (grading x) y = cochainPair x (grading y) := by
-  simp only [grading, cochainPair]
-  simp only [neg_mul, mul_neg, Finset.sum_neg_distrib]
+  dsimp [grading, cochainPair]
+  congr 1
+  apply Finset.sum_congr rfl
+  intro i hi
   ring
 
 /-- The indefinite pairing induced by the bipartite grading.
@@ -172,7 +215,8 @@ theorem graphDirac_krein_skew_adjoint (B : Matrix e v ℝ) (x y : Cochain v e) :
   have hodd := congrFun (congrArg DFunLike.coe (graphDirac_odd B)) y
   change graphDirac B (grading y) = -grading (graphDirac B y) at hodd
   rw [hodd]
-  simp [kreinPair, cochainPair, grading, neg_mul, Finset.sum_neg_distrib]
+  simp [kreinPair, cochainPair, Finset.sum_neg_distrib]
+  abel
 
 /-- The two Laplacian blocks are actual compositions B transpose B and B B transpose. -/
 theorem graphDirac_square_blocks (B : Matrix e v ℝ) (x : Cochain v e) :

@@ -93,11 +93,14 @@ def glideTangentExterior : ExteriorAlgebra ℝ (ℝ × ℝ) →ₐ[ℝ]
 theorem glideTangentExterior_involutive :
     AlgHom.comp glideTangentExterior glideTangentExterior =
       AlgHom.id ℝ (ExteriorAlgebra ℝ (ℝ × ℝ)) := by
-  rw [← ExteriorAlgebra.map_comp_map]
+  change AlgHom.comp (ExteriorAlgebra.map glideLinearPart.toLinearMap)
+      (ExteriorAlgebra.map glideLinearPart.toLinearMap) = _
+  rw [ExteriorAlgebra.map_comp_map]
   have hlinear :
       glideLinearPart.toLinearMap.comp glideLinearPart.toLinearMap =
         LinearMap.id := by
-    ext v
+    apply LinearMap.ext
+    intro v
     exact glideLinearPart_involutive v
   rw [hlinear, ExteriorAlgebra.map_id]
 
@@ -108,9 +111,13 @@ theorem glideTangentExterior_topForm :
         (ExteriorAlgebra.ι ℝ (1, 0) * ExteriorAlgebra.ι ℝ (0, 1)) =
       -(ExteriorAlgebra.ι ℝ (1, 0) * ExteriorAlgebra.ι ℝ (0, 1)) := by
   rw [map_mul, glideTangentExterior_generator, glideTangentExterior_generator]
-  change ExteriorAlgebra.ι ℝ (1, 0) *
-      ExteriorAlgebra.ι ℝ ((1 : ℝ), -(1 : ℝ) * 1) = _
-  simp [glideLinearPart]
+  have h₁ : glideLinearPart (1, 0) = (1, 0) := by
+    ext <;> simp [glideLinearPart]
+  have h₂ : glideLinearPart (0, 1) = (0, -1) := by
+    ext <;> simp [glideLinearPart]
+  rw [h₁, h₂]
+  rw [show ((0 : ℝ), (-1 : ℝ)) = -((0 : ℝ), (1 : ℝ)) by ext <;> norm_num,
+    map_neg, mul_neg]
 
 /-- Exchanging the two covering coordinates identifies the reciprocal-space
 orientation action with the exterior-orientation bridge's deck linear map.

@@ -42,6 +42,12 @@ lemma updateCoord_self (s : Fin 4 → Bool) (i : Fin 4) (b : Bool) :
 def fermDeriv (i : Fin 4) (F : Superfield R) : Superfield R :=
   fun s => if s i = false then fermSign s i * F (updateCoord s i true) else 0
 
+/-- A fermionic derivative vanishes on any monomial that already contains
+the differentiated coordinate. -/
+theorem fermDeriv_eq_zero_of_present (i : Fin 4) (F : Superfield R)
+    (s : Fin 4 → Bool) (h : s i = true) : fermDeriv i F s = 0 := by
+  simp [fermDeriv, h]
+
 theorem fermDeriv_sq_zero (i : Fin 4) (F : Superfield R) :
     fermDeriv i (fermDeriv i F) = 0 := by
   ext s
@@ -59,7 +65,8 @@ theorem fermDeriv_sq_zero (i : Fin 4) (F : Superfield R) :
 
 theorem berezinIntegral_fermDeriv (i : Fin 4) (F : Superfield R) :
     berezinIntegral (fermDeriv i F) = 0 := by
-  rfl
+  rw [berezinIntegral]
+  exact fermDeriv_eq_zero_of_present i F topMonomial rfl
 
 def supercharge (ε : Fin 4 → R) (F : Superfield R) : Superfield R :=
   fun s => ∑ i : Fin 4, ε i * fermDeriv i F s
@@ -69,7 +76,7 @@ theorem supercharge_invariance (ε : Fin 4 → R) (F : Superfield R) :
   dsimp [berezinIntegral, supercharge]
   have h_zero : ∀ i : Fin 4, fermDeriv i F topMonomial = 0 := by
     intro i
-    rfl
+    exact fermDeriv_eq_zero_of_present i F topMonomial rfl
   have h_term : ∀ i : Fin 4, ε i * fermDeriv i F topMonomial = 0 := by
     intro i
     rw [h_zero i, mul_zero]
@@ -83,7 +90,7 @@ theorem chiral_twistor_supercharge_invariance
     berezinIntegral (chiralTwistorSupercharge z a A F) = 0 := by
   dsimp [berezinIntegral, chiralTwistorSupercharge]
   have h_zero : fermDeriv A F topMonomial = 0 := by
-    rfl
+    exact fermDeriv_eq_zero_of_present A F topMonomial rfl
   rw [h_zero, mul_zero]
 
 theorem chiralTwistorSupercharge_sq_zero

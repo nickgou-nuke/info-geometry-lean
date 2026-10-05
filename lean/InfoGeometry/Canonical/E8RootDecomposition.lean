@@ -155,7 +155,7 @@ theorem e8Reflection_isometry (α u v : Fin 8 → ℚ)
     (hα : e8NormSq α = 2) :
     e8Dot (e8Reflection α u) (e8Reflection α v) = e8Dot u v := by
   simp only [e8Reflection, e8Dot_sub_left, e8Dot_sub_right,
-    e8Dot_smul_left, e8Dot_smul_right, e8Dot_comm α u, e8Dot_comm α v]
+    e8Dot_smul_left, e8Dot_smul_right, e8Dot_comm α v]
   dsimp [e8NormSq] at hα
   rw [hα]
   ring
@@ -164,6 +164,16 @@ theorem e8Reflection_preserves_norm (α v : Fin 8 → ℚ)
     (hα : e8NormSq α = 2) :
     e8NormSq (e8Reflection α v) = e8NormSq v := by
   exact e8Reflection_isometry α v v hα
+
+/-- A root reflection sends its defining norm-two root to its negative. -/
+theorem e8Reflection_root_eq_neg (α : Fin 8 → ℚ)
+    (hα : e8NormSq α = 2) :
+    e8Reflection α α = -α := by
+  have hdot : e8Dot α α = 2 := hα
+  ext i
+  change α i - e8Dot α α * α i = -α i
+  rw [hdot]
+  ring
 
 /-- The finite set of all pairings of explicit `E₈` roots. -/
 def E8RootPairings : Finset ℚ :=
@@ -198,6 +208,13 @@ theorem e8_roots_reflection_closed (α β : Fin 8 → ℚ)
   simp only [E8RootReflections, Finset.mem_biUnion, Finset.mem_image]
   exact ⟨α, hα, β, hβ, rfl⟩
 
+/-- Negatives of roots are roots: apply the corresponding reflection to the
+root itself. -/
+theorem e8_roots_neg (α : Fin 8 → ℚ) (hα : α ∈ E8Roots) :
+    -α ∈ E8Roots := by
+  rw [← e8Reflection_root_eq_neg α (e8_roots_norm α hα)]
+  exact e8_roots_reflection_closed α α hα hα
+
 /-! ### The finite reflection action and its generated subgroup
 
 The finite set above gives an actual permutation representation of the
@@ -224,7 +241,8 @@ def e8RootReflection (α : E8Root) : Equiv.Perm E8Root where
 
 /-- Each root reflection is an involution as a permutation of the root set. -/
 theorem e8RootReflection_sq (α : E8Root) : e8RootReflection α ^ 2 = 1 := by
-  ext β
+  apply Equiv.ext
+  intro β
   apply Subtype.ext
   exact e8Reflection_involutive α.1 β.1 (e8_roots_norm α.1 α.2)
 

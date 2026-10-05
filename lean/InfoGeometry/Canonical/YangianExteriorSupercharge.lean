@@ -121,6 +121,47 @@ theorem bilocalTerm_commutes_levelZeroTerm
           (fermionicDerivative n i A * fermionicDerivative n j B)) :=
       (smul_mul_smul _ _ _ _).symm
 
+/-- The total level-zero fermionic generator on `n` particles. -/
+def levelZeroSupercharge (z : Fin n → Fin 4 → ℝ) (a A : Fin 4) :
+    SuperTwistorEnd n :=
+  ∑ i : Fin n, levelZeroTerm n z a A i
+
+/-- The ordered bilocal level-one generator on `n` particles. -/
+def levelOneSupercharge (z : Fin n → Fin 4 → ℝ) (a b A B : Fin 4) :
+    SuperTwistorEnd n :=
+  ∑ i : Fin n, ∑ j : Fin n,
+    if i < j then bilocalTerm n z a b A B i j else 0
+
+/-- Each bilocal term commutes with the total level-zero generator, by finite
+additivity of multiplication and the pairwise contraction identity. -/
+theorem bilocalTerm_commutes_levelZeroSupercharge
+    (z : Fin n → Fin 4 → ℝ) (a b A B C : Fin 4) (i j : Fin n) :
+    bilocalTerm n z a b A B i j * levelZeroSupercharge n z a C =
+      levelZeroSupercharge n z a C * bilocalTerm n z a b A B i j := by
+  unfold levelZeroSupercharge
+  rw [Finset.mul_sum, Finset.sum_mul]
+  apply Finset.sum_congr rfl
+  intro k hk
+  exact bilocalTerm_commutes_levelZeroTerm n z a b A B C i j k
+
+/-- The finite level-one bilocal operator commutes with the finite level-zero
+supercharge in this exterior-contraction representation. -/
+theorem levelOne_commutes_levelZero
+    (z : Fin n → Fin 4 → ℝ) (a b A B C : Fin 4) :
+    levelOneSupercharge n z a b A B * levelZeroSupercharge n z a C =
+      levelZeroSupercharge n z a C * levelOneSupercharge n z a b A B := by
+  unfold levelOneSupercharge
+  rw [Finset.sum_mul, Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [Finset.sum_mul, Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro j hj
+  by_cases h : i < j
+  · simp only [if_pos h]
+    exact bilocalTerm_commutes_levelZeroSupercharge n z a b A B C i j
+  · simp [h]
+
 end InfoGeometry.Canonical.YangianExteriorSupercharge
 
 end noncomputable section

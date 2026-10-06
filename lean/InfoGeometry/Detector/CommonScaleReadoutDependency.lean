@@ -11,9 +11,15 @@ inductive Archetype
   | quotientCancellation
   | inverseSquareModel
   | constantDerivative
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 open Archetype
+
+instance : Fintype Archetype where
+  elems := [harmonicMeanValue, concentricMeans, quadraticScale, rootFactorization, quotientCancellation, inverseSquareModel, constantDerivative].toFinset
+  complete := by
+    intro x
+    cases x <;> simp
 
 def prerequisites : Archetype → Finset Archetype
   | harmonicMeanValue => {harmonicMeanValue}

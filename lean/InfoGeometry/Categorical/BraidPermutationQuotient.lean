@@ -233,15 +233,16 @@ Coxeter group explicit. -/
 /-- The simple reflections of the type A Coxeter group satisfy the braid and
 far-commutation relations required by the Artin presentation. -/
 def typeACoxeterArtinSystem (m : ℕ) :
-    ArtinBraidSystem (CoxeterMatrix.Aₙ m).Group m where
-  gen i := (CoxeterMatrix.Aₙ m).simple i
+    ArtinBraidSystem (CoxeterMatrix.A m).Group m where
+  gen i := (CoxeterMatrix.A m).simple i
   adjacent i j hij := by
-    let cs := (CoxeterMatrix.Aₙ m).toCoxeterSystem
-    have hM : (CoxeterMatrix.Aₙ m) i j = 3 := by
+    let cs := (CoxeterMatrix.A m).toCoxeterSystem
+    have hM : (CoxeterMatrix.A m) i j = 3 := by
       by_cases heq : i = j
       · subst j
         omega
-      · simp [CoxeterMatrix.Aₙ, heq, hij]
+      · change (if i = j then 1 else if (j:ℕ) + 1 = (i:ℕ) ∨ (i:ℕ) + 1 = (j:ℕ) then 3 else 2) = 3
+        simp [heq, hij]
     have hpow : (cs.simple i * cs.simple j) ^ 3 = 1 := by
       have h := cs.simple_mul_simple_pow i j
       rw [hM] at h
@@ -263,14 +264,14 @@ def typeACoxeterArtinSystem (m : ℕ) :
             (cs.simple j * cs.simple i * cs.simple j) := by rw [hPQ]
       _ = cs.simple j * cs.simple i * cs.simple j := by rw [hword]; simp
   farCommute i j hfar := by
-    let cs := (CoxeterMatrix.Aₙ m).toCoxeterSystem
-    have hM : (CoxeterMatrix.Aₙ m) i j = 2 := by
+    let cs := (CoxeterMatrix.A m).toCoxeterSystem
+    have hM : (CoxeterMatrix.A m) i j = 2 := by
       have hne : i ≠ j := by
         intro h
         subst j
         omega
-      simp only [CoxeterMatrix.Aₙ, Matrix.of_apply]
-      simp only [if_neg hne]
+      change (if i = j then 1 else if (j:ℕ) + 1 = (i:ℕ) ∨ (i:ℕ) + 1 = (j:ℕ) then 3 else 2) = 2
+      simp only [ite_eq_right hne]
       split_ifs <;> omega
     have hpow : (cs.simple i * cs.simple j) ^ 2 = 1 := by
       have h := cs.simple_mul_simple_pow i j
@@ -285,11 +286,11 @@ def typeACoxeterArtinSystem (m : ℕ) :
 
 /-- The type A Coxeter representation of the Artin braid group. -/
 def braidToTypeACoxeter (m : ℕ) :
-    braid_group (m + 1) →* (CoxeterMatrix.Aₙ m).Group :=
+    braid_group (m + 1) →* (CoxeterMatrix.A m).Group :=
   (typeACoxeterArtinSystem m).toGroupHom
 
 @[simp] theorem braidToTypeACoxeter_generator (m : ℕ) (i : Fin m) :
-    braidToTypeACoxeter m (σ' m i) = (CoxeterMatrix.Aₙ m).simple i := by
+    braidToTypeACoxeter m (σ' m i) = (CoxeterMatrix.A m).simple i := by
   exact ArtinBraidSystem.toGroupHom_generator (typeACoxeterArtinSystem m) i
 
 /-- The square relators vanish in the type A Coxeter representation. -/
@@ -297,13 +298,13 @@ theorem generatorSquare_mem_typeACoxeter_kernel (m : ℕ) (i : Fin m) :
     (σ' m i) ^ 2 ∈ (braidToTypeACoxeter m).ker := by
   change braidToTypeACoxeter m ((σ' m i) ^ 2) = 1
   rw [map_pow, braidToTypeACoxeter_generator]
-  exact CoxeterSystem.simple_sq ((CoxeterMatrix.Aₙ m).toCoxeterSystem) i
+  exact CoxeterSystem.simple_sq ((CoxeterMatrix.A m).toCoxeterSystem) i
 
 /-- The type A Coxeter representation factors through the quotient by
 generator-square relators. -/
 noncomputable def braidToTypeACoxeterModSquares (m : ℕ) :
     (braid_group (m + 1) ⧸ Subgroup.normalClosure (generatorSquares m)) →*
-      (CoxeterMatrix.Aₙ m).Group :=
+      (CoxeterMatrix.A m).Group :=
   QuotientGroup.lift (Subgroup.normalClosure (generatorSquares m))
     (braidToTypeACoxeter m) (by
       apply Subgroup.normalClosure_le_normal
@@ -315,7 +316,7 @@ noncomputable def braidToTypeACoxeterModSquares (m : ℕ) :
     braidToTypeACoxeterModSquares m
       (QuotientGroup.mk'
         (Subgroup.normalClosure (generatorSquares m)) (σ' m i)) =
-      (CoxeterMatrix.Aₙ m).simple i := by
+      (CoxeterMatrix.A m).simple i := by
   simp [braidToTypeACoxeterModSquares]
 
 /-- The induced map from the square-relator quotient reaches every element of
@@ -325,7 +326,7 @@ theorem braidToTypeACoxeterModSquares_surjective (m : ℕ) :
     Function.Surjective (braidToTypeACoxeterModSquares m) := by
   apply MonoidHom.mrange_eq_top.mp
   apply top_unique
-  rw [← (CoxeterMatrix.Aₙ m).toCoxeterSystem.submonoid_closure_range_simple]
+  rw [← (CoxeterMatrix.A m).toCoxeterSystem.submonoid_closure_range_simple]
   apply Submonoid.closure_le.2
   rintro g ⟨i, rfl⟩
   exact ⟨QuotientGroup.mk'
@@ -366,22 +367,24 @@ private theorem adjacentSwap_cubed_eq_one
   · exact adjacentSwap_braid m i j hij
 
 /-- The adjacent transpositions satisfy the Coxeter relations of type A. -/
-private def typeACoxeterLiftable (m : ℕ) :
-    CoxeterMatrix.IsLiftable (CoxeterMatrix.Aₙ m) (adjacentSwap m) := by
+private theorem typeACoxeterLiftable (m : ℕ) :
+    CoxeterMatrix.IsLiftable (CoxeterMatrix.A m) (adjacentSwap m) := by
   intro i j
   change (adjacentSwap m i * adjacentSwap m j) ^
-    (CoxeterMatrix.Aₙ m) i j = 1
+    (CoxeterMatrix.A m) i j = 1
   by_cases hij : i = j
   · subst j
     simp [adjacentSwap_sq]
   · by_cases hforward : i.val + 1 = j.val
-    · have hentry : (CoxeterMatrix.Aₙ m) i j = 3 := by
-        simp [CoxeterMatrix.Aₙ, hij, hforward]
+    · have hentry : (CoxeterMatrix.A m) i j = 3 := by
+        change (if i = j then 1 else if (j:ℕ) + 1 = (i:ℕ) ∨ (i:ℕ) + 1 = (j:ℕ) then 3 else 2) = 3
+        simp [hij, hforward]
       rw [hentry]
       exact adjacentSwap_cubed_eq_one m i j hforward
     · by_cases hbackward : j.val + 1 = i.val
-      · have hentry : (CoxeterMatrix.Aₙ m) i j = 3 := by
-          simp [CoxeterMatrix.Aₙ, hij, hforward, hbackward]
+      · have hentry : (CoxeterMatrix.A m) i j = 3 := by
+          change (if i = j then 1 else if (j:ℕ) + 1 = (i:ℕ) ∨ (i:ℕ) + 1 = (j:ℕ) then 3 else 2) = 3
+          simp [hij, hforward, hbackward]
         rw [hentry]
         have hArtin := adjacentSwap_braid m j i hbackward
         exact product_cube_eq_one_of_artin_involutions
@@ -389,8 +392,9 @@ private def typeACoxeterLiftable (m : ℕ) :
           (adjacentSwap_sq m i)
           (adjacentSwap_sq m j)
           hArtin.symm
-      · have hentry : (CoxeterMatrix.Aₙ m) i j = 2 := by
-          simp [CoxeterMatrix.Aₙ, hij, hforward, hbackward]
+      · have hentry : (CoxeterMatrix.A m) i j = 2 := by
+          change (if i = j then 1 else if (j:ℕ) + 1 = (i:ℕ) ∨ (i:ℕ) + 1 = (j:ℕ) then 3 else 2) = 2
+          simp [hij, hforward, hbackward]
         rw [hentry]
         have hfar : i.val + 2 ≤ j.val ∨ j.val + 2 ≤ i.val := by omega
         rcases hfar with h | h
@@ -409,15 +413,15 @@ private def typeACoxeterLiftable (m : ℕ) :
 This is the canonical realization map from Mathlib's presented Coxeter group
 to the symmetric group. -/
 def typeACoxeterToPerm (m : ℕ) :
-    (CoxeterMatrix.Aₙ m).Group →* Equiv.Perm (Fin (m + 1)) :=
-  (CoxeterMatrix.Aₙ m).toCoxeterSystem.lift ⟨adjacentSwap m,
+    (CoxeterMatrix.A m).Group →* Equiv.Perm (Fin (m + 1)) :=
+  (CoxeterMatrix.A m).toCoxeterSystem.lift ⟨adjacentSwap m,
     typeACoxeterLiftable m⟩
 
 @[simp] theorem typeACoxeterToPerm_simple (m : ℕ) (i : Fin m) :
-    typeACoxeterToPerm m ((CoxeterMatrix.Aₙ m).simple i) =
+    typeACoxeterToPerm m ((CoxeterMatrix.A m).simple i) =
       adjacentSwap m i := by
   exact CoxeterSystem.lift_apply_simple
-    (CoxeterMatrix.Aₙ m).toCoxeterSystem
+    (CoxeterMatrix.A m).toCoxeterSystem
     (typeACoxeterLiftable m) i
 
 theorem typeACoxeterToPerm_surjective (m : ℕ) :
@@ -427,7 +431,7 @@ theorem typeACoxeterToPerm_surjective (m : ℕ) :
   rw [← Equiv.Perm.mclosure_swap_castSucc_succ m]
   apply Submonoid.closure_le.2
   rintro p ⟨i, rfl⟩
-  exact ⟨(CoxeterMatrix.Aₙ m).simple i, typeACoxeterToPerm_simple m i⟩
+  exact ⟨(CoxeterMatrix.A m).simple i, typeACoxeterToPerm_simple m i⟩
 
 /-- The type-A Coxeter realization commutes with the canonical braid
 permutation representation on every Artin generator. -/

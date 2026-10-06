@@ -108,9 +108,9 @@ lemma pomMatrixEvalAux_eq_pomTripleEvalAux (prev₂ prev₁ : ℕ) :
   | cons k rest ih =>
       dsimp [pomMatrixEvalAux, pomTripleEvalAux]
       by_cases hk : k = prev₂ + 2
-      · simpa [hk, pomIndUpdate3_action, pomTripleStep] using
+      · simpa [hk, pomIndUpdate3_action, pomTripleStep, pomStateVector] using
           ih prev₁ (prev₂ + 2) (triple.1 + triple.2.2, triple.1, triple.2.1)
-      · simpa [hk, pomIndUpdate2_action, pomTripleStep] using
+      · simpa [hk, pomIndUpdate2_action, pomTripleStep, pomStateVector] using
           ih prev₁ k (triple.1 + triple.2.1, triple.1, triple.2.1)
 
 /-- Paper label: `prop:pom-ind-matrix-grammar`.

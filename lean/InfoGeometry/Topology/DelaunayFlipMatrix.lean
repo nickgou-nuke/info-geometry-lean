@@ -88,7 +88,8 @@ theorem flip_far_commute_embedded_blocks
       lowerRightEmbed2 B * upperLeftEmbed2 A := by
   ext a b
   fin_cases a <;> fin_cases b <;>
-    simp [upperLeftEmbed2, lowerRightEmbed2, Matrix.mul_apply, Fin.sum_univ_four]
+    simp [upperLeftEmbed2, lowerRightEmbed2, Matrix.mul_apply, Matrix.dotProduct, Fin.sum_univ_four]
+  all_goals ring
 
 /-- 3. Pentagon Identity target.  The exact five-flip embedding remains open. -/
 def pentagonStatement (_i _j _k _l _m : ι)

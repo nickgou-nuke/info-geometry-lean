@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Mathlib.Data.Real.Sqrt
+import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset
 import Omega.EA.GodelLogBusemann
 import Omega.GU.GroupJGPrimeRegisterPhaseBohrDense
@@ -182,8 +182,8 @@ lemma godelScale_one_le (a : ℕ →₀ ℕ) (primes : ℕ → ℝ) (hprimes : �
   classical
   unfold Omega.EA.godelScale
   simpa using
-    (Finset.one_le_prod (s := a.support) (f := fun p => primes p ^ a p)
-      (fun p => one_le_pow₀ (hprimes p)))
+    (Finset.one_le_prod₀ (s := a.support) (f := fun p => primes p ^ a p)
+      (fun p _ => one_le_pow₀ (hprimes p)))
 
 /-- The ellipse family attached to a positive prime-scale map. -/
 noncomputable def godelJoukowskyEllipseHom
@@ -192,7 +192,7 @@ noncomputable def godelJoukowskyEllipseHom
   toFun a := ⟨Omega.EA.godelScale (Multiplicative.toAdd a) primes⟩
   map_one' := by
     ext
-    simpa using Omega.EA.godelScale_zero primes
+    exact Omega.EA.godelScale_zero primes
   map_mul' := by
     intro a b
     ext
@@ -205,7 +205,7 @@ noncomputable def godelJoukowskyEllipseHom
     have hb_pos : ∀ p ∈ (Multiplicative.toAdd b).support, 0 < primes p := by
       intro p hp
       exact lt_of_lt_of_le zero_lt_one (hprimes p)
-    simpa using Omega.EA.godelScale_add
+    exact Omega.EA.godelScale_add
       (Multiplicative.toAdd a) (Multiplicative.toAdd b) primes hab_pos ha_pos hb_pos
 
 /-- Paper-facing Gödel-Joukowsky ellipse package: the normalized boundary parameterization obeys

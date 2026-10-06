@@ -10,31 +10,16 @@ example : Phase.precedes Phase.primaMateriaIntake Phase.kernelCertifiedPromotion
 example : ¬ Phase.precedes Phase.kernelCertifiedPromotion Phase.primaMateriaIntake := by
   decide
 
-example : Status.label Status.corridorReady = "corridor_ready" := by
-  rfl
-
-def provedCandidate : Candidate where
-  claim := ∀ n : Nat, n + 0 = n
-  phase := Phase.kernelCertifiedPromotion
-  status := Status.proved
-  owner := "InfoGeometry.MetaCompiler.Tests"
-  evidence := by
-    intro _
-    exact Nat.add_zero
-
-def openCandidate : Candidate where
-  claim := ∀ n : Nat, n + 0 = n
+def openCandidate : TypedArchetype Nat .candidate where
+  name := `InfoGeometry.MetaCompiler.Tests.openCandidate
   phase := Phase.multiAgentCandidateRepair
-  status := Status.corridorReady
-  owner := "InfoGeometry.MetaCompiler.Tests"
-  evidence := by
-    intro impossible
-    cases impossible
+  claim := fun n => n + 0 = n
+  evidence := PUnit.unit
 
-example : ∃ certified, promote provedCandidate = some certified := by
-  exact (promote_proved_accepts provedCandidate rfl).imp (fun certified h => h.1)
+def promotedCandidate : TypedArchetype Nat .proved :=
+  TypedArchetype.promoteToProved openCandidate (by intro n; change n + 0 = n; exact Nat.add_zero n)
 
-example : promote openCandidate = none := by
-  exact promote_raw_rejects openCandidate (by decide)
+example : promotedCandidate.phase = Phase.multiAgentCandidateRepair := rfl
+example : promotedCandidate.name = `InfoGeometry.MetaCompiler.Tests.openCandidate := rfl
 
 end InfoGeometry.MetaCompiler.Tests

@@ -70,15 +70,8 @@ theorem dirac_anticommutes_gamma {n0 n1 n2 : ℕ}
   (B1 : Matrix (Fin n0) (Fin n1) ℝ) (B2 : Matrix (Fin n1) (Fin n2) ℝ) :
   chiralGamma * diracOp B1 B2 + diracOp B1 B2 * chiralGamma = 0 := by
   ext i j
+  simp only [Matrix.add_apply, Matrix.mul_apply, Matrix.zero_apply]
   unfold chiralGamma diracOp
-  -- Compute (ΓD)ij = Γii * Dij and (DΓ)ij = Dij * Γjj
-  -- Use Matrix.mul_apply to expand the product
-  simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.zero_apply]
-  -- Now we have: (Σ_k Γik * Dkj) + (Σ_k Dik * Γkj) = 0
-  -- Since Γ is diagonal, Γik = 0 when i≠k and Γkj = 0 when k≠j
-  -- So only the k=i term in the first sum and k=j term in the second survive:
-  -- Γii * Dij + Dij * Γjj = Dij * (Γii + Γjj)
-  -- And we verify that for all (i,j), this is 0.
-  cases i <;> cases j <;> simp [cellParity]
+  cases i <;> cases j <;> simp [cellParity, Finset.sum_ite_eq, Finset.sum_ite_eq']
 
 end DAG.ChiralDiracAnticommutation

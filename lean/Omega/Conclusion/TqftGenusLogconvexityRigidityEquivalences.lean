@@ -108,7 +108,7 @@ private lemma conclusion_tqft_genus_logconvexity_rigidity_equivalences_constant_
     refine Finset.sum_pos' ?_ ?_
     · intro i _
       exact sq_nonneg (y i)
-    · obtain ⟨i0⟩ := inferInstanceAs (Nonempty ι)
+    · have ⟨i0⟩ := ‹Nonempty ι›
       refine ⟨i0, by simp, ?_⟩
       dsimp [y]
       have hden : 0 < (d i0 : ℝ) ^ g := by
@@ -141,7 +141,7 @@ private lemma conclusion_tqft_genus_logconvexity_rigidity_equivalences_constant_
       (Finset.sum_eq_zero_iff_of_nonneg (fun j _ => sq_nonneg (B * x j - C * y j))).mp
         hsum_zero i (by simp)
     nlinarith [sq_eq_zero_iff.mp hterm]
-  obtain ⟨i0⟩ := inferInstanceAs (Nonempty ι)
+  have ⟨i0⟩ := ‹Nonempty ι›
   refine ⟨d i0, hd i0, ?_⟩
   intro i
   have hcross : x i * y i0 = x i0 * y i := by

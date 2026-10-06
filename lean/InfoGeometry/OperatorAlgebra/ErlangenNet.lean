@@ -44,7 +44,7 @@ Type III law is assumed here.
 -/
 structure LocalObservableFrame
     (Alg Frame : Type*) where
-  localAlg : Frame → Type*
+  localAlg : Frame → Type
   embed : ∀ f, localAlg f → Alg
 
 namespace LocalObservableFrame
@@ -84,11 +84,11 @@ Finite symbolic sector alphabet.
 
 Finiteness is carrier data via `Fintype`; no topology is asserted.
 -/
-structure LocalSectorAlphabet
+class LocalSectorAlphabet
     (Symbol : Type*) where
   instFintype : Fintype Symbol
 
-attribute [instance] LocalSectorAlphabet.instFintype
+instance {Symbol : Type*} [A : LocalSectorAlphabet Symbol] : Fintype Symbol := A.instFintype
 
 /-- Local sector labeling carrier. -/
 structure LocalSectorSplit
@@ -112,13 +112,21 @@ inductive LightConeSymbol where
   | uPlus
   | uMinus
   | epsilon
-deriving DecidableEq, Repr, Fintype
+deriving DecidableEq, Repr
+
+instance : Fintype LightConeSymbol where
+  elems := {LightConeSymbol.one, LightConeSymbol.uPlus, LightConeSymbol.uMinus, LightConeSymbol.epsilon}
+  complete := by intro x; cases x <;> decide
 
 /-- Binary causal sector alphabet for the lightcone boundary. -/
 inductive BinarySector where
   | plus
   | minus
-deriving DecidableEq, Repr, Fintype
+deriving DecidableEq, Repr
+
+instance : Fintype BinarySector where
+  elems := {BinarySector.plus, BinarySector.minus}
+  complete := by intro x; cases x <;> decide
 
 /-- Infinite symbolic sector boundary. -/
 abbrev SectorBoundary (Symbol : Type*) :=
@@ -178,7 +186,7 @@ namespace IteratedObservableSectorization
 variable {Alg Frame Sym Symbol Label : Type*}
 variable (N : IteratedObservableSectorization Alg Frame Sym Symbol Label)
 
-instance finiteSymbol : Fintype Symbol :=
+def finiteSymbol : Fintype Symbol :=
   N.alphabet.instFintype
 
 /-- Definitional finite-code readback. -/

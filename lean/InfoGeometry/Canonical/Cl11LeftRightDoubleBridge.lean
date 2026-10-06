@@ -68,8 +68,8 @@ theorem left_commutant_eq_right_range :
 
 theorem rightAction_injective :
     Function.Injective rightAction := by
-  simpa [rightAction] using
-    (rightRegular_injective (R := ℝ) (A := Atom))
+  change Function.Injective (rightRegular (R := ℝ) (A := Atom))
+  exact rightRegular_injective (R := ℝ) (A := Atom)
 
 /-! ## 2. Explicit stage-one equivalence and native tensor realization -/
 
@@ -110,49 +110,46 @@ def rightStageTwo (B : Atom) : StageTwo :=
 
 @[simp] theorem leftStageTwo_one :
     leftStageTwo (1 : Atom) = (1 : StageTwo) := by
-  simp [leftStageTwo, atomToStageOne]
+  dsimp [leftStageTwo]
+  rw [map_one]
+  exact Matrix.one_kronecker_one
 
 @[simp] theorem rightStageTwo_one :
     rightStageTwo (1 : Atom) = (1 : StageTwo) := by
-  simp [rightStageTwo]
+  dsimp [rightStageTwo]
+  exact Matrix.one_kronecker_one
 
 @[simp] theorem leftStageTwo_mul (A B : Atom) :
     leftStageTwo (A * B) = leftStageTwo A * leftStageTwo B := by
-  simpa only [leftStageTwo, map_mul, mul_one] using
-    Matrix.mul_kronecker_mul (atomToStageOne A) (atomToStageOne B)
-      (1 : Atom) (1 : Atom)
+  dsimp [leftStageTwo]
+  have h := Matrix.mul_kronecker_mul (atomToStageOne A) (atomToStageOne B) (1 : Atom) (1 : Atom)
+  rw [mul_one] at h
+  rw [map_mul]
+  exact h
 
 @[simp] theorem rightStageTwo_mul (A B : Atom) :
     rightStageTwo (A * B) = rightStageTwo A * rightStageTwo B := by
-  simpa only [rightStageTwo, mul_one] using
-    Matrix.mul_kronecker_mul (1 : StageOne) (1 : StageOne) A B
+  dsimp [rightStageTwo]
+  have h := Matrix.mul_kronecker_mul (1 : StageOne) (1 : StageOne) A B
+  rw [mul_one] at h
+  exact h
 
 theorem leftStageTwo_rightStageTwo_commute (A B : Atom) :
     leftStageTwo A * rightStageTwo B =
       rightStageTwo B * leftStageTwo A := by
-  calc
-    leftStageTwo A * rightStageTwo B
-        = (atomToStageOne A * 1) ⊗ₖ ((1 : Atom) * B) := by
-            simpa [leftStageTwo, rightStageTwo] using
-              (Matrix.mul_kronecker_mul
-                (atomToStageOne A) (1 : StageOne) (1 : Atom) B).symm
-    _ = atomToStageOne A ⊗ₖ B := by simp
-    _ = ((1 : StageOne) * atomToStageOne A) ⊗ₖ (B * 1) := by simp
-    _ = rightStageTwo B * leftStageTwo A := by
-            simpa [leftStageTwo, rightStageTwo] using
-              (Matrix.mul_kronecker_mul
-                (1 : StageOne) (atomToStageOne A) B (1 : Atom))
+  have h1 := Matrix.mul_kronecker_mul (atomToStageOne A) (1 : StageOne) (1 : Atom) B
+  have h2 := Matrix.mul_kronecker_mul (1 : StageOne) (atomToStageOne A) B (1 : Atom)
+  rw [mul_one, one_mul] at h1
+  rw [one_mul, mul_one] at h2
+  exact Eq.trans h1.symm h2
 
 theorem leftStageTwo_mul_rightStageTwo (A B : Atom) :
     leftStageTwo A * rightStageTwo B =
       atomToStageOne A ⊗ₖ B := by
-  calc
-    leftStageTwo A * rightStageTwo B
-        = (atomToStageOne A * 1) ⊗ₖ ((1 : Atom) * B) := by
-            simpa [leftStageTwo, rightStageTwo] using
-              (Matrix.mul_kronecker_mul
-                (atomToStageOne A) (1 : StageOne) (1 : Atom) B).symm
-    _ = atomToStageOne A ⊗ₖ B := by simp
+  have h1 := Matrix.mul_kronecker_mul (atomToStageOne A) (1 : StageOne) (1 : Atom) B
+  rw [mul_one, one_mul] at h1
+  exact h1.symm
+
 
 def doubledStageToM4R : StageTwo ≃ₐ[ℝ] M4R :=
   stageTwoToM4R

@@ -151,11 +151,11 @@ def pairStageAgainstDirectLimit
           (fun _ _ h => realTransition E sys h)
           j y) =
       commonStageInner E sys i j x y := by
-  simpa only [pairingRightAtStage] using
-    (Module.DirectLimit.lift_of
+  exact
+    Module.DirectLimit.lift_of
       (g := pairingRightAtStage E sys i x)
       (pairingRightAtStage_compatible E sys i x)
-      (i := j) y)
+      (i := j) y
 
 /-- One first-stage representative determines a real-linear functional on the
 direct limit. -/
@@ -312,12 +312,11 @@ def complexScalarDirectLimit
         ℝ I E
         (fun _ _ h => realTransition E sys h)
         i (c • x) := by
-  simpa only [complexScalarCoconeMap,
-    stageComplexScalarMap] using
-    (Module.DirectLimit.lift_of
+  exact
+    Module.DirectLimit.lift_of
       (g := complexScalarCoconeMap E sys c)
       (complexScalarCoconeMap_compatible E sys c)
-      (i := i) x)
+      (i := i) x
 
 /-- Descended complex scalar action on the real direct-limit carrier. -/
 noncomputable instance complexSMulRealDirectLimit :
@@ -453,17 +452,13 @@ def directLimitInner :
         ((realDirectLimitInner E sys).map_add z₁ z₂) w)
     (by
       intro c z w
-      simpa only [smul_eq_mul] using
-        realDirectLimitInner_smul_left_complex
-          E sys c z w)
+      exact realDirectLimitInner_smul_left_complex E sys c z w)
     (by
       intro z w₁ w₂
       exact (realDirectLimitInner E sys z).map_add w₁ w₂)
     (by
       intro c z w
-      simpa only [smul_eq_mul] using
-        realDirectLimitInner_smul_right_complex
-          E sys c z w)
+      exact realDirectLimitInner_smul_right_complex E sys c z w)
 
 @[simp] theorem directLimitInner_apply
     (z w : D∞) :

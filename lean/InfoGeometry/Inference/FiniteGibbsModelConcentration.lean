@@ -55,7 +55,7 @@ theorem modelVolume_le_prior_ratio_mul_exp_neg_gap
       · exact (Real.exp_pos _).le
       · apply Real.exp_lt_one_iff.mpr
         have hneg : -(δ / ε) < 0 := neg_lt_zero.mpr (div_pos hδ hε)
-        convert hneg using 1 <;> ring
+        (convert hneg using 1; ring)
     exact mul_nonneg
       (div_nonneg (F.prior_pos m).le (F.prior_pos m₀).le)
       hexp_interval.1

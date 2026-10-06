@@ -353,7 +353,7 @@ lemma score_radial_projective_factorization
       * (scoreProjectiveGauge (T := T) f hf0 hfTop t)
       = f t := by
   unfold scoreRayDegree scoreProjectiveGauge
-  rw [PMF.normalize_apply]
+  change (∑' x, f x) * (f t * (∑' x, f x)⁻¹) = f t
   have hcancel : (∑' x, f x) * (∑' x, f x)⁻¹ = 1 := by
     simpa [scoreRayDegree] using (ENNReal.mul_inv_cancel hf0 hfTop)
   calc

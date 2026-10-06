@@ -173,7 +173,8 @@ variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 theorem hestenesJ_isInvolution [HestenesKreinSpace V] :
     IsInvolution (HestenesKreinSpace.J : Module.End ℝ V) := by
   dsimp [IsInvolution, InfoGeometry.Cartan.IsCartanInvolution]
-  simpa [Module.End.mul_eq_comp] using (HestenesKreinSpace.J_involution (V := V))
+  rw [Module.End.mul_eq_comp]
+  exact HestenesKreinSpace.J_involution
 
 -- `ε` in an involutive self-dual carrier is a Cartan involution.
 -- (using only its defining involutivity axiom).

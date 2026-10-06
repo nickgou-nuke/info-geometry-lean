@@ -46,7 +46,7 @@ lemma frozenSliceJaynes_fullSupportPrior
     (hq : ∀ t : T, 0 < (qT t).toReal) :
     (frozenSliceJaynes (X := X) (Y := Y) (T := T) prob qT mY_givenT x).FullSupportPrior := by
   intro t
-  simpa [frozenSliceJaynes] using hq t
+  exact hq t
 
 lemma frozenSliceJaynes_partition_one_ne_zero
     (prob : IBProblem (X := X) (Y := Y))
@@ -59,8 +59,8 @@ lemma frozenSliceJaynes_partition_one_ne_zero
   let J := frozenSliceJaynes (X := X) (Y := Y) (T := T) prob qT mY_givenT x
   have hprior : J.FullSupportPrior := by
     intro t
-    simpa [J, frozenSliceJaynes] using hq t
-  haveI : Nonempty T := by
+    exact hq t
+  have : Nonempty T := by
     rcases qT.support_nonempty with ⟨t0, ht0⟩
     exact ⟨t0⟩
   exact J.partition_ne_zero_of_fullSupport hprior (fun _ : Unit => (1 : ℝ))
@@ -143,14 +143,13 @@ lemma frozenSlice_local_free_energy_identity_sum
       (X := X) (Y := Y) (T := T) prob qT mY_givenT x hq
   have hprior : J.FullSupportPrior := by
     intro t
-    simpa [J, frozenSliceJaynes] using hq t
+    exact hq t
   have hvar := J.kl_gibbs_variational_identity hprior lam hZ p_x
   have hKLq :
       (InfoGeometry.fin_kl_div p_x qT).toReal
         = ∑ t : T, (p_x t).toReal * Real.log ((p_x t).toReal / (J.prior t).toReal) := by
-    simpa [J, frozenSliceJaynes] using
-      (InfoGeometry.MaxEnt.IProjection.toReal_klDiv_eq_sum_log_ratio
-        (P := p_x) (Q := qT) hq)
+    change (InfoGeometry.fin_kl_div p_x qT).toReal = ∑ t : T, (p_x t).toReal * Real.log ((p_x t).toReal / (qT t).toReal)
+    unfold fin_kl_div; exact InfoGeometry.MaxEnt.IProjection.toReal_klDiv_eq_sum_log_ratio (P := p_x) (Q := qT) hq
   have hMoment :
       (∑ i ∈ J.index, lam i * J.moment p_x (J.feature i))
         =
@@ -242,9 +241,7 @@ lemma local_free_energy_identity
       (InfoGeometry.fin_kl_div p_x (J.gibbsDist lam hZ)).toReal
         = ∑ t : T, (p_x t).toReal *
             Real.log ((p_x t).toReal / ((J.gibbsDist lam hZ) t).toReal) := by
-    simpa using
-      (InfoGeometry.MaxEnt.IProjection.toReal_klDiv_eq_sum_log_ratio
-        (P := p_x) (Q := J.gibbsDist lam hZ) hGibbsFull)
+    unfold fin_kl_div; exact InfoGeometry.MaxEnt.IProjection.toReal_klDiv_eq_sum_log_ratio (P := p_x) (Q := J.gibbsDist lam hZ) hGibbsFull
   have hKLg' :
       (InfoGeometry.fin_kl_div p_x (J.gibbsDist lam hZ)).toReal
         = ∑ t : T, (p_x t).toReal * Real.log ((p_x t).toReal / J.gibbsProb lam hZ t) := by

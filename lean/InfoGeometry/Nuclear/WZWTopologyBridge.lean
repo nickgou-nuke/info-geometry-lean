@@ -59,6 +59,12 @@ theorem cartan_three_form_is_chiral_volume (omega j_pi j_nu : Fin 3 → ℝ) :
 def wzw_topological_action (lambda : ℝ) (omega j_pi j_nu : Fin 3 → ℝ) : ℝ :=
   lambda * cartan_three_form omega j_pi j_nu
 
+/-- The total Euclidean Action for the pseudo-particle containing a topological bias. -/
+structure EuclideanInstantonAction where
+  S_sym : ℝ
+  bias_energy : ℝ
+  phi : ℝ
+
 /-- 
   🏆 THEOREM 2: The Chiral Anomaly acts as the exact Mass Bias Source.
   If we set the topological coupling constant $\lambda$ appropriately, the WZW term 

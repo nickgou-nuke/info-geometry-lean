@@ -182,24 +182,33 @@ def cuntzSdag (n : ℕ) (i : Fin n) : CuntzAlg n := cuntzMk n (Sdag n i)
 /-- The Cuntz--Toeplitz quotient satisfies `Sᵢ† Sⱼ = δᵢⱼ`. -/
 theorem toeplitz_orthogonality (n : ℕ) (i j : Fin n) :
     toeplitzSdag n i * toeplitzS n j = if i = j then 1 else 0 := by
-  change toeplitzMk n (Sdag n i) * toeplitzMk n (S n j) = _
-  rw [← map_mul]
-  simpa using RingQuot.mkAlgHom_rel ℂ (CuntzToeplitzRel.orth i j)
+  calc
+    toeplitzSdag n i * toeplitzS n j = toeplitzMk n (Sdag n i * S n j) := by
+      change toeplitzMk n (Sdag n i) * toeplitzMk n (S n j) = _
+      rw [← map_mul]
+    _ = toeplitzMk n (if i = j then 1 else 0) := RingQuot.mkAlgHom_rel ℂ (CuntzToeplitzRel.orth i j)
+    _ = if i = j then 1 else 0 := by split_ifs <;> simp
 
 /-- The Cuntz quotient satisfies `Sᵢ† Sⱼ = δᵢⱼ`. -/
 theorem cuntz_orthogonality (n : ℕ) (i j : Fin n) :
     cuntzSdag n i * cuntzS n j = if i = j then 1 else 0 := by
-  change cuntzMk n (Sdag n i) * cuntzMk n (S n j) = _
-  rw [← map_mul]
-  simpa using RingQuot.mkAlgHom_rel ℂ (CuntzRel.orth i j)
+  calc
+    cuntzSdag n i * cuntzS n j = cuntzMk n (Sdag n i * S n j) := by
+      change cuntzMk n (Sdag n i) * cuntzMk n (S n j) = _
+      rw [← map_mul]
+    _ = cuntzMk n (if i = j then 1 else 0) := RingQuot.mkAlgHom_rel ℂ (CuntzRel.orth i j)
+    _ = if i = j then 1 else 0 := by split_ifs <;> simp
 
 /-- The finite Cuntz quotient satisfies `Σᵢ Sᵢ Sᵢ† = 1`. -/
 theorem cuntz_ranges_sum_one (n : ℕ) :
     (∑ i : Fin n, cuntzS n i * cuntzSdag n i) = 1 := by
-  change (∑ i : Fin n, cuntzMk n (S n i) * cuntzMk n (Sdag n i)) = 1
-  simp_rw [← map_mul]
-  rw [← map_sum]
-  simpa using RingQuot.mkAlgHom_rel ℂ (CuntzRel.ranges_sum_one (n := n))
+  calc
+    (∑ i : Fin n, cuntzS n i * cuntzSdag n i) = cuntzMk n (∑ i : Fin n, S n i * Sdag n i) := by
+      change (∑ i : Fin n, cuntzMk n (S n i) * cuntzMk n (Sdag n i)) = _
+      simp_rw [← map_mul]
+      rw [← map_sum]
+    _ = cuntzMk n 1 := RingQuot.mkAlgHom_rel ℂ (CuntzRel.ranges_sum_one (n := n))
+    _ = 1 := map_one _
 
 /-- Each Cuntz generator is an algebraic isometry in the quotient. -/
 theorem cuntz_isometry (n : ℕ) (i : Fin n) :
@@ -338,4 +347,4 @@ theorem cuntz_complete_projector_system (n : ℕ) :
     cuntz_range_projectors_commute n, cuntz_range_projector_star n,
     cuntz_ranges_sum_one n⟩
 
-end InfoGeometry.Algebra.CuntzTensorQuotient
+end VirasoroProject.Extensions.CuntzTensorQuotient

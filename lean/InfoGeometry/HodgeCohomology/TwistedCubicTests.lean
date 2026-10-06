@@ -10,7 +10,7 @@ example : parameter (1 : ℚ) 2 = ![1, 2, 4, 8] := by
 example : OnCurve (![1, 2, 4, 8] : Fin 4 → ℚ) := by
   norm_num [OnCurve]
 
-example : OnCurve ((-3 : ℚ) • parameter 1 2) :=
+example : OnCurve ((-3 : ℚ) • parameter (1 : ℚ) 2) :=
   onCurve_smul _ _ (parameter_onCurve _ _)
 
 example : (quadric (Scalar := ℂ) 0 2 1 1).IsHomogeneous 2 :=

@@ -33,10 +33,9 @@ lemma metallicCompressionBridge_continuousOn_Ici_one :
   have hne : x + 1 ≠ 0 := by linarith
   have hlog : ContinuousAt Real.log x := Real.continuousAt_log (by linarith)
   have hquot : ContinuousAt (fun y : ℝ => (y - 1) / (y + 1)) x := by
-    exact (((continuous_id.sub continuous_const).continuousAt).div
-      ((continuous_id.add continuous_const).continuousAt) hne)
-  simpa [metallicCompressionBridge] using
-    (hlog.sub (hquot.mul continuousAt_const)).continuousWithinAt
+    exact (continuousAt_id.sub continuousAt_const).div
+      (continuousAt_id.add continuousAt_const) hne
+  exact (hlog.sub (hquot.mul continuousAt_const)).continuousWithinAt
 
 lemma metallicCompressionBridge_deriv_pos {x : ℝ}
     (hx : x ∈ interior (Set.Ici 1)) :
@@ -47,13 +46,15 @@ lemma metallicCompressionBridge_deriv_pos {x : ℝ}
   have hquot :
       HasDerivAt (fun y : ℝ => (y - 1) / (y + 1))
         (((x + 1) - (x - 1)) / (x + 1) ^ 2) x := by
-    simpa using
-      ((hasDerivAt_id x).sub_const 1).div ((hasDerivAt_id x).add_const 1) hne
+    have := ((hasDerivAt_id x).sub_const 1).div ((hasDerivAt_id x).add_const 1) hne
+    simp only [id_eq] at this
+    have heq : ((1 * (x + 1) - (x - 1) * 1) / (x + 1) ^ 2) = ((x + 1) - (x - 1)) / (x + 1) ^ 2 := by ring
+    rw [heq] at this
+    exact this
   have hf :
       HasDerivAt metallicCompressionBridge
         (x⁻¹ - (((x + 1) - (x - 1)) / (x + 1) ^ 2) * 2) x := by
-    simpa [metallicCompressionBridge] using
-      (Real.hasDerivAt_log hx0.ne').sub (hquot.mul (hasDerivAt_const x (2 : ℝ)))
+    exact (Real.hasDerivAt_log hx0.ne').sub (hquot.mul_const (2 : ℝ))
   have hderiv :
       deriv metallicCompressionBridge x = (x - 1) ^ 2 / (x * (x + 1) ^ 2) := by
     rw [hf.deriv]
@@ -104,8 +105,7 @@ lemma metallicCertificateObjective_continuousOn :
   have hlog : Real.log x ≠ 0 := ne_of_gt (Real.log_pos hx1)
   have hnum : ContinuousAt (fun y : ℝ => y - y⁻¹) x := by
     exact continuousAt_id.sub (continuousAt_inv₀ hx0.ne')
-  simpa [metallicCertificateObjective] using
-    (hnum.div (Real.continuousAt_log hx0.ne') hlog).continuousWithinAt
+  exact (hnum.div (Real.continuousAt_log hx0.ne') hlog).continuousWithinAt
 
 lemma metallicCertificateObjective_deriv_pos {x : ℝ}
     (hx : x ∈ interior (Set.Ioi 1)) :
@@ -114,12 +114,14 @@ lemma metallicCertificateObjective_deriv_pos {x : ℝ}
   have hx0 : 0 < x := by linarith
   have hlog : Real.log x ≠ 0 := ne_of_gt (Real.log_pos hx1)
   have hnum : HasDerivAt (fun y : ℝ => y - y⁻¹) (1 + x⁻¹ ^ 2) x := by
-    simpa using (hasDerivAt_id x).sub (hasDerivAt_inv hx0.ne')
+    have := (hasDerivAt_id x).sub (hasDerivAt_inv hx0.ne')
+    have heq : 1 - -(x ^ 2)⁻¹ = 1 + x⁻¹ ^ 2 := by ring
+    rw [heq] at this
+    exact this
   have hk :
       HasDerivAt metallicCertificateObjective
         (((1 + x⁻¹ ^ 2) * Real.log x - (x - x⁻¹) * x⁻¹) / (Real.log x) ^ 2) x := by
-    simpa [metallicCertificateObjective] using
-      hnum.div (Real.hasDerivAt_log hx0.ne') hlog
+    exact hnum.div (Real.hasDerivAt_log hx0.ne') hlog
   have hderiv :
       deriv metallicCertificateObjective x =
         (((1 + x⁻¹ ^ 2) * Real.log x) - (1 - x⁻¹ ^ 2)) / (Real.log x) ^ 2 := by
@@ -133,7 +135,7 @@ lemma metallicCertificateObjective_deriv_pos {x : ℝ}
   have hbridge : 2 * (x ^ 2 - 1) / (x ^ 2 + 1) < Real.log (x ^ 2) :=
     log_gt_two_mul_sub_div_add hx2
   have hlog2 : Real.log (x ^ 2) = 2 * Real.log x := by
-    simpa [Real.rpow_natCast] using (Real.log_rpow hx0 (2 : ℝ))
+    simp only [Real.log_pow, Nat.cast_ofNat]
   rw [hlog2] at hbridge
   have hbridge' : 2 * ((x ^ 2 - 1) / (x ^ 2 + 1)) < 2 * Real.log x := by
     simpa [div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm] using hbridge

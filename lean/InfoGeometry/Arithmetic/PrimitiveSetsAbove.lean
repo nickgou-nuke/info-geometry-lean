@@ -2183,8 +2183,10 @@ theorem goodDivisorSumChebyshevBound :
   have hpsi_eq :
       Chebyshev.psi ((x / x₀ : ℕ) : ℝ)
         = Finset.sum (Finset.Icc 0 (x / x₀)) realVonMangoldt := by
-    rw [Chebyshev.psi_eq_sum_Icc]
-    simp [realVonMangoldt]
+    rw [Chebyshev.psi_eq_sum_Icc, Nat.floor_natCast]
+    apply Finset.sum_congr rfl
+    intro y _
+    exact rfl
   have hsum_le_psi :
       Finset.sum good realVonMangoldt
         ≤ Chebyshev.psi ((x / x₀ : ℕ) : ℝ) := by

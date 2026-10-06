@@ -318,7 +318,7 @@ theorem exists_drazinInverse_global (A : Module.End K V) :
     exact hN k hk_le
 
   -- Projection `V → Ran` along `Ker`.
-  let πRan : V →ₗ[K] Ran := Ran.linearProjOfIsCompl Ker hk.symm
+  let πRan : V →ₗ[K] Ran := Ran.projectionOnto Ker hk.symm
 
   -- `A` preserves the stable range.
   have hA_map_Ran : ∀ x : Ran, A x.1 ∈ Ran := by
@@ -403,15 +403,15 @@ theorem exists_drazinInverse_global (A : Module.End K V) :
     ext x
     rcases Submodule.existsUnique_add_of_isCompl hk x with ⟨xK, xR, hsum, huniq⟩
     have hπK : πRan xK = 0 := by
-      exact Submodule.linearProjOfIsCompl_apply_right hk.symm xK
+      exact Submodule.projectionOnto_apply_right hk.symm xK
     have hπR : πRan xR = xR := by
-      exact Submodule.linearProjOfIsCompl_apply_left hk.symm xR
+      exact Submodule.projectionOnto_apply_left hk.symm xR
     have hAK : A (xK : V) ∈ Ker := hA_map_Ker xK xK.2
     have hπAK : πRan (A (xK : V)) = 0 := by
-      exact Submodule.linearProjOfIsCompl_apply_right' hk.symm _ hAK
+      exact Submodule.projectionOnto_apply_of_mem_right hk.symm hAK
     have hARxR : A (xR : V) ∈ Ran := hA_map_Ran xR
     have hπARxR : πRan (A (xR : V)) = ⟨A xR, hARxR⟩ := by
-      exact Submodule.linearProjOfIsCompl_apply_left hk.symm ⟨A xR, hARxR⟩
+      exact Submodule.projectionOnto_apply_left hk.symm ⟨A xR, hARxR⟩
     have hARxR_eq : (⟨A xR, hARxR⟩ : Ran) = AR xR := by
       apply Subtype.ext
       rfl
@@ -444,7 +444,7 @@ theorem exists_drazinInverse_global (A : Module.End K V) :
     ext x
     have hπPx : πRan (P x) = πRan x := by
       unfold P
-      exact Submodule.linearProjOfIsCompl_apply_left hk.symm (πRan x)
+      exact Submodule.projectionOnto_apply_left hk.symm (πRan x)
     calc
       (D * P) x = Ran.subtype (eRan.symm (πRan (P x))) := by rfl
       _ = Ran.subtype (eRan.symm (πRan x)) := by rw [hπPx]
@@ -453,7 +453,7 @@ theorem exists_drazinInverse_global (A : Module.End K V) :
   have hP_mul_D : P * D = D := by
     ext x
     have hπDx : πRan (D x) = ⟨D x, hD_mem_Ran x⟩ := by
-      exact Submodule.linearProjOfIsCompl_apply_left hk.symm ⟨D x, hD_mem_Ran x⟩
+      exact Submodule.projectionOnto_apply_left hk.symm ⟨D x, hD_mem_Ran x⟩
     calc
       (P * D) x = Ran.subtype (πRan (D x)) := by rfl
       _ = Ran.subtype ⟨D x, hD_mem_Ran x⟩ := by rw [hπDx]
@@ -463,9 +463,9 @@ theorem exists_drazinInverse_global (A : Module.End K V) :
     ext x
     rcases Submodule.existsUnique_add_of_isCompl hk x with ⟨xK, xR, hsum, huniq⟩
     have hπK : πRan xK = 0 := by
-      exact Submodule.linearProjOfIsCompl_apply_right hk.symm xK
+      exact Submodule.projectionOnto_apply_right hk.symm xK
     have hπR : πRan xR = xR := by
-      exact Submodule.linearProjOfIsCompl_apply_left hk.symm xR
+      exact Submodule.projectionOnto_apply_left hk.symm xR
     have hP_on_sum : P ((xK : V) + xR) = (xR : V) := by
       unfold P
       simp [map_add, hπK, hπR]

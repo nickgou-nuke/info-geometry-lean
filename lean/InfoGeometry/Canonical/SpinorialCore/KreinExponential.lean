@@ -18,8 +18,9 @@ def fundamentalUnit (J : Matrix n n ℂ) (hJ : J * J = 1) : (Matrix n n ℂ)ˣ w
 theorem sharp_exp (J X : Matrix n n ℂ) (hJ : J * J = 1) :
     sharp J (exp X) = exp (sharp J X) := by
   simp only [sharp, NormedSpace.star_exp]
-  simpa only [fundamentalUnit] using
-    (Matrix.exp_units_conj (fundamentalUnit J hJ) (star X)).symm
+  have h := Matrix.exp_units_conj (fundamentalUnit J hJ) (star X)
+  change exp (J * star X * J) = J * exp (star X) * J at h
+  exact h.symm
 
 /-- A genuine matrix exponential, not a formal symbol with an assumed inverse. -/
 theorem exp_isIsometry (J X : Matrix n n ℂ) (hJ : J * J = 1)

@@ -23,6 +23,8 @@ set_option linter.unusedSectionVars false
 
 namespace DAG.FunctionalGaussJordan
 
+attribute [-instance] CStarMatrix.instHMulOfFintypeOfMulOfAddCommMonoid
+
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 variable {K : Type*} [Field K]
 

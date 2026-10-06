@@ -505,7 +505,7 @@ def mctxRefRow
     levelAssignDepth := mctx.levelAssignDepth
     mvarCounter := mctx.mvarCounter
     declCount := decls.length
-    levelDepthCount := mctx.lDepth.toList.length
+    levelDepthCount := mctx.lDecls.toList.length
     userNameCount := userNames.length
     levelAssignmentCount := mctx.lAssignment.toList.length
     exprAssignmentCount := mctx.eAssignment.toList.length
@@ -585,7 +585,7 @@ def mctxSignature (mctx : MetavarContext) : String := Id.run do
     ( [ "depth=" ++ toString mctx.depth
       , "levelAssignDepth=" ++ toString mctx.levelAssignDepth
       , "mvarCounter=" ++ toString mctx.mvarCounter
-      , "lDepth=" ++ toString mctx.lDepth.toList.length
+      , "lDepth=" ++ toString mctx.lDecls.toList.length
       , "lAssignment=" ++ toString mctx.lAssignment.toList.length
       , "decls=" ++ String.intercalate ";" declIds
       , "userNames=" ++ String.intercalate ";" userNames
@@ -1058,7 +1058,7 @@ def infoKindAndPayload
          , ("elaborator", ti.elaborator.toString)
          , ("syntax", syntaxText ti.stx)
          , ("location", reprStr ti.location?)
-         , ("docString", ti.docString?.getD "")
+         , ("docString", "<docString unavailable>")
          , ("explicit", toString ti.explicit)
          , ("lctx_size", toString ti.lctx.decls.size) ]
       ("delab_term", some (payloadText fields), fields,

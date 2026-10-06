@@ -20,6 +20,7 @@ def conclusion_periodic_fiber_boolean_interval_mobius_fromSubset (n : ℕ)
 def conclusion_periodic_fiber_boolean_interval_mobius_toSubset (n : ℕ)
     (ω : conclusion_periodic_fiber_boolean_interval_mobius_microstate n) :
     Finset (Fin n) :=
+  have : DecidablePred (fun j => ω j = true) := fun _ => inferInstance
   Finset.univ.filter fun j => ω j = true
 
 /-- Product order on blockwise endpoint choices. -/

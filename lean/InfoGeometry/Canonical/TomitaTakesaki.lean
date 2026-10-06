@@ -174,9 +174,9 @@ private theorem involutiveConjugation_exp
     J * NormedSpace.exp X * J = NormedSpace.exp (J * X * J) := by
   let φ : EndH →+* EndH := involutiveConjugationRingHom (E := E) J hJ2
   have hφcont : Continuous φ := by
-    simpa [φ, involutiveConjugationRingHom] using
-      ((continuous_const.mul continuous_id).mul continuous_const)
-  simpa [φ] using (NormedSpace.map_exp φ hφcont X)
+    change Continuous (fun A => J * A * J)
+    exact (continuous_const.mul continuous_id).mul continuous_const
+  exact NormedSpace.map_exp φ hφcont X
 
 /--
 Modular conjugation `J` (real-linear model of antilinear conjugation on complex space).
@@ -266,9 +266,7 @@ lemma modularConjugationJ_anticommutes_modularSign :
 @[simp] lemma clockAxis_sq :
     (clockAxis (E := E)).comp (clockAxis (E := E))
       = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
-  simpa [clockAxis, modularConjugationJ, modularSignEpsilon,
-    InvolutiveSelfDualCarrier.K, doubledCarrier] using
-      (InvolutiveSelfDualCarrier.K_sq (X := doubledCarrier (E := E)))
+    exact (InvolutiveSelfDualCarrier.K_sq (X := doubledCarrier (E := E)))
 
 @[simp] lemma modularComplexI_sq :
     (modularComplexI (E := E)).comp (modularComplexI (E := E))
@@ -477,7 +475,7 @@ theorem modularConjugationJ_exp_modularSignEpsilon
   have hAnti :
       (modularConjugationJ (E := E)) * (modularSignEpsilon (E := E))
         = -((modularSignEpsilon (E := E)) * (modularConjugationJ (E := E))) := by
-    simpa using (modularConjugationJ_anticommutes_modularSign (E := E))
+    exact (modularConjugationJ_anticommutes_modularSign (E := E))
   have hConjSign :
       (modularConjugationJ (E := E)) * (modularSignEpsilon (E := E))
           * (modularConjugationJ (E := E))
@@ -538,7 +536,7 @@ theorem modularConjugationJ_exp_modularComplexI
   have hAnti :
       (modularConjugationJ (E := E)) * (modularComplexI (E := E))
         = -((modularComplexI (E := E)) * (modularConjugationJ (E := E))) := by
-    simpa using (modularConjugationJ_anticommutes_modularComplexI (E := E))
+    exact (modularConjugationJ_anticommutes_modularComplexI (E := E))
   have hConjAxis :
       (modularConjugationJ (E := E)) * (modularComplexI (E := E))
           * (modularConjugationJ (E := E))
@@ -673,7 +671,8 @@ theorem modularSignAdditiveModularFlow_kms_of_satisfies_kms_like
     ∀ A B : EndH,
       ω (A * modularSignAdditiveModularFlow (E := E) β B) = ω (B * A) := by
   intro A B
-  simpa [modularSignAdditiveModularFlow_apply] using hKMS A B
+  rw [modularSignAdditiveModularFlow_apply]
+  exact hKMS A B
 
 /--
 Canonical supergraded package for the modular CPT atom `⟨1, ε, J, Jε⟩`.
@@ -697,8 +696,8 @@ noncomputable def modularCPTSupercharge : Supercharge (E := E) where
 lemma modularCPTSupercharge_hamiltonian :
     superHamiltonian (modularCPTSupercharge (E := E))
       = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
-  simpa [modularCPTSupercharge, modularComplexI] using
-    (complex_iSupercharge_hamiltonian (E := E))
+  change superHamiltonian (complex_iSupercharge (E := E)) = -(ContinuousLinearMap.id ℝ (DoubledSpace E))
+  exact (complex_iSupercharge_hamiltonian (E := E))
 
 /-- `Q = Jε` maps grade-plus states to grade-minus states. -/
 lemma modularCPTSupercharge_maps_plus_to_minus

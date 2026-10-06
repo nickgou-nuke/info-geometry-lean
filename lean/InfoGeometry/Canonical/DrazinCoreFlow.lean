@@ -40,16 +40,16 @@ theorem projection_mul_eq_mul_projection
 theorem commute_projection
     (h : IsDrazinInverse a b k) :
     Commute a (projection a b) := by
-  unfold Commute
-  simpa using (projection_mul_eq_mul_projection (h := h)).symm
+  unfold Commute SemiconjBy
+  exact (projection_mul_eq_mul_projection (h := h)).symm
 
 /-- The complementary Drazin projector commutes with the base operator. -/
 theorem commute_complementaryProjection
     (h : IsDrazinInverse a b k) :
     Commute a (complementaryProjection a b) := by
-  unfold Commute complementaryProjection projection
+  unfold Commute SemiconjBy complementaryProjection projection
   have hproj : a * (a * b) = (a * b) * a := by
-    simpa [projection] using (projection_mul_eq_mul_projection (h := h)).symm
+    exact (projection_mul_eq_mul_projection (h := h)).symm
   calc
     a * (1 - a * b) = a - a * (a * b) := by rw [mul_sub, mul_one]
     _ = a - (a * b) * a := by rw [hproj]
@@ -117,7 +117,7 @@ theorem nilpotent_pow_succ_eq_pow_mul_complementaryProjection
   calc
     (a * complementaryProjection a b) ^ (m + 1)
         = a ^ (m + 1) * complementaryProjection a b ^ (m + 1) := by
-            simpa using hcomm.mul_pow (m + 1)
+            exact hcomm.mul_pow (m + 1)
     _ = a ^ (m + 1) * complementaryProjection a b := by
           rw [complementaryProjection_pow_succ (h := h) m]
 
@@ -256,13 +256,13 @@ def nilpotentPart : E →L[ℝ] E :=
     CIK.A * CIK.drazinCoreProj = CIK.drazinCoreProj * CIK.A := by
   change CIK.A * IsDrazinInverse.projection CIK.A CIK.A_D =
       IsDrazinInverse.projection CIK.A CIK.A_D * CIK.A
-  simpa using (IsDrazinInverse.projection_mul_eq_mul_projection (h := CIK.hDrazin)).symm
+  exact (IsDrazinInverse.projection_mul_eq_mul_projection (h := CIK.hDrazin)).symm
 
 @[rep_depth operator, simp] theorem A_mul_nilpotentProj_eq_nilpotentProj_mul_A :
     CIK.A * CIK.nilpotentProj = CIK.nilpotentProj * CIK.A := by
   change CIK.A * IsDrazinInverse.complementaryProjection CIK.A CIK.A_D =
       IsDrazinInverse.complementaryProjection CIK.A CIK.A_D * CIK.A
-  simpa using (IsDrazinInverse.commute_complementaryProjection (h := CIK.hDrazin)).eq
+  exact (IsDrazinInverse.commute_complementaryProjection (h := CIK.hDrazin)).eq
 
 @[rep_depth operator, simp] theorem corePart_eq_drazinCoreProj_mul_A :
     CIK.corePart = CIK.drazinCoreProj * CIK.A := by
@@ -344,7 +344,7 @@ def nilpotentPart : E →L[ℝ] E :=
     {m : ℕ} (hm : CIK.drazinIndex ≤ m) :
     CIK.A ^ m * CIK.nilpotentProj = 0 := by
   change CIK.A ^ m * IsDrazinInverse.complementaryProjection CIK.A CIK.A_D = 0
-  simpa using
+  exact
     IsDrazinInverse.pow_mul_complementaryProjection_eq_zero_of_le
       (h := CIK.hDrazin) hm
 
@@ -357,7 +357,8 @@ def nilpotentPart : E →L[ℝ] E :=
     IsDrazinInverse.nilpotent_pow_succ_eq_zero_of_le
       (a := CIK.A) (b := CIK.A_D) (k := CIK.drazinIndex) (m := m) (h := CIK.hDrazin) hm
   rw [IsDrazinInverse.nilpotent_eq_complementaryProjection_mul (h := CIK.hDrazin)] at hnil
-  simpa [CertifiedInverseKernel.nilpotentProj, CertifiedInverseKernel.spectralComplementaryProjector] using hnil
+  change (CIK.nilpotentProj * CIK.A) ^ (m + 1) = 0 at hnil
+  exact hnil
 
 end InfoGeometry.Canonical.CertifiedInverseKernel
 

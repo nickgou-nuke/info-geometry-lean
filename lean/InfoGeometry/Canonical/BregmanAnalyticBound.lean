@@ -45,10 +45,10 @@ lemma sin_arg_bound (ε : ℝ) (hε : |ε| ≤ 1) : |Real.sin ε - ε| ≤ ε ^ 
         have h := Real.sin_lt h_pos; linarith
       have h_bound : |Real.sin ε - ε| ≤ ε ^ 3 / 4 := by
         rw [abs_of_nonpos h_nonpos]
-        have h := Real.sin_gt_sub_cube h_pos (by linarith); linarith
+        have h := Real.sin_gt_sub_cube h_pos; linarith
       have h_final : ε ^ 3 / 4 ≤ ε ^ 2 := by nlinarith
       exact le_trans h_bound h_final
-  · push_neg at h_nonneg
+  · push Not at h_nonneg
     have h_abs_bd : |(-ε)| ≤ 1 := by rwa [abs_neg]
     have h_nonneg' : 0 ≤ -ε := by linarith
     have h_bound' : |Real.sin (-ε) - (-ε)| ≤ (-ε) ^ 2 := by
@@ -59,7 +59,7 @@ lemma sin_arg_bound (ε : ℝ) (hε : |ε| ≤ 1) : |Real.sin ε - ε| ≤ ε ^ 
           have h := Real.sin_lt h_pos'; linarith
         have h_bound'' : |Real.sin (-ε) - (-ε)| ≤ (-ε) ^ 3 / 4 := by
           rw [abs_of_nonpos h_nonpos']
-          have h := Real.sin_gt_sub_cube h_pos' (by linarith); linarith
+          have h := Real.sin_gt_sub_cube h_pos'; linarith
         have h_final' : (-ε) ^ 3 / 4 ≤ (-ε) ^ 2 := by nlinarith
         exact le_trans h_bound'' h_final'
     have h_eq : Real.sin (-ε) - (-ε) = -(Real.sin ε - ε) := by simp [Real.sin_neg]; ring

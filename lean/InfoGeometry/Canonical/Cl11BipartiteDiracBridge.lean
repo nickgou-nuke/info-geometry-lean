@@ -45,8 +45,11 @@ theorem compositeDirac_sq_expansion (DL : StageOne) (betaR DR : Atom) :
       (DL * DL) ⊗ₖ (betaR * betaR) +
       DL ⊗ₖ (betaR * DR + DR * betaR) +
       (1 : StageOne) ⊗ₖ (DR * DR) := by
-  unfold compositeDirac
-  rw [add_mul, mul_add, mul_add]
+  change (DL ⊗ₖ betaR + (1 : StageOne) ⊗ₖ DR) * (DL ⊗ₖ betaR + (1 : StageOne) ⊗ₖ DR) =
+    (DL * DL) ⊗ₖ (betaR * betaR) +
+      DL ⊗ₖ (betaR * DR + DR * betaR) +
+      (1 : StageOne) ⊗ₖ (DR * DR)
+  rw [Matrix.add_mul, Matrix.mul_add, Matrix.mul_add]
   rw [← Matrix.mul_kronecker_mul DL DL betaR betaR,
     ← Matrix.mul_kronecker_mul DL (1 : StageOne) betaR DR,
     ← Matrix.mul_kronecker_mul (1 : StageOne) DL DR betaR,
@@ -64,7 +67,10 @@ theorem compositeDirac_sq_decoupled
     compositeDirac DL betaR DR * compositeDirac DL betaR DR =
       (DL * DL) ⊗ₖ (1 : Atom) +
       (1 : StageOne) ⊗ₖ (DR * DR) := by
-  rw [compositeDirac_sq_expansion, hbeta, hodd]
+  rw [compositeDirac_sq_expansion]
+  change (DL * DL) ⊗ₖ (betaR * betaR) + DL ⊗ₖ (betaR * DR + DR * betaR) + (1 : StageOne) ⊗ₖ (DR * DR) =
+    (DL * DL) ⊗ₖ (1 : Atom) + (1 : StageOne) ⊗ₖ (DR * DR)
+  rw [hbeta, hodd]
   simp
 
 /-- Standard split fundamental symmetry β = diag(1,-1). -/
@@ -113,8 +119,8 @@ def totalBeta (betaL : StageOne) (betaR : Atom) : StageTwo :=
 theorem compositeDirac_transpose (DL : StageOne) (betaR DR : Atom) :
     (compositeDirac DL betaR DR)ᵀ =
       DLᵀ ⊗ₖ betaRᵀ + (1 : StageOne) ⊗ₖ DRᵀ := by
-  rw [compositeDirac, Matrix.transpose_add, transpose_kronecker,
-    transpose_kronecker, Matrix.transpose_one]
+  change (DL ⊗ₖ betaR + (1 : StageOne) ⊗ₖ DR)ᵀ = DLᵀ ⊗ₖ betaRᵀ + (1 : StageOne) ⊗ₖ DRᵀ
+  rw [Matrix.transpose_add, transpose_kronecker, transpose_kronecker, Matrix.transpose_one]
 
 /-- Finite Krein-adjoint compatibility of the composite operator. -/
 theorem compositeDirac_krein_self_adjoint
@@ -126,7 +132,8 @@ theorem compositeDirac_krein_self_adjoint
     totalBeta betaL betaR * (compositeDirac DL betaR DR)ᵀ =
       compositeDirac DL betaR DR * totalBeta betaL betaR := by
   rw [compositeDirac_transpose]
-  unfold totalBeta compositeDirac
+  change (betaL ⊗ₖ betaR) * (DLᵀ ⊗ₖ betaRᵀ + (1 : StageOne) ⊗ₖ DRᵀ) =
+    (DL ⊗ₖ betaR + (1 : StageOne) ⊗ₖ DR) * (betaL ⊗ₖ betaR)
   rw [Matrix.mul_add, Matrix.add_mul]
   simp only [← Matrix.mul_kronecker_mul, Matrix.one_mul, Matrix.mul_one]
   rw [hSymmR, hAdjL, hAdjR, hSqR]
@@ -166,10 +173,11 @@ theorem tensorSwap_kronecker (A : StageOne) (B : Atom) :
   have huy : uy = (0 : Fin 1) := Subsingleton.elim _ _
   subst ux
   subst uy
-  simp [tensorSwap, swapStageTwoIndexEquiv, swapStageTwoIndex,
+  simp [tensorSwap, swapStageTwoIndexEquiv,
     atomToStageOne, stageOneToAtom, stageOneIndexEquiv,
-    Matrix.reindexAlgEquiv_apply, Matrix.reindex_apply,
+    Matrix.coe_reindexAlgEquiv, Matrix.reindex_apply,
     Matrix.kroneckerMap_apply, mul_comm]
+  rfl
 
 /-- Tensor swap is involutive. -/
 theorem tensorSwap_involutive :
@@ -178,16 +186,23 @@ theorem tensorSwap_involutive :
   ext x y
   rcases x with ⟨⟨ux, ix⟩, jx⟩
   rcases y with ⟨⟨uy, iy⟩, jy⟩
-  simp [tensorSwap, swapStageTwoIndexEquiv, swapStageTwoIndex,
-    Matrix.reindexAlgEquiv_apply, Matrix.reindex_apply]
+  simp [tensorSwap, swapStageTwoIndexEquiv,
+    Matrix.coe_reindexAlgEquiv, Matrix.reindex_apply]
+  rfl
 
 /-- Tensor reflection of the composite operator. -/
 theorem tensorSwap_compositeDirac (DL : StageOne) (betaR DR : Atom) :
     tensorSwap (compositeDirac DL betaR DR) =
       atomToStageOne betaR ⊗ₖ stageOneToAtom DL +
       atomToStageOne DR ⊗ₖ (1 : Atom) := by
-  rw [compositeDirac]
-  rw [map_add, tensorSwap_kronecker, tensorSwap_kronecker]
-  simp
+  unfold compositeDirac
+  have h_map_add : tensorSwap (DL ⊗ₖ betaR + (1 : StageOne) ⊗ₖ DR : StageTwo) =
+    tensorSwap (DL ⊗ₖ betaR : StageTwo) + tensorSwap ((1 : StageOne) ⊗ₖ DR : StageTwo) := map_add tensorSwap _ _
+  rw [h_map_add]
+  change tensorSwap (DL ⊗ₖ betaR : StageTwo) + tensorSwap ((1 : StageOne) ⊗ₖ DR : StageTwo) =
+    (atomToStageOne betaR ⊗ₖ stageOneToAtom DL : StageTwo) + (atomToStageOne DR ⊗ₖ (1 : Atom) : StageTwo)
+  rw [tensorSwap_kronecker, tensorSwap_kronecker]
+  rw [map_one]
+  rfl
 
 end InfoGeometry.Canonical.Cl11BipartiteDiracBridge

@@ -180,7 +180,11 @@ def down2 : SplitOct := ⟨0, 0, 0, 0, 0, 0, 0, 1⟩
 /-- Eight named basis constructors for the split-octonion multiplication table. -/
 inductive Basis8 where
   | ePlus | eMinus | up0 | up1 | up2 | down0 | down1 | down2
-  deriving DecidableEq, Repr, Fintype
+  deriving DecidableEq, Repr
+
+instance : Fintype Basis8 where
+  elems := {Basis8.ePlus, Basis8.eMinus, Basis8.up0, Basis8.up1, Basis8.up2, Basis8.down0, Basis8.down1, Basis8.down2}
+  complete := by intro x; cases x <;> simp
 
 /-- The basis element corresponding to an indexed constructor. -/
 def basisElem : Basis8 → SplitOct

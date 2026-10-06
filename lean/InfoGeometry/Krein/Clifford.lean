@@ -221,11 +221,12 @@ private lemma hilbertSwap_norm (u : HilbertDoubled E) :
         (HilbertDoubled.toLp (E := E) ((HilbertDoubled.ofLp (E := E) u).2, (HilbertDoubled.ofLp (E := E) u).1) : HilbertDoubled E),
        norm_nonneg
         (HilbertDoubled.toLp (E := E) ((HilbertDoubled.ofLp (E := E) u).1, (HilbertDoubled.ofLp (E := E) u).2) : HilbertDoubled E)]
-  simpa [hilbertSwapMap, HilbertDoubled.ofLp] using h2
+  change ‖hilbertSwapMap (E := E) u‖ = ‖u‖
+  exact h2
 
 /-- Swap as a `LinearIsometryEquiv` on `HilbertDoubled`. -/
 noncomputable def hilbertSwapLIE : HilbertDoubled E ≃ₗᵢ[ℝ] HilbertDoubled E where
-  toLinearEquiv := LinearEquiv.ofLinear (hilbertSwapMap (E := E)) (hilbertSwapMap (E := E))
+  toLinearEquiv := LinearEquiv.ofLinearMap (hilbertSwapMap (E := E)) (hilbertSwapMap (E := E))
     (LinearMap.ext (hilbertSwap_invol (E := E)))
     (LinearMap.ext (hilbertSwap_invol (E := E)))
   norm_map' := hilbertSwap_norm (E := E)
@@ -278,7 +279,9 @@ noncomputable instance instKreinGradedModuleHilbertDoubled :
             simp [KreinSpace.kreinInner_def, KreinSpace.jCLM_apply]
     _ = ⟪(HilbertDoubled.ofLp (E := E) u).1, (HilbertDoubled.ofLp (E := E) v).1⟫_ℝ
           - ⟪(HilbertDoubled.ofLp (E := E) u).2, (HilbertDoubled.ofLp (E := E) v).2⟫_ℝ := by
-          simpa using krein_inner_prod_l2 (E := E) u v
+          have h := krein_inner_prod_l2 (E := E) u v
+          change ⟪KreinSpace.J u, v⟫_ℝ = _
+          exact h
     _ = ⟪HilbertDoubled.toLp (E := E) ((HilbertDoubled.ofLp (E := E) u).1, -(HilbertDoubled.ofLp (E := E) u).2), v⟫_ℝ := by
           change
             ⟪(HilbertDoubled.ofLp (E := E) u).1, (HilbertDoubled.ofLp (E := E) v).1⟫_ℝ
@@ -334,9 +337,9 @@ lemma hilbertComplexI_sq :
   apply ContinuousLinearMap.ext
   intro u
   apply HilbertDoubled.ext
-  simpa [HilbertDoubled.ofLp, Prod.smul_mk] using
-    (WithLp.toLp_smul (p := (2 : ENNReal)) (c := (-1 : ℝ))
-      (x := (WithLp.fst ((u : DoubledSpace E)), WithLp.snd ((u : DoubledSpace E)))))
+  change (WithLp.toLp 2 (-WithLp.fst ((u : DoubledSpace E)), -WithLp.snd ((u : DoubledSpace E))) : DoubledSpace E) = - (WithLp.toLp 2 (WithLp.fst ((u : DoubledSpace E)), WithLp.snd ((u : DoubledSpace E))) : DoubledSpace E)
+  simpa [Prod.smul_mk] using
+    WithLp.toLp_smul (p := (2 : ENNReal)) (c := (-1 : ℝ)) (x := (WithLp.fst ((u : DoubledSpace E)), WithLp.snd ((u : DoubledSpace E))))
 
 lemma hilbertSwap_comp_hilbertComplexI :
     (hilbertSwapCLM (E := E)).comp (hilbertComplexI (E := E))

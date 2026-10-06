@@ -36,7 +36,7 @@ theorem pom_bc_defect_multiplicative_2cocycle_multiplicative (h f g : ℕ) :
         pom_bc_defect_multiplicative_2cocycle_rho (h + f) g =
       pom_bc_defect_multiplicative_2cocycle_rho f g *
         pom_bc_defect_multiplicative_2cocycle_rho h (f + g) := by
-  simpa [pom_bc_defect_multiplicative_2cocycle_rho] using
+  simpa [pom_bc_defect_multiplicative_2cocycle_rho, bcPentagonCoherence] using
     bcPentagonCoherence_of_diagonal_defect h f g
 
 /-- Taking logarithms converts the multiplicative cocycle law into the normalized additive
@@ -46,7 +46,7 @@ theorem pom_bc_defect_multiplicative_2cocycle_log_closed (h f g : ℕ) :
         pom_bc_defect_multiplicative_2cocycle_log_rho (h + f) g =
       pom_bc_defect_multiplicative_2cocycle_log_rho f g +
         pom_bc_defect_multiplicative_2cocycle_log_rho h (f + g) := by
-  simpa [pom_bc_defect_multiplicative_2cocycle_log_rho] using
+  simpa [pom_bc_defect_multiplicative_2cocycle_log_rho, bcLogCocycleClosed] using
     bcLogCocycleClosed_of_diagonal_defect h f g
 
 /-- Concrete proposition encoding the pointwise factorization together with the multiplicative

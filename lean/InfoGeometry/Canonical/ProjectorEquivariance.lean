@@ -115,9 +115,8 @@ omit [CompleteSpace E] in
 @[rep_depth krein]
 theorem modularSign_eq_spectral_epsilon :
     modularSign (E := E) = spectral_epsilon (E := E) := by
-  simpa [modularSign, plusProjector, minusProjector,
-    InvolutiveSelfDualCarrier.Pplus, InvolutiveSelfDualCarrier.Pminus] using
-    (InvolutiveSelfDualCarrier.Pplus_sub_Pminus (X := doubledCarrier (E := E)))
+  dsimp [modularSign, plusProjector, minusProjector, InvolutiveSelfDualCarrier.Pplus, InvolutiveSelfDualCarrier.Pminus]
+  exact InvolutiveSelfDualCarrier.Pplus_sub_Pminus (X := doubledCarrier (E := E))
 
 /-- Inverse dictionary form: `ε = P₊ - P₋`. -/
 @[rep_depth krein]

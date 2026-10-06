@@ -38,7 +38,7 @@ lemma non_pivot_rows_zero (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ → ℕ)
   rcases hp with ⟨_, _, _, _, h_left_zero, _⟩
   have hj_lt_n : j.val < n := j.2
   have hj_lt_fi : j.val < f i := by rw [hfi]; exact hj_lt_n
-  exact h_left_zero i hi (by simpa [hfi] using (hp.2.1 i hi)) j.val hj_lt_fi
+  exact h_left_zero i hi (by omega) j.val hj_lt_fi
 
 -- Lemma 2: each pivot column f(i) of A is a standard basis vector e_i
 lemma pivot_column_is_std_basis (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ → ℕ)
@@ -64,7 +64,7 @@ lemma pivot_rows_transpose_are_std_basis (A : Matrix (Fin m) (Fin n) ℚ) (f : �
       intro hk
       apply hki
       exact congrArg Fin.val hk
-    simp [Pi.single_apply, hz, hneq]
+    simp [hz, hneq]
 
 -- Lemma 4: pivot rows of A (the vectors A⟨i,·⟩ for i ∈ P) as a Finset
 def pivotRows (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ → ℕ) : Finset (Fin n → ℚ) :=
@@ -98,7 +98,6 @@ lemma rank_transpose_le_pivot_card (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ →
       rcases Set.mem_range.mp hv with ⟨i, rfl⟩
       by_cases hfi : f i.val < n
       · apply Submodule.subset_span
-        dsimp [pivotRowVecs]
         change rowVec A i ∈ rows
         apply Finset.mem_image.mpr
         refine ⟨i, Finset.mem_filter.mpr ⟨Finset.mem_univ i, hfi⟩, rfl⟩
@@ -150,18 +149,11 @@ lemma rank_transpose_le_pivot_card (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ →
           intro v hv; rcases Set.mem_range.mp hv with ⟨i, rfl⟩
           refine LinearMap.mem_range.mpr ⟨Pi.basisFun ℚ (Fin m) i, ?_⟩
           -- Aᵀ * e_i = column i of Aᵀ = row i of A
-          ext j; simp [Matrix.mulVec, dotProduct, Pi.basisFun]
+          ext j; simp [Pi.basisFun]
       rw [h_range_eq]
     _ = Module.finrank ℚ (Submodule.span ℚ (rows : Set (Fin n → ℚ))) := by
-      simpa [rowVec] using congrArg
-        (fun S : Submodule ℚ (Fin n → ℚ) => Module.finrank ℚ S) h_span_eq
-    _ ≤ rows.card := by
-      -- finrank(span of a Finset) ≤ cardinality of Finset
-      have h_finrank : Set.finrank ℚ (rows : Set (Fin n → ℚ)) ≤ rows.card :=
-        finrank_span_finset_le_card rows
-      -- Set.finrank of the set coerced to Submodule should equal Module.finrank of span
-      -- Wait, Set.finrank(s) = finrank(span(s)). So this holds.
-      simpa using h_finrank
+      exact congrArg (fun S : Submodule ℚ (Fin n → ℚ) => Module.finrank ℚ S) h_span_eq
+    _ ≤ rows.card := finrank_span_finset_le_card rows
 
 -- Lemma 7: rank(A) ≥ |P| — pivot COLUMNS of A are independent standard basis vectors
 lemma pivot_card_le_rank (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ → ℕ)

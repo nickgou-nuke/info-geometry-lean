@@ -27,6 +27,7 @@ Direct connection to the truncated thermal state from `CuntzThermalState.lean`:
 -/
 open InfoGeometry.Algebra.CuntzTensorQuotient
 open InfoGeometry.Algebra.CuntzPrimonHamiltonian
+open InfoGeometry.Algebra.CuntzThermalState
 
 noncomputable section
 
@@ -141,12 +142,12 @@ coefficients since Tr(P_i) = 1) gives the truncated partition function.
     This is the finite-N spectral action. -/
 theorem primon_truncated_thermal_state (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) (N : ℕ) :
     Polynomial.aeval (hamiltonian n (λ i => (Real.log (primes i : ℝ) : ℂ)))
-      (CuntzThermalState.truncExpNegBeta β N) =
+      (truncExpNegBeta β N) =
     ∑ i : Fin n,
       (∑ k ∈ Finset.range (N+1),
         ((-β * (Real.log (primes i : ℝ) : ℂ)) ^ k / (Nat.factorial k : ℂ))) • P n i := by
   simpa using
-    CuntzThermalState.truncExp_neg_beta_explicit n
+    truncExp_neg_beta_explicit n
       (λ i => (Real.log (primes i : ℝ) : ℂ)) β N
 
 /-- The sum of the mode coefficients in the truncated thermal state.
@@ -196,4 +197,4 @@ def truncatedPartitionSum (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) (N : ℕ
           → Concrete instantiation on O_n remains as documented debt
 -/
 
-end InfoGeometry.Algebra.CuntzKMSState
+end VirasoroProject.Extensions.CuntzKMSState

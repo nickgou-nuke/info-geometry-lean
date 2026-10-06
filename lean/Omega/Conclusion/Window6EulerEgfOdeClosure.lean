@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Analysis.Normed.Algebra.Exponential
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Tactic

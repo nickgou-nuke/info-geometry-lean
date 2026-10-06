@@ -67,6 +67,7 @@ theorem leftRegular_not_bijective_of_null (x : SplitOctonion)
     simpa only [leftRegular_apply_one, LinearMap.zero_apply] using hone
   apply hx0
   apply splitConjugate_injective
-  simpa only [splitConjugate, star_zero, neg_zero, zero_a, zero_b] using hconj
+  rw [hconj]
+  apply SplitOctonion.ext <;> simp [splitConjugate]
 
 end SplitOctonion

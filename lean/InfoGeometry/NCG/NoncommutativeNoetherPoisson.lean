@@ -81,14 +81,14 @@ def adLie (R : Type*) [CommRing R] {A : Type*} [Ring A] [Algebra R A] (X : A) : 
   toFun Y := bracket X Y
   map_add' Y Z := by
     dsimp [bracket]
-    simp only [mul_add, add_mul]
-    abel
+    simp only [mul_add, add_mul, sub_add]
+    noncomm_ring
   map_smul' r Y := by
     dsimp [bracket]
     simp only [mul_smul_comm, smul_mul_assoc, smul_sub]
 
 theorem adLie_apply (X Y : A) : adLie R X Y = X * Y - Y * X := by
-  dsimp [adLie, bracket]
+  rfl
 
 /-- 🏆 THEOREM 3: The Inner Derivation satisfies the Leibniz Rule:
     ad_X(Y * Z) = ad_X(Y) * Z + Y * ad_X(Z) -/
@@ -99,7 +99,7 @@ theorem adLie_leibniz (X Y Z : A) :
     X * (Y * Z) - (Y * Z) * X
       = (X * Y * Z - Y * X * Z) + (Y * X * Z - Y * Z * X) := by
         simp only [mul_assoc]
-        abel
+        noncomm_ring
     _ = (X * Y - Y * X) * Z + Y * (X * Z - Z * X) := by
         simp only [sub_mul, mul_sub, mul_assoc]
 
@@ -107,9 +107,8 @@ theorem adLie_leibniz (X Y Z : A) :
     [ad_X, ad_Y](Z) = ad_[X, Y](Z) -/
 theorem adLie_commutator (X Y Z : A) :
     adLie R X (adLie R Y Z) - adLie R Y (adLie R X Z) = adLie R (bracket X Y) Z := by
-  dsimp [adLie, bracket]
-  simp only [mul_sub, sub_mul, mul_assoc]
-  abel
+  simp only [adLie_apply, bracket]
+  noncomm_ring
 
 /-- 🏆 THEOREM 5: Noncommutative Noether Conservation Law:
     If a charge Q commutes with the Hamiltonian H ([H, Q] = 0),
@@ -140,6 +139,6 @@ theorem derivation_bracket_leibniz
     D (bracket X Y) = bracket (D X) Y + bracket X (D Y) := by
   dsimp [bracket]
   rw [D.map_sub, hD_leibniz, hD_leibniz]
-  abel
+  noncomm_ring
 
 end InfoGeometry.NCG

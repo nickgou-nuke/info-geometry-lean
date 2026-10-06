@@ -401,8 +401,9 @@ theorem pinTwistedVectorRangeLinear_f_neg_eq_negativeReflectionRangeLinear
   have h := congrArg
       (fun T : V55 →ₗ[ℝ] Cl55 => T v)
       (pinTwistedAdjLinear_f_neg_eq_negativeReflection i)
-  simpa [pinTwistedVectorRangeLinear, negativeReflectionRangeLinear,
-    pinTwistedAdjLinear] using h
+  simp [pinTwistedVectorRangeLinear, negativeReflectionRangeLinear,
+    pinTwistedAdjLinear]
+  exact h
 
 theorem pinTwistedAdj_fNegPin_mul (i j : Fin 5) (v : V55) :
     pinTwistedAdj (fNegPin i * fNegPin j) v =
@@ -586,7 +587,8 @@ theorem spinAction_preserves_Q55 (g : Spin55) (v : V55) :
       ι55 (spinAction g v) =
         (spinGroup.toUnits g : Cl55) * ι55 v *
           (↑((spinGroup.toUnits g)⁻¹) : Cl55) := by
-    simpa only [pinTwistedAdj, hu, hinv] using hι
+    change ι55 (pinTwistedAction (spinToPin g) v) = (spinGroup.toUnits g : Cl55) * ι55 v * (↑((spinGroup.toUnits g)⁻¹) : Cl55)
+    exact hι
   have hunit :
       (↑((spinGroup.toUnits g)⁻¹) : Cl55) *
           (spinGroup.toUnits g : Cl55) = 1 := by

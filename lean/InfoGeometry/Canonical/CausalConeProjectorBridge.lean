@@ -96,19 +96,21 @@ section StandardSubspaceBridge
 
 open InfoGeometry.Canonical.RealTomitaStandardSubspace
 
-variable {H : Type*} [NormedAddCommGroup H] [NormedSpace ℂ H]
+variable {H : Type*} [NormedAddCommGroup H]
   [InnerProductSpace ℂ H] [CompleteSpace H]
 
 /-- On the physical standard-subspace domain, the identity is the canonical projector. -/
-def standardPhysicalProjector (K : Submodule ℝ H) :
+noncomputable def standardPhysicalProjector (K : Submodule ℝ H) :
     Module.End ℝ ↥(K ⊔ ImaginarySubmodule (H := H) K) :=
   (1 : Module.End ℝ ↥(K ⊔ ImaginarySubmodule (H := H) K))
 
-omit [InnerProductSpace ℂ H] [CompleteSpace H] in
+
+omit [CompleteSpace H] in
 lemma standardPhysicalProjector_isProjector (K : Submodule ℝ H) :
     IsProjector (standardPhysicalProjector (H := H) K) := by
   simp [standardPhysicalProjector, IsProjector]
 
+omit [CompleteSpace H] in
 /-- Reduced transport with the canonical physical projector equals the Tomita transport itself. -/
 lemma reduced_tomita_on_standard_eq_tomita
     (K : Submodule ℝ H) (hK : IsStandardSubspace (H := H) K) :
@@ -117,6 +119,7 @@ lemma reduced_tomita_on_standard_eq_tomita
   ext z
   simp [reducedTransport, standardPhysicalProjector]
 
+omit [CompleteSpace H] in
 /-- On the standard physical sector, reduced Tomita transport is involutive. -/
 lemma reduced_tomita_on_standard_involutive
     (K : Submodule ℝ H) (hK : IsStandardSubspace (H := H) K)

@@ -35,7 +35,9 @@ theorem tendsto_exp_neg_gap_mul_atTop
   have hlinear : Tendsto (fun β : ℝ => δ * β) atTop atTop :=
     Filter.Tendsto.const_mul_atTop hδ Filter.tendsto_id
   have hexp := Real.tendsto_exp_neg_atTop_nhds_zero.comp hlinear
-  simpa only [Function.comp_apply, neg_mul] using hexp
+  convert hexp using 1
+  ext β
+  simp [neg_mul]
 
 /-- A positive energy gap forces the non-minimizing responsibility ratio to
 vanish in the inverse-temperature limit. -/

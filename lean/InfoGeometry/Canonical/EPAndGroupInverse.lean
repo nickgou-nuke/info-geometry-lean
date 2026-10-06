@@ -175,10 +175,10 @@ theorem moorePenrose_isDrazinInverse_one_of_isEP
     (hEP : IK.IsEP) :
     IsDrazinInverse IK.A IK.A_MP 1 := by
   refine IsDrazinInverse.mk ?_ ?_ ?_
-  · simpa [InverseKernel.IsEP, InverseKernel.mpRangeProjector, InverseKernel.metricProjector] using hEP
+  · exact IK.isEP_iff_comm.mp hEP
   · exact hMP.bab_eq_b
   · have hComm : IK.A * IK.A_MP = IK.A_MP * IK.A := by
-      simpa [InverseKernel.IsEP, InverseKernel.mpRangeProjector, InverseKernel.metricProjector] using hEP
+      exact IK.isEP_iff_comm.mp hEP
     calc
       IK.A ^ (1 + 1) * IK.A_MP = IK.A * IK.A * IK.A_MP := by
         simp [pow_two, mul_assoc]

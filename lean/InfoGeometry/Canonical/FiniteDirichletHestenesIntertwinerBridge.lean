@@ -75,8 +75,7 @@ theorem encode_cantorDepthShift
     (k : ℕ) (f : TestFun) :
     J.encode (shiftOp (cantorLogTimeAtDepth k) f) =
       H.Delta_real ((k : ℝ) * Real.log 3) (J.encode f) := by
-  simpa [cantorLogTimeAtDepth, logTimeAtDepth] using
-    J.shift_intertwining (cantorLogTimeAtDepth k) f
+  exact J.shift_intertwining (cantorLogTimeAtDepth k) f
 
 /-- The generic finite Dirichlet operator in the Hestenes representation. -/
 def hestenesFiniteDirichletOperator (H : HestenesModularDatum (M := M)) (a : ℕ → ℝ) (N : ℕ) : M →L[ℝ] M :=

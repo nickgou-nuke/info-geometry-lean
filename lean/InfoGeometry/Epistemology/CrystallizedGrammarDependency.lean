@@ -12,9 +12,15 @@ inductive Archetype
   | generatorMembership
   | convexBound
   | finiteMaximum
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 open Archetype
+
+instance : Fintype Archetype where
+  elems := [hullGeneration, extremePoint, endpointSaturation, maximizerSet, linearSaturation, uniqueMaximum, generatorMembership, convexBound, finiteMaximum].toFinset
+  complete := by
+    intro x
+    cases x <;> simp
 
 def prerequisites : Archetype → Finset Archetype
   | hullGeneration => {hullGeneration}

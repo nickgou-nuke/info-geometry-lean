@@ -25,9 +25,14 @@ constructions.)
 
 namespace LieAlgebra
 
-section representation
-
 open Module
+
+local instance {𝕂 : Type*} [CommRing 𝕂] {V : Type*} [AddCommGroup V] [Module 𝕂 V] :
+    LieRing (V →ₗ[𝕂] V) := LieRing.ofAssociativeRing
+local instance {𝕂 : Type*} [CommRing 𝕂] {V : Type*} [AddCommGroup V] [Module 𝕂 V] :
+    LieAlgebra 𝕂 (V →ₗ[𝕂] V) := LieAlgebra.ofAssociativeAlgebra
+
+section representation
 
 /-- A representation of a `𝕜`-Lie algebra `𝓰` on a `𝕂`-vector space `V`. -/
 abbrev Representation (𝕜 𝕂 : Type*) [CommRing 𝕜] [CommRing 𝕂]
@@ -91,9 +96,7 @@ noncomputable def representationOfBasis
     (genComm : ∀ i j, (genOper i).commutator (genOper j)
       = LieAlgebra.representationOfBasisAux B genOper ⁅B i, B j⁆) :
     Representation 𝕂 𝕂 𝓰 V where
-  toFun := LieAlgebra.representationOfBasisAux B genOper
-  map_add' := by simp
-  map_smul' := by simp
+  toLinearMap := LieAlgebra.representationOfBasisAux B genOper
   map_lie' := by
     intro X Y
     have key := LieAlgebra.representationOfBasisAux_property B genComm
@@ -102,16 +105,17 @@ noncomputable def representationOfBasis
 end representation
 
 open LieAlgebra in
+set_option maxHeartbeats 2000000 in
 lemma representationOfBasis_property
     {𝕂 : Type*} [Field 𝕂] {V : Type*} [AddCommGroup V] [Module 𝕂 V]
-    {𝓰 : Type*} [LieRing 𝓰] [LieAlgebra 𝕂 𝓰] {ι : Type*} (B : Module.Basis ι 𝕂 𝓰)
+    {𝓰 : Type*} [LieRing 𝓰] [LieAlgebra 𝕂 𝓰] {ι : Type*} (B : Basis ι 𝕂 𝓰)
     {genOper : ι → (V →ₗ[𝕂] V)}
     (genComm : ∀ i j, (genOper i).commutator (genOper j)
       = representationOfBasisAux B genOper ⁅B i, B j⁆) :
-    ((representationOfBasis B genComm).compRight 𝕂).comp (bracketHom 𝕂 𝓰)
-      = (LinearMap.commutatorBilin V).compl₁₂
-          (representationOfBasis B genComm)
-          (representationOfBasis B genComm) := by
-  exact representationOfBasisAux_property B genComm
+    (((representationOfBasis B genComm).toLinearMap).compRight 𝕂).comp (bracketHom 𝕂 𝓰)
+      = (LinearMap.commutatorBilin (𝕜 := 𝕂) V).compl₁₂
+          ((representationOfBasis B genComm).toLinearMap)
+          ((representationOfBasis B genComm).toLinearMap) :=
+  representationOfBasisAux_property B genComm
 
 end LieAlgebra -- namespace

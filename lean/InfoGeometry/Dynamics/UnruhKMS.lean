@@ -86,7 +86,7 @@ theorem modularHamiltonian_eq_modularSign :
     boostGenerator (E := E)
       = (modular_j (E := E)).comp (phaseGenerator (E := E)) := by
   simpa [phaseGenerator, boostGenerator, HestenesI, complex_i] using
-    (modular_j_comp_complex_i (E := E))
+    (modular_j_comp_complex_i (E := E)).symm
 
 /--
 **The Unruh-Rindler Flow**

@@ -94,18 +94,16 @@ theorem chiralAnomaly_eq_mismatch_commutator_metric :
     IK.chiralAnomaly =
       IK.projectorMismatch * IK.metricProjector
         - IK.metricProjector * IK.projectorMismatch := by
-  simpa [InverseKernel.chiralAnomaly, InverseKernel.projectorMismatch,
-    InverseKernel.spectralProjector, InverseKernel.metricProjector] using
-    InfoGeometry.Canonical.MoorePenrose.chiralAnomaly_eq_mismatch_commutator_metric
+
+  exact InfoGeometry.Canonical.MoorePenrose.chiralAnomaly_eq_mismatch_commutator_metric
       IK.A IK.A_D IK.A_MP
 
 /-- Vanishing mismatch is equivalent to agreement of the spectral and metric projectors. -/
 theorem projectorMismatch_eq_zero_iff :
     IK.projectorMismatch = 0 ↔ IK.spectralProjector = IK.metricProjector := by
-  simpa [InverseKernel.projectorMismatch, InverseKernel.spectralProjector,
-    InverseKernel.metricProjector] using
-    (InfoGeometry.Canonical.MoorePenrose.projectorMismatch_eq_zero_iff
-      (a := IK.A) (a_d := IK.A_D) (a_mp := IK.A_MP))
+
+  exact InfoGeometry.Canonical.MoorePenrose.projectorMismatch_eq_zero_iff
+      (a := IK.A) (a_d := IK.A_D) (a_mp := IK.A_MP)
 
 /-- Vanishing anomaly scale is equivalent to vanishing left-projector anomaly. -/
 theorem chiralScale_eq_zero_iff_chiralAnomaly_eq_zero :
@@ -500,8 +498,8 @@ theorem dilationGap_fixed_under_spectralGradingFlow_of_projector_commute
       change (CIK.mpRangeProjector - CIK.metricProjector) * T.GammaS =
         T.GammaS * (CIK.mpRangeProjector - CIK.metricProjector)
       simp [sub_mul, mul_sub, hRangeΓ.eq, hMetricΓ.eq]
-    simpa [CertifiedInverseKernel.dilationGap, CertifiedInverseKernel.toInverseKernel',
-      InverseKernel.dilationGap] using ((hDiffΓ.smul_left ((2 : ℝ)⁻¹)).eq)
+    change CIK.dilationGap * T.GammaS = T.GammaS * CIK.dilationGap
+    exact (hDiffΓ.smul_left ((2 : ℝ)⁻¹)).eq
   simpa [T] using
     CartanDecomposition.InformationCartanTriple.spectralAdjointFlow_eq_self_of_commute_GammaS T hGapΓ t
 
@@ -640,12 +638,12 @@ theorem spectralProjector_commutator_spectralAdjointFlow_dilationGap_eq_half_sub
   let e : EndH := T.spectralGradingFlow t
   let f : EndH := T.spectralGradingFlow (-t)
   have hPe : Commute CIK.spectralProjector e := by
-    simpa [T, e] using
-      CartanDecomposition.InformationCartanTriple.spectralProjector_commutes_spectralGradingFlow
+    change CIK.spectralProjector * e = e * CIK.spectralProjector
+    exact CartanDecomposition.InformationCartanTriple.spectralProjector_commutes_spectralGradingFlow
         T CIK.hDrazin t
   have hPf : Commute CIK.spectralProjector f := by
-    simpa [T, f] using
-      CartanDecomposition.InformationCartanTriple.spectralProjector_commutes_spectralGradingFlow
+    change CIK.spectralProjector * f = f * CIK.spectralProjector
+    exact CartanDecomposition.InformationCartanTriple.spectralProjector_commutes_spectralGradingFlow
         T CIK.hDrazin (-t)
   have hCommTransport :
       CIK.spectralProjector * T.spectralAdjointFlow T.GammaS t CIK.dilationGap

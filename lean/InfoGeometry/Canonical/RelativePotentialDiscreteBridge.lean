@@ -107,7 +107,7 @@ theorem gaugeSectionFinProb_absolutelyContinuous
         (gaugeSectionFinProb (α := α) q0).toMeasure ({x} : Set α) = 0 := by
       have hsingle_le_zero := hsingle_le
       rw [hs0] at hsingle_le_zero
-      exact le_antisymm hsingle_le_zero (zero_le _)
+      exact le_antisymm hsingle_le_zero zero_le
     have hsingle_eval :
         (gaugeSectionFinProb (α := α) q0).toMeasure ({x} : Set α)
           = gaugeSectionFinProb (α := α) q0 x := by
@@ -209,7 +209,7 @@ theorem projectiveLogGenerator_eq_relativeModularPotential
       _ = 0 := hfg
   have hsingle_zero :
       (gaugeSectionFinProb (α := α) q).toMeasure ({a} : Set α) = 0 :=
-    le_antisymm hsingle_le_zero (zero_le _)
+    le_antisymm hsingle_le_zero zero_le
   have hsingle_eval :
       (gaugeSectionFinProb (α := α) q).toMeasure ({a} : Set α)
         = gaugeSectionFinProb (α := α) q a := by

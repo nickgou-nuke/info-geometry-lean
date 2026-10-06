@@ -82,7 +82,7 @@ theorem phaseAxis_sq :
     phaseAxis * phaseAxis = -(1 : Matrix (Fin 2) (Fin 2) ℂ) := by
   ext i j
   fin_cases i <;> fin_cases j
-    <;> simp [phaseAxis, Matrix.mul_apply, Fin.sum_univ_two]
+    <;> (rw [Matrix.mul_apply]; simp [phaseAxis, Fin.sum_univ_two])
 
 @[simp]
 theorem modularDelta_zero :
@@ -100,7 +100,9 @@ theorem modularDelta_commutes_phaseAxis (ε : ℝ) :
     modularDelta ε * phaseAxis = phaseAxis * modularDelta ε := by
   ext i j
   fin_cases i <;> fin_cases j
-    <;> simp [modularDelta, phaseAxis, Matrix.mul_apply, Fin.sum_univ_two]
+    <;> (try rw [Matrix.mul_apply])
+    <;> (try rw [Matrix.mul_apply])
+    <;> simp [modularDelta, phaseAxis, Fin.sum_univ_two]
 
 /--
 The regularized modular shape deformation `Δ - I - x`.

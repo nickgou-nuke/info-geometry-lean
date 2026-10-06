@@ -5,6 +5,11 @@ import Mathlib.LinearAlgebra.Matrix.Rank
 
 open Matrix
 
+set_option linter.unusedVariables false
+set_option linter.unusedTactic false
+set_option linter.unusedSimpArgs false
+set_option linter.unnecessarySimpa false
+
 set_option maxHeartbeats 400000
 
 namespace DAG.MatrixGaussJordan
@@ -26,7 +31,7 @@ lemma findPivot_spec (A : Matrix (Fin m) (Fin n) ℚ) (startRow : ℕ) (j : Fin 
       Finset.min_eq_top.mpr (Finset.not_nonempty_iff_eq_empty.mp hs0)
     simpa [findPivot, s, htop] using h
   have hmem : s.min' hs ∈ s := Finset.min'_mem s hs
-  have hmin : s.min = some i := by simpa [findPivot, s] using h
+  have hmin : s.min = some i := by exact h
   have hi : s.min' hs = i := by
     apply WithTop.coe_eq_coe.mp
     rw [Finset.coe_min' hs]
@@ -47,9 +52,9 @@ lemma findPivot_none_spec
     simp [s, hA, hi]
   have hs : s.Nonempty := ⟨i, his⟩
   have hmin : some (s.min' hs) = s.min := by
-    simpa using (Finset.coe_min' hs)
+    exact Finset.coe_min' hs
   have hfind : findPivot A startRow j = some (s.min' hs) := by
-    simpa [findPivot, s] using hmin.symm
+    exact hmin.symm
   exact Option.some_ne_none _ (hfind.symm.trans h)
 
 lemma findPivot_eq_none_iff
@@ -77,7 +82,7 @@ lemma swap_selected_pivot_ne_zero
   let A₁ := FunctionalGaussJordan.swapRowsMat pr pi * A
   have hpi := (findPivot_spec A pivotRow j hpivot).1
   dsimp [A₁, FunctionalGaussJordan.swapRowsMat]
-  rw [Matrix.mul_apply]
+  erw [Matrix.mul_apply]
   simp [PEquiv.toMatrix_apply, hpi]
 
 lemma selected_pivotVal_ne_zero
@@ -162,12 +167,12 @@ lemma gaussJordanElimFull_go_selected_pivot
       gaussJordanElimFull.go step.1 (pivotRow + 1) (col + 1) step.2 := by
   conv_lhs =>
     unfold gaussJordanElimFull.go
-  rw [dif_pos hcol]
+  erw [dite_eq_left hcol]
   dsimp only
   simp only [hfind]
-  rw [dif_pos hrow]
+  erw [dite_eq_left hrow]
   have hpv := selected_pivotVal_ne_zero hcol hfind hrow
-  rw [dif_pos hpv]
+  erw [dite_eq_left hpv]
   rfl
 
 lemma gaussJordanElimFull_go_no_pivot
@@ -180,7 +185,7 @@ lemma gaussJordanElimFull_go_no_pivot
       gaussJordanElimFull.go A pivotRow (col + 1) Es := by
   conv_lhs =>
     unfold gaussJordanElimFull.go
-  rw [dif_pos hcol]
+  erw [dite_eq_left hcol]
   dsimp only
   simp only [hfind]
 
@@ -193,7 +198,7 @@ lemma gaussJordanElimFull_go_col_exhausted
       (A, pivotRow, Es) := by
   conv_lhs =>
     unfold gaussJordanElimFull.go
-  rw [dif_neg (Nat.not_lt.mpr hcol)]
+  rw [dite_eq_right (Nat.not_lt.mpr hcol)]
 
 lemma gaussJordanElimFull_go_induction
     {A : Matrix (Fin m) (Fin n) ℚ}
@@ -308,7 +313,7 @@ lemma pivotHistory_no_pivot_eq
       gaussJordanElimFull.pivotHistory A pivotRow (col + 1) Es P := by
   conv_lhs =>
     unfold gaussJordanElimFull.pivotHistory
-  rw [dif_pos hcol]
+  erw [dite_eq_left hcol]
   dsimp only
   rw [hfind]
 
@@ -327,13 +332,13 @@ lemma pivotHistory_selected_pivot_eq
         (P ++ [((⟨pivotRow, hrow⟩ : Fin m), (⟨col, hcol⟩ : Fin n))]) := by
   conv_lhs =>
     unfold gaussJordanElimFull.pivotHistory
-  rw [dif_pos hcol]
+  erw [dite_eq_left hcol]
   dsimp only
   rw [hfind]
   simp only
-  rw [dif_pos hrow]
+  erw [dite_eq_left hrow]
   have hpv := swap_selected_pivot_ne_zero hrow hfind
-  rw [dif_pos hpv]
+  erw [dite_eq_left hpv]
   rfl
 
 lemma pivotHistory_row_exhausted_eq
@@ -348,10 +353,10 @@ lemma pivotHistory_row_exhausted_eq
     gaussJordanElimFull.pivotHistory A pivotRow col Es P = P := by
   conv_lhs =>
     unfold gaussJordanElimFull.pivotHistory
-  rw [dif_pos hcol]
+  erw [dite_eq_left hcol]
   dsimp only
   rw [hfind]
-  simp only [dif_neg (Nat.not_lt.mpr hrow)]
+  simp only [dite_eq_right (Nat.not_lt.mpr hrow)]
 
 lemma pivotHistory_col_exhausted_eq
     {A : Matrix (Fin m) (Fin n) ℚ}
@@ -362,7 +367,7 @@ lemma pivotHistory_col_exhausted_eq
     gaussJordanElimFull.pivotHistory A pivotRow col Es P = P := by
   conv_lhs =>
     unfold gaussJordanElimFull.pivotHistory
-  rw [dif_neg (Nat.not_lt.mpr hcol)]
+  rw [dite_eq_right (Nat.not_lt.mpr hcol)]
 
 lemma go_selected_pivot_eq
     {A : Matrix (Fin m) (Fin n) ℚ}
@@ -392,18 +397,18 @@ lemma go_selected_pivot_eq
         (pivotRow + 1)
         (col + 1)
         (Elims ++ [Escale, Eswap] ++ Es) := by
-  rw [gaussJordanElimFull.go, dif_pos hcol]
+  rw [gaussJordanElimFull.go, dite_eq_left hcol]
   simp only
   rw [hfind]
   simp only
-  rw [dif_pos hrow]
+  erw [dite_eq_left hrow]
   have hpv :
       let pr : Fin m := ⟨pivotRow, hrow⟩
       let A₁ :=
         FunctionalGaussJordan.swapRowsMat pr pi * A
       A₁ pr ⟨col, hcol⟩ ≠ 0 :=
     selected_pivotVal_ne_zero hcol hfind hrow
-  rw [dif_pos hpv]
+  erw [dite_eq_left hpv]
 
 lemma go_selected_pivot_step_eq
     {A : Matrix (Fin m) (Fin n) ℚ}
@@ -421,9 +426,7 @@ lemma go_selected_pivot_step_eq
         (pivotRow + 1)
         (col + 1)
         step.2 := by
-  simpa [selectedPivotStep] using
-    (go_selected_pivot_eq (A := A) (pivotRow := pivotRow)
-      (col := col) Es hcol hfind hrow)
+  exact go_selected_pivot_eq (A := A) (pivotRow := pivotRow) (col := col) Es hcol hfind hrow
 
 lemma go_no_pivot_eq
     {A : Matrix (Fin m) (Fin n) ℚ}
@@ -434,7 +437,7 @@ lemma go_no_pivot_eq
       findPivot A pivotRow ⟨col, hcol⟩ = none) :
     gaussJordanElimFull.go A pivotRow col Es =
       gaussJordanElimFull.go A pivotRow (col + 1) Es := by
-  rw [gaussJordanElimFull.go, dif_pos hcol]
+  rw [gaussJordanElimFull.go, dite_eq_left hcol]
   simp only
   rw [hfind]
 
@@ -460,7 +463,7 @@ lemma go_col_ge_eq
     (hcol : n ≤ col) :
     gaussJordanElimFull.go A pivotRow col Es =
       (A, pivotRow, Es) := by
-  rw [gaussJordanElimFull.go, dif_neg (Nat.not_lt.mpr hcol)]
+  rw [gaussJordanElimFull.go, dite_eq_right (Nat.not_lt.mpr hcol)]
 
 lemma go_row_exhausted_eq
     {A : Matrix (Fin m) (Fin n) ℚ}
@@ -473,11 +476,11 @@ lemma go_row_exhausted_eq
     (hrow : m ≤ pivotRow) :
     gaussJordanElimFull.go A pivotRow col Es =
       (A, pivotRow, Es) := by
-  rw [gaussJordanElimFull.go, dif_pos hcol]
+  rw [gaussJordanElimFull.go, dite_eq_left hcol]
   simp only
   rw [hfind]
   simp only
-  rw [dif_neg (Nat.not_lt.mpr hrow)]
+  rw [dite_eq_right (Nat.not_lt.mpr hrow)]
 
 lemma scale_selected_pivot_eq_one
     {A₁ : Matrix (Fin m) (Fin n) ℚ}
@@ -487,11 +490,11 @@ lemma scale_selected_pivot_eq_one
     (hpv : pivotVal ≠ 0) :
     (FunctionalGaussJordan.scaleRowMat pr (pivotVal⁻¹) * A₁) pr j = 1 := by
   classical
-  rw [Matrix.mul_apply]
+  erw [Matrix.mul_apply]
   simp only [FunctionalGaussJordan.scaleRowMat, Matrix.add_apply,
     Matrix.smul_apply, Matrix.one_apply, Matrix.single_apply]
   rw [Finset.sum_eq_single pr]
-  · simp only [if_true, true_and, smul_eq_mul, mul_one]
+  · simp only [ite_true, true_and, smul_eq_mul, mul_one]
     rw [← hval]
     calc
       (1 + (pivotVal⁻¹ - 1)) * pivotVal = pivotVal⁻¹ * pivotVal := by ring
@@ -608,7 +611,7 @@ lemma scaleRowMat_preserves_pivot_column
   intro k
   classical
   unfold FunctionalGaussJordan.scaleRowMat
-  rw [Matrix.mul_apply]
+  erw [Matrix.mul_apply]
   simp only [Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply,
     Matrix.single_apply]
   rw [Finset.sum_eq_single k]
@@ -616,7 +619,7 @@ lemma scaleRowMat_preserves_pivot_column
     · subst k
       have hzero : A pr oldCol = 0 := by
         have h := hold pr
-        rw [if_neg hpr] at h
+        rw [ite_eq_right hpr] at h
         exact h
       simp [hzero, hpr]
     · have hpk : pr ≠ k := Ne.symm hkp
@@ -640,7 +643,7 @@ lemma swapRowsMat_preserves_row_entry
     (E * A) oldRow oldCol = A oldRow oldCol := by
   dsimp only
   unfold FunctionalGaussJordan.swapRowsMat
-  rw [Matrix.mul_apply]
+  erw [Matrix.mul_apply]
   simp [PEquiv.toMatrix_apply, Equiv.toPEquiv_apply,
     Equiv.swap_apply_of_ne_of_ne hpr hpi]
 
@@ -655,7 +658,7 @@ lemma swapRowsMat_apply
       else A r c := by
   dsimp only
   unfold FunctionalGaussJordan.swapRowsMat
-  rw [Matrix.mul_apply]
+  erw [Matrix.mul_apply]
   by_cases hpr : r = pr
   · subst r
     simp [Equiv.swap_apply_left]
@@ -693,17 +696,17 @@ lemma swap_selected_preserves_old_pivot_column
   intro k
   classical
   unfold FunctionalGaussJordan.swapRowsMat
-  rw [PEquiv.toMatrix_mul_apply]
+  erw [PEquiv.toMatrix_mul_apply]
   simp only [Equiv.toPEquiv_apply]
   by_cases hkpr : k = pr
   · subst k
     have hpi_col := hold pi
-    rw [if_neg (Ne.symm hpi)] at hpi_col
+    rw [ite_eq_right (Ne.symm hpi)] at hpi_col
     simpa [pr, Equiv.swap_apply_left, hpr, Ne.symm hpr] using hpi_col
   · by_cases hkpi : k = pi
     · subst k
       have hpr_col := hold pr
-      rw [if_neg (Ne.symm hpr)] at hpr_col
+      rw [ite_eq_right (Ne.symm hpr)] at hpr_col
       simpa [pr, Equiv.swap_apply_right, hpi, Ne.symm hpi] using hpr_col
     · have hkswap : (Equiv.swap pr pi) k = k :=
         Equiv.swap_apply_of_ne_of_ne hkpr hkpi
@@ -873,7 +876,7 @@ lemma swap_scale_preserves_source_zero
   let A₂ : Matrix (Fin m) (Fin n) ℚ :=
     FunctionalGaussJordan.scaleRowMat pr c * A₁
   have hswap_i : A₁ i q = A i q := by
-    simpa [A₁] using swapRowsMat_preserves_row_entry hi_pr hi_pi
+    exact swapRowsMat_preserves_row_entry hi_pr hi_pi
   have hscale_i : A₂ i q = A₁ i q := by
     have h := scaleRowMat_apply_other_row (A := A₁) hi_pr c
     exact congrFun h q
@@ -912,11 +915,10 @@ lemma selectedPivotStep_active_row
   let Elims := eliminationMatrices A₂ pr j
   let E : Matrix (Fin m) (Fin m) ℚ := Elims.foldr (· * ·) 1
   have helim : (E * A₂) pr = A₂ pr := by
-    simpa [Elims] using elimination_fold_preserves_source_row_apply A₂ pr j
+    exact elimination_fold_preserves_source_row_apply A₂ pr j
   have hscale : A₂ pr = pivotVal⁻¹ • A₁ pr := by
     simpa [A₂] using scaleRowMat_apply_source_row pr pivotVal⁻¹
-  simpa [selectedPivotStep, pr, j, A₁, pivotVal, A₂, Elims, E] using
-    helim.trans hscale
+  exact helim.trans hscale
 
 lemma selectedPivotStep_active_row_left_zero
     {A : Matrix (Fin m) (Fin n) ℚ}
@@ -944,7 +946,7 @@ lemma selectedPivotStep_active_row_left_zero
       (pivotVal⁻¹ • A₁ pr) q = pivotVal⁻¹ * A pi q := by
     rw [Pi.smul_apply, hswap]
     rfl
-  rw [hpoint, hscaled, hsource]
+  erw [hpoint, hscaled, hsource]
   simp
 
 lemma elimination_fold_preserves_pivot_one
@@ -984,8 +986,7 @@ lemma selectedPivotStep_pivot_eq_one
     FunctionalGaussJordan.scaleRowMat pr pivotVal⁻¹
   let A₂ : Matrix (Fin m) (Fin n) ℚ := Escale * A₁
   have hpv : pivotVal ≠ 0 := by
-    simpa only [pivotVal, A₁, Eswap, pr, j] using
-      selected_pivotVal_ne_zero hcol hfind hrow
+    exact selected_pivotVal_ne_zero hcol hfind hrow
   have hscaled : A₂ pr j = 1 := by
     exact scale_selected_pivot_eq_one (A₁ := A₁) (j := j)
       (pivotVal := pivotVal) (pr := pr) rfl hpv
@@ -1184,7 +1185,7 @@ lemma selectedPivotStep_preserves_old_left_zero
     have hlt : oldRow.val < pi.val := lt_of_lt_of_le hOldRow hpi_ge
     exact (Nat.ne_of_lt hlt) hv
   have hswap : A₁ oldRow oldCol = A oldRow oldCol := by
-    simpa [A₁] using swapRowsMat_preserves_row_entry hOld_pr hOld_pi
+    exact swapRowsMat_preserves_row_entry hOld_pr hOld_pi
   have hscale : A₂ oldRow oldCol = A₁ oldRow oldCol := by
     have h := scaleRowMat_apply_other_row (A := A₁) hOld_pr pivotVal⁻¹
     exact congrFun h oldCol
@@ -1205,7 +1206,7 @@ lemma selectedPivotStep_preserves_old_left_zero
   have houtput :
       (E * A₂) oldRow oldCol = 0 := by
     simpa [E, htarget₂] using hfold
-  simpa [selectedPivotStep, j, pr, A₁, pivotVal, A₂, E] using houtput
+  exact houtput
 
 lemma selectedPivotStep_preserves_unprocessed_left_zero
     {A : Matrix (Fin m) (Fin n) ℚ}
@@ -1238,7 +1239,7 @@ lemma selectedPivotStep_preserves_unprocessed_left_zero
       rw [hswap]
       simpa [pr] using hactive
     · have hswap : A₁ i q = A i q := by
-        simpa [A₁] using swapRowsMat_preserves_row_entry hi_pr' hi_pi
+        exact swapRowsMat_preserves_row_entry hi_pr' hi_pi
       rw [hswap, htarget]
   have htarget₂ : A₂ i q = 0 := by
     have hscale := scaleRowMat_apply_other_row
@@ -1260,7 +1261,7 @@ lemma selectedPivotStep_preserves_unprocessed_left_zero
     (eliminationMatrices A₂ pr j).foldr (· * ·) 1
   have houtput : (E * A₂) i q = 0 := by
     simpa [E, htarget₂] using hfold
-  simpa [selectedPivotStep, j, pr, A₁, pivotVal, A₂, E] using houtput
+  exact houtput
 
 lemma elimination_fold_preserves_zero_column
     (X : Matrix (Fin m) (Fin n) ℚ)
@@ -1320,8 +1321,7 @@ lemma selectedPivotStep_pivot_column_zero
   let A₂ : Matrix (Fin m) (Fin n) ℚ :=
     FunctionalGaussJordan.scaleRowMat pr pivotVal⁻¹ * A₁
   have hpv : pivotVal ≠ 0 := by
-    simpa only [pivotVal, A₁, Eswap, pr, j] using
-      selected_pivotVal_ne_zero hcol hfind hrow
+    exact selected_pivotVal_ne_zero hcol hfind hrow
   have hpivot : A₂ pr j = 1 := by
     exact scale_selected_pivot_eq_one (A₁ := A₁) (j := j)
       (pivotVal := pivotVal) (pr := pr) rfl hpv
@@ -1349,9 +1349,9 @@ lemma selectedPivotStep_pivot_column
   intro k
   by_cases hk : k = ⟨pivotRow, hrow⟩
   · subst k
-    simp only [if_pos rfl]
+    simp only [ite_eq_left rfl]
     exact selectedPivotStep_pivot_eq_one Es hcol hfind hrow
-  · simp only [if_neg hk]
+  · simp only [ite_eq_right hk]
     exact selectedPivotStep_pivot_column_zero Es hcol hfind hrow k hk
 
 lemma selectedPivotStep_preserves_pivot_column
@@ -1386,18 +1386,17 @@ lemma selectedPivotStep_preserves_pivot_column
     omega
   have hsource : A₁ pr oldCol = 0 := by
     have h := hswap pr
-    rw [if_neg hpr] at h
+    rw [ite_eq_right hpr] at h
     exact h
   have hscale : IsPivotColumnAt A₂ oldRow oldCol := by
     simpa [A₂] using
       (scaleRowMat_preserves_pivot_column hpr hswap pivotVal⁻¹)
   have helim := elimination_fold_preserves_column_of_source_zero
-    A₂ pr j oldCol (by exact hscale pr ▸ if_neg hpr)
+    A₂ pr j oldCol (by exact hscale pr ▸ ite_eq_right hpr)
   intro k
   have helim_k := helim k
   have hscale_k := hscale k
-  simpa [selectedPivotStep, j, pr, A₁, pivotVal, A₂] using
-    helim_k.trans hscale_k
+  exact helim_k.trans hscale_k
 
 lemma selectedPivotStep_preserves_pivot_columns
     {A : Matrix (Fin m) (Fin n) ℚ}
@@ -1515,7 +1514,7 @@ lemma go_preserves_pivot_history
   induction A, pivotRow, col, Es using gaussJordanElimFull.go.induct
   · rename_i A pivotRow col Es hcol j hfind ih
     intro P hP hrows hcols rc hrc
-    rw [gaussJordanElimFull.go, dif_pos hcol]
+    rw [gaussJordanElimFull.go, dite_eq_left hcol]
     simp only
     rw [hfind]
     simp only
@@ -1544,35 +1543,34 @@ lemma go_preserves_pivot_history
       · exact Nat.lt_succ_of_lt (hcols q hq)
       · rcases List.mem_singleton.mp hq with rfl
         exact Nat.lt_succ_self col
-    rw [gaussJordanElimFull.go, dif_pos hcol]
+    rw [gaussJordanElimFull.go, dite_eq_left hcol]
     simp only
     rw [hfind]
     simp only
-    rw [dif_pos hpr, dif_pos hpv]
-    exact ih P' (by simpa [P', selectedPivotStep] using hP') hrows' hcols'
+    rw [dite_eq_left hpr, dite_eq_left hpv]
+    exact ih P' (by exact hP') hrows' hcols'
       rc (List.mem_append_left _ hrc)
   · rename_i A pivotRow col Es hcol j pi hfind hpr pr Eswap A1 pivotVal hpv ih
     intro P hP hrows hcols rc hrc
-    rw [gaussJordanElimFull.go, dif_pos hcol]
+    rw [gaussJordanElimFull.go, dite_eq_left hcol]
     simp only
     rw [hfind]
     simp only
-    rw [dif_pos hpr, dif_neg hpv]
+    rw [dite_eq_left hpr, dite_eq_right hpv]
     have hpv' : pivotVal ≠ 0 := by
-      simpa only [pivotVal, A1, pr, j] using
-        selected_pivotVal_ne_zero hcol hfind hpr
+      exact selected_pivotVal_ne_zero hcol hfind hpr
     exact (hpv hpv').elim
   · rename_i A pivotRow col Es hcol j pi hfind hpr
     intro P hP hrows hcols rc hrc
-    rw [gaussJordanElimFull.go, dif_pos hcol]
+    rw [gaussJordanElimFull.go, dite_eq_left hcol]
     simp only
     rw [hfind]
     simp only
-    rw [dif_neg hpr]
+    rw [dite_eq_right hpr]
     exact hP rc hrc
   · rename_i A pivotRow col Es hcol
     intro P hP hrows hcols rc hrc
-    rw [gaussJordanElimFull.go, dif_neg hcol]
+    rw [gaussJordanElimFull.go, dite_eq_right hcol]
     exact hP rc hrc
 
 /-- The recursive pivot-row counter never exceeds the number of rows. -/
@@ -1583,37 +1581,36 @@ lemma go_pivotRow_le
     (gaussJordanElimFull.go A pivotRow col Es).2.1 ≤ m := by
   induction A, pivotRow, col, Es using gaussJordanElimFull.go.induct
   · rename_i A pivotRow col Es hcol j h_find ih
-    rw [gaussJordanElimFull.go, dif_pos hcol]
+    rw [gaussJordanElimFull.go, dite_eq_left hcol]
     simp only
     rw [h_find]
     simp only
     exact ih hp
   · rename_i A pivotRow col Es hcol j pi h_find hpr pr Eswap A1 pivotVal hpv Escale A2 Elims A3 ih
-    rw [gaussJordanElimFull.go, dif_pos hcol]
+    rw [gaussJordanElimFull.go, dite_eq_left hcol]
     simp only
     rw [h_find]
     simp only
-    rw [dif_pos hpr, dif_pos hpv]
+    rw [dite_eq_left hpr, dite_eq_left hpv]
     exact ih (Nat.succ_le_of_lt hpr)
   · rename_i A pivotRow col Es hcol j pi h_find hpr pr Eswap A1 pivotVal hpv ih
-    rw [gaussJordanElimFull.go, dif_pos hcol]
+    rw [gaussJordanElimFull.go, dite_eq_left hcol]
     simp only
     rw [h_find]
     simp only
-    rw [dif_pos hpr, dif_neg hpv]
+    rw [dite_eq_left hpr, dite_eq_right hpv]
     have hpv' : pivotVal ≠ 0 := by
-      simpa only [pivotVal, A1, pr, j] using
-        selected_pivotVal_ne_zero hcol h_find hpr
+      exact selected_pivotVal_ne_zero hcol h_find hpr
     exact (hpv hpv').elim
   · rename_i A pivotRow col Es hcol j pi h_find hpr
-    rw [gaussJordanElimFull.go, dif_pos hcol]
+    rw [gaussJordanElimFull.go, dite_eq_left hcol]
     simp only
     rw [h_find]
     simp only
-    rw [dif_neg hpr]
+    rw [dite_eq_right hpr]
     exact hp
   · rename_i A pivotRow col Es hcol
-    rw [gaussJordanElimFull.go, dif_neg hcol]
+    rw [gaussJordanElimFull.go, dite_eq_right hcol]
     exact hp
 
 /-- The recursive pivot-row counter never decreases during elimination. -/
@@ -1623,36 +1620,35 @@ lemma go_pivotRow_le_output
     pivotRow ≤ (gaussJordanElimFull.go A pivotRow col Es).2.1 := by
   induction A, pivotRow, col, Es using gaussJordanElimFull.go.induct
   · rename_i A pivotRow col Es hcol j h_find ih
-    rw [gaussJordanElimFull.go, dif_pos hcol]
+    rw [gaussJordanElimFull.go, dite_eq_left hcol]
     simp only
     rw [h_find]
     simp only
     exact ih
   · rename_i A pivotRow col Es hcol j pi h_find hpr pr Eswap A1 pivotVal hpv Escale A2 Elims A3 ih
-    rw [gaussJordanElimFull.go, dif_pos hcol]
+    rw [gaussJordanElimFull.go, dite_eq_left hcol]
     simp only
     rw [h_find]
     simp only
-    rw [dif_pos hpr, dif_pos hpv]
+    rw [dite_eq_left hpr, dite_eq_left hpv]
     exact le_trans (Nat.le_succ pivotRow) ih
   · rename_i A pivotRow col Es hcol j pi h_find hpr pr Eswap A1 pivotVal hpv ih
-    rw [gaussJordanElimFull.go, dif_pos hcol]
+    rw [gaussJordanElimFull.go, dite_eq_left hcol]
     simp only
     rw [h_find]
     simp only
-    rw [dif_pos hpr, dif_neg hpv]
+    rw [dite_eq_left hpr, dite_eq_right hpv]
     have hpv' : pivotVal ≠ 0 := by
-      simpa only [pivotVal, A1, pr, j] using
-        selected_pivotVal_ne_zero hcol h_find hpr
+      exact selected_pivotVal_ne_zero hcol h_find hpr
     exact (hpv hpv').elim
   · rename_i A pivotRow col Es hcol j pi h_find hpr
-    rw [gaussJordanElimFull.go, dif_pos hcol]
+    rw [gaussJordanElimFull.go, dite_eq_left hcol]
     simp only
     rw [h_find]
     simp only
-    rw [dif_neg hpr]
+    rw [dite_eq_right hpr]
   · rename_i A pivotRow col Es hcol
-    rw [gaussJordanElimFull.go, dif_neg hcol]
+    rw [gaussJordanElimFull.go, dite_eq_right hcol]
 
 noncomputable def gaussJordanElimFull (A : Matrix (Fin m) (Fin n) ℚ) :
     Matrix (Fin m) (Fin n) ℚ × ℕ × List (Matrix (Fin m) (Fin m) ℚ) :=
@@ -1678,7 +1674,7 @@ theorem go_all_invertible (A : Matrix (Fin m) (Fin n) ℚ) (pivotRow col : ℕ) 
     rename_i A pivotRow col Es hcol j h_find ih
     intro E hE
     rw [gaussJordanElimFull.go] at hE
-    rw [dif_pos hcol] at hE
+    erw [dite_eq_left hcol] at hE
     simp only at hE
     rw [h_find] at hE
     simp only at hE
@@ -1687,12 +1683,12 @@ theorem go_all_invertible (A : Matrix (Fin m) (Fin n) ℚ) (pivotRow col : ℕ) 
     rename_i A pivotRow col Es hcol j pi h_find hpr pr Eswap A1 pivotVal hpv Escale A2 Elims A3 ih
     intro E hE
     rw [gaussJordanElimFull.go] at hE
-    rw [dif_pos hcol] at hE
+    erw [dite_eq_left hcol] at hE
     simp only at hE
     rw [h_find] at hE
     simp only at hE
-    rw [dif_pos hpr] at hE
-    rw [dif_pos hpv] at hE
+    rw [dite_eq_left hpr] at hE
+    erw [dite_eq_left hpv] at hE
     apply ih _ E hE
     intro F hF
     rw [List.mem_append] at hF
@@ -1724,31 +1720,30 @@ theorem go_all_invertible (A : Matrix (Fin m) (Fin n) ℚ) (pivotRow col : ℕ) 
     rename_i A pivotRow col Es hcol j pi h_find hpr pr Eswap A1 pivotVal hpv ih
     intro E hE
     rw [gaussJordanElimFull.go] at hE
-    rw [dif_pos hcol] at hE
+    erw [dite_eq_left hcol] at hE
     simp only at hE
     rw [h_find] at hE
     simp only at hE
-    rw [dif_pos hpr] at hE
-    rw [dif_neg hpv] at hE
+    rw [dite_eq_left hpr] at hE
+    erw [dite_eq_right hpv] at hE
     have hpv' : pivotVal ≠ 0 := by
-      simpa only [pivotVal, A1, pr, j] using
-        selected_pivotVal_ne_zero hcol h_find hpr
+      exact selected_pivotVal_ne_zero hcol h_find hpr
     exact (hpv hpv').elim
   · -- Case 4: findPivot = some pi, ¬pivotRow < m
     rename_i A pivotRow col Es hcol j pi h_find hpr
     intro E hE
     rw [gaussJordanElimFull.go] at hE
-    rw [dif_pos hcol] at hE
+    erw [dite_eq_left hcol] at hE
     simp only at hE
     rw [h_find] at hE
     simp only at hE
-    rw [dif_neg hpr] at hE
+    rw [dite_eq_right hpr] at hE
     exact hEs E hE
   · -- Case 5: ¬col < n
     rename_i A pivotRow col Es hcol
     intro E hE
     rw [gaussJordanElimFull.go] at hE
-    rw [dif_neg hcol] at hE
+    erw [dite_eq_right hcol] at hE
     exact hEs E hE
 
 theorem go_R_eq (A : Matrix (Fin m) (Fin n) ℚ) (pivotRow col : ℕ) (Es : List (Matrix (Fin m) (Fin m) ℚ))
@@ -1758,19 +1753,19 @@ theorem go_R_eq (A : Matrix (Fin m) (Fin n) ℚ) (pivotRow col : ℕ) (Es : List
   · -- Case 1: findPivot = none
     rename_i A pivotRow col Es hcol j h_find ih
     rw [gaussJordanElimFull.go]
-    rw [dif_pos hcol]
+    erw [dite_eq_left hcol]
     simp only
     rw [h_find]
     exact ih hA
   · -- Case 2: findPivot = some pi, pivotRow < m, pivotVal ≠ 0
     rename_i A pivotRow col Es hcol j pi h_find hpr pr Eswap A1 pivotVal hpv Escale A2 Elims A3 ih
     rw [gaussJordanElimFull.go]
-    rw [dif_pos hcol]
+    erw [dite_eq_left hcol]
     simp only
     rw [h_find]
     simp only
-    rw [dif_pos hpr]
-    rw [dif_pos hpv]
+    rw [dite_eq_left hpr]
+    erw [dite_eq_left hpv]
     apply ih
     dsimp only [A3, A2, A1]
     rw [hA]
@@ -1784,29 +1779,28 @@ theorem go_R_eq (A : Matrix (Fin m) (Fin n) ℚ) (pivotRow col : ℕ) (Es : List
   · -- Case 3: findPivot = some pi, pivotRow < m, pivotVal = 0
     rename_i A pivotRow col Es hcol j pi h_find hpr pr Eswap A1 pivotVal hpv ih
     rw [gaussJordanElimFull.go]
-    rw [dif_pos hcol]
+    erw [dite_eq_left hcol]
     simp only
     rw [h_find]
     simp only
-    rw [dif_pos hpr]
-    rw [dif_neg hpv]
+    rw [dite_eq_left hpr]
+    erw [dite_eq_right hpv]
     have hpv' : pivotVal ≠ 0 := by
-      simpa only [pivotVal, A1, pr, j] using
-        selected_pivotVal_ne_zero hcol h_find hpr
+      exact selected_pivotVal_ne_zero hcol h_find hpr
     exact (hpv hpv').elim
   · -- Case 4: findPivot = some pi, ¬pivotRow < m
     rename_i A pivotRow col Es hcol j pi h_find hpr
     rw [gaussJordanElimFull.go]
-    rw [dif_pos hcol]
+    erw [dite_eq_left hcol]
     simp only
     rw [h_find]
     simp only
-    rw [dif_neg hpr]
+    rw [dite_eq_right hpr]
     exact hA
   · -- Case 5: ¬col < n
     rename_i A pivotRow col Es hcol
     rw [gaussJordanElimFull.go]
-    rw [dif_neg hcol]
+    erw [dite_eq_right hcol]
     exact hA
 
 /-- Every matrix in the elimination list is invertible. -/

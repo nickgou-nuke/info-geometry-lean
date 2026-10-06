@@ -12,7 +12,11 @@ inductive conclusion_s4_schur_centralizer_closed_form_irrep
   | v2
   | v3
   | v3prime
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype conclusion_s4_schur_centralizer_closed_form_irrep where
+  elems := {.sgn, .v2, .v3, .v3prime}
+  complete := by intro x; cases x <;> simp
 
 /-- The multiplicities of the irreducible `S₄` summands in the Hodge decomposition. -/
 def conclusion_s4_schur_centralizer_closed_form_multiplicity :
@@ -40,13 +44,15 @@ private theorem conclusion_s4_schur_centralizer_closed_form_block_card_formula :
         conclusion_s4_schur_centralizer_closed_form_multiplicity ρ ^ 2 := by
   simp [conclusion_s4_schur_centralizer_closed_form_block_decomposition,
     conclusion_s4_schur_centralizer_closed_form_block,
-    conclusion_s4_schur_centralizer_closed_form_multiplicity, pow_two]
+    Fintype.card_sigma, Fintype.card_prod, pow_two]
 
 private theorem conclusion_s4_schur_centralizer_closed_form_dimension_sum :
     (∑ ρ : conclusion_s4_schur_centralizer_closed_form_irrep,
       conclusion_s4_schur_centralizer_closed_form_multiplicity ρ ^ 2) = 131 := by
   have h_univ : (Finset.univ : Finset conclusion_s4_schur_centralizer_closed_form_irrep) =
-      {.sgn, .v2, .v3, .v3prime} := by decide
+      {.sgn, .v2, .v3, .v3prime} := by
+    ext x
+    cases x <;> simp
   rw [h_univ]
   simp [Finset.sum_insert, Finset.sum_singleton,
     conclusion_s4_schur_centralizer_closed_form_multiplicity]
@@ -82,7 +88,7 @@ theorem paper_conclusion_s4_schur_centralizer_closed_form :
   refine ⟨paper_conclusion_s4_hodge_determines_fixedpoint_counts, rfl, rfl, rfl, rfl, ?_, ?_, ?_⟩
   · intro c
     cases c <;>
-      norm_num [conclusion_s4_hodge_determines_fixedpoint_counts_hodge_character,
+      simp [conclusion_s4_hodge_determines_fixedpoint_counts_hodge_character,
         conclusion_s4_schur_centralizer_closed_form_multiplicity,
         conclusion_s4_hodge_determines_fixedpoint_counts_sgn_character,
         conclusion_s4_hodge_determines_fixedpoint_counts_v2_character,

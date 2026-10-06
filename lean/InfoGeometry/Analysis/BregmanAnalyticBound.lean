@@ -316,6 +316,9 @@ theorem cos_remainder_abs_le_sq {ε : ℝ} (hε : |ε| ≤ 1) :
     have hform : (1 - ε ^ 2 / 2) - 1 = -(ε ^ 2 / 2) := by ring
     rw [hform, abs_neg, abs_of_nonneg hnon]
   have hsqabs : |ε| ^ 2 = ε ^ 2 := by rw [sq_abs]
+  have hpow5 : |ε| ^ 5 ≤ ε ^ 2 := by
+    rw [← hsqabs]
+    exact pow_le_pow_of_le_one (abs_nonneg ε) hε (by norm_num)
   have hpow4 : |ε| ^ 4 ≤ ε ^ 2 := by
     rw [← hsqabs]
     exact pow_le_pow_of_le_one (abs_nonneg ε) hε (by norm_num)
@@ -350,6 +353,9 @@ theorem sin_remainder_abs_le_sq {ε : ℝ} (hε : |ε| ≤ 1) :
   have hpow3 : |ε| ^ 3 ≤ ε ^ 2 := by
     rw [← hsqabs]
     exact pow_le_pow_of_le_one (abs_nonneg ε) hε (by norm_num)
+  have hpow5 : |ε| ^ 5 ≤ ε ^ 2 := by
+    rw [← hsqabs]
+    exact pow_le_pow_of_le_one (abs_nonneg ε) hε (by norm_num)
   have hpow4 : |ε| ^ 4 ≤ ε ^ 2 := by
     rw [← hsqabs]
     exact pow_le_pow_of_le_one (abs_nonneg ε) hε (by norm_num)
@@ -357,8 +363,8 @@ theorem sin_remainder_abs_le_sq {ε : ℝ} (hε : |ε| ≤ 1) :
     |Real.sin ε - ε|
         ≤ |Real.sin ε - (ε - ε ^ 3 / 6)| + |(ε - ε ^ 3 / 6) - ε| := htri
     _ = |Real.sin ε - (ε - ε ^ 3 / 6)| + |ε| ^ 3 / 6 := by rw [hsimp]
-    _ ≤ |ε| ^ 4 * (5 / 96) + |ε| ^ 3 / 6 := by gcongr
-    _ ≤ ε ^ 2 * (5 / 96) + ε ^ 2 / 6 := by gcongr
+    _ ≤ |ε| ^ 5 / 100 + |ε| ^ 3 / 6 := by gcongr
+    _ ≤ ε ^ 2 / 100 + ε ^ 2 / 6 := by gcongr
     _ ≤ ε ^ 2 := by nlinarith [sq_nonneg ε]
 
 /--
@@ -393,6 +399,9 @@ theorem scalar_rotation_remainder_abs_sum_le_sq {ε : ℝ} (hε : |ε| ≤ 1) :
   have hpow3 : |ε| ^ 3 ≤ ε ^ 2 := by
     rw [← hsqabs]
     exact pow_le_pow_of_le_one (abs_nonneg ε) hε (by norm_num)
+  have hpow5 : |ε| ^ 5 ≤ ε ^ 2 := by
+    rw [← hsqabs]
+    exact pow_le_pow_of_le_one (abs_nonneg ε) hε (by norm_num)
   have hpow4 : |ε| ^ 4 ≤ ε ^ 2 := by
     rw [← hsqabs]
     exact pow_le_pow_of_le_one (abs_nonneg ε) hε (by norm_num)
@@ -405,9 +414,9 @@ theorem scalar_rotation_remainder_abs_sum_le_sq {ε : ℝ} (hε : |ε| ≤ 1) :
           (|Real.sin ε - (ε - ε ^ 3 / 6)| + |ε| ^ 3 / 6) := by
             rw [hcos_tail, hsin_tail]
     _ ≤ |ε| ^ 4 * (5 / 96) + ε ^ 2 / 2 +
-          (|ε| ^ 4 * (5 / 96) + |ε| ^ 3 / 6) := by gcongr
+          (|ε| ^ 5 / 100 + |ε| ^ 3 / 6) := by gcongr
     _ ≤ ε ^ 2 * (5 / 96) + ε ^ 2 / 2 +
-          (ε ^ 2 * (5 / 96) + ε ^ 2 / 6) := by gcongr
+          (ε ^ 2 / 100 + ε ^ 2 / 6) := by gcongr
     _ ≤ ε ^ 2 := by nlinarith [sq_nonneg ε]
 
 /-! ## Closed-form finite phase-axis bound -/
@@ -455,19 +464,24 @@ theorem closedFormPhaseAxisRemainder_entry_bound {ε : ℝ}
       Complex.norm_real, Real.norm_eq_abs]
     simpa [abs_sub_comm] using hsin
   fin_cases i <;> fin_cases j
-  · simpa [closedFormPhaseAxisRemainder,
-      InfoGeometry.Canonical.BregmanDeformation.modularDelta,
-      InfoGeometry.Canonical.BregmanDeformation.phaseAxis] using hcosC
-  · simpa [closedFormPhaseAxisRemainder,
-      InfoGeometry.Canonical.BregmanDeformation.modularDelta,
-      InfoGeometry.Canonical.BregmanDeformation.phaseAxis,
-      abs_sub_comm, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using hsinC_neg
-  · simpa [closedFormPhaseAxisRemainder,
-      InfoGeometry.Canonical.BregmanDeformation.modularDelta,
-      InfoGeometry.Canonical.BregmanDeformation.phaseAxis] using hsinC
-  · simpa [closedFormPhaseAxisRemainder,
-      InfoGeometry.Canonical.BregmanDeformation.modularDelta,
-      InfoGeometry.Canonical.BregmanDeformation.phaseAxis] using hcosC
+  · dsimp [closedFormPhaseAxisRemainder]
+    change ‖InfoGeometry.Canonical.BregmanDeformation.modularDelta ε 0 0 - (1 : Matrix (Fin 2) (Fin 2) ℂ) 0 0 - (ε : ℂ) * InfoGeometry.Canonical.BregmanDeformation.phaseAxis 0 0‖ ≤ ε ^ 2
+    simp [InfoGeometry.Canonical.BregmanDeformation.modularDelta, InfoGeometry.Canonical.BregmanDeformation.phaseAxis]
+    exact hcosC
+  · dsimp [closedFormPhaseAxisRemainder]
+    change ‖InfoGeometry.Canonical.BregmanDeformation.modularDelta ε 0 1 - (1 : Matrix (Fin 2) (Fin 2) ℂ) 0 1 - (ε : ℂ) * InfoGeometry.Canonical.BregmanDeformation.phaseAxis 0 1‖ ≤ ε ^ 2
+    simp [InfoGeometry.Canonical.BregmanDeformation.modularDelta, InfoGeometry.Canonical.BregmanDeformation.phaseAxis]
+    have H2 : -Complex.sin ↑ε + ↑ε = ↑ε + -Complex.sin ↑ε := by ring
+    rw [H2]
+    exact hsinC_neg
+  · dsimp [closedFormPhaseAxisRemainder]
+    change ‖InfoGeometry.Canonical.BregmanDeformation.modularDelta ε 1 0 - (1 : Matrix (Fin 2) (Fin 2) ℂ) 1 0 - (ε : ℂ) * InfoGeometry.Canonical.BregmanDeformation.phaseAxis 1 0‖ ≤ ε ^ 2
+    simp [InfoGeometry.Canonical.BregmanDeformation.modularDelta, InfoGeometry.Canonical.BregmanDeformation.phaseAxis]
+    exact hsinC
+  · dsimp [closedFormPhaseAxisRemainder]
+    change ‖InfoGeometry.Canonical.BregmanDeformation.modularDelta ε 1 1 - (1 : Matrix (Fin 2) (Fin 2) ℂ) 1 1 - (ε : ℂ) * InfoGeometry.Canonical.BregmanDeformation.phaseAxis 1 1‖ ≤ ε ^ 2
+    simp [InfoGeometry.Canonical.BregmanDeformation.modularDelta, InfoGeometry.Canonical.BregmanDeformation.phaseAxis]
+    exact hcosC
 
 /--
 The explicit 2×2 phase-axis remainder has entrywise quadratic Bregman size.

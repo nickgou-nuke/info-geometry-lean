@@ -158,7 +158,7 @@ private theorem columnWindow_rank_eq_three (h : GaugeAnomalyAutocovarianceData) 
       h.hankel3.rank ≤ h.columnWindow.rank := by
     rw [hankel3_eq_columnWindow_submatrix]
     simpa using
-      (Matrix.rank_submatrix_le (f := fin3To4) (e := Equiv.refl (Fin 3)) h.columnWindow)
+      (Matrix.rank_submatrix_le (r := fin3To4) (c := Equiv.refl (Fin 3)) h.columnWindow)
   have hupper : h.columnWindow.rank ≤ 3 := Matrix.rank_le_width h.columnWindow
   omega
 
@@ -177,7 +177,7 @@ private theorem hankel4_rank_ge_three (h : GaugeAnomalyAutocovarianceData) :
       h.columnWindow.transpose.rank ≤ h.hankel4.transpose.rank := by
     rw [columnWindow_transpose_eq_hankel4_transpose_submatrix]
     simpa using
-      (Matrix.rank_submatrix_le (f := fin3To4) (e := Equiv.refl (Fin 4)) h.hankel4.transpose)
+      (Matrix.rank_submatrix_le (r := fin3To4) (c := Equiv.refl (Fin 4)) h.hankel4.transpose)
   have hsub : h.columnWindow.rank ≤ h.hankel4.rank := by
     simpa [Matrix.rank_transpose] using hsubT
   rw [hcolrank] at hsub

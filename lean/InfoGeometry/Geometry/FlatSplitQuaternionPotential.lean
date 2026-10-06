@@ -37,13 +37,13 @@ theorem determinantPotential_eq (x : Mat2) :
 
 theorem determinantPotential_fderiv (x u : Mat2) :
     fderiv ℝ determinantPotential x u = metric x u := by
-  rw [determinantPotential, fderiv_potential metricCLM metric_symm]
-  rfl
+  have h1 : fderiv ℝ (potential metricCLM) = metricCLM := fderiv_potential metricCLM metric_symm
+  exact congr_arg (fun f : Mat2 →L[ℝ] ℝ => f u) (congr_fun h1 x)
 
 theorem determinantPotential_hessian (x u v : Mat2) :
     fderiv ℝ (fderiv ℝ determinantPotential) x u v = metric u v := by
-  rw [determinantPotential, hessian_potential metricCLM metric_symm]
-  rfl
+  have h1 : (fderiv ℝ (fderiv ℝ (potential metricCLM))) x = metricCLM := hessian_potential metricCLM metric_symm x
+  exact congr_arg (fun f : Mat2 →L[ℝ] ℝ => f v) (congr_arg (fun F : Mat2 →L[ℝ] Mat2 →L[ℝ] ℝ => F u) h1)
 
 theorem metric_nondegenerate (u : Mat2) (hu : ∀ v, metric u v = 0) : u = 0 := by
   have h00 := hu !![0, 0; 0, 1]
@@ -119,8 +119,9 @@ theorem traceless_flow_tangent_to_potential (a : Mat2) (ha : a.trace = 0) (x : M
 /-- Euler scaling is transverse to nonzero levels, unlike the SL₂ split torus. -/
 theorem euler_not_tangent_at_nonzero (x : Mat2) (hx : determinantPotential x ≠ 0) :
     fderiv ℝ determinantPotential x x ≠ 0 := by
-  change fderiv ℝ (potential metricCLM) x x ≠ 0
-  rw [euler_identity metricCLM metric_symm]
+  have h_euler : fderiv ℝ determinantPotential x x = 2 * determinantPotential x :=
+    euler_identity metricCLM metric_symm x
+  rw [h_euler]
   exact mul_ne_zero (by norm_num) hx
 
 /-- A nonzero null point has the same nondegenerate ambient Hessian as every point. -/

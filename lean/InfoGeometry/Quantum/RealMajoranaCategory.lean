@@ -54,8 +54,7 @@ noncomputable def K (X : RealMajoranaCore) : X →ₗ[ℝ] X :=
 /-- The derived axis squares to `-Id`. -/
 lemma K_sq (X : RealMajoranaCore) :
     X.K.comp X.K = -((LinearMap.id : X →ₗ[ℝ] X)) := by
-  simpa [K, toAnticommutingInvolutionCore] using
-    (InfoGeometry.Quantum.AnticommutingInvolutionCore.K_sq X.toAnticommutingInvolutionCore)
+  exact InfoGeometry.Quantum.AnticommutingInvolutionCore.K_sq X.toAnticommutingInvolutionCore
 
 /-- Morphisms preserve all primitive operators `(J, eps, Pi)`. -/
 @[ext] structure Hom (X Y : RealMajoranaCore) where
@@ -221,7 +220,7 @@ theorem majorana_car_of_splitClifford :
 end SplitCliffordDatum
 
 /-- Canonical `RealMajoranaCore` on doubled space with `(J, ε, Π) = (modular_j, spectral_epsilon, spectral_epsilon)`. -/
-noncomputable def cl11DoubledCore (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+noncomputable def cl11DoubledCore (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] : RealMajoranaCore where
   V := InfoGeometry.Krein.DoubledSpace E
   J := (InfoGeometry.Krein.modular_j (E := E)).toLinearMap
@@ -238,7 +237,7 @@ noncomputable def cl11DoubledCore (E : Type*) [NormedAddCommGroup E] [InnerProdu
       (InfoGeometry.Krein.modular_j_spectral_epsilon_anticommute E)
 
 /-- `Cl(1,1)` representation with codomain in linear endomorphisms (forgetting continuity). -/
-noncomputable def cl11RepLinear (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+noncomputable def cl11RepLinear (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] :
     CliffordAlgebra InfoGeometry.Clifford.splitQ11 →ₐ[ℝ]
       (InfoGeometry.Krein.DoubledSpace E →ₗ[ℝ] InfoGeometry.Krein.DoubledSpace E) where
@@ -255,7 +254,7 @@ noncomputable def cl11RepLinear (E : Type*) [NormedAddCommGroup E] [InnerProduct
     exact congrArg ContinuousLinearMap.toLinearMap ((InfoGeometry.Krein.cl11Rep (E := E)).commutes r)
 
 /-- Concrete split `Cl(1,1)` representation datum on the doubled Majorana core. -/
-noncomputable def cl11SplitCliffordDatum (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+noncomputable def cl11SplitCliffordDatum (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] :
     SplitCliffordDatum (cl11DoubledCore E) where
   Mode := ℝ × ℝ
@@ -263,7 +262,7 @@ noncomputable def cl11SplitCliffordDatum (E : Type*) [NormedAddCommGroup E] [Inn
   rho := cl11RepLinear E
 
 /-- Primitive CAR theorem specialized to the concrete doubled-space split-`Cl(1,1)` datum. -/
-theorem majorana_car_of_concrete_cl11 (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+theorem majorana_car_of_concrete_cl11 (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] :
     MajoranaCARWitness (cl11DoubledCore E)
       (SplitCliffordDatum.majoranaPairing (cl11SplitCliffordDatum E))
@@ -274,7 +273,7 @@ theorem majorana_car_of_concrete_cl11 (E : Type*) [NormedAddCommGroup E] [InnerP
 
 section Cl11NullModes
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- The `g = polar(Q)/2` pairing for concrete split-`Cl(1,1)` is `x₁y₁ - x₂y₂`. -/
 lemma cl11_majoranaPairing_apply (u v : ℝ × ℝ) :
@@ -285,24 +284,24 @@ lemma cl11_majoranaPairing_apply (u v : ℝ × ℝ) :
   ring_nf
 
 /-- Canonical null mode `u_- = (1/2, 1/2)`. -/
-noncomputable def cl11_uMinus : (cl11SplitCliffordDatum E).Mode := ((1 / 2 : ℝ), (1 / 2 : ℝ))
+noncomputable def cl11_uMinus : ℝ × ℝ := ((1 / 2 : ℝ), (1 / 2 : ℝ))
 
 /-- Canonical null mode `u_+ = (1/2, -1/2)`. -/
-noncomputable def cl11_uPlus : (cl11SplitCliffordDatum E).Mode := ((1 / 2 : ℝ), (-(1 / 2 : ℝ)))
+noncomputable def cl11_uPlus : ℝ × ℝ := ((1 / 2 : ℝ), (-(1 / 2 : ℝ)))
 
 lemma cl11_uMinus_isotropic :
-    SplitCliffordDatum.majoranaPairing (cl11SplitCliffordDatum E) (cl11_uMinus (E := E))
-      (cl11_uMinus (E := E)) = 0 := by
+    SplitCliffordDatum.majoranaPairing (cl11SplitCliffordDatum E) (cl11_uMinus)
+      (cl11_uMinus) = 0 := by
   simp [cl11_uMinus, cl11_majoranaPairing_apply]
 
 lemma cl11_uPlus_isotropic :
-    SplitCliffordDatum.majoranaPairing (cl11SplitCliffordDatum E) (cl11_uPlus (E := E))
-      (cl11_uPlus (E := E)) = 0 := by
+    SplitCliffordDatum.majoranaPairing (cl11SplitCliffordDatum E) (cl11_uPlus)
+      (cl11_uPlus) = 0 := by
   simp [cl11_uPlus, cl11_majoranaPairing_apply]
 
 lemma cl11_uMinus_uPlus_pairing_half :
-    SplitCliffordDatum.majoranaPairing (cl11SplitCliffordDatum E) (cl11_uMinus (E := E))
-      (cl11_uPlus (E := E)) = (1 / 2 : ℝ) := by
+    SplitCliffordDatum.majoranaPairing (cl11SplitCliffordDatum E) (cl11_uMinus)
+      (cl11_uPlus) = (1 / 2 : ℝ) := by
   simp [cl11_uMinus, cl11_uPlus, cl11_majoranaPairing_apply]
   ring
 
@@ -524,7 +523,7 @@ end Polarization
 
 section Cl11Polarization
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 @[simp] lemma spectralPlusProj_apply_to_doubled (x y : E) :
     InfoGeometry.Krein.spectralPlusProj (E := E) (InfoGeometry.Krein.to_doubled x y)
@@ -614,7 +613,7 @@ noncomputable def cl11CanonicalPolarization : Polarization (cl11DoubledCore E) w
     exact congrArg ContinuousLinearMap.toLinearMap (spectralMinusProj_comm_Pi (E := E))
 
 @[simp] lemma cl11_majoranaField_uMinus_apply_to_doubled (x y : E) :
-    SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uMinus (E := E))
+    SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uMinus)
       (InfoGeometry.Krein.to_doubled x y)
       = InfoGeometry.Krein.to_doubled (0 : E) x := by
   have hhalf (z : E) :
@@ -622,7 +621,7 @@ noncomputable def cl11CanonicalPolarization : Polarization (cl11DoubledCore E) w
     have hscalar : (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) = 1 := by norm_num
     simpa [hscalar]
   change (InfoGeometry.Krein.cl11Rep (E := E)
-      (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (cl11_uMinus (E := E)))
+      (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 ((cl11_uMinus) : ℝ × ℝ))
       (InfoGeometry.Krein.to_doubled x y))
     = InfoGeometry.Krein.to_doubled (0 : E) x
   rw [InfoGeometry.Krein.cl11Rep_ι_apply]
@@ -637,7 +636,7 @@ noncomputable def cl11CanonicalPolarization : Polarization (cl11DoubledCore E) w
           simpa [hhalf]
 
 @[simp] lemma cl11_majoranaField_uPlus_apply_to_doubled (x y : E) :
-    SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uPlus (E := E))
+    SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uPlus)
       (InfoGeometry.Krein.to_doubled x y)
       = InfoGeometry.Krein.to_doubled y (0 : E) := by
   have hhalf (z : E) :
@@ -645,7 +644,7 @@ noncomputable def cl11CanonicalPolarization : Polarization (cl11DoubledCore E) w
     have hscalar : (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) = 1 := by norm_num
     simpa [hscalar]
   change (InfoGeometry.Krein.cl11Rep (E := E)
-      (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (cl11_uPlus (E := E)))
+      (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 ((cl11_uPlus) : ℝ × ℝ))
       (InfoGeometry.Krein.to_doubled x y))
     = InfoGeometry.Krein.to_doubled y (0 : E)
   rw [InfoGeometry.Krein.cl11Rep_ι_apply]
@@ -660,25 +659,23 @@ noncomputable def cl11CanonicalPolarization : Polarization (cl11DoubledCore E) w
           simpa [hhalf]
 
 @[simp] lemma cl11_majoranaField_uPlus_add_uMinus_apply_to_doubled (x y : E) :
-    (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uPlus (E := E))
-        + SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uMinus (E := E)))
+    (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uPlus)
+        + SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uMinus))
       (InfoGeometry.Krein.to_doubled x y)
       = InfoGeometry.Krein.modular_j (E := E) (InfoGeometry.Krein.to_doubled x y) := by
-  calc
-    (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uPlus (E := E))
-        + SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uMinus (E := E)))
-      (InfoGeometry.Krein.to_doubled x y)
-        = InfoGeometry.Krein.to_doubled y (0 : E) +
-            InfoGeometry.Krein.to_doubled (0 : E) x := by
-              simp [LinearMap.add_apply, cl11_majoranaField_uPlus_apply_to_doubled,
-                cl11_majoranaField_uMinus_apply_to_doubled]
-    _ = InfoGeometry.Krein.to_doubled y x := by
-          simpa [InfoGeometry.Krein.to_doubled, Prod.mk_add_mk, WithLp.add_fst, WithLp.add_snd]
-            using
-              (WithLp.toLp_add (p := (2 : ENNReal))
-                (x := (y, (0 : E))) (y := ((0 : E), x))).symm
-    _ = InfoGeometry.Krein.modular_j (E := E) (InfoGeometry.Krein.to_doubled x y) := by
-          simp [InfoGeometry.Krein.modular_j_to_doubled]
+  have h1 : (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) cl11_uPlus + SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) cl11_uMinus) (InfoGeometry.Krein.to_doubled x y) = InfoGeometry.Krein.to_doubled y (0 : E) + InfoGeometry.Krein.to_doubled (0 : E) x := by
+    change (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) cl11_uPlus) (InfoGeometry.Krein.to_doubled x y) + (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) cl11_uMinus) (InfoGeometry.Krein.to_doubled x y) = _
+    simp [cl11_majoranaField_uPlus_apply_to_doubled, cl11_majoranaField_uMinus_apply_to_doubled]
+    rfl
+  rw [h1]
+  have h2 : (WithLp.toLp 2 (y, (0 : E)) : InfoGeometry.Krein.DoubledSpace E) + (WithLp.toLp 2 ((0 : E), x) : InfoGeometry.Krein.DoubledSpace E) = InfoGeometry.Krein.to_doubled y x := by
+    have h := (WithLp.toLp_add (p := (2 : ENNReal)) (x := (y, (0 : E))) (y := ((0 : E), x))).symm
+    rw [h]
+    simp [InfoGeometry.Krein.to_doubled, Prod.mk_add_mk, WithLp.add_fst, WithLp.add_snd]
+  change (WithLp.toLp 2 (y, (0 : E)) : InfoGeometry.Krein.DoubledSpace E) + (WithLp.toLp 2 ((0 : E), x) : InfoGeometry.Krein.DoubledSpace E) = _ at h2
+  rw [h2]
+  simp [InfoGeometry.Krein.to_doubled, InfoGeometry.Krein.modular_j_to_doubled]
+  rfl
 
 end Cl11Polarization
 
@@ -841,20 +838,20 @@ theorem polarized_ladder_car_of_majorana
 
 section Cl11ConcreteRealization
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Canonical polarized object on the concrete doubled-space `Cl(1,1)` core. -/
-noncomputable def cl11CanonicalPolarizedMajorana : PolarizedMajorana where
+noncomputable def cl11CanonicalPolarizedMajorana (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] : PolarizedMajorana where
   core := cl11DoubledCore E
   polarization := cl11CanonicalPolarization (E := E)
 
 /-- Concrete `Cl(1,1)` null modes realize ladders compatible with canonical spectral polarization. -/
-noncomputable def cl11_concrete_ladder_realization :
-    PolarizedLadderRealization (cl11CanonicalPolarizedMajorana (E := E))
+noncomputable def cl11_concrete_ladder_realization (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    PolarizedLadderRealization (cl11CanonicalPolarizedMajorana E)
       (cl11SplitCliffordDatum E) := by
   refine
-    { uMinus := cl11_uMinus (E := E)
-      uPlus := cl11_uPlus (E := E)
+    { uMinus := cl11_uMinus
+      uPlus := cl11_uPlus
       minus_isotropic := cl11_uMinus_isotropic (E := E)
       plus_isotropic := cl11_uPlus_isotropic (E := E)
       mixed_half := cl11_uMinus_uPlus_pairing_half (E := E)
@@ -865,7 +862,7 @@ noncomputable def cl11_concrete_ladder_realization :
       apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
     rw [← hv]
     have hL :
-        (cl11CanonicalPolarizedMajorana (E := E)).polarization.Pplus
+        (cl11CanonicalPolarizedMajorana E).polarization.Pplus
             (InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v))
           = InfoGeometry.Krein.to_doubled (WithLp.fst v) (0 : E) := by
       unfold cl11CanonicalPolarizedMajorana cl11CanonicalPolarization
@@ -874,18 +871,20 @@ noncomputable def cl11_concrete_ladder_realization :
         = InfoGeometry.Krein.to_doubled (WithLp.fst v) (0 : E)
       exact spectralPlusProj_apply_to_doubled (E := E) (x := WithLp.fst v) (y := WithLp.snd v)
     have hR :
-        ((SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uPlus (E := E))).comp
-            (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uMinus (E := E))))
+        ((SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uPlus)).comp
+            (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uMinus)))
           (InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v))
           = InfoGeometry.Krein.to_doubled (WithLp.fst v) (0 : E) := by
-      simp [LinearMap.comp_apply]
+      change (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) cl11_uPlus) ((SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) cl11_uMinus) (InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v))) = _
+      simp [cl11_majoranaField_uMinus_apply_to_doubled, cl11_majoranaField_uPlus_apply_to_doubled]
+      rfl
     exact hL.trans hR.symm
   · ext v
     have hv : InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
       apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
     rw [← hv]
     have hL :
-        (cl11CanonicalPolarizedMajorana (E := E)).polarization.Pminus
+        (cl11CanonicalPolarizedMajorana E).polarization.Pminus
             (InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v))
           = InfoGeometry.Krein.to_doubled (0 : E) (WithLp.snd v) := by
       unfold cl11CanonicalPolarizedMajorana cl11CanonicalPolarization
@@ -894,24 +893,26 @@ noncomputable def cl11_concrete_ladder_realization :
         = InfoGeometry.Krein.to_doubled (0 : E) (WithLp.snd v)
       exact spectralMinusProj_apply_to_doubled (E := E) (x := WithLp.fst v) (y := WithLp.snd v)
     have hR :
-        ((SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uMinus (E := E))).comp
-            (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uPlus (E := E))))
+        ((SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uMinus)).comp
+            (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uPlus)))
           (InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v))
           = InfoGeometry.Krein.to_doubled (0 : E) (WithLp.snd v) := by
-      simp [LinearMap.comp_apply]
+      change (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) cl11_uMinus) ((SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) cl11_uPlus) (InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v))) = _
+      simp [cl11_majoranaField_uMinus_apply_to_doubled, cl11_majoranaField_uPlus_apply_to_doubled]
+      rfl
     exact hL.trans hR.symm
 
 /-- Final concrete CAR theorem: canonical spectral polarization + concrete split-`Cl(1,1)` datum. -/
 theorem car_realization_of_clifford_concrete :
-    CARWitness (cl11CanonicalPolarizedMajorana (E := E)).core
-      (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := E))
-        (cl11SplitCliffordDatum E) (cl11_concrete_ladder_realization (E := E))).annihil
-      (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := E))
-        (cl11SplitCliffordDatum E) (cl11_concrete_ladder_realization (E := E))).create := by
+    CARWitness (cl11CanonicalPolarizedMajorana E).core
+      (ladderOfRealization (cl11CanonicalPolarizedMajorana E)
+        (cl11SplitCliffordDatum E) (cl11_concrete_ladder_realization E)).annihil
+      (ladderOfRealization (cl11CanonicalPolarizedMajorana E)
+        (cl11SplitCliffordDatum E) (cl11_concrete_ladder_realization E)).create := by
   exact polarized_ladder_car_of_majorana
-    (X := cl11CanonicalPolarizedMajorana (E := E))
+    (X := cl11CanonicalPolarizedMajorana E)
     (hCliff := cl11SplitCliffordDatum E)
-    (hPol := cl11_concrete_ladder_realization (E := E))
+    (hPol := cl11_concrete_ladder_realization E)
 
 end Cl11ConcreteRealization
 

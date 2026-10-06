@@ -251,6 +251,7 @@ with the chosen local matrix. -/
     jwStringWithBase localMat (n + 1) ⟨n, Nat.lt_succ_self n⟩ =
       globalChirality n ⊗ₖ localMat := by
   simp [jwStringWithBase]
+  rfl
 
 @[simp] theorem matStageEmbed_jwStringWithBase
     (localMat : Matrix (Fin 2) (Fin 2) ℝ) {n : ℕ} (k : Fin n) :
@@ -262,7 +263,9 @@ with the chosen local matrix. -/
       have hk : (k : ℕ) < n + 1 := k.isLt
       by_cases h : (k : ℕ) < n
       · simp [matStageEmbed, jwStringWithBase, h, hk]
+        rfl
       · simp [matStageEmbed, jwStringWithBase, h, hk]
+        rfl
 
 @[simp] theorem matStageEmbed_jwCreation {n : ℕ} (k : Fin n) :
     matStageEmbed n (jwCreation n k) = jwCreation (n + 1) k.castSucc := by
@@ -293,19 +296,22 @@ with the chosen local matrix. -/
 @[simp] theorem matStageEmbed_zero (n : ℕ) :
     matStageEmbed n (0 : MatStage n) = 0 := by
   simp [matStageEmbed]
+  rfl
 
 @[simp] theorem matStageEmbed_one (n : ℕ) :
     matStageEmbed n (1 : MatStage n) = (1 : MatStage (n + 1)) := by
   simp [matStageEmbed]
+  rfl
 
 @[simp] theorem matStageEmbed_add (n : ℕ) (A B : MatStage n) :
     matStageEmbed n (A + B) = matStageEmbed n A + matStageEmbed n B := by
-  simpa [matStageEmbed] using Matrix.add_kronecker A B (1 : Matrix (Fin 2) (Fin 2) ℝ)
+  exact Matrix.add_kronecker A B (1 : Matrix (Fin 2) (Fin 2) ℝ)
 
 @[simp] theorem matStageEmbed_mul (n : ℕ) (A B : MatStage n) :
     matStageEmbed n (A * B) = matStageEmbed n A * matStageEmbed n B := by
-  simpa [matStageEmbed] using
-    (Matrix.mul_kronecker_mul A B (1 : Matrix (Fin 2) (Fin 2) ℝ) (1 : Matrix (Fin 2) (Fin 2) ℝ))
+  have h := Matrix.mul_kronecker_mul A B (1 : Matrix (Fin 2) (Fin 2) ℝ) (1 : Matrix (Fin 2) (Fin 2) ℝ)
+  rw [Matrix.mul_one] at h
+  exact h
 
 /-- The one-step matrix embedding `A ↦ A ⊗ I₂` is injective. -/
 theorem matStageEmbed_injective (n : ℕ) : Function.Injective (matStageEmbed n) := by
@@ -323,7 +329,11 @@ noncomputable def stageEmbed (n : ℕ) : MatStage n →ₐ[ℝ] MatStage (n + 1)
   map_add' := matStageEmbed_add n
   commutes' r := by
     rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one]
-    rw [matStageEmbed, Matrix.smul_kronecker, Matrix.one_kronecker_one]
+    change (r • (1 : MatStage n)) ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ) = r • (1 : MatStage (n + 1))
+    rw [Matrix.smul_kronecker]
+    change r • (1 ⊗ₖ 1) = r • 1
+    rw [Matrix.one_kronecker_one]
+    rfl
 
 @[simp] theorem stageEmbed_apply {n : ℕ} (A : MatStage n) :
     stageEmbed n A = matStageEmbed n A := rfl
@@ -351,6 +361,8 @@ abbrev matrixUnit (n : ℕ) (i j : InfoGeometry.Clifford.TowerMatrix.Idx n) : Ma
           fin_cases a2 <;> fin_cases b2 <;>
             simp [stageEmbed_apply, matStageEmbed, Matrix.single]
 
+attribute [local instance] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
+
 /-- The one-step embedding is a Lie algebra homomorphism for the commutator Lie structure. -/
 noncomputable def stageEmbedLieHom (n : ℕ) : MatStage n →ₗ⁅ℝ⁆ MatStage (n + 1) :=
   (stageEmbed n).toLieHom
@@ -364,13 +376,11 @@ noncomputable def stageEmbedLieHom (n : ℕ) : MatStage n →ₗ⁅ℝ⁆ MatSta
 
 @[simp] theorem stageEmbed_star (n : ℕ) (A : MatStage n) :
     stageEmbed n (star A) = star (stageEmbed n A) := by
-  ext i j
-  cases i with
-  | mk i1 i2 =>
-      cases j with
-      | mk j1 j2 =>
-          fin_cases i2 <;> fin_cases j2 <;>
-            simp [stageEmbed_apply, matStageEmbed, Matrix.star_apply]
+  ext ⟨i1, i2⟩ ⟨j1, j2⟩
+  change (star A ⊗ₖ 1) (i1, i2) (j1, j2) = star ((A ⊗ₖ 1) (j1, j2) (i1, i2))
+  simp only [Matrix.kroneckerMap_apply]
+  fin_cases i2 <;> fin_cases j2 <;>
+    simp [Matrix.one_apply_eq, Matrix.one_apply_ne, star_trivial]
 
 /-- Binary-volume normalized matrix trace. -/
 def normalizedTrace (n : ℕ) (A : MatStage n) : ℝ :=
@@ -382,8 +392,9 @@ def normalizedTrace (n : ℕ) (A : MatStage n) : ℝ :=
 
 @[simp] theorem matStageEmbed_trace (n : ℕ) (A : MatStage n) :
     Matrix.trace (matStageEmbed n A) = 2 * Matrix.trace A := by
-  rw [matStageEmbed, Matrix.trace_kronecker, trace_fin_two_one]
-  ring
+  have h := Matrix.trace_kronecker A (1 : Matrix (Fin 2) (Fin 2) ℝ)
+  rw [trace_fin_two_one] at h
+  exact h.trans (mul_comm _ _)
 
 @[simp] theorem normalizedTrace_matStageEmbed (n : ℕ) (A : MatStage n) :
     normalizedTrace (n + 1) (matStageEmbed n A) = normalizedTrace n A := by
@@ -393,8 +404,8 @@ def normalizedTrace (n : ℕ) (A : MatStage n) : ℝ :=
 
 @[simp] theorem matStageEmbed_det (n : ℕ) (A : MatStage n) :
     Matrix.det (matStageEmbed n A) = Matrix.det A ^ (2 : ℕ) := by
-  rw [matStageEmbed, Matrix.det_kronecker]
-  simp
+  have h := Matrix.det_kronecker A (1 : Matrix (Fin 2) (Fin 2) ℝ)
+  exact h.trans (by simp)
 
 /-- Binary-volume normalized logarithmic determinant readout. -/
 def normalizedLogAbsDet (n : ℕ) (A : MatStage n) : ℝ :=

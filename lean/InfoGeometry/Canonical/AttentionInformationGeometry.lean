@@ -340,7 +340,10 @@ theorem scoreFunction_eq_logSoftmaxAlong_deriv
   have hlin : HasDerivAt
       (fun t : ℝ => s m + t * tokenObservable j m)
       (tokenObservable j m) 0 := by
-    simpa using (hasDerivAt_id' (0 : ℝ)).mul_const (tokenObservable j m) |>.const_add (s m)
+    have hd := (hasDerivAt_id' (0 : ℝ)).mul_const (tokenObservable j m) |>.const_add (s m)
+    change HasDerivAt _ (1 * tokenObservable j m) 0 at hd
+    rw [one_mul] at hd
+    exact hd
 
   have hlogPart : HasDerivAt
       (fun t => logPartitionAlong s (tokenObservable j) t)
@@ -357,11 +360,17 @@ theorem scoreFunction_eq_logSoftmaxAlong_deriv
         _ = deriv (fun t => InfoGeometry.Analytic.logSumExp w (tokenObservable j) t) 0 :=
           h.deriv.symm
         _ = softmaxProb s j := by
-          simpa [logPartitionAlong, w] using logPartition_coordinate_deriv s j
-    simpa only [hmean] using h
+          exact logPartition_coordinate_deriv s j
+    change HasDerivAt _ (InfoGeometry.Analytic.logSumExpMean w (tokenObservable j) 0) 0 at h
+    rw [hmean] at h
+    exact h
 
   rw [hfun]
-  simpa [scoreFunction] using (hlin.sub hlogPart).deriv
+  have hd := (hlin.sub hlogPart).deriv
+  change deriv (fun t => s m + t * tokenObservable j m - logPartitionAlong s (tokenObservable j) t) 0 = tokenObservable j m - softmaxProb s j at hd
+  change deriv (fun t => s m + t * tokenObservable j m - logPartitionAlong s (tokenObservable j) t) 0 = scoreFunction s j m
+  rw [hd]
+  rfl
 
 /-- The Fisher-Rao Information Metric:
     g_{jk}(s) = E[ V_j * V_k ]. -/

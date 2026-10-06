@@ -253,8 +253,9 @@ theorem dihedral_orbit_card (b : Bool) :
     Nat.card (MulAction.orbit (DihedralGroup 6) (b, (0 : ZMod 6))) = 6 := by
   calc
     Nat.card (MulAction.orbit (DihedralGroup 6) (b, (0 : ZMod 6))) =
-        Nat.card {r : Root // r.1 = b} :=
-      Nat.card_congr (Equiv.setCongr (dihedral_orbit_eq_sector b))
+        Nat.card {r : Root // r.1 = b} := by
+      rw [dihedral_orbit_eq_sector b]
+      rfl
     _ = Fintype.card {r : Root // r.1 = b} := Nat.card_eq_fintype_card
     _ = 6 := sector_card b
 

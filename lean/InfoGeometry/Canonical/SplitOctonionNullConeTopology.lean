@@ -54,16 +54,18 @@ theorem continuous_splitZorn_dotProduct :
   have k0 := (continuous_apply 0).comp continuous_splitZorn_y
   have k1 := (continuous_apply 1).comp continuous_splitZorn_y
   have k2 := (continuous_apply 2).comp continuous_splitZorn_y
-  simpa [InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3] using
-    (((h0.mul k0).add (h1.mul k1)).add (h2.mul k2))
+  have h := (((h0.mul k0).add (h1.mul k1)).add (h2.mul k2))
+  change Continuous (fun X => X.x 0 * X.y 0 + X.x 1 * X.y 1 + X.x 2 * X.y 2)
+  exact h
 
 theorem continuous_splitZorn_norm :
     Continuous (InfoGeometry.Physics.ZornMatrixSU3.norm :
       SplitZornMatrix → ℝ) := by
   have hab := continuous_splitZorn_a.mul continuous_splitZorn_b
   have hd := continuous_splitZorn_dotProduct
-  simpa [InfoGeometry.Physics.ZornMatrixSU3.norm] using hab.sub hd
+  have h := hab.sub hd
+  change Continuous (fun X => X.a * X.b - InfoGeometry.Physics.ZornMatrixSU3.dotProduct X.x X.y)
+  exact h
 
 theorem isClosed_splitZornNullCone :
     IsClosed splitZornNullCone := by

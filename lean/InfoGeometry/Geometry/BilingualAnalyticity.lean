@@ -1,4 +1,12 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.Calculus.FDeriv.Const
+import Mathlib.Analysis.Calculus.FDeriv.Linear
+import Mathlib.Analysis.Calculus.FDeriv.Comp
+import Mathlib.Analysis.Analytic.Basic
+import Mathlib.Analysis.Calculus.FDeriv.RestrictScalars
+import Mathlib.Analysis.Calculus.FDeriv.Analytic
+import Mathlib.Analysis.Calculus.FDeriv.Basic
+import Mathlib.Analysis.Normed.Operator.Mul
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
@@ -168,9 +176,8 @@ def id
     CauchyAnalyticAt K K (fun y : X => y) x where
   deriv := ContinuousLinearMap.id ℝ X
   has_fderiv_at := by
-    simpa using
-      (hasFDerivAt_id (𝕜 := ℝ) (E := X) x :
-        HasFDerivAt (fun y : X => y) (ContinuousLinearMap.id ℝ X) x)
+
+    exact hasFDerivAt_id x
   phase_linear_deriv := by
     ext v
     simp
@@ -186,9 +193,8 @@ def const
     CauchyAnalyticAt Kdom Ktar (fun _ : X => y0) x where
   deriv := 0
   has_fderiv_at := by
-    simpa using
-      (hasFDerivAt_const y0 x :
-        HasFDerivAt (fun _ : X => y0) (0 : X →L[ℝ] Y) x)
+
+    exact hasFDerivAt_const y0 x
   phase_linear_deriv := by
     ext v
     simp
@@ -206,9 +212,8 @@ def ofContinuousLinearMap
     CauchyAnalyticAt Kdom Ktar (fun y : X => L y) x where
   deriv := L
   has_fderiv_at := by
-    simpa using
-      (L.hasFDerivAt (x := x) :
-        HasFDerivAt (fun y : X => L y) L x)
+
+    exact L.hasFDerivAt
   phase_linear_deriv := hL
 
 /--
@@ -228,8 +233,8 @@ def comp
     CauchyAnalyticAt KX KZ (fun u : X => G (F u)) x where
   deriv := B.deriv.comp A.deriv
   has_fderiv_at := by
-    simpa [Function.comp_def] using
-      B.has_fderiv_at.comp x A.has_fderiv_at
+
+    exact B.has_fderiv_at.comp x A.has_fderiv_at
   phase_linear_deriv := by
     ext v
     change B.deriv (A.deriv (KX.K v)) =
@@ -273,6 +278,7 @@ noncomputable def complexPhaseStructure : PhaseStructure ℂ where
   K := complexIMap
   K_square := by
     ext z
+    simp only [ContinuousLinearMap.comp_apply, neg_apply, ContinuousLinearMap.id_apply]
     change Complex.I * (Complex.I * z) = -z
     rw [← mul_assoc, Complex.I_mul_I, neg_one_mul]
 
@@ -285,6 +291,7 @@ theorem complexLinearMap_phaseLinear
     complexPhaseStructure.IsPhaseLinearMap (L.restrictScalars ℝ)
       complexPhaseStructure := by
   ext z
+  simp only [ContinuousLinearMap.comp_apply]
   change L (Complex.I * z) = Complex.I * L z
   simpa only [smul_eq_mul] using L.map_smul Complex.I z
 

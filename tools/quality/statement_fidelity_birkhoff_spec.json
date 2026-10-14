@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BirkhoffPosetOperatorProjector Statement Fidelity Target Specification",
+  "description": "Fidelity target specifications for theorems in proofs/BirkhoffPosetOperatorProjector.lean under OpenGauss Gate 2.5",
+  "theorems": {
+    "birkhoff_2x2_decomposition": {
+      "theorem_name": "birkhoff_2x2_decomposition",
+      "carrier_requirements": {
+        "expected_carrier": "Matrix (Fin 2) (Fin 2) ℝ",
+        "non_commutative": true,
+        "min_dimension": 2,
+        "forbidden_carriers": ["ℝ", "Float", "ScalarProxy", "DummyCarrier", "ScalarBirkhoffProxy"]
+      },
+      "required_hypotheses": [
+        {
+          "name": "nonneg",
+          "pattern": "0 ≤ mat|nonneg",
+          "description": "Entrywise non-negativity of stochastic matrix"
+        },
+        {
+          "name": "row_sum",
+          "pattern": "row_sum|mat i 0 \\+ mat i 1 = 1",
+          "description": "Row stochastic normalization: row sum equals 1"
+        },
+        {
+          "name": "col_sum",
+          "pattern": "col_sum|mat 0 j \\+ mat 1 j = 1",
+          "description": "Column stochastic normalization: col sum equals 1"
+        }
+      ],
+      "target_relation": {
+        "type": "equality",
+        "relation_symbol": "=",
+        "pattern": "D\\.mat\\s*=\\s*θ\\s*•.*matPerm12"
+      }
+    },
+    "matrix_two_noncommutative": {
+      "theorem_name": "matrix_two_noncommutative",
+      "carrier_requirements": {
+        "expected_carrier": "Matrix (Fin 2) (Fin 2) ℝ",
+        "non_commutative": true,
+        "min_dimension": 2,
+        "forbidden_carriers": ["ℝ", "Float", "ScalarProxy", "DummyCarrier"]
+      },
+      "required_hypotheses": [],
+      "target_relation": {
+        "type": "inequality",
+        "relation_symbol": "≠",
+        "pattern": "nullPlus.*\\*\\s*nullMinus\\s*≠\\s*nullMinus\\s*\\*\\s*nullPlus"
+      }
+    },
+    "peirce_diff_sq": {
+      "theorem_name": "peirce_diff_sq",
+      "carrier_requirements": {
+        "expected_carrier": "A",
+        "carrier_structure": "PeirceIdempotents",
+        "forbidden_carriers": ["ScalarProxy", "DummyCarrier"]
+      },
+      "required_hypotheses": [
+        {
+          "name": "peirce_idempotents",
+          "pattern": "PeirceIdempotents",
+          "description": "Orthogonal idempotent decomposition structure"
+        }
+      ],
+      "target_relation": {
+        "type": "equality",
+        "relation_symbol": "=",
+        "pattern": "\\(P\\.pL\\s*-\\s*P\\.pR\\)\\s*\\*\\s*\\(P\\.pL\\s*-\\s*P\\.pR\\)\\s*=\\s*1"
+      }
+    },
+    "certified_defect_zero": {
+      "theorem_name": "certified_defect_zero",
+      "carrier_requirements": {
+        "expected_carrier": "A",
+        "carrier_structure": "IdempotentProjector",
+        "forbidden_carriers": ["ScalarProxy", "DummyCarrier"]
+      },
+      "required_hypotheses": [
+        {
+          "name": "is_certified",
+          "pattern": "IsCertified|proj \\* x = x",
+          "description": "Certified truth subspace invariant condition"
+        }
+      ],
+      "target_relation": {
+        "type": "conjunction",
+        "pattern": "P\\.projCompl\\s*\\*\\s*x\\s*=\\s*0\\s*∧\\s*x\\s*\\*\\s*P\\.projCompl\\s*=\\s*0"
+      }
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MasterEpistemicColimitSynthesis Statement Fidelity Target Specification",
+  "description": "Fidelity target specifications for theorems in proofs/MasterEpistemicColimitSynthesis.lean under OpenGauss Gate 2.5",
+  "theorems": {
+    "matrix_two_noncommutative": {
+      "theorem_name": "matrix_two_noncommutative",
+      "carrier_requirements": {
+        "expected_carrier": "Matrix (Fin 2) (Fin 2) ℝ",
+        "non_commutative": true,
+        "min_dimension": 2,
+        "forbidden_carriers": ["ℝ", "Float", "ScalarProxy", "DummyCarrier"]
+      },
+      "required_hypotheses": [],
+      "target_relation": {
+        "type": "inequality",
+        "relation_symbol": "≠",
+        "pattern": "nullPlus.*\\*\\s*nullMinus\\s*≠\\s*nullMinus\\s*\\*\\s*nullPlus"
+      }
+    },
+    "blockEmbed_preserves_noncommutativity": {
+      "theorem_name": "blockEmbed_preserves_noncommutativity",
+      "carrier_requirements": {
+        "expected_carrier": "Matrix (Fin 2) (Fin 2) R",
+        "non_commutative": true,
+        "min_dimension": 2,
+        "forbidden_carriers": ["ℝ", "Float", "ScalarProxy", "DummyCarrier"]
+      },
+      "required_hypotheses": [
+        {
+          "name": "non_comm_hyp",
+          "pattern": "A\\s*\\*\\s*B\\s*≠\\s*B\\s*\\*\\s*A",
+          "description": "Base non-commutativity assumption"
+        }
+      ],
+      "target_relation": {
+        "type": "inequality",
+        "relation_symbol": "≠",
+        "pattern": "blockEmbed\\s+A\\s*\\*\\s*blockEmbed\\s+B\\s*≠\\s*blockEmbed\\s+B\\s*\\*\\s*blockEmbed\\s+A"
+      }
+    },
+    "matrix_embedded_noncommutative": {
+      "theorem_name": "matrix_embedded_noncommutative",
+      "carrier_requirements": {
+        "expected_carrier": "Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) ℝ",
+        "non_commutative": true,
+        "forbidden_carriers": ["ℝ", "Float", "ScalarProxy", "DummyCarrier"]
+      },
+      "required_hypotheses": [],
+      "target_relation": {
+        "type": "inequality",
+        "relation_symbol": "≠",
+        "pattern": "blockEmbed.*\\*\\s*blockEmbed.*≠\\s*blockEmbed.*\\*\\s*blockEmbed"
+      }
+    }
+  }
+}

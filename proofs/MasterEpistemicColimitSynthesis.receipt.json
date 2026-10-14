@@ -1,0 +1,89 @@
+{
+  "schema": "info_geometry.proof_artifact_receipt.v1",
+  "authority": "candidate_observation_not_proof_authority",
+  "artifact": {
+    "path": "proofs/MasterEpistemicColimitSynthesis.lean",
+    "sha256": "b28b00dc19a90d96e878bdfa765c4198e0fc211b6c28742cf86b7c6c85186e81"
+  },
+  "source": {
+    "path": "proofs/MasterEpistemicColimitSynthesis.lean",
+    "snapshotSha256": "b28b00dc19a90d96e878bdfa765c4198e0fc211b6c28742cf86b7c6c85186e81",
+    "currentSnapshotSha256": "b28b00dc19a90d96e878bdfa765c4198e0fc211b6c28742cf86b7c6c85186e81",
+    "changedSincePrompt": false
+  },
+  "environment": {
+    "toolchain": "leanprover/lean4:v4.34.1",
+    "lakefileSha256": "5372c9a95ed8f6488bc0ce257c906c83658449668db4627259d72d542c77d9f7",
+    "lakeManifestSha256": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "gitHead": "6489bf8b94730b61f0380e7e752b3b37c3dec0f3"
+  },
+  "checks": {
+    "leanProcess": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "proofs/MasterEpistemicColimitSynthesis.lean"
+      ],
+      "returncode": 0,
+      "outputSha256": "2ff18e8d7aa0ffc166cb7cf2f321556286d4c0abff42433b8c4c8cb1dbc2b3f2",
+      "status": "passed"
+    },
+    "semanticVacuityGate": {
+      "returncode": 0,
+      "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": "passed"
+    },
+    "axiomAudit": {
+      "status": "collected",
+      "declarations": [
+        "MasterEpistemicColimitSynthesis.matJ_sq",
+        "MasterEpistemicColimitSynthesis.projLeft_sq",
+        "MasterEpistemicColimitSynthesis.projRight_sq",
+        "MasterEpistemicColimitSynthesis.projLeft_mul_projRight",
+        "MasterEpistemicColimitSynthesis.projRight_mul_projLeft",
+        "MasterEpistemicColimitSynthesis.projLeft_add_projRight",
+        "MasterEpistemicColimitSynthesis.nullPlus_sq",
+        "MasterEpistemicColimitSynthesis.nullMinus_sq",
+        "MasterEpistemicColimitSynthesis.nullPlus_mul_nullMinus",
+        "MasterEpistemicColimitSynthesis.nullMinus_mul_nullPlus",
+        "MasterEpistemicColimitSynthesis.witt_anticomm",
+        "MasterEpistemicColimitSynthesis.witt_bracket",
+        "MasterEpistemicColimitSynthesis.matrix_two_noncommutative",
+        "MasterEpistemicColimitSynthesis.blockEmbed_add",
+        "MasterEpistemicColimitSynthesis.blockEmbed_sub",
+        "MasterEpistemicColimitSynthesis.blockEmbed_mul",
+        "MasterEpistemicColimitSynthesis.blockEmbed_one",
+        "MasterEpistemicColimitSynthesis.blockEmbed_zero",
+        "MasterEpistemicColimitSynthesis.blockEmbed_injective",
+        "MasterEpistemicColimitSynthesis.blockEmbed_preserves_involution",
+        "MasterEpistemicColimitSynthesis.blockEmbed_preserves_idempotent",
+        "MasterEpistemicColimitSynthesis.blockEmbed_preserves_orthogonality",
+        "MasterEpistemicColimitSynthesis.blockEmbed_preserves_partition",
+        "MasterEpistemicColimitSynthesis.blockEmbed_preserves_nilpotent",
+        "MasterEpistemicColimitSynthesis.blockEmbed_preserves_anticomm",
+        "MasterEpistemicColimitSynthesis.blockEmbed_preserves_bracket",
+        "MasterEpistemicColimitSynthesis.blockEmbed_preserves_noncommutativity",
+        "MasterEpistemicColimitSynthesis.matrix_embedded_noncommutative",
+        "MasterEpistemicColimitSynthesis.ColimitCoconeSystem.lift_stage_property_to_colimit",
+        "MasterEpistemicColimitSynthesis.compile_master_epistemic_colimit_synthesis",
+        "MasterEpistemicColimitSynthesis.standardMasterEpistemicColimitCertificate"
+      ],
+      "returncode": 0,
+      "outputSha256": "fcb6ce0a2b0f4ca92554b34f2f9f92fe0e23d09754e991853a81da5109cbae46",
+      "output": "'MasterEpistemicColimitSynthesis.matJ_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MasterEpistemicColimitSynthesis.projLeft_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MasterEpistemicColimitSynthesis.projRight_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MasterEpistemicColimitSynthesis.projLeft_mul_projRight' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MasterEpistemicColimitSynthesis.projRight_mul_projLeft' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MasterEpistemicColimitSynthesis.projLeft_add_projRight' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MasterEpistemicColimitSynthesis.nullPlus_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MasterEpistemicColimitSynthesis.nullMinus_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MasterEpistemicColimitSynthesis.nullPlus_mul_nullMinus' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MasterEpistemicColimitSynthesis.nullMinus_mul_nullPlus' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MasterEpistemicColimitSynthesis.witt_anticomm' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MasterEpistemicColimitSynthesis.witt_bracket' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MasterEpistemicColimitSynthesis.matrix_two_noncommutative' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MasterEpistemicColimitSynthesis.blockEmbed_add' depends on axioms: [propext, Quot.sound]\n'MasterEpistemicColimitSynthesis.blockEmbed_sub' depends on axioms: [propext, Quot.sound]\n'MasterEpistemicColimitSynthesis.blockEmbed_mul' depends on axioms: [propext, Classical.choice, Quot.sound]\n'MasterEpistemicColimitSynthesis.blockEmbed_one' depends on axioms: [propext, Quot.sound]\n'MasterEpistemicColimitSynthesis.blockEmbed_zero' depends on axioms: [propext, Quot.sound]\n'MasterEpistemicColimitSynthesis.blockEmbed_injective' depends on axioms: [propext, Quot.sound]\n'MasterEpistemicColimitSynthesis.blockEmbed_preserves_involution' depends on axioms: [propext,\n'MasterEpistemicColimitSynthesis.blockEmbed_preserves_idempotent' depends on axioms: [propext,\n'MasterEpistemicColimitSynthesis.blockEmbed_preserves_orthogonality' depends on axioms: [propext,\n'MasterEpistemicColimitSynthesis.blockEmbed_preserves_partition' depends on axioms: [propext, Quot.sound]\n'MasterEpistemicColimitSynthesis.blockEmbed_preserves_nilpotent' depends on axioms: [propext,\n'MasterEpistemicColimitSynthesis.blockEmbed_preserves_anticomm' depends on axioms: [propext,\n'MasterEpistemicColimitSynthesis.blockEmbed_preserves_bracket' depends on axioms: [propext,\n'MasterEpistemicColimitSynthesis.blockEmbed_preserves_noncommutativity' depends on axioms: [propext,\n'MasterEpistemicColimitSynthesis.matrix_embedded_noncommutative' depends on axioms: [propext,\n'MasterEpistemicColimitSynthesis.ColimitCoconeSystem.lift_stage_property_to_colimit' does not depend on any axioms\n'MasterEpistemicColimitSynthesis.compile_master_epistemic_colimit_synthesis' depends on axioms: [propext,\n'MasterEpistemicColimitSynthesis.standardMasterEpistemicColimitCertificate' depends on axioms: [propext,"
+    }
+  },
+  "review": {
+    "status": "kernel_checked_pending_owner_review",
+    "promotionAllowed": false
+  },
+  "score": {
+    "status": "policy_estimate",
+    "value": 1.0,
+    "meaning": "scheduling metadata only; not probability or proof authority",
+    "defect": 0.0,
+    "policyVersion": "opengauss-v1"
+  },
+  "receiptSha256": "9047631303141b6f1f7f3615d15d3880b1fde72427cd36cb162cfd04a722d322"
+}

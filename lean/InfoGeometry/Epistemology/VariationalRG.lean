@@ -41,9 +41,8 @@ uniqueness theorem on statistical manifolds:
    Microscopic configurations along the fiber `ker(T)` produce identical macroscopic expectations
    for any coarse-grained observable, formalizing the emergence of gauge invariants.
 
-6. **Master Certificate**:
-   Bundles all verified properties into `VariationalRGCertificate` with zero `sorry` and
-   standard Mathlib foundational axioms.
+6. **Owned results**:
+   The results below are exposed as individual theorems at their mathematical owners.
 -/
 
 namespace InfoGeometry.Epistemology.VariationalRG
@@ -291,37 +290,5 @@ theorem fiber_observable_invariance {α β : Type*} [Fintype α] [Fintype β]
   apply Finset.sum_congr rfl
   intro b _
   rw [h_equiv b]
-
-/-! ### 6. Master Certificate: Variational Renormalization Group -/
-
-/-- Master certificate bundling the verified components of the Variational RG Machine. -/
-structure VariationalRGCertificate : Prop where
-  pushforward_normalized : ∀ {α β : Type*} [Fintype α] [Fintype β]
-    (T : MarkovKernel α β) (P : ProbDist α),
-    ∑ b, (pushforward T P).p b = 1
-  chentsov_contraction : ∀ {α β : Type*} [Fintype α] [Fintype β]
-    (T : MarkovKernel α β) (P Q : ProbDist α),
-    distTV (pushforward T P) (pushforward T Q) ≤ distTV P Q
-  rbm_activation_normalized : ∀ {α : Type*} [Fintype α] (z : α → ℝ) (a : α),
-    ∑ b : Bool, (rbmBernoulliKernel z).T a b = 1
-  rg_composition_eq : ∀ {α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]
-    (T1 : MarkovKernel α β) (T2 : MarkovKernel β γ) (P : ProbDist α),
-    (pushforward (compose T1 T2) P).p = (pushforward T2 (pushforward T1 P)).p
-  rg_depth_monotonicity : ∀ {α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]
-    (T1 : MarkovKernel α β) (T2 : MarkovKernel β γ) (P Q : ProbDist α),
-    distTV (pushforward (compose T1 T2) P) (pushforward (compose T1 T2) Q) ≤
-      distTV (pushforward T1 P) (pushforward T1 Q) ∧
-    distTV (pushforward T1 P) (pushforward T1 Q) ≤ distTV P Q
-  fiber_gauge_annihilation : ∀ {α β : Type*} [Fintype α] [Fintype β]
-    (T : MarkovKernel α β) (v1 v2 : α) (f : β → ℝ),
-    FiberEquivalent T v1 v2 → (∑ b, T.T v1 b * f b) = (∑ b, T.T v2 b * f b)
-
-theorem compile_variational_rg : VariationalRGCertificate where
-  pushforward_normalized := fun T P => (pushforward T P).sum_one
-  chentsov_contraction := markov_tv_contraction
-  rbm_activation_normalized := fun z a => (rbmBernoulliKernel z).sum_one a
-  rg_composition_eq := pushforward_compose
-  rg_depth_monotonicity := rg_layer_distinguishability_monotonicity
-  fiber_gauge_annihilation := fun T v1 v2 f h => fiber_observable_invariance T v1 v2 h f
 
 end InfoGeometry.Epistemology.VariationalRG

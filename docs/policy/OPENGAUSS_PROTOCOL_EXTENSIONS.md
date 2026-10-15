@@ -24,7 +24,7 @@ The **OpenGauss Protocol Extensions** transition the repository from a manual pr
          Symbolic Ore & Motifs   ==========> High-temperature generative exploration
                                       |
          [Stage 2: Albedo]            v   (Adversarial Compression / Refuter)
-         Pauli Screening Gate    ==========> 15-Trap Catalog & Counterexample screening
+         Pauli Screening Gate    ==========> 17-Trap Catalog (T1-T17) & Gate 2.5 Witnessing
                                       |
          [Stage 3: Citrinitas]        v   (Constitutional Legislative Gate)
          Manifest Locking        ==========> Consumer-minimal signatures & glue compile
@@ -118,7 +118,7 @@ In traditional proof agents, a failed proof attempt produces empty failure or ca
      * **Conserved Proof Matter (Gold)**: All intermediate helper lemmas that compiled with 0 sorry and valid axioms are saved into the permanent lineage log (`docs/policy/lineage_skeleton.md`).
      * **Frontier Residue (Slag)**: The exact tactic failure, type clash, counterexample witness, or trap violation is distilled into a `TypedObstructionPacket`.
 2. **The `TypedObstructionPacket` JSON Schema**:
-   * Every failed trajectory is saved to `artifacts/residue/` and appended to `docs/black_books/residue_shadow.md`.
+   * Every failed trajectory is saved to `artifacts/residue_quarantine/` and appended to `docs/black_books/residue_shadow.md`.
    * The schema permanently binds future prover generations:
 
 ```json
@@ -211,11 +211,11 @@ The repository strictly rejects naive coordinate metrics, standalone Euclidean n
 To maintain immaculate code quality across thousands of declarations without manual audit fatigue:
 
 1. **Companion Audit Emitters**:
-   * Every formalized Lean owner file must be accompanied by an automated audit emitter command (`opengauss_cli certify <file>`).
-   * The emitter runs non-destructive AST and environment inspections to verify:
+   * Every formalized Lean owner file must be accompanied by an automated audit emitter command (`python3 tools/infra/opengauss_cli.py certify --file <file> --write-audit --verify-kernel`).
+   * The emitter and Gate 4 reviewer (`review <file> --gate GATE_4 --verify-kernel`) run static AST checks followed by locked kernel verification to verify:
      * Axiom purity: `#print axioms <decl>` $\subseteq \{\texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}\}$.
      * Zero sorries, zero admits, zero vacuous wrappers (`Prop := True`).
-     * Zero 15-Trap violations (T1–T15).
+     * Zero 17-Trap violations (T1–T17), including T16 (Anti-Surrogate), Gate 2.5 / T17 (Model Witnessing), and pre-commit proof-proxy rules.
 2. **Lean Metaprogramming Attribute Support**:
    * Formal modules may expose declarations annotated with repo-native attributes:
      * `@[owner_target_tag]`: Declares the canonical owner of a mathematical theorem.
@@ -235,19 +235,19 @@ The OpenGauss unified command suite provides 15 mathematically grounded, non-des
 |---|---|---|---|---|
 | **1** | `/prove` | Top-Down Assume-and-Recurse Prover | Headline signature, target type | Decomposed lemma plan, glue proof, Anti-T11 check |
 | **2** | `/check` | Counterexample Hunter & Consistency Auditor | Expression, candidate hypotheses | Consistency report, counterexample risk rating |
-| **3** | `/refute` | Adversarial Screener (15-Trap Catalog) | Lean source files / directories | Trap violations report (T1–T15), REJECT/PASS verdict |
+| **3** | `/refute` | Adversarial Screener (17-Trap Catalog) | Lean source files / directories | Trap violations report (T1–T17 & Gate 2.5), REJECT/PASS verdict |
 | **4** | `/draft` | Skeleton Drafter | Headline name, signature, sublemmas | Lean declaration skeleton with explicit leaf sorries |
-| **5** | `/review` | Independent QMS Auditor (Gate 2 / Gate 4) | Target Lean file, Gate specifier | QMS-SOP-IAA-001 audit report, axiom scan, verdict |
-| **6** | `/checkpoint`| State Saver & Continuous Tracker | Commit message, dry-run flag | Staged git index (`git add -A`), CheckpointReceipt JSON |
+| **5** | `/review` | Independent QMS Auditor (Gate 2 / Gate 4) | Target Lean file, `--gate`, `--verify-kernel` | QMS-SOP-IAA-001 audit report, locked kernel & axiom verdict |
+| **6** | `/checkpoint`| State Saver & Continuous Tracker | Commit message, `--stage-path` | Staged git index (`git add`), CheckpointReceipt JSON |
 | **7** | `/refactor`| Proof Refactorer & Redundancy Cleaner | Lean source file | Monolithic block (>25 lines) extraction plan |
 | **8** | `/golf` | Proof Optimizer | Lean source file | Tactic compression suggestions (`rfl`, `ring`) |
 | **9** | `/autoprove`| Autonomous Multi-Cycle Engine | Target file, max cycles | Iterative proof state, M10 Anti-Compaction re-hydration |
-| **10**| `/formalize`| Two-Phase Interactive Synthesis | Informal math spec, phase (1/2) | Categorical anchor mapping, synthesized Lean code |
-| **11**| `/autoformalize`| End-to-End CAS to Lean Translator | CAS type (SymPy/M2/GAP), expr | Kernel-verified Lean 4 theorem with 0 sorry |
+| **10**| `/formalize`| Two-Phase Interactive Synthesis | Informal math spec, phase (1/2) | Categorical anchor mapping, typed target check |
+| **11**| `/autoformalize`| End-to-End CAS to Lean Candidate Translator | CAS type (SymPy/M2/GAP), expr | Candidate Lean 4 theorem (`verified: false`) for kernel check |
 | **12**| `/handoff` | Cross-Session Context Preserver | Active targets, checkpoints, dead routes| Serialized `PLAN.md` markdown with anchor records |
 | **13**| `/discover`| Pre-Flight Discovery & Anti-Duplication Gate | Candidate concept, signature query | Canonical Mathlib/repo matches, import recommendations |
-| **14**| `/quarantine`| Residue Quarantine & Obstruction Emitter | Failed proof session / compile log | `TypedObstructionPacket` JSON, Conserved Core extraction |
-| **15**| `/certify` | Companion Certification Emitter | Verified Lean target file | `AuditCertificateReceipt` JSON, `#print axioms` log |
+| **14**| `/quarantine`| Residue Quarantine & Obstruction Emitter | Failed proof session / trap violation | `TypedObstructionPacket` JSON in `artifacts/residue_quarantine/` |
+| **15**| `/certify` | Companion Certification Emitter | Verified Lean file, `--write-audit`, `--verify-kernel` | `<Module>Audit.lean`, kernel-verified `#print axioms` receipt |
 
 ---
 
@@ -336,6 +336,8 @@ The OpenGauss unified command suite provides 15 mathematically grounded, non-des
 * **Gate Modes**:
   * `--gate GATE_2`: Adversarial pre-proof audit. Rejects for trap errors; flags `REQUEST_CHANGES` on warnings, sorries, or scope inflation keywords ("proves quantum gravity", "unifies everything").
   * `--gate GATE_4`: Static preflight by default. A clean result is `STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED` (`kernel_checked: false`), not acceptance. Add `--verify-kernel` to build the owner and run its qualified `#print axioms` audit under the shared build lock; disallowed axioms or compile failures produce `REJECTED`.
+* **Source truth gates**: Both review gates reject repository-authored `axiom`/`postulate`, `sorry`, `admit`, and `sorryAx` tokens after Lean comments and strings are removed. Kernel audit output may include Lean/Mathlib foundational axioms, but those are dependencies of checked proofs and are not permission to declare project axioms. Review also detects theorem constructors that merely assemble a multi-field `Prop` structure from field proofs; the individual owner theorems must be reviewed directly. This structural check does not depend on names such as `Certificate`, `law`, or `witness`, and does not reject a predicate structure that has no aggregate theorem constructor.
+* **Commit-hook parity**: Run `python3 tools/quality/proof_proxy_staged_gate.py` during `/review` or `/checkpoint` before commit. It inspects the staged Lean source and enforces the same no-axiom/no-hole and aggregate-proof-wrapper checks as the pre-commit hook. It is a static source gate; only `--verify-kernel` establishes compilation and theorem axiom evidence.
 * **CLI Invocation**:
   ```bash
   python3 tools/infra/opengauss_cli.py review lean/InfoGeometry/Canonical/TensorTowerColimit.lean --gate GATE_4 --verify-kernel --json
@@ -488,23 +490,27 @@ The OpenGauss workflow operates under strict QMS-SOP-IAA-001 role separation: Dr
   Skeleton & Consumer Glue       ===========> /draft, /prove (Anti-T11 Law)
                                       |
   [GATE 2: Adversarial Audit]         v
-  15-Trap & Counterexample Hunt  ===========> /refute, /check, /review --gate GATE_2
+  17-Trap & Counterexample Hunt  ===========> /refute --strict, /check, /review --gate GATE_2
+                                      |
+  [GATE 2.5: Model Witnessing]        v
+  Non-Degeneracy & T17 Check     ===========> Constructive inhabitant / Inhabited (0 sorry/axiom)
                                       |
                      +----------------+----------------+
                      |                                 |
-              [GATE 2 PASS]                     [GATE 2 REJECT]
+          [GATE 2 & 2.5 PASS]               [GATE 2 / 2.5 REJECT]
                      v                                 v
   [GATE 3: Corrective Revision]         [Pillar II Quarantine Loop]
-  Targeted leaf proof closure           Emit TypedObstructionPacket
-  via /autoprove, /refactor, /golf      Update bannedSearchDirections
+  Targeted leaf proof closure           Emit TypedObstructionPacket (/quarantine)
+  via /autoprove, /refactor, /golf      into artifacts/residue_quarantine/
                      |                                 |
                      +----------------+----------------+
                                       |
   [GATE 4: Independent Acceptance]    v
-  Zero-Sorry & Axiom Certification ===========> /certify, /review --gate GATE_4
+  Locked Kernel & Axiom Audit    ===========> /review --gate GATE_4 --verify-kernel
+                                              /certify --write-audit --verify-kernel
                                       |
   [Continuous Tracking Checkpoint]    v
-  Locked Lake build & Git Staging ===========> /checkpoint (`git add -A`)
+  Locked Lake build & Git Staging ===========> /checkpoint (--stage-path / git add)
 ```
 
 ### Gate 0: Pre-Flight Discovery Gate (`/discover`)
@@ -512,7 +518,7 @@ The OpenGauss workflow operates under strict QMS-SOP-IAA-001 role separation: Dr
 * **Mandatory Action**:
   * Execute `/discover` to search Mathlib and the local declaration DAG.
   * Check existing categorical owners in `docs/CATEGORICAL_INFRASTRUCTURE_MAP.md`.
-  * Ingest any existing `TypedObstructionPacket` files in `artifacts/residue/` to retrieve `bannedSearchDirections`.
+  * Ingest any existing `TypedObstructionPacket` files in `artifacts/residue_quarantine/` to retrieve `bannedSearchDirections`.
 * **Pass Criterion**: Zero duplication of existing theorems; target signature satisfies Goutev's Relational Invariant Formulation (Pillar III).
 
 ### Gate 1: Formal Draft & Skeleton Generation (`/draft`, `/prove`)
@@ -525,26 +531,28 @@ The OpenGauss workflow operates under strict QMS-SOP-IAA-001 role separation: Dr
   * Write draft strictly into a sandbox environment (`scratch/`), **never touching live owner files**.
 * **Pass Criterion**: Skeleton compiles cleanly in Lean 4 with explicit leaf sorries.
 
-### Gate 2: Independent Adversarial Review (`/refute`, `/check`, `/review`)
+### Gate 2 & Gate 2.5: Independent Adversarial Review & Model Witnessing (`/refute`, `/check`, `/review`)
 * **Agent Role**: Independent Audit Agent (**A-A**) — non-overlapping with G-A.
 * **Mandatory Action**:
-  * Screen draft against the 15-Trap Catalog using `/refute`.
+  * Screen draft against the **17-Trap Catalog (T1–T17)** and Git pre-commit/pre-push hook rules using `/refute <file> --strict`.
+  * Enforce **Trap T16 (Anti-Surrogate / Operator-Algebraic Root)**: verify zero scalar proxy structs, zero pre-commutator homomorphism collapses, presence of a closed carrier-matched non-commutativity witness, and zero unprojected scalar tactic misuses (`ring`/`linarith`).
+  * Enforce **Gate 2.5 / Trap T17 (Mandatory Model Witnessing & Non-Degeneracy)**: verify that every declared `structure` or `class` has a closed constructive inhabitant or `Inhabited` / `Nonempty` instance free of ambient `section` `variable` dependencies and transitively free of local or imported `axiom`, `opaque`, `sorry`, or `admit` taint.
   * Attempt counterexample models via `/check`.
-  * Perform line-by-line audit using `/review --gate GATE_2`.
+  * Perform line-by-line static preflight audit using `/review <file> --gate GATE_2`.
 * **Branching Protocol**:
   * **If PASS**: Advance to Gate 3 for leaf proof closure.
   * **If REJECT / OBSTRUCTED**:
     1. Invoke `/quarantine` immediately.
     2. Split trajectory into Conserved Core (Gold) and Frontier Residue (Slag).
-    3. Emit `TypedObstructionPacket` JSON to `artifacts/residue/`.
-    4. Register banned search tactics into `PLAN.md`.
+    3. Emit `TypedObstructionPacket` JSON to `artifacts/residue_quarantine/`.
+    4. Register banned search tactics into `PLAN.md` via `/handoff`.
     5. Return to Gate 1 with updated constraints.
 
 ### Gate 3: Corrective Revision & Leaf Closure (`/autoprove`, `/refactor`, `/golf`)
 * **Agent Role**: Prover Worker Swarm.
 * **Mandatory Action**:
   * Close leaf sorries using native Mathlib lemmas and tactic chains (`ring`, `linarith`, `simp`, `apply`).
-  * Enforce Anti-Compaction M10 Re-Hydration: log dead routes and reload state from disk on context refresh.
+  * Enforce Anti-Compaction M10 Re-Hydration: log dead routes and reload state from `artifacts/residue_quarantine/` and disk on context refresh.
   * Refactor monolithic blocks (>25 lines) using `/refactor`.
   * Optimize tactic latency via `/golf`.
 * **Pass Criterion**: All leaf sorries closed; zero sorries remain in the sandbox file.
@@ -552,13 +560,13 @@ The OpenGauss workflow operates under strict QMS-SOP-IAA-001 role separation: Dr
 ### Gate 4: Independent Acceptance QA & Automated Certification (`/certify`, `/review`)
 * **Agent Role**: Acceptance Quality Agent (**QA-A**) — non-overlapping with G-A and A-A.
 * **Mandatory Action**:
-  * Run `/review --gate GATE_4 --verify-kernel` to perform static checks and locked kernel verification.
-  * Execute `/certify --verify-kernel` under the shared build lock (`run_locked_lake_build.py`) when a standalone certification receipt is needed.
-  * Verify `#print axioms` output is strictly subset of:
+  * Run `/review <file> --gate GATE_4 --verify-kernel` to perform static checks plus locked kernel compilation and `#print axioms` verification (note: without `--verify-kernel`, `/review --gate GATE_4` returns `STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED`, which is not acceptance).
+  * Execute `/certify --file <file> --write-audit --verify-kernel` under the shared build lock (`run_locked_lake_build.py`) to generate and kernel-check the companion `<Module>Audit.lean` script.
+  * Verify `#print axioms` output for every public declaration is strictly a subset of:
     `[propext, Classical.choice, Quot.sound]`
-  * If certified, promote sandbox code to live owner file via an ordinary, clean patch.
-  * Run `/checkpoint` to stage changes into git (`git add -A`) and emit `AuditCertificateReceipt`.
-* **Pass Criterion**: Exit code 0, 100% kernel verification, pristine Git staging.
+  * If certified, promote sandbox code to the live owner file via an ordinary, clean patch.
+  * Run `/checkpoint` to stage changes into git (`--stage-path`) and emit `CheckpointReceipt`.
+* **Pass Criterion**: Exit code 0, 100% locked kernel verification (`kernel_checked: true`), pristine Git staging.
 
 ---
 
@@ -566,15 +574,15 @@ The OpenGauss workflow operates under strict QMS-SOP-IAA-001 role separation: Dr
 
 ```text
 [ ] STEP 0: Run /discover. Check Mathlib and Categorical Map. Do not reinvent existing symbols.
-[ ] STEP 1: Ingest active TypedObstructionPackets. Respect bannedSearchDirections.
+[ ] STEP 1: Ingest active TypedObstructionPackets from artifacts/residue_quarantine/. Respect bannedSearchDirections.
 [ ] STEP 2: Verify Goutev's Principle: Is the observable relational, projective, or an intertwining map?
 [ ] STEP 3: Write skeleton to scratch/ sandbox using /draft. Compile glue proof immediately.
-[ ] STEP 4: Submit to independent A-A for /refute and /check against 15-Trap Catalog.
-[ ] STEP 5: On failure, invoke /quarantine to preserve Core Gold and log Obstruction Slag.
-[ ] STEP 6: Close leaf lemmas via /autoprove. Refactor monolithic blocks with /refactor.
-[ ] STEP 7: Submit to independent QA-A for /certify and /review --gate GATE_4.
-[ ] STEP 8: Promote to live owner file only after 0 sorry, standard axioms confirmed.
-[ ] STEP 9: Immediately run /checkpoint (git add -A) to enforce Continuous Tracking.
+[ ] STEP 4: Submit to independent A-A for /refute --strict, /check, and /review --gate GATE_2 against the 17-Trap Catalog (T1-T17), including T16 anti-surrogate gates, Gate 2.5 / T17 model witnessing, and pre-commit proof-proxy rules.
+[ ] STEP 5: On failure, invoke /quarantine to preserve Core Gold and log Obstruction Slag in artifacts/residue_quarantine/.
+[ ] STEP 6: Close leaf lemmas via /autoprove. Refactor monolithic blocks (>25 lines) with /refactor and optimize with /golf.
+[ ] STEP 7: Submit to independent QA-A for /review --gate GATE_4 --verify-kernel and /certify --write-audit --verify-kernel.
+[ ] STEP 8: Promote to live owner file only after 0 sorry, 0 traps, and standard axioms confirmed by the Lean kernel.
+[ ] STEP 9: Immediately run /checkpoint (--stage-path) to stage verified files into Git.
 ```
 
 ---

@@ -21,6 +21,4 @@ open InfoGeometry.Epistemology.VariationalRG
 #print axioms pushforward_compose
 #print axioms rg_layer_distinguishability_monotonicity
 #print axioms fiber_observable_invariance
-#print axioms compile_variational_rg
-
 end InfoGeometry.Epistemology.VariationalRGAudit

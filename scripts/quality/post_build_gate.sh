@@ -75,7 +75,7 @@ if [ "$MODE" = "incremental" ]; then
     fi
 
     echo "▶ Incremental diff analysis against: $BASE_REF"
-    CHANGED_FILES=$(git diff --name-only "$BASE_REF" HEAD 2>/dev/null || true)
+    CHANGED_FILES=$(git diff --diff-filter=d --name-only "$BASE_REF" HEAD 2>/dev/null || true)
     CHANGED_LEAN_FILES=$(echo "$CHANGED_FILES" | grep '^lean/.*\.lean$' || true)
 
     if [ -z "$CHANGED_LEAN_FILES" ]; then

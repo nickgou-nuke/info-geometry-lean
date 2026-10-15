@@ -29,4 +29,3 @@ open InfoGeometry.QuantumContext.MatrixGNS
 #print axioms rhoHalf_mul_rhoHalf
 #print axioms rhoHalfInv_mul_rhoHalfInv
 #print axioms tomita_duality
-#print axioms compile_matrix_gns

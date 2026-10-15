@@ -16,6 +16,7 @@ import pytest
 from tools.infra.opengauss_screener import (
     TrapViolation,
     _has_closed_noncommutativity_witness,
+    check_authored_axioms_and_holes,
     main as screener_main,
     screen_lean_content,
     screen_lean_file,
@@ -1135,3 +1136,20 @@ def test_screen_wavefront_kms_klein_duality_clean():
     violations = screen_lean_file(target)
     errors = [v for v in violations if v.severity == "ERROR"]
     assert len(errors) == 0, f"Expected 0 errors, found: {errors}"
+
+
+def test_qms_source_gate_rejects_repo_axioms_and_holes_but_ignores_comments():
+    code = '''
+/- axiom commentAxiom : True
+   theorem fake : True := by sorry -/
+axiom localAxiom : True
+theorem unfinished : True := by
+  sorry
+'''
+    violations = check_authored_axioms_and_holes(code)
+    assert [v.trap_id for v in violations] == ["QMS_AXIOM", "QMS_HOLE"]
+
+
+def test_qms_source_gate_ignores_foundational_axiom_names_in_comments():
+    code = "-- allowed kernel footprint: propext, Classical.choice, Quot.sound\n"
+    assert check_authored_axioms_and_holes(code) == []

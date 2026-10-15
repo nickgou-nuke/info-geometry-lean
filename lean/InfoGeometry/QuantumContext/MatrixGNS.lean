@@ -356,34 +356,4 @@ theorem tomita_duality (w : ι → ℝ) (hw : ∀ i, 0 < w i) (X : Matrix ι ι 
     _ = Matrix.diagonal (fun i => (w i)⁻¹) * X * Matrix.diagonal w := by
         rw [rhoHalfInv_mul_rhoHalfInv w hw, rhoHalf_mul_rhoHalf w hw]
 
-/-! ### 5. Master Integration Certificate -/
-
-/-- Master certificate verifying the Matrix GNS and Tomita–Takesaki formalization. -/
-structure MatrixGNSCertificate (ι : Type*) [Fintype ι] [DecidableEq ι] : Prop where
-  ideal_left_mul : ∀ (w : ι → ℝ) (hw : ∀ i, 0 ≤ w i) (A X : Matrix ι ι ℝ),
-    gnsLeftIdeal (Matrix.diagonal w) A → gnsLeftIdeal (Matrix.diagonal w) (X * A)
-  ideal_faithful : ∀ (w : ι → ℝ) (hw : ∀ i, 0 < w i) (A : Matrix ι ι ℝ),
-    gnsLeftIdeal (Matrix.diagonal w) A ↔ A = 0
-  expectation_reproduction : ∀ (rho A : Matrix ι ι ℝ),
-    gnsInner rho gnsCyclicVector (A * gnsCyclicVector) = Matrix.trace (rho * A)
-  cyclic_separating : ∀ (A : Matrix ι ι ℝ),
-    A * gnsCyclicVector = 0 ↔ A = 0
-  tomita_inv : ∀ (w : ι → ℝ) (hw : ∀ i, 0 < w i) (X : Matrix ι ι ℝ),
-    tomitaJ w (tomitaJ w X) = X
-  tomita_anti_mul : ∀ (w : ι → ℝ) (hw : ∀ i, 0 < w i) (A B : Matrix ι ι ℝ),
-    tomitaJ w (A * B) = tomitaJ w B * tomitaJ w A
-  tomita_duality_eq : ∀ (w : ι → ℝ) (hw : ∀ i, 0 < w i) (X : Matrix ι ι ℝ),
-    tomitaJ w (modularDelta w (tomitaJ w X)) = modularDeltaInv w X
-
-/-- Constructive instance certifying the Matrix GNS and Tomita modular architecture. -/
-theorem compile_matrix_gns (ι : Type*) [Fintype ι] [DecidableEq ι] :
-    MatrixGNSCertificate ι where
-  ideal_left_mul := fun w hw A X hA => gnsLeftIdeal_mul_left w hw A X hA
-  ideal_faithful := fun w hw A => gnsLeftIdeal_faithful w hw A
-  expectation_reproduction := fun rho A => gns_expectation_reproduction rho A
-  cyclic_separating := fun A => gns_cyclic_vector_separating A
-  tomita_inv := fun w hw X => tomitaJ_involutive w hw X
-  tomita_anti_mul := fun w hw A B => tomitaJ_mul w hw A B
-  tomita_duality_eq := fun w hw X => tomita_duality w hw X
-
 end InfoGeometry.QuantumContext.MatrixGNS

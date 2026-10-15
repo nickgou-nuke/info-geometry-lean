@@ -34,8 +34,15 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
+# Support both `python -m tools.infra.opengauss_cli` and the documented direct
+# script invocation, where Python otherwise puts only `tools/infra` on sys.path.
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
 from tools.build_lock import acquire_build_lock
 from tools.pathing import repo_root as canonical_repo_root
+from tools.quality.proof_proxy_staged_gate import aggregate_prop_constructors
 
 # Import existing screener utilities
 try:
@@ -346,6 +353,25 @@ def review_file(
     # Screen against 15-Trap catalog
     traps = screen_lean_content(content, filename=str(path))
     trap_dicts = [asdict(t) for t in traps]
+    for type_name, constructor in aggregate_prop_constructors(content):
+        traps.append(TrapViolation(
+            "QMS_PROP_BUNDLE", "Aggregate proposition proof wrapper", 0, constructor,
+            f"Theorem constructs `{type_name}` by bundling field proofs. Review the individual owner theorems directly.",
+            "ERROR",
+        ))
+        trap_dicts.append(asdict(traps[-1]))
+    hook_root = Path(repo_root) if repo_root is not None else canonical_repo_root()
+    hook_check = subprocess.run(
+        [sys.executable, "tools/quality/proof_proxy_staged_gate.py"],
+        cwd=hook_root, capture_output=True, text=True, check=False,
+    )
+    if hook_check.returncode:
+        detail = (hook_check.stderr or hook_check.stdout).strip()
+        traps.append(TrapViolation(
+            "QMS_STAGED_HOOK", "Staged pre-commit quality gate", 0, detail[:500],
+            "The staged Lean changes fail the repository pre-commit proof/QMS gate.", "ERROR",
+        ))
+        trap_dicts.append(asdict(traps[-1]))
 
     verification_status = "not_requested"
     kernel_checked = False
@@ -403,6 +429,7 @@ class CheckpointReceipt:
     git_head: str
     status: str
     message: str
+    staged_quality_gate: str
 
 
 def execute_checkpoint(
@@ -422,6 +449,14 @@ def execute_checkpoint(
 
     if not dry_run and stage_paths:
         subprocess.run(["git", "add", "--", *stage_paths], check=True)
+
+    quality_gate = subprocess.run(
+        [sys.executable, "tools/quality/proof_proxy_staged_gate.py"],
+        cwd=canonical_repo_root(), capture_output=True, text=True, check=False,
+    )
+    quality_gate_status = "passed" if quality_gate.returncode == 0 else "rejected"
+    if quality_gate.returncode != 0:
+        message = f"{message} | staged QMS gate rejected: {(quality_gate.stderr or quality_gate.stdout).strip()}"
 
     # Get status after staging
     post_status_proc = subprocess.run(
@@ -463,8 +498,9 @@ def execute_checkpoint(
         unstaged_files=unstaged,
         untracked_files=untracked,
         git_head=git_head,
-        status="CHECKPOINT_SAVED" if not dry_run else "DRY_RUN",
+        status=("CHECKPOINT_SAVED" if not dry_run else "DRY_RUN") if quality_gate.returncode == 0 else "CHECKPOINT_REJECTED",
         message=message,
+        staged_quality_gate=quality_gate_status,
     )
 
 
@@ -1547,7 +1583,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 print(f"    + {f}")
             if len(receipt.staged_files) > 10:
                 print(f"    ... and {len(receipt.staged_files) - 10} more.")
-        return 0
+        return 1 if receipt.staged_quality_gate != "passed" else 0
 
     elif cmd == "refactor":
         p = Path(args.path)

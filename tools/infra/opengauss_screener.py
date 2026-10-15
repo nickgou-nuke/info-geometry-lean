@@ -480,6 +480,35 @@ def _strip_lean_comments_and_strings(source: str) -> str:
     return "".join(chars)
 
 
+def check_authored_axioms_and_holes(source: str) -> list[TrapViolation]:
+    """Reject repo-authored axioms and proof holes in Lean source.
+
+    This is a source gate. The allowed foundational axiom footprint of a
+    checked theorem is audited separately with Lean's `#print axioms` output.
+    """
+    clean = _strip_lean_comments_and_strings(source)
+    violations: list[TrapViolation] = []
+    axiom_decl = re.compile(
+        r"^\s*(?:(?:private|protected|noncomputable)\s+)*(?:axiom|postulate)\s+"
+        r"([A-Za-z_][A-Za-z0-9_'.]*)\b",
+        re.MULTILINE,
+    )
+    for match in axiom_decl.finditer(clean):
+        line = clean.count("\n", 0, match.start()) + 1
+        violations.append(TrapViolation(
+            "QMS_AXIOM", "Repository-authored axiom", line, match.group(0).strip(),
+            "Repository source must prove results with Lean/Mathlib theorems; do not declare axioms.",
+            "ERROR",
+        ))
+    for match in re.finditer(r"\b(?:sorry|admit|sorryAx)\b", clean):
+        line = clean.count("\n", 0, match.start()) + 1
+        violations.append(TrapViolation(
+            "QMS_HOLE", "Unproved theorem placeholder", line, match.group(0),
+            "Remove proof holes and provide a kernel-checked proof.", "ERROR",
+        ))
+    return violations
+
+
 def _witness_has_only_typeclass_binders(
     binders_and_name: str,
     *,
@@ -1138,22 +1167,54 @@ def _has_resolved_import_witness(
     *,
     required_carriers: set[tuple[str, str, str]] | None = None,
 ) -> bool:
-    """Resolve repo-local Lean imports and inspect their theorem contracts."""
+    """Inspect direct repo-local imports for a carrier-matched witness.
+
+    A witness relied on by an owner should be in its explicit imports. Walking
+    the transitive repository graph here made a local review expand into a
+    repository-wide source scan, so this check deliberately follows direct
+    imports only; imported modules are independently screened in their own
+    review/build lane.
+    """
     if filename == "<unknown>":
         return False
     repo_root = Path(__file__).resolve().parents[2]
     source = _strip_lean_comments_and_strings(source)
     subject_carriers = required_carriers or _required_matrix_carriers(source)
-    imported_source = _repo_import_source_closure(source, repo_root)
-    if imported_source and any(
-        _has_closed_noncommutativity_witness(
-            imported_source,
-            exported_only=True,
-            required_carriers={carrier},
+    imported_modules = [
+        module
+        for imported_line in re.findall(
+            r"^\s*import\s+([A-Za-z0-9_. ]+)\s*$", source, re.MULTILINE
         )
-        for carrier in subject_carriers
-    ):
-        return True
+        for module in imported_line.split()
+    ]
+    for module in imported_modules:
+        relative = Path(*module.split("."))
+        roots = (repo_root / "lean", repo_root / "proofs")
+        if module.startswith("proofs."):
+            relative = Path(*module.removeprefix("proofs.").split("."))
+            roots = (repo_root / "proofs",)
+        candidate = next(
+            (root / relative.with_suffix(".lean") for root in roots
+             if (root / relative.with_suffix(".lean")).is_file()),
+            None,
+        )
+        if candidate is None:
+            continue
+        try:
+            imported_source = _strip_lean_comments_and_strings(
+                candidate.read_text(encoding="utf-8")
+            )
+        except OSError:
+            continue
+        if any(
+            _has_closed_noncommutativity_witness(
+                imported_source,
+                exported_only=True,
+                required_carriers={carrier},
+            )
+            for carrier in subject_carriers
+        ):
+            return True
     return False
 
 
@@ -1676,6 +1737,7 @@ def screen_lean_content(
     lines = content.splitlines()
 
     # 1. Structural checks
+    violations.extend(check_authored_axioms_and_holes(content))
     violations.extend(check_hypothesis_packaging(lines))
     violations.extend(check_unused_hypothesis_binders(content))
     violations.extend(check_scalar_surrogates(lines))

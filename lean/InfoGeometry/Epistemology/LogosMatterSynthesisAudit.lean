@@ -30,12 +30,7 @@ open InfoGeometry.Clifford.Cl55PeirceMoERouting
 #print axioms logos_neurosymbolic_galois_laws
 #print axioms InfoGeometry.Meta.NeuroSymbolic.SymbolicObservation.observation_preimage_image_eq_self_iff_saturated
 #print axioms InfoGeometry.Meta.NeuroSymbolic.SymbolicObservation.observation_image_preimage_eq_self_iff_realized
-#print axioms compile_logos_matter_glue
-#print axioms logos_matter_synthesis_certified
-
-/-- Verification that the master certificate's components can be applied directly. -/
-theorem audit_synthesis_verified :
-    sigmoid 0 + sigmoid (-0) = 1 :=
-  logos_matter_synthesis_certified.sigmoid_partition 0
+example : sigmoid 0 + sigmoid (-0) = 1 :=
+  logos_softmax_binary_normalized 0
 
 end InfoGeometry.Epistemology.LogosMatterSynthesis.Audit

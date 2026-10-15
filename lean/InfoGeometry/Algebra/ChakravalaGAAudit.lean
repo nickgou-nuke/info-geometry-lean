@@ -1,32 +1,34 @@
-/-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
-import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
-import Mathlib.Tactic
 import InfoGeometry.Algebra.ChakravalaGA
 
-/-!
-# Audit Companion: Grassmann-Clifford Differential Algebras (chakravala Archetypes)
-
-This module audits the foundational axioms and kernel dependency manifest
-of `InfoGeometry.Algebra.ChakravalaGA`.
--/
-
-open ChakravalaGA
-
-#print axioms koszulSign_symm
-#print axioms koszulSign_add_left
-#print axioms superBracket_fermionic
-#print axioms superBracket_bosonic
-#print axioms superBracket_skew
-#print axioms clifford_anticommutator
-#print axioms clifford_orthogonal_swap
-#print axioms grassmann_anticomm
-#print axioms grassmann_nilpotent
-#print axioms mathlib_exteriorAlgebra_anticomm
-#print axioms mathlib_exteriorAlgebra_swap
-#print axioms mathlib_exteriorAlgebra_nilpotent
-#print axioms mathlib_exteriorAlgebra_superBracket_zero
-#print axioms geometric_bivector_sq_neg_one
+#print axioms ChakravalaGA.even_ne_odd
+#print axioms ChakravalaGA.koszulSign_even_left
+#print axioms ChakravalaGA.koszulSign_even_right
+#print axioms ChakravalaGA.koszulSign_odd_odd
+#print axioms ChakravalaGA.koszulSign_symm
+#print axioms ChakravalaGA.koszulSign_add_left
+#print axioms ChakravalaGA.koszulSign_add_right
+#print axioms ChakravalaGA.koszulSign_sq_one
+#print axioms ChakravalaGA.superBracket_fermionic
+#print axioms ChakravalaGA.superBracket_bosonic
+#print axioms ChakravalaGA.superBracket_even_odd
+#print axioms ChakravalaGA.superBracket_odd_even
+#print axioms ChakravalaGA.superBracket_skew
+#print axioms ChakravalaGA.clifford_anticommutator
+#print axioms ChakravalaGA.clifford_representation_anticommutator
+#print axioms ChakravalaGA.clifford_orthogonal_swap
+#print axioms ChakravalaGA.mathlib_cliffordAlgebra_anticommutator
+#print axioms ChakravalaGA.mathlib_cliffordAlgebra_superBracket_odd
+#print axioms ChakravalaGA.mathlib_cliffordAlgebra_orthogonal_swap
+#print axioms ChakravalaGA.grassmann_anticomm
+#print axioms ChakravalaGA.grassmann_nilpotent
+#print axioms ChakravalaGA.mathlib_exteriorAlgebra_anticomm
+#print axioms ChakravalaGA.mathlib_exteriorAlgebra_swap
+#print axioms ChakravalaGA.mathlib_exteriorAlgebra_nilpotent
+#print axioms ChakravalaGA.mathlib_exteriorAlgebra_superBracket_zero
+#print axioms ChakravalaGA.mathlib_cliffordAlgebra_zero_sq
+#print axioms ChakravalaGA.mathlib_cliffordAlgebra_zero_superBracket
+#print axioms ChakravalaGA.cliffZeroGen_anticomm
+#print axioms ChakravalaGA.geometric_bivector_sq_neg_one
+#print axioms ChakravalaGA.hyperbolic_bivector_sq_pos_one
+#print axioms ChakravalaGA.degenerate_bivector_sq_zero
+#print axioms ChakravalaGA.mathlib_cliffordAlgebra_bivector_sq_neg_one

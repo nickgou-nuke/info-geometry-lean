@@ -11,10 +11,9 @@ import InfoGeometry.QuantumContext.DrazinSpectralKernel
 Independent audit verifying that:
 1. All theorems bridging the Drazin axioms, spectral projector, kernel projector,
    Fitting decomposition, and group inverse Markov kernel compile cleanly.
-2. The Master Certificate `compile_drazin_spectral_kernel` is instantiated.
-3. Every theorem depends strictly on standard Core Lean 4 / Mathlib axioms:
+2. Every theorem depends strictly on standard Core Lean 4 / Mathlib axioms:
    `[propext, Classical.choice, Quot.sound]`.
-4. Zero `sorry`, zero `admit`, and zero custom axioms are introduced.
+3. Zero `sorry`, zero `admit`, and zero custom axioms are introduced.
 -/
 
 namespace InfoGeometry.QuantumContext.DrazinAudit
@@ -31,9 +30,11 @@ open InfoGeometry.QuantumContext.Drazin
 /- Verification 2: Check axioms of kernel annihilation. -/
 #print axioms index_annihilates_kernel_proj
 
-/- Verification 3: Check axioms of group inverse Markov specialization. -/
+/- Verification 3: Check axioms of group inverse Markov specialization and model witness. -/
 #print axioms group_inverse_nilpotent_zero
 #print axioms group_inverse_reconstruction
+#print axioms isDrazinInverse_one
 
 end InfoGeometry.QuantumContext.DrazinAudit
+
 

@@ -32,13 +32,14 @@ def Grothendieck (M) [AddCommMonoid M] : Type _ := Quotient (grothendieckSetoid 
 **Closed owner theorems (Bucket 1):**
 - `grothendieck_add_assoc`, `grothendieck_add_comm`, `grothendieck_zero_add`,
   `grothendieck_add_zero`, `grothendieck_add_left_neg`
-- `grothendieckMap`, `grothendieckMap_add` (functoriality)
-- `grothendieckProdEquiv : Grothendieck (A × B) ≃+ Grothendieck A × Grothendieck B`
+- `grothendieckMap`, `grothendieckFunctor_map`, `grothendieckFunctor_id`, `grothendieckFunctor_comp` (functoriality)
+- `grothendieckLift`, `grothendieckLift_mk`, `grothendieckLift_comp`, `grothendieckLift_unique` (universal property)
 - `grothendieckEquivInt : Grothendieck ℕ ≃+ ℤ` — **this is K₀(Spec F) ≅ ℤ**
 
 **Closed owner theorems for Fibonacci Fusion Ring:**
-- `FibonacciGrothendieckRing.lean`: Expresses the additive Grothendieck completion `FibonacciK0 := Grothendieck FibFusionMonoid` using `Algebra/Grothendieck.lean` and connects to the concrete `ℤ²` fusion-ring model `τ² = 1 + τ`.
-- `K0FibonacciRing.lean`: Ring isomorphism between `FibonacciK0` and the golden quadratic integer ring $\mathbb{Z}[\tau]/(\tau^2 - \tau - 1)$.
+- `FibonacciGrothendieckRing.lean`: Expresses the additive Grothendieck completion `FibonacciK0 := Grothendieck FibFusionMonoid` using `Algebra/Grothendieck.lean`, proves the additive isomorphism `fibonacciK0AddEquiv : FibonacciK0 ≃+ FibonacciRingModel` (`Int × Int`) via `k0ToModel_injective` and `k0ToModel_surjective`, and induces the ring multiplication `k0Mul` (`k0Mul_tau_tau`, `k0Mul_comm`, `k0Mul_assoc`, `tensorTauK0_eq_k0Mul_tau`).
+- `K0FibonacciRing.lean`: Standalone `FibRing` model (`namespace Audit.K0FibonacciRing`) verifying the golden quadratic integer relation $\tau^2 = 1 + \tau$.
+
 
 ---
 
@@ -220,7 +221,7 @@ The Georgiev–Hadjiivanov–Todorov work describes:
 |  Lightcone compensation projectors | `LightConePair`, `LightConePair.pPlus`, `LightConePair.pMinus`, `LightConePair.pPlus_idem`, `LightConePair.pMinus_idem`, `LightConePair.pPlus_mul_pMinus`, `LightConePair.pMinus_mul_pPlus`, `LightConePair.pPlus_add_pMinus_eq_one`, `LightConePair.lightcone_compensation_packet` | `Algebra/LightConePair.lean`; exact associative-ring consequences of `e₊²=e₋²=0` and `e₊e₋+e₋e₊=1`, not a Clifford module, Pin action, or physical Witten-index theorem |
 |  Five-graded Möbius/Witten globality capstone | `WittenMobiusIndex`, `witten_mobius_index_zero_of_local_compensation`, `witten_four_layer_parity_sum_zero`, `five_graded_mobius_witten_globality_packet`, `GradeTwoInformationLedger.stateAt`, `GradeTwoInformationLedger.recursive_visibleLoss_eq_gradeTwoGain` | `Canonical/FiveGradedMobiusWittenGlobality.lean`, `OperatorAlgebra/FiveGradedDefectAbsorption.lean`; closed conditional bridge packaging five-grade inversion owner laws, Möbius/chiral trace zero, four-layer Witten parity sum zero, and recursive grade-two compensation; no CCC, RH, black-hole unitarity, physical Witten index, conformal-group equivalence, or orbit classification |
 |  Mathlib Clifford split `(5,5)` Pin/Spin names and finite relations | `q55`, `pinGroup55`, `spinGroup55`, `r₀_sq`, `r₅_sq`, `anticomm`, `v4_relation`, `ProjectiveSignEq`, `r₅_projective_involutive` | `Physics/Pin55Formal.lean`; uses mathlib `CliffordAlgebra`/`pinGroup`/`spinGroup` names and exact generator identities, but does not prove a topological quotient, literal four-element V4 subgroup, CCC, conformal inversion, or orbit classification |
-|  Central sign conjugation invariance | `unitConjugation`, `scalarSignUnits`, `unitConjugation_one`, `unitConjugation_neg_one`, `unitConjugation_scalarSign_trivial`, `unitConjugation_neg_eq` | `Physics/CentralizerInvariance.lean`; exact ring/unit identity that conjugation by `-1` is trivial, not a constructed `Pin(5,5) → O(5,5)` double-cover, not a quotient by `{±1}`, and not a full orbit-classification theorem |
+|  Central sign conjugation invariance | `twistedConjugation`, `minusOne`, `inv_minusOne`, `centralizer_action_trivial`, `centralizer_preserves_orbit_readout` | `Physics/CentralizerInvariance.lean`; exact ring/unit identity that twisted conjugation by `-1` is trivial, not a constructed `Pin(5,5) → O(5,5)` double-cover, not a quotient by `{±1}`, and not a full orbit-classification theorem |
 |  Finite `O(5,5)`/V4/Klein-bottle shadows | `splitPair55`, `negAll_preserves_splitPair`, `reflPair0_preserves_splitPair`, `reflPair1_preserves_splitPair`, `reflPair0_comm_reflPair1`, `kleinBottle_affine_relation`, `finite_o55_v4_klein_packet` | `Topology/O55V4KleinBottleFinite.lean`; exact coordinate identities over `ℚ` only, not the Lie group `O(5,5)`, `Pin(5,5)`, CCC, topological quotient construction, or orbit classification |
 |  Generic quadratic zero/null/generic strata | `OrbitStratum`, `orbit_classify_trichotomy`, `classifyOrbit`, `PreservesOrbitStrata`, `map_stratum_of_preserves`, `q55_orbit_classify_trichotomy`, `classifyQ55Orbit`, `q55_epsilon0_isGeneric`, `q55_epsilon5_isGeneric`, `q55NegAll_preserves_orbit_strata`, `q55NegAll_maps_stratum` | `Topology/SpinorOrbitStratum.lean`; predicate/case-split and explicit quadratic-value-preserving map layer for quadratic forms and the concrete `q55`, not spin-action invariance or full orbit classification |
 |  Finite Pauli `B₃` braid shadow | `sigma1_sq`, `sigma2_sq`, `sigma3_sq`, `sigma1_sigma2_anticomm`, `sigma1_mul_sigma2`, `pauli_braid_relation`, `pauli_braid_triple_product`, `pauli_b3_braid_shadow_packet` | `Canonical/PauliBraidB3.lean`; exact `2 × 2` complex matrix identity for `1+iσ₁` and `1+iσ₂`, not a full `Bₙ` representation, not a biquaternion/Clifford isomorphism theorem, not Hecke/BMW/quantum-supergroup centralizer theory, and not an `osp(1|8)` formalization |
@@ -538,8 +539,8 @@ Files:
 - `Categorical/BraidPermutationQuotient.lean` — canonical pure braid kernel
 - `Topology/DelaunayPureBraidInvariant.lean` — local Delaunay move-invariance theorems
 - `Topology/DelaunayPureBraidRepresentation.lean` — subgroup restriction to `RohozhkinSourcePB`
-- `Topology/DelaunayFlipMatrixEmbeddings.lean` — `embedBlock₂` and `embedBlock₂_one`
-- `Topology/RohozhkinMatrix.lean` — concrete generator-matrix data
+- `Topology/DelaunayFlipMatrixEmbeddings.lean` — `embedBlock₂`, `embedBlock₂_one`, and coordinate evaluation lemmas
+- `Topology/DelaunayFlipMatrix.lean` & `Topology/RohozhkinPentagonMatrix.lean` — concrete generator-matrix data (`Topology/RohozhkinMatrix.lean` is an empty namespace stub)
 
 Mathematical status:
 - `DelaunayPureBraidInvariant.lean`, `DelaunayPureBraidRepresentation.lean`,

@@ -46,5 +46,8 @@ import InfoGeometry.Superalgebra.PeirceDeWittZornQuantization
 import InfoGeometry.Superalgebra.PeirceDeWittZornQuantizationAudit
 import InfoGeometry.Superalgebra.SuperGrassmannGradedExterior
 import InfoGeometry.Superalgebra.SuperGrassmannGradedExteriorAudit
+import InfoGeometry.Algebra.FibonacciGrothendieckRingAudit
+import InfoGeometry.Topology.DelaunayFlipMatrixEmbeddingsAudit
+
 
 

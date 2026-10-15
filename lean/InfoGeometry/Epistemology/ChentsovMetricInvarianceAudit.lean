@@ -23,4 +23,5 @@ open InfoGeometry.Epistemology.ChentsovMetricInvariance
 #print axioms congruent_pushforward_at
 #print axioms congruent_pushforward_tangent_at
 #print axioms chentsov_congruent_metric_invariance
+#print axioms chentsov_congruent_pushforward_fisher_isometry
 #print axioms injectiveCongruentKernel

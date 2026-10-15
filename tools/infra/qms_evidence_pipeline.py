@@ -216,6 +216,14 @@ def strip_comments_and_strings(text: str) -> str:
             out.extend((" ", " "))
             i += 2
             continue
+        if text.startswith("'\"'", i):
+            out.extend((" ", " ", " "))
+            i += 3
+            continue
+        if text.startswith("'\\\"'", i):
+            out.extend((" ", " ", " ", " "))
+            i += 4
+            continue
         ch = text[i]
         out.append(ch)
         i += 1
@@ -669,9 +677,9 @@ class QMSEvidencePipeline:
         admit_matches: list[tuple[int, str]] = []
 
         for line_no, line in enumerate(clean_code.splitlines(), start=1):
-            if re.search(r"\bsorry\b", line):
+            if re.search(r"(?:\bsorry\b|\bsorryAx\b|«sorry»|«sorryAx»)", line):
                 sorry_matches.append((line_no, line.strip()))
-            if re.search(r"\badmit\b", line):
+            if re.search(r"(?:\badmit\b|«admit»)", line):
                 admit_matches.append((line_no, line.strip()))
 
         if sorry_matches or admit_matches:
@@ -789,6 +797,28 @@ class QMSEvidencePipeline:
 
         # 2. Strict Axiom Auditing
         source = source_bytes.decode("utf-8")
+        from tools.infra.opengauss_screener import check_authored_axioms_and_holes
+
+        authored_axioms = [
+            v for v in check_authored_axioms_and_holes(source) if v.trap_id == "QMS_AXIOM"
+        ]
+        if authored_axioms:
+            critique_lines = ["Gate 5 Axiom Audit Failure: Custom or unauthorized axioms detected:"]
+            for v in authored_axioms:
+                critique_lines.append(
+                    f"  • Line {v.line_number}: {v.message} (matched: '{v.matched_text}')"
+                )
+                diagnostics.append(f"Custom axiom declaration at line {v.line_number}: {v.matched_text}")
+            return GateResult(
+                gate_number=5,
+                gate_name="KERNEL_SOURCE_CHECK",
+                passed=False,
+                diagnostics=diagnostics,
+                socratic_critique="\n".join(critique_lines),
+                details={"authored_axioms": [asdict(v) for v in authored_axioms]},
+                duration_seconds=time.time() - t0,
+            )
+
         declarations = extract_lean_declarations(source)
         if not declarations:
             return GateResult(

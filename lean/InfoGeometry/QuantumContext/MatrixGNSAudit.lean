@@ -15,6 +15,8 @@ of `InfoGeometry.QuantumContext.MatrixGNS`.
 
 open InfoGeometry.QuantumContext.MatrixGNS
 
+#print axioms gnsInner_eq_trace
+#print axioms diagonal_trace_mul
 #print axioms gnsInner_self_diagonal
 #print axioms gnsInner_self_nonneg
 #print axioms gnsLeftIdeal_diagonal_iff
@@ -24,8 +26,12 @@ open InfoGeometry.QuantumContext.MatrixGNS
 #print axioms gns_cyclic_vector_separating
 #print axioms rhoHalfInv_mul_rhoHalf
 #print axioms rhoHalf_mul_rhoHalfInv
+#print axioms rhoHalf_transpose
+#print axioms rhoHalfInv_transpose
 #print axioms tomitaJ_involutive
 #print axioms tomitaJ_mul
 #print axioms rhoHalf_mul_rhoHalf
 #print axioms rhoHalfInv_mul_rhoHalfInv
+#print axioms diagonal_transpose_self
 #print axioms tomita_duality
+

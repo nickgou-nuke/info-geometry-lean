@@ -271,6 +271,45 @@ theorem chentsov_congruent_metric_invariance {α β : Type*} [Fintype α] [Finty
         rw [mul_one]
     _ = fisherMetric P u v := rfl
 
+/-- The pushforward of an interior distribution remains in the simplex interior
+when every output has positive transition weight from its assigned fiber. -/
+noncomputable def congruentPushforwardInterior {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α]
+    (CK : CongruentMarkovKernel α β) (P : ProbInterior α)
+    (h_weight : ∀ b, 0 < CK.kernel.T (CK.fiber b) b) : ProbInterior β where
+  p := (pushforward CK.kernel (toProbDist P)).p
+  pos b := by
+    rw [congruent_pushforward_at CK P b]
+    exact mul_pos (P.pos (CK.fiber b)) (h_weight b)
+  sum_one := (pushforward CK.kernel (toProbDist P)).sum_one
+
+/-- Full-support congruent Markov embeddings preserve the native Fisher metric
+as an equality of simplex-interior metrics on the source and target. -/
+theorem chentsov_congruent_pushforward_fisher_isometry
+    {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α]
+    (CK : CongruentMarkovKernel α β) (P : ProbInterior α)
+    (h_weight : ∀ b, 0 < CK.kernel.T (CK.fiber b) b) (u v : α → ℝ) :
+    fisherMetric (congruentPushforwardInterior CK P h_weight)
+        (pushforwardTangentVec CK.kernel u) (pushforwardTangentVec CK.kernel v) =
+      fisherMetric P u v := by
+  unfold fisherMetric congruentPushforwardInterior
+  change (∑ b, (pushforwardTangentVec CK.kernel u b * pushforwardTangentVec CK.kernel v b) /
+      (pushforward CK.kernel (toProbDist P)).p b) = fisherMetric P u v
+  have h_term (b : β) :
+      (pushforwardTangentVec CK.kernel u b * pushforwardTangentVec CK.kernel v b) /
+          (pushforward CK.kernel (toProbDist P)).p b =
+        (if CK.kernel.T (CK.fiber b) b = 0 then 0 else
+          (pushforwardTangentVec CK.kernel u b * pushforwardTangentVec CK.kernel v b) /
+            (pushforward CK.kernel (toProbDist P)).p b) := by
+    simp [ne_of_gt (h_weight b)]
+  calc
+    _ = ∑ b, (if CK.kernel.T (CK.fiber b) b = 0 then 0 else
+          (pushforwardTangentVec CK.kernel u b * pushforwardTangentVec CK.kernel v b) /
+            (pushforward CK.kernel (toProbDist P)).p b) := by
+          apply Finset.sum_congr rfl
+          intro b _
+          exact h_term b
+    _ = fisherMetric P u v := chentsov_congruent_metric_invariance CK P u v
+
 /-! ### 6. Canonical Injective Embeddings -/
 
 /-- 

@@ -16,14 +16,14 @@ TOP_ANY_DECL_RE = re.compile(
     r"^\s*(?:@\[[^\n]+\]\s*)?(axiom|theorem|lemma|def|abbrev|structure|class)\s+([A-Za-z_][A-Za-z0-9_'.]*)\b"
 )
 PROP_STRUCTURE_RE = re.compile(
-    r"(?m)^\s*(?:private\s+|protected\s+)?structure\s+"
-    r"([A-Za-z_][A-Za-z0-9_'.]*)\b([^\n]*)\n((?:[ \t]*\n|[ \t]{2,}[^\s\n][^\n]*\n)*)"
+    r"(?m)^\s*(?:@\[[^\n]+\]\s*)*(?:private\s+|protected\s+)?structure\s+"
+    r"([A-Za-z_][A-Za-z0-9_'.]*)\b([^\n]*)\n((?:[ \t]*\n|[ \t]+[^\s\n][^\n]*\n)*)"
 )
 PROP_RESULT_RE = re.compile(
-    r"(?m)^\s*(?:private\s+|protected\s+)?(?:theorem|lemma)\s+"
-    r"[A-Za-z_][A-Za-z0-9_'.]*[^\n]*:\s*([A-Za-z_][A-Za-z0-9_'.]*)\b[^\n]*\bwhere\b"
+    r"(?m)^\s*(?:@\[[^\n]+\]\s*)*(?:(?:private|protected|noncomputable)\s+)*(?:theorem|lemma|def|abbrev|example)\b"
+    r"[^\n]*?:\s*([A-Za-z_][A-Za-z0-9_'.]*)\b(?:[^\n]*?\b(where)\b|\s*:=)"
 )
-FIELD_ASSIGN_RE = re.compile(r"(?m)^\s{2,}([A-Za-z_][A-Za-z0-9_']*)\s*:=\s*([^\n]+)")
+FIELD_ASSIGN_RE = re.compile(r"(?m)^\s+([A-Za-z_][A-Za-z0-9_']*)\s*:=\s*([^\n]+)")
 DEBT_BURIAL_COMMENT_RE = re.compile(
     r"\b(DEBT|OPEN CLOSURE DEBT|missing proof|not a proof|removed|no Lean declaration|owner-side proof)\b",
     re.IGNORECASE,
@@ -35,10 +35,11 @@ def git(args: list[str]) -> str:
 
 
 def aggregate_prop_constructors(source: str) -> list[tuple[str, str]]:
-    """Find theorem constructors that merely bundle a Prop structure's fields.
+    """Find theorem/def constructors that merely bundle a Prop structure's fields.
 
     Predicate structures are allowed. This catches the aggregate theorem wrapper
-    structurally, independent of names chosen for its type, theorem, or fields.
+    structurally, independent of names chosen for its type, theorem, or fields,
+    across `where`, `{ ... }`, `⟨...⟩`, and `.mk` constructor styles.
     """
     try:
         from tools.infra.opengauss_screener import _strip_lean_comments_and_strings
@@ -50,28 +51,65 @@ def aggregate_prop_constructors(source: str) -> list[tuple[str, str]]:
         type_name, header, body = structure.groups()
         if not re.search(r":\s*Prop\s+where\s*$", header):
             continue
-        fields = {
+        fields = [
             item.group(1)
-            for item in re.finditer(r"(?m)^\s{2,}([A-Za-z_][A-Za-z0-9_']*)\s*:", body)
-        }
-        if len(fields) < 2:
+            for item in re.finditer(r"(?m)^\s+([A-Za-z_][A-Za-z0-9_']*)\s*:", body)
+        ]
+        field_set = set(fields)
+        if len(field_set) < 2:
             continue
         for constructor in PROP_RESULT_RE.finditer(source):
             if constructor.group(1) != type_name:
                 continue
+            is_where = constructor.group(2) == "where"
             tail = source[constructor.end():]
             next_decl = re.search(r"(?m)^\S", tail)
             if next_decl:
                 tail = tail[:next_decl.start()]
-            assignments = FIELD_ASSIGN_RE.findall(tail)
-            selected = [(name, value.strip()) for name, value in assignments if name in fields]
-            if fields <= {name for name, _ in selected} and all(
-                re.fullmatch(r"[A-Za-z_][A-Za-z0-9_'.]*(?:\s+[^\n]+)?", value)
-                for _, value in selected
-            ):
-                found.append((type_name, constructor.group(0).strip()))
-            break
+            if is_where:
+                assignments = FIELD_ASSIGN_RE.findall(tail)
+                selected = [(name, value.strip()) for name, value in assignments if name in field_set]
+                if field_set <= {name for name, _ in selected} and all(
+                    re.fullmatch(r"[A-Za-z_][A-Za-z0-9_'.]*(?:\s+[^\n]+)?", value)
+                    for _, value in selected
+                ):
+                    found.append((type_name, constructor.group(0).strip()))
+            else:
+                rhs = tail.strip()
+                brace_assignments = re.findall(
+                    r"([A-Za-z_][A-Za-z0-9_']*)\s*:=\s*([^,}\n]+)", rhs
+                )
+                selected = [(name, value.strip()) for name, value in brace_assignments if name in field_set]
+                if field_set <= {name for name, _ in selected}:
+                    found.append((type_name, constructor.group(0).strip()))
+                    continue
+                anon = re.search(r"⟨([^⟩]+)⟩", rhs)
+                if anon and len([p for p in anon.group(1).split(",") if p.strip()]) >= len(field_set):
+                    found.append((type_name, constructor.group(0).strip()))
+                    continue
+                if re.search(rf"\b{re.escape(type_name)}\.mk\b", rhs):
+                    found.append((type_name, constructor.group(0).strip()))
     return found
+
+
+def check_text(lean_path: str, source: str) -> list[str]:
+    """Check a single Lean source blob for authored axioms, holes, and Prop-bundling wrappers."""
+    failures: list[str] = []
+    try:
+        from tools.infra.opengauss_screener import check_authored_axioms_and_holes
+        for violation in check_authored_axioms_and_holes(source):
+            failures.append(
+                f"{lean_path}:{violation.line_number}: {violation.message} ({violation.matched_text})"
+            )
+    except ImportError:
+        failures.append(
+            f"{lean_path}: cannot load the canonical QMS source checker; refusing to certify this staged Lean file"
+        )
+    for type_name, constructor in aggregate_prop_constructors(source):
+        failures.append(
+            f"{lean_path}: `{constructor}` constructs Prop structure `{type_name}` by bundling field proofs; audit the owner theorems directly"
+        )
+    return failures
 
 
 def main() -> int:
@@ -113,7 +151,7 @@ def main() -> int:
             if line_no is not None:
                 line_no += 1
             continue
-        if re.search(r"^\s*(?:axiom|postulate)\s+[A-Za-z_][A-Za-z0-9_'.]*\s*:|^\s*(?:admit|sorry)\b", stripped):
+        if re.search(r"^\s*(?:axiom|postulate)\s+(?:«[^»\n]+»|[^\W\d][\w'.]*)\s*:|^\s*(?:admit|sorry|sorryAx)\b", stripped):
             failures.append(f"{loc}: staged forbidden placeholder `{stripped}`")
         if line_no is not None:
             line_no += 1
@@ -141,20 +179,7 @@ def main() -> int:
         start = header_end + 1
         source = blob_data[start:start + size].decode("utf-8", errors="replace")
         cursor = start + size + 1
-        try:
-            from tools.infra.opengauss_screener import check_authored_axioms_and_holes
-            for violation in check_authored_axioms_and_holes(source):
-                failures.append(
-                    f"{lean_path}:{violation.line_number}: {violation.message} ({violation.matched_text})"
-                )
-        except ImportError:
-            failures.append(
-                f"{lean_path}: cannot load the canonical QMS source checker; refusing to certify this staged Lean file"
-            )
-        for type_name, constructor in aggregate_prop_constructors(source):
-            failures.append(
-                f"{lean_path}: `{constructor}` constructs Prop structure `{type_name}` by bundling field proofs; audit the owner theorems directly"
-            )
+        failures.extend(check_text(lean_path, source))
     for buried in sorted(removed_decl_files & debt_comment_files):
         failures.append(
             f"{buried}: staged deletion of Lean declarations with natural-language debt comments; keep open debt compiler-visible instead of burying it in prose"

@@ -361,13 +361,19 @@ def check_noncommutative_witness_requirement(
     # A file can contain operator products over several carriers. Require a
     # matching witness for each carrier; one real-matrix witness cannot certify
     # a separate complex- or finite-field matrix algebra.
-    carrier_coverage = bool(matrix_carriers) and all(
-        _has_closed_noncommutativity_witness(content, required_carriers={carrier})
-        or _has_resolved_import_witness(
-            content, filename, required_carriers={carrier}
+    if matrix_carriers:
+        carrier_coverage = all(
+            _has_closed_noncommutativity_witness(content, required_carriers={carrier})
+            or _has_resolved_import_witness(
+                content, filename, required_carriers={carrier}
+            )
+            for carrier in matrix_carriers
         )
-        for carrier in matrix_carriers
-    )
+    else:
+        carrier_coverage = (
+            _has_closed_noncommutativity_witness(content)
+            or _has_resolved_import_witness(content, filename)
+        )
 
     if not carrier_coverage:
         violations.append(
@@ -471,6 +477,12 @@ def _strip_lean_comments_and_strings(source: str) -> str:
             while i < len(chars) and chars[i] != "\n":
                 chars[i] = " "
                 i += 1
+        elif source.startswith("'\"'", i):
+            chars[i] = chars[i + 1] = chars[i + 2] = " "
+            i += 3
+        elif source.startswith("'\\\"'", i):
+            chars[i] = chars[i + 1] = chars[i + 2] = chars[i + 3] = " "
+            i += 4
         elif chars[i] == '"':
             in_string = True
             chars[i] = " "
@@ -488,9 +500,10 @@ def check_authored_axioms_and_holes(source: str) -> list[TrapViolation]:
     """
     clean = _strip_lean_comments_and_strings(source)
     violations: list[TrapViolation] = []
+    lean_name = r"(?:«[^»\n]+»|[^\W\d][\w'.]*)"
     axiom_decl = re.compile(
-        r"^\s*(?:(?:private|protected|noncomputable)\s+)*(?:axiom|postulate)\s+"
-        r"([A-Za-z_][A-Za-z0-9_'.]*)\b",
+        r"^\s*(?:@\[[^\]]*\]\s*)*(?:(?:private|protected|noncomputable|unsafe|partial|scoped)\s+)*(?:axiom|postulate)\s+"
+        rf"({lean_name})",
         re.MULTILINE,
     )
     for match in axiom_decl.finditer(clean):
@@ -500,7 +513,7 @@ def check_authored_axioms_and_holes(source: str) -> list[TrapViolation]:
             "Repository source must prove results with Lean/Mathlib theorems; do not declare axioms.",
             "ERROR",
         ))
-    for match in re.finditer(r"\b(?:sorry|admit|sorryAx)\b", clean):
+    for match in re.finditer(r"(?:\b(?:sorry|admit|sorryAx)\b|«(?:sorry|admit|sorryAx)»)", clean):
         line = clean.count("\n", 0, match.start()) + 1
         violations.append(TrapViolation(
             "QMS_HOLE", "Unproved theorem placeholder", line, match.group(0),
@@ -531,7 +544,8 @@ def _witness_has_only_typeclass_binders(
         ):
             return False
         if target_type_name is not None:
-            class_name = re.match(r"\s*([A-Za-z_][A-Za-z0-9_'.]*)", binder)
+            binder_rhs = binder.split(":", 1)[1] if ":" in binder else binder
+            class_name = re.match(r"\s*([A-Za-z_][A-Za-z0-9_'.]*)", binder_rhs)
             if class_name and _typeclass_binder_supplies_target(
                 source, class_name.group(1), target_type_name
             ):
@@ -579,14 +593,14 @@ def _typeclass_binder_supplies_target(source: str, class_name: str, target: str)
     text = clean_source
     aliases_of_target = {
         alias for alias, _params, rhs in re.findall(
-            r"^\s*(?:(?:private|protected|noncomputable)\s+)*(?:abbrev|def)\s+([A-Za-z_][\w']*)\s*((?:\([^\n]*?\)\s*)*)(?:\s*:\s*[^=\n]+)?\s*:=\s*([^\n]+)",
+            r"^\s*(?:(?:private|protected|noncomputable)\s+)*(?:abbrev|def)\s+([A-Za-z_][\w']*)\s*((?:\((?:[^()\n]|\([^()\n]*\))*\)\s*)*)(?:\s*:\s*[^=\n]+)?\s*:=\s*([^\n]+)",
             text,
             re.MULTILINE,
         ) if re.search(rf"\b{re.escape(target)}\b", rhs)
     }
     alias_rhs = {
         alias: rhs for alias, _params, rhs in re.findall(
-            r"^\s*(?:(?:private|protected|noncomputable)\s+)*(?:abbrev|def)\s+([A-Za-z_][\w']*)\s*((?:\([^\n]*?\)\s*)*)(?:\s*:\s*[^=\n]+)?\s*:=\s*([^\n]+)",
+            r"^\s*(?:(?:private|protected|noncomputable)\s+)*(?:abbrev|def)\s+([A-Za-z_][\w']*)\s*((?:\((?:[^()\n]|\([^()\n]*\))*\)\s*)*)(?:\s*:\s*[^=\n]+)?\s*:=\s*([^\n]+)",
             text,
             re.MULTILINE,
         )
@@ -1152,13 +1166,18 @@ def _has_closed_noncommutativity_witness(
         )
         assignment = _top_level_assignment_index(declaration)
         proof_body = declaration[assignment + 2:] if assignment is not None else ""
-        if set(re.findall(r"\b[A-Za-z_][A-Za-z0-9_']*\b", proof_body)) & unsafe_names:
+        if set(re.findall(r"(?:«[^»\n]+»|[^\W\d][\w']*)", proof_body)) & unsafe_names:
             continue
         class_binders = re.findall(r"\[([^\[\]]*)\]", binders)
         class_names = [
             found.group(1)
             for binder in class_binders
-            if (found := re.match(r"\s*([A-Za-z_][A-Za-z0-9_'.]*)", binder))
+            if (
+                found := re.match(
+                    r"\s*([A-Za-z_][A-Za-z0-9_'.]*)",
+                    binder.split(":", 1)[1] if ":" in binder else binder,
+                )
+            )
         ]
         effective_proof_body = re.sub(
             r"\blet\s+_\s*:=\s*[^;\n]+(?=;|$)", "", proof_body
@@ -1167,7 +1186,10 @@ def _has_closed_noncommutativity_witness(
             _typeclass_binder_supplies_noncommutativity(
                 source, class_name, required_carriers
             )
-            and re.search(rf"\b{re.escape(class_name)}\s*\.", effective_proof_body)
+            and (
+                re.search(rf"\b{re.escape(class_name)}\s*\.", effective_proof_body)
+                or re.search(rf"\bopen\s+[^\n]*\b{re.escape(class_name)}\b", source)
+            )
             for class_name in class_names
         ):
             continue

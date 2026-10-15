@@ -39,9 +39,11 @@
 | 12 | `lean/InfoGeometry/Canonical/ErlangenColimitResolution.lean` | 79 | 0 | 0 | 3 / 0 | 1 / 1 / 0 | 0 | Capstone `omegaAutomath_expansion_apex` (`PProd`) | **FLAG (T17)** (`resolveColimitInheritsInvariants_of_ambient` ignores `A_infty` / `global_embed` args) | `Chain : ℕ → Type u`, `[∀ n, Ring (Chain n)]`, `SupergradedClosureAt` — **PASS (T16)** |
 | 13 | `lean/InfoGeometry/Projective/SplitQuaternionMotivicDPn.lean` | 389 | 22 | 0 | 11 / 1 | 1 / 0 / 0 | 0 | `SplitQuaternionMotivicDPnCertificate` + `compile_split_quaternion_motivic_dpn` | **PASS** (`basisVec`, `basepointProj`, `affineTopCell` witnessed) | `Coquaternion R`, `Matrix (Fin (n + 1)) (Fin (n + 1)) (Coquaternion R)` — **PASS (T16)** |
 | 14 | `lean/InfoGeometry/Algebra/JordanLinearization.lean` | 49 | 0 | 1 | 0 / 0 | 0 / 0 / 0 | 0 | Single lemma `linearized_jordan_identity` | **PASS** (Proved from Mathlib `IsCommJordan`) | `[NonUnitalNonAssocCommRing J] [IsCommJordan J] [IsAddTorsionFree J]` — **PASS (T16)** |
-| 15 | `lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean` | 234 | 28 | 0 | 12 / 3 | 0 / 0 / 0 | 0 | Capstone `k0_tau_square_model` | **PASS** (Concrete `FibonacciRingModel` & `FibonacciK0` witnesses) | `Grothendieck (Nat × Nat)`, `Int × Int`, `AddMonoidHom` (`→+`) — **PASS (T16)** |
+| 15 | `lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean` | 354 | 43 | 0 | 14 / 3 | 0 / 0 / 0 | 0 | Capstone `fibonacciK0AddEquiv` & `tensorTauK0_eq_k0Mul_tau` | **PASS** (Concrete `FibonacciRingModel` & `FibonacciK0` witnesses) | `Grothendieck (Nat × Nat)`, `Int × Int`, `AddEquiv` (`≃+`) — **PASS (T16)** |
 | 16 | `lean/InfoGeometry/Topology/DelaunayPureBraidRepresentation.lean` | 38 | 0 | 0 | 1 / 3 | 0 / 0 / 0 | 0 | Frontier restriction definition | **PASS** (Truthful frontier docstring L7–12) | `Braid.braid_group (moving + 3)`, `RohozhkinSourcePB`, `MatrixUnits` — **PASS (T16)** |
-| 17 | `lean/InfoGeometry/Topology/DelaunayFlipMatrixEmbeddings.lean` | 30 | 0 | 0 | 1 / 0 | 0 / 0 / 0 | 0 | Frontier block-embedding definition | **PASS** (Truthful frontier docstring L5–10) | `Matrix (Fin 2) (Fin 2) ℚ → Fin d → Fin d → Matrix (Fin d) (Fin d) ℚ` — **PASS (T16)** |
+| 17 | `lean/InfoGeometry/Topology/DelaunayFlipMatrixEmbeddings.lean` | 68 | 6 | 0 | 1 / 0 | 0 / 0 / 0 | 0 | `embedBlock₂_one` & coordinate lemmas | **PASS** (Truthful frontier docstring L5–10) | `Matrix (Fin 2) (Fin 2) ℚ → Fin d → Fin d → Matrix (Fin d) (Fin d) ℚ` — **PASS (T16)** |
+| 18 | `lean/InfoGeometry/Superalgebra/PeirceDeWittZornQuantization.lean` | 899 | 84 | 0 | 28 / 0 | 2 / 0 / 0 | 0 | Direct owner theorems (`zorn_car_quantization_exact`, `supercolor_baryon_singlet_closure`) | **PASS** (`ColorVec3` & `ZornAlgebra` `Inhabited`; non-comm & non-assoc witnesses) | `ColorVec3 R`, `ZornAlgebra R` (`≃ₗ[R] ZornVectorMatrix R`) — **PASS (T16)** |
+| 19 | `lean/InfoGeometry/Superalgebra/SuperGrassmannGradedExterior.lean` | 232 | 15 | 0 | 4 / 1 | 0 / 0 / 0 | 0 | Direct owner theorems (`supercommutative_exterior`, `superCommutator_vanishes`) | **PASS** (`bosonic_ne_fermionic`; inductive proof on submodule powers) | `ExteriorAlgebra R M`, `LinearMap.range (ι R) ^ p`, `ZMod 2` — **PASS (T16)** |
 
 ---
 
@@ -144,11 +146,11 @@
 - **Certificate / Trap T17**: Single modular Mathlib-style lemma (`linearized_jordan_identity`, L18–46) proved from Mathlib's `two_nsmul_lie_lmul_lmul_add_add_eq_zero` without associativity or extra structure hypotheses.
 - **Carrier / Trap T16**: `[NonUnitalNonAssocCommRing J] [IsCommJordan J] [IsAddTorsionFree J]` and `AddMonoid.End.mulLeft`. Genuine non-associative Jordan algebra carrier. Fully compliant.
 
-### Module 15: `lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean` (234 lines)
-- **Declarations**: 3 `abbrev` (`FibFusionMonoid`, `FibonacciK0`, `FibonacciRingModel`), 12 `def`, 28 `theorem`s, 0 `structure`.
+### Module 15: `lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean` (354 lines)
+- **Declarations**: 3 `abbrev` (`FibFusionMonoid`, `FibonacciK0`, `FibonacciRingModel`), 14 `def` (including `fibonacciK0AddEquiv : FibonacciK0 ≃+ FibonacciRingModel` and `k0Mul`), 43 `theorem`s, 0 `structure`.
 - **Forbidden Markers**: None (`0`).
-- **Certificate / Trap T17**: Direct theorem surface culminating in `k0_tau_square_model` (L228–231). Every definition is concrete and inhabited (`fibOneRaw`, `fibTauRaw`, `fibOneK0`, `fibTauK0`, `k0ToModel`, `tensorTauK0`).
-- **Carrier / Trap T16**: `Grothendieck (Nat × Nat)` (`FibonacciK0` imported from `InfoGeometry.Algebra.Grothendieck`), `Int × Int` (`FibonacciRingModel`), and `AddMonoidHom` (`→+`) universal lifts (`grothendieckLift`, `grothendieckFunctor`). Fully compliant with the Categorical Infrastructure Map.
+- **Certificate / Trap T17**: Direct theorem surface proving `k0ToModel_injective`, `k0ToModel_surjective`, `fibonacciK0AddEquiv`, `k0Mul_tau_tau`, `k0Mul_comm`, `k0Mul_assoc`, `k0Mul_left_distrib`, `k0Mul_right_distrib`, and `tensorTauK0_eq_k0Mul_tau`. Audited in `FibonacciGrothendieckRingAudit.lean`.
+- **Carrier / Trap T16**: `Grothendieck (Nat × Nat)` (`FibonacciK0` imported from `InfoGeometry.Algebra.Grothendieck`), `Int × Int` (`FibonacciRingModel`), and `AddEquiv` (`≃+`). Fully compliant with the Categorical Infrastructure Map.
 
 ### Module 16: `lean/InfoGeometry/Topology/DelaunayPureBraidRepresentation.lean` (38 lines)
 - **Declarations**: 3 `abbrev` (`RohozhkinBraidGroup`, `RohozhkinMatrixUnits`, `RohozhkinPureBraidGroup`), 1 `def` (`restrictRohozhkinBraidRepresentation`), 0 `theorem`, 0 `structure`.
@@ -156,11 +158,23 @@
 - **Certificate / Trap T17**: Frontier definition module; docstring (L7–12) explicitly states that restricting a braid representation to the pure braid subgroup `RohozhkinSourcePB` is defined here, while constructing the homomorphism from Delaunay flip matrices to the braid group remains an open frontier.
 - **Carrier / Trap T16**: `Braid.braid_group (moving + 3)`, `RohozhkinSourcePB moving`, `MatrixUnits (rohozhkinDim moving)`, and monoid homomorphisms (`→*`). Fully compliant.
 
-### Module 17: `lean/InfoGeometry/Topology/DelaunayFlipMatrixEmbeddings.lean` (30 lines)
-- **Declarations**: 1 `def` (`embedBlock₂`), 0 `theorem`, 0 `structure`.
+### Module 17: `lean/InfoGeometry/Topology/DelaunayFlipMatrixEmbeddings.lean` (68 lines)
+- **Declarations**: 1 `def` (`embedBlock₂`), 6 `theorem`s (`embedBlock₂_apply_aa`, `embedBlock₂_apply_ab`, `embedBlock₂_apply_ba`, `embedBlock₂_apply_bb`, `embedBlock₂_apply_other`, `embedBlock₂_one`), 0 `structure`.
 - **Forbidden Markers**: None (`0`).
-- **Certificate / Trap T17**: Frontier definition module; docstring (L5–10) explicitly notes that `embedBlock₂` defines $2 \times 2$ block insertion into `Matrix (Fin d) (Fin d) ℚ` and does not claim a braid representation or multiplicativity proof.
+- **Certificate / Trap T17**: Proves exact $2 \times 2$ block-insertion evaluation lemmas and the identity-preserving theorem `embedBlock₂_one` for distinct indices `a ≠ b`. Audited in `DelaunayFlipMatrixEmbeddingsAudit.lean`.
 - **Carrier / Trap T16**: `Matrix (Fin 2) (Fin 2) ℚ → Fin d → Fin d → Matrix (Fin d) (Fin d) ℚ`. Fully compliant.
+
+### Module 18: `lean/InfoGeometry/Superalgebra/PeirceDeWittZornQuantization.lean` (899 lines)
+- **Declarations**: 2 `structure` (`ColorVec3`, `ZornAlgebra`), 28 `def`, 84 `theorem`s.
+- **Forbidden Markers**: None (`0`).
+- **Certificate / Trap T17**: Direct theorem surface (0 `Prop`-bundling wrappers), with constructive `Inhabited` instances and explicit non-commutativity (`zorn_noncommutative_witness`) and non-associativity (`zorn_nonassociative_witness`) witnesses over `ℤ`. Audited across all 84 theorems in `PeirceDeWittZornQuantizationAudit.lean`.
+- **Carrier / Trap T16**: Full 8D non-associative Zorn vector-matrix carrier `ZornAlgebra R` with `R`-linear multiplicative isomorphism `equivZornVectorMatrix : ZornAlgebra R ≃ₗ[R] ZornVectorMatrix R` (`equivZornVectorMatrix_mul`), resolving the non-associative Zorn multiplication gap noted in Module 8.
+
+### Module 19: `lean/InfoGeometry/Superalgebra/SuperGrassmannGradedExterior.lean` (232 lines)
+- **Declarations**: 1 `abbrev` (`Parity := ZMod 2`), 4 `def` (`bosonic`, `fermionic`, `koszulSign`, `superCommutator`), 15 `theorem`s.
+- **Forbidden Markers**: None (`0`).
+- **Certificate / Trap T17**: Direct theorem surface proving `ι_mul_graded_comm`, `supercommutative_exterior`, `superCommutator_vanishes`, and `bivector_central` by induction over submodule powers via `Submodule.pow_induction_on_left'`. Audited in `SuperGrassmannGradedExteriorAudit.lean`.
+- **Carrier / Trap T16**: Mathlib's native `ExteriorAlgebra R M` and homogeneous exterior power submodules `LinearMap.range (ExteriorAlgebra.ι R) ^ p`. Fully compliant.
 
 ---
 

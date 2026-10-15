@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.FDeriv.Basic
+import Mathlib.Analysis.Calculus.DifferentialForm.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus
@@ -51,6 +52,20 @@ theorem exactOneForm_is_derivative
     (i : α) {x : Chart α} (hx : x i ≠ 0) :
     fderiv ℝ (zeroForm i) x = exactOneForm i x := by
   exact (zeroForm_hasFDerivAt i hx).fderiv
+
+/--
+The local exact one-form is Mathlib's exterior derivative of the corresponding
+degree-zero differential form, represented as a continuous alternating map.
+-/
+theorem exactOneForm_eq_mathlib_extDeriv
+    (i : α) {x : Chart α} (hx : x i ≠ 0) :
+    extDeriv
+        (fun y => ContinuousAlternatingMap.constOfIsEmpty
+          ℝ (Chart α) (Fin 0) (zeroForm i y)) x =
+      ContinuousAlternatingMap.ofSubsingleton _ _ _ (0 : Fin 1)
+        (exactOneForm i x) := by
+  rw [extDeriv_constOfIsEmpty]
+  rw [exactOneForm_is_derivative i hx]
 
 theorem exactOneForm_path_integral
     (i : α) {γ : ℝ → Chart α} {a b : ℝ}

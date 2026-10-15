@@ -7,8 +7,12 @@ import InfoGeometry.Superalgebra.SuperGrassmannGradedExterior
 #print axioms InfoGeometry.Superalgebra.SuperGrassmann.koszulSign_mul
 #print axioms InfoGeometry.Superalgebra.SuperGrassmann.koszulSign_one_left
 #print axioms InfoGeometry.Superalgebra.SuperGrassmann.koszulSign_one_one
+#print axioms InfoGeometry.Superalgebra.SuperGrassmann.ι_mul_ι_anticomm
+#print axioms InfoGeometry.Superalgebra.SuperGrassmann.ι_mul_ι_swap
 #print axioms InfoGeometry.Superalgebra.SuperGrassmann.fermionic_nilpotent
+#print axioms InfoGeometry.Superalgebra.SuperGrassmann.ι_mul_graded_comm
 #print axioms InfoGeometry.Superalgebra.SuperGrassmann.supercommutative_exterior
 #print axioms InfoGeometry.Superalgebra.SuperGrassmann.superCommutator_vanishes
 #print axioms InfoGeometry.Superalgebra.SuperGrassmann.superCommutator_one_one_eq_anticomm
 #print axioms InfoGeometry.Superalgebra.SuperGrassmann.bivector_central
+

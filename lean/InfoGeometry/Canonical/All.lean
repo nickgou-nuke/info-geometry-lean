@@ -2033,6 +2033,7 @@ import InfoGeometry.Arithmetic.RiemannZetaEquivalences
 import InfoGeometry.Arithmetic.RamanujanDefectTower
 import InfoGeometry.Arithmetic.WittenParityIndex
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
+import InfoGeometry.Canonical.FiniteBitWordListAddressBridge
 import InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
 import InfoGeometry.Canonical.UHFInductiveColimitBoundaryInverseLimit
 import InfoGeometry.Canonical.UHFInductiveLimitBoundary

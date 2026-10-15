@@ -34,14 +34,17 @@ theorem toAddress_ofAddress {n : ℕ} (w : BinaryWord) (hw : w.length = n) :
     toAddress (ofAddress w hw) = w := by
   change List.ofFn (fun i : Fin n => w.get (Fin.cast hw.symm i)) = w
   have h := List.ofFn_congr hw (w.get)
-  rw [← List.ofFn_get w]
-  exact h.symm
+  calc
+    List.ofFn (fun i : Fin n => w.get (Fin.cast hw.symm i)) = List.ofFn w.get := h.symm
+    _ = w := List.ofFn_get w
 
 /-- Decoding an encoded fixed-length word returns the original word. -/
 theorem ofAddress_toAddress {n : ℕ} (w : BitWord n) :
     ofAddress (toAddress w) (toAddress_length w) = w := by
   funext i
-  simp [ofAddress, toAddress]
+  change (List.ofFn w).get (Fin.cast (toAddress_length w).symm i) = w i
+  rw [List.get_ofFn]
+  congr 1
 
 /-- Fixed-length UHF words are equivalent to list addresses carrying the same length. -/
 def addressEquiv (n : ℕ) : BitWord n ≃ {w : BinaryWord // w.length = n} where
@@ -71,11 +74,6 @@ theorem toAddress_extendSucc {n : ℕ} (w : BitWord n) (b : Bool) :
     simp [extendSucc]
   rw [hprefix, hlast]
   simp
-
-/-- The fixed-length prefixes of an address and its child agree at the old depth. -/
-theorem toAddress_prefixSucc_child {n : ℕ} (w : BitWord n) (b : Bool) :
-    prefixSucc n (extendSucc n w b) = w :=
-  prefixSucc_extendSucc n w b
 
 /-- A fixed-length extension lies in the already-defined parent address cylinder. -/
 theorem toAddress_extendSucc_mem_closedCylinder {n : ℕ}

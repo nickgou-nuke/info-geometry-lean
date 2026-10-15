@@ -1,0 +1,8 @@
+import InfoGeometry.Canonical.FiniteBitWordListAddressBridge
+
+#print axioms InfoGeometry.Canonical.FiniteBitWordListAddressBridge.toAddress_length
+#print axioms InfoGeometry.Canonical.FiniteBitWordListAddressBridge.toAddress_ofAddress
+#print axioms InfoGeometry.Canonical.FiniteBitWordListAddressBridge.ofAddress_toAddress
+#print axioms InfoGeometry.Canonical.FiniteBitWordListAddressBridge.toAddress_injective
+#print axioms InfoGeometry.Canonical.FiniteBitWordListAddressBridge.toAddress_extendSucc
+#print axioms InfoGeometry.Canonical.FiniteBitWordListAddressBridge.toAddress_extendSucc_mem_closedCylinder

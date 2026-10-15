@@ -5,9 +5,9 @@ namespace InfoGeometry.Superalgebra.KahlerDiracWeitzenbockSynthesis
 /-!
 # Kernel Axiom Audit for `KahlerDiracWeitzenbockSynthesis`
 
-This audit companion prints the transitive kernel axiom dependencies of all
-27 theorems in `KahlerDiracWeitzenbockSynthesis.lean` (`[propext, Classical.choice, Quot.sound]`,
-with zero custom axioms or proof holes).
+This companion prints transitive kernel axiom dependencies. It audits kernel
+dependencies only; it does not certify that theorem names or prose match a
+broader geometric interpretation.
 -/
 
 #print axioms exteriorWedge_apply
@@ -19,6 +19,7 @@ with zero custom axioms or proof holes).
 #print axioms exteriorContract_wedge_apply
 #print axioms exteriorContract_iota
 #print axioms exterior_cartan_homotopy_car
+#print axioms exteriorContract_wedge_noncommute_witness
 #print axioms chevalleyAction_one
 #print axioms chevalleyAction_iota
 #print axioms chevalleyAction_sq
@@ -31,11 +32,11 @@ with zero custom axioms or proof holes).
 #print axioms kahlerDirac_comm_hodgeLaplacian
 #print axioms kahlerDirac_harmonic_imp_hodge_harmonic
 #print axioms diracOperator₂_sq_weitzenbock
-#print axioms weitzenbock_curvature_decomposition
-#print axioms weitzenbock_scalar_curvature_apply
-#print axioms kalbRamondContraction_symm
-#print axioms kalbRamondContraction_diag_nonneg
-#print axioms bismutDilatonRicciTensor_isSymm
-#print axioms bismutDilatonRicciTensor_zero_flux
+#print axioms dirac_sq_remainder_decomposition
+#print axioms dirac_sq_scalar_remainder_apply
+#print axioms finiteQuadraticTensorContraction_symm
+#print axioms finiteQuadraticTensorContraction_diag_nonneg
+#print axioms weightedRicciHessianTensor_isSymm
+#print axioms weightedRicciHessianTensor_zero_corrections
 
 end InfoGeometry.Superalgebra.KahlerDiracWeitzenbockSynthesis

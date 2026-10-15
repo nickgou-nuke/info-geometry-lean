@@ -24,13 +24,14 @@ indefinite para-Kähler super-Grassmannian geometry (`SuperGrassmannianManifold.
    horizontal and vertical subspaces, evaluating natural gradient inner products on horizontal
    test vectors isolates the horizontal component:
    $$g(\tilde{\nabla} \mathcal{L}, P_{\mathcal{H}} w) = g(P_{\mathcal{H}} \tilde{\nabla} \mathcal{L}, P_{\mathcal{H}} w)$$
-4. `kernel_pinning_vanishing_drift` & `kinetic_energy_fiber_collapse`: Formal microkernel verification
-   enforces the vanishing of vertical gradient flow ($P_{\mathcal{V}} \tilde{\nabla} \mathcal{L} = 0$),
-   collapsing kinetic energy strictly to the horizontal base component.
-5. `fisher_flat_fiber_metric_collapse` & `natural_gradient_vertical_metric_null`: When the Fisher metric
-   is flat along vertical fibers ($g(P_{\mathcal{V}} u, P_{\mathcal{V}} w) = 0$), vertical directions
+4. `kernel_pinning_vanishing_drift` & `kinetic_energy_fiber_collapse`: Conditional projection
+   consequences from an explicit hypothesis that the vector has zero vertical projection.
+5. `fisher_flat_fiber_metric_collapse` & `natural_gradient_vertical_metric_null`: When the supplied
+   bilinear form is null on vertical projections ($g(P_{\mathcal{V}} u, P_{\mathcal{V}} w) = 0$), vertical directions
    are completely metric-null and quadratic metric energy collapses to the horizontal subspace.
-6. `invariantApex` & `apexObjective_at_criticalRadius`: Geodesic fixed-point optimization yielding
+6. `horizontal_projection_has_zero_vertical_component`: The vertical projector annihilates
+   the horizontal projector, as part of the supplied submersion splitting.
+7. `invariantApex` & `apexObjective_at_criticalRadius`: Scalar quadratic optimization yielding
    the critical radius $r^* = \frac{C}{2K}$ and invariant apex $R^* = \frac{C^2}{4K}$.
 -/
 
@@ -190,11 +191,10 @@ theorem natural_gradient_horizontal_isolation
   rw [h_vert_zero, add_zero]
 
 /--
-  **Kernel Pinning & Vanishing Confabulation Drift**:
-  Under microkernel verification, the vertical gradient vanishes identically:
+  Conditional projection identity: assuming the vector is vertically pinned,
+  its negative has zero vertical projection:
   $$P_{\mathcal{V}} \tilde{\nabla} \mathcal{L} = 0$$
-  Consequently, the natural gradient velocity $\dot{\theta} = - \tilde{\nabla} \mathcal{L}$
-  has vanishing vertical drift:
+  Consequently, for the explicitly related velocity $\dot{\theta} = - \tilde{\nabla} \mathcal{L}$:
   $$P_{\mathcal{V}} \dot{\theta} = 0$$
   and is strictly horizontal:
   $$P_{\mathcal{H}} \dot{\theta} = \dot{\theta}$$
@@ -223,10 +223,10 @@ theorem kinetic_energy_fiber_collapse
     horizontal_of_vertical_zero sys.split velocity h_pinned
   rw [h_horiz]
 
-/-! ### 3. Fisher-Flat Fiber Natural Gradient Descent -/
+/-! ### 3. Metric Identities for the Abstract Split -/
 
 /--
-  When the Fisher metric vanishes identically on the vertical fiber
+  When the supplied bilinear form vanishes identically on vertical projections
   ($g(P_{\mathcal{V}} u, P_{\mathcal{V}} w) = 0$), the quadratic metric form on any tangent
   vector $v$ collapses to its horizontal projection $P_{\mathcal{H}} v$.
 -/
@@ -241,7 +241,7 @@ theorem fisher_flat_fiber_metric_collapse
   simp only [map_add, LinearMap.add_apply, sys.ortho_HV v v, metric_ortho_VH sys v v, h_flat v v, add_zero]
 
 /--
-  Under a Fisher-flat vertical fiber, the vertical component of any natural gradient vector
+  Under a null vertical restriction, the vertical component of any vector
   is metric-null against every test vector $w \in V$.
 -/
 theorem natural_gradient_vertical_metric_null
@@ -254,11 +254,21 @@ theorem natural_gradient_vertical_metric_null
   conv_lhs => rw [h_decomp]
   rw [map_add, metric_ortho_VH sys natGrad w, h_flat natGrad w, add_zero]
 
+/-! ### 3b. Projection Identity -/
+
+/-- The vertical projector annihilates the horizontal projection, directly from the
+orthogonality law in `SubmersionSplit`. This theorem concerns the splitting only; it
+does not assert that a Fisher metric inverse has horizontal range. -/
+theorem horizontal_projection_has_zero_vertical_component
+    (split : SubmersionSplit V) (gradL : V) :
+    split.projV (split.projH gradL) = 0 :=
+  split.orthoVH gradL
+
 end SubmersionSystem
 
-/-! ### 4. Geodesic Fixed Point & Invariant Apex ($R^* = C^2 / (4K)$) -/
+/-! ### 4. Scalar Quadratic Optimum ($R^* = C^2 / (4K)$) -/
 
-/-- Quadratic trade-off objective along the horizontal geodesic: $\mathcal{J}(r) = C r - K r^2$. -/
+/-- Scalar quadratic objective: $\mathcal{J}(r) = C r - K r^2$. -/
 def apexObjective (C K r : ℝ) : ℝ :=
   C * r - K * r ^ 2
 
@@ -266,7 +276,7 @@ def apexObjective (C K r : ℝ) : ℝ :=
 def apexGradient (C K r : ℝ) : ℝ :=
   C - 2 * K * r
 
-/-- Critical geodesic radius where the gradient vanishes: $r^* = \frac{C}{2K}$. -/
+/-- Critical radius where the derivative of the scalar quadratic vanishes: $r^* = \frac{C}{2K}$. -/
 noncomputable def criticalRadius (C K : ℝ) : ℝ :=
   C / (2 * K)
 

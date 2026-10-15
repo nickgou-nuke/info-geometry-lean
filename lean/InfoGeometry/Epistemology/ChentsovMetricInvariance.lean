@@ -9,7 +9,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import InfoGeometry.Epistemology.VariationalRG
 
 /-!
-# Chentsov Metric Invariance: Congruent Markov Embeddings and Fisher Information
+# Finite Fisher Metric Identities for Congruent Markov Kernels
 
 This module formalizes the core differential-geometric invariance theorem of Chentsov:
 1. `ProbInterior`: Probability distributions on finite types strictly residing in the
@@ -17,7 +17,8 @@ This module formalizes the core differential-geometric invariance theorem of Che
 2. `TangentVector`: Tangent vectors to the probability simplex ($\sum_a v(a) = 0$),
    with constructive witness `zeroTangentVector`.
 3. `fisherMetric`: The Riemannian metric tensor $g_P(u, v) = \sum_a \frac{u(a) v(a)}{P(a)}$
-   on the simplex interior, together with symmetry, non-negativity, score representation,
+   on the simplex interior, together with symmetry, non-negativity, strict positive-definiteness
+   (`fisherMetric_eq_zero_iff`, `fisherMetric_pos_of_ne_zero`), score representation,
    and scalar homogeneity (`fisherMetric_zero_left`, `fisherMetric_zero_right`,
    `fisherMetric_smul_left`, `fisherMetric_smul_right`).
 4. `pushforwardTangent`: Action of a Markov transition kernel on simplex tangent vectors,
@@ -26,10 +27,16 @@ This module formalizes the core differential-geometric invariance theorem of Che
    (each output state $b \in \beta$ is reachable from at most one input state $a \in \alpha$),
    with constructive identity witness `idCongruentMarkovKernel` and `pushforwardTangentVec_id`.
 6. `chentsov_congruent_metric_invariance` & `chentsov_congruent_pushforward_fisher_isometry`:
-   Exact invariance of the Fisher information metric under congruent Markov embeddings:
+   Exact invariance of the finite Fisher sum under the stated congruent-kernel hypotheses:
    $$g_{T_* P}(T_* u, T_* v) = g_P(u, v)$$
-7. `injectiveCongruentKernel`: Injective sample-space embeddings $f : \alpha \hookrightarrow \beta$
-   induce canonical congruent Markov kernels.
+7. `CongruentPartitionEmbedding` & `chentsov_partition_embedding_fisher_invariance`:
+   Sufficient statistic partition embeddings $\pi : \beta \to \alpha$ with positive fiber weights
+   $c_b > 0$ summing to $1$ on each fiber $\pi^{-1}(a)$ induce full-support congruent Markov
+   kernels preserving the Fisher metric.
+8. `injectiveCongruentKernel` & `injectiveCongruentKernel_supportMaskedFisher_sum`:
+   Injective sample-space embeddings induce a support-masked finite sum identity. When the
+   embedding is not surjective, the pushed distribution is on the boundary of the target
+   simplex, so this theorem is not an interior Fisher isometry.
 -/
 
 namespace InfoGeometry.Epistemology.ChentsovMetricInvariance
@@ -121,6 +128,39 @@ theorem fisherMetric_zero_right {α : Type*} [Fintype α]
     fisherMetric P u (fun _ => 0) = 0 := by
   unfold fisherMetric
   simp
+
+/-- Strict positive-definiteness of the Fisher metric on the simplex interior:
+`g_P(u, u) = 0 ↔ u = 0`. -/
+theorem fisherMetric_eq_zero_iff {α : Type*} [Fintype α]
+    (P : ProbInterior α) (u : α → ℝ) :
+    fisherMetric P u u = 0 ↔ u = 0 := by
+  constructor
+  · intro h_zero
+    unfold fisherMetric at h_zero
+    have h_nonneg : ∀ a ∈ (Finset.univ : Finset α), 0 ≤ (u a * u a) / P.p a := by
+      intro a _
+      exact div_nonneg (mul_self_nonneg (u a)) (le_of_lt (P.pos a))
+    have h_terms := (Finset.sum_eq_zero_iff_of_nonneg h_nonneg).mp h_zero
+    funext a
+    have ha := h_terms a (Finset.mem_univ a)
+    have h_p_ne : P.p a ≠ 0 := ne_of_gt (P.pos a)
+    have h_mul : u a * u a = 0 := by
+      rcases div_eq_zero_iff.mp ha with h_num | h_den
+      · exact h_num
+      · exact False.elim (h_p_ne h_den)
+    exact mul_self_eq_zero.mp h_mul
+  · rintro rfl
+    unfold fisherMetric
+    simp
+
+/-- Strict positivity of the Fisher metric quadratic form on nonzero tangent vectors:
+`u ≠ 0 → 0 < g_P(u, u)`. -/
+theorem fisherMetric_pos_of_ne_zero {α : Type*} [Fintype α]
+    (P : ProbInterior α) (u : α → ℝ) (hu : u ≠ 0) :
+    0 < fisherMetric P u u := by
+  refine lt_of_le_of_ne (fisherMetric_nonneg P u) ?_
+  intro h_eq
+  exact hu ((fisherMetric_eq_zero_iff P u).mp h_eq.symm)
 
 /-- Left scalar homogeneity of the Fisher metric tensor. -/
 theorem fisherMetric_smul_left {α : Type*} [Fintype α]
@@ -402,7 +442,82 @@ theorem chentsov_congruent_pushforward_fisher_isometry
           exact h_term b
     _ = fisherMetric P u v := chentsov_congruent_metric_invariance CK P u v
 
-/-! ### 6. Canonical Injective Embeddings -/
+/-! ### 6. Sufficient Statistic Partition Embeddings -/
+
+/-- A sufficient statistic partition embedding `π : β → α` with strictly positive
+conditional fiber weights `c : β → ℝ` summing to `1` over each fiber `π⁻¹(a)`. -/
+structure CongruentPartitionEmbedding (α β : Type*) [Fintype α] [Fintype β] [DecidableEq α] where
+  π : β → α
+  c : β → ℝ
+  c_pos : ∀ b, 0 < c b
+  partition_sum : ∀ a : α, ∑ b ∈ Finset.univ.filter (fun b => π b = a), c b = 1
+
+/-- Identity sufficient statistic partition embedding on a finite type `α`. -/
+def idCongruentPartitionEmbedding (α : Type*) [Fintype α] [DecidableEq α] :
+    CongruentPartitionEmbedding α α where
+  π := id
+  c := fun _ => 1
+  c_pos := fun _ => zero_lt_one
+  partition_sum a := by
+    rw [Finset.sum_filter]
+    dsimp only [id]
+    rw [Finset.sum_ite_eq']
+    simp
+
+instance {α : Type*} [Fintype α] [DecidableEq α] :
+    Inhabited (CongruentPartitionEmbedding α α) :=
+  ⟨idCongruentPartitionEmbedding α⟩
+
+/-- Every sufficient statistic partition embedding canonically induces a congruent Markov kernel
+`T(a, b) = c(b) δ_{π(b), a}`. -/
+def partitionEmbeddingToKernel {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α]
+    (E : CongruentPartitionEmbedding α β) : CongruentMarkovKernel α β where
+  kernel := {
+    T a b := if E.π b = a then E.c b else 0
+    nonneg a b := by
+      change 0 ≤ (if E.π b = a then E.c b else 0)
+      split_ifs
+      · exact le_of_lt (E.c_pos b)
+      · exact le_refl 0
+    sum_one a := by
+      change ∑ b, (if E.π b = a then E.c b else 0) = 1
+      rw [← Finset.sum_filter]
+      exact E.partition_sum a
+  }
+  fiber := E.π
+  fiber_prop a b := by
+    dsimp
+    split_ifs with h_eq
+    · intro _
+      exact h_eq
+    · intro h_abs
+      contradiction
+
+/-- Every output state `b` in a partition embedding has strictly positive transition weight
+from its assigned sufficient-statistic fiber `E.π b`. -/
+theorem partitionEmbedding_weight_pos {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α]
+    (E : CongruentPartitionEmbedding α β) (b : β) :
+    0 < (partitionEmbeddingToKernel E).kernel.T ((partitionEmbeddingToKernel E).fiber b) b := by
+  dsimp [partitionEmbeddingToKernel]
+  rw [if_pos rfl]
+  exact E.c_pos b
+
+/-- **Chentsov's Partition Embedding Fisher Invariance Theorem**:
+Every sufficient statistic partition embedding `E : CongruentPartitionEmbedding α β`
+is an exact Fisher-metric isometry from `ProbInterior α` into `ProbInterior β`. -/
+theorem chentsov_partition_embedding_fisher_invariance
+    {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α]
+    (E : CongruentPartitionEmbedding α β) (P : ProbInterior α) (u v : α → ℝ) :
+    fisherMetric
+        (congruentPushforwardInterior (partitionEmbeddingToKernel E) P
+          (partitionEmbedding_weight_pos E))
+        (pushforwardTangentVec (partitionEmbeddingToKernel E).kernel u)
+        (pushforwardTangentVec (partitionEmbeddingToKernel E).kernel v) =
+      fisherMetric P u v :=
+  chentsov_congruent_pushforward_fisher_isometry
+    (partitionEmbeddingToKernel E) P (partitionEmbedding_weight_pos E) u v
+
+/-! ### 7. Canonical Injective Embeddings -/
 
 /--
   Any injection `f : α ↪ β` with a retraction `retract : β → α` satisfying
@@ -431,5 +546,20 @@ def injectiveCongruentKernel {α β : Type*} [Fintype α] [Fintype β] [Decidabl
       rfl
     · intro h_abs
       contradiction
+
+/-- Support-masked finite sum identity for an injective sample-space embedding. For a
+non-surjective embedding the pushforward has zero coordinates, so the masked sum here
+is not asserted to be the Fisher metric on the target simplex interior. -/
+theorem injectiveCongruentKernel_supportMaskedFisher_sum
+    {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β]
+    (f : α ↪ β) (retract : β → α) (h_retract : ∀ a, retract (f a) = a)
+    (P : ProbInterior α) (u v : α → ℝ) :
+    ∑ b, (if (injectiveCongruentKernel f retract h_retract).kernel.T
+          ((injectiveCongruentKernel f retract h_retract).fiber b) b = 0 then 0 else
+        (pushforwardTangentVec (injectiveCongruentKernel f retract h_retract).kernel u b *
+          pushforwardTangentVec (injectiveCongruentKernel f retract h_retract).kernel v b) /
+        (pushforward (injectiveCongruentKernel f retract h_retract).kernel (toProbDist P)).p b) =
+      fisherMetric P u v :=
+  chentsov_congruent_metric_invariance (injectiveCongruentKernel f retract h_retract) P u v
 
 end InfoGeometry.Epistemology.ChentsovMetricInvariance

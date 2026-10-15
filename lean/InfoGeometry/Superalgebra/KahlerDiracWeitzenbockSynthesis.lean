@@ -5,14 +5,16 @@ import Mathlib.Algebra.Order.Ring.Defs
 import Mathlib.Tactic
 
 /-!
-# Chevalley–Kähler–Dirac & Weitzenböck Synthesis
+# Exterior CAR, Chevalley Action, and Finite Operator Identities
 
-This module formalizes the five canonical mathematical archetypes synthesizing
-differential forms, interior/exterior CAR super-operators, Chevalley's
-Cliffordization of the exterior algebra, the Kähler–Dirac and Hodge Laplacian
-identities, the Lichnerowicz–Weitzenböck Bochner–curvature decomposition, and
-the Bismut–Perelman dilaton–Kalb–Ramond–Ricci tensor over general commutative
-rings and modules.
+This module proves algebraic exterior-algebra CAR and Chevalley-action
+identities, conditional identities for endomorphisms satisfying square-zero
+hypotheses, a two-generator operator expansion, and finite-index contraction
+identities. The operator results do not construct a manifold, differential
+forms, a metric connection, scalar curvature, a Bismut connection, or a Ricci
+flow. In particular, the two-generator expansion is not the geometric
+Lichnerowicz formula, and the final matrix-valued formula is not a derived
+Bismut–Perelman tensor.
 
 ## Main Definitions and Theorems
 
@@ -25,20 +27,20 @@ rings and modules.
    * `chevalleyAction`
    * `chevalleyAction_one`, `chevalleyAction_iota`
    * `chevalleyAction_sq`, `chevalleyAction_anticomm`
-3. **Archetype III (Kähler–Dirac Operator & Hodge Laplacian)**:
+3. **Archetype III (Square-Zero Endomorphisms and Their Laplacian Identity)**:
    * `kahlerDirac`, `cliffordDiracSub`, `hodgeLaplacian`
    * `kahlerDirac_sq_expansion`, `kahlerDirac_sq_eq_hodgeLaplacian`,
      `cliffordDiracSub_sq_eq_neg_hodgeLaplacian`
    * `hodgeLaplacian_comm_d`, `hodgeLaplacian_comm_delta`,
      `kahlerDirac_comm_hodgeLaplacian`, `kahlerDirac_harmonic_imp_hodge_harmonic`
-4. **Archetype IV (Lichnerowicz–Weitzenböck Bochner–Curvature Decomposition)**:
+4. **Archetype IV (Two-Generator Endomorphism Expansion)**:
    * `diracOperator`, `bochnerLaplacian₂`, `curvatureCommutator`, `diracOperator₂`
-   * `diracOperator₂_sq_weitzenbock`, `weitzenbock_curvature_decomposition`,
-     `weitzenbock_scalar_curvature_apply`
-5. **Archetype V (Dilaton–Kalb–Ramond–Ricci Superflow & Bismut Torsion Coupling)**:
-   * `kalbRamondContraction`, `bismutDilatonRicciTensor`
-   * `kalbRamondContraction_symm`, `kalbRamondContraction_diag_nonneg`
-   * `bismutDilatonRicciTensor_isSymm`, `bismutDilatonRicciTensor_zero_flux`
+   * `diracOperator₂_sq_weitzenbock`, `dirac_sq_remainder_decomposition`,
+     `dirac_sq_scalar_remainder_apply`
+5. **Archetype V (Finite Quadratic Contraction and Weighted Matrix Formula)**:
+   * `finiteQuadraticTensorContraction`, `weightedRicciHessianTensor`
+   * `finiteQuadraticTensorContraction_symm`, `finiteQuadraticTensorContraction_diag_nonneg`
+   * `weightedRicciHessianTensor_isSymm`, `weightedRicciHessianTensor_zero_corrections`
 -/
 
 noncomputable section
@@ -143,6 +145,28 @@ theorem exterior_cartan_homotopy_car {R : Type*} [CommRing R] {M : Type*} [AddCo
   change exteriorContract φ (exteriorWedge R v ω) + exteriorWedge R v (exteriorContract φ ω) =
     φ v • ω
   rw [exteriorContract_wedge_apply, sub_add_cancel]
+
+/-- Concrete creation operator used in the noncommutativity witness. -/
+noncomputable def exteriorCreationWitnessOperator :
+    Module.End ℝ (ExteriorAlgebra ℝ ℝ) := exteriorWedge ℝ (1 : ℝ)
+
+/-- Concrete contraction operator used in the noncommutativity witness. -/
+noncomputable def exteriorContractionWitnessOperator :
+    Module.End ℝ (ExteriorAlgebra ℝ ℝ) :=
+  exteriorContract (LinearMap.id : ℝ →ₗ[ℝ] ℝ)
+
+/-- A concrete noncommutativity witness for the exterior creation and
+contraction operators. Evaluating the two compositions on the unit separates
+them, so the operator carrier is not being treated as a scalar surrogate. -/
+theorem exteriorContract_wedge_noncommute_witness :
+    exteriorContractionWitnessOperator * exteriorCreationWitnessOperator ≠
+      exteriorCreationWitnessOperator * exteriorContractionWitnessOperator := by
+  intro h
+  simp only [exteriorContractionWitnessOperator, exteriorCreationWitnessOperator] at h
+  have hEval := congrArg
+    (fun f : Module.End ℝ (ExteriorAlgebra ℝ ℝ) => f 1) h
+  simp [Module.End.mul_apply, exteriorWedge_apply,
+    exteriorContract_iota, exteriorContract_one] at hEval
 
 /-!
 ## Archetype II: Chevalley Cliffordization of the Exterior Bundle (`u v = u ∧ v + u ⌟ v`)
@@ -284,10 +308,11 @@ theorem kahlerDirac_harmonic_imp_hodge_harmonic (d δ : Module.End R Ω)
   rw [← kahlerDirac_sq_eq_hodgeLaplacian d δ hd hδ, Module.End.mul_apply, hω, map_zero]
 
 /-!
-## Archetype IV: Lichnerowicz–Weitzenböck Bochner–Curvature Decomposition
+## Archetype IV: Two-Generator Endomorphism Expansion
 -/
 
-/-- General geometric Dirac operator `D = ∑ i, γ_i ∇_i` over a finite frame `ι`. -/
+/-- Finite sum of products in an endomorphism algebra. No geometric frame is
+part of this definition. -/
 def diracOperator {ι : Type*} [Fintype ι] (γ covDeriv : ι → Module.End R Ω) : Module.End R Ω :=
   ∑ i : ι, γ i * covDeriv i
 
@@ -299,13 +324,13 @@ def bochnerLaplacian₂ (covDeriv₁ covDeriv₂ : Module.End R Ω) : Module.End
 def curvatureCommutator (covDeriv₁ covDeriv₂ : Module.End R Ω) : Module.End R Ω :=
   covDeriv₁ * covDeriv₂ - covDeriv₂ * covDeriv₁
 
-/-- Two-direction geometric Dirac operator `D₂ = γ₁ ∇₁ + γ₂ ∇₂`. -/
+/-- Two-term endomorphism expression `D₂ = γ₁ A₁ + γ₂ A₂`. -/
 def diracOperator₂ (γ₁ γ₂ covDeriv₁ covDeriv₂ : Module.End R Ω) : Module.End R Ω :=
   γ₁ * covDeriv₁ + γ₂ * covDeriv₂
 
-/-- Exact Lichnerowicz–Weitzenböck decomposition of the squared two-direction Dirac operator
-into the Bochner rough Laplacian plus the Clifford-contracted curvature commutator:
-`(γ₁ ∇₁ + γ₂ ∇₂)² = (∇₁² + ∇₂²) + γ₁ γ₂ (∇₁ ∇₂ - ∇₂ ∇₁)`. -/
+/-- Two-generator endomorphism identity under the stated square, anticommutation,
+and commutation hypotheses. Its commutator term is an algebraic rearrangement;
+this theorem does not assert the geometric Lichnerowicz formula. -/
 theorem diracOperator₂_sq_weitzenbock (γ₁ γ₂ covDeriv₁ covDeriv₂ : Module.End R Ω)
     (hγ1 : γ₁ * γ₁ = 1) (hγ2 : γ₂ * γ₂ = 1)
     (hanticomm : γ₁ * γ₂ + γ₂ * γ₁ = 0)
@@ -345,70 +370,74 @@ theorem diracOperator₂_sq_weitzenbock (γ₁ γ₂ covDeriv₁ covDeriv₂ : M
     _ = bochnerLaplacian₂ covDeriv₁ covDeriv₂ + (γ₁ * γ₂) * curvatureCommutator covDeriv₁ covDeriv₂ := by
       rw [h11, h22, h12, h21, bochnerLaplacian₂, curvatureCommutator, mul_sub, sub_eq_add_neg]
 
-/-- Abstract Weitzenböck decomposition of `D²` into the Bochner Laplacian plus the
-Weitzenböck curvature endomorphism `D² - ∇*∇`. -/
-theorem weitzenbock_curvature_decomposition (D bochnerLaplacian : Module.End R Ω) :
+/-- Decompose any endomorphism square into a chosen summand and its remainder. -/
+theorem dirac_sq_remainder_decomposition (D bochnerLaplacian : Module.End R Ω) :
     D * D = bochnerLaplacian + (D * D - bochnerLaplacian) :=
   (add_sub_cancel bochnerLaplacian (D * D)).symm
 
-/-- Lichnerowicz scalar curvature action: when the Weitzenböck curvature endomorphism is a scalar
-multiple `κ • 1` (e.g., `κ = R_scal / 4`), `D² ψ = ∇*∇ ψ + κ • ψ`. -/
-theorem weitzenbock_scalar_curvature_apply (D bochnerLaplacian : Module.End R Ω) (κ : R)
+/-- If the remainder is assumed to be a scalar multiple of the identity, its
+action is multiplication by that scalar. This assumes the scalar identification
+rather than deriving curvature from geometric data. -/
+theorem dirac_sq_scalar_remainder_apply (D bochnerLaplacian : Module.End R Ω) (κ : R)
     (hκ : D * D - bochnerLaplacian = κ • (1 : Module.End R Ω)) (ψ : Ω) :
     (D * D) ψ = bochnerLaplacian ψ + κ • ψ := by
   have hD : D * D = bochnerLaplacian + κ • (1 : Module.End R Ω) := by
-    rw [weitzenbock_curvature_decomposition D bochnerLaplacian, hκ]
+    rw [dirac_sq_remainder_decomposition D bochnerLaplacian, hκ]
   rw [hD, LinearMap.add_apply, LinearMap.smul_apply, Module.End.one_apply]
 
 /-!
-## Archetype V: Dilaton–Kalb–Ramond–Ricci Superflow & Bismut Torsion Coupling
+## Archetype V: Finite Quadratic Contraction and Weighted Matrix Formula
 -/
 
-/-- Quadratic contraction `H²_{ij} = ∑_{k,l} H_{ikl} H_{jkl}` of the Kalb–Ramond 3-form `H`. -/
-def kalbRamondContraction {n : Type*} [Fintype n] (H : n → n → n → R) (i j : n) : R :=
+/-- Finite-index quadratic contraction `Cᵢⱼ = ∑ₖₗ Hᵢₖₗ Hⱼₖₗ` of an arbitrary
+three-index function. No differential-form or metric structure is assumed. -/
+def finiteQuadraticTensorContraction {n : Type*} [Fintype n]
+    (H : n → n → n → R) (i j : n) : R :=
   ∑ k : n, ∑ l : n, H i k l * H j k l
 
-/-- The Kalb–Ramond quadratic contraction `H²_{ij}` is symmetric in `(i, j)`. -/
-theorem kalbRamondContraction_symm {n : Type*} [Fintype n] (H : n → n → n → R) (i j : n) :
-    kalbRamondContraction H i j = kalbRamondContraction H j i := by
-  unfold kalbRamondContraction
+/-- The finite quadratic contraction is symmetric in its two free indices. -/
+theorem finiteQuadraticTensorContraction_symm {n : Type*} [Fintype n]
+    (H : n → n → n → R) (i j : n) :
+    finiteQuadraticTensorContraction H i j = finiteQuadraticTensorContraction H j i := by
+  unfold finiteQuadraticTensorContraction
   refine Finset.sum_congr rfl fun k _ => ?_
   refine Finset.sum_congr rfl fun l _ => ?_
   exact mul_comm (H i k l) (H j k l)
 
-/-- Over any linearly ordered commutative ring, the diagonal entries `H²_{ii}` of the
-Kalb–Ramond contraction are non-negative sums of squares. -/
-theorem kalbRamondContraction_diag_nonneg {S : Type*} [CommRing S] [LinearOrder S]
+/-- Over a linearly ordered commutative ring, diagonal entries of this
+contraction are nonnegative sums of squares. -/
+theorem finiteQuadraticTensorContraction_diag_nonneg {S : Type*}
+    [CommRing S] [LinearOrder S]
     [IsStrictOrderedRing S] {n : Type*} [Fintype n] (H : n → n → n → S) (i : n) :
-    0 ≤ kalbRamondContraction H i i := by
-  unfold kalbRamondContraction
+    0 ≤ finiteQuadraticTensorContraction H i i := by
+  unfold finiteQuadraticTensorContraction
   refine Finset.sum_nonneg fun k _ => ?_
   refine Finset.sum_nonneg fun l _ => ?_
   exact mul_self_nonneg (H i k l)
 
-/-- The Bismut–Perelman generalized dilaton-Ricci tensor
-`Ric_gen(g, H, Φ)_{ij} = Ric_{ij} - c_H H²_{ij} + c_Φ (∇²Φ)_{ij}`. -/
-def bismutDilatonRicciTensor {n : Type*} [Fintype n]
+/-- A componentwise weighted combination of an input matrix, the finite
+quadratic contraction, and a second input matrix. -/
+def weightedRicciHessianTensor {n : Type*} [Fintype n]
     (ricci hessPhi : Matrix n n R) (H : n → n → n → R) (cH cPhi : R) : Matrix n n R :=
-  fun i j => ricci i j - cH * kalbRamondContraction H i j + cPhi * hessPhi i j
+  fun i j => ricci i j - cH * finiteQuadraticTensorContraction H i j + cPhi * hessPhi i j
 
-/-- If the Ricci tensor and dilaton Hessian are symmetric, then the Bismut–Perelman
-dilaton-Ricci tensor is symmetric. -/
-theorem bismutDilatonRicciTensor_isSymm {n : Type*} [Fintype n]
+/-- If the input matrices are symmetric, their weighted combination with the
+finite quadratic contraction is symmetric. -/
+theorem weightedRicciHessianTensor_isSymm {n : Type*} [Fintype n]
     (ricci hessPhi : Matrix n n R) (H : n → n → n → R) (cH cPhi : R)
     (hRic : ricci.IsSymm) (hHess : hessPhi.IsSymm) :
-    (bismutDilatonRicciTensor ricci hessPhi H cH cPhi).IsSymm := by
+    (weightedRicciHessianTensor ricci hessPhi H cH cPhi).IsSymm := by
   refine Matrix.IsSymm.ext fun i j => ?_
-  simp only [bismutDilatonRicciTensor, hRic.apply i j, hHess.apply i j,
-    kalbRamondContraction_symm H j i]
+  simp only [weightedRicciHessianTensor, hRic.apply i j, hHess.apply i j,
+    finiteQuadraticTensorContraction_symm H j i]
 
-/-- When the Kalb–Ramond 3-form flux `H = 0` and the dilaton Hessian `∇²Φ = 0`, the
-Bismut–Perelman dilaton-Ricci tensor reduces identically to Hamilton's pure Ricci tensor. -/
+/-- If both correction inputs vanish, the weighted matrix formula reduces to
+the first input matrix. -/
 @[simp]
-theorem bismutDilatonRicciTensor_zero_flux {n : Type*} [Fintype n]
+theorem weightedRicciHessianTensor_zero_corrections {n : Type*} [Fintype n]
     (ricci : Matrix n n R) (cH cPhi : R) :
-    bismutDilatonRicciTensor ricci 0 (fun _ _ _ => (0 : R)) cH cPhi = ricci := by
+    weightedRicciHessianTensor ricci 0 (fun _ _ _ => (0 : R)) cH cPhi = ricci := by
   ext i j
-  simp [bismutDilatonRicciTensor, kalbRamondContraction]
+  simp [weightedRicciHessianTensor, finiteQuadraticTensorContraction]
 
 end InfoGeometry.Superalgebra.KahlerDiracWeitzenbockSynthesis

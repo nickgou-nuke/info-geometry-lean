@@ -69,6 +69,19 @@ structure SubmersionSplit (V : Type*) [AddCommGroup V] [Module ℝ V] where
   orthoHV : ∀ v, projH (projV v) = 0
   orthoVH : ∀ v, projV (projH v) = 0
 
+/-- Canonical identity horizontal submersion split (`projH = id`, `projV = 0`). -/
+def idSubmersionSplit (V : Type*) [AddCommGroup V] [Module ℝ V] : SubmersionSplit V where
+  projH := LinearMap.id
+  projV := 0
+  sum_id v := by simp
+  idemH v := rfl
+  idemV v := rfl
+  orthoHV v := rfl
+  orthoVH v := rfl
+
+instance (V : Type*) [AddCommGroup V] [Module ℝ V] : Inhabited (SubmersionSplit V) :=
+  ⟨idSubmersionSplit V⟩
+
 /-- If the vertical component vanishes, the vector is purely horizontal. -/
 theorem horizontal_of_vertical_zero (split : SubmersionSplit V) (v : V) (hv : split.projV v = 0) :
     split.projH v = v := by
@@ -125,6 +138,17 @@ structure ONeillCurvatureData where
   KB : ℝ
   oneill_eq : KB = KM + (3 / 4) * oneill_norm_sq
 
+/-- Canonical flat O'Neill curvature witness (`KM = 0`, `oneill_norm_sq = 0`, `KB = 0`). -/
+def zeroONeillCurvatureData : ONeillCurvatureData where
+  KM := 0
+  oneill_norm_sq := 0
+  h_norm_nonneg := le_refl 0
+  KB := 0
+  oneill_eq := by ring
+
+instance : Inhabited ONeillCurvatureData :=
+  ⟨zeroONeillCurvatureData⟩
+
 /--
   Theorem (O'Neill Curvature Augmentation):
   The sectional curvature of the semantic base space `KB` is strictly greater than
@@ -153,6 +177,12 @@ theorem oneill_flat_ambient_curvature (data : ONeillCurvatureData) (hflat : data
 /-- Kinetic energy decomposition into horizontal and vertical components. -/
 def kineticEnergy (v_H v_V : ℝ) : ℝ :=
   (1 / 2) * v_H^2 + (1 / 2) * v_V^2
+
+/-- Kinetic energy is always non-negative. -/
+theorem kineticEnergy_nonneg (v_H v_V : ℝ) :
+    0 ≤ kineticEnergy v_H v_V := by
+  dsimp [kineticEnergy]
+  positivity
 
 /--
   Theorem (Kernel Pinning Eliminates Confabulation Energy):

@@ -5,27 +5,32 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Tactic
 import Mathlib.Tactic.Ring
+import Mathlib.Algebra.Category.ModuleCat.Limits
 import InfoGeometry.Canonical.TensorTowerColimit
 
 set_option linter.unusedVariables false
 set_option linter.unusedSectionVars false
 
 /-!
-# Holographic Colimit Continuum: Tensor Tower Direct Inductive System
+# Holographic Successor Tower and Its Algebraic Module Colimit
 
 This module formalizes discrete inductive towers of modules with bonding intertwiners,
-cocone sequence compatibility, causal cone monotonicity, and finite-stage projector intertwining:
+their algebraic direct limit in `ModuleCat`, cocone compatibility, causal cone
+monotonicity, and finite-stage projector intertwining. It does not assert a
+topological completion or an analytic continuum limit:
 1. `HolographicTower`: Direct inductive tower of module spaces with linear bonding maps
    `iota : ∀ n, T n →ₗ[R] T (n + 1)`.
 2. `iotaSeq`: Multi-step sequential bonding map along the tower.
 3. `iotaSeq_eq_tensorTowerColimit_iota_seq`: Proved isomorphism with canonical `TensorTowerColimit.iota_seq`.
-4. `HolographicColimitCocone`: Cocone over the tower with compatibility `(psi (n + 1)).comp (iota n) = psi n`.
-5. `psi_comp_iotaSeq`: Multi-step cocone sequence compatibility `(psi (n + m)).comp (iotaSeq n m) = psi n`.
-6. `colimit_evaluation_invariant`: Evaluation invariance for boundary functionals on the cocone space.
-7. `CausalConeFamily` & `causal_cone_seq_stable`: Preservation of causal cone membership across sequential stages.
-8. `ProjectorFamily` & `projector_comm_iotaSeq`: Sequential intertwining of idempotent stage projectors with bonding maps.
-9. `complement_idempotent` & `projector_annihilation`: Complementary idempotent $Q = \text{id} - P$ and orthogonal annihilation $PQ = 0$.
-10. `HolographicColimitContinuumCertificate`: Master integration certificate.
+4. `HolographicColimitCocone`: A compatible family of maps from the stages; it is not assumed colimiting.
+5. `holographicModuleDirectedSystem`: The successor maps induce a directed system on all `m ≤ n`.
+6. `holographicModuleCoconeIsColimit`: Mathlib's direct-limit cocone is a genuine colimit in `ModuleCat R`.
+7. `holographicCoconeDesc`: Every compatible stage family descends uniquely from that algebraic colimit.
+8. `psi_comp_iotaSeq`: Multi-step cocone sequence compatibility `(psi (n + m)).comp (iotaSeq n m) = psi n`.
+9. `colimit_evaluation_invariant`: Evaluation invariance for boundary functionals on the cocone space.
+10. `CausalConeFamily` & `causal_cone_seq_stable`: Preservation of causal cone membership across sequential stages.
+11. `ProjectorFamily` & `projector_comm_iotaSeq`: Sequential intertwining of idempotent stage projectors with bonding maps.
+12. `complement_idempotent` & `projector_annihilation`: Complementary idempotent `Q = id - P` and annihilation `PQ = 0`.
 -/
 
 namespace InfoGeometry.Canonical.HolographicColimitContinuum
@@ -65,6 +70,85 @@ theorem iotaSeq_eq_tensorTowerColimit_iota_seq
   · rfl
   · dsimp [iotaSeq, iota_seq]
     rw [ih]
+
+/-! ### 1b. Native directed system and algebraic direct limit -/
+
+/-- The map from stage `m` to stage `n`, obtained by iterating the successor
+bonding maps. -/
+def holographicStageMap
+    {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
+    (tower : HolographicTower (R := R) T) (m n : ℕ) (h : m ≤ n) :
+    T m →ₗ[R] T n :=
+  Nat.leRecOn h
+    (C := fun k => T m →ₗ[R] T k)
+    (fun {k} ih => (tower.iota k).comp ih)
+    (LinearMap.id : T m →ₗ[R] T m)
+
+@[simp]
+theorem holographicStageMap_refl
+    {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
+    (tower : HolographicTower (R := R) T) (m : ℕ) :
+    holographicStageMap tower m m le_rfl = LinearMap.id := by
+  simpa [holographicStageMap] using
+    (Nat.leRecOn_self
+      (C := fun k => T m →ₗ[R] T k)
+      (next := fun {k} ih => (tower.iota k).comp ih)
+      (x := (LinearMap.id : T m →ₗ[R] T m)))
+
+theorem holographicStageMap_succ
+    {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
+    (tower : HolographicTower (R := R) T) (m n : ℕ) (h : m ≤ n) :
+    holographicStageMap tower m (n + 1) (Nat.le_trans h (Nat.le_succ n)) =
+      (tower.iota n).comp (holographicStageMap tower m n h) := by
+  unfold holographicStageMap
+  rw [Nat.leRecOn_trans h (Nat.le_succ n)]
+  rw [Nat.leRecOn_succ']
+
+theorem holographicStageMap_apply_trans
+    {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
+    (tower : HolographicTower (R := R) T) (m n k : ℕ)
+    (hmn : m ≤ n) (hnk : n ≤ k) (x : T m) :
+    holographicStageMap tower m k (hmn.trans hnk) x =
+      holographicStageMap tower n k hnk (holographicStageMap tower m n hmn x) := by
+  induction k, hnk using Nat.le_induction with
+  | base =>
+      simp [holographicStageMap_refl]
+  | succ k hnk ih =>
+      rw [holographicStageMap_succ tower m k (hmn.trans hnk),
+        holographicStageMap_succ tower n k hnk]
+      exact congrArg (tower.iota k) ih
+
+/-- The all-stage maps generated by a successor tower satisfy Mathlib's
+directed-system coherence laws. -/
+instance holographicModuleDirectedSystem
+    {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
+    (tower : HolographicTower (R := R) T) :
+    DirectedSystem T (fun m n h => holographicStageMap tower m n h) where
+  map_self := by
+    intro m x
+    exact congrArg (fun f : T m →ₗ[R] T m => f x)
+      (holographicStageMap_refl tower m)
+  map_map := by
+    intro k j i hij hjk x
+    simpa using (holographicStageMap_apply_trans tower i j k hij hjk x).symm
+
+/-- The native Mathlib module diagram associated with a successor tower. -/
+noncomputable abbrev holographicModuleDiagram
+    {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
+    (tower : HolographicTower (R := R) T) :=
+  ModuleCat.directLimitDiagram T (fun m n h => holographicStageMap tower m n h)
+
+/-- Mathlib's canonical direct-limit cocone for a holographic successor tower. -/
+noncomputable abbrev holographicModuleCocone
+    {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
+    (tower : HolographicTower (R := R) T) :=
+  ModuleCat.directLimitCocone T (fun m n h => holographicStageMap tower m n h)
+
+/-- The successive bonding maps determine a genuine algebraic module colimit. -/
+noncomputable def holographicModuleCoconeIsColimit
+    {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
+    (tower : HolographicTower (R := R) T) : IsColimit (holographicModuleCocone tower) :=
+  ModuleCat.directLimitIsColimit T (fun m n h => holographicStageMap tower m n h)
 
 /-! ### 2. Continuous Holographic Boundary Cocone -/
 

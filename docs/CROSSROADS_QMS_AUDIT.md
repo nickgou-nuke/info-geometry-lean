@@ -44,6 +44,7 @@
 | 17 | `lean/InfoGeometry/Topology/DelaunayFlipMatrixEmbeddings.lean` | 68 | 6 | 0 | 1 / 0 | 0 / 0 / 0 | 0 | `embedBlock₂_one` & coordinate lemmas | **PASS** (Truthful frontier docstring L5–10) | `Matrix (Fin 2) (Fin 2) ℚ → Fin d → Fin d → Matrix (Fin d) (Fin d) ℚ` — **PASS (T16)** |
 | 18 | `lean/InfoGeometry/Superalgebra/PeirceDeWittZornQuantization.lean` | 899 | 84 | 0 | 28 / 0 | 2 / 0 / 0 | 0 | Direct owner theorems (`zorn_car_quantization_exact`, `supercolor_baryon_singlet_closure`) | **PASS** (`ColorVec3` & `ZornAlgebra` `Inhabited`; non-comm & non-assoc witnesses) | `ColorVec3 R`, `ZornAlgebra R` (`≃ₗ[R] ZornVectorMatrix R`) — **PASS (T16)** |
 | 19 | `lean/InfoGeometry/Superalgebra/SuperGrassmannGradedExterior.lean` | 232 | 15 | 0 | 4 / 1 | 0 / 0 / 0 | 0 | Direct owner theorems (`supercommutative_exterior`, `superCommutator_vanishes`) | **PASS** (`bosonic_ne_fermionic`; inductive proof on submodule powers) | `ExteriorAlgebra R M`, `LinearMap.range (ι R) ^ p`, `ZMod 2` — **PASS (T16)** |
+| 20 | `lean/InfoGeometry/Superalgebra/KahlerDiracWeitzenbockSynthesis.lean` | 409 | 27 | 0 | 11 / 0 | 0 / 0 / 0 | 0 | Direct owner theorems (`exterior_cartan_homotopy_car`, `chevalleyAction_sq`, `kahlerDirac_sq_eq_hodgeLaplacian`, `diracOperator₂_sq_weitzenbock`, `bismutDilatonRicciTensor_isSymm`) | **PASS** (100% `#print axioms` coverage; 0 unused hypotheses) | `ExteriorAlgebra R M`, `Module.End R (ExteriorAlgebra R M)`, `Module.End R Ω`, `Matrix n n R` — **PASS (T16)** |
 
 ---
 

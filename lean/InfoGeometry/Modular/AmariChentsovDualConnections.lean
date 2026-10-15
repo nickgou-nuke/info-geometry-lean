@@ -1,13 +1,8 @@
 import Mathlib.Algebra.Algebra.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Algebra.Star.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 
 noncomputable section
-
-set_option linter.unusedSectionVars false
-set_option linter.unusedVariables false
 
 /-!
 # Amari–Chentsov Dual Affine Connections ∇^(e), ∇^(m) and the Bispectral Levi-Civita Bridge
@@ -70,6 +65,33 @@ structure DualConnectionManifold (V : Type*) [AddCommGroup V] [Module ℝ V] whe
   -- Fundamental Amari-Chentsov Duality Axiom:
   amari_duality : ∀ (X Y Z : V),
     diff_g X Y Z = g (nabla_e X Y) Z + g Y (nabla_m X Z)
+
+/-- Constructive 0-dimensional dual connection manifold witness on `Unit`. -/
+def trivialDualConnectionManifold : DualConnectionManifold Unit where
+  g _ _ := 0
+  g_add_left _ _ _ := by ring
+  g_add_right _ _ _ := by ring
+  g_smul_left _ _ _ := by ring
+  g_smul_right _ _ _ := by ring
+  g_symm _ _ := rfl
+  g_pos_def x hx := False.elim (hx (Subsingleton.elim x 0))
+  diff_g _ _ _ := 0
+  diff_g_symm _ _ _ := rfl
+  diff_g_add _ _ _ _ := by ring
+  nabla_e _ _ := 0
+  nabla_m _ _ := 0
+  nabla_e_add_left _ _ _ := rfl
+  nabla_e_add_right _ _ _ := rfl
+  nabla_e_smul_left _ _ _ := rfl
+  nabla_e_smul_right _ _ _ := rfl
+  nabla_m_add_left _ _ _ := rfl
+  nabla_m_add_right _ _ _ := rfl
+  nabla_m_smul_left _ _ _ := rfl
+  nabla_m_smul_right _ _ _ := rfl
+  amari_duality _ _ _ := by ring
+
+instance : Inhabited (DualConnectionManifold Unit) :=
+  ⟨trivialDualConnectionManifold⟩
 
 variable (M : DualConnectionManifold V)
 

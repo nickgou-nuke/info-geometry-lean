@@ -143,49 +143,14 @@ theorem group_inverse_reconstruction (h1 : IsDrazinInverse A D 1) :
     _ = A * 1 := by rw [spectral_add_kernel]
     _ = A := mul_one A
 
-/-! --------------------------------------------------------------------------
-    Section 5: Master Certificate & Compilation Constructor
-    -------------------------------------------------------------------------- -/
-
-/--
-Master Certificate for the Drazin Spectral Kernel:
-1. Commutation: P A = A P.
-2. Idempotency: P² = P, Q² = Q.
-3. Completeness & Orthogonality: P + Q = 1, P Q = 0.
-4. Annihilation: A^k Q = 0.
-5. Group inverse nilpotency: A Q = 0 (k = 1).
-6. Reconstruction: A P = A (k = 1).
--/
-structure DrazinSpectralKernelCertificate (R : Type*) [Ring R] : Prop where
-  proj_comm : ∀ (A D : R) (k : ℕ) (hD : IsDrazinInverse A D k),
-    spectralProj A D * A = A * spectralProj A D
-  proj_idem : ∀ (A D : R) (k : ℕ) (hD : IsDrazinInverse A D k),
-    spectralProj A D * spectralProj A D = spectralProj A D
-  kernel_idem : ∀ (A D : R) (k : ℕ) (hD : IsDrazinInverse A D k),
-    kernelProj A D * kernelProj A D = kernelProj A D
-  completeness : ∀ (A D : R), spectralProj A D + kernelProj A D = 1
-  orthogonality : ∀ (A D : R) (k : ℕ) (hD : IsDrazinInverse A D k),
-    spectralProj A D * kernelProj A D = 0
-  annihilation : ∀ (A D : R) (k : ℕ) (hD : IsDrazinInverse A D k),
-    A ^ k * kernelProj A D = 0
-  group_nilpotent : ∀ (A D : R) (h1 : IsDrazinInverse A D 1),
-    A * kernelProj A D = 0
-  group_reconstruct : ∀ (A D : R) (h1 : IsDrazinInverse A D 1),
-    A * spectralProj A D = A
-
-/--
-Master compilation constructor verifying that the Drazin spectral kernel
-is 100% mathematically closed in Lean 4 without custom axioms.
--/
-theorem compile_drazin_spectral_kernel (R : Type*) [Ring R] :
-    DrazinSpectralKernelCertificate R where
-  proj_comm := fun _ _ _ => spectralProj_comm
-  proj_idem := fun _ _ _ => spectralProj_idempotent
-  kernel_idem := fun _ _ _ => kernelProj_idempotent
-  completeness := fun _ _ => spectral_add_kernel
-  orthogonality := fun _ _ _ => spectral_mul_kernel
-  annihilation := fun _ _ _ => index_annihilates_kernel_proj
-  group_nilpotent := fun _ _ => group_inverse_nilpotent_zero
-  group_reconstruct := fun _ _ => group_inverse_reconstruction
+/-- Constructive model witness for `IsDrazinInverse`: the multiplicative unit `1 : ℤ`
+    is its own Drazin (and group) inverse of index `1`. -/
+theorem isDrazinInverse_one : IsDrazinInverse (1 : ℤ) (1 : ℤ) 1 :=
+  ⟨rfl, rfl, rfl⟩
 
 end InfoGeometry.QuantumContext.Drazin
+
+
+
+
+

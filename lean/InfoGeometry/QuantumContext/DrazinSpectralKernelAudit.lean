@@ -21,26 +21,19 @@ namespace InfoGeometry.QuantumContext.DrazinAudit
 
 open InfoGeometry.QuantumContext.Drazin
 
-/-- Verification 1: Master Certificate compilation. -/
-theorem test_certificate_compiles (R : Type*) [Ring R] :
-    DrazinSpectralKernelCertificate R :=
-  compile_drazin_spectral_kernel R
-
-/- Verification 2: Check axioms of master compilation constructor. -/
-#print axioms compile_drazin_spectral_kernel
-
-/- Verification 3: Check axioms of spectral projector properties. -/
+/- Verification 1: Check axioms of spectral projector properties. -/
 #print axioms spectralProj_comm
 #print axioms spectralProj_idempotent
 #print axioms kernelProj_idempotent
 #print axioms spectral_add_kernel
 #print axioms spectral_mul_kernel
 
-/- Verification 4: Check axioms of kernel annihilation. -/
+/- Verification 2: Check axioms of kernel annihilation. -/
 #print axioms index_annihilates_kernel_proj
 
-/- Verification 5: Check axioms of group inverse Markov specialization. -/
+/- Verification 3: Check axioms of group inverse Markov specialization. -/
 #print axioms group_inverse_nilpotent_zero
 #print axioms group_inverse_reconstruction
 
 end InfoGeometry.QuantumContext.DrazinAudit
+

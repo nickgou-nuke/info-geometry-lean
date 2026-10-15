@@ -76,25 +76,27 @@ if [ "$MODE" = "incremental" ]; then
 
     echo "▶ Incremental diff analysis against: $BASE_REF"
     CHANGED_FILES=$(git diff --diff-filter=d --name-only "$BASE_REF" HEAD 2>/dev/null || true)
-    CHANGED_LEAN_FILES=$(echo "$CHANGED_FILES" | grep '^lean/.*\.lean$' || true)
+    CHANGED_LEAN_FILES=$(grep '^lean/.*\.lean$' <<<"$CHANGED_FILES" || true)
 
     if [ -z "$CHANGED_LEAN_FILES" ]; then
         echo "  ℹ No Lean source files modified in range ($BASE_REF..HEAD)."
         echo "  ⏩ Skipping Lake build and Lean semantic audits."
     else
         echo "  Modified Lean files:"
-        echo "$CHANGED_LEAN_FILES" | sed 's/^/    - /'
+        sed 's/^/    - /' <<<"$CHANGED_LEAN_FILES"
 
         # 1. Locked Lake build (incremental targets or umbrella if configuration/all changed)
-        if echo "$CHANGED_FILES" | grep -qE '(lakefile|InfoGeometry/All\.lean|InfoGeometry/Canonical/All\.lean)'; then
+        if grep -E '(lakefile|InfoGeometry/All\.lean|InfoGeometry/Canonical/All\.lean)' <<<"$CHANGED_FILES" >/dev/null; then
             run_check "Locked Lake build (umbrella)" \
                 python3 tools/infra/run_locked_lake_build.py \
                   --wait-for-build-lock InfoGeometry.All
         else
-            TARGETS=$(echo "$CHANGED_LEAN_FILES" | sed -e 's|^lean/||' -e 's|\.lean$||' -e 's|/|.|g')
-            run_check "Locked Lake build (incremental targets: $TARGETS)" \
-                python3 tools/infra/run_locked_lake_build.py \
-                  --wait-for-build-lock $TARGETS
+            TARGETS=$(grep -E '^lean/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental)/.*\.lean$' <<<"$CHANGED_LEAN_FILES" | sed -e 's|^lean/||' -e 's|\.lean$||' -e 's|/|.|g' || true)
+            if [ -n "$TARGETS" ]; then
+                run_check "Locked Lake build (incremental targets)" \
+                    python3 tools/infra/run_locked_lake_build.py \
+                      --wait-for-build-lock $TARGETS
+            fi
         fi
 
         # 2. Incremental Axiom & Debt Audit

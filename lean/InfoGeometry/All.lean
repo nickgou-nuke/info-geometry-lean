@@ -42,3 +42,6 @@ import InfoGeometry.Canonical.DecomposableBivector
 import InfoGeometry.Algebra.FiveGradedIwasawaNilpotency
 import InfoGeometry.Canonical.MTheoryTDualitySynthesis
 import InfoGeometry.Canonical.ProofArtifactHolonomyAudit
+import InfoGeometry.Superalgebra.PeirceDeWittZornQuantization
+import InfoGeometry.Superalgebra.PeirceDeWittZornQuantizationAudit
+

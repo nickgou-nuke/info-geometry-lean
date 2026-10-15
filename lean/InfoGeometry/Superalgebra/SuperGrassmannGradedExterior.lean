@@ -202,4 +202,30 @@ theorem superCommutator_one_one_eq_anticomm (v w : M) :
       (by simpa only [pow_one] using LinearMap.mem_range_self _ v)
       (by simpa only [pow_one] using LinearMap.mem_range_self _ w)
 
+/-- **Degree-2 Bosonic Centrality**:
+    Every degree-2 bivector `x ∈ LinearMap.range (ι R) ^ 2` commutes with any homogeneous
+    element `y` of arbitrary degree `q`: `x * y = y * x`. -/
+theorem bivector_central (q : ℕ) (x y : ExteriorAlgebra R M)
+    (hx : x ∈ LinearMap.range (ExteriorAlgebra.ι R : M →ₗ[R] ExteriorAlgebra R M) ^ 2)
+    (hy : y ∈ LinearMap.range (ExteriorAlgebra.ι R : M →ₗ[R] ExteriorAlgebra R M) ^ q) :
+    x * y = y * x := by
+  rw [supercommutative_exterior 2 q x y hx hy]
+  dsimp [koszulSign]
+  rw [pow_mul, neg_one_sq, one_pow, one_smul]
+
 end InfoGeometry.Superalgebra.SuperGrassmann
+
+namespace SuperGrassmann
+
+export InfoGeometry.Superalgebra.SuperGrassmann (
+  Parity bosonic fermionic bosonic_ne_fermionic
+  koszulSign koszulSign_zero_left koszulSign_zero_right koszulSign_symm koszulSign_mul
+  koszulSign_one_left koszulSign_one_one
+  ι_mul_ι_anticomm ι_mul_ι_swap fermionic_nilpotent
+  ι_mul_graded_comm supercommutative_exterior
+  superCommutator superCommutator_vanishes superCommutator_one_one_eq_anticomm
+  bivector_central
+)
+
+end SuperGrassmann
+

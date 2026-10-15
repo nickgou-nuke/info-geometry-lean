@@ -9,38 +9,37 @@ import Mathlib.Tactic.Ring
 import InfoGeometry.Epistemology.RiemannianSubmersion
 import InfoGeometry.Canonical.SuperGrassmannianManifold
 
-set_option linter.unusedVariables false
-set_option linter.unusedSectionVars false
-
 /-!
 # Natural Gradient Submersion Flow: Horizontal Geodesics and Confabulation Elimination
 
 This module couples the Riemannian submersion framework (`RiemannianSubmersion.lean`) with
 indefinite para-Kähler super-Grassmannian geometry (`SuperGrassmannianManifold.lean`):
 
-1. `ParaComplexSplit`: Proves that any para-complex structure $K^2 = \text{id}$ on a real vector
-   space canonically induces a `SubmersionSplit` via the spectral projectors
+1. `paraComplexSubmersionSplit`: Proves that any para-complex structure $K^2 = \text{id}$ on a real
+   vector space canonically induces a `SubmersionSplit` via the spectral projectors
    $P^+ = \frac{1}{2}(\text{id} + K)$ and $P^- = \frac{1}{2}(\text{id} - K)$.
-2. `NaturalGradientSystem`: Tangent space decomposition equipped with a symmetric metric $g$,
-   horizontal-vertical metric orthogonality, and gradient vectors.
+2. `NaturalGradientSubmersionSystem`: Tangent space decomposition equipped with a symmetric metric $g$
+   and horizontal-vertical metric orthogonality, together with a constructive `Inhabited` witness.
 3. `natural_gradient_horizontal_isolation`: When the metric is block-orthogonal between
    horizontal and vertical subspaces, evaluating natural gradient inner products on horizontal
    test vectors isolates the horizontal component:
    $$g(\tilde{\nabla} \mathcal{L}, P_{\mathcal{H}} w) = g(P_{\mathcal{H}} \tilde{\nabla} \mathcal{L}, P_{\mathcal{H}} w)$$
-4. `kernel_pinning_vanishing_drift`: Formal microkernel verification enforces the vanishing of
-   vertical gradient flow ($P_{\mathcal{V}} \tilde{\nabla} \mathcal{L} = 0$). Consequently, the
-   velocity $\dot{\theta} = - \tilde{\nabla} \mathcal{L}$ has vanishing vertical confabulation drift:
-   $$P_{\mathcal{V}} \dot{\theta} = 0 \quad \text{and} \quad P_{\mathcal{H}} \dot{\theta} = \dot{\theta}$$
-5. `kinetic_energy_fiber_collapse`: Under vanishing vertical velocity, the total kinetic metric energy
-   collapses strictly to the horizontal base component:
-   $$g(\dot{\theta}, \dot{\theta}) = g(P_{\mathcal{H}} \dot{\theta}, P_{\mathcal{H}} \dot{\theta})$$
-6. `NaturalGradientSubmersionFlowCertificate`: Master integration certificate verifying the flow.
+4. `kernel_pinning_vanishing_drift` & `kinetic_energy_fiber_collapse`: Formal microkernel verification
+   enforces the vanishing of vertical gradient flow ($P_{\mathcal{V}} \tilde{\nabla} \mathcal{L} = 0$),
+   collapsing kinetic energy strictly to the horizontal base component.
+5. `fisher_flat_fiber_metric_collapse` & `natural_gradient_vertical_metric_null`: When the Fisher metric
+   is flat along vertical fibers ($g(P_{\mathcal{V}} u, P_{\mathcal{V}} w) = 0$), vertical directions
+   are completely metric-null and quadratic metric energy collapses to the horizontal subspace.
+6. `invariantApex` & `apexObjective_at_criticalRadius`: Geodesic fixed-point optimization yielding
+   the critical radius $r^* = \frac{C}{2K}$ and invariant apex $R^* = \frac{C^2}{4K}$.
 -/
 
 namespace InfoGeometry.Canonical.NaturalGradientSubmersionFlow
 
 open InfoGeometry.Epistemology.RiemannianSubmersion
 open InfoGeometry.Canonical.SuperGrassmannianManifold
+
+section SubmersionSystem
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
@@ -120,7 +119,7 @@ theorem para_projectors_annihilation_minus_plus (K : V →ₗ[ℝ] V) (hK : Para
   rw [h1]
   abel
 
-/-- 
+/--
   Theorem: Any para-complex structure $K^2 = \text{id}$ canonically induces
   a Riemannian Submersion split $(P^+, P^-)$ satisfying all axioms of `SubmersionSplit`.
 -/
@@ -147,13 +146,33 @@ structure NaturalGradientSubmersionSystem (V : Type*) [AddCommGroup V] [Module �
   symm : ∀ u w, g u w = g w u
   ortho_HV : ∀ u w, g (split.projH u) (split.projV w) = 0
 
+/-- Canonical zero-metric horizontal submersion system on `V`. -/
+def zeroNaturalGradientSubmersionSystem (V : Type*) [AddCommGroup V] [Module ℝ V] :
+    NaturalGradientSubmersionSystem V where
+  split := {
+    projH := LinearMap.id
+    projV := 0
+    sum_id := fun v => add_zero v
+    idemH := fun _ => rfl
+    idemV := fun _ => rfl
+    orthoHV := fun _ => rfl
+    orthoVH := fun _ => rfl
+  }
+  g := 0
+  symm := fun _ _ => rfl
+  ortho_HV := fun _ _ => rfl
+
+instance (V : Type*) [AddCommGroup V] [Module ℝ V] :
+    Inhabited (NaturalGradientSubmersionSystem V) :=
+  ⟨zeroNaturalGradientSubmersionSystem V⟩
+
 /-- Orthogonality of vertical and horizontal: $g(P_{\mathcal{V}} u, P_{\mathcal{H}} w) = 0$. -/
 theorem metric_ortho_VH (sys : NaturalGradientSubmersionSystem V) (u w : V) :
     sys.g (sys.split.projV u) (sys.split.projH w) = 0 := by
   rw [sys.symm]
   exact sys.ortho_HV w u
 
-/-- 
+/--
   Theorem: Evaluating natural gradient metric inner products on horizontal test directions
   isolates the horizontal natural gradient component:
   $$g(\tilde{\nabla} \mathcal{L}, P_{\mathcal{H}} w) = g(P_{\mathcal{H}} \tilde{\nabla} \mathcal{L}, P_{\mathcal{H}} w)$$
@@ -204,28 +223,84 @@ theorem kinetic_energy_fiber_collapse
     horizontal_of_vertical_zero sys.split velocity h_pinned
   rw [h_horiz]
 
-/-! ### 3. Master Integration Certificate -/
+/-! ### 3. Fisher-Flat Fiber Natural Gradient Descent -/
 
-/-- Master certificate verifying the Natural Gradient Submersion Flow formalization. -/
-structure NaturalGradientSubmersionFlowCertificate (V : Type*) [AddCommGroup V] [Module ℝ V] : Prop where
-  para_complex_induces_split : ∀ (K : V →ₗ[ℝ] V) (hK : ParaComplexStructure K) (v : V),
-    (paraComplexSubmersionSplit K hK).projH v + (paraComplexSubmersionSplit K hK).projV v = v
-  horizontal_isolation : ∀ (sys : NaturalGradientSubmersionSystem V) (natGrad w : V),
-    sys.g natGrad (sys.split.projH w) = sys.g (sys.split.projH natGrad) (sys.split.projH w)
-  vanishing_drift : ∀ (sys : NaturalGradientSubmersionSystem V)
-    (natGrad : V) (h_pinned : sys.split.projV natGrad = 0)
-    (velocity : V) (h_flow : velocity = -natGrad),
-    sys.split.projV velocity = 0 ∧ sys.split.projH velocity = velocity
-  kinetic_collapse : ∀ (sys : NaturalGradientSubmersionSystem V)
-    (velocity : V) (h_pinned : sys.split.projV velocity = 0),
-    sys.g velocity velocity = sys.g (sys.split.projH velocity) (sys.split.projH velocity)
+/--
+  When the Fisher metric vanishes identically on the vertical fiber
+  ($g(P_{\mathcal{V}} u, P_{\mathcal{V}} w) = 0$), the quadratic metric form on any tangent
+  vector $v$ collapses to its horizontal projection $P_{\mathcal{H}} v$.
+-/
+theorem fisher_flat_fiber_metric_collapse
+    (sys : NaturalGradientSubmersionSystem V)
+    (h_flat : ∀ u w, sys.g (sys.split.projV u) (sys.split.projV w) = 0)
+    (v : V) :
+    sys.g v v = sys.g (sys.split.projH v) (sys.split.projH v) := by
+  have h_decomp : v = sys.split.projH v + sys.split.projV v :=
+    (sys.split.sum_id v).symm
+  conv_lhs => rw [h_decomp]
+  simp only [map_add, LinearMap.add_apply, sys.ortho_HV v v, metric_ortho_VH sys v v, h_flat v v, add_zero]
 
-/-- Constructive instance certifying Natural Gradient Submersion Flow. -/
-theorem compile_natural_gradient_submersion_flow (V : Type*) [AddCommGroup V] [Module ℝ V] :
-    NaturalGradientSubmersionFlowCertificate V where
-  para_complex_induces_split := fun K hK v => para_projectors_sum_id K v
-  horizontal_isolation := fun sys natGrad w => natural_gradient_horizontal_isolation sys natGrad w
-  vanishing_drift := fun sys natGrad h_pin vel h_fl => kernel_pinning_vanishing_drift sys natGrad h_pin vel h_fl
-  kinetic_collapse := fun sys vel h_pin => kinetic_energy_fiber_collapse sys vel h_pin
+/--
+  Under a Fisher-flat vertical fiber, the vertical component of any natural gradient vector
+  is metric-null against every test vector $w \in V$.
+-/
+theorem natural_gradient_vertical_metric_null
+    (sys : NaturalGradientSubmersionSystem V)
+    (h_flat : ∀ u w, sys.g (sys.split.projV u) (sys.split.projV w) = 0)
+    (natGrad w : V) :
+    sys.g (sys.split.projV natGrad) w = 0 := by
+  have h_decomp : w = sys.split.projH w + sys.split.projV w :=
+    (sys.split.sum_id w).symm
+  conv_lhs => rw [h_decomp]
+  rw [map_add, metric_ortho_VH sys natGrad w, h_flat natGrad w, add_zero]
+
+end SubmersionSystem
+
+/-! ### 4. Geodesic Fixed Point & Invariant Apex ($R^* = C^2 / (4K)$) -/
+
+/-- Quadratic trade-off objective along the horizontal geodesic: $\mathcal{J}(r) = C r - K r^2$. -/
+def apexObjective (C K r : ℝ) : ℝ :=
+  C * r - K * r ^ 2
+
+/-- Derivative of the quadratic objective with respect to radius $r$: $\mathcal{J}'(r) = C - 2 K r$. -/
+def apexGradient (C K r : ℝ) : ℝ :=
+  C - 2 * K * r
+
+/-- Critical geodesic radius where the gradient vanishes: $r^* = \frac{C}{2K}$. -/
+noncomputable def criticalRadius (C K : ℝ) : ℝ :=
+  C / (2 * K)
+
+/-- The invariant apex value at the critical radius: $R^* = \frac{C^2}{4K}$. -/
+noncomputable def invariantApex (C K : ℝ) : ℝ :=
+  C ^ 2 / (4 * K)
+
+/-- At the critical radius $r^* = C / (2K)$, the radial gradient vanishes identically. -/
+theorem apexGradient_zero_at_criticalRadius (C K : ℝ) (hK : K ≠ 0) :
+    apexGradient C K (criticalRadius C K) = 0 := by
+  dsimp [apexGradient, criticalRadius]
+  have h2K : 2 * K ≠ 0 := mul_ne_zero two_ne_zero hK
+  rw [mul_div_cancel₀ C h2K, sub_self]
+
+/-- Evaluating the objective at the critical radius yields the invariant apex $R^* = C^2 / (4K)$. -/
+theorem apexObjective_at_criticalRadius (C K : ℝ) (hK : K ≠ 0) :
+    apexObjective C K (criticalRadius C K) = invariantApex C K := by
+  dsimp [apexObjective, criticalRadius, invariantApex]
+  field_simp [hK]
+  ring
+
+/-- Completing the square: deficit from the invariant apex equals $K (r - r^*)^2$. -/
+theorem invariantApex_sub_apexObjective (C K r : ℝ) (hK : K ≠ 0) :
+    invariantApex C K - apexObjective C K r = K * (r - criticalRadius C K) ^ 2 := by
+  dsimp [apexObjective, criticalRadius, invariantApex]
+  field_simp [hK]
+  ring
+
+/-- For positive curvature penalty $K > 0$, the invariant apex is the global maximum of $\mathcal{J}(r)$. -/
+theorem apexObjective_le_invariantApex (C K r : ℝ) (hK : 0 < K) :
+    apexObjective C K r ≤ invariantApex C K := by
+  have h_diff := invariantApex_sub_apexObjective C K r (ne_of_gt hK)
+  have h_nonneg : 0 ≤ K * (r - criticalRadius C K) ^ 2 :=
+    mul_nonneg (le_of_lt hK) (sq_nonneg (r - criticalRadius C K))
+  linarith
 
 end InfoGeometry.Canonical.NaturalGradientSubmersionFlow

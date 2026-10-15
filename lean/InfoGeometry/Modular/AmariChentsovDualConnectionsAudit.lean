@@ -1,0 +1,6 @@
+import InfoGeometry.Modular.AmariChentsovDualConnections
+
+#print axioms InfoGeometry.Modular.AmariChentsovDualConnections.alpha_zero_eq_levi_civita_bridge
+#print axioms InfoGeometry.Modular.AmariChentsovDualConnections.levi_civita_bridge_metric_compatibility
+#print axioms InfoGeometry.Modular.AmariChentsovDualConnections.alpha_connection_duality
+#print axioms InfoGeometry.Modular.AmariChentsovDualConnections.alpha_connection_cubic_decomposition

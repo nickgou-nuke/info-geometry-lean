@@ -1,27 +1,16 @@
-/-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
-import Mathlib.Tactic
 import InfoGeometry.Epistemology.ChentsovMetricInvariance
 
-/-!
-# Audit Companion: Chentsov Metric Invariance
-
-This module audits the foundational axioms and kernel dependency manifest
-of `InfoGeometry.Epistemology.ChentsovMetricInvariance`.
--/
-
-open InfoGeometry.Epistemology.ChentsovMetricInvariance
-
-#print axioms fisherMetric_symm
-#print axioms fisherMetric_nonneg
-#print axioms fisherMetric_eq_score_expectation
-#print axioms pushforwardTangent_sum_zero
-#print axioms congruent_kernel_zero_of_ne
-#print axioms congruent_pushforward_at
-#print axioms congruent_pushforward_tangent_at
-#print axioms chentsov_congruent_metric_invariance
-#print axioms chentsov_congruent_pushforward_fisher_isometry
-#print axioms injectiveCongruentKernel
+#print axioms InfoGeometry.Epistemology.ChentsovMetricInvariance.fisherMetric_symm
+#print axioms InfoGeometry.Epistemology.ChentsovMetricInvariance.fisherMetric_nonneg
+#print axioms InfoGeometry.Epistemology.ChentsovMetricInvariance.fisherMetric_zero_left
+#print axioms InfoGeometry.Epistemology.ChentsovMetricInvariance.fisherMetric_zero_right
+#print axioms InfoGeometry.Epistemology.ChentsovMetricInvariance.fisherMetric_smul_left
+#print axioms InfoGeometry.Epistemology.ChentsovMetricInvariance.fisherMetric_smul_right
+#print axioms InfoGeometry.Epistemology.ChentsovMetricInvariance.fisherMetric_eq_score_expectation
+#print axioms InfoGeometry.Epistemology.ChentsovMetricInvariance.pushforwardTangent_sum_zero
+#print axioms InfoGeometry.Epistemology.ChentsovMetricInvariance.congruent_kernel_zero_of_ne
+#print axioms InfoGeometry.Epistemology.ChentsovMetricInvariance.congruent_pushforward_at
+#print axioms InfoGeometry.Epistemology.ChentsovMetricInvariance.congruent_pushforward_tangent_at
+#print axioms InfoGeometry.Epistemology.ChentsovMetricInvariance.pushforwardTangentVec_id
+#print axioms InfoGeometry.Epistemology.ChentsovMetricInvariance.chentsov_congruent_metric_invariance
+#print axioms InfoGeometry.Epistemology.ChentsovMetricInvariance.chentsov_congruent_pushforward_fisher_isometry

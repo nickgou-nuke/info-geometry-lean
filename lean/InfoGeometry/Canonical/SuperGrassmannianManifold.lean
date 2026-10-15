@@ -7,23 +7,22 @@ import Mathlib.Tactic
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Ring
 
-set_option linter.unusedVariables false
-set_option linter.unusedSectionVars false
-
 /-!
 # Super-Grassmannian Manifold: Indefinite Causal Para-Kähler Geometry
 
 This module formalizes the algebraic differential-geometric structure of indefinite
 para-Kähler spaces and projection idempotents:
-1. `PseudoRiemannian`: Symmetric bilinear form $g$ on a module $V$.
+1. `PseudoRiemannianMetric`: Symmetric bilinear form $g$ on a module $V$.
 2. `ParaComplexStructure`: Involutive linear operator $K^2 = \text{id}$.
 3. `ParaKahlerStructure`: Skew-symmetric symplectic form $\omega$ compatible with $K$
    such that $g(v, w) = \omega(v, K w)$ and $\omega(K v, K w) = -\omega(v, w)$.
 4. `metric_anti_invariance`: $g(K v, K w) = -g(v, w)$, proving the algebraic split anti-invariance identity.
-5. `TwinLagrangianSheets`: Subspaces $T^+ = \ker(K - \text{id})$ and $T^- = \ker(K + \text{id})$.
-6. `sheet_isotropic_two_mul`: Proves $2 \cdot g(v, v) = 0$ for all $v \in T^\pm$.
-7. `SuperGrassmannianProjectors`: Projector idempotents $P^2 = P, Q^2 = Q, P Q = 0$.
-8. `SuperGrassmannianManifoldCertificate`: Master integration certificate.
+5. `InTPlus` & `InTMinus`: Eigen-sheets $T^+ = \ker(K - \text{id})$ and $T^- = \ker(K + \text{id})$.
+6. `tplus_isotropic_two_mul`, `tminus_isotropic_two_mul`, `omega_tplus_isotropic_two_mul`,
+   `omega_tminus_isotropic_two_mul`: Metric and symplectic isotropy ($2 \cdot g(v, v) = 0$ and
+   $2 \cdot \omega(v, v) = 0$) on $T^\pm$.
+7. `GrassmannianProjector` & `orthoComplement`: Projector idempotents $P^2 = P, Q^2 = Q$,
+   mutual annihilation $P Q = Q P = 0$, and partition of unity $P + Q = \text{id}$.
 -/
 
 namespace InfoGeometry.Canonical.SuperGrassmannianManifold
@@ -37,9 +36,19 @@ variable {V : Type*} [AddCommGroup V] [Module R V]
 structure PseudoRiemannianMetric (g : V →ₗ[R] V →ₗ[R] R) : Prop where
   symm : ∀ v w, g v w = g w v
 
+/-- Constructive model witness: the zero bilinear form is symmetric. -/
+theorem zeroPseudoRiemannianMetric {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] :
+    PseudoRiemannianMetric (0 : V →ₗ[R] V →ₗ[R] R) :=
+  ⟨fun _ _ => rfl⟩
+
 /-- Para-complex structure: an involutive linear automorphism $K^2 = \text{id}$. -/
 structure ParaComplexStructure (K : V →ₗ[R] V) : Prop where
   involutive : ∀ v, K (K v) = v
+
+/-- Constructive model witness: the identity linear map is involutive. -/
+theorem idParaComplexStructure {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] :
+    ParaComplexStructure (LinearMap.id : V →ₗ[R] V) :=
+  ⟨fun _ => rfl⟩
 
 /-! ### 2. Para-Kähler Structure and Metric Anti-Invariance -/
 
@@ -56,6 +65,11 @@ structure ParaKahlerStructure
   omega_skew : ∀ v w, omega v w = -omega w v
   compatibility : ∀ v w, g v w = omega v (K w)
   omega_anti_inv : ∀ v w, omega (K v) (K w) = -omega v w
+
+/-- Constructive model witness: trivial bilinear forms with the identity para-complex involution. -/
+theorem zeroParaKahlerStructure {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] :
+    ParaKahlerStructure (0 : V →ₗ[R] V →ₗ[R] R) (0 : V →ₗ[R] V →ₗ[R] R) (LinearMap.id : V →ₗ[R] V) :=
+  ⟨fun _ _ => rfl, fun _ _ => neg_zero.symm, fun _ _ => rfl, fun _ _ => neg_zero.symm⟩
 
 /--
 Theorem: The metric is anti-invariant under the para-complex structure:
@@ -86,7 +100,7 @@ def InTMinus (K : V →ₗ[R] V) (v : V) : Prop :=
   K v = -v
 
 /--
-Theorem: Any vector in $T^+$ is isotropic up to doubling: $2 \cdot g(v, v) = 0$.
+Theorem: Any vector in $T^+$ is metric-isotropic up to doubling: $2 \cdot g(v, v) = 0$.
 In characteristic $\ne 2$ (e.g. over $\mathbb{R}$), $g(v, v) = 0$, so $T^+$ is totally isotropic.
 -/
 theorem tplus_isotropic_two_mul
@@ -99,12 +113,12 @@ theorem tplus_isotropic_two_mul
   have h_kv : K v = v := hv
   rw [h_kv] at h_anti
   calc
-    2 * g v v = g v v + g v v := by ring
+    2 * g v v = g v v + g v v := two_mul (g v v)
     _ = -g v v + g v v := by nth_rw 1 [h_anti]
     _ = 0 := neg_add_cancel (g v v)
 
 /--
-Theorem: Any vector in $T^-$ is isotropic up to doubling: $2 \cdot g(v, v) = 0$.
+Theorem: Any vector in $T^-$ is metric-isotropic up to doubling: $2 \cdot g(v, v) = 0$.
 -/
 theorem tminus_isotropic_two_mul
     (g omega : V →ₗ[R] V →ₗ[R] R) (K : V →ₗ[R] V)
@@ -119,15 +133,55 @@ theorem tminus_isotropic_two_mul
     simp only [map_neg, LinearMap.neg_apply, neg_neg]
   rw [h_neg] at h_anti
   calc
-    2 * g v v = g v v + g v v := by ring
+    2 * g v v = g v v + g v v := two_mul (g v v)
     _ = -g v v + g v v := by nth_rw 1 [h_anti]
     _ = 0 := neg_add_cancel (g v v)
+
+/--
+Theorem: Any vector in $T^+$ is symplectic-isotropic up to doubling: $2 \cdot \omega(v, v) = 0$.
+-/
+theorem omega_tplus_isotropic_two_mul
+    (g omega : V →ₗ[R] V →ₗ[R] R) (K : V →ₗ[R] V)
+    (hpk : ParaKahlerStructure g omega K)
+    (v : V) (hv : InTPlus K v) :
+    2 * omega v v = 0 := by
+  have h_anti : omega (K v) (K v) = -omega v v := hpk.omega_anti_inv v v
+  have h_kv : K v = v := hv
+  rw [h_kv] at h_anti
+  calc
+    2 * omega v v = omega v v + omega v v := two_mul (omega v v)
+    _ = -omega v v + omega v v := by nth_rw 1 [h_anti]
+    _ = 0 := neg_add_cancel (omega v v)
+
+/--
+Theorem: Any vector in $T^-$ is symplectic-isotropic up to doubling: $2 \cdot \omega(v, v) = 0$.
+-/
+theorem omega_tminus_isotropic_two_mul
+    (g omega : V →ₗ[R] V →ₗ[R] R) (K : V →ₗ[R] V)
+    (hpk : ParaKahlerStructure g omega K)
+    (v : V) (hv : InTMinus K v) :
+    2 * omega v v = 0 := by
+  have h_anti : omega (K v) (K v) = -omega v v := hpk.omega_anti_inv v v
+  have h_kv : K v = -v := hv
+  rw [h_kv] at h_anti
+  have h_neg : omega (-v) (-v) = omega v v := by
+    simp only [map_neg, LinearMap.neg_apply, neg_neg]
+  rw [h_neg] at h_anti
+  calc
+    2 * omega v v = omega v v + omega v v := two_mul (omega v v)
+    _ = -omega v v + omega v v := by nth_rw 1 [h_anti]
+    _ = 0 := neg_add_cancel (omega v v)
 
 /-! ### 4. Super-Grassmannian Projector Idempotents -/
 
 /-- Graded projector $P$ on $V$ representing a point in the super-Grassmannian. -/
 structure GrassmannianProjector (P : V →ₗ[R] V) : Prop where
   idempotent : ∀ v, P (P v) = P v
+
+/-- Constructive model witness: the identity linear map is an idempotent projector. -/
+theorem idGrassmannianProjector {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] :
+    GrassmannianProjector (LinearMap.id : V →ₗ[R] V) :=
+  ⟨fun _ => rfl⟩
 
 /-- Algebraic complementary projector $Q = \text{id} - P$. -/
 def orthoComplement (P : V →ₗ[R] V) : V →ₗ[R] V :=
@@ -154,37 +208,11 @@ theorem ortho_projector_annihilation (P : V →ₗ[R] V) (hP : GrassmannianProje
   dsimp [orthoComplement]
   rw [hP.idempotent, sub_self]
 
-/-! ### 5. Master Super-Grassmannian Manifold Certificate -/
-
-structure SuperGrassmannianManifoldCertificate (R : Type*) [CommRing R]
-    (V : Type*) [AddCommGroup V] [Module R V] : Prop where
-  metric_anti_inv : ∀ (g omega : V →ₗ[R] V →ₗ[R] R) (K : V →ₗ[R] V),
-    ParaComplexStructure K → ParaKahlerStructure g omega K →
-    ∀ v w, g (K v) (K w) = -g v w
-  tplus_iso : ∀ (g omega : V →ₗ[R] V →ₗ[R] R) (K : V →ₗ[R] V),
-    ParaComplexStructure K → ParaKahlerStructure g omega K →
-    ∀ v, InTPlus K v → 2 * g v v = 0
-  tminus_iso : ∀ (g omega : V →ₗ[R] V →ₗ[R] R) (K : V →ₗ[R] V),
-    ParaComplexStructure K → ParaKahlerStructure g omega K →
-    ∀ v, InTMinus K v → 2 * g v v = 0
-  ortho_idem : ∀ (P : V →ₗ[R] V),
-    GrassmannianProjector P → ∀ v,
-    orthoComplement P (orthoComplement P v) = orthoComplement P v
-  annihilate_pq : ∀ (P : V →ₗ[R] V),
-    GrassmannianProjector P → ∀ v,
-    P (orthoComplement P v) = 0
-  annihilate_qp : ∀ (P : V →ₗ[R] V),
-    GrassmannianProjector P → ∀ v,
-    orthoComplement P (P v) = 0
-
-theorem compile_super_grassmannian_manifold (R : Type*) [CommRing R]
-    (V : Type*) [AddCommGroup V] [Module R V] :
-    SuperGrassmannianManifoldCertificate R V where
-  metric_anti_inv := metric_anti_invariance
-  tplus_iso := tplus_isotropic_two_mul
-  tminus_iso := tminus_isotropic_two_mul
-  ortho_idem := orthoComplement_idempotent
-  annihilate_pq := projector_ortho_annihilation
-  annihilate_qp := ortho_projector_annihilation
+/-- Theorem: Partition of unity $P v + Q v = v$. -/
+@[simp]
+theorem projector_add_orthoComplement (P : V →ₗ[R] V) (v : V) :
+    P v + orthoComplement P v = v := by
+  dsimp [orthoComplement]
+  exact add_sub_cancel (P v) v
 
 end InfoGeometry.Canonical.SuperGrassmannianManifold

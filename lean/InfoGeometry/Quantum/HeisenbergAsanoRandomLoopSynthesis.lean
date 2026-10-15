@@ -66,6 +66,7 @@ open InfoGeometry.Analysis.AsanoContractionNative
 open InfoGeometry.Analysis.AsanoUnitDiskContraction
 open InfoGeometry.Analysis.AsanoLeeYangCircle
 open InfoGeometry.Quantum.LeeYangAsanoPoincareContraction
+open InfoGeometry.Canonical.LeeYangAsanoDigest
 open InfoGeometry.Canonical.LeeYangAsanoDigest.AsanoInduction
 open InfoGeometry.Canonical.LeeYangAsanoNativeCore
 open InfoGeometry.Canonical.LeeYangAsanoInductiveContraction

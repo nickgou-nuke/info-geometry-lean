@@ -1,4 +1,4 @@
-import Mathlib.Data.Complex.Basic
+import Mathlib.Analysis.Complex.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
@@ -305,20 +305,23 @@ theorem ferromagnetic_asanoContract_ne_zero_in_openDisk {z : ℂ} (hz : ‖z‖ 
   linarith
 
 /-- Rank-one Asano contraction root radius bound: if `asanoPoly A B C D` is zero-free outside
-closed disks of radii $r_1, r_2$ ($r_1 \ge 0$), then any rank-one contracted root satisfies
-$\|z\| \le r_1 r_2$. -/
+sets $K_1 \subseteq \text{closedDisk } r_1$ and $K_2 \subseteq \text{closedDisk } r_2$ ($r_1 \ge 0$)
+with $0 \notin K_1, K_2$, then any rank-one contracted root satisfies $\|z\| \le r_1 r_2$. -/
 theorem asano_rankOne_contracted_root_radius_bound
-    {r₁ r₂ : ℝ} (hr₁ : 0 ≤ r₁) {A B C D z : ℂ}
-    (h0₁ : (0 : ℂ) ∉ closedDisk r₁)
-    (h0₂ : (0 : ℂ) ∉ closedDisk r₂)
-    (hzf : ZeroFreeOutside (closedDisk r₁) (closedDisk r₂) A B C D)
+    {K₁ K₂ : Set ℂ} {r₁ r₂ : ℝ} (hr₁ : 0 ≤ r₁) {A B C D z : ℂ}
+    (hK₁ : K₁ ⊆ closedDisk r₁)
+    (hK₂ : K₂ ⊆ closedDisk r₂)
+    (h0₁ : (0 : ℂ) ∉ K₁)
+    (h0₂ : (0 : ℂ) ∉ K₂)
+    (hzf : ZeroFreeOutside K₁ K₂ A B C D)
     (hD : D ≠ 0)
     (hdet : A * D - B * C = 0)
     (hzero : IsContractedZero A D z) :
     ‖z‖ ≤ r₁ * r₂ := by
-  have hmem : z ∈ signedProductSet (closedDisk r₁) (closedDisk r₂) :=
+  have hmem : z ∈ signedProductSet K₁ K₂ :=
     contracted_zero_mem_signedProduct_of_rankOne h0₁ h0₂ hzf hD hdet hzero
-  exact signedProduct_closedDisks_subset r₁ r₂ hr₁ hmem
+  rcases hmem with ⟨u, hu, v, hv, rfl⟩
+  exact signedProduct_closedDisks_subset r₁ r₂ hr₁ ⟨u, hK₁ hu, v, hK₂ hv, rfl⟩
 
 /-!
 ## Archetype VI: Macroscopic Loop Fraction & Spontaneous Magnetization Bound ($m \ge S/4$)

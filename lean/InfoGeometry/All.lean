@@ -50,8 +50,11 @@ import InfoGeometry.Algebra.FibonacciGrothendieckRingAudit
 import InfoGeometry.Topology.DelaunayFlipMatrixEmbeddingsAudit
 import InfoGeometry.Superalgebra.KahlerDiracWeitzenbockSynthesis
 import InfoGeometry.Superalgebra.KahlerDiracWeitzenbockSynthesisAudit
+import InfoGeometry.Quantum.HeisenbergAsanoRandomLoopSynthesis
+import InfoGeometry.Quantum.HeisenbergAsanoRandomLoopSynthesisAudit
 import InfoGeometry.Algebra.ChakravalaGA
 import InfoGeometry.Algebra.ChakravalaGAAudit
+
 import InfoGeometry.Algebra.HodgeGeometricCalculus
 import InfoGeometry.Algebra.HodgeGeometricCalculusAudit
 import InfoGeometry.Canonical.SuperGrassmannianManifold
@@ -68,3 +71,5 @@ import InfoGeometry.Canonical.NaturalGradientSubmersionFlow
 import InfoGeometry.Canonical.NaturalGradientSubmersionFlowAudit
 import InfoGeometry.Export.LeanJuliaVerifiedInterop
 import InfoGeometry.Export.LeanJuliaVerifiedInteropAudit
+import InfoGeometry.Canonical.GrandEpistemicGeometricSynthesis
+import InfoGeometry.Canonical.GrandEpistemicGeometricSynthesisAudit
